@@ -57,7 +57,7 @@
                 <dl style="width: 240px;">
                   <dt>分配的业务员：</dt>
                   <dd>
-                    <el-select v-model="formData.salesuserid" placeholder="请选择">
+                    <el-select size="small" v-model="formData.salesuserid" placeholder="请选择">
                       <el-option
                         v-for="item in salesuserlist"
                         :key="item.value"
@@ -74,8 +74,6 @@
                         placeholder="ID号"
                         size="small"
                         v-model="formData.ftword_id"
-                        oninput="value=value.replace(/^\.+|[^\d.]/g,'')"
-                        @change="confirmftword"
                         clearable>
                     </el-input>
                   </dd>
@@ -87,7 +85,7 @@
                   <dd>
                     <el-input
                         type="textarea"
-                        :autosize="{minRows:4,maxRows:4}"
+                        :autosize="{minRows:4,maxRows:8}"
                         size="small"
                         v-model="formData.custormneedinfo"
                         clearable>
@@ -151,7 +149,7 @@
                 <dl style="width: 240px;">
                   <dt>客户当地时间：<span>*</span></dt>
                   <dd>
-                    <el-select v-model="formData.timediff" placeholder="请选择">
+                    <el-select size="small" v-model="formData.timediff" placeholder="请选择">
                       <el-option
                         v-for="item in timediffList"
                         :key="item.value"
@@ -164,7 +162,7 @@
                 <dl style="width: 240px;">
                   <dt>来自大洲：</dt>
                   <dd>
-                    <el-select v-model="formData.continent" placeholder="请选择">
+                    <el-select size="small" v-model="formData.continent" placeholder="请选择">
                       <el-option
                         v-for="item in continentList"
                         :key="item.value"
@@ -188,7 +186,7 @@
                 <dl style="width: 240px;">
                   <dt>来自类型：<span>*</span></dt>
                   <dd>
-                    <el-select v-model="formData.messagetype" size="small" clearable placeholder="类型">
+                    <el-select v-model="formData.messagetype" size="small" clearable placeholder="请选择">
                         <el-option
                         v-for="item in messagetypeList"
                         :key="item.value" 
@@ -202,7 +200,7 @@
                 <dl style="width: 240px;">
                   <dt>来自渠道：<span>*外部链接请备注来自URL</span></dt>
                   <dd>
-                    <el-select v-model="formData.mode" size="small" clearable placeholder="类型">
+                    <el-select v-model="formData.mode" size="small" clearable placeholder="请选择">
                         <el-option
                         v-for="item in modeList"
                         :key="item.value"
@@ -237,7 +235,7 @@
                 <dl style="width: 240px;">
                   <dt>设备：</dt>
                   <dd>
-                    <el-select v-model="formData.device" size="small" clearable placeholder="类型">
+                    <el-select v-model="formData.device" size="small" clearable placeholder="请选择">
                         <el-option
                         v-for="item in deviceList"
                         :key="item.value"
@@ -250,10 +248,10 @@
                 <dl style="width: 240px;">
                   <dt>级别：</dt>
                   <dd>
-                    <el-select v-model="formData.level_id" size="small" clearable placeholder="类型">
+                    <el-select v-model="formData.level_id" size="small" clearable placeholder="请选择">
                         <el-option
                         v-for="item in level_idList"
-                        :key="item.value"
+                        :key="item.label"
                         :label="item.label"
                         :value="item.value">
                         </el-option>
@@ -324,7 +322,7 @@
                   </dd>
                   <dd>
                      <span>产量：</span>
-                    <el-select v-model="formData.production" size="small" clearable placeholder="类型">
+                    <el-select v-model="formData.production" size="small" clearable placeholder="请选择">
                         <el-option
                         v-for="item in productionList"
                         :key="item.value"
@@ -521,8 +519,9 @@ export default {
         custormneedinfo:"",
         otherremark:"",
         givesaleswarn:"",
-        saleswarnstatus:true,
+        saleswarnstatus:false,
         custormfiles:"",
+        custormfilesname:"",
         xuntime:"",
         timediff:"",
         continent:"",
@@ -612,6 +611,7 @@ export default {
       formData.otherremark = $this.formData.otherremark;
       formData.givesaleswarn = $this.formData.givesaleswarn;
       formData.custormfiles = $this.formData.custormfiles;
+      formData.custormfilesname = $this.formData.custormfilesname;
       formData.continent = $this.formData.continent;
       formData.country = $this.formData.country;
       formData.url = $this.formData.url;
@@ -632,7 +632,7 @@ export default {
       formData.messagetype = $this.formData.messagetype;
       formData.mode = $this.formData.mode;
       formData.phoneid = $this.formData.phoneid;
-      formData.producttype_id = $this.formData.phoneid;
+      formData.producttype_id = $this.formData.producttype_id;
       formData.id = $this.formData.id;
       var keying=[];
       keying=keying.concat($this.SandGravelArr,$this.OreDressArr,$this.FlourArr,$this.otherArr);
@@ -665,13 +665,23 @@ export default {
       $this.formData.custormname = $this.defaultInfo.custormname;
       $this.formData.custorm = $this.defaultInfo.custorm;
       $this.formData.custormphone = $this.defaultInfo.custormphone;
-      $this.formData.salesuserid = $this.defaultInfo.salesuserid;
+      if($this.defaultInfo.salesuserid!=0){
+         $this.formData.salesuserid = $this.defaultInfo.salesuserid;
+      }else{
+        $this.formData.salesuserid="";
+      }
       $this.formData.ftword_id = $this.defaultInfo.ftword_id;
       $this.formData.custormneedinfo = $this.defaultInfo.custormneedinfo;
       $this.formData.otherremark = $this.defaultInfo.otherremark;
       $this.formData.givesaleswarn = $this.defaultInfo.givesaleswarn;
       $this.formData.saleswarnstatus = $this.defaultInfo.saleswarnstatus==2?true:false;
       $this.formData.custormfiles = $this.defaultInfo.custormfiles;
+      $this.formData.custormfilesname = $this.defaultInfo.custormfilesname;
+      var fileList={};
+      $this.fileList=[];
+      fileList.name=$this.defaultInfo.custormfilesname;
+      fileList.url=$this.defaultInfo.custormfiles;
+      $this.fileList.push(fileList);
       $this.formData.xuntime = $this.defaultInfo.xuntime;
       $this.formData.timediff = $this.defaultInfo.timediff;
       $this.formData.continent = $this.defaultInfo.continent;
@@ -681,7 +691,11 @@ export default {
       $this.formData.url = $this.defaultInfo.url;
       $this.formData.ip = $this.defaultInfo.ip;
       $this.formData.device = $this.defaultInfo.device;
-      $this.formData.level_id = $this.defaultInfo.level_id;
+      if($this.defaultInfo.level_id!=0){
+         $this.formData.level_id = $this.defaultInfo.level_id;      
+      }else{
+         $this.formData.level_id="";
+      }
       $this.formData.material = $this.defaultInfo.material;
       $this.formData.production = $this.defaultInfo.production;
       $this.formData.infeed = $this.defaultInfo.infeed;
@@ -692,7 +706,7 @@ export default {
       $this.formData.invalidcause = $this.defaultInfo.invalidcause;
       $this.formData.phoneid = $this.defaultInfo.phoneid;
       $this.formData.producttype_id = $this.defaultInfo.producttype_id;
-      $this.producttypeArr=[$this.formData.producttype_id];
+      $this.producttypeArr=[$this.defaultInfo.producttype_id];
       $this.formData.keying = [];
       var SandGravelArr=[],OreDressArr=[],FlourArr=[],otherArr=[],keyArr=[];
       if($this.defaultInfo.keying){
@@ -812,7 +826,7 @@ export default {
             var level_idList = [];
             response.level.forEach(function(item,index){
               var itemData = {};
-              itemData.label = item.name;
+              itemData.label = item.levelname;
               itemData.value = item.id;
               level_idList.push(itemData);
             });
@@ -950,13 +964,13 @@ export default {
       var $this=this;
       var formData = new FormData();
       formData.append('file',parm.file);
-      $this.$store.dispatch('api/fileUpingAction', formData).then(response=>{
+      $this.$store.dispatch('api/fileUploadAction', formData).then(response=>{
         console.log(response,"文件信息");
         if(response){
           if(response.status){
             $this.$message({
               showClose: true,
-              message: response.info,
+              message: "上传成功！",
               type: 'success',
             }); 
           }else{
@@ -967,11 +981,22 @@ export default {
             });
           }
         $this.formData.custormfiles=response.info;
+        $this.formData.custormfilesname=response.name;
+        var fileList={};
+        fileList.name=$this.formData.custormfilesname;
+        fileList.url=$this.formData.custormfiles;
+        $this.fileList.push(fileList);
+        var fileListArr = $this.fileList;
+        if(fileListArr.length>0){
+           fileListArr.shift();
+        }
+        $this.fileList=fileListArr;
         }
       });
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      var $this = this;
+      $this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
     },
     // 意向分类点击事件
     producttypeClick(){
@@ -981,6 +1006,7 @@ export default {
         producttypeArr.shift();
       }
       $this.producttypeArr = producttypeArr;
+      $this.formData.producttype_id = $this.producttypeArr[0];
     },
     // 保存添加/编辑数据
     saveData(){
@@ -1031,6 +1057,7 @@ export default {
       $this.formData.givesaleswarn="";
       $this.formData.saleswarnstatus=false;
       $this.formData.custormfiles="";
+      $this.formData.custormfilesname="";
       $this.formData.xuntime="";
       $this.formData.timediff="";
       $this.formData.continent="";
@@ -1063,7 +1090,6 @@ export default {
       $this.FlourArr=[];
       $this.otherArr=[];
       $this.producttypeArr=[];
-      
     },
     // 验证是否为空
     validationForm(){
@@ -1108,6 +1134,14 @@ export default {
         });
         return false;
       }
+      if($this.formData.mode == 6&&$this.formData.url==""){
+        $this.$message({
+            showClose: true,
+            message: '错误：渠道为外部链接请备注来自URL！',
+            type: 'error'
+        });
+        return false;
+      }
       return true;
     },
     // 重置表单
@@ -1118,12 +1152,7 @@ export default {
       }else{
         $this.setCluesInfo();
       }
-    },
-    //设置富通天下ID只输入数字
-    confirmftword(e){
-      var $this=this;
-       $this.formData.ftword_id = e.target.value
-    },  
+    }, 
   }
 }
 </script>
