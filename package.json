@@ -3,15 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "start": "vue-cli-service serve",
+    "build:prod": "vue-cli-service build",
+    "build:stage": "vue-cli-service build --mode staging",
+    "lint": "vue-cli-service lint",
+    "memory": "cross-env LIMIT=8192 increase-memory-limit"
   },
   "dependencies": {
+    "@antv/data-set": "^0.11.8",
+    "@antv/f2": "^3.8.9",
+    "@antv/g2plot": "^2.3.26",
+    "@kangc/v-md-editor": "^1.7.3",
+    "axios": "^0.21.1",
+    "clipboard": "^2.0.8",
     "core-js": "^3.6.5",
+    "cross-env": "^7.0.3",
+    "element-ui": "^2.15.1",
+    "file-saver": "^2.0.5",
+    "increase-memory-limit": "^1.0.7",
+    "js-cookie": "^2.2.1",
+    "normalize.css": "^8.0.1",
+    "nprogress": "^0.2.0",
+    "particles.js": "^2.0.0",
+    "path-to-regexp": "^6.2.0",
+    "qs": "^6.10.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
+    "vue-ueditor-wrap": "^2.5.3",
+    "vuex": "^3.4.0",
+    "xlsx": "^0.16.9"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -20,10 +40,22 @@
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
+    "babel-plugin-dynamic-import-node": "^2.3.3",
+    "babel-plugin-prismjs": "^2.0.1",
+    "chalk": "^4.1.1",
+    "compression-webpack-plugin": "6.0.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-    "node-sass": "^4.12.0",
+    "ip": "^1.1.5",
+    "open": "^8.0.8",
+    "sass": "~1.32.6",
     "sass-loader": "^8.0.2",
-    "vue-template-compiler": "^2.6.11"
+    "sass-resources-loader": "^2.2.1",
+    "script-ext-html-webpack-plugin": "^2.1.5",
+    "svg-sprite-loader": "^6.0.6",
+    "svgo": "^2.3.0",
+    "vue-loader": "^15.9.7",
+    "vue-template-compiler": "^2.6.11",
+    "webpack-bundle-analyzer": "^4.4.2"
   }
 }

@@ -1,0 +1,39 @@
+@charset "UTF-8";
+*,:after,:before{margin:0;padding:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+article,aside,audio,blockquot,body,dd,div,dl,dt,figcaption,figure,filedset,form,h1,h2,h3,h4,h5,h6,header,html,input,li,nav,ol,p,section,ul,video{margin:0;padding:0}
+li,ol,ul{list-style:none}
+fieldset,img{max-width:100%;height:auto;border:0 none;vertical-align:middle;}
+table{width: 100%;max-width: 100%;border-collapse:separate;}
+table td,table th{word-break:break-all;}
+button,input,select,textarea{font:12px/20px Arial;outline:0;resize:none;border:none}
+.clearfix:after{clear:both;content:'';display:block;height:0;line-height:0;visibility:hidden}
+.clearfix{zoom:1}
+.clear{clear:both}
+/* base */
+.view{
+	height: 100%;
+}
+body.view{
+	padding: 15px;
+	background-color: #f2f2f2;
+	font-family: "微软雅黑";
+	font-size: 16px;
+	line-height: 1.5;
+	color: #333;
+	border: 1px solid transparent;
+}
+body.view> p,body.view> div{
+	margin: 15px 0;
+}
+body.view img,body.view video,body.view table{
+	max-width: 100%;
+}
+body.view table{
+	border-top: 1px solid #a3ddd1!important;
+    border-left: 1px solid #a3ddd1!important;
+}
+body.view table tr td{
+	border-bottom: 1px solid #a3ddd1!important;
+	border-right: 1px solid #a3ddd1!important;
+	padding: 3px 10px!important;
+  }

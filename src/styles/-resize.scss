@@ -1,0 +1,57 @@
+﻿html,body,div,h1,h2,h3,h4,h5,h6,ul,ol,dl,li,dt,dd,p,blockquote,pre,form,fieldset,figure,figcaption,table,th,td img {
+    margin: 0;
+    padding: 0;
+}
+a,abbr,acronym,address,big,blockquote,body,caption,cite,code,dd,dl,dt,fieldset,form,h1,time,h2,h3,h4,h5,h6,html,img,ins,kbd,label,legend,li,ol,p,pre,q,s,samp,small,span,strike,strong,ul {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    vertical-align: baseline;
+}
+html,body,#app,#app > .el-container{
+    margin:0;
+    padding:0;
+    height:100vh;
+    overflow: hidden;
+    background-color: #f2f2f2;
+    font-family:  "微软雅黑";
+}
+table{
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+img {
+    max-width: 100%!important;
+    height: auto;
+    border:0; 
+}
+*,*:after,*:before{-webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; -webkit-touch-callout:none; outline:none;}
+button{outline:none; }
+input{ outline:none; }
+input,textarea{font-family:"微软雅黑"; }
+textarea {resize :none; outline:none; }//去掉提交框右下角箭头
+ul,ol{
+    list-style: none;
+}
+ul,ol,li,dl,dt,dd,div{
+    @extend %clearfix;
+}
+
+a:focus,
+a:active {
+  outline: none;
+}
+a,
+a:focus,
+a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+div:focus {
+  outline: none;
+}
+.fr {float: right;}
+.fl {float: left;}
+.el-main{position: relative;}

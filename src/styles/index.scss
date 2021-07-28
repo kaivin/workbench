@@ -1,0 +1,492 @@
+
+@charset "UTF-8";
+
+@import "./-variables.scss";
+@import "./-mixin.scss";
+@import "./-transition.scss";
+@import "./-element-ui.scss";
+@import "./-sidebar.scss";
+@import './-btn.scss';
+@import './-resize.scss';
+@import './-public.scss';
+@import './-layout.scss';
+
+.page-root{
+  position: absolute;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  overflow: hidden;
+  padding: 15px;
+  .el-dialog__body{
+    padding: 20px!important;
+  }
+  .el-tabs__content{
+    flex: 1;
+    padding:0!important;
+    .el-tab-pane{
+      height: 100%;
+      overflow: hidden;
+    }
+  }
+}
+
+
+.scroll-panel{
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  overflow-y:auto;
+  overflow-x: hidden;
+}
+.svg-icon{
+  vertical-align: middle;
+}
+.box-card.auto{
+  height: auto;
+}
+.box-card.comment{
+  margin-top: 15px;
+}
+.box-card{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .card-header{
+    .el-button{
+      i,span{
+        vertical-align: top;
+      }
+    }
+  }
+  &.scroll-card{
+    .el-card__body{
+      padding:0;
+    }
+  }
+  .el-card__header{
+    padding: 10px;
+  }
+  .el-card__body{
+    flex:1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    .card-content{
+      flex:1;
+      overflow: hidden;
+    }
+  }
+  .pagination-panel{
+    text-align: right;
+    .el-pagination{
+      margin-top: 10px;
+    }
+  }
+}
+.pagination-panel{
+  overflow: hidden;
+  &.top-page{
+    .el-pagination{
+      margin-top:0;
+      margin-bottom: 10px;
+    }
+  }
+}
+.search-wrap{
+  .el-select .el-select__tags .el-tag .el-icon-close{
+    right: -4px!important;
+    top: -1px!important;
+  }
+}
+
+#nprogress .bar{
+  background-color: $menuActiveText!important;
+}
+
+.JobLevel_1, .JobLevel_2, .JobLevel_3, .JobLevel_4, .JobLevel_5, .JobLevel_6, .JobLevel_7, .JobLevel_8 { position: relative; display: block; width: 90px; margin: 10px auto; height: 24px; font-size: 0;overflow: initial; }
+.JobLevel_1:before, .JobLevel_2:before, .JobLevel_3:before, .JobLevel_4:before, .JobLevel_5:before, .JobLevel_6:before, .JobLevel_7:before, .JobLevel_8:before { content: ''; position: absolute; display: block; left: -11px; top: -10px; bottom: -10px; right: -11px; background-position: center; background-repeat: no-repeat; -webkit-background-size: 100% auto; background-size: 100% auto; }
+.JobLevel_6:before { background-image: url(../../public/level_1_bg.png); }
+.JobLevel_5:before { background-image: url(../../public/level_2_bg.png); }
+.JobLevel_4:before { background-image: url(../../public/level_3_bg.png); }
+.JobLevel_3:before { background-image: url(../../public/level_4_bg.png); }
+.JobLevel_9:before { background-image: url(../../public/level_5_bg.png); }
+.JobLevel_2:before { background-image: url(../../public/level_6_bg.png); }
+.JobLevel_8:before { background-image: url(../../public/level_7_bg.png); }
+.JobLevel_1:before { background-image: url(../../public/level_8_bg.png); }
+.page-root{
+  .search-dialog{
+    .el-dialog__body{
+      padding:0!important;
+      position: relative;
+    }
+  }
+}
+.search-dialog{
+  width: 90%;
+  max-height: 80%;
+  left: 5%;
+  top: 10%;
+  margin:0!important;
+  display: flex;
+  flex-direction: column;
+  .el-dialog__body{
+    flex: 1;
+    .search-dialog-wrap{
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      overflow-y: auto;
+      position: absolute;
+      left:0;
+      top:0;
+      .item-search{
+        width: 100%;
+        .el-input,.el-select{
+          width: 100%;
+        }
+      }
+      .item-search+.item-search{
+        margin-top:20px;
+      }
+    }
+  }
+}
+.new-date{
+  width: 280px!important;
+  .el-picker-panel__content{
+    width: 248px!important;
+  }
+}
+.el-time-panel{
+  width: 160px!important;
+  left: -24px!important;
+}
+.el-date-table td{
+  width: 24px!important;
+}
+
+.clues-info{
+  background: #e8f7f4;
+  border: 1px solid #a3ddd1;
+  overflow: hidden;
+  margin: 10px 0 15px;
+  padding: 10px 15px;
+  p{
+    font-size: 12px;
+    line-height: 2.5;
+    span{
+      strong,b{
+        margin: 0 2px;
+      }
+      em{
+        font-style: normal;
+        margin: 0 10px;
+      }
+    }
+    .item-span-1{
+      strong{
+        color: #429adc;
+      }
+    }
+    .item-span-2{
+      strong{
+        color: #E88401;
+      }
+    }
+    .item-span-3{
+      strong{
+        color: #B3315F;
+      }
+      b{
+        color: #130CB7;
+      }
+    }
+  }
+}
+/** 自定义表格 **/
+.border-wrap{
+  display: block;
+  border: 1px solid $border;
+  overflow: hidden;
+  .border-row{
+      width: 100%;
+      .border-cell+.border-cell{
+          border-left:1px solid $border
+      }
+  }
+  .border-row+.border-row{
+      border-top: 1px solid $border;
+  }
+}
+.post-class{
+  .border-row{
+    .border-cell{
+      padding: 5px;
+    }
+  }
+  .txt-font.border-cell{
+    width: 140px;
+    padding-right: 10px;
+    text-align: right;
+    font-weight: bold;
+    line-height: 42px;
+  }
+  .tag-panel{
+      width: 100%;
+      overflow: hidden;
+      font-size:0;
+      .el-button{
+          margin: 5px;
+          vertical-align: top;
+      }
+      .el-button+.el-button{
+        margin-left:5px!important;
+      }
+  }
+}
+.post-tag{
+  .border-row{
+    .border-cell{
+      padding: 8px;
+    }
+  }
+  .txt-font.border-cell{
+    width: 140px;
+    padding-right: 10px;
+    text-align: right;
+    font-weight: bold;
+    line-height: 28px;
+  }
+  .tag-panel{
+      width: 100%;
+      overflow: hidden;
+      font-size:0;
+      .el-tag{
+          margin: 2px;
+          vertical-align: top;
+          cursor: pointer;
+          transition: all 1s;
+          &:hover{
+            border-radius: 24px!important;
+            opacity: .8;
+          }
+          &.is-active{
+            border-radius: 24px!important;
+          }
+      }
+  }
+}
+.el-button--primary.is-plain.is-active{
+  background: #17997f!important;
+  border-color: #17997f!important;
+  color: #FFFFFF!important;
+}
+
+.depart-ul{
+  width: 100%;
+  overflow: hidden;
+  .item-depart{
+      border: 1px solid $primaryBorder;
+      overflow: hidden;
+      margin-bottom: 50px;
+      h4{
+          width: 100%;
+          overflow: hidden;
+          padding: 10px;
+          text-align: center;
+          font-size: 16px;
+          line-height: 1.2;
+          margin:0;
+          color: $menuActiveText;
+      }
+      .clerk-ul{
+          width: 100%;
+          &:after{
+              content:'';
+              display: block;
+              width: 100%;
+              clear:both;
+          }
+          .item-clerk{
+              width: 110px;
+              float:left;
+              border-right: 1px solid $primaryBorder;
+              dt{
+                  width: 100%;
+                  padding: 15px 0;
+                  font-size: 14px;
+                  line-height: 1.2;
+                  text-align: center;
+                  font-weight: normal;
+                  position: relative;
+                  &:before{
+                      content:'';
+                      display: block;
+                      width: 4000%;
+                      height: 1px;
+                      background: $primaryBorder;
+                      position: absolute;
+                      left:0;
+                      top:0;
+                  }
+              }
+              dd{
+                  width: 100%;
+                  padding: 12px 0;
+                  position: relative;
+                  span{
+                      display: block; 
+                      width: 90px; 
+                      margin: 0 auto; 
+                      height: 24px; 
+                      font-size: 0;
+                  }
+                  &:before{
+                      content:'';
+                      display: block;
+                      width: 4000%;
+                      height: 1px;
+                      background: $primaryBorder;
+                      position: absolute;
+                      left:0;
+                      top:0;
+                  }
+              }
+          }
+      }
+  }
+}
+
+.el-popover{
+  min-width: 100px!important;
+}
+.el-message{
+  max-width:300px;
+  min-width: 300px!important;
+}
+.el-message__content{
+  line-height: 1.4!important;
+}
+.el-message.is-closable .el-message__content{
+  padding-right: 24px!important;
+}
+.table-title {
+  padding: 5px 0;
+  span b{
+    color: red;
+    font-weight: bold;
+  }
+}
+.el-table--medium td{
+  // padding: 5px 0!important;
+}
+.table-button{
+  line-height:0;
+  .el-button{
+    margin: 0 5px!important;
+  }
+}
+.v-md-editor__toolbar{
+  &:before,&:after{
+    display: none;
+  }
+}
+.header-table{
+  width: 100%;
+  border-top: 1px solid $primaryBorder;
+  border-left: 1px solid $primaryBorder;
+  margin-bottom: 15px;
+  tr{
+    td{
+      border-bottom: 1px solid $primaryBorder;
+      border-right: 1px solid $primaryBorder;
+      padding: 10px;
+    }
+  }
+}
+.vuepress-markdown-body:not(.custom){
+  padding: 30px!important;
+}
+.info-content{
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  p{
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  img,video{
+    max-width: 100%;
+  }
+  table{
+    max-width: 100%;
+    border-top: 1px solid $primaryBorder!important;
+    border-left: 1px solid $primaryBorder!important;
+    tr{
+      td{
+        border-bottom: 1px solid $primaryBorder!important;
+        border-right: 1px solid $primaryBorder!important;
+        padding: 3px 10px!important;
+      }
+    }
+  }
+  &.rich-text{
+    >p,>div{
+      margin: 15px 0;
+    }
+  }
+}
+.comment-panel{
+  width: 100%;
+  overflow: hidden;
+  padding: 15px;
+  background: #fff;
+}
+.el-backtop{
+  z-index: 1000!important;
+}
+
+
+@media (max-width:1024px) {
+  .login-form{
+    >p{
+      display:none;
+    }
+  }
+  .search-dialog.block-search{
+    width: 360px;
+    left:50%;
+    margin:0 0 0 -180px!important;
+  }
+  .wscn-http404-container{
+    width: 100%!important;
+    left:0!important;
+    position: relative!important;
+    transform: translate(0,-40%)!important;
+  }
+  .wscn-http404{
+    width: 100%!important;
+    .pic-404{
+      max-width: 600px;
+      width: 100%!important;
+      margin: 0 auto;
+      float:none!important;
+    }
+    .bullshit{
+      float:none!important;
+      max-width: 360px!important;
+      width: 100%!important;
+      margin: 0 auto;
+    }
+  }
+}
+@media (max-width:450px) {
+  .search-dialog.block-search{
+    width: 90%;
+    left: 5%;
+    margin:0!important;
+  }
+}

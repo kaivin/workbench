@@ -1,0 +1,20 @@
+﻿
+.flex-wrap{
+    display: flex;
+    flex-direction: row;
+    .flex-content{
+        flex: 1;
+    }
+  }
+.flex-box{
+    display: flex;
+}
+.flex-panel{
+    flex:1;
+}
+.flex-column{
+    flex-direction: column;
+}
+.flex-row{
+    flex-direction: row;
+}
