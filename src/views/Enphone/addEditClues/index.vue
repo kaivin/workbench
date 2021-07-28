@@ -38,7 +38,7 @@
                     <el-input
                         placeholder="邮箱"
                         size="small"
-                        v-model="formData.custorm"
+                        v-model="formData.custormemail"
                         clearable>
                     </el-input>
                   </dd>
@@ -512,7 +512,7 @@ export default {
       formData:{
         id:0,
         custormname:"",
-        custorm:"",
+        custormemail:"",
         custormphone:"",
         salesuserid:"",
         ftword_id:"",
@@ -603,7 +603,7 @@ export default {
       var $this = this;
       var formData = {};
       formData.custormname = $this.formData.custormname;
-      formData.custorm = $this.formData.custorm;
+      formData.custormemail = $this.formData.custormemail;
       formData.custormphone = $this.formData.custormphone;
       formData.salesuserid = $this.formData.salesuserid;
       formData.ftword_id = $this.formData.ftword_id;
@@ -663,7 +663,7 @@ export default {
       var $this = this;
       $this.formData.id = $this.defaultInfo.id;
       $this.formData.custormname = $this.defaultInfo.custormname;
-      $this.formData.custorm = $this.defaultInfo.custorm;
+      $this.formData.custormemail = $this.defaultInfo.custormemail;
       $this.formData.custormphone = $this.defaultInfo.custormphone;
       if($this.defaultInfo.salesuserid!=0){
          $this.formData.salesuserid = $this.defaultInfo.salesuserid;
