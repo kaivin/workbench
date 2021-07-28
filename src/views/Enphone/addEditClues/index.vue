@@ -22,7 +22,119 @@
               </div>
               <div class="item-panel">
                 <dl style="width: 240px;">
-                  <dt>来源时间：<span>*</span></dt>
+                  <dt>客户姓名/称呼：</dt>
+                  <dd>
+                    <el-input
+                        placeholder="姓名"
+                        size="small"
+                        v-model="formData.custormname"
+                        clearable>
+                    </el-input>
+                  </dd>
+                </dl>
+                <dl style="width: 240px;">
+                  <dt>客户Email：</dt>
+                  <dd>
+                    <el-input
+                        placeholder="邮箱"
+                        size="small"
+                        v-model="formData.custorm"
+                        clearable>
+                    </el-input>
+                  </dd>
+                </dl>
+                <dl style="width: 240px;">
+                  <dt>客户电话：</dt>
+                  <dd>
+                    <el-input
+                        placeholder="电话"
+                        size="small"
+                        v-model="formData.custormphone"
+                        clearable>
+                    </el-input>
+                  </dd>
+                </dl>
+                <dl style="width: 240px;">
+                  <dt>分配的业务员：</dt>
+                  <dd>
+                    <el-select v-model="formData.salesuserid" placeholder="请选择">
+                      <el-option
+                        v-for="item in salesuserlist"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </dd>
+                </dl>
+                <dl style="width: 240px;">
+                  <dt>富通天下ID</dt>
+                  <dd>
+                    <el-input
+                        placeholder="ID号"
+                        size="small"
+                        v-model="formData.ftword_id"
+                        oninput="value=value.replace(/^\.+|[^\d.]/g,'')"
+                        @change="confirmftword"
+                        clearable>
+                    </el-input>
+                  </dd>
+                </dl>
+              </div>
+              <div class="item-panel">
+                <dl style="width:480px;">
+                  <dt>客户需求详情：*如有其他联系方式请在详情中注明</dt>
+                  <dd>
+                    <el-input
+                        type="textarea"
+                        :autosize="{minRows:4,maxRows:4}"
+                        size="small"
+                        v-model="formData.custormneedinfo"
+                        clearable>
+                    </el-input>
+                  </dd>
+                </dl>
+                <dl style="width:480px;">
+                  <dt>备注与提醒：</dt>
+                  <dd>
+                    <span>分配/特别说明：</span>
+                    <el-input
+                        size="small"
+                        v-model="formData.otherremark"
+                        clearable>
+                    </el-input>
+                  </dd>
+                  <dd>
+                    <span>提醒/首页提醒：</span>
+                    <el-input
+                        size="small"
+                        v-model="formData.givesaleswarn"
+                        clearable>
+                    </el-input>
+                  </dd>
+                  <dd>
+                  <el-checkbox 
+                        v-model="formData.saleswarnstatus"
+                        clearable>修改提醒</el-checkbox>
+                  </dd>
+                  <dd>
+                     <el-upload
+                        class="upload-demo"
+                        name="file"
+                        action=""
+                        accept="aplication/zip"
+                        :http-request="httpZipRequest"
+                        :limit="1"
+                        :on-exceed="handleExceed"
+                        :file-list="fileList">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                     </el-upload>
+                  </dd>
+                </dl>
+              </div>
+              <div class="item-panel">
+                <dl style="width: 240px;">
+                  <dt>信息来自具体时间：<span>*</span></dt>
                   <dd>
                      <el-date-picker
                         style="display:block;width:100%;"
@@ -37,35 +149,62 @@
                   </dd>
                 </dl>
                 <dl style="width: 240px;">
-                  <dt>客户省份：</dt>
+                  <dt>客户当地时间：<span>*</span></dt>
                   <dd>
-                    <el-input
-                        placeholder="地区"
-                        @blur="provinceChangeHandler"
-                        size="small"
-                        v-model="formData.province"
-                        clearable>
-                    </el-input>
+                    <el-select v-model="formData.timediff" placeholder="请选择">
+                      <el-option
+                        v-for="item in timediffList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
                   </dd>
                 </dl>
                 <dl style="width: 240px;">
-                  <dt>客户城市：</dt>
+                  <dt>来自大洲：</dt>
+                  <dd>
+                    <el-select v-model="formData.continent" placeholder="请选择">
+                      <el-option
+                        v-for="item in continentList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </dd>
+                </dl>
+                <dl style="width: 240px;">
+                  <dt>来自国家：</dt>
                   <dd>
                     <el-input
                         placeholder="号码归属地"
-                        @blur="cityChangeHandler"
                         size="small"
-                        v-model="formData.city"
+                        v-model="formData.country"
                         clearable>
                     </el-input>
                   </dd>
                 </dl>
                 <dl style="width: 240px;">
-                  <dt>来源渠道：<span>*</span></dt>
+                  <dt>来自类型：<span>*</span></dt>
                   <dd>
-                    <el-select v-model="formData.mode" size="small" clearable placeholder="设备">
+                    <el-select v-model="formData.messagetype" size="small" clearable placeholder="类型">
                         <el-option
-                        v-for="item in sourceList"
+                        v-for="item in messagetypeList"
+                        :key="item.value" 
+                        :label="item.label"
+                        :value="item.value"
+                        >
+                        </el-option>
+                    </el-select>
+                  </dd>
+                </dl>
+                <dl style="width: 240px;">
+                  <dt>来自渠道：<span>*外部链接请备注来自URL</span></dt>
+                  <dd>
+                    <el-select v-model="formData.mode" size="small" clearable placeholder="类型">
+                        <el-option
+                        v-for="item in modeList"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -74,31 +213,51 @@
                   </dd>
                 </dl>
                 <dl style="width: 240px;">
-                  <dt>来源网页：</dt>
+                  <dt>来自网页：</dt>
                   <dd>
                     <el-input
-                        placeholder="来源页面"
+                        placeholder="网址"
                         size="small"
                         v-model="formData.url"
-                        @blur="urlChangePhone"
                         clearable>
                     </el-input>
                   </dd>
                 </dl>
                 <dl style="width: 240px;">
-                  <dt>上传文件：</dt>
+                  <dt>IP：</dt>
                   <dd>
-                    <el-upload
-                      class="upload-demo"
-                      action="none"
-                      :on-remove="handleRemove"
-                      :before-remove="beforeRemove"
-                      :http-request="uploadFile"
-                      :limit="1"
-                      :on-exceed="handleExceed">
-                      <el-button size="small" type="primary">点击上传</el-button>
-                      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                    </el-upload>
+                    <el-input
+                        placeholder="IP"
+                        size="small"
+                        v-model="formData.ip"
+                        clearable>
+                    </el-input>
+                  </dd>
+                </dl>
+                <dl style="width: 240px;">
+                  <dt>设备：</dt>
+                  <dd>
+                    <el-select v-model="formData.device" size="small" clearable placeholder="类型">
+                        <el-option
+                        v-for="item in deviceList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                  </dd>
+                </dl>
+                <dl style="width: 240px;">
+                  <dt>级别：</dt>
+                  <dd>
+                    <el-select v-model="formData.level_id" size="small" clearable placeholder="类型">
+                        <el-option
+                        v-for="item in level_idList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
                   </dd>
                 </dl>
               </div>
@@ -106,24 +265,92 @@
                 <dl>
                   <dt>意向设备：<span>*</span></dt>
                   <dd>
+                    <strong>类别</strong>
                     <div class="clues-list product-list">
-                      <span class="item-clues" v-for="item in productList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="productClick(item.id)">{{item.name}}</span>
+                      <el-checkbox-group v-model="producttypeArr" @change="producttypeClick">
+                        <el-checkbox v-for="item in producttypeList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                      </el-checkbox-group>
                     </div>
-                    <p>如果为其他生产线、配件、其他产品，请在备注中注明具体产品</p>
+                  </dd>
+                  <dd>
+                    <strong>砂石：</strong>
+                    <div class="clues-list product-list">
+                      <el-checkbox-group v-model="SandGravelArr">
+                        <el-checkbox v-for="item in SandGravelList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                      </el-checkbox-group>
+                    </div>
+                  </dd>
+                  <dd>
+                    <strong>选矿/建材：</strong>
+                    <div class="clues-list product-list">
+                      <el-checkbox-group v-model="OreDressArr">
+                        <el-checkbox v-for="item in OreDressList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                      </el-checkbox-group>
+                    </div>
+                  </dd>
+                  <dd>
+                    <strong>磨粉/烘干/压球：</strong>
+                    <div class="clues-list product-list">
+                      <el-checkbox-group v-model="FlourArr">
+                        <el-checkbox v-for="item in FlourList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                      </el-checkbox-group>
+                    </div>
+                  </dd>
+                  <dd>
+                    <strong>其它：</strong>
+                    <div class="clues-list product-list">
+                      <el-checkbox-group v-model="otherArr">
+                        <el-checkbox v-for="item in otherList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                      </el-checkbox-group>
+                    </div>
+                    <p>**请根据客户意图选择合适的产品，可多选。如果位：其它生产线、配件、其它产品请在备注中注明具体产品</p>
                   </dd>
                 </dl>
               </div>
               <div class="item-panel">
                 <dl style="width: 240px;">
-                  <dt>用途：</dt>
+                  <dt>物料/产量：</dt>
                   <dd>
+                     <span>物料：</span>
                       <el-input
-                        placeholder="用途"
+                        placeholder="物料"
                         type="textarea"
                         resize="none"
                         :rows="4"
                         size="small"
-                        v-model="formData.useing"
+                        v-model="formData.material"
+                        clearable>
+                      </el-input>
+                  </dd>
+                  <dd>
+                     <span>产量：</span>
+                    <el-select v-model="formData.production" size="small" clearable placeholder="类型">
+                        <el-option
+                        v-for="item in productionList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                  </dd>
+                </dl>
+                <dl style="width: 240px;">
+                  <dt>进出料：</dt>
+                  <dd>
+                     <span>进料：</span>
+                      <el-input
+                        placeholder="进料"
+                        size="small"
+                        v-model="formData.infeed"
+                        clearable>
+                      </el-input>
+                  </dd>
+                  <dd>
+                     <span>出料：</span>
+                      <el-input
+                        placeholder="出料"
+                        size="small"
+                        v-model="formData.outfeed"
                         clearable>
                       </el-input>
                   </dd>
@@ -131,49 +358,23 @@
                 <dl style="width: 240px;">
                   <dt>备注：</dt>
                   <dd>
-                    <el-input
+                     <span>询盘备注：</span>
+                      <el-input
                         placeholder="备注"
-                        type="textarea"
-                        :rows="4"
-                        resize="none"
+                        size="small"
+                        v-model="formData.xunremark"
+                        clearable>
+                      </el-input>
+                  </dd>
+                  <dd>
+                     <span>客服备注：</span>
+                      <el-input
+                        placeholder="客服部备注"
                         size="small"
                         v-model="formData.custormremark"
                         clearable>
-                    </el-input>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>原因：</dt>
-                  <dd>
-                    <el-input
-                        placeholder="原因"
-                        type="textarea"
-                        resize="none"
-                        :rows="4"
-                        size="small"
-                        v-model="formData.custormcause"
-                        clearable>
-                    </el-input>
-                  </dd>
-                </dl>
-              </div>
-              <div class="item-panel">
-                <dl>
-                  <dt>级别：</dt>
-                  <dd>
-                    <div class="clues-list level-list">
-                      <span class="item-clues" v-for="item in levelList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="levelClick(item.id)">{{item.name}}</span>
-                    </div>
-                  </dd>
-                </dl>
-              </div>
-              <div class="item-panel">
-                <dl>
-                  <dt>价格范围：</dt>
-                  <dd>
-                    <div class="clues-list price-list">
-                      <span class="item-clues" v-for="item in priceList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="priceClick(item.id)">{{item.name}}</span>
-                    </div>
+                      </el-input>
+                      <i>此备注仅客服部可见</i>
                   </dd>
                 </dl>
               </div>
@@ -191,6 +392,7 @@
                         placeholder="该项只在无效情况下填写"
                         size="small"
                         v-model="formData.invalidcause"
+                        :disabled="formData.effective"
                         clearable>
                     </el-input>
                   </dd>
@@ -239,26 +441,109 @@ export default {
           }]
         },
       phoneList:[],
-      productList:[],
-      sourceList:[],
-      priceList:[],
-      levelList:[],
+      producttypeList:[],//分类
+      producttypeArr:[],
+      SandGravelList:[],//沙石
+      SandGravelArr:[],
+      OreDressList:[],//选矿建材
+      OreDressArr:[],
+      FlourList:[],//磨粉
+      FlourArr:[],
+      otherList:[],//其它
+      otherArr:[],
+      fileList:[],//上传文件
+      salesuserlist:[],//业务员
+      messagetypeList:[
+        {value: '留言板',label:'留言板'},
+        {value: '商务通',label:'商务通'},
+        {value: '其他',label:'其他'},
+        {value: 'Email',label:'Email'}
+        ],
+      modeList:[],
+      deviceList:[
+        {value: 'PC设备',label:'PC设备'},
+        {value: '移动设备',label:'移动设备'},
+        {value: '未知设备',label:'未知设备'}
+        ],
+      level_idList:[],
+      productionList:[
+        {value: '≤5T/H',label:'≤5T/H'},
+        {value: '≤10T/H',label: '≤10T/H'},
+        {value: '10-50T/H',label: '10-50T/H'},
+        {value: '50-100T/H',label: '50-100T/H'},
+        {value: '≥100T/H',label: '≥100T/H'}
+        ],
+      timediffList:[
+        {value: '-19',label: '-19'},
+        {value: '-18',label: '-18'},
+        {value: '-17',label: '-17'},
+        {value: '-16',label: '-16'},
+        {value: '-15',label: '-15'},
+        {value: '-14',label: '-14'},
+        {value: '-13',label: '-13'},
+        {value: '-12',label: '-12'},
+        {value: '-11',label: '-11'},
+        {value: '-10',label: '-10'},
+        {value: '-9',label: '-9'},
+        {value: '-8',label: '-8'},
+        {value: '-7',label: '-7'},
+        {value: '-6',label: '-6'},
+        {value: '-5',label: '-5'},
+        {value: '-4',label: '-4'},
+        {value: '-3',label: '-3'},
+        {value: '-2',label: '-2'},
+        {value: '-1',label: '-1'},
+        {value: '0',label: '0'},
+        {value: '+1',label: '1'},
+        {value: '+2',label: '2'},
+        {value: '+3',label: '3'},
+        {value: '+4',label: '4'}
+      ],
+      continentList:[
+        {value: '东南亚',label: '东南亚'},
+        {value: '中亚',label: '中亚'},
+        {value: '东亚',label: '东亚'},
+        {value: '西亚',label: '西亚'},
+        {value: '南亚',label: '南亚'},
+        {value: '非洲',label: '非洲'},
+        {value: '欧洲',label: '欧洲'},
+        {value: '南美洲',label: '南美洲'},
+        {value: '北美洲',label: '北美洲'},
+        {value: '大洋洲',label: 'label'}
+      ],
       formData:{
         id:0,
-        province:"",
+        custormname:"",
+        custorm:"",
+        custormphone:"",
+        salesuserid:"",
+        ftword_id:"",
+        custormneedinfo:"",
+        otherremark:"",
+        givesaleswarn:"",
+        saleswarnstatus:true,
+        custormfiles:"",
+        xuntime:"",
+        timediff:"",
+        continent:"",
+        country:"",
+        messagetype:"",
         mode:"",
         url:"",
-        city:"",
-        xuntime:"",
-        effective:false,
-        keying:[],
-        useing:"",
-        custormremark:"",
-        custormcause:"",
-        invalidcause:"",
-        phoneid:"",
+        ip:"",
+        device:"",
         level_id:"",
-        price_id:"",
+        material:"",
+        production:"",
+        infeed:"",
+        outfeed:"",
+        xunremark:"",
+        custormremark:"",
+        effective:true,
+        invalidcause:"",
+        producttype_id:"",
+        phoneid:"",
+        keying:[],
       },
       defaultInfo:{},
     }
@@ -304,28 +589,6 @@ export default {
     $this.initData();
   },
   methods:{
-    uploadFile(param){
-      var $this = this;
-      console.log(param);
-      var formData = new FormData();
-      formData.append('file',param.file);
-      $this.$store.dispatch('api/fileUploadAction', formData).then(response=>{
-        console.log(response,"文件信息");
-        if(response){
-          if(response.status){
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-        }
-      });
-    },
-    handleRemove(){},
-    beforeRemove(){},
-    handleExceed(){},
     // 初始化数据
     initData(){
       var $this = this;
@@ -340,21 +603,40 @@ export default {
     initFormData(){
       var $this = this;
       var formData = {};
-      formData.province = $this.formData.province;
-      formData.city = $this.formData.city;
-      formData.effective = $this.formData.effective?1:2;
-      formData.useing = $this.formData.useing;
-      formData.custormremark = $this.formData.custormremark;
-      formData.custormcause = $this.formData.custormcause;
-      formData.invalidcause = $this.formData.invalidcause;
-      formData.xuntime = $this.formData.xuntime;
+      formData.custormname = $this.formData.custormname;
+      formData.custorm = $this.formData.custorm;
+      formData.custormphone = $this.formData.custormphone;
+      formData.salesuserid = $this.formData.salesuserid;
+      formData.ftword_id = $this.formData.ftword_id;
+      formData.custormneedinfo = $this.formData.custormneedinfo;
+      formData.otherremark = $this.formData.otherremark;
+      formData.givesaleswarn = $this.formData.givesaleswarn;
+      formData.custormfiles = $this.formData.custormfiles;
+      formData.continent = $this.formData.continent;
+      formData.country = $this.formData.country;
       formData.url = $this.formData.url;
-      formData.mode = $this.formData.mode;
-      formData.price_id = $this.formData.price_id;
-      formData.phoneid = $this.formData.phoneid;
+      formData.ip = $this.formData.ip;
+      formData.device = $this.formData.device;
       formData.level_id = $this.formData.level_id;
-      formData.keying = $this.formData.keying;
+      formData.material = $this.formData.material;
+      formData.production = $this.formData.production;
+      formData.infeed = $this.formData.infeed;
+      formData.outfeed = $this.formData.outfeed;
+      formData.xunremark = $this.formData.xunremark;
+      formData.custormremark = $this.formData.custormremark;
+      formData.invalidcause = $this.formData.invalidcause;
+      formData.saleswarnstatus = $this.formData.saleswarnstatus?2:3;
+      formData.effective = $this.formData.effective?1:2;
+      formData.xuntime = $this.formData.xuntime;
+      formData.timediff = $this.formData.timediff;
+      formData.messagetype = $this.formData.messagetype;
+      formData.mode = $this.formData.mode;
+      formData.phoneid = $this.formData.phoneid;
+      formData.producttype_id = $this.formData.phoneid;
       formData.id = $this.formData.id;
+      var keying=[];
+      keying=keying.concat($this.SandGravelArr,$this.OreDressArr,$this.FlourArr,$this.otherArr);
+      formData.keying = $this.formData.keying = keying;
       return formData;
     },
     // 询盘编辑获取初始化询盘信息
@@ -380,37 +662,78 @@ export default {
     setCluesInfo(){
       var $this = this;
       $this.formData.id = $this.defaultInfo.id;
-      $this.formData.province = $this.defaultInfo.province;
-      $this.formData.city = $this.defaultInfo.city;
-      $this.formData.effective = $this.defaultInfo.effective==1?true:false;
-      $this.formData.useing = $this.defaultInfo.useing;
-      $this.formData.custormremark = $this.defaultInfo.custormremark;
-      $this.formData.custormcause = $this.defaultInfo.custormcause;
-      $this.formData.invalidcause = $this.defaultInfo.invalidcause;
+      $this.formData.custormname = $this.defaultInfo.custormname;
+      $this.formData.custorm = $this.defaultInfo.custorm;
+      $this.formData.custormphone = $this.defaultInfo.custormphone;
+      $this.formData.salesuserid = $this.defaultInfo.salesuserid;
+      $this.formData.ftword_id = $this.defaultInfo.ftword_id;
+      $this.formData.custormneedinfo = $this.defaultInfo.custormneedinfo;
+      $this.formData.otherremark = $this.defaultInfo.otherremark;
+      $this.formData.givesaleswarn = $this.defaultInfo.givesaleswarn;
+      $this.formData.saleswarnstatus = $this.defaultInfo.saleswarnstatus==2?true:false;
+      $this.formData.custormfiles = $this.defaultInfo.custormfiles;
       $this.formData.xuntime = $this.defaultInfo.xuntime;
-      $this.formData.url = $this.defaultInfo.url;
+      $this.formData.timediff = $this.defaultInfo.timediff;
+      $this.formData.continent = $this.defaultInfo.continent;
+      $this.formData.country = $this.defaultInfo.country;
+      $this.formData.messagetype = $this.defaultInfo.messagetype;
       $this.formData.mode = $this.defaultInfo.mode;
-      $this.formData.price_id = $this.defaultInfo.price_id;
-      $this.formData.phoneid = $this.defaultInfo.phoneid;
+      $this.formData.url = $this.defaultInfo.url;
+      $this.formData.ip = $this.defaultInfo.ip;
+      $this.formData.device = $this.defaultInfo.device;
       $this.formData.level_id = $this.defaultInfo.level_id;
+      $this.formData.material = $this.defaultInfo.material;
+      $this.formData.production = $this.defaultInfo.production;
+      $this.formData.infeed = $this.defaultInfo.infeed;
+      $this.formData.outfeed = $this.defaultInfo.outfeed;
+      $this.formData.xunremark = $this.defaultInfo.xunremark;
+      $this.formData.custormremark = $this.defaultInfo.custormremark;
+      $this.formData.effective = $this.defaultInfo.effective==1?true:false;
+      $this.formData.invalidcause = $this.defaultInfo.invalidcause;
+      $this.formData.phoneid = $this.defaultInfo.phoneid;
+      $this.formData.producttype_id = $this.defaultInfo.producttype_id;
+      $this.producttypeArr=[$this.formData.producttype_id];
       $this.formData.keying = [];
-      if($this.defaultInfo.keying.indexOf(",")!=-1){
-        var keyArr = $this.defaultInfo.keying.split(",");
-        keyArr.forEach(function(item,index){
-          $this.formData.keying.push(parseInt(item));
-        });
+      var SandGravelArr=[],OreDressArr=[],FlourArr=[],otherArr=[],keyArr=[];
+      if($this.defaultInfo.keying){
+          if($this.defaultInfo.keying.indexOf(",")!=-1){
+              keyArr = $this.defaultInfo.keying.split(",");              
+          }else{
+              keyArr = [$this.defaultInfo.keying]
+          }
+          keyArr.forEach(function(item,index){
+            $this.formData.keying.push(parseInt(item));
+            $this.SandGravelList.forEach(function(item01,index01){
+              if(parseInt(item)==item01.value){
+                SandGravelArr.push(parseInt(item));
+              }
+            });
+            $this.OreDressList.forEach(function(item02,index02){
+              if(parseInt(item)==item02.value){
+                OreDressArr.push(parseInt(item));
+              }
+            });
+            $this.FlourList.forEach(function(item03,index03){
+              if(parseInt(item)==item03.value){
+                FlourArr.push(parseInt(item));
+              }
+            });
+            $this.otherList.forEach(function(item04,index04){
+              if(parseInt(item)==item04.value){
+                otherArr.push(parseInt(item));
+              }
+            });
+          });
+        $this.SandGravelArr=SandGravelArr
+        $this.OreDressArr=OreDressArr;
+        $this.FlourArr=FlourArr;
+        $this.otherArr=otherArr;
       }else{
-        $this.formData.keying.push(parseInt($this.defaultInfo.keying));
+        $this.SandGravelArr=[];
+        $this.OreDressArr=[];
+        $this.FlourArr=[];
+        $this.otherArr=[];
       }
-      var priceList = $this.priceList;
-      priceList.forEach(function(item,index){
-        if(item.id == $this.formData.price_id){
-          item.isOn = true;
-        }else{
-          item.isOn = false;
-        }
-      });
-      $this.priceList = priceList;
       var phoneList = $this.phoneList;
       phoneList.forEach(function(item,index){
         if(item.id == $this.formData.phoneid){
@@ -420,24 +743,6 @@ export default {
         }
       });
       $this.phoneList = phoneList;
-      var levelList = $this.levelList;
-      levelList.forEach(function(item,index){
-        if(item.id == $this.formData.level_id){
-          item.isOn = true;
-        }else{
-          item.isOn = false;
-        }
-      });
-      $this.levelList = levelList;
-      var productList = $this.productList;
-      productList.forEach(function(item,index){
-        if($this.formData.keying.includes(item.id)){
-          item.isOn = true;
-        }else{
-          item.isOn = false;
-        }
-      });
-      $this.productList = productList;
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
@@ -495,31 +800,78 @@ export default {
       $this.$store.dispatch('enphone/cluesAddEditDataAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"条件信息");
-            var sourceList = [];
+            console.log(response,"条件信息01");
+            var modeList = [];
             response.source.forEach(function(item,index){
               var itemData = {};
               itemData.label = item.name;
               itemData.value = item.id;
-              sourceList.push(itemData);
+              modeList.push(itemData);
             });
-            $this.sourceList = sourceList;
+            $this.modeList = modeList;
+            var level_idList = [];
+            response.level.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              level_idList.push(itemData);
+            });
+            $this.level_idList = level_idList;
             response.phonelist.forEach(function(item,index){
               item.isOn = false;
             });
-            response.level.forEach(function(item,index){
-              item.isOn = false;
-              item.name = item.levelname+"级别";
+            var producttypeList=[];
+            response.producttype.forEach(function(item,index){
+                var itemChildren = {};
+                itemChildren.label = item.name;
+                itemChildren.value = item.id;
+                producttypeList.push(itemChildren);
             });
-            var itemLevel={id:0,levelname:"未标记",name:"未标记",isOn:false}
-            response.level.push(itemLevel);
-            response.price.forEach(function(item,index){
-              item.isOn = false;
+            $this.producttypeList = producttypeList;
+            var SandGravelList=[];
+            response.product[0].product.forEach(function(item,index){
+                var itemChildren = {};
+                itemChildren.label = item.name;
+                itemChildren.value = item.id;
+                SandGravelList.push(itemChildren);
             });
-            response.product.forEach(function(item,index){
-              item.isOn = false;
+            $this.SandGravelList = SandGravelList;
+            var OreDressList=[];
+            response.product[1].product.forEach(function(item,index){
+                var itemChildren = {};
+                itemChildren.label = item.name;
+                itemChildren.value = item.id;
+                OreDressList.push(itemChildren);
             });
-            $this.productList = response.product;
+            $this.OreDressList = OreDressList;
+            var FlourList=[];
+            response.product[2].product.forEach(function(item,index){
+                var itemChildren = {};
+                itemChildren.label = item.name;
+                itemChildren.value = item.id;
+                FlourList.push(itemChildren);
+            });
+            $this.FlourList = FlourList;
+            if(response.userlist.length>0){
+              var salesuserlist=[];
+              response.userlist.forEach(function(item,index){
+                  var itemChildren = {};
+                  itemChildren.label = item.name;
+                  itemChildren.value = item.id;
+                  salesuserlist.push(itemChildren);
+              });
+              $this.salesuserlist = salesuserlist;
+            }else{
+              $this.salesuserlist=[{label:"",value:0}]
+            }
+            var otherList=[];
+            response.product[3].product.forEach(function(item,index){
+                var itemChildren = {};
+                itemChildren.label = item.name;
+                itemChildren.value = item.id;
+                otherList.push(itemChildren);
+            });
+            $this.otherList = otherList;
             $this.levelList = response.level;
             $this.priceList = response.price;
             $this.phoneList = response.phonelist;
@@ -575,38 +927,6 @@ export default {
         });
       }
     },
-    // 省份失焦验证事件
-    provinceChangeHandler(e){
-      var $this = this;
-      if($this.formData.province!=''){
-        $this.$store.dispatch("enphone/cluesRegionValidAction", {name:$this.formData.province}).then(response=>{
-            if(!response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'warning',
-                duration:0
-              });
-            }
-        });
-      }
-    },
-    // 城市失焦验证事件
-    cityChangeHandler(e){
-      var $this = this;
-      if($this.formData.city!=''){
-        $this.$store.dispatch("enphone/cluesRegionValidAction", {name:$this.formData.city}).then(response=>{
-            if(!response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'warning',
-                duration:0
-              });
-            }
-        });
-      }
-    },
     // 电话点击事件
     phoneClick(id){
       var $this = this;
@@ -625,71 +945,51 @@ export default {
       });
       $this.phoneList = phoneList;
     },
-    // 产品点击事件
-    productClick(id){
-      var $this = this;
-      var productList = $this.productList;
-      productList.forEach(function(item,index){
-        if(item.id == id){
-          if(item.isOn){
-            item.isOn = false;
+    // 点击上传压缩包
+    httpZipRequest:function(parm){
+      var $this=this;
+      var formData = new FormData();
+      formData.append('file',parm.file);
+      $this.$store.dispatch('api/fileUpingAction', formData).then(response=>{
+        console.log(response,"文件信息");
+        if(response){
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success',
+            }); 
           }else{
-            item.isOn = true;
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
           }
+        $this.formData.custormfiles=response.info;
         }
       });
-      var keyList = [];
-      productList.forEach(function(item,index){
-        if(item.isOn){
-          keyList.push(item.id);
-        }
-      });
-      $this.formData.keying = keyList;
-      $this.productList = productList;
     },
-    // 级别点击事件
-    levelClick(id){
-      var $this = this;
-      var levelList = $this.levelList;
-      levelList.forEach(function(item,index){
-        if(item.id == id){
-          if(item.isOn){
-            item.isOn = false;
-          }else{
-            item.isOn = true;
-            $this.formData.level_id = id;
-          }
-        }else{
-          item.isOn = false;
-        }
-      });
-      $this.levelList = levelList;
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
     },
-    // 价格点击事件
-    priceClick(id){
+    // 意向分类点击事件
+    producttypeClick(){
       var $this = this;
-      var priceList = $this.priceList;
-      priceList.forEach(function(item,index){
-        if(item.id == id){
-          if(item.isOn){
-            item.isOn = false;
-          }else{
-            item.isOn = true;
-            $this.formData.price_id = id;
-          }
-        }else{
-          item.isOn = false;
-        }
-      });
-      $this.priceList = priceList;
+      var producttypeArr = $this.producttypeArr;
+      if (producttypeArr.length > 1) {
+        producttypeArr.shift();
+      }
+      $this.producttypeArr = producttypeArr;
     },
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
+      var formData = $this.initFormData();
       if(!$this.validationForm()){
         return false;
       }
-      var formData = $this.initFormData();
+      console.log(formData,"formData 添加保存")
       var pathUrl = "";
       if($this.formData.id==0){
         pathUrl = "enphone/cluesAddAction";
@@ -721,40 +1021,49 @@ export default {
     clearFormData(){
       var $this = this;
       $this.formData.id = 0;
-      $this.formData.province="";
+      $this.formData.custormname="";
+      $this.formData.custorm="";
+      $this.formData.custormphone="";
+      $this.formData.salesuserid="";
+      $this.formData.ftword_id="";
+      $this.formData.custormneedinfo="";
+      $this.formData.otherremark="";
+      $this.formData.givesaleswarn="";
+      $this.formData.saleswarnstatus=false;
+      $this.formData.custormfiles="";
+      $this.formData.xuntime="";
+      $this.formData.timediff="";
+      $this.formData.continent="";
+      $this.formData.country="";
+      $this.formData.messagetype="";
       $this.formData.mode="";
       $this.formData.url="";
-      $this.formData.city="";
-      $this.formData.xuntime="";
-      $this.formData.effective=false;
-      $this.formData.keying=[];
-      $this.formData.useing="";
-      $this.formData.custormremark="";
-      $this.formData.custormcause="";
-      $this.formData.invalidcause="";
-      $this.formData.phoneid="";
+      $this.formData.ip="";
+      $this.formData.device="";
       $this.formData.level_id="";
-      $this.formData.price_id="";
-      var priceList = $this.priceList;
-      priceList.forEach(function(item,index){
-        item.isOn = false;
-      });
-      $this.priceList = priceList;
+      $this.formData.material="";
+      $this.formData.production="";
+      $this.formData.infeed="";
+      $this.formData.outfeed="";
+      $this.formData.xunremark="";
+      $this.formData.custormremark="";
+      $this.formData.effective=false;
+      $this.formData.invalidcause="";
+      $this.formData.phoneid = "";
+      $this.formData.producttype_id = "";
+      $this.formData.phoneid = "";
+      $this.formData.keying = [];
       var phoneList = $this.phoneList;
       phoneList.forEach(function(item,index){
         item.isOn = false;
       });
       $this.phoneList = phoneList;
-      var levelList = $this.levelList;
-      levelList.forEach(function(item,index){
-        item.isOn = false;
-      });
-      $this.levelList = levelList;
-      var productList = $this.productList;
-      productList.forEach(function(item,index){
-        item.isOn = false;
-      });
-      $this.productList = productList;
+      $this.SandGravelArr=[];
+      $this.OreDressArr=[];
+      $this.FlourArr=[];
+      $this.otherArr=[];
+      $this.producttypeArr=[];
+      
     },
     // 验证是否为空
     validationForm(){
@@ -783,7 +1092,15 @@ export default {
         });
         return false;
       }
-      if($this.formData.keying.length == 0){
+      if($this.formData.timediff == ""||!$this.formData.timediff){
+        $this.$message({
+            showClose: true,
+            message: '错误：客户当地时间不能为空！',
+            type: 'error'
+        });
+        return false;
+      }
+      if($this.formData.keying.length == 0 || $this.formData.producttype_id == ""||!$this.formData.producttype_id){
         $this.$message({
             showClose: true,
             message: '错误：意向设备不能为空！',
@@ -801,7 +1118,12 @@ export default {
       }else{
         $this.setCluesInfo();
       }
-    }
+    },
+    //设置富通天下ID只输入数字
+    confirmftword(e){
+      var $this=this;
+       $this.formData.ftword_id = e.target.value
+    },  
   }
 }
 </script>
