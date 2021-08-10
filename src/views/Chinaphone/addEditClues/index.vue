@@ -1,15 +1,9 @@
 ﻿<template>
   <div class="page-root" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
-        <div slot="header">
-          <div class="card-header" ref="headerPane">
-              <el-button type="primary" size="small" icon="el-icon-refresh-left" v-on:click="resetFormData()">重置</el-button>
-              <el-button type="primary" size="small" icon="el-icon-finished" v-if="menuButtonPermit.includes('Chinaphone_add')||menuButtonPermit.includes('Chinaphone_edit')" @click="saveData">保存</el-button>
-          </div>
-        </div>
         <div class="card-content" ref="tableContent">
           <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
-            <div class="item-form">
+            <div class="ChinaphoneOne">
               <div class="item-panel">
                 <dl>
                   <dt>来源电话：<span>*</span></dt>
@@ -185,6 +179,10 @@
                 </dl>
               </div>
             </div>
+          </div>        
+          <div class="card-header WebServerAddEditBtn ChinaphoneBtn" ref="headerPane">
+              <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Chinaphone_add')||menuButtonPermit.includes('Chinaphone_edit')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
+              <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
           </div>
         </div>
     </el-card>
@@ -768,77 +766,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.el-select{
-  display: block;
-}
-.item-form{
-  .item-panel{
-    position: relative;
-    margin-bottom: 20px;
-    dl{
-      float: left;
-      dt{
-        line-height: 24px;
-        font-size: 14px;
-        span{
-          color:red;
-        }
-      }
-      dd{
-        margin-top: 5px;
-        .clues-list{
-          margin: 0 -2px;
-          &.phone-list,&.price-list{
-            .item-clues{
-              width: 147px;
-            }
-          }
-          &.product-list{
-            .item-clues{
-              width: 160px;
-            }
-          }
-          &.level-list{
-            .item-clues{
-              width: 104px;
-            }
-          }
-          .item-clues{
-            display: block;
-            float:left;
-            margin: 2px;
-            border: 1px solid #e6e6e6;
-            height: 34px;
-            line-height: 32px;
-            font-size: 14px;
-            text-align: center;
-            cursor: pointer;
-            &:hover{
-              color: #19aa8d;
-              background: #e8f7f4;
-              border-color: #a3ddd1;
-            }
-          }
-          .item-clues.active{
-            color: #FFFFFF;
-            background-color: #19aa8d;
-            border-color: #19aa8d;
-            &:hover{
-              color: #FFFFFF;
-              background-color: #19aa8d;
-              border-color: #19aa8d;
-            }
-          }
-        }
-        p{
-          line-height: 32px;
-          font-size: 12px;
-        }
-      }
-    }
-    dl+dl{
-      margin-left: 15px;
-    }
-  }
+.WebServerAddEditBtn.ChinaphoneBtn{
+    padding-top: 15px;
+    padding-left: 15px;
 }
 </style>

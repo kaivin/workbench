@@ -134,7 +134,6 @@
           <div slot="header">
             <div class="card-header" ref="headerPane">
               <el-button type="primary" size="small" icon="el-icon-back" v-on:click="backHome()">返回</el-button>
-              <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
               <el-button type="primary" size="small" icon="el-icon-upload2" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true">导出数据</el-button>
               <el-button type="primary" size="small" icon="el-icon-edit" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_othereditall')" v-on:click="editPageNote()">修改当前页备注</el-button>
             </div>
@@ -228,6 +227,7 @@
               :data="tableData"
               tooltip-effect="dark"
               stripe
+              class="SiteTable"
               style="width: 100%"
               :height="tableHeight"
               row-key="id"
@@ -377,7 +377,7 @@
                 key="d"
                 prop="searchword"
                 label="提供者/设备"
-                min-width="90"
+                min-width="100"
                 >
                 <template slot-scope="scope">
                   <div class="table-input">
@@ -554,7 +554,7 @@ export default {
     const $this = this;
     $this.$nextTick(function () {
       if($this.$route.query.phoneID){
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-$this.$refs.infoPane.offsetHeight-30-30-25-20-3;
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-$this.$refs.infoPane.offsetHeight-30-20-25-20-5;
       }else{
         $this.drawChart();
       }
@@ -562,7 +562,7 @@ export default {
     if($this.$route.query.phoneID){
       window.onresize = () => {
           return (() => {
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-$this.$refs.infoPane.offsetHeight-30-30-25-20-3;
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-$this.$refs.infoPane.offsetHeight-30-20-25-20-5;
             // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
           })()
       }
@@ -603,15 +603,11 @@ export default {
     if($this.phoneID){
       $this.$nextTick(() => {
         $this.$refs.simpleTable.doLayout();
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-$this.$refs.infoPane.offsetHeight-30-30-25-20-3;
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-$this.$refs.infoPane.offsetHeight-30-20-25-20-5;
       })
     }
   },
   methods:{
-    // 刷新数据
-    refreshData(){
-      this.initPage();
-    },
     // 搜索结果
     searchResult(){
       var $this = this;
@@ -1353,11 +1349,11 @@ export default {
     float:left;
     }
 }
-.el-table{
-  svg,i[class~="el-cion"]{
-    font-size: 20px;
-  }
-}
+//.el-table{
+//  svg,i[class~="el-cion"]{
+//    font-size: 20px;
+//  }
+//}
 .phone-panel{
   width:210px;
   margin-right: 15px;
@@ -1501,17 +1497,6 @@ export default {
     }
   }
 }
-.clues-title{
-  width: 100%;
-  text-align: center;
-  border: 1px solid #dfe6ec;
-  border-bottom: none;
-  line-height: 48px;
-  height: 49px;
-  font-size: 20px;
-  font-weight: normal;
-  color: $--color-primary;
-}
 .product-span{
     i{
         font-style: normal;
@@ -1590,10 +1575,6 @@ export default {
     background: #7e84fd;
   }
 }
-.el-table{
-  font-size: 12px;
-}
-
 .export-dialog{
   .el-form-item{
     margin-right:0!important;

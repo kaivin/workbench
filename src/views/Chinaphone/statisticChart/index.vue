@@ -9,7 +9,7 @@
         </div>
         <div class="card-content" ref="tableContent">
           <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
-            <div class="group-panel">
+            <div class="group-panel buttonTwo">
               <div class="group-header"><span class="require">电话：</span><el-checkbox class="all-select" :indeterminate="isAllPhone" border size="mini" v-model="checkAllPhone" @change="handleCheckAllPhoneChange">全选</el-checkbox>
               </div>
               <div class="group-body">
@@ -52,7 +52,7 @@
                 </div>
               </div>
             </div>
-            <div class="group-panel">
+            <div class="group-panel buttonTwo">
               <div class="group-body">
                 <div class="team-panel">
                   <div class="team-header">
@@ -124,7 +124,7 @@
                 </div>
               </div>
             </div>
-            <div class="group-panel">
+            <div class="group-panel buttonTwo">
               <div class="group-header"><span>产品：</span><el-checkbox class="all-select" :indeterminate="isAllProduct" border size="mini" v-model="checkAllProduct" @change="handleCheckAllProductChange">全选</el-checkbox>
               </div>
               <div class="group-body">
@@ -2287,18 +2287,15 @@ export default {
 <style lang="scss" scoped>
 .group-panel{
   width: 100%;
-  border: 1px solid #a3ddd1;
   margin-bottom: 15px;
   .group-header{
-    padding: 5px 10px;
-    border-bottom: 1px solid #a3ddd1;
     line-height: 0;
     font-size:0;
     span{
       font-size: 14px;
       line-height: 24px;
       margin-right: 10px;
-      vertical-align: middle;
+      vertical-align:top;
       display: inline-block;
       width: 72px;
       text-align: right;
@@ -2308,12 +2305,11 @@ export default {
     }
     .all-select{
       vertical-align: middle;
-      margin: 5px;
+      line-height: 15px;
     }
   }
   .group-body{
     width: 100%;
-    padding: 5px 10px 10px;
     .team-panel{
       margin-top: 5px;
       .team-header{
@@ -2323,7 +2319,7 @@ export default {
           font-size: 14px;
           line-height: 24px;
           margin-right: 10px;
-          vertical-align: middle;
+          vertical-align:top;
           display: inline-block;
           width: 72px;
           text-align: right;
@@ -2333,11 +2329,17 @@ export default {
         }
         .all-select{
           vertical-align: middle;
-          margin: 5px!important;
+          line-height: 15px;
         }
       }
       .team-body{
         padding: 5px;
+      }
+      .team-list{
+        .item-checkbox{
+            vertical-align: middle;
+            line-height: 15px;
+        }
       }
     }
   }
@@ -2345,9 +2347,6 @@ export default {
 .team-list{
   display: inline-block;
   vertical-align: middle;
-  .item-checkbox{
-    margin: 5px!important;
-  }
 }
 .cavans-wrapper{
   width: 100%;

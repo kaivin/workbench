@@ -1,16 +1,10 @@
 ﻿<template>
   <div class="page-root" ref="boxPane">
-    <el-card class="box-card scroll-card" shadow="hover">
+    <el-card class="box-card scroll-card WebsiteList-card" shadow="hover">
       <div slot="header">
         <div class="card-header" ref="headerPane">
-          <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
-          <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="resetData()">重置</el-button>
           <el-button type="primary" size="small" icon="el-icon-document-add" v-on:click="addTableRow()" v-if="menuButtonPermit.includes('Website_add')&&device==='desktop'">添加网站</el-button>
           <el-button type="primary" size="small" icon="el-icon-search" v-on:click="searchDialog()" v-if="device!=='desktop'">高级筛选</el-button>
-        </div>
-      </div>
-      <div class="card-content" ref="cardContent">
-        <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
           <div class="border-wrap post-class" v-if="device==='desktop'">
             <div class="border-row flex-wrap">
                 <div class="border-cell txt-font"><span>行业：</span></div>
@@ -21,11 +15,21 @@
                         </template>
                     </div>
                 </div>
+                <span class="borderver"></span>
                 <div class="border-cell txt-font"><span>语言：</span></div>
                 <div class="border-cell flex-content">
                     <div class="tag-panel">
                         <template v-for="item in languageList">
                             <el-button type="primary" v-bind:key="item.id" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickLanguage(item.id)">{{item.languagename}}</el-button>
+                        </template>
+                    </div>
+                </div>
+                <span class="borderver"></span>
+                <div class="border-cell txt-font"><span>排序：</span></div>
+                <div class="border-cell flex-content">
+                    <div class="tag-panel">
+                        <template v-for="(item,index) in sort">
+                            <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickSort(item.key)">{{item.name}}</el-button>
                         </template>
                     </div>
                 </div>
@@ -49,14 +53,6 @@
                         </template>
                     </div>
                 </div>
-                <div class="border-cell txt-font"><span>排序：</span></div>
-                <div class="border-cell" style="width:300px;">
-                    <div class="tag-panel">
-                        <template v-for="(item,index) in sort">
-                            <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickSort(item.key)">{{item.name}}</el-button>
-                        </template>
-                    </div>
-                </div>
             </div>
             <div class="border-row flex-wrap">
                 <div class="border-cell txt-font"><span>标签：</span></div>
@@ -77,21 +73,19 @@
                         </template>
                     </div>
                 </div>
+                <span class="borderver"></span>
                 <div class="border-cell txt-font"><span>其他：</span></div>
-                <div class="border-cell" style="width:300px;">
+                <div class="border-cell flex-content">
                     <div class="tag-panel">
                         <el-button type="primary" v-bind:class="formData.headeruser?'':'is-plain'" size="small" v-on:click="clickManage">个人负责网站</el-button>
                         <el-button type="primary" v-bind:class="formData.personuser?'':'is-plain'" size="small" v-on:click="clickDevelop">个人开发网站</el-button>
                     </div>
                 </div>
-            </div>
-            <div class="border-row flex-wrap">
-                <div class="border-cell txt-font"><span>IP/域名搜索：</span></div>
                 <div class="border-cell flex-content">
-                    <div class="tag-panel">
+                    <div class="tag-panel WebsiteListSearch">
                         <el-input
-                          style="width: 280px;margin: 5px!important;"
-                          placeholder="输入ip或域名"
+                          style="width:100%;margin:0px!important;"
+                          placeholder="IP/域名搜索："
                           v-model="formData.ip"
                           size="small"
                           clearable>
@@ -111,7 +105,10 @@
             </el-input>
             <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">搜索</el-button>
           </div>
-          <el-divider><i class="el-icon-goblet-square-full"></i></el-divider>
+        </div>
+      </div>
+      <div class="card-content WebsiteList-Wrap" ref="cardContent">
+        <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
           <div class="card-wrap">
             <div v-if="totalDataNum>50" class="pagination-panel top-page" ref="pagePane">
               <el-pagination
@@ -129,6 +126,7 @@
               ref="simpleTable"
               :data="tableData"
               stripe
+              class="SiteTable"
               style="width: 100%"
               >
               <el-table-column
@@ -155,8 +153,8 @@
                 >
                 <template #default="scope">
                   <div class="table-icon center">
-                    <i class="svg-i online" v-if="scope.row.is_online" title="在线"><svg-icon icon-class="online" class-name="disabled" /></i>
-                    <i class="svg-i offline" v-else title="离线"><svg-icon icon-class="offline" class-name="disabled" /></i>
+                    <i class="svg-i online" v-if="scope.row.is_online" title="在线"></i>
+                    <i class="svg-i offline" v-else title="离线"></i>
                   </div>
                 </template>
               </el-table-column>
@@ -167,12 +165,12 @@
                 >
                 <template #default="scope">
                   <template v-if="scope.row.is_online">
-                    <div class="table-icon center" v-if="scope.row.speedcheckstatus==1">
-                      <i class="svg-i online" v-if="scope.row.openstatus==0" title="正常"><svg-icon icon-class="runnormal" class-name="disabled" /></i>
-                      <i class="svg-i timeout" v-else-if="scope.row.openstatus==1" title="超时"><svg-icon icon-class="timeout" class-name="disabled" /></i>
-                      <i class="svg-i abnormal" v-else title="异常"><svg-icon icon-class="abnormal" class-name="disabled" /></i>
+                    <div class="table-tag" v-if="scope.row.speedcheckstatus==1">
+                       <el-tag class="NotTag normal" type="info" v-if="scope.row.openstatus==0" title="正常">正常</el-tag>
+                       <el-tag class="NotTag timeout" type="info" v-else-if="scope.row.openstatus==1" title="超时">超时网站</el-tag>
+                       <el-tag class="NotTag abnormal" type="info" v-else title="异常">异常</el-tag>
                     </div>
-                    <div class="table-tag" v-else><el-tag type="info">未检测</el-tag></div>
+                    <div class="table-tag" v-else><el-tag class="NotTag NotDetect" type="info">未检测</el-tag></div>
                   </template>
                 </template>
               </el-table-column>
@@ -225,12 +223,12 @@
                 >
                 <template #default="scope">
                   <div class="table-icon">
-                    <i class="svg-i" title="http" v-if="!scope.row.isHttps"><svg-icon icon-class="http" class-name="disabled" /></i>
+                    <i class="svg-i" title="http" v-if="!scope.row.isHttps"><svg-icon icon-class="websiteClock" class-name="disabled" /></i>
                     <template v-for="(item,index) in scope.row.hostList">
-                      <i class="svg-i" title="https" v-bind:key="index" v-if="item=='https'"><svg-icon icon-class="https" class-name="disabled" /></i>
-                      <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='www'"><svg-icon icon-class="pc" class-name="disabled" /></i>
-                      <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='m'"><svg-icon icon-class="mobile" class-name="disabled" /></i>
-                      <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else><svg-icon icon-class="internet" class-name="disabled" /></i>
+                      <i class="svg-i" title="https" v-bind:key="index" v-if="item=='https'"><svg-icon icon-class="websiteClock" class-name="disabled" /></i>
+                      <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='www'"><svg-icon icon-class="websitePc" class-name="disabled" /></i>
+                      <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='m'"><svg-icon icon-class="websiteMobile" class-name="disabled" /></i>
+                      <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else><svg-icon icon-class="websiteMap" class-name="disabled" /></i>
                     </template>
                   </div>
                 </template>
@@ -630,17 +628,6 @@ export default {
       $this.limit = 100;
       $this.page = 1;
       $this.linkTo();
-    },
-    // 重置查询结果
-    resetData(){
-      var $this = this;
-      $this.resetSearchData();
-      $this.linkTo();
-    },
-    // 刷新当前页面
-    refreshData(){
-      var $this = this;
-      $this.getLinkParam();
     },
     // 初始化页面数据
     initData(){
@@ -1209,23 +1196,6 @@ export default {
     editTableRow(row,index){
       var $this = this;
       $this.$router.push({name:'websiteEdit',query:{websiteID:row.id,website:row.domain}});
-    },
-    // 重置搜索条件
-    resetSearchData(){
-      var $this = this;
-      $this.formData.ip="";
-      $this.formData.brand=null;
-      $this.formData.language=null;
-      $this.formData.departid=null;
-      $this.formData.domainattr=null;
-      $this.formData.domainheader=null;
-      $this.formData.headeruser=null;
-      $this.formData.personuser=null;
-      $this.formData.order= null;
-      $this.formData.is_online=null;
-      $this.formData.openstatus=null;
-      $this.limit = 100;
-      $this.page = 1;
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {

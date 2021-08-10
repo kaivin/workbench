@@ -1,0 +1,275 @@
+﻿.WebServerTop{
+    .el-button.search{
+        padding:7px 10px 7px 10px!important;
+        width:84px;
+    }
+}
+.WebServerBom{
+    .el-table--group{border:0px!important;}
+    .el-table--scrollable-y{
+        .el-table__body-wrapper{
+            overflow-y:scroll;
+            &::-webkit-scrollbar {width:5px;height:1px;}
+            &::-webkit-scrollbar-thumb {box-shadow:inset 0 0 1px #f3f3f3;background:#9b9b9b;}
+            &::-webkit-scrollbar-track {background:#fff;}
+        }
+    }
+}
+.WebServerAddEditPost{
+    clear:both;
+    display:block;
+    width:100%;
+    li{
+        clear:both;
+        display:block;
+        .AddEditPostItem{
+            float:left;
+            width:30%;
+            margin-right:2%;
+            position:relative;
+            padding-top:10px;
+            padding-bottom:10px;
+            &.AddEditPostItemIp{
+                padding-right:30px;
+            }
+            &.AddEditPostItemIpTxt{
+                width:60%;
+                margin-right:2%;
+            }
+            &.AddEditPostItemAllip{
+                width:100%;padding-right:30px;
+            }
+            &.EditPostTextareaNote{
+                width:100%;padding-right:30px;
+            }
+            label{
+                float:left;
+                font-size:15px;
+                line-height:32px;
+                color:#1a1a1a;
+                width:80px;
+                text-align:right;
+            }
+            .EditPostInput,.EditPostSelect{
+                .el-input__inner{
+                    background:#f9fbfc;
+                    border:1px solid #e9ecf0;
+                    border-radius:2px;
+                    text-align:left;
+                    color:#cccccc;
+                    width:100%;
+                    height:32px;
+                    line-height:30px;
+                    box-sizing:border-box;
+                    padding-left:15px;
+                    padding-right:15px;
+                    font-size:14px;
+                }
+            }
+            .EditPostTextareaIp{
+                width:100%;
+                .el-textarea__inner{
+                    background:#f9fbfc;
+                    border:1px solid #e9ecf0;
+                    border-radius:2px;
+                    text-align:left;
+                    color:#cccccc;
+                    width:100%;
+                    line-height:30px;
+                    box-sizing:border-box;
+                    padding-left:15px;
+                    padding-right:15px;
+                    font-size:14px;
+                }
+            }
+            .EditPostTextarea{
+                width:100%;
+                .el-textarea__inner{
+                    background:#f9fbfc;
+                    border:1px solid #e9ecf0;
+                    border-radius:2px;
+                    text-align:left;
+                    color:#cccccc;
+                    width:100%;
+                    line-height:30px;
+                    box-sizing:border-box;
+                    padding-left:15px;
+                    padding-right:15px;
+                    font-size:14px;
+                }
+            }
+            }
+            .EditPostTag{
+                display:block;
+                width:30px;
+                height:32px;
+                text-align:center;
+                line-height:32px;
+                font-size:14px;
+                cursor:pointer;
+                color:#bbb;
+                float:left;
+                .el-popover{
+                    padding:10px 20px;
+                    line-height:1.4;
+                }
+                span{
+                    text-align:center;
+                    line-height:32px;
+                    font-size:14px;
+                    cursor:pointer;
+                    color:#bbb;
+                }
+            }
+        } 
+        .item-column{
+          float:left;
+          &.flex{
+            flex:1;
+          }
+          display:flex;
+          padding:5px 0;
+          ::v-deep .el-select{
+            display:block;
+          }
+          .item-tag{
+            margin:5px;
+            &:focus{
+              background:#47bba4;
+              border-color:#47bba4;
+              color:#FFFFFF;
+            }
+            &.is-plain:focus{
+              color:#19aa8d;
+              background:#e8f7f4;
+              border-color:#a3ddd1;
+            }
+          }
+          .font{
+            display:block;
+            padding:0 5px;
+            margin:0 5px;
+            height:32px;
+            font-size:14px;
+            line-height:32px;
+            color:#333;
+          }
+          .text{
+            display:block;
+            padding:0 5px;
+            margin:0 5px;
+            height:32px;
+            font-size:12px;
+            line-height:32px;
+            color:#19aa8d;
+          }
+          .link{
+            display:block;
+            padding:0 5px;
+            margin:0 5px;
+            height:32px;
+            font-size:14px;
+            line-height:32px;
+            color:#19aa8d;
+          }
+          .icon-title{
+            margin:0 5px;
+            font-size:14px;
+            color:#19aa8d;
+            cursor:pointer;
+            .svg-i{
+              color:#19aa8d;
+            }
+          }
+          &>strong{
+            display:block;
+            width:100px;
+            text-align:right;
+            height:32px;
+            line-height:32px;
+            font-weight:normal;
+            padding:0 10px 0 0;
+          }
+          &>span{
+            display:block;
+            width:30px;
+            height:32px;
+            text-align:center;
+            line-height:32px;
+            font-size:14px;
+            cursor:pointer;
+            color:#bbb;
+          }
+          .item-wrap{
+            flex:1;
+          }
+        }           
+}
+.WebServerAddEditBtn{
+    padding:20px 15px 0px 95px;
+    .el-button.updateBtn{
+        background-color: #1890ff!important;
+        border-color: #1890ff!important;
+        font-size: 16px!important;
+        width: 96px;
+        box-sizing: border-box!important;
+        height: 35px;
+        line-height: 33px!important;
+        padding: 0px 10px!important;
+        .planeWhite{
+            display: inline-block;
+            width: 16px;
+            height:16px;
+            margin-right: 10px;
+            .svg-icon{
+              width:100%!important;
+              height:100%!important;
+            }
+        }
+        &:hover{
+            background-color: #19aa8d!important;
+            border-color: #19aa8d!important;
+        }
+    }
+    .el-button.resetBtn{
+        background-color: #f5f7fa !important;
+        border-color: #e4e8ee !important;
+        font-size: 16px !important;
+        color: #808080 !important;
+        width: 83px;
+        box-sizing: border-box !important;
+        height: 35px !important;
+        line-height: 33px !important;
+        padding: 0px 10px;
+        &:hover{
+            background-color: #19aa8d!important;
+            border-color: #19aa8d!important;
+            color: #ffffff !important;
+        }
+    }
+}
+@media (max-width:1024px){}
+@media (max-width:992px){
+    .WebServerAddEditPost{
+        li{
+            .AddEditPostItem{
+                float:none;
+                clear:both;
+                width:100%;
+                margin-right:0%;
+                &.AddEditPostItemIpTxt{width:100%;margin-right:2%;}
+                &.EditPostTextareaNote{padding-right:0px;}
+                label{
+                    font-size:14px;
+                    width:65px;
+                }
+            }   
+            .item-column{
+                padding-left:65px;
+            }        
+        }
+    }
+    .WebServerAddEditBtn{
+        padding-left:80px;
+    }
+}

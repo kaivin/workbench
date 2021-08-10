@@ -1,0 +1,71 @@
+﻿
+.ChinaphoneOne{
+    .item-panel{
+      position: relative;
+      margin-bottom: 20px;
+      dl{
+        float: left;
+        dt{
+          line-height: 24px;
+          font-size: 14px;
+          span{
+            color:red;
+          }
+        }
+        dd{
+          margin-top: 5px;
+          .clues-list{
+            margin: 0 -2px;
+            &.phone-list,&.price-list{
+              .item-clues{
+                width: 147px;
+              }
+            }
+            &.product-list{
+              .item-clues{
+                width: 160px;
+              }
+            }
+            &.level-list{
+              .item-clues{
+                width: 104px;
+              }
+            }
+            .item-clues{
+              display: block;
+              float:left;
+              margin: 2px;
+              border: 1px solid #e6e6e6;
+              height: 34px;
+              line-height: 32px;
+              font-size: 14px;
+              text-align: center;
+              cursor: pointer;
+              &:hover{
+              color: #2e84f6;
+              background-color: #e7f2ff;
+              border-color: #2e84f6;
+              }
+            }
+            .item-clues.active{
+                color: #FFFFFF;
+                background-color: #2e84f6;
+                border-color: #2e84f6;
+              &:hover{
+                color: #2e84f6;
+                background-color: #e7f2ff;
+                border-color: #2e84f6;
+              }
+            }
+          }
+          p{
+            line-height: 32px;
+            font-size: 12px;
+          }
+        }
+      }
+      dl+dl{
+        margin-left: 15px;
+      }
+    }
+  }

@@ -2,18 +2,15 @@
   <div class="page-root" ref="boxPane">
     <el-card class="box-card" shadow="hover">
       <div slot="header">
-        <div class="card-header" ref="headerPane">
+        <div class="card-header WebServerTop" ref="headerPane">
           <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
           <el-button type="primary" size="small" icon="el-icon-document-add" v-on:click="addTableRow()" v-if="menuButtonPermit.includes('Webserver_add')&&device==='desktop'">添加服务器</el-button>
           <el-button type="primary" size="small" icon="el-icon-search" v-on:click="searchDialog()" v-if="device!='desktop'">高级查询</el-button>
-        </div>
-      </div>
-      <div class="card-content" ref="cardContent">
         <div class="border-wrap post-class" ref="searchPane" v-if="canSearch&&device==='desktop'">
           <div class="border-row flex-wrap">
               <div class="border-cell txt-font"><span>语言：</span></div>
               <div class="border-cell flex-content">
-                  <div class="tag-panel" style="padding:5px;">
+                  <div class="tag-panel">
                       <el-select v-model="formData.language" size="small" clearable placeholder="请选择">
                         <el-option
                           v-for="item in languageList"
@@ -26,7 +23,7 @@
               </div>
               <div class="border-cell txt-font"><span>用途：</span></div>
               <div class="border-cell flex-content">
-                  <div class="tag-panel" style="padding:5px;">
+                  <div class="tag-panel">
                       <el-select v-model="formData.useringid" size="small" clearable placeholder="请选择">
                         <el-option
                           v-for="item in useingList"
@@ -39,7 +36,7 @@
               </div>
               <div class="border-cell txt-font"><span>系统：</span></div>
               <div class="border-cell flex-content">
-                  <div class="tag-panel" style="padding:5px;">
+                  <div class="tag-panel">
                       <el-select v-model="formData.systemid" size="small" clearable placeholder="请选择">
                         <el-option
                           v-for="item in serverList"
@@ -56,25 +53,27 @@
               <div class="border-cell flex-content">
                   <div class="tag-panel">
                       <el-input
-                        style="width: 200px;margin: 5px;"
+                        style="width: 267px;margin-right:10px;"
                         placeholder="输入别名"
                         v-model="formData.name"
                         size="small"
                         clearable>
                       </el-input>
                       <el-input
-                        style="width: 200px;margin: 5px;"
+                        style="width: 267px;margin-right: 5px;"
                         placeholder="输入ip"
                         v-model="formData.ip"
                         size="small"
                         clearable>
                       </el-input>
-                      <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">搜索</el-button>
+                      <el-button class="item-input table-icon search" size="small" type="primary" @click="searchResult"><i class="svg-i searchWhite" ><svg-icon icon-class="searchWhite" class-name="disabled" /></i>搜索</el-button>
                   </div>
               </div>
           </div>
         </div>
-        <el-divider v-if="canSearch&&device==='desktop'"><i class="el-icon-goblet-square-full"></i></el-divider>
+        </div>
+      </div>
+      <div class="card-content WebServerBom" ref="cardContent">
         <div class="card-wrap">
           <div v-if="totalDataNum>50" class="pagination-panel top-page" ref="pagePane">
             <el-pagination
@@ -93,22 +92,26 @@
             :data="tableData"
             :height="tableHeight"
             stripe
+            class="SiteTable"
             style="width: 100%"
             >
             <el-table-column
               type="index"
               label="序号"
+              align="center"
               width="50">
             </el-table-column>
             <el-table-column
               prop="id"
               label="ID"
+              align="center"
               width="60"
               >
             </el-table-column>
             <el-table-column
               prop="name"
               label="别名"
+              align="left"
               min-width="120"
               >
             </el-table-column>
@@ -116,18 +119,21 @@
               prop="useringname"
               label="用途"
               width="80"
+              align="center"
               >
             </el-table-column>
             <el-table-column
               prop="systemname"
               label="系统"
               width="80"
+              align="left"
               >
             </el-table-column>
             <el-table-column
               prop="ip"
               label="IP"
               width="160"
+              align="left"
               >
               <template #default="scope">
                 <div class="table-link"><span class="link" @click="jumpWebsiteList(scope.row,scope.$index)">{{scope.row.ip}}</span></div>
@@ -137,12 +143,14 @@
               prop="allip"
               label="全部IP"
               min-width="240"
+              align="left"
               >
             </el-table-column>
             <el-table-column
               prop="adminuser"
               label="负责人"
               width="120"
+              align="left"
               >
             </el-table-column>
             <el-table-column
@@ -268,9 +276,11 @@ export default {
       this.$nextTick(function () {
         if($this.device=="desktop"){
           if($this.totalDataNum>50){
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight*2-49-30-30-25;
+            //$this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight*2-49-30-30-25;
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight*2-49-30-30-25;
           }else{
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-49-30-30-25;
+            //$this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-49-30-30-25;
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-49-30-30-25;
           }
           //49: 分割线高度；30：el-card__body上下内边距； 30：page-root上下内边距；20：按钮父级上下内边距；
         }else{
@@ -285,9 +295,11 @@ export default {
           return (() => {
             if($this.device=="desktop"){
               if($this.totalDataNum>50){
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight*2-49-30-30-25;
+                //$this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight*2-49-30-30-25;
+                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight*2-49-30-30-25;
               }else{
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-49-30-30-25;
+                //$this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-49-30-30-25;
+                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-49-30-30-25;
               }
             }else{
               if($this.totalDataNum>50){

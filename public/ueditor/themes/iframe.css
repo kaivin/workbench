@@ -14,7 +14,7 @@ button,input,select,textarea{font:12px/20px Arial;outline:0;resize:none;border:n
 	height: 100%;
 }
 body.view{
-	padding: 15px;
+	padding:0px 15px;
 	background-color: #f2f2f2;
 	font-family: "微软雅黑";
 	font-size: 16px;
@@ -23,7 +23,7 @@ body.view{
 	border: 1px solid transparent;
 }
 body.view> p,body.view> div{
-	margin: 15px 0;
+	margin:15px 0;
 }
 body.view img,body.view video,body.view table{
 	max-width: 100%;

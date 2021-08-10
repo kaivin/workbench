@@ -9,6 +9,7 @@
           border
           ref="simpleTable"
           :data="tableData"
+          class="SiteTable"
           style="width: 100%"
           :default-expand-all="true"
           :indent="0"
@@ -177,18 +178,6 @@ export default {
     margin:0;
     font-size: 18px;
     padding: 0 5px;
-  }
-}
-.el-table{
-  ::v-deep .el-table__placeholder{
-    display: none!important;
-  }
-  ::v-deep .el-table__expand-icon{
-    display: none!important;
-  }
-  .article-title{
-    cursor: pointer;
-    padding-left:10px;
   }
 }
 

@@ -1,96 +1,45 @@
 ﻿<template>
   <div class="page-root" v-bind:class="isPreview?'scroll-panel':''" ref="boxPane">
     <el-card v-show="!isPreview" class="box-card scroll-card" shadow="hover">
-        <div slot="header">
-          <div class="card-header" ref="headerPane">
-            <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="resetFormData()">重置</el-button>
-            <el-button type="primary" size="small" icon="el-icon-s-promotion" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_add')">发布</el-button>
-            <el-button type="primary" size="small" icon="el-icon-document" v-on:click="perviewPage()" v-if="menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_add')">预览</el-button>
-          </div>
-        </div>
         <div class="card-content" ref="cardContent">
           <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
-            <table class="table-post">
+            <table class="ArticleFour">
               <tr>
                 <td class="type-title"><span>论坛栏目：</span></td>
                 <td>
-                  <div class="item-form">
-                    <div class="tag-panel">
-                        <el-button type="primary" plain v-bind:class="item.plain?'is-active':''" size="small" v-for="item in postType" v-bind:key="item.id" v-on:click="clickPostType(item.id)">{{item.typename}}</el-button>
-                    </div>
-                    <el-popover
-                      placement="left"
-                      width="200"
-                      trigger="hover"
-                      content="文章所属论坛栏目，不可为空">
-                      <i slot="reference" class="el-icon-s-opportunity"></i>
-                    </el-popover>
+                  <div class="item-form buttonOne">
+                       <el-button type="primary" plain v-bind:class="item.plain?'is-active':''" size="small" v-for="item in postType" v-bind:key="item.id" v-on:click="clickPostType(item.id)">{{item.typename}}</el-button>
                   </div>
                 </td>
               </tr>
               <tr>
                 <td class="type-title"><span>系统标签：</span></td>
                 <td>
-                  <div class="item-form">
+                  <div class="item-form buttonTwo">
                     <el-checkbox-group class="checkbox-panel" v-model="formData.systemTag" size="small">
                       <el-checkbox :label="item.id" v-for="item in postSystemTag" v-bind:key="item.id" border>{{item.name}}</el-checkbox>
                     </el-checkbox-group>
-                    <el-popover
-                      placement="left"
-                      width="200"
-                      trigger="hover"
-                      content="文章可以拥有的标签属性，可为空">
-                      <i slot="reference" class="el-icon-s-opportunity"></i>
-                    </el-popover>
                   </div>
                 </td>
               </tr>
               <tr v-if="permitField.includes('mytags')">
                 <td class="type-title"><span>自定义标签：</span></td>
                 <td>
-                  <div class="item-form-group">
-                    <div class="item-form" style="width:200px;float:left;">
-                      <div class="item-form-panel">
+                    <div class="item-form" style="width:252px;">
                         <el-input
                           placeholder="请输入标签内容"
                           v-model="formData.tag"
                           size="small"
                           clearable>
                         </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="文章可以拥有的自定义标签，可为空">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
                     </div>
-                    <div class="item-form inline-item" style="width:192px;float:left;">
-                      <strong>标签背景色：</strong>
-                      <div class="item-form-panel">
-                        <el-color-picker
-                          v-model="formData.tagBgColor"
-                          :predefine="predefineColors" size="small">
-                        </el-color-picker>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="自定义标签背景色">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                  </div>
                 </td>
               </tr>
               <tr>
                 <td class="type-title"><span>标题：</span></td>
                 <td>
-                  <div class="item-form-group flex-box">
+                  <div class="item-form-group ArticleFourTit flex-box">
                     <div class="item-form flex-content">
-                      <div class="item-form-panel">
                         <el-input
                           placeholder="请输入文章标题"
                           v-model="formData.title"
@@ -98,30 +47,12 @@
                           ref="title"
                           clearable>
                         </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="文章标题，不可为空">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
                     </div>
-                    <div class="item-form inline-item title-color" style="width:180px;">
+                    <div class="item-form inline-item title-color">
                       <strong>标题颜色：</strong>
                       <div class="item-form-panel">
-                        <el-color-picker
-                          v-model="formData.titleColor"
-                          :predefine="predefineColors" size="small">
-                        </el-color-picker>
+                           <span v-for="item in predefineColors" v-bind:style="{background:item}" v-on:click="clickTitColor(item)" v-bind:class="item==isTitColor?'TitColor':''"></span>
                       </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="文章标题颜色，可为空">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
                     </div>
                   </div>
                 </td>
@@ -140,13 +71,6 @@
                           v-model="formData.markdownContent" @change="changeMarkdownHandler" height="600px" mode="editable"></v-md-editor>
                       </el-tab-pane>
                     </el-tabs>
-                    <el-popover
-                      placement="left"
-                      width="400"
-                      trigger="hover"
-                      content="文章主要内容，可选择使用富文本编辑器或者使用markdown编辑器，编辑器切换将清空当前编辑器已编辑内容，不可为空">
-                      <i slot="reference" class="el-icon-s-opportunity"></i>
-                    </el-popover>
                   </div>
                 </td>
               </tr>
@@ -164,92 +88,44 @@
                         clearable>
                       </el-input>
                     </div>
-                    <el-popover
-                      placement="left"
-                      width="200"
-                      trigger="hover"
-                      content="文章备注，可为空">
-                      <i slot="reference" class="el-icon-s-opportunity"></i>
-                    </el-popover>
                   </div>
                 </td>
               </tr>
               <tr>
                 <td colspan="2">
-                  <div class="item-form-group">
-                    <div class="item-form inline-item other-td" style="width:270px;float:left;">
+                  <div class="item-form-group ArticleFourTag">
+                    <div class="item-form buttonTwo inline-item other-td">
                       <strong>评论：</strong>
                       <div class="item-form-panel">
                         <el-checkbox v-model="formData.isCommentClose" label="关闭评论" border size="small"></el-checkbox>
                       </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="是否关闭评论，默认都可参与评论">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
                     </div>
-                    <div class="item-form inline-item other-td" style="width:270px;float:left;">
+                    <div class="item-form buttonTwo inline-item other-td">
                       <strong>共享修改：</strong>
                       <div class="item-form-panel">
                         <el-checkbox v-model="formData.isEditShareOpen" label="共享修改" border size="small"></el-checkbox>
                       </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="文章是否可以被他人修改，默认只有文章发布者及上级部门可修改">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
                     </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  <div class="item-form-group">
-                    <div class="item-form inline-item other-td" style="width:270px;float:left;">
+                    <div class="item-form buttonTwo inline-item other-td">
                       <strong>匿名发布：</strong>
                       <div class="item-form-panel">
                         <el-checkbox v-model="formData.isAnonymous" label="匿名发布" border size="small"></el-checkbox>
                       </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="是否匿名发布该文章，默认不匿名">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
                     </div>
-                    <div class="item-form inline-item other-td" style="width:270px;float:left;">
+                    <div class="item-form buttonTwo inline-item other-td">
                       <strong>置顶：</strong>
                       <div class="item-form-panel">
                         <el-checkbox v-model="formData.isTop" label="置顶" border size="small"></el-checkbox>
                       </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="文章是否置顶显示，置顶文章也可排序，根据排序数值大小进行排序，默认不置顶">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
                     </div>
-                    <div class="item-form inline-item other-td" style="width:270px;float:left;">
+                    <div class="item-form inline-item other-td">
                       <strong>排序：</strong>
-                      <div class="item-form-panel">
+                      <div class="item-form-panel" style="width:80px">
                         <el-input
                           v-model="formData.sort"
                           size="small" clearable>
                         </el-input>
                       </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="数值越小，排位越靠前，数值可为负，可为空">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
                     </div>
                   </div>
                 </td>
@@ -257,17 +133,10 @@
               <tr v-if="permitField.includes('is_updatetime')">
                 <td class="type-title"><span>更新修改时间：</span></td>
                 <td>
-                  <div class="item-form" style="width:154px;float:left;">
+                  <div class="item-form buttonTwo" style="width:154px;float:left;">
                       <div class="item-form-panel">
                        <el-checkbox v-model="formData.is_updatetime" label="更新修改时间" border size="small"></el-checkbox>
                       </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="只有勾选此项，首页推荐相关设置才会生效">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
                     </div>
                 </td>
               </tr>
@@ -285,30 +154,16 @@
                         </el-input>
                         <em>天</em>
                       </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="文章可以在首页保留显示的天数，默认是3天，不可为空">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
                     </div>
                 </td>
               </tr>
               <tr v-if="permitField.includes('indexshowdepart')">
                 <td class="type-title"><span>首页推荐部门：</span></td>
                 <td>
-                  <div class="item-form">
+                  <div class="item-form buttonTwo">
                     <el-checkbox-group class="checkbox-panel" v-model="formData.recomDepart" size="small">
                       <el-checkbox :label="item.id" v-for="item in departList" v-bind:key="item.id" border>{{item.name}}</el-checkbox>
                     </el-checkbox-group>
-                    <el-popover
-                      placement="left"
-                      width="500"
-                      trigger="hover"
-                      content="哪些有当前论坛栏目阅读权限且有当前文章浏览权限的部门可以在首页推荐看到该文章，首页推荐如不可看，但拥有当前论坛栏目阅读权限和当前文章浏览权限，则可在论坛栏目文章列表中看到该文章">
-                      <i slot="reference" class="el-icon-s-opportunity"></i>
-                    </el-popover>
                   </div>
                 </td>
               </tr>
@@ -316,17 +171,10 @@
                 <td class="type-title"><span>默认权限：</span></td>
                 <td>
                   <div class="item-form-group">
-                    <div class="item-form" style="width:126px;float:left;">
+                    <div class="item-form buttonTwo" style="width:126px;float:left;">
                       <div class="item-form-panel">
                         <el-checkbox v-model="formData.isAllPermit" @change="changeSelectHandler" label="默认权限" border size="small"></el-checkbox>
                       </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="勾选该项相当于全选浏览权限部门">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
                     </div>
                   </div>
                 </td>
@@ -334,24 +182,17 @@
               <tr v-if="permitField.includes('lookpermitdepart')">
                 <td class="type-title"><span>部门浏览权限：</span></td>
                 <td>
-                  <div class="item-form">
+                  <div class="item-form buttonTwo">
                     <el-checkbox-group class="checkbox-panel" v-model="formData.readDepart" size="small">
                       <el-checkbox :label="item.id" v-for="item in departList" v-bind:key="item.id" :disabled="item.disabled" border>{{item.name}}</el-checkbox>
                     </el-checkbox-group>
-                    <el-popover
-                      placement="left"
-                      width="300"
-                      trigger="hover"
-                      content="哪些部门可以有当前文章的浏览权限，前提是部门拥有当前文章所属论坛栏目的浏览权限">
-                      <i slot="reference" class="el-icon-s-opportunity"></i>
-                    </el-popover>
                   </div>
                 </td>
               </tr>
               <tr v-if="permitField.includes('lookuserid')">
                 <td class="type-title"><span>用户浏览权限：</span></td>
                 <td>
-                  <div class="item-form">
+                  <div class="item-form itemacces">
                     <el-select v-model="formData.readUser" filterable clearable multiple placeholder="请选择可浏览用户" style="width: 100%;">
                       <el-option
                         v-for="item in userList"
@@ -360,17 +201,15 @@
                         :value="item.value">
                       </el-option>
                     </el-select>
-                    <el-popover
-                      placement="left"
-                      width="500"
-                      trigger="hover"
-                      content="哪些用户可以拥有当前文章的浏览权限，前提是用户拥有当前文章所属论坛栏目的浏览权限，部门浏览权限未勾选的部门所属用户中，有需要当前文章的浏览权限的用户，则使用此功能给予浏览权限">
-                      <i slot="reference" class="el-icon-s-opportunity"></i>
-                    </el-popover>
                   </div>
                 </td>
               </tr>
             </table>
+          </div>          
+          <div class="card-header WebServerAddEditBtn ArticleFive" ref="headerPane">
+            <el-button type="primary" class="updateBtn" size="small" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_add')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>发布</el-button>
+            <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
+            <el-button type="primary" class="resetBtn" size="small" v-on:click="perviewPage()" v-if="menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_add')">预览</el-button>
           </div>
         </div>
     </el-card>
@@ -432,8 +271,6 @@
     </div>
   </div>
 </template>
-
-
 <script>
 import { mapGetters } from 'vuex'
 import VueUeditorWrap from 'vue-ueditor-wrap'
@@ -446,18 +283,20 @@ export default {
       activeTab:"textarea",
       isPreview:false,
       isSort:false,
+      isTitColor:false,
       scrollHeight:200,
       postType:[],
       postSystemTag:[],
       departList:[],
       userList:[],
       permitField:[],
+      isTitColor:0,
+      isTitColorNum:"#333333",
       formData:{
         id:0,
         postTypeID:0,
         systemTag:[],
         tag:"",
-        tagBgColor:"#1b3f75",
         title:"",
         titleColor:"",
         content:"",
@@ -477,13 +316,15 @@ export default {
         is_updatetime:false,
       },
       predefineColors: [
-        '#ff4500',
-        '#ff8c00',
-        '#ffd700',
-        '#90ee90',
-        '#00ced1',
-        '#1e90ff',
-        '#c71585',
+        '#222222',
+        '#a40000',
+        '#ff0000',
+        '#fa6c01',
+        '#ff9406',
+        '#0051a4',
+        '#129b30',
+        '#0b4c5f',
+        '#610b38',
       ],
       editorConfig: {
         UEDITOR_HOME_URL: '/ueditor/',
@@ -619,12 +460,12 @@ export default {
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-25;
+        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-15;
         // 30：page-root上下内边距；20：按钮父级上下内边距；
       });
       window.onresize = () => {
           return (() => {
-            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-25;
+            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-15;
             // 30：page-root上下内边距；20：按钮父级上下内边距；
           })()
       };
@@ -842,7 +683,6 @@ export default {
       $this.formData.postTypeID = data.typeid;
       $this.formData.id = data.id;
       $this.formData.tag = data.mytags;
-      $this.formData.tagBgColor = data.mytagscolor;
       $this.formData.title = data.title;
       $this.formData.titleColor = data.titlecolor;
       $this.formData.is_markdown = data.is_markdown;
@@ -924,7 +764,6 @@ export default {
       $this.formData.postTypeID = 0;
       $this.formData.systemTag = [];
       $this.formData.tag = "";
-      $this.formData.tagBgColor = "#1b3f75";
       $this.formData.title = "";
       $this.formData.titleColor = "";
       $this.formData.content = "";
@@ -1012,7 +851,6 @@ export default {
       }
       if($this.permitField.includes("mytags")){
         formData.mytags = $this.formData.tag;
-        formData.mytagscolor = $this.formData.tagBgColor;
       }
       formData.remarks = $this.formData.remarks;
       if($this.permitField.includes("showdays")){
@@ -1148,33 +986,25 @@ export default {
       var dateTime = data.getFullYear() + "-" + month + "-" + date+" "+hour+":"+minutes+":"+seconds;
       return dateTime;
     },
+    // 点击设置文字颜色事件
+    clickTitColor(ValColor){
+      var $this=this;
+       var titleColor="";
+       if($this.isTitColorNum==ValColor){
+         $this.isTitColor=0;
+         $this.isTitColorNum="#333333";
+         titleColor="";
+       }else{
+         $this.isTitColor=ValColor;
+         $this.isTitColorNum=ValColor;
+         titleColor=ValColor;
+       }
+       $this.formData.titleColor=ValColor;
+    }
   }
 }
 </script>
 <style lang="scss" scoped>
-.table-post{
-  width: 100%;
-  overflow: hidden;
-  border-top: 1px solid $border;
-  border-left: 1px solid $border;
-  tr{
-    td{
-      padding: 5px 10px;
-      vertical-align: middle;
-      border-right: 1px solid $border;
-      border-bottom: 1px solid $border;
-    }
-    td.type-title{
-      width: 140px;
-      text-align: right;
-      span{
-        display: inline-block;
-        line-height: 32px;
-        vertical-align: middle;
-      }
-    }
-  }
-}
 .item-form-panel{
   margin: 5px 0;
   em{
@@ -1189,105 +1019,6 @@ export default {
   .flex-content{
     flex: 1;
   }
-}
-.item-form{
-    padding-right: 30px;
-    position: relative;
-    &.inline-item.title-color{
-      padding-left: 115px;
-      &:before{
-        display: none;
-      }
-      >strong{
-        width: 105px;
-      }
-    }
-    &.inline-item.other-title{
-      padding-left: 115px;
-      >strong{
-        width: 105px;
-      }
-    }
-    &.other-title+&.other-title{
-      >strong{
-        &:before{
-          display: none;
-        }
-      }
-    }
-    &.inline-item.other-td{
-      padding-left: 140px;
-      >strong{
-        width: 130px;
-        &:before{
-          display: none;
-        }
-      }
-    }
-    &.inline-item{
-      padding-left: 130px;
-      &:before{
-        content:'';
-        display: block;
-        width: 1px;
-        background: $border;
-        position: absolute;
-        top: -5px;
-        height: 52px;
-        right:0;
-      }
-      ::v-deep .el-color-picker{
-        vertical-align: top;
-      }
-      >strong{
-        display: block;
-        position: absolute;
-        left:0;
-        top:0;
-        width: 120px;
-        text-align: right;
-        font-weight: normal;
-        padding: 0 10px;
-        height: 42px;
-        line-height: 42px;
-        &:before,&:after{
-          content:'';
-          display: block;
-          width: 1px;
-          background: $border;
-          position: absolute;
-          top: -5px;
-          height: 52px;
-        }
-        &:before{
-          left:0;
-        }
-        &:after{
-          right:0;
-        }
-      }
-    }
-    >span{
-      display: block;
-      width: 30px;
-      height: 42px;
-      position: absolute;
-      right:0;
-      top:0;
-      text-align: center;
-      line-height: 42px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #bbb;
-    }
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
 }
 .tag-panel{
     width: 100%;

@@ -1,283 +1,242 @@
 ﻿<template>
   <div class="page-root" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
-        <div slot="header">
-          <div class="card-header" ref="headerPane">
-            <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="resetFormData()">重置</el-button>
-            <el-button type="primary" size="small" icon="el-icon-s-promotion" v-on:click="updateWebserverInfo()" v-if="menuButtonPermit.includes('Webserver_add')||menuButtonPermit.includes('Webserver_edit')">更新</el-button>
-          </div>
-        </div>
         <div class="card-content" ref="cardContent">
           <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
-            <table class="table-post">
-              <tr>
-                <td class="type-title"><span>别名：</span></td>
-                <td>
-                  <div class="item-form-group flex-box">
-                    <div class="item-form flex-content">
-                      <div class="item-form-panel">
-                        <el-input
-                          v-model="formData.name"
-                          size="small"
-                          clearable>
-                        </el-input>
+               <ul class="WebServerAddEditPost clearfix">
+                   <li>
+                       <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>别名：</label>
+                            <el-input
+                              v-model="formData.name"
+                              size="small"
+                              class="EditPostInput flex-content"
+                              clearable>
+                            </el-input>
+                            <el-popover
+                              placement="left"
+                              width="200"
+                              class="EditPostTag"
+                              trigger="hover"
+                              content="服务器别名">
+                              <i slot="reference" class="el-icon-s-opportunity"></i>
+                            </el-popover>
+                       </div>
+                   </li>
+                   <li>
+                       <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>语言：</label>
+                            <el-select 
+                              v-model="formData.languageid" 
+                              size="small"
+                              class="EditPostSelect flex-content"
+                              clearable 
+                              placeholder="请选择品牌">
+                              <el-option
+                                v-for="item in languageList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                              </el-option>
+                            </el-select>
+                            <el-popover
+                              placement="left"
+                              width="200"
+                              class="EditPostTag"
+                              trigger="hover"
+                              content="网站所属品牌">
+                              <i slot="reference" class="el-icon-s-opportunity"></i>
+                            </el-popover>
+                       </div>
+                       <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>用途：</label>
+                            <el-select 
+                              v-model="formData.useringid" 
+                              size="small" 
+                              class="EditPostSelect flex-content"
+                              clearable 
+                              placeholder="请选择语言">
+                              <el-option
+                                v-for="item in useingList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                              </el-option>
+                            </el-select>
+                            <el-popover
+                              placement="left"
+                              width="200"
+                              class="EditPostTag"
+                              trigger="hover"
+                              content="网站所属语种">
+                              <i slot="reference" class="el-icon-s-opportunity"></i>
+                            </el-popover>
+                       </div>
+                       <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>系统：</label>
+                            <el-select 
+                              v-model="formData.systemid" 
+                              size="small" 
+                              class="EditPostSelect flex-content"
+                              clearable 
+                              placeholder="请选择系统">
+                              <el-option
+                                v-for="item in serverList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                              </el-option>
+                            </el-select>
+                            <el-popover
+                              placement="left"
+                              width="200"
+                              class="EditPostTag"
+                              trigger="hover"
+                              content="网站所属部门">
+                              <i slot="reference" class="el-icon-s-opportunity"></i>
+                            </el-popover>
+                       </div>
+                   </li>
+                   <li>
+                       <div class="AddEditPostItem flex-wrap AddEditPostItemIp clearfix">
+                            <label>IP：</label>
+                            <el-input
+                              v-model="formData.ip"
+                              size="small"
+                              class="EditPostInput flex-content"
+                              clearable>
+                            </el-input>
+                       </div>
+                      <div class="item-column flex AddEditPostItemIpTxt">
+                        <div class="item-wrap flex-box">
+                          <a :href="'http://ip.chinaz.com/?IP='+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">IP查询</a>
+                          <a :href="'https://whoer.net/checkwhois?IP='+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">IP查询2</a>
+                          <a :href="'http://ping.chinaz.com/'+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">PING国内检测</a>
+                          <a :href="'https://asm.ca.com/zh_cn/ping.php?IP='+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">PING全球检测</a>
+                          <a class="link" v-on:click="linkPage" v-if="formData.ip!=''">该IP网站查询</a>
+                        </div>
                       </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="服务器别名">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>类型：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column flex">
-                      <strong>语言：</strong>
-                      <div class="item-wrap">
-                        <el-select 
-                          v-model="formData.languageid" 
-                          size="small"
-                          clearable 
-                          placeholder="请选择品牌">
-                          <el-option
-                            v-for="item in languageList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                          </el-option>
-                        </el-select>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站所属品牌">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column flex">
-                      <strong>用途：</strong>
-                      <div class="item-wrap">
-                        <el-select 
-                          v-model="formData.useringid" 
-                          size="small" 
-                          clearable 
-                          placeholder="请选择语言">
-                          <el-option
-                            v-for="item in useingList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                          </el-option>
-                        </el-select>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站所属语种">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column flex">
-                      <strong>系统：</strong>
-                      <div class="item-wrap">
-                        <el-select 
-                          v-model="formData.systemid" 
-                          size="small" 
-                          clearable 
-                          placeholder="请选择系统">
-                          <el-option
-                            v-for="item in serverList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                          </el-option>
-                        </el-select>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站所属部门">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>IP：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column" style="width: 240px;">
-                        <el-input
-                          v-model="formData.ip"
-                          size="small"
-                          clearable>
-                        </el-input>
-                    </div>
-                    <div class="item-column flex">
-                      <div class="item-wrap flex-box">
-                        <a :href="'http://ip.chinaz.com/?IP='+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">IP查询</a>
-                        <a :href="'https://whoer.net/checkwhois?IP='+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">IP查询2</a>
-                        <a :href="'http://ping.chinaz.com/'+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">PING国内检测</a>
-                        <a :href="'https://asm.ca.com/zh_cn/ping.php?IP='+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">PING全球检测</a>
-                        <a class="link" v-on:click="linkPage" v-if="formData.ip!=''">该IP网站查询</a>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>全部IP：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column flex">
-                      <el-input
-                        type="textarea"
-                        :autosize="{ minRows: 2, maxRows: 4}"
-                        placeholder="多个IP以逗号分隔"
-                        v-model="formData.allip"
-                        size="small"
-                        clearable>
-                      </el-input>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>账号管理：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column flex">
-                      <strong>帐号：</strong>
-                      <div class="item-wrap">
-                        <el-input
-                          v-model="formData.servername"
-                          size="small"
-                          clearable>
-                        </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="210"
-                        trigger="hover"
-                        content="服务器登陆账号">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column flex">
-                      <strong>密码：</strong>
-                      <div class="item-wrap">
-                        <el-input
-                          v-model="formData.serverpwd"
-                          size="small"
-                          clearable>
-                        </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="210"
-                        trigger="hover"
-                        content="服务器登陆密码">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>备注：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column flex">
-                      <el-input
-                        type="textarea"
-                        :autosize="{ minRows: 10, maxRows: 20}"
-                        placeholder="请输入备注"
-                        v-model="formData.remarks"
-                        size="small"
-                        clearable>
-                      </el-input>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>负责人：</span></td>
-                <td>
-                  <div class="item-form-content flex-box">
-                    <div class="item-column flex">
-                      <div class="item-wrap">
-                        <el-select 
-                          v-model="formData.adminuserid" 
-                          size="small" 
-                          filterable 
-                          multiple 
-                          clearable 
-                          placeholder="请选择服务器负责人">
-                          <el-option
-                            v-for="item in userList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                          </el-option>
-                        </el-select>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="该服务器具体负责人">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>排序：</span></td>
-                <td>
-                  <div class="item-form-content flex-box">
-                    <div class="item-column" style="width: 240px;">
-                      <div class="item-wrap">
-                        <el-input
-                          v-model="formData.sort"
-                          clearable
-                          size="small">
-                        </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="服务器列表中可进行排序">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr v-if="formData.updatetime!=''">
-                <td class="type-title"><span>更新时间：</span></td>
-                <td>
-                  <div class="item-form-content flex-box">
-                    <div class="item-column flex">
-                      <div class="item-wrap">
-                        <div class="font">{{formData.updatetime}}</div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </table>
+                   </li>
+                   <li>
+                       <div class="AddEditPostItem flex-wrap AddEditPostItemAllip clearfix">
+                            <label>全部IP：</label>
+                            <el-input
+                              type="textarea"
+                              :autosize="{ minRows:3, maxRows:6}"
+                              placeholder="多个IP以逗号分隔"
+                              v-model="formData.allip"
+                              size="small"
+                              class="EditPostTextareaIp flex-content"
+                              clearable>
+                            </el-input>
+                       </div>
+                   </li>
+                   <li>
+                       <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>帐号：</label>
+                            <el-input
+                              v-model="formData.servername"
+                              size="small"
+                              class="EditPostInput flex-content"
+                              clearable>
+                            </el-input>
+                            <el-popover
+                              placement="left"
+                              width="210"
+                              class="EditPostTag"
+                              trigger="hover"
+                              content="服务器登陆账号">
+                              <i slot="reference" class="el-icon-s-opportunity"></i>
+                            </el-popover>
+                       </div>
+                       <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>密码：</label>
+                            <el-input
+                              v-model="formData.serverpwd"
+                              size="small"
+                              class="EditPostInput flex-content"
+                              clearable>
+                            </el-input>
+                            <el-popover
+                              placement="left"
+                              width="210"
+                              class="EditPostTag"
+                              trigger="hover"
+                              content="服务器登陆密码">
+                              <i slot="reference" class="el-icon-s-opportunity"></i>
+                            </el-popover>
+                       </div>
+                   </li>
+                   <li>
+                       <div class="AddEditPostItem flex-wrap EditPostTextareaNote clearfix">
+                            <label>备注：</label>                            
+                            <el-input
+                              type="textarea"
+                              :autosize="{ minRows:7, maxRows: 20}"
+                              placeholder="请输入备注"
+                              v-model="formData.remarks"
+                              size="small"
+                              class="EditPostTextarea flex-content"
+                              clearable>
+                            </el-input>
+                       </div>
+                   </li>
+                   <li>
+                       <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>负责人：</label>
+                            <el-select 
+                              v-model="formData.adminuserid" 
+                              size="small" 
+                              filterable 
+                              multiple 
+                              class="EditPostSelect flex-content"
+                              clearable 
+                              placeholder="请选择服务器负责人">
+                              <el-option
+                                v-for="item in userList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                              </el-option>
+                            </el-select>
+                            <el-popover
+                              placement="left"
+                              width="200"
+                              class="EditPostTag"
+                              trigger="hover"
+                              content="该服务器具体负责人">
+                              <i slot="reference" class="el-icon-s-opportunity"></i>
+                            </el-popover>
+                       </div>
+                       <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>排序：</label>
+                            <el-input
+                              v-model="formData.sort"
+                              class="EditPostInput flex-content"
+                              clearable
+                              size="small">
+                            </el-input>
+                            <el-popover
+                              placement="left"
+                              width="200"
+                              class="EditPostTag"
+                              trigger="hover"
+                              content="服务器列表中可进行排序">
+                              <i slot="reference" class="el-icon-s-opportunity"></i>
+                            </el-popover>
+                       </div>
+                   </li>
+                   <li v-if="formData.updatetime!=''">
+                       <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>更新时间：</label>
+                            <div class="font">{{formData.updatetime}}</div>
+                       </div>
+                   </li>
+               </ul>
+          </div>
+          <div class="card-header WebServerAddEditBtn" ref="headerPane">
+            <el-button type="primary" class="updateBtn" size="small" v-on:click="updateWebserverInfo()" v-if="menuButtonPermit.includes('Webserver_add')||menuButtonPermit.includes('Webserver_edit')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>更新</el-button>
+            <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
           </div>
         </div>
     </el-card>
@@ -324,12 +283,12 @@ export default {
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-25;
+        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-50;
         // 30：page-root上下内边距；20：按钮父级上下内边距；
       });
       window.onresize = () => {
           return (() => {
-            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-25;
+            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-50;
             // 30：page-root上下内边距；20：按钮父级上下内边距；
           })()
       };
@@ -608,17 +567,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.el-popover--plain{padding:10px 20px;}
 .table-post{
   width: 100%;
   overflow: hidden;
-  border-top: 1px solid $border;
-  border-left: 1px solid $border;
   tr{
     td{
       padding: 5px 10px;
       vertical-align: middle;
-      border-right: 1px solid $border;
-      border-bottom: 1px solid $border;
     }
     td.type-title{
       width: 140px;

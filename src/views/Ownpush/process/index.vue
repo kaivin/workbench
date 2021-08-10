@@ -74,6 +74,7 @@
           tooltip-effect="dark"
           stripe
           show-summary
+          class="SiteTable"
           style="width: 100%"
           :height="tableHeight"
           row-key="id"
@@ -1296,11 +1297,6 @@ export default {
     &:after {
       clear: both;
     }
-}
-.el-table{
-  svg,i[class~="el-cion"]{
-    font-size: 20px;
-  }
 }
 .el-select{
     display: block;

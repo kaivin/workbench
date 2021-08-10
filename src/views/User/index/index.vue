@@ -34,6 +34,7 @@
           :data="tableData"
           tooltip-effect="dark"
           stripe
+          class="SiteTable"
           style="width: 100%"
           :height="tableHeight"
           row-key="id"
@@ -1202,11 +1203,6 @@ export default {
       width: 50%;
       float:left;
       }
-  }
-  .el-table{
-    svg,i[class~="el-cion"]{
-      font-size: 20px;
-    }
   }
   .user-role{
     width: 100%;

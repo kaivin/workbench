@@ -280,6 +280,7 @@
               :data="tableData"
               tooltip-effect="dark"
               stripe
+              class="SiteTable"
               style="width: 100%"
               :height="tableHeight"
               row-key="id"
@@ -1359,11 +1360,11 @@ export default {
     float:left;
     }
 }
-.el-table{
-  svg,i[class~="el-cion"]{
-    font-size: 20px;
-  }
-}
+//.el-table{
+//  svg,i[class~="el-cion"]{
+//    font-size: 20px;
+//  }
+//}
 .phone-panel{
   width:210px;
   margin-right: 15px;
@@ -1457,17 +1458,6 @@ export default {
     padding: 5px;
   }
 }
-.clues-title{
-  width: 100%;
-  text-align: center;
-  border: 1px solid #dfe6ec;
-  border-bottom: none;
-  line-height: 48px;
-  height: 49px;
-  font-size: 20px;
-  font-weight: normal;
-  color: $--color-primary;
-}
 .product-span{
     i{
         font-style: normal;
@@ -1545,10 +1535,6 @@ export default {
     background: #7e84fd;
   }
 }
-.el-table{
-  font-size: 12px;
-}
-
 .export-dialog{
   .el-form-item{
     margin-right:0!important;
