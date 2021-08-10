@@ -345,7 +345,7 @@
         </div>
       </div>
     </el-card>
-    <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Website_add')&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" width="480px">
+    <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Website_add')&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
           <el-form-item label="品牌：" :label-width="formLabelWidth">
@@ -412,7 +412,7 @@
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="handleClose">取 消</el-button>
           <el-button type="primary" @click="saveWebsiteAddData">确 定</el-button>
         </span>
       </template>
@@ -572,8 +572,12 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device'
+      'device',
+      'addWebsite'
     ]),
+    isAdd() {
+      return this.addWebsite
+    }
   },
   mounted(){
       const $this = this;
@@ -597,6 +601,11 @@ export default {
           setTimeout(function() {
             $this.timer = false
           }, 400)
+        }
+      },
+      isAdd(e){
+        if(e){
+          this.addTableRow();
         }
       },
       //监听相同路由下参数变化的时候，从而实现异步刷新
@@ -1209,6 +1218,12 @@ export default {
       this.page = val;
       this.initData();
     },
+    // 关闭添加网站弹窗
+    handleClose(){
+      var $this = this;
+      $this.dialogFormVisible = false;
+      $this.$store.dispatch('app/closeWebsite');
+    },
     // 添加表格行数据
     addTableRow(row,index){
       this.dialogFormVisible = true;
@@ -1228,7 +1243,7 @@ export default {
               message: response.info,
               type: 'success'
             });
-            $this.dialogFormVisible = false;
+            $this.handleClose();
             $this.initData();
           }else{
             $this.$message({

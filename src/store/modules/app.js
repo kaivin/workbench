@@ -5,7 +5,8 @@ const state = {
     withoutAnimation: false
   },
   device: 'desktop',
-  size: Cookies.get('size') || 'medium'
+  size: Cookies.get('size') || 'medium',
+  addWebsite:false
 }
 
 const mutations = {
@@ -29,6 +30,12 @@ const mutations = {
   SET_SIZE: (state, size) => {
     state.size = size
     Cookies.set('size', size)
+  },
+  ADD_WEBSITE: (state) => {
+    state.addWebsite = true
+  },
+  CLOSE_WEBSITE: (state) => {
+    state.addWebsite = false
   }
 }
 
@@ -44,7 +51,13 @@ const actions = {
   },
   setSize({ commit }, size) {
     commit('SET_SIZE', size)
-  }
+  },
+  addWebsite({ commit }) {
+    commit('ADD_WEBSITE')
+  },
+  closeWebsite({ commit }) {
+    commit('CLOSE_WEBSITE')
+  },
 }
 
 export default {

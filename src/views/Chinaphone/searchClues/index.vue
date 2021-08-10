@@ -804,7 +804,7 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.searchData.page = val;
-      this.initPage();
+      this.initCluesList();
     },
     // 导出当前页数据
     handleDownload() {

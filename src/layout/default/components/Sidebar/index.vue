@@ -1,6 +1,6 @@
 <template>
     <el-aside class="sidebar-container">
-        <logo :collapse="isCollapse" />
+      <div class="abs-panel">
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <el-menu
               :default-active="activeMenu"
@@ -13,16 +13,16 @@
             <sidebar-item v-for="route in menu_data" v-bind:key="route.meta.index" v-bind:item="route" />
           </el-menu>
         </el-scrollbar>
+      </div>
     </el-aside>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import Logo from './Logo';
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/-variables.scss';
 export default {
-  components: { SidebarItem,Logo },
+  components: { SidebarItem },
   data(){
     return{
     }
@@ -52,5 +52,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-</style>
