@@ -35,6 +35,28 @@
     }
   }
 }
+/**/
+.SiteBtn{
+  clear: both;
+  display: block;
+  overflow: hidden;
+  padding-top:5px;
+  padding-bottom:5px;
+  .el-button--primary{
+    background-color: #2e84f6!important;
+    border-color: #2e84f6!important;
+    
+    &:hover,&:focus,&:active{
+      background:#66b1ff!important;
+      border-color:#66b1ff!important;
+    }
+    &.is-disabled,&.is-disabled:hover,&.is-disabled:focus,&.is-disabled:active {
+        background-color: #a0cfff!important;
+        border-color: #a0cfff!important;
+    }
+  }
+}
+/**/
 .scroll-panel{
   width: 100%;
   height: 100%;
@@ -338,12 +360,16 @@
                  transition: transform 0.15s ease-in 0s;
               }
           }
-          &.all-select{
-            .is-indeterminate{
-              background-color:#2e84f6 !important;
-              border-color:#2e84f6 !important;
-            }
+      } 
+      &.all-select{
+        .el-checkbox__input.is-indeterminate{
+          //background-color:#2e84f6 !important;
+          //border-color:#2e84f6 !important;
+          .el-checkbox__inner{
+            background-color:#2e84f6 !important;
+            border-color:#2e84f6 !important;
           }
+        }
       }
       &.is-checked,&:hover,&:focus{
           border-color:#2e84f6 !important;
@@ -408,7 +434,14 @@
   background:#2e84f6;
   color: #FFFFFF!important;
 }
-
+/*移动端默认日期*/
+.el-date-picker{
+  width:80%!important;
+  .el-picker-panel__content{
+    width:90%!important;
+    margin:5%!important;
+  }
+}
 
 .el-popover{
   min-width: 100px!important;
@@ -490,7 +523,7 @@
   border-bottom: none;
   line-height: 48px;
   height: 49px;
-  font-size: 20px;
+  font-size:15px;
   font-weight: normal;
   color:#2e84f6;
   span{
@@ -535,6 +568,10 @@
   .article-title{
     cursor: pointer;
     padding-left:10px;
+  }
+  .el-table__fixed-right-patch {
+    background-color: #e2e9ed;
+    border-bottom: 1px solid #e2e9ed;
   }
 }
 .clearfix:after{content:"."; display:block; height:0; clear:both; visibility:hidden; font-size:0px; }

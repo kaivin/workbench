@@ -69,3 +69,140 @@
       }
     }
   }
+.WebServerAddEditBtn.ChinaphoneTwoBtn{
+  padding-left:0px;
+}
+.ChinaphoneTwo{
+  width: 100%;
+  margin-bottom: 11px;
+  border-bottom: 1px dashed #d6dbe2;
+  padding-bottom: 19px;
+  .group-header{
+    line-height: 0;
+    font-size:0;
+    margin-bottom:12px;
+    border-bottom:1px dashed #d6dbe2;
+    padding-top:4px;
+    padding-bottom:6px;
+    .el-checkbox{
+      .el-checkbox__label{
+          line-height:20px!important;
+          font-size:14px!important;
+          color:#1a1a1a;
+      }
+      &.is-bordered{
+        border:0px solid #DCDFE6;
+        &.el-checkbox--mini{
+          height:28px;
+        }
+      }
+    }
+    .require{
+      font-size: 14px;
+      line-height: 24px;
+      margin-right: 10px;
+      vertical-align:top;
+      display: inline-block;
+      text-align: right;
+    }
+    .all-select{
+      line-height: 12px;
+      padding: 0px!important;
+      border: 0px;
+      float: left;
+      height: 12px;
+      margin:4px 8px 0px 0px !important;
+    }
+  }
+  .group-body{
+    width: 100%;
+    .team-panel{
+      margin-top:9px;
+      .team-header{
+        line-height: 0;
+        font-size:0;
+        .require{
+          font-size: 14px;
+          line-height: 24px;
+          margin-right: 10px;
+          vertical-align:top;
+          display: inline-block;
+          width: 72px;
+          text-align: right;
+        }
+        .all-select{
+          vertical-align: middle;
+          line-height: 15px;
+        }
+      }
+      .team-body{
+        padding: 5px;
+      }
+      .team-header{
+        clear: both;
+        display: block;
+        overflow: hidden;
+        .team-headerItem{
+            float: left;
+            .el-date-editor{width:200px; margin-bottom:6px;}
+            .el-input{width:200px; margin-bottom:6px;}
+        }
+      }
+      .team-list{
+        .item-checkbox{
+            vertical-align: middle;
+            line-height: 15px;
+        }
+      }
+    }
+  }
+}
+.mobile{
+  .ChinaphoneTwo{
+    .group-body{
+      .team-panel{
+        .team-header{
+          .require{
+            width:42px;
+          }
+          .all-select{
+            line-height: 12px;
+            padding: 0px!important;
+            border: 0px;
+            height: 12px;
+            margin:4px 8px 0px 0px !important;
+            display: block;
+            &.el-checkbox{
+              .el-checkbox__label{
+                  line-height:20px!important;
+                  font-size:14px!important;
+                  color:#1a1a1a;
+              }
+              &.is-bordered{
+                border:0px solid #DCDFE6;
+                &.el-checkbox--mini{
+                  height:28px;
+                  margin: 0px !important;
+                }
+              }
+            }
+          }
+          .team-headerItem{
+              float:none;
+              clear: both;
+              width: 100%;
+              display: flex;
+              flex-direction: row;
+              .el-date-editor{flex: 1;
+              
+              }
+              .el-input{flex: 1;}
+              &+.team-headerItem{
+                padding-top:8px;
+              }
+          }
+        }
+      }
+    }
+  }
+}

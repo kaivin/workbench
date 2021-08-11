@@ -2,9 +2,7 @@
   <div class="page-root" ref="boxPane">
     <el-card class="box-card scroll-card WebsiteList-card" shadow="hover">
       <div slot="header">
-        <div class="card-header" ref="headerPane">
-          <el-button type="primary" size="small" icon="el-icon-document-add" v-on:click="addTableRow()" v-if="menuButtonPermit.includes('Website_add')&&device==='desktop'">添加网站</el-button>
-          <el-button type="primary" size="small" icon="el-icon-search" v-on:click="searchDialog()" v-if="device!=='desktop'">高级筛选</el-button>
+        <div class="card-header" ref="headerPane" v-bind:class="device=='mobile'?'flex-wrap':''">
           <div class="border-wrap post-class" v-if="device==='desktop'">
             <div class="border-row flex-wrap">
                 <div class="border-cell txt-font"><span>行业：</span></div>
@@ -90,12 +88,12 @@
                           size="small"
                           clearable>
                         </el-input>
-                        <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">搜索</el-button>
+                        <el-button class="item-input" size="small" type="primary" @click="searchResult"><i class="svg-i searchWhite" ><svg-icon icon-class="searchWhite" /></i>搜索</el-button>
                     </div>
                 </div>
             </div>
           </div>
-          <div class="search-panel" v-else>
+          <div class="search-panel" v-bind:class="device=='mobile'?'flex-content':''" v-else>
             <el-input
               class="search-input"
               placeholder="输入ip或域名"
@@ -105,10 +103,10 @@
             </el-input>
             <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">搜索</el-button>
           </div>
+          <el-button type="primary" size="small" icon="el-icon-search" v-on:click="searchDialog()" v-if="device!=='desktop'">高级筛选</el-button>
         </div>
       </div>
       <div class="card-content WebsiteList-Wrap" ref="cardContent">
-        <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
           <div class="card-wrap">
             <div v-if="totalDataNum>50" class="pagination-panel top-page" ref="pagePane">
               <el-pagination
@@ -126,6 +124,7 @@
               ref="simpleTable"
               :data="tableData"
               stripe
+              :height="scrollHeight"
               class="SiteTable"
               style="width: 100%"
               >
@@ -342,7 +341,6 @@
               </el-pagination>
             </div>
           </div>
-        </div>
       </div>
     </el-card>
     <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Website_add')&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
@@ -417,85 +415,6 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog title="高级筛选" v-if="device==='mobile'" custom-class="search-dialog block-search" :visible.sync="dialogSearchVisible">
-      <div class="search-dialog-wrap">
-        <div class="item-search">
-          <el-select v-model="formData.brand" size="small" clearable placeholder="请选择品牌">
-            <el-option
-              v-for="item in brandSelectList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="item-search">
-          <el-select v-model="formData.language" size="small" clearable placeholder="请选择语言">
-            <el-option
-              v-for="item in languageSelectList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="item-search">
-          <el-select v-model="formData.departid" size="small" clearable placeholder="请选择部门">
-            <el-option
-              v-for="item in departSelectList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="item-search">
-          <el-select v-model="attrID" size="small" clearable placeholder="请选择标签">
-            <el-option
-              v-for="item in attrTagSelectList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="item-search">
-          <el-select v-model="hostID" size="small" clearable placeholder="请选择主机头">
-            <el-option
-              v-for="item in hostTagSelectList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="item-search">
-          <el-select v-model="websiteType" size="small" clearable placeholder="请选择模式">
-            <el-option
-              v-for="item in websiteSelectList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="item-search">
-          <template v-for="(item,index) in sort">
-              <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickSort(item.key)">{{item.name}}</el-button>
-          </template>
-        </div>
-        <div class="item-search">
-          <el-button type="primary" v-bind:class="formData.headeruser?'':'is-plain'" size="small" v-on:click="clickManage">个人负责网站</el-button>
-          <el-button type="primary" v-bind:class="formData.personuser?'':'is-plain'" size="small" v-on:click="clickDevelop">个人开发网站</el-button>
-        </div>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogSearchVisible = false">取 消</el-button>
-          <el-button type="primary" @click="screeningResult">筛选</el-button>
-        </span>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
@@ -566,7 +485,6 @@ export default {
         domain:"",
         weblink:"",
       },
-      dialogSearchVisible:false,
     }
   },
   computed: {
@@ -582,13 +500,13 @@ export default {
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-25;
-        // 30：page-root上下内边距；20：按钮父级上下内边距；
+        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-20;
+        // 30：page-root上下内边距；20：headerPane底部外边距；
       });
       window.onresize = () => {
           return (() => {
-            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-25;
-            // 30：page-root上下内边距；20：按钮父级上下内边距；
+            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-20;
+            // 30：page-root上下内边距；20：headerPane底部外边距；
           })()
       };
   },
@@ -1326,52 +1244,6 @@ export default {
     // 高级筛选
     searchDialog(){
       var $this = this;
-      if($this.formData.is_online!=null){
-        $this.websiteType = parseInt($this.formData.is_online);
-      }
-      if($this.formData.openstatus!=null){
-        if($this.formData.openstatus==1){
-          $this.websiteType = 3;
-        }
-        if($this.formData.openstatus==2){
-          $this.websiteType = 4;
-        }
-      }
-      $this.dialogSearchVisible = true;
-    },
-    // 筛选结果
-    screeningResult(){
-      var $this = this;
-      if($this.websiteType){
-        if($this.websiteType<3){
-          $this.formData.is_online = $this.websiteType;
-          $this.formData.openstatus = null;
-        }else{
-          $this.formData.is_online = null;
-          if($this.websiteType==3){
-            $this.formData.openstatus = 1;
-          }
-          if($this.websiteType==4){
-            $this.formData.openstatus = 2;
-          }
-        }
-      }
-      if($this.hostID){
-        $this.hostTagList.forEach(function(item,index){
-          if(item.id==$this.hostID){
-            $this.formData.domainheader = item.name;
-          }
-        });
-      }
-      if($this.attrID){
-        $this.attrTagList.forEach(function(item,index){
-          if(item.id==$this.attrID){
-            $this.formData.domainattr = item.name;
-          }
-        });
-      }
-      $this.dialogSearchVisible = false;
-      $this.linkTo();
     },
   }
 }
@@ -1543,8 +1415,5 @@ export default {
   .item-input{
     margin-left: 15px;
   }
-}
-.search-dialog .el-dialog__body .search-dialog-wrap .item-search + .item-search{
-  margin-top: 10px;
 }
 </style>

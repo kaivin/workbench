@@ -1,50 +1,50 @@
 ﻿<template>
   <div class="page-root" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
-        <div slot="header">
-          <div class="card-header" ref="headerPane">
-              <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="resetData()">重置</el-button>
-              <el-button type="primary" size="small" icon="el-icon-upload2" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="getCluesAnalysisData">生成数据</el-button>
-          </div>
-        </div>
         <div class="card-content" ref="tableContent">
           <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
-            <div class="group-panel buttonTwo">
-              <div class="group-header"><span class="require">电话：</span><el-checkbox class="all-select" :indeterminate="isAllPhone" border size="mini" v-model="checkAllPhone" @change="handleCheckAllPhoneChange">全选</el-checkbox>
+            <div class="ChinaphoneTwo buttonTwo">
+              <div class="group-header">
+                  <el-checkbox class="all-select" :indeterminate="isAllPhone" border size="mini" v-model="checkAllPhone" @change="handleCheckAllPhoneChange">电话全选</el-checkbox>
               </div>
               <div class="group-body">
                 <div class="team-panel" v-for="item in phoneList" v-bind:key="item.id">
                   <div class="team-header" v-if="item.icon=='sem'">
-                    <span>{{item.name}}：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllSemPhone" border size="mini" v-model="checkAllSemPhone" @change="handleCheckAllSemPhoneChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSemPhone" border size="mini" v-model="checkAllSemPhone" @change="handleCheckAllSemPhoneChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSemPhone" border size="mini" v-model="checkAllSemPhone" @change="handleCheckAllSemPhoneChange">{{item.name}}全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedSem" @change="handleCheckedSemChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                     </el-checkbox-group>
                   </div>
                   <div class="team-header" v-else-if="item.icon=='seo'">
-                    <span>{{item.name}}：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllSeoPhone" border size="mini" v-model="checkAllSeoPhone" @change="handleCheckAllSeoPhoneChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSeoPhone" border size="mini" v-model="checkAllSeoPhone" @change="handleCheckAllSeoPhoneChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSeoPhone" border size="mini" v-model="checkAllSeoPhone" @change="handleCheckAllSeoPhoneChange">{{item.name}}全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedSeo" @change="handleCheckedSeoChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                     </el-checkbox-group>
                   </div>
                   <div class="team-header" v-else-if="item.icon=='we-media'">
-                    <span>{{item.name}}：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllMediaPhone" border size="mini" v-model="checkAllMediaPhone" @change="handleCheckAllMediaPhoneChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllMediaPhone" border size="mini" v-model="checkAllMediaPhone" @change="handleCheckAllMediaPhoneChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllMediaPhone" border size="mini" v-model="checkAllMediaPhone" @change="handleCheckAllMediaPhoneChange">{{item.name}}全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedMedia" @change="handleCheckedMediaChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                     </el-checkbox-group>
                   </div>
                   <div class="team-header" v-else-if="item.icon=='sns'">
-                    <span>{{item.name}}：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllSnsPhone" border size="mini" v-model="checkAllSnsPhone" @change="handleCheckAllSnsPhoneChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSnsPhone" border size="mini" v-model="checkAllSnsPhone" @change="handleCheckAllSnsPhoneChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSnsPhone" border size="mini" v-model="checkAllSnsPhone" @change="handleCheckAllSnsPhoneChange">{{item.name}}全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedSns" @change="handleCheckedSnsChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                     </el-checkbox-group>
                   </div>
                   <div class="team-header" v-else>
-                    <span>{{item.name}}：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllOtherPhone" border size="mini" v-model="checkAllOtherPhone" @change="handleCheckAllOtherPhoneChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllOtherPhone" border size="mini" v-model="checkAllOtherPhone" @change="handleCheckAllOtherPhoneChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllOtherPhone" border size="mini" v-model="checkAllOtherPhone" @change="handleCheckAllOtherPhoneChange">{{item.name}}全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedOther" @change="handleCheckedOtherChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                     </el-checkbox-group>
@@ -52,44 +52,56 @@
                 </div>
               </div>
             </div>
-            <div class="group-panel buttonTwo">
+            <div class="ChinaphoneTwo buttonTwo">
               <div class="group-body">
                 <div class="team-panel">
                   <div class="team-header">
-                    <span class="require">时间：</span>
-                    <el-date-picker
-                        v-model="searchData.date"
-                        size="mini"
-                        type="daterange"
-                        align="right"
-                        value-format = "yyyy-MM-dd"
-                        unlink-panels
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        style="margin: 5px 0 5px 5px;width:240px;vertical-align: middle;"
-                        :picker-options="pickerRangeOptions">
-                    </el-date-picker>
-                    <span>域名：</span>
-                    <el-input
-                        style="width: 130px;margin: 5px 0 5px 5px;vertical-align: middle;"
-                        size="mini"
-                        v-model="searchData.domain"
-                        clearable>
-                    </el-input>
-                    <span>地区：</span>
-                    <el-input
-                        style="width: 100px;margin: 5px 0 5px 5px;vertical-align: middle;"
-                        size="mini"
-                        v-model="searchData.province"
-                        clearable>
-                    </el-input>
+                       <div class="team-headerItem">
+                            <span class="require">时间：</span>
+                            <el-date-picker
+                                v-model="searchData.date"
+                                size="mini"
+                                type="daterange"
+                                align="right"
+                                value-format = "yyyy-MM-dd"
+                                unlink-panels
+                                range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"
+                                v-if="device=='desktop'"
+                                :picker-options="pickerRangeOptions">
+                            </el-date-picker>                            
+                            <el-date-picker
+                              v-model="searchData.date"
+                              size="mini"
+                              type="date"
+                              v-if="device=='mobile'"
+                              placeholder="选择日期">
+                            </el-date-picker>
+                       </div>
+                       <div class="team-headerItem">
+                            <span class="require">域名：</span>
+                            <el-input
+                                size="mini"
+                                v-model="searchData.domain"
+                                clearable>
+                            </el-input>
+                       </div>
+                       <div class="team-headerItem">
+                            <span class="require">地区：</span>
+                            <el-input
+                                size="mini"
+                                v-model="searchData.province"
+                                clearable>
+                            </el-input>
+                       </div>
                   </div>
                 </div>
                 <div class="team-panel">
                   <div class="team-header">
-                    <span>渠道：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllSource" border size="mini" v-model="checkAllSource" @change="handleCheckAllSourceChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">渠道：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSource" border size="mini" v-model="checkAllSource" @change="handleCheckAllSourceChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSource" border size="mini" v-model="checkAllSource" @change="handleCheckAllSourceChange">渠道全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedSource" @change="handleCheckedSourceChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="item in sourceList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
                     </el-checkbox-group>
@@ -97,8 +109,9 @@
                 </div>
                 <div class="team-panel">
                   <div class="team-header">
-                    <span>级别：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllLevel" border size="mini" v-model="checkAllLevel" @change="handleCheckAllLevelChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">级别：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllLevel" border size="mini" v-model="checkAllLevel" @change="handleCheckAllLevelChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllLevel" border size="mini" v-model="checkAllLevel" @change="handleCheckAllLevelChange">级别全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedLevel" @change="handleCheckedLevelChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="item in levelList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
                     </el-checkbox-group>
@@ -106,8 +119,9 @@
                 </div>
                 <div class="team-panel">
                   <div class="team-header">
-                    <span>类别：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllCategory" border size="mini" v-model="checkAllCategory" @change="handleCheckAllCategoryChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">类别：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllCategory" border size="mini" v-model="checkAllCategory" @change="handleCheckAllCategoryChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllCategory" border size="mini" v-model="checkAllCategory" @change="handleCheckAllCategoryChange">类别全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedCategory" @change="handleCheckedCategoryChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="item in categoryList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
                     </el-checkbox-group>
@@ -115,8 +129,9 @@
                 </div>
                 <div class="team-panel">
                   <div class="team-header">
-                    <span>设备：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllDevice" border size="mini" v-model="checkAllDevice" @change="handleCheckAllDeviceChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">设备：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllDevice" border size="mini" v-model="checkAllDevice" @change="handleCheckAllDeviceChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllDevice" border size="mini" v-model="checkAllDevice" @change="handleCheckAllDeviceChange">全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedDevice" @change="handleCheckedDeviceChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="item in deviceList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
                     </el-checkbox-group>
@@ -124,56 +139,63 @@
                 </div>
               </div>
             </div>
-            <div class="group-panel buttonTwo">
-              <div class="group-header"><span>产品：</span><el-checkbox class="all-select" :indeterminate="isAllProduct" border size="mini" v-model="checkAllProduct" @change="handleCheckAllProductChange">全选</el-checkbox>
+            <div class="ChinaphoneTwo buttonTwo">
+              <div class="group-header"><el-checkbox class="all-select" :indeterminate="isAllProduct" border size="mini" v-model="checkAllProduct" @change="handleCheckAllProductChange">产品全选</el-checkbox>
               </div>
               <div class="group-body">
                 <div class="team-panel" v-for="item in productList" v-bind:key="item.id">
                   <div class="team-header" v-if="item.icon=='a1'">
-                    <span>{{item.name}}：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllA1Product" border size="mini" v-model="checkAllA1Product" @change="handleCheckAllA1ProductChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA1Product" border size="mini" v-model="checkAllA1Product" @change="handleCheckAllA1ProductChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA1Product" border size="mini" v-model="checkAllA1Product" @change="handleCheckAllA1ProductChange">{{item.name}}全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedA1Product" @change="handleCheckedA1ProductChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                     </el-checkbox-group>
                   </div>
                   <div class="team-header" v-else-if="item.icon=='a2'">
-                    <span>{{item.name}}：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllA2Product" border size="mini" v-model="checkAllA2Product" @change="handleCheckAllA2ProductChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA2Product" border size="mini" v-model="checkAllA2Product" @change="handleCheckAllA2ProductChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA2Product" border size="mini" v-model="checkAllA2Product" @change="handleCheckAllA2ProductChange">{{item.name}}全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedA2Product" @change="handleCheckedA2ProductChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                     </el-checkbox-group>
                   </div>
                   <div class="team-header" v-else-if="item.icon=='a3'">
-                    <span>{{item.name}}：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllA3Product" border size="mini" v-model="checkAllA3Product" @change="handleCheckAllA3ProductChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA3Product" border size="mini" v-model="checkAllA3Product" @change="handleCheckAllA3ProductChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA3Product" border size="mini" v-model="checkAllA3Product" @change="handleCheckAllA3ProductChange">{{item.name}}全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedA3Product" @change="handleCheckedA3ProductChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                     </el-checkbox-group>
                   </div>
                   <div class="team-header" v-else-if="item.icon=='a4'">
-                    <span>{{item.name}}：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllA4Product" border size="mini" v-model="checkAllA4Product" @change="handleCheckAllA4ProductChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA4Product" border size="mini" v-model="checkAllA4Product" @change="handleCheckAllA4ProductChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA4Product" border size="mini" v-model="checkAllA4Product" @change="handleCheckAllA4ProductChange">{{item.name}}全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedA4Product" @change="handleCheckedA4ProductChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                     </el-checkbox-group>
                   </div>
                   <div class="team-header" v-else-if="item.icon=='a5'">
-                    <span>{{item.name}}：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllA5Product" border size="mini" v-model="checkAllA5Product" @change="handleCheckAllA5ProductChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA5Product" border size="mini" v-model="checkAllA5Product" @change="handleCheckAllA5ProductChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA5Product" border size="mini" v-model="checkAllA5Product" @change="handleCheckAllA5ProductChange">{{item.name}}全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedA5Product" @change="handleCheckedA5ProductChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                     </el-checkbox-group>
                   </div>
                   <div class="team-header" v-else-if="item.icon=='a6'">
-                    <span>{{item.name}}：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllA6Product" border size="mini" v-model="checkAllA6Product" @change="handleCheckAllA6ProductChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA6Product" border size="mini" v-model="checkAllA6Product" @change="handleCheckAllA6ProductChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA6Product" border size="mini" v-model="checkAllA6Product" @change="handleCheckAllA6ProductChange">{{item.name}}全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedA6Product" @change="handleCheckedA6ProductChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                     </el-checkbox-group>
                   </div>
                   <div class="team-header" v-else>
-                    <span>{{item.name}}：</span>
-                    <el-checkbox class="all-select" :indeterminate="isAllA7Product" border size="mini" v-model="checkAllA7Product" @change="handleCheckAllA7ProductChange">全选</el-checkbox>
+                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA7Product" border size="mini" v-model="checkAllA7Product" @change="handleCheckAllA7ProductChange">全选</el-checkbox>
+                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA7Product" border size="mini" v-model="checkAllA7Product" @change="handleCheckAllA7ProductChange">{{item.name}}全选</el-checkbox>
                     <el-checkbox-group class="team-list" v-model="checkedA7Product" @change="handleCheckedA7ProductChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                     </el-checkbox-group>
@@ -381,6 +403,10 @@
                 </el-col>
               </el-row>
             </div>
+            <div class="card-header WebServerAddEditBtn ChinaphoneTwoBtn">
+                <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="getCluesAnalysisData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
+                <el-button type="primary" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+            </div>
           </div>
         </div>
     </el-card>
@@ -530,12 +556,12 @@ export default {
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-23;
+        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-30-23;
         // 30：page-root上下内边距；20：按钮父级上下内边距；
       });
       window.onresize = () => {
           return (() => {
-            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-23;
+            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-30-23;
             // 30：page-root上下内边距；20：按钮父级上下内边距；
           })()
       };
@@ -2285,65 +2311,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.group-panel{
-  width: 100%;
-  margin-bottom: 15px;
-  .group-header{
-    line-height: 0;
-    font-size:0;
-    span{
-      font-size: 14px;
-      line-height: 24px;
-      margin-right: 10px;
-      vertical-align:top;
-      display: inline-block;
-      width: 72px;
-      text-align: right;
-    }
-    .require{
-      color: red;
-    }
-    .all-select{
-      vertical-align: middle;
-      line-height: 15px;
-    }
-  }
-  .group-body{
-    width: 100%;
-    .team-panel{
-      margin-top: 5px;
-      .team-header{
-        line-height: 0;
-        font-size:0;
-        span{
-          font-size: 14px;
-          line-height: 24px;
-          margin-right: 10px;
-          vertical-align:top;
-          display: inline-block;
-          width: 72px;
-          text-align: right;
-        }
-        .require{
-          color: red;
-        }
-        .all-select{
-          vertical-align: middle;
-          line-height: 15px;
-        }
-      }
-      .team-body{
-        padding: 5px;
-      }
-      .team-list{
-        .item-checkbox{
-            vertical-align: middle;
-            line-height: 15px;
-        }
-      }
-    }
-  }
-}
 .team-list{
   display: inline-block;
   vertical-align: middle;
