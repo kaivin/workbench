@@ -3,91 +3,77 @@
     <el-card class="box-card" shadow="hover">
       <div slot="header">
         <div class="card-header WebServerTop" ref="headerPane">
-          <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
-          <el-button type="primary" size="small" icon="el-icon-document-add" v-on:click="addTableRow()" v-if="menuButtonPermit.includes('Webserver_add')&&device==='desktop'">添加服务器</el-button>
           <el-button type="primary" size="small" icon="el-icon-search" v-on:click="searchDialog()" v-if="device!='desktop'">高级查询</el-button>
-        <div class="border-wrap post-class" ref="searchPane" v-if="canSearch&&device==='desktop'">
-          <div class="border-row flex-wrap">
-              <div class="border-cell txt-font"><span>语言：</span></div>
-              <div class="border-cell flex-content">
-                  <div class="tag-panel">
-                      <el-select v-model="formData.language" size="small" clearable placeholder="请选择">
-                        <el-option
-                          v-for="item in languageList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                  </div>
-              </div>
-              <div class="border-cell txt-font"><span>用途：</span></div>
-              <div class="border-cell flex-content">
-                  <div class="tag-panel">
-                      <el-select v-model="formData.useringid" size="small" clearable placeholder="请选择">
-                        <el-option
-                          v-for="item in useingList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                  </div>
-              </div>
-              <div class="border-cell txt-font"><span>系统：</span></div>
-              <div class="border-cell flex-content">
-                  <div class="tag-panel">
-                      <el-select v-model="formData.systemid" size="small" clearable placeholder="请选择">
-                        <el-option
-                          v-for="item in serverList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                  </div>
-              </div>
+          <div class="border-wrap post-class" ref="searchPane" v-if="canSearch&&device==='desktop'">
+            <div class="border-row flex-wrap">
+                <div class="border-cell txt-font"><span>语言：</span></div>
+                <div class="border-cell flex-content">
+                    <div class="tag-panel">
+                        <el-select v-model="formData.language" size="small" clearable placeholder="请选择">
+                          <el-option
+                            v-for="item in languageList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="border-cell txt-font"><span>用途：</span></div>
+                <div class="border-cell flex-content">
+                    <div class="tag-panel">
+                        <el-select v-model="formData.useringid" size="small" clearable placeholder="请选择">
+                          <el-option
+                            v-for="item in useingList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="border-cell txt-font"><span>系统：</span></div>
+                <div class="border-cell flex-content">
+                    <div class="tag-panel">
+                        <el-select v-model="formData.systemid" size="small" clearable placeholder="请选择">
+                          <el-option
+                            v-for="item in serverList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                    </div>
+                </div>
+            </div>
+            <div class="border-row flex-wrap">
+                <div class="border-cell txt-font"><span>IP/别名：</span></div>
+                <div class="border-cell flex-content">
+                    <div class="tag-panel">
+                        <el-input
+                          style="width: 229px;margin-right:10px;"
+                          placeholder="输入别名"
+                          v-model="formData.name"
+                          size="small"
+                          clearable>
+                        </el-input>
+                        <el-input
+                          style="width: 229px;margin-right: 5px;"
+                          placeholder="输入ip"
+                          v-model="formData.ip"
+                          size="small"
+                          clearable>
+                        </el-input>
+                        <el-button class="item-input table-icon search" size="small" type="primary" @click="searchResult"><i class="svg-i searchWhite" ><svg-icon icon-class="searchWhite" class-name="disabled" /></i>搜索</el-button>
+                    </div>
+                </div>
+            </div>
           </div>
-          <div class="border-row flex-wrap">
-              <div class="border-cell txt-font"><span>IP/别名：</span></div>
-              <div class="border-cell flex-content">
-                  <div class="tag-panel">
-                      <el-input
-                        style="width: 267px;margin-right:10px;"
-                        placeholder="输入别名"
-                        v-model="formData.name"
-                        size="small"
-                        clearable>
-                      </el-input>
-                      <el-input
-                        style="width: 267px;margin-right: 5px;"
-                        placeholder="输入ip"
-                        v-model="formData.ip"
-                        size="small"
-                        clearable>
-                      </el-input>
-                      <el-button class="item-input table-icon search" size="small" type="primary" @click="searchResult"><i class="svg-i searchWhite" ><svg-icon icon-class="searchWhite" class-name="disabled" /></i>搜索</el-button>
-                  </div>
-              </div>
-          </div>
-        </div>
         </div>
       </div>
       <div class="card-content WebServerBom" ref="cardContent">
         <div class="card-wrap">
-          <div v-if="totalDataNum>50" class="pagination-panel top-page" ref="pagePane">
-            <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="page"
-              :page-sizes="pageSizeList"
-              :page-size="limit"
-              :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
-              :total="totalDataNum">
-            </el-pagination>
-          </div>
           <el-table
-            border
             ref="simpleTable"
             :data="tableData"
             :height="tableHeight"
@@ -165,7 +151,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane2">
+          <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
             <el-pagination
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
@@ -276,16 +262,14 @@ export default {
       this.$nextTick(function () {
         if($this.device=="desktop"){
           if($this.totalDataNum>50){
-            //$this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight*2-49-30-30-25;
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight*2-49-30-30-25;
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
           }else{
-            //$this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-49-30-30-25;
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-49-30-30-25;
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-40-20;
           }
-          //49: 分割线高度；30：el-card__body上下内边距； 30：page-root上下内边距；20：按钮父级上下内边距；
+          //40：page-root上下内边距；40: headerPane上下内边距； 20：headerPane下边距；
         }else{
           if($this.totalDataNum>50){
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight*2-30-30-25;
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-25;
           }else{
             $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-25;
           }
@@ -295,20 +279,17 @@ export default {
           return (() => {
             if($this.device=="desktop"){
               if($this.totalDataNum>50){
-                //$this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight*2-49-30-30-25;
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight*2-49-30-30-25;
+                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40;
               }else{
-                //$this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-49-30-30-25;
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-49-30-30-25;
+                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40;
               }
             }else{
               if($this.totalDataNum>50){
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight*2-30-30-25;
+                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-25;
               }else{
                 $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-25;
               }
             }
-            // 30：page-root上下内边距；20：按钮父级上下内边距；
           })()
       };
   },
@@ -488,7 +469,8 @@ export default {
     // 修改网站数据
     editTableRow(row,index){
       var $this = this;
-      $this.$router.push({name:'webserverAddEdit',query:{webserverID:row.id}});
+      var routeUrl =  $this.$router.resolve({name:'webserverAddEdit',query:{webserverID:row.id}});
+      window.open(routeUrl.href,'_blank');
     },
     // 重置搜索条件
     resetSearchData(){
@@ -621,127 +603,6 @@ export default {
 .page-root{
     ::v-deep .search-dialog{
       height: 400px!important;
-    }
-  }
-.post-class{
-  .txt-font{
-    width: 100px;
-  }
-}
-.card-wrap{
-  .pagination-panel{
-    overflow: hidden;
-  }
-  .pagination-panel.top-page{
-    .el-pagination{
-      margin-top:0;
-      margin-bottom:10px;
-    }
-  }
-}
-.table-link{
-  .link{
-    color: $--color-primary;
-    margin: 0 5px;
-    line-height: 24px;
-    cursor: pointer;
-  }
-}
-.table-tag{
-  .el-tag{
-    margin: 1px;
-  }
-}
-.table-name{
-  span{
-    display: inline-block;
-    width: 100%;
-    line-height: 24px;
-    text-align: center;
-  }
-}
-.el-select{
-  display: block;
-}
-.item-form{
-    padding-right: 30px;
-    position: relative;
-    .icon-button{
-      width: 36px;
-      height: 36px;
-      position: absolute;
-      top:0;
-      right: 30px;
-      border: 1px solid #C0C4CC;
-      border-radius: 4px;
-      text-align: center;
-      line-height: 34px;
-      font-size: 18px;
-      color: #999;
-      cursor: pointer;
-    }
-    >span{
-      display: block;
-      width: 30px;
-      height: 36px;
-      position: absolute;
-      right:0;
-      top:0;
-      text-align: center;
-      line-height: 36px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #bbb;
-    }
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-  }
-.item-form-group{
-  width: 100%;
-  &:before,
-  &:after {
-    content: "";
-    display: table;
-  }
-  &:after {
-    clear: both;
-  }
-  .item-form-3{
-    width: 180px;
-    float:left;
-    padding-right: 30px;
-    position: relative;
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-    >span{
-      display: block;
-      width: 30px;
-      height: 36px;
-      position: absolute;
-      right:0;
-      top:0;
-      text-align: center;
-      line-height: 36px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #bbb;
-    }
-  }
-  .item-form{
-    width: 50%;
-    float:left;
     }
 }
 </style>

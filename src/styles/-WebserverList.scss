@@ -1,0 +1,128 @@
+﻿.WebServerTop{
+    max-width: 1400px;
+    padding-right: 30px;
+    .el-select{
+        display: block!important;
+    }
+    .el-button.search{
+        padding:7px 10px 7px 10px!important;
+        width:84px;
+    }
+}
+.WebServerBom{
+    .table-link{
+        .link{
+            color: $menuActiveText;
+            margin: 0 5px;
+            line-height: 24px;
+            cursor: pointer;
+        }
+    }
+}
+.WebServerAddEditPost{
+    clear:both;
+    display:block;
+    width:100%;
+    padding: 20px 40px 0 30px;
+    li{
+        clear:both;
+        display:block;
+        .AddEditPostItem{
+            float:left;
+            width:33.33333%;
+            position:relative;
+            padding-top:10px;
+            padding-bottom:10px;
+            padding-right: 20px;
+            &.AddEditPostItemIpTxt,&.editPostUser{
+                width:66.66667%;
+            }
+            &.AddEditPostItemAllip,&.EditPostTextareaNote,&.txt-font{
+                width:100%;
+            }
+            &.txt-font{
+                .font{
+                    line-height: 32px;
+                    font-size: 14px;
+                }
+            }
+            label{
+                float:left;
+                font-size:15px;
+                line-height:32px;
+                color:#1a1a1a;
+                width:100px;
+                padding-right: 10px;
+                text-align:right;
+            }
+            .link{
+                display:block;
+                padding:0 5px;
+                margin:0 5px;
+                height:32px;
+                font-size:13px;
+                line-height:32px;
+                color:#2e88ff;
+            }
+            .el-input__inner,.el-textarea__inner{
+                background:#f9fbfc;
+                border:1px solid #e9ecf0;
+                border-radius:2px;
+                text-align:left;
+                width:100%;
+                height:32px;
+                line-height:30px;
+                box-sizing:border-box;
+                padding-left:15px;
+                padding-right:15px;
+                font-size:14px;
+                &:focus{
+                    border-color: $--color-primary;
+                }
+            }
+        }
+    }         
+}
+.WebServerAddEditBtn{
+    padding:20px 60px 60px 130px;
+    .el-button.updateBtn{
+        background-color: #1890ff!important;
+        border-color: #1890ff!important;
+        font-size: 16px!important;
+        width: 96px;
+        box-sizing: border-box!important;
+        height: 35px;
+        line-height: 33px!important;
+        padding: 0px 10px!important;
+        .planeWhite{
+            display: inline-block;
+            width: 16px;
+            height:16px;
+            margin-right: 10px;
+            .svg-icon{
+              width:100%!important;
+              height:100%!important;
+            }
+        }
+        &:hover{
+            background-color: #2e88ff!important;
+            border-color: #2e88ff!important;
+        }
+    }
+    .el-button.resetBtn{
+        background-color: #f5f7fa !important;
+        border-color: #e4e8ee !important;
+        font-size: 16px !important;
+        color: #808080 !important;
+        width: 83px;
+        box-sizing: border-box !important;
+        height: 35px !important;
+        line-height: 33px !important;
+        padding: 0px 10px;
+        &:hover{
+            background-color: #2e88ff!important;
+            border-color: #2e88ff!important;
+            color: #ffffff !important;
+        }
+    }
+}

@@ -1496,7 +1496,7 @@ export default {
         color: #FFFFFF;
       }
       &.is-plain:focus{
-        color: #19aa8d;
+        color: #2e88ff;
         background: #e8f7f4;
         border-color: #a3ddd1;
       }

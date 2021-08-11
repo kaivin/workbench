@@ -94,3 +94,7 @@
   background: #FFFFFF!important;
   border: 1px solid #dfe4ed!important;
 }
+
+.el-table__fixed::before, .el-table__fixed-right::before{
+  background-color: transparent!important;
+}

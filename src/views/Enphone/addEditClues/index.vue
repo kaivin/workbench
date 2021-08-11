@@ -1203,19 +1203,19 @@ export default {
             text-align: center;
             cursor: pointer;
             &:hover{
-              color: #19aa8d;
+              color: #2e88ff;
               background: #e8f7f4;
               border-color: #a3ddd1;
             }
           }
           .item-clues.active{
             color: #FFFFFF;
-            background-color: #19aa8d;
-            border-color: #19aa8d;
+            background-color: #2e88ff;
+            border-color: #2e88ff;
             &:hover{
               color: #FFFFFF;
-              background-color: #19aa8d;
-              border-color: #19aa8d;
+              background-color: #2e88ff;
+              border-color: #2e88ff;
             }
           }
         }
