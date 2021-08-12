@@ -10,8 +10,7 @@
     .scroll-panel.ArticleMainTop{
       padding:0px;
       .card-header{
-        background:#fff;
-        margin-bottom: 15px;}
+        background:#fff;}
     }
 }
 .ArticleOne{
@@ -274,6 +273,9 @@
         padding:0px;
     }
 }
+.box-card.ArticleCard{
+    background:#fff!important;
+}
 .ArticleFour{
     width:100%;
     overflow:hidden;
@@ -364,7 +366,6 @@
 }
 .WebServerAddEditBtn.ArticleFive{
     padding-left:141px;
-    padding-top:10px;
 }
 .ArticleSix{
     clear:both;

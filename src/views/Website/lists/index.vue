@@ -108,17 +108,6 @@
       </div>
       <div class="card-content WebsiteList-Wrap" ref="cardContent">
           <div class="card-wrap">
-            <div v-if="totalDataNum>50" class="pagination-panel top-page" ref="pagePane">
-              <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="page"
-                :page-sizes="pageSizeList"
-                :page-size="limit"
-                :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
-                :total="totalDataNum">
-              </el-pagination>
-            </div>
             <el-table
               border
               ref="simpleTable"
@@ -343,6 +332,72 @@
           </div>
       </div>
     </el-card>
+    <div class="WebsiteFixed">
+        <ul>
+           <li>
+              <span class="WebsiteFixedTit">行业：</span>
+              <div class="tag-panel">
+                  <template v-for="(item,index) in brandList">
+                      <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickBrand(item.id)">{{item.brandname}}</el-button>
+                  </template>
+              </div>
+           </li>
+           <li>
+              <span class="WebsiteFixedTit">语言：</span>
+                <div class="tag-panel">
+                    <template v-for="item in languageList">
+                        <el-button type="primary" v-bind:key="item.id" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickLanguage(item.id)">{{item.languagename}}</el-button>
+                    </template>
+                </div>
+           </li>
+           <li>
+              <span class="WebsiteFixedTit">排序：</span>
+                <div class="tag-panel">
+                    <template v-for="(item,index) in sort">
+                        <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickSort(item.key)">{{item.name}}</el-button>
+                    </template>
+                </div>
+           </li>
+           <li>
+              <span class="WebsiteFixedTit">部门：</span>
+                <div class="tag-panel">
+                    <template v-for="(item,index) in departList">
+                        <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickDepart(item.id)">{{item.name}}</el-button>
+                    </template>
+                </div>
+           </li>
+           <li>
+              <span class="WebsiteFixedTit">模式：</span>
+                <div class="tag-panel">
+                    <template v-for="(item,index) in websiteStatus">
+                        <el-button :type="item.type" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickStatus(item.cate,item.key)">{{item.name}}</el-button>
+                    </template>
+                </div>
+           </li>
+           <li>
+              <span class="WebsiteFixedTit">标签：</span>
+                <div class="tag-panel">
+                    <template v-for="(item,index) in attrTagList">
+                        <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickAttrTag(item.name,item.id)">{{item.name}}</el-button>
+                    </template>
+                </div>
+           </li>
+           <li>
+              <span class="WebsiteFixedTit">主机头：</span>
+                <div class="tag-panel">
+                    <template v-for="(item,index) in hostTagList">
+                        <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickHostTag(item.name,item.id)">{{item.name}}</el-button>
+                    </template>
+                </div>
+           </li>
+           <li class="WebsiteFixedFoot">
+                <div class="tag-panel">
+                    <el-button type="primary" v-bind:class="formData.headeruser?'':'is-plain'" size="small" v-on:click="clickManage">个人负责网站</el-button>
+                    <el-button type="primary" v-bind:class="formData.personuser?'':'is-plain'" size="small" v-on:click="clickDevelop">个人开发网站</el-button>
+                </div>
+           </li>
+        </ul>
+    </div>
     <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Website_add')&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
@@ -500,13 +555,19 @@ export default {
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-20;
-        // 30：page-root上下内边距；20：headerPane底部外边距；
+        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-20;
+        if($this.totalDataNum>50){
+           $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-20;
+        }
+        // 40：page-root上下内边距；20：headerPane底部外边距；
       });
       window.onresize = () => {
           return (() => {
-            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-20;
-            // 30：page-root上下内边距；20：headerPane底部外边距；
+            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-20;
+            if($this.totalDataNum>50){
+              $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-20;
+            }
+            // 40：page-root上下内边距；20：headerPane底部外边距；
           })()
       };
   },
@@ -534,6 +595,17 @@ export default {
   created(){
     var $this = this;
     $this.initData();
+  },
+  updated(){
+    var $this = this;
+    this.$nextTick(function () {
+      this.$refs.simpleTable.doLayout();
+      $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-20;
+      if($this.totalDataNum>50){
+        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-20;
+      }
+      // 40：page-root上下内边距；20：headerPane底部外边距；
+    });
   },
   methods:{
     // 搜索结果点击事件

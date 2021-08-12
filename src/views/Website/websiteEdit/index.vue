@@ -1,63 +1,34 @@
 ﻿<template>
   <div class="page-root" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
-        <div slot="header">
-          <div class="card-header" ref="headerPane">
-            <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="resetFormData()">重置</el-button>
-            <el-button type="primary" size="small" icon="el-icon-s-promotion" v-on:click="updateWebsiteInfo()" v-if="menuButtonPermit.includes('Website_edit')">更新</el-button>
-            <el-button type="primary" size="small" icon="el-icon-s-promotion" v-on:click="syncMessage()">同步留言板权限</el-button>
-          </div>
-        </div>
-        <div class="card-content" ref="cardContent">
+        <div class="card-content WebsiteOne" ref="cardContent">
           <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
-            <table class="table-post">
-              <tr v-if="writePermit.includes('domain')||readPermit.includes('domain')">
-                <td class="type-title"><span>主域名：</span></td>
-                <td>
-                  <div class="item-form-group flex-box">
-                    <div class="item-form flex-content">
-                      <div class="item-form-panel">
-                        <el-input
-                          v-model="formData.domain"
-                          size="small"
-                          :disabled="!writePermit.includes('domain')"
-                          clearable>
-                        </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站主域名">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-form inline-item title-color" style="width:240px;">
-                      <strong>网站ID：</strong>
-                      <div class="item-form-panel">
-                        <el-input
-                          v-model="formData.id"
-                          size="small"
-                          disabled>
-                        </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站唯一标识ID">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
+          <ul class="WebsiteOneTable clearfix">
+              <li v-if="writePermit.includes('domain')||readPermit.includes('domain')">
+                  <div class="AddEditPostItem flex-wrap clearfix">
+                      <label>主域名：</label>
+                      <el-input
+                        v-model="formData.domain"
+                        size="small"
+                        class="EditPostInput flex-content"
+                        :disabled="!writePermit.includes('domain')"
+                        clearable>
+                      </el-input>
                   </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>查询工具：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column flex">
-                      <div class="item-wrap flex-box">
+                  <div class="AddEditPostItem flex-wrap clearfix">
+                      <label>网站ID：</label>
+                      <el-input
+                        v-model="formData.id"
+                        size="small"
+                        class="EditPostInput flex-content"
+                        disabled>
+                      </el-input>
+                  </div>
+              </li>
+              <li>
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneTool">
+                      <label>查询工具：</label>
+                      <div class="item-wrap flex-content">
                         <a :href="isHttps?'https://www.ipip.net/ip/https://www.'+formData.domain+'/.html':'https://www.ipip.net/ip/http://www.'+formData.domain+'/.html'" target="_blank" class="link">IP查询</a>
                         <a :href="isHttps?'https://www.'+formData.domain+'/robots.txt':'http://www.'+formData.domain+'/robots.txt'" target="_blank" class="link">robots.txt</a>
                         <a :href="isHttps?'https://www.'+formData.domain+'/sitemap.xml':'http://www.'+formData.domain+'/sitemap.xml'" target="_blank" class="link">sitemap.xml</a>
@@ -72,23 +43,12 @@
                         <a :href="'https://www.google.com/search?q=site:'+formData.domain+' (博彩|时时彩|澳门|斗地主|娱乐场|欢乐豆|成人|传奇)'" target="_blank" class="link">被黑查询</a>
                         <a :href="'https://www.google.com/search?q=site:'+formData.domain+' (黎明|世邦|西芝|嵩山|维科|科利瑞克|鑫海|一帆|豫晖|最佳|第一|最优)'" target="_blank" class="link">同行与违禁词</a>
                       </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="* 可自主替换更多查询词，同行、违禁词、被黑关键词可自行补充">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
                   </div>
-                </td>
-              </tr>
-              <tr v-if="writePermit.includes('domain_header')||readPermit.includes('domain_header')">
-                <td class="type-title"><span>网站：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column flex">
-                      <div class="item-wrap flex-box table-icon">
+              </li>
+              <li v-if="writePermit.includes('domain_header')||readPermit.includes('domain_header')">
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneSite">
+                      <label>网站：</label>
+                      <div class="item-wrap flex-content table-icon">
                           <span class="icon-title" title="https模式" v-if="isHttps"><i class="svg-i"><svg-icon icon-class="https" class-name="disabled" /></i>ssl证书</span>
                           <template v-for="(item,index) in websiteList">
                             <span class="icon-title" v-on:click="hrefBlank(item)" :title="item" v-bind:key="index" v-if="item.indexOf('://www.')!=-1"><i class="svg-i"><svg-icon icon-class="pc" class-name="disabled" /></i>{{item}}</span>
@@ -96,14 +56,11 @@
                             <span class="icon-title" v-on:click="hrefBlank(item)" :title="item" v-bind:key="index" v-else><i class="svg-i"><svg-icon icon-class="internet" class-name="disabled" /></i>{{item}}</span>
                           </template>
                       </div>
-                    </div>
                   </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>状态：</span></td>
-                <td>
-                  <div class="item-form-content">
+              </li>
+              <li>
+                  <div class="AddEditPostItem flex-wrap clearfix">
+                      <label>状态：</label>
                     <div class="item-column flex">
                       <template v-if="formData.is_online">
                         <div class="table-icon" v-if="formData.speedcheckstatus==1">
@@ -131,193 +88,110 @@
                       <div class="table-tag" v-else><el-tag type="info">离线</el-tag></div>
                     </div>
                   </div>
-                </td>
-              </tr>
-              <tr v-if="writePermit.includes('domain_outtime')||readPermit.includes('domain_outtime')||writePermit.includes('server_outtime')||readPermit.includes('server_outtime')">
-                <td class="type-title"><span>到期时间：</span></td>
-                <td>
-                  <div class="item-form-content flex-box">
-                    <div class="item-column" v-if="writePermit.includes('domain_outtime')||readPermit.includes('domain_outtime')">
-                      <strong>域名到期：</strong>
-                      <div class="item-wrap">
-                        <el-date-picker
-                          v-model="formData.domain_outtime"
-                          type="datetime"
-                          placeholder="选择日期时间"
-                          value-format = "yyyy-MM-dd HH:mm:ss"
-                          :disabled="!writePermit.includes('domain_outtime')"
-                          default-time="12:00:00">
-                        </el-date-picker>
-                      </div>
+              </li>
+              <li v-if="writePermit.includes('domain_outtime')||readPermit.includes('domain_outtime')||writePermit.includes('server_outtime')||readPermit.includes('server_outtime')">
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneDomain" v-if="writePermit.includes('domain_outtime')||readPermit.includes('domain_outtime')">
+                      <label>域名到期：</label>
+                      <el-date-picker
+                        v-model="formData.domain_outtime"
+                        type="datetime"
+                        placeholder="选择日期时间"
+                        class="EditPostInput flex-content"
+                        value-format = "yyyy-MM-dd HH:mm:ss"
+                        :disabled="!writePermit.includes('domain_outtime')"
+                        default-time="12:00:00">
+                      </el-date-picker>
                       <a :href="'http://tool.chinaz.com/DomainDel/?wd=www.'+formData.domain" target="_blank" class="link">到期查询</a>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="域名到期时间，域名续费后，需更新域名到期时间">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column" v-if="writePermit.includes('server_outtime')||readPermit.includes('server_outtime')">
-                      <strong>主机到期：</strong>
-                      <div class="item-wrap">
-                        <el-date-picker
-                          v-model="formData.server_outtime"
-                          type="datetime"
-                          value-format = "yyyy-MM-dd HH:mm:ss"
-                          :disabled="!writePermit.includes('server_outtime')"
-                          placeholder="选择日期时间"
-                          default-time="12:00:00">
-                        </el-date-picker>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="主机续费后，需更新主机到期时间">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
                   </div>
-                </td>
-              </tr>
-              <tr v-if="writePermit.includes('ip')||readPermit.includes('ip')">
-                <td class="type-title"><span>IP：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column" style="width: 240px;">
-                        <el-input
-                          v-model="formData.ip"
-                          size="small"
-                          :disabled="!writePermit.includes('ip')"
-                          clearable>
-                        </el-input>
-                    </div>
-                    <div class="item-column flex">
-                      <div class="item-wrap flex-box">
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('server_outtime')||readPermit.includes('server_outtime')">
+                      <label>主机到期：</label>
+                      <el-date-picker
+                        v-model="formData.server_outtime"
+                        type="datetime"
+                        class="EditPostInput flex-content"
+                        value-format = "yyyy-MM-dd HH:mm:ss"
+                        :disabled="!writePermit.includes('server_outtime')"
+                        placeholder="选择日期时间"
+                        default-time="12:00:00">
+                      </el-date-picker>
+                  </div>
+              </li>
+              <li v-if="writePermit.includes('ip')||readPermit.includes('ip')">
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneIp">
+                      <label>IP：</label>
+                      <el-input
+                        v-model="formData.ip"
+                        size="small"
+                        class="EditPostInput flex-content"
+                        :disabled="!writePermit.includes('ip')"
+                        clearable>
+                      </el-input>
+                      <div class="item-wrap">
                         <a :href="'https://www.ipip.net/ip/'+formData.ip+'.html'" target="_blank" class="link">IP查询</a>
                         <a :href="'http://ping.chinaz.com/'+formData.ip" target="_blank" class="link">PING国内检测</a>
                         <a :href="'https://asm.ca.com/zh_cn/ping.php?IP='+formData.ip" target="_blank" class="link">PING全球检测</a>
                         <a class="link" v-if="formData.serverstatus==1" v-on:click="linkPage">独立服务器查询</a>
                       </div>
-                    </div>
                   </div>
-                </td>
-              </tr>
-              <tr v-if="writePermit.includes('ftpuser')||readPermit.includes('ftpuser')||writePermit.includes('ftppassword')||readPermit.includes('ftppassword')">
-                <td class="type-title"><span>FTP：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column flex" v-if="writePermit.includes('ftpuser')||readPermit.includes('ftpuser')">
-                      <strong>帐号：</strong>
-                      <div class="item-wrap">
+              </li>
+              <li v-if="writePermit.includes('ftpuser')||readPermit.includes('ftpuser')||writePermit.includes('ftppassword')||readPermit.includes('ftppassword')">
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('ftpuser')||readPermit.includes('ftpuser')">
+                      <label>FTP帐号：</label>
                         <el-input
                           v-model="formData.ftpuser"
                           :disabled="!writePermit.includes('ftpuser')"
                           size="small"
+                          class="EditPostInput flex-content"
                           clearable>
                         </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="FTP登录账号">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column flex" v-if="writePermit.includes('ftppassword')||readPermit.includes('ftppassword')">
-                      <strong>密码：</strong>
-                      <div class="item-wrap">
+                  </div>
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('ftppassword')||readPermit.includes('ftppassword')">
+                      <label>FTP密码：</label>
                         <el-input
                           v-model="formData.ftppassword"
                           :disabled="!writePermit.includes('ftppassword')"
                           size="small"
+                          class="EditPostInput flex-content"
                           clearable>
                         </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="FTP登录密码">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
                   </div>
-                </td>
-              </tr>
-              <tr v-if="writePermit.includes('iisftpuser')||readPermit.includes('iisftpuser')||writePermit.includes('iisftppwd')||readPermit.includes('iisftppwd')||writePermit.includes('logspath')||readPermit.includes('logspath')">
-                <td class="type-title"><span>IIS FTP：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column flex" v-if="writePermit.includes('iisftpuser')||readPermit.includes('iisftpuser')">
-                      <strong>帐号：</strong>
-                      <div class="item-wrap">
-                        <el-input
-                          v-model="formData.iisftpuser"
-                          :disabled="!writePermit.includes('iisftpuser')"
-                          size="small"
-                          clearable>
-                        </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="IIS FTP登陆账号">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column flex" v-if="writePermit.includes('iisftppwd')||readPermit.includes('iisftppwd')">
-                      <strong>密码：</strong>
-                      <div class="item-wrap">
+              </li>
+              <li v-if="writePermit.includes('iisftpuser')||readPermit.includes('iisftpuser')||writePermit.includes('iisftppwd')||readPermit.includes('iisftppwd')||writePermit.includes('logspath')||readPermit.includes('logspath')">
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('iisftpuser')||readPermit.includes('iisftpuser')">
+                      <label>IIS FTP帐号：</label>
+                      <el-input
+                        v-model="formData.iisftpuser"
+                        :disabled="!writePermit.includes('iisftpuser')"
+                        size="small"
+                        class="EditPostInput flex-content"
+                        clearable>
+                      </el-input>
+                  </div>
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('iisftppwd')||readPermit.includes('iisftppwd')">
+                      <label>IIS FTP密码：</label>
                         <el-input
                           v-model="formData.iisftppwd"
                           :disabled="!writePermit.includes('iisftppwd')"
                           size="small"
+                          class="EditPostInput flex-content"
                           clearable>
                         </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="IIS FTP登录密码">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column flex" v-if="writePermit.includes('logspath')||readPermit.includes('logspath')">
-                      <strong>Path：</strong>
-                      <div class="item-wrap">
+                  </div>
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOnePath" v-if="writePermit.includes('logspath')||readPermit.includes('logspath')">
+                      <label>Path：</label>
                         <el-input
                           v-model="formData.logspath"
                           :disabled="!writePermit.includes('logspath')"
                           size="small"
+                          class="EditPostInput flex-content"
                           clearable>
                         </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站日志的存放路径">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column">
-                      <div class="item-wrap flex-box">
                         <a :href="isHttps?'http://172.16.10.90:8528/iis.aspx?ip='+formData.ip+'&user='+formData.iisftpuser+'&pwd='+formData.iisftppwd+'&path='+formData.logspath+'&web=https://www.'+formData.domain:'http://172.16.10.90:8528/iis.aspx?ip='+formData.ip+'&user='+formData.iisftpuser+'&pwd='+formData.iisftppwd+'&path='+formData.logspath+'&web=http://www.'+formData.domain" target="_blank" class="link">IIS 分析</a>
-                      </div>
-                    </div>
                   </div>
-                </td>
-              </tr>
-              <tr v-if="writePermit.includes('ftpremarks')||readPermit.includes('ftpremarks')">
-                <td class="type-title"><span>FTP备注：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column flex">
+              </li>
+              <li v-if="writePermit.includes('ftpremarks')||readPermit.includes('ftpremarks')">
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneFtpBak">
+                      <label>FTP备注：</label>
                       <el-input
                         type="textarea"
                         :autosize="{ minRows: 2, maxRows: 4}"
@@ -325,81 +199,47 @@
                         v-model="formData.ftpremarks"
                         :disabled="!writePermit.includes('ftpremarks')"
                         size="small"
+                        class="EditPostInput flex-content"
                         clearable>
                       </el-input>
-                    </div>
                   </div>
-                </td>
-              </tr>
-              <tr v-if="writePermit.includes('websiteurl')||readPermit.includes('websiteurl')||writePermit.includes('websiteuser')||readPermit.includes('websiteuser')||writePermit.includes('websitepassword')||readPermit.includes('websitepassword')">
-                <td class="type-title"><span>后台管理：</span></td>
-                <td>
-                  <div class="item-form-content" v-if="writePermit.includes('websiteurl')||readPermit.includes('websiteurl')">
-                    <div class="item-column flex">
-                      <strong>后台地址：</strong>
-                      <div class="item-wrap">
-                        <el-input
-                          v-model="formData.websiteurl"
-                          :disabled="!writePermit.includes('websiteurl')"
-                          size="small"
-                          clearable>
-                        </el-input>
-                      </div>
+              </li>
+              <li v-if="writePermit.includes('websiteurl')||readPermit.includes('websiteurl')||writePermit.includes('websiteuser')||readPermit.includes('websiteuser')||writePermit.includes('websitepassword')||readPermit.includes('websitepassword')">
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneWebsiteurl" v-if="writePermit.includes('websiteurl')||readPermit.includes('websiteurl')">
+                      <label>后台地址：</label>
+                      <el-input
+                        v-model="formData.websiteurl"
+                        :disabled="!writePermit.includes('websiteurl')"
+                        size="small"
+                        class="EditPostInput flex-content"
+                        clearable>
+                      </el-input>
                       <a :href="formData.websiteurl" target="_blank" class="link">跳转</a>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站后台管理地址">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
                   </div>
-                  <div class="item-form-content">
-                    <div class="item-column flex" v-if="writePermit.includes('websiteuser')||readPermit.includes('websiteuser')">
-                      <strong>帐号：</strong>
-                      <div class="item-wrap">
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('websiteuser')||readPermit.includes('websiteuser')">
+                      <label>后台帐号：</label>
                         <el-input
                           v-model="formData.websiteuser"
                           :disabled="!writePermit.includes('websiteuser')"
                           size="small"
+                          class="EditPostInput flex-content"
                           clearable>
                         </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="210"
-                        trigger="hover"
-                        content="网站后台管理系统登陆账号">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column flex" v-if="writePermit.includes('websitepassword')||readPermit.includes('websitepassword')">
-                      <strong>密码：</strong>
-                      <div class="item-wrap">
+                  </div>
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('websitepassword')||readPermit.includes('websitepassword')">
+                      <label>后台密码：</label>
                         <el-input
                           v-model="formData.websitepassword"
                           :disabled="!writePermit.includes('websitepassword')"
                           size="small"
+                          class="EditPostInput flex-content"
                           clearable>
                         </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="210"
-                        trigger="hover"
-                        content="网站后台管理系统登陆密码">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
                   </div>
-                </td>
-              </tr>
-              <tr v-if="writePermit.includes('websiteremarks')||readPermit.includes('websiteremarks')">
-                <td class="type-title"><span>后台备注：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column flex">
+              </li>
+              <li v-if="writePermit.includes('websiteremarks')||readPermit.includes('websiteremarks')">
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneAdminBak">
+                      <label>后台备注：</label>
                       <el-input
                         type="textarea"
                         :autosize="{ minRows: 2, maxRows: 4}"
@@ -407,48 +247,36 @@
                         v-model="formData.websiteremarks"
                         :disabled="!writePermit.includes('websiteremarks')"
                         size="small"
+                        class="EditPostInput flex-content"
                         clearable>
                       </el-input>
-                    </div>
                   </div>
-                </td>
-              </tr>
-              <tr v-if="writePermit.includes('brand')||readPermit.includes('brand')||writePermit.includes('language')||readPermit.includes('language')||writePermit.includes('website_departid')||readPermit.includes('website_departid')||writePermit.includes('website_designuser')||readPermit.includes('website_designuser')||writePermit.includes('website_beforeuser')||readPermit.includes('website_beforeuser')||writePermit.includes('website_backuser')||readPermit.includes('website_backuser')||writePermit.includes('website_serveruser')||readPermit.includes('website_serveruser')||writePermit.includes('website_pushuser')||readPermit.includes('website_pushuser')||writePermit.includes('website_headuser')||readPermit.includes('website_headuser')">
-                <td class="type-title"><span>网站归属：</span></td>
-                <td>
-                  <div class="item-form-content" v-if="writePermit.includes('brand')||readPermit.includes('brand')||writePermit.includes('language')||readPermit.includes('language')||writePermit.includes('website_departid')||readPermit.includes('website_departid')">
-                    <div class="item-column flex" v-if="writePermit.includes('brand')||readPermit.includes('brand')">
-                      <strong>品牌：</strong>
-                      <div class="item-wrap">
-                        <el-select 
-                          v-model="formData.brand" 
-                          size="small"
-                          :disabled="!writePermit.includes('brand')" 
-                          clearable 
-                          placeholder="请选择品牌">
-                          <el-option
-                            v-for="item in brandSelectList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                          </el-option>
-                        </el-select>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站所属品牌">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column flex" v-if="writePermit.includes('language')||readPermit.includes('language')">
-                      <strong>语言：</strong>
-                      <div class="item-wrap">
+              </li>
+              <li v-if="writePermit.includes('brand')||readPermit.includes('brand')||writePermit.includes('language')||readPermit.includes('language')||writePermit.includes('website_departid')||readPermit.includes('website_departid')">
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('brand')||readPermit.includes('brand')">
+                      <label>品牌：</label>
+                      <el-select 
+                        v-model="formData.brand" 
+                        size="small"
+                        class="EditPostInput flex-content"
+                        :disabled="!writePermit.includes('brand')" 
+                        clearable 
+                        placeholder="请选择品牌">
+                        <el-option
+                          v-for="item in brandSelectList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                  </div>
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('language')||readPermit.includes('language')">
+                      <label>语言：</label>
                         <el-select 
                           v-model="formData.language" 
                           :disabled="!writePermit.includes('language')" 
                           size="small" 
+                          class="EditPostInput flex-content"
                           clearable 
                           placeholder="请选择语言">
                           <el-option
@@ -458,22 +286,14 @@
                             :value="item.value">
                           </el-option>
                         </el-select>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站所属语种">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column flex" v-if="writePermit.includes('website_departid')||readPermit.includes('website_departid')">
-                      <strong>部门：</strong>
-                      <div class="item-wrap">
+                  </div>
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_departid')||readPermit.includes('website_departid')">
+                      <label>部门：</label>
                         <el-select 
                           v-model="formData.website_departid" 
                           :disabled="!writePermit.includes('website_departid')" 
                           size="small" 
+                          class="EditPostInput flex-content"
                           clearable 
                           placeholder="请选择部门">
                           <el-option
@@ -483,24 +303,16 @@
                             :value="item.value">
                           </el-option>
                         </el-select>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站所属部门">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
                   </div>
-                  <div class="item-form-content" v-if="writePermit.includes('website_designuser')||readPermit.includes('website_designuser')||writePermit.includes('website_beforeuser')||readPermit.includes('website_beforeuser')">
-                    <div class="item-column flex" v-if="writePermit.includes('website_designuser')||readPermit.includes('website_designuser')">
-                      <strong>设计：</strong>
-                      <div class="item-wrap">
+              </li>
+              <li v-if="writePermit.includes('website_designuser')||readPermit.includes('website_designuser')||writePermit.includes('website_beforeuser')||readPermit.includes('website_beforeuser')||writePermit.includes('website_backuser')||readPermit.includes('website_backuser')">
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_designuser')||readPermit.includes('website_designuser')">
+                      <label>设计：</label>
                         <el-select 
                           v-model="formData.website_designuser" 
                           :disabled="!writePermit.includes('website_designuser')" 
                           size="small" 
+                          class="EditPostInput flex-content"
                           filterable 
                           multiple 
                           clearable 
@@ -512,22 +324,14 @@
                             :value="item.value">
                           </el-option>
                         </el-select>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站的设计负责人">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column flex" v-if="writePermit.includes('website_beforeuser')||readPermit.includes('website_beforeuser')">
-                      <strong>前端：</strong>
-                      <div class="item-wrap">
+                  </div>
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_beforeuser')||readPermit.includes('website_beforeuser')">
+                      <label>前端：</label>
                         <el-select 
                           v-model="formData.website_beforeuser" 
                           :disabled="!writePermit.includes('website_beforeuser')" 
                           size="small" 
+                          class="EditPostInput flex-content"
                           filterable 
                           multiple 
                           clearable 
@@ -539,24 +343,14 @@
                             :value="item.value">
                           </el-option>
                         </el-select>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站的前端负责人">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
                   </div>
-                  <div class="item-form-content" v-if="writePermit.includes('website_backuser')||readPermit.includes('website_backuser')||writePermit.includes('website_serveruser')||readPermit.includes('website_serveruser')">
-                    <div class="item-column flex" v-if="writePermit.includes('website_backuser')||readPermit.includes('website_backuser')">
-                      <strong>程序：</strong>
-                      <div class="item-wrap">
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_backuser')||readPermit.includes('website_backuser')">
+                      <label>程序：</label>
                         <el-select 
                           v-model="formData.website_backuser" 
                           :disabled="!writePermit.includes('website_backuser')" 
                           size="small" 
+                          class="EditPostInput flex-content"
                           filterable 
                           multiple 
                           clearable 
@@ -568,22 +362,16 @@
                             :value="item.value">
                           </el-option>
                         </el-select>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站的程序负责人">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column flex" v-if="writePermit.includes('website_serveruser')||readPermit.includes('website_serveruser')">
-                      <strong>服务器：</strong>
-                      <div class="item-wrap">
+                  </div>
+              </li>
+              <li v-if="writePermit.includes('website_serveruser')||readPermit.includes('website_serveruser')||writePermit.includes('website_pushuser')||readPermit.includes('website_pushuser')||writePermit.includes('website_headuser')||readPermit.includes('website_headuser')">
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_serveruser')||readPermit.includes('website_serveruser')">
+                      <label>服务器：</label>
                         <el-select 
                           v-model="formData.website_serveruser" 
                           :disabled="!writePermit.includes('website_serveruser')" 
                           size="small" 
+                          class="EditPostInput flex-content"
                           filterable 
                           multiple 
                           clearable 
@@ -595,24 +383,14 @@
                             :value="item.value">
                           </el-option>
                         </el-select>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站服务器的运维负责人">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
                   </div>
-                  <div class="item-form-content" v-if="writePermit.includes('website_pushuser')||readPermit.includes('website_pushuser')||writePermit.includes('website_headuser')||readPermit.includes('website_headuser')">
-                    <div class="item-column flex" v-if="writePermit.includes('website_pushuser')||readPermit.includes('website_pushuser')">
-                      <strong>推广：</strong>
-                      <div class="item-wrap">
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_pushuser')||readPermit.includes('website_pushuser')">
+                      <label>推广：</label>
                         <el-select 
                           v-model="formData.website_pushuser" 
                           :disabled="!writePermit.includes('website_pushuser')" 
                           size="small" 
+                          class="EditPostInput flex-content"
                           filterable 
                           multiple 
                           clearable 
@@ -624,22 +402,14 @@
                             :value="item.value">
                           </el-option>
                         </el-select>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站推广|优化的负责人">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column flex" v-if="writePermit.includes('website_headuser')||readPermit.includes('website_headuser')">
-                      <strong>站长：</strong>
-                      <div class="item-wrap">
+                  </div>
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_headuser')||readPermit.includes('website_headuser')">
+                      <label>站长：</label>
                         <el-select 
                           v-model="formData.website_headuser" 
                           :disabled="!writePermit.includes('website_headuser')" 
                           size="small" 
+                          class="EditPostInput flex-content"
                           filterable 
                           multiple 
                           clearable 
@@ -651,110 +421,52 @@
                             :value="item.value">
                           </el-option>
                         </el-select>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站站长负责人">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
                   </div>
-                </td>
-              </tr>
-              <tr v-if="writePermit.includes('domain_attr')||readPermit.includes('domain_attr')">
-                <td class="type-title"><span>网站标签：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column flex">
+              </li>
+              <li v-if="writePermit.includes('domain_attr')||readPermit.includes('domain_attr')">
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneTag">
+                      <label>网站标签：</label>
+                      <el-input
+                        v-model="formData.domain_attr"
+                        :disabled="!writePermit.includes('domain_attr')" 
+                        @input="attrChangeHandler"
+                        size="small"
+                        class="EditPostInput flex-content"
+                        clearable>
+                      </el-input>
                       <div class="item-wrap">
-                        <el-input
-                          v-model="formData.domain_attr"
-                          :disabled="!writePermit.includes('domain_attr')" 
-                          @input="attrChangeHandler"
-                          size="small"
-                          clearable>
-                        </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="300"
-                        trigger="hover"
-                        content="网站属性标签，有系统标签可供选择，也可添加自定义标签，以'|'分隔不同标签，并以'|'结尾">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                  </div>
-                  <div class="item-form-content" v-if="attrTagList.length>0">
-                    <div class="item-column flex">
-                      <div class="item-wrap flex-box">
                         <el-button class="item-tag" type="primary" v-for="(item,index) in attrTagList" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="mini" v-on:click="clickAttrTag(item.name)">{{item.name}}</el-button>
                       </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="系统标签">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
                   </div>
-                </td>
-              </tr>
-              <tr v-if="writePermit.includes('domain_header')||readPermit.includes('domain_header')">
-                <td class="type-title"><span>主机头：</span></td>
-                <td>
-                  <div class="item-form-content">
-                    <div class="item-column flex">
+              </li>
+              <li v-if="writePermit.includes('domain_header')||readPermit.includes('domain_header')">
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneDomainHeader">
+                      <label>主机头：</label>
+                      <el-input
+                        v-model="formData.domain_header"
+                        :disabled="!writePermit.includes('domain_header')" 
+                        size="small"
+                        class="EditPostInput flex-content"
+                        @input="hostChangeHandler"
+                        clearable>
+                      </el-input>
                       <div class="item-wrap">
-                        <el-input
-                          v-model="formData.domain_header"
-                          :disabled="!writePermit.includes('domain_header')" 
-                          size="small"
-                          @input="hostChangeHandler"
-                          clearable>
-                        </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="300"
-                        trigger="hover"
-                        content="主机头属性标签，有系统主机头标签可供选择，也可添加自定义标签，以'|'分隔不同标签，并以'|'结尾">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                  </div>
-                  <div class="item-form-content" v-if="hostTagList.length>0">
-                    <div class="item-column flex">
-                      <div class="item-wrap flex-box">
                         <el-button class="item-tag" type="primary" v-for="(item,index) in hostTagList" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="mini" v-on:click="clickHostTag(item.name)">{{item.name}}</el-button>
                       </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="系统主机头标签">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
                   </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>备注：</span></td>
-                <td>
-                  <div class="item-form">
-                    <div class="item-form-panel">
+              </li>
+              <li>
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneBak">
+                      <label>备注：</label>
                       <el-input
                         type="textarea"
-                        :autosize="{ minRows: 10, maxRows: 20}"
+                        :autosize="{ minRows:5, maxRows:10}"
                         placeholder="请输入网站备注"
                         v-model="formData.remarks"
                         size="small"
+                        class="EditPostInput flex-content"
                         clearable>
                       </el-input>
-                    </div>
                     <el-popover
                       placement="left"
                       width="400"
@@ -777,53 +489,32 @@
                       <i slot="reference" class="el-icon-s-opportunity"></i>
                     </el-popover>
                   </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>其他属性：</span></td>
-                <td>
-                  <div class="item-form-content flex-box">
-                    <div class="item-column" style="width:240px;" v-if="writePermit.includes('is_online')||readPermit.includes('is_online')">
-                      <strong>上线：</strong>
-                      <div class="item-wrap">
-                        <el-checkbox v-model="formData.is_online" :disabled="!writePermit.includes('is_online')" label="网站已上线" border size="small"></el-checkbox>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站上线后，需勾选此项">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column" style="width: 240px;" v-if="writePermit.includes('sort')||readPermit.includes('sort')">
-                      <strong>排序：</strong>
-                      <div class="item-wrap">
+              </li>
+              <li class="WebsiteOneFoot">
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('is_online')||readPermit.includes('is_online')">
+                      <label>上线：</label>
+                      <el-checkbox v-model="formData.is_online" :disabled="!writePermit.includes('is_online')" label="网站已上线" border size="small"></el-checkbox>
+                  </div>
+                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('sort')||readPermit.includes('sort')">
+                      <label>排序：</label>
                         <el-input
                           v-model="formData.sort"
                           :disabled="!writePermit.includes('sort')"
                           clearable
                           size="small">
                         </el-input>
-                      </div>
-                      <el-popover
-                        placement="left"
-                        width="200"
-                        trigger="hover"
-                        content="网站列表中可进行排序">
-                        <i slot="reference" class="el-icon-s-opportunity"></i>
-                      </el-popover>
-                    </div>
-                    <div class="item-column flex">
-                      <strong style="width:120px;">更新时间：</strong>
-                      <div class="item-wrap">
-                        <div class="font">{{formData.updatetime}}</div>
-                      </div>
-                    </div>
                   </div>
-                </td>
-              </tr>
-            </table>
+                  <div class="AddEditPostItem flex-wrap clearfix">
+                      <label>更新时间：</label>
+                      <span>{{formData.updatetime}}</span>
+                  </div>
+              </li>
+          </ul>
+          <div class="card-header WebServerAddEditBtn WebsiteOneBtn">
+              <el-button type="primary" class="updateBtn" size="small" v-on:click="updateWebsiteInfo()" v-if="menuButtonPermit.includes('Website_edit')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>更新</el-button>
+              <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
+              <el-button type="primary" class="resetBtn" size="small" v-on:click="syncMessage()">同步留言板权限</el-button>
+          </div>
           </div>
         </div>
     </el-card>
@@ -901,13 +592,13 @@ export default {
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-25;
-        // 30：page-root上下内边距；20：按钮父级上下内边距；
+        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-40;
+        // 40：page-root上下内边距；20：按钮父级上下内边距；
       });
       window.onresize = () => {
           return (() => {
-            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-25;
-            // 30：page-root上下内边距；20：按钮父级上下内边距；
+            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-40;
+            // 40：page-root上下内边距；20：按钮父级上下内边距；
           })()
       };
   },
@@ -1453,293 +1144,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.table-post{
-  width: 100%;
-  overflow: hidden;
-  border-top: 1px solid $border;
-  border-left: 1px solid $border;
-  tr{
-    td{
-      padding: 5px 10px;
-      vertical-align: middle;
-      border-right: 1px solid $border;
-      border-bottom: 1px solid $border;
-    }
-    td.type-title{
-      width: 140px;
-      text-align: right;
-      span{
-        display: inline-block;
-        line-height: 32px;
-        vertical-align: middle;
-      }
-    }
-  }
-}
-.flex-box{display:flex;flex-wrap:wrap;}
-.item-form-content{
-  display: flex;
-  .item-column{
-    &.flex{
-      flex: 1;
-    }
-    display: flex;
-    padding: 5px 0;
-    ::v-deep .el-select{
-      display: block;
-    }
-    .item-tag{
-      margin: 5px;
-      &:focus{
-        background: #47bba4;
-        border-color: #47bba4;
-        color: #FFFFFF;
-      }
-      &.is-plain:focus{
-        color: #2e88ff;
-        background: #e8f7f4;
-        border-color: #a3ddd1;
-      }
-    }
-    .font{
-      display: block;
-      padding: 0 5px;
-      margin: 0 5px;
-      height: 32px;
-      font-size: 14px;
-      line-height: 32px;
-      color: #333;
-    }
-    .text{
-      display: block;
-      padding: 0 5px;
-      margin: 0 5px;
-      height: 32px;
-      font-size: 12px;
-      line-height: 32px;
-      color: $--color-primary;
-    }
-    .link{
-      display: block;
-      padding: 0 5px;
-      margin: 0 5px;
-      height: 32px;
-      font-size: 14px;
-      line-height: 32px;
-      color: $--color-primary;
-    }
-    .icon-title{
-      margin: 0 5px;
-      font-size: 14px;
-      color: $--color-primary;
-      cursor: pointer;
-      .svg-i{
-        color: $--color-primary;
-      }
-    }
-    >strong{
-      display: block;
-      width:100px;
-      text-align: right;
-      height: 32px;
-      line-height: 32px;
-      font-weight: normal;
-      padding: 0 10px 0 0;
-    }
-    >span{
-      display: block;
-      width: 30px;
-      height: 32px;
-      text-align: center;
-      line-height: 32px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #bbb;
-    }
-    .item-wrap{
-      flex:1;
-    }
-  }
-}
-.item-form-panel{
-  margin: 5px 0;
-  em{
-    font-style: normal;
-    font-weight: normal;
-    margin-left: 10px;
-    line-height: 32px;
-  }
-}
-.item-form-group.flex-box{
-  display: flex;
-  .flex-content{
-    flex: 1;
-  }
-}
-.item-form{
-    padding-right: 30px;
-    position: relative;
-    &.inline-item.title-color{
-      padding-left: 115px;
-      &:before{
-        display: none;
-      }
-      >strong{
-        width: 105px;
-      }
-    }
-    &.inline-item.other-title{
-      padding-left: 115px;
-      >strong{
-        width: 105px;
-      }
-    }
-    &.other-title+&.other-title{
-      >strong{
-        &:before{
-          display: none;
-        }
-      }
-    }
-    &.inline-item.other-td{
-      padding-left: 140px;
-      >strong{
-        width: 130px;
-        &:before{
-          display: none;
-        }
-      }
-    }
-    &.inline-item{
-      padding-left: 130px;
-      &:before{
-        content:'';
-        display: block;
-        width: 1px;
-        background: $border;
-        position: absolute;
-        top: -5px;
-        height: 52px;
-        right:0;
-      }
-      ::v-deep .el-color-picker{
-        vertical-align: top;
-      }
-      >strong{
-        display: block;
-        position: absolute;
-        left:0;
-        top:0;
-        width: 120px;
-        text-align: right;
-        font-weight: normal;
-        padding: 0 10px;
-        height: 42px;
-        line-height: 42px;
-        &:before,&:after{
-          content:'';
-          display: block;
-          width: 1px;
-          background: $border;
-          position: absolute;
-          top: -5px;
-          height: 52px;
-        }
-        &:before{
-          left:0;
-        }
-        &:after{
-          right:0;
-        }
-      }
-    }
-    >span{
-      display: block;
-      width: 30px;
-      height: 42px;
-      position: absolute;
-      right:0;
-      top:0;
-      text-align: center;
-      line-height: 42px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #bbb;
-    }
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-}
-.tag-panel{
-    width: 100%;
-    overflow: hidden;
-    font-size:0;
-    .el-button{
-        margin-right: 10px;
-        margin-bottom: 5px;
-        margin-top: 5px;
-        vertical-align: top;
-    }
-    .el-button+.el-button{
-      margin-left:0!important;
-    }
-}
-.checkbox-panel{
-  .el-checkbox{
-    margin: 5px 10px 5px 0!important;
-  }
-}
-.tab-card{
-  margin: 5px 0;
-}
-.btn-back{
-  cursor: pointer;
-}
-.remarks-content{
-  p{
-    line-height: 2;
-    font-size: 14px;
-  }
-}
-.table-icon{
-  line-height:0;
-  transition: all .3s;
-  .svg-i{
-    display: inline-block;
-    vertical-align: middle;
-    margin: 3px;
-    cursor: pointer;
-    color: #333;
-    &.link{
-      &:hover{
-        color: $--color-primary;
-      }
-    }
-    &.offline{
-      color: #909399;
-    }
-    &.online{
-      color: #42d885;
-    }
-    &.abnormal{
-      color: #ff4949;
-    }
-    &.timeout{
-      color: #ffc833;
-    }
-  }
-  .svg-icon{
-    width: 20px;
-    height: 20px;
-  }
-  span{
-    vertical-align: middle;
-    line-height: 24px;
-  }
-}
 </style>

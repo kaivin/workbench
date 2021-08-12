@@ -53,17 +53,6 @@
                       </ul>
                     </div>
                     <div v-if="isList" class="card-wrap ArticleThreeList">
-                      <div v-if="totalDataNum>50" class="pagination-panel top-page" ref="pagePaneTop">
-                        <el-pagination
-                          @size-change="handleSizeChange"
-                          @current-change="handleCurrentChange"
-                          :current-page="page"
-                          :page-sizes="pageSizeList"
-                          :page-size="limit"
-                          :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
-                          :total="totalDataNum">
-                        </el-pagination>
-                      </div>
                       <el-table
                         border
                         ref="simpleTable"
@@ -170,7 +159,7 @@
                           </template>
                         </el-table-column>
                       </el-table>
-                      <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePaneBom">
+                      <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
                         <el-pagination
                           @size-change="handleSizeChange"
                           @current-change="handleCurrentChange"
@@ -183,17 +172,6 @@
                       </div>
                     </div>
                     <div v-if="isSearch&&menuButtonPermit.includes('Article_search')" class="card-wrap search-content">
-                      <div v-if="totalDataNum>50" class="pagination-panel top-page" ref="pagePaneTop">
-                        <el-pagination
-                          @size-change="handleSizeChange"
-                          @current-change="handleCurrentChange"
-                          :current-page="page"
-                          :page-sizes="pageSizeList"
-                          :page-size="limit"
-                          :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
-                          :total="totalDataNum">
-                        </el-pagination>
-                      </div>
                       <h2>搜索关键词：<span>{{searchKey}}</span>，共找到：<span>{{totalDataNum}}</span>条</h2>
                       <el-table
                         border
@@ -283,7 +261,7 @@
                           </template>
                         </el-table-column>
                       </el-table>
-                      <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePaneBom">
+                      <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
                         <el-pagination
                           @size-change="handleSizeChange"
                           @current-change="handleCurrentChange"
@@ -348,11 +326,12 @@ export default {
       const $this = this;
       this.$nextTick(function () {
         if($this.isDefault&&$this.departUser.length>0){
-           $this.scrollHeight = $this.$refs.boxPane.offsetHeight-30;
+           $this.scrollHeight = $this.$refs.boxPane.offsetHeight-40;
         }else{
-           $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-15;
            if($this.totalDataNum>50){
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePaneTop.offsetHeight-$this.$refs.pagePaneBom.offsetHeight-30-15;
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-15;
+           }else{
+             $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-15;
            }
         }
         // 30：page-root上下内边距；20：按钮父级上下内边距；
@@ -360,12 +339,13 @@ export default {
       window.onresize = () => {
           return (() => {
               if($this.isDefault&&$this.departUser.length>0){
-                $this.scrollHeight = $this.$refs.boxPane.offsetHeight-30;
+                $this.scrollHeight = $this.$refs.boxPane.offsetHeight-40;
               }else{
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-15;
-                if($this.totalDataNum>50){
-                  $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePaneTop.offsetHeight-$this.$refs.pagePaneBom.offsetHeight-30-15;
-                }
+                  if($this.totalDataNum>50){
+                      $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-15;
+                  }else{
+                    $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-15;
+                  }
               }
             // 30：page-root上下内边距；20：按钮父级上下内边距；
           })()
@@ -405,11 +385,12 @@ export default {
     var $this = this;
     this.$nextTick(() => {
       if($this.isDefault&&$this.departUser.length>0){
-          $this.scrollHeight = $this.$refs.boxPane.offsetHeight-30;
+          $this.scrollHeight = $this.$refs.boxPane.offsetHeight-40;
       }else{
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-15;
           if($this.totalDataNum>50){
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePaneTop.offsetHeight-$this.$refs.pagePaneBom.offsetHeight-30-15;
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-15;
+          }else{
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-15;
           }
       }
       if($this.isList){

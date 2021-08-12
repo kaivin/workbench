@@ -1,114 +1,56 @@
 ﻿<template>
-  <div class="page-root scroll-panel">
-    <div class="article-header">
-      <div class="flex-row multiple-column">
-        <div class="flex-column txt-content">
-          <div class="flex-row">
-            <div class="flex-column txt-font nowrap"><span>网站：</span></div>
-            <div class="flex-column txt-content nowrap">
-              <strong>{{website}} [ {{websiteID}} ]</strong>
+  <div class="page-root scroll-panel ArticleSix flex-wrap">
+      <div class="ArticleSixFl flex-content">
+            <div class="ArticleSixFlTop">
+                <h1>{{articleData.title}}</h1>
+                <div class="ArticleSixFlTopTag clearfix">
+                    <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>网站：{{website}} [ {{websiteID}} ]</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>匿名</span><span><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.addtime}}</span></p>
+                    <p class="ArticleSixFlTopTagFr">阅读：{{articleData.hits}}&nbsp;&nbsp;|&nbsp;&nbsp;发布时间：{{articleData.updatetime}}</p>
+                </div>
+                <div class="ArticleSixFlTopRead">
+                      <p class="article-user" v-if="articleData.readshow==1">
+                        <strong>{{userList.hasreadusercount}}人已读</strong>
+                        <template v-for="(item,index) in userList.hasreaduser">
+                          <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
+                          <span v-bind:key="item.id" v-else>、{{item.name}}</span>
+                        </template>
+                      </p>
+                      <p class="article-user" v-if="articleData.readshow==1">
+                        <strong>{{userList.notreadusercount}}人未读</strong>
+                        <template v-for="(item,index) in userList.notreaduser">
+                          <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
+                          <span v-bind:key="item.id" v-else>、{{item.name}}</span>
+                        </template>
+                      </p>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="flex-column txt-content">
-          <div class="flex-row">
-            <div class="flex-column txt-font nowrap"><span>创建者：</span></div>
-            <div class="flex-column txt-content nowrap">
-              <strong v-if="articleData.is_hidename==0">{{articleData.createname}}</strong><strong v-else>匿名</strong>
-            </div>
-          </div>
-        </div>
-        <div class="flex-column txt-content">
-          <div class="flex-row">
-            <div class="flex-column txt-font nowrap"><span>创建时间：</span></div>
-            <div class="flex-column txt-content nowrap">
-              <strong>{{articleData.addtime}}</strong>
-            </div>
-          </div>
-        </div>
-        <div class="flex-column txt-content">
-          <div class="flex-row">
-            <div class="flex-column txt-font nowrap"><span>修改时间：</span></div>
-            <div class="flex-column txt-content nowrap">
-              <strong>{{articleData.updatetime}}</strong>
-            </div>
-          </div>
-        </div>
-        <div class="flex-column txt-content">
-          <div class="flex-row">
-            <div class="flex-column txt-font nowrap"><span>点击量：</span></div>
-            <div class="flex-column txt-content">
-              <strong>{{articleData.hits}}</strong>
-            </div>
-          </div>
-        </div>
-        <div class="flex-column txt-content" v-if="articleData.issay==1||(articleData.issay==0&&commentList.length>0)">
-          <div class="flex-row">
-            <div class="flex-column txt-font nowrap"><span>评论数：</span></div>
-            <div class="flex-column txt-content">
-              <strong>{{commentList.length}}</strong>
-            </div>
-            <div class="flex-column txt-content" style="line-height:0;" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||articleData.issay==0&&commentList.length>0">
-              <el-tag class="btn-back" v-on:click="lookComment">评论</el-tag>
-            </div>
-          </div>
-        </div>
+            <div class="info-content" v-bind:class="articleData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="articleData.content"></div>
       </div>
-      <div class="flex-row">
-        <div class="flex-column txt-font nowrap"><span>标题：</span></div>
-        <div class="flex-column txt-content">
-          <strong>{{articleData.title}}</strong>
-        </div>
+    <el-card class="box-card comment ArticleSixFr" shadow="hover" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||(articleData.issay==0&&commentList.length>0)">
+      <div class="ArticleSixFrTop">
+           <p slot="header" class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
+           <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
+              <vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap>
+              <div class="btn-rich">
+                  <el-switch class="hide-name" width="26" v-model="isHideName" inactive-text="匿名发布"> </el-switch>
+                  <el-button type="primary" v-on:click="submitComment">提交</el-button>
+              </div>
+           </div>
       </div>
-      <div class="flex-row" v-if="articleData.readshow==1">
-        <div class="flex-column txt-font nowrap"><span>已读：</span></div>
-        <div class="flex-column txt-content">
-           <p class="article-user">
-            <strong>{{userList.hasreadusercount}}人已读</strong>
-            <template v-for="(item,index) in userList.hasreaduser">
-              <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
-              <span v-bind:key="item.id" v-else>、{{item.name}}</span>
-            </template>
-          </p>
-        </div>
-      </div>
-      <div class="flex-row" v-if="articleData.readshow==1">
-        <div class="flex-column txt-font nowrap"><span>未读：</span></div>
-        <div class="flex-column txt-content">
-          <p class="article-user">
-            <strong>{{userList.notreadusercount}}人未读</strong>
-            <template v-for="(item,index) in userList.notreaduser">
-              <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
-              <span v-bind:key="item.id" v-else>、{{item.name}}</span>
-            </template>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="info-content" v-bind:class="articleData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="articleData.content"></div>
-    <el-card class="box-card comment" shadow="hover" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||(articleData.issay==0&&commentList.length>0)">
-      <div slot="header" class="clearfix comment-header">
-        <strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span>
-      </div>
-      <div class="comment-content">
-        <div class="rich-comment" v-if="articleData.issay==1&&device==='desktop'">
-          <vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap>
-          <div class="btn-rich"><el-checkbox class="hide-name" v-model="isHideName" border>匿名</el-checkbox><el-button type="primary" v-on:click="submitComment">提交</el-button></div>
-        </div>
-        <el-divider class="white-line" v-if="articleData.issay==1&&commentList.length>0&&device==='desktop'"><i class="el-icon-goblet-square-full"></i></el-divider>
-        <div class="comment-list" v-if="commentList.length>0">
+      <div class="ArticleSixFrBom" v-if="commentList.length>0">
           <div class="item-comment" v-for="(item,index) in commentList" v-bind:key="item.id">
-            <div class="comment-header"><span class="floor">#{{commentList.length-index}}楼</span><span class="time">{{item.addtime}}</span><span class="name" v-if="item.is_hidename==0">{{item.name}}：</span><span class="name" v-else>匿名：</span><span v-if="articleData.commentdelete==1" class="delete" v-on:click="deleteComment(item.id)" title="删除该条评论"><i class="el-icon-delete-solid"></i></span></div>
-            <div class="comment-body" v-html="item.content"></div>
+              <div class="comment-header">
+                  <span class="name" v-if="item.is_hidename==0">{{item.name}}</span><span class="name" v-else>匿名</span>
+                  <span class="time">{{item.addtime}}</span>
+                  <span v-if="articleData.commentdelete==1" class="delete" v-on:click="deleteComment(item.id)" title="删除该条评论"><i class="el-icon-delete-solid"></i></span>
+              </div>
+              <div class="comment-body" v-html="item.content"></div>
           </div>
-        </div>
       </div>
     </el-card>
     <el-backtop target=".scroll-panel"></el-backtop>
   </div>
 </template>
-
-
 <script>
 import { mapGetters } from 'vuex'
 import VueUeditorWrap from 'vue-ueditor-wrap'
@@ -136,7 +78,7 @@ export default {
         // 工具栏是否可以浮动
         autoFloatEnabled: false,
         // 初始容器高度
-        initialFrameHeight: 200,
+        initialFrameHeight:120,
         // 初始容器宽度
         initialFrameWidth: '100%',
         // 关闭自动保存
@@ -400,6 +342,7 @@ export default {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .article-user{
   width: 100%;
@@ -417,128 +360,8 @@ export default {
 }
 .box-card{
   height: auto!important;
-  .comment-header{
-    font-size:0;
-    line-height:0;
-    padding: 0 5px;
-    span,strong{
-      line-height: 32px;
-      color: $--color-primary;
-      vertical-align: middle;
-    }
-    strong{
-      font-size: 18px;
-      font-weight: bold;
-    }
-    span{
-      font-size: 14px;
-    }
-  }
-  .comment-content{
-    padding-top: 10px;
-    overflow: hidden;
-  }
-}
-.el-card ::v-deep .edui-editor{
-  border: 1px solid $border!important;
 }
 .btn-back{
   cursor: pointer;
-}
-.btn-rich{
-  padding: 15px 15px 0;
-  text-align: right;
-  line-height:0;
-  .hide-name{
-    margin: 0 15px;
-  }
-}
-.comment-list{
-  width: 100%;
-  overflow: hidden;
-  padding-bottom: 20px;
-  .item-comment{
-    width: 100%;
-    overflow: hidden;
-    border-bottom: 1px solid #f2f2f2;
-    margin-top: 15px;
-    &:hover{
-      .comment-header{
-        .delete{
-          display: block;
-        }
-      }
-    }
-    .comment-header{
-      height:24px;
-      span{
-        display: block;
-        float:left;
-        height: 24px;
-        line-height: 24px;
-        margin-right: 10px;
-        &.floor{
-          color:#999;
-        }
-        &.name{
-          font-weight: bold;
-        }
-        &.delete{
-          float:right;
-          cursor: pointer;
-          display: none;
-          i{
-            font-size: 16px;
-          }
-        }
-      }
-    }
-    .comment-body{
-      padding: 15px;
-      overflow: hidden;
-      p,div{
-        width: 100%;
-        margin: 10px 0;
-      }
-      table{
-        margin: 10px 0;
-      }
-      img,video,table{
-        max-width: 100%;
-      }
-    }
-  }
-}
-.article-header{
-  margin-bottom: 15px;
-  border-top: 1px solid $primaryBorder;
-  border-left: 1px solid $primaryBorder;
-  display: block;
-  .flex-row{
-    display: flex;
-    .flex-column{
-      padding: 10px;
-      line-height: 28px;
-      font-size: 15px;
-      border-bottom: 1px solid $primaryBorder;
-      border-right: 1px solid $primaryBorder;
-    }
-    .nowrap{
-      word-break: keep-all;
-      word-wrap:normal;
-      white-space:nowrap;
-    }
-    .txt-content{
-      flex: 1;
-    }
-    &.multiple-column{
-      flex-wrap: wrap;
-      >.flex-column{
-        padding:0;
-        border-bottom:none;
-        border-right:none;
-      }
-    }
-  }
 }
 </style>

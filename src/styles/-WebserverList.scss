@@ -1,8 +1,8 @@
 ﻿.WebServerTop{
-    max-width: 1400px;
-    padding-right: 30px;
+    max-width:1400px;
+    padding-right:30px;
     .el-select{
-        display: block!important;
+        display:block!important;
     }
     .el-button.search{
         padding:7px 10px 7px 10px!important;
@@ -12,10 +12,10 @@
 .WebServerBom{
     .table-link{
         .link{
-            color: $menuActiveText;
-            margin: 0 5px;
-            line-height: 24px;
-            cursor: pointer;
+            color:$menuActiveText;
+            margin:0 5px;
+            line-height:24px;
+            cursor:pointer;
         }
     }
 }
@@ -23,7 +23,7 @@
     clear:both;
     display:block;
     width:100%;
-    padding: 20px 40px 0 30px;
+    padding:20px 40px 0 30px;
     li{
         clear:both;
         display:block;
@@ -33,7 +33,7 @@
             position:relative;
             padding-top:10px;
             padding-bottom:10px;
-            padding-right: 20px;
+            padding-right:20px;
             &.AddEditPostItemIpTxt,&.editPostUser{
                 width:66.66667%;
             }
@@ -42,8 +42,8 @@
             }
             &.txt-font{
                 .font{
-                    line-height: 32px;
-                    font-size: 14px;
+                    line-height:32px;
+                    font-size:14px;
                 }
             }
             label{
@@ -52,7 +52,7 @@
                 line-height:32px;
                 color:#1a1a1a;
                 width:100px;
-                padding-right: 10px;
+                padding-right:10px;
                 text-align:right;
             }
             .link{
@@ -77,52 +77,52 @@
                 padding-right:15px;
                 font-size:14px;
                 &:focus{
-                    border-color: $--color-primary;
+                    border-color:$menuActiveText;
                 }
             }
         }
-    }         
+    }
 }
 .WebServerAddEditBtn{
-    padding:20px 60px 60px 130px;
+    padding:20px 60px 20px 130px;
     .el-button.updateBtn{
-        background-color: #1890ff!important;
-        border-color: #1890ff!important;
-        font-size: 16px!important;
-        width: 96px;
-        box-sizing: border-box!important;
-        height: 35px;
-        line-height: 33px!important;
-        padding: 0px 10px!important;
+        background-color:#1890ff!important;
+        border-color:#1890ff!important;
+        font-size:16px!important;
+        width:96px;
+        box-sizing:border-box!important;
+        height:35px;
+        line-height:33px!important;
+        padding:0px 10px!important;
         .planeWhite{
-            display: inline-block;
-            width: 16px;
+            display:inline-block;
+            width:16px;
             height:16px;
-            margin-right: 10px;
+            margin-right:10px;
             .svg-icon{
               width:100%!important;
               height:100%!important;
             }
         }
         &:hover{
-            background-color: #2e88ff!important;
-            border-color: #2e88ff!important;
+            background-color:#2e88ff!important;
+            border-color:#2e88ff!important;
         }
     }
     .el-button.resetBtn{
-        background-color: #f5f7fa !important;
-        border-color: #e4e8ee !important;
-        font-size: 16px !important;
-        color: #808080 !important;
-        width: 83px;
-        box-sizing: border-box !important;
-        height: 35px !important;
-        line-height: 33px !important;
-        padding: 0px 10px;
+        background-color:#f5f7fa !important;
+        border-color:#e4e8ee !important;
+        font-size:16px !important;
+        color:#808080 !important;
+        min-width:83px;
+        box-sizing:border-box !important;
+        height:35px !important;
+        line-height:33px !important;
+        padding:0px 10px;
         &:hover{
-            background-color: #2e88ff!important;
-            border-color: #2e88ff!important;
-            color: #ffffff !important;
+            background-color:#2e88ff!important;
+            border-color:#2e88ff!important;
+            color:#ffffff !important;
         }
     }
 }

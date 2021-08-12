@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="page-root" v-bind:class="isPreview?'scroll-panel':''" ref="boxPane">
-    <el-card v-show="!isPreview" class="box-card scroll-card" shadow="hover">
+    <el-card v-show="!isPreview" class="box-card ArticleCard" shadow="hover">
         <div class="card-content" ref="cardContent">
           <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
             <table class="ArticleFour">
@@ -283,7 +283,6 @@ export default {
       activeTab:"textarea",
       isPreview:false,
       isSort:false,
-      isTitColor:false,
       scrollHeight:200,
       postType:[],
       postSystemTag:[],

@@ -29,11 +29,11 @@ body.view img,body.view video,body.view table{
 	max-width: 100%;
 }
 body.view table{
-	border-top: 1px solid #a3ddd1!important;
-    border-left: 1px solid #a3ddd1!important;
+	border-top: 1px solid #f1f3f9!important;
+    border-left: 1px solid #f1f3f9!important;
 }
 body.view table tr td{
-	border-bottom: 1px solid #a3ddd1!important;
-	border-right: 1px solid #a3ddd1!important;
+	border-bottom: 1px solid #f1f3f9!important;
+	border-right: 1px solid #f1f3f9!important;
 	padding: 3px 10px!important;
-  }
+}

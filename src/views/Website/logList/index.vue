@@ -3,19 +3,17 @@
     <el-card class="box-card" shadow="hover">
       <div slot="header">
         <div class="card-header" ref="headerPane">
-          <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
-          <el-button type="primary" size="small" icon="el-icon-circle-plus-outline" @click="addTableRow()" v-if="(menuButtonPermit.includes('Website_logadd'))&&device==='desktop'">新增日志</el-button>
+            <h2 class="log-header">{{website}} 工作日志</h2>
         </div>
       </div>
       <div class="card-content" ref="tableContent">
-        <h2 class="log-header" ref="logHeader">{{website}} 工作日志</h2>
         <el-table
           border
           ref="simpleTable"
           :data="tableData"
           tooltip-effect="dark"
           stripe
-          style="width: 100%"
+          class="SiteTable"
           :height="tableHeight"
           row-key="id"
           >
@@ -158,20 +156,20 @@ export default {
       const $this = this;
       this.$nextTick(function () {
         if($this.totalDataNum>50){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.logHeader.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-20-3;
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-20;
           // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
         }else{
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.logHeader.offsetHeight-30-30-20-3;
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-20;
           // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
         }
       });
       window.onresize = () => {
           return (() => {
             if($this.totalDataNum>50){
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.logHeader.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-20-3;
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-20;
               // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
             }else{
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.logHeader.offsetHeight-30-30-20-3;
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-20;
               // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
             }
           })()
@@ -199,10 +197,6 @@ export default {
     })
   },
   methods:{
-    // 刷新数据
-    refreshData(){
-      this.initPage();
-    },
     // 初始化数据
     initData(){
         var $this = this;
@@ -386,6 +380,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.log-header{
+  width: 100%;
+  text-align: center;
+  font-size: 15px;
+  color: $--color-primary;
+  line-height:1.5;
+}
 .table-tag{
   .el-tag{
     margin: 1px;
@@ -401,17 +402,6 @@ export default {
     color: $--color-primary;
     font-weight: bold;
   }
-}
-.log-header{
-  width: 100%;
-  text-align: center;
-  font-size: 18px;
-  color: $--color-primary;
-  border-top: 1px solid #dfe6ec;
-  border-left: 1px solid #dfe6ec;
-  border-right: 1px solid #dfe6ec;
-  padding: 10px;
-  line-height:2;
 }
 .table-title{
   cursor: pointer;
