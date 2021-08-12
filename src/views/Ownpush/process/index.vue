@@ -1,74 +1,75 @@
 ﻿<template>
-  <div class="page-root" ref="boxPane">
+  <div class="page-root process-index" ref="boxPane">
     <el-card class="box-card" shadow="hover">
       <div slot="header">
         <div class="card-header" ref="headerPane">
-          <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
-          <el-button type="primary" size="small" icon="el-icon-circle-plus-outline" @click="addTableRow()" v-if="device==='desktop'&&menuButtonPermit.includes('Ownpush_processadd')">添加数据</el-button>
-          <el-button type="primary" icon="el-icon-download" v-on:click="dialogImportVisible = true">导入</el-button>
-          <el-button type="primary" icon="el-icon-upload2" @click="dialogExportVisible = true">导出</el-button>
+          <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
+            <div class="item-search">
+              <el-date-picker
+                  class="date-picker"
+                  size="small"
+                  v-model="searchData.date"
+                  type="daterange"
+                  align="right"
+                  value-format = "yyyy-MM-dd"
+                  unlink-panels
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  :picker-options="pickerRangeOptions">
+              </el-date-picker>
+            </div>
+            <div class="item-search">
+              <el-select v-model="searchData.account_id" size="small" filterable clearable multiple collapse-tags placeholder="请选择账户" class="select-panel">
+                  <el-option
+                      v-for="item in accountList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                  </el-option>
+              </el-select>
+            </div>
+            <div class="item-search">
+              <el-select v-model="searchData.processtype" size="small" filterable clearable multiple collapse-tags placeholder="请选择渠道" class="select-panel">
+                  <el-option
+                      v-for="item in channelList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                  </el-option>
+              </el-select>
+            </div>
+            <div class="item-search">
+              <el-select v-model="searchData.processuserid" size="small" filterable clearable multiple collapse-tags placeholder="请选择负责人" class="select-panel">
+                  <el-option
+                      v-for="item in userList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                  </el-option>
+              </el-select>
+            </div>
+            <div class="item-search">
+              <el-select v-model="searchData.brand_id" size="small" clearable multiple collapse-tags placeholder="请选择品牌" class="select-panel">
+                <el-option
+                  v-for="item in brandList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+            <div class="item-search">
+              <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+            </div>
+          </div>
+          <el-button type="primary" icon="el-icon-download" size="small" v-on:click="dialogImportVisible = true">导入</el-button>
+          <el-button type="primary" icon="el-icon-upload2" size="small" @click="dialogExportVisible = true">导出</el-button>
           <el-button type="primary" size="small" icon="el-icon-search" @click="openSearchDialog()" v-if="device==='mobile'">高级查询</el-button>
         </div>
       </div>
-      <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
-        <el-date-picker
-            v-model="searchData.date"
-            type="daterange"
-            align="right"
-            value-format = "yyyy-MM-dd"
-            unlink-panels
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            style="float:left;margin: 5px;"
-            :picker-options="pickerRangeOptions">
-        </el-date-picker>
-        <el-select v-model="searchData.account_id" filterable clearable
-          multiple
-          collapse-tags placeholder="请选择账户" style="width:150px;margin: 5px;float:left;">
-            <el-option
-                v-for="item in accountList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-        </el-select>
-        <el-select v-model="searchData.processtype" filterable clearable
-          multiple
-          collapse-tags placeholder="请选择渠道" style="width:200px;margin: 5px;float:left;">
-            <el-option
-                v-for="item in channelList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-        </el-select>
-        <el-select v-model="searchData.processuserid" filterable clearable
-          multiple
-          collapse-tags placeholder="请选择负责人" style="width:200px;margin: 5px;float:left;">
-            <el-option
-                v-for="item in userList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-        </el-select>
-        <el-select v-model="searchData.brand_id" clearable
-          multiple
-          collapse-tags placeholder="请选择品牌" style="width:150px;margin: 5px;float:left;">
-          <el-option
-            v-for="item in brandList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        <el-button class="item-input" type="primary" icon="el-icon-search" @click="searchResult" style="margin: 5px;float:left;">查询</el-button>
-      </div>
-      <el-divider v-if="device==='desktop'"><i class="el-icon-goblet-square-full"></i></el-divider>
       <div class="card-content" ref="tableContent">
         <el-table
-          border
           ref="simpleTable"
           :data="tableData"
           tooltip-effect="dark"
@@ -254,7 +255,7 @@
         </el-pagination>
       </div>
     </el-card>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_processadd')||menuButtonPermit.includes('Ownpush_processedit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" width="760px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_processadd')||menuButtonPermit.includes('Ownpush_processedit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="760px">
       <el-form :model="dialogForm">
         <div class="item-form-group">
           <div class="item-form">
@@ -269,13 +270,6 @@
                     :picker-options="pickerOptions">
                 </el-date-picker>
               </el-form-item>
-              <el-popover
-                  placement="left"
-                  width="200"
-                  trigger="hover"
-                  content="数据日期，不可为空">
-                  <i slot="reference" class="el-icon-s-opportunity"></i>
-              </el-popover>
           </div>
           <div class="item-form">
               <el-form-item label="账户：" :label-width="formLabelWidth">
@@ -288,13 +282,6 @@
                       </el-option>
                   </el-select>
               </el-form-item>
-              <el-popover
-                  placement="left"
-                  width="200"
-                  trigger="hover"
-                  content="数据所属账户，不可为空">
-                  <i slot="reference" class="el-icon-s-opportunity"></i>
-              </el-popover>
           </div>
         </div>
         <div class="item-form-group">
@@ -309,13 +296,6 @@
                       </el-option>
                   </el-select>
               </el-form-item>
-              <el-popover
-                  placement="left"
-                  width="200"
-                  trigger="hover"
-                  content="账户所属渠道，不可为空">
-                  <i slot="reference" class="el-icon-s-opportunity"></i>
-              </el-popover>
           </div>
           <div class="item-form">
               <el-form-item label="所属人：" :label-width="formLabelWidth">
@@ -328,13 +308,6 @@
                       </el-option>
                   </el-select>
               </el-form-item>
-              <el-popover
-                  placement="left"
-                  width="200"
-                  trigger="hover"
-                  content="账户所属人，不可为空">
-                  <i slot="reference" class="el-icon-s-opportunity"></i>
-              </el-popover>
           </div>
         </div>
         <div class="item-form-group">
@@ -342,25 +315,11 @@
               <el-form-item label="消费：" :label-width="formLabelWidth">
                   <el-input v-model="dialogForm.processmoney" ref="processmoney"></el-input>
               </el-form-item>
-              <el-popover
-                  placement="left"
-                  width="200"
-                  trigger="hover"
-                  content="当日消费">
-                  <i slot="reference" class="el-icon-s-opportunity"></i>
-              </el-popover>
           </div>
           <div class="item-form">
               <el-form-item label="展现：" :label-width="formLabelWidth">
                   <el-input v-model="dialogForm.showhits" ref="showhits"></el-input>
               </el-form-item>
-              <el-popover
-                  placement="left"
-                  width="200"
-                  trigger="hover"
-                  content="展现次数">
-                  <i slot="reference" class="el-icon-s-opportunity"></i>
-              </el-popover>
           </div>
         </div>
         <div class="item-form-group">
@@ -368,25 +327,11 @@
               <el-form-item label="点击：" :label-width="formLabelWidth">
                   <el-input v-model="dialogForm.hits" ref="hits"></el-input>
               </el-form-item>
-              <el-popover
-                  placement="left"
-                  width="200"
-                  trigger="hover"
-                  content="点击次数">
-                  <i slot="reference" class="el-icon-s-opportunity"></i>
-              </el-popover>
           </div>
           <div class="item-form">
               <el-form-item label="抵达：" :label-width="formLabelWidth">
                   <el-input v-model="dialogForm.gethits" ref="gethits"></el-input>
               </el-form-item>
-              <el-popover
-                  placement="left"
-                  width="200"
-                  trigger="hover"
-                  content="抵达次数">
-                  <i slot="reference" class="el-icon-s-opportunity"></i>
-              </el-popover>
           </div>
         </div>
         <div class="item-form-group">
@@ -394,25 +339,11 @@
               <el-form-item label="电话：" :label-width="formLabelWidth">
                   <el-input v-model="dialogForm.phonenumber" ref="phonenumber"></el-input>
               </el-form-item>
-              <el-popover
-                  placement="left"
-                  width="200"
-                  trigger="hover"
-                  content="电话询盘数">
-                  <i slot="reference" class="el-icon-s-opportunity"></i>
-              </el-popover>
           </div>
           <div class="item-form">
               <el-form-item label="商务通：" :label-width="formLabelWidth">
                   <el-input v-model="dialogForm.qqnumber" ref="qqnumber"></el-input>
               </el-form-item>
-              <el-popover
-                  placement="left"
-                  width="200"
-                  trigger="hover"
-                  content="商务通询盘数">
-                  <i slot="reference" class="el-icon-s-opportunity"></i>
-              </el-popover>
           </div>
         </div>
         <div class="item-form-group">
@@ -420,47 +351,13 @@
               <el-form-item label="表单：" :label-width="formLabelWidth">
                   <el-input v-model="dialogForm.formnumber" ref="formnumber"></el-input>
               </el-form-item>
-              <el-popover
-                  placement="left"
-                  width="200"
-                  trigger="hover"
-                  content="表单询盘数">
-                  <i slot="reference" class="el-icon-s-opportunity"></i>
-              </el-popover>
           </div>
         </div>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="handleClose">取 消</el-button>
           <el-button type="primary" @click="saveData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <el-dialog title="高级查询" v-if="device==='mobile'" custom-class="search-dialog block-search" :visible.sync="dialogSearchVisible">
-      <div class="search-dialog-wrap">
-        <div class="item-search">
-          <el-select v-model="searchData.is_delete" clearable placeholder="请选择用户状态">
-            <el-option
-              v-for="item in userStatus"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="item-search">
-          <el-input
-            placeholder="请输入真实姓名关键字"
-            v-model="searchData.uname"
-            clearable>
-          </el-input>
-        </div>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogSearchVisible = false">取 消</el-button>
-          <el-button type="primary" @click="searchResult">查询</el-button>
         </span>
       </template>
     </el-dialog>
@@ -473,7 +370,6 @@
         </span>
       </template>
     </el-dialog>
-    
     <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="400px">
       <el-form :inline="true" :model="exportForm">
         <el-form-item label="文件名称：" :label-width="formLabelWidth">
@@ -496,8 +392,6 @@
     </el-dialog>
   </div>
 </template>
-
-
 <script>
 import { mapGetters } from 'vuex'
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
@@ -617,28 +511,28 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device'
+      'device',
+      'addCnProcess'
     ]),
+    isAdd() {
+      return this.addCnProcess
+    }
   },
   mounted(){
       const $this = this;
       this.$nextTick(function () {
         if($this.device === "desktop"){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-49-30-30-20-3;
-          // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
         }else{
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-20-3;
-          // 30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
         }
       });
       window.onresize = () => {
           return (() => {
             if($this.device === "desktop"){
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-49-30-30-20-3;
-                // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
             }else{
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-20-3;
-                // 30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
             }
           })()
       }
@@ -652,6 +546,11 @@ export default {
           setTimeout(function() {
             $this.timer = false
           }, 400)
+        }
+      },
+      isAdd(e){
+        if(e){
+          this.addTableRow();
         }
       },
   },
@@ -676,10 +575,6 @@ export default {
         date.setTime(date.getTime() - 3600 * 1000 * 24);
         var yesterday = date.getFullYear()+"-"+(date.getMonth()+1>9?date.getMonth()+1:'0'+(date.getMonth()+1))+"-"+(date.getDate()+1>9?date.getDate():'0'+(date.getDate()));
         $this.dialogForm.addtime = yesterday;
-    },
-    // 刷新数据
-    refreshData(){
-      this.initPage();
     },
     // 搜索数据
     searchResult(){
@@ -792,6 +687,12 @@ export default {
         }
       });
     },
+    // 关闭添加营销流程数据弹窗
+    handleClose(){
+      var $this = this;
+      $this.dialogFormVisible = false;
+      $this.$store.dispatch('app/closeCnProcess');
+    },
     // 添加表格行数据
     addTableRow(row,index){
       var $this = this;
@@ -838,7 +739,7 @@ export default {
               message: response.info,
               type: 'success'
             });
-            $this.dialogFormVisible = false;
+            $this.handleClose();
             $this.initPage();
           }else{
             $this.$message({
@@ -1229,98 +1130,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.item-form.icon{
-  padding-right: 76px;
-}
-.export-dialog{
-  .el-form-item{
-    margin-right:0!important;
-    width: 100%;
-    :deep(.el-form-item__content){
-      width: 280px;
-      .el-select--small{
-        width: 100%;
-      }
-    }
-  }
-}
-.item-form-group {
-  width: 100%;
-  &:before,
-  &:after {
-    content: "";
-    display: table;
-  }
-  &:after {
-    clear: both;
-  }
-  .item-form {
-    width: 50%;
-    float: left;
-  }
-}
-.item-form{
-    padding-right: 30px;
-    position: relative;
-    .icon-button{
-      width: 36px;
-      height: 36px;
-      position: absolute;
-      top:0;
-      right: 30px;
-      border: 1px solid #C0C4CC;
-      border-radius: 4px;
-      text-align: center;
-      line-height: 34px;
-      font-size: 18px;
-      color: #999;
-      cursor: pointer;
-    }
-    >span{
-      display: block;
-      width: 30px;
-      height: 36px;
-      position: absolute;
-      right:0;
-      top:0;
-      text-align: center;
-      line-height: 36px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #bbb;
-    }
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-}
-.el-select{
-    display: block;
-}
-.product-span{
-    i{
-        font-style: normal;
-        font-weight: bold;
-    }
-    &.level_1{
-        i{color:#B3315F};
-    }
-    &.level_2{
-        i{
-            color: #130CB7;
-        }
-    }
-    &.level_3{
-        i{
-            color: #6a6a6b;
-        }
-    }
-}
-.el-form-item{
-  margin-bottom: 15px;
-}
 </style>

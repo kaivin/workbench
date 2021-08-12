@@ -1,15 +1,8 @@
 ﻿<template>
   <div ref="boxPane" class="page-root">
     <el-card class="box-card" shadow="hover">
-      <div slot="header">
-        <div ref="headerPane" class="card-header">
-          <el-button type="primary" size="small" icon="el-icon-refresh" @click="refreshData" >刷新</el-button>
-          <el-button type="primary" size="small" icon="el-icon-circle-plus-outline" @click="addTableRow()" v-if="menuButtonPermit.includes('Menu_add')&& device === 'desktop'" >添加</el-button>
-        </div>
-      </div>
       <div class="card-content" ref="tableContent">
         <el-table
-          border
           ref="simpleTable"
           :data="tableData"
           tooltip-effect="dark"
@@ -18,14 +11,12 @@
           style="width: 100%"
           :height="tableHeight"
           row-key="id"
-          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-        >
+          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }" >
           <el-table-column
             prop="name"
             label="菜单名称"
             min-width="160"
-            fixed="left"
-          >
+            fixed="left" >
           </el-table-column>
           <el-table-column prop="route" label="唯一标识名" width="150">
           </el-table-column>
@@ -34,17 +25,13 @@
           <el-table-column
             prop="redirecturl"
             label="重定向链接"
-            min-width="160"
-          >
+            min-width="160" >
           </el-table-column>
           <el-table-column prop="sort" label="排序" width="80">
           </el-table-column>
           <el-table-column align="center" prop="icon" label="图标" width="80">
             <template slot-scope="scope" v-if="scope.row.iconType != ''">
-              <svg-icon
-                v-if="scope.row.iconType == 'svg'"
-                :icon-class="scope.row.icon"
-              />
+              <svg-icon v-if="scope.row.iconType == 'svg'" :icon-class="scope.row.icon" />
               <i v-else :class="scope.row.icon"></i>
             </template>
           </el-table-column>
@@ -52,28 +39,27 @@
             align="center"
             prop="hide"
             label="是否隐藏"
-            width="80"
-          >
+            width="80" >
             <template slot-scope="scope">
               <el-checkbox v-model="scope.row.hide" disabled></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column
+            v-if="isCaches"
             align="center"
             prop="is_fixed"
             label="是否固定"
-            width="80"
-          >
+            width="80" >
             <template slot-scope="scope">
               <el-checkbox v-model="scope.row.fixed" disabled></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column
+            v-if="isCaches"
             align="center"
             prop="redis"
             label="是否缓存"
-            width="80"
-          >
+            width="80" >
             <template slot-scope="scope">
               <el-checkbox v-model="scope.row.redis" disabled></el-checkbox>
             </template>
@@ -84,8 +70,7 @@
             align="center"
             fixed="right"
             prop="operations"
-            label="操作"
-          >
+            label="操作" >
             <template #default="scope">
               <div class="table-button">
                 <el-button size="mini" @click="addTableRow(scope.row, scope.$index)" v-if="menuButtonPermit.includes('Menu_add')">添加子菜单</el-button>
@@ -97,21 +82,11 @@
         </el-table>
       </div>
     </el-card>
-    <el-dialog
-      :title="dialogText"
-      v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit')) &&device === 'desktop'"
-      custom-class="add-edit-dialog"
-      :visible.sync="dialogFormVisible"
-      width="680px"
-    >
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit')) &&device === 'desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="680px">
       <el-form :model="dialogForm">
         <div class="item-form-group">
           <div class="item-form">
-            <el-form-item
-              label="父级菜单："
-              :label-width="formLabelWidth"
-              v-if="menuLevelData.length > 0"
-            >
+            <el-form-item label="父级菜单：" :label-width="formLabelWidth" v-if="menuLevelData.length > 0">
               <el-cascader
                 v-model="dialogForm.uid"
                 :options="menuLevelData"
@@ -119,104 +94,44 @@
                 filterable
                 placeholder="请选择父级菜单"
                 :props="{ checkStrictly: true, expandTrigger: 'hover' }"
-                clearable
-              ></el-cascader>
+                clearable></el-cascader>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="为空则表示设置为根节点菜单，根节点菜单必须设置图标"
-            >
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
           </div>
           <div class="item-form">
             <el-form-item label="菜单名称：" :label-width="formLabelWidth">
               <el-input v-model="dialogForm.name" ref="name"></el-input>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="菜单显示名称，不可为空"
-            >
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
           </div>
         </div>
         <div class="item-form">
           <el-form-item label="唯一标识名：" :label-width="formLabelWidth">
             <el-input v-model="dialogForm.route" ref="route"></el-input>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="后端程序控制器与前端路由别名共用此字段，可为空，有值则唯一"
-          >
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
           <el-form-item label="链接：" :label-width="formLabelWidth">
             <el-input v-model="dialogForm.url" ref="url"></el-input>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="前端路由链接，非叶节点可为空，叶节点不为空且唯一"
-          >
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
           <el-form-item label="重定向链接：" :label-width="formLabelWidth">
-            <el-input
-              v-model="dialogForm.redirecturl"
-              ref="redirecturl"
-            ></el-input>
+            <el-input v-model="dialogForm.redirecturl" ref="redirecturl"></el-input>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="重定向页面链接地址，一般为父节点重定向到其某一子节点使用，可为空"
-          >
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form-group">
           <div class="item-form">
             <el-form-item label="排序：" :label-width="formLabelWidth">
               <el-input v-model="dialogForm.sort" ref="sort"></el-input>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="数字越小，菜单排序越靠前，数字可为负，不同层级的菜单排序数字互不影响"
-            >
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
           </div>
           <div class="item-form icon">
             <el-form-item label="图标：" :label-width="formLabelWidth">
-              <el-input
-                v-model="dialogForm.icon"
-                :disabled="true"
-                clearable
-                ref="icon"
-              ></el-input>
+              <el-input v-model="dialogForm.icon" :disabled="true" clearable ref="icon"></el-input>
             </el-form-item>
             <div class="icon-button" v-on:click="chooseIcon()">
               <template v-if="dialogText == '编辑菜单'">
                 <template v-if="dialogForm.icon && dialogForm.icon != ''">
-                  <svg-icon
-                    v-if="dialogForm.icon.indexOf('el-icon-') == -1"
-                    :icon-class="dialogForm.icon"
-                  />
+                  <svg-icon v-if="dialogForm.icon.indexOf('el-icon-') == -1" :icon-class="dialogForm.icon" />
                   <i v-else :class="dialogForm.icon"></i>
                 </template>
                 <template v-else>
@@ -228,125 +143,69 @@
                   <i class="el-icon-plus"></i>
                 </template>
                 <template v-else>
-                  <svg-icon
-                    v-if="selectedIcon.activeTabName == 'svg'"
-                    :icon-class="dialogForm.icon"
-                  />
+                  <svg-icon v-if="selectedIcon.activeTabName == 'svg'" :icon-class="dialogForm.icon" />
                   <i v-else :class="dialogForm.icon"></i>
                 </template>
               </template>
             </div>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="菜单设置为根节点菜单，则必须为该菜单设置图标"
-            >
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
           </div>
         </div>
         <div class="item-form-group">
           <div class="item-form-3">
-            <div class="form-title">是否隐藏：</div>
-            <el-switch
-              v-model="dialogForm.is_hide"
-              active-color="#47bba4"
-              inactive-color="#bbbbbb"
-              active-value="1"
-              inactive-value="0"
-            >
-            </el-switch>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="菜单是否可在侧边导航展示"
-            >
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
+            <el-form-item label="是否隐藏：" :label-width="formLabelWidth">
+              <el-switch
+                v-model="dialogForm.is_hide"
+                active-color="#2e84f6"
+                inactive-color="#bbbbbb"
+                active-value="1"
+                inactive-value="0">
+              </el-switch>
+            </el-form-item>
           </div>
-          <div class="item-form-3">
-            <div class="form-title">是否固定：</div>
-            <el-switch
-              v-model="dialogForm.is_fixed"
-              active-color="#47bba4"
-              inactive-color="#bbbbbb"
-              active-value="1"
-              inactive-value="0"
-              v-on:change="handleFixedChange"
-            >
-            </el-switch>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="菜单是否需要固定显示在标签栏"
-            >
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
+          <div class="item-form-3" v-if="isCaches">
+            <el-form-item label="是否固定：" :label-width="formLabelWidth">
+              <el-switch
+                v-model="dialogForm.is_fixed"
+                active-color="#2e84f6"
+                inactive-color="#bbbbbb"
+                active-value="1"
+                inactive-value="0"
+                v-on:change="handleFixedChange">
+              </el-switch>
+            </el-form-item>
           </div>
-          <div class="item-form-3">
-            <div class="form-title">是否缓存：</div>
-            <el-switch
-              v-model="dialogForm.is_redis"
-              active-color="#47bba4"
-              inactive-color="#bbbbbb"
-              active-value="1"
-              inactive-value="0"
-              :disabled="redisDisabled"
-            >
-            </el-switch>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="菜单是否需要被标签栏缓存，标签栏上的菜单都必须可被缓存"
-            >
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
+          <div class="item-form-3" v-if="isCaches">
+            <el-form-item label="是否缓存：" :label-width="formLabelWidth">
+              <el-switch
+                v-model="dialogForm.is_redis"
+                active-color="#2e84f6"
+                inactive-color="#bbbbbb"
+                active-value="1"
+                inactive-value="0"
+                :disabled="redisDisabled">
+              </el-switch>
+            </el-form-item>
           </div>
         </div>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="handleClose">取 消</el-button>
           <el-button type="primary" @click="saveData">确 定</el-button>
         </span>
       </template>
     </el-dialog>
-    <el-dialog
-      title="选择图标"
-      v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit'))&&device === 'desktop'"
-      custom-class="icon-dialog"
-      :visible.sync="dialogIconVisible"
-      width="960px"
-    >
-      <el-tabs
-        v-model="activeTabName"
-        type="border-card"
-        @tab-click="handleTabClick"
-      >
+    <el-dialog title="选择图标" v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit'))&&device === 'desktop'" custom-class="icon-dialog" :visible.sync="dialogIconVisible" width="960px">
+      <el-tabs v-model="activeTabName" type="border-card" @tab-click="handleTabClick">
         <el-tab-pane label="svg图标" name="svg">
           <div class="scroll-panel">
             <div class="grid">
-              <div
-                v-for="(item, index) of svgIcons"
-                :key="item"
-                @click="handleIconClick(item, index)"
-              >
+              <div v-for="(item, index) of svgIcons" :key="item" @click="handleIconClick(item, index)">
                 <el-tooltip placement="top">
                   <template v-slot:content>
                     <div>{{ generateIconCode(item) }}</div>
                   </template>
-                  <div
-                    class="icon-item"
-                    v-bind:class="
-                      activeTabName == 'svg' && currentIndex == index
-                        ? 'is-active'
-                        : ''
-                    "
-                  >
+                  <div class="icon-item" v-bind:class="activeTabName == 'svg' && currentIndex == index?'is-active':''">
                     <svg-icon :icon-class="item" class-name="disabled" />
                     <span>{{ item }}</span>
                   </div>
@@ -358,23 +217,12 @@
         <el-tab-pane label="饿了么图标" name="element">
           <div class="scroll-panel">
             <div class="grid">
-              <div
-                v-for="(item, index) of elementIcons"
-                :key="item"
-                @click="handleIconClick(item, index)"
-              >
+              <div v-for="(item, index) of elementIcons" :key="item" @click="handleIconClick(item, index)">
                 <el-tooltip placement="top">
                   <template v-slot:content>
                     <div>{{ generateElementIconCode(item) }}</div>
                   </template>
-                  <div
-                    class="icon-item"
-                    v-bind:class="
-                      activeTabName == 'element' && currentIndex == index
-                        ? 'is-active'
-                        : ''
-                    "
-                  >
+                  <div class="icon-item" v-bind:class="activeTabName == 'element' && currentIndex == index?'is-active':''">
                     <i :class="'el-icon-' + item" />
                     <span>{{ item }}</span>
                   </div>
@@ -388,16 +236,12 @@
         <span class="dialog-footer">
           <el-button @click="dialogIconVisible = false">取 消</el-button>
           <el-button @click="clearIcon">清空选择</el-button>
-          <el-button type="primary" @click="handleSelectedIcon"
-            >确 定</el-button
-          >
+          <el-button type="primary" @click="handleSelectedIcon">确 定</el-button>
         </span>
       </template>
     </el-dialog>
   </div>
 </template>
-
-
 <script>
 import svgIcons from "./svg-icons.js";
 import elementIcons from "./element-icons.js";
@@ -415,6 +259,7 @@ export default {
       formLabelWidth: "110px",
       menuLevelData: [],
       redisDisabled: false,
+      isCaches:false,
       dialogForm: {
         uid: 0,
         id: 0,
@@ -426,7 +271,7 @@ export default {
         icon: "",
         is_hide: "0",
         is_fixed: "0",
-        is_redis: "1",
+        is_redis: "0",
       },
       dialogIconVisible: false,
       svgIcons,
@@ -442,30 +287,22 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["device"]),
+    ...mapGetters([
+      "device",
+      'addMenu'
+    ]),
+    isAdd() {
+      return this.addMenu
+    }
   },
   mounted() {
     const $this = this;
     this.$nextTick(function () {
-      $this.tableHeight =
-        $this.$refs.boxPane.offsetHeight -
-        $this.$refs.headerPane.offsetHeight -
-        30 -
-        30 -
-        20 -
-        3;
-      // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+      $this.tableHeight = $this.$refs.boxPane.offsetHeight-40;
     });
     window.onresize = () => {
       return (() => {
-        $this.tableHeight =
-          $this.$refs.boxPane.offsetHeight -
-          $this.$refs.headerPane.offsetHeight -
-          30 -
-          30 -
-          20 -
-          3;
-        // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-40;
       })();
     };
   },
@@ -478,6 +315,11 @@ export default {
         setTimeout(function () {
           $this.timer = false;
         }, 400);
+      }
+    },
+    isAdd(e){
+      if(e){
+        this.addTableRow();
       }
     },
   },
@@ -496,10 +338,6 @@ export default {
     },
     generateElementIconCode(symbol) {
       return `<i class="el-icon-${symbol}" />`;
-    },
-    // 刷新数据
-    refreshData() {
-      this.initPage();
     },
     // 初始化数据
     initData() {
@@ -646,6 +484,12 @@ export default {
           }
         });
     },
+    // 关闭添加菜单弹窗
+    handleClose(){
+      var $this = this;
+      $this.dialogFormVisible = false;
+      $this.$store.dispatch('app/closeMenu');
+    },
     // 添加表格行数据
     addTableRow(row, index) {
       this.dialogFormVisible = true;
@@ -756,7 +600,7 @@ export default {
             message: response.info,
             type: "success",
           });
-          $this.dialogFormVisible = false;
+          $this.handleClose();
           $this.initPage();
         } else {
           $this.$message({
@@ -780,7 +624,7 @@ export default {
       $this.dialogForm.icon = "";
       $this.dialogForm.is_hide = "0";
       $this.dialogForm.is_fixed = "0";
-      $this.dialogForm.is_redis = "1";
+      $this.dialogForm.is_redis = "0";
       $this.selectedIcon.activeTabName = "";
       $this.selectedIcon.currentIndex = "";
       $this.selectedIcon.currentItem = "";
@@ -891,139 +735,4 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.el-tabs {
-  display: flex;
-  height: 480px;
-  overflow: hidden;
-  flex-direction: column;
-  .grid {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-
-  .icon-item {
-    margin: 10px;
-    padding: 10px;
-    border-radius: 4px;
-    height: 105px;
-    text-align: center;
-    width: 100px;
-    float: left;
-    font-size: 30px;
-    color: #24292e;
-    cursor: pointer;
-    &.is-active {
-      background: #f2f2f2;
-    }
-  }
-
-  span {
-    display: block;
-    font-size: 16px;
-    margin-top: 10px;
-  }
-
-  .disabled {
-    pointer-events: none;
-  }
-}
-.el-cascader {
-  width: 100%;
-}
-.form-title {
-  width: 110px;
-  display: inline-block;
-  text-align: right;
-  vertical-align: middle;
-  font-size: 14px;
-  color: #606266;
-  line-height: 36px;
-  padding: 0 12px 0 0;
-  box-sizing: border-box;
-}
-.item-form.icon {
-  padding-right: 76px;
-}
-.item-form {
-  padding-right: 30px;
-  position: relative;
-  .icon-button {
-    width: 36px;
-    height: 36px;
-    position: absolute;
-    top: 0;
-    right: 30px;
-    border: 1px solid #c0c4cc;
-    border-radius: 4px;
-    text-align: center;
-    line-height: 34px;
-    font-size: 18px;
-    color: #999;
-    cursor: pointer;
-  }
-  > span {
-    display: block;
-    width: 30px;
-    height: 36px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    text-align: center;
-    line-height: 36px;
-    font-size: 14px;
-    cursor: pointer;
-    color: #bbb;
-  }
-  &:before,
-  &:after {
-    content: "";
-    display: table;
-  }
-  &:after {
-    clear: both;
-  }
-}
-.item-form-group {
-  width: 100%;
-  &:before,
-  &:after {
-    content: "";
-    display: table;
-  }
-  &:after {
-    clear: both;
-  }
-  .item-form-3 {
-    width: 180px;
-    float: left;
-    padding-right: 30px;
-    position: relative;
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-    > span {
-      display: block;
-      width: 30px;
-      height: 36px;
-      position: absolute;
-      right: 0;
-      top: 0;
-      text-align: center;
-      line-height: 36px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #bbb;
-    }
-  }
-  .item-form {
-    width: 50%;
-    float: left;
-  }
-}
 </style>

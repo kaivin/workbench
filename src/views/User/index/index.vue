@@ -1,35 +1,40 @@
 ﻿<template>
-  <div class="page-root" ref="boxPane">
+  <div class="page-root user-index" ref="boxPane">
     <el-card class="box-card" shadow="hover">
       <div slot="header">
         <div class="card-header" ref="headerPane">
-          <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
-          <el-button type="primary" size="small" icon="el-icon-circle-plus-outline" @click="addTableRow()" v-if="device==='desktop'&&menuButtonPermit.includes('User_add')">添加用户</el-button>
+          <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
+            <div class="item-search">
+              <el-cascader v-model="searchData.dept_id" size="small" class="cascader-panel" :options="departLevelData" ref="menuLevel" filterable placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover' }" clearable></el-cascader>
+            </div>
+            <div class="item-search">
+              <el-select v-model="searchData.is_delete" size="small" clearable placeholder="请选择用户状态" class="select-panel">
+                <el-option
+                  v-for="item in userStatus"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+            <div class="item-search">
+              <el-input
+                class="input-panel"
+                size="small"
+                placeholder="请输入真实姓名关键字"
+                v-model="searchData.uname"
+                clearable>
+              </el-input>
+            </div>
+            <div class="item-search">
+              <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+            </div>
+          </div>
           <el-button type="primary" size="small" icon="el-icon-search" @click="openSearchDialog()" v-if="device==='mobile'">高级查询</el-button>
         </div>
       </div>
-      <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
-        <el-cascader v-model="searchData.dept_id" style="width:150px;" :options="departLevelData" ref="menuLevel" filterable placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover' }" clearable></el-cascader>
-        <el-select v-model="searchData.is_delete" clearable placeholder="请选择用户状态" style="width:150px;margin-left: 10px;">
-          <el-option
-            v-for="item in userStatus"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        <el-input
-          style="width: 200px;margin: 0 10px"
-          placeholder="请输入真实姓名关键字"
-          v-model="searchData.uname"
-          clearable>
-        </el-input>
-        <el-button class="item-input" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
-      </div>
-      <el-divider v-if="device==='desktop'"><i class="el-icon-goblet-square-full"></i></el-divider>
       <div class="card-content" ref="tableContent">
         <el-table
-          border
           ref="simpleTable"
           :data="tableData"
           tooltip-effect="dark"
@@ -38,7 +43,6 @@
           style="width: 100%"
           :height="tableHeight"
           row-key="id"
-          :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
           >
           <el-table-column
             prop="id"
@@ -149,32 +153,18 @@
         </el-pagination>
       </div>
     </el-card>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('User_add')||menuButtonPermit.includes('User_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" width="680px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('User_add')||menuButtonPermit.includes('User_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="680px">
       <el-form :model="dialogForm">
         <div class="item-form-group">
           <div class="item-form">
             <el-form-item label="真实姓名：" :label-width="formLabelWidth">
               <el-input v-model="dialogForm.name" ref="name"></el-input>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="用户真实姓名，不可为空">
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
           </div>
           <div class="item-form">
             <el-form-item label="手机号：" :label-width="formLabelWidth">
               <el-input v-model="dialogForm.phone" ref="phone"></el-input>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="用户手机号">
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
           </div>
         </div>
         <div class="item-form-group">
@@ -182,25 +172,11 @@
             <el-form-item label="邮箱：" :label-width="formLabelWidth">
               <el-input v-model="dialogForm.email" ref="email"></el-input>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="用户邮箱">
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
           </div>
           <div class="item-form">
             <el-form-item label="部门：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
               <el-cascader v-model="dialogForm.deptid_othername" :options="departLevelData" ref="departLevel" placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover',multiple:true }" :collapse-tags="true" clearable></el-cascader>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="不可为空，每个用户都有一个部门归属">
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
           </div>
         </div>
         <div class="item-form-group">
@@ -215,13 +191,6 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="可为空">
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
           </div>
           <div class="item-form">
             <el-form-item label="职称：" :label-width="formLabelWidth">
@@ -234,50 +203,29 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="可为空">
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
           </div>
         </div>
         <div class="item-form">
             <el-form-item label="备注：" :label-width="formLabelWidth">
               <el-input type="textarea" v-model="dialogForm.remarks" :autosize="{ minRows: 2, maxRows: 4}" ref="remarks"></el-input>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="用户创建时备注，可描述该用户基本情况">
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
         </div>
         <div class="item-form" style="width: 240px;">
             <el-form-item label="分配角色：" :label-width="formLabelWidth">
               <el-button type="primary" @click="allotRole(0,0)">分配角色</el-button>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="创建用户时，可选择给该用户分配什么角色">
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
         </div>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="handleClose">取 消</el-button>
           <el-button type="primary" @click="saveData">确 定</el-button>
         </span>
       </template>
     </el-dialog>
-    <el-dialog title="分配角色" v-if="(menuButtonPermit.includes('User_getrole'))&&device==='desktop'" custom-class="user-dialog" :visible.sync="dialogRoleVisible" width="840px">
-      <div class="user-role">
-        <div class="role-wrap">
+    <el-dialog title="分配角色" v-if="(menuButtonPermit.includes('User_getrole'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
+      <div class="transfer-panel">
+        <div class="transfer-wrap">
           <el-transfer 
             v-model="roleValue" 
             :data="roleData"
@@ -325,8 +273,6 @@
     </el-dialog>
   </div>
 </template>
-
-
 <script>
 import { validEmail,validPhone } from '@/utils/validate';
 import { mapGetters } from 'vuex'
@@ -386,28 +332,28 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device'
+      'device',
+      'addUser'
     ]),
+    isAdd() {
+      return this.addUser
+    }
   },
   mounted(){
       const $this = this;
       this.$nextTick(function () {
         if($this.device === "desktop"){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-49-30-30-20-3;
-          // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
         }else{
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-20-3;
-          // 30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
         }
       });
       window.onresize = () => {
           return (() => {
             if($this.device === "desktop"){
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-49-30-30-20-3;
-              // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
             }else{
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-20-3;
-              // 30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
             }
           })()
       }
@@ -423,6 +369,11 @@ export default {
           }, 400)
         }
       },
+      isAdd(e){
+        if(e){
+          this.addTableRow();
+        }
+      },
   },
   created(){
     var $this = this;
@@ -434,11 +385,6 @@ export default {
     })
   },
   methods:{
-    // 刷新数据
-    refreshData(){
-      this.resetSearchData();
-      this.initPage();
-    },
     // 移动端查询弹窗事件
     openSearchDialog(){
       var $this = this;
@@ -600,6 +546,12 @@ export default {
         }
       });
     },
+    // 关闭添加用户弹窗
+    handleClose(){
+      var $this = this;
+      $this.dialogFormVisible = false;
+      $this.$store.dispatch('app/closeUser');
+    },
     // 添加表格行数据
     addTableRow(row,index){
       var $this = this;
@@ -696,7 +648,7 @@ export default {
               message: response.info,
               type: 'success'
             });
-            $this.dialogFormVisible = false;
+            $this.handleClose();
             $this.initPage();
           }else{
             $this.$message({
@@ -1069,182 +1021,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .el-tabs{
-    display: flex;
-    height: 480px;
-    overflow: hidden;
-    flex-direction: column;
-    .grid {
-      position: relative;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
-
-    .icon-item {
-      margin: 10px;
-      padding: 10px;
-      border-radius: 4px;
-      height: 105px;
-      text-align: center;
-      width: 100px;
-      float: left;
-      font-size: 30px;
-      color: #24292e;
-      cursor: pointer;
-      &.is-active{
-        background: #f2f2f2;
-      }
-    }
-
-    span {
-      display: block;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-
-    .disabled {
-      pointer-events: none;
-    }
-  }
-  .el-cascader{
-      width:100%;
-  }
-  .form-title{
-    width: 110px;
-    display: inline-block;
-    text-align: right;
-    vertical-align: middle;
-    font-size: 14px;
-    color: #606266;
-    line-height: 36px;
-    padding: 0 12px 0 0;
-    box-sizing: border-box;
-  }
-  .item-form.icon{
-    padding-right: 76px;
-  }
-  .item-form{
-      padding-right: 30px;
-      position: relative;
-      .icon-button{
-        width: 36px;
-        height: 36px;
-        position: absolute;
-        top:0;
-        right: 30px;
-        border: 1px solid #C0C4CC;
-        border-radius: 4px;
-        text-align: center;
-        line-height: 34px;
-        font-size: 18px;
-        color: #999;
-        cursor: pointer;
-      }
-      >span{
-        display: block;
-        width: 30px;
-        height: 36px;
-        position: absolute;
-        right:0;
-        top:0;
-        text-align: center;
-        line-height: 36px;
-        font-size: 14px;
-        cursor: pointer;
-        color: #bbb;
-      }
-      &:before,
-      &:after {
-        content: "";
-        display: table;
-      }
-      &:after {
-        clear: both;
-      }
-    }
-  .item-form-group{
-    width: 100%;
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-    .item-form-3{
-      width: 180px;
-      float:left;
-      padding-right: 30px;
-      position: relative;
-      &:before,
-      &:after {
-        content: "";
-        display: table;
-      }
-      &:after {
-        clear: both;
-      }
-      >span{
-        display: block;
-        width: 30px;
-        height: 36px;
-        position: absolute;
-        right:0;
-        top:0;
-        text-align: center;
-        line-height: 36px;
-        font-size: 14px;
-        cursor: pointer;
-        color: #bbb;
-      }
-    }
-    .item-form{
-      width: 50%;
-      float:left;
-      }
-  }
-  .user-role{
-    width: 100%;
-    overflow: hidden;
-    height: 400px;
-    .role-wrap{
-      width: 100%;
-      float:right;
-      height: 100%;
-      overflow: hidden;
-      .el-transfer{
-          height: 100%;
-          overflow: hidden;
-          ::v-deep .el-transfer-panel{
-            width: 352px!important;
-            height: 100%!important;
-            .el-checkbox__label{
-              position: static;
-            }
-            .el-transfer-panel__body{
-              height: 360px!important;
-              overflow: hidden;
-              .el-transfer-panel__list.is-filterable{
-                height: 298px!important;
-              }
-            }
-          }
-          ::v-deep .el-transfer__buttons{
-          padding: 0 20px!important;
-          width: 96px;
-          margin-left:0!important;
-          margin-right:0!important;
-          .el-button + .el-button{
-            margin-left:0!important;
-          }
-        }
-      }
-    }
-  }
-  .page-root{
-    ::v-deep .search-dialog{
-      height: 260px!important;
-    }
-  }
 </style>

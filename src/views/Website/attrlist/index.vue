@@ -1,15 +1,8 @@
 ﻿<template>
   <div class="page-root" ref="boxPane">
     <el-card class="box-card" shadow="hover">
-      <div slot="header">
-        <div class="card-header" ref="headerPane">
-          <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
-          <el-button type="primary" size="small" icon="el-icon-circle-plus-outline" @click="addTableRow()" v-if="(menuButtonPermit.includes('Website_attradd'))&&device==='desktop'">添加标签</el-button>
-        </div>
-      </div>
       <div class="card-content" ref="tableContent">
         <el-table
-          border
           ref="simpleTable"
           :data="tableData"
           tooltip-effect="dark"
@@ -64,19 +57,12 @@
         </el-table>
       </div>
     </el-card>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Website_attradd')||menuButtonPermit.includes('Website_attredit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" width="480px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Website_attradd')||menuButtonPermit.includes('Website_attredit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
           <el-form-item label="标签名称：" :label-width="formLabelWidth">
             <el-input v-model="dialogForm.name" ref="name"></el-input>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="网站属性标签显示名称，不可为空">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form" style="width:180px;">
             <el-form-item label="背景色：" :label-width="formLabelWidth">
@@ -85,18 +71,11 @@
                 :predefine="predefineColors">
               </el-color-picker>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="标签背景色，不可为空">
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
         </div>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="handleClose">取 消</el-button>
           <el-button type="primary" @click="saveData">确 定</el-button>
         </span>
       </template>
@@ -136,19 +115,21 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device'
+      'device',
+      'addWebsiteAttr'
     ]),
+    isAdd() {
+      return this.addWebsiteAttr
+    }
   },
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-20-3;
-        // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-40;
       });
       window.onresize = () => {
           return (() => {
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-20-3;
-            // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-40;
           })()
       }
   },
@@ -163,6 +144,11 @@ export default {
           }, 400)
         }
       },
+      isAdd(e){
+        if(e){
+          this.addTableRow();
+        }
+      },
   },
   created(){
     var $this = this;
@@ -174,10 +160,6 @@ export default {
     })
   },
   methods:{
-    // 刷新数据
-    refreshData(){
-      this.initPage();
-    },
     // 初始化数据
     initData(){
       var $this = this;
@@ -262,6 +244,12 @@ export default {
         }
       });
     },
+    // 关闭添加电话弹窗
+    handleClose(){
+      var $this = this;
+      $this.dialogFormVisible = false;
+      $this.$store.dispatch('app/closeWebsiteAttr');
+    },
     // 添加表格行数据
     addTableRow(row,index){
       this.dialogFormVisible = true;
@@ -287,43 +275,29 @@ export default {
       formData.id = $this.dialogForm.id;
       formData.name = $this.dialogForm.name;
       formData.namecolor = $this.dialogForm.namecolor;
-      if($this.dialogText=="编辑标签"){
-        $this.$store.dispatch('website/websiteAttrEditAction', formData).then(response=>{
-            if(response.status){
-                $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'success'
-                });
-                $this.dialogFormVisible = false;
-                $this.initData();
-            }else{
-                $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'error'
-                });
-            }
-        });
+      var pathUrl = "";
+      if($this.dialogText=="编辑电话"){
+        pathUrl = "website/websiteAttrEditAction";
       }else{
-        $this.$store.dispatch('website/websiteAttrAddAction', formData).then(response=>{
-            if(response.status){
-                $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'success'
-                });
-                $this.dialogFormVisible = false;
-                $this.initData();
-            }else{
-                $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'error'
-                });
-            }
-        });
+        pathUrl = "website/websiteAttrAddAction";
       }
+      $this.$store.dispatch(pathUrl, formData).then(response=>{
+          if(response.status){
+              $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'success'
+              });
+              $this.handleClose();
+              $this.initData();
+          }else{
+              $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+              });
+          }
+      });
     },
     // 重置添加数据表单
     resetFormData(){
@@ -390,89 +364,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.tag-color{padding:0 13px;line-height:0;font-size:0; vertical-align: top;}
-.item-form.icon{
-  padding-right: 76px;
-}
-.item-form{
-    padding-right: 30px;
-    position: relative;
-    .icon-button{
-      width: 36px;
-      height: 36px;
-      position: absolute;
-      top:0;
-      right: 30px;
-      border: 1px solid #C0C4CC;
-      border-radius: 4px;
-      text-align: center;
-      line-height: 34px;
-      font-size: 18px;
-      color: #999;
-      cursor: pointer;
-    }
-    >span{
-      display: block;
-      width: 30px;
-      height: 36px;
-      position: absolute;
-      right:0;
-      top:0;
-      text-align: center;
-      line-height: 36px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #bbb;
-    }
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-  }
-.item-form-group{
-  width: 100%;
-  &:before,
-  &:after {
-    content: "";
-    display: table;
-  }
-  &:after {
-    clear: both;
-  }
-  .item-form-3{
-    width: 180px;
-    float:left;
-    padding-right: 30px;
-    position: relative;
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-    >span{
-      display: block;
-      width: 30px;
-      height: 36px;
-      position: absolute;
-      right:0;
-      top:0;
-      text-align: center;
-      line-height: 36px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #bbb;
-    }
-  }
-  .item-form{
-    width: 50%;
-    float:left;
-    }
-}
 </style>

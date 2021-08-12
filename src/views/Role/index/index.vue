@@ -1,15 +1,8 @@
 ﻿<template>
   <div class="page-root" ref="boxPane">
     <el-card class="box-card" shadow="hover">
-      <div slot="header">
-        <div class="card-header" ref="headerPane">
-          <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
-          <el-button type="primary" size="small" icon="el-icon-circle-plus-outline" @click="addTableRow()" v-if="(menuButtonPermit.includes('Role_add'))&&device==='desktop'">添加角色</el-button>
-        </div>
-      </div>
       <div class="card-content" ref="tableContent">
         <el-table
-          border
           ref="simpleTable"
           :data="tableData"
           tooltip-effect="dark"
@@ -53,43 +46,22 @@
         </el-table>
       </div>
     </el-card>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Role_add')||menuButtonPermit.includes('Role_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" width="480px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Role_add')||menuButtonPermit.includes('Role_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
           <el-form-item label="父级角色：" :label-width="formLabelWidth" v-if="roleLevelData.length>0">
             <el-cascader v-model="dialogForm.f_id" :options="roleLevelData" ref="menuLevel" filterable placeholder="请选择父级角色" :props="{ checkStrictly: true,expandTrigger: 'hover' }" clearable></el-cascader>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="可为空，根节点角色一般为特殊角色或部门级角色">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
           <el-form-item label="角色名称：" :label-width="formLabelWidth">
             <el-input v-model="dialogForm.name" ref="name"></el-input>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="角色显示名称，不可为空">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form" v-if="menuButtonPermit.includes('Role_getroledepart')">
           <el-form-item label="部门权限：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
             <el-cascader v-model="dialogForm.role_depart" :options="departLevelData" ref="departLevel" placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover',multiple:true }" :collapse-tags="true" clearable></el-cascader>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="角色可分配部门权限，可查看权限内部门的相关信息">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form" v-if="menuButtonPermit.includes('Role_readdepartwebsite')">
           <el-form-item label="网站管理：" :label-width="formLabelWidth">
@@ -106,39 +78,25 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="300"
-            trigger="hover"
-            content="角色可选择管理哪些部门网站，未分配部门的网站统归为无部门网站，某些角色可管理无部门网站，勾选对应部门则当前角色将拥有对应部门所属网站的编辑、日志操作权限，删除权限需另行设置">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
             <el-form-item label="角色备注：" :label-width="formLabelWidth">
               <el-input type="textarea" v-model="dialogForm.remarks" :autosize="{ minRows: 2, maxRows: 4}" ref="remarks"></el-input>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="角色创建时备注，可描述该角色大概有哪些权限">
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
         </div>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="handleClose">取 消</el-button>
           <el-button type="primary" @click="saveData">确 定</el-button>
         </span>
       </template>
     </el-dialog>
-    <el-dialog :title="permitTitle" v-if="(menuButtonPermit.includes('Role_getpermit'))&&device==='desktop'" custom-class="permit-dialog" :visible.sync="dialogPermitVisible" width="916px">
-      <div class="permit-panel">
-        <div class="menu-panel">
-          <div class="permit-title">菜单列表</div>
-          <div class="menu-wrap">
+    <el-dialog :title="permitTitle" v-if="(menuButtonPermit.includes('Role_getpermit'))&&device==='desktop'" custom-class="transfer-2-dialog" :visible.sync="dialogPermitVisible" width="916px">
+      <div class="transfer-panel">
+        <div class="list-panel">
+          <div class="title-panel">菜单列表</div>
+          <div class="list-wrap">
             <el-tree
               :data="menuTreeData"
               show-checkbox
@@ -149,8 +107,8 @@
             </el-tree>
           </div>
         </div>
-        <div class="menu-button"><el-button type="primary" v-on:click="getCheckedKeys"><i class="el-icon-arrow-right"></i></el-button></div>
-        <div class="permit-wrap">
+        <div class="button-panel"><el-button type="primary" v-on:click="getCheckedKeys"><i class="el-icon-arrow-right"></i></el-button></div>
+        <div class="transfer-wrap">
           <el-transfer 
             v-model="permitValue" 
             :data="permitData"
@@ -168,9 +126,9 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog :title="userTitle" v-if="(menuButtonPermit.includes('Role_getuser'))&&device==='desktop'" custom-class="user-dialog" :visible.sync="dialogUserVisible" width="840px">
-      <div class="user-role">
-        <div class="user-wrap">
+    <el-dialog :title="userTitle" v-if="(menuButtonPermit.includes('Role_getuser'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogUserVisible" width="840px">
+      <div class="transfer-panel">
+        <div class="transfer-wrap">
           <el-transfer 
             v-model="userValue" 
             :data="userData"
@@ -188,11 +146,11 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog :title="postTitle" v-if="(menuButtonPermit.includes('Role_gettypepermit'))&&device==='desktop'" custom-class="permit-dialog" :visible.sync="dialogPostVisible" width="916px">
-      <div class="permit-panel">
-        <div class="menu-panel">
-          <div class="permit-title">论坛栏目列表</div>
-          <div class="menu-wrap">
+    <el-dialog :title="postTitle" v-if="(menuButtonPermit.includes('Role_gettypepermit'))&&device==='desktop'" custom-class="transfer-2-dialog" :visible.sync="dialogPostVisible" width="916px">
+      <div class="transfer-panel">
+        <div class="list-panel">
+          <div class="title-panel">论坛栏目列表</div>
+          <div class="list-wrap">
             <el-tree
               :data="postData"
               show-checkbox
@@ -203,8 +161,8 @@
             </el-tree>
           </div>
         </div>
-        <div class="menu-button"><el-button type="primary" v-on:click="getPostCheckedKeys"><i class="el-icon-arrow-right"></i></el-button></div>
-        <div class="permit-wrap">
+        <div class="button-panel"><el-button type="primary" v-on:click="getPostCheckedKeys"><i class="el-icon-arrow-right"></i></el-button></div>
+        <div class="transfer-wrap">
           <el-transfer 
             v-model="postPermitValue" 
             :data="postPermitData"
@@ -224,8 +182,6 @@
     </el-dialog>
   </div>
 </template>
-
-
 <script>
 import { mapGetters } from 'vuex'
 export default {
@@ -299,19 +255,21 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device'
+      'device',
+      'addRole'
     ]),
+    isAdd() {
+      return this.addRole
+    }
   },
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-20-3;
-        // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-40;
       });
       window.onresize = () => {
           return (() => {
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-20-3;
-            // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-40;
           })()
       }
   },
@@ -326,6 +284,11 @@ export default {
           }, 400)
         }
       },
+      isAdd(e){
+        if(e){
+          this.addTableRow();
+        }
+      },
   },
   created(){
     var $this = this;
@@ -337,10 +300,6 @@ export default {
     })
   },
   methods:{
-    // 刷新数据
-    refreshData(){
-      this.getRoleList();
-    },
     // 初始化数据
     initData(){
       var $this = this;
@@ -482,6 +441,12 @@ export default {
           });
         }
       });
+    },
+    // 关闭添加角色弹窗
+    handleClose(){
+      var $this = this;
+      $this.dialogFormVisible = false;
+      $this.$store.dispatch('app/closeRole');
     },
     // 添加表格行数据
     addTableRow(row,index){
@@ -651,7 +616,7 @@ export default {
               message: response.info,
               type: 'success'
             });
-            $this.dialogFormVisible = false;
+            $this.handleClose();
             $this.initData();
           }else{
             $this.$message({
@@ -1317,258 +1282,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .el-tabs{
-    display: flex;
-    height: 480px;
-    overflow: hidden;
-    flex-direction: column;
-    .grid {
-      position: relative;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
-
-    .icon-item {
-      margin: 10px;
-      padding: 10px;
-      border-radius: 4px;
-      height: 105px;
-      text-align: center;
-      width: 100px;
-      float: left;
-      font-size: 30px;
-      color: #24292e;
-      cursor: pointer;
-      &.is-active{
-        background: #f2f2f2;
-      }
-    }
-
-    span {
-      display: block;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-
-    .disabled {
-      pointer-events: none;
-    }
-  }
-  .el-cascader{
-      width:100%;
-  }
-  .form-title{
-    width: 110px;
-    display: inline-block;
-    text-align: right;
-    vertical-align: middle;
-    font-size: 14px;
-    color: #606266;
-    line-height: 36px;
-    padding: 0 12px 0 0;
-    box-sizing: border-box;
-  }
-  .item-form.icon{
-    padding-right: 76px;
-  }
-  .item-form{
-      padding-right: 30px;
-      position: relative;
-      .icon-button{
-        width: 36px;
-        height: 36px;
-        position: absolute;
-        top:0;
-        right: 30px;
-        border: 1px solid #C0C4CC;
-        border-radius: 4px;
-        text-align: center;
-        line-height: 34px;
-        font-size: 18px;
-        color: #999;
-        cursor: pointer;
-      }
-      >span{
-        display: block;
-        width: 30px;
-        height: 36px;
-        position: absolute;
-        right:0;
-        top:0;
-        text-align: center;
-        line-height: 36px;
-        font-size: 14px;
-        cursor: pointer;
-        color: #bbb;
-      }
-      &:before,
-      &:after {
-        content: "";
-        display: table;
-      }
-      &:after {
-        clear: both;
-      }
-    }
-  .item-form-group{
-    width: 100%;
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-    .item-form-3{
-      width: 180px;
-      float:left;
-      padding-right: 30px;
-      position: relative;
-      &:before,
-      &:after {
-        content: "";
-        display: table;
-      }
-      &:after {
-        clear: both;
-      }
-      >span{
-        display: block;
-        width: 30px;
-        height: 36px;
-        position: absolute;
-        right:0;
-        top:0;
-        text-align: center;
-        line-height: 36px;
-        font-size: 14px;
-        cursor: pointer;
-        color: #bbb;
-      }
-    }
-    .item-form{
-      width: 50%;
-      float:left;
-      }
-  }
-  .permit-panel{
-    width: 100%;
-    overflow: hidden;
-    height: 400px;
-    .menu-panel{
-      width: 210px;
-      float:left;
-      height: 100%;
-      border: 1px solid #dfe6ec;
-      border-radius:4px;
-      position: relative;
-      padding-top: 40px;
-      overflow: hidden;
-      .permit-title{
-        height: 40px;
-        width: 100%;
-        border-bottom: 1px solid #dfe6ec;
-        background: #F5F7FA;
-        position: absolute;
-        left:0;
-        top:0;
-        padding-left: 16px;
-        font-size: 16px;
-        color: #303133;
-        line-height: 39px;
-      }
-      .menu-wrap{
-        padding: 10px 0;
-        height: 100%;
-        overflow: auto;
-      }
-    }
-    .menu-button{
-      float:left;
-      margin-left: 20px;
-      width: 56px;
-      height: 100%;
-      .el-button{
-        position: relative;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-    }
-    .permit-wrap{
-      width: 570px;
-      float:right;
-      height: 100%;
-      overflow: hidden;
-      .el-transfer{
-          height: 100%;
-          overflow: hidden;
-          ::v-deep .el-checkbox{
-            margin-right: 10px;
-          }
-          ::v-deep .el-transfer-panel{
-            width: 237px!important;
-            height: 100%!important;
-            .el-checkbox__label{
-              position: static;
-            }
-            .el-transfer-panel__body{
-              height: 360px!important;
-              overflow: hidden;
-              .el-transfer-panel__list.is-filterable{
-                height: 298px!important;
-              }
-            }
-          }
-          ::v-deep .el-transfer__buttons{
-          padding: 0 20px!important;
-          width: 96px;
-          margin-left:0!important;
-          margin-right:0!important;
-          .el-button + .el-button{
-            margin-left:0!important;
-          }
-        }
-      }
-    }
-  }
-  .user-role{
-    width: 100%;
-    overflow: hidden;
-    height: 400px;
-    .user-wrap{
-      width: 100%;
-      float:right;
-      height: 100%;
-      overflow: hidden;
-      .el-transfer{
-          height: 100%;
-          overflow: hidden;
-          ::v-deep .el-transfer-panel{
-            width: 352px!important;
-            height: 100%!important;
-            .el-checkbox__label{
-              position: static;
-            }
-            .el-transfer-panel__body{
-              height: 360px!important;
-              overflow: hidden;
-              .el-transfer-panel__list.is-filterable{
-                height: 298px!important;
-              }
-            }
-          }
-          ::v-deep .el-transfer__buttons{
-          padding: 0 20px!important;
-          width: 96px;
-          margin-left:0!important;
-          margin-right:0!important;
-          .el-button + .el-button{
-            margin-left:0!important;
-          }
-        }
-      }
-    }
-  }
-  .el-select{display: block;}
 </style>

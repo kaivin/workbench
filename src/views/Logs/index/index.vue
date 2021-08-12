@@ -1,52 +1,59 @@
 ﻿<template>
-  <div class="page-root" ref="boxPane">
+  <div class="page-root logs-index" ref="boxPane">
     <el-card class="box-card" shadow="hover">
       <div slot="header">
         <div class="card-header" ref="headerPane">
-          <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
           <el-button type="primary" size="small" icon="el-icon-search" @click="openSearchDialog()" v-if="device==='mobile'">高级查询</el-button>
+          <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
+            <div class="item-search">
+              <el-date-picker
+                  class="date-picker"
+                  size="small"
+                  v-model="searchData.date"
+                  type="datetimerange"
+                  align="right"
+                  unlink-panels
+                  range-separator="至"
+                  start-placeholder="开始时间"
+                  end-placeholder="结束时间"
+                  value-format="yyyy-MM-dd HH:mm:ss">
+              </el-date-picker>
+            </div>
+            <div class="item-search">
+                <el-input
+                    class="input-panel"
+                    size="small"
+                    placeholder="请输入真实姓名关键字"
+                    v-model="searchData.uname"
+                    clearable>
+                </el-input>
+            </div>
+            <div class="item-search">
+              <el-select v-model="searchData.action" size="small" filterable clearable placeholder="请选择操作动作" class="select-panel">
+                  <el-option
+                      v-for="item in actionList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                  </el-option>
+              </el-select>
+            </div>
+            <div class="item-search">
+              <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
-        <el-date-picker
-            class="date-picker"
-            v-model="searchData.date"
-            type="datetimerange"
-            align="right"
-            unlink-panels
-            range-separator="至"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            value-format="yyyy-MM-dd HH:mm:ss">
-        </el-date-picker>
-        <el-input
-            style="width: 190px;margin: 0 10px"
-            placeholder="请输入真实姓名关键字"
-            v-model="searchData.uname"
-            clearable>
-        </el-input>
-        <el-select v-model="searchData.action" filterable clearable placeholder="请选择操作动作" style="width:190px;margin-right: 10px">
-            <el-option
-                v-for="item in actionList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-        </el-select>
-        <el-button class="item-input" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
-      </div>
-      <el-divider v-if="device==='desktop'"><i class="el-icon-goblet-square-full"></i></el-divider>
       <div class="card-content" ref="tableContent">
         <el-table
-          border
           ref="simpleTable"
           :data="tableData"
           tooltip-effect="dark"
           stripe
+          class="SiteTable"
           style="width: 100%"
           :height="tableHeight"
           row-key="id"
-          :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
           >
           <el-table-column
             prop="user"
@@ -139,8 +146,6 @@
     </el-dialog>
   </div>
 </template>
-
-
 <script>
 import { mapGetters } from 'vuex'
 export default {
@@ -174,21 +179,18 @@ export default {
       const $this = this;
       this.$nextTick(function () {
         if($this.device === "desktop"){
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-49-30-30-20-3;
-            // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
+            //40：page-root上下内边距；40: headerPane上下内边距； 20：headerPane下边距；
         }else{
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-20-3;
-            // 30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
         }
       });
       window.onresize = () => {
           return (() => {
             if($this.device === "desktop"){
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-49-30-30-20-3;
-                // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
             }else{
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-20-3;
-                // 30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
             }
           })()
       }
@@ -210,11 +212,6 @@ export default {
     $this.initData();
   },
   methods:{
-    // 刷新数据
-    refreshData(){
-      this.resetSearchData();
-      this.initPage();
-    },
     // 移动端查询弹窗事件
     openSearchDialog(){
       var $this = this;
@@ -421,12 +418,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .page-root{
-    ::v-deep .search-dialog{
-      height: 370px!important;
-    }
-  }
-  .date-picker{
-    vertical-align: top;
-  }
 </style>

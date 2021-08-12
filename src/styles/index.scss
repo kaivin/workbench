@@ -1,6 +1,5 @@
 
 @charset "UTF-8";
-
 @import "./-variables.scss";
 @import "./-mixin.scss";
 @import "./-transition.scss";
@@ -13,6 +12,10 @@
 @import './ArticleIndex.scss';
 @import './-WebsiteList.scss';
 @import './-WebserverList.scss';
+@import './-logsIndex.scss';
+@import './-userIndex.scss';
+@import './-ownPush.scss';
+@import './-enCnProduct.scss';
 @import './Article.scss';
 @import './Chinaphone.scss';
 .page-root{
@@ -548,6 +551,9 @@
     border-right:1px solid #dae4e9;
     line-height:20px;
   }
+  th.gutter{
+    background: #e2e9ed;
+  }
   td{
     border-bottom:1px solid #f7f9fa !important;
     border-right:1px solid #f7f9fa !important;
@@ -575,6 +581,284 @@
   }
 }
 .clearfix:after{content:"."; display:block; height:0; clear:both; visibility:hidden; font-size:0px; }
+/** 添加编辑弹窗统一样式 **/
+.add-edit-dialog{
+    .item-form.icon{
+        padding-right: 76px;
+    }
+    .item-form{
+        padding-right: 30px;
+        position: relative;
+        .icon-button{
+          width: 36px;
+          height: 36px;
+          position: absolute;
+          top:0;
+          right: 30px;
+          border: 1px solid #C0C4CC;
+          border-radius: 4px;
+          text-align: center;
+          line-height: 34px;
+          font-size: 18px;
+          color: #999;
+          cursor: pointer;
+        }
+        >span{
+          display: block;
+          width: 30px;
+          height: 36px;
+          position: absolute;
+          right:0;
+          top:0;
+          text-align: center;
+          line-height: 36px;
+          font-size: 14px;
+          cursor: pointer;
+          color: #bbb;
+        }
+        &:before,
+        &:after {
+          content: "";
+          display: table;
+        }
+        &:after {
+          clear: both;
+        }
+    }
+    .item-form-group {
+      width: 100%;
+      &:before,
+      &:after {
+        content: "";
+        display: table;
+      }
+      &:after {
+        clear: both;
+      }
+      .item-form-3 {
+        width: 180px;
+        float: left;
+        padding-right: 30px;
+        position: relative;
+        &:before,
+        &:after {
+          content: "";
+          display: table;
+        }
+        &:after {
+          clear: both;
+        }
+        > span {
+          display: block;
+          width: 30px;
+          height: 36px;
+          position: absolute;
+          right: 0;
+          top: 0;
+          text-align: center;
+          line-height: 36px;
+          font-size: 14px;
+          cursor: pointer;
+          color: #bbb;
+        }
+      }
+      .item-form {
+        width: 50%;
+        float: left;
+      }
+    }
+    .el-select,.el-cascader{
+      display: block!important;
+    }
+}
+/** 穿梭框弹窗统一样式 穿梭一次 **/
+.transfer-dialog{
+    .transfer-panel{
+        width: 100%;
+        overflow: hidden;
+        height: 400px;
+        .transfer-wrap{
+            width: 100%;
+            float:right;
+            height: 100%;
+            overflow: hidden;
+            .el-transfer{
+                height: 100%;
+                overflow: hidden;
+                .el-transfer-panel{
+                    width: 352px!important;
+                    height: 100%!important;
+                    .el-checkbox__label{
+                        position: static;
+                    }
+                    .el-transfer-panel__body{
+                        height: 360px!important;
+                        overflow: hidden;
+                        .el-transfer-panel__list.is-filterable{
+                            height: 298px!important;
+                        }
+                    }
+                }
+                .el-transfer__buttons{
+                    padding: 0 20px!important;
+                    width: 96px;
+                    margin-left:0!important;
+                    margin-right:0!important;
+                    .el-button + .el-button{
+                        margin-left:0!important;
+                    }
+                }
+            }
+        }
+    }
+}
+/** 穿梭框弹窗统一样式二 穿梭两次 **/
+.transfer-2-dialog{
+  .transfer-panel{
+    width: 100%;
+    overflow: hidden;
+    height: 400px;
+    .list-panel{
+      width: 210px;
+      float:left;
+      height: 100%;
+      border: 1px solid #dfe6ec;
+      border-radius:4px;
+      position: relative;
+      padding-top: 40px;
+      overflow: hidden;
+      .title-panel{
+        height: 40px;
+        width: 100%;
+        border-bottom: 1px solid #dfe6ec;
+        background: #F5F7FA;
+        position: absolute;
+        left:0;
+        top:0;
+        padding-left: 16px;
+        font-size: 16px;
+        color: #303133;
+        line-height: 39px;
+      }
+      .list-wrap{
+        padding: 10px 0;
+        height: 100%;
+        overflow: auto;
+      }
+    }
+    .button-panel{
+      float:left;
+      margin-left: 20px;
+      width: 56px;
+      height: 100%;
+      .el-button{
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+    .transfer-wrap{
+      width: 570px;
+      float:right;
+      height: 100%;
+      overflow: hidden;
+      .el-transfer{
+        height: 100%;
+        overflow: hidden;
+        .el-checkbox{
+          margin-right: 10px;
+        }
+        .el-transfer-panel{
+          width: 237px!important;
+          height: 100%!important;
+          .el-checkbox__label{
+            position: static;
+          }
+          .el-transfer-panel__body{
+            height: 360px!important;
+            overflow: hidden;
+            .el-transfer-panel__list.is-filterable{
+              height: 298px!important;
+            }
+          }
+        }
+        .el-transfer__buttons{
+          padding: 0 20px!important;
+          width: 96px;
+          margin-left:0!important;
+          margin-right:0!important;
+          .el-button + .el-button{
+            margin-left:0!important;
+          }
+        }
+      }
+    }
+  }
+}
+/** 论坛标签管理 **/
+.tags-index{
+  .tag-color{padding:0 13px;line-height:0;font-size:0; vertical-align: top;}
+}
+/** 图标弹窗样式 **/
+.icon-dialog{
+  .el-tabs {
+    display: flex;
+    height: 480px;
+    overflow: hidden;
+    flex-direction: column;
+    .grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      &:before,&:after{
+        display: initial;
+        content: initial;
+      }
+    }
+    .icon-item {
+      margin: 10px;
+      padding: 10px;
+      border-radius: 4px;
+      height: 105px;
+      text-align: center;
+      width: 100px;
+      float: left;
+      font-size: 30px;
+      color: #24292e;
+      cursor: pointer;
+      &.is-active {
+        background: #f2f2f2;
+      }
+    }
+    span {
+      display: block;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    .disabled {
+      pointer-events: none;
+    }
+  }
+}
+/** 表格中tag标签样式 **/
+.table-tag{
+  .el-tag{
+    margin: 2px;
+  }
+}
+/** 导出弹窗统一样式 **/
+.export-dialog{
+  .el-form-item{
+    margin-right:0!important;
+    width: 100%;
+    .el-form-item__content{
+      width: 280px;
+      .el-select--small{
+        width: 100%;
+      }
+    }
+  }
+}
 @media (max-width:1024px) {
   .login-form{
     >p{

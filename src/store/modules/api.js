@@ -5,6 +5,24 @@ const state = {
     isArticleAdd: false,
     isWebsiteAdd: false,
     isWebserverAdd: false,
+    isCnPhoneAdd:false,
+    isCnCateAdd:false,
+    isCnProductAdd:false,
+    isEnPhoneAdd:false,
+    isEnCateAdd:false,
+    isEnProductAdd:false,
+    isWebsiteAttrAdd:false,
+    isInformationAdd:false,
+    isTagAdd:false,
+    isUserAdd:false,
+    isDepartAdd:false,
+    isRoleAdd:false,
+    isMenuAdd:false,
+    isPermitAdd:false,
+    isPromotedAccountAdd:false,
+    isPromotedChannelAdd:false,
+    isCnProcessAdd:false,
+    isCnMoneyAdd:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -32,6 +50,96 @@ const mutations = {
       state.isWebserverAdd = true;
     }else{
       state.isWebserverAdd = false;
+    }
+    if(permitData.includes("Enphone_phoneadd")&&data.page==""){
+      state.isEnPhoneAdd = true;
+    }else{
+      state.isEnPhoneAdd = false;
+    }
+    if(permitData.includes("Enphone_producttypeadd")&&data.page==""){
+      state.isEnCateAdd = true;
+    }else{
+      state.isEnCateAdd = false;
+    }
+    if(permitData.includes("Enphone_productadd")&&data.page==""){
+      state.isEnProductAdd = true;
+    }else{
+      state.isEnProductAdd = false;
+    }
+    if(permitData.includes("Chinaphone_phoneadd")&&data.page==""){
+      state.isCnPhoneAdd = true;
+    }else{
+      state.isCnPhoneAdd = false;
+    }
+    if(permitData.includes("Chinaphone_producttypeadd")&&data.page==""){
+      state.isCnCateAdd = true;
+    }else{
+      state.isCnCateAdd = false;
+    }
+    if(permitData.includes("Chinaphone_productadd")&&data.page==""){
+      state.isCnProductAdd = true;
+    }else{
+      state.isCnProductAdd = false;
+    }
+    if(permitData.includes("Website_attradd")&&data.page==""){
+      state.isWebsiteAttrAdd = true;
+    }else{
+      state.isWebsiteAttrAdd = false;
+    }
+    if(permitData.includes("Information_add")&&data.page==""){
+      state.isInformationAdd = true;
+    }else{
+      state.isInformationAdd = false;
+    }
+    if(permitData.includes("Tags_add")&&data.page==""){
+      state.isTagAdd = true;
+    }else{
+      state.isTagAdd = false;
+    }
+    if(permitData.includes("User_add")&&data.page==""){
+      state.isUserAdd = true;
+    }else{
+      state.isUserAdd = false;
+    }
+    if(permitData.includes("Depart_add")&&data.page==""){
+      state.isDepartAdd = true;
+    }else{
+      state.isDepartAdd = false;
+    }
+    if(permitData.includes("Role_add")&&data.page==""){
+      state.isRoleAdd = true;
+    }else{
+      state.isRoleAdd = false;
+    }
+    if(permitData.includes("Menu_add")&&data.page==""){
+      state.isMenuAdd = true;
+    }else{
+      state.isMenuAdd = false;
+    }
+    if(permitData.includes("Permit_add")&&data.page==""){
+      state.isPermitAdd = true;
+    }else{
+      state.isPermitAdd = false;
+    }
+    if(permitData.includes("Ownpush_pushadd")&&data.page==""){
+      state.isPromotedAccountAdd = true;
+    }else{
+      state.isPromotedAccountAdd = false;
+    }
+    if(permitData.includes("Ownpush_pushtypeadd")&&data.page==""){
+      state.isPromotedChannelAdd = true;
+    }else{
+      state.isPromotedChannelAdd = false;
+    }
+    if(permitData.includes("Ownpush_processadd")&&data.page==""){
+      state.isCnProcessAdd = true;
+    }else{
+      state.isCnProcessAdd = false;
+    }
+    if(permitData.includes("Ownpush_moneyadd")&&data.page==""){
+      state.isCnMoneyAdd = true;
+    }else{
+      state.isCnMoneyAdd = false;
     }
   },
 }

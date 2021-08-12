@@ -1,15 +1,8 @@
 ﻿<template>
   <div class="page-root" ref="boxPane">
     <el-card class="box-card" shadow="hover">
-      <div slot="header">
-        <div class="card-header" ref="headerPane">
-          <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
-          <el-button type="primary" size="small" icon="el-icon-circle-plus-outline" @click="addTableRow()" v-if="(menuButtonPermit.includes('Permit_add'))&&device==='desktop'">添加权限</el-button>
-        </div>
-      </div>
       <div class="card-content" ref="tableContent">
         <el-table
-          border
           ref="simpleTable"
           :data="tableData"
           tooltip-effect="dark"
@@ -62,48 +55,27 @@
         </el-table>
       </div>
     </el-card>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Permit_add')||menuButtonPermit.includes('Permit_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" width="480px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Permit_add')||menuButtonPermit.includes('Permit_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
           <el-form-item label="权限所属菜单：" :label-width="formLabelWidth" v-if="permitLevelData.length>0">
             <el-cascader v-model="dialogForm.mid" :options="permitLevelData" ref="menuLevel" filterable placeholder="请选择权限所属菜单" :props="{ checkStrictly: true,expandTrigger: 'hover' }" clearable></el-cascader>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="不可为空，所添加权限必须有一个指定的菜单">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
           <el-form-item label="权限名称：" :label-width="formLabelWidth">
             <el-input v-model="dialogForm.name" ref="name"></el-input>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="权限显示名称，不可为空">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
             <el-form-item label="唯一标识名：" :label-width="formLabelWidth">
               <el-input v-model="dialogForm.route" ref="route"></el-input>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="后端程序控制器，此处不可为空">
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
         </div>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="handleClose">取 消</el-button>
           <el-button type="primary" @click="saveData">确 定</el-button>
         </span>
       </template>
@@ -136,19 +108,21 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device'
+      'device',
+      'addPermit'
     ]),
+    isAdd() {
+      return this.addPermit
+    }
   },
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-20-3;
-        // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-40;
       });
       window.onresize = () => {
           return (() => {
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-20-3;
-            // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-40;
           })()
       }
   },
@@ -163,6 +137,11 @@ export default {
           }, 400)
         }
       },
+      isAdd(e){
+        if(e){
+          this.addTableRow();
+        }
+      },
   },
   created(){
     var $this = this;
@@ -174,10 +153,6 @@ export default {
     })
   },
   methods:{
-    // 刷新数据
-    refreshData(){
-      this.initPage();
-    },
     // 初始化数据
     initData(){
       var $this = this;
@@ -333,6 +308,12 @@ export default {
         }
       });
     },
+    // 关闭添加权限弹窗
+    handleClose(){
+      var $this = this;
+      $this.dialogFormVisible = false;
+      $this.$store.dispatch('app/closePermit');
+    },
     // 添加表格行数据
     addTableRow(row,index){
       this.dialogFormVisible = true;
@@ -377,7 +358,7 @@ export default {
               message: response.info,
               type: 'success'
             });
-            $this.dialogFormVisible = false;
+            $this.handleClose();
             $this.initData();
           }else{
             $this.$message({
@@ -462,139 +443,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .el-tabs{
-    display: flex;
-    height: 480px;
-    overflow: hidden;
-    flex-direction: column;
-    .grid {
-      position: relative;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
-
-    .icon-item {
-      margin: 10px;
-      padding: 10px;
-      border-radius: 4px;
-      height: 105px;
-      text-align: center;
-      width: 100px;
-      float: left;
-      font-size: 30px;
-      color: #24292e;
-      cursor: pointer;
-      &.is-active{
-        background: #f2f2f2;
-      }
-    }
-
-    span {
-      display: block;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-
-    .disabled {
-      pointer-events: none;
-    }
-  }
-  .el-cascader{
-      width:100%;
-  }
-  .form-title{
-    width: 110px;
-    display: inline-block;
-    text-align: right;
-    vertical-align: middle;
-    font-size: 14px;
-    color: #606266;
-    line-height: 36px;
-    padding: 0 12px 0 0;
-    box-sizing: border-box;
-  }
-  .item-form.icon{
-    padding-right: 76px;
-  }
-  .item-form{
-      padding-right: 30px;
-      position: relative;
-      .icon-button{
-        width: 36px;
-        height: 36px;
-        position: absolute;
-        top:0;
-        right: 30px;
-        border: 1px solid #C0C4CC;
-        border-radius: 4px;
-        text-align: center;
-        line-height: 34px;
-        font-size: 18px;
-        color: #999;
-        cursor: pointer;
-      }
-      >span{
-        display: block;
-        width: 30px;
-        height: 36px;
-        position: absolute;
-        right:0;
-        top:0;
-        text-align: center;
-        line-height: 36px;
-        font-size: 14px;
-        cursor: pointer;
-        color: #bbb;
-      }
-      &:before,
-      &:after {
-        content: "";
-        display: table;
-      }
-      &:after {
-        clear: both;
-      }
-    }
-  .item-form-group{
-    width: 100%;
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-    .item-form-3{
-      width: 180px;
-      float:left;
-      padding-right: 30px;
-      position: relative;
-      &:before,
-      &:after {
-        content: "";
-        display: table;
-      }
-      &:after {
-        clear: both;
-      }
-      >span{
-        display: block;
-        width: 30px;
-        height: 36px;
-        position: absolute;
-        right:0;
-        top:0;
-        text-align: center;
-        line-height: 36px;
-        font-size: 14px;
-        cursor: pointer;
-        color: #bbb;
-      }
-    }
-    .item-form{
-      width: 50%;
-      float:left;
-      }
-  }
 </style>

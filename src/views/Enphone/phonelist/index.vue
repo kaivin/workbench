@@ -1,15 +1,8 @@
 ﻿<template>
   <div class="page-root" ref="boxPane">
     <el-card class="box-card" shadow="hover">
-      <div slot="header">
-        <div class="card-header" ref="headerPane">
-          <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
-          <el-button type="primary" size="small" icon="el-icon-circle-plus-outline" @click="addTableRow()" v-if="device==='desktop'&&menuButtonPermit.includes('Enphone_phoneadd')">添加电话</el-button>
-        </div>
-      </div>
       <div class="card-content" ref="tableContent">
         <el-table
-          border
           ref="simpleTable"
           :data="tableData"
           tooltip-effect="dark"
@@ -81,19 +74,12 @@
         </el-table>
       </div>
     </el-card>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Enphone_phoneadd')||menuButtonPermit.includes('Enphone_phoneedit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" width="480px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Enphone_phoneadd')||menuButtonPermit.includes('Enphone_phoneedit'))&&device==='desktop'" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
           <el-form-item label="电话号码：" :label-width="formLabelWidth">
             <el-input v-model="dialogForm.phonenumber" ref="phonenumber"></el-input>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="座机或手机号，不可为空">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
           <el-form-item label="品牌：" :label-width="formLabelWidth">
@@ -106,13 +92,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="电话所属推广品牌">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
           <el-form-item label="部门：" :label-width="formLabelWidth">
@@ -125,13 +104,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="电话归属的部门">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
           <el-form-item label="负责人：" :label-width="formLabelWidth">
@@ -144,49 +116,28 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="电话具体负责人">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
           <el-form-item label="别名：" :label-width="formLabelWidth">
             <el-input v-model="dialogForm.othername" ref="othername"></el-input>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="无具体负责人时，作为显示使用">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
           <el-form-item label="排序：" :label-width="formLabelWidth">
             <el-input v-model="dialogForm.sort" ref="sort"></el-input>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="电话列表中可进行排序">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="handleClose">取 消</el-button>
           <el-button type="primary" @click="saveData">确 定</el-button>
         </span>
       </template>
     </el-dialog>
-    <el-dialog :title="roleDialogText" v-if="(menuButtonPermit.includes('Enphone_getenphonereadrole')||menuButtonPermit.includes('Enphone_getenphonewriterole'))&&device==='desktop'" custom-class="user-dialog" :visible.sync="dialogRoleVisible" width="840px">
-      <div class="user-role">
-        <div class="role-wrap">
+    <el-dialog :title="roleDialogText" v-if="(menuButtonPermit.includes('Enphone_getenphonereadrole')||menuButtonPermit.includes('Enphone_getenphonewriterole'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
+      <div class="transfer-panel">
+        <div class="transfer-wrap">
           <el-transfer 
             v-model="roleValue" 
             :data="roleData"
@@ -204,9 +155,9 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog :title="domainDialogText" v-if="(menuButtonPermit.includes('Enphone_getphonedomain'))&&device==='desktop'" custom-class="user-dialog" :visible.sync="dialogDomainVisible" width="840px">
-      <div class="user-role">
-        <div class="role-wrap">
+    <el-dialog :title="domainDialogText" v-if="(menuButtonPermit.includes('Enphone_getphonedomain'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogDomainVisible" width="840px">
+      <div class="transfer-panel">
+        <div class="transfer-wrap">
           <el-transfer 
             v-model="domainValue" 
             :data="domainData"
@@ -226,8 +177,6 @@
     </el-dialog>
   </div>
 </template>
-
-
 <script>
 import { mapGetters } from 'vuex'
 export default {
@@ -278,17 +227,21 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device'
+      'device',
+      'addEnPhone'
     ]),
+    isAdd() {
+      return this.addEnPhone
+    }
   },
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-20-3;
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-40;
       });
       window.onresize = () => {
           return (() => {
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-20-3;
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-40;
           })()
       }
   },
@@ -303,6 +256,11 @@ export default {
           }, 400)
         }
       },
+      isAdd(e){
+        if(e){
+          this.addTableRow();
+        }
+      },
   },
   created(){
     var $this = this;
@@ -314,10 +272,6 @@ export default {
     })
   },
   methods:{
-    // 刷新数据
-    refreshData(){
-      this.initPage();
-    },
     // 初始化数据
     initData(){
       var $this = this;
@@ -411,6 +365,12 @@ export default {
         }
       });
     },
+    // 关闭添加电话弹窗
+    handleClose(){
+      var $this = this;
+      $this.dialogFormVisible = false;
+      $this.$store.dispatch('app/closeEnPhone');
+    },
     // 添加表格行数据
     addTableRow(row,index){
       var $this = this;
@@ -472,7 +432,7 @@ export default {
               message: response.info,
               type: 'success'
             });
-            $this.dialogFormVisible = false;
+            $this.handleClose();
             $this.initPage();
           }else{
             $this.$message({
@@ -853,87 +813,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .item-form.icon{
-    padding-right: 76px;
-  }
-  .item-form{
-      padding-right: 30px;
-      position: relative;
-      .icon-button{
-        width: 36px;
-        height: 36px;
-        position: absolute;
-        top:0;
-        right: 30px;
-        border: 1px solid #C0C4CC;
-        border-radius: 4px;
-        text-align: center;
-        line-height: 34px;
-        font-size: 18px;
-        color: #999;
-        cursor: pointer;
-      }
-      >span{
-        display: block;
-        width: 30px;
-        height: 36px;
-        position: absolute;
-        right:0;
-        top:0;
-        text-align: center;
-        line-height: 36px;
-        font-size: 14px;
-        cursor: pointer;
-        color: #bbb;
-      }
-      &:before,
-      &:after {
-        content: "";
-        display: table;
-      }
-      &:after {
-        clear: both;
-      }
-    }
-  .user-role{
-    width: 100%;
-    overflow: hidden;
-    height: 400px;
-    .role-wrap{
-      width: 100%;
-      float:right;
-      height: 100%;
-      overflow: hidden;
-      .el-transfer{
-          height: 100%;
-          overflow: hidden;
-          ::v-deep .el-transfer-panel{
-            width: 352px!important;
-            height: 100%!important;
-            .el-checkbox__label{
-              position: static;
-            }
-            .el-transfer-panel__body{
-              height: 360px!important;
-              overflow: hidden;
-              .el-transfer-panel__list.is-filterable{
-                height: 298px!important;
-              }
-            }
-          }
-          ::v-deep .el-transfer__buttons{
-          padding: 0 20px!important;
-          width: 96px;
-          margin-left:0!important;
-          margin-right:0!important;
-          .el-button + .el-button{
-            margin-left:0!important;
-          }
-        }
-      }
-    }
-  }
-.el-select{
-  display: block;
-}
 </style>

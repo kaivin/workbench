@@ -1,0 +1,30 @@
+﻿.en-cn-product{
+    .search-wrap{
+        .item-search{
+            float:left;
+            padding: 10px 10px 10px 0;
+        }
+        .input-panel{
+            width: 190px;
+        }
+    }
+    .product-span{
+        i{
+            font-style: normal;
+            font-weight: bold;
+        }
+        &.level_1{
+            i{color:#B3315F};
+        }
+        &.level_2{
+            i{
+                color: #130CB7;
+            }
+        }
+        &.level_3{
+            i{
+                color: #6a6a6b;
+            }
+        }
+    }
+}
