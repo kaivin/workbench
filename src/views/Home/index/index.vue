@@ -1,12 +1,8 @@
 ﻿<template>
-  <div class="page-root scroll-panel" ref="boxPane">
-    <el-card class="box-card auto" shadow="hover">
-      <div slot="header" class="title-panel clearfix">
-        <h2>最新消息</h2>
-      </div>
+  <div class="page-root scroll-panel home-index" ref="boxPane">
+    <el-card class="box-card scroll-card" shadow="hover">
       <div class="card-content" ref="tableContent">
         <el-table
-          border
           ref="simpleTable"
           :data="tableData"
           class="SiteTable"
@@ -64,8 +60,6 @@
     </el-card>
   </div>
 </template>
-
-
 <script>
 import { mapGetters } from 'vuex'
 export default {
@@ -90,8 +84,8 @@ export default {
     // 初始化数据
     initData() {
       var $this = this;
-      // $this.getUserMenuButtonPermit();
-      $this.initPage();
+      $this.getUserMenuButtonPermit();
+      // $this.initPage();
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
@@ -159,26 +153,16 @@ export default {
     // 跳转到文章详情
     jumpArticle(row){
       var $this = this;
+      var routeUrl = "";
       if(row.type==1){
-        $this.$router.push({path:'/Website/logInfo',query:{logID:row.id,websiteID:row.website_id,website:row.domain}});
+        routeUrl =  $this.$router.resolve({path:'/Website/logInfo',query:{logID:row.id,websiteID:row.website_id,website:row.domain}});
       }else{
-        $this.$router.push({path:'/Article/info',query:{id:row.id}});
+        routeUrl =  $this.$router.resolve({path:'/Article/info',query:{id:row.id}});
       }
+      window.open(routeUrl.href,'_blank');
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.title-panel{
-  width: 100%;
-  line-height: 32px;
-  color: $--color-primary;
-  h2{
-    float:left;
-    margin:0;
-    font-size: 18px;
-    padding: 0 5px;
-  }
-}
-
 </style>

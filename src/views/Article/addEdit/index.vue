@@ -195,7 +195,7 @@
                     <td class="type-title"><span>用户浏览权限：</span></td>
                     <td>
                       <div class="item-form itemacces">
-                        <el-select v-model="formData.readUser" size="small" filterable clearable multiple placeholder="请选择可浏览用户" style="width: 100%;">
+                        <el-select v-model="formData.readUser" size="small" filterable clearable multiple placeholder="请选择可浏览用户">
                           <el-option
                             v-for="item in userList"
                             :key="item.value"

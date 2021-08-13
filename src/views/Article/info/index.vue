@@ -1,12 +1,12 @@
 ﻿<template>
   <div class="page-root scroll-panel ArticleSix">
-    <div class="ArticleSixFl">
+    <div class="ArticleSixFl" v-bind:class="articleData.issay==0&&commentList.length==0?'no-comment':''">
       <div class="article-info">
         <div class="ArticleSixFlTop">
           <h1>{{articleData.title}}</h1>
           <div class="ArticleSixFlTopTag clearfix">
             <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>{{articleData.typename}}</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>匿名</span><span><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.addtime}}</span></p>
-            <p class="ArticleSixFlTopTagFr">阅读：{{articleData.hits}}&nbsp;&nbsp;|&nbsp;&nbsp;发布时间：{{articleData.updatetime}} </p>
+            <p class="ArticleSixFlTopTagFr">阅读：{{articleData.hits}}<span>|</span>发布时间：{{articleData.updatetime}} </p>
           </div>
           <div class="ArticleSixFlTopRead">
             <p class="article-user" v-if="articleData.readshow==1">

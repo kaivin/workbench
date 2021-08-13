@@ -17,6 +17,7 @@
 @import './-ownPush.scss';
 @import './-enCnProduct.scss';
 @import './-Article.scss';
+@import './-home.scss';
 @import './Chinaphone.scss';
 @import '-Enphone.scss';
 .page-root{
@@ -71,12 +72,6 @@
 .svg-icon{
   vertical-align:middle;
 }
-.box-card.auto{
-  height:auto;
-}
-.box-card.comment{
-  margin-top:15px;
-}
 .bg-white{background-color:#fff;}
 .box-card{
   width:100%;
@@ -122,7 +117,6 @@
     }
   }
 }
-.el-table__placeholder{display:none!important;}
 .pagination-panel{
   overflow:hidden;
   &.top-page{
@@ -557,8 +551,6 @@
     font-size:14px;
     color:#555;
     font-weight:normal;
-    padding-top:14px;
-    padding-bottom:14px;
     border-bottom:1px solid #e2e9ed;
     border-right:1px solid #dae4e9;
     line-height:20px;
@@ -571,8 +563,6 @@
     border-right:1px solid #f7f9fa !important;
     font-size:13px !important;
     color:#1a1a1a;
-    padding-top:12px !important;
-    padding-bottom:12px !important;
   }
   svg,i[class~="el-cion"]{
     font-size:20px;
@@ -619,9 +609,12 @@
       width: 20px;
       height: 20px;
     }
-    span{
+    span,strong{
       vertical-align: middle;
       line-height: 24px;
+    }
+    b{
+      color: red;
     }
     &:hover{
       padding-left: 5px;
@@ -920,7 +913,20 @@
 .abs-scroll-panel{
   padding:0;
 }
-
+@media (max-width:1600px){
+  .article-info{
+    .ArticleSixFlTop{
+        .ArticleSixFlTopTag{
+            .ArticleSixFlTopTagFl{
+                span{
+                    margin-right: 10px;
+                    padding:3px 10px;
+                }
+            }
+        }
+    }
+  }
+}
 @media (max-width:1440px){
   .ArticleSix{
       .ArticleSixFl{
@@ -944,8 +950,6 @@
             .ArticleSixFlTopTagFl{
                 float:left;
                 span{
-                    margin-right: 15px;
-                    padding:3px 5px;
                     font-size: 14px;
                 }
             }

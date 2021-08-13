@@ -351,6 +351,9 @@
             .el-input{
                 margin: 4px;
             }
+            .el-select{
+                display: block;
+            }
             .ArticleFourTit{
                 .title-color{
                     strong{
@@ -411,7 +414,13 @@
                     }
                 }
             }
-            .itemacces{width:300px;}
+            .itemacces{
+                width:300px;
+                margin: 4px;
+                .el-input{
+                    margin: 0;
+                }
+            }
             .item-form-panel{
                 em{
                   font-style: normal;
@@ -422,6 +431,9 @@
             }
             .item-textarea{
                 margin: 4px;
+            }
+            .el-select .el-tag__close.el-icon-close{
+                right: -4px;
             }
         }
         td.type-title{
@@ -449,6 +461,11 @@
         width: 74%;
         float:left;
         padding-right: 20px;
+        &.no-comment{
+            width: 100%;
+            float:none;
+            padding:0;
+        }
     }
     .ArticleSixFr{
         float:right;
@@ -694,6 +711,9 @@
                 line-height:24px;
                 padding-top:3px;
                 padding-bottom:3px;
+                span{
+                    margin:0 20px;
+                }
             }
         }
         .ArticleSixFlTopRead{
