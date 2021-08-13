@@ -1,36 +1,38 @@
 ﻿<template>
   <div class="page-root scroll-panel ArticleSix flex-wrap">
-      <div class="ArticleSixFl flex-content">
-            <div class="ArticleSixFlTop">
-                <h1>{{articleData.title}}</h1>
-                <div class="ArticleSixFlTopTag clearfix">
-                    <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>网站：{{website}} [ {{websiteID}} ]</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>匿名</span><span><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.addtime}}</span></p>
-                    <p class="ArticleSixFlTopTagFr">阅读：{{articleData.hits}}&nbsp;&nbsp;|&nbsp;&nbsp;发布时间：{{articleData.updatetime}}</p>
+      <div class="ArticleSixFl">
+            <div class="article-info">
+                <div class="ArticleSixFlTop">
+                    <h1>{{articleData.title}}</h1>
+                    <div class="ArticleSixFlTopTag clearfix">
+                        <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>网站：{{website}} [ {{websiteID}} ]</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>匿名</span><span><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.addtime}}</span></p>
+                        <p class="ArticleSixFlTopTagFr">阅读：{{articleData.hits}}&nbsp;&nbsp;|&nbsp;&nbsp;发布时间：{{articleData.updatetime}}</p>
+                    </div>
+                    <div class="ArticleSixFlTopRead">
+                          <p class="article-user" v-if="articleData.readshow==1">
+                            <strong>{{userList.hasreadusercount}}人已读</strong>
+                            <template v-for="(item,index) in userList.hasreaduser">
+                              <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
+                              <span v-bind:key="item.id" v-else>、{{item.name}}</span>
+                            </template>
+                          </p>
+                          <p class="article-user" v-if="articleData.readshow==1">
+                            <strong>{{userList.notreadusercount}}人未读</strong>
+                            <template v-for="(item,index) in userList.notreaduser">
+                              <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
+                              <span v-bind:key="item.id" v-else>、{{item.name}}</span>
+                            </template>
+                          </p>
+                    </div>
                 </div>
-                <div class="ArticleSixFlTopRead">
-                      <p class="article-user" v-if="articleData.readshow==1">
-                        <strong>{{userList.hasreadusercount}}人已读</strong>
-                        <template v-for="(item,index) in userList.hasreaduser">
-                          <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
-                          <span v-bind:key="item.id" v-else>、{{item.name}}</span>
-                        </template>
-                      </p>
-                      <p class="article-user" v-if="articleData.readshow==1">
-                        <strong>{{userList.notreadusercount}}人未读</strong>
-                        <template v-for="(item,index) in userList.notreaduser">
-                          <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
-                          <span v-bind:key="item.id" v-else>、{{item.name}}</span>
-                        </template>
-                      </p>
-                </div>
+                <div class="info-content" v-bind:class="articleData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="articleData.content"></div>
             </div>
-            <div class="info-content" v-bind:class="articleData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="articleData.content"></div>
       </div>
-    <el-card class="box-card comment ArticleSixFr" shadow="hover" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||(articleData.issay==0&&commentList.length>0)">
+    <el-card class="box-card scroll-card comment ArticleSixFr" shadow="hover" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||(articleData.issay==0&&commentList.length>0)">
       <div class="ArticleSixFrTop">
            <p slot="header" class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
            <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
-              <vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap>
+              <div class="ueditor-panel"><vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap></div>
               <div class="btn-rich">
                   <el-switch class="hide-name" width="26" v-model="isHideName" inactive-text="匿名发布"> </el-switch>
                   <el-button type="primary" v-on:click="submitComment">提交</el-button>
@@ -38,7 +40,7 @@
            </div>
       </div>
       <div class="ArticleSixFrBom" v-if="commentList.length>0">
-          <div class="item-comment" v-for="(item,index) in commentList" v-bind:key="item.id">
+          <div class="item-comment" v-for="item in commentList" v-bind:key="item.id">
               <div class="comment-header">
                   <span class="name" v-if="item.is_hidename==0">{{item.name}}</span><span class="name" v-else>匿名</span>
                   <span class="time">{{item.addtime}}</span>
