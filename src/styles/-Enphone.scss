@@ -1,1 +1,368 @@
-﻿
+﻿.EnphoneCard{
+    .EnphoneCardFl{
+        width:210px;
+        margin-right: 15px;
+        .side-button{
+          width: 100%;
+          overflow: hidden;
+          .el-button{
+            display: block;
+            width: 100%;
+            margin:0px 0px 10px 0px;
+            &.el-button--primary.is-plain{
+                color: #333;
+                background: #f6f7fb;
+                border-color: #f6f7fb;
+                line-height:24px;
+                padding-top:2px;
+                padding-bottom:2px;
+                span{
+                    display: inline-block;
+                    line-height:24px;
+                    font-size: 14px;
+                    i{
+                       display: inline-block;
+                       margin-right: 10px;
+                       font-size: 15px;
+                       .svg-icon{
+                            width:20px;
+                            height:20px;
+                            vertical-align: middle;
+                           &.add_en{
+                                width:16px;
+                                height:16px;
+                           }
+                       }
+                    }
+                }
+                &:hover{
+                    background: #dbe6ec;
+                    border-color: #dbe6ec;
+                }
+            }
+          }
+        }
+        .phone-list{
+          width: 100%;
+          padding-top:23px;
+          dt{
+            width: 100%;
+            font-size:0;
+            line-height:0;
+            padding-bottom:7px;
+            position: relative;
+            padding-left:21px;
+            &:after{
+                content:'';
+                position: absolute;
+                left:0px;
+                top:6px;
+                width:11px;
+                height:11px;
+                border:2px solid $menuActiveText;
+                box-sizing: border-box;
+                border-radius:50%;
+            }
+            span{
+              vertical-align: top;
+              line-height: 24px;
+              font-size: 16px;
+              color: $menuActiveText;
+            }
+          }
+          dd{
+            width: 100%;
+            line-height:0;
+            font-size:0;
+            padding-left:21px;
+            padding-top:3px;
+            padding-bottom:3px;
+            cursor: pointer;
+            &:hover{
+              span,i,b,em{
+                text-decoration: underline;
+              }
+            }
+            span,i,b,em{
+              font-style: normal;
+              font-size: 12px;
+              line-height:24px;
+              font-weight: normal;
+              color:#52575c;
+            }
+            i{
+              margin-left: 5px;
+              font-weight: bold;
+              color: $red;
+            }
+            em{
+              color: $green;
+            }
+            b{
+              color:$menuActiveText;
+            }
+          }
+        }
+        .el-card__body{
+          padding:30px 15px;
+          height: 100%;
+          overflow: hidden;
+          .el-scrollbar{
+            height: 100%;
+            .el-scrollbar__wrap{
+              overflow-x: hidden;
+            }
+            .el-scrollbar__view{
+              padding-bottom: 15px;
+            }
+          }
+        }
+    }
+    .EnphoneCardFr{
+        position: relative;
+        .phone-index{
+          height: 100%;
+          .card-header{
+            padding: 5px;
+          }
+        }            
+        //.el-select{
+        //   display: block;
+        //}
+        //.form-title{
+        //width: 110px;
+        //display: inline-block;
+        //text-align: right;
+        //vertical-align: middle;
+        //font-size: 14px;
+        //color: #606266;
+        //line-height: 36px;
+        //padding: 0 12px 0 0;
+        //box-sizing: border-box;
+        //}
+        //.item-form.icon{
+        //padding-right: 76px;
+        //}
+        //.item-form{
+        //    padding-right: 30px;
+        //    position: relative;
+        //    .icon-button{
+        //    width: 36px;
+        //    height: 36px;
+        //    position: absolute;
+        //    top:0;
+        //    right: 30px;
+        //    border: 1px solid #C0C4CC;
+        //    border-radius: 4px;
+        //    text-align: center;
+        //    line-height: 34px;
+        //    font-size: 18px;
+        //    color: #999;
+        //    cursor: pointer;
+        //    }
+        //    >span{
+        //    display: block;
+        //    width: 30px;
+        //    height: 36px;
+        //    position: absolute;
+        //    right:0;
+        //    top:0;
+        //    text-align: center;
+        //    line-height: 36px;
+        //    font-size: 14px;
+        //    cursor: pointer;
+        //    color: #bbb;
+        //    }
+        //    &:before,
+        //    &:after {
+        //    content: "";
+        //    display: table;
+        //    }
+        //    &:after {
+        //    clear: both;
+        //    }
+        //}
+        //.item-form-group{
+        //width: 100%;
+        //&:before,
+        //&:after {
+        //    content: "";
+        //    display: table;
+        //}
+        //&:after {
+        //    clear: both;
+        //}
+        //.item-form-3{
+        //    width: 180px;
+        //    float:left;
+        //    padding-right: 30px;
+        //    position: relative;
+        //    &:before,
+        //    &:after {
+        //    content: "";
+        //    display: table;
+        //    }
+        //    &:after {
+        //    clear: both;
+        //    }
+        //    >span{
+        //    display: block;
+        //    width: 30px;
+        //    height: 36px;
+        //    position: absolute;
+        //    right:0;
+        //    top:0;
+        //    text-align: center;
+        //    line-height: 36px;
+        //    font-size: 14px;
+        //    cursor: pointer;
+        //    color: #bbb;
+        //    }
+        //}
+        //.item-form{
+        //    width: 50%;
+        //    float:left;
+        //    }
+        //}
+        //.product-span{
+        //    i{
+        //        font-style: normal;
+        //        font-weight: bold;
+        //    }
+        //    &.level_1{
+        //        i{color:#B3315F};
+        //    }
+        //    &.level_2{
+        //        i{
+        //            color: #130CB7;
+        //        }
+        //    }
+        //    &.level_3{
+        //        i{
+        //            color: #6a6a6b;
+        //        }
+        //    }
+        //}
+        //.absolute-panel{
+        //position: absolute;
+        //left:0;
+        //top:0;
+        //width: 100%;
+        //height: 100%;
+        //}
+        //.table-input{
+        //.el-input+.el-input{
+        //    margin-top: 10px;
+        //}
+        //.el-input{
+        //    ::v-deep .el-input__inner{
+        //    padding: 0 10px!important;
+        //    }
+        //}
+        //.el-textarea{
+        //    ::v-deep .el-textarea__inner{
+        //    padding: 5px 10px!important;
+        //    }
+        //}
+        //}
+        //.table-text{
+        //p{
+        //    a{
+        //    color: $menuActiveText;
+        //    &:hover{
+        //        text-decoration: underline;
+        //    }
+        //    }
+        //}
+        //}
+        //.table-tag{
+        //.level{
+        //    display: inline-block;
+        //    border-radius: 4px;
+        //    padding: 0 5px;
+        //    color: #fff;
+        //}
+        //.level-1{
+        //    background: #ff0000;
+        //}
+        //.level-2{
+        //    background: #eab905;
+        //}
+        //.level-3{
+        //    background: #293cfc;
+        //}
+        //.level-4{
+        //    background: #1acfda;
+        //}
+        //.level-5{
+        //    background: #f6b37f;
+        //}
+        //.level-6{
+        //    background: #7e84fd;
+        //}
+        //}
+        //.export-dialog{
+        //.el-form-item{
+        //    margin-right:0!important;
+        //    width: 100%;
+        //    ::v-deep .el-form-item__content{
+        //    width: 240px;
+        //    .el-select,.el-input{
+        //        width: 100%;
+        //    }
+        //    }
+        //}
+        //}
+        //.item-box{
+        //flex:1;
+        //.box-card{
+        //    margin-bottom: 15px;
+        //    .item-num{
+        //    font-size:0;
+        //    line-height:0;
+        //    text-align: center;
+        //    overflow: hidden;
+        //    padding: 60px 0;
+        //    dl{
+        //        display: inline-block;
+        //        vertical-align: top;
+        //        overflow: hidden;
+        //        dt,dd{
+        //        display: block;
+        //        width: 100%;
+        //        text-align: right;
+        //        }
+        //        dt{
+        //        font-size: 16px;
+        //        line-height: 1.5;
+        //        }
+        //        dd{
+        //        font-size: 48px;
+        //        line-height: 1;
+        //        color: #fc5457;
+        //        }
+        //    }
+        //    }
+        //}
+        //}
+        //.item-box+.item-box{
+        //margin-left: 15px;
+        //}
+    }
+}
+.box-card.EnphoneCardFrDate{
+    background:#fff!important;
+    border-radius:8px!important;
+    padding:20px;
+     .el-card__header{
+         background: none;
+         border-radius:0px;
+         padding:0px;
+         .search-wrap{
+             padding-bottom:14px;
+         }
+         .clues-info{
+             margin-bottom:30px;
+         }
+     }
+}

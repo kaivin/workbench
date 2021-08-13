@@ -5,8 +5,8 @@
         <div class="ArticleSixFlTop">
           <h1>{{articleData.title}}</h1>
           <div class="ArticleSixFlTopTag clearfix">
-            <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>{{articleData.typename}}</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>匿名</span><span><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.addtime}}</span></p>
-            <p class="ArticleSixFlTopTagFr">阅读：{{articleData.hits}}<span>|</span>发布时间：{{articleData.updatetime}} </p>
+            <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>{{articleData.typename}}</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>匿名</span><span v-if="device==='desktop'"><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.addtime}}</span></p>
+            <p class="ArticleSixFlTopTagFr"><i class="svg-i" ><svg-icon icon-class="eye_rz" /></i>{{articleData.hits}}<span>|</span><i class="svg-i" ><svg-icon icon-class="read_rz" /></i>{{articleData.updatetime}} </p>
           </div>
           <div class="ArticleSixFlTopRead" v-if="articleData.readshow==1&&device==='desktop'&&(userList.hasreadusercount>0||userList.notreadusercount>0)">
             <p class="article-user" v-if="userList.hasreadusercount>0">
@@ -27,14 +27,14 @@
         </div>
         <div class="info-content" v-bind:class="articleData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="articleData.content"></div>
       </div>
-    </div>     
+    </div>
     <el-card class="box-card scroll-card comment ArticleSixFr" shadow="hover" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||articleData.issay==0&&commentList.length>0">
       <div class="ArticleSixFrTop">
            <p slot="header" class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
            <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
               <div class="ueditor-panel"><vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap></div>
               <div class="btn-rich">
-                  <el-switch class="hide-name" v-model="isHideName" inactive-text="匿名发布"> </el-switch>
+                  <el-switch class="hide-name" v-model="isHideName" inactive-text="匿名发布"></el-switch>
                   <el-button type="primary" v-on:click="submitComment">提交</el-button>
               </div>
            </div>

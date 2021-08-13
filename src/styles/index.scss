@@ -200,39 +200,36 @@
 }
 
 .clues-info{
-  background:#e8f7f4;
-  border:1px solid #a3ddd1;
+  background:#f6f8fa;
+  border:1px solid #e4e8ee;
   overflow:hidden;
-  margin:10px 0 15px;
-  padding:10px 15px;
+  padding:10px 20px;
+  border-radius:4px;
   p{
-    font-size:12px;
-    line-height:2.5;
+    font-size:13px;
+    line-height:30px;
+    em{
+      font-style:normal;
+      margin:0 10px;
+    }
     span{
       strong,b{
         margin:0 2px;
       }
-      em{
-        font-style:normal;
-        margin:0 10px;
-      }
     }
     .item-span-1{
       strong{
-        color:#429adc;
+        color:#d02c34;
       }
     }
     .item-span-2{
       strong{
-        color:#E88401;
+        color:#f8a53a;
       }
     }
     .item-span-3{
       strong{
-        color:#B3315F;
-      }
-      b{
-        color:#130CB7;
+        color:#333;
       }
     }
   }
@@ -526,20 +523,60 @@
 }
 /**/
 .clues-title{
-  width:100%;
-  text-align:center;
-  border:0px;
-  border-bottom:none;
-  line-height:48px;
-  height:49px;
-  font-size:15px;
-  font-weight:normal;
-  color:#2e84f6;
-  span{
-      strong{
-          color:#E88401;
-          margin:0 2px;
-      }
+  clear: both;
+  display: block;
+  overflow: hidden;
+  h2{
+      float: left;
+      font-size:18px;
+      color:#2e84f6;
+      line-height:32px;
+     i{
+        margin-right: 10px;
+        float: left;
+        line-height: 22px;
+        margin-top: 3px;
+        .svg-icon{
+             width:22px;
+             height:22px;
+             vertical-align: middle;
+        }
+     }
+  }
+  .clues-title-btn{
+       float: right;
+       .el-button.el-button--primary{
+         float: left;
+         line-height: 1;
+         padding:8px 10px 7px 10px;
+         &.derived{
+             background: #fff;
+             border-color: #00d1a4;
+             color: #00d1a4;
+             &:hover{
+              border-color:#f73a3e;
+              color: #f73a3e;
+             }
+         }
+         &.editorNote{
+             background: #fff;
+             border-color: #d7dce5;
+             color: #666666;
+             &:hover{
+              border-color:#f73a3e;
+              color:#f73a3e;
+             }
+         }
+         i{
+            float: left;
+            margin-right:7px;
+            .svg-icon{
+                 width:15px;
+                 height:15px;
+                 vertical-align: middle;
+            }
+         }
+       }
   }
 }
 /*表格样式*/
@@ -1082,6 +1119,9 @@
       h1{
           font-size:20px;
       }
+      h2{
+          font-size:15px;
+      }
     }
   }
 }
@@ -1090,5 +1130,12 @@
     width:90%;
     left:5%;
     margin:0!important;
+  }
+  .article-info{
+    .ArticleSixFlTop{
+      h1{
+          font-size:18px;
+      }
+    }
   }
 }

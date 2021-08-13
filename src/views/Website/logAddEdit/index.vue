@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="page-root" v-bind:class="isPreview?'scroll-panel':''" ref="boxPane">
-    <el-card v-show="!isPreview" class="box-card ArticleCard" shadow="hover">
+    <el-card v-show="!isPreview" class="box-card WebsiteCard" shadow="hover">
         <div class="card-content" ref="cardContent">
           <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
             <table class="ArticleFour">
@@ -751,76 +751,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.item-form-panel{
-  margin: 5px 0;
-  em{
-    font-style: normal;
-    font-weight: normal;
-    margin-left: 10px;
-    line-height: 32px;
-  }
-}
-.item-form-group.flex-box{
-  display: flex;
-  .flex-content{
-    flex: 1;
-  }
-}
-.tag-panel{
-    width: 100%;
-    overflow: hidden;
-    font-size:0;
-    .el-button{
-        margin-right: 10px;
-        margin-bottom: 5px;
-        margin-top: 5px;
-        vertical-align: top;
-    }
-    .el-button+.el-button{
-      margin-left:0!important;
-    }
-}
-.checkbox-panel{
-  .el-checkbox{
-    margin: 5px 10px 5px 0!important;
-  }
-}
-.tab-card{
-  margin: 5px 0;
-}
-.btn-back{
-  cursor: pointer;
-}
-.article-header{
-  margin-bottom: 15px;
-  border-top: 1px solid $primaryBorder;
-  border-left: 1px solid $primaryBorder;
-  display: block;
-  .flex-row{
-    display: flex;
-    .flex-column{
-      padding: 10px;
-      line-height: 28px;
-      font-size: 15px;
-      border-bottom: 1px solid $primaryBorder;
-      border-right: 1px solid $primaryBorder;
-    }
-    .nowrap{
-      word-break: keep-all;
-      word-wrap:normal;
-      white-space:nowrap;
-    }
-    .txt-content{
-      flex: 1;
-    }
-    &.multiple-column{
-      flex-wrap: wrap;
-      >.flex-column{
-        padding:0;
-        border-bottom:none;
-        border-right:none;
-      }
-    }
-  }
-}
 </style>

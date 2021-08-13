@@ -1,12 +1,12 @@
 ﻿<template>
-  <div class="page-root flex-box" ref="boxPane">
-    <div class="phone-panel flex-box flex-column">
+  <div class="page-root flex-box EnphoneCard" ref="boxPane">
+    <div class="flex-box flex-column EnphoneCardFl"  ref="EnphoneCardFl">
       <el-card class="flex-panel" shadow="hover">
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <div class="side-button">
-            <el-button type="primary" plain size="mini" icon="el-icon-plus" v-if="menuButtonPermit.includes('Enphone_add')" v-on:click="addClues()">新增询盘</el-button>
-            <el-button type="primary" plain size="mini" icon="el-icon-search" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="searchStatisticsData()">搜索数据</el-button>
-            <el-button type="primary" plain size="mini" icon="el-icon-coin" v-if="menuButtonPermit.includes('Enphone_countlist')" v-on:click="statisticsClues()">统计分析</el-button>
+            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_add')" v-on:click="addClues()"><i class="svg-i" ><svg-icon icon-class="add_en" /></i>新增询盘</el-button>
+            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="searchStatisticsData()"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
+            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_countlist')" v-on:click="statisticsClues()"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>统计分析</el-button>
           </div>
           <template v-for="(item,index) in defaultData.data">
             <dl class="phone-list" v-if="item.phone.length>0" v-bind:key="index">
@@ -17,7 +17,7 @@
         </el-scrollbar>
       </el-card>
     </div>
-    <div class="clues-panel flex-panel">
+    <div class="flex-panel EnphoneCardFr" :style="{width:EnphoneCardFrWidth + 'px'}">
       <div class="absolute-panel">
         <div class="phone-index flex-box flex-column" v-if="!phoneID">
           <div class="flex-box">
@@ -81,198 +81,216 @@
             </div>
           </div>
         </div>
-        <el-card class="box-card" v-else shadow="hover">
+        <el-card class="box-card EnphoneCardFrDate" v-else shadow="hover">
           <div slot="header">
             <div class="card-header" ref="headerPane">
-              <el-button type="primary" size="small" icon="el-icon-back" v-on:click="backHome()">返回</el-button>
-              <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
-              <el-button type="primary" size="small" icon="el-icon-upload2" :disabled="isDisabled" v-if="menuButtonPermit.includes('Enphone_listexport')" @click="dialogExportVisible = true">导出数据</el-button>
-              <el-button type="primary" size="small" icon="el-icon-edit" :disabled="isDisabled" v-if="menuButtonPermit.includes('Enphone_othereditall')" v-on:click="editPageNote()">修改当前页备注</el-button>
+                <div class="search-wrap" v-if="device==='desktop'">
+                  <el-date-picker
+                      v-model="searchData.date"
+                      size="small"
+                      type="daterange"
+                      align="right"
+                      value-format = "yyyy-MM-dd"
+                      unlink-panels
+                      range-separator="至"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期"
+                      style="float:left;margin:5px 10px 5px 0px;"
+                      :picker-options="pickerRangeOptions">
+                  </el-date-picker>
+                  <el-select v-model="searchData.timeing" clearable placeholder="时段" size="small" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                      <el-option
+                          v-for="item in timeList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.continent" size="small" clearable placeholder="大洲" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                      <el-option
+                          v-for="item in continentsList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.typekey" size="small" clearable placeholder="分类" @change="currentCateChange" style="width:90px;margin:5px 10px 5px 0px;float:left;">
+                      <el-option
+                          v-for="item in productTypeList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.productid" size="small" clearable placeholder="产品" style="width:90px;margin:5px 10px 5px 0px;float:left;">
+                      <el-option
+                          v-for="item in productList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.messagetype" size="small" clearable placeholder="留言类型" style="width:100px;margin:5px 10px 5px 0px;float:left;">
+                      <el-option
+                          v-for="item in messageList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                      <el-option
+                          v-for="item in sourceList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.device" size="small" clearable placeholder="设备" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                    <el-option
+                      v-for="item in deviceList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                      <el-option
+                          v-for="item in levelList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                      <el-option
+                          v-for="item in natureList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.enxunprice" size="small" clearable placeholder="需求" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                      <el-option
+                          v-for="item in priceList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.erroring" size="small" clearable placeholder="异常" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                      <el-option
+                          v-for="item in errorList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.adduser" size="small" clearable placeholder="添加人" style="width:90px;margin:5px 10px 5px 0px;float:left;">
+                    <el-option
+                      v-for="item in userList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.production" size="small" clearable placeholder="产量" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                    <el-option
+                      v-for="item in productionList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.custormwarnstatus" size="small" clearable placeholder="业务员提醒" style="width:120px;margin:5px 10px 5px 0px;float:left;">
+                    <el-option
+                      v-for="item in salesUserNoticeList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.saleswarnstatus" size="small" clearable placeholder="添加人提醒" style="width:120px;margin:5px 10px 5px 0px;float:left;">
+                    <el-option
+                      v-for="item in addUserNoticeList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <el-input
+                    style="width: 150px;margin:5px 10px 5px 0px;float:left;" size="small"
+                    placeholder="模糊搜索、备注1"
+                    v-model="searchData.remark1"
+                    clearable>
+                  </el-input>
+                  <el-input
+                    style="width: 100px;margin:5px 10px 5px 0px;float:left;" size="small"
+                    placeholder="备注2"
+                    v-model="searchData.remark2"
+                    clearable>
+                  </el-input>
+                  <el-input
+                    style="width: 100px;margin:5px 10px 5px 0px;float:left;" size="small"
+                    placeholder="备注3"
+                    v-model="searchData.remark3"
+                    clearable>
+                  </el-input>
+                  <el-select v-model="searchData.effective" size="small" clearable placeholder="有效性" style="width:100px;margin:5px 10px 5px 0px;float:left;">
+                    <el-option
+                      v-for="item in effectiveList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.feedback" size="small" clearable placeholder="反馈" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                    <el-option
+                      v-for="item in feedbackList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <span style="float:left;line-height:32px;font-size:13px;margin:5px;">排序：</span>
+                  <el-select v-model="searchData.sort" size="small" placeholder="排序" style="width:100px;margin:5px 10px 5px 0px;float:left;">
+                    <el-option
+                      v-for="item in sortList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
+                </div>
+                <div class="clues-info">
+                  <p>
+                  
+                  <span class="item-span-1">当前结果集：共有<strong>{{infoData.totalCount}}</strong>条。</span>
+                  <span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条，</span>
+                  <span class="item-span-3">无效：<strong>{{infoData.invalidCount}}</strong>条。</span>
+                  <span class="item-span-1">总分：<strong>{{infoData.totalScore}}</strong>。</span>
+                  <br/>
+                  <span class="item-span-1">本月（自然月） 共有<strong>{{infoData.totalCountMonth}}</strong>条。</span>
+                  <span class="item-span-2">有效：<strong>{{infoData.effectiveCountMonth}}</strong>条，</span>                  
+                  <span class="item-span-1">积分：<strong>{{infoData.totalScoreMonth}}</strong>。</span><em>||</em>
+                  
+                  <span class="item-span-1">上月（自然月） 共有<strong>{{infoData.totalCountLastMonth}}</strong>条。</span>
+                  <span class="item-span-2">有效：<strong>{{infoData.effectiveCountLastMonth}}</strong>条，</span>                  
+                  <span class="item-span-1">积分：<strong>{{infoData.totalScoreLastMonth}}</strong>。</span>
+                  
+                  </p>
+                </div>
+                <div class="clues-title">
+                     <h2><i class="svg-i" ><svg-icon icon-class="telBlue" /></i>{{currentPhone}}</h2>
+                     <div class="clues-title-btn">
+                          <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Enphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出结果</el-button>
+                          <el-button type="primary" size="small" class="editorNote" :disabled="isDisabled" v-if="menuButtonPermit.includes('Enphone_othereditall')" v-on:click="editPageNote()"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改当前页备注</el-button>
+                     </div>
+                </div>
+
             </div>
           </div>
-          <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
-            <el-date-picker
-                v-model="searchData.date"
-                size="small"
-                type="daterange"
-                align="right"
-                value-format = "yyyy-MM-dd"
-                unlink-panels
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                style="float:left;margin: 5px;"
-                :picker-options="pickerRangeOptions">
-            </el-date-picker>
-            <el-select v-model="searchData.timeing" clearable placeholder="时段" size="small" style="width:80px;margin: 5px;float:left;">
-                <el-option
-                    v-for="item in timeList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-            <el-select v-model="searchData.continent" size="small" clearable placeholder="大洲" style="width:80px;margin: 5px;float:left;">
-                <el-option
-                    v-for="item in continentsList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-            <el-select v-model="searchData.typekey" size="small" clearable placeholder="分类" @change="currentCateChange" style="width:90px;margin: 5px;float:left;">
-                <el-option
-                    v-for="item in productTypeList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-            <el-select v-model="searchData.productid" size="small" clearable placeholder="产品" style="width:90px;margin: 5px;float:left;">
-                <el-option
-                    v-for="item in productList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-            <el-select v-model="searchData.messagetype" size="small" clearable placeholder="留言类型" style="width:100px;margin: 5px;float:left;">
-                <el-option
-                    v-for="item in messageList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-            <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道" style="width:80px;margin: 5px;float:left;">
-                <el-option
-                    v-for="item in sourceList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-            <el-select v-model="searchData.device" size="small" clearable placeholder="设备" style="width:80px;margin: 5px;float:left;">
-              <el-option
-                v-for="item in deviceList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别" style="width:80px;margin: 5px;float:left;">
-                <el-option
-                    v-for="item in levelList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-            <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质" style="width:80px;margin: 5px;float:left;">
-                <el-option
-                    v-for="item in natureList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-            <el-select v-model="searchData.enxunprice" size="small" clearable placeholder="需求" style="width:80px;margin: 5px;float:left;">
-                <el-option
-                    v-for="item in priceList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-            <el-select v-model="searchData.erroring" size="small" clearable placeholder="异常" style="width:80px;margin: 5px;float:left;">
-                <el-option
-                    v-for="item in errorList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-            <el-select v-model="searchData.adduser" size="small" clearable placeholder="添加人" style="width:90px;margin: 5px;float:left;">
-              <el-option
-                v-for="item in userList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-select v-model="searchData.production" size="small" clearable placeholder="产量" style="width:80px;margin: 5px;float:left;">
-              <el-option
-                v-for="item in productionList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-select v-model="searchData.custormwarnstatus" size="small" clearable placeholder="业务员提醒" style="width:120px;margin: 5px;float:left;">
-              <el-option
-                v-for="item in salesUserNoticeList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-select v-model="searchData.saleswarnstatus" size="small" clearable placeholder="添加人提醒" style="width:120px;margin: 5px;float:left;">
-              <el-option
-                v-for="item in addUserNoticeList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-input
-              style="width: 150px;margin: 5px;float:left;" size="small"
-              placeholder="模糊搜索、备注1"
-              v-model="searchData.remark1"
-              clearable>
-            </el-input>
-            <el-input
-              style="width: 100px;margin: 5px;float:left;" size="small"
-              placeholder="备注2"
-              v-model="searchData.remark2"
-              clearable>
-            </el-input>
-            <el-input
-              style="width: 100px;margin: 5px;float:left;" size="small"
-              placeholder="备注3"
-              v-model="searchData.remark3"
-              clearable>
-            </el-input>
-            <el-select v-model="searchData.effective" size="small" clearable placeholder="有效性" style="width:100px;margin: 5px;float:left;">
-              <el-option
-                v-for="item in effectiveList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-select v-model="searchData.feedback" size="small" clearable placeholder="反馈" style="width:80px;margin: 5px;float:left;">
-              <el-option
-                v-for="item in feedbackList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <span style="float:left;line-height:32px;font-size:13px;margin:5px;">排序：</span>
-            <el-select v-model="searchData.sort" size="small" placeholder="排序" style="width:100px;margin: 5px;float:left;">
-              <el-option
-                v-for="item in sortList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin: 5px;float:left;">查询</el-button>
-          </div>
-          <div class="clues-info" ref="infoPane">
-            <p><span class="item-span-2">当前结果集：共有<strong>{{infoData.totalCount}}</strong>条。</span><span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条。</span><span class="item-span-2">无效：<strong>{{infoData.invalidCount}}</strong>条。</span><span class="item-span-1">总分：<strong>{{infoData.totalScore}}</strong>。</span><span class="item-span-2"><em>||</em>本月（自然月） 共有<strong>{{infoData.totalCountMonth}}</strong>条，有效：<strong>{{infoData.effectiveCountMonth}}</strong>条，积分：<strong>{{infoData.totalScoreMonth}}</strong>。<em>||</em>上月（自然月） 共有<strong>{{infoData.totalCountLastMonth}}</strong>条，有效：<strong>{{infoData.effectiveCountLastMonth}}</strong>条，积分：<strong>{{infoData.totalScoreLastMonth}}</strong>。</span></p>
-          </div>
-          <h2 class="clues-title" ref="titlePane">{{currentPhone}}</h2>
           <div class="card-content" ref="tableContent">
             <el-table
               border
@@ -350,7 +368,7 @@
               <el-table-column
                 prop="effective"
                 label="有效/原因"
-                width="80"
+                width="100"
                 >
                 <template slot-scope="scope">
                   <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
@@ -413,7 +431,7 @@
               <el-table-column
                 prop="score"
                 label="价值分"
-                min-width="60"
+                min-width="80"
                 >
                 <template slot-scope="scope">
                   <div class="table-score"><span>{{scope.row.score}}</span></div>
@@ -510,6 +528,7 @@ export default {
       defaultData:{},
       operationsWidth:"",
       tableData:[],
+      EnphoneCardFrWidth:200,
       tableHeight:200,
       maxDate:[],
       minDate:[],
@@ -678,14 +697,15 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
+      $this.EnphoneCardFrWidth = $this.$refs.boxPane.offsetWidth-$this.$refs.EnphoneCardFl.offsetWidth-40-15;
       if($this.$route.query.phoneID){
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-$this.$refs.infoPane.offsetHeight-30-30-25-20-3;
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-30-25-20-3;
       }
     });
     if($this.$route.query.phoneID){
       window.onresize = () => {
           return (() => {
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-$this.$refs.infoPane.offsetHeight-30-30-25-20-3;
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-30-25-20-3;
             // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
           })()
       }
@@ -726,15 +746,11 @@ export default {
     if($this.phoneID){
       $this.$nextTick(() => {
         $this.$refs.simpleTable.doLayout();
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-$this.$refs.infoPane.offsetHeight-30-30-25-20-3;
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-30-25-20-3;
       })
     }
   },
   methods:{
-    // 刷新数据
-    refreshData(){
-      this.initPage();
-    },
     // 搜索结果
     searchResult(){
       var $this = this;
@@ -955,10 +971,6 @@ export default {
       var queryObj = {};
       queryObj.phoneID = id;
       this.$router.push({page:'Enphone/phoneindex',query:queryObj});
-    },
-    // 返回询盘首页
-    backHome(){
-      this.$router.push({page:'Enphone/phoneindex'});
     },
     // 获取当前电话的搜索条件数据
     getCurrentPhoneSearchData(){
@@ -1262,324 +1274,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .el-select{
-    display: block;
-  }
-.form-title{
-  width: 110px;
-  display: inline-block;
-  text-align: right;
-  vertical-align: middle;
-  font-size: 14px;
-  color: #606266;
-  line-height: 36px;
-  padding: 0 12px 0 0;
-  box-sizing: border-box;
-}
-.item-form.icon{
-  padding-right: 76px;
-}
-.item-form{
-    padding-right: 30px;
-    position: relative;
-    .icon-button{
-      width: 36px;
-      height: 36px;
-      position: absolute;
-      top:0;
-      right: 30px;
-      border: 1px solid #C0C4CC;
-      border-radius: 4px;
-      text-align: center;
-      line-height: 34px;
-      font-size: 18px;
-      color: #999;
-      cursor: pointer;
-    }
-    >span{
-      display: block;
-      width: 30px;
-      height: 36px;
-      position: absolute;
-      right:0;
-      top:0;
-      text-align: center;
-      line-height: 36px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #bbb;
-    }
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-  }
-.item-form-group{
-  width: 100%;
-  &:before,
-  &:after {
-    content: "";
-    display: table;
-  }
-  &:after {
-    clear: both;
-  }
-  .item-form-3{
-    width: 180px;
-    float:left;
-    padding-right: 30px;
-    position: relative;
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-    >span{
-      display: block;
-      width: 30px;
-      height: 36px;
-      position: absolute;
-      right:0;
-      top:0;
-      text-align: center;
-      line-height: 36px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #bbb;
-    }
-  }
-  .item-form{
-    width: 50%;
-    float:left;
-    }
-}
-//.el-table{
-//  svg,i[class~="el-cion"]{
-//    font-size: 20px;
-//  }
-//}
-.phone-panel{
-  width:210px;
-  margin-right: 15px;
-  .side-button{
-    width: 100%;
-    overflow: hidden;
-    padding: 0 10px 5px;
-    .el-button{
-      display: block;
-      width: 100%;
-      margin: 10px 0 0;
-    }
-  }
-  ::v-deep .el-card__body{
-    padding:0;
-    height: 100%;
-    overflow: hidden;
-  }
-  ::v-deep .el-scrollbar{
-    height: 100%;
-    .el-scrollbar__wrap{
-      overflow-x: hidden;
-    }
-    .el-scrollbar__view{
-      padding-bottom: 15px;
-    }
-  }
-}
-.clues-panel{
-  position: relative;
-}
-.phone-list{
-  width: 100%;
-  overflow: hidden;
-  padding: 15px 15px 0 15px;
-  dt{
-    width: 100%;
-    font-size:0;
-    line-height:0;
-    padding-bottom: 15px;
-    .svg-i{
-      display: inline-block;
-      width: 24px;
-      height: 24px;
-      line-height: 24px;
-      margin-right: 5px;
-      font-size: 24px;
-      vertical-align: top;
-      color: $--color-primary;
-    }
-    span{
-      vertical-align: top;
-      line-height: 24px;
-      font-size: 16px;
-      color: $--color-primary;
-    }
-  }
-  dd{
-    width: 100%;
-    overflow: hidden;
-    line-height:0;
-    font-size:0;
-    cursor: pointer;
-    &:hover{
-      span,i,b,em{
-        text-decoration: underline;
-      }
-    }
-    span,i,b,em{
-      font-style: normal;
-      font-size: 12px;
-      line-height:24px;
-      font-weight: normal;
-    }
-    i{
-      margin-left: 5px;
-      font-weight: bold;
-      color: $--color-danger;
-    }
-    em{
-      color: $--color-primary;
-    }
-    b{
-      color: $blue;
-    }
-  }
-}
-.phone-index{
-  height: 100%;
-  .card-header{
-    padding: 5px;
-  }
-}
-.product-span{
-    i{
-        font-style: normal;
-        font-weight: bold;
-    }
-    &.level_1{
-        i{color:#B3315F};
-    }
-    &.level_2{
-        i{
-            color: #130CB7;
-        }
-    }
-    &.level_3{
-        i{
-            color: #6a6a6b;
-        }
-    }
-}
-.absolute-panel{
-  position: absolute;
-  left:0;
-  top:0;
-  width: 100%;
-  height: 100%;
-}
-.table-input{
-  .el-input+.el-input{
-    margin-top: 10px;
-  }
-  .el-input{
-    ::v-deep .el-input__inner{
-      padding: 0 10px!important;
-    }
-  }
-  .el-textarea{
-    ::v-deep .el-textarea__inner{
-      padding: 5px 10px!important;
-    }
-  }
-}
-.table-text{
-  p{
-    a{
-      color: $--color-primary;
-      &:hover{
-        text-decoration: underline;
-      }
-    }
-  }
-}
-.table-tag{
-  .level{
-    display: inline-block;
-    border-radius: 4px;
-    padding: 0 5px;
-    color: #fff;
-  }
-  .level-1{
-    background: #ff0000;
-  }
-  .level-2{
-    background: #eab905;
-  }
-  .level-3{
-    background: #293cfc;
-  }
-  .level-4{
-    background: #1acfda;
-  }
-  .level-5{
-    background: #f6b37f;
-  }
-  .level-6{
-    background: #7e84fd;
-  }
-}
-.export-dialog{
-  .el-form-item{
-    margin-right:0!important;
-    width: 100%;
-    ::v-deep .el-form-item__content{
-      width: 240px;
-      .el-select,.el-input{
-        width: 100%;
-      }
-    }
-  }
-}
-.item-box{
-  flex:1;
-  .box-card{
-    margin-bottom: 15px;
-    .item-num{
-      font-size:0;
-      line-height:0;
-      text-align: center;
-      overflow: hidden;
-      padding: 60px 0;
-      dl{
-        display: inline-block;
-        vertical-align: top;
-        overflow: hidden;
-        dt,dd{
-          display: block;
-          width: 100%;
-          text-align: right;
-        }
-        dt{
-          font-size: 16px;
-          line-height: 1.5;
-        }
-        dd{
-          font-size: 48px;
-          line-height: 1;
-          color: #fc5457;
-        }
-      }
-    }
-  }
-}
-.item-box+.item-box{
-  margin-left: 15px;
-}
 </style>

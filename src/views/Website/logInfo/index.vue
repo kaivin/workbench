@@ -1,14 +1,15 @@
 ﻿<template>
-  <div class="page-root scroll-panel ArticleSix flex-wrap">
+  <div class="page-root scroll-panel ArticleSix">
       <div class="ArticleSixFl">
             <div class="article-info">
                 <div class="ArticleSixFlTop">
                     <h1>{{articleData.title}}</h1>
+                    <h2>网站：{{website}} [ {{websiteID}} ]</h2>
                     <div class="ArticleSixFlTopTag clearfix">
-                        <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>网站：{{website}} [ {{websiteID}} ]</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>匿名</span><span><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.addtime}}</span></p>
-                        <p class="ArticleSixFlTopTagFr">阅读：{{articleData.hits}}&nbsp;&nbsp;|&nbsp;&nbsp;发布时间：{{articleData.updatetime}}</p>
+                        <p class="ArticleSixFlTopTagFl"><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>匿名</span><span v-if="device==='desktop'"><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.addtime}}</span></p>
+                        <p class="ArticleSixFlTopTagFr"><i class="svg-i" ><svg-icon icon-class="eye_rz" /></i>{{articleData.hits}}<span>|</span><i class="svg-i" ><svg-icon icon-class="read_rz" /></i>{{articleData.updatetime}}</p>
                     </div>
-                    <div class="ArticleSixFlTopRead">
+                    <div class="ArticleSixFlTopRead" v-if="articleData.readshow==1&&device==='desktop'&&(userList.hasreadusercount>0||userList.notreadusercount>0)">
                           <p class="article-user" v-if="articleData.readshow==1">
                             <strong>{{userList.hasreadusercount}}人已读</strong>
                             <template v-for="(item,index) in userList.hasreaduser">
@@ -346,24 +347,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.article-user{
-  width: 100%;
-  overflow: hidden;
-  font-size: 14px;
-  strong{
-    margin-right: 10px;
-  }
-}
-.el-divider__text{
-  background: #f2f2f2!important;
-}
-.white-line ::v-deep .el-divider__text{
-  background: #ffffff!important;
-}
-.box-card{
-  height: auto!important;
-}
-.btn-back{
-  cursor: pointer;
-}
 </style>
