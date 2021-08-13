@@ -8,15 +8,15 @@
             <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>{{articleData.typename}}</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>匿名</span><span><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.addtime}}</span></p>
             <p class="ArticleSixFlTopTagFr">阅读：{{articleData.hits}}<span>|</span>发布时间：{{articleData.updatetime}} </p>
           </div>
-          <div class="ArticleSixFlTopRead">
-            <p class="article-user" v-if="articleData.readshow==1">
+          <div class="ArticleSixFlTopRead" v-if="articleData.readshow==1&&device==='desktop'&&(userList.hasreadusercount>0||userList.notreadusercount>0)">
+            <p class="article-user" v-if="userList.hasreadusercount>0">
               <strong>{{userList.hasreadusercount}}人已读</strong>
               <template v-for="(item,index) in userList.hasreaduser">
                 <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
                 <span v-bind:key="item.id" v-else>、{{item.name}}</span>
               </template>
             </p>
-            <p class="article-user" v-if="articleData.readshow==1">
+            <p class="article-user" v-if="userList.notreadusercount>0">
               <strong>{{userList.notreadusercount}}人未读</strong>
               <template v-for="(item,index) in userList.notreaduser">
                 <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
