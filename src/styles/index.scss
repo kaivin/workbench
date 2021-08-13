@@ -16,7 +16,7 @@
 @import './-userIndex.scss';
 @import './-ownPush.scss';
 @import './-enCnProduct.scss';
-@import './Article.scss';
+@import './-Article.scss';
 @import './Chinaphone.scss';
 @import '-Enphone.scss';
 .page-root{
@@ -250,6 +250,7 @@
       width:100%;
   }
 }
+/** 内网论坛相关样式 **/
 .post-class{
   .border-row{
     .border-cell{
@@ -323,11 +324,16 @@
         color:#666;
         background:#f1f3f6;
         border-color:#f1f3f6!important;
+<<<<<<< Updated upstream
         border-radius:2px;
         margin-right:6px;
         margin-bottom:5px;
         margin-top:5px;
         margin-left:0px;
+=======
+        border-radius:3px;
+        margin:4px;
+>>>>>>> Stashed changes
         padding:3px 15px;
         line-height:24px;
         &.is-active,&:hover,&:focus{
@@ -345,11 +351,16 @@
   }
   .el-checkbox{
       border-color:#e6e6e6 !important;
+<<<<<<< Updated upstream
       border-radius:2px!important;
       margin-right:0px!important;
       margin-bottom:0px!important;
       margin-top:0px!important;
       margin-left:0px!important;
+=======
+      border-radius:3px!important;
+      margin:4px!important;
+>>>>>>> Stashed changes
       padding:5px 15px 5px 10px!important;
       line-height:20px;
       .el-checkbox__label{
@@ -482,6 +493,17 @@
 .vuepress-markdown-body:not(.custom){
   padding:30px!important;
 }
+.article-user{
+  width: 100%;
+  overflow: hidden;
+  font-size: 14px;
+  strong{
+    margin-right: 10px;
+  }
+}
+.btn-back{
+  cursor: pointer;
+}
 .info-content{
   width:100%;
   padding:0;
@@ -495,13 +517,17 @@
   }
   table{
     max-width:100%;
+    border:none!important;
     border-top:1px solid $primaryBorder!important;
     border-left:1px solid $primaryBorder!important;
+    background: none!important;
     tr{
       td{
+        border:none!important;
         border-bottom:1px solid $primaryBorder!important;
         border-right:1px solid $primaryBorder!important;
         padding:3px 10px!important;
+        background: none!important;
       }
     }
   }
@@ -580,6 +606,57 @@
   .el-table__fixed-right-patch {
     background-color:#e2e9ed;
     border-bottom:1px solid #e2e9ed;
+  }
+  .table-tag{
+    .el-tag{
+      margin: 2px;
+    }
+  }
+  .table-hit{
+    span{
+      color:#4c4c4c;
+    }
+  }
+  .table-comment{
+    span{
+      color:#fc8440;
+    }
+  }
+  .table-title{
+    cursor: pointer;
+    line-height:0;
+    transition: all .3s;
+    .svg-i{
+      color: #ff4500;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+    .svg-icon{
+      width: 20px;
+      height: 20px;
+    }
+    span{
+      vertical-align: middle;
+      line-height: 24px;
+    }
+    &:hover{
+      padding-left: 5px;
+    }
+  }
+  .table-permit{
+    .svg-i{
+      cursor: pointer;
+      .svg-icon{
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+  .el-popover{
+    min-width: 100px!important;
+    p{
+      margin: 5px;
+    }
   }
 }
 .clearfix:after{content:"."; display:block; height:0; clear:both; visibility:hidden; font-size:0px; }
@@ -842,12 +919,6 @@
     }
   }
 }
-/** 表格中tag标签样式 **/
-.table-tag{
-  .el-tag{
-    margin: 2px;
-  }
-}
 /** 导出弹窗统一样式 **/
 .export-dialog{
   .el-form-item{
@@ -857,6 +928,69 @@
       width: 280px;
       .el-select--small{
         width: 100%;
+      }
+    }
+  }
+}
+/** 绝对定位按钮层，页面滚动统一样式 **/
+.abs-scroll-panel{
+  padding:0;
+}
+
+@media (max-width:1440px){
+  .ArticleSix{
+      .ArticleSixFl{
+        float:none;
+        width:100%;
+        padding-right:0;
+        
+      }
+      .ArticleSixFr{
+        float:none;
+        width: 100%;
+        margin-top: 20px!important;
+      }
+  }
+  .article-info{
+    .ArticleSixFlTop{
+        h1{
+            font-size:26px;
+        }
+        .ArticleSixFlTopTag{
+            .ArticleSixFlTopTagFl{
+                float:left;
+                span{
+                    margin-right: 15px;
+                    padding:3px 5px;
+                    font-size: 14px;
+                }
+            }
+            .ArticleSixFlTopTagFr{
+                font-size:14px;
+            }
+        }
+    }
+  }
+}
+@media (max-width:1280px){
+  .article-info{
+    .ArticleSixFlTop{
+      h1{
+          font-size:26px;
+      }
+      .ArticleSixFlTopTag{
+          .ArticleSixFlTopTagFl{
+              float:none;
+              clear: both;
+              display: block;
+          }
+          .ArticleSixFlTopTagFr{
+              padding-top: 10px;
+              padding-bottom: 0px;
+              float: none;
+              clear: both;
+              display: block;
+          }
       }
     }
   }
@@ -891,6 +1025,75 @@
       max-width:360px!important;
       width:100%!important;
       margin:0 auto;
+    }
+  }
+}
+@media (max-width:992px){
+  .ArticleSix{
+      &.flex-wrap{
+          display: flex;
+          align-content: flex-start;
+          flex-flow: row wrap;
+      }
+      .ArticleSixFl{
+          flex: 0 0 100%;
+      }
+      .ArticleSixFr{            
+          float:none;
+          clear: both;
+          width:100%;
+          min-width:100%;
+          max-width:100%;
+          flex: 0 0 100%;
+          .ArticleSixFrTop{
+              margin-bottom: 0px;
+              &:after{
+                  display: none;
+              }
+          }
+      }
+  }
+  .article-info{
+    .ArticleSixFlTop{
+        h1{
+            font-size:24px;
+        }
+        .ArticleSixFlTopTag{
+            padding-top: 10px;
+            padding-bottom: 15px;
+            .ArticleSixFlTopTagFl{
+                span{
+                    margin-right: 5px;
+                    font-size: 12px;
+                    line-height: 18px;
+                    padding: 3px 7px;
+                }
+            }
+            .ArticleSixFlTopTagFr{
+                font-size: 12px;
+                line-height: 20px;
+                padding-top: 8px;
+            }
+        }
+      }
+
+  }
+}
+@media (max-width:782px){
+  .article-info{
+    .ArticleSixFlTop{
+      h1{
+          font-size:22px;
+      }
+    }
+  }
+}
+@media (max-width:576px){
+  .article-info{
+    .ArticleSixFlTop{
+      h1{
+          font-size:20px;
+      }
     }
   }
 }

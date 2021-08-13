@@ -15,7 +15,7 @@ table, caption, tbody, tfoot, thead, tr, th, td {
     margin: 0;
     padding: 0;
     outline: 0;
-    font-size: 12px;
+    font-size: 16px;
 }
 
 ol, ul {
@@ -37,6 +37,7 @@ del {
 table {
     border-collapse: collapse;
     border-spacing: 0;
+    width:100%;
 }
 
 #preview *,#preview *:after,#preview *:before{-webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; -webkit-touch-callout:none; outline:none;}
@@ -49,7 +50,7 @@ body {
     font-size: 14px;
 }
 body.view{
-    background-color: #f2f2f2;
+    background-color: #ffffff;
     padding: 15px;
     font-size: 16px;
     box-sizing:border-box;
@@ -112,13 +113,15 @@ a.button:hover {
 }
 
 body.view table{
-	border-top: 1px solid #f1f3f9!important;
-    border-left: 1px solid #f1f3f9!important;
+    border:none!important;
+	border-top: 1px solid #a8d3ff!important;
+    border-left: 1px solid #a8d3ff!important;
     background: none;
 }
 body.view table tr td{
-	border-bottom: 1px solid #f1f3f9!important;
-	border-right: 1px solid #f1f3f9!important;
+    border:none!important;
+	border-bottom: 1px solid #a8d3ff!important;
+	border-right: 1px solid #a8d3ff!important;
 	padding: 3px 10px!important;
 }
 body.view table tr td,body.view table tr th{

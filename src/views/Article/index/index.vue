@@ -1,4 +1,5 @@
 ﻿<template>
+<<<<<<< Updated upstream
   <div class="page-root" ref="boxPane">
       <el-card class="box-card scroll-card ArticleMain" v-bind:class="device==='desktop'?'':'mobile'" shadow="hover">
           <div class="ArticleMainTop" v-bind:class="isDefault&&departUser.length>0?'scroll-panel':''" :style="isDefault&&departUser.length>0?{height:scrollHeight+'px'}:''">
@@ -277,6 +278,39 @@
                         :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
                         :total="totalDataNum">
                       </el-pagination>
+=======
+  <div class="page-root bbs-panel" v-bind:class="isDefault?'scroll-panel':''" ref="boxPane">
+    <el-card class="box-card scroll-card ArticleMain" v-bind:class="device==='desktop'?'':'mobile'" shadow="hover">
+      <div slot="header">
+          <div class="card-header" ref="headerPane">
+            <div class="border-wrap post-class ArticleOne" v-bind:class="device==='desktop'?'':'mobile'" v-if="postTypeData.length>0">
+              <div class="border-row flex-wrap" v-for="item in postTypeData" v-bind:key="item.id" v-bind:class="item.id==isArticleTit?'active':''">
+                  <div class="border-cell txt-font" v-on:click="handArticleTit(item.id)">
+                      <span>{{item.typename}}</span>
+                  </div>
+                  <div class="border-cell flex-content" style="left:0px;">
+                      <div class="tag-panel">
+                          <el-button type="primary" plain v-bind:class="type.plain?'is-active':''" :size="device==='desktop'?'small':'mini'" v-for="type in item.children" v-bind:key="type.id" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div class="border-wrap post-tag ArticleTwo clearfix" v-bind:class="device==='desktop'?'':'mobile'" v-if="tagData.length>0&&isList">
+                <div class="border-row flex-wrap" v-if="tags.systemList.length>0">
+                    <div class="border-cell txt-font">系统标签</div>
+                    <div class="border-cell flex-content">
+                        <div class="tag-panel">
+                            <el-tag v-bind:class="item.plain?'is-active':''" size="small" v-for="item in tags.systemList" v-bind:key="item.id" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-row flex-wrap" v-if="tags.customList.length>0">
+                    <div class="border-cell txt-font">自定义标签</div>
+                    <div class="border-cell flex-content">
+                        <div class="tag-panel">
+                            <el-tag v-bind:class="item.plain?'is-active':''" size="small" v-for="(item,index) in tags.customList" v-bind:key="index" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
+                        </div>
+>>>>>>> Stashed changes
                     </div>
                   </div>
               </div>
@@ -290,6 +324,7 @@
                 <div class="tag-panel">
                     <el-button type="primary" v-bind:class="type.plain?'is-plain':''" :size="device==='desktop'?'small':'mini'" v-for="type in item.children" v-bind:key="type.id" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
                 </div>
+<<<<<<< Updated upstream
             </li>
             <li v-if="tagData.length>0&&tags.systemList.length>0">
                 <span class="WebsiteFixedTit">系统标签</span>
@@ -308,6 +343,246 @@
               <span class="WebsiteQue" v-on:click="searchDialog()">确定</span>
           </p>
       </div>
+=======
+              </div>
+          </div>
+      </div>  
+      <div class="card-content ArticleThree" ref="cardContent">
+          <div v-if="isDefault&&departUser.length>0" class="card-wrap ArticleThreeDefault">
+            <ul class="depart-ul">
+                <li class="item-depart" v-for="item in departUser" v-bind:key="item.id">
+                    <h4>{{item.name}}</h4>
+                    <div class="clerk-ul" v-if="item.departuser.length>0">
+                        <dl class="item-clerk" v-for="user in item.departuser" v-bind:key="user.id">
+                            <dt>{{user.name}}<span>[{{user.id}}]</span></dt>
+                            <dd><span v-bind:class="'JobLevel_'+user.level"></span></dd>
+                        </dl>
+                    </div>
+                </li>
+            </ul>
+          </div>
+          <div v-if="isList" class="card-wrap ArticleThreeList">
+            <el-table
+              ref="simpleTable"
+              :data="tableData"
+              stripe
+              :height="tableHeight"
+              class="SiteTable"
+              style="width: 100%"
+              key="a"
+              >
+              <el-table-column
+                prop="createname"
+                align="center"
+                label="添加人"
+                width="120"
+                >
+                <template #default="scope">
+                  <div class="table-title">
+                    <span v-if="scope.row.is_hidename==0">{{scope.row.createname}}</span>
+                    <span v-else>匿名</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="title"
+                align="left"
+                label="标题"
+                min-width="240"
+                >
+                <template #default="scope">
+                  <div class="table-title" v-on:click="jumpArticle(scope.row.id)">
+                    <i class="svg-i"><svg-icon v-if="scope.row.is_top" icon-class="top" class-name="disabled" /></i><span :style="{color:scope.row.titlecolor?scope.row.titlecolor:''}">{{scope.row.title}}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="mytags"
+                align="left"
+                label="标签"
+                min-width="160"
+                >
+                <template #default="scope">
+                  <div class="table-tag">
+                    <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="item in scope.row.tagList" v-bind:key="item.tag">{{item.tag}}</el-tag>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="readpermit"
+                align="center"
+                label="阅读权限"
+                width="100"
+                >
+                <template slot-scope="scope">
+                  <div class="table-permit">
+                    <el-popover trigger="hover" placement="top" v-if="scope.row.authorization.length>0">
+                      <p v-for="(item,index) in scope.row.authorization" v-bind:key="index">{{item}}</p>
+                      <i slot="reference" class="svg-i"><svg-icon :icon-class="scope.row.authorization[0]!='默认权限'?'peoples':'unlock'" /></i>
+                    </el-popover>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="hits"
+                align="center"
+                label="点击"
+                width="80"
+                >
+                <template #default="scope">
+                  <div class="table-hit">
+                    <span>{{scope.row.hits==0?'':scope.row.hits}}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="commentnumber"
+                align="center"
+                label="评论"
+                width="100"
+                >
+                <template #default="scope">
+                  <div class="table-comment">
+                    <span>{{scope.row.commentnumber==0?'':scope.row.commentnumber+"条评论"}}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="addtime"
+                align="left"
+                label="添加时间"
+                width="160"
+                >
+              </el-table-column>
+              <el-table-column
+                v-if="(menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_delete'))&&device==='desktop'"
+                :width="operationsWidth"
+                fixed="right"
+                prop="operations"
+                align="center"
+                label="操作">
+                <template #default="scope">
+                  <el-button size="mini" v-if="scope.row.editshow&&menuButtonPermit.includes('Article_edit')" @click="editTableRow(scope.row,scope.$index)">修改</el-button>
+                  <el-button size="mini" v-if="scope.row.deleteshow&&menuButtonPermit.includes('Article_delete')" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
+              <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page"
+                :page-sizes="pageSizeList"
+                :page-size="limit"
+                :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                :total="totalDataNum">
+              </el-pagination>
+            </div>
+          </div>
+          <div v-if="isSearch&&menuButtonPermit.includes('Article_search')" class="card-wrap search-content">
+            <h2>搜索关键词：<span>{{searchKey}}</span>，共找到：<span>{{totalDataNum}}</span>条</h2>
+            <el-table
+              ref="searchTable"
+              :data="searchData"
+              stripe
+              :height="tableHeight"
+              class="SiteTable"
+              style="width: 100%"
+              key="b"
+              >
+              <el-table-column
+                prop="typename"
+                label="论坛栏目"
+                width="120"
+                >
+              </el-table-column>
+              <el-table-column
+                prop="createname"
+                label="添加人"
+                width="120"
+                >
+                <template #default="scope">
+                  <div class="table-title">
+                    <span v-if="scope.row.is_hidename==0">{{scope.row.createname}}</span>
+                    <span v-else>匿名</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="title"
+                label="标题"
+                min-width="240"
+                >
+                <template #default="scope">
+                  <div class="table-title" v-on:click="jumpArticle(scope.row.id)">
+                    <span v-html="scope.row.title"></span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="mytags"
+                label="标签"
+                min-width="160"
+                >
+                <template #default="scope">
+                  <div class="table-tag">
+                    <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="item in scope.row.tagList" v-bind:key="item.tag">{{item.tag}}</el-tag>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="remarks"
+                label="备注"
+                min-width="180"
+                >
+              </el-table-column>
+              <el-table-column
+                prop="hits"
+                label="点击"
+                width="80"
+                >
+                <template #default="scope">
+                  <div class="table-hit">
+                    <span>{{scope.row.hits==0?'':scope.row.hits}}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="addtime"
+                label="添加时间"
+                width="160"
+                >
+              </el-table-column>
+              <el-table-column
+                v-if="(menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_delete'))&&device==='desktop'"
+                :width="operationsWidth"
+                align="center"
+                fixed="right"
+                prop="operations"
+                label="操作">
+                <template #default="scope">
+                  <div class="table-button">
+                    <el-button size="mini" v-if="scope.row.editshow&&menuButtonPermit.includes('Article_edit')" @click="editTableRow(scope.row,scope.$index)">修改</el-button>
+                    <el-button size="mini" v-if="scope.row.deleteshow&&menuButtonPermit.includes('Article_delete')" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
+                  </div>
+                </template>
+              </el-table-column>
+            </el-table>
+            <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
+              <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page"
+                :page-sizes="pageSizeList"
+                :page-size="limit"
+                :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                :total="totalDataNum">
+              </el-pagination>
+            </div>
+          </div>
+      </div>
+    </el-card>
+>>>>>>> Stashed changes
   </div>
 </template>
 <script>
@@ -316,7 +591,6 @@ export default {
   name: 'articleIndex',
   data() {
     return {
-      scrollHeight:200,
       tableHeight:250,
       menuButtonPermit:[],
       operationsWidth:"",
@@ -357,43 +631,43 @@ export default {
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        if($this.isDefault&&$this.departUser.length>0){
-           $this.scrollHeight = $this.$refs.boxPane.offsetHeight-40;
+        if($this.totalDataNum>50){
+          if($this.isList){
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
+          }
+          if($this.isSearch){
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-48-40-40-20;
+          }
         }else{
-           if($this.totalDataNum>50){
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-15;
-           }else{
-             $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-15;
-           }
+          if($this.isList){
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-40-20;
+          }
+          if($this.isSearch){
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-48-40-40-20;
+          }
         }
-        // 30：page-root上下内边距；20：按钮父级上下内边距；
       });
       window.onresize = () => {
           return (() => {
-              if($this.isDefault&&$this.departUser.length>0){
-                $this.scrollHeight = $this.$refs.boxPane.offsetHeight-40;
+              if($this.totalDataNum>50){
+                if($this.isList){
+                  $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
+                }
+                if($this.isSearch){
+                  $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-48-40-40-20;
+                }
               }else{
-                  if($this.totalDataNum>50){
-                      $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-15;
-                  }else{
-                    $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-15;
-                  }
+                if($this.isList){
+                  $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-40-20;
+                }
+                if($this.isSearch){
+                  $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-48-40-40-20;
+                }
               }
-            // 30：page-root上下内边距；20：按钮父级上下内边距；
           })()
       };
   },
   watch: {
-      scrollHeight(val) {
-        if (!this.timer) {
-          this.scrollHeight = val
-          this.timer = true
-          const $this = this
-          setTimeout(function() {
-            $this.timer = false
-          }, 400)
-        }
-      },
       tableHeight(val) {
         if (!this.timer) {
           this.tableHeight = val
@@ -416,14 +690,20 @@ export default {
   updated(){
     var $this = this;
     this.$nextTick(() => {
-      if($this.isDefault&&$this.departUser.length>0){
-          $this.scrollHeight = $this.$refs.boxPane.offsetHeight-40;
+      if($this.totalDataNum>50){
+        if($this.isList){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
+        }
+        if($this.isSearch){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-48-40-40-20;
+        }
       }else{
-          if($this.totalDataNum>50){
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-15;
-          }else{
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-15;
-          }
+        if($this.isList){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-40-20;
+        }
+        if($this.isSearch){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-48-40-40-20;
+        }
       }
       if($this.isList){
         $this.$refs.simpleTable.doLayout();
@@ -647,15 +927,11 @@ export default {
         }
       });
     },
-    // 添加表格行数据
-    addTableRow(){
-      var $this = this;
-      $this.$router.push({path:'/Article/addEdit'});
-    },
     // 编辑表格行数据
     editTableRow(row,index){
       var $this = this;
-      $this.$router.push({path:'/Article/addEdit',query:{id:row.id}});
+      var routeUrl =  $this.$router.resolve({path:'/Article/addEdit',query:{id:row.id}});
+      window.open(routeUrl.href,'_blank');
     },
     // 删除表格行
     deleteTableRow(row,index){
@@ -889,7 +1165,8 @@ export default {
     // 跳转到文章详情
     jumpArticle(id){
       var $this = this;
-      $this.$router.push({path:'/Article/info',query:{id:id}});
+      var routeUrl =  $this.$router.resolve({path:'/Article/info',query:{id:id}});
+      window.open(routeUrl.href,'_blank');
     },
     //移动端导航切换
     handArticleTit(Nt){
@@ -914,80 +1191,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.card-wrap{
-  &.search-content{
-    h2{
-      color: #111;
-      span{
-        margin:0;
-        color: $--color-primary;
-      }
-    }
-  }
-  h2{
-    width: 100%;
-    text-align: center;
-    font-size: 15px;
-    color: $--color-primary;
-    line-height: 1.2;
-    padding: 15px 0;
-    border-bottom:none;
-    span{
-      margin-left: 15px;
-    }
-  }
-}
-.table-tag{
-  .el-tag{
-    margin: 2px;
-  }
-}
-.table-hit{
-  span{
-    color:#4c4c4c;
-  }
-}
-.table-comment{
-  span{
-    color:#fc8440;
-  }
-}
-.table-title{
-  cursor: pointer;
-  line-height:0;
-  transition: all .3s;
-  .svg-i{
-    color: #ff4500;
-    margin-right: 5px;
-    vertical-align: middle;
-  }
-  .svg-icon{
-    width: 20px;
-    height: 20px;
-  }
-  span{
-    vertical-align: middle;
-    line-height: 24px;
-  }
-  &:hover{
-    padding-left: 5px;
-  }
-}
-.table-permit{
-  .svg-i{
-    cursor: pointer;
-    .svg-icon{
-      width: 20px;
-      height: 20px;
-    }
-  }
-}
-.el-popover{
-  min-width: 100px!important;
-  p{
-    margin: 5px;
-  }
-}
-
-
 </style>

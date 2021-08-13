@@ -15,7 +15,7 @@ button,input,select,textarea{font:12px/20px Arial;outline:0;resize:none;border:n
 }
 body.view{
 	padding:0px 15px;
-	background-color: #f2f2f2;
+	background-color: #ffffff;
 	font-family: "微软雅黑";
 	font-size: 16px;
 	line-height: 1.5;
@@ -29,11 +29,17 @@ body.view img,body.view video,body.view table{
 	max-width: 100%;
 }
 body.view table{
-	border-top: 1px solid #f1f3f9!important;
-    border-left: 1px solid #f1f3f9!important;
+    border:none!important;
+	border-top: 1px solid #a8d3ff!important;
+    border-left: 1px solid #a8d3ff!important;
+    background: none!important;
 }
 body.view table tr td{
-	border-bottom: 1px solid #f1f3f9!important;
-	border-right: 1px solid #f1f3f9!important;
+    border:none!important;
+	border-bottom: 1px solid #a8d3ff!important;
+	border-right: 1px solid #a8d3ff!important;
 	padding: 3px 10px!important;
+}
+body.view table tr td,body.view table tr th{
+    background: none!important;
 }

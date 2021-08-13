@@ -1,273 +1,240 @@
 ﻿<template>
-  <div class="page-root" v-bind:class="isPreview?'scroll-panel':''" ref="boxPane">
-    <el-card v-show="!isPreview" class="box-card ArticleCard" shadow="hover">
+  <div class="page-root bbs-panel" v-bind:class="isPreview?'scroll-panel':'abs-scroll-panel'" ref="boxPane">
+    <el-card class="box-card ArticleCard" v-show="!isPreview" shadow="hover">
         <div class="card-content" ref="cardContent">
-          <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
-            <table class="ArticleFour">
-              <tr>
-                <td class="type-title"><span>论坛栏目：</span></td>
-                <td>
-                  <div class="item-form buttonOne">
-                       <el-button type="primary" plain v-bind:class="item.plain?'is-active':''" size="small" v-for="item in postType" v-bind:key="item.id" v-on:click="clickPostType(item.id)">{{item.typename}}</el-button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>系统标签：</span></td>
-                <td>
-                  <div class="item-form buttonTwo">
-                    <el-checkbox-group class="checkbox-panel" v-model="formData.systemTag" size="small">
-                      <el-checkbox :label="item.id" v-for="item in postSystemTag" v-bind:key="item.id" border>{{item.name}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </td>
-              </tr>
-              <tr v-if="permitField.includes('mytags')">
-                <td class="type-title"><span>自定义标签：</span></td>
-                <td>
-                    <div class="item-form" style="width:252px;">
-                        <el-input
-                          placeholder="请输入标签内容"
-                          v-model="formData.tag"
-                          size="small"
-                          clearable>
-                        </el-input>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>标题：</span></td>
-                <td>
-                  <div class="item-form-group ArticleFourTit flex-box">
-                    <div class="item-form flex-content">
-                        <el-input
-                          placeholder="请输入文章标题"
-                          v-model="formData.title"
-                          size="small"
-                          ref="title"
-                          clearable>
-                        </el-input>
-                    </div>
-                    <div class="item-form inline-item title-color">
-                      <strong>标题颜色：</strong>
-                      <div class="item-form-panel">
-                           <span v-for="item in predefineColors" v-bind:style="{background:item}" v-on:click="clickTitColor(item)" v-bind:class="item==isTitColor?'TitColor':''"></span>
+          <div class="abs-panel">
+            <div class="scroll-panel">
+              <div class="main-content">
+                <table class="ArticleFour">
+                  <tr>
+                    <td class="type-title"><span>论坛栏目：</span></td>
+                    <td>
+                      <div class="item-form buttonOne">
+                          <el-button type="primary" plain v-bind:class="item.plain?'is-active':''" size="small" v-for="item in postType" v-bind:key="item.id" v-on:click="clickPostType(item.id)">{{item.typename}}</el-button>
                       </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr v-if="userList.length>0">
-                <td class="type-title"><span>内容：</span></td>
-                <td>
-                  <div class="item-form">
-                    <el-tabs v-model="activeTab" type="border-card" class="tab-card" :before-leave="tabClickHandler">
-                      <el-tab-pane label="富文本编辑器" name="textarea" id="editor-rich">
-                        <vue-ueditor-wrap v-model="formData.content" :config="editorConfig" @ready="ready" editor-id="editor-rich-text"></vue-ueditor-wrap>
-                      </el-tab-pane>
-                      <el-tab-pane label="Markdown" name="markdown">
-                        <v-md-editor 
-                          left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code"
-                          v-model="formData.markdownContent" @change="changeMarkdownHandler" height="600px" mode="editable"></v-md-editor>
-                      </el-tab-pane>
-                    </el-tabs>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>备注：</span></td>
-                <td>
-                  <div class="item-form">
-                    <div class="item-form-panel">
-                      <el-input
-                        type="textarea"
-                        :autosize="{ minRows: 2, maxRows: 4}"
-                        placeholder="请输入文章备注"
-                        v-model="formData.remarks"
-                        size="small"
-                        clearable>
-                      </el-input>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  <div class="item-form-group ArticleFourTag">
-                    <div class="item-form buttonTwo inline-item other-td">
-                      <strong>评论：</strong>
-                      <div class="item-form-panel">
-                        <el-checkbox v-model="formData.isCommentClose" label="关闭评论" border size="small"></el-checkbox>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="type-title"><span>系统标签：</span></td>
+                    <td>
+                      <div class="item-form buttonTwo">
+                        <el-checkbox-group class="checkbox-panel" v-model="formData.systemTag" size="small">
+                          <el-checkbox :label="item.id" v-for="item in postSystemTag" v-bind:key="item.id" border>{{item.name}}</el-checkbox>
+                        </el-checkbox-group>
                       </div>
-                    </div>
-                    <div class="item-form buttonTwo inline-item other-td">
-                      <strong>共享修改：</strong>
-                      <div class="item-form-panel">
-                        <el-checkbox v-model="formData.isEditShareOpen" label="共享修改" border size="small"></el-checkbox>
+                    </td>
+                  </tr>
+                  <tr v-if="permitField.includes('mytags')">
+                    <td class="type-title"><span>自定义标签：</span></td>
+                    <td>
+                        <div class="item-form" style="width:252px;">
+                            <el-input
+                              placeholder="请输入标签内容"
+                              v-model="formData.tag"
+                              size="small"
+                              clearable>
+                            </el-input>
+                        </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="type-title"><span>标题：</span></td>
+                    <td>
+                      <div class="item-form-group ArticleFourTit flex-box">
+                        <div class="item-form flex-content">
+                            <el-input
+                              placeholder="请输入文章标题"
+                              v-model="formData.title"
+                              size="small"
+                              ref="title"
+                              clearable>
+                            </el-input>
+                        </div>
+                        <div class="item-form inline-item title-color">
+                          <strong>标题颜色：</strong>
+                          <div class="item-form-panel">
+                              <span v-for="(item,index) in predefineColors" v-bind:key="index" v-bind:style="{background:item}" v-on:click="clickTitColor(item)" v-bind:class="item==isTitColor?'TitColor':''"></span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div class="item-form buttonTwo inline-item other-td">
-                      <strong>匿名发布：</strong>
-                      <div class="item-form-panel">
-                        <el-checkbox v-model="formData.isAnonymous" label="匿名发布" border size="small"></el-checkbox>
+                    </td>
+                  </tr>
+                  <tr v-if="userList.length>0">
+                    <td class="type-title"><span>内容：</span></td>
+                    <td>
+                      <div class="item-form">
+                        <el-tabs v-model="activeTab" type="border-card" class="tab-card" :before-leave="tabClickHandler">
+                          <el-tab-pane label="富文本编辑器" name="textarea" id="editor-rich">
+                            <vue-ueditor-wrap v-model="formData.content" :config="editorConfig" @ready="ready" editor-id="editor-rich-text"></vue-ueditor-wrap>
+                          </el-tab-pane>
+                          <el-tab-pane label="Markdown" name="markdown">
+                            <v-md-editor 
+                              left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code"
+                              v-model="formData.markdownContent" @change="changeMarkdownHandler" height="600px" mode="editable"></v-md-editor>
+                          </el-tab-pane>
+                        </el-tabs>
                       </div>
-                    </div>
-                    <div class="item-form buttonTwo inline-item other-td">
-                      <strong>置顶：</strong>
-                      <div class="item-form-panel">
-                        <el-checkbox v-model="formData.isTop" label="置顶" border size="small"></el-checkbox>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="type-title"><span>备注：</span></td>
+                    <td>
+                      <div class="item-form">
+                        <div class="item-textarea">
+                          <el-input
+                            type="textarea"
+                            :autosize="{ minRows: 2, maxRows: 4}"
+                            placeholder="请输入文章备注"
+                            v-model="formData.remarks"
+                            size="small"
+                            clearable>
+                          </el-input>
+                        </div>
                       </div>
-                    </div>
-                    <div class="item-form inline-item other-td">
-                      <strong>排序：</strong>
-                      <div class="item-form-panel" style="width:80px">
-                        <el-input
-                          v-model="formData.sort"
-                          size="small" clearable>
-                        </el-input>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <div class="item-form-group ArticleFourTag">
+                        <div class="item-form buttonTwo inline-item other-td">
+                          <strong>评论：</strong>
+                          <div class="item-form-panel">
+                            <el-checkbox v-model="formData.isCommentClose" label="关闭评论" border size="small"></el-checkbox>
+                          </div>
+                        </div>
+                        <div class="item-form buttonTwo inline-item other-td">
+                          <strong>共享修改：</strong>
+                          <div class="item-form-panel">
+                            <el-checkbox v-model="formData.isEditShareOpen" label="共享修改" border size="small"></el-checkbox>
+                          </div>
+                        </div>
+                        <div class="item-form buttonTwo inline-item other-td">
+                          <strong>匿名发布：</strong>
+                          <div class="item-form-panel">
+                            <el-checkbox v-model="formData.isAnonymous" label="匿名发布" border size="small"></el-checkbox>
+                          </div>
+                        </div>
+                        <div class="item-form buttonTwo inline-item other-td">
+                          <strong>置顶：</strong>
+                          <div class="item-form-panel">
+                            <el-checkbox v-model="formData.isTop" label="置顶" border size="small"></el-checkbox>
+                          </div>
+                        </div>
+                        <div class="item-form inline-item other-td">
+                          <strong>排序：</strong>
+                          <div class="item-form-panel" style="width:80px">
+                            <el-input
+                              v-model="formData.sort"
+                              size="small" clearable>
+                            </el-input>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </td>
+                  </tr>
+                  <tr v-if="permitField.includes('is_updatetime')">
+                    <td class="type-title"><span>更新修改时间：</span></td>
+                    <td>
+                      <div class="item-form buttonTwo" style="width:154px;float:left;">
+                          <div class="item-form-panel">
+                          <el-checkbox v-model="formData.is_updatetime" label="更新修改时间" border size="small"></el-checkbox>
+                          </div>
+                        </div>
+                    </td>
+                  </tr>
+                  <tr v-if="permitField.includes('showdays')">
+                    <td class="type-title"><span>首页推荐天数：</span></td>
+                    <td>
+                      <div class="item-form" style="width:190px;float:left;">
+                          <div class="item-form-panel">
+                            <el-input
+                              placeholder="推荐天数"
+                              v-model="formData.day"
+                              size="small"
+                              style="width:121px"
+                              clearable>
+                            </el-input>
+                            <em>天</em>
+                          </div>
+                        </div>
+                    </td>
+                  </tr>
+                  <tr v-if="permitField.includes('indexshowdepart')">
+                    <td class="type-title"><span>首页推荐部门：</span></td>
+                    <td>
+                      <div class="item-form buttonTwo">
+                        <el-checkbox-group class="checkbox-panel" v-model="formData.recomDepart" size="small">
+                          <el-checkbox :label="item.id" v-for="item in departList" v-bind:key="item.id" border>{{item.name}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr v-if="permitField.includes('readpermit')">
+                    <td class="type-title"><span>默认权限：</span></td>
+                    <td>
+                      <div class="item-form-group">
+                        <div class="item-form buttonTwo" style="width:126px;float:left;">
+                          <div class="item-form-panel">
+                            <el-checkbox v-model="formData.isAllPermit" @change="changeSelectHandler" label="默认权限" border size="small"></el-checkbox>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr v-if="permitField.includes('lookpermitdepart')">
+                    <td class="type-title"><span>部门浏览权限：</span></td>
+                    <td>
+                      <div class="item-form buttonTwo">
+                        <el-checkbox-group class="checkbox-panel" v-model="formData.readDepart" size="small">
+                          <el-checkbox :label="item.id" v-for="item in departList" v-bind:key="item.id" :disabled="item.disabled" border>{{item.name}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr v-if="permitField.includes('lookuserid')">
+                    <td class="type-title"><span>用户浏览权限：</span></td>
+                    <td>
+                      <div class="item-form itemacces">
+                        <el-select v-model="formData.readUser" size="small" filterable clearable multiple placeholder="请选择可浏览用户" style="width: 100%;">
+                          <el-option
+                            v-for="item in userList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                      </div>
+                    </td>
+                  </tr>
+                </table>      
+                <div class="card-header WebServerAddEditBtn ArticleFive" ref="headerPane">
+                  <div class="header-content">
+                    <el-button type="primary" class="updateBtn" size="small" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_add')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>发布</el-button>
+                    <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
+                    <el-button type="primary" class="resetBtn" size="small" v-on:click="perviewPage()" v-if="menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_add')">预览</el-button>
                   </div>
-                </td>
-              </tr>
-              <tr v-if="permitField.includes('is_updatetime')">
-                <td class="type-title"><span>更新修改时间：</span></td>
-                <td>
-                  <div class="item-form buttonTwo" style="width:154px;float:left;">
-                      <div class="item-form-panel">
-                       <el-checkbox v-model="formData.is_updatetime" label="更新修改时间" border size="small"></el-checkbox>
-                      </div>
-                    </div>
-                </td>
-              </tr>
-              <tr v-if="permitField.includes('showdays')">
-                <td class="type-title"><span>首页推荐天数：</span></td>
-                <td>
-                  <div class="item-form" style="width:190px;float:left;">
-                      <div class="item-form-panel">
-                        <el-input
-                          placeholder="推荐天数"
-                          v-model="formData.day"
-                          size="small"
-                          style="width:130px"
-                          clearable>
-                        </el-input>
-                        <em>天</em>
-                      </div>
-                    </div>
-                </td>
-              </tr>
-              <tr v-if="permitField.includes('indexshowdepart')">
-                <td class="type-title"><span>首页推荐部门：</span></td>
-                <td>
-                  <div class="item-form buttonTwo">
-                    <el-checkbox-group class="checkbox-panel" v-model="formData.recomDepart" size="small">
-                      <el-checkbox :label="item.id" v-for="item in departList" v-bind:key="item.id" border>{{item.name}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </td>
-              </tr>
-              <tr v-if="permitField.includes('readpermit')">
-                <td class="type-title"><span>默认权限：</span></td>
-                <td>
-                  <div class="item-form-group">
-                    <div class="item-form buttonTwo" style="width:126px;float:left;">
-                      <div class="item-form-panel">
-                        <el-checkbox v-model="formData.isAllPermit" @change="changeSelectHandler" label="默认权限" border size="small"></el-checkbox>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr v-if="permitField.includes('lookpermitdepart')">
-                <td class="type-title"><span>部门浏览权限：</span></td>
-                <td>
-                  <div class="item-form buttonTwo">
-                    <el-checkbox-group class="checkbox-panel" v-model="formData.readDepart" size="small">
-                      <el-checkbox :label="item.id" v-for="item in departList" v-bind:key="item.id" :disabled="item.disabled" border>{{item.name}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </td>
-              </tr>
-              <tr v-if="permitField.includes('lookuserid')">
-                <td class="type-title"><span>用户浏览权限：</span></td>
-                <td>
-                  <div class="item-form itemacces">
-                    <el-select v-model="formData.readUser" filterable clearable multiple placeholder="请选择可浏览用户" style="width: 100%;">
-                      <el-option
-                        v-for="item in userList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </div>          
-          <div class="card-header WebServerAddEditBtn ArticleFive" ref="headerPane">
-            <el-button type="primary" class="updateBtn" size="small" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_add')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>发布</el-button>
-            <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
-            <el-button type="primary" class="resetBtn" size="small" v-on:click="perviewPage()" v-if="menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_add')">预览</el-button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
     </el-card>
     <div v-show="isPreview" class="preview-page">
-      <div class="article-header">
-        <div class="flex-row multiple-column">
-          <div class="flex-column txt-content">
-            <div class="flex-row">
-              <div class="flex-column txt-font nowrap"><span>栏目：</span></div>
-              <div class="flex-column txt-content nowrap">
-                <strong>{{previewData.typeName}}</strong>
-              </div>
-            </div>
-          </div>
-          <div class="flex-column txt-content">
-            <div class="flex-row">
-              <div class="flex-column txt-font nowrap"><span>创建者：</span></div>
-              <div class="flex-column txt-content nowrap">
-                <strong>{{previewData.anthor}}</strong>
-              </div>
-            </div>
-          </div>
-          <div class="flex-column txt-content">
-            <div class="flex-row">
-              <div class="flex-column txt-font nowrap"><span>创建时间：</span></div>
-              <div class="flex-column txt-content nowrap">
-                <strong>{{previewData.createdTime}}</strong>
-              </div>
-            </div>
-          </div>
-          <div class="flex-column txt-content">
-            <div class="flex-row">
-              <div class="flex-column txt-font nowrap"><span>修改时间：</span></div>
-              <div class="flex-column txt-content nowrap">
-                <strong>{{previewData.updateTime}}</strong>
-              </div>
-            </div>
-          </div>
-          <div class="flex-column txt-content">
-            <div class="flex-row">
-              <div class="flex-column txt-font nowrap"><span>点击量：</span></div>
-              <div class="flex-column txt-content">
-                <strong>{{previewData.hits}}</strong>
-              </div>
-              <div class="flex-column txt-content" style="line-height:0;">
-                <el-tag class="btn-back" type="danger" v-on:click="backSendPost">返回</el-tag>
-              </div>
-            </div>
+      <div class="article-info">
+        <div class="ArticleSixFlTop">
+          <h1>{{previewData.title}}</h1>
+          <div class="ArticleSixFlTopTag clearfix">
+            <p class="ArticleSixFlTopTagFl">
+              <span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>{{previewData.typeName}}</span>
+              <span><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{previewData.anthor}}</span>
+              <span><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{previewData.updateTime}}</span>
+              <span class="back" v-on:click="backSendPost"><i class="svg-i" ><svg-icon icon-class="back" /></i>点击返回</span>
+            </p>
+            <p class="ArticleSixFlTopTagFr">阅读：{{previewData.hits}}&nbsp;&nbsp;|&nbsp;&nbsp;发布时间：{{previewData.createdTime}} </p>
           </div>
         </div>
-        <div class="flex-row">
-          <div class="flex-column txt-font nowrap"><span>标题：</span></div>
-          <div class="flex-column txt-content">
-            <strong>{{previewData.title}}</strong>
-          </div>
-        </div>
+        <div class="info-content" v-bind:class="formData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="previewData.content"></div>
       </div>
-      <div class="info-content" v-bind:class="formData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="previewData.content"></div>
     </div>
   </div>
 </template>
@@ -283,7 +250,6 @@ export default {
       activeTab:"textarea",
       isPreview:false,
       isSort:false,
-      scrollHeight:200,
       postType:[],
       postSystemTag:[],
       departList:[],
@@ -455,31 +421,6 @@ export default {
       'userInfo',
       'device'
     ]),
-  },
-  mounted(){
-      const $this = this;
-      this.$nextTick(function () {
-        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-15;
-        // 30：page-root上下内边距；20：按钮父级上下内边距；
-      });
-      window.onresize = () => {
-          return (() => {
-            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-15;
-            // 30：page-root上下内边距；20：按钮父级上下内边距；
-          })()
-      };
-  },
-  watch: {
-      scrollHeight(val) {
-        if (!this.timer) {
-          this.scrollHeight = val
-          this.timer = true
-          const $this = this
-          setTimeout(function() {
-            $this.timer = false
-          }, 400)
-        }
-      },
   },
   created(){
     var $this = this;
@@ -1004,76 +945,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.item-form-panel{
-  margin: 5px 0;
-  em{
-    font-style: normal;
-    font-weight: normal;
-    margin-left: 10px;
-    line-height: 32px;
-  }
-}
-.item-form-group.flex-box{
-  display: flex;
-  .flex-content{
-    flex: 1;
-  }
-}
-.tag-panel{
-    width: 100%;
-    overflow: hidden;
-    font-size:0;
-    .el-button{
-        margin-right: 10px;
-        margin-bottom: 5px;
-        margin-top: 5px;
-        vertical-align: top;
-    }
-    .el-button+.el-button{
-      margin-left:0!important;
-    }
-}
-.checkbox-panel{
-  .el-checkbox{
-    margin: 5px 10px 5px 0!important;
-  }
-}
-.tab-card{
-  margin: 5px 0;
-}
-.btn-back{
-  cursor: pointer;
-}
-.article-header{
-  margin-bottom: 15px;
-  border-top: 1px solid $primaryBorder;
-  border-left: 1px solid $primaryBorder;
-  display: block;
-  .flex-row{
-    display: flex;
-    .flex-column{
-      padding: 10px;
-      line-height: 28px;
-      font-size: 15px;
-      border-bottom: 1px solid $primaryBorder;
-      border-right: 1px solid $primaryBorder;
-    }
-    .nowrap{
-      word-break: keep-all;
-      word-wrap:normal;
-      white-space:nowrap;
-    }
-    .txt-content{
-      flex: 1;
-    }
-    &.multiple-column{
-      flex-wrap: wrap;
-      >.flex-column{
-        padding:0;
-        border-bottom:none;
-        border-right:none;
-      }
-    }
-  }
-}
 </style>

@@ -2,14 +2,11 @@
 .flex-wrap{
     display: flex;
     flex-direction: row;
-    .flex-content{
-        flex: 1;
-    }
-  }
+}
 .flex-box{
     display: flex;
 }
-.flex-panel{
+.flex-panel,.flex-content{
     flex:1;
 }
 .flex-column{
