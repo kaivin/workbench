@@ -2,65 +2,64 @@
     border:0px!important;
     border-radius:0px!important;
     background:none!important;
-    box-shadow: none!important;
+    box-shadow:none!important;
     .el-card__header{
-        padding:0px;
         border-radius:8px;
         margin-bottom:20px;
-        background: #fff;
-        padding:10px 10px 10px 10px;
+        background:#fff;
+        padding:20px 10px;
         .border-wrap{
             border:0px!important;
-            overflow: initial;
-            .borderver{width:1px; height:15px; background:#a5a5a5; display: inline-block; margin-top:17px;}
+            overflow:initial;
+            .borderver{width:1px;height:15px;background:#a5a5a5;display:inline-block;margin-top:17px;}
             .border-row + .border-row{border:0px;}
             .border-row .border-cell + .border-cell{border:0px;}
             &.post-class .txt-font.border-cell{
-                line-height: 30px;
-                width: 75px;
-                font-weight: normal;
-                font-size: 15px;
-                color: #999;
+                line-height:30px;
+                width:75px;
+                font-weight:normal;
+                font-size:15px;
+                color:#999;
                 padding:5px 0px;
-                border: 0px;
+                border:0px;
             }
             &.post-class .flex-content.border-cell{
-                border: 0px;
+                border:0px;
                 padding:5px 0px;
                 .tag-panel{
                     &.WebsiteListSearch{
                         width:380px;
                         height:36px;
-                        position: relative;
+                        position:relative;
                         padding-right:105px;
                         border:1px solid #1e252e;
                         border-radius:4px;
                         background:#fff;
                         box-shadow:9px 9px 21px rgba(100,130,171,0.35);
                         .el-button{
-                            position: absolute;
-                            right: 0px;
-                            top: 0px;
-                            width: 98px;
-                            line-height: 36px;
-                            text-align: center;
-                            color: #fff;
-                            background: #1e252e;
-                            border-radius: 0px 4px 4px 0px;
-                            font-size: 16px;
-                            vertical-align: middle;
-                            height: 36px;
-                            display: block;
+                            position:absolute;
+                            right:0px;
+                            top:0px;
+                            width:98px;
+                            line-height:36px;
+                            text-align:center;
+                            color:#fff;
+                            background:#1e252e;
+                            border-radius:0px 4px 4px 0px;
+                            font-size:16px;
+                            vertical-align:middle;
+                            height:36px;
+                            display:block;
                             margin-right:0px!important;
                             span{
-                                display: inline-block;
+                                display:inline-block;
                                 .svg-i{
-                                    float: left;
-                                    width: 16px;
-                                    height: 16px;
+                                    float:left;
+                                    width:16px;
+                                    height:16px;
                                     display:inline-block;
-                                    vertical-align: middle;
-                                    margin-right: 10px;
+                                    vertical-align:middle;
+                                    margin-right:10px;
                                 }
                             }
                             &:hover{
@@ -69,85 +68,74 @@
                         }
                         .el-input--suffix{
                             .el-input__inner{
-                                clear: both;
-                                display: block;
+                                clear:both;
+                                display:block;
                                 width:100%;
                                 line-height:34px;
-                                font-size: 15px;
+                                font-size:15px;
                                 color:#a5a5a5;
                                 text-align:left;
                                 border:none;
                                 border-radius:0px;
-                                height: 34px;
-                                padding: 0px 10px;                                
+                                height:34px;
+                                padding:0px 10px;                               
                             }
                         }
                     }
                     .el-button{
-                        padding: 0px 10px;
-                        margin: 0px 5px 0px 0px!important;
-                        font-size: 14px;
-                        border-radius: 3px;
-                        line-height: 30px;
-                        border: 0px;
+                        padding:0px 10px;
+                        margin:0px 5px 0px 0px!important;
+                        font-size:14px;
+                        border-radius:3px;
+                        line-height:30px;
+                        border:0px;
                         color:#fff;
-                        background: -moz-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                        background: -webkit-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                        background: -o-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                        background: -ms-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                        background: linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                        background:-moz-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                        background:-webkit-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                        background:-o-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                        background:-ms-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                        background:linear-gradient(135deg, #2e84f6 0%, #136add 100%);
                         &.is-plain{
-                            color: #1a1a1a;
-                            background: #fff;
+                            color:#1a1a1a;
+                            background:#fff;
                             &:hover{
                                 color:#fff;
-                                background: -moz-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                                background: -webkit-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                                background: -o-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                                background: -ms-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                                background: linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                                background:-moz-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                                background:-webkit-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                                background:-o-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                                background:-ms-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                                background:linear-gradient(135deg, #2e84f6 0%, #136add 100%);
                             }
                         }
                     }
                 }
             }
         }
-        .card-header.flex-wrap{
-            .search-panel{
-                
-            }
-            .el-button.el-button--primary{
-                margin-left:15px!important;
-                background-color: #2e84f6!important;
-                border-color: #2e84f6!important;
-                
-                &:hover,&:focus,&:active{
-                background:#66b1ff!important;
-                border-color:#66b1ff!important;
-                }
-                &.is-disabled,&.is-disabled:hover,&.is-disabled:focus,&.is-disabled:active {
-                    background-color: #a0cfff!important;
-                    border-color: #a0cfff!important;
-                }
-            }
+    }
+    &.mobile{
+        .el-card__header{
+            margin-bottom:20px;
+            background:none;
+            padding:0px;
+            border-radius: 0px;
         }
     }
 }
 .el-card.WebsiteList-card .scroll-panel{padding:0px;}
 .WebsiteList-Wrap{
     border-radius:8px;
-    overflow: hidden;
+    overflow:hidden;
 }
 .WebsiteOne{
     background:#fff;
-    border-radius: 8px;
+    border-radius:8px;
     .WebsiteOneTable{
         padding-right:5%;
         li{
-            clear: both;
-            display: block;
+            clear:both;
+            display:block;
             padding-top:10px;
-            padding-bottom:10px;                
+            padding-bottom:10px;               
             .AddEditPostItem{
                 float:left;
                 width:33.3333%;
@@ -157,14 +145,14 @@
                     .item-wrap{
                         padding-top:4px;
                         a{
-                            float: left;
-                            line-height: 24px;
+                            float:left;
+                            line-height:24px;
                             margin-bottom:4px;
-                            margin-right: 10px;
+                            margin-right:10px;
                             color:$menuActiveText;
                             font-size:14px;
                             &:hover{
-                                text-decoration: underline;
+                                text-decoration:underline;
                             }
                         }
                     }
@@ -174,15 +162,15 @@
                     .item-wrap{
                         padding-top:4px;
                         .icon-title{
-                            float: left;
-                            line-height: 24px;
-                            margin-bottom: 5px;
-                            margin-right: 10px;
+                            float:left;
+                            line-height:24px;
+                            margin-bottom:5px;
+                            margin-right:10px;
                             color:$menuActiveText;
                             font-size:13px;
                             i{
-                                float: left;
-                                margin-right: 5px;
+                                float:left;
+                                margin-right:5px;
                             }
                         }
                     }
@@ -190,12 +178,12 @@
                 &.WebsiteOneDomain{
                     width:40%;
                     a{
-                        line-height: 32px;
-                        margin-left: 10px;
+                        line-height:32px;
+                        margin-left:10px;
                         color:$menuActiveText;
-                        font-size: 14px;
+                        font-size:14px;
                         &:hover{
-                            text-decoration: underline;
+                            text-decoration:underline;
                         }
                     }
                 }             
@@ -206,27 +194,27 @@
                     }
                     .item-wrap{
                         a{
-                            float: left;
-                            line-height: 24px;
-                            margin-left: 10px;
+                            float:left;
+                            line-height:24px;
+                            margin-left:10px;
                             color:$menuActiveText;
                             font-size:14px;
                             margin-top:4px;
                             &:hover{
-                                text-decoration: underline;
+                                text-decoration:underline;
                             }
                         }
                     }
                 }
                 &.WebsiteOneWebsiteurl{
                     a{
-                        line-height: 24px;
-                        margin-left: 10px;
+                        line-height:24px;
+                        margin-left:10px;
                         color:$menuActiveText;
                         font-size:14px;
                         margin-top:4px;
                         &:hover{
-                            text-decoration: underline;
+                            text-decoration:underline;
                         }
                     }
                 }
@@ -239,22 +227,22 @@
                 &.WebsiteOneBak{
                     width:100%;
                     .item-tag{
-                      margin: 5px;
+                      margin:5px;
                       &:focus{
-                        background: #47bba4;
-                        border-color: #47bba4;
-                        color: #FFFFFF;
+                        background:#47bba4;
+                        border-color:#47bba4;
+                        color:#FFFFFF;
                       }
                       &.is-plain:focus{
-                        color: #19aa8d;
-                        background: #e8f7f4;
-                        border-color: #a3ddd1;
+                        color:#19aa8d;
+                        background:#e8f7f4;
+                        border-color:#a3ddd1;
                       }
                     }
                     .remarks-content{
                       p{
-                        line-height: 2;
-                        font-size: 14px;
+                        line-height:2;
+                        font-size:14px;
                         padding-top:5px;
                         padding-bottom:5px;
                       }
@@ -262,13 +250,13 @@
                 }
                 &.WebsiteOnePath{
                     a{
-                        display: inline-block;
-                        line-height: 24px;
-                        margin-left: 10px;
+                        display:inline-block;
+                        line-height:24px;
+                        margin-left:10px;
                         color:$menuActiveText;
                         font-size:13px;
                         &:hover{
-                            text-decoration: underline;
+                            text-decoration:underline;
                         }
                     }
                 }
@@ -287,11 +275,11 @@
                     }
                 }
             }
-            &.WebsiteOneFoot{            
+            &.WebsiteOneFoot{
                 .AddEditPostItem{
-                    width: auto;
+                    width:auto;
                     label+span{
-                        display: inline-block;
+                        display:inline-block;
                         line-height:32px;
                     }
                 }
@@ -301,8 +289,8 @@
                 font-size:15px;
                 line-height:32px;
                 color:#1a1a1a;
-                width: 105px;
-                padding-right: 0px;
+                width:105px;
+                padding-right:0px;
                 text-align:right;
                 &+label{
                     line-height:20px;
@@ -320,37 +308,53 @@
                 padding-right:15px;
                 font-size:14px;
                 &:focus{
-                    border-color: $menuActiveText;
+                    border-color:$menuActiveText;
                 }
             }
         }
     }
     .WebsiteOneBtn.WebServerAddEditBtn{
-        padding: 20px 0px 0px 104px;
+        padding:20px 0px 0px 104px;
     }
 }
+.drawerBg{
+   position: absolute;
+   right:0px;
+   top:0px;
+   bottom:0px;
+   width:0%;
+   opacity:0;
+   background:rgba(0,0,0,0.6)!important;
+   z-index:3;
+   transition:all 0.2s linear;
+   &.open{
+       width:100%;
+       opacity:1;
+   }
+}
 .WebsiteFixed{
-    position: absolute;
-    right: 0px;
-    bottom: 0px;
-    top: 0px;
-    width: 280px;
-    padding-top:15px;
-    background: #fff!important;
-    z-index: 4;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0,0,0,0.12);
+    position:absolute;
+    right:-320px;
+    bottom:0px;
+    top:0px;
+    width:300px;
+    opacity:0;
+    transition:right 0.3s ease 0.2s;
+    z-index:4;
+    overflow:hidden;
+    box-shadow:0 0 10px rgba(0,0,0,0.12);
+    background:#fff;
     ul{
-        clear: both;
-        display: block;
-        height:100%;
-        overflow: hidden;
-        overflow-y: scroll;
-        margin-right: -20px;
-        padding-right: 20px;
-        &::-webkit-scrollbar {width: 4px;height: 1px;}
-        &::-webkit-scrollbar-thumb {box-shadow: inset 0 0 1px $menuText;background:$subMenuBg;}
-        &::-webkit-scrollbar-track {background: #fff;}
+        position:absolute;
+        z-index: 3;
+        clear:both;
+        display:block;
+        padding-right:20px;
+        overflow:hidden;
+        overflow-y:scroll;
+        &::-webkit-scrollbar {width:4px;height:1px;}
+        &::-webkit-scrollbar-thumb {box-shadow:inset 0 0 1px $menuText;background:$subMenuBg;}
+        &::-webkit-scrollbar-track {background:#fff;}
         li{
             padding:15px 15px;
             border-top:2px solid #eee;
@@ -358,64 +362,96 @@
                 border-top:0px;
             }
             .WebsiteFixedTit{
-                clear: both;
-                display: block;
+                clear:both;
+                display:block;
                 font-size:14px;
-                font-weight: bold;
+                font-weight:bold;
                 line-height:24px;
             }
             .tag-panel{
-                clear: both;
-                display: block;
-                text-align: left;
+                clear:both;
+                display:block;
+                text-align:left;
                 margin-left:-2%;
-                .el-button{                
-                    float: left;
-                    width: 31.3333%;
-                    margin-left: 2%;
-                    color: #fff;
-                    background: #2e84f6;
-                    border-color: #2e84f6;
-                    text-align: center;
+                .el-button{
+                    float:left;
+                    width:31.3333%;
+                    margin-left:2%;
+                    background:$subMenuActiveText;
+                    border-color:$subMenuActiveText;
+                    color:$menuHover;
+                    text-align:center;
                     padding:2px 5px;
-                    border-radius: 15px;
-                    line-height: 20px;
-                    margin-top: 7px;
-                    font-size: 12px;
+                    border-radius:15px;
+                    line-height:20px;
+                    margin-top:7px;
+                    font-size:12px;
                     &.is-plain{
-                        background:$subMenuActiveText;
-                        border-color:$subMenuActiveText;
-                        color:$menuHover;
+                        color:#fff;
+                        background:$menuActiveText;
+                        border-color:$menuActiveText;
+                    }
+                }
+                span.el-tag{
+                    float:left;
+                    width:31.3333%;
+                    margin-left:2%;
+                    background:$subMenuActiveText;
+                    border-color:$subMenuActiveText;
+                    color:$menuHover;
+                    text-align:center;
+                    padding:2px 5px;
+                    border-radius:15px;
+                    line-height:20px;
+                    margin-top:7px;
+                    font-size:12px;
+                    &.is-plain{
+                        color:#fff;
+                        background:$menuActiveText;
+                        border-color:$menuActiveText;
                     }
                 }
             }
-            &.WebsiteFixedFoot{
-                background:$border;
-                .el-button{                
-                    float: left;
-                    width:50%;
-                    color: #fff;
-                    background: #2e84f6;
-                    border-color: #2e84f6;
-                    text-align: center;
-                    padding:2px 5px;
-                    line-height:30px;
-                    font-size: 12px;
-                    margin:0!important;
-                    &.is-plain{
-                        background:$subMenuActiveText;
-                        border-color:$subMenuActiveText;
-                        color:$menuHover;
+            &.WebsiteFixedWeb{
+                .tag-panel{
+                    .el-button{
+                        width:48%;
                     }
                 }
             }
         }
     }
+    .WebsiteFixedFoot{
+        position:absolute;
+        left:0px;
+        bottom:10px;
+        right:0px;
+        background:none;
+        border:0px;
+        text-align:center;
+        .WebsiteQue{
+            clear:both;
+            display:block;
+            width:60%;
+            margin:0 auto;
+            color:#fff;
+            background:#2e84f6;
+            text-align:center;
+            padding:5px 5px;
+            border-radius:30px;
+            line-height:24px;
+            font-size:12px;
+        }
+    }
+    &.open{
+        opacity:1;
+        right:-20px;
+    }
 }
 @media (max-width:1024px){
     .WebsiteOne{
         .WebsiteOneTable{
-            li{          
+            li{
                 .AddEditPostItem{
                     &.WebsiteOneDomain{
                         width:48%;
@@ -423,8 +459,8 @@
                     &.WebsiteOneTag{
                         display:block;
                         .item-wrap{
-                            clear: both;
-                            display: block;
+                            clear:both;
+                            display:block;
                             padding-top:10px;
                             padding-left:105px;
                         }
@@ -432,8 +468,8 @@
                     &.WebsiteOneDomainHeader{
                         display:block;
                         .item-wrap{
-                            clear: both;
-                            display: block;
+                            clear:both;
+                            display:block;
                             padding-top:10px;
                             padding-left:105px;
                         }
