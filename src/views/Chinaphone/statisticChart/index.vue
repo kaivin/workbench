@@ -1,8 +1,7 @@
 ﻿<template>
-  <div class="page-root" ref="boxPane">
+  <div class="page-root scroll-panel" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
-        <div class="card-content" ref="tableContent">
-          <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
+        <div class="card-content ChinaphoneTwoBox" ref="tableContent">
             <div class="ChinaphoneTwo buttonTwo">
               <div class="group-header">
                   <el-checkbox class="all-select" :indeterminate="isAllPhone" border size="mini" v-model="checkAllPhone" @change="handleCheckAllPhoneChange">电话全选</el-checkbox>
@@ -407,7 +406,6 @@
                 <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="getCluesAnalysisData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
                 <el-button type="primary" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
             </div>
-          </div>
         </div>
     </el-card>
   </div>
@@ -423,7 +421,6 @@ export default {
   data() {
     return {
       isSearch:false,
-      scrollHeight:200,
       menuButtonPermit:[],
       isAllPhone:false,
       checkAllPhone:false,
@@ -552,31 +549,6 @@ export default {
       'userInfo',
       'device'
     ]),
-  },
-  mounted(){
-      const $this = this;
-      this.$nextTick(function () {
-        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-30-23;
-        // 30：page-root上下内边距；20：按钮父级上下内边距；
-      });
-      window.onresize = () => {
-          return (() => {
-            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-30-23;
-            // 30：page-root上下内边距；20：按钮父级上下内边距；
-          })()
-      };
-  },
-  watch: {
-      tableHeight(val) {
-        if (!this.timer) {
-          this.tableHeight = val
-          this.timer = true
-          const $this = this
-          setTimeout(function() {
-            $this.timer = false
-          }, 400)
-        }
-      },
   },
   created(){
     var $this = this;

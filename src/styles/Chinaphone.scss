@@ -1,76 +1,10 @@
-﻿
-.ChinaphoneOne{
-    .item-panel{
-      position: relative;
-      margin-bottom: 20px;
-      dl{
-        float: left;
-        dt{
-          line-height: 24px;
-          font-size: 14px;
-          span{
-            color:red;
-          }
-        }
-        dd{
-          margin-top: 5px;
-          .clues-list{
-            margin: 0 -2px;
-            &.phone-list,&.price-list{
-              .item-clues{
-                width: 147px;
-              }
-            }
-            &.product-list{
-              .item-clues{
-                width: 160px;
-              }
-            }
-            &.level-list{
-              .item-clues{
-                width: 104px;
-              }
-            }
-            .item-clues{
-              display: block;
-              float:left;
-              margin: 2px;
-              border: 1px solid #e6e6e6;
-              height: 34px;
-              line-height: 32px;
-              font-size: 14px;
-              text-align: center;
-              cursor: pointer;
-              &:hover{
-              color: #2e84f6;
-              background-color: #e7f2ff;
-              border-color: #2e84f6;
-              }
-            }
-            .item-clues.active{
-                color: #FFFFFF;
-                background-color: #2e84f6;
-                border-color: #2e84f6;
-              &:hover{
-                color: #2e84f6;
-                background-color: #e7f2ff;
-                border-color: #2e84f6;
-              }
-            }
-          }
-          p{
-            line-height: 32px;
-            font-size: 12px;
-          }
-        }
-      }
-      dl+dl{
-        margin-left: 15px;
-      }
-    }
-  }
-.WebServerAddEditBtn.ChinaphoneTwoBtn{
+﻿.WebServerAddEditBtn.ChinaphoneTwoBtn{
   padding-left:0px;
+}
+.card-content.ChinaphoneTwoBox{
+  background:#fff!important;
+  border-radius:8px!important;
+  padding:20px!important;
 }
 .ChinaphoneTwo{
   width: 100%;
@@ -205,4 +139,59 @@
       }
     }
   }
+}
+.search-wrap{
+  padding-bottom:15px;
+  .search-panelOne{
+    .el-date-editor,.el-select,.el-checkbox,.el-input{
+      float: left;
+    }
+   }
+  .search-panelTwo{
+      float: left;
+      width: 250px;
+      margin-left:1%;
+      .el-input+.el-checkbox{margin-left:10px;}
+      .el-checkbox+.el-input{width: 100%;margin-top:10px;}
+   }
+  .search-panelThree{
+    float: left;
+    width: 102px;
+    margin-left: 2%;
+    .el-checkbox{width: 100%; margin-top:10px;}
+  }
+  .search-panelFour{
+    float: left;
+    width: 95px;
+    margin-left: 2%;
+    .el-checkbox{margin-bottom:10px;}
+    .el-select,.el-checkbox{width: 100%;}
+  }
+  .search-panelFive{
+    float: left;
+    width: 120px;
+    margin-left: 2%;
+    .el-input{margin-bottom:10px;}
+    .el-textarea,.el-input{width: 100%;}
+  }
+}
+@media (max-width:1500px){
+  
+.search-wrap{
+  &.flex-wrap{
+    display: block;
+    .search-panelOne{
+      &.flex-content{
+        clear: both;
+        display: block;
+        width: 100%;
+        flex: auto;
+      }
+    }
+    .search-panelTwo{
+      margin-left:0px;
+    }
+  }
+}
+
 }

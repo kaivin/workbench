@@ -4,8 +4,8 @@
       <el-card class="flex-panel" shadow="hover">
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <div class="side-button">
-            <el-button type="primary" plain size="mini" icon="el-icon-search" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="searchStatisticsData()">搜索数据</el-button>
-            <el-button type="primary" plain size="mini" icon="el-icon-coin" v-if="menuButtonPermit.includes('Enphone_countlist')" v-on:click="statisticsClues()">统计分析</el-button>
+            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="searchStatisticsData()"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
+            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_countlist')" v-on:click="statisticsClues()"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>统计分析</el-button>
           </div>
           <template v-for="(item,index) in defaultData.data">
             <dl class="phone-list" v-if="item.phone.length>0" v-bind:key="index">
@@ -263,8 +263,7 @@
                   <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
                 </div>
                 <div class="clues-info">
-                  <p>
-                  
+                  <p>                  
                   <span class="item-span-1">当前结果集：共有<strong>{{infoData.totalCount}}</strong>条。</span>
                   <span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条，</span>
                   <span class="item-span-3">无效：<strong>{{infoData.invalidCount}}</strong>条。</span>
@@ -287,7 +286,6 @@
                           <el-button type="primary" size="small" class="editorNote" :disabled="isDisabled" v-if="menuButtonPermit.includes('Enphone_othereditall')" v-on:click="editPageNote()"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改当前页备注</el-button>
                      </div>
                 </div>
-
             </div>
           </div>
           <div class="card-content" ref="tableContent">
@@ -704,6 +702,7 @@ export default {
     if($this.$route.query.phoneID){
       window.onresize = () => {
           return (() => {
+            $this.EnphoneCardFrWidth = $this.$refs.boxPane.offsetWidth-$this.$refs.EnphoneCardFl.offsetWidth-40-15;
             $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-30-25-20-3;
             // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
           })()

@@ -3,12 +3,13 @@
     <el-card class="box-card" shadow="hover">
         <div slot="header">
             <div class="card-header" ref="headerPane">
-                <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
-                    <div class="search-panelTop">
+                <div class="search-wrap flex-wrap" v-if="device==='desktop'">
+                    <div class="search-panelOne flex-content">
                         <el-date-picker
                             v-model="searchData.date"
                             size="small"
                             type="daterange"
+                            style="width:250px;margin-right:10px;margin-bottom:10px;"
                             align="right"
                             value-format = "yyyy-MM-dd"
                             unlink-panels
@@ -17,7 +18,7 @@
                             end-placeholder="结束日期"
                             :picker-options="pickerRangeOptions">
                         </el-date-picker>
-                        <el-select v-model="searchData.phoneid" size="small" clearable placeholder="电话">
+                        <el-select v-model="searchData.phoneid" size="small" style="width:120px;margin-right:10px;margin-bottom:10px;" clearable placeholder="电话">
                             <el-option
                             v-for="item in phoneList"
                             :key="item.value"
@@ -25,7 +26,7 @@
                             :value="item.value">
                             </el-option>
                         </el-select>
-                        <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道" style="width:120px;">
+                        <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道" style="width:120px;margin-right:10px;margin-bottom:10px;">
                             <el-option
                                 v-for="item in sourceList"
                                 :key="item.value"
@@ -33,7 +34,7 @@
                                 :value="item.value">
                             </el-option>
                         </el-select>
-                        <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别" style="width:90px;">
+                        <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别" style="width:80px;margin-right:10px;margin-bottom:10px;">
                             <el-option
                                 v-for="item in levelList"
                                 :key="item.value"
@@ -41,7 +42,7 @@
                                 :value="item.value">
                             </el-option>
                         </el-select>
-                        <el-select v-model="searchData.typekey" size="small" clearable placeholder="选择分类" @change="currentCateChange" style="width:140px;">
+                        <el-select v-model="searchData.typekey" size="small" clearable placeholder="选择分类" @change="currentCateChange" style="width:100px;margin-right:10px;margin-bottom:10px;">
                             <el-option
                                 v-for="item in productTypeList"
                                 :key="item.value"
@@ -49,7 +50,7 @@
                                 :value="item.value">
                             </el-option>
                         </el-select>
-                        <el-select v-model="searchData.productid" size="small" clearable placeholder="选择产品" style="width:200px;">
+                        <el-select v-model="searchData.productid" size="small" clearable placeholder="选择产品" style="width:150px;margin-right:10px;margin-bottom:10px;">
                             <el-option
                                 v-for="item in productList"
                                 :key="item.value"
@@ -57,7 +58,7 @@
                                 :value="item.value">
                             </el-option>
                         </el-select>
-                        <el-select v-model="searchData.productlevel" size="small" clearable placeholder="产品类别" style="width:150px;">
+                        <el-select v-model="searchData.productlevel" size="small" clearable placeholder="产品类别" style="width:100px;margin-right:10px;margin-bottom:10px;">
                             <el-option
                             v-for="item in categoryList"
                             :key="item.value"
@@ -65,7 +66,7 @@
                             :value="item.value">
                             </el-option>
                         </el-select>
-                        <el-select v-model="searchData.device" size="small" clearable placeholder="设备" style="width:120px;">
+                        <el-select v-model="searchData.device" size="small" clearable placeholder="设备" style="width:80px;margin-right:10px;margin-bottom:10px;">
                             <el-option
                             v-for="item in deviceList"
                             :key="item.value"
@@ -74,26 +75,28 @@
                             </el-option>
                         </el-select>
                         <el-input
-                            style="width: 140px;"
+                            style="width: 140px;margin-right:10px;margin-bottom:10px;"
                             placeholder="地区"
                             size="small"
                             v-model="searchData.province"
                             clearable>
                         </el-input>
                         <el-input
-                            style="width: 200px;"
+                            style="width: 200px;margin-right:10px;margin-bottom:10px;"
                             placeholder="来源平台/关键词"
                             size="small"
                             v-model="searchData.search"
                             clearable>
                         </el-input>
                         <el-input
-                            style="width: 380px;"
+                            style="width:150px;margin-bottom:10px;"
                             placeholder="备注/提供者"
                             size="small"
                             v-model="searchData.anymessage"
                             clearable>
                         </el-input>
+                    </div>
+                    <div class="search-panelTwo">
                         <el-input
                             style="width: 140px;"
                             placeholder="域名(精确匹配)"
@@ -101,14 +104,15 @@
                             v-model="searchData.domain"
                             clearable>
                         </el-input>
+                        <el-checkbox v-model="searchData.is_url" label="精确URL" border size="small" style="width:90px;"></el-checkbox>
                         <el-input
-                            style="width: 360px;"
                             placeholder="来源URL(默认模糊匹配)"
                             size="small"
                             v-model="searchData.url"
                             clearable>
                         </el-input>
-                        <el-checkbox v-model="searchData.is_url" label="精确URL" border size="small" style="width:90px;"></el-checkbox>
+                    </div>
+                    <div class="search-panelThree">
                         <span style="float:left;line-height:32px;font-size:12px;">显示条数：</span>
                         <el-input
                             style="width:40px;"
@@ -116,9 +120,11 @@
                             size="small"
                             v-model="searchData.limit">
                         </el-input>
-                        <el-checkbox v-model="searchData.effective" label="只看有效" border size="small" style="width:90px;"></el-checkbox>
-                        <el-checkbox v-model="searchData.is_group" label="分组统计" border size="small" style="width:100px;"></el-checkbox>
-                        <el-select v-model="searchData.groupurlproduct" size="small" placeholder="分组类型" style="width:100px;">
+                        <el-checkbox v-model="searchData.effective" label="只看有效" border size="small"></el-checkbox>
+                    </div>
+                    <div class="search-panelFour">
+                        <el-checkbox v-model="searchData.is_group" label="分组统计" border size="small"></el-checkbox>
+                        <el-select v-model="searchData.groupurlproduct" size="small" placeholder="分组类型">
                             <el-option
                             v-for="item in groupList"
                             :key="item.value"
@@ -126,17 +132,17 @@
                             :value="item.value">
                             </el-option>
                         </el-select>
+                    </div>
+                    <div class="search-panelFive">
                         <el-input
-                            style="width: 100px;"
                             placeholder="询盘ID"
                             size="small"
                             v-model="searchData.messageid"
                             clearable>
                         </el-input>
                         <el-input
-                            style="width: 140px;"
                             type="textarea"
-                            :autosize="{ minRows:1, maxRows: 4}"
+                            :rows="2"
                             placeholder="询盘ID，一行一个"
                             size="small"
                             v-model="searchData.idlist"
@@ -144,18 +150,19 @@
                         </el-input>
                     </div>
                 </div>
-                <div class="SiteBtn">
-                  <el-button type="primary" size="small" icon="el-icon-search" v-if="device==='desktop'" @click="searchResult">查询</el-button>
-                  <el-button type="primary" size="small" icon="el-icon-refresh" v-on:click="refreshData()">刷新</el-button>
-                  <el-button type="primary" size="small" icon="el-icon-upload2" :disabled="isExportDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true">导出数据</el-button>
-                  <el-button type="primary" size="small" icon="el-icon-refresh" v-bind:disabled="isDisabled" v-on:click="setALevel">标记为A+</el-button>
+                <div class="clues-info" style="margin-bottom:20px">
+                    <p v-if="isClues"><span class="item-span-1">根据查询条件共找到：<strong>{{infoData.totalCount}}</strong>条，</span><span class="item-span-2">其中有效<strong>{{infoData.effectiveCount}}</strong>条，无效：<strong>{{infoData.invalidCount}}</strong>条！</span></p>
+                    <p v-if="isUrl"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>条URL！数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                    <p v-if="isProduct"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                </div>
+                <div class="clues-title">
+                     <div class="clues-title-btn">
+                        <el-button type="primary" size="small" class="serchBtn" v-if="device==='desktop'" @click="searchResult"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>查询</el-button>
+                        <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                        <el-button type="primary" size="small" class="editorNote" v-bind:disabled="isDisabled" v-on:click="setALevel"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>标记为A+</el-button>
+                     </div>
                 </div>
             </div>
-        </div>
-        <div class="clues-title" ref="titlePane">
-            <p v-if="isClues"><span>根据查询条件共找到：<strong>{{infoData.totalCount}}</strong>条，其中有效<strong>{{infoData.effectiveCount}}</strong>条，无效：<strong>{{infoData.invalidCount}}</strong>条！</span></p>
-            <p v-if="isUrl"><span>共计：<strong>{{infoData.groupCount}}</strong>条URL！数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-            <p v-if="isProduct"><span>共计：<strong>{{infoData.groupCount}}</strong>种产品，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
         </div>
         <div class="card-content" ref="tableContent">
             <el-table
@@ -527,11 +534,11 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-      $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-30-30-20-3-5;
+      $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
     });
     window.onresize = () => {
         return (() => {
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-30-30-20-3-5;
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
         // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
         })()
     }
@@ -553,10 +560,6 @@ export default {
     $this.initData();
   },
   methods:{
-    // 刷新数据
-    refreshData(){
-      this.initPage();
-    },
     // 搜索结果
     searchResult(){
       var $this = this;
@@ -890,117 +893,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.el-select{
-    display: block;
-}
-.product-span{
-    i{
-        font-style: normal;
-        font-weight: bold;
-    }
-    &.level_1{
-        i{color:#B3315F};
-    }
-    &.level_2{
-        i{
-            color: #130CB7;
-        }
-    }
-    &.level_3{
-        i{
-            color: #6a6a6b;
-        }
-    }
-}
-.table-input{
-  .el-input+.el-input{
-    margin-top: 10px;
-  }
-  .el-input{
-    ::v-deep .el-input__inner{
-      padding: 0 10px!important;
-    }
-  }
-  .el-textarea{
-    ::v-deep .el-textarea__inner{
-      padding: 5px 10px!important;
-    }
-  }
-}
-.table-text{
-  p{
-    a{
-      color: $--color-primary;
-      &:hover{
-        text-decoration: underline;
-      }
-    }
-  }
-}
-.table-tag{
-  text-align: center;
-  .level{
-    display: inline-block;
-    border-radius: 4px;
-    padding: 0 5px;
-    color: #fff;
-  }
-  .level-1{
-    background: #ff0000;
-  }
-  .level-2{
-    background: #eab905;
-  }
-  .level-3{
-    background: #293cfc;
-  }
-  .level-4{
-    background: #1acfda;
-  }
-  .level-5{
-    background: #f6b37f;
-  }
-  .level-6{
-    background: #7e84fd;
-  }
-}
-.export-dialog{
-  .el-form-item{
-    margin-right:0!important;
-    width: 100%;
-    ::v-deep .el-form-item__content{
-      width: 240px;
-      .el-select,.el-input{
-        width: 100%;
-      }
-    }
-  }
-}
-.search-wrap{
-   padding-top:10px;
-   padding-bottom:5px;
-   .search-panelTop{
-     
-   }
-   .search-panelBom{
-     
-   }
-  .el-date-editor,.el-select,.el-checkbox,.el-input{
-    float: left;
-    margin-right:10px;
-    margin-bottom: 10px;
-  }
-    .search-panel{
-        float:left;
-        .item-search{
-            width: 100%;
-            margin-bottom: 10px;
-            .el-textarea{
-                ::v-deep .el-textarea__inner{
-                height: 100%!important;
-                }
-            }
-        }
-    }
-}
 </style>

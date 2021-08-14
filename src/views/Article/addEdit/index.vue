@@ -209,6 +209,7 @@
                 </table>      
                 <div class="card-header WebServerAddEditBtn ArticleFive" ref="headerPane">
                   <div class="header-content">
+                  
                     <el-button type="primary" class="updateBtn" size="small" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_add')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>发布</el-button>
                     <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
                     <el-button type="primary" class="resetBtn" size="small" v-on:click="perviewPage()" v-if="menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_add')">预览</el-button>

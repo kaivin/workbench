@@ -1,20 +1,20 @@
 ﻿<template>
-  <div class="page-root flex-box" ref="boxPane">
-    <div class="phone-panel flex-box flex-column">
+  <div class="page-root flex-box EnphoneCard" ref="boxPane">
+    <div class="flex-box flex-column EnphoneCardFl"  ref="EnphoneCardFl">
       <el-card class="flex-panel" shadow="hover">
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <div class="side-button">
-            <el-button type="primary" plain size="mini" icon="el-icon-search" v-if="menuButtonPermit.includes('Chinaphone_search')" v-on:click="searchStatisticsData()">搜索数据</el-button>
-            <el-button type="primary" plain size="mini" icon="el-icon-coin" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="statisticsClues()">统计分析</el-button>
+            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Chinaphone_search')" v-on:click="searchStatisticsData()"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
+            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="statisticsClues()"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>统计分析</el-button>
           </div>
           <dl class="phone-list" v-for="(item,index) in defaultData.data" v-bind:key="index">
-            <dt><i class="svg-i"><svg-icon :icon-class='item.icon' /></i><span>{{item.name}}</span></dt>
+            <dt><span>{{item.name}}</span></dt>
             <dd v-for="phone in item.phone" :key="phone.id" :title="phone.phonenumber+phone.othername" v-on:click="phoneJump(phone.id)"><span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
           </dl>
         </el-scrollbar>
       </el-card>
     </div>
-    <div class="clues-panel flex-panel">
+    <div class="flex-panel EnphoneCardFr" :style="{width:EnphoneCardFrWidth + 'px'}">
       <div class="absolute-panel">
         <div class="phone-index flex-box flex-column" v-if="!phoneID">
           <div class="num-box">
@@ -129,96 +129,109 @@
             </el-card>
           </div>
         </div>
-        <el-card class="box-card" v-else shadow="hover">
+        <el-card class="box-card EnphoneCardFrDate" v-else shadow="hover">
           <div slot="header">
             <div class="card-header" ref="headerPane">
-              <el-button type="primary" size="small" icon="el-icon-back" v-on:click="backHome()">返回</el-button>
-              <el-button type="primary" size="small" icon="el-icon-upload2" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true">导出数据</el-button>
-              <el-button type="primary" size="small" icon="el-icon-edit" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_othereditall')" v-on:click="editPageNote()">修改当前页备注</el-button>
+                <div class="search-wrap" v-if="device==='desktop'">
+                  <el-date-picker
+                      v-model="searchData.date"
+                      type="daterange"
+                      align="right"
+                      value-format = "yyyy-MM-dd"
+                      unlink-panels
+                      range-separator="至"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期"
+                      style="float:left;margin: 5px;"
+                      :picker-options="pickerRangeOptions">
+                  </el-date-picker>
+                  <el-input
+                    style="width: 150px;margin: 5px;float:left;"
+                    placeholder="域名、备注等"
+                    v-model="searchData.name"
+                    clearable>
+                  </el-input>
+                  <el-select v-model="searchData.mode" clearable placeholder="渠道" style="width:120px;margin: 5px;float:left;">
+                      <el-option
+                          v-for="item in sourceList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.typekey" clearable placeholder="分类" style="width:100px;margin: 5px;float:left;">
+                      <el-option
+                          v-for="item in productTypeList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.level_id" clearable placeholder="级别" style="width:100px;margin: 5px;float:left;">
+                      <el-option
+                          v-for="item in levelList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.productlevel" clearable placeholder="类别" style="width:100px;margin: 5px;float:left;">
+                    <el-option
+                      v-for="item in categoryList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.userid" clearable placeholder="提供者" style="width:100px;margin: 5px;float:left;">
+                    <el-option
+                      v-for="item in userList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.device" clearable placeholder="设备" style="width:80px;margin: 5px;float:left;">
+                    <el-option
+                      v-for="item in deviceList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <el-select v-model="searchData.effective" clearable placeholder="价值" style="width:80px;margin: 5px;float:left;">
+                    <el-option
+                      v-for="item in effectiveList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <el-button class="item-input" type="primary" icon="el-icon-search" @click="searchResult" style="margin: 5px;float:left;">查询</el-button>
+                </div>
+                <div class="clues-info">
+                  <p>
+                      <span class="item-span-1">共有<strong>{{infoData.totalCount}}</strong>条。</span>
+                      <span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条。</span>
+                      <span class="item-span-2">无效：<strong>{{infoData.invalidCount}}</strong>条。</span>
+                      <span class="item-span-3">其中：一类产品<strong>{{infoData.levelOneCount}}</strong>个，二类产品<b>{{infoData.levelTwoCount}}</b>个。</span>
+                  </p>
+                  <p>
+                      <span class="item-span-1">本月共有<strong>{{infoData.totalCountMonth}}</strong>条信息。</span>
+                      <span class="item-span-2">有效：<strong>{{infoData.effectiveCountMonth}}</strong>条。</span>
+                      <span class="item-span-2">无效：<strong>{{infoData.invalidCountMonth}}</strong>条。</span>
+                      <span class="item-span-3">其中：一类产品<strong>{{infoData.levelOneCountMonth}}</strong>个，二类产品<b>{{infoData.levelTwoCountMonth}}</b>个。</span>
+                  </p>
+                </div>
+                <div class="clues-title">
+                     <h2><i class="svg-i" ><svg-icon icon-class="telBlue" /></i>{{currentPhone}}</h2>
+                     <div class="clues-title-btn">
+                        <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                        <el-button type="primary" size="small" class="editorNote" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_othereditall')" v-on:click="editPageNote()"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改当前页备注</el-button>
+                     </div>
+                </div>
             </div>
           </div>
-          <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
-            <el-date-picker
-                v-model="searchData.date"
-                type="daterange"
-                align="right"
-                value-format = "yyyy-MM-dd"
-                unlink-panels
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                style="float:left;margin: 5px;"
-                :picker-options="pickerRangeOptions">
-            </el-date-picker>
-            <el-input
-              style="width: 150px;margin: 5px;float:left;"
-              placeholder="域名、备注等"
-              v-model="searchData.name"
-              clearable>
-            </el-input>
-            <el-select v-model="searchData.mode" clearable placeholder="渠道" style="width:120px;margin: 5px;float:left;">
-                <el-option
-                    v-for="item in sourceList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-            <el-select v-model="searchData.typekey" clearable placeholder="分类" style="width:100px;margin: 5px;float:left;">
-                <el-option
-                    v-for="item in productTypeList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-            <el-select v-model="searchData.level_id" clearable placeholder="级别" style="width:100px;margin: 5px;float:left;">
-                <el-option
-                    v-for="item in levelList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-            <el-select v-model="searchData.productlevel" clearable placeholder="类别" style="width:100px;margin: 5px;float:left;">
-              <el-option
-                v-for="item in categoryList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-select v-model="searchData.userid" clearable placeholder="提供者" style="width:100px;margin: 5px;float:left;">
-              <el-option
-                v-for="item in userList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-select v-model="searchData.device" clearable placeholder="设备" style="width:80px;margin: 5px;float:left;">
-              <el-option
-                v-for="item in deviceList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-select v-model="searchData.effective" clearable placeholder="价值" style="width:80px;margin: 5px;float:left;">
-              <el-option
-                v-for="item in effectiveList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-button class="item-input" type="primary" icon="el-icon-search" @click="searchResult" style="margin: 5px;float:left;">查询</el-button>
-          </div>
-          <div class="clues-info" ref="infoPane">
-            <p><span class="item-span-1">共有<strong>{{infoData.totalCount}}</strong>条。</span><span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条。</span><span class="item-span-2">无效：<strong>{{infoData.invalidCount}}</strong>条。</span><span class="item-span-3">其中：一类产品<strong>{{infoData.levelOneCount}}</strong>个，二类产品<b>{{infoData.levelTwoCount}}</b>个。</span></p>
-            <p><span class="item-span-1">本月共有<strong>{{infoData.totalCountMonth}}</strong>条信息。</span><span class="item-span-2">有效：<strong>{{infoData.effectiveCountMonth}}</strong>条。</span><span class="item-span-2">无效：<strong>{{infoData.invalidCountMonth}}</strong>条。</span><span class="item-span-3">其中：一类产品<strong>{{infoData.levelOneCountMonth}}</strong>个，二类产品<b>{{infoData.levelTwoCountMonth}}</b>个。</span></p>
-          </div>
-          <h2 class="clues-title" ref="titlePane">{{currentPhone}}</h2>
           <div class="card-content" ref="tableContent">
             <el-table
               border
@@ -462,7 +475,8 @@ export default {
       menuButtonPermit:[],
       defaultData:{},
       operationsWidth:"",
-      tableData:[],
+      tableData:[],      
+      EnphoneCardFrWidth:200,
       tableHeight:200,
       maxDate:[],
       minDate:[],
@@ -551,9 +565,10 @@ export default {
   },
   mounted(){
     const $this = this;
-    $this.$nextTick(function () {
+    $this.$nextTick(function () {      
+      $this.EnphoneCardFrWidth = $this.$refs.boxPane.offsetWidth-$this.$refs.EnphoneCardFl.offsetWidth-40-15;
       if($this.$route.query.phoneID){
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-$this.$refs.infoPane.offsetHeight-30-20-25-20-5;
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-20-25-20-5;
       }else{
         $this.drawChart();
       }
@@ -561,7 +576,8 @@ export default {
     if($this.$route.query.phoneID){
       window.onresize = () => {
           return (() => {
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-$this.$refs.infoPane.offsetHeight-30-20-25-20-5;
+            $this.EnphoneCardFrWidth = $this.$refs.boxPane.offsetWidth-$this.$refs.EnphoneCardFl.offsetWidth-40-15;
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-20-25-20-5;
             // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
           })()
       }
@@ -602,7 +618,7 @@ export default {
     if($this.phoneID){
       $this.$nextTick(() => {
         $this.$refs.simpleTable.doLayout();
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.searchPane.offsetHeight-$this.$refs.pagePane.offsetHeight-$this.$refs.titlePane.offsetHeight-$this.$refs.infoPane.offsetHeight-30-20-25-20-5;
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-20-25-20-5;
       })
     }
   },
@@ -958,10 +974,6 @@ export default {
       queryObj.phoneID = id;
       this.$router.push({page:'Chinaphone/phoneindex',query:queryObj});
     },
-    // 返回询盘首页
-    backHome(){
-      this.$router.push({page:'Chinaphone/phoneindex'});
-    },
     // 获取当前电话的搜索条件数据
     getCurrentPhoneSearchData(){
       var $this = this;
@@ -1246,9 +1258,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .el-select{
-    display: block;
-  }
 .form-title{
   width: 110px;
   display: inline-block;
@@ -1344,97 +1353,8 @@ export default {
     float:left;
     }
 }
-//.el-table{
-//  svg,i[class~="el-cion"]{
-//    font-size: 20px;
-//  }
-//}
-.phone-panel{
-  width:210px;
-  margin-right: 15px;
-  .side-button{
-    width: 100%;
-    overflow: hidden;
-    padding: 0 10px 5px;
-    .el-button{
-      display: block;
-      width: 100%;
-      margin: 10px 0 0;
-    }
-  }
-  ::v-deep .el-card__body{
-    padding:0;
-    height: 100%;
-    overflow: hidden;
-  }
-  ::v-deep .el-scrollbar{
-    height: 100%;
-    .el-scrollbar__wrap{
-      overflow-x: hidden;
-    }
-    .el-scrollbar__view{
-      padding-bottom: 15px;
-    }
-  }
-}
 .clues-panel{
   position: relative;
-}
-.phone-list{
-  width: 100%;
-  overflow: hidden;
-  padding: 15px 15px 0 15px;
-  dt{
-    width: 100%;
-    font-size:0;
-    line-height:0;
-    padding-bottom: 15px;
-    .svg-i{
-      display: inline-block;
-      width: 24px;
-      height: 24px;
-      line-height: 24px;
-      margin-right: 5px;
-      font-size: 24px;
-      vertical-align: top;
-      color: $--color-primary;
-    }
-    span{
-      vertical-align: top;
-      line-height: 24px;
-      font-size: 16px;
-      color: $--color-primary;
-    }
-  }
-  dd{
-    width: 100%;
-    overflow: hidden;
-    line-height:0;
-    font-size:0;
-    cursor: pointer;
-    &:hover{
-      span,i,b,em{
-        text-decoration: underline;
-      }
-    }
-    span,i,b,em{
-      font-style: normal;
-      font-size: 12px;
-      line-height:24px;
-      font-weight: normal;
-    }
-    i{
-      margin-left: 5px;
-      font-weight: bold;
-      color: $--color-danger;
-    }
-    em{
-      color: $--color-primary;
-    }
-    b{
-      color: $blue;
-    }
-  }
 }
 .phone-index{
   height: 100%;

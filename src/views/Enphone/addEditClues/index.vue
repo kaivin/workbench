@@ -1,407 +1,411 @@
 ﻿<template>
-  <div class="page-root" ref="boxPane">
+  <div class="page-root scroll-panel" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
-        <div slot="header">
-          <div class="card-header" ref="headerPane">
-              <el-button type="primary" size="small" icon="el-icon-refresh-left" v-on:click="resetFormData()">重置</el-button>
-              <el-button type="primary" size="small" icon="el-icon-finished" v-if="menuButtonPermit.includes('Enphone_add')||menuButtonPermit.includes('Enphone_edit')" @click="saveData">保存</el-button>
-          </div>
-        </div>
-        <div class="card-content" ref="tableContent">
-          <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
-            <div class="item-form">
-              <div class="item-panel">
-                <dl>
-                  <dt>来源电话：<span>*</span></dt>
-                  <dd>
-                    <div class="clues-list phone-list">
-                      <span class="item-clues" v-for="item in phoneList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="phoneClick(item.id)">{{item.phonenumber}}</span>
-                    </div>
-                  </dd>
-                </dl>
-              </div>
-              <div class="item-panel">
-                <dl style="width: 240px;">
-                  <dt>客户姓名/称呼：</dt>
-                  <dd>
-                    <el-input
-                        placeholder="姓名"
-                        size="small"
-                        v-model="formData.custormname"
-                        clearable>
-                    </el-input>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>客户Email：</dt>
-                  <dd>
-                    <el-input
-                        placeholder="邮箱"
-                        size="small"
-                        v-model="formData.custormemail"
-                        clearable>
-                    </el-input>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>客户电话：</dt>
-                  <dd>
-                    <el-input
-                        placeholder="电话"
-                        size="small"
-                        v-model="formData.custormphone"
-                        clearable>
-                    </el-input>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>分配的业务员：</dt>
-                  <dd>
-                    <el-select size="small" v-model="formData.salesuserid" placeholder="请选择">
-                      <el-option
-                        v-for="item in salesuserlist"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>富通天下ID</dt>
-                  <dd>
-                    <el-input
-                        placeholder="ID号"
-                        size="small"
-                        v-model="formData.ftword_id"
-                        clearable>
-                    </el-input>
-                  </dd>
-                </dl>
-              </div>
-              <div class="item-panel">
-                <dl style="width:480px;">
-                  <dt>客户需求详情：*如有其他联系方式请在详情中注明</dt>
-                  <dd>
-                    <el-input
-                        type="textarea"
-                        :autosize="{minRows:4,maxRows:8}"
-                        size="small"
-                        v-model="formData.custormneedinfo"
-                        clearable>
-                    </el-input>
-                  </dd>
-                </dl>
-                <dl style="width:480px;">
-                  <dt>备注与提醒：</dt>
-                  <dd>
-                    <span>分配/特别说明：</span>
-                    <el-input
-                        size="small"
-                        v-model="formData.otherremark"
-                        clearable>
-                    </el-input>
-                  </dd>
-                  <dd>
-                    <span>提醒/首页提醒：</span>
-                    <el-input
-                        size="small"
-                        v-model="formData.givesaleswarn"
-                        clearable>
-                    </el-input>
-                  </dd>
-                  <dd>
-                  <el-checkbox 
-                        v-model="formData.saleswarnstatus"
-                        clearable>修改提醒</el-checkbox>
-                  </dd>
-                  <dd>
-                     <el-upload
-                        class="upload-demo"
-                        name="file"
-                        action=""
-                        accept="aplication/zip"
-                        :http-request="httpZipRequest"
-                        :limit="1"
-                        :on-exceed="handleExceed"
-                        :file-list="fileList">
-                        <el-button size="small" type="primary">点击上传</el-button>
-                     </el-upload>
-                  </dd>
-                </dl>
-              </div>
-              <div class="item-panel">
-                <dl style="width: 240px;">
-                  <dt>信息来自具体时间：<span>*</span></dt>
-                  <dd>
-                     <el-date-picker
-                        style="display:block;width:100%;"
-                        v-model="formData.xuntime"
-                        size="small"
-                        type="datetime"
-                        placeholder="选择日期时间"
-                        value-format = "yyyy-MM-dd HH:mm:ss"
-                        align="right"
-                        :picker-options="pickerOptions">
-                      </el-date-picker>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>客户当地时间：<span>*</span></dt>
-                  <dd>
-                    <el-select size="small" v-model="formData.timediff" placeholder="请选择">
-                      <el-option
-                        v-for="item in timediffList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>来自大洲：</dt>
-                  <dd>
-                    <el-select size="small" v-model="formData.continent" placeholder="请选择">
-                      <el-option
-                        v-for="item in continentList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>来自国家：</dt>
-                  <dd>
-                    <el-input
-                        placeholder="号码归属地"
-                        size="small"
-                        v-model="formData.country"
-                        clearable>
-                    </el-input>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>来自类型：<span>*</span></dt>
-                  <dd>
-                    <el-select v-model="formData.messagetype" size="small" clearable placeholder="请选择">
-                        <el-option
-                        v-for="item in messagetypeList"
-                        :key="item.value" 
-                        :label="item.label"
-                        :value="item.value"
-                        >
-                        </el-option>
-                    </el-select>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>来自渠道：<span>*外部链接请备注来自URL</span></dt>
-                  <dd>
-                    <el-select v-model="formData.mode" size="small" clearable placeholder="请选择">
-                        <el-option
-                        v-for="item in modeList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>来自网页：</dt>
-                  <dd>
-                    <el-input
-                        placeholder="网址"
-                        size="small"
-                        v-model="formData.url"
-                        clearable>
-                    </el-input>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>IP：</dt>
-                  <dd>
-                    <el-input
-                        placeholder="IP"
-                        size="small"
-                        v-model="formData.ip"
-                        clearable>
-                    </el-input>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>设备：</dt>
-                  <dd>
-                    <el-select v-model="formData.device" size="small" clearable placeholder="请选择">
-                        <el-option
-                        v-for="item in deviceList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>级别：</dt>
-                  <dd>
-                    <el-select v-model="formData.level_id" size="small" clearable placeholder="请选择">
-                        <el-option
-                        v-for="item in level_idList"
-                        :key="item.label"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                  </dd>
-                </dl>
-              </div>
-              <div class="item-panel">
-                <dl>
-                  <dt>意向设备：<span>*</span></dt>
-                  <dd>
-                    <strong>类别</strong>
-                    <div class="clues-list product-list">
-                      <el-checkbox-group v-model="producttypeArr" @change="producttypeClick">
-                        <el-checkbox v-for="item in producttypeList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
-                      </el-checkbox-group>
-                    </div>
-                  </dd>
-                  <dd>
-                    <strong>砂石：</strong>
-                    <div class="clues-list product-list">
-                      <el-checkbox-group v-model="SandGravelArr">
-                        <el-checkbox v-for="item in SandGravelList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
-                      </el-checkbox-group>
-                    </div>
-                  </dd>
-                  <dd>
-                    <strong>选矿/建材：</strong>
-                    <div class="clues-list product-list">
-                      <el-checkbox-group v-model="OreDressArr">
-                        <el-checkbox v-for="item in OreDressList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
-                      </el-checkbox-group>
-                    </div>
-                  </dd>
-                  <dd>
-                    <strong>磨粉/烘干/压球：</strong>
-                    <div class="clues-list product-list">
-                      <el-checkbox-group v-model="FlourArr">
-                        <el-checkbox v-for="item in FlourList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
-                      </el-checkbox-group>
-                    </div>
-                  </dd>
-                  <dd>
-                    <strong>其它：</strong>
-                    <div class="clues-list product-list">
-                      <el-checkbox-group v-model="otherArr">
-                        <el-checkbox v-for="item in otherList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
-                      </el-checkbox-group>
-                    </div>
-                    <p>**请根据客户意图选择合适的产品，可多选。如果位：其它生产线、配件、其它产品请在备注中注明具体产品</p>
-                  </dd>
-                </dl>
-              </div>
-              <div class="item-panel">
-                <dl style="width: 240px;">
-                  <dt>物料/产量：</dt>
-                  <dd>
-                     <span>物料：</span>
-                      <el-input
-                        placeholder="物料"
-                        type="textarea"
-                        resize="none"
-                        :rows="4"
-                        size="small"
-                        v-model="formData.material"
-                        clearable>
-                      </el-input>
-                  </dd>
-                  <dd>
-                     <span>产量：</span>
-                    <el-select v-model="formData.production" size="small" clearable placeholder="请选择">
-                        <el-option
-                        v-for="item in productionList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>进出料：</dt>
-                  <dd>
-                     <span>进料：</span>
-                      <el-input
-                        placeholder="进料"
-                        size="small"
-                        v-model="formData.infeed"
-                        clearable>
-                      </el-input>
-                  </dd>
-                  <dd>
-                     <span>出料：</span>
-                      <el-input
-                        placeholder="出料"
-                        size="small"
-                        v-model="formData.outfeed"
-                        clearable>
-                      </el-input>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>备注：</dt>
-                  <dd>
-                     <span>询盘备注：</span>
-                      <el-input
-                        placeholder="备注"
-                        size="small"
-                        v-model="formData.xunremark"
-                        clearable>
-                      </el-input>
-                  </dd>
-                  <dd>
-                     <span>客服备注：</span>
-                      <el-input
-                        placeholder="客服部备注"
-                        size="small"
-                        v-model="formData.custormremark"
-                        clearable>
-                      </el-input>
-                      <i>此备注仅客服部可见</i>
-                  </dd>
-                </dl>
-              </div>
-              <div class="item-panel">
-                <dl style="width: 240px;">
-                  <dt>是否有效：</dt>
-                  <dd>
-                    <el-checkbox v-model="formData.effective" label="有效" border size="small"></el-checkbox>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>无效原因：</dt>
-                  <dd>
-                    <el-input
-                        placeholder="该项只在无效情况下填写"
-                        size="small"
-                        v-model="formData.invalidcause"
-                        :disabled="formData.effective"
-                        clearable>
-                    </el-input>
-                  </dd>
-                </dl>
-                <dl style="width: 240px;">
-                  <dt>添加人：</dt>
-                  <dd><p>{{userInfo.name}}</p></dd>
-                </dl>
-              </div>
+        <div class="card-content EnphoneAddEdit" ref="tableContent">
+            <div class="EnphoneAddEditMain">
+                <div class="EnphoneAddEditMainItem phone-list">
+                  <dl>
+                    <dt>来源电话：<span>*</span></dt>
+                    <dd>
+                      <div class="clues-list">
+                        <span class="item-clues" v-for="item in phoneList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="phoneClick(item.id)"><i></i>{{item.phonenumber}}</span>
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="EnphoneAddEditMainItem customer-info">
+                    <dl>
+                      <dt>客户姓名/称呼：</dt>
+                      <dd>
+                        <el-input
+                            placeholder="姓名"
+                            size="small"
+                            v-model="formData.custormname"
+                            clearable>
+                        </el-input>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>客户Email：</dt>
+                      <dd>
+                        <el-input
+                            placeholder="邮箱"
+                            size="small"
+                            v-model="formData.custormemail"
+                            clearable>
+                        </el-input>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>客户电话：</dt>
+                      <dd>
+                        <el-input
+                            placeholder="电话"
+                            size="small"
+                            v-model="formData.custormphone"
+                            clearable>
+                        </el-input>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>分配的业务员：</dt>
+                      <dd>
+                        <el-select size="small" v-model="formData.salesuserid" placeholder="请选择">
+                          <el-option
+                            v-for="item in salesuserlist"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>富通天下ID</dt>
+                      <dd>
+                        <el-input
+                            placeholder="ID号"
+                            size="small"
+                            v-model="formData.ftword_id"
+                            clearable>
+                        </el-input>
+                      </dd>
+                    </dl>
+                </div>
+                <div class="EnphoneAddEditMainItem specifications">
+                    <dl>
+                      <dt>客户需求详情：*如有其他联系方式请在详情中注明</dt>
+                      <dd class="spectextarea">
+                        <el-input
+                            type="textarea"
+                            :rows="5"
+                            size="small"
+                            v-model="formData.custormneedinfo"
+                            clearable>
+                        </el-input>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>备注与提醒：</dt>
+                      <dd class="prompt flex-wrap">
+                        <span>分配/特别说明：</span>
+                        <el-input
+                            size="small"
+                            class="flex-content"
+                            v-model="formData.otherremark"
+                            clearable>
+                        </el-input>
+                      </dd>
+                      <dd class="prompt flex-wrap">
+                        <span>提醒/首页提醒：</span>
+                        <el-input
+                            size="small"
+                            class="flex-content"
+                            v-model="formData.givesaleswarn"
+                            clearable>
+                        </el-input>
+                      </dd>
+                      <dd>
+                      <el-checkbox 
+                            v-model="formData.saleswarnstatus"
+                            class="remind"
+                            clearable>修改提醒</el-checkbox>
+                      </dd>
+                      <dd class="upload">
+                        <el-upload
+                            class="upload-demo"
+                            name="file"
+                            action=""
+                            accept="aplication/zip"
+                            :http-request="httpZipRequest"
+                            :limit="1"
+                            :on-exceed="handleExceed"
+                            :file-list="fileList">
+                            <el-button size="small" type="primary">点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip">(rar zip格式 50M内)</div>
+                        </el-upload>
+                      </dd>
+                    </dl>
+                </div>
+                <div class="EnphoneAddEditMainItem customer-info">
+                    <dl style="width:23.4%;">
+                      <dt>信息来自具体时间：<span>*</span></dt>
+                      <dd>
+                        <el-date-picker
+                            style="display:block;width:100%;"
+                            v-model="formData.xuntime"
+                            size="small"
+                            type="datetime"
+                            placeholder="选择日期时间"
+                            value-format = "yyyy-MM-dd HH:mm:ss"
+                            align="right"
+                            :picker-options="pickerOptions">
+                          </el-date-picker>
+                      </dd>
+                    </dl>
+                    <dl style="width:10.4%;">
+                      <dt>客户当地时间：<span>*</span></dt>
+                      <dd>
+                        <el-select size="small"style="width:100%" v-model="formData.timediff" placeholder="请选择">
+                          <el-option
+                            v-for="item in timediffList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                      </dd>
+                    </dl>
+                    <dl style="width:21.4%;">
+                      <dt>来自大洲：</dt>
+                      <dd>
+                        <el-select size="small"style="width:100%" v-model="formData.continent" placeholder="请选择">
+                          <el-option
+                            v-for="item in continentList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>来自国家：</dt>
+                      <dd>
+                        <el-input
+                            placeholder="号码归属地"
+                            size="small"
+                            v-model="formData.country"
+                            clearable>
+                        </el-input>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>来自类型：<span>*</span></dt>
+                      <dd>
+                        <el-select v-model="formData.messagetype" size="small"style="width:100%" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in messagetypeList"
+                            :key="item.value" 
+                            :label="item.label"
+                            :value="item.value"
+                            >
+                            </el-option>
+                        </el-select>
+                      </dd>
+                    </dl>
+                </div>
+                <div class="EnphoneAddEditMainItem customer-info">
+                    <dl style="width:23.4%;">
+                      <dt>来自渠道：<span>*外部链接请备注来自URL</span></dt>
+                      <dd>
+                        <el-select v-model="formData.mode" size="small" style="width:100%" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in modeList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                      </dd>
+                    </dl>
+                    <dl style="width:33.8%;">
+                      <dt>来自网页：</dt>
+                      <dd>
+                        <el-input
+                            placeholder="网址"
+                            size="small"
+                            v-model="formData.url"
+                            clearable>
+                        </el-input>
+                      </dd>
+                    </dl>
+                    <dl style="width:16.6%;">
+                      <dt>IP：</dt>
+                      <dd>
+                        <el-input
+                            placeholder="IP"
+                            size="small"
+                            v-model="formData.ip"
+                            clearable>
+                        </el-input>
+                      </dd>
+                    </dl>
+                    <dl style="width:11.6%;">
+                      <dt>设备：</dt>
+                      <dd>
+                        <el-select v-model="formData.device" size="small"style="width:100%" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in deviceList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                      </dd>
+                    </dl>
+                    <dl style="width:6.6%;">
+                      <dt>级别：</dt>
+                      <dd>
+                        <el-select v-model="formData.level_id" size="small"style="width:100%" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in level_idList"
+                            :key="item.label"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                      </dd>
+                    </dl>
+                </div>
+                <div class="EnphoneAddEditMainItem IntentionEquipment">
+                    <dl>
+                      <dt>意向设备：<span>*</span></dt>
+                      <dd>
+                        <strong>类别</strong>
+                        <div class="clues-list">
+                          <el-checkbox-group v-model="producttypeArr" @change="producttypeClick">
+                            <el-checkbox v-for="item in producttypeList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
+                      </dd>
+                      <dd>
+                        <strong>砂石：</strong>
+                        <div class="clues-list">
+                          <el-checkbox-group v-model="SandGravelArr">
+                            <el-checkbox v-for="item in SandGravelList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
+                      </dd>
+                      <dd>
+                        <strong>选矿/建材：</strong>
+                        <div class="clues-list">
+                          <el-checkbox-group v-model="OreDressArr">
+                            <el-checkbox v-for="item in OreDressList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
+                      </dd>
+                      <dd>
+                        <strong>磨粉/烘干/压球：</strong>
+                        <div class="clues-list">
+                          <el-checkbox-group v-model="FlourArr">
+                            <el-checkbox v-for="item in FlourList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
+                      </dd>
+                      <dd>
+                        <strong>其它：</strong>
+                        <div class="clues-list">
+                          <el-checkbox-group v-model="otherArr">
+                            <el-checkbox v-for="item in otherList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
+                        <p>**请根据客户意图选择合适的产品，可多选。如果位：其它生产线、配件、其它产品请在备注中注明具体产品</p>
+                      </dd>
+                    </dl>
+                </div>
+                <div class="EnphoneAddEditMainItem material">
+                      <dl>
+                        <dt>物料/产量：</dt>
+                        <dd class="flex-wrap">
+                          <span>物料：</span>
+                            <el-input
+                              placeholder="物料"
+                              size="small"
+                              class="flex-content"
+                              v-model="formData.material"
+                              clearable>
+                            </el-input>
+                        </dd>
+                        <dd class="flex-wrap">
+                          <span>产量：</span>
+                          <el-select v-model="formData.production" size="small" class="flex-content" clearable placeholder="请选择">
+                              <el-option
+                              v-for="item in productionList"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                              </el-option>
+                          </el-select>
+                        </dd>
+                      </dl>
+                      <dl>
+                        <dt>进出料：</dt>
+                        <dd class="flex-wrap">
+                          <span>进料：</span>
+                            <el-input
+                              placeholder="进料"
+                              size="small"
+                              class="flex-content"
+                              v-model="formData.infeed"
+                              clearable>
+                            </el-input>
+                        </dd>
+                        <dd class="flex-wrap">
+                          <span>出料：</span>
+                            <el-input
+                              placeholder="出料"
+                              size="small"
+                              class="flex-content"
+                              v-model="formData.outfeed"
+                              clearable>
+                            </el-input>
+                        </dd>
+                      </dl>
+                      <dl>
+                        <dt>备注：</dt>
+                        <dd class="flex-wrap">
+                          <span>询盘备注：</span>
+                            <el-input
+                              placeholder="备注"
+                              size="small"
+                              class="flex-content"
+                              v-model="formData.xunremark"
+                              clearable>
+                            </el-input>
+                        </dd>
+                        <dd class="flex-wrap CustomerNote">
+                          <span>客服备注：</span>
+                          <el-input
+                            placeholder="客服部备注"
+                            size="small"
+                            class="flex-content"
+                            v-model="formData.custormremark"
+                            clearable>
+                          </el-input>
+                          <i>*此备注仅客服部可见</i>
+                        </dd>
+                      </dl>
+                </div>
+                <div class="EnphoneAddEditMainItem author">
+                    <dl>
+                      <dt>是否有效：</dt>
+                      <dd>
+                        <el-checkbox v-model="formData.effective" label="有效" border size="small"></el-checkbox>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>无效原因：</dt>
+                      <dd>
+                        <el-input
+                            placeholder="该项只在无效情况下填写"
+                            size="small"
+                            v-model="formData.invalidcause"
+                            :disabled="formData.effective"
+                            clearable>
+                        </el-input>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>添加人：</dt>
+                      <dd><p>{{userInfo.name}}</p></dd>
+                    </dl>
+                </div>
             </div>
-          </div>
+            <div class="card-header WebServerAddEditBtn EnphoneAddEditBtn">
+                <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Enphone_add')||menuButtonPermit.includes('Enphone_edit')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
+                <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
+            </div>
         </div>
     </el-card>
   </div>
@@ -413,7 +417,6 @@ export default {
   name: 'addEditClues',
   data() {
     return {
-      scrollHeight:200,
       ID:null,
       menuButtonPermit:[],
       pickerOptions: {
@@ -552,31 +555,6 @@ export default {
       'userInfo',
       'device'
     ]),
-  },
-  mounted(){
-      const $this = this;
-      this.$nextTick(function () {
-        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-23;
-        // 30：page-root上下内边距；20：按钮父级上下内边距；
-      });
-      window.onresize = () => {
-          return (() => {
-            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-23;
-            // 30：page-root上下内边距；20：按钮父级上下内边距；
-          })()
-      };
-  },
-  watch: {
-      scrollHeight(val) {
-        if (!this.timer) {
-          this.scrollHeight = val
-          this.timer = true
-          const $this = this
-          setTimeout(function() {
-            $this.timer = false
-          }, 400)
-        }
-      },
   },
   created(){
     var $this = this;
@@ -1157,77 +1135,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.el-select{
-  display: block;
-}
-.item-form{
-  .item-panel{
-    position: relative;
-    margin-bottom: 20px;
-    dl{
-      float: left;
-      dt{
-        line-height: 24px;
-        font-size: 14px;
-        span{
-          color:red;
-        }
-      }
-      dd{
-        margin-top: 5px;
-        .clues-list{
-          margin: 0 -2px;
-          &.phone-list,&.price-list{
-            .item-clues{
-              width: 147px;
-            }
-          }
-          &.product-list{
-            .item-clues{
-              width: 160px;
-            }
-          }
-          &.level-list{
-            .item-clues{
-              width: 104px;
-            }
-          }
-          .item-clues{
-            display: block;
-            float:left;
-            margin: 2px;
-            border: 1px solid #e6e6e6;
-            height: 34px;
-            line-height: 32px;
-            font-size: 14px;
-            text-align: center;
-            cursor: pointer;
-            &:hover{
-              color: #2e88ff;
-              background: #e8f7f4;
-              border-color: #a3ddd1;
-            }
-          }
-          .item-clues.active{
-            color: #FFFFFF;
-            background-color: #2e88ff;
-            border-color: #2e88ff;
-            &:hover{
-              color: #FFFFFF;
-              background-color: #2e88ff;
-              border-color: #2e88ff;
-            }
-          }
-        }
-        p{
-          line-height: 32px;
-          font-size: 12px;
-        }
-      }
-    }
-    dl+dl{
-      margin-left: 15px;
-    }
-  }
-}
 </style>
