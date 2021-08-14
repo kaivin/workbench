@@ -37,9 +37,15 @@
               <div class="item-button" v-if="isCnMoneyAdd" v-on:click="cnMoneyAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加充值记录</span></div>
               <div class="item-button" v-if="isCnCluesAdd" v-on:click="cnCluesAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">新增询盘</span></div>
               <div class="item-button" v-if="isEnCluesAdd" v-on:click="enCluesAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">新增询盘</span></div>
+              <div class="item-button" v-if="isWebsiteLogAdd" v-on:click="websiteLogAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加网站日志</span></div>
             </div>
         </div>
         <div class="header-right">
+          <div class="notice-button" v-if="isEnCluesAdd">
+            <el-badge :value="60" :max="99" class="item">
+              <i class="svg-i"><svg-icon icon-class="notice" class-name="disabled" /></i>
+            </el-badge>
+          </div>
           <el-dropdown class="user-button" @command="handleCommand">
             <div class="el-dropdown-link">
               <span class="user-icon">
@@ -102,6 +108,7 @@ export default {
         'isCnMoneyAdd',
         'isCnCluesAdd',
         'isEnCluesAdd',
+        'isWebsiteLogAdd',
       ]),
     },
     methods:{
@@ -246,6 +253,10 @@ export default {
           var $this = this;
           var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues'});
           window.open(routeUrl.href,'_blank');
+        },
+        // 添加网站日志
+        websiteLogAdd(){
+          this.$store.dispatch('app/addWebsiteLog')
         },
     }
 }

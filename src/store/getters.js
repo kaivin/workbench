@@ -47,6 +47,8 @@
     addCnMoney:state => state.app.addCnMoney,
     isCnCluesAdd: state => state.api.isCnCluesAdd,
     isEnCluesAdd: state => state.api.isEnCluesAdd,
+    isWebsiteLogAdd: state => state.api.isWebsiteLogAdd,
+    addWebsiteLog:state => state.app.addWebsiteLog,
 }
 export default getters
   

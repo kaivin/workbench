@@ -182,7 +182,6 @@ export default {
   name: 'webserverAddEdit',
   data() {
     return {
-      scrollHeight:200,
       menuButtonPermit:[],
       formData:{
         id:0,
@@ -212,42 +211,11 @@ export default {
       'device'
     ]),
   },
-  mounted(){
-      const $this = this;
-      this.$nextTick(function () {
-        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-50;
-        // 30：page-root上下内边距；20：按钮父级上下内边距；
-      });
-      window.onresize = () => {
-          return (() => {
-            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-50;
-            // 30：page-root上下内边距；20：按钮父级上下内边距；
-          })()
-      };
-  },
-  watch: {
-      scrollHeight(val) {
-        if (!this.timer) {
-          this.scrollHeight = val
-          this.timer = true
-          const $this = this
-          setTimeout(function() {
-            $this.timer = false
-          }, 400)
-        }
-      },
-  },
   created(){
     var $this = this;
     $this.initData();
   },
   methods:{
-    // 刷新页面
-    refreshPage(){
-      var $this = this;
-      $this.clearForm();
-      $this.initData();
-    },
     // 初始化数据
     initData(){
         var $this = this;
@@ -494,7 +462,8 @@ export default {
     // 跳转到服务器管理
     linkPage(){
       var $this = this;
-      $this.$router.push({name:'Website_lists',query:{key:$this.formData.ip}});
+      var routeUrl =  $this.$router.resolve({name:'Website_lists',query:{key:$this.formData.ip}});
+      window.open(routeUrl.href,'_blank');
     },
   }
 }

@@ -1,185 +1,147 @@
 ﻿<template>
-  <div class="page-root" v-bind:class="isPreview?'scroll-panel':''" ref="boxPane">
-    <el-card v-show="!isPreview" class="box-card WebsiteCard" shadow="hover">
-        <div class="card-content" ref="cardContent">
-          <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
-            <table class="ArticleFour">
-              <tr>
-                <td class="type-title"><span>所属网站：</span></td>
-                <td>
-                  <div class="item-form buttonOne">
-                        <el-button type="primary" size="small">{{website}} [ {{websiteID}} ] </el-button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>系统标签：</span></td>
-                <td>
-                  <div class="item-form buttonTwo">
-                    <el-checkbox-group class="checkbox-panel" v-model="formData.systemTag" size="small">
-                      <el-checkbox :label="item.id" v-for="item in postSystemTag" v-bind:key="item.id" border>{{item.name}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>自定义标签：</span></td>
-                <td>
-                    <div class="item-form"  style="width:252px;">
-                        <el-input
-                          placeholder="请输入标签内容"
-                          v-model="formData.tag"
-                          size="small"
-                          clearable>
-                        </el-input>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>标题：</span></td>
-                <td>
-                  <div class="item-form-group ArticleFourTit flex-box">
-                    <div class="item-form flex-content">
-                        <el-input
-                          placeholder="请输入文章标题"
-                          v-model="formData.title"
-                          size="small"
-                          ref="title"
-                          clearable>
-                        </el-input>
-                    </div>
-                    <div class="item-form inline-item title-color">
-                      <strong>标题颜色：</strong>
-                      <div class="item-form-panel">
-                           <span v-for="item in predefineColors" v-bind:style="{background:item}" v-on:click="clickTitColor(item)" v-bind:class="item==isTitColor?'TitColor':''"></span>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr v-if="postSystemTag.length>0">
-                <td class="type-title"><span>内容：</span></td>
-                <td>
-                  <div class="item-form">
-                    <el-tabs v-model="activeTab" type="border-card" class="tab-card" :before-leave="tabClickHandler">
-                      <el-tab-pane label="富文本编辑器" name="textarea" id="editor-rich">
-                        <vue-ueditor-wrap v-model="formData.content" :config="editorConfig" @ready="ready" editor-id="editor-rich-text"></vue-ueditor-wrap>
-                      </el-tab-pane>
-                      <el-tab-pane label="Markdown" name="markdown">
-                        <v-md-editor 
-                          left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code"
-                          v-model="formData.markdownContent" @change="changeMarkdownHandler" height="600px" mode="editable"></v-md-editor>
-                      </el-tab-pane>
-                    </el-tabs>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="type-title"><span>备注：</span></td>
-                <td>
-                  <div class="item-form">
-                    <div class="item-form-panel">
+  <div class="page-root bbs-panel scroll-panel" ref="boxPane">
+    <el-card v-show="!isPreview" class="box-card WebsiteCard scroll-card" shadow="hover">
+      <div class="card-content" ref="cardContent">
+        <div class="main-content">
+          <table class="ArticleFour">
+            <tr>
+              <td class="type-title"><span>所属网站：</span></td>
+              <td>
+                <div class="item-form buttonOne">
+                      <el-button type="primary" size="small" style="margin:4px;">{{website}} [ {{websiteID}} ] </el-button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="type-title"><span>系统标签：</span></td>
+              <td>
+                <div class="item-form buttonTwo">
+                  <el-checkbox-group class="checkbox-panel" v-model="formData.systemTag" size="small">
+                    <el-checkbox :label="item.id" v-for="item in postSystemTag" v-bind:key="item.id" border>{{item.name}}</el-checkbox>
+                  </el-checkbox-group>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="type-title"><span>自定义标签：</span></td>
+              <td>
+                  <div class="item-form"  style="width:252px;">
                       <el-input
-                        type="textarea"
-                        :autosize="{ minRows: 2, maxRows: 4}"
-                        placeholder="请输入文章备注"
-                        v-model="formData.remarks"
+                        placeholder="请输入标签内容"
+                        v-model="formData.tag"
                         size="small"
                         clearable>
                       </el-input>
+                  </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="type-title"><span>标题：</span></td>
+              <td>
+                <div class="item-form-group ArticleFourTit flex-box">
+                  <div class="item-form flex-content">
+                      <el-input
+                        placeholder="请输入文章标题"
+                        v-model="formData.title"
+                        size="small"
+                        ref="title"
+                        clearable>
+                      </el-input>
+                  </div>
+                  <div class="item-form inline-item title-color">
+                    <strong>标题颜色：</strong>
+                    <div class="item-form-panel">
+                          <span v-for="(item,index) in predefineColors" v-bind:key="index" v-bind:style="{background:item}" v-on:click="clickTitColor(item)" v-bind:class="item==isTitColor?'TitColor':''"></span>
                     </div>
                   </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  <div class="item-form-group ArticleFourTag">
-                    <div class="item-form buttonTwo inline-item other-td">
-                      <strong>评论：</strong>
-                      <div class="item-form-panel">
-                        <el-checkbox v-model="formData.isCommentClose" label="关闭评论" border size="small"></el-checkbox>
-                      </div>
-                    </div>
-                    <div class="item-form buttonTwo inline-item other-td">
-                      <strong>匿名发布：</strong>
-                      <div class="item-form-panel">
-                        <el-checkbox v-model="formData.isAnonymous" label="匿名发布" border size="small"></el-checkbox>
-                      </div>
-                    </div>
-                    <div class="item-form buttonTwo inline-item other-td">
-                      <strong>置顶：</strong>
-                      <div class="item-form-panel">
-                        <el-checkbox v-model="formData.isTop" label="置顶" border size="small"></el-checkbox>
-                      </div>
+                </div>
+              </td>
+            </tr>
+            <tr v-if="postSystemTag.length>0">
+              <td class="type-title"><span>内容：</span></td>
+              <td>
+                <div class="item-form">
+                  <el-tabs v-model="activeTab" type="border-card" class="tab-card" :before-leave="tabClickHandler">
+                    <el-tab-pane label="富文本编辑器" name="textarea" id="editor-rich">
+                      <vue-ueditor-wrap v-model="formData.content" :config="editorConfig" @ready="ready" editor-id="editor-rich-text"></vue-ueditor-wrap>
+                    </el-tab-pane>
+                    <el-tab-pane label="Markdown" name="markdown">
+                      <v-md-editor 
+                        left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code"
+                        v-model="formData.markdownContent" @change="changeMarkdownHandler" height="600px" mode="editable"></v-md-editor>
+                    </el-tab-pane>
+                  </el-tabs>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="type-title"><span>备注：</span></td>
+              <td>
+                <div class="item-form">
+                  <div class="item-textarea">
+                    <el-input
+                      type="textarea"
+                      :autosize="{ minRows: 2, maxRows: 4}"
+                      placeholder="请输入文章备注"
+                      v-model="formData.remarks"
+                      size="small"
+                      clearable>
+                    </el-input>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <div class="item-form-group ArticleFourTag">
+                  <div class="item-form buttonTwo inline-item other-td">
+                    <strong>评论：</strong>
+                    <div class="item-form-panel">
+                      <el-checkbox v-model="formData.isCommentClose" label="关闭评论" border size="small"></el-checkbox>
                     </div>
                   </div>
-                </td>
-              </tr>
-            </table>
-          </div>
+                  <div class="item-form buttonTwo inline-item other-td">
+                    <strong>匿名发布：</strong>
+                    <div class="item-form-panel">
+                      <el-checkbox v-model="formData.isAnonymous" label="匿名发布" border size="small"></el-checkbox>
+                    </div>
+                  </div>
+                  <div class="item-form buttonTwo inline-item other-td">
+                    <strong>置顶：</strong>
+                    <div class="item-form-panel">
+                      <el-checkbox v-model="formData.isTop" label="置顶" border size="small"></el-checkbox>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
           <div class="card-header WebServerAddEditBtn ArticleFive" ref="headerPane">
             <el-button type="primary" class="updateBtn" size="small" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Website_logedit')||menuButtonPermit.includes('Website_logadd')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>发布</el-button>
             <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
             <el-button type="primary" class="resetBtn" size="small" v-on:click="perviewPage()" v-if="menuButtonPermit.includes('Website_logedit')||menuButtonPermit.includes('Website_logadd')">预览</el-button>
           </div>
         </div>
+      </div>
     </el-card>
     <div v-show="isPreview" class="preview-page">
-      <div class="article-header">
-        <div class="flex-row multiple-column">
-          <div class="flex-column txt-content">
-            <div class="flex-row">
-              <div class="flex-column txt-font nowrap"><span>网站：</span></div>
-              <div class="flex-column txt-content nowrap">
-                <strong>{{previewData.typeName}}</strong>
-              </div>
-            </div>
-          </div>
-          <div class="flex-column txt-content">
-            <div class="flex-row">
-              <div class="flex-column txt-font nowrap"><span>创建者：</span></div>
-              <div class="flex-column txt-content nowrap">
-                <strong>{{previewData.anthor}}</strong>
-              </div>
-            </div>
-          </div>
-          <div class="flex-column txt-content">
-            <div class="flex-row">
-              <div class="flex-column txt-font nowrap"><span>创建时间：</span></div>
-              <div class="flex-column txt-content nowrap">
-                <strong>{{previewData.createdTime}}</strong>
-              </div>
-            </div>
-          </div>
-          <div class="flex-column txt-content">
-            <div class="flex-row">
-              <div class="flex-column txt-font nowrap"><span>修改时间：</span></div>
-              <div class="flex-column txt-content nowrap">
-                <strong>{{previewData.updateTime}}</strong>
-              </div>
-            </div>
-          </div>
-          <div class="flex-column txt-content">
-            <div class="flex-row">
-              <div class="flex-column txt-font nowrap"><span>点击量：</span></div>
-              <div class="flex-column txt-content">
-                <strong>{{previewData.hits}}</strong>
-              </div>
-              <div class="flex-column txt-content" style="line-height:0;">
-                <el-tag class="btn-back" type="danger" v-on:click="backSendPost">返回</el-tag>
-              </div>
-            </div>
+      <div class="article-info">
+        <div class="ArticleSixFlTop">
+          <h1>{{previewData.title}}</h1>
+          <div class="ArticleSixFlTopTag clearfix">
+            <p class="ArticleSixFlTopTagFl">
+              <span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>{{previewData.typeName}}</span>
+              <span><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{previewData.anthor}}</span>
+              <span><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{previewData.createdTime}}</span>
+              <span class="back" v-on:click="backSendPost"><i class="svg-i" ><svg-icon icon-class="back" /></i>点击返回</span>
+            </p>
+            <p class="ArticleSixFlTopTagFr"><i class="svg-i" ><svg-icon icon-class="eye_rz" /></i>{{previewData.hits}}<span>|</span><i class="svg-i" ><svg-icon icon-class="read_rz" /></i>{{previewData.updateTime}} </p>
           </div>
         </div>
-        <div class="flex-row">
-          <div class="flex-column txt-font nowrap"><span>标题：</span></div>
-          <div class="flex-column txt-content">
-            <strong>{{previewData.title}}</strong>
-          </div>
-        </div>
+        <div class="info-content" v-bind:class="formData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="previewData.content"></div>
       </div>
-      <div class="info-content" v-bind:class="formData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="previewData.content"></div>
     </div>
+    <el-backtop target=".scroll-panel"></el-backtop>
   </div>
 </template>
 

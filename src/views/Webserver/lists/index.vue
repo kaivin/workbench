@@ -320,11 +320,6 @@ export default {
       $this.dialogSearchVisible = false;
       $this.getWebsiteListData();
     },
-    // 刷新当前页面
-    refreshData(){
-      var $this = this;
-      $this.getWebsiteListData();
-    },
     // 初始化页面数据
     initData(){
       var $this = this;
@@ -460,10 +455,15 @@ export default {
         }
       });
     },
-    // 跳转到网站日志列表页
+    // 跳转到网站列表页
     jumpWebsiteList(row,index){
       var $this = this;
-      $this.$router.push({name:'Website_lists',query:{key:row.ip}});
+      if($this.device=="desktop"){
+        var routeUrl =  $this.$router.resolve({name:'Website_lists',query:{key:row.ip}});
+        window.open(routeUrl.href,'_blank');
+      }else{
+        $this.$router.push({name:'Website_lists',query:{key:row.ip}});
+      }
     },
     // 修改网站数据
     editTableRow(row,index){

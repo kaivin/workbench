@@ -1,14 +1,15 @@
 ﻿<template>
-  <div class="page-root" ref="boxPane">
+  <div class="page-root website-log" ref="boxPane">
     <el-card class="box-card" shadow="hover">
       <div slot="header">
         <div class="card-header" ref="headerPane">
-            <h2 class="log-header">{{website}} 工作日志</h2>
+            <div class="clues-title">
+              <h2><i class="svg-i" ><svg-icon icon-class="log" /></i>{{website}} 工作日志</h2>
+            </div>
         </div>
       </div>
       <div class="card-content" ref="tableContent">
         <el-table
-          border
           ref="simpleTable"
           :data="tableData"
           tooltip-effect="dark"
@@ -99,7 +100,7 @@
             prop="operations"
             label="操作">
             <template #default="scope">
-                <el-button size="mini" v-if="menuButtonPermit.includes('Website_logedit')" @click="editTableRow(scope.row,scope.$index)">修改</el-button>
+                <el-button size="mini" v-if="menuButtonPermit.includes('Website_logedit')" @click="editTableRow(scope.row,scope.$index)">编辑</el-button>
                 <el-button size="mini" v-if="menuButtonPermit.includes('Website_logdelete')&&scope.row.deleteshow" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
             </template>
           </el-table-column>
@@ -149,27 +150,31 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device'
+      'device',
+      'addWebsiteLog'
     ]),
+    isAdd(){
+      return this.addWebsiteLog
+    }
   },
   mounted(){
       const $this = this;
       this.$nextTick(function () {
         if($this.totalDataNum>50){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-20;
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-10;
           // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
         }else{
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-20;
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-10;
           // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
         }
       });
       window.onresize = () => {
           return (() => {
             if($this.totalDataNum>50){
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-20;
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-10;
               // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
             }else{
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-20;
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-10;
               // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
             }
           })()
@@ -184,6 +189,11 @@ export default {
           setTimeout(function() {
             $this.timer = false
           }, 400)
+        }
+      },
+      isAdd(e){
+        if(e>0){
+          this.addTableRow();
         }
       },
   },
@@ -321,12 +331,18 @@ export default {
     // 添加表格行数据
     addTableRow(){
       var $this = this;
-      $this.$router.push({path:'/Website/logAddEdit',query:{websiteID:$this.websiteID,website:$this.website}});
+      var routeUrl =  $this.$router.resolve({path:'/Website/logAddEdit',query:{websiteID:$this.websiteID,website:$this.website}});
+      window.open(routeUrl.href,'_blank');
     },
     // 编辑表格行数据
     editTableRow(row,index){
       var $this = this;
-      $this.$router.push({path:'/Website/logAddEdit',query:{logID:row.id,websiteID:$this.websiteID,website:$this.website}});
+      if($this.device=="desktop"){
+        var routeUrl =  $this.$router.resolve({path:'/Website/logAddEdit',query:{logID:row.id,websiteID:$this.websiteID,website:$this.website}});
+        window.open(routeUrl.href,'_blank');
+      }else{
+        $this.$router.push({path:'/Website/logAddEdit',query:{logID:row.id,websiteID:$this.websiteID,website:$this.website}});
+      }
     },
     // 删除表格行
     deleteTableRow(row,index){
@@ -374,7 +390,12 @@ export default {
     // 跳转到文章详情
     jumpArticle(id){
       var $this = this;
-      $this.$router.push({path:'/Website/logInfo',query:{logID:id,websiteID:$this.websiteID,website:$this.website}});
+      if($this.device=="desktop"){
+        var routeUrl =  $this.$router.resolve({path:'/Website/logInfo',query:{logID:id,websiteID:$this.websiteID,website:$this.website}});
+        window.open(routeUrl.href,'_blank');
+      }else{
+        $this.$router.push({path:'/Website/logInfo',query:{logID:id,websiteID:$this.websiteID,website:$this.website}});
+      }
     }
   }
 }

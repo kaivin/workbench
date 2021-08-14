@@ -106,7 +106,6 @@
       <div class="card-content WebsiteList-Wrap" ref="cardContent">
           <div class="card-wrap">
             <el-table
-              border
               ref="simpleTable"
               :data="tableData"
               stripe
@@ -412,13 +411,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="不可为空，新增网站必须有一个品牌归属">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
           <el-form-item label="语言：" :label-width="formLabelWidth">
@@ -431,37 +423,16 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="不可为空，新增网站必须有一个语种归属">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
           <el-form-item label="主域名：" :label-width="formLabelWidth">
             <el-input v-model="dialogForm.domain" ref="domain"></el-input>
           </el-form-item>
-          <el-popover
-            placement="left"
-            width="200"
-            trigger="hover"
-            content="新增网站的主域名，不可为空">
-            <i slot="reference" class="el-icon-s-opportunity"></i>
-          </el-popover>
         </div>
         <div class="item-form">
             <el-form-item label="网址：" :label-width="formLabelWidth">
               <el-input v-model="dialogForm.weblink" ref="weblink"></el-input>
             </el-form-item>
-            <el-popover
-              placement="left"
-              width="200"
-              trigger="hover"
-              content="新增网站的链接，可为空">
-              <i slot="reference" class="el-icon-s-opportunity"></i>
-            </el-popover>
         </div>
       </el-form>
       <template #footer>
@@ -1195,12 +1166,22 @@ export default {
     // 跳转到网站日志列表页
     linkToLog(row,index){
       var $this = this;
-      $this.$router.push({name:'websiteLogList',query:{websiteID:row.id,website:row.domain}});
+      if($this.device=="desktop"){
+        var routeUrl =  $this.$router.resolve({name:'websiteLogList',query:{websiteID:row.id,website:row.domain}});
+        window.open(routeUrl.href,'_blank');
+      }else{
+        $this.$router.push({name:'websiteLogList',query:{websiteID:row.id,website:row.domain}});
+      }
     },
     // 修改网站数据
     editTableRow(row,index){
       var $this = this;
-      $this.$router.push({name:'websiteEdit',query:{websiteID:row.id,website:row.domain}});
+      if($this.device=="desktop"){
+        var routeUrl =  $this.$router.resolve({name:'websiteEdit',query:{websiteID:row.id,website:row.domain}});
+        window.open(routeUrl.href,'_blank');
+      }else{
+        $this.$router.push({name:'websiteEdit',query:{websiteID:row.id,website:row.domain}});
+      }
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {

@@ -25,6 +25,7 @@ const state = {
     isCnMoneyAdd:false,
     isCnCluesAdd:false,
     isEnCluesAdd:false,
+    isWebsiteLogAdd:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -152,6 +153,11 @@ const mutations = {
       state.isEnCluesAdd = true;
     }else{
       state.isEnCluesAdd = false;
+    }
+    if(permitData.includes("Website_logadd")&&data.page=="websiteLogList"){
+      state.isWebsiteLogAdd = true;
+    }else{
+      state.isWebsiteLogAdd = false;
     }
   },
 }

@@ -29,7 +29,7 @@
       </div>
     </div>
     <el-card class="box-card scroll-card comment ArticleSixFr" shadow="hover" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||articleData.issay==0&&commentList.length>0">
-      <div class="ArticleSixFrTop">
+      <div class="ArticleSixFrTop" v-bind:class="commentList.length>0?'':'no-comment'">
            <p slot="header" class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
            <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
               <div class="ueditor-panel"><vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap></div>

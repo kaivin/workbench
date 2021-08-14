@@ -433,13 +433,7 @@
   color:#FFFFFF!important;
 }
 /*移动端默认日期*/
-.el-date-picker{
-  width:80%!important;
-  .el-picker-panel__content{
-    width:90%!important;
-    margin:5%!important;
-  }
-}
+
 
 .el-popover{
   min-width:100px!important;
@@ -490,9 +484,9 @@
   width:100%;
   padding:0;
   overflow:hidden;
-  p{
+  p,div{
     font-size:16px;
-    line-height:1.5;
+    line-height:2;
   }
   img,video{
     max-width:100%;
@@ -510,6 +504,7 @@
         border-right:1px solid $primaryBorder!important;
         padding:3px 10px!important;
         background: none!important;
+        font-size: 16px;
       }
     }
   }
@@ -716,6 +711,19 @@
         height: 20px;
       }
     }
+  }
+  .table-icon{
+    .svg-i{
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+    .link{
+      cursor: pointer;
+    }
+  }
+  .logs-num{
+    color: red;
   }
   .el-popover{
     min-width: 100px!important;
@@ -1159,6 +1167,28 @@
       margin:0 auto;
     }
   }
+  .article-info{
+    .info-content{
+      padding-top: 0;
+      p,div{
+        font-size: 14px;
+      }
+      table{
+        tr{
+          td{
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+  .el-date-picker{
+    width:80%!important;
+    .el-picker-panel__content{
+      width:90%!important;
+      margin:5%!important;
+    }
+  }
 }
 @media (max-width:992px){
   .ArticleSix{
@@ -1211,8 +1241,9 @@
 
   }
 }
-@media (max-width:782px){
+@media (max-width:750px){
   .article-info{
+    padding: 20px;
     .ArticleSixFlTop{
       h1{
           font-size:22px;

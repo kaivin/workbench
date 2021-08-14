@@ -63,9 +63,13 @@
               <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
             </div>
           </div>
-          <el-button type="primary" icon="el-icon-download" size="small" v-on:click="dialogImportVisible = true">导入</el-button>
-          <el-button type="primary" icon="el-icon-upload2" size="small" @click="dialogExportVisible = true">导出</el-button>
-          <el-button type="primary" size="small" icon="el-icon-search" @click="openSearchDialog()" v-if="device==='mobile'">高级查询</el-button>
+          <div class="clues-title">
+            <div class="clues-title-btn">
+                <el-button type="primary" size="small" class="derived" v-on:click="dialogImportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导入数据</el-button>
+                <el-button type="primary" size="small" class="derived" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                <el-button type="primary" size="small" icon="el-icon-search" @click="openSearchDialog()" v-if="device==='mobile'">高级查询</el-button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="card-content" ref="tableContent">

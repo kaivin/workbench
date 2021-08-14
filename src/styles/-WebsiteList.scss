@@ -11,7 +11,7 @@
         .border-wrap{
             border:0px!important;
             overflow:initial;
-            .borderver{width:1px;height:15px;background:#a5a5a5;display:inline-block;margin-top:17px;}
+            .borderver{width:1px;height:15px;background:#a5a5a5;display:inline-block;margin-top:13px;}
             .border-row + .border-row{border:0px;}
             .border-row .border-cell + .border-cell{border:0px;}
             &.post-class .txt-font.border-cell{
@@ -36,6 +36,10 @@
                         border-radius:4px;
                         background:#fff;
                         box-shadow:9px 9px 21px rgba(100,130,171,0.35);
+                        transition: all .3s;
+                        &:hover{
+                            box-shadow:none;
+                        }
                         .el-button{
                             position:absolute;
                             right:0px;
@@ -47,23 +51,20 @@
                             background:#1e252e;
                             border-radius:0px 4px 4px 0px;
                             font-size:16px;
-                            vertical-align:middle;
                             height:36px;
                             display:block;
                             margin-right:0px!important;
+                            transition: all .3s;
                             span{
                                 display:inline-block;
                                 .svg-i{
-                                    float:left;
                                     width:16px;
                                     height:16px;
-                                    display:inline-block;
-                                    vertical-align:middle;
                                     margin-right:10px;
                                 }
                             }
-                            &:hover{
-                                background:#2e84f6;
+                            &:active{
+                                font-size: 14px;
                             }
                         }
                         .el-input--suffix{
@@ -129,8 +130,9 @@
 .WebsiteOne{
     background:#fff;
     border-radius:8px;
+    padding: 20px 30px;
     .WebsiteOneTable{
-        padding-right:5%;
+        padding-right: 30px;
         li{
             clear:both;
             display:block;
@@ -168,6 +170,10 @@
                             margin-right:10px;
                             color:$menuActiveText;
                             font-size:13px;
+                            cursor: pointer;
+                            &:hover{
+                                text-decoration: underline;
+                            }
                             i{
                                 float:left;
                                 margin-right:5px;
@@ -176,7 +182,6 @@
                     }
                 }
                 &.WebsiteOneDomain{
-                    width:40%;
                     a{
                         line-height:32px;
                         margin-left:10px;
@@ -186,12 +191,19 @@
                             text-decoration:underline;
                         }
                     }
+                }
+                &.WebsiteOneStatus{
+                    width: 100%;
+                    .item-column{
+                        .table-tag{
+                            .el-tag{
+                                margin: 2px 2px 2px 0;
+                            }
+                        }
+                    }
                 }             
                 &.WebsiteOneIp{
-                    width:100%;
-                    .EditPostInput{
-                        max-width:300px;
-                    }
+                    width:66.6667%;
                     .item-wrap{
                         a{
                             float:left;
@@ -261,17 +273,12 @@
                     }
                 }
                 &.WebsiteOneTag{
-                    width:100%;
-                    .EditPostInput{
-                        max-width:300px;
-                        margin-right:15px;
-                    }
-                }
-                &.WebsiteOneDomainHeader{
-                    width:100%;
-                    .EditPostInput{
-                        max-width:300px;
-                        margin-right:15px;
+                    width:66.6667%;
+                    .item-wrap{
+                        padding: 0 8px;
+                        .item-tag{
+                            margin: 2px;
+                        }
                     }
                 }
             }
@@ -289,9 +296,14 @@
                 font-size:15px;
                 line-height:32px;
                 color:#1a1a1a;
-                width:105px;
-                padding-right:0px;
+                width:116px;
+                padding-right:10px;
                 text-align:right;
+                .svg-i{
+                    font-size: 16px;
+                    color: red;
+                    cursor: pointer;
+                }
                 &+label{
                     line-height:20px;
                 }
@@ -314,7 +326,7 @@
         }
     }
     .WebsiteOneBtn.WebServerAddEditBtn{
-        padding:20px 0px 0px 104px;
+        padding:20px 0px 30px 116px;
     }
 }
 .drawerBg{

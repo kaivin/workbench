@@ -31,6 +31,25 @@
                 width: 1px;
                 background: linear-gradient(#1d212a 15%,#feffff 50%,#1d212a 85%);
             }
+            .notice-button{
+                margin-right: 20px;
+                position: relative;
+                z-index: 2;
+                cursor: pointer;
+                .svg-i{
+                    display: inline-block;
+                    height: 36px;
+                    line-height: 36px;
+                    font-size: 24px;
+                    color: #d8d8d8;
+                }
+                .el-badge__content{
+                    line-height: 15px;
+                }
+                .el-badge__content.is-fixed{
+                    transform: translateY(-30%) translateX(80%);
+                }
+            }
             .el-dropdown-link{
                 font-size:0;
                 line-height:0;

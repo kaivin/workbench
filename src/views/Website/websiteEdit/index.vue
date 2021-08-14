@@ -1,8 +1,7 @@
 ﻿<template>
-  <div class="page-root" ref="boxPane">
+  <div class="page-root scroll-panel" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
         <div class="card-content WebsiteOne" ref="cardContent">
-          <div class="scroll-panel" v-bind:style="{height:scrollHeight+'px'}">
           <ul class="WebsiteOneTable clearfix">
               <li v-if="writePermit.includes('domain')||readPermit.includes('domain')">
                   <div class="AddEditPostItem flex-wrap clearfix">
@@ -59,9 +58,9 @@
                   </div>
               </li>
               <li>
-                  <div class="AddEditPostItem flex-wrap clearfix">
-                      <label>状态：</label>
-                    <div class="item-column flex">
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneStatus">
+                    <label>状态：</label>
+                    <div class="item-column flex-content">
                       <template v-if="formData.is_online">
                         <div class="table-icon" v-if="formData.speedcheckstatus==1">
                           <i class="svg-i online" v-if="openstatus==0" title="正常"><svg-icon icon-class="runnormal" class-name="disabled" /></i>
@@ -117,7 +116,7 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('ip')||readPermit.includes('ip')">
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneIp">
+                  <div class="AddEditPostItem flex-wrap clearfix">
                       <label>IP：</label>
                       <el-input
                         v-model="formData.ip"
@@ -126,7 +125,9 @@
                         :disabled="!writePermit.includes('ip')"
                         clearable>
                       </el-input>
-                      <div class="item-wrap">
+                  </div>
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneIp">
+                    <div class="item-wrap">
                         <a :href="'https://www.ipip.net/ip/'+formData.ip+'.html'" target="_blank" class="link">IP查询</a>
                         <a :href="'http://ping.chinaz.com/'+formData.ip" target="_blank" class="link">PING国内检测</a>
                         <a :href="'https://asm.ca.com/zh_cn/ping.php?IP='+formData.ip" target="_blank" class="link">PING全球检测</a>
@@ -424,7 +425,7 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('domain_attr')||readPermit.includes('domain_attr')">
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneTag">
+                  <div class="AddEditPostItem flex-wrap clearfix">
                       <label>网站标签：</label>
                       <el-input
                         v-model="formData.domain_attr"
@@ -434,13 +435,15 @@
                         class="EditPostInput flex-content"
                         clearable>
                       </el-input>
-                      <div class="item-wrap">
-                        <el-button class="item-tag" type="primary" v-for="(item,index) in attrTagList" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="mini" v-on:click="clickAttrTag(item.name)">{{item.name}}</el-button>
-                      </div>
+                  </div>
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneTag">
+                    <div class="item-wrap">
+                      <el-button class="item-tag" type="primary" v-for="(item,index) in attrTagList" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="mini" v-on:click="clickAttrTag(item.name)">{{item.name}}</el-button>
+                    </div>
                   </div>
               </li>
               <li v-if="writePermit.includes('domain_header')||readPermit.includes('domain_header')">
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneDomainHeader">
+                  <div class="AddEditPostItem flex-wrap clearfix">
                       <label>主机头：</label>
                       <el-input
                         v-model="formData.domain_header"
@@ -450,6 +453,8 @@
                         @input="hostChangeHandler"
                         clearable>
                       </el-input>
+                  </div>
+                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneTag">
                       <div class="item-wrap">
                         <el-button class="item-tag" type="primary" v-for="(item,index) in hostTagList" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="mini" v-on:click="clickHostTag(item.name)">{{item.name}}</el-button>
                       </div>
@@ -457,7 +462,30 @@
               </li>
               <li>
                   <div class="AddEditPostItem flex-wrap clearfix WebsiteOneBak">
-                      <label>备注：</label>
+                      <label>
+                        <el-popover
+                          placement="left"
+                          width="400"
+                          trigger="hover">
+                          <div class="remarks-content">
+                            <p><strong>以下情况请添加备注：</strong></p>
+                            <p>1.上线时间；</p>
+                            <p>2. 上线后2、3天的蜘蛛与收录表现情况；</p>
+                            <p>3.一周左右的收录与流量；</p>
+                            <p>4.表现较好时的流量；</p>
+                            <p>5.网站异常，较大波动，被K惩罚的时间；</p>
+                            <p>6.异常后做的处理；</p>
+                            <p>7.对网站进行改版等较大改动；</p>
+                            <p>8.其他认为需要记录分析的情况。</p>
+                            <p><strong>格式：#时间 内容</strong></p>
+                            <p><strong>示例：</strong></p>
+                            <p>#2021-06-18</p>
+                            <p>网站上线</p>
+                          </div>
+                          <i slot="reference" class="svg-i"><svg-icon icon-class="tips" class-name="disabled" /></i>
+                        </el-popover>
+                        备注：
+                      </label>
                       <el-input
                         type="textarea"
                         :autosize="{ minRows:5, maxRows:10}"
@@ -467,27 +495,6 @@
                         class="EditPostInput flex-content"
                         clearable>
                       </el-input>
-                    <el-popover
-                      placement="left"
-                      width="400"
-                      trigger="hover">
-                      <div class="remarks-content">
-                        <p><strong>以下情况请添加备注：</strong></p>
-                        <p>1.上线时间；</p>
-                        <p>2. 上线后2、3天的蜘蛛与收录表现情况；</p>
-                        <p>3.一周左右的收录与流量；</p>
-                        <p>4.表现较好时的流量；</p>
-                        <p>5.网站异常，较大波动，被K惩罚的时间；</p>
-                        <p>6.异常后做的处理；</p>
-                        <p>7.对网站进行改版等较大改动；</p>
-                        <p>8.其他认为需要记录分析的情况。</p>
-                        <p><strong>格式：#时间 内容</strong></p>
-                        <p><strong>示例：</strong></p>
-                        <p>#2021-06-18</p>
-                        <p>网站上线</p>
-                      </div>
-                      <i slot="reference" class="el-icon-s-opportunity"></i>
-                    </el-popover>
                   </div>
               </li>
               <li class="WebsiteOneFoot">
@@ -515,13 +522,10 @@
               <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
               <el-button type="primary" class="resetBtn" size="small" v-on:click="syncMessage()">同步留言板权限</el-button>
           </div>
-          </div>
         </div>
     </el-card>
   </div>
 </template>
-
-
 <script>
 import { mapGetters } from 'vuex'
 export default {
@@ -529,7 +533,6 @@ export default {
   data() {
     return {
       menuButtonPermit:[],
-      scrollHeight:200,
       formData:{
         id:0,
         language:"",
@@ -588,31 +591,6 @@ export default {
       'userInfo',
       'device'
     ]),
-  },
-  mounted(){
-      const $this = this;
-      this.$nextTick(function () {
-        $this.scrollHeight = $this.$refs.boxPane.offsetHeight-40;
-        // 40：page-root上下内边距；20：按钮父级上下内边距；
-      });
-      window.onresize = () => {
-          return (() => {
-            $this.scrollHeight = $this.$refs.boxPane.offsetHeight-40;
-            // 40：page-root上下内边距；20：按钮父级上下内边距；
-          })()
-      };
-  },
-  watch: {
-      scrollHeight(val) {
-        if (!this.timer) {
-          this.scrollHeight = val
-          this.timer = true
-          const $this = this
-          setTimeout(function() {
-            $this.timer = false
-          }, 400)
-        }
-      },
   },
   created(){
     var $this = this;
@@ -1130,7 +1108,12 @@ export default {
     linkPage(){
       var $this = this;
       if($this.formData.ip!=""){
-        $this.$router.push({path:'/Webserver/lists',query:{IP:$this.formData.ip}});
+        if($this.device=="desktop"){
+          var routeUrl =  $this.$router.resolve({path:'/Webserver/lists',query:{IP:$this.formData.ip}});
+          window.open(routeUrl.href,'_blank');
+        }else{
+          $this.$router.push({path:'/Webserver/lists',query:{IP:$this.formData.ip}});
+        }
       }
     },
     // 同步留言板权限

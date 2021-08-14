@@ -25,6 +25,7 @@ const state = {
   addPromotedChannel:false,
   addCnProcess:false,
   addCnMoney:false,
+  addWebsiteLog:1,
 }
 
 const mutations = {
@@ -163,6 +164,9 @@ const mutations = {
   CLOSE_CNMONEY: (state) => {
     state.addCnMoney = false
   },
+  ADD_WEBSITELOG: (state) => {
+    state.addWebsiteLog +=1
+  },
 }
 
 const actions = {
@@ -291,6 +295,9 @@ const actions = {
   },
   closeCnMoney({ commit }) {
     commit('CLOSE_CNMONEY')
+  },
+  addWebsiteLog({ commit }) {
+    commit('ADD_WEBSITELOG')
   },
 }
 
