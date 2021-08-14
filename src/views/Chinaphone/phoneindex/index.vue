@@ -4,7 +4,6 @@
       <el-card class="flex-panel" shadow="hover">
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <div class="side-button">
-            <el-button type="primary" plain size="mini" icon="el-icon-plus" v-if="menuButtonPermit.includes('Chinaphone_add')" v-on:click="addClues()">新增询盘</el-button>
             <el-button type="primary" plain size="mini" icon="el-icon-search" v-if="menuButtonPermit.includes('Chinaphone_search')" v-on:click="searchStatisticsData()">搜索数据</el-button>
             <el-button type="primary" plain size="mini" icon="el-icon-coin" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="statisticsClues()">统计分析</el-button>
           </div>
@@ -1044,10 +1043,6 @@ export default {
     // 修改询盘
     editTableRow(row,index){
       this.$router.push({path:'/Chinaphone/addEditClues',query:{ID:row.id}});
-    },
-    // 新增询盘跳转
-    addClues(){
-      this.$router.push({path:'/Chinaphone/addEditClues'});
     },
     // 搜索统计数据跳转
     searchStatisticsData(){

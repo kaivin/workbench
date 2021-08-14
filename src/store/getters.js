@@ -45,6 +45,8 @@
     addCnProcess:state => state.app.addCnProcess,
     isCnMoneyAdd: state => state.api.isCnMoneyAdd,
     addCnMoney:state => state.app.addCnMoney,
+    isCnCluesAdd: state => state.api.isCnCluesAdd,
+    isEnCluesAdd: state => state.api.isEnCluesAdd,
 }
 export default getters
   

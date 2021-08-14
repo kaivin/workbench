@@ -23,6 +23,8 @@ const state = {
     isPromotedChannelAdd:false,
     isCnProcessAdd:false,
     isCnMoneyAdd:false,
+    isCnCluesAdd:false,
+    isEnCluesAdd:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -140,6 +142,16 @@ const mutations = {
       state.isCnMoneyAdd = true;
     }else{
       state.isCnMoneyAdd = false;
+    }
+    if(permitData.includes("Chinaphone_add")&&data.page==""){
+      state.isCnCluesAdd = true;
+    }else{
+      state.isCnCluesAdd = false;
+    }
+    if(permitData.includes("Enphone_add")&&data.page==""){
+      state.isEnCluesAdd = true;
+    }else{
+      state.isEnCluesAdd = false;
     }
   },
 }

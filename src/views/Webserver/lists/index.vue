@@ -223,7 +223,6 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
 import { mapGetters } from 'vuex'
 export default {
@@ -600,9 +599,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.page-root{
-    ::v-deep .search-dialog{
-      height: 400px!important;
-    }
-}
 </style>

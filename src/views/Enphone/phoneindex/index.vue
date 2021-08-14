@@ -4,14 +4,13 @@
       <el-card class="flex-panel" shadow="hover">
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <div class="side-button">
-            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_add')" v-on:click="addClues()"><i class="svg-i" ><svg-icon icon-class="add_en" /></i>新增询盘</el-button>
-            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="searchStatisticsData()"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
-            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_countlist')" v-on:click="statisticsClues()"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>统计分析</el-button>
+            <el-button type="primary" plain size="mini" icon="el-icon-search" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="searchStatisticsData()">搜索数据</el-button>
+            <el-button type="primary" plain size="mini" icon="el-icon-coin" v-if="menuButtonPermit.includes('Enphone_countlist')" v-on:click="statisticsClues()">统计分析</el-button>
           </div>
           <template v-for="(item,index) in defaultData.data">
             <dl class="phone-list" v-if="item.phone.length>0" v-bind:key="index">
               <dt><span>{{item.brandname}}</span></dt>
-              <dd v-for="phone in item.phone" :key="phone.id" :title="phone.phonenumber+phone.othername" v-on:click="phoneJump(phone.id)"><span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
+              <dd v-for="(phone,index) in item.phone" :key="index" :title="phone.phonenumber+phone.othername" v-on:click="phoneJump(phone.id)"><span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
             </dl>
           </template>
         </el-scrollbar>
@@ -1053,10 +1052,6 @@ export default {
     // 修改询盘
     editTableRow(row,index){
       this.$router.push({path:'/Enphone/addEditClues',query:{ID:row.id}});
-    },
-    // 新增询盘跳转
-    addClues(){
-      this.$router.push({path:'/Enphone/addEditClues'});
     },
     // 搜索统计数据跳转
     searchStatisticsData(){

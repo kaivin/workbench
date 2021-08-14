@@ -1,5 +1,5 @@
 ﻿<template>
-  <div class="page-root scroll-panel" ref="boxPane">
+  <div class="page-root scroll-panel user-center" ref="boxPane">
       <table class="table-panel">
           <tr>
               <th colspan="2">基本信息</th>
@@ -815,47 +815,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .table-panel{
-        width: 100%;
-        overflow: hidden;
-        border-top: 1px solid #ddd;
-        border-left: 1px solid #ddd;
-        border-collapse:collapse;
-        border-spacing:0;
-        tr{
-            width: 100%;
-            border-bottom: 1px solid #ddd;
-            th,td{
-                padding: 15px;
-                border-right: 1px solid #ddd;
-            }
-            th{
-                font-size: 18px;
-                text-align: left;
-                font-weight: bold;
-                background: #f5f5f5;
-            }
-            td{
-                line-height: 24px;
-                text-align: right;
-            }
-            td+td{
-                text-align: left;    
-                word-break: break-all;
-            }
-        }
-    }
-    .el-form{
-        padding-right: 20px;
-    }
-    .item-form{
-        position: relative;
-        padding-right: 130px;
-        .btn-code{
-            position: absolute;
-            right:0;
-            top:0;
-            width: 112px;
-        }
-    }
 </style>

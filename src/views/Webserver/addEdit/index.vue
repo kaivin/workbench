@@ -176,8 +176,6 @@
     </el-card>
   </div>
 </template>
-
-
 <script>
 import { mapGetters } from 'vuex'
 export default {
@@ -502,5 +500,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
 </style>

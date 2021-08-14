@@ -2,7 +2,7 @@
     <div class="login-container">
         <Particles />
         <el-form v-bind:model="loginForm" v-bind:rules="rules" ref="loginForm" class="login-form">
-            <div class="login-title"><img class="logo-img" v-bind:src="logo" alt=""> <span>{{websiteName}}</span></div>
+            <div class="logo"><img class="logo-img" v-bind:src="logo" alt=""><img class="logo-title" v-bind:src="logoFont" alt=""></div>
             <el-form-item prop="username">
                 <el-input 
                     v-model="loginForm.username" 
@@ -74,6 +74,7 @@ import Particles from '@/components/Particles/index.vue';
 import { validEmail,isEmpty } from '@/utils/validate';
 import { mapGetters } from 'vuex'
 import logo from "@/assets/logo.png";
+import logoTitle from "@/assets/logo_font.png";
 const defaultSettings = require('@/settings.js');
 export default {
     name:'Login',
@@ -102,6 +103,7 @@ export default {
         return{
             websiteName:defaultSettings.title,
             logo: logo,
+            logoFont:logoTitle,
             loginForm:{
                 username:'',
                 password:''
@@ -430,117 +432,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.login-container{
-    width:100%;
-    height:100%;
-    overflow: hidden;
-    position: relative;
-}
-.add-edit-dialog{
-    .el-form{
-        padding-right: 20px;
-    }
-    .item-form{
-        position: relative;
-        padding-right: 130px;
-        .btn-code{
-            position: absolute;
-            right:0;
-            top:0;
-            width: 112px;
-        }
-    }
-}
-.login-form{
-    position: absolute;
-    width:280px;
-    text-align:center;
-    left:50%;
-    top:50%;
-    margin-left:-140px;
-    transform: translateY(-50%);
-    >p{
-        width: 100%;
-        height: 20px;
-        text-align: right;
-        color: #fff;
-        margin: -12px 0 0;
-        span{
-            font-size: 14px;
-            line-height: 20px;
-            cursor: pointer;
-            opacity: .7;
-            transition: all .3s;
-            &:hover{
-                opacity: 1;
-            }
-        }
-    }
-    .login-title{
-        width:100%;
-        text-align: center;
-        line-height: 0;
-        font-size:0;
-        margin-bottom:20px;
-        .logo-img{
-            display: inline-block;
-            height:48px;
-            vertical-align: middle;
-            margin-right: 20px;
-        }
-        span{
-            display: inline-block;
-            height:48px;
-            line-height: 48px;
-            font-size:24px;
-            color: $--color-primary;
-            vertical-align: middle;
-        }
-    }
-    ::v-deep .el-input{
-        input.el-input__inner{
-            width:100%;
-            height:50px;
-            line-height:50px;
-            background:#2d2d2d;
-            background:rgba(45,45,45,.15);
-            border-radius:6px;
-            border:1px solid #3d3d3d;
-            border:1px solid rgba(255,255,255,.15);
-            box-shadow:0 2px 3px 0 rgba(0,0,0,.1) inset;
-            font-size:14px;
-            color:#fff;
-            text-shadow:0 1px 2px rgba(0,0,0,.1);
-            transition:all .2s;
-        }
-        ::v-deep input:-moz-placeholder{color:#fff}
-        ::v-deep input:-ms-input-placeholder{color:#fff}
-        ::v-deep input::-webkit-input-placeholder{color:#fff}
-        ::v-deep input:focus{
-            outline:0;
-            box-shadow:0 2px 3px 0 rgba(0,0,0,.1) inset,0 2px 7px 0 rgba(0,0,0,.2)
-        }
-    }
-    button.el-button{
-        cursor:pointer;
-        width:100%;
-        height:48px;
-        padding:0;
-        border-radius:6px;
-        border:0;
-        box-shadow:0 15px 30px 0 rgba(255,255,255,.25) inset,0 2px 7px 0 rgba(0,0,0,.2);
-        font-size:14px;
-        font-weight:700;
-        color:#fff;
-        text-shadow:0 1px 2px rgba(0,0,0,.1);
-        transition:all .2s;
-    }
-    button.el-button:hover{
-        box-shadow:0 15px 30px 0 rgba(255,255,255,.15) inset,0 2px 7px 0 rgba(0,0,0,.2)
-    }
-    button.el-button:active{
-        box-shadow:0 5px 8px 0 rgba(0,0,0,.1) inset,0 1px 4px 0 rgba(0,0,0,.1);
-        border:0;
-    }
-}
 </style>

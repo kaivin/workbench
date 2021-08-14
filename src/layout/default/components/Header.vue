@@ -35,6 +35,8 @@
               <div class="item-button" v-if="isPromotedChannelAdd" v-on:click="promotedChannelAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加渠道</span></div>
               <div class="item-button" v-if="isCnProcessAdd" v-on:click="cnProcessAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加数据</span></div>
               <div class="item-button" v-if="isCnMoneyAdd" v-on:click="cnMoneyAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加充值记录</span></div>
+              <div class="item-button" v-if="isCnCluesAdd" v-on:click="cnCluesAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">新增询盘</span></div>
+              <div class="item-button" v-if="isEnCluesAdd" v-on:click="enCluesAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">新增询盘</span></div>
             </div>
         </div>
         <div class="header-right">
@@ -55,7 +57,6 @@
         </div>
     </div>
 </template>
-
 <script>
 import logo from "@/assets/logo.png";
 import logoTitle from "@/assets/logo_font.png";
@@ -99,6 +100,8 @@ export default {
         'isPromotedChannelAdd',
         'isCnProcessAdd',
         'isCnMoneyAdd',
+        'isCnCluesAdd',
+        'isEnCluesAdd',
       ]),
     },
     methods:{
@@ -231,6 +234,18 @@ export default {
         // 添加中文推广消费充值记录
         cnMoneyAdd(){
           this.$store.dispatch('app/addCnMoney')
+        },
+        // 添加中文询盘
+        cnCluesAdd(){
+          var $this = this;
+          var routeUrl =  $this.$router.resolve({path:'/Chinaphone/addEditClues'});
+          window.open(routeUrl.href,'_blank');
+        },
+        // 添加英文询盘
+        enCluesAdd(){
+          var $this = this;
+          var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues'});
+          window.open(routeUrl.href,'_blank');
         },
     }
 }
