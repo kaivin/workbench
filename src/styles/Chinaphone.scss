@@ -141,7 +141,6 @@
   }
 }
 .search-wrap{
-  padding-bottom:15px;
   .search-panelOne{
     .el-date-editor,.el-select,.el-checkbox,.el-input{
       float: left;
@@ -182,7 +181,7 @@
   }
 }
 @media (max-width:1500px){
-  
+
 .search-wrap{
   &.flex-wrap{
     display: block;

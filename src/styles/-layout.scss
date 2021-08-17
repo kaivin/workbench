@@ -7,7 +7,7 @@
     .header{
         width:100%;
         position: relative;
-        height: 80px;
+        height: 64px;
         z-index: 1100;
         display: flex;
         -webkit-box-align: center;
@@ -38,16 +38,16 @@
                 cursor: pointer;
                 .svg-i{
                     display: inline-block;
-                    height: 36px;
-                    line-height: 36px;
-                    font-size: 24px;
+                    height: 32px;
+                    line-height: 32px;
+                    font-size: 18px;
                     color: #d8d8d8;
                 }
                 .el-badge__content{
                     line-height: 15px;
                 }
                 .el-badge__content.is-fixed{
-                    transform: translateY(-30%) translateX(80%);
+                    transform: translateY(-40%) translateX(100%);
                 }
             }
             .el-dropdown-link{
@@ -57,11 +57,11 @@
             }
             .user-icon{
                 display: inline-block;
-                width: 36px;
-                height: 36px;
-                font-size: 22px;
+                width: 32px;
+                height: 32px;
+                font-size: 18px;
                 text-align: center;
-                line-height: 36px;
+                line-height: 32px;
                 border-radius: 100%;
                 background: #63666c;
                 vertical-align: middle;
@@ -69,9 +69,9 @@
             }
             .user-name{
                 display: inline-block;
-                line-height: 36px;
+                line-height: 32px;
                 color: #fff;
-                font-size: 16px;
+                font-size: 14px;
                 font-weight: 500;
                 margin-left: 12px;
                 vertical-align: middle;
@@ -80,9 +80,9 @@
         .header-center{
             flex: 1;
             height: 100%;
-            padding: 22px 0;
+            padding: 16px 0;
             .header-search{
-                width: 340px;
+                width: 300px;
                 float:left;
                 line-height:0;
                 font-size:0;
@@ -92,7 +92,7 @@
                         background: #343840;
                         border: 1px solid #343840;
                         color: #fff;
-                        font-size: 16px;
+                        font-size: 14px;
                     }
                     .el-input-group__append{
                         background-color: #32588c;
@@ -103,7 +103,7 @@
                         .el-button.el-button--medium{
                             font-size:0;
                             line-height:0;
-                            padding: 0 20px;
+                            padding: 0 12px;
                             vertical-align: top;
                             >span{
                                 font-size:0;
@@ -112,17 +112,17 @@
                                 .search-icon{
                                     display: inline-block;
                                     vertical-align: top;
-                                    height: 34px;
-                                    line-height: 34px;
+                                    height: 32px;
+                                    line-height: 32px;
                                     font-size: 16px;
                                     color: #fff;
                                 }
                                 .search-font{
                                     display: inline-block;
-                                    height: 34px;
-                                    line-height: 34px;
+                                    height: 32px;
+                                    line-height: 32px;
                                     color: #fff;
-                                    font-size: 16px;
+                                    font-size: 14px;
                                     font-weight: 500;
                                     margin-left: 10px;
                                     vertical-align: top;
@@ -139,14 +139,14 @@
                 text-align: right;
                 .item-button{
                     display: inline-block;
-                    height: 36px;
-                    border-radius: 5px;
+                    height: 32px;
+                    border-radius: 4px;
                     background: #f9a500;
                     text-align: center;
                     line-height:0;
                     font-size:0;
-                    padding: 0 20px;
-                    margin-right: 20px;
+                    padding: 0 12px;
+                    margin-right: 12px;
                     cursor: pointer;
                     box-shadow: 0 5px 20px rgba(247,142,66,.57);
                     transition: all .3s;
@@ -155,17 +155,17 @@
                     }
                     .button-icon{
                         display: inline-block;
-                        height: 36px;
-                        font-size: 17px;
-                        line-height: 34px;
+                        height: 32px;
+                        font-size: 14px;
+                        line-height: 32px;
                         vertical-align: top;
                         color: #ffffff;
                     }
                     .button-font{
                         display: inline-block;
-                        line-height: 36px;
+                        line-height: 32px;
                         color: #fff;
-                        font-size: 16px;
+                        font-size: 14px;
                         font-weight: 500;
                         margin-left: 10px;
                         vertical-align: top;
@@ -190,7 +190,7 @@
             .logo-link {
                 display: block;
                 height: 100%;
-                padding: 22px 23px;
+                padding: 16px 23px;
                 font-size:0;
                 line-height:0;
                 position: relative;
@@ -204,7 +204,7 @@
                 .logo-title {
                     height: 22px;
                     margin-left: 10px;
-                    margin-top: 7px;
+                    margin-top: 5px;
                 }
             }
         }
@@ -213,7 +213,7 @@
 .hamburger-container {
     display: block;
     float:left;
-    line-height: 36px;
+    line-height: 32px;
     padding: 0 15px;
     cursor: pointer;
     font-size: 0;

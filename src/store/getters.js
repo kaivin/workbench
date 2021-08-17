@@ -49,6 +49,7 @@
     isEnCluesAdd: state => state.api.isEnCluesAdd,
     isWebsiteLogAdd: state => state.api.isWebsiteLogAdd,
     addWebsiteLog:state => state.app.addWebsiteLog,
+    customerTipsCount:state => state.enphone.customerTipsCount,
 }
 export default getters
   

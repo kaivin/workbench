@@ -1,8 +1,8 @@
 ﻿<template>
-  <div class="page-root flex-box EnphoneCard" ref="boxPane">
-    <div class="flex-box flex-column EnphoneCardFl"  ref="EnphoneCardFl">
-      <el-card class="flex-panel" shadow="hover">
-        <el-scrollbar wrap-class="scrollbar-wrapper">
+  <div class="page-root flex-box no-padding EnphoneCard" ref="boxPane">
+    <div class="sub-router">
+      <el-scrollbar wrap-class="scrollbar-wrapper">
+        <div class="sub-wrapper">
           <div class="side-button">
             <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Chinaphone_search')" v-on:click="searchStatisticsData()"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
             <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="statisticsClues()"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>统计分析</el-button>
@@ -11,432 +11,434 @@
             <dt><span>{{item.name}}</span></dt>
             <dd v-for="phone in item.phone" :key="phone.id" :title="phone.phonenumber+phone.othername" v-on:click="phoneJump(phone.id)"><span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
           </dl>
-        </el-scrollbar>
-      </el-card>
+        </div>
+      </el-scrollbar>
     </div>
-    <div class="flex-panel EnphoneCardFr" :style="{width:EnphoneCardFrWidth + 'px'}">
-      <div class="absolute-panel">
-        <div class="phone-index flex-box flex-column" v-if="!phoneID">
-          <div class="num-box">
-            <el-row :gutter="15" v-if="defaultData.show==2">
-              <el-col :xs="24" :sm="12">
-                <el-card class="box-card" shadow="hover">
-                  <div slot="header">
+    <div class="flex-content EnphoneCardFr">
+      <div class="abs-panel">
+        <div class="scroll-panel" ref="scrollPane">
+          <div class="phone-index flex-box flex-column" v-if="!phoneID">
+            <div class="num-box">
+              <el-row :gutter="15" v-if="defaultData.show==2">
+                <el-col :xs="24" :sm="12">
+                  <el-card class="box-card" shadow="hover">
+                    <div slot="header">
+                        <div class="card-header">
+                          <span>部门总计</span>
+                        </div>
+                      </div>
+                      <div class="card-content flex-box">
+                        <div class="flex-panel item-num">
+                          <dl>
+                            <dt>今天</dt>
+                            <dd>{{defaultData.allgrouptodaynumber}}</dd>
+                          </dl>
+                        </div>
+                        <div class="flex-panel item-num">
+                          <dl>
+                            <dt>昨天</dt>
+                            <dd>{{defaultData.allgrouplastnumber}}</dd>
+                          </dl>
+                        </div>
+                        <div class="flex-panel item-num">
+                          <dl>
+                            <dt>本月</dt>
+                            <dd>{{defaultData.allgroupnumber}}</dd>
+                          </dl>
+                        </div>
+                      </div>
+                  </el-card>
+                </el-col>
+                <el-col :xs="24" :sm="12">
+                  <el-card class="box-card" shadow="hover">
+                    <div slot="header">
                       <div class="card-header">
-                        <span>部门总计</span>
+                        <span>中文总计</span>
                       </div>
                     </div>
                     <div class="card-content flex-box">
                       <div class="flex-panel item-num">
                         <dl>
                           <dt>今天</dt>
-                          <dd>{{defaultData.allgrouptodaynumber}}</dd>
+                          <dd>{{defaultData.alltodaynumber}}</dd>
                         </dl>
                       </div>
                       <div class="flex-panel item-num">
                         <dl>
                           <dt>昨天</dt>
-                          <dd>{{defaultData.allgrouplastnumber}}</dd>
+                          <dd>{{defaultData.alllastnumber}}</dd>
                         </dl>
                       </div>
                       <div class="flex-panel item-num">
                         <dl>
                           <dt>本月</dt>
-                          <dd>{{defaultData.allgroupnumber}}</dd>
+                          <dd>{{defaultData.allnumber}}</dd>
                         </dl>
                       </div>
                     </div>
-                </el-card>
-              </el-col>
-              <el-col :xs="24" :sm="12">
-                <el-card class="box-card" shadow="hover">
-                  <div slot="header">
-                    <div class="card-header">
-                      <span>中文总计</span>
+                  </el-card>
+                </el-col>
+              </el-row>
+              <el-row :gutter="15" v-else>
+                <el-col :span="24">
+                  <el-card class="box-card" shadow="hover">
+                    <div slot="header">
+                      <div class="card-header">
+                        <span>中文总计</span>
+                      </div>
                     </div>
+                    <div class="card-content flex-box">
+                      <div class="flex-panel item-num">
+                        <dl>
+                          <dt>今天</dt>
+                          <dd>{{defaultData.alltodaynumber}}</dd>
+                        </dl>
+                      </div>
+                      <div class="flex-panel item-num">
+                        <dl>
+                          <dt>昨天</dt>
+                          <dd>{{defaultData.alllastnumber}}</dd>
+                        </dl>
+                      </div>
+                      <div class="flex-panel item-num">
+                        <dl>
+                          <dt>本月</dt>
+                          <dd>{{defaultData.allnumber}}</dd>
+                        </dl>
+                      </div>
+                    </div>
+                  </el-card>
+                </el-col>
+              </el-row>
+            </div>
+            <div class="flex-panel">
+              <el-card class="box-card canvas-card" shadow="hover">
+                <div slot="header">
+                  <div class="card-header">
+                    <span v-if="defaultData.show==2">本部门询盘月度趋势</span>
+                    <span v-else>中文询盘月度趋势</span>
                   </div>
-                  <div class="card-content flex-box">
-                    <div class="flex-panel item-num">
-                      <dl>
-                        <dt>今天</dt>
-                        <dd>{{defaultData.alltodaynumber}}</dd>
-                      </dl>
-                    </div>
-                    <div class="flex-panel item-num">
-                      <dl>
-                        <dt>昨天</dt>
-                        <dd>{{defaultData.alllastnumber}}</dd>
-                      </dl>
-                    </div>
-                    <div class="flex-panel item-num">
-                      <dl>
-                        <dt>本月</dt>
-                        <dd>{{defaultData.allnumber}}</dd>
-                      </dl>
-                    </div>
+                </div>
+                <div class="card-content flex-box">
+                  <div class="canvas-wrap" v-if="device==='desktop'">
+                    <div id="cluesChart" class="chart-canvas"></div>
                   </div>
-                </el-card>
-              </el-col>
-            </el-row>
-            <el-row :gutter="15" v-else>
-              <el-col :span="24">
-                <el-card class="box-card" shadow="hover">
-                  <div slot="header">
-                    <div class="card-header">
-                      <span>中文总计</span>
-                    </div>
+                  <div class="canvas-wrap" v-else>
+                    <canvas id="cluesChart" class="chart-canvas"></canvas>
                   </div>
-                  <div class="card-content flex-box">
-                    <div class="flex-panel item-num">
-                      <dl>
-                        <dt>今天</dt>
-                        <dd>{{defaultData.alltodaynumber}}</dd>
-                      </dl>
-                    </div>
-                    <div class="flex-panel item-num">
-                      <dl>
-                        <dt>昨天</dt>
-                        <dd>{{defaultData.alllastnumber}}</dd>
-                      </dl>
-                    </div>
-                    <div class="flex-panel item-num">
-                      <dl>
-                        <dt>本月</dt>
-                        <dd>{{defaultData.allnumber}}</dd>
-                      </dl>
-                    </div>
-                  </div>
-                </el-card>
-              </el-col>
-            </el-row>
-          </div>
-          <div class="flex-panel">
-            <el-card class="box-card canvas-card" shadow="hover">
-              <div slot="header">
-                <div class="card-header">
-                  <span v-if="defaultData.show==2">本部门询盘月度趋势</span>
-                  <span v-else>中文询盘月度趋势</span>
                 </div>
-              </div>
-              <div class="card-content flex-box">
-                <div class="canvas-wrap" v-if="device==='desktop'">
-                  <div id="cluesChart" class="chart-canvas"></div>
-                </div>
-                <div class="canvas-wrap" v-else>
-                  <canvas id="cluesChart" class="chart-canvas"></canvas>
-                </div>
-              </div>
-            </el-card>
-          </div>
-        </div>
-        <el-card class="box-card EnphoneCardFrDate" v-else shadow="hover">
-          <div slot="header">
-            <div class="card-header" ref="headerPane">
-                <div class="search-wrap" v-if="device==='desktop'">
-                  <el-date-picker
-                      v-model="searchData.date"
-                      type="daterange"
-                      align="right"
-                      value-format = "yyyy-MM-dd"
-                      unlink-panels
-                      range-separator="至"
-                      start-placeholder="开始日期"
-                      end-placeholder="结束日期"
-                      style="float:left;margin: 5px;"
-                      :picker-options="pickerRangeOptions">
-                  </el-date-picker>
-                  <el-input
-                    style="width: 150px;margin: 5px;float:left;"
-                    placeholder="域名、备注等"
-                    v-model="searchData.name"
-                    clearable>
-                  </el-input>
-                  <el-select v-model="searchData.mode" clearable placeholder="渠道" style="width:120px;margin: 5px;float:left;">
-                      <el-option
-                          v-for="item in sourceList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                      </el-option>
-                  </el-select>
-                  <el-select v-model="searchData.typekey" clearable placeholder="分类" style="width:100px;margin: 5px;float:left;">
-                      <el-option
-                          v-for="item in productTypeList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                      </el-option>
-                  </el-select>
-                  <el-select v-model="searchData.level_id" clearable placeholder="级别" style="width:100px;margin: 5px;float:left;">
-                      <el-option
-                          v-for="item in levelList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                      </el-option>
-                  </el-select>
-                  <el-select v-model="searchData.productlevel" clearable placeholder="类别" style="width:100px;margin: 5px;float:left;">
-                    <el-option
-                      v-for="item in categoryList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                  <el-select v-model="searchData.userid" clearable placeholder="提供者" style="width:100px;margin: 5px;float:left;">
-                    <el-option
-                      v-for="item in userList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                  <el-select v-model="searchData.device" clearable placeholder="设备" style="width:80px;margin: 5px;float:left;">
-                    <el-option
-                      v-for="item in deviceList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                  <el-select v-model="searchData.effective" clearable placeholder="价值" style="width:80px;margin: 5px;float:left;">
-                    <el-option
-                      v-for="item in effectiveList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                  <el-button class="item-input" type="primary" icon="el-icon-search" @click="searchResult" style="margin: 5px;float:left;">查询</el-button>
-                </div>
-                <div class="clues-info">
-                  <p>
-                      <span class="item-span-1">共有<strong>{{infoData.totalCount}}</strong>条。</span>
-                      <span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条。</span>
-                      <span class="item-span-2">无效：<strong>{{infoData.invalidCount}}</strong>条。</span>
-                      <span class="item-span-3">其中：一类产品<strong>{{infoData.levelOneCount}}</strong>个，二类产品<b>{{infoData.levelTwoCount}}</b>个。</span>
-                  </p>
-                  <p>
-                      <span class="item-span-1">本月共有<strong>{{infoData.totalCountMonth}}</strong>条信息。</span>
-                      <span class="item-span-2">有效：<strong>{{infoData.effectiveCountMonth}}</strong>条。</span>
-                      <span class="item-span-2">无效：<strong>{{infoData.invalidCountMonth}}</strong>条。</span>
-                      <span class="item-span-3">其中：一类产品<strong>{{infoData.levelOneCountMonth}}</strong>个，二类产品<b>{{infoData.levelTwoCountMonth}}</b>个。</span>
-                  </p>
-                </div>
-                <div class="clues-title">
-                     <h2><i class="svg-i" ><svg-icon icon-class="telBlue" /></i>{{currentPhone}}</h2>
-                     <div class="clues-title-btn">
-                        <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
-                        <el-button type="primary" size="small" class="editorNote" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_othereditall')" v-on:click="editPageNote()"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改当前页备注</el-button>
-                     </div>
-                </div>
+              </el-card>
             </div>
           </div>
-          <div class="card-content" ref="tableContent">
-            <el-table
-              border
-              ref="simpleTable"
-              :data="tableData"
-              tooltip-effect="dark"
-              stripe
-              class="SiteTable"
-              style="width: 100%"
-              :height="tableHeight"
-              row-key="id"
-              >
-              <el-table-column
-                prop="id"
-                label="ID"
-                width="80"
-                >
-              </el-table-column>
-              <el-table-column
-                prop="phoneText"
-                label="电话"
-                width="80"
-                >
-              </el-table-column>
-              <el-table-column
-                prop="xuntime"
-                label="时间"
-                width="150"
-                >
-                <template slot-scope="scope">
-                  <div class="table-text">
-                    <p>{{scope.row.xuntime}}</p>
-                    <p>{{scope.row.weekday}}</p>
+          <el-card class="box-card scroll-card EnphoneCardFrDate" v-else shadow="hover">
+            <div slot="header">
+              <div class="card-header" ref="headerPane">
+                  <div class="search-wrap" v-if="device==='desktop'">
+                    <el-date-picker
+                        v-model="searchData.date"
+                        type="daterange"
+                        align="right"
+                        value-format = "yyyy-MM-dd"
+                        unlink-panels
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        style="float:left;margin: 5px;"
+                        :picker-options="pickerRangeOptions">
+                    </el-date-picker>
+                    <el-input
+                      style="width: 150px;margin: 5px;float:left;"
+                      placeholder="域名、备注等"
+                      v-model="searchData.name"
+                      clearable>
+                    </el-input>
+                    <el-select v-model="searchData.mode" clearable placeholder="渠道" style="width:120px;margin: 5px;float:left;">
+                        <el-option
+                            v-for="item in sourceList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-select v-model="searchData.typekey" clearable placeholder="分类" style="width:100px;margin: 5px;float:left;">
+                        <el-option
+                            v-for="item in productTypeList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-select v-model="searchData.level_id" clearable placeholder="级别" style="width:100px;margin: 5px;float:left;">
+                        <el-option
+                            v-for="item in levelList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-select v-model="searchData.productlevel" clearable placeholder="类别" style="width:100px;margin: 5px;float:left;">
+                      <el-option
+                        v-for="item in categoryList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                    <el-select v-model="searchData.userid" clearable placeholder="提供者" style="width:100px;margin: 5px;float:left;">
+                      <el-option
+                        v-for="item in userList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                    <el-select v-model="searchData.device" clearable placeholder="设备" style="width:80px;margin: 5px;float:left;">
+                      <el-option
+                        v-for="item in deviceList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                    <el-select v-model="searchData.effective" clearable placeholder="价值" style="width:80px;margin: 5px;float:left;">
+                      <el-option
+                        v-for="item in effectiveList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                    <el-button class="item-input" type="primary" icon="el-icon-search" @click="searchResult" style="margin: 5px;float:left;">查询</el-button>
                   </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="sourcename"
-                label="域名/渠道"
-                width="100"
-                >
-                <template slot-scope="scope">
-                  <div class="table-text">
-                    <p><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
-                    <p>{{scope.row.sourcename}}</p>
+                  <div class="clues-info">
+                    <p>
+                        <span class="item-span-1">共有<strong>{{infoData.totalCount}}</strong>条。</span>
+                        <span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条。</span>
+                        <span class="item-span-2">无效：<strong>{{infoData.invalidCount}}</strong>条。</span>
+                        <span class="item-span-3">其中：一类产品<strong>{{infoData.levelOneCount}}</strong>个，二类产品<b>{{infoData.levelTwoCount}}</b>个。</span>
+                    </p>
+                    <p>
+                        <span class="item-span-1">本月共有<strong>{{infoData.totalCountMonth}}</strong>条信息。</span>
+                        <span class="item-span-2">有效：<strong>{{infoData.effectiveCountMonth}}</strong>条。</span>
+                        <span class="item-span-2">无效：<strong>{{infoData.invalidCountMonth}}</strong>条。</span>
+                        <span class="item-span-3">其中：一类产品<strong>{{infoData.levelOneCountMonth}}</strong>个，二类产品<b>{{infoData.levelTwoCountMonth}}</b>个。</span>
+                    </p>
                   </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="sourcename"
-                label="地区/归属地"
-                width="100"
-                >
-                <template slot-scope="scope">
-                  <div class="table-text">
-                    <p>{{scope.row.province}}/{{scope.row.city}}</p>
+                  <div class="clues-title">
+                      <h2><i class="svg-i" ><svg-icon icon-class="telBlue" /></i>{{currentPhone}}</h2>
+                      <div class="clues-title-btn">
+                          <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                          <el-button type="primary" size="small" class="editorNote" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_othereditall')" v-on:click="editPageNote()"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改当前页备注</el-button>
+                      </div>
                   </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="keyproduct"
-                label="意向设备"
-                width="100"
+              </div>
+            </div>
+            <div class="card-content" ref="tableContent">
+              <el-table
+                border
+                ref="simpleTable"
+                :data="tableData"
+                tooltip-effect="dark"
+                stripe
+                class="SiteTable"
+                style="width: 100%"
+                :height="tableHeight"
+                row-key="id"
                 >
-                <template slot-scope="scope">
-                  <span class="product-span" v-bind:class="'level_'+scope.row.productlevel"><i>[{{scope.row.productlevel}}]</i>{{scope.row.keyproduct}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="effective"
-                label="有效"
-                width="60"
-                >
-                <template slot-scope="scope">
-                  <div class="table-tag"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                  <div class="table-text" v-if="!scope.row.isEffective"><p>{{scope.row.invalidcause}}</p></div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="addusername"
-                label="添加人"
-                width="80"
-                >
-              </el-table-column>
-              <el-table-column
-                prop="addtime"
-                label="添加时间"
-                width="150"
-                >
-              </el-table-column>
-              <el-table-column
-                prop="levelname"
-                label="等级"
-                min-width="60"
-                >
-                <template slot-scope="scope">
-                  <div class="table-tag"><span class="level" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="levelname"
-                label="备注/原因"
-                min-width="120"
-                >
-                <template slot-scope="scope">
-                  <div class="table-text">
-                    <p>{{scope.row.custormcause}}</p>
-                    <p>{{scope.row.custormremark}}</p>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                v-if="writepermit&&(permitField.includes('domain')||permitField.includes('url'))"
-                key="a"
-                prop="url"
-                label="域名/链接"
-                min-width="150"
-                >
-                <template slot-scope="scope">
-                  <div class="table-input">
-                    <el-input size="small" v-model="scope.row.domain" v-if="permitField.includes('domain')"></el-input>
-                    <el-input size="small" v-model="scope.row.url" v-if="permitField.includes('url')"></el-input>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                v-if="writepermit&&(permitField.includes('search')||permitField.includes('searchword'))"
-                key="b"
-                prop="searchword"
-                label="平台/关键词"
-                min-width="110"
-                >
-                <template slot-scope="scope">
-                  <div class="table-input">
-                    <el-input size="small" v-model="scope.row.search" v-if="permitField.includes('search')"></el-input>
-                    <el-input size="small" v-model="scope.row.searchword" v-if="permitField.includes('searchword')"></el-input>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                v-if="writepermit&&permitField.includes('remark')"
-                key="c"
-                prop="remark"
-                label="备注"
-                min-width="140"
-                >
-                <template slot-scope="scope">
-                  <div class="table-input">
-                    <el-input size="small" type="textarea" rows="3" resize="none" v-model="scope.row.remark" v-if="permitField.includes('remark')"></el-input>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                v-if="writepermit&&(permitField.includes('userid')||permitField.includes('device'))"
-                key="d"
-                prop="searchword"
-                label="提供者/设备"
-                min-width="100"
-                >
-                <template slot-scope="scope">
-                  <div class="table-input">
-                    <el-input size="small" v-model="scope.row.useridname" v-if="permitField.includes('userid')"></el-input>
-                    <el-input size="small" v-model="scope.row.device" v-if="permitField.includes('device')"></el-input>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_otheredit'))&&device==='desktop'"
-                width="88"
-                align="center"
-                prop="operations"
-                label="修改">
-                <template #default="scope">
-                  <div class="table-button">
-                    <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_otheredit')">修改</el-button>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_edit')||menuButtonPermit.includes('Chinaphone_delete'))&&device==='desktop'"
-                :width="operationsWidth"
-                align="center"
-                prop="operations"
-                label="操作">
-                <template #default="scope">
-                  <div class="table-button">
-                    <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_edit')">修改</el-button>
-                    <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_delete')">删除</el-button>
-                  </div>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-          <div class="pagination-panel" ref="pagePane">
-            <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="searchData.page"
-              :page-sizes="pageSizeList"
-              :page-size="searchData.limit"
-              :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
-              :total="totalDataNum">
-            </el-pagination>
-          </div>
-        </el-card>
+                <el-table-column
+                  prop="id"
+                  label="ID"
+                  width="80"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="phoneText"
+                  label="电话"
+                  width="80"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="xuntime"
+                  label="时间"
+                  width="150"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-text">
+                      <p>{{scope.row.xuntime}}</p>
+                      <p>{{scope.row.weekday}}</p>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="sourcename"
+                  label="域名/渠道"
+                  width="100"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-text">
+                      <p><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
+                      <p>{{scope.row.sourcename}}</p>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="sourcename"
+                  label="地区/归属地"
+                  width="100"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-text">
+                      <p>{{scope.row.province}}/{{scope.row.city}}</p>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="keyproduct"
+                  label="意向设备"
+                  width="100"
+                  >
+                  <template slot-scope="scope">
+                    <span class="product-span" v-bind:class="'level_'+scope.row.productlevel"><i>[{{scope.row.productlevel}}]</i>{{scope.row.keyproduct}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="effective"
+                  label="有效"
+                  width="60"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-tag"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
+                    <div class="table-text" v-if="!scope.row.isEffective"><p>{{scope.row.invalidcause}}</p></div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="addusername"
+                  label="添加人"
+                  width="80"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="addtime"
+                  label="添加时间"
+                  width="150"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="levelname"
+                  label="等级"
+                  min-width="60"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-tag"><span class="level" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="levelname"
+                  label="备注/原因"
+                  min-width="120"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-text">
+                      <p>{{scope.row.custormcause}}</p>
+                      <p>{{scope.row.custormremark}}</p>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-if="writepermit&&(permitField.includes('domain')||permitField.includes('url'))"
+                  key="a"
+                  prop="url"
+                  label="域名/链接"
+                  min-width="150"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-input">
+                      <el-input size="small" v-model="scope.row.domain" v-if="permitField.includes('domain')"></el-input>
+                      <el-input size="small" v-model="scope.row.url" v-if="permitField.includes('url')"></el-input>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-if="writepermit&&(permitField.includes('search')||permitField.includes('searchword'))"
+                  key="b"
+                  prop="searchword"
+                  label="平台/关键词"
+                  min-width="110"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-input">
+                      <el-input size="small" v-model="scope.row.search" v-if="permitField.includes('search')"></el-input>
+                      <el-input size="small" v-model="scope.row.searchword" v-if="permitField.includes('searchword')"></el-input>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-if="writepermit&&permitField.includes('remark')"
+                  key="c"
+                  prop="remark"
+                  label="备注"
+                  min-width="140"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-input">
+                      <el-input size="small" type="textarea" rows="3" resize="none" v-model="scope.row.remark" v-if="permitField.includes('remark')"></el-input>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-if="writepermit&&(permitField.includes('userid')||permitField.includes('device'))"
+                  key="d"
+                  prop="searchword"
+                  label="提供者/设备"
+                  min-width="100"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-input">
+                      <el-input size="small" v-model="scope.row.useridname" v-if="permitField.includes('userid')"></el-input>
+                      <el-input size="small" v-model="scope.row.device" v-if="permitField.includes('device')"></el-input>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_otheredit'))&&device==='desktop'"
+                  width="88"
+                  align="center"
+                  prop="operations"
+                  label="修改">
+                  <template #default="scope">
+                    <div class="table-button">
+                      <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_otheredit')">修改</el-button>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_edit')||menuButtonPermit.includes('Chinaphone_delete'))&&device==='desktop'"
+                  :width="operationsWidth"
+                  align="center"
+                  prop="operations"
+                  label="操作">
+                  <template #default="scope">
+                    <div class="table-button">
+                      <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_edit')">修改</el-button>
+                      <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_delete')">删除</el-button>
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <div class="pagination-panel" ref="pagePane">
+              <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="searchData.page"
+                :page-sizes="pageSizeList"
+                :page-size="searchData.limit"
+                :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                :total="totalDataNum">
+              </el-pagination>
+            </div>
+          </el-card>
+        </div>
       </div>
     </div>
     <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="400px">

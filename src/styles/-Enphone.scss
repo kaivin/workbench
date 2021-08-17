@@ -1,86 +1,107 @@
 ﻿.EnphoneCard{
-    .EnphoneCardFl{
-        width:210px;
-        margin-right: 15px;
-        .side-button{
-          width: 100%;
-          overflow: hidden;
-          .el-button{
-            display: block;
+    .sub-router{
+        width:200px;
+        .sub-wrapper{
+          padding: 30px 10px;
+          .side-button{
             width: 100%;
-            margin:0px 0px 10px 0px;
-            &.el-button--primary.is-plain{
-                color: #333;
-                background: #f6f7fb;
-                border-color: #f6f7fb;
-                line-height:24px;
-                padding-top:2px;
-                padding-bottom:2px;
-                span{
-                    display: inline-block;
-                    line-height:24px;
-                    font-size: 14px;
-                    i{
-                       display: inline-block;
-                       margin-right: 10px;
-                       font-size: 15px;
-                       .svg-icon{
-                            width:20px;
-                            height:20px;
-                            vertical-align: middle;
-                           &.add_en{
-                                width:16px;
-                                height:16px;
-                           }
-                       }
-                    }
-                }
-                &:hover{
-                    background: #dbe6ec;
-                    border-color: #dbe6ec;
-                }
+            overflow: hidden;
+            .el-button{
+              display: block;
+              width: 100%;
+              margin:0px 0px 10px 0px;
+              &.el-button--primary.is-plain{
+                  color: #808080;
+                  background: #ffffff;
+                  border-color: #ffffff;
+                  line-height:24px;
+                  padding-top:2px;
+                  padding-bottom:2px;
+                  span{
+                      display: inline-block;
+                      line-height:24px;
+                      font-size: 14px;
+                      i{
+                         display: inline-block;
+                         margin-right: 10px;
+                         font-size: 15px;
+                         .svg-icon{
+                              width:20px;
+                              height:20px;
+                              vertical-align: middle;
+                             &.add_en{
+                                  width:16px;
+                                  height:16px;
+                             }
+                         }
+                      }
+                  }
+                  &:hover{
+                      background: #dae6ec;
+                      border-color: #dae6ec;
+                      color: #333333;
+                  }
+              }
             }
           }
-        }
-        .phone-list{
-          width: 100%;
-          padding-top:23px;
-          dt{
+          .phone-list{
             width: 100%;
-            font-size:0;
-            line-height:0;
-            padding-bottom:7px;
-            position: relative;
-            padding-left:21px;
-            &:after{
-                content:'';
-                position: absolute;
-                left:0px;
-                top:6px;
-                width:11px;
-                height:11px;
-                border:2px solid $menuActiveText;
-                box-sizing: border-box;
-                border-radius:50%;
+            padding-top:23px;
+            dt{
+              width: 100%;
+              font-size:0;
+              line-height:0;
+              padding-bottom:7px;
+              position: relative;
+              padding-left:21px;
+              &:after{
+                  content:'';
+                  position: absolute;
+                  left:0px;
+                  top:6px;
+                  width:11px;
+                  height:11px;
+                  border:2px solid $menuActiveText;
+                  box-sizing: border-box;
+                  border-radius:50%;
+              }
+              span{
+                vertical-align: top;
+                line-height: 24px;
+                font-size: 16px;
+                color: $menuActiveText;
+              }
             }
-            span{
-              vertical-align: top;
-              line-height: 24px;
-              font-size: 16px;
-              color: $menuActiveText;
-            }
-          }
-          dd{
-            width: 100%;
-            line-height:0;
-            font-size:0;
-            padding-left:21px;
-            padding-top:3px;
-            padding-bottom:3px;
-            cursor: pointer;
-            &:hover{
+            dd{
+              width: 100%;
+              line-height:0;
+              font-size:0;
+              padding-left:21px;
+              padding-top:3px;
+              padding-bottom:3px;
+              cursor: pointer;
+              &:hover{
+                span,i,b,em{
+                  text-decoration: underline;
+                }
+              }
               span,i,b,em{
-                text-decoration: underline;
+                font-style: normal;
+                font-size: 12px;
+                line-height:24px;
+                font-weight: normal;
+                color:#52575c;
+              }
+              i{
+                margin-left: 5px;
+                font-weight: bold;
+                color: $red;
+              }
+              em{
+                color: $green;
+              }
+              b{
+                color:$menuActiveText;
               }
             }
             span,i,b,em{
@@ -126,21 +147,6 @@
             }
           }
         }
-        .el-card__body{
-          padding:0px;
-          height: 100%;
-          overflow: hidden;
-          .el-scrollbar{
-            height: 100%;
-            .el-scrollbar__wrap{
-              overflow-x: hidden;
-              padding:30px 15px;
-            }
-            .el-scrollbar__view{
-              padding-bottom: 15px;
-            }
-          }
-        }
     }
     .EnphoneCardFr{
         position: relative;
@@ -150,6 +156,27 @@
             padding: 5px;
           }
         }
+    }
+    .tips-list{
+      width: 100%;
+      overflow: hidden;
+      .item-tips{
+        width: 100%;
+        line-height: 32px;
+        text-align: center;
+        margin-bottom: 10px;
+        cursor: pointer;
+        &.type-1{
+          border: 1px solid #97b2ff;
+          background: #e9ffea;
+          color: #d51d1d;
+        }
+        &.type-2{
+          border: 1px solid #ffd8a4;
+          background: #fffae9;
+          color: #379bff;
+        }
+      }
     }
 }
 .box-card.EnphoneCardFrDate{
@@ -429,5 +456,26 @@
   }
   .WebServerAddEditBtn.EnphoneAddEditBtn{    
     padding:20px 0px 20px 0px;
+  }
+}
+.en-phone{
+  .box-card{
+    background: #fff!important;
+    padding: 15px!important;
+    border-radius: 8px!important;
+    .el-card__header{
+      margin-bottom:0!important;
+    }
+    .search-wrap{
+      .item-search{
+        float:left;
+      }
+    }
+  }
+  .el-table--border.table-border{
+    border-bottom: 1px solid #dfe6ec!important;
+    th > .cell{
+      line-height: 1.4;
+    }
   }
 }

@@ -323,11 +323,12 @@ export function cluesRegionValid(data) {
   });
 }
 
-// 询盘统计获取搜索条件数据
-export function cluesAnalysisSystemData() {
+// 业务员数据统计初始化页面信息东西
+export function cluesAnalysisInitSystemData(data) {
   return request({
-    url: "/hxindex/Enphone/allcondition",
-    method: "POST"
+    url: "/hxindex/Enphone/phonecount",
+    method: "POST",
+    data
   });
 }
 // 询盘统计获取搜索结果数据

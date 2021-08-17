@@ -143,6 +143,18 @@ function setRoutes(routers){
         component: () => import(/* webpackChunkName: "addEditEnClues" */ "@/views/Enphone/addEditClues/index.vue"),
         meta: {id:'addEditEnClues-72',title: '询盘添加|修改', icon: null, keepAlive:false},
       },
+      {
+        path: "/Enphone/statisticClues",
+        name:'statisticEnClues',
+        component: () => import(/* webpackChunkName: "statisticEnClues" */ "@/views/Enphone/statisticClues/index.vue"),
+        meta: {id:'statisticEnClues-72',title: '业务员数据统计', icon: null, keepAlive:false},
+      },
+      {
+        path: "/Enphone/searchClues",
+        name:'searchEnClues',
+        component: () => import(/* webpackChunkName: "searchEnClues" */ "@/views/Enphone/searchClues/index.vue"),
+        meta: {id:'searchEnClues-72',title: '搜索数据', icon: null, keepAlive:false},
+      },
     ]
   }]
   accessedRouters.forEach(function(item,index){

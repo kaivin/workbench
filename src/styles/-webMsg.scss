@@ -1,0 +1,51 @@
+﻿.web-msg{
+    .sub-router-list{
+        width: 100%;
+        overflow: hidden;
+        padding: 15px;
+        li{
+            width: 100%;
+            margin: 2px 0;
+            border: 1px solid #fafafa;
+            border-radius: 4px;
+            padding: 0 10px;
+            line-height:0;
+            font-size:0;
+            cursor: pointer;
+            &.active,&:hover{
+                border: 1px solid #BDDEFF;
+                background-color: #F6FBFF;
+            }
+            span{
+                color: $menuActiveText;
+            }
+            b{
+                font-weight: bold;
+                color: #f73a3e;
+                margin-left: 5px;
+            }
+            span,b{
+                display: inline-block;
+                height: 28px;
+                line-height: 28px;
+                vertical-align: top;
+                font-size: 12px;
+            }
+        }
+    }
+    .search-wrap{
+        .item-search{
+            float:left;
+            padding: 10px 10px 10px 0;
+        }
+        .date-picker{
+            vertical-align: top;
+        }
+        .input-panel{
+            width: 190px;
+        }
+        .select-panel{
+            width: 150px;
+        }
+    }
+}

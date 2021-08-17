@@ -22,3 +22,23 @@
     top:0;
     bottom:0;
 }
+.sub-router{
+    width:180px;
+    background-color: #fafafa;
+    border-left: 1px solid #e8e8e8;
+    .el-scrollbar{
+        height: 100%;
+        .el-scrollbar__wrap{
+            overflow-x: hidden;
+        }
+        .el-scrollbar__bar.is-horizontal{
+            display: none;
+        }
+    }
+}
+.no-padding{
+    padding:0!important;
+}
+.relative{
+    position: relative;
+}

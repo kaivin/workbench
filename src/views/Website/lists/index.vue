@@ -292,7 +292,6 @@
               <el-table-column
                 v-if="menuButtonPermit.includes('Website_loglist')"
                 label="工作日志"
-                align="center"
                 width="140"
                 fixed="right"
                 >

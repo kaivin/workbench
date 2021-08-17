@@ -35,7 +35,12 @@ export default {
   },
   methods: {
     jumpLink:function(path,index){
-      this.$router.push(path);
+      console.log(path,"路由跳转");
+      if(path === "/Webmsg/allmsg"){
+        this.$router.push({path,query:{Status:'Untreated'}});
+      }else{
+        this.$router.push(path);
+      }
     }
   }
 }

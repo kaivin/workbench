@@ -40,14 +40,20 @@
     initCluesEditInfo,
     cluesUrlGetPhone,
     cluesRegionValid,
-    cluesAnalysisSystemData,
+    cluesAnalysisInitSystemData,
     cluesAnalysisResultData,
 } from '@/api/enphone'
 
-const state = {}
-const mutations = {}
+const state = {
+    customerTipsCount:0,
+}
+const mutations = {
+    SET_COUNT: (state, count) => {
+    state.customerTipsCount = count
+  },
+}
 const actions = {
-    // 中文电话列表数据获取动作
+    // 英文电话列表数据获取动作
     phoneListAction({ commit, state }) {
         return new Promise((resolve, reject) => {
             getPhoneList().then(response => {
@@ -57,7 +63,7 @@ const actions = {
             })
         })
     },
-    // 添加中文电话动作
+    // 添加英文电话动作
     phoneAddAction({ commit }, data){
         return new Promise((resolve, reject) => {
             phoneAdd(data).then(response => {
@@ -67,7 +73,7 @@ const actions = {
             });
         });
     },
-    // 编辑中文电话动作
+    // 编辑英文电话动作
     phoneEditAction({ commit }, data){
         return new Promise((resolve, reject) => {
             phoneEdit(data).then(response => {
@@ -77,7 +83,7 @@ const actions = {
             });
         });
     },
-    // 删除中文电话动作
+    // 删除英文电话动作
     phoneDeleteAction({ commit }, data){
         return new Promise((resolve, reject) => {
             phoneDelete(data).then(response => {
@@ -297,6 +303,7 @@ const actions = {
     cluesPhoneIndexDataAction({ commit, state }) {
         return new Promise((resolve, reject) => {
             cluesPhoneIndexData().then(response => {
+                commit('SET_COUNT',response.warningcount);
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -333,7 +340,7 @@ const actions = {
             })
         })
     },
-    // 询盘系统页面当前电话询盘数据获电商人员批量编辑动作
+    // 询盘系统页面当前电话询盘数据电商人员批量编辑动作
     cluesCurrentPhoneDataEleEditPageAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             cluesCurrentPhoneDataEleEditPage(data).then(response => {
@@ -343,7 +350,7 @@ const actions = {
             })
         })
     },
-    // 询盘系统页面当前电话询盘数据获电商人员批量编辑动作
+    // 询盘系统页面当前电话询盘数据删除动作
     cluesCurrentPhoneDataDeleteAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             cluesCurrentPhoneDataDelete(data).then(response => {
@@ -403,8 +410,6 @@ const actions = {
             })
         })
     },
-
-
     // 询盘添加修改获取条件数据动作
     cluesAddEditDataAction({ commit, state }) {
         return new Promise((resolve, reject) => {
@@ -466,10 +471,10 @@ const actions = {
         })
     },
 
-    // 询盘统计获取搜索条件数据
-    cluesAnalysisSystemDataAction({ commit, state }) {
+    // 业务员数据统计初始化页面信息东西
+    cluesAnalysisInitSystemDataAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
-            cluesAnalysisSystemData().then(response => {
+            cluesAnalysisInitSystemData(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

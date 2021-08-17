@@ -3,6 +3,15 @@
     <el-card class="box-card scroll-card" shadow="hover">
         <div class="card-content EnphoneAddEdit" ref="tableContent">
             <div class="EnphoneAddEditMain">
+                <div class="en-phone-tips">
+                  <div class="item-input" style="display:inline-block;"><span>客服提醒</span></div>
+                  <div class="item-input" style="display:inline-block;"><el-checkbox v-model="checked1" size="small" label="修改提醒" border></el-checkbox></div>
+                  <div class="item-input" style="display:inline-block;"><span>内部提醒：</span></div>
+                  <div class="item-input" style="display:inline-block;"><el-input v-model="input" size="small" placeholder=""></el-input></div>
+                  <div class="item-input" style="display:inline-block;"><span>业务员提醒：</span></div>
+                  <div class="item-input" style="display:inline-block;"><el-input v-model="input" size="small" disabled placeholder=""></el-input></div>
+                  <div class="item-input" style="display:inline-block;"><el-button class="item-input" size="small" type="primary" icon="el-icon-edit" @click="searchResult">修改</el-button></div>
+                </div>
                 <div class="EnphoneAddEditMainItem phone-list">
                   <dl>
                     <dt>来源电话：<span>*</span></dt>
@@ -146,7 +155,7 @@
                     <dl style="width:10.4%;">
                       <dt>客户当地时间：<span>*</span></dt>
                       <dd>
-                        <el-select size="small"style="width:100%" v-model="formData.timediff" placeholder="请选择">
+                        <el-select size="small" style="width:100%" v-model="formData.timediff" placeholder="请选择">
                           <el-option
                             v-for="item in timediffList"
                             :key="item.value"
@@ -159,7 +168,7 @@
                     <dl style="width:21.4%;">
                       <dt>来自大洲：</dt>
                       <dd>
-                        <el-select size="small"style="width:100%" v-model="formData.continent" placeholder="请选择">
+                        <el-select size="small" style="width:100%" v-model="formData.continent" placeholder="请选择">
                           <el-option
                             v-for="item in continentList"
                             :key="item.value"
@@ -183,7 +192,7 @@
                     <dl>
                       <dt>来自类型：<span>*</span></dt>
                       <dd>
-                        <el-select v-model="formData.messagetype" size="small"style="width:100%" clearable placeholder="请选择">
+                        <el-select v-model="formData.messagetype" size="small" style="width:100%" clearable placeholder="请选择">
                             <el-option
                             v-for="item in messagetypeList"
                             :key="item.value" 
@@ -234,7 +243,7 @@
                     <dl style="width:11.6%;">
                       <dt>设备：</dt>
                       <dd>
-                        <el-select v-model="formData.device" size="small"style="width:100%" clearable placeholder="请选择">
+                        <el-select v-model="formData.device" size="small" style="width:100%" clearable placeholder="请选择">
                             <el-option
                             v-for="item in deviceList"
                             :key="item.value"
@@ -247,7 +256,7 @@
                     <dl style="width:6.6%;">
                       <dt>级别：</dt>
                       <dd>
-                        <el-select v-model="formData.level_id" size="small"style="width:100%" clearable placeholder="请选择">
+                        <el-select v-model="formData.level_id" size="small" style="width:100%" clearable placeholder="请选择">
                             <el-option
                             v-for="item in level_idList"
                             :key="item.label"

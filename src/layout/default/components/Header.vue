@@ -9,7 +9,7 @@
         <div class="header-center">
             <hamburger id="hamburger-container" v-if="device==='desktop'" v-bind:is-active="sidebar.opened" class="hamburger-container" v-on:toggleClick="toggleSideBar" />
             <div class="header-search" v-if="isArticleSearch&&device==='desktop'">
-              <el-input placeholder="请输入内容" v-model="searchWord" class="article-search">
+              <el-input placeholder="请输入内容" v-model="searchWord" size="small" class="article-search">
                 <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span><span class="search-font" v-if="device==='desktop'">搜索</span></el-button>
               </el-input>
             </div>
@@ -42,7 +42,7 @@
         </div>
         <div class="header-right">
           <div class="notice-button" v-if="isEnCluesAdd">
-            <el-badge :value="60" :max="99" class="item">
+            <el-badge :value="customerTipsCount" :hidden="customerTipsCount==0" :max="99" class="item">
               <i class="svg-i"><svg-icon icon-class="notice" class-name="disabled" /></i>
             </el-badge>
           </div>
@@ -109,6 +109,7 @@ export default {
         'isCnCluesAdd',
         'isEnCluesAdd',
         'isWebsiteLogAdd',
+        'customerTipsCount',
       ]),
     },
     methods:{

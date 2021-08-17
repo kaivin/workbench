@@ -5,7 +5,7 @@
         <el-table
           ref="simpleTable"
           :data="tableData"
-          class="SiteTable"
+          class="SiteTable homeTable"
           style="width: 100%"
           :default-expand-all="true"
           :indent="0"
