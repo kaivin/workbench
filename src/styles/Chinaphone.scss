@@ -156,8 +156,14 @@
    }
   .search-panelThree{
     float: left;
-    width: 102px;
+    width: 105px;
     margin-left: 2%;
+    .el-input{
+      .el-input__inner{
+        padding: 0 5px;
+        text-align: center;
+      }
+    }
     .el-checkbox{width: 100%; margin-top:10px;}
   }
   .search-panelFour{

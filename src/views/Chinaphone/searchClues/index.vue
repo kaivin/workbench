@@ -384,9 +384,11 @@
         </div>
         <div class="pagination-panel" ref="pagePane">
             <el-pagination
+                @size-change="handleSizeChange"
+                :page-sizes="pageSizeList"
                 @current-change="handleCurrentChange"
                 :current-page="searchData.page"
-                :layout="device==='mobile'?'jumper':'total, prev, pager, next, jumper'"
+                :layout="device==='mobile'?'jumper':'total, sizes, prev, pager, next, jumper'"
                 :total="totalDataNum">
             </el-pagination>
         </div>
@@ -431,6 +433,7 @@ export default {
       maxDate:[],
       minDate:[],
       maxNum:0,
+      pageSizeList:[20],
       searchData:{
         date:[],
         messageid:"",
@@ -652,6 +655,14 @@ export default {
             $this.tableData = response.data;
             $this.infoData = infoData;
             $this.totalDataNum = response.allcount;
+            $this.pageSizeList;
+            
+            var pageSizeListArr = [$this.pageSizeList];
+            if (pageSizeListArr.length > 1) {
+              pageSizeListArr.shift();
+            }
+            pageSizeListArr = [searchData.limit];
+            $this.pageSizeList = pageSizeListArr;
           }else{
             $this.$message({
               showClose: true,
@@ -797,6 +808,12 @@ export default {
           $this.searchData.productid = "";
           $this.productList = [];
         }
+    },
+    // 每页显示条数改变事件
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.searchData.limit = val;
+      this.initCluesList();
     },
     // 当前页改变事件
     handleCurrentChange(val) {

@@ -103,6 +103,29 @@
             }
           }
         }
+        .Sales-list{
+          width: 100%;
+          padding-top:23px;
+          dt{
+            color: #2e88ff;
+            background: #f6f7fb;
+            border-color: #f6f7fb;
+            line-height: 24px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            margin-bottom: 8px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            span{
+              vertical-align: top;
+              line-height: 20px;
+            }
+            i{
+              font-style: normal;
+            }
+          }
+        }
         .el-card__body{
           padding:0px;
           height: 100%;

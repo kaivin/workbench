@@ -23,6 +23,7 @@
 @import './-home.scss';
 @import './Chinaphone.scss';
 @import '-Enphone.scss';
+@import '-Sale.scss';
 .page-root{
   position:absolute;
   left:0;
@@ -130,6 +131,9 @@
 /** 分页页码统一样式 **/
 .pagination-panel{
   overflow:hidden;
+  .el-pagination__sizes{
+    display: none!important;
+  }
   &.top-page{
     .el-pagination{
       margin-top:0;
@@ -141,6 +145,30 @@
   .el-select .el-select__tags .el-tag .el-icon-close{
     right:-4px!important;
     top:-1px!important;
+  }
+  .SalesCardOne{
+    float: left;
+    padding-right: 10px;
+    &>span{
+      float: left;
+      line-height: 32px;
+      padding: 5px 0px;
+    }
+  }
+  .SalesCardcheckbox{
+    float: left;
+    line-height: 32px;
+    font-size: 14px;
+    padding: 5px 10px 5px 0px;
+  }
+  .SalesCardInput{
+    &>span{
+      float: left;
+      line-height: 32px;
+      padding: 5px 0px;
+    }
+    float: left;
+    line-height: 32px;
   }
 }
 
@@ -174,12 +202,12 @@
     flex:1;
     .search-dialog-wrap{
       width:100%;
-      height:100%;
+      /*height:100%;*/
       padding:20px;
-      overflow-y:auto;
+      /*overflow-y:auto;
       position:absolute;
       left:0;
-      top:0;
+      top:0;*/
       .item-search{
         width:100%;
         .el-input,.el-select{
@@ -628,9 +656,9 @@
   .el-table__placeholder{
     display:none!important;
   }
-  .el-table__expand-icon{
-    display:none!important;
-  }
+  //.el-table__expand-icon{
+  //  display:none!important;
+  //}
   .article-title{
     cursor:pointer;
     padding-left:10px;
