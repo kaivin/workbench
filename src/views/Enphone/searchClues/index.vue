@@ -67,7 +67,7 @@
                     </div>
                     <div class="item-search">
                         <div class="item-title">
-                            <el-checkbox class="all-select" :indeterminate="isAllTeam" border size="mini" v-model="checkAllTeam" @change="handleCheckAllTeamChange">电话全选</el-checkbox>
+                            <el-checkbox class="all-select" :indeterminate="isAllTeam" border size="mini" v-model="checkAllTeam" @change="handleCheckAllTeamChange">组别全选</el-checkbox>
                         </div>
                         <div class="unit-search">
                             <div class="unit-content">
@@ -270,8 +270,9 @@
                                 <el-radio-group class="team-list" v-model="searchData.groupurlproduct" size="mini">
                                     <el-radio class="item-radio" label="1" border>按URL</el-radio>
                                     <el-radio class="item-radio" label="2" border>按产品</el-radio>
-                                    <el-radio class="item-radio" label="3" border>按国家</el-radio>
+                                    <el-radio class="item-radio" label="6" border>按分类</el-radio>
                                     <el-radio class="item-radio" label="4" border>按大洲</el-radio>
+                                    <el-radio class="item-radio" label="3" border>按国家</el-radio>
                                     <el-radio class="item-radio" label="5" border>按组别</el-radio>
                                 </el-radio-group>
                             </div>
