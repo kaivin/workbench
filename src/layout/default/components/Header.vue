@@ -38,6 +38,7 @@
               <div class="item-button" v-if="isCnCluesAdd" v-on:click="cnCluesAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">新增询盘</span></div>
               <div class="item-button" v-if="isEnCluesAdd" v-on:click="enCluesAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">新增询盘</span></div>
               <div class="item-button" v-if="isWebsiteLogAdd" v-on:click="websiteLogAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加网站日志</span></div>
+              <div class="item-button" v-if="isWebMsgIpAdd" v-on:click="webMsgIpAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加IP白名单</span></div>
             </div>
         </div>
         <div class="header-right">
@@ -110,6 +111,7 @@ export default {
         'isEnCluesAdd',
         'isWebsiteLogAdd',
         'customerTipsCount',
+        'isWebMsgIpAdd',
       ]),
     },
     methods:{
@@ -258,6 +260,10 @@ export default {
         // 添加网站日志
         websiteLogAdd(){
           this.$store.dispatch('app/addWebsiteLog')
+        },
+        // 添加网站日志
+        webMsgIpAdd(){
+          this.$store.dispatch('app/addWebMsgIp')
         },
     }
 }

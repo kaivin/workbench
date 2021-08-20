@@ -155,6 +155,12 @@ function setRoutes(routers){
         component: () => import(/* webpackChunkName: "searchEnClues" */ "@/views/Enphone/searchClues/index.vue"),
         meta: {id:'searchEnClues-72',title: '搜索数据', icon: null, keepAlive:false},
       },
+      {
+        path: "/Enphone/editHistoryLog",
+        name:'editHistoryLog',
+        component: () => import(/* webpackChunkName: "editHistoryLog" */ "@/views/Enphone/editHistoryLog/index.vue"),
+        meta: {id:'editHistoryLog-72',title: '询盘修改日志', icon: null, keepAlive:false},
+      },
     ]
   }]
   accessedRouters.forEach(function(item,index){
@@ -188,7 +194,6 @@ const actions = {
       } else {
         accessedRoutes = setRoutes(newData);
         menuData = dataToTree(newData);
-        console.log(menuData,"菜单数据");
       }
       commit('SET_ROUTES', accessedRoutes);
       commit('SET_MENUS', menuData);

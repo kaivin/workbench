@@ -48,4 +48,93 @@
             width: 150px;
         }
     }
+    .msg-table{
+        .msg-text{
+            p{
+                display: block;
+                padding: 3px 0;
+                line-height:0;
+                font-size:0;
+                strong{
+                    display: inline-block;
+                    color: #666;
+                    font-weight: bold;
+                    font-size: 12px;
+                    vertical-align: top;
+                    line-height: 1.6;
+                }
+                &.star-p{
+                    strong{
+                        line-height: 20px;
+                    }
+                }
+                .svg-i{
+                    color: #fc5457;
+                    display: inline-block;
+                    width: 20px;
+                    height: 20px;
+                }
+                .txt-span{
+                    display: inline-block;
+                    color: #666;
+                    font-size: 12px;
+                    line-height:1.6;
+                    vertical-align: top;
+                }
+                .txt-link{
+                    display: inline-block;
+                    color: $menuActiveText;
+                    font-size: 12px;
+                    line-height: 1.6;
+                    vertical-align: top;
+                    cursor: pointer;
+                    &.num-span{
+                        margin-left: 5px;
+                    }
+                    &:hover{
+                        text-decoration: underline;
+                    }
+                }
+            }
+            .txt-api{
+                strong,span{
+                    color: #FF3300;
+                }
+            }
+            &.input-msg{
+                p{
+                    .txt-strong,.txt-span{
+                        line-height: 28px;
+                    }
+                    .checkbox-inline{
+                        margin-right:10px;
+                    }
+                }
+            }
+            &.textarea-msg{
+                p{
+                    .txt-strong{
+                        display: block;
+                        margin-bottom: 4px;
+                    }
+                }
+            }
+        }
+        .table-button{
+            .el-button{
+                margin: 4px 0;
+            }
+        }
+    }
+}
+.white-ip{
+    .search-wrap{
+        .item-search{
+            float:left;
+            padding: 10px 10px 10px 0;
+        }
+        .input-panel{
+            width: 190px;
+        }
+    }
 }

@@ -276,7 +276,7 @@ export default {
       formData.name = $this.dialogForm.name;
       formData.namecolor = $this.dialogForm.namecolor;
       var pathUrl = "";
-      if($this.dialogText=="编辑电话"){
+      if($this.dialogText=="编辑标签"){
         pathUrl = "website/websiteAttrEditAction";
       }else{
         pathUrl = "website/websiteAttrAddAction";

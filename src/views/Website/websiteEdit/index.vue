@@ -520,7 +520,6 @@
           <div class="card-header WebServerAddEditBtn WebsiteOneBtn">
               <el-button type="primary" class="updateBtn" size="small" v-on:click="updateWebsiteInfo()" v-if="menuButtonPermit.includes('Website_edit')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>更新</el-button>
               <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
-              <el-button type="primary" class="resetBtn" size="small" v-on:click="syncMessage()">同步留言板权限</el-button>
           </div>
         </div>
     </el-card>
@@ -1116,13 +1115,6 @@ export default {
         }
       }
     },
-    // 同步留言板权限
-    syncMessage(){
-      var $this = this;
-      $this.$alert('该功能暂未实现，将在留言板模块开发时实现', '提示', {
-        confirmButtonText: '确定',
-      });
-    }
   }
 }
 </script>

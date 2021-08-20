@@ -50,6 +50,9 @@
     isWebsiteLogAdd: state => state.api.isWebsiteLogAdd,
     addWebsiteLog:state => state.app.addWebsiteLog,
     customerTipsCount:state => state.enphone.customerTipsCount,
+    isWebMsgIpAdd: state => state.api.isWebMsgIpAdd,
+    addWebMsgIp:state => state.app.addWebMsgIp,
+    msgPage:state => state.webmsg.msgPage,
 }
 export default getters
   

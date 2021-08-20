@@ -26,6 +26,7 @@ const state = {
     isCnCluesAdd:false,
     isEnCluesAdd:false,
     isWebsiteLogAdd:false,
+    isWebMsgIpAdd:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -158,6 +159,11 @@ const mutations = {
       state.isWebsiteLogAdd = true;
     }else{
       state.isWebsiteLogAdd = false;
+    }
+    if(permitData.includes("Webmsg_addip")&&data.page==""){
+      state.isWebMsgIpAdd = true;
+    }else{
+      state.isWebMsgIpAdd = false;
     }
   },
 }

@@ -322,7 +322,7 @@
                 <el-table-column
                   prop="xuntime"
                   label="时间"
-                  width="180"
+                  width="200"
                   >
                   <template slot-scope="scope">
                     <div class="table-text">
@@ -427,7 +427,7 @@
                 <el-table-column
                   prop="addtime"
                   label="添/分/改/业务时间"
-                  width="140"
+                  width="160"
                   >
                   <template slot-scope="scope">
                     <div class="table-text">
@@ -486,6 +486,7 @@
                   <template #default="scope">
                     <div class="table-button">
                       <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_edit')">修改</el-button>
+                      <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)">({{scope.row.eidtnumber}})</span>
                     </div>
                   </template>
                 </el-table-column>
@@ -716,7 +717,6 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-      $this.EnphoneCardFrWidth = $this.$refs.boxPane.offsetWidth-$this.$refs.EnphoneCardFl.offsetWidth-40-15;
       if($this.$route.query.phoneID){
         $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-30-25-20-3;
       }
@@ -724,7 +724,6 @@ export default {
     if($this.$route.query.phoneID){
       window.onresize = () => {
           return (() => {
-            $this.EnphoneCardFrWidth = $this.$refs.boxPane.offsetWidth-$this.$refs.EnphoneCardFl.offsetWidth-40-15;
             $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-30-25-20-3;
             // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
           })()
@@ -1092,6 +1091,12 @@ export default {
     jumpEditPage(id){
       var $this = this;
       var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:id}});
+      window.open(routeUrl.href,'_blank');
+    },
+    // 跳转询盘修改历史页面
+    jumpEditHistoryPage(id){
+      var $this = this;
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/editHistoryLog',query:{ID:id}});
       window.open(routeUrl.href,'_blank');
     },
     // 搜索统计数据跳转

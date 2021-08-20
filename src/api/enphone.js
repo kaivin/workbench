@@ -314,14 +314,6 @@ export function cluesUrlGetPhone(data) {
     data
   });
 }
-// 询盘修改添加的地区验证
-export function cluesRegionValid(data) {
-  return request({
-    url: "/hxindex/Enphone/getcity",
-    method: "POST",
-    data
-  });
-}
 
 // 业务员数据统计初始化页面信息东西
 export function cluesAnalysisInitSystemData(data) {
@@ -331,10 +323,34 @@ export function cluesAnalysisInitSystemData(data) {
     data
   });
 }
-// 询盘统计获取搜索结果数据
-export function cluesAnalysisResultData(data) {
+// 修改客服内部提醒
+export function customerWarnEdit(data) {
   return request({
-    url: "/hxindex/Enphone/countlist",
+    url: "/hxindex/Enphone/custormwarnsub",
+    method: "POST",
+    data
+  });
+}
+// 确认阅读客服内部提醒
+export function customerWarnIsRead(data) {
+  return request({
+    url: "/hxindex/Enphone/custormwarnread",
+    method: "POST",
+    data
+  });
+}
+// 确认阅读业务员提醒
+export function salesmanWarnIsRead(data) {
+  return request({
+    url: "/hxindex/Enphone/saleswarnread",
+    method: "POST",
+    data
+  });
+}
+// 客服修改历史
+export function customerEditHistoryLog(data) {
+  return request({
+    url: "/hxindex/Enphone/enxunlog",
     method: "POST",
     data
   });

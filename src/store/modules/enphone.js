@@ -41,7 +41,10 @@
     cluesUrlGetPhone,
     cluesRegionValid,
     cluesAnalysisInitSystemData,
-    cluesAnalysisResultData,
+    customerWarnEdit,
+    customerWarnIsRead,
+    salesmanWarnIsRead,
+    customerEditHistoryLog,
 } from '@/api/enphone'
 
 const state = {
@@ -460,10 +463,10 @@ const actions = {
             })
         })
     },
-    // 询盘修改添加的地区验证
-    cluesRegionValidAction({ commit, state },data) {
+    // 客服修改历史
+    customerEditHistoryLogAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
-            cluesRegionValid(data).then(response => {
+            customerEditHistoryLog(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -481,10 +484,30 @@ const actions = {
             })
         })
     },
-    // 询盘统计获取搜索结果数据
-    cluesAnalysisResultDataAction({ commit, state },data) {
+    // 修改客服内部提醒
+    customerWarnEditAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
-            cluesAnalysisResultData(data).then(response => {
+            customerWarnEdit(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 确认阅读客服内部提醒
+    customerWarnIsReadAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            customerWarnIsRead(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 确认阅读业务员提醒
+    salesmanWarnIsReadAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            salesmanWarnIsRead(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

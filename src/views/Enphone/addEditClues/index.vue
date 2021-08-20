@@ -3,14 +3,20 @@
     <el-card class="box-card scroll-card" shadow="hover">
         <div class="card-content EnphoneAddEdit" ref="tableContent">
             <div class="EnphoneAddEditMain">
-                <div class="en-phone-tips">
-                  <div class="item-input" style="display:inline-block;"><span>客服提醒</span></div>
-                  <div class="item-input" style="display:inline-block;"><el-checkbox v-model="checked1" size="small" label="修改提醒" border></el-checkbox></div>
-                  <div class="item-input" style="display:inline-block;"><span>内部提醒：</span></div>
-                  <div class="item-input" style="display:inline-block;"><el-input v-model="input" size="small" placeholder=""></el-input></div>
-                  <div class="item-input" style="display:inline-block;"><span>业务员提醒：</span></div>
-                  <div class="item-input" style="display:inline-block;"><el-input v-model="input" size="small" disabled placeholder=""></el-input></div>
-                  <div class="item-input" style="display:inline-block;"><el-button class="item-input" size="small" type="primary" icon="el-icon-edit" @click="searchResult">修改</el-button></div>
+                <div class="en-phone-tips" v-if="ID">
+                  <div class="item-input"><span class="tips-title">客服提醒</span></div>
+                  <div class="item-input"><el-checkbox v-model="noRead" size="small" label="修改提醒" border></el-checkbox></div>
+                  <div class="item-input"><span class="tips-title">内部提醒：</span></div>
+                  <div class="item-input"><el-input v-model="formData.custormselfwarn" size="small" placeholder=""></el-input></div>
+                  <div class="item-input" v-if="isCustomerSalesman"><span class="tips-title">业务员提醒：</span></div>
+                  <div class="item-input" v-if="isCustomerSalesman"><el-input v-model="formData.givecustormwarn" size="small" disabled placeholder=""></el-input></div>
+                  <div class="item-input"><el-button class="item-input" size="small" type="primary" icon="el-icon-edit" @click="editCustomerWarn">修改</el-button></div>
+                </div>
+                <div class="tips-list" v-if="ID&&isCustomer">
+                  <div class="item-tips type-1"><span class="tips">【提醒】：</span><b>{{formData.custormselfwarn}}</b><el-button class="item-input" size="mini" type="primary" @click="customerWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></div>
+                </div>
+                <div class="tips-list" v-if="ID&&isSalesman">
+                  <div class="item-tips type-2"><span class="tips">【提醒】：</span><b>{{formData.givecustormwarn}}</b><el-button class="item-input" size="mini" type="primary" @click="salesmanWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></div>
                 </div>
                 <div class="EnphoneAddEditMainItem phone-list">
                   <dl>
@@ -267,6 +273,29 @@
                       </dd>
                     </dl>
                 </div>
+                <div class="EnphoneAddEditMainItem customer-info" v-if="ID&&(formData.ennature!=0||formData.enxunprice!=0)">
+                    <dl style="width:100%;">
+                      <dt>二次判定：</dt>
+                      <dd>
+                        <el-select v-model="formData.ennature" v-if="formData.ennature!=0" size="small" style="width:40%" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in natureList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                        <el-select v-model="formData.enxunprice" v-if="formData.enxunprice!=0" size="small" style="width:40%" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in priceList"
+                            :key="item.label"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                      </dd>
+                    </dl>
+                </div>
                 <div class="EnphoneAddEditMainItem IntentionEquipment">
                     <dl>
                       <dt>意向设备：<span>*</span></dt>
@@ -426,6 +455,7 @@ export default {
   name: 'addEditClues',
   data() {
     return {
+      noRead:false,
       ID:null,
       menuButtonPermit:[],
       pickerOptions: {
@@ -555,8 +585,18 @@ export default {
         producttype_id:"",
         phoneid:"",
         keying:[],
+        ennature:0,
+        enxunprice:0,
+        givecustormwarn:"",
+        custormselfwarn:"",
+
       },
       defaultInfo:{},
+      priceList:[],
+      natureList:[],
+      isCustomer:false,
+      isSalesman:false,
+      isCustomerSalesman:false,
     }
   },
   computed: {
@@ -634,6 +674,30 @@ export default {
           if(response.status){
             console.log(response,"询盘信息");
             $this.defaultInfo = response.data;
+            $this.isCustomer = response.custormselfwarnshow?true:false;
+            $this.isSalesman = response.givecustormwarnshow?true:false;
+            $this.isCustomerSalesman = response.custormwarnshow?true:false;
+            if($this.defaultInfo.custormselfwarnstatus==3&&$this.defaultInfo.custormselfwarn&&$this.defaultInfo.custormselfwarn!=""){
+              $this.noRead = true;
+            }else{
+              $this.noRead = false;
+            }
+            var natureList = [];
+            response.ennature.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              natureList.push(itemData);
+            });
+            $this.natureList = natureList;
+            var priceList = [];
+            response.enprice.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              priceList.push(itemData);
+            });
+            $this.priceList = priceList;
             $this.setCluesInfo();
           }else{
             $this.$message({
@@ -664,6 +728,8 @@ export default {
       $this.formData.saleswarnstatus = $this.defaultInfo.saleswarnstatus==2?true:false;
       $this.formData.custormfiles = $this.defaultInfo.custormfiles;
       $this.formData.custormfilesname = $this.defaultInfo.custormfilesname;
+      $this.formData.givecustormwarn = $this.defaultInfo.givecustormwarn;
+      $this.formData.custormselfwarn = $this.defaultInfo.custormselfwarn;
       var fileList={};
       $this.fileList=[];
       fileList.name=$this.defaultInfo.custormfilesname;
@@ -693,6 +759,8 @@ export default {
       $this.formData.invalidcause = $this.defaultInfo.invalidcause;
       $this.formData.phoneid = $this.defaultInfo.phoneid;
       $this.formData.producttype_id = $this.defaultInfo.producttype_id;
+      $this.formData.ennature = $this.defaultInfo.ennature;
+      $this.formData.enxunprice = $this.defaultInfo.enxunprice;
       $this.producttypeArr=[$this.defaultInfo.producttype_id];
       $this.formData.keying = [];
       var SandGravelArr=[],OreDressArr=[],FlourArr=[],otherArr=[],keyArr=[];
@@ -1140,6 +1208,74 @@ export default {
         $this.setCluesInfo();
       }
     }, 
+    // 修改客服内部提醒
+    editCustomerWarn(){
+      var $this = this;
+      var resultData = {};
+      resultData.id = $this.formData.id;
+      resultData.custormselfwarn = $this.formData.custormselfwarn;
+      resultData.custormselfwarnstatus = $this.noRead?3:2;
+      $this.$store.dispatch("enphone/customerWarnEditAction", resultData).then(response=>{
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.initCluesInfo();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    // 确认阅读客服内部提醒
+    customerWarnRead(){
+      var $this = this;
+      var resultData = {};
+      resultData.id = $this.formData.id;
+      $this.$store.dispatch("enphone/customerWarnIsReadAction", resultData).then(response=>{
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.initCluesInfo();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    // 确认阅读业务员提醒
+    salesmanWarnRead(){
+      var $this = this;
+      var resultData = {};
+      resultData.id = $this.formData.id;
+      $this.$store.dispatch("enphone/salesmanWarnIsReadAction", resultData).then(response=>{
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.initCluesInfo();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
   }
 }
 </script>

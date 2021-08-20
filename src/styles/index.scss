@@ -51,6 +51,12 @@
     }
   }
 }
+/** 模块默认样式 **/
+.init-style{
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+}
 /**/
 .SiteBtn{
   clear:both;
@@ -132,9 +138,6 @@
 /** 分页页码统一样式 **/
 .pagination-panel{
   overflow:hidden;
-  .el-pagination__sizes{
-    display: none!important;
-  }
   &.top-page{
     .el-pagination{
       margin-top:0;

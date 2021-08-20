@@ -25,6 +25,7 @@ const state = {
   addPromotedChannel:false,
   addCnProcess:false,
   addCnMoney:false,
+  addWebMsgIp:false,
   addWebsiteLog:1,
 }
 
@@ -167,6 +168,12 @@ const mutations = {
   ADD_WEBSITELOG: (state) => {
     state.addWebsiteLog +=1
   },
+  ADD_WEBMSGIP: (state) => {
+    state.addWebMsgIp = true
+  },
+  CLOSE_WEBMSGIP: (state) => {
+    state.addWebMsgIp = false
+  },
 }
 
 const actions = {
@@ -298,6 +305,12 @@ const actions = {
   },
   addWebsiteLog({ commit }) {
     commit('ADD_WEBSITELOG')
+  },
+  addWebMsgIp({ commit }) {
+    commit('ADD_WEBMSGIP')
+  },
+  closeWebMsgIp({ commit }) {
+    commit('CLOSE_WEBMSGIP')
   },
 }
 

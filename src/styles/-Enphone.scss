@@ -194,11 +194,80 @@
              margin-bottom:30px;
          }
      }
+     .table-button{
+       .edit-times{
+         display: inline-block;
+         color: $menuActiveText;
+         cursor: pointer;
+         &:hover{
+           text-decoration: underline;
+         }
+       }
+     }
 }
 .EnphoneAddEdit{
   background:#fff;
   padding: 20px 30px;
   .EnphoneAddEditMain{
+    .en-phone-tips{
+      border: 1px solid #ffd7a0;
+      background-color: #fffae9;
+      padding: 10px;
+      font-size:0;
+      line-height:0;
+      margin-bottom: 15px;
+      .item-input{
+        display: inline-block;
+        vertical-align: top;
+        margin-left: 10px;
+        .tips-title{
+          height: 32px;
+          line-height: 32px;
+          font-size: 14px;
+        }
+      }
+    }
+    .tips-list{
+      width: 100%;
+      overflow: hidden;
+      .item-tips{
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+        line-height:0;
+        font-size:0;
+        padding: 6px;
+        .tips,b,em{
+          font-style: normal;
+          vertical-align: top;
+          font-size: 12px;
+          height: 28px;
+          line-height: 28px;
+        }
+        .el-button{
+          margin: 0 10px;
+        }
+        .tips{
+          color: #d51d1d;
+          font-weight: bold;
+        }
+        b{
+          color: #379bff;
+        }
+        em{
+          color: #a06d14;
+        }
+        &.type-1{
+          border: 1px solid #97b2ff;
+          background: #e9ffea;
+          
+        }
+        &.type-2{
+          border: 1px solid #ffd8a4;
+          background: #fffae9;
+        }
+      }
+    }
     .EnphoneAddEditMainItem{
         position: relative;
         padding-top:10px;
@@ -476,6 +545,87 @@
     border-bottom: 1px solid #dfe6ec!important;
     th > .cell{
       line-height: 1.4;
+    }
+  }
+}
+.en-phone-history{
+  .table-text{
+    h3{
+      color: #666;
+      font-weight: normal;
+      font-size: 14px;
+      padding: 0 5px;
+    }
+    .line{
+      border-top: 1px solid #ddd;
+      margin: 10px 0 15px;
+    }
+    p{
+      color: #666;
+      span{
+        margin:0 5px;
+      }
+    }
+  }
+}
+.en-phone-search{
+  .search-wrap{
+    margin-bottom: 15px;
+    .item-search{
+      width: 100%;
+      padding: 4px 0;
+      &.group-search{
+        margin: 20px 0;
+        .unit-search{
+          .item-checkbox{
+            margin: 4px 0 4px 4px;
+          }
+          .unit-title{
+            span{
+              height: 36px;
+              line-height: 36px;
+            }
+          }
+        }
+      }
+      &.button-search{
+        .updateBtn{
+          margin-left: 9px;
+        }
+        .svg-i{
+          margin-right: 5px;
+        }
+      }
+      .item-title{
+        margin-bottom: 8px;
+        padding: 0 5px;
+        margin-top: 10px;
+        .all-select{
+          margin-left: 4px;
+        }
+      }
+      .unit-search{
+        float:left;
+        display: flex;
+        padding: 0 5px;
+        .unit-title{
+          padding: 0 5px;
+          span{
+            display: block;
+            height: 28px;
+            line-height: 28px;
+            font-size: 12px;
+          }
+        }
+        .unit-content{
+          flex:1;
+        }
+      }
+      .team-list{
+        .item-checkbox,.item-radio{
+          margin: 4px;
+        }
+      }
     }
   }
 }
