@@ -38,6 +38,8 @@ export default {
       console.log(path,"路由跳转");
       if(path === "/Webmsg/allmsg"){
         this.$router.push({path,query:{Status:'Untreated'}});
+      }else if(path === "/Sales/index"){
+        this.$router.push({path,query:{Status:'personcount'}});
       }else{
         this.$router.push(path);
       }

@@ -1,0 +1,620 @@
+﻿<template>
+  <div class="page-root scroll-panel" ref="boxPane">
+    <el-card class="box-card scroll-card" shadow="hover">
+        <div class="card-content SaleAddEdit" ref="tableContent">
+            <div class="SaleAddEditMain">
+                <div class="SaleAddEditMainItem timeArr">
+                      <dl>
+                        <dt>信息分配时间：</dt>
+                        <dd>
+                          <span>{{formData.allottime}}</span>                           
+                        </dd>
+                      </dl>
+                      <dl>
+                        <dt>级别判定时间：</dt>
+                        <dd>
+                          <span>{{formData.leveltime}}</span> 
+                        </dd>
+                      </dl>
+                      <dl>
+                        <dt>最近修改时间：</dt>
+                        <dd>
+                          <span>{{formData.updatetime}}</span> 
+                        </dd>
+                      </dl>
+                </div>
+                <div class="SaleAddEditMainItem timeArr">
+                      <dl>
+                        <dt><span>*</span>处理业务员：</dt>
+                        <dd>
+                          <span>{{formData.salesuserid}}</span>                          
+                        </dd>
+                      </dl>
+                      <dl>
+                        <dt>来自地区：</dt>
+                        <dd>
+                          <span>{{formData.continent}}-{{formData.country}}</span>   
+                        </dd>
+                      </dl>
+                      <dl>
+                        <dt>需求产品：</dt>
+                        <dd>
+                          <span>{{formData.producttype_id}}-{{formData.keying}}</span>  
+                        </dd>
+                      </dl>
+                </div>
+                <div class="SaleAddEditMainItem timeArr">
+                      <dl>
+                        <dt>客户姓名/称呼：</dt>
+                        <dd>
+                          <span>{{formData.custormname}}</span>                           
+                        </dd>
+                      </dl>
+                      <dl>
+                        <dt>客户Email：</dt>
+                        <dd>
+                          <span>{{formData.custormemail}}</span>   
+                        </dd>
+                      </dl>
+                      <dl>
+                        <dt>客户电话：</dt>
+                        <dd>
+                          <span>{{formData.custormphone}}</span>   
+                        </dd>
+                      </dl>
+                </div>
+                <div class="SaleAddEditMainItem needCustomers">
+                      <dl>
+                        <dt>客户需求详情：<span>注意：内容有修改，修改时间：2020-02-02</span></dt>
+                        <dd>
+                            <div class="needCustomersBox">
+                               {{formData.custormneedinfo}}
+                            </div>    
+                            <p><span>特别说明：</span><span style='display:inline-block; padding-left:15px;'>附件：<el-link target="_blank" :underline="false" :href="formData.custormfiles">{{formData.custormfilesname}}</el-link></span></p>                     
+                        </dd>
+                      </dl>
+                </div>
+                <div class="SaleAddEditMainItem divider">
+                     *收到询盘10天后进行询盘反馈，请根据实际情况选择对应类型判定！当前：<strong>已反馈</strong>
+                </div>
+                <div class="SaleAddEditMainItem SaleFoot">
+                      <dl class="SaleFootFl">
+                        <dd class="flex-wrap">
+                          <span>富通编号*：</span>
+                          <div class="flex-content">                          
+                              <el-input
+                                  size="small"
+                                  style="width:150px"
+                                  v-model="formData.ftword_id"
+                                  clearable>
+                              </el-input>  
+                          </div>                        
+                        </dd>
+                        <dd class="flex-wrap">
+                          <span>标记处理*：</span>
+                          <div class="flex-content">
+                              <el-checkbox 
+                                    v-model="formData.managestatus"
+                                    class="remind"
+                                    clearable>已处理</el-checkbox>
+                          </div>                         
+                        </dd>
+                        <dd class="flex-wrap">                             
+                          <span>是否回复*：</span>
+                          <div class="flex-content">
+                              <el-checkbox-group v-model="replystatusArr" @change="replystatusClick">
+                                <el-checkbox v-for="item in replystatusList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                              </el-checkbox-group>                         
+                          </div>                       
+                        </dd>
+                      </dl>
+                      <dl class="SaleFootMid">
+                        <dt>
+                           <span>客户性质*：</span>                          
+                        </dt>
+                        <dd class="flex-wrap">       
+                            <el-radio-group style="margin-bottom:10px;" v-model="formData.ennature">
+                              <el-radio v-for="item in ennatureList" :label="item.value" :key="item.value">{{item.label}}</el-radio>
+                            </el-radio-group>              
+                        </dd>
+                        <dd class="flex-wrap">                     
+                          <span>务必认真标注！</span>                          
+                        </dd>
+                      </dl>
+                      <dl class="SaleFootFr">
+                        <dt>
+                          <span>沟通后客户需求设备价格范围（）*： </span>                         
+                        </dt>
+                        <dd class="SaleFootFrTop">       
+                            <el-radio-group style="margin-bottom:10px;" v-model="formData.enxunprice">
+                              <el-radio v-for="item in enxunpriceList" :label="item.value" :key="item.value">{{item.label}}</el-radio>
+                            </el-radio-group>  
+                            <span>单位：人民币RMB</span>              
+                        </dd>
+                        <dd class="SaleFootFrBom">
+                            <p>备注：(在此填写内容可提醒推广人员，如需提醒请勾选提醒)</p>
+                            <div class="SaleFootFrBomBox flex-wrap">
+                                <el-checkbox 
+                                      v-model="formData.custormwarnstatus"
+                                      class="remind"
+                                      clearable>提醒</el-checkbox>
+                                <el-input
+                                  type="textarea"
+                                  :rows="2"
+                                  placeholder="请输入内容"
+                                  class="flex-content"
+                                  v-model="formData.givecustormwarn">
+                                </el-input>
+                            </div> 
+                        </dd>
+                      </dl>
+                </div>
+            </div>
+            <div class="card-header WebServerAddEditBtn SaleAddEditBtn">
+                <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Sales_addEditClues')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
+            </div>
+        </div>
+    </el-card>
+  </div>
+</template>
+
+<script>
+import { mapGetters } from 'vuex';
+export default {
+  name: 'addEditClues',
+  data() {
+    return {
+      ID:null,
+      status:null,
+      menuButtonPermit:[],
+      pickerOptions: {
+          shortcuts: [{
+            text: '今天',
+            onClick(picker) {
+              picker.$emit('pick', new Date());
+            }
+          }, {
+            text: '昨天',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              picker.$emit('pick', date);
+            }
+          }, {
+            text: '一周前',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', date);
+            }
+          }]
+        },
+     
+      formData:{
+        id:0,
+        allottime:'',
+        leveltime:'',
+        updatetime:'',
+        salesuserid:'',
+        continent:'',
+        country:'',
+        keying:[],
+        producttype_id:'',
+        custormname:'',
+        custormemail:'',
+        custormphone:'',
+        custormneedinfo:'',
+        custormfiles:'',
+        custormfilesname:'',
+        ftword_id:'',
+        managestatus:'',
+        replystatus:'',
+        ennature:'',
+        enxunprice:'',
+        givecustormwarn:'',
+        custormwarnstatus:false,
+      },      
+      formValidate:{
+        id:null,
+        status:null,
+      },
+      salesuseridList:[],
+      productidList:[],
+      producttype_idList:[],
+      ennatureList:[],
+      enxunpriceList:[],
+      replystatusArr:[],
+      replystatusList:[
+        {label:"未标记",value:1},
+        {label:"已回复",value:2},
+        {label:"未回复",value:3},
+      ],
+      SandGravelList:[],//沙石
+      OreDressList:[],//选矿建材
+      FlourList:[],//磨粉
+      otherList:[],//其它
+      keying:[],
+      defaultInfo:{},
+      formSaveData:{
+        id: "",
+        ftword_id: "",
+        replystatus: "",
+        managestatus: "",
+        ennature: "",
+        enxunprice: "",
+        givecustormwarn: "",
+        custormwarnstatus:false
+      }
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'userInfo',
+      'device'
+    ]),
+  },
+  created(){
+    var $this = this;
+    if($this.$route.query.ID){
+      $this.ID = parseInt($this.$route.query.ID);
+    }else{
+      $this.ID = null;
+    }
+    if($this.$route.query.status){
+      $this.status = parseInt($this.$route.query.status);
+    }else{
+      $this.status = null;
+    }
+    var formValidate={};
+    formValidate.status=$this.status;
+    formValidate.id=$this.ID;
+    $this.formValidate=formValidate;
+    $this.initData();
+  },
+  methods:{
+    // 初始化数据
+    initData(){
+      var $this = this;
+      $this.getUserMenuButtonPermit();
+    },
+    // 初始化页面信息
+    initPage(){
+      var $this = this;
+      $this.getSystemData();
+    },
+    // 询盘编辑获取初始化询盘信息
+    initCluesInfo(){
+      var $this = this;
+      $this.$store.dispatch('Sales/getSalesDetailsAction',$this.formValidate).then(response=>{
+        if(response){
+          if(response.status){
+            console.log(response,"初始化询盘信息");
+            $this.defaultInfo = response.data;
+            $this.setCluesInfo();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    // 设置询盘初始化信息
+    setCluesInfo(){
+      var $this = this;
+      console.log($this.defaultInfo,'$this.defaultInfo');
+      $this.formData.id = $this.defaultInfo.id;
+      $this.formData.allottime = $this.defaultInfo.allottime;
+      $this.formData.leveltime = $this.defaultInfo.leveltime;
+      $this.formData.updatetime = $this.defaultInfo.updatetime;
+      if($this.salesuseridList.length>0){
+        $this.salesuseridList.forEach(function(item,index){
+            if(item.value==$this.defaultInfo.salesuserid){
+              $this.formData.salesuserid=item.label;
+            }
+        });
+      }
+      $this.formData.continent = $this.defaultInfo.continent;
+      $this.formData.country = $this.defaultInfo.country;
+      $this.formData.keying = [];
+      var keyArr=[];
+      if($this.defaultInfo.keying){
+          if($this.defaultInfo.keying.indexOf(",")!=-1){
+              keyArr = $this.defaultInfo.keying.split(",");              
+          }else{
+              keyArr = [$this.defaultInfo.keying]
+          }
+          keyArr.forEach(function(item,index){
+            $this.keying.forEach(function(item01,index01){
+               if(item==item01.value){
+                 $this.formData.keying.push(item01.label);
+               }
+            });
+          });
+      }
+      if($this.producttype_idList.length>0){
+        $this.producttype_idList.forEach(function(item,index){
+            if(item.value==$this.defaultInfo.producttype_id){
+              $this.formData.producttype_id=item.label;
+            }
+        });
+      }
+      $this.formData.custormname = $this.defaultInfo.custormname;
+      $this.formData.custormemail = $this.defaultInfo.custormemail;
+      $this.formData.custormphone = $this.defaultInfo.custormphone;
+      $this.formData.custormneedinfo = $this.defaultInfo.custormneedinfo;
+      $this.formData.custormfiles = $this.defaultInfo.custormfiles;
+      $this.formData.custormfilesname = $this.defaultInfo.custormfilesname;
+      $this.formData.ftword_id = $this.defaultInfo.ftword_id;
+      $this.formData.managestatus=$this.defaultInfo.managestatus==1?false:true;
+      $this.replystatusArr=[];
+      $this.replystatusList.forEach(function(item,index){
+          if(item.value==$this.defaultInfo.replystatus){
+            $this.formData.replystatus=item.value;
+            $this.replystatusArr.push(item.value);
+          }
+      });
+      $this.formData.ennature = $this.defaultInfo.ennature;
+      $this.formData.enxunprice = $this.defaultInfo.enxunprice;
+      $this.formData.givecustormwarn = $this.defaultInfo.givecustormwarn;
+      $this.formData.custormwarnstatus=$this.defaultInfo.custormwarnstatus==2?true:false;
+      console.log($this.formData,'$this.formData');
+    },
+    // 获取当前登陆用户在该页面的操作权限
+    getUserMenuButtonPermit(){
+      var $this = this;
+      $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
+        console.log(res);
+        if(res.status){
+          if(res.data.length>0){
+            res.data.forEach(function(item,index){
+              $this.menuButtonPermit.push(item.action_route);
+            });
+            if($this.ID){
+              if(!$this.menuButtonPermit.includes('Sales_addEditClues')){
+                $this.$message({
+                  showClose: true,
+                  message: "未被分配该页面的编辑权限",
+                  type: 'error',
+                    duration:6000
+                });
+                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+              }
+            }else{
+              if(!$this.menuButtonPermit.includes('Enphone_add')){
+                $this.$message({
+                  showClose: true,
+                  message: "未被分配该页面的添加权限",
+                  type: 'error',
+                    duration:6000
+                });
+                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+              }
+            }
+            $this.initPage();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: "未被分配该页面的访问权限",
+              type: 'error',
+                duration:6000
+            });
+            $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+          }
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
+    },
+    // 获取当前页面的条件数据
+    getSystemData(){
+      var $this = this;
+      $this.$store.dispatch('Sales/getSalesSearchListAction', null).then(response=>{
+        if(response){
+          if(response.status){
+            var producttype_idList=[];
+            response.producttype.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              producttype_idList.push(itemData);
+            });
+            $this.producttype_idList=producttype_idList;
+            var ennatureList=[];
+            response.nature.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              ennatureList.push(itemData);
+            });
+            $this.ennatureList=ennatureList;
+            var enxunpriceList=[];
+            response.enprice.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              enxunpriceList.push(itemData);
+            });
+            $this.enxunpriceList=enxunpriceList;
+            var salesuseridList=[];
+            response.dealuser.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              salesuseridList.push(itemData);
+            });
+            $this.salesuseridList=salesuseridList;
+            console.log(response,"搜索条件");
+            $this.getProductData();
+            $this.initCluesInfo();
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          }
+        }
+      });
+    },
+    // 获取当前页面的产品数据
+    getProductData(){
+      var $this = this;
+      $this.$store.dispatch('enphone/cluesAddEditDataAction', null).then(response=>{
+        if(response){
+          if(response.status){
+            console.log(response.product,"获取当前页面的产品数据");
+            var SandGravelList=[];
+            response.product[0].product.forEach(function(item,index){
+                var itemChildren = {};
+                itemChildren.label = item.name;
+                itemChildren.value = item.id;
+                SandGravelList.push(itemChildren);
+            });
+            $this.SandGravelList = SandGravelList;
+            var OreDressList=[];
+            response.product[1].product.forEach(function(item,index){
+                var itemChildren = {};
+                itemChildren.label = item.name;
+                itemChildren.value = item.id;
+                OreDressList.push(itemChildren);
+            });
+            $this.OreDressList = OreDressList;
+            var FlourList=[];
+            response.product[2].product.forEach(function(item,index){
+                var itemChildren = {};
+                itemChildren.label = item.name;
+                itemChildren.value = item.id;
+                FlourList.push(itemChildren);
+            });
+            $this.FlourList = FlourList;
+            var otherList=[];
+            response.product[3].product.forEach(function(item,index){
+                var itemChildren = {};
+                itemChildren.label = item.name;
+                itemChildren.value = item.id;
+                otherList.push(itemChildren);
+            });
+            $this.otherList = otherList;
+            var keying=[];
+            keying=keying.concat($this.SandGravelList,$this.OreDressList,$this.FlourList,$this.otherList);
+            $this.keying=keying;
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    // 组装修改接口所需数据
+    initFormData(){
+      var $this = this;
+      var formSaveData = {};
+      formSaveData.id = $this.formData.id.toString();
+      formSaveData.ftword_id = $this.formData.ftword_id;
+      formSaveData.replystatus = $this.formData.replystatus.toString();
+      formSaveData.managestatus = $this.formData.managestatus==true?'2':'1';
+      formSaveData.ennature = $this.formData.ennature.toString();
+      formSaveData.enxunprice = $this.formData.enxunprice.toString();
+      formSaveData.givecustormwarn = $this.formData.givecustormwarn;
+      formSaveData.custormwarnstatus = $this.formData.custormwarnstatus==true?'2':'3';
+      return formSaveData;
+    },
+    // 保存添加/编辑数据
+    saveData(){
+      var $this = this;
+      var formSaveData = $this.initFormData();      
+      $this.formSaveData = formSaveData;
+      if(!$this.validationForm()){
+        return false;
+      }
+      console.log(formSaveData,"formSaveData 添加保存")
+      $this.$store.dispatch("Sales/getSalesDetailsModifyAction", formSaveData).then(response=>{
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            console.log(response,'formSaveData 添加保存结果01');
+            $this.initCluesInfo();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    // 验证是否为空
+    validationForm(){
+      var $this = this;
+      if($this.formSaveData.ftword_id == ""){
+        $this.$message({
+            showClose: true,
+            message: '错误：富通编号不能为空！',
+            type: 'error'
+        });
+        return false;
+      }
+      if($this.formSaveData.managestatus == ""){
+        $this.$message({
+            showClose: true,
+            message: '错误：是否回复不能为空！',
+            type: 'error'
+        });
+        return false;
+      }
+      if($this.formSaveData.ennature == ""){
+        $this.$message({
+            showClose: true,
+            message: '错误：客户性质不能为空！',
+            type: 'error'
+        });
+        return false;
+      }
+      if($this.formSaveData.enxunprice == ""){
+        $this.$message({
+            showClose: true,
+            message: '错误：价格范围不能为空！',
+            type: 'error'
+        });
+        return false;
+      }
+      return true;
+    },    
+    // 是否回复点击事件
+    replystatusClick(){
+      var $this = this;
+      var replystatusArr = $this.replystatusArr;
+      if (replystatusArr.length > 1) {
+        replystatusArr.shift();
+      }
+      $this.replystatusArr = replystatusArr;
+      $this.formData.replystatus = $this.replystatusArr[0];
+    },
+  }
+}
+</script>
+<style lang="scss" scoped>
+</style>

@@ -15,10 +15,20 @@ export function getSalesSearchList() {
   });
 }
 //业务员英文询盘-详情
-export function getSalesDetails() {
+export function getSalesDetails(data) {
+  return request({
+    url: "/hxindex/Sales/phoneinfo",
+    method: "POST",
+    data
+  });
 }
 //业务员英文询盘-详情修改
-export function getSalesDetailsModify() {
+export function getSalesDetailsModify(data) {
+  return request({
+    url: "/hxindex/Sales/phoneinfosub",
+    method: "POST",
+    data
+  });
 }
 //业务员英文询盘-确认阅读提醒
 export function getSalesConfirmrRemind() {
@@ -49,29 +59,72 @@ export function getSalesWithdrawDistribuSalesman() {
 export function getSalesSalesmanData() {
 }
 //业务员英文询盘-等待处理询盘
-export function getSalesWaitFortis() {
+export function getSalesWaitFortis(data) {
+  return request({
+    url: "/hxindex/Sales/waitdeal",
+    method: "POST",
+    data
+  });
 }
 //业务员英文询盘-已处理询盘
-export function getSalesInquiryFortis() {
+export function getSalesInquiryFortis(data) {
+  return request({
+    url: "/hxindex/Sales/hasdeal",
+    method: "POST",
+    data
+  });
 }
 //业务员英文询盘-已做反馈询盘
-export function getSalesInquiryfeedback() {
+export function getSalesInquiryfeedback(data) {
+  return request({
+    url: "/hxindex/Sales/hassay",
+    method: "POST",
+    data
+  });
 }
 //业务员英文询盘-未反馈询盘
-export function getSalesNofeedback() {
+export function getSalesNofeedback(data) {
+  return request({
+    url: "/hxindex/Sales/hasnosay",
+    method: "POST",
+    data
+  });
 }
 //业务员英文询盘-等待添加富通id
-export function getSalesWaitAddingFortis() {
+export function getSalesWaitAddingFortis(data) {
+  return request({
+    url: "/hxindex/Sales/waitftword",
+    method: "POST",
+    data
+  });
 }
 //业务员英文询盘-月底前需要反馈的询盘
-export function getSalesMonthEndFeedback() {
+export function getSalesMonthEndFeedback(data) {
+  return request({
+    url: "/hxindex/Sales/monthsay",
+    method: "POST",
+    data
+  });
 }
-//数据分析查询条件
+// 数据分析查询条件
 export function getSalesAnalysisCondition() {
+  return request({
+    url: "/hxindex/Sales/searchcondition",
+    method: "POST"
+  });
 }
 //数据分析
-export function getSalesDataAnalysis() {
+export function getSalesDataAnalysis(data) {
+  return request({
+    url: "/hxindex/Sales/search",
+    method: "POST",
+    data
+  });
 }
 //公共数据
 export function getSalesPublicData() {
+  return request({
+    url: "/hxindex/Sales/phoneindex",
+    method: "POST"
+  });
 }

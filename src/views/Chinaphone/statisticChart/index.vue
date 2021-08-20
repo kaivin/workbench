@@ -10,11 +10,16 @@
                 <div class="team-panel" v-for="item in phoneList" v-bind:key="item.id">
                   <div class="team-header" v-if="item.icon=='sem'">
                     <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+
                     <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSemPhone" border size="mini" v-model="checkAllSemPhone" @change="handleCheckAllSemPhoneChange">全选</el-checkbox>
+
                     <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSemPhone" border size="mini" v-model="checkAllSemPhone" @change="handleCheckAllSemPhoneChange">{{item.name}}全选</el-checkbox>
+
                     <el-checkbox-group class="team-list" v-model="checkedSem" @change="handleCheckedSemChange" size="mini">
                       <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                     </el-checkbox-group>
+
+                    
                   </div>
                   <div class="team-header" v-else-if="item.icon=='seo'">
                     <span class="require" v-if="device=='desktop'">{{item.name}}：</span>

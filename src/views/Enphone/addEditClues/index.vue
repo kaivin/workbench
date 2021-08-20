@@ -872,7 +872,7 @@ export default {
                 itemChildren.value = item.id;
                 otherList.push(itemChildren);
             });
-            $this.otherList = otherList;
+            $this.otherList = otherList;            
             $this.levelList = response.level;
             $this.priceList = response.price;
             $this.phoneList = response.phonelist;

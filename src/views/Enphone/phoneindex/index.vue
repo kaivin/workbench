@@ -491,6 +491,7 @@
                 </el-table-column>
               </el-table>
             </div>
+            
             <div class="pagination-panel" ref="pagePane">
               <el-pagination
                 @size-change="handleSizeChange"
@@ -1292,7 +1293,7 @@ export default {
           $this.$store.dispatch('enphone/getCurrentCateProductListAction', {typeid:e}).then(response=>{
               if(response){
                   if(response.status){
-                      console.log(response,"搜索条件信息");
+                      console.log(response,"搜索条件信息phoneindex");
                       var productList = [];
                       response.data.forEach(function(item,index){
                           var itemData = {};

@@ -1,13 +1,14 @@
 ﻿.SaleCard{
     .SaleCardFl{
         width:210px;
-        margin-right: 15px;
         .side-button{
           width: 100%;
           overflow: hidden;
           dl{
             width: 100%;
             padding-top:23px;
+            padding-left: 15px;
+            padding-right: 15px;
             dt{
               color:$menuActiveText;
               line-height: 20px;
@@ -16,6 +17,7 @@
               border-radius: 5px;
               padding: 5px 10px;
               font-size: 14px;
+              cursor: pointer;
               i{
                 font-style: normal;
               }
@@ -28,7 +30,7 @@
         }
         .Salelist{
           width: 100%;
-          padding:25px 10px 0px 10px;
+          padding:25px 15px 0px 15px;
           dt{
             color:$menuActiveText;
             line-height: 20px;
@@ -36,6 +38,21 @@
             border: 1px solid #fff;
             border-radius: 5px;
             font-size: 14px;
+            cursor: pointer;
+            &:hover{
+              span,i{
+                text-decoration: underline;
+              }
+            }
+            span,i{
+              font-style: normal;
+              font-weight: normal;
+            }
+            i{
+              margin-left: 5px;
+              font-weight: bold;
+              color: $red;
+            }
           }
           dd{
             width: 100%;
@@ -46,11 +63,11 @@
             padding-bottom:3px;
             cursor: pointer;
             &:hover{
-              span,i,b,em{
+              span,i{
                 text-decoration: underline;
               }
             }
-            span,i,b,em{
+            span,i{
               font-style: normal;
               font-size: 12px;
               line-height:24px;
@@ -61,12 +78,6 @@
               margin-left: 5px;
               font-weight: bold;
               color: $red;
-            }
-            em{
-              color: $green;
-            }
-            b{
-              color:$menuActiveText;
             }
           }
         }
@@ -96,7 +107,7 @@
         }
     }
 }
-.box-card.SaleCardFlFrDate{
+.box-card.SaleCardFlFrTable{
     background:#fff!important;
     border-radius:8px!important;
     padding:20px;
@@ -108,7 +119,349 @@
              padding-bottom:14px;
          }
          .clues-info{
-             margin-bottom:30px;
+             margin-bottom:0px;
+         }
+         .clues-warn{
+           clear: both;
+           li{
+            clear: both;
+            text-align: center;
+            background: #fef0f0;
+            border: 1px solid #fbc4c4;
+            color: #f56c6c;
+            font-size: 14px;
+            line-height: 20px;
+            padding: 3px 0px;
+            margin-top: 10px;
+            border-radius: 3px;
+           }
          }
      }
+}
+.box-card.SaleCardFlFrDatastatistic{
+
+}
+
+.card-content.SaleCardDataTop{
+  background:#fff!important;
+  border-radius:8px!important;
+  padding:20px!important;
+  .SaleCardDate{
+    padding-bottom: 20px;
+    width: 100%;
+    .group-header{
+      line-height: 0;
+      font-size: 0;
+      margin-bottom: 12px;
+      border-bottom: 1px dashed #d6dbe2;
+      padding-bottom: 10px;
+      span{
+        clear: both;
+        display: inline-block;
+        font-size: 14px;
+        line-height:20px;
+      }
+    }
+    .group-body{
+      width: 100%;
+      .team-panel{
+        margin-top:9px;
+        .require{
+          font-size: 14px;
+          line-height: 24px;
+          margin-right: 10px;
+          vertical-align:top;
+          display: inline-block;
+          width: 72px;
+          text-align: right;
+        }
+        .all-select{
+          vertical-align: middle;
+          line-height: 15px;
+          float: left;
+        }
+        .item-clues{
+          float:left;
+          position: relative;
+          font-size: 14px;
+          color:$menuBg;
+          cursor: pointer;
+          padding-left: 20px;
+          line-height: 24px;
+          margin-right: 20px;
+          margin-bottom: 5px;
+          i{
+            position: absolute;
+            left:0px;
+            top:6px;        
+            width: 12px;
+            height: 12px;
+            box-sizing: border-box;
+            border-radius:50%;
+            border:1px solid #939393;
+            background:#fff;
+          }
+          &:hover,&.active{
+            color:$menuActiveText;
+            i{
+              border-color:$menuActiveText;
+              &:after{
+                content:'';
+                position: absolute;
+                width:4px;
+                height:4px;
+                border-radius:50%;
+                left:3px;
+                top:3px;
+                background:$menuActiveText;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.card-content.SaleCardDataBom{
+  background:#fff!important;
+  border-radius:8px!important;
+  padding:20px!important;
+  margin-top:20px;
+  h2{
+    clear: both;
+    display: block;
+    color:$menuActiveText;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+}
+
+.SaleAddEdit{
+  background:#fff;
+  padding: 20px 30px;
+  .SaleAddEditMain{
+    .SaleAddEditMainItem{
+        position: relative;
+        padding-top: 5px;
+        padding-bottom: 0px;
+        &.CnphoneAdd{
+          padding-top:20px;
+          padding-bottom:15px;
+        }
+        dl{
+          dt{
+            line-height: 24px;
+            font-size: 14px;
+            span{
+              color:$red;
+            }
+          }
+          dd{
+            margin-top: 5px;
+            p{
+              line-height: 32px;
+              font-size: 12px;
+            }
+          }
+        }
+        &.timeArr{
+          dl{
+            float: left;
+            width:30%;
+            margin-left:5%;
+            padding-bottom:5px;
+            &:first-child{margin-left:0;}
+            dd{
+              clear: both;
+              span{
+                clear: both;
+                display: block;
+                font-size:14px;
+                line-height:32px;
+                color:$menuActiveText;
+              }
+            }
+          }
+        }
+        &.needCustomers{
+          dl{
+            padding-top:20px;
+            padding-bottom:15px;
+            dd{
+              .needCustomersBox{
+                clear: both;
+                display: block;
+                width:100%;
+                box-sizing: border-box;
+                min-height:128px;
+                border:1px solid #eee;
+                font-size:14px;
+                line-height:24px;
+                padding:15px 20px;
+                color:$subMenuBg;
+                margin-top:10px;
+                margin-bottom:10px;
+                background:#f9f9f9;
+                &+p{
+                  a{
+                    font-size: 12px;
+                    font-weight: bold;
+                    color:$red;
+                    &:hover{
+                      color:$Rougecolor;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        &.divider{
+          border-top:1px solid #eee;
+          border-bottom:1px solid #eee;
+          padding-top:15px;
+          padding-bottom:15px;
+          text-align: center;
+          color:$red;
+          strong{
+            color:$menuActiveText;
+          }
+        }
+        &.SaleFoot{
+          padding-top:30px;
+          dl{
+            float: left;
+            width:30%;
+            margin-left:5%;
+            padding-bottom:5px;
+            &:first-child{margin-left:0;}
+            dd{
+              .needCustomers{
+                clear: both;
+                display: block;
+                width:100%;
+                box-sizing: border-box;
+                min-height:128px;
+                border:1px solid #eee;
+                font-size:14px;
+                line-height:24px;
+                padding:15px 20px;
+                color:$subMenuBg;
+                margin-top:10px;
+                margin-bottom:10px;
+                background:#f9f9f9;
+              }
+            }
+            &.SaleFootFl{
+              dd{
+                padding-top:15px;
+                &:first-child{
+                  padding-top:0px;
+                }
+                span{
+                  line-height:32px;
+                  font-size: 14px;
+                  color: #0755bb;
+                }
+              }
+            }
+            &.SaleFootMid{
+              dt{
+                span{
+                  clear: both;
+                  display: block;
+                  font-size:14px;
+                  line-height:32px;
+                  color: #0755bb;
+                }
+              }
+              dd{
+                &>span{
+                  line-height:32px;
+                  font-size: 14px;
+                  color: $red;
+                }
+                .el-radio-group{
+                  clear: both;
+                  display: block;
+                  padding-top:8px;
+                  .el-radio{
+                    clear: both;
+                    display: block;
+                    margin-bottom:8px;
+                    .el-radio__input.is-checked{
+                      .el-radio__inner{
+                        background:#fff!important;
+                        &:after{
+                          background:#2e88ff!important;
+                          width:8px;
+                          height: 8px;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            &.SaleFootFr{
+              dt{
+                span{
+                  clear: both;
+                  display: block;
+                  font-size:14px;
+                  line-height:32px;
+                  color: #0755bb;
+                }
+              }
+              dd{
+                &.SaleFootFrTop{
+                  &>span{
+                    line-height:32px;
+                    font-size: 14px;
+                    color: $red;
+                  }
+                  .el-radio-group{
+                    clear: both;
+                    display: block;
+                    padding-top:8px;
+                    .el-radio{
+                      clear: both;
+                      display: block;
+                      margin-bottom:8px;
+                      .el-radio__input.is-checked{
+                        .el-radio__inner{
+                          background:#fff!important;
+                          &:after{
+                            background:#2e88ff!important;
+                            width:8px;
+                            height: 8px;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                &.SaleFootFrBom{
+                  &>p{
+                    clear: both;
+                    display: block;
+                    text-align: left;
+                    font-size:12px;
+                    line-height:20px;
+                    padding-bottom:15px;
+                  }
+                  .SaleFootFrBomBox{
+                    clear: both;
+                    .el-checkbox{padding-right: 20px;}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+  }
+  .WebServerAddEditBtn.SaleAddEditBtn{    
+    padding:20px 0px 20px 0px;
+  }
 }
