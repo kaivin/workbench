@@ -336,6 +336,7 @@
                 key="b"
                 border
                 ref="simpleUrlTable"
+                class="SiteTable"
                 :data="tableData"
                 tooltip-effect="dark"
                 stripe
@@ -361,6 +362,7 @@
                 key="c"
                 border
                 ref="simpleProductTable"
+                class="SiteTable"
                 :data="tableData"
                 tooltip-effect="dark"
                 stripe
@@ -655,8 +657,7 @@ export default {
             $this.tableData = response.data;
             $this.infoData = infoData;
             $this.totalDataNum = response.allcount;
-            $this.pageSizeList;
-            
+            $this.pageSizeList;            
             var pageSizeListArr = [$this.pageSizeList];
             if (pageSizeListArr.length > 1) {
               pageSizeListArr.shift();

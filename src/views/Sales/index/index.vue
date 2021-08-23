@@ -5,7 +5,7 @@
         <div class="sub-wrapper">
           <div class="side-button">
             <dl class="Sales-list">
-                <dt><span>业务员数据统计</span></dt>
+                <dt v-on:click="datastatisticClues()"><span>业务员数据统计</span></dt>
                 <dt v-bind:class="currentStatus === 'waitcount'?'active':''" v-on:click="jumpLink('waitcount')"><span>等待分配</span><i>({{defaultData.waitcount}})</i></dt>
                 <dt v-bind:class="currentStatus === 'allotcount'?'active':''" v-on:click="jumpLink('allotcount')"><span>所有已分配询盘</span><i>({{defaultData.allotcount}})</i></dt>
             </dl>
@@ -33,6 +33,9 @@
             <el-card class="box-card scroll-card SaleCardFlFrTable" shadow="hover">
               <div slot="header">
                 <div class="card-header" ref="headerPane">
+                    <ul class="clues-warn"  v-if="infoData.warnlist.length>0">
+                        <li v-for="(item,index) in infoData.warnlist" v-bind:key="item.id"  @click="editTableRow(item,index,'1')">[提醒{{index}}]&nbsp;ID：{{item.id}}&nbsp;内容：{{item.givesaleswarn}}</li>
+                    </ul>
                     <div class="search-wrap" v-if="device==='desktop'">
                         <div class="SalesCardOne">
                           <span>搜索：[</span>
@@ -152,11 +155,9 @@
                       </p>
                       <div class="clues-title-btn">
                           <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Sales_index')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出结果</el-button>
+                          <el-button class="item-input" v-if="menuButtonPermit.includes('Sales_index')&&currentStatus === 'allotcount'" size="small" type="primary" :disabled="isTableRow" @click="deleteTableRow">分配撤回</el-button>
                       </div>
                     </div>
-                    <ul class="clues-warn"  v-if="infoData.warnlist.length>0">
-                        <li v-for="(item,index) in infoData.warnlist" v-bind:key="item.id"  @click="editTableRow(item,index,'1')">[提醒{{index}}]&nbsp;ID：{{item.id}}&nbsp;内容：{{item.givesaleswarn}}</li>
-                    </ul>
                 </div>
               </div>
               <div class="card-content" ref="tableContent">
@@ -169,7 +170,14 @@
                     class="SiteTable"
                     style="width: 100%"
                     row-key="id"
+                    @selection-change="handleSelectionChange"
                     >
+                    <el-table-column
+                        type="selection"
+                        align="center"
+                        v-if="currentStatus === 'allotcount'"
+                        width="48">
+                    </el-table-column>
                     <el-table-column
                     prop="id"
                     label="ID"
@@ -288,7 +296,7 @@
                     </template>
                     </el-table-column>
                     <el-table-column
-                    v-if="(menuButtonPermit.includes('Sales_edit'))&&device==='desktop'"
+                    v-if="(menuButtonPermit.includes('Sales_phoneinfosub'))&&device==='desktop'"
                     :width="operationsWidth"
                     align="center"
                     prop="operations"
@@ -342,7 +350,7 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
-  name: 'salesIndex',
+  name: 'Sales_search',
   data() {
     return {
       currentStatus:"personcount",
@@ -356,7 +364,7 @@ export default {
       searchData:{
         page:1,
         limit:15,
-        timetype:1,
+        timetype:"",
         date:[],
         starttime: "",
         endtime: "",
@@ -449,6 +457,9 @@ export default {
       downloadLoading: false,
       permitField:[],
       isDisabled:true,
+      selectedData:[],
+      isTableRow:true,
+      ids:[],
     }
   },
   computed: {
@@ -867,7 +878,12 @@ export default {
     // 跳转数据分析页面
     dataStatistic(){
       var $this = this;
-      $this.$router.push({path:'/Sales/dataStatistic'});
+      $this.$router.push({path:'/Sales/search'});
+    },
+    // 跳转数据统计页面
+    datastatisticClues(){
+      var $this = this;
+      $this.$router.push({path:'/Sales/phonecount'});
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
@@ -956,8 +972,43 @@ export default {
     // 修改询盘
     editTableRow(row,index,num){
       var $this = this;
-      var routeUrl =  $this.$router.resolve({path:'/Sales/addEditClues',query:{ID:row.id,status:num}});
+      var routeUrl =  $this.$router.resolve({path:'/Sales/phoneinfosub',query:{ID:row.id,status:num}});
       window.open(routeUrl.href,'_blank');
+    },
+    // 表格多选改变事件
+    handleSelectionChange(val) {
+        var $this = this;
+        $this.selectedData = val;
+        if($this.selectedData.length>0){
+          $this.isTableRow = false;
+        }else{
+          $this.isTableRow = true;
+        }
+    },
+    // 分配撤回表格行
+    deleteTableRow(row,index){
+      var $this = this;
+      var resultData={};
+      resultData.ids = [];
+      if($this.selectedData.length>0){
+          $this.selectedData.forEach(function(item,index){
+              resultData.ids.push(item.id);
+          });
+      }
+      $this.$store.dispatch('Sales/getSalesWithdrawDistribuSalesmanAction', resultData).then(response=>{
+          var $this = this;
+          if(response){
+            if(response.status){
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          }
+      });
     },
   }
 }

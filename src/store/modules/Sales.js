@@ -13,8 +13,11 @@
     getSalesDataAnalysis,
     getSalesAnalysisCondition,
     getSalesDetails,
-    getSalesDetailsModify
-
+    getSalesDetailsModify,
+    getSalesWithdrawDistribuSalesman,
+    getSalesConfirmrRemind,
+    getSalesDistribuSalesman,
+    getSalesSalesmanData
 } from '@/api/Sales'
 
 const state = {}
@@ -164,6 +167,46 @@ const actions = {
     getSalesDetailsModifyAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             getSalesDetailsModify(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //业务员英文询盘-询盘分配给具体的业务员撤回
+    getSalesWithdrawDistribuSalesmanAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getSalesWithdrawDistribuSalesman(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //业务员英文询盘-确认阅读提醒
+    getSalesConfirmrRemindAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getSalesConfirmrRemind(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    //业务员英文询盘-询盘分配给具体的业务员
+    getSalesDistribuSalesmanAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getSalesDistribuSalesman(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //业务员英文询盘-询盘分配给具体的业务员
+    getSalesSalesmanDataAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getSalesSalesmanData(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

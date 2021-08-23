@@ -144,6 +144,9 @@
       margin-bottom:10px;
     }
   }
+  .el-pagination__sizes{
+    display:none!important;
+  }
 }
 .search-wrap{
   .el-select .el-select__tags .el-tag .el-icon-close{

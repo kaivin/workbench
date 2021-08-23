@@ -31,7 +31,12 @@ export function getSalesDetailsModify(data) {
   });
 }
 //业务员英文询盘-确认阅读提醒
-export function getSalesConfirmrRemind() {
+export function getSalesConfirmrRemind(data) {
+  return request({
+    url: "/hxindex/Sales/warnread",
+    method: "POST",
+    data
+  });
 }
 //业务员英文询盘-等待分配询盘列表
 export function getSalesWaitDistribu(data) {
@@ -42,7 +47,12 @@ export function getSalesWaitDistribu(data) {
   });
 }
 //业务员英文询盘-询盘分配给具体的业务员
-export function getSalesDistribuSalesman() {
+export function getSalesDistribuSalesman(data) {
+  return request({
+    url: "​/hxindex​/Sales​/dealphone",
+    method: "POST",
+    data
+  });
 }
 //业务员英文询盘-所有已分配询盘列表
 export function getSalesAllDistribuList(data) {
@@ -53,10 +63,20 @@ export function getSalesAllDistribuList(data) {
   });
 }
 //业务员英文询盘-询盘分配给具体的业务员撤回
-export function getSalesWithdrawDistribuSalesman() {
+export function getSalesWithdrawDistribuSalesman(data) {
+  return request({
+    url: "/hxindex/Sales/phonecancel",
+    method: "POST",
+    data
+  });
 }
 //业务员英文询盘-业务员数据统计
-export function getSalesSalesmanData() {
+export function getSalesSalesmanData(data) {
+  return request({
+    url: "/hxindex/Sales/phonecount",
+    method: "POST",
+    data
+  });
 }
 //业务员英文询盘-等待处理询盘
 export function getSalesWaitFortis(data) {

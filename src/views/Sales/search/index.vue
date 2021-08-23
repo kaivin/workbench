@@ -36,8 +36,12 @@
                       <div class="group-header"><span>业务员</span></div>
                       <div class="group-body">
                         <div class="team-panel">
-                            <el-checkbox class="all-select" border size="mini" >全选</el-checkbox>
-                            <el-checkbox-group class="team-list" v-model="searchData.user" size="mini">
+                            <el-checkbox class="all-select" v-if="device=='desktop'"
+                            v-model="checkAllUser"
+                            :indeterminate="isAllUser" 
+                            @change="handleCheckAllUserChange"  border size="mini">全选</el-checkbox>
+                            <el-checkbox-group class="team-list" v-model="searchData.userid" 
+                            @change="handleCheckedUserhange" size="mini">
                               <el-checkbox class="item-checkbox" v-for="item in userlist" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
                             </el-checkbox-group>
                         </div>
@@ -139,14 +143,14 @@
                         style="width: 100%;"
                         >
                         <el-table-column
-                          prop="phoneText"
+                          prop="uname"
                           label="业务员姓名"
                           align="center"
                           v-if="is_groupData=='3'"
                           >
                         </el-table-column>
                         <el-table-column
-                          prop="phoneText"
+                          prop="producttypename"
                           label="产品分类"
                           align="center"
                           v-if="is_groupData=='1'"
@@ -177,9 +181,11 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
-  name: 'Sales_dataStatistic',
+  name: 'Sales_search',
   data() {
     return {
+      checkAllUser:false,
+      isAllUser:false,
       checkAllArea:false,
       isAllArea:false,
       checkAllProductType:false,
@@ -326,7 +332,7 @@ export default {
       var $this = this;    
       $this.getUserMenuButtonPermit();
     },
-    // 初始化页面信息
+    // 初始化页面信息-数据分析查询条件
     initPage(){
       var $this = this;
       $this.$store.dispatch('Sales/getSalesAnalysisConditionAction', null).then(response=>{
@@ -455,7 +461,7 @@ export default {
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
-            if($this.menuButtonPermit.includes('Sales_dataStatistic')){
+            if($this.menuButtonPermit.includes('Sales_search')){
               $this.initPage();
             }else{
               $this.$message({
@@ -489,6 +495,7 @@ export default {
         var $this = this;
         $this.$router.push({path:'/Sales/index',query:{Status:status}});
     },
+    //分组点击事件
     groupClick(id){
       var $this = this;
       var groupArr = $this.groupList;
@@ -504,6 +511,37 @@ export default {
           item.isOn = false;
         }
       });
+    },
+    //业务员点击事件
+    handleCheckedUserhange(e){
+      var $this = this;
+      var checkedCount = e.length;
+      if(checkedCount === $this.userlist.length){
+        $this.checkAllUser = true;
+      }else{
+        $this.checkAllUser = false;
+      }
+      if(checkedCount>0&&checkedCount<$this.userlist.length){
+        $this.isAllUser = true;
+      }else{
+        $this.isAllUser = false;
+      }
+    },
+    // 业务员全选点击事件
+    handleCheckAllUserChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.userlist.forEach(function(item,index){
+            checkedList.push(item.value);
+        });
+        $this.searchData.userid = checkedList;
+        $this.checkAllUser = true;
+      }else{
+        $this.searchData.userid = [];
+        $this.checkAllUser = false;
+      }
+      $this.isAllUser = false;
     },
     //地区点击事件
     handleCheckedAreahange(e){

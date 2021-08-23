@@ -139,7 +139,7 @@
                         <div class="unit-search">
                             <div class="unit-title"><span>产品分类：</span></div>
                             <div class="unit-content">
-                                <el-select v-model="searchData.producttype_id" clearable placeholder="产品分类" size="mini">
+                                <el-select v-model="searchData.producttype_id" clearable placeholder="产品分类" @change="currentCateChange" size="mini">
                                     <el-option
                                         v-for="item in cateList"
                                         :key="item.value"
@@ -262,18 +262,12 @@
                     <div class="item-search group-search">
                         <div class="unit-search">
                             <div class="unit-content">
-                                <el-checkbox class="item-checkbox" :label="searchData.is_group" size="mini" border>分组</el-checkbox>
+                                <el-checkbox class="item-checkbox" v-model="searchData.is_group" size="mini" border>分组</el-checkbox>
                             </div>
                         </div>
                         <div class="unit-search">
                             <div class="unit-content">
-                                <el-radio-group class="team-list" v-model="searchData.groupurlproduct" size="mini">
-                                    <el-radio class="item-radio" label="1" border>按URL</el-radio>
-                                    <el-radio class="item-radio" label="2" border>按产品</el-radio>
-                                    <el-radio class="item-radio" label="3" border>按国家</el-radio>
-                                    <el-radio class="item-radio" label="4" border>按大洲</el-radio>
-                                    <el-radio class="item-radio" label="5" border>按组别</el-radio>
-                                </el-radio-group>
+                                <span class="item-clues" v-for="item in groupurlproductList" v-bind:class="item.isOn?'active':''" v-bind:key="item.value" v-on:click="groupurlproductClick(item.value)"><i></i>{{item.label}}</span>
                             </div>
                         </div>
                         <div class="unit-search">
@@ -289,11 +283,358 @@
                     <div class="item-search button-search">
                         <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="enCluesSearchData"><i class="svg-i" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
                         <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+                    </div>                    
+                    <div class="clues-info" style="margin-bottom:20px">
+                        <p v-if="isClues"><span class="item-span-1">根据查询条件共找到：<strong>{{infoData.totalCount}}</strong>条，</span><span class="item-span-2">其中有效<strong>{{infoData.effectiveCount}}</strong>条，无效：<strong>{{infoData.invalidCount}}</strong>条！</span></p>
+                        <p v-if="isUrl"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>条URL，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                        <p v-if="isProduct"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                        <p v-if="isCountry"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个国家，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                        <p v-if="isContinent"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个州，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                        <p v-if="isGroup"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个小组，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                        <p v-if="isProducttype"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品分类，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                    </div>
+                    <div class="clues-title">
+                        <div class="clues-title-btn">
+                            <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled"  @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                        </div>
                     </div>
                 </div>
-                <div class="init-style result-wrap"></div>
+                <div class="init-style result-wrap">
+                    <el-table
+                        v-if="isClues"
+                        key="a"
+                        border
+                        ref="simpleTable"
+                        :data="tableData"
+                        tooltip-effect="dark"
+                        stripe
+                        class="SiteTable"
+                        style="width: 100%"
+                        @selection-change="handleSelectionChange"
+                        >
+                        <el-table-column
+                            type="selection"
+                            align="center"
+                            width="48">
+                        </el-table-column>
+                        <el-table-column
+                            prop="id"
+                            label="ID"
+                            width="80"
+                            >
+                        </el-table-column>
+                        <el-table-column
+                            prop="phonenumber"
+                            label="电话"
+                            width="80"
+                            >
+                        </el-table-column>
+                        <el-table-column
+                            prop="xuntime"
+                            label="时间"
+                            width="150"
+                            >
+                            <template slot-scope="scope">
+                                <div class="table-text">
+                                <p>{{scope.row.xuntime}}</p>
+                                <p>{{scope.row.weekday}}</p>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="sourcename"
+                            label="域名/渠道"
+                            width="100"
+                            >
+                            <template slot-scope="scope">
+                                <div class="table-text">
+                                <p><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
+                                <p>{{scope.row.sourcename}}</p>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="sourcename"
+                            label="地区/归属地"
+                            width="100"
+                            >
+                            <template slot-scope="scope">
+                                <div class="table-text">
+                                <p>{{scope.row.province}}/{{scope.row.city}}</p>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="keyproduct"
+                            label="意向设备"
+                            width="100"
+                            >
+                            <template slot-scope="scope">
+                                <span class="product-span" v-bind:class="'level_'+scope.row.productlevel"><i>[{{scope.row.productlevel}}]</i>{{scope.row.keyproduct}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="effective"
+                            label="有效"
+                            width="60"
+                            >
+                            <template slot-scope="scope">
+                                <div class="table-tag"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
+                                <div class="table-text"><p>{{scope.row.invalidcause}}</p></div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="addusername"
+                            label="添加人"
+                            width="80"
+                            >
+                        </el-table-column>
+                        <el-table-column
+                            prop="addtime"
+                            label="添加时间"
+                            width="150"
+                            >
+                        </el-table-column>
+                        <el-table-column
+                            prop="levelname"
+                            label="等级"
+                            min-width="60"
+                            >
+                            <template slot-scope="scope">
+                                <div class="table-tag"><span class="level" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="levelname"
+                            label="备注/原因"
+                            min-width="120"
+                            >
+                            <template slot-scope="scope">
+                                <div class="table-text">
+                                    <p>{{scope.row.custormcause}}</p>
+                                    <p>{{scope.row.custormremark}}</p>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="url"
+                            label="域名/链接"
+                            min-width="150"
+                            >
+                            <template slot-scope="scope">
+                                <div class="table-text">
+                                    <p>{{scope.row.domain}}</p>
+                                    <p>{{scope.row.url}}</p>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="searchword"
+                            label="平台/关键词"
+                            min-width="110"
+                            >
+                            <template slot-scope="scope">
+                                <div class="table-text">
+                                    <p>{{scope.row.search}}</p>
+                                    <p>{{scope.row.searchword}}</p>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="remark"
+                            label="备注"
+                            min-width="140"
+                            >
+                            <template slot-scope="scope">
+                                <div class="table-text">
+                                    <p>{{scope.row.remark}}</p>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="searchword"
+                            label="提供者/设备"
+                            min-width="100"
+                            >
+                            <template slot-scope="scope">
+                                <div class="table-text">
+                                    <p>{{scope.row.useridname}}</p>
+                                    <p>{{scope.row.device}}</p>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <el-table
+                        v-if="isUrl"
+                        key="b"
+                        border
+                        :data="tableData"
+                        class="SiteTable"
+                        tooltip-effect="dark"
+                        stripe
+                        style="width: 100%"
+                        >
+                        <el-table-column
+                            prop="url"
+                            label="按URL"
+                            min-width="200"
+                            >
+                        </el-table-column>
+                        <el-table-column
+                            prop="number"
+                            label="数量"
+                            min-width="120"
+                            >
+                        </el-table-column>
+                    </el-table>
+                    <el-table
+                        v-if="isProduct"
+                        key="c"
+                        border
+                        :data="tableData"
+                        class="SiteTable"
+                        tooltip-effect="dark"
+                        stripe
+                        style="width: 100%"
+                        >
+                        <el-table-column
+                            prop="keyproduct"
+                            label="按产品"
+                            min-width="200"
+                            >
+                        </el-table-column>
+                        <el-table-column
+                            prop="number"
+                            label="数量"
+                            min-width="120"
+                            >
+                        </el-table-column>
+                    </el-table>
+                    <el-table
+                        v-if="isCountry"
+                        key="d"
+                        border
+                        :data="tableData"
+                        class="SiteTable"
+                        tooltip-effect="dark"
+                        stripe
+                        style="width: 100%"
+                        >
+                        <el-table-column
+                            prop="country"
+                            label="按国家"
+                            min-width="200"
+                            >
+                        </el-table-column>
+                        <el-table-column
+                            prop="number"
+                            label="数量"
+                            min-width="120"
+                            >
+                        </el-table-column>
+                    </el-table>
+                    <el-table
+                        v-if="isContinent"
+                        key="e"
+                        border
+                        :data="tableData"
+                        class="SiteTable"
+                        tooltip-effect="dark"
+                        stripe
+                        style="width: 100%"
+                        >
+                        <el-table-column
+                            prop="continent"
+                            label="按大洲"
+                            min-width="200"
+                            >
+                        </el-table-column>
+                        <el-table-column
+                            prop="number"
+                            label="数量"
+                            min-width="120"
+                            >
+                        </el-table-column>
+                    </el-table>
+                    <el-table
+                        v-if="isGroup"
+                        key="f"
+                        border
+                        :data="tableData"
+                        class="SiteTable"
+                        tooltip-effect="dark"
+                        stripe
+                        style="width: 100%"
+                        >
+                        <el-table-column
+                            prop="phoneid"
+                            label="按组别"
+                            min-width="200"
+                            >
+                        </el-table-column>
+                        <el-table-column
+                            prop="number"
+                            label="数量"
+                            min-width="120"
+                            >
+                        </el-table-column>
+                    </el-table>
+                    <el-table
+                        v-if="isProducttype"
+                        key="g"
+                        border
+                        :data="tableData"
+                        class="SiteTable"
+                        tooltip-effect="dark"
+                        stripe
+                        style="width: 100%"
+                        >
+                        <el-table-column
+                            prop="producttypename"
+                            label="按产品分类"
+                            min-width="200"
+                            >
+                        </el-table-column>
+                        <el-table-column
+                            prop="number"
+                            label="数量"
+                            min-width="120"
+                            >
+                        </el-table-column>
+                    </el-table>
+                </div>
+                <div class="pagination-panel" ref="pagePane">
+                    <el-pagination
+                        @size-change="handleSizeChange"
+                        :page-sizes="pageSizeList"
+                        @current-change="handleCurrentChange"
+                        :current-page="searchData.page"
+                        :layout="device==='mobile'?'jumper':'total, sizes, prev, pager, next, jumper'"
+                        :total="totalDataNum">
+                    </el-pagination>
+                </div>
             </div>
-        </el-card>
+        </el-card>        
+        <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="400px">
+            <el-form :inline="true" :model="exportForm">
+                <el-form-item label="文件名称：" :label-width="formLabelWidth">
+                <el-input v-model="exportForm.fileName" placeholder="文件名 (默认：excel-list)" prefix-icon="el-icon-document"></el-input>
+                </el-form-item>
+                <el-form-item label="文件类型：" :label-width="formLabelWidth">
+                <el-select v-model="exportForm.bookType" placeholder="请选择导出文件类型">
+                    <el-option label="xlsx" value="xlsx"></el-option>
+                    <el-option label="csv" value="csv"></el-option>
+                    <el-option label="txt" value="txt"></el-option>
+                </el-select>
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <span class="dialog-footer">
+                <el-button @click="dialogExportVisible = false">取 消</el-button>
+                <el-button :loading="downloadLoading" type="primary" icon="el-icon-document" @click="handleDownload">导 出</el-button>
+                </span>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
@@ -304,7 +645,6 @@ export default {
   data() {
     return {
         menuButtonPermit:[],
-        tableHeight:0,
         tableData:[],
         searchData:{
             date:[],
@@ -376,6 +716,14 @@ export default {
             {label:"移动设备",value:"移动设备"},
             {label:"未知设备",value:"未知设备"},
         ],
+        groupurlproductList:[
+            {label:"按URL",value:1,isOn:false},
+            {label:"按产品",value:2,isOn:false},
+            {label:"按国家",value:3,isOn:false},
+            {label:"按大洲",value:4,isOn:false},
+            {label:"按组别",value:5,isOn:false},
+            {label:"按产品分类",value:6,isOn:false},
+        ],
         timeList:[
             {label:"0-3",value:"0-3"},
             {label:"3-6",value:"3-6"},
@@ -404,6 +752,37 @@ export default {
             {label:"5.产量过小",value:"5.产量过小"},
             {label:"6.联系方式错误",value:"6.联系方式错误"},
         ],
+        infoData:{
+            totalCount:0,
+            effectiveCount:0,
+            invalidCount:0,
+            levelOneCount:0,
+            levelTwoCount:0,
+            totalCountMonth:0,
+            effectiveCountMonth:0,
+            invalidCountMonth:0,
+            levelOneCountMonth:0,
+            levelTwoCountMonth:0,
+        },
+        formLabelWidth:"110px",
+        exportForm:{
+            fileName:"",
+            bookType:"xlsx"
+        },
+        dialogExportVisible:false,
+        downloadLoading: false,
+        permitField:[],
+        isExportDisabled:true,
+        isDisabled:true,
+        pageSizeList:[20],
+
+        isUrl:false,
+        isProduct:false,
+        isCountry:false,
+        isContinent:false,
+        isGroup:false,
+        isProducttype:false,
+        isClues:true,
     }
   },
   computed: {
@@ -414,26 +793,6 @@ export default {
   },
   mounted(){
     const $this = this;
-    $this.$nextTick(function () {
-      $this.tableHeight = $this.$refs.boxPane.offsetHeight-30;
-    });
-    window.onresize = () => {
-        return (() => {
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-30;
-        })()
-    }
-  },
-  watch: {
-      tableHeight(val) {
-        if (!this.timer) {
-          this.tableHeight = val
-          this.timer = true
-          const $this = this
-          setTimeout(function() {
-            $this.timer = false
-          }, 400)
-        }
-      },
   },
   created(){
     var $this = this;
@@ -451,7 +810,7 @@ export default {
       $this.$store.dispatch('enphone/cluesSearchSelectDataAction', null).then(response=>{
         if(response){
           if(response.status){
-              console.log(response,"搜索条件数据")
+              console.log(response,"搜索数据02")
               var phoneList = [];
               response.phone.forEach(function(item,index){
                   var itemData = {};
@@ -532,24 +891,6 @@ export default {
         }
       });
     },
-    // 搜索数据
-    searchResult(){
-        var $this = this;
-        var searchData = {};
-        $this.$store.dispatch('enphone/getCurrentCluesSearchListAction', searchData).then(response=>{
-            if(response){
-                if(response.status){
-                    console.log(response,"搜索结果数据")
-                }else{
-                    $this.$message({
-                        showClose: true,
-                        message: response.info,
-                        type: 'error'
-                    });
-                }
-            }
-        });
-    },
     // 小组全选
     handleCheckAllTeamChange(e){
       var $this = this;
@@ -628,7 +969,86 @@ export default {
         $this.$store.dispatch('enphone/getCurrentCluesSearchListAction', resultData).then(response=>{
         if(response){
           if(response.status){
-              console.log(response,"搜索条件数据")
+            console.log(response,"搜索条件数据01");
+            var infoData = {};
+            infoData.totalCount = response.allcount;
+            if($this.searchData.is_group){
+                $this.isClues=false;
+                infoData.groupCount = response.countgroup;
+                if($this.searchData.groupurlproduct == 1){
+                    $this.isUrl=true;
+                    $this.isProduct=false;
+                    $this.isCountry=false;
+                    $this.isContinent=false;
+                    $this.isGroup=false;
+                    $this.isProducttype=false;
+                }
+                if($this.searchData.groupurlproduct == 2){
+                    $this.isUrl=false;
+                    $this.isProduct=true;
+                    $this.isCountry=false;
+                    $this.isContinent=false;
+                    $this.isGroup=false;
+                    $this.isProducttype=false;
+                }
+                if($this.searchData.groupurlproduct == 3){
+                    $this.isUrl=false;
+                    $this.isProduct=false;
+                    $this.isCountry=true;
+                    $this.isContinent=false;
+                    $this.isGroup=false;
+                    $this.isProducttype=false;
+                }
+                if($this.searchData.groupurlproduct == 4){
+                    $this.isUrl=false;
+                    $this.isProduct=false;
+                    $this.isCountry=false;
+                    $this.isContinent=true;
+                    $this.isGroup=false;
+                    $this.isProducttype=false;
+                }
+                if($this.searchData.groupurlproduct == 5){
+                    $this.isUrl=false;
+                    $this.isProduct=false;
+                    $this.isCountry=false;
+                    $this.isContinent=false;
+                    $this.isGroup=true;
+                    $this.isProducttype=false;
+                }
+                if($this.searchData.groupurlproduct == 6){
+                    $this.isUrl=false;
+                    $this.isProduct=false;
+                    $this.isCountry=false;
+                    $this.isContinent=false;
+                    $this.isGroup=false;
+                    $this.isProducttype=true;
+                }                
+            }else{
+                infoData.effectiveCount = response.effectivecount;
+                infoData.invalidCount = response.noeffectivecount;
+                $this.isUrl=false;
+                $this.isProduct=false;
+                $this.isCountry=false;
+                $this.isContinent=false;
+                $this.isGroup=false;
+                $this.isProducttype=false;
+                $this.isClues=true;
+            }
+            if(response.data.length>0){
+              $this.isExportDisabled = false;
+            }else{
+              $this.isExportDisabled = true;
+            }
+            $this.tableData = response.data;
+            $this.infoData = infoData;
+            $this.totalDataNum = response.allcount;
+            $this.pageSizeList;            
+            var pageSizeListArr = [$this.pageSizeList];
+            if (pageSizeListArr.length > 1) {
+              pageSizeListArr.shift();
+            }
+            pageSizeListArr = [searchData.limit];
+            $this.pageSizeList = pageSizeListArr;
           }else{
             $this.$message({
                 showClose: true,
@@ -672,6 +1092,123 @@ export default {
         $this.isAllTeam=false;
         $this.checkAllTeam=false;
         $this.pageSizeList=[20];
+    },
+    // 表格多选改变事件
+    handleSelectionChange(val) {
+        var $this = this;
+        $this.selectedData = val;
+        if($this.selectedData.length>0){
+          $this.isDisabled = false;
+        }else{
+          $this.isDisabled = true;
+        }
+    },
+    // 当前产品分类改变触发事件
+    currentCateChange(e){
+        var $this = this;
+        if(e){
+          $this.searchData.productid = "";
+          $this.$store.dispatch('enphone/getCurrentCateProductListAction', {typeid:e}).then(response=>{
+              if(response){
+                  if(response.status){
+                      console.log(response,"搜索条件信息phoneindex");
+                      var productList = [];
+                      response.data.forEach(function(item,index){
+                          var itemData = {};
+                          itemData.label = item.name;
+                          itemData.value = item.id;
+                          productList.push(itemData);
+                      });
+                      $this.productList = productList;
+                  }else{
+                      $this.$message({
+                      showClose: true,
+                      message: response.info,
+                      type: 'error'
+                      });
+                  }
+              }
+          });
+        }else{
+          $this.searchData.productid = "";
+          $this.productList = [];
+        }
+    },
+    //分组选择点击事件
+    groupurlproductClick(id){
+      var $this = this;
+      var groupurlproductList = $this.groupurlproductList;
+      groupurlproductList.forEach(function(item,index){
+        if(item.value == id){
+          if(item.isOn){
+            item.isOn = false;
+          }else{
+            item.isOn = true;
+            $this.searchData.groupurlproduct = id;
+          }
+        }else{
+          item.isOn = false;
+        }
+      });
+      $this.groupurlproductList = groupurlproductList;
+    },
+    // 导出当前页数据
+    handleDownload() {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['ID','电话','询盘时间','星期','域名','渠道','地区','城市','意向设备','有效','添加人','添加时间','等级','备注','原因','域名','链接','平台','关键词','备注','提供者','设备']
+        const list = this.tableData
+        const data = [];
+        list.forEach(function(item,index){
+          var itemData = [];
+          itemData.push(item.id);
+          itemData.push(item.phonenumber);
+          itemData.push(item.xuntime);
+          itemData.push(item.weekday);
+          itemData.push(item.domain);
+          itemData.push(item.sourcename);
+          itemData.push(item.province);
+          itemData.push(item.city);
+          itemData.push(item.keyproduct);
+          itemData.push(item.invalidcause);
+          itemData.push(item.addusername);
+          itemData.push(item.addtime);
+          itemData.push(item.levelname);
+          itemData.push(item.custormcause);
+          itemData.push(item.custormremark);
+          itemData.push(item.domain);
+          itemData.push(item.url);
+          itemData.push(item.search);
+          itemData.push(item.searchword);
+          itemData.push(item.remark);
+          itemData.push(item.useridname);
+          itemData.push(item.device);
+          data.push(itemData);
+        });
+        // const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.exportForm.fileName,
+          autoWidth: true,
+          bookType: this.exportForm.bookType
+        })
+        this.downloadLoading = false;
+        this.dialogExportVisible = false;
+        this.exportForm.fileName = "";
+      })
+    },
+    // 每页显示条数改变事件
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.searchData.limit = val;
+      this.initCluesList();
+    },
+    // 当前页改变事件
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.searchData.page = val;
+      this.initCluesList();
     },
   }
 }

@@ -132,11 +132,48 @@
             font-size: 14px;
             line-height: 20px;
             padding: 3px 0px;
-            margin-top: 10px;
+            margin-bottom: 10px;
             border-radius: 3px;
            }
          }
      }
+}
+.SaleTips{
+   clear: both;
+   li{
+     clear: both;
+     text-align: center;
+     line-height:0;
+     font-size:0;
+     padding: 6px;
+     margin-top: 10px;
+     border-radius: 3px;
+     border: 1px solid #97b2ff;
+     background: #e9ffea;
+     color: #d51d1d;
+     width: 100%;
+     margin-bottom: 10px;
+     .tips,b,em{
+       font-style: normal;
+       vertical-align: top;
+       font-size: 12px;
+       height: 28px;
+       line-height: 28px;
+     }
+     .el-button{
+       margin: 0 10px;
+     }
+     .tips{
+       color: #d51d1d;
+       font-weight: bold;
+     }
+     b{
+       color: #379bff;
+     }
+     em{
+       color: #a06d14;
+     }
+   }
 }
 .box-card.SaleCardFlFrDatastatistic{
 

@@ -3,6 +3,9 @@
     <el-card class="box-card scroll-card" shadow="hover">
         <div class="card-content SaleAddEdit" ref="tableContent">
             <div class="SaleAddEditMain">
+                <ul class="SaleTips">
+                    <li v-if="ID&&isSalesman"><span class="tips">【提醒】：</span><b>{{formData.givesaleswarn}}</b><el-button class="item-input" size="mini" type="primary" @click="salesmanWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></li>
+                </ul>
                 <div class="SaleAddEditMainItem timeArr">
                       <dl>
                         <dt>信息分配时间：</dt>
@@ -151,7 +154,7 @@
                 </div>
             </div>
             <div class="card-header WebServerAddEditBtn SaleAddEditBtn">
-                <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Sales_addEditClues')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
+                <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Sales_phoneinfosub')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
             </div>
         </div>
     </el-card>
@@ -161,7 +164,7 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
-  name: 'addEditClues',
+  name: 'Sales_phoneinfosub',
   data() {
     return {
       ID:null,
@@ -213,6 +216,8 @@ export default {
         enxunprice:'',
         givecustormwarn:'',
         custormwarnstatus:false,
+        givesaleswarn:'',
+        saleswarnstatus:'',
       },      
       formValidate:{
         id:null,
@@ -244,7 +249,8 @@ export default {
         enxunprice: "",
         givecustormwarn: "",
         custormwarnstatus:false
-      }
+      },      
+      isSalesman:false,
     }
   },
   computed: {
@@ -290,6 +296,9 @@ export default {
           if(response.status){
             console.log(response,"初始化询盘信息");
             $this.defaultInfo = response.data;
+            if(response.data.givesaleswarn&&response.data.givesaleswarn!=''&&response.data.saleswarnstatus==3){
+              $this.isSalesman=true;
+            }
             $this.setCluesInfo();
           }else{
             $this.$message({
@@ -360,6 +369,8 @@ export default {
       $this.formData.enxunprice = $this.defaultInfo.enxunprice;
       $this.formData.givecustormwarn = $this.defaultInfo.givecustormwarn;
       $this.formData.custormwarnstatus=$this.defaultInfo.custormwarnstatus==2?true:false;
+      $this.formData.givesaleswarn = $this.defaultInfo.givesaleswarn;
+      $this.formData.saleswarnstatus = $this.defaultInfo.saleswarnstatus;
       console.log($this.formData,'$this.formData');
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -372,28 +383,17 @@ export default {
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
-            if($this.ID){
-              if(!$this.menuButtonPermit.includes('Sales_addEditClues')){
-                $this.$message({
-                  showClose: true,
-                  message: "未被分配该页面的编辑权限",
-                  type: 'error',
-                    duration:6000
-                });
-                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-              }
+            if($this.menuButtonPermit.includes('Sales_phoneinfosub')){
+              $this.initPage();
             }else{
-              if(!$this.menuButtonPermit.includes('Enphone_add')){
-                $this.$message({
-                  showClose: true,
-                  message: "未被分配该页面的添加权限",
-                  type: 'error',
-                    duration:6000
-                });
-                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-              }
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面的访问权限",
+                type: 'error',
+                  duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
             }
-            $this.initPage();
           }else{
             $this.$message({
               showClose: true,
@@ -612,6 +612,29 @@ export default {
       }
       $this.replystatusArr = replystatusArr;
       $this.formData.replystatus = $this.replystatusArr[0];
+    },
+    // 确认阅读业务员提醒
+    salesmanWarnRead(){
+      var $this = this;
+      var resultData = {};
+      resultData.id = $this.formData.id;
+      $this.$store.dispatch("Sales/getSalesConfirmrRemindAction", resultData).then(response=>{
+          console.log(response,'阅读提醒')
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.initCluesInfo();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
     },
   }
 }
