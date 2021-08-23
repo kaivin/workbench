@@ -67,7 +67,7 @@
                     </div>
                     <div class="item-search">
                         <div class="item-title">
-                            <el-checkbox class="all-select" :indeterminate="isAllTeam" border size="mini" v-model="checkAllTeam" @change="handleCheckAllTeamChange">电话全选</el-checkbox>
+                            <el-checkbox class="all-select" :indeterminate="isAllTeam" border size="mini" v-model="checkAllTeam" @change="handleCheckAllTeamChange">组别全选</el-checkbox>
                         </div>
                         <div class="unit-search">
                             <div class="unit-content">
