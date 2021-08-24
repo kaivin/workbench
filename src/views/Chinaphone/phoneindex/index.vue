@@ -1,13 +1,13 @@
 ﻿<template>
   <div class="page-root flex-box no-padding EnphoneCard" ref="boxPane">
-    <div class="sub-router">
+    <div class="sub-router" ref="EnphoneCardFl">
       <el-scrollbar wrap-class="scrollbar-wrapper">
         <div class="sub-wrapper">
           <div class="side-button">
             <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Chinaphone_search')" v-on:click="searchStatisticsData()"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
             <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="statisticsClues()"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>统计分析</el-button>
           </div>
-          <dl class="phone-list" v-for="(item,index) in defaultData.data" v-bind:key="index">
+          <dl class="phone-list" v-for="(item,index) in defaultData.phoneArr" v-bind:key="index">
             <dt><span>{{item.name}}</span></dt>
             <dd v-for="phone in item.phone" :key="phone.id" :title="phone.phonenumber+phone.othername" v-on:click="phoneJump(phone.id)"><span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
           </dl>
@@ -18,110 +18,63 @@
       <div class="abs-panel">
         <div class="scroll-panel" ref="scrollPane">
           <div class="phone-index flex-box flex-column" v-if="!phoneID">
-            <div class="num-box">
-              <el-row :gutter="15" v-if="defaultData.show==2">
-                <el-col :xs="24" :sm="12">
+            <div class="ChinaphoneNum">
                   <el-card class="box-card" shadow="hover">
-                    <div slot="header">
-                        <div class="card-header">
-                          <span>部门总计</span>
-                        </div>
-                      </div>
-                      <div class="card-content flex-box">
-                        <div class="flex-panel item-num">
-                          <dl>
-                            <dt>今天</dt>
-                            <dd>{{defaultData.allgrouptodaynumber}}</dd>
-                          </dl>
-                        </div>
-                        <div class="flex-panel item-num">
-                          <dl>
-                            <dt>昨天</dt>
-                            <dd>{{defaultData.allgrouplastnumber}}</dd>
-                          </dl>
-                        </div>
-                        <div class="flex-panel item-num">
-                          <dl>
-                            <dt>本月</dt>
-                            <dd>{{defaultData.allgroupnumber}}</dd>
-                          </dl>
-                        </div>
-                      </div>
-                  </el-card>
-                </el-col>
-                <el-col :xs="24" :sm="12">
-                  <el-card class="box-card" shadow="hover">
-                    <div slot="header">
                       <div class="card-header">
-                        <span>中文总计</span>
+                           <h2>中文总计</h2>
+                           <p class="ChinaphoneNumTag">
+                                <span class="item-clues" v-for="item in topdepart" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="topdepartClick(item.id)">{{item.name}}</span>
+                           </p>
                       </div>
-                    </div>
-                    <div class="card-content flex-box">
-                      <div class="flex-panel item-num">
-                        <dl>
-                          <dt>今天</dt>
-                          <dd>{{defaultData.alltodaynumber}}</dd>
-                        </dl>
+                      <div class="card-content ChinaphoneNumBom" >
+                        <div class="flex-panel ChinaphoneNumItem">
+                            <dl>
+                              <dt>今天</dt>
+                              <dd>{{defaultData.alltodaynumber}}</dd>
+                            </dl>
+                            <dl>
+                              <dt>昨天</dt>
+                              <dd>{{defaultData.alllastnumber}}</dd>
+                            </dl>
+                            <dl>
+                              <dt>本月</dt>
+                              <dd>{{defaultData.allnumber}}</dd>
+                            </dl>
+                        </div>
                       </div>
-                      <div class="flex-panel item-num">
-                        <dl>
-                          <dt>昨天</dt>
-                          <dd>{{defaultData.alllastnumber}}</dd>
-                        </dl>
-                      </div>
-                      <div class="flex-panel item-num">
-                        <dl>
-                          <dt>本月</dt>
-                          <dd>{{defaultData.allnumber}}</dd>
-                        </dl>
-                      </div>
-                    </div>
                   </el-card>
-                </el-col>
-              </el-row>
-              <el-row :gutter="15" v-else>
-                <el-col :span="24">
-                  <el-card class="box-card" shadow="hover">
-                    <div slot="header">
-                      <div class="card-header">
-                        <span>中文总计</span>
-                      </div>
-                    </div>
-                    <div class="card-content flex-box">
-                      <div class="flex-panel item-num">
-                        <dl>
-                          <dt>今天</dt>
-                          <dd>{{defaultData.alltodaynumber}}</dd>
-                        </dl>
-                      </div>
-                      <div class="flex-panel item-num">
-                        <dl>
-                          <dt>昨天</dt>
-                          <dd>{{defaultData.alllastnumber}}</dd>
-                        </dl>
-                      </div>
-                      <div class="flex-panel item-num">
-                        <dl>
-                          <dt>本月</dt>
-                          <dd>{{defaultData.allnumber}}</dd>
-                        </dl>
-                      </div>
-                    </div>
-                  </el-card>
-                </el-col>
-              </el-row>
             </div>
-            <div class="flex-panel">
+            <div class="flex-panel ChinaphoneMap">
               <el-card class="box-card canvas-card" shadow="hover">
-                <div slot="header">
-                  <div class="card-header">
-                    <span v-if="defaultData.show==2">本部门询盘月度趋势</span>
-                    <span v-else>中文询盘月度趋势</span>
-                  </div>
+                <div class="card-header">
+                     <h2>中文询盘月度趋势</h2>
+                     <div class="ChinaphoneMapDate">
+                        <el-select v-model="deptChart" size="small" @change="handleCheckTopdepartChange" clearable placeholder="部门总计">
+                            <el-option
+                            v-for="item in department"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>                        
+                        <el-date-picker
+                          v-model="timeChart"
+                          type="daterange"
+                          align="right"
+                          size="small"
+                          unlink-panels
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"
+                          value-format = "yyyy-MM-dd"
+                          @change="handleCheckTopdepartChange"
+                          :picker-options="pickerOptions">
+                        </el-date-picker>
+                     </div>
                 </div>
-                <div class="card-content flex-box">
+                <div class="card-content ChinaphoneMapChart">
                   <div class="canvas-wrap" v-if="device==='desktop'">
-                    <div id="cluesChart" class="chart-canvas"></div>
+                    <div id="cluesChart" class="chart-canvas" v-if="tableShow"></div>
                   </div>
                   <div class="canvas-wrap" v-else>
                     <canvas id="cluesChart" class="chart-canvas"></canvas>
@@ -242,7 +195,6 @@
                 stripe
                 class="SiteTable"
                 style="width: 100%"
-                :height="tableHeight"
                 row-key="id"
                 >
                 <el-table-column
@@ -479,7 +431,6 @@ export default {
       operationsWidth:"",
       tableData:[],      
       EnphoneCardFrWidth:200,
-      tableHeight:200,
       maxDate:[],
       minDate:[],
       maxNum:0,
@@ -496,7 +447,7 @@ export default {
         device:'',
         effective:'',
       },
-      pageSizeList:[20, 500, 5000, 10000],
+      pageSizeList:[20],
       totalDataNum:0,
       pickerRangeOptions: {
         shortcuts: [{
@@ -557,6 +508,44 @@ export default {
       downloadLoading: false,
       permitField:[],
       isDisabled:true,
+      topdepart:[],
+      topdepartChartList:[],      
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
+      chartData:{
+         dept_id:[],
+         starttime:"",
+         endtime:"",
+      },
+      department:[],
+      timeChart:"",
+      deptChart:"0",
+      tableShow:true,
     }
   },
   computed: {
@@ -569,9 +558,7 @@ export default {
     const $this = this;
     $this.$nextTick(function () {      
       $this.EnphoneCardFrWidth = $this.$refs.boxPane.offsetWidth-$this.$refs.EnphoneCardFl.offsetWidth-40-15;
-      if($this.$route.query.phoneID){
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-20-25-20-5;
-      }else{
+      if(!$this.$route.query.phoneID){
         $this.drawChart();
       }
     });
@@ -579,23 +566,11 @@ export default {
       window.onresize = () => {
           return (() => {
             $this.EnphoneCardFrWidth = $this.$refs.boxPane.offsetWidth-$this.$refs.EnphoneCardFl.offsetWidth-40-15;
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-20-25-20-5;
-            // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
           })()
       }
     }
   },
   watch: {
-      tableHeight(val) {
-        if (!this.timer) {
-          this.tableHeight = val
-          this.timer = true
-          const $this = this
-          setTimeout(function() {
-            $this.timer = false
-          }, 400)
-        }
-      },
       //监听相同路由下参数变化的时候，从而实现异步刷新
       '$route'(to,from) {
         if(this.$route.query.phoneID){
@@ -620,7 +595,6 @@ export default {
     if($this.phoneID){
       $this.$nextTick(() => {
         $this.$refs.simpleTable.doLayout();
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-20-25-20-5;
       })
     }
   },
@@ -638,7 +612,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
-      $this.$store.dispatch('chinaphone/cluesPhoneIndexDataAction', null).then(response=>{
+      $this.$store.dispatch('chinaphone/cluesPhoneIndexDataAction', $this.chartData).then(response=>{
         if(response){
           if(response.status){
             var numArr = [];
@@ -660,8 +634,18 @@ export default {
             $this.maxNum = maxNum;
             $this.maxDate = maxDate;
             $this.minDate = minDate;
+            var phoneArr=response.data;
+            phoneArr.forEach(function(item,index){
+               item.phone.forEach(function(item01,index01){
+                   var tagphone='0371-';
+                　　if(item01.phonenumber.indexOf(tagphone)!=-1){
+                       item01.phonenumber=item01.phonenumber.substring(5);
+                　　}
+               });
+            });
             $this.defaultData = response;
-            console.log(response,"电话信息");
+            $this.defaultData.phoneArr=phoneArr;
+            console.log($this.defaultData,"电话信息");
             if($this.$route.query.phoneID){
               $this.defaultData.data.forEach(function(item,index){
                 item.phone.forEach(function(item1,index1){
@@ -671,9 +655,80 @@ export default {
                 });
               });
               $this.getCurrentPhoneSearchData();
-            }else{
+            }else{              
+              var topdepart=[];
+              var topdepartObj = {
+                id:'0',
+                name:'部门总计',
+                alllastday:response.allgrouplastnumber,
+                allnumber:response.allgroupnumber,
+                alltoday:response.allgrouptodaynumber,
+                isOn:true,
+              };
+              topdepart.push(topdepartObj);
+              response.topdepart.forEach(function(item,index){
+                var itemData = {};
+                itemData.id = item.id;
+                itemData.name = item.name;
+                itemData.alllastday = item.alllastday;
+                itemData.allnumber = item.allnumber;
+                itemData.alltoday = item.alltoday;
+                itemData.isOn=false;
+                topdepart.push(itemData);
+              });
+              $this.topdepart=topdepart;
+              console.log($this.topdepart,'topdepart');
+              var topdepartChartList=[];
+              $this.topdepart.forEach(function(item,index){
+                var itemData = {};
+                itemData.value = item.id;
+                itemData.label = item.name;
+                topdepartChartList.push(itemData);
+              });
+              $this.topdepartChartList=topdepartChartList;
+              $this.departmentData();
               $this.drawChart();
             }
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          }
+        }
+      });
+    },
+    // 获取搜索部门
+    departmentData(){
+      var $this = this;
+      $this.$store.dispatch('chinaphone/cluesdepartmentDataAction', null).then(response=>{
+        if(response){
+          if(response.status){
+              var departmentList = response.data;
+              var department=[];
+              var DepartmentObj = {
+                value:'0',
+                label:'部门总计',
+              };
+              department.push(DepartmentObj);
+              departmentList.forEach(function(item,index){
+                var itemData = {};
+                itemData.value = item.id;
+                itemData.label = item.name;
+                department.push(itemData);
+              });
+              $this.department=department;
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -834,7 +889,7 @@ export default {
           const minColor = '#1CC25E';
           const defaultColor = '#5B8FF9';
           const columnPlot = new Column('cluesChart', {
-            data:$this.defaultData.groupmonthtrend,
+            data:$this.defaultData.groupmonthtrend,    
             xField: 'date',
             yField: 'xunnumber',
             appendPadding:[15,15,15,15],
@@ -919,7 +974,6 @@ export default {
             id: 'cluesChart',
             pixelRatio: window.devicePixelRatio // 指定分辨率
           });
-    
           // Step 2: 载入数据源
           chart.source($this.defaultData.groupmonthtrend, {
             date: {
@@ -1256,252 +1310,46 @@ export default {
         }
       });
     },
+    // 部门点击事件
+    topdepartClick(Tid){
+      var $this = this;
+      var topdepart = $this.topdepart;
+      topdepart.forEach(function(item){
+        if(item.id == Tid){
+          item.isOn = true;
+          $this.defaultData.alltodaynumber=item.alltoday;
+          $this.defaultData.alllastnumber=item.alllastday;
+          $this.defaultData.allnumber=item.allnumber;
+        }else{
+          item.isOn = false;
+        }
+      });
+      $this.topdepart=topdepart;
+      console.log($this.topdepart,'$this.topdepart');
+    },   
+    // 部门选择图表点击事件 
+    handleCheckTopdepartChange(){
+      var $this = this;
+      if($this.timeChart&&$this.timeChart.length>0){
+        $this.chartData.starttime = $this.timeChart[0];
+        $this.chartData.endtime = $this.timeChart[1];
+      }else{
+        $this.chartData.starttime='';
+        $this.chartData.endtime='';
+      }
+      if($this.deptChart&&$this.deptChart!=''&&$this.deptChart!='0'){
+        $this.chartData.dept_id=[$this.deptChart];
+      }else{
+        $this.chartData.dept_id=[];
+      }
+      $this.tableShow=false;
+      $this.$nextTick(function(){
+        $this.tableShow=true;
+      });
+      $this.initPage();
+    },
   }
 }
 </script>
 <style lang="scss" scoped>
-.form-title{
-  width: 110px;
-  display: inline-block;
-  text-align: right;
-  vertical-align: middle;
-  font-size: 14px;
-  color: #606266;
-  line-height: 36px;
-  padding: 0 12px 0 0;
-  box-sizing: border-box;
-}
-.item-form.icon{
-  padding-right: 76px;
-}
-.item-form{
-    padding-right: 30px;
-    position: relative;
-    .icon-button{
-      width: 36px;
-      height: 36px;
-      position: absolute;
-      top:0;
-      right: 30px;
-      border: 1px solid #C0C4CC;
-      border-radius: 4px;
-      text-align: center;
-      line-height: 34px;
-      font-size: 18px;
-      color: #999;
-      cursor: pointer;
-    }
-    >span{
-      display: block;
-      width: 30px;
-      height: 36px;
-      position: absolute;
-      right:0;
-      top:0;
-      text-align: center;
-      line-height: 36px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #bbb;
-    }
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-  }
-.item-form-group{
-  width: 100%;
-  &:before,
-  &:after {
-    content: "";
-    display: table;
-  }
-  &:after {
-    clear: both;
-  }
-  .item-form-3{
-    width: 180px;
-    float:left;
-    padding-right: 30px;
-    position: relative;
-    &:before,
-    &:after {
-      content: "";
-      display: table;
-    }
-    &:after {
-      clear: both;
-    }
-    >span{
-      display: block;
-      width: 30px;
-      height: 36px;
-      position: absolute;
-      right:0;
-      top:0;
-      text-align: center;
-      line-height: 36px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #bbb;
-    }
-  }
-  .item-form{
-    width: 50%;
-    float:left;
-    }
-}
-.clues-panel{
-  position: relative;
-}
-.phone-index{
-  height: 100%;
-  .card-header{
-    padding: 5px;
-  }
-}
-.num-box{
-  .box-card{
-    margin-bottom: 15px;
-    .item-num{
-      font-size:0;
-      line-height:0;
-      text-align: center;
-      overflow: hidden;
-      padding: 60px 0;
-      dl{
-        display: inline-block;
-        vertical-align: top;
-        overflow: hidden;
-        dt,dd{
-          display: block;
-          width: 100%;
-          text-align: right;
-        }
-        dt{
-          font-size: 16px;
-          line-height: 1.5;
-        }
-        dd{
-          font-size: 48px;
-          line-height: 1;
-          color: #fc5457;
-        }
-      }
-    }
-  }
-}
-.canvas-card{
-  ::v-deep .el-card__body{
-    padding:0;
-    position: relative;
-  }
-  .canvas-wrap{
-    position: absolute;
-    left:0;
-    top:0;
-    width: 100%;
-    height: 100%;
-    padding: 15px;
-    .chart-canvas{
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-  }
-}
-.product-span{
-    i{
-        font-style: normal;
-        font-weight: bold;
-    }
-    &.level_1{
-        i{color:#B3315F};
-    }
-    &.level_2{
-        i{
-            color: #130CB7;
-        }
-    }
-    &.level_3{
-        i{
-            color: #6a6a6b;
-        }
-    }
-}
-.absolute-panel{
-  position: absolute;
-  left:0;
-  top:0;
-  width: 100%;
-  height: 100%;
-}
-.table-input{
-  .el-input+.el-input{
-    margin-top: 10px;
-  }
-  .el-input{
-    ::v-deep .el-input__inner{
-      padding: 0 10px!important;
-    }
-  }
-  .el-textarea{
-    ::v-deep .el-textarea__inner{
-      padding: 5px 10px!important;
-    }
-  }
-}
-.table-text{
-  p{
-    a{
-      color: $--color-primary;
-      &:hover{
-        text-decoration: underline;
-      }
-    }
-  }
-}
-.table-tag{
-  text-align: center;
-  .level{
-    display: inline-block;
-    border-radius: 4px;
-    padding: 0 5px;
-    color: #fff;
-  }
-  .level-1{
-    background: #ff0000;
-  }
-  .level-2{
-    background: #eab905;
-  }
-  .level-3{
-    background: #293cfc;
-  }
-  .level-4{
-    background: #1acfda;
-  }
-  .level-5{
-    background: #f6b37f;
-  }
-  .level-6{
-    background: #7e84fd;
-  }
-}
-.export-dialog{
-  .el-form-item{
-    margin-right:0!important;
-    width: 100%;
-    ::v-deep .el-form-item__content{
-      width: 240px;
-      .el-select,.el-input{
-        width: 100%;
-      }
-    }
-  }
-}
 </style>

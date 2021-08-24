@@ -188,11 +188,19 @@ export function getCluesList() {
     method: "POST"
   });
 }
+// 电话首页-可读电话-可读部门
+export function cluesdepartmentData() {
+  return request({
+    url: "/hxindex/Chinaphone/readdepart",
+    method: "POST"
+  });
+}
 // 询盘系统页面默认电话列表数据获取动作
-export function cluesPhoneIndexData() {
+export function cluesPhoneIndexData(data) {
   return request({
     url: "/hxindex/Chinaphone/phoneindex",
-    method: "POST"
+    method: "POST",
+    data
   });
 }
 // 询盘系统页面当前电话搜索条件数据获取动作

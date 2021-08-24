@@ -42,6 +42,7 @@
     cluesRegionValid,
     cluesAnalysisSystemData,
     cluesAnalysisResultData,
+    cluesdepartmentData,
 } from '@/api/chinaphone'
 
 const state = {}
@@ -293,10 +294,20 @@ const actions = {
     },
 
     
-    // 询盘系统页面默认电话列表数据获取动作
-    cluesPhoneIndexDataAction({ commit, state }) {
+    // 电话首页-可读电话-可读部门
+    cluesdepartmentDataAction({ commit, state }) {
         return new Promise((resolve, reject) => {
-            cluesPhoneIndexData().then(response => {
+            cluesdepartmentData().then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 询盘系统页面默认电话列表数据获取动作
+    cluesPhoneIndexDataAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            cluesPhoneIndexData(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
