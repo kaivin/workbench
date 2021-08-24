@@ -7,7 +7,7 @@
     .header{
         width:100%;
         position: relative;
-        height: 64px;
+        height: 60px;
         z-index: 1100;
         display: flex;
         -webkit-box-align: center;
@@ -40,7 +40,7 @@
                     display: inline-block;
                     height: 32px;
                     line-height: 32px;
-                    font-size: 18px;
+                    font-size: 16px;
                     color: #d8d8d8;
                 }
                 .el-badge__content{
@@ -59,7 +59,7 @@
                 display: inline-block;
                 width: 32px;
                 height: 32px;
-                font-size: 18px;
+                font-size: 16px;
                 text-align: center;
                 line-height: 32px;
                 border-radius: 100%;
@@ -80,7 +80,7 @@
         .header-center{
             flex: 1;
             height: 100%;
-            padding: 16px 0;
+            padding: 14px 0;
             .header-search{
                 width: 300px;
                 float:left;
@@ -146,7 +146,7 @@
                     line-height:0;
                     font-size:0;
                     padding: 0 12px;
-                    margin-right: 12px;
+                    margin-right: 20px;
                     cursor: pointer;
                     box-shadow: 0 5px 20px rgba(247,142,66,.57);
                     transition: all .3s;
@@ -166,7 +166,6 @@
                         line-height: 32px;
                         color: #fff;
                         font-size: 14px;
-                        font-weight: 500;
                         margin-left: 10px;
                         vertical-align: top;
                     }
@@ -190,7 +189,7 @@
             .logo-link {
                 display: block;
                 height: 100%;
-                padding: 16px 23px;
+                padding: 14px 28px;
                 font-size:0;
                 line-height:0;
                 position: relative;
@@ -199,7 +198,6 @@
                 }
                 .logo-img {
                     height: 32px;
-                    margin-top: 2px;
                 }
                 .logo-title {
                     height: 22px;
@@ -207,21 +205,6 @@
                     margin-top: 5px;
                 }
             }
-        }
-    }
-}
-.hamburger-container {
-    display: block;
-    float:left;
-    line-height: 32px;
-    padding: 0 15px;
-    cursor: pointer;
-    font-size: 0;
-    text-align: center;
-    position: relative;
-    .hamburger{
-        path{
-            fill: #fff;
         }
     }
 }
@@ -241,7 +224,7 @@
 .mobile{
     .header-layout{
         .header{
-            height: 64px;
+            height: 60px;
             .header-right{
                 padding: 0 10px;
                 &:before{
@@ -252,9 +235,9 @@
                 }
                 .user-icon{
                     width: 36px;
-                    height: 64px;
+                    height: 60px;
                     font-size: 24px;
-                    line-height: 64px;
+                    line-height: 60px;
                     background: transparent;
                     color: #cccccc;
                     .svg-icon{
@@ -263,7 +246,7 @@
                 }
                 .nav-button{
                     display: inline-block;
-                    height: 64px;
+                    height: 60px;
                     width: 36px;
                     margin-left: 5px;
                     position: relative;
@@ -295,7 +278,7 @@
                 }
             }
             .header-center{
-                padding: 16px 0;
+                padding: 14px 0;
                 .header-search{
                     width: 100%;
                     .article-search{

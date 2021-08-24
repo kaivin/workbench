@@ -7,7 +7,6 @@
             </router-link>
         </div>
         <div class="header-center">
-            <hamburger id="hamburger-container" v-if="device==='desktop'" v-bind:is-active="sidebar.opened" class="hamburger-container" v-on:toggleClick="toggleSideBar" />
             <div class="header-search" v-if="isArticleSearch&&device==='desktop'">
               <el-input placeholder="请输入内容" v-model="searchWord" size="small" class="article-search">
                 <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span><span class="search-font" v-if="device==='desktop'">搜索</span></el-button>

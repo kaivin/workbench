@@ -15,12 +15,53 @@
       height: 100%;
       .scrollbar-wrapper {
         overflow-x: hidden !important;
+        position: relative;
       }
       .el-scrollbar__bar.is-vertical {
         right: 0px;
       }
       .is-horizontal {
         display: none;
+      }
+    }
+    .fold-button{
+      width: 60px;
+      height: 40px;
+      position: relative;
+      right: initial;
+      top:initial;
+      z-index: 10;
+      overflow: hidden;
+      cursor: pointer;
+      transform: rotate(180deg);
+      transition: all .05s;
+      margin-top: 10px;
+      &.is-fold{
+        transform: rotate(0);
+        position: absolute;
+        right:0;
+        top: 10px;
+        margin-top:0;
+        width: 40px;
+      }
+      &:hover{
+        .svg-i{
+          color: $--color-primary;
+        }
+      }
+      .svg-i{
+        display: block;
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+        color: #485c76;
+        margin: 4px auto;
+        overflow: hidden;
+        .svg-icon {
+          display: block;
+          height: 14px;
+          margin: 9px auto;
+        }
       }
     }
     .sidebar-menu{
@@ -40,12 +81,12 @@
           .svg-i{
             display: inline-block;
             width: 24px;
-            height: 18px;
-            font-size: 18px;
-            vertical-align: -2px;
+            height: 20px;
+            font-size: 20px;
+            vertical-align: -4px;
             .svg-icon {
               display: block;
-              height: 18px;
+              height: 20px;
               margin: 0 auto;
             }
           }
@@ -61,10 +102,11 @@
             transition: all .3s;
           }
           span{
-            font-size: 15px;
+            font-size: 14px;
             transition: all .3s;
             vertical-align: 1px;
             margin-left: 12px;
+            font-weight: 700;
           }
           &:hover,&:focus{
             background: none;
@@ -80,9 +122,9 @@
         .el-submenu__title{
           .el-submenu__icon-arrow{
             margin-top: -7px;
-            font-size: 16px;
+            font-size: 14px;
             right: 15px;
-            color: #2d2d2d;
+            color: #666;
             font-weight: bold;
           }
         }
@@ -99,6 +141,7 @@
               margin-left:0;
               padding-left: 15px;
               position: relative;
+              font-weight: normal;
               &:before{
                 content:'';
                 display: block;
