@@ -1,7 +1,7 @@
 ﻿<template>
   <div class="page-root scroll-panel home-index" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
-      <div class="card-content" ref="tableContent">
+      <div class="card-content" ref="tableContent" v-if="tableData.length>0">
         <el-table
           ref="simpleTable"
           :data="tableData"

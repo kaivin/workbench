@@ -11,11 +11,17 @@
     overflow: hidden!important;
     font-size:0;
     position: relative;
+    &.is-fold{
+      .scrollbar-wrapper{
+        padding-top: 50px;
+      }
+    }
     .el-scrollbar {
       height: 100%;
       .scrollbar-wrapper {
         overflow-x: hidden !important;
         position: relative;
+        transition: all .3s;
       }
       .el-scrollbar__bar.is-vertical {
         right: 0px;
@@ -25,24 +31,18 @@
       }
     }
     .fold-button{
-      width: 60px;
+      width: 40px;
       height: 40px;
-      position: relative;
-      right: initial;
-      top:initial;
+      position: absolute;
+      right:0;
+      top: 10px;
       z-index: 10;
       overflow: hidden;
       cursor: pointer;
-      transform: rotate(180deg);
-      transition: all .05s;
-      margin-top: 10px;
+      transition: all .3s;
       &.is-fold{
-        transform: rotate(0);
-        position: absolute;
-        right:0;
-        top: 10px;
-        margin-top:0;
-        width: 40px;
+        transform: rotate(180deg);
+        width: 60px;
       }
       &:hover{
         .svg-i{

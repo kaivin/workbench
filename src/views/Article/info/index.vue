@@ -1,55 +1,59 @@
 ﻿<template>
   <div class="page-root scroll-panel ArticleSix">
-    <div class="ArticleSixFl" v-bind:class="articleData.issay==0&&commentList.length==0?'no-comment':''">
-      <div class="article-info">
-        <div class="ArticleSixFlTop">
-          <h1>{{articleData.title}}</h1>
-          <div class="ArticleSixFlTopTag clearfix">
-            <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>{{articleData.typename}}</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>匿名</span><span v-if="device==='desktop'"><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.addtime}}</span></p>
-            <p class="ArticleSixFlTopTagFr"><i class="svg-i" ><svg-icon icon-class="eye_rz" /></i>{{articleData.hits}}<span>|</span><i class="svg-i" ><svg-icon icon-class="read_rz" /></i>{{articleData.updatetime}} </p>
-          </div>
-          <div class="ArticleSixFlTopRead" v-if="articleData.readshow==1&&device==='desktop'&&(userList.hasreadusercount>0||userList.notreadusercount>0)">
-            <p class="article-user" v-if="userList.hasreadusercount>0">
-              <strong>{{userList.hasreadusercount}}人已读</strong>
-              <template v-for="(item,index) in userList.hasreaduser">
-                <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
-                <span v-bind:key="item.id" v-else>、{{item.name}}</span>
-              </template>
-            </p>
-            <p class="article-user" v-if="userList.notreadusercount>0">
-              <strong>{{userList.notreadusercount}}人未读</strong>
-              <template v-for="(item,index) in userList.notreaduser">
-                <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
-                <span v-bind:key="item.id" v-else>、{{item.name}}</span>
-              </template>
-            </p>
+    <div class="abs-panel" ref="mainPane">
+      <div class="scroll-panel" ref="scrollPane">
+        <div class="ArticleSixFl" v-bind:class="articleData.issay==0&&commentList.length==0?'no-comment':''" v-bind:style="'min-height:'+minHeight+'px;'" ref="leftPane">
+          <div class="article-info" v-bind:style="'min-height:'+minHeight+'px;'">
+            <div class="ArticleSixFlTop">
+              <h1>{{articleData.title}}</h1>
+              <div class="ArticleSixFlTopTag clearfix">
+                <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>{{articleData.typename}}</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>匿名</span><span v-if="device==='desktop'"><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.addtime}}</span></p>
+                <p class="ArticleSixFlTopTagFr"><i class="svg-i" ><svg-icon icon-class="eye_rz" /></i>{{articleData.hits}}<span>|</span><i class="svg-i" ><svg-icon icon-class="read_rz" /></i>{{articleData.updatetime}} </p>
+              </div>
+              <div class="ArticleSixFlTopRead" v-if="articleData.readshow==1&&device==='desktop'&&(userList.hasreadusercount>0||userList.notreadusercount>0)">
+                <p class="article-user" v-if="userList.hasreadusercount>0">
+                  <strong>{{userList.hasreadusercount}}人已读</strong>
+                  <template v-for="(item,index) in userList.hasreaduser">
+                    <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
+                    <span v-bind:key="item.id" v-else>、{{item.name}}</span>
+                  </template>
+                </p>
+                <p class="article-user" v-if="userList.notreadusercount>0">
+                  <strong>{{userList.notreadusercount}}人未读</strong>
+                  <template v-for="(item,index) in userList.notreaduser">
+                    <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
+                    <span v-bind:key="item.id" v-else>、{{item.name}}</span>
+                  </template>
+                </p>
+              </div>
+            </div>
+            <div class="info-content" v-bind:class="articleData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="articleData.content"></div>
           </div>
         </div>
-        <div class="info-content" v-bind:class="articleData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="articleData.content"></div>
+        <div class="comment ArticleSixFr" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||articleData.issay==0&&commentList.length>0" v-bind:style="'min-height:'+minHeight+'px;'" ref="rightPane">
+          <div class="ArticleSixFrTop" v-bind:class="commentList.length>0?'':'no-comment'">
+              <p class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
+              <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
+                  <div class="ueditor-panel"><vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap></div>
+                  <div class="btn-rich">
+                      <el-switch class="hide-name" v-model="isHideName" inactive-text="匿名发布"></el-switch>
+                      <el-button type="primary" v-on:click="submitComment">提交</el-button>
+                  </div>
+              </div>
+          </div>
+          <div class="ArticleSixFrBom" v-if="commentList.length>0">
+              <div class="item-comment" v-for="item in commentList" v-bind:key="item.id">
+                  <div class="comment-header">
+                      <span class="name" v-if="item.is_hidename==0">{{item.name}}</span><span class="name" v-else>匿名</span>
+                      <span class="time">{{item.addtime}}</span>
+                      <span v-if="articleData.commentdelete==1&&menuButtonPermit.includes('Article_commentdelete')" class="delete" v-on:click="deleteComment(item.id)" title="删除该条评论"><i class="el-icon-delete-solid"></i></span>
+                  </div>
+                  <div class="comment-body" v-html="item.content"></div>
+              </div>
+          </div>
+        </div>
       </div>
     </div>
-    <el-card class="box-card scroll-card comment ArticleSixFr" shadow="hover" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||articleData.issay==0&&commentList.length>0">
-      <div class="ArticleSixFrTop" v-bind:class="commentList.length>0?'':'no-comment'">
-           <p slot="header" class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
-           <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
-              <div class="ueditor-panel"><vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap></div>
-              <div class="btn-rich">
-                  <el-switch class="hide-name" v-model="isHideName" inactive-text="匿名发布"></el-switch>
-                  <el-button type="primary" v-on:click="submitComment">提交</el-button>
-              </div>
-           </div>
-      </div>
-      <div class="ArticleSixFrBom" v-if="commentList.length>0">
-          <div class="item-comment" v-for="item in commentList" v-bind:key="item.id">
-              <div class="comment-header">
-                  <span class="name" v-if="item.is_hidename==0">{{item.name}}</span><span class="name" v-else>匿名</span>
-                  <span class="time">{{item.addtime}}</span>
-                  <span v-if="articleData.commentdelete==1&&menuButtonPermit.includes('Article_commentdelete')" class="delete" v-on:click="deleteComment(item.id)" title="删除该条评论"><i class="el-icon-delete-solid"></i></span>
-              </div>
-              <div class="comment-body" v-html="item.content"></div>
-          </div>
-      </div>
-    </el-card>
     <el-backtop target=".scroll-panel"></el-backtop>
   </div>
 </template>
@@ -61,6 +65,7 @@ export default {
   components: { VueUeditorWrap },
   data() {
     return {
+      minHeight:0,
       menuButtonPermit:[],
       currentID:0,
       colspanNum:12,
@@ -121,6 +126,29 @@ export default {
     ...mapGetters([
       'device'
     ]),
+  },
+  mounted(){
+      const $this = this;
+      this.$nextTick(function () {
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-30;
+      });
+      window.onresize = () => {
+          return (() => {
+            $this.minHeight = $this.$refs.mainPane.offsetHeight-30;
+          })()
+      };
+  },
+  watch: {
+      tableHeight(val) {
+        if (!this.timer) {
+          this.tableHeight = val
+          this.timer = true
+          const $this = this
+          setTimeout(function() {
+            $this.timer = false
+          }, 400)
+        }
+      },
   },
   created(){
     var $this = this;

@@ -80,7 +80,7 @@
         .header-center{
             flex: 1;
             height: 100%;
-            padding: 14px 0;
+            padding: 14px 20px;
             .header-search{
                 width: 300px;
                 float:left;
@@ -146,7 +146,7 @@
                     line-height:0;
                     font-size:0;
                     padding: 0 12px;
-                    margin-right: 20px;
+                    margin-left: 10px;
                     cursor: pointer;
                     box-shadow: 0 5px 20px rgba(247,142,66,.57);
                     transition: all .3s;

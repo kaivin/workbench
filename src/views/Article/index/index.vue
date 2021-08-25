@@ -1,309 +1,319 @@
 ﻿<template>
-    <div class="page-root bbs-panel" v-bind:class="isDefault?'scroll-panel':''" ref="boxPane">
-        <el-card class="box-card scroll-card ArticleMain" v-bind:class="device==='desktop'?'':'mobile'" shadow="hover">
-            <div slot="header">
-                <div class="card-header" v-if="device==='desktop'" ref="headerPane">
-                    <div class="border-wrap post-class ArticleOne" v-bind:class="device==='desktop'?'':'mobile'" v-if="postTypeData.length>0">
-                        <div class="border-row flex-wrap" v-for="item in postTypeData" v-bind:key="item.id" v-bind:class="item.id==isArticleTit?'active':''">
-                            <div class="border-cell txt-font" v-on:click="handArticleTit(item.id)">
-                                <span>{{item.typename}}</span>
-                            </div>
-                            <div class="border-cell flex-content" style="left:0px;">
-                                <div class="tag-panel">
-                                    <el-button type="primary" plain v-bind:class="type.plain?'is-active':''" :size="device==='desktop'?'small':'mini'" v-for="type in item.children" v-bind:key="type.id" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="border-wrap post-tag ArticleTwo clearfix" v-if="tagData.length>0&&isList">
-                        <div class="border-row flex-wrap" v-if="tags.systemList.length>0">
-                            <div class="border-cell txt-font">系统标签</div>
-                            <div class="border-cell flex-content">
-                                <div class="tag-panel">
-                                    <el-tag v-bind:class="item.plain?'is-active':''" size="small" v-for="item in tags.systemList" v-bind:key="item.id" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="border-row flex-wrap" v-if="tags.customList.length>0">
-                            <div class="border-cell txt-font">自定义标签</div>
-                            <div class="border-cell flex-content">
-                                <div class="tag-panel">
-                                    <el-tag v-bind:class="item.plain?'is-active':''" size="small" v-for="(item,index) in tags.customList" v-bind:key="index" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-header ArticleSearchScreen" v-else ref="headerPane">
-                    <div class="search-panel ArticleSearch">                              
-                        <el-input placeholder="请输入内容" v-model="keyword" class="article-search" v-if="(menuButtonPermit.includes('Article_search'))">
-                            <el-button slot="append" @click="searchResult" v-if="(menuButtonPermit.includes('Article_search'))"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
-                        </el-input>
-                    </div>
-                    <span class="WebsiteListScreen" v-on:click="searchDialog()">筛选</span>
-                </div>
-            </div>
-            <div class="card-content ArticleThree" ref="cardContent">
-                <div v-if="isDefault&&departUser.length>0" class="card-wrap ArticleThreeDefault">
-                    <ul class="depart-ul">
-                        <li class="item-depart" v-for="item in departUser" v-bind:key="item.id">
-                            <h4>{{item.name}}</h4>
-                            <div class="clerk-ul" v-if="item.departuser.length>0">
-                                <dl class="item-clerk" v-for="user in item.departuser" v-bind:key="user.id">
-                                    <dt>{{user.name}}<span>[{{user.id}}]</span></dt>
-                                    <dd><span v-bind:class="'JobLevel_'+user.level"></span></dd>
-                                </dl>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div v-if="isList" class="card-wrap ArticleThreeList">
-                    <el-table
-                        ref="simpleTable"
-                        :data="tableData"
-                        stripe
-                        :height="tableHeight"
-                        class="SiteTable"
-                        style="width: 100%"
-                        key="a"
-                        >
-                        <el-table-column
-                        prop="createname"
-                        align="center"
-                        label="添加人"
-                        width="120"
-                        >
-                        <template #default="scope">
-                            <div class="table-title">
-                            <span v-if="scope.row.is_hidename==0">{{scope.row.createname}}</span>
-                            <span v-else>匿名</span>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="title"
-                        align="left"
-                        label="标题"
-                        min-width="240"
-                        >
-                        <template #default="scope">
-                            <div class="table-title" v-on:click="jumpArticle(scope.row.id)">
-                            <i class="svg-i"><svg-icon v-if="scope.row.is_top" icon-class="top" class-name="disabled" /></i><span :style="{color:scope.row.titlecolor?scope.row.titlecolor:''}">{{scope.row.title}}</span>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="mytags"
-                        align="left"
-                        label="标签"
-                        min-width="160"
-                        >
-                        <template #default="scope">
-                            <div class="table-tag">
-                            <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="item in scope.row.tagList" v-bind:key="item.tag">{{item.tag}}</el-tag>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="readpermit"
-                        align="center"
-                        label="阅读权限"
-                        width="100"
-                        >
-                        <template slot-scope="scope">
-                            <div class="table-permit">
-                            <el-popover trigger="hover" placement="top" v-if="scope.row.authorization.length>0">
-                                <p v-for="(item,index) in scope.row.authorization" v-bind:key="index">{{item}}</p>
-                                <i slot="reference" class="svg-i"><svg-icon :icon-class="scope.row.authorization[0]!='默认权限'?'peoples':'unlock'" /></i>
-                            </el-popover>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="hits"
-                        align="center"
-                        label="点击"
-                        width="80"
-                        >
-                        <template #default="scope">
-                            <div class="table-hit">
-                            <span>{{scope.row.hits==0?'':scope.row.hits}}</span>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="commentnumber"
-                        align="center"
-                        label="评论"
-                        width="100"
-                        >
-                        <template #default="scope">
-                            <div class="table-comment">
-                            <span>{{scope.row.commentnumber==0?'':scope.row.commentnumber+"条评论"}}</span>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="addtime"
-                        align="left"
-                        label="添加时间"
-                        width="160"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                        v-if="(menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_delete'))&&device==='desktop'"
-                        :width="operationsWidth"
-                        fixed="right"
-                        prop="operations"
-                        align="center"
-                        label="操作">
-                        <template #default="scope">
-                            <el-button size="mini" v-if="scope.row.editshow&&menuButtonPermit.includes('Article_edit')" @click="editTableRow(scope.row,scope.$index)">修改</el-button>
-                            <el-button size="mini" v-if="scope.row.deleteshow&&menuButtonPermit.includes('Article_delete')" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
-                        </template>
-                        </el-table-column>
-                    </el-table>
-                    <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
-                        <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page"
-                        :page-sizes="pageSizeList"
-                        :page-size="limit"
-                        :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
-                        :total="totalDataNum">
-                        </el-pagination>
-                    </div>
-                </div>
-                <div v-if="isSearch&&menuButtonPermit.includes('Article_search')" class="card-wrap search-content">
-                    <h2>搜索关键词：<span>{{searchKey}}</span>，共找到：<span>{{totalDataNum}}</span>条</h2>
-                    <el-table
-                        ref="searchTable"
-                        :data="searchData"
-                        stripe
-                        :height="tableHeight"
-                        class="SiteTable"
-                        style="width: 100%"
-                        key="b"
-                        >
-                        <el-table-column
-                        prop="typename"
-                        label="论坛栏目"
-                        width="120"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                        prop="createname"
-                        label="添加人"
-                        width="120"
-                        >
-                        <template #default="scope">
-                            <div class="table-title">
-                            <span v-if="scope.row.is_hidename==0">{{scope.row.createname}}</span>
-                            <span v-else>匿名</span>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="title"
-                        label="标题"
-                        min-width="240"
-                        >
-                        <template #default="scope">
-                            <div class="table-title" v-on:click="jumpArticle(scope.row.id)">
-                            <span v-html="scope.row.title"></span>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="mytags"
-                        label="标签"
-                        min-width="160"
-                        >
-                        <template #default="scope">
-                            <div class="table-tag">
-                            <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="item in scope.row.tagList" v-bind:key="item.tag">{{item.tag}}</el-tag>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="remarks"
-                        label="备注"
-                        min-width="180"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                        prop="hits"
-                        label="点击"
-                        width="80"
-                        >
-                        <template #default="scope">
-                            <div class="table-hit">
-                            <span>{{scope.row.hits==0?'':scope.row.hits}}</span>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column
-                        prop="addtime"
-                        label="添加时间"
-                        width="160"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                        v-if="(menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_delete'))&&device==='desktop'"
-                        :width="operationsWidth"
-                        align="center"
-                        fixed="right"
-                        prop="operations"
-                        label="操作">
-                        <template #default="scope">
-                            <div class="table-button">
-                            <el-button size="mini" v-if="scope.row.editshow&&menuButtonPermit.includes('Article_edit')" @click="editTableRow(scope.row,scope.$index)">修改</el-button>
-                            <el-button size="mini" v-if="scope.row.deleteshow&&menuButtonPermit.includes('Article_delete')" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
-                            </div>
-                        </template>
-                        </el-table-column>
-                    </el-table>
-                    <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
-                        <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page"
-                        :page-sizes="pageSizeList"
-                        :page-size="limit"
-                        :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
-                        :total="totalDataNum">
-                        </el-pagination>
-                    </div>
-                </div>
-            </div>
-        </el-card>
-        <div class="drawerBg" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
-        <div class="WebsiteFixed" ref="WebsiteFixed" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
-            <ul :style="{height:WebsiteFixedHeight+'px'}">
-                <li v-for="item in postTypeData" v-bind:key="item.id" v-bind:class="item.id==isArticleTit?'active':''">
-                    <span class="WebsiteFixedTit">{{item.typename}}</span>
-                    <div class="tag-panel">
-                        <el-button type="primary" v-bind:class="type.plain?'is-plain':''" :size="device==='desktop'?'small':'mini'" v-for="type in item.children" v-bind:key="type.id" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
-                    </div>
-                </li>
-                <li v-if="tagData.length>0&&tags.systemList.length>0&&isList">
-                    <span class="WebsiteFixedTit">系统标签</span>
-                    <div class="tag-panel">
-                        <el-tag v-bind:class="item.plain?'is-plain':''" size="small" v-for="item in tags.systemList" v-bind:key="item.id" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
-                    </div>
-                </li>
-                <li v-if="tagData.length>0&&tags.customList.length>0&&isList">
-                    <span class="WebsiteFixedTit">自定义标签</span>
-                    <div class="tag-panel">
-                            <el-tag v-bind:class="item.plain?'is-plain':''" size="small" v-for="(item,index) in tags.customList" v-bind:key="index" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
-                    </div>
-                </li>
-            </ul>
-            <p class="WebsiteFixedFoot" ref="WebsiteFixedFoot">
-                <span class="WebsiteQue" v-on:click="searchDialog()">确定</span>
-            </p>
+    <div class="page-root bbs-panel" ref="boxPane">
+      <div class="abs-panel" ref="mainPane">
+        <div class="scroll-panel" ref="scrollPane">
+          <el-card class="box-card scroll-card ArticleMain" v-bind:class="device==='desktop'?'':'mobile'" shadow="hover">
+              <div slot="header">
+                  <div class="card-header" v-if="device==='desktop'" ref="headerPane">
+                      <div class="border-wrap post-class ArticleOne" v-bind:class="device==='desktop'?'':'mobile'" v-if="postTypeData.length>0">
+                          <div class="border-row flex-wrap" v-for="item in postTypeData" v-bind:key="item.id" v-bind:class="item.id==isArticleTit?'active':''">
+                              <div class="border-cell txt-font" v-on:click="handArticleTit(item.id)">
+                                  <span>{{item.typename}}</span>
+                              </div>
+                              <div class="border-cell flex-content" style="left:0px;">
+                                  <div class="tag-panel">
+                                      <el-button type="primary" plain v-bind:class="type.plain?'is-active':''" :size="device==='desktop'?'small':'mini'" v-for="type in item.children" v-bind:key="type.id" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="border-wrap post-tag ArticleTwo clearfix" v-if="tagData.length>0&&isList">
+                          <div class="border-row flex-wrap" v-if="tags.systemList.length>0">
+                              <div class="border-cell txt-font">系统标签</div>
+                              <div class="border-cell flex-content">
+                                  <div class="tag-panel">
+                                      <el-tag v-bind:class="item.plain?'is-active':''" size="small" v-for="item in tags.systemList" v-bind:key="item.id" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="border-row flex-wrap" v-if="tags.customList.length>0">
+                              <div class="border-cell txt-font">自定义标签</div>
+                              <div class="border-cell flex-content">
+                                  <div class="tag-panel">
+                                      <el-tag v-bind:class="item.plain?'is-active':''" size="small" v-for="(item,index) in tags.customList" v-bind:key="index" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-header ArticleSearchScreen" v-else ref="headerPane">
+                      <div class="search-panel ArticleSearch">                              
+                          <el-input placeholder="请输入内容" v-model="keyword" class="article-search" v-if="(menuButtonPermit.includes('Article_search'))">
+                              <el-button slot="append" @click="searchResult" v-if="(menuButtonPermit.includes('Article_search'))"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
+                          </el-input>
+                      </div>
+                      <span class="WebsiteListScreen" v-on:click="searchDialog()">筛选</span>
+                  </div>
+              </div>
+              <div class="card-content ArticleThree" ref="cardContent">
+                  <div v-if="isDefault&&departUser.length>0" class="card-wrap ArticleThreeDefault" v-bind:style="'min-height:'+minHeight+'px;'">
+                      <ul class="depart-ul">
+                          <li class="item-depart" v-for="item in departUser" v-bind:key="item.id">
+                              <h4>{{item.name}}</h4>
+                              <div class="clerk-ul" v-if="item.departuser.length>0">
+                                  <dl class="item-clerk" v-for="user in item.departuser" v-bind:key="user.id">
+                                      <dt>{{user.name}}<span>[{{user.id}}]</span></dt>
+                                      <dd><span v-bind:class="'JobLevel_'+user.level"></span></dd>
+                                  </dl>
+                              </div>
+                              <div class="clerk-ul" v-else>
+                                  <dl class="item-clerk">
+                                      <dt><span></span></dt>
+                                      <dd><span></span></dd>
+                                  </dl>
+                              </div>
+                          </li>
+                      </ul>
+                  </div>
+                  <div v-if="isList" class="card-wrap ArticleThreeList">
+                      <el-table
+                          ref="simpleTable"
+                          :data="tableData"
+                          stripe
+                          class="SiteTable"
+                          style="width: 100%"
+                           v-bind:style="'min-height:'+minHeight+'px;'"
+                          key="a"
+                          >
+                          <el-table-column
+                          prop="createname"
+                          align="center"
+                          label="添加人"
+                          width="120"
+                          >
+                          <template #default="scope">
+                              <div class="table-title">
+                              <span v-if="scope.row.is_hidename==0">{{scope.row.createname}}</span>
+                              <span v-else>匿名</span>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="title"
+                          align="left"
+                          label="标题"
+                          min-width="240"
+                          >
+                          <template #default="scope">
+                              <div class="table-title" v-on:click="jumpArticle(scope.row.id)">
+                              <i class="svg-i"><svg-icon v-if="scope.row.is_top" icon-class="top" class-name="disabled" /></i><span :style="{color:scope.row.titlecolor?scope.row.titlecolor:''}">{{scope.row.title}}</span>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="mytags"
+                          align="left"
+                          label="标签"
+                          min-width="160"
+                          >
+                          <template #default="scope">
+                              <div class="table-tag">
+                              <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="item in scope.row.tagList" v-bind:key="item.tag">{{item.tag}}</el-tag>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="readpermit"
+                          align="center"
+                          label="阅读权限"
+                          width="100"
+                          >
+                          <template slot-scope="scope">
+                              <div class="table-permit">
+                              <el-popover trigger="hover" placement="top" v-if="scope.row.authorization.length>0">
+                                  <p v-for="(item,index) in scope.row.authorization" v-bind:key="index">{{item}}</p>
+                                  <i slot="reference" class="svg-i"><svg-icon :icon-class="scope.row.authorization[0]!='默认权限'?'peoples':'unlock'" /></i>
+                              </el-popover>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="hits"
+                          align="center"
+                          label="点击"
+                          width="80"
+                          >
+                          <template #default="scope">
+                              <div class="table-hit">
+                              <span>{{scope.row.hits==0?'':scope.row.hits}}</span>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="commentnumber"
+                          align="center"
+                          label="评论"
+                          width="100"
+                          >
+                          <template #default="scope">
+                              <div class="table-comment">
+                              <span>{{scope.row.commentnumber==0?'':scope.row.commentnumber+"条评论"}}</span>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="addtime"
+                          align="left"
+                          label="添加时间"
+                          width="160"
+                          >
+                          </el-table-column>
+                          <el-table-column
+                          v-if="(menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_delete'))&&device==='desktop'"
+                          :width="operationsWidth"
+                          fixed="right"
+                          prop="operations"
+                          align="center"
+                          label="操作">
+                          <template #default="scope">
+                              <el-button size="mini" v-if="scope.row.editshow&&menuButtonPermit.includes('Article_edit')" @click="editTableRow(scope.row,scope.$index)">修改</el-button>
+                              <el-button size="mini" v-if="scope.row.deleteshow&&menuButtonPermit.includes('Article_delete')" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
+                          </template>
+                          </el-table-column>
+                      </el-table>
+                      <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
+                          <el-pagination
+                          @size-change="handleSizeChange"
+                          @current-change="handleCurrentChange"
+                          :current-page="page"
+                          :page-sizes="pageSizeList"
+                          :page-size="limit"
+                          :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                          :total="totalDataNum">
+                          </el-pagination>
+                      </div>
+                  </div>
+                  <div v-if="isSearch&&menuButtonPermit.includes('Article_search')" class="card-wrap search-content">
+                      <h2>搜索关键词：<span>{{searchKey}}</span>，共找到：<span>{{totalDataNum}}</span>条</h2>
+                      <el-table
+                          ref="searchTable"
+                          :data="searchData"
+                          stripe
+                          class="SiteTable"
+                          style="width: 100%"
+                          v-bind:style="'min-height:'+minHeight+'px;'"
+                          key="b"
+                          >
+                          <el-table-column
+                          prop="typename"
+                          label="论坛栏目"
+                          width="120"
+                          >
+                          </el-table-column>
+                          <el-table-column
+                          prop="createname"
+                          label="添加人"
+                          width="120"
+                          >
+                          <template #default="scope">
+                              <div class="table-title">
+                              <span v-if="scope.row.is_hidename==0">{{scope.row.createname}}</span>
+                              <span v-else>匿名</span>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="title"
+                          label="标题"
+                          min-width="240"
+                          >
+                          <template #default="scope">
+                              <div class="table-title" v-on:click="jumpArticle(scope.row.id)">
+                              <span v-html="scope.row.title"></span>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="mytags"
+                          label="标签"
+                          min-width="160"
+                          >
+                          <template #default="scope">
+                              <div class="table-tag">
+                              <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="item in scope.row.tagList" v-bind:key="item.tag">{{item.tag}}</el-tag>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="remarks"
+                          label="备注"
+                          min-width="180"
+                          >
+                          </el-table-column>
+                          <el-table-column
+                          prop="hits"
+                          label="点击"
+                          width="80"
+                          >
+                          <template #default="scope">
+                              <div class="table-hit">
+                              <span>{{scope.row.hits==0?'':scope.row.hits}}</span>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="addtime"
+                          label="添加时间"
+                          width="160"
+                          >
+                          </el-table-column>
+                          <el-table-column
+                          v-if="(menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_delete'))&&device==='desktop'"
+                          :width="operationsWidth"
+                          align="center"
+                          fixed="right"
+                          prop="operations"
+                          label="操作">
+                          <template #default="scope">
+                              <div class="table-button">
+                              <el-button size="mini" v-if="scope.row.editshow&&menuButtonPermit.includes('Article_edit')" @click="editTableRow(scope.row,scope.$index)">修改</el-button>
+                              <el-button size="mini" v-if="scope.row.deleteshow&&menuButtonPermit.includes('Article_delete')" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
+                              </div>
+                          </template>
+                          </el-table-column>
+                      </el-table>
+                      <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
+                          <el-pagination
+                          @size-change="handleSizeChange"
+                          @current-change="handleCurrentChange"
+                          :current-page="page"
+                          :page-sizes="pageSizeList"
+                          :page-size="limit"
+                          :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                          :total="totalDataNum">
+                          </el-pagination>
+                      </div>
+                  </div>
+              </div>
+          </el-card>
         </div>
+      </div>
+      <div class="drawerBg" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
+      <div class="WebsiteFixed" ref="WebsiteFixed" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
+          <ul :style="{height:WebsiteFixedHeight+'px'}">
+              <li v-for="item in postTypeData" v-bind:key="item.id" v-bind:class="item.id==isArticleTit?'active':''">
+                  <span class="WebsiteFixedTit">{{item.typename}}</span>
+                  <div class="tag-panel">
+                      <el-button type="primary" v-bind:class="type.plain?'is-plain':''" :size="device==='desktop'?'small':'mini'" v-for="type in item.children" v-bind:key="type.id" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
+                  </div>
+              </li>
+              <li v-if="tagData.length>0&&tags.systemList.length>0&&isList">
+                  <span class="WebsiteFixedTit">系统标签</span>
+                  <div class="tag-panel">
+                      <el-tag v-bind:class="item.plain?'is-plain':''" size="small" v-for="item in tags.systemList" v-bind:key="item.id" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
+                  </div>
+              </li>
+              <li v-if="tagData.length>0&&tags.customList.length>0&&isList">
+                  <span class="WebsiteFixedTit">自定义标签</span>
+                  <div class="tag-panel">
+                          <el-tag v-bind:class="item.plain?'is-plain':''" size="small" v-for="(item,index) in tags.customList" v-bind:key="index" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
+                  </div>
+              </li>
+          </ul>
+          <p class="WebsiteFixedFoot" ref="WebsiteFixedFoot">
+              <span class="WebsiteQue" v-on:click="searchDialog()">确定</span>
+          </p>
+      </div>
     </div>
 </template>
 <script>
@@ -312,7 +322,7 @@ export default {
   name: 'articleIndex',
   data() {
     return {
-      tableHeight:250,
+      minHeight:0,
       menuButtonPermit:[],
       operationsWidth:"",
       tableData:[],
@@ -352,39 +362,11 @@ export default {
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        if($this.totalDataNum>50){
-          if($this.isList){
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-          }
-          if($this.isSearch){
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-48-40-40-20;
-          }
-        }else{
-          if($this.isList){
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-40-20;
-          }
-          if($this.isSearch){
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-48-40-40-20;
-          }
-        }
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
       });
       window.onresize = () => {
           return (() => {
-              if($this.totalDataNum>50){
-                if($this.isList){
-                  $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-                }
-                if($this.isSearch){
-                  $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-48-40-40-20;
-                }
-              }else{
-                if($this.isList){
-                  $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-40-20;
-                }
-                if($this.isSearch){
-                  $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-48-40-40-20;
-                }
-              }
+            $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
           })()
       };
   },
@@ -411,21 +393,7 @@ export default {
   updated(){
     var $this = this;
     this.$nextTick(() => {
-      if($this.totalDataNum>50){
-        if($this.isList){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-        }
-        if($this.isSearch){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-48-40-40-20;
-        }
-      }else{
-        if($this.isList){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-40-20;
-        }
-        if($this.isSearch){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-48-40-40-20;
-        }
-      }
+      $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
       if($this.isList){
         $this.$refs.simpleTable.doLayout();
       }
