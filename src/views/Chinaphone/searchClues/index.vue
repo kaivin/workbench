@@ -150,18 +150,20 @@
                         </el-input>
                     </div>
                 </div>
-                <div class="clues-info" style="margin-bottom:20px">
-                    <p v-if="isClues"><span class="item-span-1">根据查询条件共找到：<strong>{{infoData.totalCount}}</strong>条，</span><span class="item-span-2">其中有效<strong>{{infoData.effectiveCount}}</strong>条，无效：<strong>{{infoData.invalidCount}}</strong>条！</span></p>
-                    <p v-if="isUrl"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>条URL！数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                    <p v-if="isProduct"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                </div>
-                <div class="clues-title">
-                     <div class="clues-title-btn">
+                  <div class="clues-info flex-wrap">
+                       <div class="clues-infoFl flex-content">
+                          <p v-if="isClues"><span class="item-span-1">根据查询条件共找到：<strong>{{infoData.totalCount}}</strong>条，</span><span class="item-span-2">其中有效<strong>{{infoData.effectiveCount}}</strong>条，无效：<strong>{{infoData.invalidCount}}</strong>条！</span></p>
+                          <p v-if="isUrl"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>条URL！数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                          <p v-if="isProduct"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                       </div>
+                       <div class="clues-title-btn">                          
                         <el-button type="primary" size="small" class="serchBtn" v-if="device==='desktop'" @click="searchResult"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>查询</el-button>
                         <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
                         <el-button type="primary" size="small" class="editorNote" v-bind:disabled="isDisabled" v-on:click="setALevel"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>标记为A+</el-button>
-                     </div>
-                </div>
+
+
+                       </div>
+                  </div>
             </div>
         </div>
         <div class="card-content" ref="tableContent">

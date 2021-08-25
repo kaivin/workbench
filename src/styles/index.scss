@@ -242,19 +242,81 @@
 }
 
 .clues-info{
-  background:#f6f8fa;
-  border:1px solid #e4e8ee;
   overflow:hidden;
-  padding:10px 20px;
-  border-radius:4px;
+  position: relative;
+  .clues-infoFl{
+    clear: both;
+    display: block;
+    background:#f6f8fa;
+    border:1px solid #e4e8ee;
+    padding:4px 15px;
+    border-radius:4px;
+  }  
+  .clues-title-btn{
+    padding-left: 30px;
+    .el-button.el-button--primary{
+      float: left;
+      line-height: 1;
+      padding:8px 10px 7px 10px;
+      &.serchBtn{
+         background:#2e88ff;
+         border-color:#2e88ff;
+         color: #fff;
+         &:hover{
+           background:#f73a3e;
+           border-color: #f73a3e;
+         }
+      }
+      &.derived{
+          background: #fff;
+          border-color: #31dab5;
+          color: #31dab5;
+          &:hover{
+           border-color:#f73a3e;
+           color: #f73a3e;
+          }
+          &.is-disabled,&.is-disabled:hover{
+           border-color: #cccccc;
+           color: #bbbbbb;
+           background: #f7f7f7;
+          }
+      }
+      &.editorNote{
+          background: #fff;
+          border-color: #f9a000;
+          color: #f9a000;
+          &:hover{
+           border-color:#f73a3e;
+           color:#f73a3e;
+          }
+          &.is-disabled,&.is-disabled:hover{
+           border-color: #cccccc;
+           color: #bbbbbb;
+           background: #f7f7f7;
+          }
+      }
+      i{
+         float: left;
+         margin-right:7px;
+         .svg-icon{
+              width:15px;
+              height:15px;
+              vertical-align: middle;
+         }
+      }
+    }
+  }
   p{
-    font-size:13px;
-    line-height:30px;
+    font-size:12px;
+    line-height:24px;
+    color:#999;
     em{
       font-style:normal;
       margin:0 10px;
     }
     span{
+      color:#333;
+      padding:0px 5px;
       strong,b{
         margin:0 2px;
       }
@@ -468,8 +530,6 @@
   color:#FFFFFF!important;
 }
 /*移动端默认日期*/
-
-
 .el-popover{
   min-width:100px!important;
 }
@@ -563,78 +623,33 @@
   clear: both;
   display: block;
   overflow: hidden;
-  h2{
-      float: left;
-      font-size:18px;
-      color:#2e84f6;
-      line-height:32px;
-     i{
-        margin-right: 10px;
-        float: left;
-        line-height: 22px;
-        margin-top: 3px;
-        .svg-icon{
-             width:22px;
-             height:22px;
-             vertical-align: middle;
-        }
-     }
-  }
-  .clues-title-btn{
-       float: right;
-       .el-button.el-button--primary{
-         float: left;
-         line-height: 1;
-         padding:8px 10px 7px 10px;
-         &.serchBtn{
-            background:#2e88ff;
-            border-color:#2e88ff;
-            color: #fff;
-            &:hover{
-              background:#f73a3e;
-              border-color: #f73a3e;
-            }
-         }
-         &.derived{
-             background: #fff;
-             border-color: #00d1a4;
-             color: #00d1a4;
-             &:hover{
-              border-color:#f73a3e;
-              color: #f73a3e;
-             }
-             &.is-disabled,&.is-disabled:hover{
-              border-color: #cccccc;
-              color: #bbbbbb;
-              background: #f7f7f7;
-             }
-         }
-         &.editorNote{
-             background: #fff;
-             border-color: #d7dce5;
-             color: #666666;
-             &:hover{
-              border-color:#f73a3e;
-              color:#f73a3e;
-             }
-             &.is-disabled,&.is-disabled:hover{
-              border-color: #cccccc;
-              color: #bbbbbb;
-              background: #f7f7f7;
-             }
-         }
-         i{
-            float: left;
-            margin-right:7px;
-            .svg-icon{
-                 width:15px;
-                 height:15px;
-                 vertical-align: middle;
-            }
-         }
-       }
-  }
+  font-size:18px;
+  color:#2e84f6;
+  line-height:24px;
+  padding-bottom:10px;
 }
+//.clues-title{
+//  clear: both;
+//  display: block;
+//  overflow: hidden;
+//  h2{
+//      float: left;
+//      font-size:18px;
+//      color:#2e84f6;
+//      line-height:32px;
+//     i{
+//        margin-right: 10px;
+//        float: left;
+//        line-height: 22px;
+//        margin-top: 3px;
+//        .svg-icon{
+//             width:22px;
+//             height:22px;
+//             vertical-align: middle;
+//        }
+//     }
+//  }
+//}
 /*表格样式*/
 .el-table.SiteTable{
   border-radius:8px;

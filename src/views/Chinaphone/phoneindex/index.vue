@@ -86,6 +86,7 @@
           <el-card class="box-card scroll-card EnphoneCardFrDate" v-else shadow="hover">
             <div slot="header">
               <div class="card-header" ref="headerPane">
+                  <h2 class="clues-title">当前信息：{{currentPhone}}</h2>
                   <div class="search-wrap" v-if="device==='desktop'">
                     <el-date-picker
                         v-model="searchData.date"
@@ -163,26 +164,23 @@
                     </el-select>
                     <el-button class="item-input" type="primary" icon="el-icon-search" @click="searchResult" style="margin: 5px;float:left;">查询</el-button>
                   </div>
-                  <div class="clues-info">
-                    <p>
-                        <span class="item-span-1">共有<strong>{{infoData.totalCount}}</strong>条。</span>
-                        <span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条。</span>
-                        <span class="item-span-2">无效：<strong>{{infoData.invalidCount}}</strong>条。</span>
-                        <span class="item-span-3">其中：一类产品<strong>{{infoData.levelOneCount}}</strong>个，二类产品<b>{{infoData.levelTwoCount}}</b>个。</span>
-                    </p>
-                    <p>
-                        <span class="item-span-1">本月共有<strong>{{infoData.totalCountMonth}}</strong>条信息。</span>
-                        <span class="item-span-2">有效：<strong>{{infoData.effectiveCountMonth}}</strong>条。</span>
-                        <span class="item-span-2">无效：<strong>{{infoData.invalidCountMonth}}</strong>条。</span>
-                        <span class="item-span-3">其中：一类产品<strong>{{infoData.levelOneCountMonth}}</strong>个，二类产品<b>{{infoData.levelTwoCountMonth}}</b>个。</span>
-                    </p>
-                  </div>
-                  <div class="clues-title">
-                      <h2><i class="svg-i" ><svg-icon icon-class="telBlue" /></i>{{currentPhone}}</h2>
-                      <div class="clues-title-btn">
+                  <div class="clues-info flex-wrap">
+                       <div class="clues-infoFl flex-content">
+                            <p>
+                                <span class="item-span-1">共有<strong>{{infoData.totalCount}}</strong>条信息</span>|
+                                <span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条，</span>
+                                <span class="item-span-2">无效：<strong>{{infoData.invalidCount}}</strong>条</span>|
+                                <span class="item-span-3">一类产品<strong>{{infoData.levelOneCount}}</strong>个，二类产品<b>{{infoData.levelTwoCount}}</b>个</span>
+                                <span class="item-span-1">本月共有<strong>{{infoData.totalCountMonth}}</strong>条信息</span>|
+                                <span class="item-span-2">有效：<strong>{{infoData.effectiveCountMonth}}</strong>条</span>|
+                                <span class="item-span-2">无效：<strong>{{infoData.invalidCountMonth}}</strong>条。</span>
+                                <span class="item-span-3">一类产品<strong>{{infoData.levelOneCountMonth}}</strong>个，二类产品<b>{{infoData.levelTwoCountMonth}}</b>个</span>
+                            </p>
+                       </div>
+                       <div class="clues-title-btn">
                           <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
                           <el-button type="primary" size="small" class="editorNote" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_othereditall')" v-on:click="editPageNote()"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改当前页备注</el-button>
-                      </div>
+                       </div>
                   </div>
               </div>
             </div>
