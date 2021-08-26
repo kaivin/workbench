@@ -52,6 +52,7 @@
               margin-left: 5px;
               font-weight: bold;
               color: $red;
+              font-size: 12px;
             }
           }
           dd{
@@ -108,13 +109,8 @@
     }
 }
 .box-card.SaleCardFlFrTable{
-    background:#fff!important;
-    border-radius:8px!important;
-    padding:20px;
      .el-card__header{
-         background: none;
-         border-radius:0px;
-         padding:0px;
+          margin-bottom: 15px;
          .search-wrap{
              padding-bottom:14px;
          }
@@ -178,7 +174,16 @@
 .box-card.SaleCardFlFrDatastatistic{
 
 }
-
+.SaleMassDistribution{
+  display: inline-block;
+  padding-left: 10px;
+  .el-select.el-select--small{
+    float:left; width:150px; margin-right:10px;
+  }
+  .item-input{
+    padding:9px 10px!important;
+  }
+}
 .card-content.SaleCardDataTop{
   background:#fff!important;
   border-radius:8px!important;

@@ -2,10 +2,8 @@
   <div class="page-root website-log" ref="boxPane">
     <el-card class="box-card" shadow="hover">
       <div slot="header">
-        <div class="card-header" ref="headerPane">
-            <div class="clues-title">
-              <h2><i class="svg-i" ><svg-icon icon-class="log" /></i>{{website}} 工作日志</h2>
-            </div>
+        <div class="card-header EnphoneCardHeader" ref="headerPane">
+            <h2 class="clues-title"><i class="svg-i" ><svg-icon icon-class="log" /></i>{{website}} 工作日志</h2>
         </div>
       </div>
       <div class="card-content" ref="tableContent">

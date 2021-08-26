@@ -19,73 +19,65 @@
     <div class="flex-content relative EnphoneCardFr">
       <div class="abs-panel">
         <div class="scroll-panel" ref="scrollPane">
-          <div class="phone-index flex-box flex-column" v-if="!phoneID">
-            <div class="tips-list" v-if="defaultData.custormwarn.length>0&&defaultData.custormwarntatus">
-              <div class="item-tips type-1" v-for="(item,index) in defaultData.custormwarn" v-bind:key="index" v-on:click="jumpEditPage(item.id)">{{item.custormselfwarn}}</div>
-            </div>
-            <div class="tips-list" v-if="defaultData.saleswarning.length>0&&defaultData.warningstatus">
-              <div class="item-tips type-2" v-for="(item,index) in defaultData.saleswarning" v-bind:key="index" v-on:click="jumpEditPage(item.id)">{{item.givecustormwarn}}</div>
-            </div>
-            <div class="flex-box">
-              <div class="item-box">
-                <el-card class="box-card" shadow="hover">
-                  <div slot="header">
-                      <div class="card-header">
-                        <span>英文总计</span>
-                      </div>
-                    </div>
-                    <div class="card-content flex-box">
-                      <div class="flex-panel item-num">
-                        <dl>
-                          <dt>今天</dt>
-                          <dd>{{defaultData.alltodaynumber}}</dd>
-                        </dl>
-                      </div>
-                      <div class="flex-panel item-num">
-                        <dl>
-                          <dt>昨天</dt>
-                          <dd>{{defaultData.alllastnumber}}</dd>
-                        </dl>
-                      </div>
-                      <div class="flex-panel item-num">
-                        <dl>
-                          <dt>本月</dt>
-                          <dd>{{defaultData.allnumber}}</dd>
-                        </dl>
-                      </div>
-                    </div>
-                </el-card>
+          <div class="EnStatistical" v-if="!phoneID">
+              <div class="tips-list" v-if="defaultData.custormwarn.length>0&&defaultData.custormwarntatus">
+                <div class="item-tips type-1" v-for="(item,index) in defaultData.custormwarn" v-bind:key="index" v-on:click="jumpEditPage(item.id)">{{item.custormselfwarn}}</div>
               </div>
-              <div class="item-box" v-for="(item,index) in defaultData.departnumber" v-bind:key="index">
-                <el-card class="box-card" shadow="hover">
-                  <div slot="header">
-                    <div class="card-header">
-                      <span>{{item.depart}}</span>
-                    </div>
-                  </div>
-                  <div class="card-content flex-box">
-                    <div class="flex-panel item-num">
-                      <dl>
-                        <dt>今天</dt>
-                        <dd>{{item.todaynumber}}</dd>
-                      </dl>
-                    </div>
-                    <div class="flex-panel item-num">
-                      <dl>
-                        <dt>昨天</dt>
-                        <dd>{{item.lastdaynumber}}</dd>
-                      </dl>
-                    </div>
-                    <div class="flex-panel item-num">
-                      <dl>
-                        <dt>本月</dt>
-                        <dd>{{item.monthnumber}}</dd>
-                      </dl>
-                    </div>
-                  </div>
-                </el-card>
+              <div class="tips-list" v-if="defaultData.saleswarning.length>0&&defaultData.warningstatus">
+                <div class="item-tips type-2" v-for="(item,index) in defaultData.saleswarning" v-bind:key="index" v-on:click="jumpEditPage(item.id)">{{item.givecustormwarn}}</div>
               </div>
-            </div>
+              <el-card class="box-card" shadow="hover">
+                    <div slot="header">
+                        <div class="EnStatisticalTop">
+                              <ul class="EnStatisticalTopTit">
+                                  <li v-for="(item,index) in defaultData.departcountArr" v-bind:key="index"><span v-bind:class="item.isOn?'active':''" v-on:click="topdepartClick(item.dept_id)">{{item.name}}</span></li>
+                              </ul>
+                              <div class="EnStatisticalTopBox">
+                                    <dl v-for="(item,index) in departcountUlist" v-bind:key="index" :class="item.user=='总数'?'dep':''">
+                                        <dt>{{item.user}}</dt>
+                                        <dd>
+                                            <p>今天<span>{{item.todaycount}}</span></p>
+                                            <p>昨天<span>{{item.lastdaycount}}</span></p>
+                                            <p>本月<span>{{item.monthcount}}</span></p>
+                                        </dd>
+                                    </dl>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="card-content EnStatisticalBom">
+                         <div class="EnStatisticalBomBox" v-for="(item,index) in defaultData.departusercount" v-bind:key="index">
+                              <h2>{{item.name}}个人有效询盘数量</h2>
+                              <div class="item">
+                                   <div class="itemPane" v-for="(items,indexs) in item.ulist" v-bind:key="indexs">
+                                        <h3>{{items.user}}</h3>   
+                                        <div class="itemPaneTable">                                                                      
+                                            <el-table
+                                              :data="items.xunlist"
+                                              show-summary
+                                              align='center'>
+                                              <el-table-column
+                                                prop="personname"
+                                                label="姓名">
+                                              </el-table-column>
+                                              <el-table-column
+                                                prop="todaycount"
+                                                label="今天个数">
+                                              </el-table-column>
+                                              <el-table-column
+                                                prop="lastdaycount"
+                                                label="昨天个数">
+                                              </el-table-column>
+                                              <el-table-column
+                                                prop="monthcount"
+                                                label="本月个数">
+                                              </el-table-column>
+                                            </el-table>
+                                        </div>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+              </el-card>
           </div>
           <el-card class="box-card scroll-card EnphoneCardFrDate" v-else shadow="hover">
             <div slot="header">
@@ -489,7 +481,6 @@
                 </el-table-column>
               </el-table>
             </div>
-            
             <div class="pagination-panel" ref="pagePane">
               <el-pagination
                 @size-change="handleSizeChange"
@@ -525,21 +516,23 @@
         </span>
       </template>
     </el-dialog>
-    <p class="popoverzz" v-if="levelPopBool" @click="handleLockClick"></p>
-    <div class="popover" v-if="levelPopBool">
-         <p class="popoverTit">级别修改记录</p>
+    <el-dialog title="级别修改记录" custom-class="export-dialog popover" :visible.sync="levelPopBool">
          <ul>
             <li v-for="item in levelPop" :key="item.id">            
-            <span>{{item.addtime}}</span>
-            <span v-if="item.bname&&item.bname!=''">[{{item.bname}}]修改</span>
-            <span>是否有效<em>[{{item.neweffective}}]</em></span>
-            <span>原始级别<em>[{{item.oldlevel}}]</em>,</span>
-            <span>修改后级别<em>[{{item.newlevel}}]</em>,</span>
-            <span>原因：<em>[{{item.remark}}]</em></span>            
+              <span>{{item.addtime}}</span>
+              <span v-if="item.bname&&item.bname!=''">[{{item.bname}}]修改</span>
+              <span>是否有效<em>[{{item.neweffective}}]</em></span>
+              <span>原始级别<em>[{{item.oldlevel}}]</em>,</span>
+              <span>修改后级别<em>[{{item.newlevel}}]</em>,</span>
+              <span>原因：<em>[{{item.remark}}]</em></span>            
             </li>
          </ul>
-         <span @click="handleLockClick">确定</span>
-    </div>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button :loading="downloadLoading" type="primary" icon="el-icon-document" @click="handleLockClick">确定</el-button>
+          </span>
+        </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -560,7 +553,6 @@ export default {
       operationsWidth:"",
       tableData:[],
       EnphoneCardFrWidth:200,
-      tableHeight:200,
       maxDate:[],
       minDate:[],
       maxNum:0,
@@ -718,7 +710,9 @@ export default {
       downloadLoading: false,
       permitField:[],
       isDisabled:true,
-      levelPopBool: false,
+      levelPop:[],  
+      levelPopBool:false,
+      departcountUlist:[],  
     }
   },
   computed: {
@@ -729,31 +723,8 @@ export default {
   },
   mounted(){
     const $this = this;
-    $this.$nextTick(function () {
-      if($this.$route.query.phoneID){
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-30-25-20-3;
-      }
-    });
-    if($this.$route.query.phoneID){
-      window.onresize = () => {
-          return (() => {
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-30-25-20-3;
-            // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
-          })()
-      }
-    }
   },
   watch: {
-      tableHeight(val) {
-        if (!this.timer) {
-          this.tableHeight = val
-          this.timer = true
-          const $this = this
-          setTimeout(function() {
-            $this.timer = false
-          }, 400)
-        }
-      },
       //监听相同路由下参数变化的时候，从而实现异步刷新
       '$route'(to,from) {
         if(this.$route.query.phoneID){
@@ -782,7 +753,6 @@ export default {
     if($this.phoneID){
       $this.$nextTick(() => {
         $this.$refs.simpleTable.doLayout();
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-30-25-20-3;
       })
     }
   },
@@ -803,8 +773,45 @@ export default {
       $this.$store.dispatch('enphone/cluesPhoneIndexDataAction', null).then(response=>{
         if(response){
           if(response.status){
+            var departnumberArr=[];
+            var totalObj={              
+              user: "总数",
+              depart: "总数",
+              lastdaycount:response.alllastnumber,
+              monthcount:response.allnumber,
+              todaycount:response.alltodaynumber,
+            }
+            departnumberArr.push(totalObj);
+            response.departnumber.forEach(function(item){
+                item.user=item.depart;
+                item.lastdaycount=item.lastdaynumber;
+                item.monthcount=item.monthnumber;
+                item.todaycount=item.todaynumber;
+                departnumberArr.push(item);
+            });
+            var departcountArr=[];          
+            var departcountObj={
+              dept_id:0,
+              name: "总数",
+              isOn:true,
+              ulist: departnumberArr
+            }
+            departcountArr.push(departcountObj);
+            response.departcount.forEach(function(item){
+                item.isOn=false;
+                departcountArr.push(item);
+            });
+            var departcountUlist=[];
+            departcountArr.forEach(function(item){
+              if(item.dept_id==0){
+                departcountUlist=item.ulist;
+              }
+            });
+            $this.departcountUlist = departcountUlist;
             $this.defaultData = response;
+            $this.defaultData.departcountArr = departcountArr;
             console.log(response,"电话信息");
+            console.log($this.departcountUlist,"$this.departcountUlist");
             var brand = "";
             if($this.$route.query.phoneID){
               $this.defaultData.data.forEach(function(item,index){
@@ -1360,7 +1367,23 @@ export default {
     handleLockClick(){
         var $this=this;
         $this.levelPopBool=!$this.levelPopBool;
-    }
+    },
+    // 部门点击事件
+    topdepartClick(Tid){
+      var $this = this;
+      var topdepart = $this.defaultData.departcountArr;
+      topdepart.forEach(function(item){
+        if(item.dept_id == Tid){
+          item.isOn = true;
+          var departcountUlist=[];
+          departcountUlist=item.ulist;
+          $this.departcountUlist = departcountUlist;
+        }else{
+          item.isOn = false;
+        }
+      });
+      console.log($this.departcountUlist,'$this.departcountUlist');
+    },  
   }
 }
 </script>

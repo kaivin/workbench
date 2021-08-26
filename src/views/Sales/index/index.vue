@@ -12,12 +12,12 @@
           </div>
           <dl class="Salelist">
               <dt v-bind:class="currentStatus === 'personcount'?'active':''" v-on:click="jumpLink('personcount')"><span>个人所有询盘</span><i>({{defaultData.personcount}})</i></dt>
-              <dd v-bind:class="currentStatus === 'waitdealcount'?'active':''" v-on:click="jumpLink('waitdealcount')"><span>等待处理</span><i>({{defaultData.waitdealcount}})</i></dd>
-              <dd v-bind:class="currentStatus === 'monthsaycount'?'active':''" v-on:click="jumpLink('monthsaycount')"><span>月底前需反馈</span><i>({{defaultData.monthsaycount}})</i></dd>
-              <dd v-bind:class="currentStatus === 'hasnosaycount'?'active':''" v-on:click="jumpLink('hasnosaycount')"><span>所有未反馈</span><i>({{defaultData.hasnosaycount}})</i></dd>
-              <dd v-bind:class="currentStatus === 'waitftwordcount'?'active':''" v-on:click="jumpLink('waitftwordcount')"><span>等待添加富通ID</span>><i>({{defaultData.waitftwordcount}})</i></dd>
-              <dd v-bind:class="currentStatus === 'hasdealcount'?'active':''" v-on:click="jumpLink('hasdealcount')"><span>已处理</span><i>({{defaultData.hasdealcount}})</i></dd>
-              <dd v-bind:class="currentStatus === 'hassaycount'?'active':''" v-on:click="jumpLink('hassaycount')"><span>已做反馈</span><i>({{defaultData.hasdealcount}})</i></dd>
+              <dt v-bind:class="currentStatus === 'waitdealcount'?'active':''" v-on:click="jumpLink('waitdealcount')"><span>等待处理</span><i>({{defaultData.waitdealcount}})</i></dt>
+              <dt v-bind:class="currentStatus === 'monthsaycount'?'active':''" v-on:click="jumpLink('monthsaycount')"><span>月底前需反馈</span><i>({{defaultData.monthsaycount}})</i></dt>
+              <dt v-bind:class="currentStatus === 'hasnosaycount'?'active':''" v-on:click="jumpLink('hasnosaycount')"><span>所有未反馈</span><i>({{defaultData.hasnosaycount}})</i></dt>
+              <dt v-bind:class="currentStatus === 'waitftwordcount'?'active':''" v-on:click="jumpLink('waitftwordcount')"><span>等待添加富通ID</span><i>({{defaultData.waitftwordcount}})</i></dt>
+              <dt v-bind:class="currentStatus === 'hasdealcount'?'active':''" v-on:click="jumpLink('hasdealcount')"><span>已处理</span><i>({{defaultData.hasdealcount}})</i></dt>
+              <dt v-bind:class="currentStatus === 'hassaycount'?'active':''" v-on:click="jumpLink('hassaycount')"><span>已做反馈</span><i>({{defaultData.hasdealcount}})</i></dt>
           </dl>
           <div class="side-button">
             <dl class="Sales-list">
@@ -149,14 +149,25 @@
                         </div>
                         <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
                     </div>
-                    <div class="clues-info">                
-                      <p>
-                          <span class="item-span-1">当前结果集状态：共有<strong>{{infoData.allcount}}</strong>条。</span>                  
-                      </p>
-                      <div class="clues-title-btn">
-                          <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Sales_index')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出结果</el-button>
-                          <el-button class="item-input" v-if="menuButtonPermit.includes('Sales_index')&&currentStatus === 'allotcount'" size="small" type="primary" :disabled="isTableRow" @click="deleteTableRow">分配撤回</el-button>
-                      </div>
+                    <div class="clues-info flex-wrap">
+                        <div class="clues-infoFl flex-content">
+                              <p><span class="item-span-1">当前结果集状态：共有<strong>{{infoData.allcount}}</strong>条。</span></p>
+                        </div>
+                        <div class="clues-title-btn">
+                            <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Sales_index')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出结果</el-button>
+                            <el-button class="item-input" v-if="menuButtonPermit.includes('Sales_index')&&currentStatus === 'allotcount'" size="small" type="primary" :disabled="isTableRow" @click="deleteTableRow">分配撤回</el-button>
+                            <div class="SaleMassDistribution" v-if="menuButtonPermit.includes('Sales_index')&&currentStatus === 'waitcount'">                          
+                                  <el-select v-model="Determine.DetermineSale" size="small" clearable placeholder="-选择业务员-">
+                                      <el-option
+                                      v-for="item in salesuseridList"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                      </el-option>
+                                  </el-select>
+                                <el-button class="item-input" size="small" type="primary" :disabled="isTableRow" @click="DetermineTableRow">确定分配</el-button>
+                            </div>
+                        </div>
                     </div>
                 </div>
               </div>
@@ -175,7 +186,7 @@
                     <el-table-column
                         type="selection"
                         align="center"
-                        v-if="currentStatus === 'allotcount'"
+                        v-if="currentStatus === 'allotcount'||currentStatus === 'waitcount'"
                         width="48">
                     </el-table-column>
                     <el-table-column
@@ -192,7 +203,7 @@
                     >
                     <template slot-scope="scope">
                         <div class="table-text">
-                        <p><span>星期：</span>{{scope.row.weekday}}</p>
+                        <p>{{scope.row.weekday}}-{{scope.row.xuntime}}</p>
                         <p><span>业务员：</span>{{scope.row.salesusername}}</p>
                         <p><span>特别说明：</span>{{scope.row.otherremark}}</p>
                         </div>
@@ -460,6 +471,10 @@ export default {
       selectedData:[],
       isTableRow:true,
       ids:[],
+      Determine:{
+        ids:[],
+        userid:'',
+      },
     }
   },
   computed: {
@@ -901,13 +916,14 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['ID', '星期','业务员','特别说明','大州','国家','类型','产品','富通','称呼','邮箱','电话','需求详情','处理','回复','客户性质','客户需求','个人备注','添加时间','分配时间','更新时间']
+        const tHeader = ['ID', '星期','咨询时间','业务员','特别说明','大州','国家','类型','产品','富通','称呼','邮箱','电话','需求详情','处理','回复','客户性质','客户需求','个人备注','添加时间','分配时间','更新时间']
         const list = this.tableData
         const data = [];
         list.forEach(function(item,index){
           var itemData = [];
           itemData.push(item.id);
           itemData.push(item.weekday);
+          itemData.push(item.xuntime);
           itemData.push(item.salesusername);
           itemData.push(item.otherremark);
           itemData.push(item.continent);
@@ -999,6 +1015,32 @@ export default {
           var $this = this;
           if(response){
             if(response.status){
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          }
+      });
+    },
+    // 批量分配
+    DetermineTableRow(row,index){
+      var $this = this;
+      var ids = [];
+      if($this.selectedData.length>0){
+          $this.selectedData.forEach(function(item,index){
+              ids.push(item.id);
+          });
+      }
+      $this.Determine.ids=ids;
+      $this.$store.dispatch('Sales/getSalesDistribuSalesmanAction', $this.Determine).then(response=>{
+          var $this = this;
+          if(response){
+            if(response.status){
+              console.log(response,"确定分配-response");
               $this.initPage();
             }else{
               $this.$message({

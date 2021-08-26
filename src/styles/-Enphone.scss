@@ -150,10 +150,160 @@
     }
     .EnphoneCardFr{
         position: relative;
-        .phone-index{
-          height: 100%;
-          .card-header{
-            padding: 5px;
+        .EnStatistical{
+          .el-card__header{padding:0px;}
+          .EnStatisticalTop{
+            margin-bottom:15px;
+            .EnStatisticalTopTit{              
+              background: -webkit-linear-gradient(#ffffff, #edf2f3);
+              background: -o-linear-gradient(#ffffff, #edf2f3);
+              background: -moz-linear-gradient(#ffffff, #edf2f3);
+              background: linear-gradient(#ffffff, #edf2f3); 
+              li{
+                float: left;
+                padding:0px 20px;
+                span{
+                  clear: both;
+                  display: block;
+                  font-size: 14px;
+                  font-weight: bold;
+                  color:#000;
+                  padding:15px 0px;
+                  line-height:20px;
+                  position: relative;
+                  cursor: pointer;
+                  &:after{
+                    content: '';
+                    position: absolute;
+                    left:0px;
+                    bottom:0px;
+                    height:4px;
+                    width:0;
+                    background:#2e88ff;
+                    transition: all 0.5s;
+                  }
+                  &:hover,&.active{
+                    &:after{
+                      width:100%;
+                    }
+                  }
+                }
+              }
+            }
+            .EnStatisticalTopBox{
+              clear: both;
+              display: block;
+              background:#fff;
+              padding-bottom: 2%;
+              dl{
+                float: left;
+                margin-left:2%;
+                margin-top: 2%;
+                width: 22.5%;
+                border:1px solid #f0f0f0;
+                background:#ffffff;
+                box-shadow:0px 5px 13px rgba(120,136,158,0.07);
+                border-radius:4px;
+                dt{
+                  clear: both;
+                  display: block;
+                  font-size:14px;
+                  padding:7px 15px;
+                  line-height:24px;
+                  text-align: left;
+                  color:#263445;
+                  border-bottom:1px solid #f0f0f0;
+                }
+                dd{
+                  clear: both;
+                  display:block;
+                  overflow: hidden;
+                  padding-top: 40px;
+                  padding-bottom: 40px;
+                  p{
+                    float: left;
+                    width:33.3333%;
+                    text-align: center;
+                    font-size: 14px;
+                    line-height: 20px;
+                    span{
+                      clear: both;
+                      display:block;
+                      font-size: 30px;
+                      line-height: 45px;
+                      color:#5ca0f9;
+                    }
+                  }
+                }
+                &.dep{
+                  dd{
+                    p{
+                      span{
+                        color:#f73a3e;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          .EnStatisticalBom{
+            background:#fff;
+            border-radius: 8px;
+            .EnStatisticalBomBox{
+              padding-bottom: 2%;
+              &:first-child{padding-top: 2%;}
+              h2{
+                clear: both;
+                display: block;
+                font-size:15px;
+                padding:7px 0px 7px 2%;
+                line-height:24px;
+                text-align: left;
+                color:#263445;
+              }
+              .item{
+                clear: both;
+                display: block;
+                .itemPane{
+                  float: left;
+                  margin-left:2%;
+                  margin-top: 10px;
+                  width: 22.5%;
+                  border:1px solid #f0f0f0;
+                  background:#ffffff;
+                  box-shadow:0px 5px 13px rgba(120,136,158,0.07);
+                  border-radius:4px;
+                  h3{
+                    clear: both;
+                    display: block;
+                    font-size: 14px;
+                    padding:10px 10px 10px 10px;
+                    font-weight:normal;
+                  }
+                  .itemPaneTable{
+                    .el-table{
+                      .el-table__header{
+                        th{font-weight: normal;}
+                      }
+                      thead{
+                        overflow: hidden;
+                        border-radius: 8px;
+                        tr{
+                          border-radius: 8px;
+                          th.is-leaf{
+                            border:0px; 
+                            background:#edf2f2;
+                            color:#999;
+                            font-size: 12px;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
     }

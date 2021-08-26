@@ -62,13 +62,13 @@
             <div class="item-search">
               <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
             </div>
-          </div>
-          <div class="clues-title">
-            <div class="clues-title-btn">
-                <el-button type="primary" size="small" class="derived" v-on:click="dialogImportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导入数据</el-button>
-                <el-button type="primary" size="small" class="derived" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
-                <el-button type="primary" size="small" icon="el-icon-search" @click="openSearchDialog()" v-if="device==='mobile'">高级查询</el-button>
-            </div>
+          </div>          
+          <div class="clues-info flex-wrap">
+                <div class="clues-title-btn">
+                    <el-button type="primary" size="small" class="derived" v-on:click="dialogImportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导入数据</el-button>
+                    <el-button type="primary" size="small" class="derived" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                    <el-button type="primary" size="small" icon="el-icon-search" @click="openSearchDialog()" v-if="device==='mobile'">高级查询</el-button>
+                </div>
           </div>
         </div>
       </div>

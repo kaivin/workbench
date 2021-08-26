@@ -533,6 +533,23 @@
                 </span>
             </template>
         </el-dialog>
+        <el-dialog title="级别修改记录" custom-class="export-dialog popover" :visible.sync="levelPopBool">
+            <ul>
+                <li v-for="item in levelPop" :key="item.id">            
+                <span>{{item.addtime}}</span>
+                <span v-if="item.bname&&item.bname!=''">[{{item.bname}}]修改</span>
+                <span>是否有效<em>[{{item.neweffective}}]</em></span>
+                <span>原始级别<em>[{{item.oldlevel}}]</em>,</span>
+                <span>修改后级别<em>[{{item.newlevel}}]</em>,</span>
+                <span>原因：<em>[{{item.remark}}]</em></span>            
+                </li>
+            </ul>
+            <template #footer>
+            <span class="dialog-footer">
+                <el-button :loading="downloadLoading" type="primary" icon="el-icon-document" @click="handleLockClick">确定</el-button>
+            </span>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
@@ -681,6 +698,7 @@ export default {
         isGroup:false,
         isProducttype:false,
         isClues:true,
+        levelPop:[],  
         levelPopBool:false,
     }
   },

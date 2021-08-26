@@ -411,9 +411,7 @@
         </span>
       </template>
     </el-dialog>
-    <p class="popoverzz" v-if="levelPopBool" @click="handleLockClick"></p>
-    <div class="popover" v-if="levelPopBool">
-         <p class="popoverTit">级别修改记录</p>
+    <el-dialog title="级别修改记录" custom-class="export-dialog popover" :visible.sync="levelPopBool">
          <ul>
             <li v-for="item in levelPop" :key="item.id">            
             <span>{{item.addtime}}</span>
@@ -424,8 +422,12 @@
             <span>原因：<em>[{{item.remark}}]</em></span>            
             </li>
          </ul>
-         <span @click="handleLockClick">确定</span>
-    </div>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button :loading="downloadLoading" type="primary" icon="el-icon-document" @click="handleLockClick">确定</el-button>
+          </span>
+        </template>
+    </el-dialog>
   </div>
 </template>
 
