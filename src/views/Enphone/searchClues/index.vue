@@ -157,9 +157,9 @@
                                 v-model="searchData.url"
                                 clearable>
                             </el-input>
-                            <el-checkbox class="item-checkbox" :label="searchData.is_url" size="mini" border>精确</el-checkbox>
-                            <el-checkbox class="item-checkbox" :label="searchData.effective" size="mini" border>只显示有效</el-checkbox>
-                            <el-checkbox class="item-checkbox" :label="searchData.is_adduser" size="mini" border>只显示我添加的（客服）</el-checkbox>
+                            <el-checkbox class="item-checkbox" v-model="searchData.is_url" size="mini" border>精确</el-checkbox>
+                            <el-checkbox class="item-checkbox" v-model="searchData.effective" size="mini" border>只显示有效</el-checkbox>
+                            <el-checkbox class="item-checkbox" v-model="searchData.is_adduser" size="mini" border>只显示我添加的（客服）</el-checkbox>
                             <div class="search-panelThree">
                                 <span style="float:left;line-height:28px;font-size:12px;">显示条数：</span>
                                 <el-input

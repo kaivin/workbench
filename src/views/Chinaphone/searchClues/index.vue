@@ -160,8 +160,6 @@
                         <el-button type="primary" size="small" class="serchBtn" v-if="device==='desktop'" @click="searchResult"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>查询</el-button>
                         <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
                         <el-button type="primary" size="small" class="editorNote" v-bind:disabled="isDisabled" v-on:click="setALevel"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>标记为A+</el-button>
-
-
                        </div>
                   </div>
             </div>
@@ -217,7 +215,7 @@
                     >
                     <template slot-scope="scope">
                         <div class="table-text">
-                        <p><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
+                        <p><a :href="scope.row.lookurl" target="_blank">{{scope.row.lookdomain}}</a></p>
                         <p>{{scope.row.sourcename}}</p>
                         </div>
                     </template>

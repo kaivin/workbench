@@ -168,6 +168,7 @@
                             placeholder="该项只在无效情况下填写"
                             size="small"
                             v-model="formData.invalidcause"
+                            :disabled="formData.effective"
                             clearable>
                         </el-input>
                       </dd>
@@ -229,7 +230,7 @@ export default {
         url:"",
         city:"",
         xuntime:"",
-        effective:false,
+        effective:true,
         keying:[],
         useing:"",
         custormremark:"",
@@ -658,7 +659,7 @@ export default {
       $this.formData.url="";
       $this.formData.city="";
       $this.formData.xuntime="";
-      $this.formData.effective=false;
+      $this.formData.effective=true;
       $this.formData.keying=[];
       $this.formData.useing="";
       $this.formData.custormremark="";

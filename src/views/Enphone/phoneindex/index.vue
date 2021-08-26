@@ -10,7 +10,7 @@
           <template v-for="(item,index) in defaultData.data">
             <dl class="phone-list" v-if="item.phone.length>0" v-bind:key="index">
               <dt><span>{{item.brandname}}</span></dt>
-              <dd v-for="(phone,index) in item.phone" :key="index" :title="phone.phonenumber+phone.othername" v-on:click="phoneJump(phone.id,phone.waitstatus)"><span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
+              <dd v-for="(phone,index) in item.phone" v-bind:class="phone.isOn?'active':''" :key="index" :title="phone.phonenumber+phone.othername" v-on:click="phoneJump(phone.id,phone.waitstatus)"><span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
             </dl>
           </template>
         </div>
@@ -357,7 +357,7 @@
                   <template slot-scope="scope">
                     <div class="table-text">
                       <p><span>产品：</span><span :style="'font-weight:bold;color:'+scope.row.producttypecolor">{{scope.row.producttypename}}</span>/{{scope.row.keyproduct}}</p>
-                      <p><span>物料：</span>{{scope.row.custormemail}}</p>
+                      <p><span>物料：</span>{{scope.row.material}}</p>
                       <p><span>产量：</span>{{scope.row.production}}</p>
                       <p><span>进料：</span>{{scope.row.infeed}}</p>
                       <p><span>出料：</span>{{scope.row.outfeed}}</p>
@@ -453,7 +453,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  v-if="(menuButtonPermit.includes('Enphone_otheredit'))&&device==='desktop'"
+                  v-if="writepermit&&(menuButtonPermit.includes('Enphone_otheredit'))&&device==='desktop'"
                   width="88"
                   align="center"
                   prop="operations"
@@ -466,7 +466,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  v-if="(menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_delete'))&&device==='desktop'"
+                  v-if="writepermit&&(menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_delete'))&&device==='desktop'"
                   :width="operationsWidth"
                   align="center"
                   prop="operations"
@@ -818,11 +818,14 @@ export default {
                 brand = item.brandname;
                 item.phone.forEach(function(item1,index1){
                   if(item1.id == $this.phoneID&&item1.waitstatus==$this.searchData.waitstatus){
+                    item1.isOn = true;
                     if(item1.phonenumber.indexOf("-")!=-1){
                       $this.currentPhone = item1.phonenumber;
                     }else{
                       $this.currentPhone = brand+"-"+item1.phonenumber;
                     }
+                  }else{
+                    item1.isOn = false;
                   }
                 });
               });
@@ -1238,7 +1241,7 @@ export default {
       var $this = this;
       var resultData = {};
       resultData.id = row.id;
-      resultData.phoneid = $this.phoneID;
+      resultData.phoneid = row.phoneid;
       resultData.remark1 = row.remark1;
       resultData.remark2 = row.remark2;
       resultData.remark3 = row.remark3;

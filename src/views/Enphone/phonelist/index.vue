@@ -31,8 +31,8 @@
             >
           </el-table-column>
           <el-table-column
-            prop="typename"
-            label="分类"
+            prop="brandname"
+            label="品牌"
             width="90"
             >
           </el-table-column>
@@ -523,7 +523,7 @@ export default {
             response.user.forEach(function(item,index){
               var itemData = {};
               itemData.value = item.id;
-              itemData.label = item.name;
+              itemData.label = item.name+"["+item.id+"]";
               userList.push(itemData);
             });
             $this.userList = userList;

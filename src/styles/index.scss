@@ -135,19 +135,6 @@
     }
   }
 }
-/** 分页页码统一样式 **/
-.pagination-panel{
-  overflow:hidden;
-  &.top-page{
-    .el-pagination{
-      margin-top:0;
-      margin-bottom:10px;
-    }
-  }
-  .el-pagination__sizes{
-    display:none!important;
-  }
-}
 .search-wrap{
   .el-select .el-select__tags .el-tag .el-icon-close{
     right:-4px!important;
@@ -224,12 +211,6 @@
         margin-top:20px;
       }
     }
-  }
-}
-.new-date{
-  width:280px!important;
-  .el-picker-panel__content{
-    width:248px!important;
   }
 }
 .el-time-panel{

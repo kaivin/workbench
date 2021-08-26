@@ -231,6 +231,7 @@
                             placeholder="网址"
                             size="small"
                             v-model="formData.url"
+                            @blur="urlChangePhone"
                             clearable>
                         </el-input>
                       </dd>
@@ -307,39 +308,33 @@
                           </el-checkbox-group>
                         </div>
                       </dd>
+                      <el-checkbox-group v-model="formData.keying" @change="productClick">
                       <dd>
                         <strong>砂石：</strong>
                         <div class="clues-list">
-                          <el-checkbox-group v-model="SandGravelArr">
                             <el-checkbox v-for="item in SandGravelList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
-                          </el-checkbox-group>
                         </div>
                       </dd>
                       <dd>
                         <strong>选矿/建材：</strong>
                         <div class="clues-list">
-                          <el-checkbox-group v-model="OreDressArr">
                             <el-checkbox v-for="item in OreDressList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
-                          </el-checkbox-group>
                         </div>
                       </dd>
                       <dd>
                         <strong>磨粉/烘干/压球：</strong>
                         <div class="clues-list">
-                          <el-checkbox-group v-model="FlourArr">
                             <el-checkbox v-for="item in FlourList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
-                          </el-checkbox-group>
                         </div>
                       </dd>
                       <dd>
                         <strong>其它：</strong>
                         <div class="clues-list">
-                          <el-checkbox-group v-model="otherArr">
                             <el-checkbox v-for="item in otherList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
-                          </el-checkbox-group>
                         </div>
-                        <p>**请根据客户意图选择合适的产品，可多选。如果位：其它生产线、配件、其它产品请在备注中注明具体产品</p>
+                        <p>**请根据客户意图选择合适的产品，可多选。如果为：其它生产线、配件、其它产品请在备注中注明具体产品</p>
                       </dd>
+                      </el-checkbox-group>
                     </dl>
                 </div>
                 <div class="EnphoneAddEditMainItem material">
@@ -481,16 +476,13 @@ export default {
           }]
         },
       phoneList:[],
+      productList:[],
       producttypeList:[],//分类
       producttypeArr:[],
       SandGravelList:[],//沙石
-      SandGravelArr:[],
-      OreDressList:[],//选矿建材
-      OreDressArr:[],
-      FlourList:[],//磨粉
-      FlourArr:[],
+      OreDressList:[],//选矿/建材
+      FlourList:[],//磨粉/烘干/压球
       otherList:[],//其它
-      otherArr:[],
       fileList:[],//上传文件
       salesuserlist:[],//业务员
       messagetypeList:[
@@ -589,7 +581,6 @@ export default {
         enxunprice:0,
         givecustormwarn:"",
         custormselfwarn:"",
-
       },
       defaultInfo:{},
       priceList:[],
@@ -652,7 +643,7 @@ export default {
       formData.xunremark = $this.formData.xunremark;
       formData.custormremark = $this.formData.custormremark;
       formData.invalidcause = $this.formData.invalidcause;
-      formData.saleswarnstatus = $this.formData.saleswarnstatus?2:3;
+      formData.saleswarnstatus = $this.formData.saleswarnstatus?3:2;
       formData.effective = $this.formData.effective?1:2;
       formData.xuntime = $this.formData.xuntime;
       formData.timediff = $this.formData.timediff;
@@ -661,9 +652,7 @@ export default {
       formData.phoneid = $this.formData.phoneid;
       formData.producttype_id = $this.formData.producttype_id;
       formData.id = $this.formData.id;
-      var keying=[];
-      keying=keying.concat($this.SandGravelArr,$this.OreDressArr,$this.FlourArr,$this.otherArr);
-      formData.keying = $this.formData.keying = keying;
+      formData.keying = $this.formData.keying;
       return formData;
     },
     // 询盘编辑获取初始化询盘信息
@@ -725,7 +714,7 @@ export default {
       $this.formData.custormneedinfo = $this.defaultInfo.custormneedinfo;
       $this.formData.otherremark = $this.defaultInfo.otherremark;
       $this.formData.givesaleswarn = $this.defaultInfo.givesaleswarn;
-      $this.formData.saleswarnstatus = $this.defaultInfo.saleswarnstatus==2?true:false;
+      $this.formData.saleswarnstatus = $this.defaultInfo.saleswarnstatus==2?false:true;
       $this.formData.custormfiles = $this.defaultInfo.custormfiles;
       $this.formData.custormfilesname = $this.defaultInfo.custormfilesname;
       $this.formData.givecustormwarn = $this.defaultInfo.givecustormwarn;
@@ -897,30 +886,39 @@ export default {
                 producttypeList.push(itemChildren);
             });
             $this.producttypeList = producttypeList;
+            var productList = [];
+            response.product.forEach(function(item,index){
+              item.product.forEach(function(item1,index1){
+                var itemData = {};
+                itemData.id = item1.id;
+                itemData.name = item1.name;
+                itemData.typeid = item1.typeid;
+                productList.push(itemData)
+              });
+            });
+            $this.productList = productList;
             var SandGravelList=[];
-            response.product[0].product.forEach(function(item,index){
-                var itemChildren = {};
-                itemChildren.label = item.name;
-                itemChildren.value = item.id;
-                SandGravelList.push(itemChildren);
+            var OreDressList=[];
+            var FlourList=[];
+            var otherList=[];
+            productList.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              if(item.typeid==1){
+                SandGravelList.push(itemData);
+              }else if(item.typeid==2||item.typeid==3){
+                OreDressList.push(itemData);
+              }else if(item.typeid==4||item.typeid==5||item.typeid==7){
+                FlourList.push(itemData);
+              }else{
+                otherList.push(itemData);
+              }
             });
             $this.SandGravelList = SandGravelList;
-            var OreDressList=[];
-            response.product[1].product.forEach(function(item,index){
-                var itemChildren = {};
-                itemChildren.label = item.name;
-                itemChildren.value = item.id;
-                OreDressList.push(itemChildren);
-            });
             $this.OreDressList = OreDressList;
-            var FlourList=[];
-            response.product[2].product.forEach(function(item,index){
-                var itemChildren = {};
-                itemChildren.label = item.name;
-                itemChildren.value = item.id;
-                FlourList.push(itemChildren);
-            });
             $this.FlourList = FlourList;
+            $this.otherList = otherList;  
             if(response.userlist.length>0){
               var salesuserlist=[];
               response.userlist.forEach(function(item,index){
@@ -932,15 +930,7 @@ export default {
               $this.salesuserlist = salesuserlist;
             }else{
               $this.salesuserlist=[{label:"",value:0}]
-            }
-            var otherList=[];
-            response.product[3].product.forEach(function(item,index){
-                var itemChildren = {};
-                itemChildren.label = item.name;
-                itemChildren.value = item.id;
-                otherList.push(itemChildren);
-            });
-            $this.otherList = otherList;            
+            }        
             $this.levelList = response.level;
             $this.priceList = response.price;
             $this.phoneList = response.phonelist;
@@ -1056,12 +1046,33 @@ export default {
     // 意向分类点击事件
     producttypeClick(){
       var $this = this;
-      var producttypeArr = $this.producttypeArr;
-      if (producttypeArr.length > 1) {
-        producttypeArr.shift();
+      var producttypeArr = [];
+      if($this.producttypeArr.length==0){
+        $this.formData.producttype_id = "";
+      }else{
+        $this.formData.producttype_id = $this.producttypeArr[$this.producttypeArr.length-1];
+        producttypeArr = [$this.formData.producttype_id];
       }
       $this.producttypeArr = producttypeArr;
-      $this.formData.producttype_id = $this.producttypeArr[0];
+    },
+    // 产品点击事件
+    productClick(){
+      var $this = this;
+      if(!$this.ID){
+        var producttypeArr = [];
+        if($this.formData.keying.length==0){
+          $this.formData.producttype_id = "";
+        }else{
+          var lastProductID = $this.formData.keying[$this.formData.keying.length-1];
+          $this.productList.forEach(function(item,index){
+            if(item.id == lastProductID){
+              $this.formData.producttype_id = item.typeid;
+            }
+          });
+          producttypeArr = [$this.formData.producttype_id];
+        }
+        $this.producttypeArr = producttypeArr;
+      }
     },
     // 保存添加/编辑数据
     saveData(){
@@ -1140,10 +1151,6 @@ export default {
         item.isOn = false;
       });
       $this.phoneList = phoneList;
-      $this.SandGravelArr=[];
-      $this.OreDressArr=[];
-      $this.FlourArr=[];
-      $this.otherArr=[];
       $this.producttypeArr=[];
     },
     // 验证是否为空
@@ -1189,10 +1196,18 @@ export default {
         });
         return false;
       }
-      if($this.formData.keying.length == 0 || $this.formData.producttype_id == ""||!$this.formData.producttype_id){
+      if($this.formData.producttype_id == ""||!$this.formData.producttype_id){
         $this.$message({
             showClose: true,
-            message: '错误：意向设备不能为空！',
+            message: '错误：意向产品分类不能为空！',
+            type: 'error'
+        });
+        return false;
+      }
+      if($this.formData.keying.length == 0){
+        $this.$message({
+            showClose: true,
+            message: '错误：意向产品不能为空！',
             type: 'error'
         });
         return false;

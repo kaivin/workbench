@@ -1,6 +1,6 @@
 ﻿<template>
-  <div class="page-root flex-box no-padding EnphoneCard" ref="boxPane">
-    <div class="sub-router" ref="EnphoneCardFl">
+  <div class="page-root flex-box no-padding cn-phone-index" ref="boxPane">
+    <div class="sub-router">
       <el-scrollbar wrap-class="scrollbar-wrapper">
         <div class="sub-wrapper">
           <div class="side-button">
@@ -9,12 +9,12 @@
           </div>
           <dl class="phone-list" v-for="(item,index) in defaultData.phoneArr" v-bind:key="index">
             <dt><span>{{item.name}}</span></dt>
-            <dd v-for="phone in item.phone" :key="phone.id" :title="phone.areaPhonenumber+phone.othername" v-on:click="phoneJump(phone.id)"><span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
+            <dd v-for="phone in item.phone" v-bind:class="phone.isOn?'active':''" :key="phone.id" :title="phone.phonenumber+phone.othername" v-on:click="phoneJump(phone.id)"><span>{{phone.shortPhonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
           </dl>
         </div>
       </el-scrollbar>
     </div>
-    <div class="flex-content EnphoneCardFr">
+    <div class="flex-content relative">
       <div class="abs-panel">
         <div class="scroll-panel" ref="scrollPane">
           <div class="phone-index flex-box flex-column" v-if="!phoneID">
@@ -445,7 +445,6 @@ export default {
       defaultData:{},
       operationsWidth:"",
       tableData:[],      
-      EnphoneCardFrWidth:200,
       maxDate:[],
       minDate:[],
       maxNum:0,
@@ -574,7 +573,6 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {      
-      $this.EnphoneCardFrWidth = $this.$refs.boxPane.offsetWidth-$this.$refs.EnphoneCardFl.offsetWidth-40-15;
       if(!$this.$route.query.phoneID){
         $this.drawChart();
       }
@@ -582,7 +580,6 @@ export default {
     if($this.$route.query.phoneID){
       window.onresize = () => {
           return (() => {
-            $this.EnphoneCardFrWidth = $this.$refs.boxPane.offsetWidth-$this.$refs.EnphoneCardFl.offsetWidth-40-15;
           })()
       }
     }
@@ -656,9 +653,10 @@ export default {
                item.phone.forEach(function(item01,index01){
                    var tagphone='-';
                 　　if(item01.phonenumber.indexOf(tagphone)!=-1){
-                       item01.areaPhonenumber=item01.phonenumber;
-                       item01.phonenumber=item01.phonenumber.substring(5);
-                　　}
+                       item01.shortPhonenumber=item01.phonenumber.split("-")[1];
+                　　}else{
+                      item01.shortPhonenumber=item01.phonenumber;
+                    }
                });
             });
             $this.defaultData = response;
@@ -669,6 +667,9 @@ export default {
                 item.phone.forEach(function(item1,index1){
                   if(item1.id == $this.phoneID){
                     $this.currentPhone = item1.phonenumber;
+                    item1.isOn = true;
+                  }else{
+                    item1.isOn = false;
                   }
                 });
               });
