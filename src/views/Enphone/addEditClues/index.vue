@@ -1181,6 +1181,14 @@ export default {
         });
         return false;
       }
+      if($this.formData.messagetype == ""||!$this.formData.messagetype){
+        $this.$message({
+            showClose: true,
+            message: '错误：来源类型不能为空！',
+            type: 'error'
+        });
+        return false;
+      }
       if($this.formData.keying.length == 0 || $this.formData.producttype_id == ""||!$this.formData.producttype_id){
         $this.$message({
             showClose: true,

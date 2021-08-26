@@ -1,5 +1,5 @@
 <template>
-    <div class="header">
+    <div class="header-panel">
         <div class="logo">
             <router-link class="logo-link" to="/">
                 <img class="logo-img" v-bind:src="logo" alt="">
@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="header-right">
-          <div class="notice-button" v-if="isEnCluesAdd">
+          <div class="notice-button" v-if="isEnCluesAdd&&customerTipsCount>0">
             <el-badge :value="customerTipsCount" :hidden="customerTipsCount==0" :max="99" class="item">
               <i class="svg-i"><svg-icon icon-class="notice" class-name="disabled" /></i>
             </el-badge>

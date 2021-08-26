@@ -302,14 +302,12 @@
             </div>
             <div class="card-content" ref="tableContent">
               <el-table
-                border
                 ref="simpleTable"
                 :data="tableData"
                 tooltip-effect="dark"
                 stripe
                 class="SiteTable"
                 style="width: 100%"
-                :height="tableHeight"
                 row-key="id"
                 >
                 <el-table-column

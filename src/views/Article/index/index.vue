@@ -362,11 +362,19 @@ export default {
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        if($this.isSearch){
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75-48;
+        }else{
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        }
       });
       window.onresize = () => {
           return (() => {
-            $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+            if($this.isSearch){
+              $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75-48;
+            }else{
+              $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+            }
           })()
       };
   },
@@ -393,7 +401,11 @@ export default {
   updated(){
     var $this = this;
     this.$nextTick(() => {
-      $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+      if($this.isSearch){
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75-48;
+      }else{
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+      }
       if($this.isList){
         $this.$refs.simpleTable.doLayout();
       }

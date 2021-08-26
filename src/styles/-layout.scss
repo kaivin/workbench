@@ -4,7 +4,7 @@
     z-index: 10;
     background: #1d212a;
     padding:0!important;
-    .header{
+    .header-panel{
         width:100%;
         position: relative;
         height: 60px;
@@ -223,7 +223,7 @@
 }
 .mobile{
     .header-layout{
-        .header{
+        .header-panel{
             height: 60px;
             .header-right{
                 padding: 0 10px;

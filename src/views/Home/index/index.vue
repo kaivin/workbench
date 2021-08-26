@@ -1,61 +1,63 @@
 ﻿<template>
   <div class="page-root scroll-panel home-index" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
-      <div class="card-content" ref="tableContent" v-if="tableData.length>0">
-        <el-table
-          ref="simpleTable"
-          :data="tableData"
-          class="SiteTable homeTable"
-          style="width: 100%"
-          :default-expand-all="true"
-          :indent="0"
-          row-key="id"
-          :tree-props="{children: 'article', hasChildren: 'hasChildren'}"
-          :span-method="arraySpanMethod"
-          >
-          <el-table-column
-            prop="typename"
-            label="所属栏目"
-            width="120"
+      <div class="card-content" ref="tableContent">
+        <div class="item-module" v-if="tableData.length>0&&permitModules.includes('Module_bbs')">
+          <el-table
+            ref="simpleTable"
+            :data="tableData"
+            class="SiteTable homeTable"
+            style="width: 100%"
+            :default-expand-all="true"
+            :indent="0"
+            row-key="id"
+            :tree-props="{children: 'article', hasChildren: 'hasChildren'}"
+            :span-method="arraySpanMethod"
             >
-            <template #default="scope">
-              <div class="table-title" v-if="scope.row.article"><strong>{{scope.row.groupname}}：</strong><strong>（{{scope.row.number}}）条新消息！</strong></div>
-              <div class="table-type" v-else>
-                <span v-if="scope.row.type==1">{{scope.row.domain}} [{{scope.row.website_id}}]</span>
-                <span v-else>{{scope.row.typename}}</span>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="title"
-            label="文章标题"
-            min-width="240"
-            >
-            <template #default="scope">
-              <div class="table-title article-title" v-on:click="jumpArticle(scope.row)">
-                <span :style="{color:scope.row.titlecolor?scope.row.titlecolor:''}">{{scope.row.title}}</span>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="is_new"
-            label="更新类型"
-            width="80"
-            align="center"
-            >
-            <template slot-scope="scope">
-              <el-tag
-                :type="scope.row.is_new === 0 ? 'primary' : 'warning'"
-                disable-transitions>{{scope.row.is_new === 0?"新增":"修改"}}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="updatetime"
-            label="更新时间"
-            width="160"
-            >
-          </el-table-column>
-        </el-table>
+            <el-table-column
+              prop="typename"
+              label="所属栏目"
+              width="120"
+              >
+              <template #default="scope">
+                <div class="table-title" v-if="scope.row.article"><strong>{{scope.row.groupname}}：</strong><strong>（{{scope.row.number}}）条新消息！</strong></div>
+                <div class="table-type" v-else>
+                  <span v-if="scope.row.type==1">{{scope.row.domain}} [{{scope.row.website_id}}]</span>
+                  <span v-else>{{scope.row.typename}}</span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="title"
+              label="文章标题"
+              min-width="240"
+              >
+              <template #default="scope">
+                <div class="table-title article-title" v-on:click="jumpArticle(scope.row)">
+                  <span :style="{color:scope.row.titlecolor?scope.row.titlecolor:''}">{{scope.row.title}}</span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="is_new"
+              label="更新类型"
+              width="80"
+              align="center"
+              >
+              <template slot-scope="scope">
+                <el-tag
+                  :type="scope.row.is_new === 0 ? 'primary' : 'warning'"
+                  disable-transitions>{{scope.row.is_new === 0?"新增":"修改"}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="updatetime"
+              label="更新时间"
+              width="160"
+              >
+            </el-table-column>
+          </el-table>
+        </div>
       </div>
     </el-card>
   </div>
@@ -68,6 +70,7 @@ export default {
     return {
       menuButtonPermit:[],
       tableData:[],
+      permitModules:[],
     }
   },
   computed: {
@@ -129,10 +132,34 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
+      $this.getPermitModules();
+    },
+    // 获取当前登录用户首页拥有阅读权限的模块
+    getPermitModules(){
+      var $this = this;
+      $this.$store.dispatch("modulelist/getPermitModuleListAction", null).then((response) => {
+        if (response) {
+          if (response.status) {
+            $this.permitModules = response.data;
+            if($this.permitModules.includes('Module_bbs')){
+              $this.getPostData();
+            }
+          } else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+          }
+        }
+      });
+    },
+    // 获取论坛最新资讯
+    getPostData(){
+      var $this = this;
       $this.$store.dispatch("api/getNewPostArticleAction", null).then((response) => {
         if (response) {
           if (response.status) {
-            console.log(response.data,"最新消息");
             $this.tableData = response.data;
           } else {
             $this.$message({

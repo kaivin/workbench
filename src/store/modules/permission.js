@@ -4,10 +4,10 @@ function _import(file){
   }
 function dataToTree(data){
   var parents = data.filter(function (item) {
-      return item.meta.uid == 0;
+      return item.meta.uid == 0&&!item.meta.hidden;
   });
   var children = data.filter(function (item) {
-      return item.meta.uid != 0;
+      return item.meta.uid != 0&&!item.meta.hidden;
   });
   convert(parents, children);
   return parents;

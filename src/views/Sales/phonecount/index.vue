@@ -17,14 +17,12 @@
             </div>
             <div class="card-content" ref="tableContent">
                 <el-table
-                    border
                     ref="simpleTable"
                     :data="tableData"
-                    :height="pageHeight<=tableHeight?tableHeight:false"
+                    :height="tableHeight"
                     tooltip-effect="dark"
                     stripe
                     class="SiteTable"
-                    :class="pageHeight<=tableHeight?'table-border':''"
                     style="width: 100%;text-align:center"
                     row-key="id"
                     >
@@ -32,20 +30,6 @@
                         prop="id"
                         label="业务员ID"
                         width="90"
-                        text-align='center'
-                        >
-                    </el-table-column>
-                    <el-table-column
-                        prop="depart"
-                        label="部门"
-                        width="80"
-                        text-align='center'
-                        >
-                    </el-table-column>
-                    <el-table-column
-                        prop="departgroup"
-                        label="小组"
-                        width="80"
                         text-align='center'
                         >
                     </el-table-column>
@@ -184,7 +168,6 @@ export default {
         status:1,
         menuButtonPermit:[],
         tableHeight:0,
-        pageHeight:0,
         tableData:[],
         statusList:[
             {label:"所有",value:1},
@@ -203,13 +186,11 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-      $this.tableHeight = document.documentElement.clientHeight-$this.$refs.headerPane.offsetHeight-64-30-30-30;
-      $this.pageHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-30;
+      $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
     });
     window.onresize = () => {
         return (() => {
-            $this.tableHeight = document.documentElement.clientHeight-$this.$refs.headerPane.offsetHeight-64-30-30-30;
-            $this.pageHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-30;
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
         })()
     }
   },

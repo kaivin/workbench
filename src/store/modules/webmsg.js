@@ -19,6 +19,7 @@ import {
   webMsgRecycleDelete,
   webMsgEdit,
   webMsgRecycleBack,
+  webMsgFilterBack,
   webMsgPromotePending,
   webMsgPromoteProcessed,
   webMsgSyncPlatMsg,

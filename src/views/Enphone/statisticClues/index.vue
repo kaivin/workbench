@@ -17,14 +17,12 @@
             </div>
             <div class="card-content" ref="tableContent">
                 <el-table
-                    border
                     ref="simpleTable"
                     :data="tableData"
-                    :height="pageHeight<=tableHeight?tableHeight:'auto'"
                     tooltip-effect="dark"
                     stripe
+                    :height="tableHeight"
                     class="SiteTable"
-                    :class="pageHeight<=tableHeight?'table-border':''"
                     style="width: 100%"
                     row-key="id"
                     >
@@ -168,7 +166,6 @@ export default {
         status:1,
         menuButtonPermit:[],
         tableHeight:0,
-        pageHeight:0,
         tableData:[],
         statusList:[
             {label:"所有",value:1},
@@ -187,14 +184,11 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-      $this.tableHeight = document.documentElement.clientHeight-$this.$refs.headerPane.offsetHeight-64-30-30-30;
-      $this.pageHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-30;
-      
+      $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
     });
     window.onresize = () => {
         return (() => {
-            $this.tableHeight = document.documentElement.clientHeight-$this.$refs.headerPane.offsetHeight-64-30-30-30;
-            $this.pageHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-30;
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
         })()
     }
   },

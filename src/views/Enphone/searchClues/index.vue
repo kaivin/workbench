@@ -172,8 +172,8 @@
                             <div class="search-panelThree">
                                 <span style="float:left;line-height:28px;font-size:12px;">排序：</span>
                                 <el-radio-group class="team-list" v-model="searchData.sort" size="mini">
-                                    <el-radio class="item-radio" label="desc" border>升序</el-radio>
-                                    <el-radio class="item-radio" label="asc" border>降序</el-radio>
+                                    <el-radio class="item-radio" label="asc" border>升序</el-radio>
+                                    <el-radio class="item-radio" label="desc" border>降序</el-radio>
                                 </el-radio-group>
                             </div>
                         </div>   
@@ -571,7 +571,7 @@ export default {
             is_adduser:false,
             is_group:false,
             groupurlproduct:"1",
-            sort:"desc",
+            sort:"asc",
         },
         pageSizeList:[20],
         totalDataNum:0,
@@ -987,7 +987,7 @@ export default {
         $this.searchData.is_adduser=false;
         $this.searchData.is_group=false;
         $this.searchData.groupurlproduct="1";
-        $this.searchData.sort="desc";
+        $this.searchData.sort="asc";
         $this.isAllTeam=false;
         $this.checkAllTeam=false;
         $this.pageSizeList=[20];

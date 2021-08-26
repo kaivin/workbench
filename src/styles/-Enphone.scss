@@ -520,22 +520,10 @@
 }
 .en-phone{
   .box-card{
-    background: #fff!important;
-    padding: 15px!important;
-    border-radius: 8px!important;
-    .el-card__header{
-      margin-bottom:0!important;
-    }
     .search-wrap{
       .item-search{
         float:left;
       }
-    }
-  }
-  .el-table--border.table-border{
-    border-bottom: 1px solid #dfe6ec!important;
-    th > .cell{
-      line-height: 1.4;
     }
   }
 }
