@@ -89,13 +89,14 @@
           </div>
           <el-card class="box-card scroll-card EnphoneCardFrDate" v-else shadow="hover">
             <div slot="header">
-              <div class="card-header" ref="headerPane">
+              <div class="card-header EnphoneCardHeader" ref="headerPane">
                   <div class="tips-list" v-if="defaultData.custormwarn.length>0&&defaultData.custormwarntatus">
                     <div class="item-tips type-1" v-for="(item,index) in defaultData.custormwarn" v-bind:key="index" v-on:click="jumpEditPage(item.id)">{{item.custormselfwarn}}</div>
                   </div>
                   <div class="tips-list" v-if="defaultData.saleswarning.length>0&&defaultData.warningstatus">
                     <div class="item-tips type-2" v-for="(item,index) in defaultData.saleswarning" v-bind:key="index" v-on:click="jumpEditPage(item.id)">{{item.givecustormwarn}}</div>
                   </div>
+                  <h2 class="clues-title">当前信息：{{currentPhone}}</h2>
                   <div class="search-wrap" v-if="device==='desktop'">
                     <el-date-picker
                         v-model="searchData.date"
@@ -275,29 +276,27 @@
                     </el-select>
                     <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
                   </div>
-                  <div class="clues-info">
-                    <p>                  
-                    <span class="item-span-1">当前结果集：共有<strong>{{infoData.totalCount}}</strong>条。</span>
-                    <span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条，</span>
-                    <span class="item-span-3">无效：<strong>{{infoData.invalidCount}}</strong>条。</span>
-                    <span class="item-span-1">总分：<strong>{{infoData.totalScore}}</strong>。</span>
-                    <br/>
-                    <span class="item-span-1">本月（自然月） 共有<strong>{{infoData.totalCountMonth}}</strong>条。</span>
-                    <span class="item-span-2">有效：<strong>{{infoData.effectiveCountMonth}}</strong>条，</span>                  
-                    <span class="item-span-1">积分：<strong>{{infoData.totalScoreMonth}}</strong>。</span><em>||</em>
-                    
-                    <span class="item-span-1">上月（自然月） 共有<strong>{{infoData.totalCountLastMonth}}</strong>条。</span>
-                    <span class="item-span-2">有效：<strong>{{infoData.effectiveCountLastMonth}}</strong>条，</span>                  
-                    <span class="item-span-1">积分：<strong>{{infoData.totalScoreLastMonth}}</strong>。</span>
-                    
-                    </p>
-                  </div>
-                  <div class="clues-title">
-                      <h2><i class="svg-i" ><svg-icon icon-class="telBlue" /></i>{{currentPhone}}</h2>
-                      <div class="clues-title-btn">
+                  <div class="clues-info flex-wrap">
+                       <div class="clues-infoFl flex-content">
+                            <p>
+                              <span class="item-span-1">当前结果集：共有<strong>{{infoData.totalCount}}</strong>条。</span>
+                              <span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条，</span>
+                              <span class="item-span-3">无效：<strong>{{infoData.invalidCount}}</strong>条。</span>
+                              <span class="item-span-1">总分：<strong>{{infoData.totalScore}}</strong>。</span>
+                              <br/>
+                              <span class="item-span-1">本月（自然月） 共有<strong>{{infoData.totalCountMonth}}</strong>条。</span>
+                              <span class="item-span-2">有效：<strong>{{infoData.effectiveCountMonth}}</strong>条，</span>                  
+                              <span class="item-span-1">积分：<strong>{{infoData.totalScoreMonth}}</strong>。</span><em>||</em>
+                              
+                              <span class="item-span-1">上月（自然月） 共有<strong>{{infoData.totalCountLastMonth}}</strong>条。</span>
+                              <span class="item-span-2">有效：<strong>{{infoData.effectiveCountLastMonth}}</strong>条，</span>                  
+                              <span class="item-span-1">积分：<strong>{{infoData.totalScoreLastMonth}}</strong>。</span>
+                            </p>
+                       </div>
+                       <div class="clues-title-btn">
                             <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Enphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出结果</el-button>
                             <el-button type="primary" size="small" class="editorNote" :disabled="isDisabled" v-if="menuButtonPermit.includes('Enphone_othereditall')" v-on:click="editPageNote()"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改当前页备注</el-button>
-                      </div>
+                       </div>
                   </div>
               </div>
             </div>
@@ -392,7 +391,7 @@
                   >
                   <template slot-scope="scope">
                     <div class="table-text">
-                      <p class="table-tag"><span>初次：</span><span class="level" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></p>
+                      <p class="table-tag"><span>初次：</span><span class="level"  @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></p>
                       <p><span>性质：</span>{{scope.row.ennaturename?scope.row.ennaturename:'未判定'}}</p>
                       <p><span>需求：</span>{{scope.row.enxunpricename?scope.row.enxunpricename:'未判定'}}</p>
                       <p><span>状态：</span>{{scope.row.managestatus==1?'':'已开始处理'}}</p>
@@ -528,6 +527,21 @@
         </span>
       </template>
     </el-dialog>
+    <p class="popoverzz" v-if="levelPopBool" @click="handleLockClick"></p>
+    <div class="popover" v-if="levelPopBool">
+         <p class="popoverTit">级别修改记录</p>
+         <ul>
+            <li v-for="item in levelPop" :key="item.id">            
+            <span>{{item.addtime}}</span>
+            <span v-if="item.bname&&item.bname!=''">[{{item.bname}}]修改</span>
+            <span>是否有效<em>[{{item.neweffective}}]</em></span>
+            <span>原始级别<em>[{{item.oldlevel}}]</em>,</span>
+            <span>修改后级别<em>[{{item.newlevel}}]</em>,</span>
+            <span>原因：<em>[{{item.remark}}]</em></span>            
+            </li>
+         </ul>
+         <span @click="handleLockClick">确定</span>
+    </div>
   </div>
 </template>
 
@@ -706,6 +720,7 @@ export default {
       downloadLoading: false,
       permitField:[],
       isDisabled:true,
+      levelPopBool: false,
     }
   },
   computed: {
@@ -1321,6 +1336,33 @@ export default {
           $this.productList = [];
         }
     },
+    // 询盘级别修改记录
+    handleCustormeditlogClick(Rid){
+      var $this = this;
+      var FormID={};
+      FormID.id = Rid;
+      $this.$store.dispatch('chinaphone/CustormeditlogAction', FormID).then(response=>{
+        if(response){
+          if(response.status){  
+            console.log(response,'级别修改记录-response');  
+            if(response.data.length>0){
+              $this.levelPopBool=true;
+              $this.levelPop=response.data;
+            }
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    handleLockClick(){
+        var $this=this;
+        $this.levelPopBool=!$this.levelPopBool;
+    }
   }
 }
 </script>

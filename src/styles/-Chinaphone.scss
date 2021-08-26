@@ -1,4 +1,47 @@
-﻿.WebServerAddEditBtn.ChinaphoneTwoBtn{
+﻿.page-root.Chinaphone{
+  .search-wrap{
+    padding-bottom:20px;
+    .search-panelOne{
+      .el-date-editor,.el-select,.el-checkbox,.el-input{
+        float: left;
+      }
+     }
+    .search-panelTwo{
+        float: left;
+        width: 250px;
+        margin-left:1%;
+        .el-input+.el-checkbox{margin-left:10px;}
+        .el-checkbox+.el-input{width: 100%;margin-top:10px;}
+     }
+    .search-panelThree{
+      float: left;
+      width: 105px;
+      margin-left: 2%;
+      .el-input{
+        .el-input__inner{
+          padding: 0 5px;
+          text-align: center;
+        }
+      }
+      .el-checkbox{width: 100%; margin-top:10px;}
+    }
+    .search-panelFour{
+      float: left;
+      width: 95px;
+      margin-left: 2%;
+      .el-checkbox{margin-bottom:10px;}
+      .el-select,.el-checkbox{width: 100%;}
+    }
+    .search-panelFive{
+      float: left;
+      width: 120px;
+      margin-left: 2%;
+      .el-input{margin-bottom:10px;}
+      .el-textarea,.el-input{width: 100%;}
+    }
+  }
+}
+.WebServerAddEditBtn.ChinaphoneTwoBtn{
   padding-left:0px;
 }
 .card-content.ChinaphoneTwoBox{
@@ -138,47 +181,6 @@
         }
       }
     }
-  }
-}
-.search-wrap{
-  padding-bottom:20px;
-  .search-panelOne{
-    .el-date-editor,.el-select,.el-checkbox,.el-input{
-      float: left;
-    }
-   }
-  .search-panelTwo{
-      float: left;
-      width: 250px;
-      margin-left:1%;
-      .el-input+.el-checkbox{margin-left:10px;}
-      .el-checkbox+.el-input{width: 100%;margin-top:10px;}
-   }
-  .search-panelThree{
-    float: left;
-    width: 105px;
-    margin-left: 2%;
-    .el-input{
-      .el-input__inner{
-        padding: 0 5px;
-        text-align: center;
-      }
-    }
-    .el-checkbox{width: 100%; margin-top:10px;}
-  }
-  .search-panelFour{
-    float: left;
-    width: 95px;
-    margin-left: 2%;
-    .el-checkbox{margin-bottom:10px;}
-    .el-select,.el-checkbox{width: 100%;}
-  }
-  .search-panelFive{
-    float: left;
-    width: 120px;
-    margin-left: 2%;
-    .el-input{margin-bottom:10px;}
-    .el-textarea,.el-input{width: 100%;}
   }
 }
 

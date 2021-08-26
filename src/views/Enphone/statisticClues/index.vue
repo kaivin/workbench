@@ -20,7 +20,7 @@
                     border
                     ref="simpleTable"
                     :data="tableData"
-                    :height="pageHeight<=tableHeight?tableHeight:false"
+                    :height="pageHeight<=tableHeight?tableHeight:'auto'"
                     tooltip-effect="dark"
                     stripe
                     class="SiteTable"
@@ -189,6 +189,7 @@ export default {
     $this.$nextTick(function () {
       $this.tableHeight = document.documentElement.clientHeight-$this.$refs.headerPane.offsetHeight-64-30-30-30;
       $this.pageHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-30;
+      
     });
     window.onresize = () => {
         return (() => {
@@ -199,6 +200,16 @@ export default {
   },
   watch: {
       tableHeight(val) {
+        if (!this.timer) {
+          this.tableHeight = val
+          this.timer = true
+          const $this = this
+          setTimeout(function() {
+            $this.timer = false
+          }, 400)
+        }
+      },
+      pageHeight(val) {
         if (!this.timer) {
           this.tableHeight = val
           this.timer = true

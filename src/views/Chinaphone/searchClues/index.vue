@@ -1,8 +1,8 @@
 ﻿<template>
-  <div class="page-root" ref="boxPane">
+  <div class="page-root Chinaphone" ref="boxPane">
     <el-card class="box-card" shadow="hover">
         <div slot="header">
-            <div class="card-header" ref="headerPane">
+            <div class="card-header EnphoneCardHeader" ref="headerPane">
                 <div class="search-wrap flex-wrap" v-if="device==='desktop'">
                     <div class="search-panelOne flex-content">
                         <el-date-picker
@@ -270,7 +270,7 @@
                     min-width="60"
                     >
                     <template slot-scope="scope">
-                        <div class="table-tag"><span class="level" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
+                        <div class="table-tag"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -417,6 +417,21 @@
         </span>
       </template>
     </el-dialog>
+    <p class="popoverzz" v-if="levelPopBool" @click="handleLockClick"></p>
+    <div class="popover" v-if="levelPopBool">
+         <p class="popoverTit">级别修改记录</p>
+         <ul>
+            <li v-for="item in levelPop" :key="item.id">            
+            <span>{{item.addtime}}</span>
+            <span v-if="item.bname&&item.bname!=''">[{{item.bname}}]修改</span>
+            <span>是否有效<em>[{{item.neweffective}}]</em></span>
+            <span>原始级别<em>[{{item.oldlevel}}]</em>,</span>
+            <span>修改后级别<em>[{{item.newlevel}}]</em>,</span>
+            <span>原因：<em>[{{item.remark}}]</em></span>            
+            </li>
+         </ul>
+         <span @click="handleLockClick">确定</span>
+    </div>
   </div>
 </template>
 
@@ -530,6 +545,7 @@ export default {
       isUrl:false,
       isProduct:false,
       isClues:true,
+      levelPopBool: false,
     }
   },
   computed: {
@@ -909,6 +925,33 @@ export default {
         }
       });
     },
+    // 询盘级别修改记录
+    handleCustormeditlogClick(Rid){
+      var $this = this;
+      var FormID={};
+      FormID.id = Rid;
+      $this.$store.dispatch('chinaphone/CustormeditlogAction', FormID).then(response=>{
+        if(response){
+          if(response.status){  
+            console.log(response,'级别修改记录-response');  
+            if(response.data.length>0){
+              $this.levelPopBool=true;
+              $this.levelPop=response.data;
+            }
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    handleLockClick(){
+        var $this=this;
+        $this.levelPopBool=!$this.levelPopBool;
+    }
   }
 }
 </script>

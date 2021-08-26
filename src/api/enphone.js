@@ -355,3 +355,11 @@ export function customerEditHistoryLog(data) {
     data
   });
 }
+// 询盘级别修改记录
+export function Custormeditlog(data) {
+  return request({
+    url: "/hxindex/Enphone/custormeditlog",
+    method: "POST",
+    data
+  });
+}

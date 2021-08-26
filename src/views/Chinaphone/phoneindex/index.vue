@@ -9,7 +9,7 @@
           </div>
           <dl class="phone-list" v-for="(item,index) in defaultData.phoneArr" v-bind:key="index">
             <dt><span>{{item.name}}</span></dt>
-            <dd v-for="phone in item.phone" :key="phone.id" :title="phone.phonenumber+phone.othername" v-on:click="phoneJump(phone.id)"><span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
+            <dd v-for="phone in item.phone" :key="phone.id" :title="phone.areaPhonenumber+phone.othername" v-on:click="phoneJump(phone.id)"><span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
           </dl>
         </div>
       </el-scrollbar>
@@ -85,7 +85,7 @@
           </div>
           <el-card class="box-card scroll-card EnphoneCardFrDate" v-else shadow="hover">
             <div slot="header">
-              <div class="card-header" ref="headerPane">
+              <div class="card-header EnphoneCardHeader" ref="headerPane">
                   <h2 class="clues-title">当前信息：{{currentPhone}}</h2>
                   <div class="search-wrap" v-if="device==='desktop'">
                     <el-date-picker
@@ -279,7 +279,7 @@
                   min-width="60"
                   >
                   <template slot-scope="scope">
-                    <div class="table-tag"><span class="level" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
+                    <div class="table-tag"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -411,6 +411,21 @@
         </span>
       </template>
     </el-dialog>
+    <p class="popoverzz" v-if="levelPopBool" @click="handleLockClick"></p>
+    <div class="popover" v-if="levelPopBool">
+         <p class="popoverTit">级别修改记录</p>
+         <ul>
+            <li v-for="item in levelPop" :key="item.id">            
+            <span>{{item.addtime}}</span>
+            <span v-if="item.bname&&item.bname!=''">[{{item.bname}}]修改</span>
+            <span>是否有效<em>[{{item.neweffective}}]</em></span>
+            <span>原始级别<em>[{{item.oldlevel}}]</em>,</span>
+            <span>修改后级别<em>[{{item.newlevel}}]</em>,</span>
+            <span>原因：<em>[{{item.remark}}]</em></span>            
+            </li>
+         </ul>
+         <span @click="handleLockClick">确定</span>
+    </div>
   </div>
 </template>
 
@@ -543,7 +558,9 @@ export default {
       department:[],
       timeChart:"",
       deptChart:"0",
-      tableShow:true,
+      tableShow:true,      
+      levelPop:[],  
+      levelPopBool:false,
     }
   },
   computed: {
@@ -635,8 +652,9 @@ export default {
             var phoneArr=response.data;
             phoneArr.forEach(function(item,index){
                item.phone.forEach(function(item01,index01){
-                   var tagphone='0371-';
+                   var tagphone='-';
                 　　if(item01.phonenumber.indexOf(tagphone)!=-1){
+                       item01.areaPhonenumber=item01.phonenumber;
                        item01.phonenumber=item01.phonenumber.substring(5);
                 　　}
                });
@@ -1346,6 +1364,33 @@ export default {
       });
       $this.initPage();
     },
+    // 询盘级别修改记录
+    handleCustormeditlogClick(Rid){
+      var $this = this;
+      var FormID={};
+      FormID.id = Rid;
+      $this.$store.dispatch('chinaphone/CustormeditlogAction', FormID).then(response=>{
+        if(response){
+          if(response.status){  
+            console.log(response,'级别修改记录-response');  
+            if(response.data.length>0){
+              $this.levelPopBool=true;
+              $this.levelPop=response.data;
+            }
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    handleLockClick(){
+        var $this=this;
+        $this.levelPopBool=!$this.levelPopBool;
+    }
   }
 }
 </script>

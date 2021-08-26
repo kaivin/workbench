@@ -43,6 +43,7 @@
     cluesAnalysisSystemData,
     cluesAnalysisResultData,
     cluesdepartmentData,
+    Custormeditlog,
 } from '@/api/chinaphone'
 
 const state = {}
@@ -491,6 +492,16 @@ const actions = {
     cluesAnalysisResultDataAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             cluesAnalysisResultData(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 询盘级别修改记录
+    CustormeditlogAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            Custormeditlog(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

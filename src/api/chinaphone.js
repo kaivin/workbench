@@ -346,3 +346,11 @@ export function cluesAnalysisResultData(data) {
     data
   });
 }
+// 询盘级别修改记录
+export function Custormeditlog(data) {
+  return request({
+    url: "/hxindex/Chinaphone/custormeditlog",
+    method: "POST",
+    data
+  });
+}

@@ -45,6 +45,7 @@
     customerWarnIsRead,
     salesmanWarnIsRead,
     customerEditHistoryLog,
+    Custormeditlog,
 } from '@/api/enphone'
 
 const state = {
@@ -508,6 +509,16 @@ const actions = {
     salesmanWarnIsReadAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             salesmanWarnIsRead(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 询盘级别修改记录
+    CustormeditlogAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            Custormeditlog(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

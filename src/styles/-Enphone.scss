@@ -561,56 +561,23 @@
 }
 .en-phone-search{
   .search-wrap{
-    margin-bottom: 15px;
     .item-search{
       width: 100%;
       padding: 4px 0;
-      &.group-search{
-        margin: 20px 0;
-        .unit-search{
-          .item-checkbox{
-            margin: 4px 0 4px 4px;
-          }
-          .unit-title{
-            span{
-              height: 36px;
-              line-height: 36px;
-            }
-          }
-        }
-      }
-      &.button-search{
-        .updateBtn{
-          margin-left: 9px;
-        }
-        .svg-i{
-          margin-right: 5px;
-        }
-      }
-      .item-title{
-        margin-bottom: 8px;
-        padding: 0 5px;
-        margin-top: 10px;
+      &.EnphoneSearchOne{
         .all-select{
-          margin-left: 4px;
+          margin: 4px;
         }
-      }
-      .unit-search{
-        float:left;
-        display: flex;
-        padding: 0 5px;
-        .unit-title{
-          padding: 0 5px;
-          span{
-            display: block;
-            height: 28px;
-            line-height: 28px;
-            font-size: 12px;
+        .team-list{
+          .el-checkbox{
+            margin-top:4px;
+            margin-bottom:4px;
+            margin-right: 0px;
           }
         }
-        .unit-content{
-          flex:1;
-          
+      }
+      &.EnphoneSearchTwo{
+        .team-list{       
           .item-clues{
             float:left;
             position: relative;
@@ -619,8 +586,8 @@
             cursor: pointer;
             padding-left: 20px;
             line-height: 24px;
-            margin-right: 20px;
-            margin-bottom: 5px;
+            margin-left: 20px;
+            margin-top: 2px;
             i{
               position: absolute;
               left:0px;
@@ -651,9 +618,65 @@
           }
         }
       }
-      .team-list{
-        .item-checkbox,.item-radio{
-          margin: 4px;
+      &.EnphoneSearchThree{
+        .el-input--suffix .el-input__inner{padding:0px 10px;}
+        .el-checkbox{margin-right:10px;margin-left: 0px;}
+        .search-panelThree{
+          display: inline-block;
+          margin-right:10px;
+          margin-bottom:10px;
+          .el-radio{margin-right:0px;}
+        }
+      }
+    }
+  }
+}
+.mobile{
+  .card-header.EnphoneCardHeader{
+    .clues-info.flex-wrap{
+      display: block;
+      .clues-title-btn{
+        padding-left:0px;
+        padding-top:15px;
+      }
+    }
+  }
+  .en-phone-search{
+    .search-wrap{
+      .item-search{
+        &.EnphoneSearchOne{
+          &.flex-wrap{
+            display: block;
+            .all-select{
+              clear: both;
+              display: block;
+              border: 0px;
+              padding: 0px 0px 0px 0px;
+              margin: 0px;
+            }
+            .el-checkbox{margin-right: 0px;}
+          }
+        }
+        &.EnphoneSearchTwo{
+          padding-top:10px;
+          padding-bottom:10px;
+          &.flex-wrap{
+            display: block;
+            .el-checkbox{
+              clear: both;
+              display: block;
+              border: 0px;
+              padding: 0px 0px 0px 0px;
+              margin: 0px;
+            }
+            .team-list{
+              .item-clues{
+                margin-left:0px;
+                margin-right:10px;
+                margin-bottom:5px;
+              }
+            }
+          }
         }
       }
     }
