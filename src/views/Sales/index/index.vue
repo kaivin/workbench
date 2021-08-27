@@ -6,18 +6,18 @@
           <div class="side-button">
             <dl class="Sales-list">
                 <dt v-on:click="datastatisticClues()"><span>业务员数据统计</span></dt>
-                <dt v-bind:class="currentStatus === 'waitcount'?'active':''" v-on:click="jumpLink('waitcount')"><span>等待分配</span><i>({{defaultData.waitcount}})</i></dt>
-                <dt v-bind:class="currentStatus === 'allotcount'?'active':''" v-on:click="jumpLink('allotcount')"><span>所有已分配询盘</span><i>({{defaultData.allotcount}})</i></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_waitphone')" v-bind:class="currentStatus === 'waitcount'?'active':''" v-on:click="jumpLink('waitcount')"><span>等待分配</span><i>({{defaultData.waitcount}})</i></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_allphone')" v-bind:class="currentStatus === 'allotcount'?'active':''" v-on:click="jumpLink('allotcount')"><span>所有已分配询盘</span><i>({{defaultData.allotcount}})</i></dt>
             </dl>
           </div>
           <dl class="Salelist">
-              <dt v-bind:class="currentStatus === 'personcount'?'active':''" v-on:click="jumpLink('personcount')"><span>个人所有询盘</span><i>({{defaultData.personcount}})</i></dt>
-              <dt v-bind:class="currentStatus === 'waitdealcount'?'active':''" v-on:click="jumpLink('waitdealcount')"><span>等待处理</span><i>({{defaultData.waitdealcount}})</i></dt>
-              <dt v-bind:class="currentStatus === 'monthsaycount'?'active':''" v-on:click="jumpLink('monthsaycount')"><span>月底前需反馈</span><i>({{defaultData.monthsaycount}})</i></dt>
-              <dt v-bind:class="currentStatus === 'hasnosaycount'?'active':''" v-on:click="jumpLink('hasnosaycount')"><span>所有未反馈</span><i>({{defaultData.hasnosaycount}})</i></dt>
-              <dt v-bind:class="currentStatus === 'waitftwordcount'?'active':''" v-on:click="jumpLink('waitftwordcount')"><span>等待添加富通ID</span><i>({{defaultData.waitftwordcount}})</i></dt>
-              <dt v-bind:class="currentStatus === 'hasdealcount'?'active':''" v-on:click="jumpLink('hasdealcount')"><span>已处理</span><i>({{defaultData.hasdealcount}})</i></dt>
-              <dt v-bind:class="currentStatus === 'hassaycount'?'active':''" v-on:click="jumpLink('hassaycount')"><span>已做反馈</span><i>({{defaultData.hasdealcount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_index')" v-bind:class="currentStatus === 'personcount'?'active':''" v-on:click="jumpLink('personcount')"><span>个人所有询盘</span><i>({{defaultData.personcount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_waitdeal')" v-bind:class="currentStatus === 'waitdealcount'?'active':''" v-on:click="jumpLink('waitdealcount')"><span>等待处理</span><i>({{defaultData.waitdealcount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_monthsay')" v-bind:class="currentStatus === 'monthsaycount'?'active':''" v-on:click="jumpLink('monthsaycount')"><span>月底前需反馈</span><i>({{defaultData.monthsaycount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_hasnosay')" v-bind:class="currentStatus === 'hasnosaycount'?'active':''" v-on:click="jumpLink('hasnosaycount')"><span>所有未反馈</span><i>({{defaultData.hasnosaycount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_waitftword')" v-bind:class="currentStatus === 'waitftwordcount'?'active':''" v-on:click="jumpLink('waitftwordcount')"><span>等待添加富通ID</span><i>({{defaultData.waitftwordcount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_hasdeal')" v-bind:class="currentStatus === 'hasdealcount'?'active':''" v-on:click="jumpLink('hasdealcount')"><span>已处理</span><i>({{defaultData.hasdealcount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_hassay')" v-bind:class="currentStatus === 'hassaycount'?'active':''" v-on:click="jumpLink('hassaycount')"><span>已做反馈</span><i>({{defaultData.hasdealcount}})</i></dt>
           </dl>
           <div class="side-button">
             <dl class="Sales-list">
@@ -314,7 +314,7 @@
                     label="操作">
                     <template #default="scope">
                         <div class="table-button">
-                        <el-button size="mini" @click="editTableRow(scope.row,scope.$index,'2')">修改</el-button>
+                        <el-button size="mini" @click="editTableRow(scope.row,scope.$index,'2')">详情</el-button>
                         </div>
                     </template>
                     </el-table-column>
@@ -852,6 +852,7 @@ export default {
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         console.log(res);
         if(res.status){
+          console.log(res,"操作权限")
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);

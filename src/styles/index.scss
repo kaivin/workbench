@@ -958,6 +958,11 @@
         width: 50%;
         float: left;
       }
+      &.itemwebmsg{
+        .el-select__tags{
+          max-width: initial!important;
+        }
+      }
     }
     .el-select,.el-cascader{
       display: block!important;

@@ -12,18 +12,23 @@
             dt{
               color:$menuActiveText;
               line-height: 20px;
-              margin-bottom: 8px;
-              border: 1px solid #fff;
-              border-radius: 5px;
-              padding: 5px 10px;
-              font-size: 14px;
+              margin-bottom:10px;
+              font-size: 12px;
               cursor: pointer;
-              i{
-                font-style: normal;
-              }
               &:hover{
-                background: #f2f7ff;
-                border: 1px solid #d8e9ff;
+                span,i{
+                  text-decoration: underline;
+                }
+              }
+              span,i{
+                font-style: normal;
+                font-weight: normal;
+              }
+              i{
+                margin-left: 5px;
+                font-weight: bold;
+                color: $red;
+                font-size: 12px;
               }
             }
           }
@@ -34,10 +39,8 @@
           dt{
             color:$menuActiveText;
             line-height: 20px;
-            margin-bottom: 8px;
-            border: 1px solid #fff;
-            border-radius: 5px;
-            font-size: 14px;
+            margin-bottom:10px;
+            font-size: 12px;
             cursor: pointer;
             &:hover{
               span,i{
@@ -53,32 +56,6 @@
               font-weight: bold;
               color: $red;
               font-size: 12px;
-            }
-          }
-          dd{
-            width: 100%;
-            line-height:0;
-            font-size:0;
-            padding-left:16px;
-            padding-top:3px;
-            padding-bottom:3px;
-            cursor: pointer;
-            &:hover{
-              span,i{
-                text-decoration: underline;
-              }
-            }
-            span,i{
-              font-style: normal;
-              font-size: 12px;
-              line-height:24px;
-              font-weight: normal;
-              color:#52575c;
-            }
-            i{
-              margin-left: 5px;
-              font-weight: bold;
-              color: $red;
             }
           }
         }

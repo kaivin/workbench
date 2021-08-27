@@ -79,6 +79,38 @@
             </el-select>
           </el-form-item>
         </div>
+        <div class="item-form-group itemwebmsg" v-if="menuButtonPermit.includes('Role_getwebmsg')">
+          <el-form-item label="留言管理：" :label-width="formLabelWidth">
+            <div class="item-form">
+                <el-select
+                  v-model="dialogForm.readwebmsglangauge"
+                  multiple
+                  collapse-tags
+                  placeholder="语言选择">
+                  <el-option
+                    v-for="item in webmsglangauge"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+            </div>
+            <div class="item-form">
+                <el-select
+                  v-model="dialogForm.readwebmsgbrand"
+                  multiple
+                  collapse-tags
+                  placeholder="品牌选择">
+                  <el-option
+                    v-for="item in webmsgbrand"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+            </div>
+          </el-form-item>
+        </div>
         <div class="item-form">
             <el-form-item label="角色备注：" :label-width="formLabelWidth">
               <el-input type="textarea" v-model="dialogForm.remarks" :autosize="{ minRows: 2, maxRows: 4}" ref="remarks"></el-input>
@@ -197,7 +229,9 @@ export default {
       formLabelWidth:"110px",
       roleLevelData:[],
       departLevelData:[],
-      websiteDepart:[],
+      websiteDepart:[],      
+      webmsglangauge:[],
+      webmsgbrand:[],
       dialogForm:{
         role_depart:[],
         f_id:0,
@@ -205,6 +239,8 @@ export default {
         name:"",
         readdepartwebsite:[],
         remarks:"",
+        readwebmsglangauge:[],
+        readwebmsgbrand:[],
       },
       dialogPermitVisible:false,
       dialogUserVisible:false,
@@ -543,6 +579,36 @@ export default {
         }
         $this.dialogForm.readdepartwebsite = websiteDepart;
       }
+      if($this.menuButtonPermit.includes('Role_getwebmsg')){
+        var webmsglangauge = [];
+        if(row.readwebmsglangauge&&row.readwebmsglangauge!=''){
+          if(row.readwebmsglangauge.indexOf(",")!=-1){
+            var idArr = row.readwebmsglangauge.split(",");
+            idArr.forEach(function(item,index){
+              webmsglangauge.push(parseInt(item));
+            });
+          }else{
+            webmsglangauge = [parseInt(row.readwebmsglangauge)];
+          }
+        }else{
+          webmsglangauge = [];
+        }
+        $this.dialogForm.readwebmsglangauge = webmsglangauge;
+        var webmsgbrand = [];
+        if(row.readwebmsgbrand&&row.readwebmsgbrand!=''){
+          if(row.readwebmsgbrand.indexOf(",")!=-1){
+            var idArr = row.readwebmsgbrand.split(",");
+            idArr.forEach(function(item,index){
+              webmsgbrand.push(parseInt(item));
+            });
+          }else{
+            webmsgbrand = [parseInt(row.readwebmsgbrand)];
+          }
+        }else{
+          webmsgbrand = [];
+        }
+        $this.dialogForm.readwebmsgbrand = webmsgbrand;
+      }
       $this.dialogForm.remarks = row.remarks;
     },
     // 初始化部门下拉框的禁用状态
@@ -603,6 +669,10 @@ export default {
         formData.readdepartwebsite = $this.dialogForm.readdepartwebsite;
       }
       formData.remarks = $this.dialogForm.remarks;
+      if($this.menuButtonPermit.includes('Role_getwebmsg')){
+        formData.readwebmsglangauge = $this.dialogForm.readwebmsglangauge;
+        formData.readwebmsgbrand = $this.dialogForm.readwebmsgbrand;
+      }
       var pathUrl = "";
       if($this.dialogText=="编辑角色"){
         pathUrl = "role/roleEditAction";
@@ -625,6 +695,8 @@ export default {
               type: 'error'
             });
           }
+
+
       });
     },
     // 重置添加数据表单
@@ -636,6 +708,8 @@ export default {
       $this.dialogForm.name = "";
       $this.dialogForm.readdepartwebsite = [];
       $this.dialogForm.remarks = "";
+      $this.dialogForm.readwebmsglangauge = [];
+      $this.dialogForm.readwebmsgbrand = [];
     },
     // 验证是否为空
     validationForm(){
@@ -1057,6 +1131,22 @@ export default {
               });
               $this.departLevelData = selectData;
               $this.websiteDepart = websiteDepart;
+              var webmsglangauge=[];
+              response.language.forEach(function(item,index){
+                var itemData = {}
+                itemData.value = item.id;
+                itemData.label = item.languagename;
+                webmsglangauge.push(itemData);
+              });
+              $this.webmsglangauge = webmsglangauge;
+              var webmsgbrand=[];
+              response.brand.forEach(function(item,index){
+                var itemData = {}
+                itemData.value = item.id;
+                itemData.label = item.brandname;
+                webmsgbrand.push(itemData);
+              });
+              $this.webmsgbrand = webmsgbrand;
             }
           }else{
             $this.$message({
@@ -1164,7 +1254,6 @@ export default {
         });
         $this.$store.dispatch('role/canAllotPostPermitAction', {ids:str}).then(response=>{
           if(response.status){
-            console.log(response.data,"已选栏目的操作权限");
             if(response.data.length>0){
               response.data.forEach(function(item,index){
                 if(!$this.postPermitValue.includes(item.id)){
@@ -1192,7 +1281,6 @@ export default {
       $this.$store.dispatch('role/userCanAllotPostAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"论坛栏目数据")
             var menuData = [];
             response.data.forEach(function(item,index){
               if(item.fid != 0){
