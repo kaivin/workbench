@@ -86,8 +86,8 @@
 .WebServerAddEditBtn{
     padding:20px 60px 20px 130px;
     .el-button.updateBtn{
-        background-color:#1890ff!important;
-        border-color:#1890ff!important;
+        background-color:$menuActiveText!important;
+        border-color:$menuActiveText!important;
         font-size:16px!important;
         min-width:96px;
         box-sizing:border-box!important;

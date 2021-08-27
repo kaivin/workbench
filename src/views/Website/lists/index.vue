@@ -1,332 +1,336 @@
 ﻿<template>
   <div class="page-root" ref="boxPane">
-    <el-card class="box-card scroll-card WebsiteList-card" shadow="hover" v-bind:class="device=='mobile'?'mobile':''">
-      <div slot="header" ref="headerPane" >
-        <div class="card-header" v-if="device==='desktop'">
-          <div class="border-wrap post-class">
-            <div class="border-row flex-wrap">
-                <div class="border-cell txt-font"><span>行业：</span></div>
-                <div class="border-cell flex-content">
-                    <div class="tag-panel">
-                        <template v-for="(item,index) in brandList">
-                            <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickBrand(item.id)">{{item.brandname}}</el-button>
-                        </template>
+    <div class="abs-panel" ref="mainPane">
+      <div class="scroll-panel" ref="scrollPane">
+        <el-card class="box-card scroll-card WebsiteList-card" shadow="hover" v-bind:class="device=='mobile'?'mobile':''">
+          <div slot="header" ref="headerPane" >
+            <div class="card-header" v-if="device==='desktop'">
+              <div class="border-wrap post-class">
+                <div class="border-row flex-wrap">
+                    <div class="border-cell txt-font"><span>行业：</span></div>
+                    <div class="border-cell flex-content">
+                        <div class="tag-panel">
+                            <template v-for="(item,index) in brandList">
+                                <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickBrand(item.id)">{{item.brandname}}</el-button>
+                            </template>
+                        </div>
+                    </div>
+                    <span class="borderver"></span>
+                    <div class="border-cell txt-font"><span>语言：</span></div>
+                    <div class="border-cell flex-content">
+                        <div class="tag-panel">
+                            <template v-for="item in languageList">
+                                <el-button type="primary" v-bind:key="item.id" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickLanguage(item.id)">{{item.languagename}}</el-button>
+                            </template>
+                        </div>
+                    </div>
+                    <span class="borderver"></span>
+                    <div class="border-cell txt-font"><span>排序：</span></div>
+                    <div class="border-cell flex-content">
+                        <div class="tag-panel">
+                            <template v-for="(item,index) in sort">
+                                <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickSort(item.key)">{{item.name}}</el-button>
+                            </template>
+                        </div>
                     </div>
                 </div>
-                <span class="borderver"></span>
-                <div class="border-cell txt-font"><span>语言：</span></div>
-                <div class="border-cell flex-content">
-                    <div class="tag-panel">
-                        <template v-for="item in languageList">
-                            <el-button type="primary" v-bind:key="item.id" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickLanguage(item.id)">{{item.languagename}}</el-button>
-                        </template>
+                <div class="border-row flex-wrap">
+                    <div class="border-cell txt-font"><span>部门：</span></div>
+                    <div class="border-cell flex-content">
+                        <div class="tag-panel">
+                            <template v-for="(item,index) in departList">
+                                <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickDepart(item.id)">{{item.name}}</el-button>
+                            </template>
+                        </div>
                     </div>
                 </div>
-                <span class="borderver"></span>
-                <div class="border-cell txt-font"><span>排序：</span></div>
-                <div class="border-cell flex-content">
-                    <div class="tag-panel">
-                        <template v-for="(item,index) in sort">
-                            <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickSort(item.key)">{{item.name}}</el-button>
-                        </template>
+                <div class="border-row flex-wrap">
+                    <div class="border-cell txt-font"><span>模式：</span></div>
+                    <div class="border-cell flex-content">
+                        <div class="tag-panel">
+                            <template v-for="(item,index) in websiteStatus">
+                                <el-button :type="item.type" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickStatus(item.cate,item.key)">{{item.name}}</el-button>
+                            </template>
+                        </div>
                     </div>
                 </div>
+                <div class="border-row flex-wrap">
+                    <div class="border-cell txt-font"><span>标签：</span></div>
+                    <div class="border-cell flex-content">
+                        <div class="tag-panel">
+                            <template v-for="(item,index) in attrTagList">
+                                <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickAttrTag(item.name,item.id)">{{item.name}}</el-button>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-row flex-wrap">
+                    <div class="border-cell txt-font"><span>主机头：</span></div>
+                    <div class="border-cell flex-content">
+                        <div class="tag-panel">
+                            <template v-for="(item,index) in hostTagList">
+                                <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickHostTag(item.name,item.id)">{{item.name}}</el-button>
+                            </template>
+                        </div>
+                    </div>
+                    <span class="borderver"></span>
+                    <div class="border-cell txt-font"><span>其他：</span></div>
+                    <div class="border-cell flex-content">
+                        <div class="tag-panel">
+                            <el-button type="primary" v-bind:class="formData.headeruser?'':'is-plain'" size="small" v-on:click="clickManage">个人负责网站</el-button>
+                            <el-button type="primary" v-bind:class="formData.personuser?'':'is-plain'" size="small" v-on:click="clickDevelop">个人开发网站</el-button>
+                        </div>
+                    </div>
+                    <div class="border-cell flex-content">
+                        <div class="tag-panel WebsiteListSearch">
+                            <el-input
+                              style="width:100%;margin:0px!important;"
+                              placeholder="IP/域名搜索："
+                              v-model="formData.ip"
+                              size="small"
+                              clearable>
+                            </el-input>
+                            <el-button class="item-input" size="small" type="primary" @click="searchResult"><i class="svg-i searchWhite" ><svg-icon icon-class="searchWhite" /></i>搜索</el-button>
+                        </div>
+                    </div>
+                </div>
+              </div>
             </div>
-            <div class="border-row flex-wrap">
-                <div class="border-cell txt-font"><span>部门：</span></div>
-                <div class="border-cell flex-content">
-                    <div class="tag-panel">
-                        <template v-for="(item,index) in departList">
-                            <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickDepart(item.id)">{{item.name}}</el-button>
-                        </template>
-                    </div>
+            <div class="card-header ArticleSearchScreen" v-else>
+                <div class="search-panel ArticleSearch">                              
+                    <el-input placeholder="输入ip或域名" v-model="formData.ip" class="article-search">
+                      <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
+                    </el-input>
                 </div>
-            </div>
-            <div class="border-row flex-wrap">
-                <div class="border-cell txt-font"><span>模式：</span></div>
-                <div class="border-cell flex-content">
-                    <div class="tag-panel">
-                        <template v-for="(item,index) in websiteStatus">
-                            <el-button :type="item.type" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickStatus(item.cate,item.key)">{{item.name}}</el-button>
-                        </template>
-                    </div>
-                </div>
-            </div>
-            <div class="border-row flex-wrap">
-                <div class="border-cell txt-font"><span>标签：</span></div>
-                <div class="border-cell flex-content">
-                    <div class="tag-panel">
-                        <template v-for="(item,index) in attrTagList">
-                            <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickAttrTag(item.name,item.id)">{{item.name}}</el-button>
-                        </template>
-                    </div>
-                </div>
-            </div>
-            <div class="border-row flex-wrap">
-                <div class="border-cell txt-font"><span>主机头：</span></div>
-                <div class="border-cell flex-content">
-                    <div class="tag-panel">
-                        <template v-for="(item,index) in hostTagList">
-                            <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickHostTag(item.name,item.id)">{{item.name}}</el-button>
-                        </template>
-                    </div>
-                </div>
-                <span class="borderver"></span>
-                <div class="border-cell txt-font"><span>其他：</span></div>
-                <div class="border-cell flex-content">
-                    <div class="tag-panel">
-                        <el-button type="primary" v-bind:class="formData.headeruser?'':'is-plain'" size="small" v-on:click="clickManage">个人负责网站</el-button>
-                        <el-button type="primary" v-bind:class="formData.personuser?'':'is-plain'" size="small" v-on:click="clickDevelop">个人开发网站</el-button>
-                    </div>
-                </div>
-                <div class="border-cell flex-content">
-                    <div class="tag-panel WebsiteListSearch">
-                        <el-input
-                          style="width:100%;margin:0px!important;"
-                          placeholder="IP/域名搜索："
-                          v-model="formData.ip"
-                          size="small"
-                          clearable>
-                        </el-input>
-                        <el-button class="item-input" size="small" type="primary" @click="searchResult"><i class="svg-i searchWhite" ><svg-icon icon-class="searchWhite" /></i>搜索</el-button>
-                    </div>
-                </div>
+                <span class="WebsiteListScreen" v-on:click="searchDialog()">筛选</span>
             </div>
           </div>
-        </div>
-        <div class="card-header ArticleSearchScreen" v-else>
-            <div class="search-panel ArticleSearch">                              
-                <el-input placeholder="输入ip或域名" v-model="formData.ip" class="article-search">
-                  <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
-                </el-input>
-            </div>
-            <span class="WebsiteListScreen" v-on:click="searchDialog()">筛选</span>
-        </div>
-      </div>
-      <div class="card-content WebsiteList-Wrap" ref="cardContent">
-          <div class="card-wrap">
-            <el-table
-              ref="simpleTable"
-              :data="tableData"
-              stripe
-              :height="scrollHeight"
-              class="SiteTable"
-              style="width: 100%"
-              >
-              <el-table-column
-                type="index"
-                label="序号"
-                width="50">
-              </el-table-column>
-              <el-table-column
-                prop="id"
-                label="ID"
-                width="60"
-                >
-              </el-table-column>
-              <el-table-column
-                prop="departname"
-                label="部门"
-                width="100"
-                >
-              </el-table-column>
-              <el-table-column
-                prop="is_online"
-                label="上线"
-                width="50"
-                >
-                <template #default="scope">
-                  <div class="table-icon center">
-                    <i class="svg-i online" v-if="scope.row.is_online" title="在线"></i>
-                    <i class="svg-i offline" v-else title="离线"></i>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="openstatus"
-                label="状态"
-                width="80"
-                >
-                <template #default="scope">
-                  <template v-if="scope.row.is_online">
-                    <div class="table-tag" v-if="scope.row.speedcheckstatus==1">
-                       <el-tag class="NotTag normal" type="info" v-if="scope.row.openstatus==0" title="正常">正常</el-tag>
-                       <el-tag class="NotTag timeout" type="info" v-else-if="scope.row.openstatus==1" title="超时">超时网站</el-tag>
-                       <el-tag class="NotTag abnormal" type="info" v-else title="异常">异常</el-tag>
-                    </div>
-                    <div class="table-tag" v-else><el-tag class="NotTag NotDetect" type="info">未检测</el-tag></div>
-                  </template>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="speed"
-                label="速度"
-                width="80"
-                >
-                <template #default="scope">
-                  <template v-if="scope.row.is_online">
-                    <div class="table-tag" v-if="scope.row.speedcheckstatus==1">
-                        <template v-if="scope.row.isCn">
-                          <el-tag size="small" v-if="scope.row.speed<1" type="success">{{scope.row.speed}}s</el-tag>
-                          <el-tag size="small" v-else-if="scope.row.speed>=1&&scope.row.speed<2" type="warning">{{scope.row.speed}}s</el-tag>
-                          <el-tag size="small" v-else type="danger">{{scope.row.speed}}s</el-tag>
-                        </template>
-                        <template v-else>
-                          <el-tag size="small" v-if="scope.row.speed<2" type="success">{{scope.row.speed}}s</el-tag>
-                          <el-tag size="small" v-else-if="scope.row.speed>=2&&scope.row.speed<4" type="warning">{{scope.row.speed}}s</el-tag>
-                          <el-tag size="small" v-else type="danger">{{scope.row.speed}}s</el-tag>
-                        </template>
-                    </div>
-                  </template>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="domainattr"
-                label="标签"
-                min-width="240"
-                >
-                <template #default="scope">
-                  <div class="table-tag">
-                    <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="(item,index) in scope.row.tagList" v-bind:key="index">{{item.tag}}</el-tag>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="domain"
-                label="主域名"
-                min-width="210"
-                >
-                <template #default="scope">
-                  <strong>{{scope.row.domain}}</strong>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="hosttag"
-                label="主机头"
-                min-width="130"
-                >
-                <template #default="scope">
-                  <div class="table-icon">
-                    <i class="svg-i" title="http" v-if="!scope.row.isHttps"><svg-icon icon-class="websiteClock" class-name="disabled" /></i>
-                    <template v-for="(item,index) in scope.row.hostList">
-                      <i class="svg-i" title="https" v-bind:key="index" v-if="item=='https'"><svg-icon icon-class="websiteClock" class-name="disabled" /></i>
-                      <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='www'"><svg-icon icon-class="websitePc" class-name="disabled" /></i>
-                      <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='m'"><svg-icon icon-class="websiteMobile" class-name="disabled" /></i>
-                      <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else><svg-icon icon-class="websiteMap" class-name="disabled" /></i>
+          <div class="card-content WebsiteList-Wrap" ref="cardContent">
+              <div class="card-wrap">
+                <el-table
+                  ref="simpleTable"
+                  :data="tableData"
+                  stripe
+                  v-bind:style="'min-height:'+minHeight+'px;'"
+                  class="SiteTable"
+                  style="width: 100%"
+                  >
+                  <el-table-column
+                    type="index"
+                    label="序号"
+                    width="50">
+                  </el-table-column>
+                  <el-table-column
+                    prop="id"
+                    label="ID"
+                    width="60"
+                    >
+                  </el-table-column>
+                  <el-table-column
+                    prop="departname"
+                    label="部门"
+                    width="100"
+                    >
+                  </el-table-column>
+                  <el-table-column
+                    prop="is_online"
+                    label="上线"
+                    width="50"
+                    >
+                    <template #default="scope">
+                      <div class="table-icon center">
+                        <i class="svg-i online" v-if="scope.row.is_online" title="在线"></i>
+                        <i class="svg-i offline" v-else title="离线"></i>
+                      </div>
                     </template>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="website_designuser"
-                label="设计负责人"
-                width="94"
-                >
-                <template #default="scope">
-                  <div class="table-name" v-if="scope.row.uiList.length>0">
-                    <span class="item-name" v-for="(item,index) in scope.row.uiList" v-bind:key="index">{{item}}</span>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="website_beforeuser"
-                label="前端负责人"
-                width="94"
-                >
-                <template #default="scope">
-                  <div class="table-name" v-if="scope.row.frontEndList.length>0">
-                    <span class="item-name" v-for="(item,index) in scope.row.frontEndList" v-bind:key="index">{{item}}</span>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="website_backuser"
-                label="程序负责人"
-                width="94"
-                >
-                <template #default="scope">
-                  <div class="table-name" v-if="scope.row.programList.length>0">
-                    <span class="item-name" v-for="(item,index) in scope.row.programList" v-bind:key="index">{{item}}</span>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="website_pushuser"
-                label="推广负责人"
-                width="94"
-                >
-                <template #default="scope">
-                  <div class="table-name" v-if="scope.row.promoteList.length>0">
-                    <span class="item-name" v-for="(item,index) in scope.row.promoteList" v-bind:key="index">{{item}}</span>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="website_headuser"
-                label="组负责人"
-                width="84"
-                >
-                <template #default="scope">
-                  <div class="table-name" v-if="scope.row.teamList.length>0">
-                    <span class="item-name" v-for="(item,index) in scope.row.teamList" v-bind:key="index">{{item}}</span>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="website_serveruser"
-                label="服务器负责人"
-                width="110"
-                >
-                <template #default="scope">
-                  <div class="table-name" v-if="scope.row.serverList.length>0">
-                    <span class="item-name" v-for="(item,index) in scope.row.serverList" v-bind:key="index">{{item}}</span>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="addtime"
-                label="添加时间"
-                width="160"
-                >
-              </el-table-column>
-              <el-table-column
-                v-if="menuButtonPermit.includes('Website_loglist')"
-                label="工作日志"
-                width="140"
-                fixed="right"
-                >
-                <template #default="scope">
-                  <el-button v-if="scope.row.show===1" class="logs-button" size="mini" @click="linkToLog(scope.row,scope.$index)">工作日志<span v-if="scope.row.weblogcount!=0" class="logs-num">({{scope.row.weblogcount}})</span></el-button>
-                </template>
-              </el-table-column>
-              <el-table-column
-                v-if="(menuButtonPermit.includes('Website_edit')||menuButtonPermit.includes('Website_delete'))&&device==='desktop'"
-                :width="operationsWidth"
-                align="center"
-                fixed="right"
-                label="操作">
-                <template #default="scope">
-                  <div class="table-button">
-                    <el-button v-if="scope.row.show===1&&menuButtonPermit.includes('Website_edit')" size="mini" @click="editTableRow(scope.row,scope.$index)">编辑</el-button>
-                    <el-button v-if="scope.row.deletepermit===1&&menuButtonPermit.includes('Website_delete')" size="mini" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
-                  </div>
-                </template>
-              </el-table-column>
-            </el-table>
-            <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
-              <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="page"
-                :page-sizes="pageSizeList"
-                :page-size="limit"
-                :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
-                :total="totalDataNum">
-              </el-pagination>
-            </div>
+                  </el-table-column>
+                  <el-table-column
+                    prop="openstatus"
+                    label="状态"
+                    width="80"
+                    >
+                    <template #default="scope">
+                      <template v-if="scope.row.is_online">
+                        <div class="table-tag" v-if="scope.row.speedcheckstatus==1">
+                          <el-tag class="NotTag normal" type="info" v-if="scope.row.openstatus==0" title="正常">正常</el-tag>
+                          <el-tag class="NotTag timeout" type="info" v-else-if="scope.row.openstatus==1" title="超时">超时网站</el-tag>
+                          <el-tag class="NotTag abnormal" type="info" v-else title="异常">异常</el-tag>
+                        </div>
+                        <div class="table-tag" v-else><el-tag class="NotTag NotDetect" type="info">未检测</el-tag></div>
+                      </template>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="speed"
+                    label="速度"
+                    width="80"
+                    >
+                    <template #default="scope">
+                      <template v-if="scope.row.is_online">
+                        <div class="table-tag" v-if="scope.row.speedcheckstatus==1">
+                            <template v-if="scope.row.isCn">
+                              <el-tag size="small" v-if="scope.row.speed<1" type="success">{{scope.row.speed}}s</el-tag>
+                              <el-tag size="small" v-else-if="scope.row.speed>=1&&scope.row.speed<2" type="warning">{{scope.row.speed}}s</el-tag>
+                              <el-tag size="small" v-else type="danger">{{scope.row.speed}}s</el-tag>
+                            </template>
+                            <template v-else>
+                              <el-tag size="small" v-if="scope.row.speed<2" type="success">{{scope.row.speed}}s</el-tag>
+                              <el-tag size="small" v-else-if="scope.row.speed>=2&&scope.row.speed<4" type="warning">{{scope.row.speed}}s</el-tag>
+                              <el-tag size="small" v-else type="danger">{{scope.row.speed}}s</el-tag>
+                            </template>
+                        </div>
+                      </template>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="domainattr"
+                    label="标签"
+                    min-width="240"
+                    >
+                    <template #default="scope">
+                      <div class="table-tag">
+                        <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="(item,index) in scope.row.tagList" v-bind:key="index">{{item.tag}}</el-tag>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="domain"
+                    label="主域名"
+                    min-width="210"
+                    >
+                    <template #default="scope">
+                      <strong>{{scope.row.domain}}</strong>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="hosttag"
+                    label="主机头"
+                    min-width="130"
+                    >
+                    <template #default="scope">
+                      <div class="table-icon">
+                        <i class="svg-i" title="http" v-if="!scope.row.isHttps"><svg-icon icon-class="http" class-name="disabled" /></i>
+                        <template v-for="(item,index) in scope.row.hostList">
+                          <i class="svg-i" title="https" v-bind:key="index" v-if="item=='https'"><svg-icon icon-class="websiteClock" class-name="disabled" /></i>
+                          <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='www'"><svg-icon icon-class="websitePc" class-name="disabled" /></i>
+                          <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='m'"><svg-icon icon-class="websiteMobile" class-name="disabled" /></i>
+                          <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else><svg-icon icon-class="websiteMap" class-name="disabled" /></i>
+                        </template>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="website_designuser"
+                    label="设计负责人"
+                    width="94"
+                    >
+                    <template #default="scope">
+                      <div class="table-name" v-if="scope.row.uiList.length>0">
+                        <span class="item-name" v-for="(item,index) in scope.row.uiList" v-bind:key="index">{{item}}</span>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="website_beforeuser"
+                    label="前端负责人"
+                    width="94"
+                    >
+                    <template #default="scope">
+                      <div class="table-name" v-if="scope.row.frontEndList.length>0">
+                        <span class="item-name" v-for="(item,index) in scope.row.frontEndList" v-bind:key="index">{{item}}</span>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="website_backuser"
+                    label="程序负责人"
+                    width="94"
+                    >
+                    <template #default="scope">
+                      <div class="table-name" v-if="scope.row.programList.length>0">
+                        <span class="item-name" v-for="(item,index) in scope.row.programList" v-bind:key="index">{{item}}</span>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="website_pushuser"
+                    label="推广负责人"
+                    width="94"
+                    >
+                    <template #default="scope">
+                      <div class="table-name" v-if="scope.row.promoteList.length>0">
+                        <span class="item-name" v-for="(item,index) in scope.row.promoteList" v-bind:key="index">{{item}}</span>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="website_headuser"
+                    label="组负责人"
+                    width="84"
+                    >
+                    <template #default="scope">
+                      <div class="table-name" v-if="scope.row.teamList.length>0">
+                        <span class="item-name" v-for="(item,index) in scope.row.teamList" v-bind:key="index">{{item}}</span>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="website_serveruser"
+                    label="服务器负责人"
+                    width="110"
+                    >
+                    <template #default="scope">
+                      <div class="table-name" v-if="scope.row.serverList.length>0">
+                        <span class="item-name" v-for="(item,index) in scope.row.serverList" v-bind:key="index">{{item}}</span>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="addtime"
+                    label="添加时间"
+                    width="160"
+                    >
+                  </el-table-column>
+                  <el-table-column
+                    v-if="menuButtonPermit.includes('Website_loglist')"
+                    label="工作日志"
+                    width="140"
+                    fixed="right"
+                    >
+                    <template #default="scope">
+                      <el-button v-if="scope.row.show===1" class="logs-button" size="mini" @click="linkToLog(scope.row,scope.$index)">工作日志<span v-if="scope.row.weblogcount!=0" class="logs-num">({{scope.row.weblogcount}})</span></el-button>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    v-if="(menuButtonPermit.includes('Website_edit')||menuButtonPermit.includes('Website_delete'))&&device==='desktop'"
+                    :width="operationsWidth"
+                    align="center"
+                    fixed="right"
+                    label="操作">
+                    <template #default="scope">
+                      <div class="table-button">
+                        <el-button v-if="scope.row.show===1&&menuButtonPermit.includes('Website_edit')" size="mini" @click="editTableRow(scope.row,scope.$index)">编辑</el-button>
+                        <el-button v-if="scope.row.deletepermit===1&&menuButtonPermit.includes('Website_delete')" size="mini" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
+                      </div>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div v-if="totalDataNum>100" class="pagination-panel" ref="pagePane">
+                  <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page"
+                    :page-sizes="pageSizeList"
+                    :page-size="limit"
+                    :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                    :total="totalDataNum">
+                  </el-pagination>
+                </div>
+              </div>
           </div>
+        </el-card>
       </div>
-    </el-card>
+    </div>
     <div class="drawerBg" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
     <div class="WebsiteFixed" ref="WebsiteFixed" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
         <ul :style="{height:WebsiteFixedHeight+'px'}">
@@ -450,7 +454,7 @@ export default {
   name: 'websiteLists',
   data() {
     return {
-      scrollHeight:200,
+      minHeight:0,
       WebsiteFixedHeight:0,
       operationsWidth:"",
       openClass:false,
@@ -527,29 +531,19 @@ export default {
   },
   mounted(){
       const $this = this;
-      this.$nextTick(function () {
-        if($this.totalDataNum>50){
-           $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-        }else{
-           $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-40-20;
-        }
-        // 40：page-root上下内边距；40：headerPane上下内边距；20：headerPane底部外边距；
+      $this.$nextTick(function () {
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
       });
       window.onresize = () => {
-          return (() => {
-              if($this.totalDataNum>50){
-                $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-              }else{
-                $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-40-20;
-              }
-              // 40：page-root上下内边距；40：headerPane上下内边距；20：headerPane底部外边距；
-          })()
+        return (() => {
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        })()
       };
   },
   watch: {
-      scrollHeight(val) {
+      minHeight(val) {
         if (!this.timer) {
-          this.scrollHeight = val
+          this.minHeight = val
           this.timer = true
           const $this = this
           setTimeout(function() {
@@ -573,14 +567,9 @@ export default {
   },
   updated(){
     var $this = this;
-    this.$nextTick(function () {
-      this.$refs.simpleTable.doLayout();
-      if($this.totalDataNum>50){
-          $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-      }else{
-          $this.scrollHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-40-20;
-      }
-      // 40：page-root上下内边距；40：headerPane上下内边距；20：headerPane底部外边距；
+    $this.$nextTick(function () {
+      $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+      $this.$refs.simpleTable.doLayout();
     });
   },
   methods:{

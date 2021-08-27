@@ -2,7 +2,7 @@
   <div class="page-root website-log" ref="boxPane">
     <el-card class="box-card" shadow="hover">
       <div slot="header">
-        <div class="card-header EnphoneCardHeader" ref="headerPane">
+        <div class="card-header" ref="headerPane">
             <h2 class="clues-title"><i class="svg-i" ><svg-icon icon-class="log" /></i>{{website}} 工作日志</h2>
         </div>
       </div>
@@ -159,21 +159,17 @@ export default {
       const $this = this;
       this.$nextTick(function () {
         if($this.totalDataNum>50){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-10;
-          // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-15;
         }else{
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-10;
-          // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-15;
         }
       });
       window.onresize = () => {
           return (() => {
             if($this.totalDataNum>50){
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-10;
-              // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-15;
             }else{
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-10;
-              // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
+              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-15;
             }
           })()
       }

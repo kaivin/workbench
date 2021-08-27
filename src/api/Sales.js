@@ -49,7 +49,7 @@ export function getSalesWaitDistribu(data) {
 //业务员英文询盘-询盘分配给具体的业务员
 export function getSalesDistribuSalesman(data) {
   return request({
-    url: "​/hxindex​/Sales​/dealphone",
+    url: "/hxindex/Sales/dealphone",
     method: "POST",
     data
   });

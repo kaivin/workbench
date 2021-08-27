@@ -258,38 +258,13 @@ export default {
   },
   mounted(){
       const $this = this;
-      this.$nextTick(function () {
-        if($this.device=="desktop"){
-          if($this.totalDataNum>50){
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-          }else{
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40-40-20;
-          }
-          //40：page-root上下内边距；40: headerPane上下内边距； 20：headerPane下边距；
-        }else{
-          if($this.totalDataNum>50){
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-25;
-          }else{
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-25;
-          }
-        }
+      $this.$nextTick(function () {
+        $this.setTableHeight();
       });
       window.onresize = () => {
-          return (() => {
-            if($this.device=="desktop"){
-              if($this.totalDataNum>50){
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40;
-              }else{
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-40;
-              }
-            }else{
-              if($this.totalDataNum>50){
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-25;
-              }else{
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-30-25;
-              }
-            }
-          })()
+        return (() => {
+          $this.setTableHeight();
+        })()
       };
   },
   watch: {
@@ -310,10 +285,20 @@ export default {
   },
   updated(){
     this.$nextTick(() => {
-      this.$refs.simpleTable.doLayout()
+      this.setTableHeight();
+      this.$refs.simpleTable.doLayout();
     })
   },
   methods:{
+    // 设置table高度
+    setTableHeight(){
+      var $this = this;
+      if($this.totalDataNum >50){
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-45;
+      }else{
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
+      }
+    },
     // 搜索结果点击事件
     searchResult(){
       var $this = this;

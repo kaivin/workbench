@@ -138,11 +138,11 @@ export default {
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-40;
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-30;
       });
       window.onresize = () => {
           return (() => {
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-40;
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-30;
           })()
       }
   },

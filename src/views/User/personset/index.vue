@@ -1,45 +1,45 @@
 ﻿<template>
   <div class="page-root scroll-panel user-center" ref="boxPane">
-      <table class="table-panel">
-          <tr>
-              <th colspan="2">基本信息</th>
+    <table class="table-panel">
+        <tr>
+            <th colspan="2">基本信息</th>
+        </tr>
+        <tr>
+            <td style="min-width: 100px;width: 100px;"><span>姓名：</span></td>
+            <td>{{userData.name}}</td>
+        </tr>
+        <tr v-if="userData.workname&&userData.workname!=''">
+            <td><span>职位：</span></td>
+            <td>{{userData.workname}}</td>
+        </tr>
+        <tr v-if="userData.postionname&&userData.postionname!=''">
+            <td><span>职称：</span></td>
+            <td>{{userData.postionname}}</td>
+        </tr>
+        <tr v-if="userData.depart&&userData.depart!=''">
+            <td><span>部门：</span></td>
+            <td>{{userData.depart}}</td>
+        </tr>
+        <tr>
+            <td><span>用户名：</span></td>
+            <td>{{userData.username}}<el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="editName" v-if="(menuButtonPermit.includes('User_personuser'))&&device==='desktop'">修改用户名</el-button></td>
+        </tr>
+        <tr v-if="device==='desktop'">
+            <td><span>密码：</span></td>
+            <td><el-button type="primary" size="mini" icon="el-icon-edit" v-on:click="editPwd" v-if="menuButtonPermit.includes('User_personpwd')">修改密码</el-button><el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="resetPwd">忘记密码</el-button></td>
+        </tr>
+        <tr>
+            <th colspan="2">联系方式<el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="editPhone" v-if="(menuButtonPermit.includes('User_personset'))&&device==='desktop'">修改联系方式</el-button></th>
+        </tr>
+        <tr>
+            <td><span>手机号：</span></td>
+            <td>{{userData.phone}}</td>
           </tr>
-          <tr>
-              <td style="min-width: 100px;width: 100px;"><span>姓名：</span></td>
-              <td>{{userData.name}}</td>
+        <tr>
+            <td><span>邮箱：</span></td>
+            <td>{{userData.email}}</td>
           </tr>
-          <tr v-if="userData.workname&&userData.workname!=''">
-              <td><span>职位：</span></td>
-              <td>{{userData.workname}}</td>
-          </tr>
-          <tr v-if="userData.postionname&&userData.postionname!=''">
-              <td><span>职称：</span></td>
-              <td>{{userData.postionname}}</td>
-          </tr>
-          <tr v-if="userData.depart&&userData.depart!=''">
-              <td><span>部门：</span></td>
-              <td>{{userData.depart}}</td>
-          </tr>
-          <tr>
-              <td><span>用户名：</span></td>
-              <td>{{userData.username}}<el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="editName" v-if="(menuButtonPermit.includes('User_personuser'))&&device==='desktop'">修改用户名</el-button></td>
-          </tr>
-          <tr v-if="device==='desktop'">
-              <td><span>密码：</span></td>
-              <td><el-button type="primary" size="mini" icon="el-icon-edit" v-on:click="editPwd" v-if="menuButtonPermit.includes('User_personpwd')">修改密码</el-button><el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="resetPwd">忘记密码</el-button></td>
-          </tr>
-          <tr>
-              <th colspan="2">联系方式<el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="editPhone" v-if="(menuButtonPermit.includes('User_personset'))&&device==='desktop'">修改联系方式</el-button></th>
-          </tr>
-          <tr>
-              <td><span>手机号：</span></td>
-              <td>{{userData.phone}}</td>
-            </tr>
-          <tr>
-              <td><span>邮箱：</span></td>
-              <td>{{userData.email}}</td>
-            </tr>
-      </table>
+    </table>
     <el-dialog title="修改用户名" v-if="(menuButtonPermit.includes('User_personuser'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogNameVisible" width="480px">
       <el-form :model="dialogNameForm">
           <el-form-item label="原用户名：" :label-width="formLabelWidth">
@@ -141,8 +141,6 @@
     </el-dialog>
   </div>
 </template>
-
-
 <script>
 import { validEmail,validPhone } from '@/utils/validate';
 import { mapGetters } from 'vuex'

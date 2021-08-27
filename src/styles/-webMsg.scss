@@ -1,4 +1,14 @@
 ﻿.web-msg{
+    .tips{
+        padding: 15px;
+        overflow: hidden;
+        p{
+            padding: 0 10px;
+            font-size: 12px;
+            line-height: 24px;
+            color: #999;
+        }
+    }
     .sub-router-list{
         width: 100%;
         overflow: hidden;

@@ -341,21 +341,13 @@ export default {
   },
   mounted(){
       const $this = this;
-      this.$nextTick(function () {
-        if($this.device === "desktop"){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-        }else{
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-        }
+      $this.$nextTick(function () {
+        $this.setTableHeight();
       });
       window.onresize = () => {
-          return (() => {
-            if($this.device === "desktop"){
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-            }else{
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-            }
-          })()
+        return (() => {
+          $this.setTableHeight();
+        })()
       }
   },
   watch: {
@@ -381,10 +373,20 @@ export default {
   },
   updated(){
     this.$nextTick(() => {
+      this.setTableHeight();
       this.$refs.simpleTable.doLayout()
     })
   },
   methods:{
+    // 设置table高度
+    setTableHeight(){
+      var $this = this;
+      if($this.totalDataNum >10){
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-45;
+      }else{
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
+      }
+    },
     // 移动端查询弹窗事件
     openSearchDialog(){
       var $this = this;

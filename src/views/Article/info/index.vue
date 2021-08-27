@@ -1,5 +1,5 @@
 ﻿<template>
-  <div class="page-root scroll-panel ArticleSix">
+  <div class="page-root ArticleSix">
     <div class="abs-panel" ref="mainPane">
       <div class="scroll-panel" ref="scrollPane">
         <div class="ArticleSixFl" v-bind:class="articleData.issay==0&&commentList.length==0?'no-comment':''" v-bind:style="'min-height:'+minHeight+'px;'" ref="leftPane">
@@ -32,24 +32,24 @@
         </div>
         <div class="comment ArticleSixFr" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||articleData.issay==0&&commentList.length>0" v-bind:style="'min-height:'+minHeight+'px;'" ref="rightPane">
           <div class="ArticleSixFrTop" v-bind:class="commentList.length>0?'':'no-comment'">
-              <p class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
-              <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
-                  <div class="ueditor-panel"><vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap></div>
-                  <div class="btn-rich">
-                      <el-switch class="hide-name" v-model="isHideName" inactive-text="匿名发布"></el-switch>
-                      <el-button type="primary" v-on:click="submitComment">提交</el-button>
-                  </div>
+            <p class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
+            <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
+              <div class="ueditor-panel"><vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap></div>
+              <div class="btn-rich">
+                <el-switch class="hide-name" v-model="isHideName" inactive-text="匿名发布"></el-switch>
+                <el-button type="primary" v-on:click="submitComment">提交</el-button>
               </div>
+            </div>
           </div>
           <div class="ArticleSixFrBom" v-if="commentList.length>0">
-              <div class="item-comment" v-for="item in commentList" v-bind:key="item.id">
-                  <div class="comment-header">
-                      <span class="name" v-if="item.is_hidename==0">{{item.name}}</span><span class="name" v-else>匿名</span>
-                      <span class="time">{{item.addtime}}</span>
-                      <span v-if="articleData.commentdelete==1&&menuButtonPermit.includes('Article_commentdelete')" class="delete" v-on:click="deleteComment(item.id)" title="删除该条评论"><i class="el-icon-delete-solid"></i></span>
-                  </div>
-                  <div class="comment-body" v-html="item.content"></div>
+            <div class="item-comment" v-for="item in commentList" v-bind:key="item.id">
+              <div class="comment-header">
+                <span class="name" v-if="item.is_hidename==0">{{item.name}}</span><span class="name" v-else>匿名</span>
+                <span class="time">{{item.addtime}}</span>
+                <span v-if="articleData.commentdelete==1&&menuButtonPermit.includes('Article_commentdelete')" class="delete" v-on:click="deleteComment(item.id)" title="删除该条评论"><i class="el-icon-delete-solid"></i></span>
               </div>
+              <div class="comment-body" v-html="item.content"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -139,9 +139,9 @@ export default {
       };
   },
   watch: {
-      tableHeight(val) {
+      minHeight(val) {
         if (!this.timer) {
-          this.tableHeight = val
+          this.minHeight = val
           this.timer = true
           const $this = this
           setTimeout(function() {

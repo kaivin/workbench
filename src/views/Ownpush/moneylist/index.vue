@@ -165,7 +165,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="pagination-panel" ref="pagePane">
+      <div class="pagination-panel" v-if="totalDataNum>50" ref="pagePane">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -334,21 +334,13 @@ export default {
   },
   mounted(){
       const $this = this;
-      this.$nextTick(function () {
-        if($this.device === "desktop"){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-        }else{
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-        }
+      $this.$nextTick(function () {
+        $this.setTableHeight();
       });
       window.onresize = () => {
-          return (() => {
-            if($this.device === "desktop"){
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-            }else{
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-            }
-          })()
+        return (() => {
+          $this.setTableHeight();
+        })()
       }
   },
   watch: {
@@ -375,10 +367,20 @@ export default {
   },
   updated(){
     this.$nextTick(() => {
-      this.$refs.simpleTable.doLayout()
+      this.setTableHeight();
+      this.$refs.simpleTable.doLayout();
     })
   },
   methods:{
+    // 设置table高度
+    setTableHeight(){
+      var $this = this;
+      if($this.totalDataNum >50){
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-45;
+      }else{
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
+      }
+    },
     // 获取今天时间
     getToday(){
         var $this = this;

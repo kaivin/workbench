@@ -157,7 +157,7 @@
                             <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Sales_index')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出结果</el-button>
                             <el-button class="item-input" v-if="menuButtonPermit.includes('Sales_index')&&currentStatus === 'allotcount'" size="small" type="primary" :disabled="isTableRow" @click="deleteTableRow">分配撤回</el-button>
                             <div class="SaleMassDistribution" v-if="menuButtonPermit.includes('Sales_index')&&currentStatus === 'waitcount'">                          
-                                  <el-select v-model="Determine.DetermineSale" size="small" clearable placeholder="-选择业务员-">
+                                  <el-select v-model="Determine.userid" size="small" clearable placeholder="-选择业务员-">
                                       <el-option
                                       v-for="item in salesuseridList"
                                       :key="item.value"
@@ -989,7 +989,7 @@ export default {
     // 修改询盘
     editTableRow(row,index,num){
       var $this = this;
-      var routeUrl =  $this.$router.resolve({path:'/Sales/phoneinfosub',query:{ID:row.id,status:num}});
+      var routeUrl =  $this.$router.resolve({path:'Sales/phoneinfosub',query:{ID:row.id,status:num}});
       window.open(routeUrl.href,'_blank');
     },
     // 表格多选改变事件

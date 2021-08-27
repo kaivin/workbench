@@ -87,7 +87,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="pagination-panel" ref="pagePane">
+      <div class="pagination-panel" v-if="totalDataNum>50" ref="pagePane">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -177,23 +177,20 @@ export default {
   },
   mounted(){
       const $this = this;
-      this.$nextTick(function () {
-        if($this.device === "desktop"){
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-            //40：page-root上下内边距；40: headerPane上下内边距； 20：headerPane下边距；
-        }else{
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-        }
+      $this.$nextTick(function () {
+        $this.setTableHeight();
       });
       window.onresize = () => {
           return (() => {
-            if($this.device === "desktop"){
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-            }else{
-                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-40-20;
-            }
+            $this.setTableHeight();
           })()
       }
+  },
+  updated(){
+    var $this = this;
+    $this.$nextTick(() => {
+      $this.setTableHeight();
+    });
   },
   watch: {
       tableHeight(val) {
@@ -212,6 +209,15 @@ export default {
     $this.initData();
   },
   methods:{
+    // 设置table高度
+    setTableHeight(){
+      var $this = this;
+      if($this.totalDataNum >50){
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-45;
+      }else{
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
+      }
+    },
     // 移动端查询弹窗事件
     openSearchDialog(){
       var $this = this;

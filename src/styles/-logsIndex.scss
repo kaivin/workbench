@@ -19,9 +19,12 @@
     .box-card{
         .el-card__header{
             padding:0;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             background: none;
             border-radius:0;
+        }
+        .clues-title{
+            padding-bottom: 0;
         }
     }
 }

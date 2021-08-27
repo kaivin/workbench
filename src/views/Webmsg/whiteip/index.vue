@@ -133,15 +133,15 @@ export default {
     }
   },
   mounted(){
-      const $this = this;
-      this.$nextTick(function () {
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-15;
-      });
-      window.onresize = () => {
-          return (() => {
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-30-15;
-          })()
-      }
+    const $this = this;
+    $this.$nextTick(function () {
+      $this.setTableHeight();
+    });
+    window.onresize = () => {
+        return (() => {
+          $this.setTableHeight();
+        })()
+    }
   },
   watch: {
       tableHeight(val) {
@@ -166,15 +166,25 @@ export default {
   },
   updated(){
     this.$nextTick(() => {
-      this.$refs.simpleTable.doLayout()
+      this.setTableHeight();
+      this.$refs.simpleTable.doLayout();
     })
   },
   methods:{
-      // 查询结果
-      searchResult(){
-          var $this = this;
-          $this.initPage();
-      },
+    // 设置table高度
+    setTableHeight(){
+      var $this = this;
+      if($this.totalDataNum >50){
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-45;
+      }else{
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
+      }
+    },
+    // 查询结果
+    searchResult(){
+        var $this = this;
+        $this.initPage();
+    },
     // 初始化数据
     initData(){
       var $this = this;

@@ -379,9 +379,9 @@ export default {
       };
   },
   watch: {
-      tableHeight(val) {
+      minHeight(val) {
         if (!this.timer) {
-          this.tableHeight = val
+          this.minHeight = val
           this.timer = true
           const $this = this
           setTimeout(function() {

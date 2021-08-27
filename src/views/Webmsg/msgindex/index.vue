@@ -15,6 +15,9 @@
                     <li v-if="menuButtonPermit.includes('Webmsg_filetermsg')" v-bind:class="currentStatus === 'Filter'?'active':''" v-on:click="jumpLink('Filter')" style="margin-top:32px;"><span>已过滤垃圾信息</span><b>({{defaultData.filterNum}})</b></li>
                     <li v-if="menuButtonPermit.includes('Webmsg_deletemsg')" v-bind:class="currentStatus === 'Recycle'?'active':''" v-on:click="jumpLink('Recycle')" style="margin-top:32px;"><span>回收站</span><b>({{defaultData.recycleNum}})</b></li>
                 </ul>
+                <div class="tips">
+                  <p>tips：显示45天内的数据</p>
+                </div>
             </el-scrollbar>
         </div>
         <div class="flex-content relative">

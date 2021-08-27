@@ -1,179 +1,183 @@
 ﻿<template>
-  <div class="page-root scroll-panel" ref="boxPane">
-    <el-card class="box-card scroll-card" shadow="hover">
-        <div class="card-content bg-white" ref="cardContent">
-          <ul class="WebServerAddEditPost clearfix">
-              <li>
-                  <div class="AddEditPostItem flex-wrap clearfix">
-                      <label>别名：</label>
-                      <el-input
-                        v-model="formData.name"
-                        size="small"
-                        class="EditPostInput flex-content"
-                        clearable>
-                      </el-input>
-                  </div>
-              </li>
-              <li>
-                  <div class="AddEditPostItem flex-wrap clearfix">
-                      <label>语言：</label>
-                      <el-select 
-                        v-model="formData.languageid" 
-                        size="small"
-                        class="EditPostSelect flex-content"
-                        clearable 
-                        placeholder="请选择品牌">
-                        <el-option
-                          v-for="item in languageList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                  </div>
-                  <div class="AddEditPostItem flex-wrap clearfix">
-                      <label>用途：</label>
-                      <el-select 
-                        v-model="formData.useringid" 
-                        size="small" 
-                        class="EditPostSelect flex-content"
-                        clearable 
-                        placeholder="请选择语言">
-                        <el-option
-                          v-for="item in useingList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                  </div>
-                  <div class="AddEditPostItem flex-wrap clearfix">
-                      <label>系统：</label>
-                      <el-select 
-                        v-model="formData.systemid" 
-                        size="small" 
-                        class="EditPostSelect flex-content"
-                        clearable 
-                        placeholder="请选择系统">
-                        <el-option
-                          v-for="item in serverList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                  </div>
-              </li>
-              <li>
-                  <div class="AddEditPostItem flex-wrap AddEditPostItemIp clearfix">
-                      <label>IP：</label>
-                      <el-input
-                        v-model="formData.ip"
-                        size="small"
-                        class="EditPostInput flex-content"
-                        clearable>
-                      </el-input>
-                  </div>
-                <div class="AddEditPostItem flex-wrap AddEditPostItemIpTxt clearfix">
-                  <div class="item-wrap flex-box">
-                    <a :href="'http://ip.chinaz.com/?IP='+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">IP查询</a>
-                    <a :href="'https://whoer.net/checkwhois?IP='+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">IP查询2</a>
-                    <a :href="'http://ping.chinaz.com/'+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">PING国内检测</a>
-                    <a :href="'https://asm.ca.com/zh_cn/ping.php?IP='+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">PING全球检测</a>
-                    <a class="link" v-on:click="linkPage" v-if="formData.ip!=''">该IP网站查询</a>
-                  </div>
+  <div class="page-root" ref="boxPane">
+    <div class="abs-panel" ref="mainPane">
+        <div class="scroll-panel" ref="scrollPane">
+          <el-card class="box-card scroll-card" shadow="hover">
+              <div class="card-content bg-white" ref="cardContent" v-bind:style="'min-height:'+minHeight+'px;'">
+                <ul class="WebServerAddEditPost clearfix">
+                    <li>
+                        <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>别名：</label>
+                            <el-input
+                              v-model="formData.name"
+                              size="small"
+                              class="EditPostInput flex-content"
+                              clearable>
+                            </el-input>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>语言：</label>
+                            <el-select 
+                              v-model="formData.languageid" 
+                              size="small"
+                              class="EditPostSelect flex-content"
+                              clearable 
+                              placeholder="请选择品牌">
+                              <el-option
+                                v-for="item in languageList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                              </el-option>
+                            </el-select>
+                        </div>
+                        <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>用途：</label>
+                            <el-select 
+                              v-model="formData.useringid" 
+                              size="small" 
+                              class="EditPostSelect flex-content"
+                              clearable 
+                              placeholder="请选择语言">
+                              <el-option
+                                v-for="item in useingList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                              </el-option>
+                            </el-select>
+                        </div>
+                        <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>系统：</label>
+                            <el-select 
+                              v-model="formData.systemid" 
+                              size="small" 
+                              class="EditPostSelect flex-content"
+                              clearable 
+                              placeholder="请选择系统">
+                              <el-option
+                                v-for="item in serverList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                              </el-option>
+                            </el-select>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="AddEditPostItem flex-wrap AddEditPostItemIp clearfix">
+                            <label>IP：</label>
+                            <el-input
+                              v-model="formData.ip"
+                              size="small"
+                              class="EditPostInput flex-content"
+                              clearable>
+                            </el-input>
+                        </div>
+                      <div class="AddEditPostItem flex-wrap AddEditPostItemIpTxt clearfix">
+                        <div class="item-wrap flex-box">
+                          <a :href="'http://ip.chinaz.com/?IP='+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">IP查询</a>
+                          <a :href="'https://whoer.net/checkwhois?IP='+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">IP查询2</a>
+                          <a :href="'http://ping.chinaz.com/'+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">PING国内检测</a>
+                          <a :href="'https://asm.ca.com/zh_cn/ping.php?IP='+formData.ip" v-if="formData.ip!=''" target="_blank" class="link">PING全球检测</a>
+                          <a class="link" v-on:click="linkPage" v-if="formData.ip!=''">该IP网站查询</a>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                        <div class="AddEditPostItem flex-wrap AddEditPostItemAllip clearfix">
+                            <label>全部IP：</label>
+                            <el-input
+                              type="textarea"
+                              :autosize="{ minRows:3, maxRows:6}"
+                              placeholder="多个IP以逗号分隔"
+                              v-model="formData.allip"
+                              size="small"
+                              class="EditPostTextareaIp flex-content"
+                              clearable>
+                            </el-input>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>帐号：</label>
+                            <el-input
+                              v-model="formData.servername"
+                              size="small"
+                              class="EditPostInput flex-content"
+                              clearable>
+                            </el-input>
+                        </div>
+                        <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>密码：</label>
+                            <el-input
+                              v-model="formData.serverpwd"
+                              size="small"
+                              class="EditPostInput flex-content"
+                              clearable>
+                            </el-input>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="AddEditPostItem flex-wrap EditPostTextareaNote clearfix">
+                            <label>备注：</label>                            
+                            <el-input
+                              type="textarea"
+                              :autosize="{ minRows:7, maxRows: 20}"
+                              placeholder="请输入备注"
+                              v-model="formData.remarks"
+                              size="small"
+                              class="EditPostTextarea flex-content"
+                              clearable>
+                            </el-input>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="AddEditPostItem flex-wrap editPostUser clearfix">
+                            <label>负责人：</label>
+                            <el-select 
+                              v-model="formData.adminuserid" 
+                              size="small" 
+                              filterable 
+                              multiple 
+                              class="EditPostSelect flex-content"
+                              clearable 
+                              placeholder="请选择服务器负责人">
+                              <el-option
+                                v-for="item in userList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                              </el-option>
+                            </el-select>
+                        </div>
+                        <div class="AddEditPostItem flex-wrap clearfix">
+                            <label>排序：</label>
+                            <el-input
+                              v-model="formData.sort"
+                              class="EditPostInput flex-content"
+                              clearable
+                              size="small">
+                            </el-input>
+                        </div>
+                    </li>
+                    <li v-if="formData.updatetime!=''">
+                        <div class="AddEditPostItem flex-wrap txt-font clearfix" style="width: 100%;">
+                            <label>更新时间：</label>
+                            <div class="font">{{formData.updatetime}}</div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="card-header WebServerAddEditBtn" ref="headerPane">
+                  <el-button type="primary" class="updateBtn" size="small" v-on:click="updateWebserverInfo()" v-if="menuButtonPermit.includes('Webserver_add')||menuButtonPermit.includes('Webserver_edit')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>更新</el-button>
+                  <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
                 </div>
-              </li>
-              <li>
-                  <div class="AddEditPostItem flex-wrap AddEditPostItemAllip clearfix">
-                      <label>全部IP：</label>
-                      <el-input
-                        type="textarea"
-                        :autosize="{ minRows:3, maxRows:6}"
-                        placeholder="多个IP以逗号分隔"
-                        v-model="formData.allip"
-                        size="small"
-                        class="EditPostTextareaIp flex-content"
-                        clearable>
-                      </el-input>
-                  </div>
-              </li>
-              <li>
-                  <div class="AddEditPostItem flex-wrap clearfix">
-                      <label>帐号：</label>
-                      <el-input
-                        v-model="formData.servername"
-                        size="small"
-                        class="EditPostInput flex-content"
-                        clearable>
-                      </el-input>
-                  </div>
-                  <div class="AddEditPostItem flex-wrap clearfix">
-                      <label>密码：</label>
-                      <el-input
-                        v-model="formData.serverpwd"
-                        size="small"
-                        class="EditPostInput flex-content"
-                        clearable>
-                      </el-input>
-                  </div>
-              </li>
-              <li>
-                  <div class="AddEditPostItem flex-wrap EditPostTextareaNote clearfix">
-                      <label>备注：</label>                            
-                      <el-input
-                        type="textarea"
-                        :autosize="{ minRows:7, maxRows: 20}"
-                        placeholder="请输入备注"
-                        v-model="formData.remarks"
-                        size="small"
-                        class="EditPostTextarea flex-content"
-                        clearable>
-                      </el-input>
-                  </div>
-              </li>
-              <li>
-                  <div class="AddEditPostItem flex-wrap editPostUser clearfix">
-                      <label>负责人：</label>
-                      <el-select 
-                        v-model="formData.adminuserid" 
-                        size="small" 
-                        filterable 
-                        multiple 
-                        class="EditPostSelect flex-content"
-                        clearable 
-                        placeholder="请选择服务器负责人">
-                        <el-option
-                          v-for="item in userList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                  </div>
-                  <div class="AddEditPostItem flex-wrap clearfix">
-                      <label>排序：</label>
-                      <el-input
-                        v-model="formData.sort"
-                        class="EditPostInput flex-content"
-                        clearable
-                        size="small">
-                      </el-input>
-                  </div>
-              </li>
-              <li v-if="formData.updatetime!=''">
-                  <div class="AddEditPostItem flex-wrap txt-font clearfix" style="width: 100%;">
-                      <label>更新时间：</label>
-                      <div class="font">{{formData.updatetime}}</div>
-                  </div>
-              </li>
-          </ul>
-          <div class="card-header WebServerAddEditBtn" ref="headerPane">
-            <el-button type="primary" class="updateBtn" size="small" v-on:click="updateWebserverInfo()" v-if="menuButtonPermit.includes('Webserver_add')||menuButtonPermit.includes('Webserver_edit')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>更新</el-button>
-            <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
-          </div>
+              </div>
+          </el-card>
         </div>
-    </el-card>
+    </div>
   </div>
 </template>
 <script>
@@ -182,6 +186,7 @@ export default {
   name: 'webserverAddEdit',
   data() {
     return {
+      minHeight:0,
       menuButtonPermit:[],
       formData:{
         id:0,
@@ -210,6 +215,29 @@ export default {
       'userInfo',
       'device'
     ]),
+  },
+  mounted(){
+      const $this = this;
+      $this.$nextTick(function () {
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-30;
+      });
+      window.onresize = () => {
+        return (() => {
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-30;
+        })()
+      };
+  },
+  watch: {
+      minHeight(val) {
+        if (!this.timer) {
+          this.minHeight = val
+          this.timer = true
+          const $this = this
+          setTimeout(function() {
+            $this.timer = false
+          }, 400)
+        }
+      },
   },
   created(){
     var $this = this;
