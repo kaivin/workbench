@@ -345,10 +345,8 @@ export default {
       $this.$store.dispatch('article/postArticleCommentListAction', {id:$this.currentID}).then(response=>{
           if(response){
             if(response.status){
-              if(response.data.length>0){
-                $this.commentList = response.data;
-                $this.setHeight();
-              }
+              $this.commentList = response.data;
+              $this.setHeight();
             }else{
               $this.$message({
                   showClose: true,
