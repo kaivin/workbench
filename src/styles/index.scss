@@ -651,24 +651,7 @@
   }
   .el-dialog__footer{
     padding: 0px 20px 20px 20px;
-    span{
-      clear: both;
-      display: block;
-      width: 79px;
-      height: 32px;
-      line-height: 32px;
-      background: #2e88ff;
-      color: #fff;
-      font-size: 14px;
-      font-weight: bold;
-      margin: 0 auto;
-      text-align: center;
-      border-radius: 5px;
-      cursor: pointer;
-      &:hover{
-        opacity: 0.6;
-      }
-    }
+    text-align: center;
   }
 }
 /**/
@@ -817,6 +800,7 @@
   }
   .logs-num{
     color: red;
+    margin-left:4px;
   }
   .el-popover{
     min-width: 100px!important;

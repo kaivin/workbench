@@ -550,7 +550,7 @@
             </ul>
             <template #footer>
             <span class="dialog-footer">
-                <el-button :loading="downloadLoading" type="primary" icon="el-icon-document" @click="handleLockClick">确定</el-button>
+                <el-button type="primary" size="small" @click="handleLockClick">确定</el-button>
             </span>
             </template>
         </el-dialog>

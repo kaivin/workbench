@@ -464,6 +464,73 @@
     background:#fff!important;
     border-radius:8px!important;
 }
+.website-list-page{
+    .table-icon{
+        display: block;
+        &.center{
+            text-align: center;
+            line-height: 0;
+            font-size:0;
+        }
+        .svg-i{
+            margin: 2px;
+            color: #808080;
+            &.online{
+                color: #49c969;
+            }
+            &.offline{
+                color: #999999;
+            }
+            &.link{
+                &:hover{
+                    color: $menuActiveText;
+                }
+            }
+        }
+    }
+    .table-font{
+        p{
+            display: block;
+            padding-left: 12px;
+            position: relative;
+            &:before{
+                content:'';
+                display: block;
+                position: absolute;
+                left: 0;
+                width: 6px;
+                height: 6px;
+                border-radius: 100%;
+                top: 50%;
+                margin-top: -3px;
+            }
+            &.normal{
+                color: #49c969;
+                &:before{
+                    background-color: #49c969;
+                }
+            }
+            &.timeout{
+                color: #ee3c40;
+                &:before{
+                    background-color: #ee3c40;
+                }
+            }
+            &.abnormal{
+                color: $Redapricot;
+                &:before{
+                    background-color: $Redapricot;
+                }
+            }
+            &.NotDetect{
+                color: #999;
+                &:before{
+                    background-color: #999;
+                }
+            }
+        }
+    }
+}
 @media (max-width:1024px){
     .WebsiteOne{
         .WebsiteOneTable{

@@ -410,7 +410,9 @@ export default {
         hits:0,
         title:"",
         content:"",
-      }
+      },
+      isInit:false,
+      count:0,
     }
   },
   computed: {
@@ -626,6 +628,7 @@ export default {
       if(data.is_markdown==1){
         $this.formData.markdownContent = data.markdowntext;
         $this.activeTab = "markdown";
+        $this.isInit = true;
       }else{
         $this.formData.markdownContent = "";
         $this.activeTab = "textarea";
@@ -842,24 +845,29 @@ export default {
     // 文本编辑器选项卡切换事件
     tabClickHandler(activeName,oldActiveName){
       var $this = this;
-      return $this.$confirm('两种编辑器的内容不能相互转换，切换编辑器将清空当前编辑器已编辑内容，是否确认切换编辑器？', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        if(activeName=="markdown"){
-          $this.formData.is_markdown = 1;
-          $this.formData.content = "";
-          // $this.activeTab = "markdown";
-        }else{
-          $this.formData.is_markdown = 0;
-          $this.formData.content = "";
-          $this.formData.markdownContent = "";
-          // $this.activeTab = "textarea";
-        }
-      }).catch(() => {
-        throw new Error("已取消切换");        
-      });
+      if($this.isInit&&$this.count==0){
+        $this.isInit = false;
+      }else{
+        $this.count +=1;
+        return $this.$confirm('两种编辑器的内容不能相互转换，切换编辑器将清空当前编辑器已编辑内容，是否确认切换编辑器？', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          if(activeName=="markdown"){
+            $this.formData.is_markdown = 1;
+            $this.formData.content = "";
+            // $this.activeTab = "markdown";
+          }else{
+            $this.formData.is_markdown = 0;
+            $this.formData.content = "";
+            $this.formData.markdownContent = "";
+            // $this.activeTab = "textarea";
+          }
+        }).catch(() => {
+          throw new Error("已取消切换");        
+        });
+      }
     },
     // 返回添加编辑页面
     backSendPost(){

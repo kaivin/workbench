@@ -28,7 +28,7 @@
       </el-scrollbar>
     </div>
     <div class="flex-content SaleCardFr">
-      <div class="abs-panel">
+      <div class="abs-panel" ref="mainPane">
           <div class="scroll-panel" ref="scrollPane">
             <el-card class="box-card scroll-card SaleCardFlFrTable" shadow="hover">
               <div slot="header">
@@ -180,6 +180,7 @@
                     class="SiteTable"
                     style="width: 100%"
                     row-key="id"
+                    :style="'min-height:'+tableHeight+'px;'"
                     @selection-change="handleSelectionChange"
                     >
                     <el-table-column
@@ -323,7 +324,7 @@
                     </el-table-column>
                 </el-table>
               </div>
-              <div class="pagination-panel" ref="pagePane">
+              <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
                 <el-pagination
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange"
@@ -356,7 +357,7 @@ export default {
       tableHeight:200,
       searchData:{
         page:1,
-        limit:15,
+        limit:20,
         timetype:"",
         salesownid:"",
         continent:"",
@@ -410,7 +411,7 @@ export default {
         {label:"已反馈",value:1},
         {label:"未反馈",value:2},
       ],
-      pageSizeList:[15],
+      pageSizeList:[20,50,100,200,500],
       totalDataNum:0,
       pickerRangeOptions: {
         shortcuts: [{
@@ -462,15 +463,12 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-30-25-20-3;
+      $this.setTableHeight();
     });
-    if($this.$route.query.Status){
-      window.onresize = () => {
-          return (() => {
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-30-25-20-3;
-            // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
-          })()
-      }
+    window.onresize = () => {
+        return (() => {
+            $this.setTableHeight();
+        })()
     }
   },
   watch: {
@@ -517,6 +515,12 @@ export default {
     $this.initData();
   },
   methods:{
+    // 设置高度
+    setTableHeight(){
+      const $this = this;
+      var screenHeight = $this.$refs.mainPane.offsetHeight;
+      $this.tableHeight = screenHeight-$this.$refs.headerPane.offsetHeight-75;
+    },
     // 搜索结果
     searchResult(DealVal){
       var $this = this;

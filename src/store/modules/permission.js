@@ -170,19 +170,19 @@ function setRoutes(routers){
       {
         path: "/Sales/phonecount",
         name:'phonecount',
-        component: () => import(/* webpackChunkName: "editHistoryLog" */ "@/views/Sales/phonecount/index.vue"),
+        component: () => import(/* webpackChunkName: "salesPhonecount" */ "@/views/Sales/phonecount/index.vue"),
         meta: {id:'phonecount-79',title: '业务员数据统计', icon: null, keepAlive:false},
       },
       {
         path: "/Sales/search",
         name:'search',
-        component: () => import(/* webpackChunkName: "editHistoryLog" */ "@/views/Sales/search/index.vue"),
+        component: () => import(/* webpackChunkName: "salesSearch" */ "@/views/Sales/search/index.vue"),
         meta: {id:'search-79',title: '业务员数据分析', icon: null, keepAlive:false},
       },
       {
         path: "/Sales/phoneinfosub",
         name:'phoneinfosub',
-        component: () => import(/* webpackChunkName: "editHistoryLog" */ "@/views/Sales/phoneinfosub/index.vue"),
+        component: () => import(/* webpackChunkName: "salesPhoneinfosub" */ "@/views/Sales/phoneinfosub/index.vue"),
         meta: {id:'phoneinfosub-79',title: '业务员询盘修改', icon: null, keepAlive:false},
       },
     ]

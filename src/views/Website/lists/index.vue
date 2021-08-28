@@ -1,8 +1,8 @@
 ﻿<template>
-  <div class="page-root" ref="boxPane">
+  <div class="page-root website-list-page" ref="boxPane">
     <div class="abs-panel" ref="mainPane">
       <div class="scroll-panel" ref="scrollPane">
-        <el-card class="box-card scroll-card WebsiteList-card" shadow="hover" v-bind:class="device=='mobile'?'mobile':''">
+        <el-card class="box-card scroll-card WebsiteList-card" shadow="hover" v-bind:class="device=='mobile'?'mobile':''" v-loading.lock="isLoading">
           <div slot="header" ref="headerPane" >
             <div class="card-header" v-if="device==='desktop'">
               <div class="border-wrap post-class">
@@ -116,11 +116,6 @@
                   style="width: 100%"
                   >
                   <el-table-column
-                    type="index"
-                    label="序号"
-                    width="50">
-                  </el-table-column>
-                  <el-table-column
                     prop="id"
                     label="ID"
                     width="60"
@@ -139,8 +134,8 @@
                     >
                     <template #default="scope">
                       <div class="table-icon center">
-                        <i class="svg-i online" v-if="scope.row.is_online" title="在线"></i>
-                        <i class="svg-i offline" v-else title="离线"></i>
+                        <i class="svg-i online" v-if="scope.row.is_online" title="在线"><svg-icon icon-class="online" /></i>
+                        <i class="svg-i offline" v-else title="离线"><svg-icon icon-class="offline" /></i>
                       </div>
                     </template>
                   </el-table-column>
@@ -151,12 +146,12 @@
                     >
                     <template #default="scope">
                       <template v-if="scope.row.is_online">
-                        <div class="table-tag" v-if="scope.row.speedcheckstatus==1">
-                          <el-tag class="NotTag normal" type="info" v-if="scope.row.openstatus==0" title="正常">正常</el-tag>
-                          <el-tag class="NotTag timeout" type="info" v-else-if="scope.row.openstatus==1" title="超时">超时网站</el-tag>
-                          <el-tag class="NotTag abnormal" type="info" v-else title="异常">异常</el-tag>
+                        <div class="table-font" v-if="scope.row.speedcheckstatus==1">
+                          <p class="normal" v-if="scope.row.openstatus==0" title="正常">正常</p>
+                          <p class="timeout" v-else-if="scope.row.openstatus==1" title="超时">超时</p>
+                          <p class="abnormal" v-else title="异常">异常</p>
                         </div>
-                        <div class="table-tag" v-else><el-tag class="NotTag NotDetect" type="info">未检测</el-tag></div>
+                        <div class="table-font" v-else><p class="NotDetect" title="未检测">未检测</p></div>
                       </template>
                     </template>
                   </el-table-column>
@@ -517,6 +512,7 @@ export default {
         domain:"",
         weblink:"",
       },
+      isLoading:false,
     }
   },
   computed: {
@@ -596,6 +592,7 @@ export default {
     // 初始化页面数据
     initData(){
       var $this = this;
+      $this.isLoading = true;
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -707,9 +704,9 @@ export default {
                   var tagArr = item.domainattr.split("|");
                   tagArr.forEach(function(item1,index1){
                     var itemData = {};
-                    if(item1.indexOf("-")!=-1){
-                      itemData.tag = item1.split("-")[0];
-                      itemData.color = item1.split("-")[1];
+                    if(item1.indexOf("#")!=-1){
+                      itemData.tag = item1.split("#")[0];
+                      itemData.color = "#"+item1.split("#")[1];
                     }else{
                       itemData.tag = item1;
                       itemData.color = "#1b3f75";
@@ -718,9 +715,9 @@ export default {
                   });
                 }else{
                   var itemData = {};
-                  if(item.domainattr.indexOf("-")!=-1){
-                    itemData.tag = item.domainattr.split("-")[0];
-                    itemData.color = item.domainattr.split("-")[1];
+                  if(item.domainattr.indexOf("#")!=-1){
+                    itemData.tag = item.domainattr.split("#")[0];
+                    itemData.color = "#"+item.domainattr.split("#")[1];
                   }else{
                     itemData.tag = item.domainattr;
                     itemData.color = "#1b3f75";
@@ -793,22 +790,24 @@ export default {
             });
             $this.tableData = response.data;
             $this.totalDataNum = response.allcount;
+            $this.isLoading = false;
           }else{
-             if(response.permitstatus&&response.permitstatus==2){
-                $this.$message({
-                  showClose: true,
-                  message: "未被分配该页面访问权限",
-                  type: 'error',
-                  duration:6000
-                });
-                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-              }else{
-                $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'error'
-                });
-              }
+            $this.isLoading = false;
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
           }
         }
       });
