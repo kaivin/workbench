@@ -25,6 +25,10 @@
 @import '-Enphone.scss';
 @import '-Sale.scss';
 @import '-webMsg.scss';
+.clear{
+  clear:both;
+  display: block;
+}
 .page-root{
   position:absolute;
   left:0;

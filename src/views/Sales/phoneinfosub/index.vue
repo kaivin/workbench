@@ -68,7 +68,7 @@
                 </div>
                 <div class="SaleAddEditMainItem needCustomers">
                       <dl>
-                        <dt>客户需求详情：<span>注意：内容有修改，修改时间：2020-02-02</span></dt>
+                        <dt>客户需求详情：<span v-if="formData.contentedittime">注意：内容有修改，修改时间：{{formData.contentedittime}}</span></dt>
                         <dd>
                             <div class="needCustomersBox">
                                {{formData.custormneedinfo}}
@@ -94,7 +94,7 @@
                           </div>                        
                         </dd>
                         <dd class="flex-wrap">
-                          <span>标记处理*：</span>
+                          <span>标记处理：</span>
                           <div class="flex-content">
                               <el-checkbox 
                                     v-model="formData.managestatus"
@@ -338,7 +338,7 @@ export default {
           }
           keyArr.forEach(function(item,index){
             $this.keying.forEach(function(item01,index01){
-               if(item==item01.value){
+               if(parseInt(item)==item01.value){
                  $this.formData.keying.push(item01.label);
                }
             });
@@ -354,6 +354,7 @@ export default {
       $this.formData.custormname = $this.defaultInfo.custormname;
       $this.formData.custormemail = $this.defaultInfo.custormemail;
       $this.formData.custormphone = $this.defaultInfo.custormphone;
+      $this.formData.contentedittime = $this.defaultInfo.contentedittime;
       $this.formData.custormneedinfo = $this.defaultInfo.custormneedinfo;
       $this.formData.custormfiles = $this.defaultInfo.custormfiles;
       $this.formData.custormfilesname = $this.defaultInfo.custormfilesname;

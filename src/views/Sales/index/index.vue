@@ -204,7 +204,7 @@
                         <div class="table-text">
                         <p>{{scope.row.weekday}}-{{scope.row.xuntime}}</p>
                         <p><span>业务员：</span>{{scope.row.salesusername}}</p>
-                        <p><span>特别说明：</span>{{scope.row.otherremark}}</p>
+                        <p><span>特别说明：</span><span class="SiteColor-01">{{scope.row.otherremark}}</span></p>
                         </div>
                     </template>
                     </el-table-column>
@@ -241,7 +241,9 @@
                     <template slot-scope="scope">
                         <div class="table-text">
                         <p><span>称呼：</span>{{scope.row.custormname}}</p>
-                        <p><span>邮箱：</span>{{scope.row.custormemail}}</p>
+
+                        <p v-if="currentStatus === 'waitcount'||currentStatus == 'waitdealcount'||currentStatus == 'monthsaycount'||currentStatus == 'hasnosaycount'||currentStatus == 'waitftwordcount'"><span>邮箱：</span><span class="SiteColor-02" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;">点击详情查看Email</span></p>
+                        <p v-else><span>邮箱：</span>{{scope.row.custormemail}}</p>
                         <p><span>电话：</span>{{scope.row.custormphone}}</p>
                         </div>
                     </template>
@@ -249,11 +251,12 @@
                     <el-table-column
                     prop="custormneedinfo"
                     label="需求详情"
-                    min-width="150"
+                    min-width="300"
                     >
                     <template slot-scope="scope">
-                        <div class="table-text">
-                            <p>{{scope.row.custormneedinfo}}</p>
+                        <div class="table-text">                        
+                            <p v-if="scope.row.contentedittime"><span class="SiteColor-01">内容有修改：修改时间{{scope.row.contentedittime}}</span></p>
+                            <p>{{scope.row.Salescustormneedinfo}}<span class="SiteColor-03 clear" v-if="scope.row.Salescustormneedinfo.length>150" @click="editTableRow(scope.row,scope.$index,'2')">#查看更多</span></p>
                         </div>
                     </template>
                     </el-table-column>
@@ -264,8 +267,8 @@
                     >
                     <template slot-scope="scope">
                         <div class="table-text">
-                            <p style="color:#49c96a;">{{scope.row.Salesmanagestatus}}</p>
-                            <p style="color:#1a6fdf;">{{scope.row.Salesreplystatus}}</p>
+                            <p :style="scope.row.managestatus==1?'color:#d02c34':'color:#1a6fdf'">{{scope.row.Salesmanagestatus}}</p>
+                            <p :style="scope.row.replystatus==1?'color:#d02c34':'color:#49c96a'">{{scope.row.Salesreplystatus}}</p>
                         </div>
                     </template>
                     </el-table-column>
@@ -314,6 +317,7 @@
                     <template #default="scope">
                         <div class="table-button">
                         <el-button size="mini" @click="editTableRow(scope.row,scope.$index,'2')">修改</el-button>
+                        <span class="SiteColor-03" v-if="scope.row.is_read==1">未读</span>
                         </div>
                     </template>
                     </el-table-column>
@@ -390,7 +394,7 @@ export default {
       producttype_idList:[],
       productidList:[],
       managestatusList:[
-        {label:"待处理",value:1},
+        {label:"未处理",value:1},
         {label:"已处理",value:2},
       ],
       replystatusList:[
@@ -755,7 +759,8 @@ export default {
               var Salesmanagestatus=''; 
               var Salesreplystatus=''; 
               var SalesEnnature='';  
-              var SalesEnxunprice='';         
+              var SalesEnxunprice=''; 
+              var Salescustormneedinfo='';         
               $this.managestatusList.forEach(function(item01,index01){
                   if(item.managestatus==item01.value){
                     Salesmanagestatus=item01.label;
@@ -776,6 +781,15 @@ export default {
                     SalesEnxunprice=item04.label;
                   }
               });
+              if(item.custormneedinfo&&item.custormneedinfo!=''&&item.custormneedinfo!=undefined){                  
+                  var list=item.custormneedinfo.length;
+                  if(list>150){
+                      Salescustormneedinfo=item.custormneedinfo.substring(0,150) + '...';
+                  }else{
+                    Salescustormneedinfo=item.custormneedinfo;
+                  }
+              }
+              item.Salescustormneedinfo=Salescustormneedinfo;
               item.Salesmanagestatus=Salesmanagestatus;
               item.Salesreplystatus=Salesreplystatus;
               item.SalesEnnature=SalesEnnature;
