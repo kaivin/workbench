@@ -265,7 +265,7 @@
                       <dd>
                         <el-select v-model="formData.level_id" size="small" style="width:100%" clearable placeholder="请选择">
                             <el-option
-                            v-for="item in level_idList"
+                            v-for="item in levelList"
                             :key="item.label"
                             :label="item.label"
                             :value="item.value">
@@ -274,11 +274,11 @@
                       </dd>
                     </dl>
                 </div>
-                <div class="EnphoneAddEditMainItem customer-info" v-if="ID&&(formData.ennature!=0||formData.enxunprice!=0)">
-                    <dl style="width:100%;">
-                      <dt>二次判定：</dt>
+                <div class="EnphoneAddEditMainItem customer-info">
+                    <dl style="width:23.4%;">
+                      <dt>性质：</dt>
                       <dd>
-                        <el-select v-model="formData.ennature" v-if="formData.ennature!=0" size="small" style="width:40%" clearable placeholder="请选择">
+                        <el-select v-model="formData.ennature" style="width:100%" size="small" clearable placeholder="请选择">
                             <el-option
                             v-for="item in natureList"
                             :key="item.value"
@@ -286,7 +286,12 @@
                             :value="item.value">
                             </el-option>
                         </el-select>
-                        <el-select v-model="formData.enxunprice" v-if="formData.enxunprice!=0" size="small" style="width:40%" clearable placeholder="请选择">
+                      </dd>
+                    </dl>
+                    <dl style="width:23.4%;">
+                      <dt>价值：</dt>
+                      <dd>
+                        <el-select v-model="formData.enxunprice" style="width:100%" size="small" clearable placeholder="请选择">
                             <el-option
                             v-for="item in priceList"
                             :key="item.label"
@@ -497,7 +502,7 @@ export default {
         {value: '移动设备',label:'移动设备'},
         {value: '未知设备',label:'未知设备'}
         ],
-      level_idList:[],
+      levelList:[],
       productionList:[
         {value: '≤5T/H',label:'≤5T/H'},
         {value: '≤10T/H',label: '≤10T/H'},
@@ -577,8 +582,8 @@ export default {
         producttype_id:"",
         phoneid:"",
         keying:[],
-        ennature:0,
-        enxunprice:0,
+        ennature:"",
+        enxunprice:"",
         givecustormwarn:"",
         custormselfwarn:"",
       },
@@ -653,6 +658,8 @@ export default {
       formData.producttype_id = $this.formData.producttype_id;
       formData.id = $this.formData.id;
       formData.keying = $this.formData.keying;
+      formData.ennature = $this.formData.ennature;
+      formData.enxunprice = $this.formData.enxunprice;
       return formData;
     },
     // 询盘编辑获取初始化询盘信息
@@ -671,22 +678,7 @@ export default {
             }else{
               $this.noRead = false;
             }
-            var natureList = [];
-            response.ennature.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.id;
-              natureList.push(itemData);
-            });
-            $this.natureList = natureList;
-            var priceList = [];
-            response.enprice.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.id;
-              priceList.push(itemData);
-            });
-            $this.priceList = priceList;
+            
             $this.setCluesInfo();
           }else{
             $this.$message({
@@ -867,14 +859,14 @@ export default {
               modeList.push(itemData);
             });
             $this.modeList = modeList;
-            var level_idList = [];
+            var levelList = [];
             response.level.forEach(function(item,index){
               var itemData = {};
               itemData.label = item.levelname;
               itemData.value = item.id;
-              level_idList.push(itemData);
+              levelList.push(itemData);
             });
-            $this.level_idList = level_idList;
+            $this.levelList = levelList;
             response.phonelist.forEach(function(item,index){
               item.isOn = false;
             });
@@ -930,10 +922,24 @@ export default {
               $this.salesuserlist = salesuserlist;
             }else{
               $this.salesuserlist=[{label:"",value:0}]
-            }        
-            $this.levelList = response.level;
-            $this.priceList = response.price;
+            }
             $this.phoneList = response.phonelist;
+            var natureList = [];
+            response.ennature.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              natureList.push(itemData);
+            });
+            $this.natureList = natureList;
+            var priceList = [];
+            response.price.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              priceList.push(itemData);
+            });
+            $this.priceList = priceList;
             if($this.ID){
               $this.initCluesInfo();
             }
@@ -1146,6 +1152,8 @@ export default {
       $this.formData.producttype_id = "";
       $this.formData.phoneid = "";
       $this.formData.keying = [];
+      $this.formData.enxunprice = "";
+      $this.formData.ennature = "";
       var phoneList = $this.phoneList;
       phoneList.forEach(function(item,index){
         item.isOn = false;

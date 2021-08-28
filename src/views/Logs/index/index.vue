@@ -367,12 +367,16 @@ export default {
           if(response){
             if(response.status){
               if(response.data.length>0){
+                var permitList = [];
                   var actionList = [];
                   response.data.forEach(function(item,index){
+                    if(!permitList.includes(item.action_route)){
                       var itemData = {};
                       itemData.value = item.action_route;
                       itemData.label = item.name;
                       actionList.push(itemData);
+                      permitList.push(item.action_route);
+                    }
                   });
                   $this.actionList = actionList;
               }

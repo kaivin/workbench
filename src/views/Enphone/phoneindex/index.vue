@@ -17,7 +17,7 @@
       </el-scrollbar>
     </div>
     <div class="flex-content relative EnphoneCardFr">
-      <div class="abs-panel">
+      <div class="abs-panel" ref="mainPane">
         <div class="scroll-panel" ref="scrollPane">
           <div class="EnStatistical" v-if="!phoneID">
               <div class="tips-list" v-if="defaultData.custormwarn.length>0&&defaultData.custormwarntatus">
@@ -49,27 +49,32 @@
                               <h2>{{item.name}}个人有效询盘数量</h2>
                               <div class="item">
                                    <div class="itemPane" v-for="(items,indexs) in item.ulist" v-bind:key="indexs">
-                                        <h3>{{items.user}}</h3>   
+                                        <h3>{{items.user}}组</h3>   
                                         <div class="itemPaneTable">                                                                      
                                             <el-table
                                               :data="items.xunlist"
+                                              stripe
                                               show-summary
                                               align='center'>
                                               <el-table-column
                                                 prop="personname"
-                                                label="姓名">
+                                                label="姓名"
+                                                align='center'>
                                               </el-table-column>
                                               <el-table-column
                                                 prop="todaycount"
-                                                label="今天个数">
+                                                label="今天个数"
+                                                align='center'>
                                               </el-table-column>
                                               <el-table-column
                                                 prop="lastdaycount"
-                                                label="昨天个数">
+                                                label="昨天个数"
+                                                align='center'>
                                               </el-table-column>
                                               <el-table-column
                                                 prop="monthcount"
-                                                label="本月个数">
+                                                label="本月个数"
+                                                align='center'>
                                               </el-table-column>
                                             </el-table>
                                         </div>
@@ -300,6 +305,7 @@
                 stripe
                 class="SiteTable"
                 style="width: 100%"
+                v-bind:style="'min-height:'+minHeight+'px;'"
                 row-key="id"
                 >
                 <el-table-column
@@ -466,7 +472,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  v-if="writepermit&&(menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_delete'))&&device==='desktop'"
+                  v-if="writepermit&&(menuButtonPermit.includes('Enphone_edit'))&&device==='desktop'"
                   :width="operationsWidth"
                   align="center"
                   prop="operations"
@@ -481,7 +487,7 @@
                 </el-table-column>
               </el-table>
             </div>
-            <div class="pagination-panel" ref="pagePane">
+            <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
               <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
@@ -542,6 +548,7 @@ export default {
   name: 'Enphone_phoneindex',
   data() {
     return {
+      minHeight:0,
       phoneID:null,
       currentPhone:'',
       writepermit:false,
@@ -723,8 +730,30 @@ export default {
   },
   mounted(){
     const $this = this;
+    $this.$nextTick(function () {     
+      if($this.$route.query.phoneID){
+       $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75; 
+      }
+    });
+    if($this.$route.query.phoneID){
+      window.onresize = () => {
+        return (() => {
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75; 
+        })()
+      }
+    }
   },
   watch: {
+      minHeight(val) {
+        if (!this.timer) {
+          this.minHeight = val
+          this.timer = true
+          const $this = this
+          setTimeout(function() {
+            $this.timer = false
+          }, 400)
+        }
+      },
       //监听相同路由下参数变化的时候，从而实现异步刷新
       '$route'(to,from) {
         if(this.$route.query.phoneID){
@@ -752,6 +781,7 @@ export default {
     var $this =this;
     if($this.phoneID){
       $this.$nextTick(() => {
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75; 
         $this.$refs.simpleTable.doLayout();
       })
     }
@@ -1107,25 +1137,31 @@ export default {
     // 修改询盘
     editTableRow(row,index){
       var $this = this;
-      var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:row.id}});
-      window.open(routeUrl.href,'_blank');
+      if($this.device==="desktop"){
+        var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:row.id}});
+        window.open(routeUrl.href,'_blank');
+      }
     },
     // 提醒跳转到编辑页面
     jumpEditPage(id){
       var $this = this;
-      var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:id}});
-      window.open(routeUrl.href,'_blank');
+      if($this.device==="desktop"){
+        var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:id}});
+        window.open(routeUrl.href,'_blank');
+      }
     },
     // 跳转询盘修改历史页面
     jumpEditHistoryPage(id){
       var $this = this;
-      var routeUrl =  $this.$router.resolve({path:'/Enphone/editHistoryLog',query:{ID:id}});
-      window.open(routeUrl.href,'_blank');
+      if($this.device==="desktop"){
+        var routeUrl =  $this.$router.resolve({path:'/Enphone/editHistoryLog',query:{ID:id}});
+        window.open(routeUrl.href,'_blank');
+      }
     },
     // 搜索统计数据跳转
     searchStatisticsData(){
       var $this = this;
-      if($this.device="desktop"){
+      if($this.device==="desktop"){
         var routeUrl =  $this.$router.resolve({path:'/Enphone/searchClues'});
         window.open(routeUrl.href,'_blank');
       }else{
@@ -1135,7 +1171,7 @@ export default {
     // 统计分析跳转
     statisticsClues(){
       var $this = this;
-      if($this.device=="desktop"){
+      if($this.device==="desktop"){
         var routeUrl =  $this.$router.resolve({path:'/Enphone/statisticClues'});
         window.open(routeUrl.href,'_blank');
       }else{

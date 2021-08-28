@@ -134,7 +134,7 @@
                 clear: both;
                 display: block;
                 font-size:15px;
-                padding:7px 0px 7px 20px;
+                padding:7px 0px 7px 30px;
                 line-height:24px;
                 text-align: left;
                 color:#263445;
@@ -144,22 +144,56 @@
                 display: block;
                 .itemPane{
                   float: left;
-                  margin-left: 20px;
-                  margin-top: 15px;
-                  width:322px;
+                  margin-left:30px;
+                  margin-top: 10px;
+                  width: 400px;
                   border:1px solid #f0f0f0;
                   background:#ffffff;
                   box-shadow:0px 5px 13px rgba(120,136,158,0.07);
-                  border-radius:4px;
+                  border-radius:8px;
+                  padding: 5px 15px 20px;
                   h3{
                     clear: both;
                     display: block;
                     font-size: 14px;
                     padding:10px 10px 10px 10px;
+                    margin-bottom: 5px;
                     font-weight:normal;
                   }
                   .itemPaneTable{
+                    .el-table__footer-wrapper{
+                      margin-top: 12px;
+                      td{
+                        border-top: none;
+                      }
+                    } 
+                    .el-table__header-wrapper tbody td, .el-table__footer-wrapper tbody td{
+                      background-color: #ffe5c7;
+                      color: #c04611;
+                      &:first-child{
+                        border-top-left-radius: 8px;
+                        border-bottom-left-radius: 8px;
+                      }
+                      &:last-child{
+                        border-top-right-radius: 8px;
+                        border-bottom-right-radius: 8px;
+                      }
+                    }
                     .el-table{
+                      &::before{
+                        display: none;
+                      }
+                      th.is-leaf, td{
+                        border-bottom:none;
+                        &:first-child{
+                          border-top-left-radius: 8px;
+                          border-bottom-left-radius: 8px;
+                        }
+                        &:nth-child(4){
+                          border-top-right-radius: 8px;
+                          border-bottom-right-radius: 8px;
+                        }
+                      }
                       .el-table__header{
                         th{font-weight: normal;}
                       }

@@ -1,418 +1,427 @@
 ﻿<template>
-  <div class="page-root scroll-panel" ref="boxPane">
-    <el-card class="box-card scroll-card" shadow="hover">
-        <div class="card-content ChinaphoneTwoBox" ref="tableContent">
-            <div class="ChinaphoneTwo buttonTwo">
-              <div class="group-header">
-                  <el-checkbox class="all-select" :indeterminate="isAllPhone" border size="mini" v-model="checkAllPhone" @change="handleCheckAllPhoneChange">电话全选</el-checkbox>
-              </div>
-              <div class="group-body">
-                <div class="team-panel" v-for="item in phoneList" v-bind:key="item.id">
-                  <div class="team-header" v-if="item.icon=='sem'">
-                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+  <div class="page-root cn-phone-stat" ref="boxPane">
+    <div class="abs-panel" ref="mainPane">
+      <div class="scroll-panel" ref="scrollPane">
+        <el-card class="box-card scroll-card" shadow="hover">
+            <div class="card-content ChinaphoneTwoBox" ref="tableContent">
+                <div class="ChinaphoneTwo buttonTwo">
+                  <div class="group-header">
+                      <el-checkbox class="all-select" :indeterminate="isAllPhone" border size="mini" v-model="checkAllPhone" @change="handleCheckAllPhoneChange">电话全选</el-checkbox>
+                  </div>
+                  <div class="group-body">
+                    <div class="team-panel" v-for="item in phoneList" v-bind:key="item.id">
+                      <div class="team-header" v-if="item.icon=='sem'">
+                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
 
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSemPhone" border size="mini" v-model="checkAllSemPhone" @change="handleCheckAllSemPhoneChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSemPhone" border size="mini" v-model="checkAllSemPhone" @change="handleCheckAllSemPhoneChange">全选</el-checkbox>
 
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSemPhone" border size="mini" v-model="checkAllSemPhone" @change="handleCheckAllSemPhoneChange">{{item.name}}全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSemPhone" border size="mini" v-model="checkAllSemPhone" @change="handleCheckAllSemPhoneChange">{{item.name}}全选</el-checkbox>
 
-                    <el-checkbox-group class="team-list" v-model="checkedSem" @change="handleCheckedSemChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
-                    </el-checkbox-group>
+                        <el-checkbox-group class="team-list" v-model="checkedSem" @change="handleCheckedSemChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
+                        </el-checkbox-group>
 
-                    
-                  </div>
-                  <div class="team-header" v-else-if="item.icon=='seo'">
-                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSeoPhone" border size="mini" v-model="checkAllSeoPhone" @change="handleCheckAllSeoPhoneChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSeoPhone" border size="mini" v-model="checkAllSeoPhone" @change="handleCheckAllSeoPhoneChange">{{item.name}}全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedSeo" @change="handleCheckedSeoChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                  <div class="team-header" v-else-if="item.icon=='we-media'">
-                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllMediaPhone" border size="mini" v-model="checkAllMediaPhone" @change="handleCheckAllMediaPhoneChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllMediaPhone" border size="mini" v-model="checkAllMediaPhone" @change="handleCheckAllMediaPhoneChange">{{item.name}}全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedMedia" @change="handleCheckedMediaChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                  <div class="team-header" v-else-if="item.icon=='sns'">
-                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSnsPhone" border size="mini" v-model="checkAllSnsPhone" @change="handleCheckAllSnsPhoneChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSnsPhone" border size="mini" v-model="checkAllSnsPhone" @change="handleCheckAllSnsPhoneChange">{{item.name}}全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedSns" @change="handleCheckedSnsChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                  <div class="team-header" v-else>
-                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllOtherPhone" border size="mini" v-model="checkAllOtherPhone" @change="handleCheckAllOtherPhoneChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllOtherPhone" border size="mini" v-model="checkAllOtherPhone" @change="handleCheckAllOtherPhoneChange">{{item.name}}全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedOther" @change="handleCheckedOtherChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="ChinaphoneTwo buttonTwo">
-              <div class="group-body">
-                <div class="team-panel">
-                  <div class="team-header">
-                       <div class="team-headerItem">
-                            <span class="require">时间：</span>
-                            <el-date-picker
-                                v-model="searchData.date"
-                                size="mini"
-                                type="daterange"
-                                align="right"
-                                value-format = "yyyy-MM-dd"
-                                unlink-panels
-                                range-separator="至"
-                                start-placeholder="开始日期"
-                                end-placeholder="结束日期"
-                                v-if="device=='desktop'"
-                                :picker-options="pickerRangeOptions">
-                            </el-date-picker>                            
-                            <el-date-picker
-                              v-model="searchData.date"
-                              size="mini"
-                              type="date"
-                              v-if="device=='mobile'"
-                              placeholder="选择日期">
-                            </el-date-picker>
-                       </div>
-                       <div class="team-headerItem">
-                            <span class="require">域名：</span>
-                            <el-input
-                                size="mini"
-                                v-model="searchData.domain"
-                                clearable>
-                            </el-input>
-                       </div>
-                       <div class="team-headerItem">
-                            <span class="require">地区：</span>
-                            <el-input
-                                size="mini"
-                                v-model="searchData.province"
-                                clearable>
-                            </el-input>
-                       </div>
-                  </div>
-                </div>
-                <div class="team-panel">
-                  <div class="team-header">
-                    <span class="require" v-if="device=='desktop'">渠道：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSource" border size="mini" v-model="checkAllSource" @change="handleCheckAllSourceChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSource" border size="mini" v-model="checkAllSource" @change="handleCheckAllSourceChange">渠道全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedSource" @change="handleCheckedSourceChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="item in sourceList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </div>
-                <div class="team-panel">
-                  <div class="team-header">
-                    <span class="require" v-if="device=='desktop'">级别：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllLevel" border size="mini" v-model="checkAllLevel" @change="handleCheckAllLevelChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllLevel" border size="mini" v-model="checkAllLevel" @change="handleCheckAllLevelChange">级别全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedLevel" @change="handleCheckedLevelChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="item in levelList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </div>
-                <div class="team-panel">
-                  <div class="team-header">
-                    <span class="require" v-if="device=='desktop'">类别：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllCategory" border size="mini" v-model="checkAllCategory" @change="handleCheckAllCategoryChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllCategory" border size="mini" v-model="checkAllCategory" @change="handleCheckAllCategoryChange">类别全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedCategory" @change="handleCheckedCategoryChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="item in categoryList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </div>
-                <div class="team-panel">
-                  <div class="team-header">
-                    <span class="require" v-if="device=='desktop'">设备：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllDevice" border size="mini" v-model="checkAllDevice" @change="handleCheckAllDeviceChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllDevice" border size="mini" v-model="checkAllDevice" @change="handleCheckAllDeviceChange">全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedDevice" @change="handleCheckedDeviceChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="item in deviceList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="ChinaphoneTwo buttonTwo">
-              <div class="group-header"><el-checkbox class="all-select" :indeterminate="isAllProduct" border size="mini" v-model="checkAllProduct" @change="handleCheckAllProductChange">产品全选</el-checkbox>
-              </div>
-              <div class="group-body">
-                <div class="team-panel" v-for="item in productList" v-bind:key="item.id">
-                  <div class="team-header" v-if="item.icon=='a1'">
-                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA1Product" border size="mini" v-model="checkAllA1Product" @change="handleCheckAllA1ProductChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA1Product" border size="mini" v-model="checkAllA1Product" @change="handleCheckAllA1ProductChange">{{item.name}}全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedA1Product" @change="handleCheckedA1ProductChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                  <div class="team-header" v-else-if="item.icon=='a2'">
-                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA2Product" border size="mini" v-model="checkAllA2Product" @change="handleCheckAllA2ProductChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA2Product" border size="mini" v-model="checkAllA2Product" @change="handleCheckAllA2ProductChange">{{item.name}}全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedA2Product" @change="handleCheckedA2ProductChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                  <div class="team-header" v-else-if="item.icon=='a3'">
-                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA3Product" border size="mini" v-model="checkAllA3Product" @change="handleCheckAllA3ProductChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA3Product" border size="mini" v-model="checkAllA3Product" @change="handleCheckAllA3ProductChange">{{item.name}}全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedA3Product" @change="handleCheckedA3ProductChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                  <div class="team-header" v-else-if="item.icon=='a4'">
-                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA4Product" border size="mini" v-model="checkAllA4Product" @change="handleCheckAllA4ProductChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA4Product" border size="mini" v-model="checkAllA4Product" @change="handleCheckAllA4ProductChange">{{item.name}}全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedA4Product" @change="handleCheckedA4ProductChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                  <div class="team-header" v-else-if="item.icon=='a5'">
-                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA5Product" border size="mini" v-model="checkAllA5Product" @change="handleCheckAllA5ProductChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA5Product" border size="mini" v-model="checkAllA5Product" @change="handleCheckAllA5ProductChange">{{item.name}}全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedA5Product" @change="handleCheckedA5ProductChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                  <div class="team-header" v-else-if="item.icon=='a6'">
-                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA6Product" border size="mini" v-model="checkAllA6Product" @change="handleCheckAllA6ProductChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA6Product" border size="mini" v-model="checkAllA6Product" @change="handleCheckAllA6ProductChange">{{item.name}}全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedA6Product" @change="handleCheckedA6ProductChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                  <div class="team-header" v-else>
-                    <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                    <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA7Product" border size="mini" v-model="checkAllA7Product" @change="handleCheckAllA7ProductChange">全选</el-checkbox>
-                    <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA7Product" border size="mini" v-model="checkAllA7Product" @change="handleCheckAllA7ProductChange">{{item.name}}全选</el-checkbox>
-                    <el-checkbox-group class="team-list" v-model="checkedA7Product" @change="handleCheckedA7ProductChange" size="mini">
-                      <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="cavans-wrapper" id="canvasPane" ref="canvasPane" v-if="isSearch">
-              <el-row :gutter="15">
-                <el-col :xs="24" :sm="24" :md="12">
-                  <div class="chart-wrapper">
-                    <div class="chart-header"><span>电话总数（{{searchResult.phoneTotalNum}}）</span></div>
-                    <div class="chart-body" style="height:640px;">
-                      <div class="abs-canvas"><div id="cluesChart1" class="chart-canvas"></div></div>
-                    </div>
-                  </div>
-                </el-col>
-                <el-col :xs="24" :sm="24" :md="12">
-                  <div class="chart-wrapper">
-                    <div class="chart-header"><span>有效电话（{{searchResult.phoneEffectiveNum}}）</span></div>
-                    <div class="chart-body" style="height:640px;">
-                      <div class="abs-canvas"><div id="cluesChart2" class="chart-canvas"></div></div>
-                    </div>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row :gutter="15">
-                <el-col :xs="24" :sm="24" :md="12">
-                  <div class="chart-wrapper">
-                    <div class="chart-header"><span>使用设备</span></div>
-                    <div class="chart-body" style="height:400px;">
-                      <div class="abs-canvas"><div id="cluesChart3" class="chart-canvas"></div></div>
-                    </div>
-                  </div>
-                </el-col>
-                <el-col :xs="24" :sm="24" :md="12">
-                  <div class="chart-wrapper">
-                    <div class="chart-header"><span>产品分类</span></div>
-                    <div class="chart-body" style="height:400px;">
-                      <div class="abs-canvas"><div id="cluesChart4" class="chart-canvas"></div></div>
-                    </div>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row :gutter="15">
-                <el-col :xs="24" :sm="24" :md="12">
-                  <div class="chart-wrapper">
-                    <div class="chart-header"><span>平均星期电话量</span></div>
-                    <div class="chart-body" style="height:400px;">
-                      <div class="abs-canvas"><div id="cluesChart5" class="chart-canvas"></div></div>
-                    </div>
-                  </div>
-                </el-col>
-                <el-col :xs="24" :sm="24" :md="12">
-                  <div class="chart-wrapper">
-                    <div class="chart-header"><span>来源渠道</span></div>
-                    <div class="chart-body" style="height:400px;">
-                      <div class="abs-canvas"><div id="cluesChart6" class="chart-canvas"></div></div>
-                    </div>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row :gutter="15">
-                <el-col :xs="24">
-                  <div class="chart-wrapper">
-                    <div class="chart-header"><span>每天电话量</span></div>
-                    <div class="chart-body" style="height:400px;">
-                      <div class="abs-canvas"><div id="cluesChart7" class="chart-canvas"></div></div>
-                    </div>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row :gutter="15">
-                <el-col :xs="24">
-                  <div class="chart-wrapper">
-                    <div class="chart-header"><span>平均小时电话量</span></div>
-                    <div class="chart-body" style="height:400px;">
-                      <div class="abs-canvas"><div id="cluesChart8" class="chart-canvas"></div></div>
-                    </div>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row :gutter="15">
-                <el-col :xs="24">
-                  <div class="chart-wrapper">
-                    <div class="chart-header"><span>热门产品</span></div>
-                    <div class="chart-body" style="height:400px;">
-                      <div class="abs-canvas"><div id="cluesChart9" class="chart-canvas"></div></div>
-                    </div>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row :gutter="15">
-                <el-col :xs="24">
-                  <div class="chart-wrapper">
-                    <div class="chart-header"><span>热门地区</span></div>
-                    <div class="chart-body" style="height:530px;text-align:center;">
-                      <div class="abs-canvas"><div id="cluesChart10" class="chart-canvas"></div></div>
-                    </div>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row :gutter="15">
-                <el-col :sm="24" :md="8">
-                  <div class="chart-wrapper">
-                    <div class="chart-header"><span>关键词</span></div>
-                    <div class="chart-body">
-                      <div class="table-chart">
-                        <el-table
-                          border
-                          ref="simpleKeywordTable"
-                          :data="searchResult.searchWordCount"
-                          tooltip-effect="dark"
-                          stripe
-                          style="width: 100%"
-                          height="540"
-                          row-key="id"
-                          show-summary
-                          :summary-method="getSummaries"
-                          :default-sort = "{prop: 'number', order: 'descending'}"
-                          >
-                          <el-table-column
-                            prop="searchword"
-                            label="关键词"
-                            >
-                          </el-table-column>
-                          <el-table-column
-                            prop="number"
-                            label="数量"
-                            sortable
-                            >
-                          </el-table-column>
-                        </el-table>
+                        
+                      </div>
+                      <div class="team-header" v-else-if="item.icon=='seo'">
+                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSeoPhone" border size="mini" v-model="checkAllSeoPhone" @change="handleCheckAllSeoPhoneChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSeoPhone" border size="mini" v-model="checkAllSeoPhone" @change="handleCheckAllSeoPhoneChange">{{item.name}}全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedSeo" @change="handleCheckedSeoChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                      <div class="team-header" v-else-if="item.icon=='we-media'">
+                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllMediaPhone" border size="mini" v-model="checkAllMediaPhone" @change="handleCheckAllMediaPhoneChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllMediaPhone" border size="mini" v-model="checkAllMediaPhone" @change="handleCheckAllMediaPhoneChange">{{item.name}}全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedMedia" @change="handleCheckedMediaChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                      <div class="team-header" v-else-if="item.icon=='sns'">
+                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSnsPhone" border size="mini" v-model="checkAllSnsPhone" @change="handleCheckAllSnsPhoneChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSnsPhone" border size="mini" v-model="checkAllSnsPhone" @change="handleCheckAllSnsPhoneChange">{{item.name}}全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedSns" @change="handleCheckedSnsChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                      <div class="team-header" v-else>
+                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllOtherPhone" border size="mini" v-model="checkAllOtherPhone" @change="handleCheckAllOtherPhoneChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllOtherPhone" border size="mini" v-model="checkAllOtherPhone" @change="handleCheckAllOtherPhoneChange">{{item.name}}全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedOther" @change="handleCheckedOtherChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
+                        </el-checkbox-group>
                       </div>
                     </div>
                   </div>
-                </el-col>
-                <el-col :sm="24" :md="8">
-                  <div class="chart-wrapper">
-                    <div class="chart-header"><span>地区</span></div>
-                    <div class="chart-body">
-                      <div class="table-chart">
-                        <el-table
-                          border
-                          ref="simpleRegionTable"
-                          :data="searchResult.regionCount"
-                          tooltip-effect="dark"
-                          stripe
-                          style="width: 100%"
-                          height="540"
-                          row-key="id"
-                          show-summary
-                          :summary-method="getSummaries"
-                          :default-sort = "{prop: 'number', order: 'descending'}"
-                          >
-                          <el-table-column
-                            prop="province"
-                            label="地区"
-                            >
-                          </el-table-column>
-                          <el-table-column
-                            prop="number"
-                            label="数量"
-                            sortable
-                            >
-                          </el-table-column>
-                        </el-table>
+                </div>
+                <div class="ChinaphoneTwo buttonTwo">
+                  <div class="group-body">
+                    <div class="team-panel">
+                      <div class="team-header">
+                          <div class="team-headerItem">
+                                <span class="require">时间：</span>
+                                <el-date-picker
+                                    v-model="searchData.date"
+                                    size="mini"
+                                    type="daterange"
+                                    align="right"
+                                    value-format = "yyyy-MM-dd"
+                                    unlink-panels
+                                    range-separator="至"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期"
+                                    v-if="device=='desktop'"
+                                    :picker-options="pickerRangeOptions">
+                                </el-date-picker>                            
+                                <el-date-picker
+                                  v-model="searchData.date"
+                                  size="mini"
+                                  type="date"
+                                  v-if="device=='mobile'"
+                                  placeholder="选择日期">
+                                </el-date-picker>
+                          </div>
+                          <div class="team-headerItem">
+                                <span class="require">域名：</span>
+                                <el-input
+                                    size="mini"
+                                    v-model="searchData.domain"
+                                    clearable>
+                                </el-input>
+                          </div>
+                          <div class="team-headerItem">
+                                <span class="require">地区：</span>
+                                <el-input
+                                    size="mini"
+                                    v-model="searchData.province"
+                                    clearable>
+                                </el-input>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="team-panel">
+                      <div class="team-header">
+                        <span class="require" v-if="device=='desktop'">渠道：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSource" border size="mini" v-model="checkAllSource" @change="handleCheckAllSourceChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSource" border size="mini" v-model="checkAllSource" @change="handleCheckAllSourceChange">渠道全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedSource" @change="handleCheckedSourceChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="item in sourceList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                    </div>
+                    <div class="team-panel">
+                      <div class="team-header">
+                        <span class="require" v-if="device=='desktop'">级别：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllLevel" border size="mini" v-model="checkAllLevel" @change="handleCheckAllLevelChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllLevel" border size="mini" v-model="checkAllLevel" @change="handleCheckAllLevelChange">级别全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedLevel" @change="handleCheckedLevelChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="item in levelList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                    </div>
+                    <div class="team-panel">
+                      <div class="team-header">
+                        <span class="require" v-if="device=='desktop'">类别：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllCategory" border size="mini" v-model="checkAllCategory" @change="handleCheckAllCategoryChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllCategory" border size="mini" v-model="checkAllCategory" @change="handleCheckAllCategoryChange">类别全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedCategory" @change="handleCheckedCategoryChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="item in categoryList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                    </div>
+                    <div class="team-panel">
+                      <div class="team-header">
+                        <span class="require" v-if="device=='desktop'">设备：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllDevice" border size="mini" v-model="checkAllDevice" @change="handleCheckAllDeviceChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllDevice" border size="mini" v-model="checkAllDevice" @change="handleCheckAllDeviceChange">全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedDevice" @change="handleCheckedDeviceChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="item in deviceList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
+                        </el-checkbox-group>
                       </div>
                     </div>
                   </div>
-                </el-col>
-                <el-col :sm="24" :md="8">
-                  <div class="chart-wrapper">
-                    <div class="chart-header"><span>产品</span></div>
-                    <div class="chart-body">
-                      <div class="table-chart">
-                        <el-table
-                          border
-                          ref="simpleProductTable"
-                          :data="searchResult.productCount"
-                          tooltip-effect="dark"
-                          stripe
-                          style="width: 100%"
-                          height="540"
-                          row-key="id"
-                          show-summary
-                          :summary-method="getSummaries"
-                          :default-sort = "{prop: 'number', order: 'descending'}"
-                          >
-                          <el-table-column
-                            prop="name"
-                            label="产品"
-                            >
-                          </el-table-column>
-                          <el-table-column
-                            prop="number"
-                            label="数量"
-                            sortable
-                            >
-                          </el-table-column>
-                        </el-table>
+                </div>
+                <div class="ChinaphoneTwo buttonTwo">
+                  <div class="group-header"><el-checkbox class="all-select" :indeterminate="isAllProduct" border size="mini" v-model="checkAllProduct" @change="handleCheckAllProductChange">产品全选</el-checkbox>
+                  </div>
+                  <div class="group-body">
+                    <div class="team-panel" v-for="item in productList" v-bind:key="item.id">
+                      <div class="team-header" v-if="item.icon=='a1'">
+                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA1Product" border size="mini" v-model="checkAllA1Product" @change="handleCheckAllA1ProductChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA1Product" border size="mini" v-model="checkAllA1Product" @change="handleCheckAllA1ProductChange">{{item.name}}全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedA1Product" @change="handleCheckedA1ProductChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                      <div class="team-header" v-else-if="item.icon=='a2'">
+                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA2Product" border size="mini" v-model="checkAllA2Product" @change="handleCheckAllA2ProductChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA2Product" border size="mini" v-model="checkAllA2Product" @change="handleCheckAllA2ProductChange">{{item.name}}全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedA2Product" @change="handleCheckedA2ProductChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                      <div class="team-header" v-else-if="item.icon=='a3'">
+                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA3Product" border size="mini" v-model="checkAllA3Product" @change="handleCheckAllA3ProductChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA3Product" border size="mini" v-model="checkAllA3Product" @change="handleCheckAllA3ProductChange">{{item.name}}全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedA3Product" @change="handleCheckedA3ProductChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                      <div class="team-header" v-else-if="item.icon=='a4'">
+                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA4Product" border size="mini" v-model="checkAllA4Product" @change="handleCheckAllA4ProductChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA4Product" border size="mini" v-model="checkAllA4Product" @change="handleCheckAllA4ProductChange">{{item.name}}全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedA4Product" @change="handleCheckedA4ProductChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                      <div class="team-header" v-else-if="item.icon=='a5'">
+                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA5Product" border size="mini" v-model="checkAllA5Product" @change="handleCheckAllA5ProductChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA5Product" border size="mini" v-model="checkAllA5Product" @change="handleCheckAllA5ProductChange">{{item.name}}全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedA5Product" @change="handleCheckedA5ProductChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                      <div class="team-header" v-else-if="item.icon=='a6'">
+                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA6Product" border size="mini" v-model="checkAllA6Product" @change="handleCheckAllA6ProductChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA6Product" border size="mini" v-model="checkAllA6Product" @change="handleCheckAllA6ProductChange">{{item.name}}全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedA6Product" @change="handleCheckedA6ProductChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                      <div class="team-header" v-else>
+                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
+                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA7Product" border size="mini" v-model="checkAllA7Product" @change="handleCheckAllA7ProductChange">全选</el-checkbox>
+                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA7Product" border size="mini" v-model="checkAllA7Product" @change="handleCheckAllA7ProductChange">{{item.name}}全选</el-checkbox>
+                        <el-checkbox-group class="team-list" v-model="checkedA7Product" @change="handleCheckedA7ProductChange" size="mini">
+                          <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
+                        </el-checkbox-group>
                       </div>
                     </div>
                   </div>
-                </el-col>
-              </el-row>
+                </div>
+                <div class="card-header WebServerAddEditBtn ChinaphoneTwoBtn">
+                    <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="getCluesAnalysisData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
+                    <el-button type="primary" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+                </div>
             </div>
-            <div class="card-header WebServerAddEditBtn ChinaphoneTwoBtn">
-                <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="getCluesAnalysisData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
-                <el-button type="primary" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+        </el-card>
+        <el-card class="box-card scroll-card cn-phone-result" shadow="hover" v-if="isSearch">
+            <div class="card-content ChinaphoneTwoBox" ref="tableContent">
+              <div class="cavans-wrapper" id="canvasPane" ref="canvasPane">
+                <el-row :gutter="15">
+                  <el-col :xs="24" :sm="24" :md="12">
+                    <div class="chart-wrapper">
+                      <div class="chart-header"><span>电话总数（{{searchResult.phoneTotalNum}}）</span></div>
+                      <div class="chart-body" style="height:640px;">
+                        <div class="abs-canvas"><div id="cluesChart1" class="chart-canvas"></div></div>
+                      </div>
+                    </div>
+                  </el-col>
+                  <el-col :xs="24" :sm="24" :md="12">
+                    <div class="chart-wrapper">
+                      <div class="chart-header"><span>有效电话（{{searchResult.phoneEffectiveNum}}）</span></div>
+                      <div class="chart-body" style="height:640px;">
+                        <div class="abs-canvas"><div id="cluesChart2" class="chart-canvas"></div></div>
+                      </div>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="15">
+                  <el-col :xs="24" :sm="24" :md="12">
+                    <div class="chart-wrapper">
+                      <div class="chart-header"><span>使用设备</span></div>
+                      <div class="chart-body" style="height:400px;">
+                        <div class="abs-canvas"><div id="cluesChart3" class="chart-canvas"></div></div>
+                      </div>
+                    </div>
+                  </el-col>
+                  <el-col :xs="24" :sm="24" :md="12">
+                    <div class="chart-wrapper">
+                      <div class="chart-header"><span>产品分类</span></div>
+                      <div class="chart-body" style="height:400px;">
+                        <div class="abs-canvas"><div id="cluesChart4" class="chart-canvas"></div></div>
+                      </div>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="15">
+                  <el-col :xs="24" :sm="24" :md="12">
+                    <div class="chart-wrapper">
+                      <div class="chart-header"><span>平均星期电话量</span></div>
+                      <div class="chart-body" style="height:400px;">
+                        <div class="abs-canvas"><div id="cluesChart5" class="chart-canvas"></div></div>
+                      </div>
+                    </div>
+                  </el-col>
+                  <el-col :xs="24" :sm="24" :md="12">
+                    <div class="chart-wrapper">
+                      <div class="chart-header"><span>来源渠道</span></div>
+                      <div class="chart-body" style="height:400px;">
+                        <div class="abs-canvas"><div id="cluesChart6" class="chart-canvas"></div></div>
+                      </div>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="15">
+                  <el-col :xs="24">
+                    <div class="chart-wrapper">
+                      <div class="chart-header"><span>每天电话量</span></div>
+                      <div class="chart-body" style="height:400px;">
+                        <div class="abs-canvas"><div id="cluesChart7" class="chart-canvas"></div></div>
+                      </div>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="15">
+                  <el-col :xs="24">
+                    <div class="chart-wrapper">
+                      <div class="chart-header"><span>平均小时电话量</span></div>
+                      <div class="chart-body" style="height:400px;">
+                        <div class="abs-canvas"><div id="cluesChart8" class="chart-canvas"></div></div>
+                      </div>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="15">
+                  <el-col :xs="24">
+                    <div class="chart-wrapper">
+                      <div class="chart-header"><span>热门产品</span></div>
+                      <div class="chart-body" style="height:400px;">
+                        <div class="abs-canvas"><div id="cluesChart9" class="chart-canvas"></div></div>
+                      </div>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="15">
+                  <el-col :xs="24">
+                    <div class="chart-wrapper">
+                      <div class="chart-header"><span>热门地区</span></div>
+                      <div class="chart-body" style="height:530px;text-align:center;">
+                        <div class="abs-canvas"><div id="cluesChart10" class="chart-canvas"></div></div>
+                      </div>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="15">
+                  <el-col :sm="24" :md="8">
+                    <div class="chart-wrapper">
+                      <div class="chart-header"><span>关键词</span></div>
+                      <div class="chart-body">
+                        <div class="table-chart">
+                          <el-table
+                            border
+                            ref="simpleKeywordTable"
+                            :data="searchResult.searchWordCount"
+                            tooltip-effect="dark"
+                            stripe
+                            style="width: 100%"
+                            height="540"
+                            row-key="id"
+                            show-summary
+                            :summary-method="getSummaries"
+                            :default-sort = "{prop: 'number', order: 'descending'}"
+                            >
+                            <el-table-column
+                              prop="searchword"
+                              label="关键词"
+                              >
+                            </el-table-column>
+                            <el-table-column
+                              prop="number"
+                              label="数量"
+                              sortable
+                              >
+                            </el-table-column>
+                          </el-table>
+                        </div>
+                      </div>
+                    </div>
+                  </el-col>
+                  <el-col :sm="24" :md="8">
+                    <div class="chart-wrapper">
+                      <div class="chart-header"><span>地区</span></div>
+                      <div class="chart-body">
+                        <div class="table-chart">
+                          <el-table
+                            border
+                            ref="simpleRegionTable"
+                            :data="searchResult.regionCount"
+                            tooltip-effect="dark"
+                            stripe
+                            style="width: 100%"
+                            height="540"
+                            row-key="id"
+                            show-summary
+                            :summary-method="getSummaries"
+                            :default-sort = "{prop: 'number', order: 'descending'}"
+                            >
+                            <el-table-column
+                              prop="province"
+                              label="地区"
+                              >
+                            </el-table-column>
+                            <el-table-column
+                              prop="number"
+                              label="数量"
+                              sortable
+                              >
+                            </el-table-column>
+                          </el-table>
+                        </div>
+                      </div>
+                    </div>
+                  </el-col>
+                  <el-col :sm="24" :md="8">
+                    <div class="chart-wrapper">
+                      <div class="chart-header"><span>产品</span></div>
+                      <div class="chart-body">
+                        <div class="table-chart">
+                          <el-table
+                            border
+                            ref="simpleProductTable"
+                            :data="searchResult.productCount"
+                            tooltip-effect="dark"
+                            stripe
+                            style="width: 100%"
+                            height="540"
+                            row-key="id"
+                            show-summary
+                            :summary-method="getSummaries"
+                            :default-sort = "{prop: 'number', order: 'descending'}"
+                            >
+                            <el-table-column
+                              prop="name"
+                              label="产品"
+                              >
+                            </el-table-column>
+                            <el-table-column
+                              prop="number"
+                              label="数量"
+                              sortable
+                              >
+                            </el-table-column>
+                          </el-table>
+                        </div>
+                      </div>
+                    </div>
+                  </el-col>
+                </el-row>
+              </div>
             </div>
-        </div>
-    </el-card>
+        </el-card>
+      </div>
+    </div>
+    <el-backtop target=".scroll-panel"></el-backtop>
   </div>
 </template>
 
@@ -1646,7 +1655,7 @@ export default {
     handleCheckedLevelChange(e){
       var $this = this;
       var checkedCount = e.length;
-       if(checkedCount === $this.LevelList.length){
+       if(checkedCount === $this.levelList.length){
           $this.checkAllLevel = true;
         }else{
           $this.checkAllLevel = false;
@@ -2288,50 +2297,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.team-list{
-  display: inline-block;
-  vertical-align: middle;
-}
-.cavans-wrapper{
-  width: 100%;
-  overflow: hidden;
-}
-.el-row+.el-row{
-  margin-top: 15px;
-}
-.chart-wrapper{
-  width: 100%;
-  overflow: hidden;
-  .chart-header{
-    padding: 10px;
-    position: relative;
-    background: #e8f7f4;
-    >span{
-      display: inline-block;
-      line-height: 24px;
-      font-size: 16px;
-      font-weight: bold;
-      color: #47bba4;
-    }
-  }
-  .chart-body{
-    border: 1px solid #e8f7f4;
-    position: relative;
-    .abs-canvas{
-      position: absolute;
-      left:0;
-      top:0;
-      width: 100%;
-      height: 100%;
-      padding: 15px;
-      .chart-canvas{
-        width: 100%;
-        height: 100%;
-      }
-    }
-  }
-}
-.table-chart{
-  padding: 15px;
-}
 </style>

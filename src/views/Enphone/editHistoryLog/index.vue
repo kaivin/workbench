@@ -32,7 +32,7 @@
                         >
                     </el-table-column>
                     <el-table-column
-                        prop="uid"
+                        prop="enid"
                         label="修改信息ID"
                         width="110"
                         >

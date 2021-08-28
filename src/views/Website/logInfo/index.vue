@@ -133,11 +133,11 @@ export default {
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        $this.minHeight = $this.$refs.mainPane.offsetHeight-30;
+        $this.setHeight();
       });
       window.onresize = () => {
           return (() => {
-            $this.minHeight = $this.$refs.mainPane.offsetHeight-30;
+            $this.setHeight();
           })()
       };
   },
@@ -158,6 +158,27 @@ export default {
     $this.initData();
   },
   methods:{
+    // 设置高度
+    setHeight(){
+      var $this = this;
+      var minHeight= 0;
+      if($this.articleData.issay==1&&$this.device==='desktop'||$this.articleData.issay==1&&$this.device==='mobile'&&$this.commentList.length>0||$this.articleData.issay==0&&$this.commentList.length>0){
+        var screenHeight = $this.$refs.mainPane.offsetHeight-30;
+        var leftHeight = $this.$refs.leftPane.offsetHeight;
+        var rightHeight = $this.$refs.rightPane.offsetHeight;
+        if(leftHeight>rightHeight){
+          minHeight = leftHeight;
+        }else{
+          minHeight = rightHeight;
+        }
+        if(minHeight<screenHeight){
+          minHeight = screenHeight;
+        }
+      }else{
+        minHeight = "auto";
+      }
+      $this.minHeight = minHeight;
+    },
     // 初始化数据
     initData(){
         var $this = this;
@@ -326,6 +347,7 @@ export default {
             if(response.status){
               if(response.data.length>0){
                 $this.commentList = response.data;
+                $this.setHeight();
               }
             }else{
               $this.$message({

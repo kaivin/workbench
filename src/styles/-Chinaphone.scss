@@ -3,6 +3,57 @@
     width:210px;
   }
 }
+.cn-phone-stat{
+  .cn-phone-result.box-card{
+    margin-top: 15px;
+  }
+  .team-list{
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .cavans-wrapper{
+    width: 100%;
+    overflow: hidden;
+  }
+  .el-row+.el-row{
+    margin-top: 15px;
+  }
+  .chart-wrapper{
+    width: 100%;
+    overflow: hidden;
+    .chart-header{
+      padding: 10px;
+      position: relative;
+      background: #e8f2ff;
+      >span{
+        display: inline-block;
+        line-height: 24px;
+        font-size: 16px;
+        font-weight: bold;
+        color: $menuActiveText;
+      }
+    }
+    .chart-body{
+      border: 1px solid #e8f2ff;
+      position: relative;
+      .abs-canvas{
+        position: absolute;
+        left:0;
+        top:0;
+        width: 100%;
+        height: 100%;
+        padding: 15px;
+        .chart-canvas{
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+  .table-chart{
+    padding: 15px;
+  }
+}
 .page-root.Chinaphone{
   .search-wrap{
     padding-bottom:20px;
@@ -83,6 +134,8 @@
       font-size: 14px;
       line-height: 24px;
       margin-right: 10px;
+      margin-top: 4px;
+      margin-bottom: 4px;
       vertical-align:top;
       display: inline-block;
       text-align: right;
@@ -107,6 +160,8 @@
           font-size: 14px;
           line-height: 24px;
           margin-right: 10px;
+          margin-top: 4px;
+          margin-bottom: 4px;
           vertical-align:top;
           display: inline-block;
           width: 72px;
@@ -126,8 +181,8 @@
         overflow: hidden;
         .team-headerItem{
             float: left;
-            .el-date-editor{width:200px; margin-bottom:6px;}
-            .el-input{width:200px; margin-bottom:6px;}
+            .el-date-editor{width:200px; margin:4px 0;}
+            .el-input{width:200px; margin:4px 0;}
         }
       }
       .team-list{
@@ -300,7 +355,6 @@
       top:0;
       width: 100%;
       height: 100%;
-      padding: 15px;
       .chart-canvas{
         display: block;
         width: 100%;
@@ -309,26 +363,28 @@
     }
   }
 }
-@media (max-width:1500px){
 
-.search-wrap{
-  &.flex-wrap{
-    display: block;
-    .search-panelOne{
-      &.flex-content{
-        clear: both;
+@media (max-width:1500px){
+  .page-root.Chinaphone{
+    .search-wrap{
+      &.flex-wrap{
         display: block;
-        width: 100%;
-        flex: auto;
+        .search-panelOne{
+          &.flex-content{
+            clear: both;
+            display: block;
+            width: 100%;
+            flex: auto;
+          }
+        }
+        .search-panelTwo{
+          margin-left:0px;
+        }
       }
-    }
-    .search-panelTwo{
-      margin-left:0px;
     }
   }
 }
 
-}
 @media (max-width:1280px){
   .ChinaphoneNum{
     .card-header{

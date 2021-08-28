@@ -15,41 +15,41 @@
       </el-scrollbar>
     </div>
     <div class="flex-content relative">
-      <div class="abs-panel">
+      <div class="abs-panel" ref="mainPane">
         <div class="scroll-panel" ref="scrollPane">
-          <div class="phone-index flex-box flex-column" v-if="!phoneID">
-            <div class="ChinaphoneNum">
-                  <el-card class="box-card" shadow="hover">
-                      <div class="card-header">
-                           <h2>中文总计</h2>
-                           <p class="ChinaphoneNumTag">
-                                <span class="item-clues" v-for="item in topdepart" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="topdepartClick(item.id)">{{item.name}}</span>
-                           </p>
-                      </div>
-                      <div class="card-content ChinaphoneNumBom" >
-                        <div class="flex-panel ChinaphoneNumItem">
-                            <dl>
-                              <dt>今天</dt>
-                              <dd>{{defaultData.alltodaynumber}}</dd>
-                            </dl>
-                            <dl>
-                              <dt>昨天</dt>
-                              <dd>{{defaultData.alllastnumber}}</dd>
-                            </dl>
-                            <dl>
-                              <dt>本月</dt>
-                              <dd>{{defaultData.allnumber}}</dd>
-                            </dl>
-                        </div>
-                      </div>
-                  </el-card>
+          <div class="phone-index" v-if="!phoneID">
+            <div class="ChinaphoneNum" ref="numPane">
+              <el-card class="box-card" shadow="hover">
+                  <div class="card-header">
+                        <h2>{{currentTeam}}</h2>
+                        <p class="ChinaphoneNumTag">
+                            <span class="item-clues" v-for="item in topdepart" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="topdepartClick(item.id,item.name)">{{item.name}}</span>
+                        </p>
+                  </div>
+                  <div class="card-content ChinaphoneNumBom" >
+                    <div class="flex-panel ChinaphoneNumItem">
+                        <dl>
+                          <dt>今天</dt>
+                          <dd>{{defaultData.alltodaynumber}}</dd>
+                        </dl>
+                        <dl>
+                          <dt>昨天</dt>
+                          <dd>{{defaultData.alllastnumber}}</dd>
+                        </dl>
+                        <dl>
+                          <dt>本月</dt>
+                          <dd>{{defaultData.allnumber}}</dd>
+                        </dl>
+                    </div>
+                  </div>
+              </el-card>
             </div>
-            <div class="flex-panel ChinaphoneMap">
-              <el-card class="box-card canvas-card" shadow="hover">
+            <div class="ChinaphoneMap" v-bind:style="'min-height:'+minHeight+'px;'">
+              <el-card class="box-card canvas-card flex-box" shadow="hover" v-bind:style="'min-height:'+(minHeight-60)+'px;'">
                 <div class="card-header">
-                     <h2>中文询盘月度趋势</h2>
+                     <h2>中文询盘趋势</h2>
                      <div class="ChinaphoneMapDate">
-                        <el-select v-model="deptChart" size="small" @change="handleCheckTopdepartChange" clearable placeholder="部门总计">
+                        <el-select v-model="deptChart" size="small" @change="handleCheckTopdepartChange" clearable placeholder="中文总计">
                             <el-option
                             v-for="item in department"
                             :key="item.value"
@@ -74,7 +74,7 @@
                 </div>
                 <div class="card-content ChinaphoneMapChart">
                   <div class="canvas-wrap" v-if="device==='desktop'">
-                    <div id="cluesChart" class="chart-canvas" v-if="tableShow"></div>
+                    <div id="cluesChart" class="chart-canvas"></div>
                   </div>
                   <div class="canvas-wrap" v-else>
                     <canvas id="cluesChart" class="chart-canvas"></canvas>
@@ -186,7 +186,6 @@
             </div>
             <div class="card-content" ref="tableContent">
               <el-table
-                border
                 ref="simpleTable"
                 :data="tableData"
                 tooltip-effect="dark"
@@ -194,6 +193,7 @@
                 class="SiteTable"
                 style="width: 100%"
                 row-key="id"
+                v-bind:style="'min-height:'+minHeight+'px;'"
                 >
                 <el-table-column
                   prop="id"
@@ -238,7 +238,7 @@
                   >
                   <template slot-scope="scope">
                     <div class="table-text">
-                      <p>{{scope.row.province}}/{{scope.row.city}}</p>
+                      <p>{{scope.row.province}}<span v-if="scope.row.province&&scope.row.city">/</span>{{scope.row.city}}</p>
                     </div>
                   </template>
                 </el-table-column>
@@ -297,6 +297,7 @@
                 <el-table-column
                   v-if="writepermit&&(permitField.includes('domain')||permitField.includes('url'))"
                   key="a"
+                  fixed="right"
                   prop="url"
                   label="域名/链接"
                   min-width="150"
@@ -311,6 +312,7 @@
                 <el-table-column
                   v-if="writepermit&&(permitField.includes('search')||permitField.includes('searchword'))"
                   key="b"
+                  fixed="right"
                   prop="searchword"
                   label="平台/关键词"
                   min-width="110"
@@ -325,6 +327,7 @@
                 <el-table-column
                   v-if="writepermit&&permitField.includes('remark')"
                   key="c"
+                  fixed="right"
                   prop="remark"
                   label="备注"
                   min-width="140"
@@ -338,6 +341,7 @@
                 <el-table-column
                   v-if="writepermit&&(permitField.includes('userid')||permitField.includes('device'))"
                   key="d"
+                  fixed="right"
                   prop="searchword"
                   label="提供者/设备"
                   min-width="100"
@@ -352,6 +356,7 @@
                 <el-table-column
                   v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_otheredit'))&&device==='desktop'"
                   width="88"
+                  fixed="right"
                   align="center"
                   prop="operations"
                   label="修改">
@@ -365,6 +370,7 @@
                   v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_edit')||menuButtonPermit.includes('Chinaphone_delete'))&&device==='desktop'"
                   :width="operationsWidth"
                   align="center"
+                  fixed="right"
                   prop="operations"
                   label="操作">
                   <template #default="scope">
@@ -376,7 +382,7 @@
                 </el-table-column>
               </el-table>
             </div>
-            <div class="pagination-panel" ref="pagePane">
+            <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
               <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
@@ -438,6 +444,7 @@ export default {
   name: 'Chinaphone_phoneindex',
   data() {
     return {
+      minHeight:0,
       phoneID:null,
       currentPhone:'',
       writepermit:false,
@@ -461,7 +468,7 @@ export default {
         device:'',
         effective:'',
       },
-      pageSizeList:[20],
+      pageSizeList:[20,50,100,200,500],
       totalDataNum:0,
       pickerRangeOptions: {
         shortcuts: [{
@@ -562,6 +569,7 @@ export default {
       tableShow:true,      
       levelPop:[],  
       levelPopBool:false,
+      currentTeam:"中文总计",
     }
   },
   computed: {
@@ -572,19 +580,35 @@ export default {
   },
   mounted(){
     const $this = this;
-    $this.$nextTick(function () {      
-      if(!$this.$route.query.phoneID){
+    $this.$nextTick(function () {     
+      if($this.$route.query.phoneID){
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75; 
+      }else{
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
         $this.drawChart();
       }
     });
-    if($this.$route.query.phoneID){
-      window.onresize = () => {
-          return (() => {
-          })()
-      }
+    window.onresize = () => {
+      return (() => {
+        if($this.$route.query.phoneID){
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75; 
+        }else{
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
+        }
+      })()
     }
   },
   watch: {
+      minHeight(val) {
+        if (!this.timer) {
+          this.minHeight = val
+          this.timer = true
+          const $this = this
+          setTimeout(function() {
+            $this.timer = false
+          }, 400)
+        }
+      },
       //监听相同路由下参数变化的时候，从而实现异步刷新
       '$route'(to,from) {
         if(this.$route.query.phoneID){
@@ -606,11 +630,14 @@ export default {
   },
   updated(){
     var $this =this;
-    if($this.phoneID){
-      $this.$nextTick(() => {
-        $this.$refs.simpleTable.doLayout();
-      })
-    }
+    $this.$nextTick(() => {
+      if($this.phoneID){
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75; 
+          $this.$refs.simpleTable.doLayout();
+      }else{
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
+      }
+    })
   },
   methods:{
     // 搜索结果
@@ -678,7 +705,7 @@ export default {
               var topdepart=[];
               var topdepartObj = {
                 id:'0',
-                name:'部门总计',
+                name:'中文总计',
                 alllastday:response.allgrouplastnumber,
                 allnumber:response.allgroupnumber,
                 alltoday:response.allgrouptodaynumber,
@@ -738,7 +765,7 @@ export default {
               var department=[];
               var DepartmentObj = {
                 value:'0',
-                label:'部门总计',
+                label:'中文总计',
               };
               department.push(DepartmentObj);
               departmentList.forEach(function(item,index){
@@ -749,21 +776,11 @@ export default {
               });
               $this.department=department;
           }else{
-            if(response.permitstatus&&response.permitstatus==2){
-              $this.$message({
-                showClose: true,
-                message: "未被分配该页面访问权限",
-                type: 'error',
-                duration:6000
-              });
-              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-            }
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
           }
         }
       });
@@ -1042,7 +1059,7 @@ export default {
     },
     // 电话点击跳转列表
     phoneJump(id){
-      if(this.columnPlot&&this.columnPlot.chart.destroyed){
+      if(this.columnPlot&&!this.columnPlot.chart.destroyed){
         this.columnPlot.destroy();
       }
       var queryObj = {};
@@ -1129,15 +1146,29 @@ export default {
     },
     // 修改询盘
     editTableRow(row,index){
-      this.$router.push({path:'/Chinaphone/addEditClues',query:{ID:row.id}});
+      var $this = this;
+      var routeUrl =  $this.$router.resolve({path:'/Chinaphone/addEditClues',query:{ID:row.id}});
+      window.open(routeUrl.href,'_blank');
     },
     // 搜索统计数据跳转
     searchStatisticsData(){
-      this.$router.push({path:'/Chinaphone/searchClues'});
+      var $this = this;
+      if($this.device==='desktop'){
+        var routeUrl =  $this.$router.resolve({path:'/Chinaphone/searchClues'});
+        window.open(routeUrl.href,'_blank');
+      }else{
+        $this.$router.push({path:'/Chinaphone/searchClues'});
+      }
     },
     // 统计分析跳转
     statisticsClues(){
-      this.$router.push({path:'/Chinaphone/statisticChart'});
+      var $this = this;
+      if($this.device==='desktop'){
+        var routeUrl =  $this.$router.resolve({path:'/Chinaphone/statisticChart'});
+        window.open(routeUrl.href,'_blank');
+      }else{
+        $this.$router.push({path:'/Chinaphone/statisticChart'});
+      }
     },
     // 导出当前页数据
     handleDownload() {
@@ -1330,9 +1361,10 @@ export default {
       });
     },
     // 部门点击事件
-    topdepartClick(Tid){
+    topdepartClick(Tid,name){
       var $this = this;
       var topdepart = $this.topdepart;
+      $this.currentTeam = name;
       topdepart.forEach(function(item){
         if(item.id == Tid){
           item.isOn = true;
@@ -1349,6 +1381,9 @@ export default {
     // 部门选择图表点击事件 
     handleCheckTopdepartChange(){
       var $this = this;
+      if($this.columnPlot&&!$this.columnPlot.chart.destroyed){
+        $this.columnPlot.destroy();
+      }
       if($this.timeChart&&$this.timeChart.length>0){
         $this.chartData.starttime = $this.timeChart[0];
         $this.chartData.endtime = $this.timeChart[1];
@@ -1361,10 +1396,6 @@ export default {
       }else{
         $this.chartData.dept_id=[];
       }
-      $this.tableShow=false;
-      $this.$nextTick(function(){
-        $this.tableShow=true;
-      });
       $this.initPage();
     },
     // 询盘级别修改记录

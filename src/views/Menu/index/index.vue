@@ -27,6 +27,8 @@
             label="重定向链接"
             min-width="160" >
           </el-table-column>
+          <el-table-column prop="id" label="ID" width="80">
+          </el-table-column>
           <el-table-column prop="sort" label="排序" width="80">
           </el-table-column>
           <el-table-column align="center" prop="icon" label="图标" width="80">

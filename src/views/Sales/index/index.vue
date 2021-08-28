@@ -27,7 +27,7 @@
         </div>
       </el-scrollbar>
     </div>
-    <div class="flex-content SaleCardFr" :style="{width:SaleCardFlFrWidth + 'px'}">
+    <div class="flex-content SaleCardFr">
       <div class="abs-panel">
           <div class="scroll-panel" ref="scrollPane">
             <el-card class="box-card scroll-card SaleCardFlFrTable" shadow="hover">
@@ -173,7 +173,6 @@
               </div>
               <div class="card-content" ref="tableContent">
                 <el-table
-                    border
                     ref="simpleTable"
                     :data="tableData"
                     tooltip-effect="dark"
@@ -350,7 +349,6 @@ export default {
       defaultData:{},
       operationsWidth:"",
       tableData:[],
-      SaleCardFlFrWidth:200,
       tableHeight:200,
       searchData:{
         page:1,
@@ -460,12 +458,11 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-      $this.SaleCardFlFrWidth = $this.$refs.boxPane.offsetWidth-$this.$refs.SaleCardFl.offsetWidth-40-15;
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-30-25-20-3;
     });
     if($this.$route.query.Status){
       window.onresize = () => {
           return (() => {
-            $this.SaleCardFlFrWidth = $this.$refs.boxPane.offsetWidth-$this.$refs.SaleCardFl.offsetWidth-40-15;
             $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-40-30-25-20-3;
             // 49: 分割线高度；30：page-root上下内边距；30：el-card__body上下内边距；20：按钮父级上下内边距；3：上下border
           })()
