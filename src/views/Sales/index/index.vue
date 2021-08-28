@@ -5,23 +5,23 @@
         <div class="sub-wrapper">
           <div class="side-button">
             <dl class="Sales-list">
-                <dt v-on:click="datastatisticClues()"><span>业务员数据统计</span></dt>
-                <dt v-if="menuButtonPermit.includes('Sales_waitphone')" v-bind:class="currentStatus === 'waitcount'?'active':''" v-on:click="jumpLink('waitcount')"><span>等待分配</span><i>({{defaultData.waitcount}})</i></dt>
-                <dt v-if="menuButtonPermit.includes('Sales_allphone')" v-bind:class="currentStatus === 'allotcount'?'active':''" v-on:click="jumpLink('allotcount')"><span>所有已分配询盘</span><i>({{defaultData.allotcount}})</i></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_lookphoneall')||menuButtonPermit.includes('Sales_phonecount')" v-on:click="datastatisticClues()"><span>业务员数据统计</span></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_waitphone')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitcount'?'active':''" v-on:click="jumpLink('waitcount')"><span>等待分配</span><i>({{defaultData.waitcount}})</i></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_allphone')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'allotcount'?'active':''" v-on:click="jumpLink('allotcount')"><span>所有已分配询盘</span><i>({{defaultData.allotcount}})</i></dt>
             </dl>
           </div>
           <dl class="Salelist">
               <dt v-if="menuButtonPermit.includes('Sales_index')" v-bind:class="currentStatus === 'personcount'?'active':''" v-on:click="jumpLink('personcount')"><span>个人所有询盘</span><i>({{defaultData.personcount}})</i></dt>
-              <dt v-if="menuButtonPermit.includes('Sales_waitdeal')" v-bind:class="currentStatus === 'waitdealcount'?'active':''" v-on:click="jumpLink('waitdealcount')"><span>等待处理</span><i>({{defaultData.waitdealcount}})</i></dt>
-              <dt v-if="menuButtonPermit.includes('Sales_monthsay')" v-bind:class="currentStatus === 'monthsaycount'?'active':''" v-on:click="jumpLink('monthsaycount')"><span>月底前需反馈</span><i>({{defaultData.monthsaycount}})</i></dt>
-              <dt v-if="menuButtonPermit.includes('Sales_hasnosay')" v-bind:class="currentStatus === 'hasnosaycount'?'active':''" v-on:click="jumpLink('hasnosaycount')"><span>所有未反馈</span><i>({{defaultData.hasnosaycount}})</i></dt>
-              <dt v-if="menuButtonPermit.includes('Sales_waitftword')" v-bind:class="currentStatus === 'waitftwordcount'?'active':''" v-on:click="jumpLink('waitftwordcount')"><span>等待添加富通ID</span><i>({{defaultData.waitftwordcount}})</i></dt>
-              <dt v-if="menuButtonPermit.includes('Sales_hasdeal')" v-bind:class="currentStatus === 'hasdealcount'?'active':''" v-on:click="jumpLink('hasdealcount')"><span>已处理</span><i>({{defaultData.hasdealcount}})</i></dt>
-              <dt v-if="menuButtonPermit.includes('Sales_hassay')" v-bind:class="currentStatus === 'hassaycount'?'active':''" v-on:click="jumpLink('hassaycount')"><span>已做反馈</span><i>({{defaultData.hasdealcount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_waitdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitdealcount'?'active':''" v-on:click="jumpLink('waitdealcount')"><span>等待处理</span><i>({{defaultData.waitdealcount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_monthsay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'monthsaycount'?'active':''" v-on:click="jumpLink('monthsaycount')"><span>月底前需反馈</span><i>({{defaultData.monthsaycount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_hasnosay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasnosaycount'?'active':''" v-on:click="jumpLink('hasnosaycount')"><span>所有未反馈</span><i>({{defaultData.hasnosaycount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_waitftword')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitftwordcount'?'active':''" v-on:click="jumpLink('waitftwordcount')"><span>等待添加富通ID</span><i>({{defaultData.waitftwordcount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_hasdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasdealcount'?'active':''" v-on:click="jumpLink('hasdealcount')"><span>已处理</span><i>({{defaultData.hasdealcount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_hassay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hassaycount'?'active':''" v-on:click="jumpLink('hassaycount')"><span>已做反馈</span><i>({{defaultData.hasdealcount}})</i></dt>
           </dl>
           <div class="side-button">
             <dl class="Sales-list">
-                <dt v-on:click="dataStatistic()"><span>数据分析</span></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_search')" v-on:click="dataStatistic()"><span>数据分析</span></dt>
             </dl>
           </div>
         </div>
@@ -147,17 +147,17 @@
                                 clearable>
                             </el-input>
                         </div>
-                        <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
+                        <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult()" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
                     </div>
                     <div class="clues-info flex-wrap">
                         <div class="clues-infoFl flex-content">
-                              <p><span class="item-span-1">当前结果集状态：共有<strong>{{infoData.allcount}}</strong>条。</span></p>
+                              <p v-if="currentStatus != 'allotcount'"><span class="item-span-1">当前结果集状态：共有<strong>{{infoData.allcount}}</strong>条。</span></p>
+                              <p v-else><span class="item-span-1">当前结果集状态：当前共有<strong>{{infoData.allcount}}</strong>条信息。</span><span class="item-span-1">昨天共分配<strong>{{infoData.allcount}}</strong>条询盘，</span><span class="item-span-1">当前共有<strong>{{infoData.allcount}}</strong>条未处理，</span><span class="item-span-4" style="cursor: pointer;" @click="searchResult(1)">点击查看昨天未处理询盘</span>，<span class="item-span-4" style="cursor: pointer;" @click="searchResult(2)">点击查看今天未处理询盘</span>.</p>
                         </div>
                         <div class="clues-title-btn">
-                            <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Sales_index')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出结果</el-button>
-                            <el-button class="item-input" v-if="menuButtonPermit.includes('Sales_index')&&currentStatus === 'allotcount'" size="small" type="primary" :disabled="isTableRow" @click="deleteTableRow">分配撤回</el-button>
-                            <div class="SaleMassDistribution" v-if="menuButtonPermit.includes('Sales_index')&&currentStatus === 'waitcount'">                          
-                                  <el-select v-model="Determine.userid" size="small" clearable placeholder="-选择业务员-">
+                            <el-button class="item-input" v-if="menuButtonPermit.includes('Sales_phonecancel')&&currentStatus === 'allotcount'" size="small" type="primary" :disabled="isTableRow" @click="deleteTableRow">分配撤回</el-button>
+                            <div class="SaleMassDistribution" v-if="menuButtonPermit.includes('Sales_waitphone')&&currentStatus === 'waitcount'">                          
+                                  <el-select :disabled="isTableRow" v-model="Determine.userid" size="small" clearable placeholder="-选择业务员-">
                                       <el-option
                                       v-for="item in salesuseridList"
                                       :key="item.value"
@@ -307,14 +307,14 @@
                     </template>
                     </el-table-column>
                     <el-table-column
-                    v-if="(menuButtonPermit.includes('Sales_phoneinfosub'))&&device==='desktop'"
+                    v-if="menuButtonPermit.includes('Sales_phoneinfosub')&&device==='desktop'"
                     :width="operationsWidth"
                     align="center"
                     prop="operations"
                     label="操作">
                     <template #default="scope">
                         <div class="table-button">
-                        <el-button size="mini" @click="editTableRow(scope.row,scope.$index,'2')">详情</el-button>
+                        <el-button size="mini" @click="editTableRow(scope.row,scope.$index,'2')">修改</el-button>
                         </div>
                     </template>
                     </el-table-column>
@@ -335,26 +335,6 @@
           </div>
       </div>
     </div>
-    <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="400px">
-      <el-form :inline="true" :model="exportForm">
-        <el-form-item label="文件名称：" :label-width="formLabelWidth">
-          <el-input v-model="exportForm.fileName" placeholder="文件名 (默认：excel-list)" prefix-icon="el-icon-document"></el-input>
-        </el-form-item>
-        <el-form-item label="文件类型：" :label-width="formLabelWidth">
-          <el-select v-model="exportForm.bookType" placeholder="请选择导出文件类型">
-            <el-option label="xlsx" value="xlsx"></el-option>
-            <el-option label="csv" value="csv"></el-option>
-            <el-option label="txt" value="txt"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogExportVisible = false">取 消</el-button>
-          <el-button :loading="downloadLoading" type="primary" icon="el-icon-document" @click="handleDownload">导 出</el-button>
-        </span>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
@@ -376,19 +356,21 @@ export default {
         page:1,
         limit:15,
         timetype:"",
-        date:[],
-        starttime: "",
-        endtime: "",
-        continent: "",
+        salesownid:"",
+        continent:"",
         producttype_id:"",
-        productid: "",
-        managestatus: "",
-        replystatus: "",
-        ennature: "",
-        enxunprice: "",
+        productid:"",
+        ennature:"",
+        enxunprice:"",
+        managestatus:"",
+        replystatus:"",
+        starttime:"",
+        endtime:"",
+        keyword:"",
         feedback:"",
-        keyword: "",
-        ftword_id: "",
+        ftword_id:"",
+        deal:"",
+        date:[],
         salesuserid: ""
       },
       timetypelist:[
@@ -459,17 +441,9 @@ export default {
         allcount:0,
         warnlist:[]
       },
-      formLabelWidth:"110px",
-      exportForm:{
-        fileName:"",
-        bookType:"xlsx"
-      },
-      dialogExportVisible:false,
-      downloadLoading: false,
-      permitField:[],
-      isDisabled:true,
-      selectedData:[],
       isTableRow:true,
+      permitField:[],
+      selectedData:[],
       ids:[],
       Determine:{
         ids:[],
@@ -543,8 +517,13 @@ export default {
   },
   methods:{
     // 搜索结果
-    searchResult(){
+    searchResult(DealVal){
       var $this = this;
+      if(DealVal&&DealVal!=''&&DealVal!=undefined){
+        $this.searchData.deal=DealVal;
+      }else{
+        $this.searchData.deal='';
+      }
       $this.initCluesList();
     },    
     // 初始化数据
@@ -632,7 +611,7 @@ export default {
         }
       });
     },    
-    // 当前产品分类改变触发事件
+    // 当前产品分类改变触发加载分类下的产品
     currentCateChange(e){
         var $this = this;
         if(e){
@@ -669,33 +648,20 @@ export default {
       var searchData = {};
       searchData.page = $this.searchData.page;
       searchData.limit = $this.searchData.limit;
-      searchData.phoneid = $this.phoneID;
-      if($this.searchData.timeing&&$this.searchData.timeing!=''){
-        searchData.timeing = $this.searchData.timeing;
+      if($this.searchData.timetype&&$this.searchData.timetype!=''){
+        searchData.timetype = $this.searchData.timetype;
+      }
+      if($this.searchData.salesownid&&$this.searchData.salesownid!=''){
+        searchData.salesownid = $this.searchData.salesownid;
       }
       if($this.searchData.continent&&$this.searchData.continent!=''){
         searchData.continent = $this.searchData.continent;
       }
-      if($this.searchData.mode&&$this.searchData.mode!=''){
-        searchData.mode = $this.searchData.mode;
-      }
-      if($this.searchData.typekey&&$this.searchData.typekey!=''){
-        searchData.typekey = $this.searchData.typekey;
+      if($this.searchData.producttype_id&&$this.searchData.producttype_id!=''){
+        searchData.producttype_id = $this.searchData.producttype_id;
       }
       if($this.searchData.productid&&$this.searchData.productid!=''){
         searchData.productid = $this.searchData.productid;
-      }
-      if($this.searchData.level_id&&$this.searchData.level_id!=''){
-        searchData.level_id = $this.searchData.level_id;
-      }
-      if($this.searchData.messagetype&&$this.searchData.messagetype!=''){
-        searchData.messagetype = $this.searchData.messagetype;
-      }
-      if($this.searchData.adduser&&$this.searchData.adduser!=''){
-        searchData.adduser = $this.searchData.adduser;
-      }
-      if($this.searchData.device&&$this.searchData.device!=''){
-        searchData.device = $this.searchData.device;
       }
       if($this.searchData.ennature&&$this.searchData.ennature!=''){
         searchData.ennature = $this.searchData.ennature;
@@ -703,39 +669,30 @@ export default {
       if($this.searchData.enxunprice&&$this.searchData.enxunprice!=''){
         searchData.enxunprice = $this.searchData.enxunprice;
       }
-      if($this.searchData.erroring&&$this.searchData.erroring!=''){
-        searchData.erroring = $this.searchData.erroring;
+      if($this.searchData.managestatus&&$this.searchData.managestatus!=''){
+        searchData.managestatus = $this.searchData.managestatus;
       }
-      if($this.searchData.production&&$this.searchData.production!=''){
-        searchData.production = $this.searchData.production;
-      }
-      if($this.searchData.custormwarnstatus&&$this.searchData.custormwarnstatus!=''){
-        searchData.custormwarnstatus = $this.searchData.custormwarnstatus;
-      }
-      if($this.searchData.saleswarnstatus&&$this.searchData.saleswarnstatus!=''){
-        searchData.saleswarnstatus = $this.searchData.saleswarnstatus;
-      }
-      if($this.searchData.effective&&$this.searchData.effective!=''){
-        searchData.effective = $this.searchData.effective;
-      }
-      if($this.searchData.remark1!=''){
-        searchData.remark1 = $this.searchData.remark1;
-      }
-      if($this.searchData.remark2!=''){
-        searchData.remark2 = $this.searchData.remark2;
-      }
-      if($this.searchData.remark3!=''){
-        searchData.remark3 = $this.searchData.remark3;
-      }
-      if($this.searchData.feedback&&$this.searchData.feedback!=''){
-        searchData.feedback = $this.searchData.feedback;
-      }
-      if($this.searchData.sort!=''){
-        searchData.sort = $this.searchData.sort;
+      if($this.searchData.replystatus&&$this.searchData.replystatus!=''){
+        searchData.replystatus = $this.searchData.replystatus;
       }
       if($this.searchData.date&&$this.searchData.date.length>0){
         searchData.starttime = $this.searchData.date[0];
         searchData.endtime = $this.searchData.date[1];
+      }
+      if($this.searchData.keyword&&$this.searchData.keyword!=''){
+        searchData.keyword = $this.searchData.keyword;
+      }
+      if($this.searchData.feedback&&$this.searchData.feedback!=''){
+        searchData.feedback = $this.searchData.feedback;
+      }
+      if($this.searchData.ftword_id&&$this.searchData.ftword_id!=''){
+        searchData.ftword_id = $this.searchData.ftword_id;
+      }
+      if($this.searchData.deal&&$this.searchData.deal!=''){
+        searchData.deal = $this.searchData.deal;
+      }
+      if($this.searchData.salesuserid&&$this.searchData.salesuserid!=''){
+        searchData.salesuserid = $this.searchData.salesuserid;
       }
       return searchData;
     },
@@ -827,9 +784,6 @@ export default {
               item.SalesEnnature=SalesEnnature;
               item.SalesEnxunprice=SalesEnxunprice;
             });
-            $this.isDisabled = false;
-          }else{
-            $this.isDisabled = true;
           }
           $this.tableData = tableData;
         }else{
@@ -913,67 +867,6 @@ export default {
       this.searchData.page = val;
       this.initPage();
     },
-    // 导出当前页数据
-    handleDownload() {
-      this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['ID', '星期','咨询时间','业务员','特别说明','大州','国家','类型','产品','富通','称呼','邮箱','电话','需求详情','处理','回复','客户性质','客户需求','个人备注','添加时间','分配时间','更新时间']
-        const list = this.tableData
-        const data = [];
-        list.forEach(function(item,index){
-          var itemData = [];
-          itemData.push(item.id);
-          itemData.push(item.weekday);
-          itemData.push(item.xuntime);
-          itemData.push(item.salesusername);
-          itemData.push(item.otherremark);
-          itemData.push(item.continent);
-          itemData.push(item.country);
-          itemData.push(item.producttypename);
-          itemData.push(item.keyproduct);
-          itemData.push(item.ftword_id);
-          itemData.push(item.custormname);
-          itemData.push(item.custormemail);
-          itemData.push(item.custormphone);
-          itemData.push(item.custormneedinfo);
-          itemData.push(item.Salesmanagestatus);
-          itemData.push(item.Salesreplystatus);
-          itemData.push(item.xuntime);
-          itemData.push(item.addtime);
-          itemData.push(item.updatetime);
-          data.push(itemData);
-        });
-        // const data = this.formatJson(filterVal, list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: this.exportForm.fileName,
-          autoWidth: true,
-          bookType: this.exportForm.bookType
-        })
-        this.downloadLoading = false;
-        this.dialogExportVisible = false;
-        this.exportForm.fileName = "";
-      })
-    },
-    // 获取当前登录用户有可写权限的询盘字段
-    getPermitField(){
-      var $this = this;
-      $this.$store.dispatch('enphone/cluesCurrentPhoneUserCanEditFieldAction', null).then(response=>{
-        if(response){
-          if(response.status){
-            console.log(response,"字段权限");
-            $this.permitField = response.data;
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-        }
-      });
-    },
     // 反馈点击事件
     feedbackClick(){
       var $this = this;
@@ -989,7 +882,7 @@ export default {
     // 修改询盘
     editTableRow(row,index,num){
       var $this = this;
-      var routeUrl =  $this.$router.resolve({path:'Sales/phoneinfosub',query:{ID:row.id,status:num}});
+      var routeUrl =  $this.$router.resolve({path:'/Sales/phoneinfosub',query:{ID:row.id,status:num}});
       window.open(routeUrl.href,'_blank');
     },
     // 表格多选改变事件

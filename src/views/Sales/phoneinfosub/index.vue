@@ -3,7 +3,7 @@
     <el-card class="box-card scroll-card" shadow="hover">
         <div class="card-content SaleAddEdit" ref="tableContent">
             <div class="SaleAddEditMain">
-                <ul class="SaleTips">
+                <ul class="SaleTips" v-if="menuButtonPermit.includes('Sales_warnread')">
                     <li v-if="ID&&isSalesman"><span class="tips">【提醒】：</span><b>{{formData.givesaleswarn}}</b><el-button class="item-input" size="mini" type="primary" @click="salesmanWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></li>
                 </ul>
                 <div class="SaleAddEditMainItem timeArr">
@@ -78,7 +78,7 @@
                       </dl>
                 </div>
                 <div class="SaleAddEditMainItem divider">
-                     *收到询盘10天后进行询盘反馈，请根据实际情况选择对应类型判定！当前：<strong>已反馈</strong>
+                     *收到询盘10天后进行询盘反馈，请根据实际情况选择对应类型判定！当前：<strong>{{feedback}}</strong>
                 </div>
                 <div class="SaleAddEditMainItem SaleFoot">
                       <dl class="SaleFootFl">
@@ -251,6 +251,7 @@ export default {
         custormwarnstatus:false
       },      
       isSalesman:false,
+      feedback:'未反馈',
     }
   },
   computed: {
@@ -294,7 +295,7 @@ export default {
       $this.$store.dispatch('Sales/getSalesDetailsAction',$this.formValidate).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"初始化询盘信息");
+            console.log(response,"初始化询盘信息");            
             $this.defaultInfo = response.data;
             if(response.data.givesaleswarn&&response.data.givesaleswarn!=''&&response.data.saleswarnstatus==3){
               $this.isSalesman=true;
@@ -367,6 +368,7 @@ export default {
       });
       $this.formData.ennature = $this.defaultInfo.ennature;
       $this.formData.enxunprice = $this.defaultInfo.enxunprice;
+      $this.feedback=$this.defaultInfo.ennature||$this.defaultInfo.enxunprice?'已反馈':'未反馈';
       $this.formData.givecustormwarn = $this.defaultInfo.givecustormwarn;
       $this.formData.custormwarnstatus=$this.defaultInfo.custormwarnstatus==2?true:false;
       $this.formData.givesaleswarn = $this.defaultInfo.givesaleswarn;
@@ -379,6 +381,7 @@ export default {
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         console.log(res);
         if(res.status){
+          console.log(res,"操作权限")
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);

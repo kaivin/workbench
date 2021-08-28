@@ -161,6 +161,30 @@ function setRoutes(routers){
         component: () => import(/* webpackChunkName: "editHistoryLog" */ "@/views/Enphone/editHistoryLog/index.vue"),
         meta: {id:'editHistoryLog-72',title: '询盘修改日志', icon: null, keepAlive:false},
       },
+      {
+        path: "/Sales/index",
+        name:'Salesindex',
+        component: () => import(/* webpackChunkName: "editHistoryLog" */ "@/views/Sales/index/index.vue"),
+        meta: {id:'Salesindex-79',title: '业务员个人所有询盘', icon: null, keepAlive:false},
+      },
+      {
+        path: "/Sales/phonecount",
+        name:'phonecount',
+        component: () => import(/* webpackChunkName: "editHistoryLog" */ "@/views/Sales/phonecount/index.vue"),
+        meta: {id:'phonecount-79',title: '业务员数据统计', icon: null, keepAlive:false},
+      },
+      {
+        path: "/Sales/search",
+        name:'search',
+        component: () => import(/* webpackChunkName: "editHistoryLog" */ "@/views/Sales/search/index.vue"),
+        meta: {id:'search-79',title: '业务员数据分析', icon: null, keepAlive:false},
+      },
+      {
+        path: "/Sales/phoneinfosub",
+        name:'phoneinfosub',
+        component: () => import(/* webpackChunkName: "editHistoryLog" */ "@/views/Sales/phoneinfosub/index.vue"),
+        meta: {id:'phoneinfosub-79',title: '业务员询盘修改', icon: null, keepAlive:false},
+      },
     ]
   }]
   accessedRouters.forEach(function(item,index){
