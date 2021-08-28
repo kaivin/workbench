@@ -494,7 +494,12 @@ export default {
     // 页面自跳转
     jumpLink(status){
         var $this = this;
-        $this.$router.push({path:'/Sales/index',query:{Status:status}});
+        if($this.device==="desktop"){
+          var routeUrl = $this.$router.resolve({path:'/Sales/index',query:{Status:status}});
+          window.open(routeUrl.href,'_blank');
+        }else{
+          $this.$router.push({path:'/Sales/index',query:{Status:status}});
+        }
     },
     //分组点击事件
     groupClick(id){
@@ -683,7 +688,12 @@ export default {
     // 跳转数据统计页面
     datastatisticClues(){
       var $this = this;
-      $this.$router.push({path:'/Sales/phonecount'});
+      if($this.device==="desktop"){
+        var routeUrl = $this.$router.resolve({path:'/Sales/phonecount'});
+        window.open(routeUrl.href,'_blank');
+      }else{
+        $this.$router.push({path:'/Sales/phonecount'});
+      }
     },
   }
 }

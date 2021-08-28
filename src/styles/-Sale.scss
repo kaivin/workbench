@@ -1,6 +1,7 @@
 ﻿.SaleCard{
     .SaleCardFl{
         width:210px;
+        &.sub-router .sub-wrapper{padding:0px;}
         .side-button{
           width: 100%;
           overflow: hidden;
@@ -11,14 +12,17 @@
             padding-right: 15px;
             dt{
               color:$menuActiveText;
-              line-height: 20px;
-              margin-bottom:10px;
-              font-size: 12px;
+              width: 100%;
+              margin: 2px 0;
+              border: 1px solid #fafafa;
+              border-radius: 4px;
+              padding: 0 10px;
+              line-height: 28px;
               cursor: pointer;
-              &:hover{
-                span,i{
-                  text-decoration: underline;
-                }
+              font-size: 12px;
+              &:hover,&.active{
+                border: 1px solid #BDDEFF;
+                background-color: #F6FBFF;
               }
               span,i{
                 font-style: normal;
@@ -38,14 +42,17 @@
           padding:25px 15px 0px 15px;
           dt{
             color:$menuActiveText;
-            line-height: 20px;
-            margin-bottom:10px;
-            font-size: 12px;
+            width: 100%;
+            margin: 2px 0;
+            border: 1px solid #fafafa;
+            border-radius: 4px;
+            padding: 0 10px;
+            line-height: 28px;
             cursor: pointer;
-            &:hover{
-              span,i{
-                text-decoration: underline;
-              }
+            font-size: 12px;
+            &:hover,&.active{
+              border: 1px solid #BDDEFF;
+              background-color: #F6FBFF;
             }
             span,i{
               font-style: normal;

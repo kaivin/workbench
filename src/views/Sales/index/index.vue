@@ -199,7 +199,7 @@
                     <el-table-column
                     prop="weekday"
                     label="咨询时间与说明"
-                    width="180"
+                    width="190"
                     >
                     <template slot-scope="scope">
                         <div class="table-text">
@@ -314,6 +314,7 @@
                     :width="operationsWidth"
                     align="center"
                     prop="operations"
+                    fixed="right"
                     label="操作">
                     <template #default="scope">
                         <div class="table-button">
@@ -858,17 +859,31 @@ export default {
     // 页面自跳转
     jumpLink(status){
         var $this = this;
-        $this.$router.push({path:'/Sales/index',query:{Status:status}});
+        if($this.currentStatus=status){
+          $this.searchResult();
+        }else{
+          $this.$router.push({path:'/Sales/index',query:{Status:status}});
+        }
     },
     // 跳转数据分析页面
     dataStatistic(){
       var $this = this;
-      $this.$router.push({path:'/Sales/search'});
+      if($this.device==="desktop"){
+        var routeUrl = $this.$router.resolve({path:'/Sales/search'});
+        window.open(routeUrl.href,'_blank');
+      }else{
+        $this.$router.push({path:'/Sales/search'});
+      }
     },
     // 跳转数据统计页面
     datastatisticClues(){
       var $this = this;
-      $this.$router.push({path:'/Sales/phonecount'});
+      if($this.device==="desktop"){
+        var routeUrl = $this.$router.resolve({path:'/Sales/phonecount'});
+        window.open(routeUrl.href,'_blank');
+      }else{
+        $this.$router.push({path:'/Sales/phonecount'});
+      }
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
