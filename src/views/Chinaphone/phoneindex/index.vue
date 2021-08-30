@@ -27,7 +27,7 @@
                         </p>
                   </div>
                   <div class="card-content ChinaphoneNumBom" >
-                    <div class="flex-panel ChinaphoneNumItem">
+                    <div class="flex-content ChinaphoneNumItem">
                         <dl>
                           <dt>今天</dt>
                           <dd>{{defaultData.alltodaynumber}}</dd>

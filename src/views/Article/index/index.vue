@@ -288,31 +288,39 @@
           </el-card>
         </div>
       </div>
-      <div class="drawerBg" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
-      <div class="WebsiteFixed" ref="WebsiteFixed" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
-          <ul :style="{height:WebsiteFixedHeight+'px'}">
+      <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
+      <div class="mobile-filter-dialog flex-box flex-column" ref="WebsiteFixed" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
+        <div class="flex-content">
+          <div class="abs-scroll">
+            <ul>
               <li v-for="item in postTypeData" v-bind:key="item.id" v-bind:class="item.id==isArticleTit?'active':''">
-                  <span class="WebsiteFixedTit">{{item.typename}}</span>
-                  <div class="tag-panel">
-                      <el-button type="primary" v-bind:class="type.plain?'is-plain':''" :size="device==='desktop'?'small':'mini'" v-for="type in item.children" v-bind:key="type.id" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
+                <span class="title-panel">{{item.typename}}</span>
+                <div class="tag-panel">
+                  <div class="item-button" v-for="type in item.children" v-bind:key="type.id">
+                    <el-button type="primary" v-bind:class="type.plain?'is-plain':''"  size="small" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
                   </div>
+                </div>
               </li>
               <li v-if="tagData.length>0&&tags.systemList.length>0&&isList">
-                  <span class="WebsiteFixedTit">系统标签</span>
-                  <div class="tag-panel">
-                      <el-tag v-bind:class="item.plain?'is-plain':''" size="small" v-for="item in tags.systemList" v-bind:key="item.id" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
+                <span class="title-panel">系统标签</span>
+                <div class="tag-panel">
+                  <div class="item-button" v-for="item in tags.systemList" v-bind:key="item.id">
+                    <el-tag v-bind:class="item.plain?'is-plain':''" size="small" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
                   </div>
+                </div>
               </li>
               <li v-if="tagData.length>0&&tags.customList.length>0&&isList">
-                  <span class="WebsiteFixedTit">自定义标签</span>
-                  <div class="tag-panel">
-                          <el-tag v-bind:class="item.plain?'is-plain':''" size="small" v-for="(item,index) in tags.customList" v-bind:key="index" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
+                <span class="title-panel">自定义标签</span>
+                <div class="tag-panel">
+                  <div class="item-button" v-for="(item,index) in tags.customList" v-bind:key="index">
+                    <el-tag v-bind:class="item.plain?'is-plain':''" size="small" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
                   </div>
+                </div>
               </li>
-          </ul>
-          <p class="WebsiteFixedFoot" ref="WebsiteFixedFoot">
-              <span class="WebsiteQue" v-on:click="searchDialog()">确定</span>
-          </p>
+            </ul>
+          </div>
+        </div>
+        <p class="footer-button" ref="WebsiteFixedFoot"><span class="btn-yes" v-on:click="searchDialog()">确定</span></p>
       </div>
     </div>
 </template>

@@ -55,6 +55,14 @@
     }
   }
 }
+.mobile{
+  .page-root{
+    padding:0;
+  }
+  .el-table.SiteTable{
+    border-radius: 0;
+  }
+}
 /** 模块默认样式 **/
 .init-style{
   padding: 15px;
@@ -333,7 +341,7 @@
       width:100%;
   }
 }
-/** 内网论坛相关样式 **/
+/** 论坛相关样式 **/
 .post-class{
   .border-row{
     .border-cell{

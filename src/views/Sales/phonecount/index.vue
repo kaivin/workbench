@@ -1,16 +1,12 @@
 ﻿
 <template>
-    <div class="page-root en-phone sale-en-phone" ref="boxPane">
+    <div class="page-root sales-phonecount" ref="boxPane">
         <el-card class="box-card scroll-card" shadow="hover">
             <div slot="header">
                 <div class="card-header" ref="headerPane">
-                    <div class="search-wrap" v-if="device==='desktop'">
+                    <div class="search-wrap">
                         <div class="item-search">
-                            <span>属性：</span>
-                            <el-radio v-for="(item,index) in statusList" size="small" v-bind:key="index" v-model="status" :label="item.value">{{item.label}}</el-radio>
-                        </div>
-                        <div class="item-search">
-                            <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
+                            <el-radio v-for="(item,index) in statusList" border size="small" @change="valueChangeHandler" v-bind:key="index" v-model="status" :label="item.value">{{item.label}}</el-radio>
                         </div>
                     </div>
                 </div>
@@ -212,11 +208,6 @@ export default {
     $this.initData();
   },
   methods:{
-    // 搜索结果
-    searchResult(){
-      var $this = this;
-      $this.initPage();
-    },
     // 初始化数据
     initData(){
       var $this = this;
@@ -305,6 +296,11 @@ export default {
       const currentDate = "("+date.year+"-"+newmonth+"-16 至今)";
       this.lastDate = lastDate;
       this.currentDate = currentDate;
+    },
+    // 单选值改变事件
+    valueChangeHandler(e){
+      var $this = this;
+      $this.initPage();
     }
   }
 }

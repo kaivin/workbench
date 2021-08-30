@@ -4,13 +4,9 @@
         <el-card class="box-card scroll-card" shadow="hover">
             <div slot="header">
                 <div class="card-header" ref="headerPane">
-                    <div class="search-wrap" v-if="device==='desktop'">
+                    <div class="search-wrap">
                         <div class="item-search">
-                            <span>属性：</span>
-                            <el-radio v-for="(item,index) in statusList" size="small" v-bind:key="index" v-model="status" :label="item.value">{{item.label}}</el-radio>
-                        </div>
-                        <div class="item-search">
-                            <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
+                            <el-radio v-for="(item,index) in statusList" border @change="searchResult" size="small" v-bind:key="index" v-model="status" :label="item.value">{{item.label}}</el-radio>
                         </div>
                     </div>
                 </div>

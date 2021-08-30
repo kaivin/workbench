@@ -326,75 +326,77 @@
         </el-card>
       </div>
     </div>
-    <div class="drawerBg" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
-    <div class="WebsiteFixed" ref="WebsiteFixed" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
-        <ul :style="{height:WebsiteFixedHeight+'px'}">
-           <li>
-              <span class="WebsiteFixedTit">行业：</span>
+    <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
+    <div class="mobile-filter-dialog flex-box flex-column" ref="WebsiteFixed" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
+      <div class="flex-content">
+        <div class="abs-scroll"> 
+          <ul>
+            <li>
+              <span class="title-panel">行业：</span>
               <div class="tag-panel">
-                  <template v-for="(item,index) in brandList">
-                      <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickBrand(item.id)">{{item.brandname}}</el-button>
-                  </template>
+                <div class="item-button" v-for="(item,index) in brandList" v-bind:key="index">
+                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickBrand(item.id)">{{item.brandname}}</el-button>
+                </div>
               </div>
-           </li>
-           <li>
-              <span class="WebsiteFixedTit">语言：</span>
-                <div class="tag-panel">
-                    <template v-for="item in languageList">
-                        <el-button type="primary" v-bind:key="item.id" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickLanguage(item.id)">{{item.languagename}}</el-button>
-                    </template>
+            </li>
+            <li>
+              <span class="title-panel">语言：</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="item in languageList" v-bind:key="item.id">
+                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickLanguage(item.id)">{{item.languagename}}</el-button>
                 </div>
-           </li>
-           <li>
-              <span class="WebsiteFixedTit">排序：</span>
-                <div class="tag-panel">
-                    <template v-for="(item,index) in sort">
-                        <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickSort(item.key)">{{item.name}}</el-button>
-                    </template>
+              </div>
+            </li>
+            <li>
+              <span class="title-panel">排序：</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="(item,index) in sort" v-bind:key="index">
+                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickSort(item.key)">{{item.name}}</el-button>
                 </div>
-           </li>
-           <li>
-              <span class="WebsiteFixedTit">部门：</span>
-                <div class="tag-panel">
-                    <template v-for="(item,index) in departList">
-                        <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickDepart(item.id)">{{item.name}}</el-button>
-                    </template>
+              </div>
+            </li>
+            <li>
+              <span class="title-panel">部门：</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="(item,index) in departList" v-bind:key="index">
+                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickDepart(item.id)">{{item.name}}</el-button>
                 </div>
-           </li>
-           <li>
-              <span class="WebsiteFixedTit">模式：</span>
-                <div class="tag-panel">
-                    <template v-for="(item,index) in websiteStatus">
-                        <el-button :type="item.type" v-bind:key="index" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickStatus(item.cate,item.key)">{{item.name}}</el-button>
-                    </template>
+              </div>
+            </li>
+            <li>
+              <span class="title-panel">模式：</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="(item,index) in websiteStatus" v-bind:key="index">
+                  <el-button :type="item.type" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickStatus(item.cate,item.key)">{{item.name}}</el-button>
                 </div>
-           </li>
-           <li>
-              <span class="WebsiteFixedTit">标签：</span>
-                <div class="tag-panel">
-                    <template v-for="(item,index) in attrTagList">
-                        <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickAttrTag(item.name,item.id)">{{item.name}}</el-button>
-                    </template>
+              </div>
+            </li>
+            <li>
+              <span class="title-panel">标签：</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="(item,index) in attrTagList" v-bind:key="index">
+                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickAttrTag(item.name,item.id)">{{item.name}}</el-button>
                 </div>
-           </li>
-           <li>
-              <span class="WebsiteFixedTit">主机头：</span>
-                <div class="tag-panel">
-                    <template v-for="(item,index) in hostTagList">
-                        <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickHostTag(item.name,item.id)">{{item.name}}</el-button>
-                    </template>
+              </div>
+            </li>
+            <li>
+              <span class="title-panel">主机头：</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="(item,index) in hostTagList" v-bind:key="index">
+                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickHostTag(item.name,item.id)">{{item.name}}</el-button>
                 </div>
-           </li>
-           <li class="WebsiteFixedWeb">
-                <div class="tag-panel">
-                    <el-button type="primary" v-bind:class="formData.headeruser?'is-plain':''" size="small" v-on:click="clickManage">个人负责网站</el-button>
-                    <el-button type="primary" v-bind:class="formData.personuser?'is-plain':''" size="small" v-on:click="clickDevelop">个人开发网站</el-button>
-                </div>
-           </li>
-        </ul>
-        <p class="WebsiteFixedFoot" ref="WebsiteFixedFoot">
-            <span class="WebsiteQue" v-on:click="searchDialog()">确定</span>
-        </p>
+              </div>
+            </li>
+            <li class="column-2">
+              <div class="tag-panel">
+                <div class="item-button"><el-button type="primary" v-bind:class="formData.headeruser?'is-plain':''" size="small" v-on:click="clickManage">个人负责网站</el-button></div>
+                <div class="item-button"><el-button type="primary" v-bind:class="formData.personuser?'is-plain':''" size="small" v-on:click="clickDevelop">个人开发网站</el-button></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-button" ref="WebsiteFixedFoot"><span class="btn-yes" v-on:click="searchDialog()">确定</span></p>
     </div>
     <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Website_add')&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">

@@ -499,6 +499,11 @@ export default {
           $this.initData();
       },
   },
+  updated(){
+    this.$nextTick(() => {
+      this.$refs.simpleTable.doLayout()
+    })
+  },
   created(){
     var $this = this;
     if($this.$route.query.Status){

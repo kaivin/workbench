@@ -234,14 +234,6 @@
     margin-bottom: 20px;
   }
 }
-.sale-en-phone.en-phone{
-  .box-card .search-wrap .item-search{
-    line-height:32px;
-    .el-radio{
-      margin-right:10px;
-    }
-  }
-}
 .SaleAddEdit{
   background:#fff;
   padding: 20px 30px;
@@ -469,5 +461,16 @@
   }
   .WebServerAddEditBtn.SaleAddEditBtn{    
     padding:20px 0px 20px 0px;
+  }
+}
+
+.sales-phonecount{
+  .search-wrap{
+    .item-search{
+      float:left;
+      .el-radio{
+        margin: 5px!important;
+      }
+    }
   }
 }
