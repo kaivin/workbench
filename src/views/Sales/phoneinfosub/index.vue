@@ -371,7 +371,7 @@ export default {
       $this.formData.enxunprice = $this.defaultInfo.enxunprice;
       $this.feedback=$this.defaultInfo.ennature||$this.defaultInfo.enxunprice?'已反馈':'未反馈';
       $this.formData.givecustormwarn = $this.defaultInfo.givecustormwarn;
-      $this.formData.custormwarnstatus=$this.defaultInfo.custormwarnstatus==2?true:false;
+      $this.formData.custormwarnstatus=$this.defaultInfo.custormwarnstatus==2?false:true;
       $this.formData.givesaleswarn = $this.defaultInfo.givesaleswarn;
       $this.formData.saleswarnstatus = $this.defaultInfo.saleswarnstatus;
       console.log($this.formData,'$this.formData');
@@ -540,7 +540,7 @@ export default {
       formSaveData.ennature = $this.formData.ennature.toString();
       formSaveData.enxunprice = $this.formData.enxunprice.toString();
       formSaveData.givecustormwarn = $this.formData.givecustormwarn;
-      formSaveData.custormwarnstatus = $this.formData.custormwarnstatus==true?'2':'3';
+      formSaveData.custormwarnstatus = $this.formData.custormwarnstatus==true?'3':'2';
       return formSaveData;
     },
     // 保存添加/编辑数据

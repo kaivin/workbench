@@ -46,7 +46,7 @@
               >
               <template slot-scope="scope">
                 <el-tag
-                  :type="scope.row.is_new === 0 ? 'primary' : 'warning'"
+                  :type="scope.row.is_new === 0 ? 'primary' : 'warning'"  v-if="!scope.row.article"
                   disable-transitions>{{scope.row.is_new === 0?"新增":"修改"}}</el-tag>
               </template>
             </el-table-column>

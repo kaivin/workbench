@@ -787,6 +787,16 @@
 /*表格样式*/
 .el-table.SiteTable{
   border-radius:8px;
+  display: flex;
+  flex-direction: column;
+  .el-table__body-wrapper{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    .el-table__empty-block{
+      flex:1;
+    }
+  }
   &:before{display:none;}
   th.is-leaf{
     background:#e2e9ed;
