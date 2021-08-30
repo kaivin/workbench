@@ -130,19 +130,17 @@
                           <el-checkbox v-for="item in feedbackList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
                         </el-checkbox-group>
                         <div class="SalesCardInput">
-                            <span>关键词：</span>
                             <el-input
                                 style="width: 150px;margin:5px 10px 5px 0px;float:left;" size="small"
-                                placeholder=""
+                                placeholder="客户联系方式"
                                 v-model="searchData.keyword"
                                 clearable>
                             </el-input>
                         </div>
                         <div class="SalesCardInput">
-                            <span>富通ID/分配ID：</span>
                             <el-input
-                                style="width: 100px;margin:5px 10px 5px 0px;float:left;" size="small"
-                                placeholder="备注2"
+                                style="width: 150px;margin:5px 10px 5px 0px;float:left;" size="small"
+                                placeholder="富通ID/分配ID"
                                 v-model="searchData.ftword_id"
                                 clearable>
                             </el-input>
@@ -257,7 +255,7 @@
                     <template slot-scope="scope">
                         <div class="table-text">                        
                             <p v-if="scope.row.contentedittime"><span class="SiteColor-01">内容有修改：修改时间{{scope.row.contentedittime}}</span></p>
-                            <p>{{scope.row.Salescustormneedinfo}}<span class="SiteColor-03 clear" v-if="scope.row.Salescustormneedinfo.length>150" @click="editTableRow(scope.row,scope.$index,'2')">#查看更多</span></p>
+                            <p>{{scope.row.Salescustormneedinfo}}<span class="SiteColor-03 clear" style="cursor:pointer;" v-if="scope.row.Salescustormneedinfo.length>150" @click="editTableRow(scope.row,scope.$index,'2')">#查看更多</span></p>
                         </div>
                     </template>
                     </el-table-column>
@@ -318,7 +316,7 @@
                     label="操作">
                     <template #default="scope">
                         <div class="table-button">
-                        <el-button size="mini" @click="editTableRow(scope.row,scope.$index,'2')">修改</el-button>
+                        <el-button size="mini" @click="editTableRow(scope.row,scope.$index,'2')">详情</el-button>
                         <span class="SiteColor-03" v-if="scope.row.is_read==1">未读</span>
                         </div>
                     </template>

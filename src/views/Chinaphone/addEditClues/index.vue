@@ -7,7 +7,7 @@
                   <dl>
                     <dt>来源电话：<span>*</span></dt>
                     <dd>
-                      <div class="clues-list">
+                      <div class="clues-list customRadio">
                         <span class="item-clues" v-for="item in phoneList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="phoneClick(item.id)"><i></i>{{item.phonenumber}}</span>
                       </div>
                     </dd>
@@ -134,21 +134,21 @@
                     </dd>
                   </dl>
                 </div>
-                <div class="EnphoneAddEditMainItem phone-list">
+                <div class="EnphoneAddEditMainItem">
                   <dl>
                     <dt>级别：</dt>
                     <dd>
-                      <div class="clues-list">
+                      <div class="clues-list customRadio">
                         <span class="item-clues" v-for="item in levelList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="levelClick(item.id)"><i></i>{{item.name}}</span>
                       </div>
                     </dd>
                   </dl>
                 </div>
-                <div class="EnphoneAddEditMainItem phone-list">
+                <div class="EnphoneAddEditMainItem">
                   <dl>
                     <dt>价格范围：</dt>
                     <dd>
-                      <div class="clues-list">
+                      <div class="clues-list customRadio">
                         <span class="item-clues" v-for="item in priceList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="priceClick(item.id)"><i></i>{{item.name}}</span>
                       </div>
                     </dd>

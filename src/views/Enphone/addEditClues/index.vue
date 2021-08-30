@@ -22,7 +22,7 @@
                   <dl>
                     <dt>来源电话：<span>*</span></dt>
                     <dd>
-                      <div class="clues-list">
+                      <div class="clues-list customRadio">
                         <span class="item-clues" v-for="item in phoneList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="phoneClick(item.id)"><i></i>{{item.phonenumber}}</span>
                       </div>
                     </dd>
@@ -308,7 +308,7 @@
                       <dd>
                         <strong>类别</strong>
                         <div class="clues-list">
-                          <el-checkbox-group v-model="producttypeArr" @change="producttypeClick">
+                          <el-checkbox-group v-model="producttypeArr" class="radioTomulti" @change="producttypeClick">
                             <el-checkbox v-for="item in producttypeList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
                           </el-checkbox-group>
                         </div>

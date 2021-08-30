@@ -27,7 +27,7 @@
 @import '-webMsg.scss';
 .clear{
   clear:both;
-  display: block;
+  display: block;  
 }
 .page-root{
   position:absolute;
@@ -516,6 +516,116 @@
   border-color:#2e84f6!important;
   background:#2e84f6;
   color:#FFFFFF!important;
+}
+/*自定义单选*/
+.customRadio{
+  .item-clues{
+    float: left;
+    position: relative;
+    font-size: 14px;
+    color: #20222A;
+    cursor: pointer;
+    padding-left: 20px;
+    line-height: 24px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #e6ebf5;
+    border-radius: 4px;
+    padding: 5px 8px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    i{
+      position: relative;
+      float: left;
+      width: 12px;
+      height: 12px;
+      box-sizing: border-box;
+      border-radius: 50%;
+      border: 1px solid #939393;
+      background: #fff;
+      margin-top: 5px;
+      margin-right: 8px;
+    }
+    &:hover,&.active{
+      color:$menuActiveText;
+      border-color: #bfdbff;
+      background: #edf5ff;
+      i{
+        border-color:$menuActiveText;
+        &:after{
+          content:'';
+          position: absolute;
+          width:4px;
+          height:4px;
+          border-radius:50%;
+          left:3px;
+          top:3px;
+          background:$menuActiveText;
+        }
+      }
+    }
+  }
+}
+/*控件多选模仿单选*/
+.radioTomulti{
+  .el-checkbox{
+    float: left;
+    position: relative;
+    font-size: 14px;
+    color: #20222A;
+    cursor: pointer;
+    padding-left: 20px;
+    line-height: 24px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #e6ebf5;
+    border-radius: 4px;
+    padding: 5px 8px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    .el-checkbox__input{ 
+      float: left;
+      margin-top: 5px;
+      margin-right: 8px;
+      .el-checkbox__inner{  
+        border-radius: 50%;
+        width: 12px;
+        height: 12px;
+        &:after{
+          content: "";
+          position: absolute;
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          left: 3px;
+          top: 3px;
+          background: #fff;
+          border: 0px;
+        }
+      }
+    }
+    .el-checkbox__label{
+      padding-left: 0px;
+    }
+    &.is-checked,&:hover{
+      border-color: #bfdbff;
+      background: #edf5ff;
+      .el-checkbox__input{
+        border-color: #2e88ff;
+        .el-checkbox__inner{
+          background-color:#fff;
+          &:after{
+            background: #2e88ff;
+          }
+        }
+      }
+      .el-checkbox__label{
+        color:#2e88ff;
+      }
+    }
+  }
 }
 /*移动端默认日期*/
 .el-popover{

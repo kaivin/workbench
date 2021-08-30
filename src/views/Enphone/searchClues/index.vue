@@ -14,7 +14,7 @@
                                 </div>
                                 <div class="item-search  EnphoneSearchTwo flex-wrap">
                                     <el-checkbox class="item-checkbox" v-model="searchData.is_group" size="mini" border>分组</el-checkbox>
-                                    <div class="team-list flex-content">
+                                    <div class="team-list flex-content customRadio">
                                         <span class="item-clues" v-for="item in groupurlproductList" v-bind:class="item.isOn?'active':''" v-bind:key="item.value" v-on:click="groupurlproductClick(item.value)"><i></i>{{item.label}}</span>
                                     </div>
                                 </div>
