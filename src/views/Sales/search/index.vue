@@ -21,7 +21,7 @@
           </dl>
           <div class="side-button">
             <dl class="Sales-list">
-                <dt v-if="menuButtonPermit.includes('Sales_search')" v-on:click="dataStatistic()"><span>数据分析</span></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_search')" v-on:click="dataStatistic()" v-bind:class="currentStatus === 'SalesSearch'?'active':''"><span>数据分析</span></dt>
             </dl>
           </div>
         </div>
@@ -122,7 +122,7 @@
                     <div class="SaleCardDate buttonTwo">
                       <div class="group-header"><span>分组</span></div>
                       <div class="group-body">
-                        <div class="team-panel">
+                        <div class="team-panel customRadio">
                              <span class="item-clues" v-for="item in groupList" v-bind:class="item.isOn?'active':''" v-bind:key="item.value" v-on:click="groupClick(item.value)"><i></i>{{item.label}}</span>
                         </div>
                       </div>
@@ -194,7 +194,7 @@ export default {
       ismanagestatus:false,
       checkAllReplystatus:false,
       isReplystatus:false,
-      currentStatus:"personcount",
+      currentStatus:"SalesSearch",
       status:1,
       menuButtonPermit:[],
       defaultData:{},

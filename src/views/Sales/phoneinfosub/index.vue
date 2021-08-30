@@ -367,8 +367,8 @@ export default {
             $this.replystatusArr.push(item.value);
           }
       });
-      $this.formData.ennature = $this.defaultInfo.ennature;
-      $this.formData.enxunprice = $this.defaultInfo.enxunprice;
+      $this.formData.ennature = $this.defaultInfo.ennature==0?'':$this.defaultInfo.ennature;
+      $this.formData.enxunprice = $this.defaultInfo.enxunprice==0?'':$this.defaultInfo.enxunprice;
       $this.feedback=$this.defaultInfo.ennature||$this.defaultInfo.enxunprice?'已反馈':'未反馈';
       $this.formData.givecustormwarn = $this.defaultInfo.givecustormwarn;
       $this.formData.custormwarnstatus=$this.defaultInfo.custormwarnstatus==2?false:true;
@@ -535,7 +535,7 @@ export default {
       var formSaveData = {};
       formSaveData.id = $this.formData.id.toString();
       formSaveData.ftword_id = $this.formData.ftword_id;
-      formSaveData.replystatus = $this.formData.replystatus.toString();
+      formSaveData.replystatus = $this.formData.replystatus;
       formSaveData.managestatus = $this.formData.managestatus==true?'2':'1';
       formSaveData.ennature = $this.formData.ennature.toString();
       formSaveData.enxunprice = $this.formData.enxunprice.toString();
@@ -581,7 +581,7 @@ export default {
         });
         return false;
       }
-      if($this.formSaveData.managestatus == ""){
+      if($this.formSaveData.replystatus == ""){
         $this.$message({
             showClose: true,
             message: '错误：是否回复不能为空！',
@@ -615,7 +615,11 @@ export default {
         replystatusArr.shift();
       }
       $this.replystatusArr = replystatusArr;
-      $this.formData.replystatus = $this.replystatusArr[0];
+      if($this.replystatusArr.length>0){
+         $this.formData.replystatus = $this.replystatusArr[0];
+      }else{
+         $this.formData.replystatus="";
+      }
     },
     // 确认阅读业务员提醒
     salesmanWarnRead(){

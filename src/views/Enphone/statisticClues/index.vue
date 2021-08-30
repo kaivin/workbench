@@ -1,6 +1,6 @@
 ﻿
 <template>
-    <div class="page-root en-phone" ref="boxPane">
+    <div class="page-root en-phone sale-en-phone" ref="boxPane">
         <el-card class="box-card scroll-card" shadow="hover">
             <div slot="header">
                 <div class="card-header" ref="headerPane">

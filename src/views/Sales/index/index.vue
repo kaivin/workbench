@@ -444,6 +444,7 @@ export default {
         warnlist:[]
       },
       isTableRow:true,
+      permitStatus:[],
       permitField:[],
       selectedData:[],
       ids:[],
@@ -519,6 +520,37 @@ export default {
       const $this = this;
       var screenHeight = $this.$refs.mainPane.offsetHeight;
       $this.tableHeight = screenHeight-$this.$refs.headerPane.offsetHeight-75;
+    },
+    // 数据清空
+    DataEmpty(){
+      var $this=this; 
+      $this.defaultData.page={};
+      $this.searchData.page=1;
+      $this.searchData.limit=20;
+      $this.searchData.timetype='';
+      $this.searchData.salesownid='';
+      $this.searchData.continent='';
+      $this.searchData.producttype_id='';
+      $this.searchData.productid='';
+      $this.searchData.ennature='';
+      $this.searchData.enxunprice='';
+      $this.searchData.managestatus='';
+      $this.searchData.replystatus='';
+      $this.searchData.date=[];
+      $this.searchData.keyword='';
+      $this.searchData.feedback='';
+      $this.searchData.ftword_id='';
+      $this.searchData.deal='';
+      $this.searchData.salesuserid='';
+      $this.infoData.allcount=0;
+      $this.infoData.warnlist=[];
+      $this.isTableRow=true;
+      $this.tableData=[];
+      $this.tableHeight=[];
+      $this.ids=[];
+      $this.Determine.ids=[];
+      $this.Determine.userid='';
+      $this.selectedData=[];
     },
     // 搜索结果
     searchResult(DealVal){
@@ -825,9 +857,51 @@ export default {
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
+              if(item.action_route=="Sales_waitphone"){
+                $this.permitStatus.push("waitcount");
+              }
+              if(item.action_route=="Sales_allphone"){
+                $this.permitStatus.push("allotcount");
+              }
+              if(item.action_route=="Sales_index"){
+                $this.permitStatus.push("personcount");
+              }
+              if(item.action_route=="Sales_waitdeal"){
+                $this.permitStatus.push("waitdealcount");
+              }
+              if(item.action_route=="Sales_monthsay"){
+                $this.permitStatus.push("monthsaycount");
+              }
+              if(item.action_route=="Sales_hasnosay"){
+                $this.permitStatus.push("hasnosaycount");
+              }
+              if(item.action_route=="Sales_waitftword"){
+                $this.permitStatus.push("waitftwordcount");
+              }
+              if(item.action_route=="Sales_hasdeal"){
+                $this.permitStatus.push("hasdealcount");
+              }
+              if(item.action_route=="Sales_hassay"){
+                $this.permitStatus.push("hassaycount");
+              }
             });
-            if($this.menuButtonPermit.includes('Sales_index')){
-              $this.initPage();
+            if($this.menuButtonPermit.includes('Sales_index')&&$this.permitStatus.length>0){              
+              if($this.$route.query.Status){
+                if($this.permitStatus.includes($this.$route.query.Status)){
+                  $this.currentStatus = $this.$route.query.Status;
+                  $this.initPage();
+                }else{
+                  $this.$router.push({path:'/Sales/index',query:{Status:$this.permitStatus[0]}});
+                }
+              }else{
+                  $this.$message({
+                      showClose: true,
+                      message: "未找到对应页面或页面缺失参数",
+                      type: 'error',
+                      duration:6000
+                  });
+                  $this.$router.push({path:`/404?redirect=${$this.$router.currentRoute.fullPath}`});
+              }
             }else{
               $this.$message({
                 showClose: true,
@@ -858,6 +932,7 @@ export default {
     // 页面自跳转
     jumpLink(status){
         var $this = this;
+        $this.DataEmpty();
         if($this.currentStatus==status){
           $this.searchResult();
         }else{

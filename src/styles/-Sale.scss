@@ -217,39 +217,6 @@
           line-height: 15px;
           float: left;
         }
-        .item-clues{
-          padding-left: 20px;
-          line-height: 24px;
-          margin-right: 20px;
-          margin-bottom: 5px;
-          i{
-            position: absolute;
-            left:0px;
-            top:6px;        
-            width: 12px;
-            height: 12px;
-            box-sizing: border-box;
-            border-radius:50%;
-            border:1px solid #939393;
-            background:#fff;
-          }
-          &:hover,&.active{
-            color:$menuActiveText;
-            i{
-              border-color:$menuActiveText;
-              &:after{
-                content:'';
-                position: absolute;
-                width:4px;
-                height:4px;
-                border-radius:50%;
-                left:3px;
-                top:3px;
-                background:$menuActiveText;
-              }
-            }
-          }
-        }
       }
     }
   }
@@ -267,7 +234,14 @@
     margin-bottom: 20px;
   }
 }
-
+.sale-en-phone.en-phone{
+  .box-card .search-wrap .item-search{
+    line-height:32px;
+    .el-radio{
+      margin-right:10px;
+    }
+  }
+}
 .SaleAddEdit{
   background:#fff;
   padding: 20px 30px;

@@ -534,6 +534,7 @@ export default {
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
+          console.log(res,'请求权限')
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
