@@ -2,8 +2,8 @@
   <div class="page-root white-ip" ref="boxPane">
     <el-card class="box-card" shadow="hover">
       <div slot="header">
-        <div class="card-header" ref="headerPane">
-          <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
+        <div class="card-header" v-if="device==='desktop'" ref="headerPane">
+          <div class="search-wrap" ref="searchPane">
             <div class="item-search">
                 <el-input
                     class="input-panel"
@@ -21,6 +21,13 @@
             </div>
           </div>
         </div>
+        <div class="card-header filter-panel" v-else ref="headerPane">
+          <div class="search-panel">                              
+              <el-input placeholder="请输入IP" v-model="ip" class="article-search">
+                  <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
+              </el-input>
+          </div>
+        </div>
       </div>
       <div class="card-content" ref="tableContent">
         <el-table
@@ -35,6 +42,7 @@
             @selection-change="handleSelectionChange"
             >
             <el-table-column
+              v-if="device==='desktop'"
                 type="selection"
                 align="center"
                 width="48">
@@ -67,14 +75,15 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="pagination-panel" ref="pagePane">
+      <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="page"
           :page-sizes="pageSizeList"
           :page-size="limit"
-          :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+          :pager-count="pagerCount"
+          :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
           :total="totalDataNum">
         </el-pagination>
       </div>
@@ -106,6 +115,7 @@ export default {
         ip:"",
         page:1,
         limit:20,
+        pagerCount:5,
         pageSizeList:[20, 50, 100, 200],
         totalDataNum:0,
         menuButtonPermit:[],
@@ -175,9 +185,17 @@ export default {
     setTableHeight(){
       var $this = this;
       if($this.totalDataNum >50){
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-45;
+        if($this.device==="desktop"){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-75;
+        }else{
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-15;
+        }
       }else{
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
+        if($this.device==="desktop"){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        }else{
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15;
+        }
       }
     },
     // 查询结果

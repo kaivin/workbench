@@ -224,7 +224,7 @@
 .mobile{
     .header-layout{
         .header-panel{
-            height: 60px;
+            height: 48px;
             .header-right{
                 padding: 0 10px;
                 &:before{
@@ -235,9 +235,9 @@
                 }
                 .user-icon{
                     width: 36px;
-                    height: 60px;
+                    height: 48px;
                     font-size: 24px;
-                    line-height: 60px;
+                    line-height: 48px;
                     background: transparent;
                     color: #cccccc;
                     .svg-icon{
@@ -246,7 +246,7 @@
                 }
                 .nav-button{
                     display: inline-block;
-                    height: 60px;
+                    height: 48px;
                     width: 36px;
                     margin-left: 5px;
                     position: relative;
@@ -278,58 +278,17 @@
                 }
             }
             .header-center{
-                padding: 14px 0;
-                .header-search{
-                    width: 100%;
-                    .article-search{
-                        &.el-input--medium{
-                            font-size: 12px;
-                            background-color: #474a52;
-                            border-radius:16px;
-                            .el-input__inner{
-                                height: 32px;
-                                line-height: 32px;
-                                padding: 0 15px;
-                                font-size: 14px;
-                                background: transparent;
-                                border:none;
-                            }
-                        }
-                        .el-input-group__append{
-                            padding: 0 10px;
-                            background-color: transparent;
-                            border:none;
-                            .el-button.el-button--medium{
-                                >span{
-                                    .search-icon{
-                                        height: 32px;
-                                        line-height: 32px;
-                                        font-size: 20px;
-                                        color: #cccccc;
-                                        .svg-icon{
-                                            vertical-align: -2px;
-                                        }
-                                    }
-                                    .search-font{
-                                        height: 32px;
-                                        line-height: 32px;
-                                        font-size: 14px;
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                }
+                padding: 10px 0;
             }
             .logo{
                 &:after{
                     display: none;
                 }
                 .logo-link{
-                    padding: 16px;
+                    padding: 10px;
                     .logo-img{
                         margin-top:0;
+                        height: 28px;
                     }
                 }
             }

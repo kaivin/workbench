@@ -778,7 +778,7 @@ export default {
       }
       var domainDataNow = $this.domainData;
       var domainIngData = [];
-      $this.$store.dispatch('enphone/userCanAllotDomainAction', null).then(response=>{
+      $this.$store.dispatch('enphone/userCanAllotDomainAction', {phoneid:$this.currentID}).then(response=>{
         if(response.status){
           if(response.data.length>0){
             if(domainDataNow.length>0){

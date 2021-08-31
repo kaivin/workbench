@@ -639,6 +639,7 @@ export default {
     searchJumpLink(val){
       var $this = this;
       if($this.permitStatus.includes("All")){
+        $this.resetSearchData();
         $this.$router.push({path:'/Webmsg/msgindex',query:{Status:'All',keyword:val}});
       }
     },
@@ -893,6 +894,8 @@ export default {
       $this.searchData.keyword = "";
       $this.searchData.language = "";
       $this.searchData.brand_id = "";
+      $this.page = 1;
+      $this.limit = 50;
     }
   }
 }

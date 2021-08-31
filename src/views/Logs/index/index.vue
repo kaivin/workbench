@@ -2,9 +2,8 @@
   <div class="page-root logs-index" ref="boxPane">
     <el-card class="box-card" shadow="hover">
       <div slot="header">
-        <div class="card-header" ref="headerPane">
-          <el-button type="primary" size="small" icon="el-icon-search" @click="openSearchDialog()" v-if="device==='mobile'">高级查询</el-button>
-          <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
+        <div class="card-header" v-if="device==='desktop'" ref="headerPane">
+          <div class="search-wrap" ref="searchPane">
             <div class="item-search">
               <el-date-picker
                   class="date-picker"
@@ -42,6 +41,19 @@
               <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
             </div>
           </div>
+        </div>
+        <div class="card-header filter-panel" v-else ref="headerPane">
+            <div class="search-panel">                              
+              <el-select v-model="searchData.action" size="small" @change="actionChangeHandler" style="display:block;" filterable clearable placeholder="请选择操作动作">
+                <el-option
+                    v-for="item in actionList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+            <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
         </div>
       </div>
       <div class="card-content" ref="tableContent">
@@ -94,56 +106,59 @@
           :current-page="searchData.page"
           :page-sizes="pageSizeList"
           :page-size="searchData.limit"
-          :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+          :pager-count="pagerCount"
+          :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
           :total="totalDataNum">
         </el-pagination>
       </div>
     </el-card>
-    <el-dialog title="高级查询" v-if="device==='mobile'" custom-class="search-dialog block-search" :visible.sync="dialogSearchVisible">
-      <div class="search-dialog-wrap">
-        <div class="item-search">
-          <el-date-picker
-              v-model="searchData.startDate"
-              popper-class="new-date"
-              type="datetime"
-              placeholder="选择开始时间"
-              value-format="yyyy-MM-dd HH:mm:ss">
-          </el-date-picker>
-        </div>
-        <div class="item-search">
-          <el-date-picker
-              v-model="searchData.endDate"
-              popper-class="new-date"
-              type="datetime"
-              placeholder="选择结束时间"
-              value-format="yyyy-MM-dd HH:mm:ss">
-          </el-date-picker>
-        </div>
-        <div class="item-search">
-          <el-input
-              placeholder="请输入真实姓名关键字"
-              v-model="searchData.uname"
-              clearable>
-          </el-input>
-        </div>
-        <div class="item-search">
-          <el-select v-model="searchData.action" filterable clearable placeholder="请选择操作动作">
-              <el-option
-                  v-for="item in actionList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-          </el-select>
+    <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
+    <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
+      <div class="flex-content">
+        <div class="abs-scroll">
+          <ul>
+            <li>
+              <div class="item-li">
+                <span class="title-panel">开始时间</span>
+                <div class="item-filter">
+                  <el-date-picker
+                    v-model="searchData.startDate"
+                    size="small"
+                    type="datetime"
+                    placeholder="选择开始时间"
+                    value-format="yyyy-MM-dd HH:mm:ss">
+                  </el-date-picker>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">结束时间</span>
+                <div class="item-filter">
+                  <el-date-picker
+                    v-model="searchData.endDate"
+                    size="small"
+                    type="datetime"
+                    placeholder="选择结束时间"
+                    value-format="yyyy-MM-dd HH:mm:ss">
+                  </el-date-picker>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">真实姓名</span>
+                <div class="item-filter">
+                  <el-input
+                      placeholder="请输入真实姓名关键字"
+                      size="small"
+                      v-model="searchData.uname"
+                      clearable>
+                  </el-input>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogSearchVisible = false">取 消</el-button>
-          <el-button type="primary" @click="searchResult">查询</el-button>
-        </span>
-      </template>
-    </el-dialog>
+      <p class="footer-button"><span class="btn-yes" v-on:click="searchResult()">确定</span></p>
+    </div>
   </div>
 </template>
 <script>
@@ -155,6 +170,7 @@ export default {
       menuButtonPermit:[],
       tableData:[],
       tableHeight:200,
+      pagerCount:5,
       searchData:{
           uname:"",
           page:1,
@@ -167,7 +183,8 @@ export default {
       pageSizeList:[50, 100, 150, 200],
       totalDataNum:0,
       actionList:[],
-      dialogSearchVisible:false
+      dialogSearchVisible:false,
+      openClass:false,
     }
   },
   computed: {
@@ -209,20 +226,27 @@ export default {
     $this.initData();
   },
   methods:{
+    // 高级筛选
+    searchDialog(){
+      var $this = this;
+      $this.openClass=!$this.openClass;
+    },
     // 设置table高度
     setTableHeight(){
       var $this = this;
       if($this.totalDataNum >50){
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-45;
+        if($this.device==="desktop"){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-75;
+        }else{
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-15;
+        }
       }else{
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
+        if($this.device==="desktop"){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        }else{
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15;
+        }
       }
-    },
-    // 移动端查询弹窗事件
-    openSearchDialog(){
-      var $this = this;
-      $this.dialogSearchVisible = true;
-      $this.resetSearchData();
     },
     // 搜索点击事件
     searchResult(){
@@ -258,7 +282,7 @@ export default {
         }
         return false;
       }
-      $this.initData();
+      $this.initPage();
     },
     // 初始化数据
     initData(){
@@ -298,7 +322,7 @@ export default {
                 $this.tableData = response.data;
                 $this.totalDataNum = response.allcount;
                 if($this.device==="mobile"){
-                  $this.dialogSearchVisible = false;
+                  $this.openClass = false;
                 }
               }
             }else{
@@ -423,7 +447,13 @@ export default {
       }else{
           return true;
       }
-    }
+    },
+    // 选择动作切换事件
+    actionChangeHandler(e){
+      var $this = this;
+      console.log(e);
+      $this.searchResult();
+    },
   }
 }
 </script>

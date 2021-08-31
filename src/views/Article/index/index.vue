@@ -36,13 +36,13 @@
                           </div>
                       </div>
                   </div>
-                  <div class="card-header ArticleSearchScreen" v-else ref="headerPane">
-                      <div class="search-panel ArticleSearch">                              
+                  <div class="card-header filter-panel" v-else ref="headerPane">
+                      <div class="search-panel">                              
                           <el-input placeholder="请输入内容" v-model="keyword" class="article-search" v-if="(menuButtonPermit.includes('Article_search'))">
                               <el-button slot="append" @click="searchResult" v-if="(menuButtonPermit.includes('Article_search'))"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
                           </el-input>
                       </div>
-                      <span class="WebsiteListScreen" v-on:click="searchDialog()">筛选</span>
+                      <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
                   </div>
               </div>
               <div class="card-content ArticleThree" ref="cardContent">
@@ -178,7 +178,8 @@
                           :current-page="page"
                           :page-sizes="pageSizeList"
                           :page-size="limit"
-                          :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                          :pager-count="pagerCount"
+                          :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
                           :total="totalDataNum">
                           </el-pagination>
                       </div>
@@ -279,7 +280,7 @@
                           :current-page="page"
                           :page-sizes="pageSizeList"
                           :page-size="limit"
-                          :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                          :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
                           :total="totalDataNum">
                           </el-pagination>
                       </div>
@@ -289,7 +290,7 @@
         </div>
       </div>
       <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
-      <div class="mobile-filter-dialog flex-box flex-column" ref="WebsiteFixed" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
+      <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
         <div class="flex-content">
           <div class="abs-scroll">
             <ul>
@@ -320,7 +321,7 @@
             </ul>
           </div>
         </div>
-        <p class="footer-button" ref="WebsiteFixedFoot"><span class="btn-yes" v-on:click="searchDialog()">确定</span></p>
+        <p class="footer-button"><span class="btn-yes" v-on:click="searchDialog()">确定</span></p>
       </div>
     </div>
 </template>
@@ -346,10 +347,10 @@ export default {
       searchKey:"",
       page:1,
       limit:50,
+      pagerCount:5,
       pageSizeList:[50, 100, 150, 200],
       totalDataNum:0,
       openClass:false,
-      WebsiteFixedHeight:0,
       isDefault:true,
       isList:false,
       isSearch:false,
@@ -371,17 +372,33 @@ export default {
       const $this = this;
       this.$nextTick(function () {
         if($this.isSearch){
-          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75-48;
+          if($this.device==="desktop"){
+            $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75-48;
+          }else{
+            $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15-48;
+          }
         }else{
-          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+          if($this.device==="desktop"){
+            $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+          }else{
+            $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15;
+          }
         }
       });
       window.onresize = () => {
           return (() => {
             if($this.isSearch){
-              $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75-48;
+              if($this.device==="desktop"){
+                $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75-48;
+              }else{
+                $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15-48;
+              }
             }else{
-              $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+              if($this.device==="desktop"){
+                $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+              }else{
+                $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15;
+              }
             }
           })()
       };
@@ -410,9 +427,17 @@ export default {
     var $this = this;
     this.$nextTick(() => {
       if($this.isSearch){
-        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75-48;
+        if($this.device==="desktop"){
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75-48;
+        }else{
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15-48;
+        }
       }else{
-        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        if($this.device==="desktop"){
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        }else{
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15;
+        }
       }
       if($this.isList){
         $this.$refs.simpleTable.doLayout();
@@ -892,9 +917,6 @@ export default {
     searchDialog(){
       var $this = this;
       $this.openClass=!$this.openClass;
-      if($this.openClass){
-          $this.WebsiteFixedHeight = $this.$refs.WebsiteFixed.offsetHeight-$this.$refs.WebsiteFixedFoot.offsetHeight-10-10;
-      }
     },
   }
 }

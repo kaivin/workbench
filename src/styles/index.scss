@@ -56,8 +56,27 @@
   }
 }
 .mobile{
-  .page-root{
+  .page-root,.scroll-panel{
     padding:0;
+  }
+  .box-card{
+    border-radius:0;
+    .el-card__header{
+      padding: 0;
+      border-radius:0;
+    }
+    .el-card__body{
+      .card-content{
+        border-radius:0;
+      }
+    }
+    .pagination-panel{
+      text-align:center;
+      .el-pagination{
+        margin-top: 15px;
+        margin-bottom: 15px;
+      }
+    }
   }
   .el-table.SiteTable{
     border-radius:0;
@@ -143,7 +162,7 @@
   .pagination-panel{
     text-align:right;
     .el-pagination{
-      margin-top:10px;
+      margin-top:15px;
     }
   }
 }
@@ -1316,8 +1335,7 @@
         float:none;
         width:100%;
         padding-right:0;
-        min-height:auto!important;
-        .article-info{
+        .main-article{
           min-height:auto!important;
         }
       }

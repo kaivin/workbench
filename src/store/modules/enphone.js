@@ -168,9 +168,9 @@ const actions = {
         });
     },
     // 当前登录用户可操作的域名
-    userCanAllotDomainAction({ commit }){
+    userCanAllotDomainAction({ commit },data){
         return new Promise((resolve, reject) => {
-            userCanAllotDomain().then(response => {
+            userCanAllotDomain(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

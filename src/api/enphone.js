@@ -86,10 +86,11 @@ export function phoneAllotedDomain(data) {
   });
 }
 // 当前登录用户可操作的域名
-export function userCanAllotDomain() {
+export function userCanAllotDomain(data) {
   return request({
     url: "/hxindex/Enphone/domainlist",
-    method: "POST"
+    method: "POST",
+    data
   });
 }
 

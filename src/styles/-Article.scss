@@ -5,58 +5,6 @@
         }
     }
 }
-.ArticleSearchScreen{                
-    display: flex;
-    flex-direction: row;
-    background: none!important;
-    &:before{display: none;}
-    .ArticleSearch{
-        flex:1;
-        &:before{display: none;}
-        .article-search.el-input--medium{
-            font-size: 12px;
-            background-color: #474a52;
-            border-radius: 16px;
-            .el-input__inner{                            
-                height: 32px;
-                line-height: 32px;
-                padding: 0 15px;
-                font-size: 14px;
-                background: transparent;
-                border: none;
-                color:#ddd;
-            }
-        }
-        .article-search .el-input-group__append{                    
-            padding: 0 10px;
-            background-color: transparent;
-            border: none;
-            .el-button.el-button--medium{        
-                font-size: 0;
-                line-height: 0;
-                padding: 0 20px;
-                vertical-align: top;
-                .search-icon{                            
-                    height: 32px;
-                    line-height: 32px;
-                    font-size: 20px;
-                    color: #cccccc;
-                }
-            }
-        }
-    }
-    .WebsiteListScreen{
-      margin-left: 35px;
-      color: #1f2d3d;
-      font-size: 13px;
-      line-height: 22px;
-      display: inline-block;
-      background: #fff;
-      padding: 5px 10px;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-}
 .ArticleOne{
     background:#fff;
     padding: 0 10px;
@@ -483,6 +431,11 @@
         width: 74%;
         float:left;
         padding-right: 15px;
+        .main-article{
+            background:#fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
         &.no-comment{
             width: 100%;
             float:none;
@@ -697,8 +650,6 @@
     }
 }
 .article-info{
-    background:#fff;
-    border-radius: 8px;
     padding:3% 4%;
     .ArticleSixFlTop{
         h1{
@@ -825,6 +776,37 @@
         .tab-card{
             margin: 4px;
             box-shadow: none;
+        }
+    }
+}
+.mobile{
+    .ArticleThree{
+        .ArticleThreeDefault{
+            padding:10px 15px;
+        }
+        .depart-ul{
+            .item-depart{
+                margin-bottom: 10px;
+            }
+        }
+    }
+    .ArticleSix{
+        .ArticleSixFl{
+            .main-article{
+                border-radius:0;
+            }
+        }
+        .ArticleSixFr{
+            border-radius:0;
+        }
+    }
+    .bbs-panel{
+        .ArticleCard,.WebsiteCard{
+            border-radius: 0;
+            .main-content{
+                border-radius: 0;
+                padding: 10px 20px 20px 10px;
+            }
         }
     }
 }

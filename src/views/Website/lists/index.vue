@@ -317,7 +317,7 @@
                     :current-page="page"
                     :page-sizes="pageSizeList"
                     :page-size="limit"
-                    :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                    :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
                     :total="totalDataNum">
                   </el-pagination>
                 </div>
@@ -327,7 +327,7 @@
       </div>
     </div>
     <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
-    <div class="mobile-filter-dialog flex-box flex-column" ref="WebsiteFixed" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
+    <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
       <div class="flex-content">
         <div class="abs-scroll"> 
           <ul>
@@ -396,7 +396,7 @@
           </ul>
         </div>
       </div>
-      <p class="footer-button" ref="WebsiteFixedFoot"><span class="btn-yes" v-on:click="searchDialog()">确定</span></p>
+      <p class="footer-button"><span class="btn-yes" v-on:click="searchDialog()">确定</span></p>
     </div>
     <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Website_add')&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
@@ -452,7 +452,6 @@ export default {
   data() {
     return {
       minHeight:0,
-      WebsiteFixedHeight:0,
       operationsWidth:"",
       openClass:false,
       menuButtonPermit:[],
@@ -1293,9 +1292,6 @@ export default {
     searchDialog(){
       var $this = this;
       $this.openClass=!$this.openClass;
-      if($this.openClass){
-          $this.WebsiteFixedHeight = $this.$refs.WebsiteFixed.offsetHeight-$this.$refs.WebsiteFixedFoot.offsetHeight-10-10;
-      }
     },
   }
 }

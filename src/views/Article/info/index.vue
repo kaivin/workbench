@@ -2,35 +2,39 @@
   <div class="page-root ArticleSix">
     <div class="abs-panel" ref="mainPane">
       <div class="scroll-panel" ref="scrollPane">
-        <div class="ArticleSixFl" v-bind:class="articleData.issay==0&&commentList.length==0?'no-comment':''" v-bind:style="'min-height:'+minHeight+'px;'" ref="leftPane">
-          <div class="article-info" v-bind:style="'min-height:'+minHeight+'px;'">
-            <div class="ArticleSixFlTop">
-              <h1>{{articleData.title}}</h1>
-              <div class="ArticleSixFlTopTag clearfix">
-                <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>{{articleData.typename}}</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>匿名</span><span v-if="device==='desktop'"><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.addtime}}</span></p>
-                <p class="ArticleSixFlTopTagFr"><i class="svg-i" ><svg-icon icon-class="eye_rz" /></i>{{articleData.hits}}<span>|</span><i class="svg-i" ><svg-icon icon-class="read_rz" /></i>{{articleData.updatetime}} </p>
+        <div class="ArticleSixFl" v-bind:class="articleData.issay==0&&commentList.length==0?'no-comment':''">
+          <div class="main-article" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length==0?'min-height:'+minHeight+'px!important;':''">
+            <div class="article-info" ref="leftPane">
+              <div class="ArticleSixFlTop">
+                <h1>{{articleData.title}}</h1>
+                <div class="ArticleSixFlTopTag clearfix">
+                  <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>{{articleData.typename}}</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>匿名</span><span v-if="device==='desktop'"><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.addtime}}</span></p>
+                  <p class="ArticleSixFlTopTagFr"><i class="svg-i" ><svg-icon icon-class="eye_rz" /></i>{{articleData.hits}}<span>|</span><i class="svg-i" ><svg-icon icon-class="read_rz" /></i>{{articleData.updatetime}} </p>
+                </div>
+                <div class="ArticleSixFlTopRead" v-if="articleData.readshow==1&&device==='desktop'&&(userList.hasreadusercount>0||userList.notreadusercount>0)">
+                  <p class="article-user" v-if="userList.hasreadusercount>0">
+                    <strong>{{userList.hasreadusercount}}人已读</strong>
+                    <template v-for="(item,index) in userList.hasreaduser">
+                      <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
+                      <span v-bind:key="item.id" v-else>、{{item.name}}</span>
+                    </template>
+                  </p>
+                  <p class="article-user" v-if="userList.notreadusercount>0">
+                    <strong>{{userList.notreadusercount}}人未读</strong>
+                    <template v-for="(item,index) in userList.notreaduser">
+                      <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
+                      <span v-bind:key="item.id" v-else>、{{item.name}}</span>
+                    </template>
+                  </p>
+                </div>
               </div>
-              <div class="ArticleSixFlTopRead" v-if="articleData.readshow==1&&device==='desktop'&&(userList.hasreadusercount>0||userList.notreadusercount>0)">
-                <p class="article-user" v-if="userList.hasreadusercount>0">
-                  <strong>{{userList.hasreadusercount}}人已读</strong>
-                  <template v-for="(item,index) in userList.hasreaduser">
-                    <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
-                    <span v-bind:key="item.id" v-else>、{{item.name}}</span>
-                  </template>
-                </p>
-                <p class="article-user" v-if="userList.notreadusercount>0">
-                  <strong>{{userList.notreadusercount}}人未读</strong>
-                  <template v-for="(item,index) in userList.notreaduser">
-                    <span v-bind:key="item.id" v-if="index==0">{{item.name}}</span>
-                    <span v-bind:key="item.id" v-else>、{{item.name}}</span>
-                  </template>
-                </p>
-              </div>
+              <div class="info-content" v-bind:class="articleData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="articleData.content"></div>
             </div>
-            <div class="info-content" v-bind:class="articleData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="articleData.content"></div>
           </div>
         </div>
-        <div class="comment ArticleSixFr" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||articleData.issay==0&&commentList.length>0" v-bind:style="'min-height:'+minHeight+'px;'" ref="rightPane">
+        <div class="comment ArticleSixFr" id="comment" 
+          v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||articleData.issay==0&&commentList.length>0" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length>=0?'min-height:'+minHeight+'px!important;':''" 
+          ref="rightPane">
           <div class="ArticleSixFrTop" v-bind:class="commentList.length>0?'':'no-comment'">
             <p class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
             <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
@@ -154,25 +158,48 @@ export default {
     var $this = this;
     $this.initData();
   },
+  updated(){
+    const $this = this;
+    this.$nextTick(function () {
+      $this.setHeight();
+    });
+  },
   methods:{
     // 设置高度
     setHeight(){
       var $this = this;
       var minHeight= 0;
-      if($this.articleData.issay==1&&$this.device==='desktop'||$this.articleData.issay==1&&$this.device==='mobile'&&$this.commentList.length>0||$this.articleData.issay==0&&$this.commentList.length>0){
-        var screenHeight = $this.$refs.mainPane.offsetHeight-30;
-        var leftHeight = $this.$refs.leftPane.offsetHeight;
-        var rightHeight = $this.$refs.rightPane.offsetHeight;
-        if(leftHeight>rightHeight){
-          minHeight = leftHeight;
+      var screenHeight = $this.$refs.mainPane.offsetHeight-30;
+      var leftHeight = $this.$refs.leftPane.offsetHeight;
+      if($this.device==='desktop'){
+        if($this.articleData.issay==1||$this.articleData.issay==0&&$this.commentList.length>0){
+          var rightHeight = $this.$refs.rightPane.offsetHeight;
+          if(leftHeight>rightHeight){
+            minHeight = leftHeight;
+          }else{
+            minHeight = rightHeight;
+          }
         }else{
-          minHeight = rightHeight;
+          minHeight = leftHeight;
         }
         if(minHeight<screenHeight){
           minHeight = screenHeight;
         }
       }else{
-        minHeight = "auto";
+        if($this.commentList.length>0){
+          if($this.$refs.rightPane){
+            var rightHeight = $this.$refs.rightPane.offsetHeight;
+            var scrollHeight = leftHeight + rightHeight + 15;
+            if(scrollHeight<screenHeight){
+              minHeight = rightHeight + (screenHeight+30-scrollHeight);
+            }
+          }
+        }else{
+          var scrollHeight = leftHeight;
+          if(scrollHeight<screenHeight){
+            minHeight = leftHeight + (screenHeight+30-scrollHeight);
+          }
+        }
       }
       $this.minHeight = minHeight;
     },
