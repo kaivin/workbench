@@ -6,17 +6,40 @@
                     <div slot="header">
                         <div class="card-header EnphoneCardHeader" ref="headerPane">
                             <div class="search-wrap">
-                                <div class="item-search EnphoneSearchOne flex-wrap">
-                                    <el-checkbox class="all-select" :indeterminate="isAllTeam" border size="mini" v-model="checkAllTeam" @change="handleCheckAllTeamChange">组别全选</el-checkbox>
-                                    <el-checkbox-group class="team-list flex-content" v-model="searchData.phoneid" @change="handleCheckedTeamChange" size="mini">
-                                        <el-checkbox class="item-checkbox" v-for="item in phoneList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
-                                    </el-checkbox-group>
-                                </div>
-                                <div class="item-search  EnphoneSearchTwo flex-wrap">
-                                    <el-checkbox class="item-checkbox" v-model="searchData.is_group" size="mini" border>分组</el-checkbox>
-                                    <div class="team-list flex-content customRadio">
-                                        <span class="item-clues" v-for="item in groupurlproductList" v-bind:class="item.isOn?'active':''" v-bind:key="item.value" v-on:click="groupurlproductClick(item.value)"><i></i>{{item.label}}</span>
-                                    </div>
+                                <div class="item-search EnphoneSearchOne ">
+                                     <div class="item flex-wrap">
+                                            <strong v-if="device=='desktop'">电商一部</strong>
+                                            <el-checkbox class="all-select"
+                                             v-if="device=='desktop'" :indeterminate="isAlldeptOne" border size="mini" v-model="checkAlldeptOne" @change="handleCheckAllOneChange">全选</el-checkbox>
+                                            <el-checkbox class="all-select"  v-if="device=='mobile'" :indeterminate="isAlldeptOne" border size="mini" v-model="checkAlldeptOne" @change="handleCheckAllOneChange">电商一部全选</el-checkbox>
+                                            <el-checkbox-group class="team-list flex-content" v-model="deptOneId" @change="handleCheckedOneChange" size="mini">
+                                                <el-checkbox class="item-checkbox" v-for="item in deptOne" :key="item.value" :label="item.value" border>{{item.label}}</el-checkbox>
+                                            </el-checkbox-group>                                   
+                                     </div>
+                                     <div class="item flex-wrap">
+                                            <strong v-if="device=='desktop'">电商五部</strong>
+                                            <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAlldeptFive" border size="mini" v-model="checkAlldeptFive" @change="handleCheckAllFiveChange">全选</el-checkbox>
+                                            <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAlldeptFive" border size="mini" v-model="checkAlldeptFive" @change="handleCheckAllFiveChange">电商五部全选</el-checkbox>
+                                            <el-checkbox-group class="team-list flex-content" v-model="deptFiveId" @change="handleCheckedFiveChange" size="mini">
+                                                <el-checkbox class="item-checkbox" v-for="item in deptFive" :key="item.value" :label="item.value" border>{{item.label}}</el-checkbox>
+                                            </el-checkbox-group>                                    
+                                     </div>
+                                     <div class="item flex-wrap">
+                                            <strong v-if="device=='desktop'">电商六部</strong>
+                                            <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAlldeptSix" border size="mini" v-model="checkAlldeptSix" @change="handleCheckAllSixChange">全选</el-checkbox>
+                                            <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAlldeptSix" border size="mini" v-model="checkAlldeptSix" @change="handleCheckAllSixChange">电商六部全选</el-checkbox>
+                                            <el-checkbox-group class="team-list flex-content" v-model="deptSixId" @change="handleCheckedSixChange" size="mini">
+                                                <el-checkbox class="item-checkbox" v-for="item in deptSix" :key="item.value" :label="item.value" border>{{item.label}}</el-checkbox>
+                                            </el-checkbox-group>                                    
+                                     </div>
+                                     <div class="item flex-wrap">
+                                            <strong v-if="device=='desktop'">其他</strong>
+                                            <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAlldeptOther" border size="mini" v-model="checkAlldeptOther" @change="handleCheckAllOtherChange">全选</el-checkbox>
+                                            <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAlldeptOther" border size="mini" v-model="checkAlldeptOther" @change="handleCheckAllOtherChange">其他全选</el-checkbox>
+                                            <el-checkbox-group class="team-list flex-content" v-model="deptOtherId" @change="handleCheckedOtherChange" size="mini">
+                                                <el-checkbox class="item-checkbox" v-for="item in deptOther" :key="item.value" :label="item.value" border>{{item.label}}</el-checkbox>
+                                            </el-checkbox-group>                                    
+                                     </div>
                                 </div>
                                 <div class="item-search EnphoneSearchThree">
                                     <el-input
@@ -171,14 +194,20 @@
                                             clearable>
                                         </el-input>
                                     </div>
-                                    <div class="search-panelThree">
+                                </div> 
+                                <div class="item-search  EnphoneSearchTwo flex-wrap">
+                                    <el-checkbox class="item-checkbox" v-model="searchData.is_group" size="mini" border>分组</el-checkbox>
+                                    <div class="team-list customRadio">
+                                        <span class="item-clues" v-for="item in groupurlproductList" v-bind:class="item.isOn?'active':''" v-bind:key="item.value" v-on:click="groupurlproductClick(item.value)"><i></i>{{item.label}}</span>
+                                    </div>
+                                    <div class="search-panelThree flex-content">
                                         <span style="float:left;line-height:28px;font-size:12px;">排序：</span>
                                         <el-radio-group class="team-list" v-model="searchData.sort" size="mini">
                                             <el-radio class="item-radio" label="asc" border>升序</el-radio>
                                             <el-radio class="item-radio" label="desc" border>降序</el-radio>
                                         </el-radio-group>
                                     </div>
-                                </div>   
+                                </div>  
                             </div>
                             <div class="clues-info flex-wrap">
                                 <div class="clues-infoFl flex-content">
@@ -629,8 +658,22 @@ export default {
         levelList:[],
         sourceList:[],
         productList:[],
-        isAllTeam:false,
-        checkAllTeam:false,
+        deptOne:[],
+        deptOneId:[],
+        isAlldeptOne:false,
+        checkAlldeptOne:false,
+        deptFive:[],
+        deptFiveId:[],
+        isAlldeptFive:false,
+        checkAlldeptFive:false,
+        deptSix:[],
+        deptSixId:[],
+        isAlldeptSix:false,
+        checkAlldeptSix:false,
+        deptOther:[],
+        deptOtherId:[],
+        isAlldeptOther:false,
+        checkAlldeptOther:false,
         deviceList:[
             {label:"PC设备",value:"PC设备"},
             {label:"移动设备",value:"移动设备"},
@@ -758,14 +801,48 @@ export default {
         if(response){
           if(response.status){
               console.log(response,"搜索数据02")
-              var phoneList = [];
-              response.phone.forEach(function(item,index){
-                  var itemData = {};
-                  itemData.label = item.phonenumber;
-                  itemData.value = item.id;
-                  phoneList.push(itemData);
-              });
-              $this.phoneList = phoneList;
+              var deptOne = [];
+              var deptFive = [];
+              var deptSix = [];
+              var deptOther = [];
+                response.phone.forEach(function(item,index){
+                    if(item.dept_id==0){
+                        var itemData = {};
+                        itemData.label = item.phonenumber;
+                        itemData.value = item.id;
+                        itemData.departname = item.departname;
+                        itemData.dept_id = item.dept_id;
+                        deptOther.push(itemData);
+                    }
+                    if(item.dept_id==12){
+                        var itemData = {};
+                        itemData.label = item.phonenumber;
+                        itemData.value = item.id;
+                        itemData.departname = item.departname;
+                        itemData.dept_id = item.dept_id;
+                        deptOne.push(itemData);
+                    }
+                    if(item.dept_id==16){
+                        var itemData = {};
+                        itemData.label = item.phonenumber;
+                        itemData.value = item.id;
+                        itemData.departname = item.departname;
+                        itemData.dept_id = item.dept_id;
+                        deptFive.push(itemData);
+                    }
+                    if(item.dept_id==23){
+                        var itemData = {};
+                        itemData.label = item.phonenumber;
+                        itemData.value = item.id;
+                        itemData.departname = item.departname;
+                        itemData.dept_id = item.dept_id;
+                        deptSix.push(itemData);
+                    }
+                });
+              $this.deptOne = deptOne;
+              $this.deptFive = deptFive;
+              $this.deptSix = deptSix;
+              $this.deptOther = deptOther;
               var levelList = [];
               response.xunlevel.forEach(function(item,index){
                   var itemData = {};
@@ -838,35 +915,128 @@ export default {
         }
       });
     },
-    // 小组全选
-    handleCheckAllTeamChange(e){
+    // 电商一部全选
+    handleCheckAllOneChange(e){
       var $this = this;
       if(e){
         var checkedList = [];
-        $this.phoneList.forEach(function(item,index){
+        $this.deptOne.forEach(function(item,index){
           checkedList.push(item.value);
         });
-        $this.searchData.phoneid = checkedList;
-        $this.checkAllTeam= true;
+        $this.deptOneId=checkedList;
+        $this.checkAlldeptOne= true;
       }else{
-        $this.searchData.phoneid = [];
-        $this.checkAllTeam = false;
+        $this.deptOneId = [];
+        $this.checkAlldeptOne = false;
       }
-      $this.isAllTeam = false;
+      $this.isAlldeptOne = false;
     },
-    // 小组选择改变事件
-    handleCheckedTeamChange(e){
+    // 电商一部选择改变事件
+    handleCheckedOneChange(e){
       var $this = this;
       var checkedCount = e.length;
-       if(checkedCount === $this.phoneList.length){
-          $this.checkAllTeam = true;
+       if(checkedCount === $this.deptOne.length){
+          $this.checkAlldeptOne = true;
         }else{
-          $this.checkAllTeam = false;
+          $this.checkAlldeptOne = false;
         }
-        if(checkedCount>0&&checkedCount<$this.phoneList.length){
-          $this.isAllTeam = true;
+        if(checkedCount>0&&checkedCount<$this.deptOne.length){
+          $this.isAlldeptOne = true;
         }else{
-          $this.isAllTeam = false;
+          $this.isAlldeptOne = false;
+        }
+    },
+    // 电商五部全选
+    handleCheckAllFiveChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.deptFive.forEach(function(item,index){
+          checkedList.push(item.value);
+        });
+        $this.deptFiveId=checkedList;
+        $this.checkAlldeptFive= true;
+      }else{
+        $this.deptFiveId = [];
+        $this.checkAlldeptFive = false;
+      }
+      $this.isAlldeptFive = false;
+    },
+    // 电商五部选择改变事件
+    handleCheckedFiveChange(e){
+      var $this = this;
+      var checkedCount = e.length;
+       if(checkedCount === $this.deptFive.length){
+          $this.checkAlldeptFive = true;
+        }else{
+          $this.checkAlldeptFive = false;
+        }
+        if(checkedCount>0&&checkedCount<$this.deptFive.length){
+          $this.isAlldeptFive = true;
+        }else{
+          $this.isAlldeptFive = false;
+        }
+    },
+    // 电商六部全选
+    handleCheckAllSixChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.deptSix.forEach(function(item,index){
+          checkedList.push(item.value);
+        });
+        $this.deptSixId=checkedList;
+        $this.checkAlldeptSix= true;
+      }else{
+        $this.deptSixId = [];
+        $this.checkAlldeptSix = false;
+      }
+      $this.isAlldeptSix = false;
+    },
+    // 电商六部选择改变事件
+    handleCheckedSixChange(e){
+      var $this = this;
+      var checkedCount = e.length;
+       if(checkedCount === $this.deptSix.length){
+          $this.checkAlldeptSix = true;
+        }else{
+          $this.checkAlldeptSix = false;
+        }
+        if(checkedCount>0&&checkedCount<$this.deptSix.length){
+          $this.isAlldeptSix = true;
+        }else{
+          $this.isAlldeptSix = false;
+        }
+    },
+    // 其他全选
+    handleCheckAllOtherChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.deptOther.forEach(function(item,index){
+          checkedList.push(item.value);
+        });
+        $this.deptOtherId=checkedList;
+        $this.checkAlldeptOther= true;
+      }else{
+        $this.deptOtherId = [];
+        $this.checkAlldeptOther = false;
+      }
+      $this.isAlldeptOther = false;
+    },
+    // 其他选择改变事件
+    handleCheckedOtherChange(e){
+      var $this = this;
+      var checkedCount = e.length;
+       if(checkedCount === $this.deptOther.length){
+          $this.checkAlldeptOther = true;
+        }else{
+          $this.checkAlldeptOther = false;
+        }
+        if(checkedCount>0&&checkedCount<$this.deptOther.length){
+          $this.isAlldeptOther = true;
+        }else{
+          $this.isAlldeptOther = false;
         }
     },
     // 组装搜索需要的条件数据
@@ -911,6 +1081,7 @@ export default {
     // 搜索确认
     enCluesSearchData(){
         var $this = this;
+        $this.searchData.phoneid= $this.searchData.phoneid.concat($this.deptOneId,$this.deptFiveId,$this.deptSixId,$this.deptOtherId);
         var resultData = $this.getSearchResultData();
         console.log(resultData,"搜索条件");
         $this.$store.dispatch('enphone/getCurrentCluesSearchListAction', resultData).then(response=>{

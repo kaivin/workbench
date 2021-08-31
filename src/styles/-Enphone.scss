@@ -580,14 +580,36 @@
       width: 100%;
       padding: 4px 0;
       &.EnphoneSearchOne{
-        .all-select{
-          margin: 4px;
-        }
-        .team-list{
-          .el-checkbox{
-            margin-top:4px;
-            margin-bottom:4px;
-            margin-right: 0px;
+        .item{
+          clear: both;
+          display: block;
+          padding-top: 5px;
+          strong{
+            font-size: 14px;
+            line-height: 24px;
+            margin-right: 10px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+            vertical-align:top;
+            display: inline-block;
+            width: 72px;
+            text-align: right;
+            font-weight:normal;
+          }
+          .all-select{
+            vertical-align: middle;
+            line-height: 15px;
+          }
+          .team-list{            
+            display: inline-block;
+            vertical-align: middle;
+            padding-left: 10px;
+            .el-checkbox{
+              margin-top:4px;
+              margin-bottom:4px;
+              margin-right: 10px;
+              margin-left: 0px;
+            }
           }
         }
       }
@@ -603,16 +625,14 @@
             }
           }
         }
+        .search-panelThree{
+          padding-left: 10px;
+          .el-radio{margin-right:0px;}
+        }
       }
       &.EnphoneSearchThree{
         .el-input--suffix .el-input__inner{padding:0px 10px;}
         .el-checkbox{margin-right:10px;margin-left: 0px;}
-        .search-panelThree{
-          display: inline-block;
-          margin-right:10px;
-          margin-bottom:10px;
-          .el-radio{margin-right:0px;}
-        }
       }
     }
   }
@@ -631,16 +651,22 @@
     .search-wrap{
       .item-search{
         &.EnphoneSearchOne{
-          &.flex-wrap{
+          .item{
+            clear: both;
             display: block;
+            padding-top: 5px;
             .all-select{
+              vertical-align: middle;
+              border: 0px;
+              padding: 0px;
+              margin-bottom:5px;
+              line-height: 28px;
+            }
+            .team-list{
               clear: both;
               display: block;
-              border: 0px;
-              padding: 0px 0px 0px 0px;
-              margin: 0px;
+              padding-left:0px;
             }
-            .el-checkbox{margin-right: 0px;}
           }
         }
         &.EnphoneSearchTwo{
@@ -661,6 +687,12 @@
                 margin-right:10px;
                 margin-bottom:5px;
               }
+            }
+            .search-panelThree{
+              display:block;
+              margin-bottom: 10px;
+              padding-left:0px;
+              padding-top:10px;
             }
           }
         }

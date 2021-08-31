@@ -62,7 +62,7 @@
                             </el-date-picker>
                           <span>]</span>
                         </div>
-                        <el-select v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'||currentStatus == 'personcount'||currentStatus == 'waitdealcount'||currentStatus == 'monthsaycount'||currentStatus == 'hasnosaycount'" v-model="searchData.salesuserid" size="small" clearable placeholder="业务员" style="width:100px;margin:5px 10px 5px 0px;float:left;">
+                        <el-select v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'" v-model="searchData.salesuserid" size="small" clearable placeholder="业务员" style="width:100px;margin:5px 10px 5px 0px;float:left;">
                             <el-option
                                 v-for="item in salesuseridList"
                                 :key="item.value"
@@ -150,14 +150,14 @@
                     <div class="clues-info flex-wrap">
                         <div class="clues-infoFl flex-content">
                               <p v-if="currentStatus != 'allotcount'"><span class="item-span-1">当前结果集状态：共有<strong>{{infoData.allcount}}</strong>条。</span></p>
-                              <p v-else><span class="item-span-1">当前结果集状态：当前共有<strong>{{infoData.allcount}}</strong>条信息。</span><span class="item-span-1">昨天共分配<strong>{{infoData.allcount}}</strong>条询盘，</span><span class="item-span-1">当前共有<strong>{{infoData.allcount}}</strong>条未处理，</span><span class="item-span-4" style="cursor: pointer;" @click="searchResult(1)">点击查看昨天未处理询盘</span>，<span class="item-span-4" style="cursor: pointer;" @click="searchResult(2)">点击查看今天未处理询盘</span>.</p>
+                              <p v-else><span class="item-span-1">当前结果集状态：当前共有<strong>{{infoData.allcount}}</strong>条信息。</span><span class="item-span-1">昨天共分配<strong>{{infoData.countyestoday}}</strong>条询盘，</span><span class="item-span-1">当前共有<strong>{{infoData.countyestodaynodeal}}</strong>条未处理，</span><span class="item-span-4" style="cursor: pointer;" @click="searchResult(1)">点击查看昨天未处理询盘</span>，<span class="item-span-1">今天天共分配<strong>{{infoData.counttoday}}</strong>条询盘，</span><span class="item-span-1">当前共有<strong>{{infoData.counttodaynodeal}}</strong>条未处理，</span><span class="item-span-4" style="cursor: pointer;" @click="searchResult(2)">点击查看今天未处理询盘</span>.</p>
                         </div>
                         <div class="clues-title-btn">
                             <el-button class="item-input" v-if="menuButtonPermit.includes('Sales_phonecancel')&&currentStatus === 'allotcount'" size="small" type="primary" :disabled="isTableRow" @click="deleteTableRow">分配撤回</el-button>
                             <div class="SaleMassDistribution" v-if="menuButtonPermit.includes('Sales_waitphone')&&currentStatus === 'waitcount'">                          
                                   <el-select :disabled="isTableRow" v-model="Determine.userid" size="small" clearable placeholder="-选择业务员-">
                                       <el-option
-                                      v-for="item in salesuseridList"
+                                      v-for="item in dealuserList"
                                       :key="item.value"
                                       :label="item.label"
                                       :value="item.value">
@@ -240,9 +240,7 @@
                     <template slot-scope="scope">
                         <div class="table-text">
                         <p><span>称呼：</span>{{scope.row.custormname}}</p>
-
-                        <p v-if="currentStatus === 'waitcount'||currentStatus == 'waitdealcount'||currentStatus == 'monthsaycount'||currentStatus == 'hasnosaycount'||currentStatus == 'waitftwordcount'"><span>邮箱：</span><span class="SiteColor-02" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;">点击详情查看Email</span></p>
-                        <p v-else><span>邮箱：</span>{{scope.row.custormemail}}</p>
+                        <p><span>邮箱：</span><span class="SiteColor-02"  v-if="scope.row.custormemail" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;">点击详情查看Email</span></p>
                         <p><span>电话：</span>{{scope.row.custormphone}}</p>
                         </div>
                     </template>
@@ -405,6 +403,7 @@ export default {
       ennatureList:[],
       enxunpriceList:[],
       salesuseridList:[],
+      dealuserList:[],
       feedbackArr:[],
       feedbackList:[
         {label:"已反馈",value:1},
@@ -547,6 +546,8 @@ export default {
       $this.searchData.ftword_id='';
       $this.searchData.deal='';
       $this.searchData.salesuserid='';
+      $this.salesuseridList=[];
+      $this.dealuserList=[];      
       $this.infoData.allcount=0;
       $this.infoData.warnlist=[];
       $this.isTableRow=true;
@@ -559,7 +560,8 @@ export default {
     },
     // 搜索结果
     searchResult(DealVal){
-      var $this = this;
+      var $this = this;      
+      $this.tableData=[];
       if(DealVal&&DealVal!=''&&DealVal!=undefined){
         $this.searchData.deal=DealVal;
       }else{
@@ -577,7 +579,7 @@ export default {
       var $this = this;
       $this.$store.dispatch('Sales/getSalesPublicDataAction', null).then(response=>{
         if(response){        
-          console.log(response,'0');
+          console.log(response,'左侧公共数据');
           var defaultData = {};
           defaultData.waitcount=response.waitcount;
           defaultData.allotcount=response.allotcount;
@@ -587,7 +589,9 @@ export default {
           defaultData.hasnosaycount=response.hasnosaycount;
           defaultData.waitftwordcount=response.waitftwordcount;
           defaultData.hasdealcount=response.hasdealcount;
+          defaultData.hassaycount=response.hassaycount;
           $this.defaultData = defaultData;
+          console.log(defaultData,'defaultData');
         }
       });
     },
@@ -623,14 +627,36 @@ export default {
               enxunpriceList.push(itemData);
             });
             $this.enxunpriceList=enxunpriceList;
-            var salesuseridList=[];
-            response.dealuser.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.id;
-              salesuseridList.push(itemData);
-            });
-            $this.salesuseridList=salesuseridList;
+            
+            if($this.currentStatus=="waitcount"&&response.dealuser.length>0){
+              var salesuseridList=[];
+              response.allotuser.forEach(function(item,index){
+                var itemData = {};
+                itemData.label = item.name;
+                itemData.value = item.id;
+                salesuseridList.push(itemData);
+              });              
+              var dealuserList=[];
+              response.dealuser.forEach(function(item,index){
+                var itemData = {};
+                itemData.label = item.name;
+                itemData.value = item.id;
+                dealuserList.push(itemData);
+              });
+              $this.salesuseridList=salesuseridList;
+              $this.dealuserList=dealuserList;
+              $this.salesuseridList=salesuseridList;
+            }
+            if($this.currentStatus=="allotcount"&&response.allotuser.length>0){              
+              var salesuseridList=[];
+              response.dealuser.forEach(function(item,index){
+                var itemData = {};
+                itemData.label = item.name;
+                itemData.value = item.id;
+                salesuseridList.push(itemData);
+              });
+              $this.salesuseridList=salesuseridList;
+            }
             $this.searchResult();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -732,8 +758,11 @@ export default {
       if($this.searchData.deal&&$this.searchData.deal!=''){
         searchData.deal = $this.searchData.deal;
       }
-      if($this.searchData.salesuserid&&$this.searchData.salesuserid!=''){
-        searchData.salesuserid = $this.searchData.salesuserid;
+      if($this.currentStatus=="waitcount"&&$this.searchData.salesuserid&&$this.searchData.salesuserid!=''){
+          searchData.salesuserid = $this.searchData.salesuserid;
+      }
+      if($this.currentStatus=="allotcount"&&$this.searchData.salesuserid&&$this.searchData.salesuserid!=''){
+          searchData.salesownid = $this.searchData.salesuserid;
       }
       return searchData;
     },
@@ -847,6 +876,12 @@ export default {
         var infoData = {};
         infoData.allcount=resData.allcount;
         infoData.warnlist=resData.warnlist;
+        if($this.currentStatus=="allotcount"){
+          infoData.counttoday=resData.counttoday;
+          infoData.counttodaynodeal=resData.counttodaynodeal;
+          infoData.countyestoday=resData.countyestoday;
+          infoData.countyestodaynodeal=resData.countyestodaynodeal;
+        }
         $this.infoData = infoData;
         $this.totalDataNum = resData.allcount;
         $this.setTableHeight();

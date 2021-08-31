@@ -3,8 +3,8 @@
     <el-card class="box-card scroll-card" shadow="hover">
         <div class="card-content SaleAddEdit" ref="tableContent">
             <div class="SaleAddEditMain">
-                <ul class="SaleTips" v-if="menuButtonPermit.includes('Sales_warnread')">
-                    <li v-if="ID&&isSalesman"><span class="tips">【提醒】：</span><b>{{formData.givesaleswarn}}</b><el-button class="item-input" size="mini" type="primary" @click="salesmanWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></li>
+                <ul class="SaleTips" v-if="menuButtonPermit.includes('Sales_warnread')&&ID&&isSalesman">
+                    <li><span class="tips">【提醒】：</span><b>{{formData.givesaleswarn}}</b><el-button class="item-input" size="mini" type="primary" @click="salesmanWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></li>
                 </ul>
                 <div class="SaleAddEditMainItem timeArr">
                       <dl>
@@ -73,7 +73,7 @@
                             <div class="needCustomersBox">
                                {{formData.custormneedinfo}}
                             </div>    
-                            <p><span>特别说明：</span><span style='display:inline-block; padding-left:15px;'>附件：<el-link target="_blank" :underline="false" :href="formData.custormfiles">{{formData.custormfilesname}}</el-link></span></p>                     
+                            <p><span>特别说明：{{formData.otherremark}}</span><span style='display:inline-block; padding-left:15px;'>附件：<el-link target="_blank" :underline="false" :href="formData.custormfiles">{{formData.custormfilesname}}</el-link></span></p>                     
                         </dd>
                       </dl>
                 </div>
@@ -207,6 +207,7 @@ export default {
         custormemail:'',
         custormphone:'',
         custormneedinfo:'',
+        otherremark:'',
         custormfiles:'',
         custormfilesname:'',
         ftword_id:'',
@@ -297,9 +298,25 @@ export default {
           if(response.status){
             console.log(response,"初始化询盘信息");            
             $this.defaultInfo = response.data;
-            if(response.data.givesaleswarn&&response.data.givesaleswarn!=''&&response.data.saleswarnstatus==3){
+            if(response.data.saleswarnstatus==3){
               $this.isSalesman=true;
             }
+            var ennatureList=[];
+            response.ennature.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              ennatureList.push(itemData);
+            });
+            $this.ennatureList=ennatureList;
+            var enxunpriceList=[];
+            response.enprice.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              enxunpriceList.push(itemData);
+            });
+            $this.enxunpriceList=enxunpriceList;
             $this.setCluesInfo();
           }else{
             $this.$message({
@@ -356,6 +373,7 @@ export default {
       $this.formData.custormphone = $this.defaultInfo.custormphone;
       $this.formData.contentedittime = $this.defaultInfo.contentedittime;
       $this.formData.custormneedinfo = $this.defaultInfo.custormneedinfo;
+      $this.formData.otherremark = $this.defaultInfo.otherremark;
       $this.formData.custormfiles = $this.defaultInfo.custormfiles;
       $this.formData.custormfilesname = $this.defaultInfo.custormfilesname;
       $this.formData.ftword_id = $this.defaultInfo.ftword_id;
@@ -430,22 +448,6 @@ export default {
               producttype_idList.push(itemData);
             });
             $this.producttype_idList=producttype_idList;
-            var ennatureList=[];
-            response.nature.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.id;
-              ennatureList.push(itemData);
-            });
-            $this.ennatureList=ennatureList;
-            var enxunpriceList=[];
-            response.enprice.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.id;
-              enxunpriceList.push(itemData);
-            });
-            $this.enxunpriceList=enxunpriceList;
             var salesuseridList=[];
             response.dealuser.forEach(function(item,index){
               var itemData = {};

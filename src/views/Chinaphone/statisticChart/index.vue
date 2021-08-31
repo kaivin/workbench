@@ -76,14 +76,26 @@
                                     end-placeholder="结束日期"
                                     v-if="device=='desktop'"
                                     :picker-options="pickerRangeOptions">
-                                </el-date-picker>                            
-                                <el-date-picker
-                                  v-model="searchData.date"
-                                  size="mini"
-                                  type="date"
-                                  v-if="device=='mobile'"
-                                  placeholder="选择日期">
-                                </el-date-picker>
+                                </el-date-picker> 
+                                <div class="mobileTime flex-box" v-if="device=='mobile'">          
+                                    <el-date-picker
+                                      v-model="starttime"
+                                      size="mini"
+                                      type="date"       
+                                      class="flex-content"   
+                                      value-format="yyyy-MM-dd"                            
+                                      placeholder="开始日期">
+                                    </el-date-picker> 
+                                    <i>至</i>
+                                    <el-date-picker
+                                      v-model="endtime"
+                                      size="mini"
+                                      type="date"
+                                      class="flex-content"
+                                      value-format="yyyy-MM-dd" 
+                                      placeholder="结束日期">
+                                    </el-date-picker>
+                                </div>                 
                           </div>
                           <div class="team-headerItem">
                                 <span class="require">域名：</span>
@@ -224,6 +236,7 @@
                       <div class="chart-header"><span>电话总数（{{searchResult.phoneTotalNum}}）</span></div>
                       <div class="chart-body" style="height:640px;">
                         <div class="abs-canvas"><div id="cluesChart1" class="chart-canvas"></div></div>
+                        
                       </div>
                     </div>
                   </el-col>
@@ -458,6 +471,8 @@ export default {
         province:"",
         domain:'',
       },
+      starttime:'',
+      endtime:'',
       pickerRangeOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -639,7 +654,8 @@ export default {
       $this.minProduct=[];
       $this.maxProductNum=0;
       $this.minProductNum=0;
-      $this.searchData.date=[];
+      $this.starttime="";
+      $this.endtime="";
       $this.searchData.province="";
       $this.searchData.domain='';
       $this.searchResult.hoursCount=[];
@@ -676,12 +692,17 @@ export default {
       var searchData = {};
       searchData.province = $this.searchData.province;
       searchData.domain = $this.searchData.domain;
-      if($this.searchData.date&&$this.searchData.date.length>0){
-        searchData.starttime = $this.searchData.date[0];
-        searchData.endtime = $this.searchData.date[1];
+      if($this.device=='desktop'){
+        if($this.searchData.date&&$this.searchData.date.length>0){
+          searchData.starttime = $this.searchData.date[0];
+          searchData.endtime = $this.searchData.date[1];
+        }else{
+          searchData.starttime = "";
+          searchData.endtime = "";
+        }
       }else{
-        searchData.starttime = "";
-        searchData.endtime = "";
+          searchData.starttime = $this.starttime;
+          searchData.endtime = $this.endtime;
       }
       var checkedSem = $this.checkedSem;
       var checkedSeo = $this.checkedSeo;
@@ -857,7 +878,7 @@ export default {
         });
         return false;
       }
-      if($this.searchData.date.length == 0){
+      if($this.searchData.date.length == 0||$this.starttime&&$this.endtime){
         $this.$message({
             showClose: true,
             message: '错误：请选择查询时间范围！',
