@@ -96,13 +96,8 @@
                 </div>
               </div>
             </div>
-<<<<<<< Updated upstream
-            <div class="card-header filter-panel" v-else>
-                <div class="search-panel">                          
-=======
             <div class="card-header filter-panel" v-else ref="headerPane">
                 <div class="search-panel">                              
->>>>>>> Stashed changes
                     <el-input placeholder="输入ip或域名" v-model="formData.ip" class="article-search">
                       <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
                     </el-input>
