@@ -1,10 +1,9 @@
 ﻿<template>
   <div class="page-root" ref="boxPane">
     <el-card class="box-card" shadow="hover">
-      <div slot="header">
-        <div class="card-header WebServerTop" ref="headerPane">
-          <el-button type="primary" size="small" icon="el-icon-search" v-on:click="searchDialog()" v-if="device!='desktop'">高级查询</el-button>
-          <div class="border-wrap post-class" ref="searchPane" v-if="canSearch&&device==='desktop'">
+      <div slot="header" v-if="canSearch">
+        <div class="card-header WebServerTop" v-if="device==='desktop'" ref="headerPane">
+          <div class="border-wrap post-class" ref="searchPane">
             <div class="border-row flex-wrap">
                 <div class="border-cell txt-font"><span>语言：</span></div>
                 <div class="border-cell flex-content">
@@ -69,6 +68,14 @@
                 </div>
             </div>
           </div>
+        </div>
+        <div class="card-header filter-panel" v-else ref="headerPane">
+          <div class="search-panel">                              
+              <el-input placeholder="输入ip" v-model="formData.ip" class="article-search">
+                  <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
+              </el-input>
+          </div>
+          <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
         </div>
       </div>
       <div class="card-content WebServerBom" ref="cardContent">
@@ -158,69 +165,59 @@
               :current-page="page"
               :page-sizes="pageSizeList"
               :page-size="limit"
-              :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+              :pager-count="pagerCount"
+              :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
               :total="totalDataNum">
             </el-pagination>
           </div>
         </div>
       </div>
     </el-card>
-    <el-dialog title="高级查询" v-if="device==='mobile'" custom-class="search-dialog block-search" :visible.sync="dialogSearchVisible">
-      <div class="search-dialog-wrap">
-        <div class="item-search">
-          <el-select v-model="formData.language" size="small" clearable placeholder="请选择语言">
-            <el-option
-              v-for="item in languageList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="item-search">
-          <el-select v-model="formData.useringid" size="small" clearable placeholder="请选择用途">
-            <el-option
-              v-for="item in useingList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="item-search">
-          <el-select v-model="formData.systemid" size="small" clearable placeholder="请选择系统">
-            <el-option
-              v-for="item in serverList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="item-search">
-          <el-input
-            placeholder="输入别名"
-            v-model="formData.name"
-            size="small"
-            clearable>
-          </el-input>
-        </div>
-        <div class="item-search">
-          <el-input
-            placeholder="输入ip"
-            v-model="formData.ip"
-            size="small"
-            clearable>
-          </el-input>
+    <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
+    <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
+      <div class="flex-content">
+        <div class="abs-scroll">
+          <ul>
+            <li>
+              <span class="title-panel">语言</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="item in languageList" v-bind:key="item.value">
+                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''"  size="small" v-on:click="clickLanguageHandler(item)">{{item.label}}</el-button>
+                </div>
+              </div>
+            </li>
+            <li class="column-2">
+              <span class="title-panel">用途</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="item in useingList" v-bind:key="item.value">
+                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickUseingHandler(item)">{{item.label}}</el-tag>
+                </div>
+              </div>
+            </li>
+            <li class="column-2">
+              <span class="title-panel">系统</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="item in serverList" v-bind:key="item.value">
+                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickSystemHandler(item)">{{item.label}}</el-tag>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="title-panel">别名</span>
+              <div class="item-filter">
+                <el-input
+                  placeholder="输入别名"
+                  v-model="formData.name"
+                  size="small"
+                  clearable>
+                </el-input>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogSearchVisible = false">取 消</el-button>
-          <el-button type="primary" @click="searchResult">查询</el-button>
-        </span>
-      </template>
-    </el-dialog>
+      <p class="footer-button"><span class="btn-yes" v-on:click="searchResult()">确定</span></p>
+    </div>
   </div>
 </template>
 <script>
@@ -235,6 +232,7 @@ export default {
       tableData:[],
       page:1,
       limit:50,
+      pagerCount:5,
       pageSizeList:[50, 100, 150, 200],
       totalDataNum:0,
       serverList:[],
@@ -248,7 +246,8 @@ export default {
         name:"",
         useringid:"",
       },
-      dialogSearchVisible:false
+      dialogSearchVisible:false,
+      openClass:false,
     }
   },
   computed: {
@@ -290,19 +289,33 @@ export default {
     })
   },
   methods:{
+    // 高级筛选
+    searchDialog(){
+      var $this = this;
+      $this.openClass=!$this.openClass;
+    },
     // 设置table高度
     setTableHeight(){
       var $this = this;
-      if($this.totalDataNum >50){
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-45;
+      if($this.totalDataNum >10){
+        if($this.device==="desktop"){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-75;
+        }else{
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-15;
+        }
       }else{
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
+        if($this.device==="desktop"){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        }else{
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15;
+        }
       }
     },
     // 搜索结果点击事件
     searchResult(){
       var $this = this;
-      $this.dialogSearchVisible = false;
+      $this.openClass = false;
+      $this.page = 1;
       $this.getWebsiteListData();
     },
     // 初始化页面数据
@@ -378,6 +391,9 @@ export default {
             $this.tableData = response.data;
             $this.totalDataNum = response.allcount;
             $this.canSearch = response.searchshow?true:false;
+            if($this.device === "mobile"){
+              $this.openClass = false;
+            }
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -410,6 +426,7 @@ export default {
               var itemData = {};
               itemData.value = item.id;
               itemData.label = item.languagename;
+              item.isOn = false;
               languageList.push(itemData);
             });
             $this.languageList = languageList;
@@ -418,6 +435,7 @@ export default {
               var itemData = {};
               itemData.value = item.id;
               itemData.label = item.name;
+              item.isOn = false;
               serverList.push(itemData);
             });
             $this.serverList = serverList;
@@ -426,6 +444,7 @@ export default {
               var itemData = {};
               itemData.value = item.id;
               itemData.label = item.name;
+              item.isOn = false;
               useingList.push(itemData);
             });
             $this.useingList = useingList;
@@ -575,10 +594,59 @@ export default {
           });          
       });
     },
-    // 移动端查询弹窗事件
-    searchDialog(){
+    // 移动端语言选择事件
+    clickLanguageHandler(e){
       var $this = this;
-      $this.dialogSearchVisible = true;
+      var languageList = $this.languageList;
+      languageList.forEach(function(item,index){
+        if(item.value == e.value){
+          item.isOn = !item.isOn;
+          if(item.isOn){
+            $this.formData.language = item.value;
+          }else{
+            $this.formData.language = "";
+          }
+        }else{
+          item.isOn = false;
+        }
+      });
+      $this.languageList = languageList;
+    },
+    // 移动端用途选择事件
+    clickUseingHandler(e){
+      var $this = this;
+      var useingList = $this.useingList;
+      useingList.forEach(function(item,index){
+        if(item.value == e.value){
+          item.isOn = !item.isOn;
+          if(item.isOn){
+            $this.formData.useringid = item.value;
+          }else{
+            $this.formData.useringid = "";
+          }
+        }else{
+          item.isOn = false;
+        }
+      });
+      $this.useingList = useingList;
+    },
+    // 移动端系统选择事件
+    clickSystemHandler(e){
+      var $this = this;
+      var serverList = $this.serverList;
+      serverList.forEach(function(item,index){
+        if(item.value == e.value){
+          item.isOn = !item.isOn;
+          if(item.isOn){
+            $this.formData.systemid = item.value;
+          }else{
+            $this.formData.systemid = "";
+          }
+        }else{
+          item.isOn = false;
+        }
+      });
+      $this.serverList = serverList;
     },
   }
 }

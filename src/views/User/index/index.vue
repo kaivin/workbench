@@ -2,8 +2,8 @@
   <div class="page-root user-index" ref="boxPane">
     <el-card class="box-card" shadow="hover">
       <div slot="header">
-        <div class="card-header" ref="headerPane">
-          <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
+        <div class="card-header" v-if="device==='desktop'" ref="headerPane">
+          <div class="search-wrap" ref="searchPane">
             <div class="item-search">
               <el-cascader v-model="searchData.dept_id" size="small" class="cascader-panel" :options="departLevelData" ref="menuLevel" filterable placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover' }" clearable></el-cascader>
             </div>
@@ -31,6 +31,14 @@
             </div>
           </div>
           <el-button type="primary" size="small" icon="el-icon-search" @click="openSearchDialog()" v-if="device==='mobile'">高级查询</el-button>
+        </div>
+        <div class="card-header filter-panel" v-else ref="headerPane">
+          <div class="search-panel">                              
+              <el-input placeholder="请输入真实姓名关键字" v-model="searchData.uname" class="article-search">
+                  <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
+              </el-input>
+          </div>
+          <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
         </div>
       </div>
       <div class="card-content" ref="tableContent">
@@ -141,14 +149,15 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="pagination-panel" ref="pagePane">
+      <div class="pagination-panel" v-if="totalDataNum>10" ref="pagePane">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="searchData.page"
           :page-sizes="pageSizeList"
           :page-size="searchData.limit"
-          :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+          :pager-count="pagerCount"
+          :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
           :total="totalDataNum">
         </el-pagination>
       </div>
@@ -271,6 +280,32 @@
         </span>
       </template>
     </el-dialog>
+    <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
+    <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
+      <div class="flex-content">
+        <div class="abs-scroll">
+          <ul>
+            <li>
+              <span class="title-panel">部门</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="item in departLevelData" v-bind:key="item.value">
+                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''"  size="small" v-on:click="clickDepartHandler(item)">{{item.label}}</el-button>
+                </div>
+              </div>
+            </li>
+            <li class="column-2">
+              <span class="title-panel">用户状态</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="item in userStatus" v-bind:key="item.value">
+                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickTagHandler(item)">{{item.label}}</el-tag>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-button"><span class="btn-yes" v-on:click="searchResult()">确定</span></p>
+    </div>
   </div>
 </template>
 <script>
@@ -292,11 +327,12 @@ export default {
           is_delete:"",
       },
       userStatus:[
-        {label:"激活用户",value:0},
-        {label:"封禁用户",value:1}
+        {label:"激活用户",value:0,isOn:false},
+        {label:"封禁用户",value:1,isOn:false}
       ],
       pageSizeList:[10, 20, 50, 100],
       totalDataNum:0,
+      pagerCount:5,
       dialogFormVisible:false,
       dialogText:"",
       formLabelWidth:"110px",
@@ -327,7 +363,8 @@ export default {
         children: 'children',
         label: 'label'
       },
-      dialogSearchVisible:false
+      dialogSearchVisible:false,
+      openClass:false,
     }
   },
   computed: {
@@ -378,20 +415,27 @@ export default {
     })
   },
   methods:{
+    // 高级筛选
+    searchDialog(){
+      var $this = this;
+      $this.openClass=!$this.openClass;
+    },
     // 设置table高度
     setTableHeight(){
       var $this = this;
       if($this.totalDataNum >10){
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-45;
+        if($this.device==="desktop"){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-75;
+        }else{
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-15;
+        }
       }else{
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
+        if($this.device==="desktop"){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        }else{
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15;
+        }
       }
-    },
-    // 移动端查询弹窗事件
-    openSearchDialog(){
-      var $this = this;
-      $this.dialogSearchVisible = true;
-      $this.resetSearchData();
     },
     // 搜索点击事件
     searchResult(){
@@ -432,7 +476,7 @@ export default {
             }
             $this.totalDataNum = response.allcount;
             if($this.device === "mobile"){
-              $this.dialogSearchVisible = false;
+              $this.openClass = false;
             }
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -668,6 +712,7 @@ export default {
       $this.searchData.page = 1;
       $this.searchData.limit = 10;
       $this.searchData.dept_id = 0;
+      $this.searchData.is_delete = "";
     },
     // 重置添加数据表单
     resetFormData(){
@@ -951,6 +996,7 @@ export default {
                 var itemData = {}
                 itemData.value = item.id;
                 itemData.label = item.name;
+                itemData.isOn = false;
                 if(item.is_usering == 0){
                   itemData.disabled = false;
                 }else{
@@ -1018,6 +1064,42 @@ export default {
             });
           }
       });
+    },
+    // 移动端部门选择事件
+    clickDepartHandler(e){
+      var $this = this;
+      var departLevelData = $this.departLevelData;
+      departLevelData.forEach(function(item,index){
+        if(item.value == e.value){
+          item.isOn = !item.isOn;
+          if(item.isOn){
+            $this.searchData.dept_id = item.value;
+          }else{
+            $this.searchData.dept_id = 0;
+          }
+        }else{
+          item.isOn = false;
+        }
+      });
+      $this.departLevelData = departLevelData;
+    },
+    // 移动端用户状态选择事件
+    clickTagHandler(e){
+      var $this = this;
+      var userStatus = $this.userStatus;
+      userStatus.forEach(function(item,index){
+        if(item.value == e.value){
+          item.isOn = !item.isOn;
+          if(item.isOn){
+            $this.searchData.is_delete = item.value;
+          }else{
+            $this.searchData.is_delete = "";
+          }
+        }else{
+          item.isOn = false;
+        }
+      });
+      $this.userStatus = userStatus;
     },
   }
 }

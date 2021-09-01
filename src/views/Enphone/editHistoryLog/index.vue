@@ -87,11 +87,19 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-      $this.tableHeight = $this.$refs.boxPane.offsetHeight-30;
+      if($this.device==="desktop"){
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight-30;
+      }else{
+        $this.tableHeight = $this.$refs.boxPane.offsetHeight;
+      }
     });
     window.onresize = () => {
         return (() => {
+            if($this.device==="desktop"){
             $this.tableHeight = $this.$refs.boxPane.offsetHeight-30;
+          }else{
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight;
+          }
         })()
     }
   },

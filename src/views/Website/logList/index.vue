@@ -110,7 +110,8 @@
             :current-page="page"
             :page-sizes="pageSizeList"
             :page-size="limit"
-            :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+            :pager-count="pagerCount"
+            :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
             :total="totalDataNum">
             </el-pagination>
         </div>
@@ -132,6 +133,7 @@ export default {
       tableHeight:200,
       page:1,
       limit:50,
+      pagerCount:5,
       pageSizeList:[50, 100, 150, 200],
       totalDataNum:0,
       formLabelWidth:"110px",
@@ -159,17 +161,33 @@ export default {
       const $this = this;
       this.$nextTick(function () {
         if($this.totalDataNum>50){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-15;
+          if($this.device==="desktop"){
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-45;
+          }else{
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-15;
+          }
         }else{
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-15;
+          if($this.device==="desktop"){
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-45;
+          }else{
+            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15;
+          }
         }
       });
       window.onresize = () => {
           return (() => {
             if($this.totalDataNum>50){
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-15;
+              if($this.device==="desktop"){
+                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-45;
+              }else{
+                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-15;
+              }
             }else{
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-15;
+              if($this.device==="desktop"){
+                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-45;
+              }else{
+                $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15;
+              }
             }
           })()
       }

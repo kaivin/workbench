@@ -2,8 +2,8 @@
   <div class="page-root process-index" ref="boxPane">
     <el-card class="box-card" shadow="hover">
       <div slot="header">
-        <div class="card-header" ref="headerPane">
-          <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
+        <div class="card-header" v-if="device==='desktop'" ref="headerPane">
+          <div class="search-wrap" ref="searchPane">
             <div class="item-search">
               <el-date-picker
                   class="date-picker"
@@ -63,6 +63,12 @@
               <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
             </div>
           </div>
+        </div>
+        <div class="card-header filter-panel" v-else ref="headerPane">
+          <div class="search-panel">                              
+              <p class="search-info">当前共有 <span>{{totalDataNum}}</span> 条搜索结果。</p>
+          </div>
+          <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
         </div>
       </div>
       <div class="card-content" ref="tableContent">
@@ -172,7 +178,8 @@
           :current-page="searchData.page"
           :page-sizes="pageSizeList"
           :page-size="searchData.limit"
-          :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+          :pager-count="pagerCount"
+          :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
           :total="totalDataNum">
         </el-pagination>
       </div>
@@ -217,6 +224,74 @@
         </span>
       </template>
     </el-dialog>
+    <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
+    <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
+      <div class="flex-content">
+        <div class="abs-scroll">
+          <ul>
+            <li>
+              <div class="item-li">
+                <span class="title-panel">开始时间</span>
+                <div class="item-filter">
+                  <el-date-picker
+                    v-model="searchData.startDate"
+                    size="small"
+                    type="date"
+                    placeholder="选择开始时间"
+                    value-format="yyyy-MM-dd">
+                  </el-date-picker>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">结束时间</span>
+                <div class="item-filter">
+                  <el-date-picker
+                    v-model="searchData.endDate"
+                    size="small"
+                    type="date"
+                    placeholder="选择结束时间"
+                    value-format="yyyy-MM-dd">
+                  </el-date-picker>
+                </div>
+              </div>
+            </li>
+            <li class="column-2">
+              <span class="title-panel">品牌</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="item in brandList" v-bind:key="item.value">
+                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickBrandHandler(item)">{{item.label}}</el-tag>
+                </div>
+              </div>
+            </li>
+            <li class="column-2">
+              <span class="title-panel">账户</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="item in accountList" v-bind:key="item.value">
+                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickAccountHandler(item)">{{item.label}}</el-tag>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="title-panel">渠道</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="item in channelList" v-bind:key="item.value">
+                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickChannelHandler(item)">{{item.label}}</el-tag>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="title-panel">负责人</span>
+              <div class="tag-panel">
+                <div class="item-button" v-for="item in userList" v-bind:key="item.value">
+                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickUserHandler(item)">{{item.label}}</el-tag>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-button"><span class="btn-yes" v-on:click="searchResult()">确定</span></p>
+    </div>
   </div>
 </template>
 <script>
@@ -236,8 +311,8 @@ export default {
       accountList:[],
       channelList:[],
       brandList:[
-          {label:"红星",value:"红星"},
-          {label:"中德",value:"中德"},
+        {label:'红星',value:'红星',isOn:false},
+        {label:'中德',value:'中德',isOn:false},
       ],
       filterTypeList:[
         {text:'充值',value:'1'},
@@ -285,13 +360,16 @@ export default {
           date:[],
           page:1,
           limit:50,
-          account_id:"",
-          processtype:"",
-          processuserid:"",
-          brand_id:"",
+          account_id:[],
+          processtype:[],
+          processuserid:[],
+          brand_id:[],
+          startDate:"",
+          endDate:""
       },
       pageSizeList:[50, 500, 5000, 10000],
       totalDataNum:0,
+      pagerCount:5,
       dialogSearchVisible:false,
       pickerRangeOptions: {
         shortcuts: [{
@@ -321,6 +399,7 @@ export default {
         }]
       },
       today:'',
+      openClass:false,
     }
   },
   computed: {
@@ -372,13 +451,26 @@ export default {
     })
   },
   methods:{
+    // 高级筛选
+    searchDialog(){
+      var $this = this;
+      $this.openClass=!$this.openClass;
+    },
     // 设置table高度
     setTableHeight(){
       var $this = this;
       if($this.totalDataNum >50){
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-45;
+        if($this.device==="desktop"){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-75;
+        }else{
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-15;
+        }
       }else{
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
+        if($this.device==="desktop"){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        }else{
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15;
+        }
       }
     },
     // 获取今天时间
@@ -392,7 +484,48 @@ export default {
     // 搜索数据
     searchResult(){
         var $this = this;
+        var isSearch = true;
+        if($this.device==="mobile"){
+          if(($this.searchData.startDate==""&&$this.searchData.endDate!="")||($this.searchData.startDate!=""&&$this.searchData.endDate=="")){
+            isSearch = false;
+          }else{
+            if($this.searchData.startDate!=""&&$this.searchData.endDate!=""){
+              if(!$this.compareDate($this.searchData.startDate,$this.searchData.endDate)){
+                isSearch = false;
+              }
+            }
+          }
+        }
+        if(!isSearch){
+          if($this.searchData.startDate==""&&$this.searchData.endDate!=""){
+            $this.$alert('结束时间不为空时开始时间不能为空', '警告', {
+              confirmButtonText: '确定',
+            });
+          }
+          if($this.searchData.startDate!=""&&$this.searchData.endDate==""){
+            $this.$alert('开始时间不为空时结束时间不能为空', '警告', {
+              confirmButtonText: '确定',
+            });
+          }
+          if($this.searchData.startDate!=""&&$this.searchData.endDate!=""){
+            $this.$alert('开始时间不能大于结束时间', '警告', {
+              confirmButtonText: '确定',
+            });
+          }
+          return false;
+        }
+        $this.searchData.page = 1;
         $this.initPage();
+    },
+    // 比较两个时间的先后
+    compareDate(date1,date2){
+      var oDate1 = new Date(date1);
+      var oDate2 = new Date(date2);
+      if(oDate1.getTime() > oDate2.getTime()){
+          return false;
+      }else{
+          return true;
+      }
     },
     searchDataInit(){
       var $this = this;
@@ -403,12 +536,17 @@ export default {
       searchData.pushuser_id = $this.searchData.processuserid;
       searchData.marketname = $this.searchData.account_id;
       searchData.pushbrand = $this.searchData.brand_id;
-      if(!$this.searchData.date||$this.searchData.date.length==0){
-        searchData.starttime = "";
-        searchData.endtime = "";
+      if($this.device === "mobile"){
+        searchData.starttime = $this.searchData.startDate;
+        searchData.endtime = $this.searchData.endDate;
       }else{
-        searchData.starttime = $this.searchData.date[0];
-        searchData.endtime = $this.searchData.date[1];
+        if(!$this.searchData.date||$this.searchData.date.length==0){
+          searchData.starttime = "";
+          searchData.endtime = "";
+        }else{
+          searchData.starttime = $this.searchData.date[0];
+          searchData.endtime = $this.searchData.date[1];
+        }
       }
       return searchData;
     },
@@ -454,6 +592,9 @@ export default {
               });
               $this.tableData = response.data;
               $this.totalDataNum = response.allcount;
+              if($this.device === "mobile"){
+                $this.openClass = false;
+              }
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -679,6 +820,7 @@ export default {
               var itemData = {};
               itemData.value = item.id;
               itemData.label = item.pushname;
+              itemData.isOn = false;
               accountList.push(itemData);
             });
             $this.accountList = accountList;
@@ -703,6 +845,7 @@ export default {
               var itemData = {};
               itemData.value = item.id;
               itemData.label = item.name;
+              itemData.isOn = false;
               channelList.push(itemData);
             });
             $this.channelList = channelList;
@@ -727,6 +870,7 @@ export default {
               var itemData = {};
               itemData.value = item.id;
               itemData.label = item.name;
+              itemData.isOn = false;
               userList.push(itemData);
             });
             $this.userList = userList;
@@ -787,6 +931,135 @@ export default {
           }
         });
         return sums;
+    },
+    // 移动端账户选择事件
+    clickAccountHandler(e){
+      var $this = this;
+      var accountList = $this.accountList;
+      var account_id = $this.searchData.account_id;
+      accountList.forEach(function(item,index){
+        if(item.value == e.value){
+          item.isOn = !item.isOn;
+          if(item.isOn){
+            if(!account_id.includes(item.value)){
+              account_id.push(item.value);
+            }
+          }else{
+            if(account_id.length == 0){
+              account_id = [];
+            }else{
+              if(account_id.includes(item.value)){
+                var newAccount = [];
+                account_id.forEach(function(item1,index1){
+                  if(item1!=item.value){
+                    newAccount.push(item1);
+                  }
+                });
+                account_id = newAccount;
+              }
+            }
+          }
+        }
+      });
+      $this.accountList = accountList;
+      $this.searchData.account_id = account_id;
+    },
+    // 移动端渠道选择事件
+    clickChannelHandler(e){
+      var $this = this;
+      var channelList = $this.channelList;
+      var processtype = $this.searchData.processtype;
+      channelList.forEach(function(item,index){
+        if(item.value == e.value){
+          item.isOn = !item.isOn;
+          if(item.isOn){
+            if(!processtype.includes(item.value)){
+              processtype.push(item.value);
+            }
+          }else{
+            if(processtype.length == 0){
+              processtype = [];
+            }else{
+              if(processtype.includes(item.value)){
+                var newArr = [];
+                processtype.forEach(function(item1,index1){
+                  if(item1!=item.value){
+                    newArr.push(item1);
+                  }
+                });
+                processtype = newArr;
+              }
+            }
+          }
+        }
+      });
+      $this.channelList = channelList;
+      $this.searchData.processtype = processtype;
+    },
+    // 移动端负责人选择事件
+    clickUserHandler(e){
+      var $this = this;
+      var userList = $this.userList;
+      var processuserid = $this.searchData.processuserid;
+      userList.forEach(function(item,index){
+        if(item.value == e.value){
+          item.isOn = !item.isOn;
+          if(item.isOn){
+            if(!processuserid.includes(item.value)){
+              processuserid.push(item.value);
+            }
+          }else{
+            if(processuserid.length == 0){
+              processuserid = [];
+            }else{
+              if(processuserid.includes(item.value)){
+                var newArr = [];
+                processuserid.forEach(function(item1,index1){
+                  if(item1!=item.value){
+                    newArr.push(item1);
+                  }
+                });
+                processuserid = newArr;
+              }
+            }
+          }
+        }
+      });
+      $this.userList = userList;
+      $this.searchData.processuserid = processuserid;
+    },
+    // 移动端品牌选择事件
+    clickBrandHandler(e){
+      var $this = this;
+      var brandList = $this.brandList;
+      var brand_id = $this.searchData.brand_id;
+      brandList.forEach(function(item,index){
+        if(item.value == e.value){
+          item.isOn = !item.isOn;
+          if(item.isOn){
+            $this.searchData.dept_id = item.value;
+            if(!brand_id.includes(item.value)){
+              brand_id.push(item.value);
+            }
+          }else{
+            if(brand_id.length == 0){
+              brand_id = [];
+            }else{
+              if(brand_id.includes(item.value)){
+                var newArr = [];
+                brand_id.forEach(function(item1,index1){
+                  if(item1!=item.value){
+                    newArr.push(item1);
+                  }
+                });
+                brand_id = newArr;
+              }
+            }
+          }
+        }
+      });
+      $this.brandList = brandList;
+      $this.searchData.brand_id = brand_id;
     },
   }
 }

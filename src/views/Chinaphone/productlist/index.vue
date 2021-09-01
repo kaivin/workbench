@@ -2,8 +2,8 @@
   <div class="page-root en-cn-product" ref="boxPane">
     <el-card class="box-card" shadow="hover">
       <div slot="header">
-        <div class="card-header" ref="headerPane">
-          <div class="search-wrap" ref="searchPane" v-if="device==='desktop'">
+        <div class="card-header" v-if="device==='desktop'" ref="headerPane">
+          <div class="search-wrap" ref="searchPane">
             <div class="item-search">
               <el-input
                 class="input-panel"
@@ -16,6 +16,13 @@
             <div class="item-search">
               <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
             </div>
+          </div>
+        </div>
+        <div class="card-header filter-panel" v-else ref="headerPane">
+          <div class="search-panel">                              
+              <el-input placeholder="请输入产品名" v-model="searchData.name" class="article-search">
+                  <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
+              </el-input>
           </div>
         </div>
       </div>
@@ -73,14 +80,15 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="pagination-panel" ref="pagePane">
+      <div class="pagination-panel" v-if="totalDataNum>15" ref="pagePane">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="searchData.page"
           :page-sizes="pageSizeList"
           :page-size="searchData.limit"
-          :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+          :pager-count="pagerCount"
+          :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
           :total="totalDataNum">
         </el-pagination>
       </div>
@@ -214,9 +222,17 @@ export default {
     setTableHeight(){
       var $this = this;
       if($this.totalDataNum >15){
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-30-45;
+        if($this.device==="desktop"){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-75;
+        }else{
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-15;
+        }
       }else{
-        $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
+        if($this.device==="desktop"){
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        }else{
+          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15;
+        }
       }
     },
     // 搜索点击事件

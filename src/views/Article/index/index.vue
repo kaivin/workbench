@@ -38,8 +38,8 @@
                   </div>
                   <div class="card-header filter-panel" v-else ref="headerPane">
                       <div class="search-panel">                              
-                          <el-input placeholder="请输入内容" v-model="keyword" class="article-search" v-if="(menuButtonPermit.includes('Article_search'))">
-                              <el-button slot="append" @click="searchResult" v-if="(menuButtonPermit.includes('Article_search'))"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
+                          <el-input placeholder="请输入内容" v-model="keyword" class="article-search">
+                              <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
                           </el-input>
                       </div>
                       <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>

@@ -2,9 +2,9 @@
   <div class="page-root website-list-page" ref="boxPane">
     <div class="abs-panel" ref="mainPane">
       <div class="scroll-panel" ref="scrollPane">
-        <el-card class="box-card scroll-card WebsiteList-card" shadow="hover" v-bind:class="device=='mobile'?'mobile':''" v-loading.lock="isLoading">
-          <div slot="header" ref="headerPane" >
-            <div class="card-header" v-if="device==='desktop'">
+        <el-card class="box-card scroll-card WebsiteList-card" shadow="hover" v-loading.lock="isLoading">
+          <div slot="header">
+            <div class="card-header" v-if="device==='desktop'" ref="headerPane">
               <div class="border-wrap post-class">
                 <div class="border-row flex-wrap">
                     <div class="border-cell txt-font"><span>行业：</span></div>
@@ -96,8 +96,13 @@
                 </div>
               </div>
             </div>
+<<<<<<< Updated upstream
             <div class="card-header filter-panel" v-else>
                 <div class="search-panel">                          
+=======
+            <div class="card-header filter-panel" v-else ref="headerPane">
+                <div class="search-panel">                              
+>>>>>>> Stashed changes
                     <el-input placeholder="输入ip或域名" v-model="formData.ip" class="article-search">
                       <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
                     </el-input>
@@ -317,6 +322,7 @@
                     :current-page="page"
                     :page-sizes="pageSizeList"
                     :page-size="limit"
+                    :pager-count="pagerCount"
                     :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
                     :total="totalDataNum">
                   </el-pagination>
@@ -458,6 +464,7 @@ export default {
       tableData:[],
       page:1,
       limit:100,
+      pagerCount:5,
       pageSizeList:[100, 200, 500, 1000],
       totalDataNum:0,
       languageSelectList:[],
@@ -529,11 +536,11 @@ export default {
   mounted(){
       const $this = this;
       $this.$nextTick(function () {
-        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        $this.setHeight();
       });
       window.onresize = () => {
         return (() => {
-          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+         $this.setHeight();
         })()
       };
   },
@@ -565,11 +572,28 @@ export default {
   updated(){
     var $this = this;
     $this.$nextTick(function () {
-      $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+      $this.setHeight();
       $this.$refs.simpleTable.doLayout();
     });
   },
   methods:{
+    // 设置table高度
+    setHeight(){
+      var $this = this;
+      if($this.totalDataNum >100){
+        if($this.device==="desktop"){
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-75;
+        }else{
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-15;
+        }
+      }else{
+        if($this.device==="desktop"){
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        }else{
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15;
+        }
+      }
+    },
     // 搜索结果点击事件
     searchResult(){
       var $this = this;
