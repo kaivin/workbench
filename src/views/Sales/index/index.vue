@@ -30,6 +30,13 @@
     <div class="flex-content SaleCardFr">
       <div class="abs-panel" ref="mainPane">
           <div class="scroll-panel" ref="scrollPane">
+            <div class="tips-list" v-if="infoData.warnlist.length>0&&infoData.warnlist">
+                  <div class="item-tips type-1" v-for="(item,index) in infoData.warnlist" v-bind:key="index" v-on:click="editTableRow(item,index,'1')">
+                      <i>{{index+1}}</i>
+                      <strong>ID：{{item.id}}</strong>
+                      <span>{{item.givesaleswarn}}</span>
+                  </div>
+            </div>
             <el-card class="box-card scroll-card SaleCardFlFrTable" shadow="hover">
               <div slot="header">  
                   <div class="card-header" ref="headerPane"> 
@@ -43,36 +50,29 @@
                           </el-input>
                       </div>
                       <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
-                  </div>       
-                    <ul class="clues-warn"  v-if="infoData.warnlist.length>0">
-                        <li v-for="(item,index) in infoData.warnlist" v-bind:key="item.id"  @click="editTableRow(item,index,'1')">[提醒{{index}}]&nbsp;ID：{{item.id}}&nbsp;内容：{{item.givesaleswarn}}</li>
-                    </ul>
+                  </div>      
                     <div class="search-wrap" v-if="device==='desktop'">
-                        <div class="SalesCardOne">
-                          <span>搜索：[</span>
-                            <el-select v-model="searchData.timetype" size="small" clearable placeholder="分配时间" style="width:140px;margin:5px 10px;float:left;">
-                                <el-option
-                                    v-for="item in timetypelist"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                            <el-date-picker
-                                v-model="searchData.date"
-                                size="small"
-                                type="daterange"
-                                align="right"
-                                value-format = "yyyy-MM-dd"
-                                unlink-panels
-                                range-separator="至"
-                                start-placeholder="开始日期"
-                                end-placeholder="结束日期"
-                                style="float:left;margin:5px 10px 5px 0px; width:280px;"
-                                :picker-options="pickerRangeOptions">
-                            </el-date-picker>
-                          <span>]</span>
-                        </div>
+                        <el-select v-model="searchData.timetype" size="small" clearable placeholder="分配时间" style="width:140px;margin:5px 10px;float:left;">
+                            <el-option
+                                v-for="item in timetypelist"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                        <el-date-picker
+                            v-model="searchData.date"
+                            size="small"
+                            type="daterange"
+                            align="right"
+                            value-format = "yyyy-MM-dd"
+                            unlink-panels
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            style="float:left;margin:5px 10px 5px 0px; width:280px;"
+                            :picker-options="pickerRangeOptions">
+                        </el-date-picker>
                         <el-select v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'" v-model="searchData.salesuserid" size="small" clearable placeholder="业务员" style="width:100px;margin:5px 10px 5px 0px;float:left;">
                             <el-option
                                 v-for="item in salesuseridList"

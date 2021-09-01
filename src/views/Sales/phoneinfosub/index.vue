@@ -1,89 +1,46 @@
 ﻿<template>
   <div class="page-root scroll-panel" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
+        <ul class="SaleTips" v-if="menuButtonPermit.includes('Sales_warnread')&&ID&&isSalesman">
+            <li><i class="svg-i tips" ><svg-icon icon-class="prompt" /></i><b>{{formData.givesaleswarn}}</b><el-button class="item-input" size="mini" type="primary" @click="salesmanWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></li>
+        </ul>
         <div class="card-content SaleAddEdit" ref="tableContent">
             <div class="SaleAddEditMain">
-                <ul class="SaleTips" v-if="menuButtonPermit.includes('Sales_warnread')&&ID&&isSalesman">
-                    <li><span class="tips">【提醒】：</span><b>{{formData.givesaleswarn}}</b><el-button class="item-input" size="mini" type="primary" @click="salesmanWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></li>
-                </ul>
                 <div class="SaleAddEditMainItem timeArr">
                       <dl>
-                        <dt>信息分配时间：</dt>
-                        <dd>
-                          <span>{{formData.allottime}}</span>                           
-                        </dd>
+                        <dt><span>信息分配时间：</span><strong>{{formData.allottime}}</strong></dt>
+                        <dt><span>级别判定时间：</span><strong>{{formData.leveltime}}</strong> </dt>
+                        <dt><span>最近修改时间：</span><strong>{{formData.updatetime}}</strong> </dt>
                       </dl>
                       <dl>
-                        <dt>级别判定时间：</dt>
-                        <dd>
-                          <span>{{formData.leveltime}}</span> 
-                        </dd>
+                        <dt><span><i>*</i>处理业务员：</span><strong>{{formData.salesuserid}}</strong> </dt>
+                        <dt><span>来自地区：</span><strong>{{formData.continent}}-{{formData.country}}</strong></dt>
+                        <dt><span>需求产品：</span><strong>{{formData.producttype_id}}-{{formData.keying}}</strong> </dt>
                       </dl>
                       <dl>
-                        <dt>最近修改时间：</dt>
-                        <dd>
-                          <span>{{formData.updatetime}}</span> 
-                        </dd>
-                      </dl>
-                </div>
-                <div class="SaleAddEditMainItem timeArr">
-                      <dl>
-                        <dt><span>*</span>处理业务员：</dt>
-                        <dd>
-                          <span>{{formData.salesuserid}}</span>                          
-                        </dd>
-                      </dl>
-                      <dl>
-                        <dt>来自地区：</dt>
-                        <dd>
-                          <span>{{formData.continent}}-{{formData.country}}</span>   
-                        </dd>
-                      </dl>
-                      <dl>
-                        <dt>需求产品：</dt>
-                        <dd>
-                          <span>{{formData.producttype_id}}-{{formData.keying}}</span>  
-                        </dd>
-                      </dl>
-                </div>
-                <div class="SaleAddEditMainItem timeArr">
-                      <dl>
-                        <dt>客户姓名/称呼：</dt>
-                        <dd>
-                          <span>{{formData.custormname}}</span>                           
-                        </dd>
-                      </dl>
-                      <dl>
-                        <dt>客户Email：</dt>
-                        <dd>
-                          <span>{{formData.custormemail}}</span>   
-                        </dd>
-                      </dl>
-                      <dl>
-                        <dt>客户电话：</dt>
-                        <dd>
-                          <span>{{formData.custormphone}}</span>   
-                        </dd>
+                        <dt><span>客户姓名/称呼：</span><strong>{{formData.custormname}}</strong> </dt>
+                        <dt><span>客户Email：</span><strong>{{formData.custormemail}}</strong></dt>
+                        <dt><span>客户电话：</span><strong>{{formData.custormphone}}</strong></dt>
                       </dl>
                 </div>
                 <div class="SaleAddEditMainItem needCustomers">
                       <dl>
-                        <dt>客户需求详情：<span v-if="formData.contentedittime">注意：内容有修改，修改时间：{{formData.contentedittime}}</span></dt>
+                        <dt>客户需求详情：<span v-if="formData.contentedittime"><i class="svg-i" ><svg-icon icon-class="prompt" /></i>注意：内容有修改，修改时间：{{formData.contentedittime}}</span></dt>
                         <dd>
                             <div class="needCustomersBox">
                                {{formData.custormneedinfo}}
                             </div>    
-                            <p><span>特别说明：{{formData.otherremark}}</span><span style='display:inline-block; padding-left:15px;'>附件：<el-link target="_blank" :underline="false" :href="formData.custormfiles">{{formData.custormfilesname}}</el-link></span></p>                     
+                            <p><span>特别说明：{{formData.otherremark}}</span><el-link target="_blank" style='display:inline-block; padding-left:15px;' :underline="false" :href="formData.custormfiles" v-if="formData.custormfiles">附件：{{formData.custormfilesname}}</el-link></p>                     
                         </dd>
                       </dl>
                 </div>
                 <div class="SaleAddEditMainItem divider">
-                     *收到询盘10天后进行询盘反馈，请根据实际情况选择对应类型判定！当前：<strong>{{feedback}}</strong>
+                     <i class="svg-i" ><svg-icon icon-class="prompt" /></i>收到询盘10天后进行询盘反馈，请根据实际情况选择对应类型判定！<strong>当前：{{feedback}}</strong>
                 </div>
                 <div class="SaleAddEditMainItem SaleFoot">
                       <dl class="SaleFootFl">
                         <dd class="flex-wrap">
-                          <span>富通编号*：</span>
+                          <span>富通编号<i>*</i>：</span>
                           <div class="flex-content">                          
                               <el-input
                                   size="small"
@@ -103,7 +60,7 @@
                           </div>                         
                         </dd>
                         <dd class="flex-wrap">                             
-                          <span>是否回复*：</span>
+                          <span>是否回复<i>*</i>：</span>
                           <div class="flex-content">
                               <el-checkbox-group v-model="replystatusArr" @change="replystatusClick">
                                 <el-checkbox v-for="item in replystatusList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
@@ -113,48 +70,41 @@
                       </dl>
                       <dl class="SaleFootMid">
                         <dt>
-                           <span>客户性质*：</span>                          
+                           <span>务必认真标注！</span>
+                           <span>客户性质<i>*</i>：</span>                          
                         </dt>
                         <dd class="flex-wrap">       
                             <el-radio-group style="margin-bottom:10px;" v-model="formData.ennature">
                               <el-radio v-for="item in ennatureList" :label="item.value" :key="item.value">{{item.label}}</el-radio>
                             </el-radio-group>              
                         </dd>
-                        <dd class="flex-wrap">                     
-                          <span>务必认真标注！</span>                          
-                        </dd>
                       </dl>
                       <dl class="SaleFootFr">
                         <dt>
-                          <span>沟通后客户需求设备价格范围（）*： </span>                         
+                           <span>沟通后客户需求设备价格范围<i>（单位：人民币RMB）*</i>：</span>                        
                         </dt>
                         <dd class="SaleFootFrTop">       
                             <el-radio-group style="margin-bottom:10px;" v-model="formData.enxunprice">
                               <el-radio v-for="item in enxunpriceList" :label="item.value" :key="item.value">{{item.label}}</el-radio>
-                            </el-radio-group>  
-                            <span>单位：人民币RMB</span>              
-                        </dd>
-                        <dd class="SaleFootFrBom">
-                            <p>备注：(在此填写内容可提醒推广人员，如需提醒请勾选提醒)</p>
-                            <div class="SaleFootFrBomBox flex-wrap">
-                                <el-checkbox 
-                                      v-model="formData.custormwarnstatus"
-                                      class="remind"
-                                      clearable>提醒</el-checkbox>
-                                <el-input
-                                  type="textarea"
-                                  :rows="2"
-                                  placeholder="请输入内容"
-                                  class="flex-content"
-                                  v-model="formData.givecustormwarn">
-                                </el-input>
-                            </div> 
+                            </el-radio-group>             
                         </dd>
                       </dl>
                 </div>
-            </div>
-            <div class="card-header WebServerAddEditBtn SaleAddEditBtn">
-                <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Sales_phoneinfosub')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
+                <div class="SaleAddEditMainItem SaleAddEditBtn">
+                    <p>备注：(在此填写内容可提醒推广人员，如需提醒请勾选提醒)</p>
+                    <el-checkbox 
+                          v-model="formData.custormwarnstatus"
+                          class="remind"
+                          clearable>提醒</el-checkbox>
+                    <el-input
+                      type="textarea"
+                      :rows="1"
+                      placeholder="请输入内容"
+                      style="display:inline-block; width:300px;"
+                      v-model="formData.givecustormwarn">
+                    </el-input>
+                    <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Sales_phoneinfosub')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
+                </div>
             </div>
         </div>
     </el-card>
@@ -300,6 +250,8 @@ export default {
             $this.defaultInfo = response.data;
             if(response.data.saleswarnstatus==3){
               $this.isSalesman=true;
+            }else{
+              $this.isSalesman=false;
             }
             var ennatureList=[];
             response.ennature.forEach(function(item,index){
