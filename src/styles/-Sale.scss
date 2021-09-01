@@ -129,6 +129,20 @@
       }      
      }
 }
+.mobile{  
+  .box-card.SaleCardFlFrTable{
+    .el-card__header{
+        .clues-info{
+            display: block;
+            padding: 5px 10px 10px 10px;
+            .clues-infoFl.flex-content{
+            margin-right:0px;
+            margin-bottom:10px;
+            }
+        }
+    }
+  }
+}
 .SaleTips{
    clear: both;
    li{

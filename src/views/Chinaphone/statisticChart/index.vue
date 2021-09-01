@@ -79,7 +79,7 @@
                                 </el-date-picker> 
                                 <div class="mobileTime flex-box" v-if="device=='mobile'">          
                                     <el-date-picker
-                                      v-model="starttime"
+                                      v-model="searchData.startDate"
                                       size="mini"
                                       type="date"       
                                       class="flex-content"   
@@ -88,7 +88,7 @@
                                     </el-date-picker> 
                                     <i>至</i>
                                     <el-date-picker
-                                      v-model="endtime"
+                                      v-model="searchData.endDate"
                                       size="mini"
                                       type="date"
                                       class="flex-content"
@@ -234,17 +234,26 @@
                   <el-col :xs="24" :sm="24" :md="12">
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>电话总数（{{searchResult.phoneTotalNum}}）</span></div>
-                      <div class="chart-body" style="height:640px;">
-                        <div class="abs-canvas"><div id="cluesChart1" class="chart-canvas"></div></div>
-                        
+                      <div class="chart-body" style="height:640px;">                        
+                          <div class="abs-canvas" v-if="device==='desktop'">
+                            <div id="cluesChart1" class="chart-canvas"></div>
+                          </div>
+                          <div class="abs-canvas" v-else>
+                            <canvas id="cluesChart1" class="chart-canvas"></canvas>
+                          </div>                        
                       </div>
                     </div>
                   </el-col>
                   <el-col :xs="24" :sm="24" :md="12">
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>有效电话（{{searchResult.phoneEffectiveNum}}）</span></div>
-                      <div class="chart-body" style="height:640px;">
-                        <div class="abs-canvas"><div id="cluesChart2" class="chart-canvas"></div></div>
+                      <div class="chart-body" style="height:640px;">                              
+                          <div class="abs-canvas" v-if="device==='desktop'">
+                            <div id="cluesChart2" class="chart-canvas"></div>
+                          </div>
+                          <div class="abs-canvas" v-else>
+                            <canvas id="cluesChart2" class="chart-canvas"></canvas>
+                          </div>
                       </div>
                     </div>
                   </el-col>
@@ -253,8 +262,13 @@
                   <el-col :xs="24" :sm="24" :md="12">
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>使用设备</span></div>
-                      <div class="chart-body" style="height:400px;">
-                        <div class="abs-canvas"><div id="cluesChart3" class="chart-canvas"></div></div>
+                      <div class="chart-body" style="height:400px;">                                              
+                          <div class="abs-canvas" v-if="device==='desktop'">
+                            <div id="cluesChart3" class="chart-canvas"></div>
+                          </div>
+                          <div class="abs-canvas" v-else>
+                            <canvas id="cluesChart3" class="chart-canvas"></canvas>
+                          </div>
                       </div>
                     </div>
                   </el-col>
@@ -272,7 +286,12 @@
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>平均星期电话量</span></div>
                       <div class="chart-body" style="height:400px;">
-                        <div class="abs-canvas"><div id="cluesChart5" class="chart-canvas"></div></div>
+                          <div class="abs-canvas" v-if="device==='desktop'">
+                            <div id="cluesChart5" class="chart-canvas"></div>
+                          </div>
+                          <div class="abs-canvas" v-else>
+                            <canvas id="cluesChart5" class="chart-canvas"></canvas>
+                          </div>
                       </div>
                     </div>
                   </el-col>
@@ -300,7 +319,12 @@
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>平均小时电话量</span></div>
                       <div class="chart-body" style="height:400px;">
-                        <div class="abs-canvas"><div id="cluesChart8" class="chart-canvas"></div></div>
+                          <div class="abs-canvas" v-if="device==='desktop'">
+                            <div id="cluesChart8" class="chart-canvas"></div>
+                          </div>
+                          <div class="abs-canvas" v-else>
+                            <canvas id="cluesChart8" class="chart-canvas"></canvas>
+                          </div>
                       </div>
                     </div>
                   </el-col>
@@ -310,7 +334,12 @@
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>热门产品</span></div>
                       <div class="chart-body" style="height:400px;">
-                        <div class="abs-canvas"><div id="cluesChart9" class="chart-canvas"></div></div>
+                          <div class="abs-canvas" v-if="device==='desktop'">
+                            <div id="cluesChart9" class="chart-canvas"></div>
+                          </div>
+                          <div class="abs-canvas" v-else>
+                            <canvas id="cluesChart9" class="chart-canvas"></canvas>
+                          </div>
                       </div>
                     </div>
                   </el-col>
@@ -320,7 +349,12 @@
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>热门地区</span></div>
                       <div class="chart-body" style="height:530px;text-align:center;">
-                        <div class="abs-canvas"><div id="cluesChart10" class="chart-canvas"></div></div>
+                          <div class="abs-canvas" v-if="device==='desktop'">
+                            <div id="cluesChart10" class="chart-canvas"></div>
+                          </div>
+                          <div class="abs-canvas" v-else>
+                            <canvas id="cluesChart10" class="chart-canvas"></canvas>
+                          </div>
                       </div>
                     </div>
                   </el-col>
@@ -468,11 +502,11 @@ export default {
       checkedOther:[],
       searchData:{
         date:[],
+        startDate:'',
+        endDate:'',
         province:"",
         domain:'',
       },
-      starttime:'',
-      endtime:'',
       pickerRangeOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -654,8 +688,8 @@ export default {
       $this.minProduct=[];
       $this.maxProductNum=0;
       $this.minProductNum=0;
-      $this.starttime="";
-      $this.endtime="";
+      $this.searchData.startDate='';
+      $this.searchData.endDate='';
       $this.searchData.province="";
       $this.searchData.domain='';
       $this.searchResult.hoursCount=[];
@@ -701,8 +735,8 @@ export default {
           searchData.endtime = "";
         }
       }else{
-          searchData.starttime = $this.starttime;
-          searchData.endtime = $this.endtime;
+          searchData.starttime = $this.searchData.startDate;
+          searchData.endtime = $this.searchData.endDate;
       }
       var checkedSem = $this.checkedSem;
       var checkedSeo = $this.checkedSeo;
@@ -865,6 +899,16 @@ export default {
           }
         }
       });
+    },    
+    // 比较两个时间的先后
+    compareDate(date1,date2){
+      var oDate1 = new Date(date1);
+      var oDate2 = new Date(date2);
+      if(oDate1.getTime() > oDate2.getTime()){
+          return false;
+      }else{
+          return true;
+      }
     },
     // 获取统计数据
     getCluesAnalysisData(){
@@ -878,7 +922,37 @@ export default {
         });
         return false;
       }
-      if($this.searchData.date.length == 0||$this.starttime&&$this.endtime){
+      var isSearch = true;
+      if($this.device==="mobile"){
+        if(($this.searchData.startDate==""&&$this.searchData.endDate!="")||($this.searchData.startDate!=""&&$this.searchData.endDate=="")){
+          isSearch = false;
+        }else{
+          if($this.searchData.startDate!=""&&$this.searchData.endDate!=""){
+            if(!$this.compareDate($this.searchData.startDate,$this.searchData.endDate)){
+              isSearch = false;
+            }
+          }
+        }
+      }
+      if(!isSearch){
+        if($this.searchData.startDate==""&&$this.searchData.endDate!=""){
+          $this.$alert('结束时间不为空时开始时间不能为空', '警告', {
+            confirmButtonText: '确定',
+          });
+        }
+        if($this.searchData.startDate!=""&&$this.searchData.endDate==""){
+          $this.$alert('开始时间不为空时结束时间不能为空', '警告', {
+            confirmButtonText: '确定',
+          });
+        }
+        if($this.searchData.startDate!=""&&$this.searchData.endDate!=""){
+          $this.$alert('开始时间不能大于结束时间', '警告', {
+            confirmButtonText: '确定',
+          });
+        }
+        return false;
+      }
+      if($this.searchData.date.length == 0&&$this.device==="desktop"){
         $this.$message({
             showClose: true,
             message: '错误：请选择查询时间范围！',
@@ -894,7 +968,15 @@ export default {
           if(response.status){
             $this.isSearch=true;
             $this.searchResult.hoursCount = response.avghourscount;
-            $this.searchResult.deviceCount = response.devicecount;
+            var deviceCount=[];
+            if(response.devicecount.length>0){
+              response.devicecount.forEach(function(item){
+                   item.count="count";
+                   deviceCount.push(item);
+              });
+            }
+            $this.searchResult.deviceCount = deviceCount;
+            console.log($this.searchResult.deviceCount,'$this.searchResult.deviceCount');
             $this.searchResult.dayCount = response.everydaycount;
             $this.searchResult.productCount = response.hotproductcount;
             $this.searchResult.sourceCount = response.modecount;
@@ -1748,100 +1830,186 @@ export default {
     // 图表功能
     drawChart1(){
       var $this = this;
-      if($this.searchResult.phoneCount.length>0){
-        const barPhoneTotalPlot = new Bar('cluesChart1', {
-          data:$this.searchResult.phoneCount,
-          xField: 'number',
-          yField: 'phonenumber',
-          appendPadding:[15,15,15,15],
-          seriesField: 'phonenumber',
-          label: {
-            // 可手动配置 label 数据标签位置
-            position: 'middle', // 'top', 'bottom', 'middle',
-            // 配置样式
-            style: {
-              fill: '#FFFFFF',
-              opacity:1,
+      if($this.searchResult.phoneCount.length>0){        
+        if($this.device == "desktop"){
+          const barPhoneTotalPlot = new Bar('cluesChart1', {
+            data:$this.searchResult.phoneCount,
+            xField: 'number',
+            yField: 'phonenumber',
+            appendPadding:[15,15,15,15],
+            seriesField: 'phonenumber',
+            label: {
+              // 可手动配置 label 数据标签位置
+              position: 'middle', // 'top', 'bottom', 'middle',
+              // 配置样式
+              style: {
+                fill: '#FFFFFF',
+                opacity:1,
+              },
             },
-          },
-          tooltip: {
-            formatter: (datum) => {
-              return { name: "询盘个数", value: datum.number };
-            }
-          },
-          meta: {
+            tooltip: {
+              formatter: (datum) => {
+                return { name: "询盘个数", value: datum.number };
+              }
+            },
+            meta: {
+              number: {
+                alias: '询盘个数',
+              },
+              phonenumber: {
+                alias: '电话',
+              },
+            },
+          });
+          $this.barPhoneTotalPlot = barPhoneTotalPlot;
+          barPhoneTotalPlot.render();
+        }else{
+          // Step 1: 创建 Chart 对象
+          const chart = new $this.$F2.Chart({
+            id: 'cluesChart1',
+            pixelRatio: window.devicePixelRatio // 指定分辨率
+          });
+          // Step 2: 载入数据源
+          chart.source($this.searchResult.phoneCount, {
             number: {
-              alias: '询盘个数',
-            },
-            phonenumber: {
-              alias: '电话',
-            },
-          },
-        });
-        $this.barPhoneTotalPlot = barPhoneTotalPlot;
-        barPhoneTotalPlot.render();
+              tickCount:5
+            }
+          });
+          chart.coord({
+            transposed: true
+          });
+          // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
+          chart.interval()
+            .position('phonenumber*number')
+            .color('phonenumber');
+
+          // Step 4: 渲染图表
+          chart.render();
+        }
       }
     },
     // 图表功能
     drawChart2(){
       var $this = this;
-      if($this.searchResult.phoneEffectiveCount.length>0){
-        const barPhoneEffectivePlot = new Bar('cluesChart2', {
-          data:$this.searchResult.phoneEffectiveCount,
-          xField: 'number',
-          yField: 'phonenumber',
-          appendPadding:[15,15,15,15],
-          seriesField: 'phonenumber',
-          label: {
-            // 可手动配置 label 数据标签位置
-            position: 'middle', // 'top', 'bottom', 'middle',
-            // 配置样式
-            style: {
-              fill: '#FFFFFF',
-              opacity:1,
+      if($this.searchResult.phoneEffectiveCount.length>0){               
+        if($this.device == "desktop"){
+          const barPhoneEffectivePlot = new Bar('cluesChart2', {
+            data:$this.searchResult.phoneEffectiveCount,
+            xField: 'number',
+            yField: 'phonenumber',
+            appendPadding:[15,15,15,15],
+            seriesField: 'phonenumber',
+            label: {
+              // 可手动配置 label 数据标签位置
+              position: 'middle', // 'top', 'bottom', 'middle',
+              // 配置样式
+              style: {
+                fill: '#FFFFFF',
+                opacity:1,
+              },
             },
-          },
-          tooltip: {
-            formatter: (datum) => {
-              return { name: "询盘个数", value: datum.number };
-            }
-          },
-          meta: {
+            tooltip: {
+              formatter: (datum) => {
+                return { name: "询盘个数", value: datum.number };
+              }
+            },
+            meta: {
+              number: {
+                alias: '询盘个数',
+              },
+              phonenumber: {
+                alias: '电话',
+              },
+            },
+          });
+          $this.barPhoneEffectivePlot = barPhoneEffectivePlot;
+          barPhoneEffectivePlot.render();
+        }else{
+          // Step 1: 创建 Chart 对象
+          const chart = new $this.$F2.Chart({
+            id: 'cluesChart2',
+            pixelRatio: window.devicePixelRatio // 指定分辨率
+          });
+          // Step 2: 载入数据源
+          chart.source($this.searchResult.phoneEffectiveCount, {
             number: {
-              alias: '询盘个数',
-            },
-            phonenumber: {
-              alias: '电话',
-            },
-          },
-        });
-        $this.barPhoneEffectivePlot = barPhoneEffectivePlot;
-        barPhoneEffectivePlot.render();
+              tickCount:5
+            }
+          });
+          chart.coord({
+            transposed: true
+          });
+          // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
+          chart.interval()
+            .position('phonenumber*number')
+            .color('phonenumber');
+
+          // Step 4: 渲染图表
+          chart.render();
+        }
       }
     },
     // 图表功能
     drawChart3(){
       var $this = this;
-      if($this.searchResult.deviceCount.length>0){
-        const pieDevicePlot = new Pie('cluesChart3', {
-          data:$this.searchResult.deviceCount,
-          angleField: 'number',
-          colorField: 'devicename',
-          appendPadding:[15,15,15,15],
-          radius: 0.8,
-          label: {
-            type: 'outer',
-            content: '{name} {percentage}',
-          },
-          tooltip: {
-            formatter: (datum) => {
-              return { name: "询盘个数", value: datum.number };
-            }
-          },
-          interactions: [{ type: 'pie-legend-active' }, { type: 'element-active' }],
-        });
-        $this.pieDevicePlot = pieDevicePlot;
-        pieDevicePlot.render();
+      if($this.searchResult.deviceCount.length>0){            
+        if($this.device == "desktop"){
+            const pieDevicePlot = new Pie('cluesChart3', {
+              data:$this.searchResult.deviceCount,
+              angleField: 'number',
+              colorField: 'devicename',
+              appendPadding:[15,15,15,15],
+              radius: 0.8,
+              label: {
+                type: 'outer',
+                content: '{name} {percentage}',
+              },
+              tooltip: {
+                formatter: (datum) => {
+                  return { name: "询盘个数", value: datum.number };
+                }
+              },
+              interactions: [{ type: 'pie-legend-active' }, { type: 'element-active' }],
+            });
+            $this.pieDevicePlot = pieDevicePlot;
+            pieDevicePlot.render();
+        }else{
+            const chart = new $this.$F2.Chart({
+              id: 'cluesChart3',
+              pixelRatio: window.devicePixelRatio
+            });
+
+            chart.source($this.searchResult.deviceCount);
+            chart.coord('polar', {
+              transposed: true,
+              radius: 0.75
+            });
+            chart.legend(false);
+            chart.axis(false);
+            chart.tooltip(false);
+            // 添加饼图文本
+            //chart.pieLabel({
+            //  sidePadding: 40,
+            //  label1: function label1(data, color) {
+            //    return {
+            //      text: data.devicename,
+            //      fill: color
+            //    };
+            //  },
+            //  label2: function label2(data) {
+            //    return {
+            //      text: '￥' + String(Math.floor(data.percenter * 100) / 100).replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+            //      fill: '#808080',
+            //      fontWeight: 'bold'
+            //    };
+            //  }
+            //});
+            chart.interval()
+              .position('const*devicename')
+              .color('devicename', [ '#1890FF', '#13C2C2', '#2FC25B', '#FACC14', '#F04864' ])
+              .adjust('stack');
+            chart.render();
+        }
       }
     },
     // 图表功能
@@ -1873,63 +2041,84 @@ export default {
     drawChart5(){
       var $this = this;
       if($this.searchResult.weekCount.length>0){
-        const maxColor = '#FF4500';
-        const minColor = '#1CC25E';
-        const defaultColor = '#5B8FF9';
-        const columnWeekPlot = new Column('cluesChart5', {
-          data:$this.searchResult.weekCount,
-          xField: 'weekday',
-          yField: 'number',
-          appendPadding:[15,15,15,15],
-          seriesField: '',
-          color: ({ weekday }) => {
-            var currentColor = defaultColor;
-            $this.maxWeek.forEach(function(item,index){
-              if(weekday == item){
-                currentColor = maxColor;
-              }
+        if($this.device == "desktop"){
+            const maxColor = '#FF4500';
+            const minColor = '#1CC25E';
+            const defaultColor = '#5B8FF9';
+            const columnWeekPlot = new Column('cluesChart5', {
+              data:$this.searchResult.weekCount,
+              xField: 'weekday',
+              yField: 'number',
+              appendPadding:[15,15,15,15],
+              seriesField: '',
+              color: ({ weekday }) => {
+                var currentColor = defaultColor;
+                $this.maxWeek.forEach(function(item,index){
+                  if(weekday == item){
+                    currentColor = maxColor;
+                  }
+                });
+                $this.minWeek.forEach(function(item,index){
+                  if(weekday == item){
+                    currentColor = minColor;
+                  }
+                });
+                return currentColor;
+              },
+              xAxis:{
+                label:{
+                  autoHide:true
+                },
+              },
+              label:{
+                position:'top',
+                offsetY:8,
+                style: {
+                  fill: '#000',
+                  opacity:1
+                },
+              },
+              tooltip: {
+                formatter: (datum) => {
+                  return { name: "询盘个数", value: datum.number };
+                },
+                title:(e)=>{
+                  return e.replace(/\n/g," ")
+                }
+              },
+              meta: {
+                weekday: {
+                  alias: '星期',
+                },
+                number: {
+                  alias: '询盘个数',
+                  max: $this.maxWeekNum,
+                  min: 0,
+                },
+              },
             });
-            $this.minWeek.forEach(function(item,index){
-              if(weekday == item){
-                currentColor = minColor;
-              }
-            });
-            return currentColor;
-          },
-          xAxis:{
-            label:{
-              autoHide:true
-            },
-          },
-          label:{
-            position:'top',
-            offsetY:8,
-            style: {
-              fill: '#000',
-              opacity:1
-            },
-          },
-          tooltip: {
-            formatter: (datum) => {
-              return { name: "询盘个数", value: datum.number };
-            },
-            title:(e)=>{
-              return e.replace(/\n/g," ")
-            }
-          },
-          meta: {
-            weekday: {
-              alias: '星期',
-            },
+            $this.columnWeekPlot = columnWeekPlot;
+            columnWeekPlot.render();
+        }else{
+          // Step 1: 创建 Chart 对象
+          const chart = new $this.$F2.Chart({
+            id: 'cluesChart5',
+            pixelRatio: window.devicePixelRatio // 指定分辨率
+          });
+          // Step 2: 载入数据源
+          chart.source($this.searchResult.weekCount, {
             number: {
-              alias: '询盘个数',
-              max: $this.maxWeekNum,
-              min: 0,
-            },
-          },
-        });
-        $this.columnWeekPlot = columnWeekPlot;
-        columnWeekPlot.render();
+              tickCount:4
+            }
+          });
+          // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
+          chart.interval()
+            .position('weekday*number')
+            .color('weekday');
+
+          // Step 4: 渲染图表
+          chart.render();
+        }
       }
     },
     // 图表功能
@@ -2046,247 +2235,319 @@ export default {
     // 图表功能
     drawChart8(){
       var $this = this;
-      if($this.searchResult.hoursCount.length>0){
-        const maxColor = '#FF4500';
-        const minColor = '#1CC25E';
-        const defaultColor = '#5B8FF9';
-        const columnHoursPlot = new Column('cluesChart8', {
-          data:$this.searchResult.hoursCount,
-          xField: 'hours',
-          yField: 'number',
-          appendPadding:[15,15,15,15],
-          seriesField: '',
-          color: ({ hours }) => {
-            var currentColor = defaultColor;
-            $this.maxHours.forEach(function(item,index){
-              if(hours == item){
-                currentColor = maxColor;
-              }
+      if($this.searchResult.hoursCount.length>0){        
+        if($this.device == "desktop"){
+            const maxColor = '#FF4500';
+            const minColor = '#1CC25E';
+            const defaultColor = '#5B8FF9';
+            const columnHoursPlot = new Column('cluesChart8', {
+              data:$this.searchResult.hoursCount,
+              xField: 'hours',
+              yField: 'number',
+              appendPadding:[15,15,15,15],
+              seriesField: '',
+              color: ({ hours }) => {
+                var currentColor = defaultColor;
+                $this.maxHours.forEach(function(item,index){
+                  if(hours == item){
+                    currentColor = maxColor;
+                  }
+                });
+                $this.minHours.forEach(function(item,index){
+                  if(hours == item){
+                    currentColor = minColor;
+                  }
+                });
+                return currentColor;
+              },
+              xAxis:{
+                label:{
+                  autoHide:true
+                },
+              },
+              label:{
+                position:'top',
+                offsetY:8,
+                style: {
+                  fill: '#000',
+                  opacity:1
+                },
+              },
+              tooltip: {
+                formatter: (datum) => {
+                  return { name: "询盘个数", value: datum.number };
+                },
+                title:(e)=>{
+                  return e.replace(/\n/g," ")
+                }
+              },
+              meta: {
+                weekday: {
+                  alias: '时段',
+                },
+                number: {
+                  alias: '询盘个数',
+                  max: $this.maxHoursNum,
+                  min: 0,
+                },
+              },
             });
-            $this.minHours.forEach(function(item,index){
-              if(hours == item){
-                currentColor = minColor;
-              }
-            });
-            return currentColor;
-          },
-          xAxis:{
-            label:{
-              autoHide:true
-            },
-          },
-          label:{
-            position:'top',
-            offsetY:8,
-            style: {
-              fill: '#000',
-              opacity:1
-            },
-          },
-          tooltip: {
-            formatter: (datum) => {
-              return { name: "询盘个数", value: datum.number };
-            },
-            title:(e)=>{
-              return e.replace(/\n/g," ")
-            }
-          },
-          meta: {
-            weekday: {
-              alias: '时段',
-            },
+            $this.columnHoursPlot = columnHoursPlot;
+            columnHoursPlot.render();
+        }else{
+          // Step 1: 创建 Chart 对象
+          const chart = new $this.$F2.Chart({
+            id: 'cluesChart8',
+            pixelRatio: window.devicePixelRatio // 指定分辨率
+          });
+          // Step 2: 载入数据源
+          chart.source($this.searchResult.hoursCount, {
             number: {
-              alias: '询盘个数',
-              max: $this.maxHoursNum,
-              min: 0,
-            },
-          },
-        });
-        $this.columnHoursPlot = columnHoursPlot;
-        columnHoursPlot.render();
+              tickCount:12
+            }
+          });
+          // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
+          chart.interval()
+            .position('hours*number')
+            .color('hours');
+
+          // Step 4: 渲染图表
+          chart.render();
+        }
       }
     },
     // 图表功能
     drawChart9(){
       var $this = this;
-      if($this.searchResult.productCount.length>0){
-        const maxColor = '#FF4500';
-        const minColor = '#1CC25E';
-        const defaultColor = '#5B8FF9';
-        const columnProductPlot = new Column('cluesChart9', {
-          data:$this.searchResult.productCount,
-          xField: 'name',
-          yField: 'number',
-          appendPadding:[15,15,15,15],
-          seriesField: '',
-          color: ({ name }) => {
-            var currentColor = defaultColor;
-            $this.maxProduct.forEach(function(item,index){
-              if(name == item){
-                currentColor = maxColor;
-              }
+      if($this.searchResult.productCount.length>0){       
+        if($this.device == "desktop"){
+            const maxColor = '#FF4500';
+            const minColor = '#1CC25E';
+            const defaultColor = '#5B8FF9';
+            const columnProductPlot = new Column('cluesChart9', {
+              data:$this.searchResult.productCount,
+              xField: 'name',
+              yField: 'number',
+              appendPadding:[15,15,15,15],
+              seriesField: '',
+              color: ({ name }) => {
+                var currentColor = defaultColor;
+                $this.maxProduct.forEach(function(item,index){
+                  if(name == item){
+                    currentColor = maxColor;
+                  }
+                });
+                $this.minProduct.forEach(function(item,index){
+                  if(name == item){
+                    currentColor = minColor;
+                  }
+                });
+                return currentColor;
+              },
+              xAxis:{
+                label:{
+                  autoHide:true
+                },
+              },
+              label:{
+                position:'top',
+                offsetY:8,
+                style: {
+                  fill: '#000',
+                  opacity:1
+                },
+              },
+              tooltip: {
+                formatter: (datum) => {
+                  return { name: "询盘个数", value: datum.number };
+                },
+                title:(e)=>{
+                  return e.replace(/\n/g," ")
+                }
+              },
+              meta: {
+                name: {
+                  alias: '产品',
+                },
+                number: {
+                  alias: '询盘个数',
+                  max: $this.maxProductNum,
+                  min: 0,
+                },
+              },
             });
-            $this.minProduct.forEach(function(item,index){
-              if(name == item){
-                currentColor = minColor;
-              }
-            });
-            return currentColor;
-          },
-          xAxis:{
-            label:{
-              autoHide:true
-            },
-          },
-          label:{
-            position:'top',
-            offsetY:8,
-            style: {
-              fill: '#000',
-              opacity:1
-            },
-          },
-          tooltip: {
-            formatter: (datum) => {
-              return { name: "询盘个数", value: datum.number };
-            },
-            title:(e)=>{
-              return e.replace(/\n/g," ")
-            }
-          },
-          meta: {
-            name: {
-              alias: '产品',
-            },
+            $this.columnProductPlot = columnProductPlot;
+            columnProductPlot.render();
+        }else{
+          // Step 1: 创建 Chart 对象
+          const chart = new $this.$F2.Chart({
+            id: 'cluesChart9',
+            pixelRatio: window.devicePixelRatio // 指定分辨率
+          });
+          // Step 2: 载入数据源
+          chart.source($this.searchResult.productCount, {
             number: {
-              alias: '询盘个数',
-              max: $this.maxProductNum,
-              min: 0,
-            },
-          },
-        });
-        $this.columnProductPlot = columnProductPlot;
-        columnProductPlot.render();
+              tickCount:10
+            }
+          });
+          // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
+          chart.interval()
+            .position('name*number')
+            .color('name');
+
+          // Step 4: 渲染图表
+          chart.render();
+        }
       }
     },
     // 图表功能
     drawChart10(){
       var $this = this;
-      if($this.searchResult.regionMap.length>0){
-        fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
-        .then(res => res.json())
-        .then(GeoJSON => {
-          const chart = new Chart({
-            container: 'cluesChart10',
-            width: 860,
-            height: 500,
-            padding: [15,50]
-          });
-          chart.scale({
-            latitude: { sync: true },
-            longitude: { sync: true }
-          });
-          chart.tooltip({
-            showTitle: false,
-            showMarkers: false,
-            shared: true,
-          });
-          // 同步度量
-          chart.scale({
-            longitude: {
-              sync: true
-            },
-            latitude: {
-              sync: true
-            }
-          });
-          chart.axis(false);
-          chart.legend('trend', {
-            position: 'left'
-          });
-          
-          var ds = new DataSet();
-          const geoDv = ds.createView('back').source(GeoJSON, {type: 'GeoJSON'});
-          const geoView = chart.createView();
-          geoView.data(geoDv.rows);
-          geoView.tooltip(false);
-          geoView.polygon()
-            .position('longitude*latitude')
-            .color('grey')
-            .style({
-              fill: '#fff',
-              stroke: '#ccc',
-              lineWidth: 1,
-            });
+      if($this.searchResult.regionMap.length>0){     
+        if($this.device == "desktop"){
+            fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
+            .then(res => res.json())
+            .then(GeoJSON => {
+              const chart = new Chart({
+                container: 'cluesChart10',
+                width: 860,
+                height: 500,
+                padding: [15,50]
+              });
+              chart.scale({
+                latitude: { sync: true },
+                longitude: { sync: true }
+              });
+              chart.tooltip({
+                showTitle: false,
+                showMarkers: false,
+                shared: true,
+              });
+              // 同步度量
+              chart.scale({
+                longitude: {
+                  sync: true
+                },
+                latitude: {
+                  sync: true
+                }
+              });
+              chart.axis(false);
+              chart.legend('trend', {
+                position: 'left'
+              });
+              
+              var ds = new DataSet();
+              const geoDv = ds.createView('back').source(GeoJSON, {type: 'GeoJSON'});
+              const geoView = chart.createView();
+              geoView.data(geoDv.rows);
+              geoView.tooltip(false);
+              geoView.polygon()
+                .position('longitude*latitude')
+                .color('grey')
+                .style({
+                  fill: '#fff',
+                  stroke: '#ccc',
+                  lineWidth: 1,
+                });
 
-          const userData = [];
-          $this.searchResult.regionMap.forEach(function(item,index){
-            var itemData = {};
-            itemData.name = item.name;
-            itemData.value = item.number;
-            userData.push(itemData);
-          });
-          const userDv = ds.createView().source(userData).transform({
-            // sizeByCount: true,
-            geoDataView: geoDv,
-            field: 'name',
-            type: 'geo.region',
-            as: ['longitude', 'latitude']
-          }).transform({
-            type: 'map',
-            callback: obj => {
-              if(obj.value <10){
-                  obj.trend="0-10";
-              }else if(obj.value <20 && obj.value>=10){
-                  obj.trend="10-20";
-              }else if(obj.value <30 && obj.value>=20){
-                  obj.trend="20-30";
-              }else if(obj.value <40 && obj.value>=30){
-                  obj.trend="30-40";
-              }else if(obj.value <50 && obj.value>=40){
-                  obj.trend="40-50";
-              }else if(obj.value <60 && obj.value>=50){
-                  obj.trend="50-60";
-              }else if(obj.value <100 && obj.value>=60){
-                  obj.trend="60-100";
-              }else if(obj.value <300 && obj.value>=100){
-                  obj.trend="100-300";
-              }else if(obj.value <500 && obj.value>=300){
-                  obj.trend="300-500";
-              }else if(obj.value <800 && obj.value>=500){
-                  obj.trend="500-800";
-              }else{
-                  obj.trend="大于800";
-              }
-              return obj;
-            }
-          });
-          console.log(userDv,"用户数据");
-          const userView = chart.createView();
-          userView.data(userDv.rows);
-          userView.scale({
-            value: {
-              alias: '数量'
-            },
-            name:{
-              alias:"地区"
-            }
-          });
-          userView.polygon()
-            .position('longitude*latitude')
-            .color('trend', ['#fbdee2', '#febbc3', '#f1a2a8', '#e89196', '#c95356', '#de7d82', '#d4686c', '#bf3e41', '#f9b1b8', '#b52b2c', '#ac191a','#8f0303' ])
-            .tooltip('name*value')
-            .style({
-              fillOpacity: 0.85
-            }).animate({
-              leave: {
-                animation: 'fade-out'
-              }
+              const userData = [];
+              $this.searchResult.regionMap.forEach(function(item,index){
+                var itemData = {};
+                itemData.name = item.name;
+                itemData.value = item.number;
+                userData.push(itemData);
+              });
+              const userDv = ds.createView().source(userData).transform({
+                // sizeByCount: true,
+                geoDataView: geoDv,
+                field: 'name',
+                type: 'geo.region',
+                as: ['longitude', 'latitude']
+              }).transform({
+                type: 'map',
+                callback: obj => {
+                  if(obj.value <10){
+                      obj.trend="0-10";
+                  }else if(obj.value <20 && obj.value>=10){
+                      obj.trend="10-20";
+                  }else if(obj.value <30 && obj.value>=20){
+                      obj.trend="20-30";
+                  }else if(obj.value <40 && obj.value>=30){
+                      obj.trend="30-40";
+                  }else if(obj.value <50 && obj.value>=40){
+                      obj.trend="40-50";
+                  }else if(obj.value <60 && obj.value>=50){
+                      obj.trend="50-60";
+                  }else if(obj.value <100 && obj.value>=60){
+                      obj.trend="60-100";
+                  }else if(obj.value <300 && obj.value>=100){
+                      obj.trend="100-300";
+                  }else if(obj.value <500 && obj.value>=300){
+                      obj.trend="300-500";
+                  }else if(obj.value <800 && obj.value>=500){
+                      obj.trend="500-800";
+                  }else{
+                      obj.trend="大于800";
+                  }
+                  return obj;
+                }
+              });
+              console.log(userDv,"用户数据");
+              const userView = chart.createView();
+              userView.data(userDv.rows);
+              userView.scale({
+                value: {
+                  alias: '数量'
+                },
+                name:{
+                  alias:"地区"
+                }
+              });
+              userView.polygon()
+                .position('longitude*latitude')
+                .color('trend', ['#fbdee2', '#febbc3', '#f1a2a8', '#e89196', '#c95356', '#de7d82', '#d4686c', '#bf3e41', '#f9b1b8', '#b52b2c', '#ac191a','#8f0303' ])
+                .tooltip('name*value')
+                .style({
+                  fillOpacity: 0.85
+                }).animate({
+                  leave: {
+                    animation: 'fade-out'
+                  }
+                });
+              userView.interaction('element-active');
+              $this.chart = chart;
+              chart.render();
             });
-          userView.interaction('element-active');
-          $this.chart = chart;
-          chart.render();
-        });
+        }else{                  
+          //const DataSet = window.DataSet;
+          //fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
+          //  .then(res => res.json())
+          //  .then(GeoJSON => {
+          //    const geoDv = new DataSet.View().source(GeoJSON, {
+          //      type: 'GeoJSON'
+          //    });
+          //    const chart = new $this.$F2.Chart({
+          //      id: 'cluesChart10',
+          //      padding: 0,
+          //      pixelRatio: window.devicePixelRatio
+          //    });
+          //    chart.legend(false);
+          //    chart.axis(false);
+          //    chart.tooltip(false);
+          //    chart.source(geoDv.rows);
+          //    chart.polygon()
+          //      .position('longitude*latitude')
+          //      .color('grey')
+          //      .style({
+          //        fill: '#fff',
+          //        stroke: '#ccc',
+          //        lineWidth: 1,
+          //      });
+
+          //    chart.render();
+          //  });
+          }
       }
     },
     getSummaries(param){

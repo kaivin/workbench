@@ -96,13 +96,13 @@
                 </div>
               </div>
             </div>
-            <div class="card-header ArticleSearchScreen" v-else>
-                <div class="search-panel ArticleSearch">                              
+            <div class="card-header filter-panel" v-else>
+                <div class="search-panel">                          
                     <el-input placeholder="输入ip或域名" v-model="formData.ip" class="article-search">
                       <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
                     </el-input>
                 </div>
-                <span class="WebsiteListScreen" v-on:click="searchDialog()">筛选</span>
+                <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
             </div>
           </div>
           <div class="card-content WebsiteList-Wrap" ref="cardContent">

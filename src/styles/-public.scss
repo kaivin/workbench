@@ -226,6 +226,15 @@
                 }
             }
         }
+        h2{
+            clear: both;
+            display: block;
+            overflow: hidden;
+            font-size: 14px;
+            color: #2e84f6;
+            line-height: 24px;
+            padding-bottom: 10px;
+        }
     }
     .filter-button{
       color: #1f2d3d;
@@ -342,7 +351,15 @@
                }
            }
            .item-li{
-               margin-bottom: 20px;
+               margin-bottom:10px;
+               .item-En{
+                   float: left;
+                   width:48%;
+                   margin-left: 4%;
+                   &:first-child{
+                       margin-left: 0px;
+                   }
+               }
            }
            .item-filter{
                width: 100%;

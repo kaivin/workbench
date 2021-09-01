@@ -31,8 +31,19 @@
       <div class="abs-panel" ref="mainPane">
           <div class="scroll-panel" ref="scrollPane">
             <el-card class="box-card scroll-card SaleCardFlFrTable" shadow="hover">
-              <div slot="header">
-                <div class="card-header" ref="headerPane">
+              <div slot="header">  
+                  <div class="card-header" ref="headerPane"> 
+                  <div class="filter-panel" v-if="device==='mobile'">
+                      <div class="search-panel">
+                          <el-input class="article-search" size="small"
+                              placeholder="富通ID/分配ID"
+                              v-model="searchData.ftword_id"
+                              clearable>
+                            <el-button slot="append" @click="searchResult()"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
+                          </el-input>
+                      </div>
+                      <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
+                  </div>       
                     <ul class="clues-warn"  v-if="infoData.warnlist.length>0">
                         <li v-for="(item,index) in infoData.warnlist" v-bind:key="item.id"  @click="editTableRow(item,index,'1')">[提醒{{index}}]&nbsp;ID：{{item.id}}&nbsp;内容：{{item.givesaleswarn}}</li>
                     </ul>
@@ -167,7 +178,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                  </div>
               </div>
               <div class="card-content" ref="tableContent">
                 <el-table
@@ -336,6 +347,187 @@
           </div>
       </div>
     </div>
+    <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
+    <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
+      <div class="flex-content">
+        <div class="abs-scroll">        
+          <ul>
+            <li>
+              <div class="item-li">
+                <span class="title-panel">分配时间</span>
+                <div class="item-filter">
+                    <el-select v-model="searchData.timetype" size="small" clearable placeholder="分配时间">
+                        <el-option
+                            v-for="item in timetypelist"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">开始时间</span>
+                <div class="item-filter">
+                  <el-date-picker
+                    v-model="searchData.startDate"
+                    size="small"
+                    type="datetime"
+                    placeholder="选择开始时间"
+                    value-format="yyyy-MM-dd HH:mm:ss">
+                  </el-date-picker>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">结束时间</span>
+                <div class="item-filter">
+                    <el-date-picker
+                      v-model="searchData.endData"
+                      size="small"
+                      type="datetime"
+                      placeholder="选择结束时间"
+                      value-format="yyyy-MM-dd HH:mm:ss">
+                    </el-date-picker>
+                </div>
+              </div>
+              <div class="item-li" v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'">
+                <span class="title-panel">业务员</span>
+                <div class="item-filter">
+                    <el-select v-model="searchData.salesuserid" size="small" clearable placeholder="业务员" >
+                        <el-option
+                            v-for="item in salesuseridList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">大洲</span>
+                <div class="item-filter">
+                    <el-select v-model="searchData.continent" size="small" clearable placeholder="大洲" >
+                        <el-option
+                            v-for="item in continentlist"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">产品类型</span>
+                <div class="item-filter">
+                    <el-select v-model="searchData.producttype_id" size="small" clearable placeholder="产品类型" @change="currentCateChange" >
+                        <el-option
+                            v-for="item in producttype_idList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">产品</span>
+                <div class="item-filter">
+                        <el-select v-model="searchData.productid" size="small" clearable placeholder="产品名" >
+                            <el-option
+                                v-for="item in productidList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">处理</span>
+                <div class="item-filter">
+                    <el-select v-model="searchData.managestatus" size="small" clearable placeholder="处理">
+                        <el-option
+                            v-for="item in managestatusList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">回复</span>
+                <div class="item-filter">
+                    <el-select v-model="searchData.replystatus" size="small" clearable placeholder="回复情况">
+                        <el-option
+                            v-for="item in replystatusList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">性质</span>
+                <div class="item-filter">
+                    <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质">
+                        <el-option
+                            v-for="item in ennatureList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">需求</span>
+                <div class="item-filter">
+                    <el-select v-model="searchData.enxunprice" size="small" clearable placeholder="需求">
+                        <el-option
+                            v-for="item in enxunpriceList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">反馈</span>
+                <div class="item-filter">
+                    <el-checkbox-group v-model="feedbackArr" class="SalesCardcheckbox" @change="feedbackClick">
+                      <el-checkbox v-for="item in feedbackList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                    </el-checkbox-group>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">客户联系方式</span>
+                <div class="item-filter">
+                    <el-input size="small"
+                        placeholder="客户联系方式"
+                        v-model="searchData.keyword"
+                        clearable>
+                    </el-input>
+                </div>
+              </div>
+              <div class="item-li">
+                <span class="title-panel">富通ID/分配ID</span>
+                <div class="item-filter">
+                    <el-input size="small"
+                        placeholder="富通ID/分配ID"
+                        v-model="searchData.ftword_id"
+                        clearable>
+                    </el-input>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-button"><span class="btn-yes" v-on:click="searchResult()">确定</span></p>
+    </div>
   </div>
 </template>
 
@@ -371,7 +563,9 @@ export default {
         ftword_id:"",
         deal:"",
         date:[],
-        salesuserid: ""
+        salesuserid: "",
+        startData:"",
+        endData:"",
       },
       timetypelist:[
         {label:"按照分配时间",value:1},
@@ -443,6 +637,7 @@ export default {
         warnlist:[]
       },
       isTableRow:true,
+      openClass:false,
       permitStatus:[],
       permitField:[],
       selectedData:[],
@@ -545,7 +740,8 @@ export default {
       $this.searchData.feedback='';
       $this.searchData.ftword_id='';
       $this.searchData.deal='';
-      $this.searchData.salesuserid='';
+      $this.searchData.startDate='';
+      $this.searchData.endDate='';
       $this.salesuseridList=[];
       $this.dealuserList=[];      
       $this.infoData.allcount=0;
@@ -560,7 +756,38 @@ export default {
     },
     // 搜索结果
     searchResult(DealVal){
-      var $this = this;      
+      var $this = this;
+      var isSearch = true;
+      if($this.device==="mobile"){
+        if(($this.searchData.startDate==""&&$this.searchData.endDate!="")||($this.searchData.startDate!=""&&$this.searchData.endDate=="")){
+          isSearch = false;
+        }else{
+          if($this.searchData.startDate!=""&&$this.searchData.endDate!=""){
+            if(!$this.compareDate($this.searchData.startDate,$this.searchData.endDate)){
+              isSearch = false;
+            }
+          }
+        }
+      }
+      if(!isSearch){
+        if($this.searchData.startDate==""&&$this.searchData.endDate!=""){
+          $this.$alert('结束时间不为空时开始时间不能为空', '警告', {
+            confirmButtonText: '确定',
+          });
+        }
+        if($this.searchData.startDate!=""&&$this.searchData.endDate==""){
+          $this.$alert('开始时间不为空时结束时间不能为空', '警告', {
+            confirmButtonText: '确定',
+          });
+        }
+        if($this.searchData.startDate!=""&&$this.searchData.endDate!=""){
+          $this.$alert('开始时间不能大于结束时间', '警告', {
+            confirmButtonText: '确定',
+          });
+        }
+        return false;
+      }
+      $this.openClass = false;      
       $this.tableData=[];
       if(DealVal&&DealVal!=''&&DealVal!=undefined){
         $this.searchData.deal=DealVal;
@@ -741,10 +968,15 @@ export default {
       }
       if($this.searchData.replystatus&&$this.searchData.replystatus!=''){
         searchData.replystatus = $this.searchData.replystatus;
-      }
-      if($this.searchData.date&&$this.searchData.date.length>0){
-        searchData.starttime = $this.searchData.date[0];
-        searchData.endtime = $this.searchData.date[1];
+      }  
+      if($this.device === "mobile"){
+        searchData.starttime = $this.searchData.startDate;
+        searchData.endtime = $this.searchData.endDate;
+      }else{
+        if($this.searchData.date!=''){
+          searchData.starttime = $this.searchData.date[0];
+          searchData.endtime = $this.searchData.date[1];
+        }
       }
       if($this.searchData.keyword&&$this.searchData.keyword!=''){
         searchData.keyword = $this.searchData.keyword;
@@ -1089,6 +1321,21 @@ export default {
             }
           }
       });
+    },
+    // 高级筛选
+    searchDialog(){
+      var $this = this;
+      $this.openClass=!$this.openClass;
+    },
+    // 比较两个时间的先后
+    compareDate(date1,date2){
+      var oDate1 = new Date(date1);
+      var oDate2 = new Date(date2);
+      if(oDate1.getTime() > oDate2.getTime()){
+          return false;
+      }else{
+          return true;
+      }
     },
   }
 }
