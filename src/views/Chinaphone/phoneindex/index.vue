@@ -88,98 +88,111 @@
               <div class="card-header EnphoneCardHeader" ref="headerPane">
                   <h2 class="clues-title">当前信息：{{currentPhone}}</h2>
                   <div class="search-wrap" v-if="device==='desktop'">
-                    <el-date-picker
-                        v-model="searchData.date"
-                        type="daterange"
-                        align="right"
-                        value-format = "yyyy-MM-dd"
-                        unlink-panels
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        style="float:left;margin: 5px;"
-                        :picker-options="pickerRangeOptions">
-                    </el-date-picker>
-                    <el-input
-                      style="width: 150px;margin: 5px;float:left;"
-                      placeholder="域名、备注等"
-                      v-model="searchData.name"
-                      clearable>
-                    </el-input>
-                    <el-select v-model="searchData.mode" clearable placeholder="渠道" style="width:120px;margin: 5px;float:left;">
+                    <div class="item-search" style="width: 240px;">
+                      <el-date-picker
+                          v-model="searchData.date"
+                          class="date-range"
+                          type="daterange"
+                          align="right"
+                          value-format = "yyyy-MM-dd"
+                          unlink-panels
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"
+                          size="small"
+                          :picker-options="pickerRangeOptions">
+                      </el-date-picker>
+                    </div>
+                    <div class="item-search" style="width: 150px;">
+                      <el-input
+                        placeholder="域名、备注等"
+                        class="tips-bg-1"
+                        size="small"
+                        v-model="searchData.name"
+                        clearable>
+                      </el-input>
+                    </div>
+                    <div class="item-search" style="width: 100px;">
+                      <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道">
                         <el-option
                             v-for="item in sourceList"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
                         </el-option>
-                    </el-select>
-                    <el-select v-model="searchData.typekey" clearable placeholder="分类" style="width:100px;margin: 5px;float:left;">
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width: 100px;">
+                      <el-select v-model="searchData.typekey" size="small" clearable placeholder="分类">
                         <el-option
                             v-for="item in productTypeList"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
                         </el-option>
-                    </el-select>
-                    <el-select v-model="searchData.level_id" clearable placeholder="级别" style="width:100px;margin: 5px;float:left;">
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width: 80px;">
+                      <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别">
                         <el-option
                             v-for="item in levelList"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
                         </el-option>
-                    </el-select>
-                    <el-select v-model="searchData.productlevel" clearable placeholder="类别" style="width:100px;margin: 5px;float:left;">
-                      <el-option
-                        v-for="item in categoryList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                    <el-select v-model="searchData.userid" clearable placeholder="提供者" style="width:100px;margin: 5px;float:left;">
-                      <el-option
-                        v-for="item in userList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                    <el-select v-model="searchData.device" clearable placeholder="设备" style="width:80px;margin: 5px;float:left;">
-                      <el-option
-                        v-for="item in deviceList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                    <el-select v-model="searchData.effective" clearable placeholder="价值" style="width:80px;margin: 5px;float:left;">
-                      <el-option
-                        v-for="item in effectiveList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                    <el-button class="item-input" type="primary" icon="el-icon-search" @click="searchResult" style="margin: 5px;float:left;">查询</el-button>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width: 100px;">
+                      <el-select v-model="searchData.productlevel" size="small" clearable placeholder="类别">
+                        <el-option
+                          v-for="item in categoryList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width: 100px;">
+                      <el-select v-model="searchData.userid" size="small" clearable placeholder="提供者">
+                        <el-option
+                          v-for="item in userList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width: 80px;">
+                      <el-select v-model="searchData.device" size="small" clearable placeholder="设备">
+                        <el-option
+                          v-for="item in deviceList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width: 80px;">
+                      <el-select v-model="searchData.effective" size="small" clearable placeholder="价值">
+                        <el-option
+                          v-for="item in effectiveList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search">
+                      <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
+                    </div>
                   </div>
-                  <div class="clues-info flex-wrap">
+                  <div class="clues-info flex-box">
                        <div class="clues-infoFl flex-content">
-                            <p>
-                                <span class="item-span-1">共有<strong>{{infoData.totalCount}}</strong>条信息</span>|
-                                <span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条，</span>
-                                <span class="item-span-2">无效：<strong>{{infoData.invalidCount}}</strong>条</span>|
-                                <span class="item-span-3">一类产品<strong>{{infoData.levelOneCount}}</strong>个，二类产品<b>{{infoData.levelTwoCount}}</b>个</span>
-                                <span class="item-span-1">本月共有<strong>{{infoData.totalCountMonth}}</strong>条信息</span>|
-                                <span class="item-span-2">有效：<strong>{{infoData.effectiveCountMonth}}</strong>条</span>|
-                                <span class="item-span-2">无效：<strong>{{infoData.invalidCountMonth}}</strong>条。</span>
-                                <span class="item-span-3">一类产品<strong>{{infoData.levelOneCountMonth}}</strong>个，二类产品<b>{{infoData.levelTwoCountMonth}}</b>个</span>
-                            </p>
+                            <p><span>共有<strong class="color1">{{infoData.totalCount}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效<strong class="color3">{{infoData.invalidCount}}</strong>条，一类产品<strong class="color4">{{infoData.levelOneCount}}</strong>个，二类产品<b class="color5">{{infoData.levelTwoCount}}</b>个。</span><span>||</span><span>本月共有<strong class="color1">{{infoData.totalCountMonth}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCountMonth}}</strong>条，无效<strong class="color3">{{infoData.invalidCountMonth}}</strong>条，一类产品<strong class="color4">{{infoData.levelOneCountMonth}}</strong>个，二类产品<b class="color5">{{infoData.levelTwoCountMonth}}</b>个。</span></p>
                        </div>
                        <div class="clues-title-btn">
                           <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
-                          <el-button type="primary" size="small" class="editorNote" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_othereditall')" v-on:click="editPageNote()"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改当前页备注</el-button>
+                          <el-button type="primary" size="small" class="editorNote" :disabled="isDisabled" v-if="writepermit&&menuButtonPermit.includes('Chinaphone_othereditall')" v-on:click="editPageNote()"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改当前页备注</el-button>
                        </div>
                   </div>
               </div>
@@ -397,13 +410,13 @@
         </div>
       </div>
     </div>
-    <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="400px">
+    <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="440px">
       <el-form :inline="true" :model="exportForm">
         <el-form-item label="文件名称：" :label-width="formLabelWidth">
           <el-input v-model="exportForm.fileName" placeholder="文件名 (默认：excel-list)" prefix-icon="el-icon-document"></el-input>
         </el-form-item>
         <el-form-item label="文件类型：" :label-width="formLabelWidth">
-          <el-select v-model="exportForm.bookType" placeholder="请选择导出文件类型">
+          <el-select v-model="exportForm.bookType" placeholder="请选择导出文件类型" style="display:block;">
             <el-option label="xlsx" value="xlsx"></el-option>
             <el-option label="csv" value="csv"></el-option>
             <el-option label="txt" value="txt"></el-option>

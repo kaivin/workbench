@@ -1,190 +1,207 @@
 ﻿<template>
-  <div class="page-root scroll-panel" ref="boxPane">
-    <el-card class="box-card scroll-card" shadow="hover">
-        <div class="card-content EnphoneAddEdit" ref="tableContent">
-            <div class="EnphoneAddEditMain CnphoneAdd">
-                <div class="EnphoneAddEditMainItem phone-list">
-                  <dl>
-                    <dt>来源电话：<span>*</span></dt>
-                    <dd>
-                      <div class="clues-list customRadio">
-                        <span class="item-clues" v-for="item in phoneList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="phoneClick(item.id)"><i></i>{{item.phonenumber}}</span>
-                      </div>
-                    </dd>
-                  </dl>
+  <div class="page-root" ref="boxPane">
+    <div class="abs-panel" ref="mainPane">
+      <div class="scroll-panel" ref="scrollPane">
+        <el-card class="box-card scroll-card" shadow="hover">
+            <div class="card-content EnphoneAddEdit" :style="'min-height:'+minHeight+'px;'" ref="tableContent">
+                <div class="EnphoneAddEditMain CnphoneAdd">
+                    <div class="EnphoneAddEditMainItem phone-list">
+                      <dl>
+                        <dt>来源电话：<span>*</span></dt>
+                        <dd>
+                          <div class="clues-list customRadio">
+                            <span class="item-clues" v-for="item in phoneList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="phoneClick(item.id)"><i></i>{{item.phonenumber}}</span>
+                          </div>
+                        </dd>
+                      </dl>
+                    </div>
+                    <div class="EnphoneAddEditMainItem customer-info">
+                        <dl style="width: 160px;">
+                          <dt>来源时间：<span>*</span></dt>
+                          <dd>
+                            <el-date-picker
+                                v-model="formData.xuntime"
+                                class="date-time"
+                                size="small"
+                                type="datetime"
+                                placeholder="选择日期时间"
+                                value-format = "yyyy-MM-dd HH:mm:ss"
+                                align="right"
+                                :picker-options="pickerOptions">
+                              </el-date-picker>
+                          </dd>
+                        </dl>
+                        <dl style="width: 100px;">
+                          <dt>客户省份：</dt>
+                          <dd>
+                            <el-input
+                                placeholder="地区"
+                                @blur="provinceChangeHandler"
+                                size="small"
+                                v-model="formData.province"
+                                clearable>
+                            </el-input>
+                          </dd>
+                        </dl>
+                        <dl style="width: 120px;">
+                          <dt>客户城市：</dt>
+                          <dd>
+                            <el-input
+                                placeholder="号码归属地"
+                                @blur="cityChangeHandler"
+                                size="small"
+                                v-model="formData.city"
+                                clearable>
+                            </el-input>
+                          </dd>
+                        </dl>
+                        <dl style="width: 100px;">
+                          <dt>来源渠道：<span>*</span></dt>
+                          <dd>
+                            <el-select v-model="formData.mode" size="small" clearable placeholder="设备">
+                                <el-option
+                                v-for="item in sourceList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                          </dd>
+                        </dl>
+                        <dl style="width: 250px;">
+                          <dt>来源网页：</dt>
+                          <dd>
+                            <el-input
+                                placeholder="来源页面"
+                                size="small"
+                                v-model="formData.url"
+                                @blur="urlChangePhone"
+                                clearable>
+                            </el-input>
+                          </dd>
+                        </dl>
+                    </div>
+                    <div class="EnphoneAddEditMainItem CnIntentionEquipment">
+                      <dl>
+                        <dt>意向设备：<span>* （注：如果为其他生产线、配件、其他产品，请在备注中注明具体产品）</span></dt>
+                        <dd>
+                          <div class="clues-list">
+                            <span class="item-clues" v-for="item in productList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="productClick(item.id)"><i></i>{{item.name}}</span>
+                          </div>
+                        </dd>
+                      </dl>
+                    </div>
+                    <div class="EnphoneAddEditMainItem material">
+                      <dl style="width: 250px;">
+                        <dt>用途：</dt>
+                        <dd>
+                            <el-input
+                              placeholder="用途"
+                              type="textarea"
+                              resize="none"
+                              :rows="4"
+                              size="small"
+                              v-model="formData.useing"
+                              clearable>
+                            </el-input>
+                        </dd>
+                      </dl>
+                      <dl style="width: 250px;">
+                        <dt>备注：</dt>
+                        <dd>
+                          <el-input
+                              placeholder="备注"
+                              type="textarea"
+                              :rows="4"
+                              resize="none"
+                              size="small"
+                              v-model="formData.custormremark"
+                              clearable>
+                          </el-input>
+                        </dd>
+                      </dl>
+                      <dl style="width: 250px;">
+                        <dt>原因：</dt>
+                        <dd>
+                          <el-input
+                              placeholder="原因"
+                              type="textarea"
+                              resize="none"
+                              :rows="4"
+                              size="small"
+                              v-model="formData.custormcause"
+                              clearable>
+                          </el-input>
+                        </dd>
+                      </dl>
+                    </div>
+                    <div class="EnphoneAddEditMainItem">
+                      <dl>
+                        <dt>级别：</dt>
+                        <dd>
+                          <div class="clues-list customRadio">
+                            <span class="item-clues" v-for="item in levelList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="levelClick(item.id)"><i></i>{{item.name}}</span>
+                          </div>
+                        </dd>
+                      </dl>
+                    </div>
+                    <div class="EnphoneAddEditMainItem">
+                      <dl>
+                        <dt>价格范围：</dt>
+                        <dd>
+                          <div class="clues-list customRadio">
+                            <span class="item-clues" v-for="item in priceList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="priceClick(item.id)"><i></i>{{item.name}}</span>
+                          </div>
+                        </dd>
+                      </dl>
+                    </div>
+                    <div class="EnphoneAddEditMainItem author">
+                        <dl>
+                          <dt>是否有效：</dt>
+                          <dd>
+                            <el-checkbox v-model="formData.effective" label="有效" border size="small"></el-checkbox>
+                          </dd>
+                        </dl>
+                        <dl style="width: 200px;">
+                          <dt>无效原因：</dt>
+                          <dd>
+                            <el-input
+                                placeholder="该项只在无效情况下填写"
+                                size="small"
+                                v-model="formData.invalidcause"
+                                :disabled="formData.effective"
+                                clearable>
+                            </el-input>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>添加人：</dt>
+                          <dd>
+                            <el-input
+                                size="small"
+                                v-model="userInfo.name"
+                                disabled>
+                            </el-input>
+                          </dd>
+                        </dl>
+                    </div>
+                    <div class="EnphoneAddEditMainItem btn-item">
+                        <dl>
+                          <dd>
+                            <el-button type="primary" class="updateBtn" size="large" v-if="menuButtonPermit.includes('Chinaphone_add')||menuButtonPermit.includes('Chinaphone_edit')" @click="saveData"><i class="svg-i planeWhite"><svg-icon icon-class="planeWhite" /></i>保存</el-button>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dd>
+                            <el-button type="info" plain class="resetBtn" size="large" v-on:click="resetFormData()">重置</el-button>
+                          </dd>
+                        </dl>
+                    </div>
                 </div>
-                <div class="EnphoneAddEditMainItem customer-info">
-                    <dl>
-                      <dt>来源时间：<span>*</span></dt>
-                      <dd>
-                        <el-date-picker
-                            style="display:block;width:100%;"
-                            v-model="formData.xuntime"
-                            size="small"
-                            type="datetime"
-                            placeholder="选择日期时间"
-                            value-format = "yyyy-MM-dd HH:mm:ss"
-                            align="right"
-                            :picker-options="pickerOptions">
-                          </el-date-picker>
-                      </dd>
-                    </dl>
-                    <dl>
-                      <dt>客户省份：</dt>
-                      <dd>
-                        <el-input
-                            placeholder="地区"
-                            @blur="provinceChangeHandler"
-                            size="small"
-                            v-model="formData.province"
-                            clearable>
-                        </el-input>
-                      </dd>
-                    </dl>
-                    <dl>
-                      <dt>客户城市：</dt>
-                      <dd>
-                        <el-input
-                            placeholder="号码归属地"
-                            @blur="cityChangeHandler"
-                            size="small"
-                            v-model="formData.city"
-                            clearable>
-                        </el-input>
-                      </dd>
-                    </dl>
-                    <dl>
-                      <dt>来源渠道：<span>*</span></dt>
-                      <dd>
-                        <el-select v-model="formData.mode" size="small" clearable placeholder="设备">
-                            <el-option
-                            v-for="item in sourceList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                      </dd>
-                    </dl>
-                    <dl>
-                      <dt>来源网页：</dt>
-                      <dd>
-                        <el-input
-                            placeholder="来源页面"
-                            size="small"
-                            v-model="formData.url"
-                            @blur="urlChangePhone"
-                            clearable>
-                        </el-input>
-                      </dd>
-                    </dl>
-                </div>
-                <div class="EnphoneAddEditMainItem CnIntentionEquipment">
-                  <dl>
-                    <dt>意向设备：<span>*</span></dt>
-                    <dd>
-                      <div class="clues-list">
-                        <span class="item-clues" v-for="item in productList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="productClick(item.id)"><i></i>{{item.name}}</span>
-                      </div>
-                    <p>如果为其他生产线、配件、其他产品，请在备注中注明具体产品</p>
-                    </dd>
-                  </dl>
-                </div>
-                <div class="EnphoneAddEditMainItem material">
-                  <dl>
-                    <dt>用途：</dt>
-                    <dd>
-                        <el-input
-                          placeholder="用途"
-                          type="textarea"
-                          resize="none"
-                          :rows="4"
-                          size="small"
-                          v-model="formData.useing"
-                          clearable>
-                        </el-input>
-                    </dd>
-                  </dl>
-                  <dl>
-                    <dt>备注：</dt>
-                    <dd>
-                      <el-input
-                          placeholder="备注"
-                          type="textarea"
-                          :rows="4"
-                          resize="none"
-                          size="small"
-                          v-model="formData.custormremark"
-                          clearable>
-                      </el-input>
-                    </dd>
-                  </dl>
-                  <dl>
-                    <dt>原因：</dt>
-                    <dd>
-                      <el-input
-                          placeholder="原因"
-                          type="textarea"
-                          resize="none"
-                          :rows="4"
-                          size="small"
-                          v-model="formData.custormcause"
-                          clearable>
-                      </el-input>
-                    </dd>
-                  </dl>
-                </div>
-                <div class="EnphoneAddEditMainItem">
-                  <dl>
-                    <dt>级别：</dt>
-                    <dd>
-                      <div class="clues-list customRadio">
-                        <span class="item-clues" v-for="item in levelList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="levelClick(item.id)"><i></i>{{item.name}}</span>
-                      </div>
-                    </dd>
-                  </dl>
-                </div>
-                <div class="EnphoneAddEditMainItem">
-                  <dl>
-                    <dt>价格范围：</dt>
-                    <dd>
-                      <div class="clues-list customRadio">
-                        <span class="item-clues" v-for="item in priceList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="priceClick(item.id)"><i></i>{{item.name}}</span>
-                      </div>
-                    </dd>
-                  </dl>
-                </div>
-                <div class="EnphoneAddEditMainItem author">
-                    <dl>
-                      <dt>是否有效：</dt>
-                      <dd>
-                        <el-checkbox v-model="formData.effective" label="有效" border size="small"></el-checkbox>
-                      </dd>
-                    </dl>
-                    <dl>
-                      <dt>无效原因：</dt>
-                      <dd>
-                        <el-input
-                            placeholder="该项只在无效情况下填写"
-                            size="small"
-                            v-model="formData.invalidcause"
-                            :disabled="formData.effective"
-                            clearable>
-                        </el-input>
-                      </dd>
-                    </dl>
-                    <dl>
-                      <dt>添加人：</dt>
-                      <dd><p>{{userInfo.name}}</p></dd>
-                    </dl>
-                </div>
-            </div>      
-          <div class="card-header WebServerAddEditBtn EnphoneAddEditBtn" ref="headerPane">
-              <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Chinaphone_add')||menuButtonPermit.includes('Chinaphone_edit')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
-              <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
-          </div>
-        </div>
-    </el-card>
+            </div>
+        </el-card>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -195,6 +212,7 @@ export default {
   data() {
     return {
       ID:null,
+      minHeight:0,
       menuButtonPermit:[],
       pickerOptions: {
           shortcuts: [{
@@ -248,6 +266,37 @@ export default {
       'userInfo',
       'device'
     ]),
+  },
+  mounted(){
+      const $this = this;
+      this.$nextTick(function () {
+        if($this.device==="desktop"){
+          $this.minHeight = $this.$refs.boxPane.offsetHeight-30;
+        }else{
+          $this.minHeight = $this.$refs.boxPane.offsetHeight;
+        }
+      });
+      window.onresize = () => {
+          return (() => {
+            if($this.device==="desktop"){
+              $this.minHeight = $this.$refs.boxPane.offsetHeight-30;
+            }else{
+              $this.minHeight = $this.$refs.boxPane.offsetHeight;
+            }
+          })()
+      }
+  },
+  watch: {
+      tableHeight(val) {
+        if (!this.timer) {
+          this.tableHeight = val
+          this.timer = true
+          const $this = this
+          setTimeout(function() {
+            $this.timer = false
+          }, 400)
+        }
+      },
   },
   created(){
     var $this = this;

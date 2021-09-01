@@ -144,6 +144,7 @@
                 <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('User_edit')">编辑</el-button>
                 <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('User_delete')&&scope.row.is_delete==1" type="info" plain>启用</el-button>
                 <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('User_delete')&&scope.row.is_delete==0" type="info" plain>禁用</el-button>
+                <el-button size="mini" @click="showHideTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('User_showhide')">{{scope.row.user_show==1?'显示':'隐藏'}}</el-button>
               </div>
             </template>
           </el-table-column>
@@ -563,6 +564,9 @@ export default {
               if($this.menuButtonPermit.includes('User_getrole')){
                 operationsWidth+=90;
               }
+              if($this.menuButtonPermit.includes('User_showhide')){
+                operationsWidth+=66;
+              }
               $this.operationsWidth = "" + operationsWidth;
               $this.getDepartList();
             }else{
@@ -785,7 +789,7 @@ export default {
                 type: 'success'
               });
               $this.resetSearchData();
-              $this.initData();
+              $this.initPage();
             }else{
               $this.$message({
                 showClose: true,
@@ -799,6 +803,27 @@ export default {
             type: 'info',
             message: '已取消'+tips
           });          
+      });
+    },
+    // 删除表格行
+    showHideTableRow(row,index){
+      var $this = this;
+      $this.$store.dispatch('user/userShowHideAction', {id:row.id}).then(response=>{
+        if(response.status){
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'success'
+          });
+          $this.resetSearchData();
+          $this.initPage();
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
       });
     },
     // 重置密码

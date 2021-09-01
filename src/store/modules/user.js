@@ -1,4 +1,4 @@
-﻿import { getUserList,userAdd,userEdit,userDelete,userResetPwd,userAllotedRole,userCanAllotRole,userAllotRole,userCanDepart,userNameEdit,pwdEdit,contactEdit } from '@/api/user'
+﻿import { getUserList,userAdd,userEdit,userDelete,userShowHide,userResetPwd,userAllotedRole,userCanAllotRole,userAllotRole,userCanDepart,userNameEdit,pwdEdit,contactEdit } from '@/api/user'
 
 const state = {}
 const mutations = {}
@@ -37,6 +37,16 @@ const actions = {
   userDeleteAction({ commit, state },data) {
     return new Promise((resolve, reject) => {
       userDelete(data).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // 用户显示隐藏
+  userShowHideAction({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+      userShowHide(data).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)

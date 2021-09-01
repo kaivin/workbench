@@ -31,6 +31,14 @@ export function userDelete(data) {
     data
   });
 }
+// 用户显示隐藏接口
+export function userShowHide(data) {
+  return request({
+    url: "/hxindex/User/showhide",
+    method: "POST",
+    data
+  });
+}
 // 用户密码重置接口
 export function userResetPwd(data) {
   return request({

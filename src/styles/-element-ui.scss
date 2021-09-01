@@ -98,3 +98,6 @@
 .el-table__fixed::before, .el-table__fixed-right::before{
   background-color: transparent!important;
 }
+.el-checkbox.is-bordered.el-checkbox--small,.el-checkbox.is-bordered.el-checkbox--mini{
+  line-height: 20px;
+}

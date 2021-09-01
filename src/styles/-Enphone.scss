@@ -1,6 +1,6 @@
 ﻿.EnphoneCard{
     .sub-router{
-        width:230px;
+        width:220px;
         .Sales-list{
           width: 100%;
           padding-top:23px;
@@ -277,7 +277,7 @@
 .box-card.EnphoneCardFrDate{
      .el-card__header{
          .search-wrap{
-             padding-bottom:14px;
+             padding-bottom:10px;
          }
      }
      .table-button{
@@ -356,8 +356,7 @@
     }
     .EnphoneAddEditMainItem{
         position: relative;
-        padding-top:10px;
-        padding-bottom:5px;
+        padding:5px 0;
         &.CnphoneAdd{
           padding-top:20px;
           padding-bottom:15px;
@@ -367,21 +366,23 @@
           dt{
             line-height: 24px;
             font-size: 14px;
+            height: 24px;
             span{
               color:red;
+              font-size: 12px;
+              font-weight: normal;
             }
           }
           dd{
-            margin-top: 5px;
             .clues-list{
               &.price-list{
                 .item-clues{
-                  width: 147px;
+                  width: 160px;
                 }
               }
               &.level-list{
                 .item-clues{
-                  width: 104px;
+                  width: 120px;
                 }
               }
             }
@@ -396,19 +397,23 @@
             dd{
               .clues-list{
                 .item-clues{
-                  width: 145px;
+                  width: 160px;
                 }
               }
             }
           }
         }
         &.customer-info{
+          margin: 0 -5px;
           dl{
             float: left;
-            width:18.4%;
-            margin-left: 2%;
-            padding-bottom:5px;
-            &:first-child{margin-left:0;}
+            margin: 5px;
+            dd{
+              margin-top: 5px;
+            }
+          }
+          .date-time{
+            width: 100%;
           }
         }
         &.specifications{
@@ -473,8 +478,10 @@
         }
         &.CnIntentionEquipment{
           dl{
+            padding-top: 10px;
             dd{
               .clues-list{
+                margin: 0 -5px;
                 .item-clues{
                   float:left;
                   position: relative;
@@ -482,18 +489,19 @@
                   color:$menuBg;
                   cursor: pointer;
                   padding-left: 20px;
-                  line-height: 24px;
-                  margin-right: 20px;
-                  margin-bottom: 5px;
+                  line-height: 20px;
+                  padding: 2px 15px 2px 20px;
+                  margin: 5px;
                   i{
                     position: absolute;
                     left:0px;
-                    top:6px;        
-                    width: 12px;
-                    height: 12px;
+                    top:50%;
+                    margin-top: -7px;        
+                    width: 14px;
+                    height: 14px;
                     box-sizing: border-box;
                     border-radius:2px;
-                    border:1px solid #939393;
+                    border:1px solid #dcdfe6;
                     background:#fff;
                   }
                   &:hover,&.active{
@@ -509,7 +517,7 @@
                         border-left: 0;
                         border-top: 0;
                         height: 7px;
-                        left: 3px;
+                        left: 4px;
                         position: absolute;
                         top: 0px;
                         width: 3px;
@@ -524,15 +532,12 @@
           }
         }
         &.material{
+          margin: 0 -5px;
           dl{
             float: left;
-            width:30%;
-            margin-left:5%;
-            padding-bottom:5px;
-            &:first-child{margin-left:0;}
+            margin: 5px;
             dd{
-              clear: both;
-              padding-bottom: 10px;
+              margin-top: 5px;
               span{
                 font-size:14px;
                 line-height:32px;
@@ -554,23 +559,27 @@
           }
         }
         &.author{
-          padding-top:20px;
-          padding-bottom:20px;
+          margin: 0 -5px;
           dl{
             float: left;
-            width:30%;
-            margin-left:5%;
-            padding-bottom:5px;
-            &:first-child{margin-left:0;}
+            margin: 5px;
             dd{
-              clear: both;
-              padding-bottom: 10px;
+              margin-top: 5px;
               & > span{
                 font-size:14px;
                 line-height:32px;
               }
             }
           }
+        }
+        &.btn-item{
+          margin: 0 -5px;
+          dl{
+            margin: 5px;
+          }
+        }
+        .planeWhite{
+          margin-right: 10px;
         }
       }
   }
@@ -634,7 +643,6 @@
           }
           .all-select{
             vertical-align: middle;
-            line-height: 15px;
           }
           .team-list{            
             display: inline-block;
