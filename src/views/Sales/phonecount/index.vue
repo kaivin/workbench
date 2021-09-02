@@ -161,6 +161,8 @@ export default {
     return {
         lastDate:"",
         currentDate:"",
+        time1:'',
+        time2:'',
         status:1,
         menuButtonPermit:[],
         tableHeight:0,
@@ -204,7 +206,6 @@ export default {
   },
   created(){
     var $this = this;
-    $this.getCurrentDate()
     $this.initData();
   },
   methods:{
@@ -220,6 +221,9 @@ export default {
         if(response){
           if(response.status){
             $this.tableData = response.data;
+            $this.time1= response.time1;
+            $this.time2= response.time2;
+            $this.getCurrentDate();
             console.log(response,"业务员数据统计");
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -283,19 +287,19 @@ export default {
     },
     // 获取当前月份
     getCurrentDate(){
-      var nowDate = new Date();
-      const date = {
-        year: nowDate.getFullYear(),
-        month: nowDate.getMonth()+1,
-        date: nowDate.getDate(),
+      var $this=this;
+      var DataOne=$this.time1;
+      var DataTwo=$this.time2;
+      var lastDateOneArr=[];
+      var currentDateOneArr=[];
+      if(DataOne&&DataTwo){
+        lastDateOneArr=DataOne.split('-');
+        currentDateOneArr=DataTwo.split('-');      
+        const lastDateOne = "("+lastDateOneArr[1]+"-"+lastDateOneArr[2]+"到 "+currentDateOneArr[1]+"-"+currentDateOneArr[2]+")";
+        const currentDateOne = "("+DataTwo+"至今)";
+        $this.lastDate = lastDateOne;
+        $this.currentDate = currentDateOne;
       }
-      const lastMonth = nowDate.getMonth()>10?nowDate.getMonth():'0'+nowDate.getMonth();
-      const newmonth = date.month>10?date.month:'0'+date.month;
-      const day = date.date>10?date.date:'0'+date.date;
-      const lastDate = "("+lastMonth+"-16 到 "+newmonth+"-16)";
-      const currentDate = "("+date.year+"-"+newmonth+"-16 至今)";
-      this.lastDate = lastDate;
-      this.currentDate = currentDate;
     },
     // 单选值改变事件
     valueChangeHandler(e){

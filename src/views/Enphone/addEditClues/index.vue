@@ -1,6 +1,10 @@
 ﻿<template>
   <div class="page-root scroll-panel" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
+        <ul class="SaleTips" v-if="(ID&&isCustomer)||(ID&&isSalesman)">
+            <li v-if="ID&&isCustomer"><i class="svg-i tips" ><svg-icon icon-class="prompt" /></i><b>{{formData.custormselfwarn}}</b><el-button class="item-input" size="mini" type="primary" @click="customerWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></li>
+            <li class="SaleTipRed" v-if="ID&&isSalesman"><i class="svg-i tips" ><svg-icon icon-class="prompt" /></i><b>{{formData.givecustormwarn}}</b><el-button class="item-input" size="mini" type="primary" @click="salesmanWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></li>
+        </ul>        
         <div class="card-content EnphoneAddEdit" ref="tableContent">
             <div class="EnphoneAddEditMain">
                 <div class="en-phone-tips" v-if="ID">
@@ -11,12 +15,6 @@
                   <div class="item-input" v-if="isCustomerSalesman"><span class="tips-title">业务员提醒：</span></div>
                   <div class="item-input" v-if="isCustomerSalesman"><el-input v-model="formData.givecustormwarn" size="small" disabled placeholder=""></el-input></div>
                   <div class="item-input"><el-button class="item-input" size="small" type="primary" icon="el-icon-edit" @click="editCustomerWarn">修改</el-button></div>
-                </div>
-                <div class="tips-list" v-if="ID&&isCustomer">
-                  <div class="item-tips type-1"><span class="tips">【提醒】：</span><b>{{formData.custormselfwarn}}</b><el-button class="item-input" size="mini" type="primary" @click="customerWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></div>
-                </div>
-                <div class="tips-list" v-if="ID&&isSalesman">
-                  <div class="item-tips type-2"><span class="tips">【提醒】：</span><b>{{formData.givecustormwarn}}</b><el-button class="item-input" size="mini" type="primary" @click="salesmanWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></div>
                 </div>
                 <div class="EnphoneAddEditMainItem phone-list">
                   <dl>
@@ -35,6 +33,7 @@
                         <el-input
                             placeholder="姓名"
                             size="small"
+                            style="width:200px;"
                             v-model="formData.custormname"
                             clearable>
                         </el-input>
@@ -46,6 +45,7 @@
                         <el-input
                             placeholder="邮箱"
                             size="small"
+                            style="width:200px;"
                             v-model="formData.custormemail"
                             clearable>
                         </el-input>
@@ -57,6 +57,7 @@
                         <el-input
                             placeholder="电话"
                             size="small"
+                            style="width:200px;"
                             v-model="formData.custormphone"
                             clearable>
                         </el-input>
@@ -65,7 +66,7 @@
                     <dl>
                       <dt>分配的业务员：</dt>
                       <dd>
-                        <el-select size="small" v-model="formData.salesuserid" placeholder="请选择">
+                        <el-select size="small" style="width:200px;" v-model="formData.salesuserid" placeholder="请选择">
                           <el-option
                             v-for="item in salesuserlist"
                             :key="item.value"
@@ -81,6 +82,7 @@
                         <el-input
                             placeholder="ID号"
                             size="small"
+                            style="width:200px;"
                             v-model="formData.ftword_id"
                             clearable>
                         </el-input>
@@ -106,7 +108,7 @@
                         <span>分配/特别说明：</span>
                         <el-input
                             size="small"
-                            class="flex-content"
+                            style="width:200px;"
                             v-model="formData.otherremark"
                             clearable>
                         </el-input>
@@ -115,7 +117,7 @@
                         <span>提醒/首页提醒：</span>
                         <el-input
                             size="small"
-                            class="flex-content"
+                            style="width:200px;"
                             v-model="formData.givesaleswarn"
                             clearable>
                         </el-input>
@@ -143,7 +145,7 @@
                     </dl>
                 </div>
                 <div class="EnphoneAddEditMainItem customer-info">
-                    <dl style="width:23.4%;">
+                    <dl style="width:200px;">
                       <dt>信息来自具体时间：<span>*</span></dt>
                       <dd>
                         <el-date-picker
@@ -158,7 +160,7 @@
                           </el-date-picker>
                       </dd>
                     </dl>
-                    <dl style="width:10.4%;">
+                    <dl style="width:200px;">
                       <dt>客户当地时间：<span>*</span></dt>
                       <dd>
                         <el-select size="small" style="width:100%" v-model="formData.timediff" placeholder="请选择">
@@ -171,7 +173,7 @@
                         </el-select>
                       </dd>
                     </dl>
-                    <dl style="width:21.4%;">
+                    <dl style="width:200px;">
                       <dt>来自大洲：</dt>
                       <dd>
                         <el-select size="small" style="width:100%" v-model="formData.continent" placeholder="请选择">
@@ -211,7 +213,7 @@
                     </dl>
                 </div>
                 <div class="EnphoneAddEditMainItem customer-info">
-                    <dl style="width:23.4%;">
+                    <dl style="width:200px;">
                       <dt>来自渠道：<span>*外部链接请备注来自URL</span></dt>
                       <dd>
                         <el-select v-model="formData.mode" size="small" style="width:100%" clearable placeholder="请选择">
@@ -224,7 +226,7 @@
                         </el-select>
                       </dd>
                     </dl>
-                    <dl style="width:33.8%;">
+                    <dl style="width:340px;">
                       <dt>来自网页：</dt>
                       <dd>
                         <el-input
@@ -236,7 +238,7 @@
                         </el-input>
                       </dd>
                     </dl>
-                    <dl style="width:16.6%;">
+                    <dl style="width:160px;">
                       <dt>IP：</dt>
                       <dd>
                         <el-input
@@ -247,7 +249,7 @@
                         </el-input>
                       </dd>
                     </dl>
-                    <dl style="width:11.6%;">
+                    <dl style="width:200px;">
                       <dt>设备：</dt>
                       <dd>
                         <el-select v-model="formData.device" size="small" style="width:100%" clearable placeholder="请选择">
@@ -260,7 +262,7 @@
                         </el-select>
                       </dd>
                     </dl>
-                    <dl style="width:6.6%;">
+                    <dl style="width:100px;">
                       <dt>级别：</dt>
                       <dd>
                         <el-select v-model="formData.level_id" size="small" style="width:100%" clearable placeholder="请选择">
@@ -275,7 +277,7 @@
                     </dl>
                 </div>
                 <div class="EnphoneAddEditMainItem customer-info">
-                    <dl style="width:23.4%;">
+                    <dl style="width:200px;">
                       <dt>性质：</dt>
                       <dd>
                         <el-select v-model="formData.ennature" style="width:100%" size="small" clearable placeholder="请选择">
@@ -288,7 +290,7 @@
                         </el-select>
                       </dd>
                     </dl>
-                    <dl style="width:23.4%;">
+                    <dl style="width:200px;">
                       <dt>价值：</dt>
                       <dd>
                         <el-select v-model="formData.enxunprice" style="width:100%" size="small" clearable placeholder="请选择">
@@ -711,11 +713,13 @@ export default {
       $this.formData.custormfilesname = $this.defaultInfo.custormfilesname;
       $this.formData.givecustormwarn = $this.defaultInfo.givecustormwarn;
       $this.formData.custormselfwarn = $this.defaultInfo.custormselfwarn;
-      var fileList={};
-      $this.fileList=[];
-      fileList.name=$this.defaultInfo.custormfilesname;
-      fileList.url=$this.defaultInfo.custormfiles;
-      $this.fileList.push(fileList);
+      if($this.defaultInfo.custormfilesname&&$this.defaultInfo.custormfiles){
+          var fileList={};
+          $this.fileList=[];
+          fileList.name=$this.defaultInfo.custormfilesname;
+          fileList.url=$this.defaultInfo.custormfiles;
+          $this.fileList.push(fileList);
+      }
       $this.formData.xuntime = $this.defaultInfo.xuntime;
       $this.formData.timediff = $this.defaultInfo.timediff;
       $this.formData.continent = $this.defaultInfo.continent;
@@ -1038,7 +1042,7 @@ export default {
         fileList.url=$this.formData.custormfiles;
         $this.fileList.push(fileList);
         var fileListArr = $this.fileList;
-        if(fileListArr.length>0){
+        if(fileListArr.length>1){
            fileListArr.shift();
         }
         $this.fileList=fileListArr;

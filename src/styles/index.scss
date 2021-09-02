@@ -371,6 +371,9 @@
     .item-span-4{
       color:#2e88ff;
       font-weight:bold;
+      &:hover{
+        opacity: 0.6;
+      }
     }
   }
 }

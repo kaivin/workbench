@@ -238,18 +238,21 @@
                           </el-option>
                         </el-select>
                         <el-input
+                          class="tips-input-2"
                           style="width: 150px;margin:5px 10px 5px 0px;float:left;" size="small"
                           placeholder="模糊搜索、备注1"
                           v-model="searchData.remark1"
                           clearable>
                         </el-input>
                         <el-input
+                          class="tips-input-3"
                           style="width: 100px;margin:5px 10px 5px 0px;float:left;" size="small"
                           placeholder="备注2"
                           v-model="searchData.remark2"
                           clearable>
                         </el-input>
                         <el-input
+                          class="tips-input-4"
                           style="width: 100px;margin:5px 10px 5px 0px;float:left;" size="small"
                           placeholder="备注3"
                           v-model="searchData.remark3"
@@ -301,7 +304,7 @@
                           </div>
                           <div class="clues-title-btn">
                                 <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Enphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出结果</el-button>
-                                <el-button type="primary" size="small" class="editorNote" :disabled="isDisabled" v-if="menuButtonPermit.includes('Enphone_othereditall')" v-on:click="editPageNote()"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改当前页备注</el-button>
+                                <el-button type="primary" size="small" class="editorNote" :disabled="isDisabled" v-if="menuButtonPermit.includes('Enphone_othereditall')" v-on:click="editPageNote()"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>批量修改当前页备注</el-button>
                           </div>
                       </div>
                   </div>
@@ -461,9 +464,9 @@
                       >
                       <template slot-scope="scope">
                         <div class="table-input">
-                          <el-input size="small" v-model="scope.row.remark1" v-if="permitField.includes('remark1')"></el-input>
-                          <el-input size="small" v-model="scope.row.remark2" v-if="permitField.includes('remark2')"></el-input>
-                          <el-input size="small" v-model="scope.row.remark3" v-if="permitField.includes('remark3')"></el-input>
+                          <el-input size="small" class="tips-input-2" v-model="scope.row.remark1" v-if="permitField.includes('remark1')"></el-input>
+                          <el-input size="small" class="tips-input-3" v-model="scope.row.remark2" v-if="permitField.includes('remark2')"></el-input>
+                          <el-input size="small" class="tips-input-4" v-model="scope.row.remark3" v-if="permitField.includes('remark3')"></el-input>
                         </div>
                       </template>
                     </el-table-column>
@@ -1714,7 +1717,7 @@ export default {
       var $this = this;
       var FormID={};
       FormID.id = Rid;
-      $this.$store.dispatch('chinaphone/CustormeditlogAction', FormID).then(response=>{
+      $this.$store.dispatch('enphone/CustormeditlogAction', FormID).then(response=>{
         if(response){
           if(response.status){  
             console.log(response,'级别修改记录-response');  

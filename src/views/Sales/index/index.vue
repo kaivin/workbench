@@ -853,8 +853,7 @@ export default {
               itemData.value = item.id;
               enxunpriceList.push(itemData);
             });
-            $this.enxunpriceList=enxunpriceList;
-            
+            $this.enxunpriceList=enxunpriceList;            
             if($this.currentStatus=="waitcount"&&response.dealuser.length>0){
               var salesuseridList=[];
               response.allotuser.forEach(function(item,index){
@@ -1206,7 +1205,7 @@ export default {
         var $this = this;
         $this.DataEmpty();
         if($this.currentStatus==status){
-          $this.searchResult();
+          $this.initPage();
         }else{
           $this.$router.push({path:'/Sales/index',query:{Status:status}});
         }
@@ -1247,10 +1246,14 @@ export default {
     feedbackClick(){
       var $this = this;
       var feedbackArr = $this.feedbackArr;
-      if (feedbackArr.length > 1) {
-        feedbackArr.shift();
-        $this.feedbackArr = feedbackArr;
-        $this.searchData.feedback = $this.feedbackArr.toString();
+      if(feedbackArr.length > 0){
+        if (feedbackArr.length > 1) {
+          feedbackArr.shift();
+          $this.feedbackArr = feedbackArr;
+          $this.searchData.feedback = $this.feedbackArr.toString();
+        }else{
+          $this.searchData.feedback = $this.feedbackArr.toString();
+        }
       }else{
         $this.searchData.feedback = '';
       }

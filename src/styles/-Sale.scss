@@ -193,6 +193,16 @@
      width: 100%;
      margin-bottom: 10px;
      color: #333333;
+     &.SaleTipRed{
+      border: 1px solid #ff5c5c;
+      background: #f3e9e9;
+      .tips{
+        color: #ff5c5c;
+      }
+      b{
+        color: #ff5c5c;
+      }
+     }
      .tips,b,em{
        font-style: normal;
        vertical-align: top;
@@ -336,6 +346,7 @@
               span{
                 display: inline-block;
                 color:#333;
+                width: 100px;
               }
             }
           }
@@ -408,8 +419,8 @@
           padding-top:30px;
           dl{
             float: left;
-            width:30%;
-            margin-left:5%;
+            width: 22%;
+            margin-left: 4%;
             padding-bottom:5px;
             &:first-child{margin-left:0;}
             &.SaleFootFl{
@@ -514,6 +525,11 @@
                     }
                   }
                 }
+              }
+            }
+            &.SaleFootBak{
+              dt{
+                padding-bottom:10px;
               }
             }
           }

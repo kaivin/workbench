@@ -422,7 +422,23 @@
             width:47.5%;
             margin-left:5%;
             padding-bottom:5px;
-            &:first-child{margin-left:0;}
+            &:first-child{
+              width: 652px;
+              margin-left:0;
+              dt{
+                padding-bottom: 10px;            
+                height: auto;
+              }
+            }
+            &:first-child+dl{
+              width:400px;
+              dd{
+                padding-bottom: 10px;
+                &:last-child{
+                  padding-bottom: 0px;
+                }
+              }
+            }
             .spectextarea{
               .el-textarea__inner{
                 padding: 10px 15px;
@@ -459,6 +475,7 @@
           }
         }
         &.IntentionEquipment{
+          width:1050px;
           dl{
             dd{
               strong{
@@ -537,7 +554,7 @@
             float: left;
             margin: 5px;
             dd{
-              margin-top: 5px;
+              margin-top:10px;
               span{
                 font-size:14px;
                 line-height:32px;
@@ -679,6 +696,11 @@
         .el-checkbox{margin-right:10px;margin-left: 0px;}
       }
     }
+  }
+}
+.card-header.EnphoneCardHeader{
+  .clues-info.flex-wrap{
+    margin-top: 10px;
   }
 }
 .mobile{

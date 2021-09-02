@@ -89,6 +89,19 @@
                             </el-radio-group>             
                         </dd>
                       </dl>
+                      <dl class="SaleFootBak">
+                        <dt>
+                           <span>个人备注：</span>                        
+                        </dt>
+                        <dd class="SaleFootFrTop">
+                            <el-input
+                              type="textarea"
+                              :rows="3"
+                              placeholder="请输入内容"
+                              v-model="formData.salesremark">
+                            </el-input>           
+                        </dd>
+                      </dl>
                 </div>
                 <div class="SaleAddEditMainItem SaleAddEditBtn">
                     <p>备注：(在此填写内容可提醒推广人员，如需提醒请勾选提醒)</p>
@@ -165,6 +178,7 @@ export default {
         replystatus:'',
         ennature:'',
         enxunprice:'',
+        salesremark:'',
         givecustormwarn:'',
         custormwarnstatus:false,
         givesaleswarn:'',
@@ -344,6 +358,7 @@ export default {
       $this.formData.custormwarnstatus=$this.defaultInfo.custormwarnstatus==2?false:true;
       $this.formData.givesaleswarn = $this.defaultInfo.givesaleswarn;
       $this.formData.saleswarnstatus = $this.defaultInfo.saleswarnstatus;
+      $this.formData.salesremark = $this.defaultInfo.salesremark;
       console.log($this.formData,'$this.formData');
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -495,6 +510,7 @@ export default {
       formSaveData.enxunprice = $this.formData.enxunprice.toString();
       formSaveData.givecustormwarn = $this.formData.givecustormwarn;
       formSaveData.custormwarnstatus = $this.formData.custormwarnstatus==true?'3':'2';
+      formSaveData.salesremark = $this.formData.salesremark;
       return formSaveData;
     },
     // 保存添加/编辑数据
@@ -502,9 +518,6 @@ export default {
       var $this = this;
       var formSaveData = $this.initFormData();      
       $this.formSaveData = formSaveData;
-      if(!$this.validationForm()){
-        return false;
-      }
       console.log(formSaveData,"formSaveData 添加保存")
       $this.$store.dispatch("Sales/getSalesDetailsModifyAction", formSaveData).then(response=>{
           if(response.status){
@@ -523,44 +536,7 @@ export default {
             });
           }
       });
-    },
-    // 验证是否为空
-    validationForm(){
-      var $this = this;
-      if($this.formSaveData.ftword_id == ""){
-        $this.$message({
-            showClose: true,
-            message: '错误：富通编号不能为空！',
-            type: 'error'
-        });
-        return false;
-      }
-      if($this.formSaveData.replystatus == ""){
-        $this.$message({
-            showClose: true,
-            message: '错误：是否回复不能为空！',
-            type: 'error'
-        });
-        return false;
-      }
-      if($this.formSaveData.ennature == ""){
-        $this.$message({
-            showClose: true,
-            message: '错误：客户性质不能为空！',
-            type: 'error'
-        });
-        return false;
-      }
-      if($this.formSaveData.enxunprice == ""){
-        $this.$message({
-            showClose: true,
-            message: '错误：价格范围不能为空！',
-            type: 'error'
-        });
-        return false;
-      }
-      return true;
-    },    
+    },  
     // 是否回复点击事件
     replystatusClick(){
       var $this = this;
