@@ -138,21 +138,38 @@
               padding-left: 10px;
               width:100px;
             }
-            span{}
           }
         }
     }
+    .search-wrap{
+      padding-bottom:10px;
+      .item-search{
+        float:left;
+        margin: 5px;
+        input::-webkit-input-placeholder {
+          color: #606266;
+        }
+        input::-moz-input-placeholder {
+          color: #606266;
+        }
+        input::-ms-input-placeholder {
+          color: #606266;
+        }
+        .date-range{
+          width: 100%;
+        }
+        .checkbox-group{
+          .el-checkbox{
+            margin:0;
+          }
+          .el-checkbox+.el-checkbox{
+            margin-left: 10px;
+          }
+        }
+      }
+    }
 }
 .box-card.SaleCardFlFrTable{
-     .el-card__header{
-          margin-bottom: 15px;
-         .search-wrap{
-             padding-bottom:14px;
-         }
-         .clues-info{
-             margin-bottom:0px;
-         }
-     }
      .SiteTable{
       .SiteColor-01{color: $red;}
       .SiteColor-02{color: $Rougecolor;}
@@ -239,9 +256,6 @@
   .el-select.el-select--small{
     float:left; width:150px; margin-right:10px;
   }
-  .item-input{
-    padding:9px 10px!important;
-  }
 }
 .card-content.SaleCardDataTop{
   background:#fff!important;
@@ -286,17 +300,7 @@
   }
 }
 .card-content.SaleCardDataBom{
-  background:#fff!important;
-  border-radius:8px!important;
-  padding:20px!important;
-  margin-top:20px;
-  h2{
-    clear: both;
-    display: block;
-    color:$menuActiveText;
-    font-size: 16px;
-    margin-bottom: 20px;
-  }
+  margin-top:15px;
 }
 .SaleAddEdit{
   background:#fff;

@@ -2,6 +2,56 @@
   <div class="page-root scroll-panel home-index" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
       <div class="card-content" ref="tableContent">
+        <div class="item-row flex-box">
+          <div class="item-column flex-content" v-if="permitModules.includes('Module_cnStat')">
+            <div class="item-module">
+              <div class="module-header"><h2>中文总计</h2></div>
+              <div class="module-body">
+                <div class="num-list">
+                  <p><span>今天</span><strong>{{cnCluesData.alltoday}}</strong></p>
+                  <p><span>昨天</span><strong>{{cnCluesData.alllastnumber}}</strong></p>
+                  <p><span>本月</span><strong>{{cnCluesData.allnumber}}</strong></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="item-column flex-content" v-if="permitModules.includes('Module_enStat')">
+            <div class="item-module">
+              <div class="module-header"><h2>英文总计</h2></div>
+              <div class="module-body">
+                <div class="num-list">
+                  <p><span>今天</span><strong>{{enCluesData.alltoday}}</strong></p>
+                  <p><span>昨天</span><strong>{{enCluesData.alllastnumber}}</strong></p>
+                  <p><span>本月</span><strong>{{enCluesData.allnumber}}</strong></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="item-column flex-content" v-if="permitModules.includes('Module_bbs')">
+            <div class="item-module">
+              <div class="module-header"><h2>消息通知</h2></div>
+              <div class="module-body">
+                <div class="news-panel">
+                  <el-scrollbar wrap-class="scrollbar-wrapper">
+                    <div class="news-list">
+                      <div class="item-news flex-box" v-for="item in newsList" v-bind:key="item.id" v-on:click="jumpArticle(item)">
+                        <div class="txt-font flex-content" :title="item.title">
+                          <span class="txt-type" v-if="item.type==1">{{scope.row.domain}} [{{scope.row.website_id}}]</span>
+                          <span class="txt-type" v-else>【{{item.typename}}】</span>
+                          <span class="txt-title" :style="{color:item.titlecolor?item.titlecolor:''}">{{item.title}}</span>
+                        </div>
+                        <div class="txt-time">({{item.updatetime}})</div>
+                      </div>
+                    </div>
+                  </el-scrollbar>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-column"></div>
+        </div>
         <div class="item-module" v-if="tableData.length>0&&permitModules.includes('Module_bbs')">
           <el-table
             ref="simpleTable"
@@ -71,6 +121,10 @@ export default {
       menuButtonPermit:[],
       tableData:[],
       permitModules:[],
+      cnCluesData:{},
+      enCluesData:{},
+      salesmanData:{},
+      newsList:[],
     }
   },
   computed: {
@@ -144,23 +198,15 @@ export default {
             if($this.permitModules.includes('Module_bbs')){
               $this.getPostData();
             }
-          } else {
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: "error",
-            });
-          }
-        }
-      });
-    },
-    // 获取论坛最新资讯
-    getPostData(){
-      var $this = this;
-      $this.$store.dispatch("api/getNewPostArticleAction", null).then((response) => {
-        if (response) {
-          if (response.status) {
-            $this.tableData = response.data;
+            if($this.permitModules.includes('Module_cnStat')){
+              $this.getCnCluesStatData();
+            }
+            if($this.permitModules.includes('Module_enStat')){
+              $this.getEnCluesStatData();
+            }
+            if($this.permitModules.includes('Module_salesman')){
+              $this.getSalesmanStatData();
+            }
           } else {
             $this.$message({
               showClose: true,
@@ -187,7 +233,83 @@ export default {
         routeUrl =  $this.$router.resolve({path:'/Article/info',query:{id:row.id}});
       }
       window.open(routeUrl.href,'_blank');
-    }
+    },
+    // 获取论坛最新资讯
+    getPostData(){
+      var $this = this;
+      $this.$store.dispatch("api/getNewPostArticleAction", null).then((response) => {
+        if (response) {
+          if (response.status) {
+            var newsList = [];
+            response.data.forEach(function(item,index){
+              newsList = newsList.concat(item.article);
+            });
+            $this.newsList = newsList;
+            console.log($this.newsList,"消息提醒");
+          } else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+          }
+        }
+      });
+    },
+    // 获取中文统计数据
+    getCnCluesStatData(){
+      var $this = this;
+      $this.$store.dispatch("api/cnCluesStatDataAction", null).then((response) => {
+        if (response) {
+          if (response.status) {
+            console.log(response,"中文统计数据");
+            $this.cnCluesData = response;
+          } else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+          }
+        }
+      });
+    },
+    // 获取英文统计数据
+    getEnCluesStatData(){
+      var $this = this;
+      $this.$store.dispatch("api/enCluesStatDataAction", null).then((response) => {
+        if (response) {
+          if (response.status) {
+            console.log(response,"英文统计数据");
+            $this.enCluesData = response;
+          } else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+          }
+        }
+      });
+    },
+    // 获取业务员统计数据
+    getSalesmanStatData(){
+      var $this = this;
+      $this.$store.dispatch("api/salesmanStatDataAction", null).then((response) => {
+        if (response) {
+          if (response.status) {
+            console.log(response,"业务员统计数据");
+            $this.salesmanData = response;
+          } else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+          }
+        }
+      });
+    },
   }
 }
 </script>

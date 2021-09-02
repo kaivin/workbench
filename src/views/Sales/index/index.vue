@@ -30,7 +30,7 @@
     <div class="flex-content SaleCardFr">
       <div class="abs-panel" ref="mainPane">
           <div class="scroll-panel" ref="scrollPane">
-            <div class="tips-list" v-if="infoData.warnlist.length>0&&infoData.warnlist">
+            <div class="tips-list" v-if="infoData.warnlist.length>0&&infoData.warnlist" ref="tipsPane">
                   <div class="item-tips type-1" v-for="(item,index) in infoData.warnlist" v-bind:key="index" v-on:click="editTableRow(item,index,'1')">
                       <i>{{index+1}}</i>
                       <strong>ID：{{item.id}}</strong>
@@ -39,7 +39,7 @@
             </div>
             <el-card class="box-card scroll-card SaleCardFlFrTable" shadow="hover">
               <div slot="header">  
-                  <div class="card-header" ref="headerPane"> 
+                <div class="card-header" ref="headerPane"> 
                   <div class="filter-panel" v-if="device==='mobile'">
                       <div class="search-panel">
                           <el-input class="article-search" size="small"
@@ -51,134 +51,160 @@
                       </div>
                       <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
                   </div>      
-                    <div class="search-wrap" v-if="device==='desktop'">
-                        <el-select v-model="searchData.timetype" size="small" clearable placeholder="分配时间" style="width:140px;margin:5px 10px;float:left;">
-                            <el-option
-                                v-for="item in timetypelist"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                        <el-date-picker
-                            v-model="searchData.date"
-                            size="small"
-                            type="daterange"
-                            align="right"
-                            value-format = "yyyy-MM-dd"
-                            unlink-panels
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            style="float:left;margin:5px 10px 5px 0px; width:280px;"
-                            :picker-options="pickerRangeOptions">
-                        </el-date-picker>
-                        <el-select v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'" v-model="searchData.salesuserid" size="small" clearable placeholder="业务员" style="width:100px;margin:5px 10px 5px 0px;float:left;">
-                            <el-option
-                                v-for="item in salesuseridList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                        <el-select v-model="searchData.continent" size="small" clearable placeholder="大洲" style="width:100px;margin:5px 10px 5px 0px;float:left;">
-                            <el-option
-                                v-for="item in continentlist"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                        <el-select v-model="searchData.producttype_id" size="small" clearable placeholder="产品类型" style="width:120px;margin:5px 10px 5px 0px;float:left;"  @change="currentCateChange" >
-                            <el-option
-                                v-for="item in producttype_idList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                        <el-select v-model="searchData.productid" size="small" clearable placeholder="产品名" style="width:120px;margin:5px 10px 5px 0px;float:left;">
-                            <el-option
-                                v-for="item in productidList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                        <el-select v-model="searchData.managestatus" size="small" clearable placeholder="处理" style="width:100px;margin:5px 10px 5px 0px;float:left;">
-                            <el-option
-                                v-for="item in managestatusList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                        <el-select v-model="searchData.replystatus" size="small" clearable placeholder="回复情况" style="width:100px;margin:5px 10px 5px 0px;float:left;">
-                            <el-option
-                                v-for="item in replystatusList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                        <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质" style="width:150px;margin:5px 10px 5px 0px;float:left;">
-                            <el-option
-                                v-for="item in ennatureList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                        <el-select v-model="searchData.enxunprice" size="small" clearable placeholder="需求" style="width:100px;margin:5px 10px 5px 0px;float:left;">
-                            <el-option
-                                v-for="item in enxunpriceList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                        <el-checkbox-group v-model="feedbackArr" class="SalesCardcheckbox" @change="feedbackClick">
-                          <el-checkbox v-for="item in feedbackList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
-                        </el-checkbox-group>
-                        <div class="SalesCardInput">
-                            <el-input
-                                style="width: 150px;margin:5px 10px 5px 0px;float:left;" size="small"
-                                placeholder="客户联系方式"
-                                v-model="searchData.keyword"
-                                clearable>
-                            </el-input>
-                        </div>
-                        <div class="SalesCardInput">
-                            <el-input
-                                style="width: 150px;margin:5px 10px 5px 0px;float:left;" size="small"
-                                placeholder="富通ID/分配ID"
-                                v-model="searchData.ftword_id"
-                                clearable>
-                            </el-input>
-                        </div>
-                        <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult()" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
+                  <div class="search-wrap" v-if="device==='desktop'">
+                    <div class="item-search" style="width:130px;">
+                      <el-select v-model="searchData.timetype" size="small" clearable placeholder="分配时间">
+                        <el-option
+                            v-for="item in timetypelist"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
                     </div>
-                    <div class="clues-info flex-wrap">
-                        <div class="clues-infoFl flex-content">
-                              <p v-if="currentStatus != 'allotcount'"><span class="item-span-1">当前结果集状态：共有<strong>{{infoData.allcount}}</strong>条。</span></p>
-                              <p v-else><span class="item-span-1">当前结果集状态：当前共有<strong>{{infoData.allcount}}</strong>条信息。</span><span class="item-span-1">昨天共分配<strong>{{infoData.countyestoday}}</strong>条询盘，</span><span class="item-span-1">当前共有<strong>{{infoData.countyestodaynodeal}}</strong>条未处理，</span><span class="item-span-4" style="cursor: pointer;" @click="searchResult(1)">点击查看昨天未处理询盘</span>，<span class="item-span-1">今天天共分配<strong>{{infoData.counttoday}}</strong>条询盘，</span><span class="item-span-1">当前共有<strong>{{infoData.counttodaynodeal}}</strong>条未处理，</span><span class="item-span-4" style="cursor: pointer;" @click="searchResult(2)">点击查看今天未处理询盘</span>.</p>
-                        </div>
-                        <div class="clues-title-btn">
-                            <el-button class="item-input" v-if="menuButtonPermit.includes('Sales_phonecancel')&&currentStatus === 'allotcount'" size="small" type="primary" :disabled="isTableRow" @click="deleteTableRow">分配撤回</el-button>
-                            <div class="SaleMassDistribution" v-if="menuButtonPermit.includes('Sales_waitphone')&&currentStatus === 'waitcount'">                          
-                                  <el-select :disabled="isTableRow" v-model="Determine.userid" size="small" clearable placeholder="-选择业务员-">
-                                      <el-option
-                                      v-for="item in dealuserList"
-                                      :key="item.value"
-                                      :label="item.label"
-                                      :value="item.value">
-                                      </el-option>
-                                  </el-select>
-                                <el-button class="item-input" size="small" type="primary" :disabled="isTableRow" @click="DetermineTableRow">确定分配</el-button>
-                            </div>
-                        </div>
+                    <div class="item-search" style="width:240px;">
+                      <el-date-picker
+                        v-model="searchData.date"
+                        class="date-range"
+                        size="small"
+                        type="daterange"
+                        align="right"
+                        value-format = "yyyy-MM-dd"
+                        unlink-panels
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :picker-options="pickerRangeOptions">
+                      </el-date-picker>
+                    </div>
+                    <div class="item-search" v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'" style="width:100px;">
+                      <el-select v-model="searchData.salesuserid" size="small" clearable placeholder="业务员">
+                        <el-option
+                            v-for="item in salesuseridList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width:90px;">
+                      <el-select v-model="searchData.continent" size="small" clearable placeholder="大洲">
+                        <el-option
+                            v-for="item in continentlist"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width:100px;">
+                      <el-select v-model="searchData.producttype_id" size="small" clearable placeholder="产品类型"  @change="currentCateChange" >
+                        <el-option
+                            v-for="item in producttype_idList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width:90px;">
+                      <el-select v-model="searchData.productid" size="small" clearable placeholder="产品名">
+                        <el-option
+                            v-for="item in productidList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width:90px;">
+                      <el-select v-model="searchData.managestatus" size="small" clearable placeholder="处理">
+                        <el-option
+                            v-for="item in managestatusList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width:100px;">
+                      <el-select v-model="searchData.replystatus" size="small" clearable placeholder="回复情况">
+                        <el-option
+                            v-for="item in replystatusList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width:100px;">
+                      <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质">
+                        <el-option
+                            v-for="item in ennatureList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width:100px;">
+                      <el-select v-model="searchData.enxunprice" size="small" clearable placeholder="需求">
+                        <el-option
+                            v-for="item in enxunpriceList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search">
+                      <el-checkbox-group v-model="feedbackArr" class="checkbox-group" @change="feedbackClick"  size="small">
+                        <el-checkbox v-for="item in feedbackList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
+                      </el-checkbox-group>
+                    </div>
+                    <div class="item-search" style="width: 150px;">
+                      <el-input
+                        size="small"
+                        class="tips-input-2"
+                        placeholder="客户联系方式"
+                        v-model="searchData.keyword"
+                        clearable>
+                      </el-input>
+                    </div>
+                    <div class="item-search" style="width: 150px;">
+                      <el-input
+                        size="small"
+                        class="tips-input-3"
+                        placeholder="富通ID/分配ID"
+                        v-model="searchData.ftword_id"
+                        clearable>
+                      </el-input>
+                    </div>
+                    <div class="item-search">
+                      <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult()">查询</el-button>
+                    </div>  
+                  </div>
+                  <div class="clues-info flex-box">
+                    <div class="clues-infoFl flex-content">
+                      <p v-if="currentStatus != 'allotcount'"><span>当前结果集状态：共有<strong class="color1">{{infoData.allcount}}</strong>条。</span></p>
+                      <p v-else><span>当前结果集状态：当前共有<strong class="color1">{{infoData.allcount}}</strong>条信息。</span><span>昨天共分配<strong class="color2">{{infoData.countyestoday}}</strong>个询盘，当前共有<strong class="color3">{{infoData.countyestodaynodeal}}</strong>条未处理</span><span v-if="infoData.countyestodaynodeal>0" class="item-span-4" style="cursor: pointer;" @click="searchResult(1)">点击查看昨天未处理询盘</span><span>||</span><span>今天天共分配<strong class="color2">{{infoData.counttoday}}</strong>个询盘，当前共有<strong class="color3">{{infoData.counttodaynodeal}}</strong>条未处理</span><span v-if="infoData.counttodaynodeal>0" class="item-span-4" style="cursor: pointer;" @click="searchResult(2)">点击查看今天未处理询盘</span></p>
+                    </div>
+                    <div class="clues-title-btn">
+                      <el-button class="item-input" v-if="menuButtonPermit.includes('Sales_phonecancel')&&currentStatus === 'allotcount'" size="small" type="primary" :disabled="isTableRow" @click="deleteTableRow">分配撤回</el-button>
+                      <div class="SaleMassDistribution" v-if="menuButtonPermit.includes('Sales_waitphone')&&currentStatus === 'waitcount'">                          
+                        <el-select :disabled="isTableRow" v-model="Determine.userid" size="small" clearable placeholder="-选择业务员-">
+                          <el-option
+                          v-for="item in dealuserList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                          </el-option>
+                        </el-select>
+                        <el-button class="item-input" size="small" type="primary" :disabled="isTableRow" @click="DetermineTableRow">确定分配</el-button>
+                      </div>
                     </div>
                   </div>
+                </div>
               </div>
               <div class="card-content" ref="tableContent">
                 <el-table
@@ -695,6 +721,7 @@ export default {
   },
   updated(){
     this.$nextTick(() => {
+      this.setTableHeight();
       this.$refs.simpleTable.doLayout()
     })
   },
@@ -717,8 +744,14 @@ export default {
     // 设置高度
     setTableHeight(){
       const $this = this;
-      var screenHeight = $this.$refs.mainPane.offsetHeight;
-      $this.tableHeight = screenHeight-$this.$refs.headerPane.offsetHeight-75;
+      console.log($this.infoData.warnlist.length,"提醒条数");
+      var tipsHeight = 0;
+      if($this.$refs.tipsPane){
+        tipsHeight = $this.$refs.tipsPane.offsetHeight+15;
+        $this.tableHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-tipsHeight-75;
+      }else{
+        $this.tableHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+      }
     },
     // 数据清空
     DataEmpty(){

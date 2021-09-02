@@ -70,3 +70,24 @@ export function fileUpload(data) {
       }
     });
 }
+// 获取中文统计数据
+export function cnCluesStatData() {
+  return request({
+    url: "/hxindex/Api/chinacount",
+    method: "POST",
+  });
+}
+// 获取英文统计数据
+export function enCluesStatData() {
+  return request({
+    url: "/hxindex/Api/encount",
+    method: "POST",
+  });
+}
+// 获取业务员统计数据
+export function salesmanStatData() {
+  return request({
+    url: "/hxindex/Api/salescount",
+    method: "POST",
+  });
+}

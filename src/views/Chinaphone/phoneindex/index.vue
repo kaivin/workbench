@@ -106,7 +106,7 @@
                     <div class="item-search" style="width: 150px;">
                       <el-input
                         placeholder="域名、备注等"
-                        class="tips-bg-1"
+                        class="tips-input-1"
                         size="small"
                         v-model="searchData.name"
                         clearable>

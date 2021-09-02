@@ -1,4 +1,17 @@
-﻿import { getMenuPermit,getUserInfo,getUser,getWorkName,getPostionName,getRoute,getMenuButtonPermit,getNewPostArticle,fileUpload} from '@/api/api'
+﻿import { 
+  getMenuPermit,
+  getUserInfo,
+  getUser,
+  getWorkName,
+  getPostionName,
+  getRoute,
+  getMenuButtonPermit,
+  getNewPostArticle,
+  fileUpload,
+  cnCluesStatData,
+  enCluesStatData,
+  salesmanStatData,
+} from '@/api/api'
 
 const state = {
     isArticleSearch: false,
@@ -264,6 +277,36 @@ const actions = {
     fileUploadAction({ commit, state },data) {
       return new Promise((resolve, reject) => {
         fileUpload(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 获取中文统计数据
+    cnCluesStatDataAction({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        cnCluesStatData().then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 获取英文统计数据
+    enCluesStatDataAction({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        enCluesStatData().then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 获取业务员统计数据
+    salesmanStatDataAction({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        salesmanStatData().then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)

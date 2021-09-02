@@ -131,45 +131,43 @@
                         <el-button type="primary" class="updateBtn" size="small" v-on:click="searchResult"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>查询</el-button>
                     </div>
                 </div>               
-                <div class="card-content SaleCardDataBom" v-if="tableData.length>0">
-                     <h2>查询结果</h2>                     
-                      <el-table
-                        border
-                        ref="simpleTable"
-                        :data="tableData"
-                        tooltip-effect="dark"
-                        stripe
-                        class="SiteTable"
-                        style="width: 100%;"
-                        >
-                        <el-table-column
-                          prop="uname"
-                          label="业务员姓名"
-                          align="center"
-                          v-if="is_groupData=='3'"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="producttypename"
-                          label="产品分类"
-                          align="center"
-                          v-if="is_groupData=='1'"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="continent"
-                          label="地区"
-                          align="center"
-                          v-if="is_groupData=='2'"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="number"
-                          label="数量"
-                          align="center"
-                          >
-                        </el-table-column>
-                      </el-table>
+                <div class="card-content SaleCardDataBom" v-if="tableData.length>0">                 
+                  <el-table
+                    ref="simpleTable"
+                    :data="tableData"
+                    tooltip-effect="dark"
+                    stripe
+                    class="SiteTable"
+                    style="width: 100%;"
+                    >
+                    <el-table-column
+                      prop="uname"
+                      label="业务员姓名"
+                      align="center"
+                      v-if="is_groupData=='3'"
+                      >
+                    </el-table-column>
+                    <el-table-column
+                      prop="producttypename"
+                      label="产品分类"
+                      align="center"
+                      v-if="is_groupData=='1'"
+                      >
+                    </el-table-column>
+                    <el-table-column
+                      prop="continent"
+                      label="地区"
+                      align="center"
+                      v-if="is_groupData=='2'"
+                      >
+                    </el-table-column>
+                    <el-table-column
+                      prop="number"
+                      label="数量"
+                      align="center"
+                      >
+                    </el-table-column>
+                  </el-table>
                 </div>
             </el-card>
           </div>

@@ -2,4 +2,102 @@
     .el-table__expand-icon,.el-table__placeholder{
         display: none!important;
     }
+    .item-row{
+        margin: 0 -8px 0 -7px;
+        .item-column{
+            padding: 0 8px 0 7px;
+            .item-module{
+                width: 100%;
+                border-radius: 8px;
+                overflow: hidden;
+                background-color: #fff;
+                .module-header{
+                    width: 100%;
+                    background: linear-gradient(#ffffff, #edf2f3);
+                    padding: 10px 0;
+                    h2{
+                        padding: 0 20px;
+                        height: 32px;
+                        line-height: 32px;
+                        font-size: 16px;
+                        font-weight: bold;
+                        color: #1a1a1a;
+                    }
+                }
+                .module-body{
+                    .num-list{
+                        padding: 15px;
+                        height: 250px;
+                        p{
+                            width: 33.333333%;
+                            float:left;
+                            padding: 66px 0;
+                            span,strong{
+                                display: block;
+                                text-align: center;
+                            }
+                            span{
+                                height: 24px;
+                                line-height: 24px;
+                                font-size: 16px;
+                                color: #333333;
+                            }
+                            strong{
+                                margin-top: 14px;
+                                font-size: 42px;
+                                color: #f93838;
+                                line-height: 48px;
+                                height: 48px;
+                                font-weight: normal;
+                            }
+                        }
+                    }
+                    .news-panel{
+                        height: 250px;
+                        .el-scrollbar {
+                          height: 100%;
+                          .scrollbar-wrapper {
+                            overflow-x: hidden !important;
+                            position: relative;
+                            transition: all .3s;
+                          }
+                          .el-scrollbar__bar.is-vertical {
+                            right: 0px;
+                          }
+                          .is-horizontal {
+                            display: none;
+                          }
+                        }
+                        .news-list{
+                            padding: 15px;
+                            .item-news{
+                                margin-top: 10px;
+                                height: 32px;
+                                width: 100%;
+                                position: relative;
+                                cursor: pointer;
+                                .txt-font{
+                                    height: 32px;
+                                    @extend %ellipsis-basic;
+                                    color: #1a1a1a;
+                                    font-size: 14px;
+                                    line-height: 32px;
+                                }
+                                .txt-time{
+                                    font-size: 13px;
+                                    color: #999999;
+                                    padding: 0 15px;
+                                    height: 32px;
+                                    line-height: 32px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .item-row+.item-row{
+        margin-top: 15px;
+    }
 }
