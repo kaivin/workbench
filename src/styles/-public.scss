@@ -388,3 +388,39 @@
        right:0;
    }
 }
+.chart-font{
+    position: relative;
+    left: -40px;
+    top: -20px;
+    .txt-font{
+        padding: 6px 10px;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    i{
+        display: block;
+        border-right: 12px dashed transparent;
+        border-left:none;
+        border-bottom:none;
+        position: absolute;
+        left: 0;
+        bottom: -12px;
+    }
+    &.avg{
+        .txt-font{
+            background-color: #f16b6b;
+        }
+        i{
+            border-top: 12px solid #f16b6b;
+        }
+    }
+    &.target{
+        .txt-font{
+            background-color: #6aa343;
+        }
+        i{
+            border-top: 12px solid #6aa343;
+        }
+    }
+}

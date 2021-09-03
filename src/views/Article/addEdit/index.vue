@@ -221,12 +221,12 @@
           <h1>{{previewData.title}}</h1>
           <div class="ArticleSixFlTopTag clearfix">
             <p class="ArticleSixFlTopTagFl">
-              <span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>{{previewData.typeName}}</span>
-              <span><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{previewData.anthor}}</span>
-              <span><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{previewData.updateTime}}</span>
+              <span><i class="svg-i" ><svg-icon icon-class="art-depart" /></i>{{previewData.typeName}}</span>
+              <span><i class="svg-i" ><svg-icon icon-class="art-author" /></i>{{previewData.anthor}}</span>
+              <span><i class="svg-i" ><svg-icon icon-class="art-edit-time" /></i>{{previewData.updateTime}}</span>
               <span class="back" v-on:click="backSendPost"><i class="svg-i" ><svg-icon icon-class="back" /></i>点击返回</span>
             </p>
-            <p class="ArticleSixFlTopTagFr"><i class="svg-i" ><svg-icon icon-class="eye_rz" /></i>{{previewData.hits}}<span>|</span><i class="svg-i" ><svg-icon icon-class="read_rz" /></i>{{previewData.createdTime}} </p>
+            <p class="ArticleSixFlTopTagFr">阅读：{{previewData.hits}}<span>|</span>发布时间：{{previewData.createdTime}} </p>
           </div>
         </div>
         <div class="info-content" v-bind:class="formData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="previewData.content"></div>
