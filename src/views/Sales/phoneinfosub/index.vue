@@ -13,7 +13,7 @@
                         <dt><span>最近修改时间：</span><strong>{{formData.updatetime}}</strong> </dt>
                       </dl>
                       <dl>
-                        <dt><span><i>*</i>处理业务员：</span><strong>{{formData.salesuserid}}</strong> </dt>
+                        <dt><span><i>*</i>处理业务员：</span><strong>{{formData.dealusername}}</strong> </dt>
                         <dt><span>来自地区：</span><strong>{{formData.continent}}-{{formData.country}}</strong></dt>
                         <dt><span>需求产品：</span><strong>{{formData.producttype_id}}-{{formData.keying}}</strong> </dt>
                       </dl>

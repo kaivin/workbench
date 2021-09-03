@@ -1,155 +1,161 @@
 ﻿
 <template>
     <div class="page-root sales-phonecount" ref="boxPane">
-        <el-card class="box-card scroll-card" shadow="hover">
-            <div slot="header">
-                <div class="card-header" ref="headerPane">
-                    <div class="search-wrap">
-                        <div class="item-search">
-                            <el-radio v-for="(item,index) in statusList" border size="small" @change="valueChangeHandler" v-bind:key="index" v-model="status" :label="item.value">{{item.label}}</el-radio>
+        <div class="abs-panel" ref="mainPane">
+            <div class="scroll-panel">
+                <div class="true-height" ref="scrollPane">
+                    <el-card class="box-card scroll-card" shadow="hover">
+                        <div slot="header">
+                            <div class="card-header" ref="headerPane">
+                                <div class="search-wrap">
+                                    <div class="item-search">
+                                        <el-radio v-for="(item,index) in statusList" border size="small" @change="valueChangeHandler" v-bind:key="index" v-model="status" :label="item.value">{{item.label}}</el-radio>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                        <div class="card-content" ref="tableContent">
+                            <el-table
+                                ref="simpleTable"
+                                :data="tableData"
+                                :height="tableHeight"
+                                tooltip-effect="dark"
+                                stripe
+                                class="SiteTable"
+                                style="width: 100%;text-align:center"
+                                row-key="id"
+                                >
+                                <el-table-column
+                                    prop="id"
+                                    label="业务员ID"
+                                    width="90"
+                                    text-align='center'
+                                    >
+                                </el-table-column>
+                                <el-table-column
+                                    prop="permit"
+                                    label="权限"
+                                    width="90"
+                                    text-align='center'
+                                    >
+                                </el-table-column>
+                                <el-table-column
+                                    prop="name"
+                                    label="姓名"
+                                    width="100"
+                                    >
+                                </el-table-column>
+                                <el-table-column
+                                    prop="allcount"
+                                    label="询盘总数"
+                                    width="100"
+                                    >
+                                    <template slot-scope="scope">
+                                        <div class="table-text">
+                                            <p><b style="color:#379bff">{{scope.row.allcount}}</b></p>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                    prop="countnodeal"
+                                    label="未处理询盘数"
+                                    width="110"
+                                    >
+                                    <template slot-scope="scope">
+                                        <div class="table-text">
+                                            <p><b style="color:#ed475e">{{scope.row.countnodeal}}</b></p>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                    prop="countnoread"
+                                    :label="lastDate+'未反馈数'"
+                                    width="140"
+                                    >
+                                    <template slot-scope="scope">
+                                        <div class="table-text">
+                                            <p><b style="color:#f37220">{{scope.row.nofeedcount}}</b></p>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                    prop="noftwordcount"
+                                    :label="lastDate+'未填富通'"
+                                    width="140"
+                                    >
+                                    <template slot-scope="scope">
+                                        <div class="table-text">
+                                            <p><b style="color:#8e4d22">{{scope.row.noftwordcount}}</b></p>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                    prop="nofeednowcount"
+                                    :label="currentDate+'未反馈数'"
+                                    width="150"
+                                    >
+                                    <template slot-scope="scope">
+                                        <div class="table-text">
+                                            <p><b style="color:#7d6c15">{{scope.row.nofeednowcount}}</b></p>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                    prop="noftwordnowcount"
+                                    :label="currentDate+'未填富通'"
+                                    width="150"
+                                    >
+                                    <template slot-scope="scope">
+                                        <div class="table-text">
+                                            <p><b style="color:#848c1c">{{scope.row.noftwordnowcount}}</b></p>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                    prop="allotcount"
+                                    label="近2日分配询盘数"
+                                    width="140"
+                                    >
+                                    <template slot-scope="scope">
+                                        <div class="table-text">
+                                            <p><b style="color:#349b1e">{{scope.row.allotcount}}</b></p>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                    prop="countnoread"
+                                    label="未读询盘数"
+                                    width="100"
+                                    >
+                                    <template slot-scope="scope">
+                                        <div class="table-text">
+                                            <p><b style="color:#791ca2">{{scope.row.countnoread}}</b></p>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                    prop="countwarn"
+                                    label="提醒未处理"
+                                    width="100"
+                                    >
+                                    <template slot-scope="scope">
+                                        <div class="table-text">
+                                            <p><b style="color:#6bd416">{{scope.row.countwarn}}</b></p>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                    prop="login_time"
+                                    label="上次登录时间"
+                                    min-width="160"
+                                    >
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </el-card>
                 </div>
             </div>
-            <div class="card-content" ref="tableContent">
-                <el-table
-                    ref="simpleTable"
-                    :data="tableData"
-                    :height="tableHeight"
-                    tooltip-effect="dark"
-                    stripe
-                    class="SiteTable"
-                    style="width: 100%;text-align:center"
-                    row-key="id"
-                    >
-                    <el-table-column
-                        prop="id"
-                        label="业务员ID"
-                        width="90"
-                        text-align='center'
-                        >
-                    </el-table-column>
-                    <el-table-column
-                        prop="permit"
-                        label="权限"
-                        width="90"
-                        text-align='center'
-                        >
-                    </el-table-column>
-                    <el-table-column
-                        prop="name"
-                        label="姓名"
-                        width="100"
-                        >
-                    </el-table-column>
-                    <el-table-column
-                        prop="allcount"
-                        label="询盘总数"
-                        width="100"
-                        >
-                        <template slot-scope="scope">
-                            <div class="table-text">
-                                <p><b style="color:#379bff">{{scope.row.allcount}}</b></p>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="countnodeal"
-                        label="未处理询盘数"
-                        width="110"
-                        >
-                        <template slot-scope="scope">
-                            <div class="table-text">
-                                <p><b style="color:#ed475e">{{scope.row.countnodeal}}</b></p>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="countnoread"
-                        :label="lastDate+'未反馈数'"
-                        width="140"
-                        >
-                        <template slot-scope="scope">
-                            <div class="table-text">
-                                <p><b style="color:#f37220">{{scope.row.nofeedcount}}</b></p>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="noftwordcount"
-                        :label="lastDate+'未填富通'"
-                        width="140"
-                        >
-                        <template slot-scope="scope">
-                            <div class="table-text">
-                                <p><b style="color:#8e4d22">{{scope.row.noftwordcount}}</b></p>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="nofeednowcount"
-                        :label="currentDate+'未反馈数'"
-                        width="150"
-                        >
-                        <template slot-scope="scope">
-                            <div class="table-text">
-                                <p><b style="color:#7d6c15">{{scope.row.nofeednowcount}}</b></p>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="noftwordnowcount"
-                        :label="currentDate+'未填富通'"
-                        width="150"
-                        >
-                        <template slot-scope="scope">
-                            <div class="table-text">
-                                <p><b style="color:#848c1c">{{scope.row.noftwordnowcount}}</b></p>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="allotcount"
-                        label="近2日分配询盘数"
-                        width="140"
-                        >
-                        <template slot-scope="scope">
-                            <div class="table-text">
-                                <p><b style="color:#349b1e">{{scope.row.allotcount}}</b></p>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="countnoread"
-                        label="未读询盘数"
-                        width="100"
-                        >
-                        <template slot-scope="scope">
-                            <div class="table-text">
-                                <p><b style="color:#791ca2">{{scope.row.countnoread}}</b></p>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="countwarn"
-                        label="提醒未处理"
-                        width="100"
-                        >
-                        <template slot-scope="scope">
-                            <div class="table-text">
-                                <p><b style="color:#6bd416">{{scope.row.countwarn}}</b></p>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="login_time"
-                        label="上次登录时间"
-                        min-width="160"
-                        >
-                    </el-table-column>
-                </el-table>
-            </div>
-        </el-card>
+        </div>
     </div>
 </template>
 
@@ -184,11 +190,11 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-      $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
+           $this.setTableHeight();
     });
     window.onresize = () => {
         return (() => {
-            $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-30-45;
+           $this.setTableHeight();
         })()
     }
   },
@@ -208,7 +214,38 @@ export default {
     var $this = this;
     $this.initData();
   },
+  updated(){
+    var $this =this;
+    $this.$nextTick(() => {
+      this.$refs.simpleTable.doLayout()
+    })
+  },
   methods:{
+    // 设置高度
+    setTableHeight(){
+      var $this = this;
+      $this.tableHeight = "auto";
+      var trueHeight = $this.$refs.scrollPane.offsetHeight;
+      var headerHeight = $this.$refs.headerPane.offsetHeight+45;
+      var screenHeight = $this.$refs.boxPane.offsetHeight;
+      console.log(trueHeight,"真实高度");
+      console.log(headerHeight,"头部高度");
+      console.log(screenHeight,"视窗高度");
+      if(trueHeight<=screenHeight){
+        $this.tableHeight = screenHeight-headerHeight-30;
+      }else{
+        if(trueHeight-screenHeight<=headerHeight){
+          $this.tableHeight = "auto";
+        }else{
+          if($this.totalDataNum>100){
+            $this.tableHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 45;
+          }else{
+            $this.tableHeight = screenHeight-30;
+          }
+        }
+      }
+      console.log($this.tableHeight,"表格高度");
+    },
     // 初始化数据
     initData(){
       var $this = this;
@@ -223,7 +260,10 @@ export default {
             $this.tableData = response.data;
             $this.time1= response.time1;
             $this.time2= response.time2;
-            $this.getCurrentDate();
+            $this.getCurrentDate();         
+            $this.$nextTick(function () {
+              $this.setTableHeight();
+            })
             console.log(response,"业务员数据统计");
           }else{
             if(response.permitstatus&&response.permitstatus==2){

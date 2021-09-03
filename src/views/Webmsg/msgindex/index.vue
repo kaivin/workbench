@@ -81,7 +81,7 @@
                                 :data="tableData"
                                 tooltip-effect="dark"
                                 stripe
-                                class="SiteTable msg-table"
+                                class="SiteTable msg-table EntableColor"
                                 style="width: 100%"
                                 :style="'min-height:'+tableHeight+'px;'"
                                 row-key="id"
@@ -99,9 +99,9 @@
                                     >
                                     <template slot-scope="scope">
                                       <div class="msg-text">
-                                        <p><strong>ID：</strong><span class="txt-span">{{scope.row.id}}</span></p>
-                                        <p class="star-p"><strong>星标：</strong><i class="svg-i" v-if="scope.row.isStar"><svg-icon icon-class="star1" class-name="disabled" /></i></p>
-                                        <p class="txt-api" v-if="scope.row.appid"><strong>APPID：</strong><span class="txt-span">{{scope.row.appid}}</span></p>
+                                        <p><strong class="EnColor05">ID：</strong><span class="txt-span">{{scope.row.id}}</span></p>
+                                        <p class="star-p"><strong class="EnColor05">星标：</strong><i class="svg-i" v-if="scope.row.isStar"><svg-icon icon-class="star1" class-name="disabled" /></i></p>
+                                        <p class="txt-api" v-if="scope.row.appid"><strong class="EnColor05">APPID：</strong><span class="txt-span">{{scope.row.appid}}</span></p>
                                       </div>
                                     </template>
                                 </el-table-column>
@@ -112,12 +112,12 @@
                                     >
                                     <template slot-scope="scope">
                                       <div class="msg-text">
-                                        <p><strong>域名：</strong><span class="txt-span">{{scope.row.webdomain}}</span></p>
-                                        <p><strong>网站ID：</strong><span class="txt-span">{{scope.row.website_id}}</span></p>
-                                        <p><strong>IP：</strong><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" class="txt-link">{{scope.row.ip}}</a><span v-if="scope.row.ip&&scope.row.ip!=''&&scope.row.ipcount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.ip)">({{scope.row.ipcount}})</span></p>
-                                        <p><strong>URL：</strong><a :href="scope.row.refer" target="_blank" class="txt-link">打开</a></p>
-                                        <p><strong>标识：</strong><span class="txt-span">{{scope.row.site_feedback}}</span></p>
-                                        <p><strong>渠道：</strong><span class="txt-span">{{scope.row.from_way}}</span></p>
+                                        <p><strong class="EnColor05">域名：</strong><span class="txt-span">{{scope.row.webdomain}}</span></p>
+                                        <p><strong class="EnColor05">网站ID：</strong><span class="txt-span">{{scope.row.website_id}}</span></p>
+                                        <p><strong class="EnColor05">IP：</strong><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" class="txt-link">{{scope.row.ip}}</a><span v-if="scope.row.ip&&scope.row.ip!=''&&scope.row.ipcount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.ip)">({{scope.row.ipcount}})</span></p>
+                                        <p><strong class="EnColor05">URL：</strong><a :href="scope.row.refer" target="_blank" class="txt-link">打开</a></p>
+                                        <p><strong class="EnColor05">标识：</strong><span class="txt-span">{{scope.row.site_feedback}}</span></p>
+                                        <p><strong class="EnColor05">渠道：</strong><span class="txt-span">{{scope.row.from_way}}</span></p>
                                       </div>
                                     </template>
                                 </el-table-column>
@@ -128,10 +128,10 @@
                                     >
                                     <template slot-scope="scope">
                                       <div class="msg-text">
-                                        <p><strong>联系人：</strong><span class="txt-span">{{scope.row.name}}</span></p>
-                                        <p><strong>电话：</strong><span class="txt-span">{{scope.row.encryptPhone}}</span><span v-if="scope.row.encryptPhone&&scope.row.encryptPhone!=''&&scope.row.phonecount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.encryptPhone)">({{scope.row.phonecount}})</span></p>
-                                        <p><strong>Email：</strong><span class="txt-span">{{scope.row.encryptEmail}}</span><span v-if="scope.row.encryptEmail&&scope.row.encryptEmail!=''&&scope.row.emailcount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.encryptEmail)">({{scope.row.emailcount}})</span></p>
-                                        <p><strong>理想联系方式：</strong><span class="txt-span">{{scope.row.othercontact}}</span></p>
+                                        <p><strong class="EnColor05">联系人：</strong><span class="txt-span">{{scope.row.name}}</span></p>
+                                        <p><strong class="EnColor05">电话：</strong><span class="txt-span">{{scope.row.encryptPhone}}</span><span v-if="scope.row.encryptPhone&&scope.row.encryptPhone!=''&&scope.row.phonecount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.encryptPhone)">({{scope.row.phonecount}})</span></p>
+                                        <p><strong class="EnColor05">Email：</strong><span class="txt-span">{{scope.row.encryptEmail}}</span><span v-if="scope.row.encryptEmail&&scope.row.encryptEmail!=''&&scope.row.emailcount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.encryptEmail)">({{scope.row.emailcount}})</span></p>
+                                        <p><strong class="EnColor05">理想联系方式：</strong><span class="txt-span">{{scope.row.othercontact}}</span></p>
                                       </div>
                                     </template>
                                 </el-table-column>
@@ -142,9 +142,9 @@
                                     >
                                     <template slot-scope="scope">
                                       <div class="msg-text">
-                                        <p><strong>产品：</strong><span class="txt-span">{{scope.row.productname}}</span></p>
-                                        <p><strong>标题：</strong><span class="txt-span">{{scope.row.topic}}</span></p>
-                                        <p><strong>内容：</strong><span class="txt-span">{{scope.row.message}}</span></p>
+                                        <p><strong class="EnColor05">产品：</strong><span class="txt-span">{{scope.row.productname}}</span></p>
+                                        <p><strong class="EnColor05">标题：</strong><span class="txt-span">{{scope.row.topic}}</span></p>
+                                        <p><strong class="EnColor05">内容：</strong><span class="txt-span">{{scope.row.message}}</span></p>
                                       </div>
                                     </template>
                                 </el-table-column>
@@ -166,9 +166,9 @@
                                     >
                                     <template slot-scope="scope">
                                       <div class="msg-text">
-                                        <p><strong>留言时间：</strong><br /><span class="txt-span">{{scope.row.addtime}}</span></p>
-                                        <p><strong>处理时间：</strong><br /><span class="txt-span">{{scope.row.dealtime?scope.row.dealtime:"未处理"}}</span></p>
-                                        <p><strong>更新时间：</strong><br /><span class="txt-span">{{scope.row.updatetime}}</span></p>
+                                        <p><strong class="EnColor05">留言时间：</strong><br /><span class="txt-span">{{scope.row.addtime}}</span></p>
+                                        <p><strong class="EnColor05">处理时间：</strong><br /><span class="txt-span">{{scope.row.dealtime?scope.row.dealtime:"未处理"}}</span></p>
+                                        <p><strong class="EnColor05">更新时间：</strong><br /><span class="txt-span">{{scope.row.updatetime}}</span></p>
                                       </div>
                                     </template>
                                 </el-table-column>
@@ -182,7 +182,7 @@
                                         <p><el-checkbox v-model="scope.row.isProcessed" label="已处理" border size="mini" class="checkbox-inline"></el-checkbox><span class="txt-span">{{scope.row.dealusername}}</span></p>
                                         <p><el-checkbox v-model="scope.row.isStar" label="加星标" border size="mini"></el-checkbox></p>
                                         <p>
-                                          <strong class="txt-strong">质量级：</strong>
+                                          <strong class="txt-strong EnColor05">质量级：</strong>
                                           <el-select v-model="scope.row.qualitylevel" placeholder="" style="width: 118px;" size="mini">
                                             <el-option
                                               v-for="item in levelList"
@@ -192,7 +192,7 @@
                                             </el-option>
                                           </el-select>
                                         </p>
-                                        <p><strong class="txt-strong">备注项：</strong><el-input size="small" type="textarea" rows="2" resize="none" style="width: 118px;" v-model="scope.row.xunremark"></el-input></p>
+                                        <p><strong class="txt-strong EnColor05">备注项：</strong><el-input size="small" type="textarea" rows="2" resize="none" style="width: 118px;" v-model="scope.row.xunremark"></el-input></p>
                                       </div>
                                     </template>
                                 </el-table-column>
@@ -203,8 +203,8 @@
                                     >
                                     <template slot-scope="scope">
                                       <div class="msg-text textarea-msg">
-                                        <p><strong class="txt-strong">询盘分配：</strong><el-input size="mini" type="textarea" rows="1" resize="none" v-model="scope.row.allotremark"></el-input></p>
-                                        <p><strong class="txt-strong">询盘状态：</strong><el-input size="mini" type="textarea" rows="3" resize="none" v-model="scope.row.xunstatusremark"></el-input></p>
+                                        <p><strong class="txt-strong EnColor05">询盘分配：</strong><el-input size="mini" type="textarea" rows="1" resize="none" v-model="scope.row.allotremark"></el-input></p>
+                                        <p><strong class="txt-strong EnColor05">询盘状态：</strong><el-input size="mini" type="textarea" rows="3" resize="none" v-model="scope.row.xunstatusremark"></el-input></p>
                                       </div>
                                     </template>
                                 </el-table-column>

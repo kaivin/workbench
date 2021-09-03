@@ -29,347 +29,351 @@
     </div>
     <div class="flex-content SaleCardFr">
       <div class="abs-panel" ref="mainPane">
-          <div class="scroll-panel" ref="scrollPane">
-            <div class="tips-list" v-if="defaultData.warningcount>0" ref="tipsPane">
-                  <div class="item-tips type-1" v-for="(item,index) in defaultData.warning" v-bind:key="index" v-on:click="editTableRow(item,index,'1')">
-                      <i>{{index+1}}</i>
-                      <strong>ID：{{item.id}}</strong>
-                      <span>{{item.givesaleswarn}}</span>
-                  </div>
-            </div>
-            <el-card class="box-card scroll-card SaleCardFlFrTable" shadow="hover">
-              <div slot="header">  
-                <div class="card-header" ref="headerPane"> 
-                  <div class="filter-panel" v-if="device==='mobile'">
-                      <div class="search-panel">
-                          <el-input class="article-search" size="small"
-                              placeholder="富通ID/分配ID"
-                              v-model="searchData.ftword_id"
-                              clearable>
-                            <el-button slot="append" @click="searchResult()"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
-                          </el-input>
+          <div class="scroll-panel">
+              <div class="true-height" ref="scrollPane">
+                  <el-card class="box-card scroll-card SaleCardFlFrTable tipsHas" shadow="hover">
+                    <div slot="header">  
+                      <div class="card-header" ref="headerPane">                      
+                        <div class="tips-list" v-if="defaultData.warningcount>0" ref="tipsPane">
+                              <div class="item-tips type-1" v-for="(item,index) in defaultData.warning" v-bind:key="index" v-on:click="editTableRow(item,index,'1')">
+                                  <i>{{index+1}}</i>
+                                  <strong>ID：{{item.id}}</strong>
+                                  <span>{{item.givesaleswarn}}</span>
+                              </div>
+                        </div>
+                        <div class="tipsHasItem">
+                            <div class="filter-panel" v-if="device==='mobile'">
+                                <div class="search-panel">
+                                    <el-input class="article-search" size="small"
+                                        placeholder="富通ID/分配ID"
+                                        v-model="searchData.ftword_id"
+                                        clearable>
+                                      <el-button slot="append" @click="searchResult()"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
+                                    </el-input>
+                                </div>
+                                <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
+                            </div>      
+                            <div class="search-wrap" v-if="device==='desktop'">
+                              <div class="item-search" style="width:130px;">
+                                <el-select v-model="searchData.timetype" size="small" clearable placeholder="分配时间">
+                                  <el-option
+                                      v-for="item in timetypelist"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </div>
+                              <div class="item-search" style="width:240px;">
+                                <el-date-picker
+                                  v-model="searchData.date"
+                                  class="date-range"
+                                  size="small"
+                                  type="daterange"
+                                  align="right"
+                                  value-format = "yyyy-MM-dd"
+                                  unlink-panels
+                                  range-separator="至"
+                                  start-placeholder="开始日期"
+                                  end-placeholder="结束日期"
+                                  :picker-options="pickerRangeOptions">
+                                </el-date-picker>
+                              </div>
+                              <div class="item-search" v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'" style="width:100px;">
+                                <el-select v-model="searchData.salesuserid" size="small" clearable placeholder="业务员">
+                                  <el-option
+                                      v-for="item in salesuseridList"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </div>
+                              <div class="item-search" style="width:90px;">
+                                <el-select v-model="searchData.continent" size="small" clearable placeholder="大洲">
+                                  <el-option
+                                      v-for="item in continentlist"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </div>
+                              <div class="item-search" style="width:100px;">
+                                <el-select v-model="searchData.producttype_id" size="small" clearable placeholder="产品类型"  @change="currentCateChange" >
+                                  <el-option
+                                      v-for="item in producttype_idList"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </div>
+                              <div class="item-search" style="width:90px;">
+                                <el-select v-model="searchData.productid" size="small" clearable placeholder="产品名">
+                                  <el-option
+                                      v-for="item in productidList"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </div>
+                              <div class="item-search" style="width:90px;">
+                                <el-select v-model="searchData.managestatus" size="small" clearable placeholder="处理">
+                                  <el-option
+                                      v-for="item in managestatusList"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </div>
+                              <div class="item-search" style="width:100px;">
+                                <el-select v-model="searchData.replystatus" size="small" clearable placeholder="回复情况">
+                                  <el-option
+                                      v-for="item in replystatusList"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </div>
+                              <div class="item-search" style="width:100px;">
+                                <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质">
+                                  <el-option
+                                      v-for="item in ennatureList"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </div>
+                              <div class="item-search" style="width:100px;">
+                                <el-select v-model="searchData.enxunprice" size="small" clearable placeholder="需求">
+                                  <el-option
+                                      v-for="item in enxunpriceList"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </div>
+                              <div class="item-search">
+                                <el-checkbox-group v-model="feedbackArr" class="checkbox-group" @change="feedbackClick"  size="small">
+                                  <el-checkbox v-for="item in feedbackList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
+                                </el-checkbox-group>
+                              </div>
+                              <div class="item-search" style="width: 150px;">
+                                <el-input
+                                  size="small"
+                                  class="tips-input-2"
+                                  placeholder="客户联系方式"
+                                  v-model="searchData.keyword"
+                                  clearable>
+                                </el-input>
+                              </div>
+                              <div class="item-search" style="width: 150px;">
+                                <el-input
+                                  size="small"
+                                  class="tips-input-3"
+                                  placeholder="富通ID/分配ID"
+                                  v-model="searchData.ftword_id"
+                                  clearable>
+                                </el-input>
+                              </div>
+                              <div class="item-search">
+                                <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult()">查询</el-button>
+                              </div>  
+                            </div>
+                            <div class="clues-info flex-box">
+                              <div class="clues-infoFl flex-content">
+                                <p v-if="currentStatus != 'allotcount'"><span>当前结果集状态：共有<strong class="color1">{{infoData.allcount}}</strong>条。</span></p>
+                                <p v-else><span>当前结果集状态：当前共有<strong class="color1">{{infoData.allcount}}</strong>条信息。</span><span>昨天共分配<strong class="color2">{{infoData.countyestoday}}</strong>个询盘，当前共有<strong class="color3">{{infoData.countyestodaynodeal}}</strong>条未处理</span><span v-if="infoData.countyestodaynodeal>0" class="item-span-4" style="cursor: pointer;" @click="searchResult(1)">点击查看昨天未处理询盘</span><span>||</span><span>今天天共分配<strong class="color2">{{infoData.counttoday}}</strong>个询盘，当前共有<strong class="color3">{{infoData.counttodaynodeal}}</strong>条未处理</span><span v-if="infoData.counttodaynodeal>0" class="item-span-4" style="cursor: pointer;" @click="searchResult(2)">点击查看今天未处理询盘</span></p>
+                              </div>
+                              <div class="clues-title-btn">
+                                <el-button class="item-input" v-if="menuButtonPermit.includes('Sales_phonecancel')&&currentStatus === 'allotcount'" size="small" type="primary" :disabled="isTableRow" @click="deleteTableRow">分配撤回</el-button>
+                                <div class="SaleMassDistribution" v-if="menuButtonPermit.includes('Sales_waitphone')&&currentStatus === 'waitcount'">                          
+                                  <el-select :disabled="isTableRow" v-model="Determine.userid" size="small" clearable placeholder="-选择业务员-">
+                                    <el-option
+                                    v-for="item in dealuserList"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                    </el-option>
+                                  </el-select>
+                                  <el-button class="item-input" size="small" type="primary" :disabled="isTableRow" @click="DetermineTableRow">确定分配</el-button>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
                       </div>
-                      <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
-                  </div>      
-                  <div class="search-wrap" v-if="device==='desktop'">
-                    <div class="item-search" style="width:130px;">
-                      <el-select v-model="searchData.timetype" size="small" clearable placeholder="分配时间">
-                        <el-option
-                            v-for="item in timetypelist"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                      </el-select>
                     </div>
-                    <div class="item-search" style="width:240px;">
-                      <el-date-picker
-                        v-model="searchData.date"
-                        class="date-range"
-                        size="small"
-                        type="daterange"
-                        align="right"
-                        value-format = "yyyy-MM-dd"
-                        unlink-panels
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        :picker-options="pickerRangeOptions">
-                      </el-date-picker>
+                    <div class="card-content" ref="tableContent">
+                      <el-table
+                          ref="simpleTable"
+                          :data="tableData"
+                          tooltip-effect="dark"
+                          stripe
+                          class="SiteTable EntableColor"
+                          style="width: 100%"
+                          row-key="id"
+                          :height="tableHeight"
+                          @selection-change="handleSelectionChange"
+                          >
+                          <el-table-column
+                              type="selection"
+                              align="center"
+                              v-if="currentStatus === 'allotcount'||currentStatus === 'waitcount'"
+                              width="48">
+                          </el-table-column>
+                          <el-table-column
+                          prop="id"
+                          label="ID"
+                          width="50"
+                          align="center"
+                          >
+                          </el-table-column>
+                          <el-table-column
+                          prop="weekday"
+                          label="咨询时间与说明"
+                          width="190"
+                          >
+                          <template slot-scope="scope">
+                              <div class="table-text">
+                              <p>{{scope.row.weekday}}-{{scope.row.xuntime}}</p>
+                              <p><span>业务员：</span><strong>{{scope.row.salesusername}}</strong></p>
+                              <p><span>特别说明：</span><span class="SiteColor-01">{{scope.row.otherremark}}</span></p>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="continent"
+                          label="大州/地区"
+                          width="100"
+                          >
+                          <template slot-scope="scope">
+                              <div class="table-text">
+                                <p><span class="EnColor05">大州：</span>{{scope.row.continent}}</p>
+                                <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="producttypename"
+                          label="类型/产品"
+                          width="150"
+                          >
+                          <template slot-scope="scope">
+                              <div class="table-text">
+                                <p><span class="EnColor05">类型：</span>{{scope.row.producttypename}}</p>
+                                <p><span class="EnColor05">产品：</span>{{scope.row.keyproduct}}</p>
+                                <p><span class="EnColor05">富通：</span>{{scope.row.ftword_id}}</p>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="custormname"
+                          label="联系方式"
+                          width="180"
+                          >
+                          <template slot-scope="scope">
+                              <div class="table-text">
+                              <p><span class="EnColor05">称呼：</span>{{scope.row.custormname}}</p>
+                              <p><span class="EnColor05">邮箱：</span><span class="SiteColor-02"  v-if="scope.row.custormemail" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;">点击详情查看Email</span></p>
+                              <p><span class="EnColor05">电话：</span>{{scope.row.custormphone}}</p>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="custormneedinfo"
+                          label="需求详情"
+                          min-width="300"
+                          >
+                          <template slot-scope="scope">
+                              <div class="table-text">                        
+                                  <p v-if="scope.row.contentedittime"><span class="SiteColor-01">内容有修改：修改时间{{scope.row.contentedittime}}</span></p>
+                                  <p>{{scope.row.Salescustormneedinfo}}<span class="SiteColor-03 clear" style="cursor:pointer;" v-if="scope.row.Salescustormneedinfo.length>150" @click="editTableRow(scope.row,scope.$index,'2')">#查看更多</span></p>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="Salesmanagestatus"
+                          label="处理/回复"
+                          width="90"
+                          >
+                          <template slot-scope="scope">
+                              <div class="table-text">
+                                  <p :style="scope.row.managestatus==1?'color:#d02c34':'color:#1a6fdf'">{{scope.row.Salesmanagestatus}}</p>
+                                  <p :style="scope.row.replystatus==1?'color:#d02c34':'color:#49c96a'">{{scope.row.Salesreplystatus}}</p>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="SalesEnnature"
+                          label="客户性质"
+                          width="120"
+                          >
+                          <template slot-scope="scope">
+                              <div class="table-text">
+                                  <p>{{scope.row.SalesEnnature}}</p>
+                                  <p>{{scope.row.SalesEnxunprice}}</p>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="salesremark"
+                          label="个人备注"
+                          width="200"
+                          >
+                          <template slot-scope="scope">
+                              <div class="table-text">
+                                  <p>{{scope.row.salesremark}}</p>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="addtime"
+                          label="添加/修改时间"
+                          width="230"
+                          >
+                          <template slot-scope="scope">
+                              <div class="table-text">
+                                  <p><span>添加时间：</span>{{scope.row.xuntime}}</p>
+                                  <p><span>分配时间：</span>{{scope.row.addtime}}</p>
+                                  <p><span>更新时间：</span>{{scope.row.updatetime}}</p>
+                              </div>
+                          </template>
+                          </el-table-column>
+                          <el-table-column
+                          v-if="menuButtonPermit.includes('Sales_phoneinfosub')&&device==='desktop'"
+                          :width="operationsWidth"
+                          align="center"
+                          prop="operations"
+                          fixed="right"
+                          label="操作">
+                          <template #default="scope">
+                              <div class="table-button">
+                              <el-button size="mini" @click="editTableRow(scope.row,scope.$index,'2')">详情</el-button>
+                              <span class="SiteColor-03" v-if="scope.row.is_read==1">未读</span>
+                              </div>
+                          </template>
+                          </el-table-column>
+                      </el-table>
                     </div>
-                    <div class="item-search" v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'" style="width:100px;">
-                      <el-select v-model="searchData.salesuserid" size="small" clearable placeholder="业务员">
-                        <el-option
-                            v-for="item in salesuseridList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                      </el-select>
+                    <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
+                      <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="searchData.page"
+                        :page-sizes="pageSizeList"
+                        :page-size="searchData.limit"
+                        :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                        :total="totalDataNum">
+                      </el-pagination>
                     </div>
-                    <div class="item-search" style="width:90px;">
-                      <el-select v-model="searchData.continent" size="small" clearable placeholder="大洲">
-                        <el-option
-                            v-for="item in continentlist"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </div>
-                    <div class="item-search" style="width:100px;">
-                      <el-select v-model="searchData.producttype_id" size="small" clearable placeholder="产品类型"  @change="currentCateChange" >
-                        <el-option
-                            v-for="item in producttype_idList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </div>
-                    <div class="item-search" style="width:90px;">
-                      <el-select v-model="searchData.productid" size="small" clearable placeholder="产品名">
-                        <el-option
-                            v-for="item in productidList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </div>
-                    <div class="item-search" style="width:90px;">
-                      <el-select v-model="searchData.managestatus" size="small" clearable placeholder="处理">
-                        <el-option
-                            v-for="item in managestatusList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </div>
-                    <div class="item-search" style="width:100px;">
-                      <el-select v-model="searchData.replystatus" size="small" clearable placeholder="回复情况">
-                        <el-option
-                            v-for="item in replystatusList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </div>
-                    <div class="item-search" style="width:100px;">
-                      <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质">
-                        <el-option
-                            v-for="item in ennatureList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </div>
-                    <div class="item-search" style="width:100px;">
-                      <el-select v-model="searchData.enxunprice" size="small" clearable placeholder="需求">
-                        <el-option
-                            v-for="item in enxunpriceList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </div>
-                    <div class="item-search">
-                      <el-checkbox-group v-model="feedbackArr" class="checkbox-group" @change="feedbackClick"  size="small">
-                        <el-checkbox v-for="item in feedbackList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
-                      </el-checkbox-group>
-                    </div>
-                    <div class="item-search" style="width: 150px;">
-                      <el-input
-                        size="small"
-                        class="tips-input-2"
-                        placeholder="客户联系方式"
-                        v-model="searchData.keyword"
-                        clearable>
-                      </el-input>
-                    </div>
-                    <div class="item-search" style="width: 150px;">
-                      <el-input
-                        size="small"
-                        class="tips-input-3"
-                        placeholder="富通ID/分配ID"
-                        v-model="searchData.ftword_id"
-                        clearable>
-                      </el-input>
-                    </div>
-                    <div class="item-search">
-                      <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult()">查询</el-button>
-                    </div>  
-                  </div>
-                  <div class="clues-info flex-box">
-                    <div class="clues-infoFl flex-content">
-                      <p v-if="currentStatus != 'allotcount'"><span>当前结果集状态：共有<strong class="color1">{{infoData.allcount}}</strong>条。</span></p>
-                      <p v-else><span>当前结果集状态：当前共有<strong class="color1">{{infoData.allcount}}</strong>条信息。</span><span>昨天共分配<strong class="color2">{{infoData.countyestoday}}</strong>个询盘，当前共有<strong class="color3">{{infoData.countyestodaynodeal}}</strong>条未处理</span><span v-if="infoData.countyestodaynodeal>0" class="item-span-4" style="cursor: pointer;" @click="searchResult(1)">点击查看昨天未处理询盘</span><span>||</span><span>今天天共分配<strong class="color2">{{infoData.counttoday}}</strong>个询盘，当前共有<strong class="color3">{{infoData.counttodaynodeal}}</strong>条未处理</span><span v-if="infoData.counttodaynodeal>0" class="item-span-4" style="cursor: pointer;" @click="searchResult(2)">点击查看今天未处理询盘</span></p>
-                    </div>
-                    <div class="clues-title-btn">
-                      <el-button class="item-input" v-if="menuButtonPermit.includes('Sales_phonecancel')&&currentStatus === 'allotcount'" size="small" type="primary" :disabled="isTableRow" @click="deleteTableRow">分配撤回</el-button>
-                      <div class="SaleMassDistribution" v-if="menuButtonPermit.includes('Sales_waitphone')&&currentStatus === 'waitcount'">                          
-                        <el-select :disabled="isTableRow" v-model="Determine.userid" size="small" clearable placeholder="-选择业务员-">
-                          <el-option
-                          v-for="item in dealuserList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                          </el-option>
-                        </el-select>
-                        <el-button class="item-input" size="small" type="primary" :disabled="isTableRow" @click="DetermineTableRow">确定分配</el-button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  </el-card>
               </div>
-              <div class="card-content" ref="tableContent">
-                <el-table
-                    ref="simpleTable"
-                    :data="tableData"
-                    tooltip-effect="dark"
-                    stripe
-                    class="SiteTable EntableColor"
-                    style="width: 100%"
-                    row-key="id"
-                    :style="'min-height:'+tableHeight+'px;'"
-                    @selection-change="handleSelectionChange"
-                    >
-                    <el-table-column
-                        type="selection"
-                        align="center"
-                        v-if="currentStatus === 'allotcount'||currentStatus === 'waitcount'"
-                        width="48">
-                    </el-table-column>
-                    <el-table-column
-                    prop="id"
-                    label="ID"
-                    width="50"
-                    align="center"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                    prop="weekday"
-                    label="咨询时间与说明"
-                    width="190"
-                    >
-                    <template slot-scope="scope">
-                        <div class="table-text">
-                        <p>{{scope.row.weekday}}-{{scope.row.xuntime}}</p>
-                        <p><span>业务员：</span><strong>{{scope.row.salesusername}}</strong></p>
-                        <p><span>特别说明：</span><span class="SiteColor-01">{{scope.row.otherremark}}</span></p>
-                        </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="continent"
-                    label="大州/地区"
-                    width="100"
-                    >
-                    <template slot-scope="scope">
-                        <div class="table-text">
-                          <p><span class="EnColor05">大州：</span>{{scope.row.continent}}</p>
-                          <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
-                        </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="producttypename"
-                    label="类型/产品"
-                    width="150"
-                    >
-                    <template slot-scope="scope">
-                        <div class="table-text">
-                          <p><span class="EnColor05">类型：</span>{{scope.row.producttypename}}</p>
-                          <p><span class="EnColor05">产品：</span>{{scope.row.keyproduct}}</p>
-                          <p><span class="EnColor05">富通：</span>{{scope.row.ftword_id}}</p>
-                        </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="custormname"
-                    label="联系方式"
-                    width="180"
-                    >
-                    <template slot-scope="scope">
-                        <div class="table-text">
-                        <p><span class="EnColor05">称呼：</span>{{scope.row.custormname}}</p>
-                        <p><span class="EnColor05">邮箱：</span><span class="SiteColor-02"  v-if="scope.row.custormemail" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;">点击详情查看Email</span></p>
-                        <p><span class="EnColor05">电话：</span>{{scope.row.custormphone}}</p>
-                        </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="custormneedinfo"
-                    label="需求详情"
-                    min-width="300"
-                    >
-                    <template slot-scope="scope">
-                        <div class="table-text">                        
-                            <p v-if="scope.row.contentedittime"><span class="SiteColor-01">内容有修改：修改时间{{scope.row.contentedittime}}</span></p>
-                            <p>{{scope.row.Salescustormneedinfo}}<span class="SiteColor-03 clear" style="cursor:pointer;" v-if="scope.row.Salescustormneedinfo.length>150" @click="editTableRow(scope.row,scope.$index,'2')">#查看更多</span></p>
-                        </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="Salesmanagestatus"
-                    label="处理/回复"
-                    width="90"
-                    >
-                    <template slot-scope="scope">
-                        <div class="table-text">
-                            <p :style="scope.row.managestatus==1?'color:#d02c34':'color:#1a6fdf'">{{scope.row.Salesmanagestatus}}</p>
-                            <p :style="scope.row.replystatus==1?'color:#d02c34':'color:#49c96a'">{{scope.row.Salesreplystatus}}</p>
-                        </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="SalesEnnature"
-                    label="客户性质"
-                    width="120"
-                    >
-                    <template slot-scope="scope">
-                        <div class="table-text">
-                            <p>{{scope.row.SalesEnnature}}</p>
-                            <p>{{scope.row.SalesEnxunprice}}</p>
-                        </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="salesremark"
-                    label="个人备注"
-                    width="200"
-                    >
-                    <template slot-scope="scope">
-                        <div class="table-text">
-                            <p>{{scope.row.salesremark}}</p>
-                        </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column
-                    prop="addtime"
-                    label="添加/修改时间"
-                    width="230"
-                    >
-                    <template slot-scope="scope">
-                        <div class="table-text">
-                            <p><span>添加时间：</span>{{scope.row.xuntime}}</p>
-                            <p><span>分配时间：</span>{{scope.row.addtime}}</p>
-                            <p><span>更新时间：</span>{{scope.row.updatetime}}</p>
-                        </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column
-                    v-if="menuButtonPermit.includes('Sales_phoneinfosub')&&device==='desktop'"
-                    :width="operationsWidth"
-                    align="center"
-                    prop="operations"
-                    fixed="right"
-                    label="操作">
-                    <template #default="scope">
-                        <div class="table-button">
-                        <el-button size="mini" @click="editTableRow(scope.row,scope.$index,'2')">详情</el-button>
-                        <span class="SiteColor-03" v-if="scope.row.is_read==1">未读</span>
-                        </div>
-                    </template>
-                    </el-table-column>
-                </el-table>
-              </div>
-              <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
-                <el-pagination
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="searchData.page"
-                  :page-sizes="pageSizeList"
-                  :page-size="searchData.limit"
-                  :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
-                  :total="totalDataNum">
-                </el-pagination>
-              </div>
-            </el-card>
           </div>
       </div>
     </div>
@@ -721,7 +725,6 @@ export default {
   },
   updated(){
     this.$nextTick(() => {
-      this.setTableHeight();
       this.$refs.simpleTable.doLayout()
     })
   },
@@ -743,15 +746,28 @@ export default {
   methods:{
     // 设置高度
     setTableHeight(){
-      const $this = this;
-      console.log($this.infoData.warnlist.length,"提醒条数");
-      var tipsHeight = 0;
-      if($this.$refs.tipsPane){
-        tipsHeight = $this.$refs.tipsPane.offsetHeight+15;
-        $this.tableHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-tipsHeight-75;
+      var $this = this;
+      $this.tableHeight = "auto";
+      var trueHeight = $this.$refs.scrollPane.offsetHeight;
+      var headerHeight = $this.$refs.headerPane.offsetHeight+45;
+      var screenHeight = $this.$refs.boxPane.offsetHeight;
+      console.log(trueHeight,"真实高度");
+      console.log(headerHeight,"头部高度");
+      console.log(screenHeight,"视窗高度");
+      if(trueHeight<=screenHeight){
+        $this.tableHeight = screenHeight-headerHeight;
       }else{
-        $this.tableHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+        if(trueHeight-screenHeight<=headerHeight){
+          $this.tableHeight = "auto";
+        }else{
+          if($this.totalDataNum>100){
+            $this.tableHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 45;
+          }else{
+            $this.tableHeight = screenHeight;
+          }
+        }
       }
+      console.log($this.tableHeight,"表格高度");
     },
     // 数据清空
     DataEmpty(){
@@ -1131,6 +1147,9 @@ export default {
             });
           }
           $this.tableData = tableData;
+            $this.$nextTick(function () {
+              $this.setTableHeight();
+            })
         }else{
           $this.$message({
             showClose: true,

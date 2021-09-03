@@ -656,7 +656,6 @@
             display: inline-block;
             width: 72px;
             text-align: right;
-            font-weight:normal;
           }
           .all-select{
             vertical-align: middle;
@@ -723,8 +722,24 @@
     color:#666;
   }
   .EnColor02{color:#468847;}
-  .EnColor05{color:#999797;}
+  .EnColor05{color:#999797!important;}
   .EnColor06{color:#CC0000;font-weight: bold;}
+}
+.tipsHas{
+  &.box-card .el-card__header{    
+    padding:0px;
+    background:none;
+    margin-bottom:0;
+    border-radius:0;
+    border: none;
+    .tipsHasItem{
+      padding: 15px;
+      background: #fff;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: none;
+    }
+  }
 }
 .mobile{
   .card-header.EnphoneCardHeader{
