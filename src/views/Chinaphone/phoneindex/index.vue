@@ -203,7 +203,7 @@
                 :data="tableData"
                 tooltip-effect="dark"
                 stripe
-                class="SiteTable"
+                class="SiteTable EntableColor"
                 style="width: 100%"
                 row-key="id"
                 v-bind:style="'min-height:'+minHeight+'px;'"

@@ -40,7 +40,7 @@
                 <div class="SaleAddEditMainItem SaleFoot">
                       <dl class="SaleFootFl">
                         <dd class="flex-wrap">
-                          <span>富通编号<i>*</i>：</span>
+                          <span>富通编号：</span>
                           <div class="flex-content">                          
                               <el-input
                                   size="small"
@@ -71,7 +71,7 @@
                       <dl class="SaleFootMid">
                         <dt>
                            <span>务必认真标注！</span>
-                           <span>客户性质<i>*</i>：</span>                          
+                           <span>客户性质：</span>                          
                         </dt>
                         <dd class="flex-wrap">       
                             <el-radio-group style="margin-bottom:10px;" v-model="formData.ennature">
@@ -81,7 +81,7 @@
                       </dl>
                       <dl class="SaleFootFr">
                         <dt>
-                           <span>沟通后客户需求设备价格范围<i>（单位：人民币RMB）*</i>：</span>                        
+                           <span>沟通后客户需求设备价格范围<i>（单位：人民币RMB）</i>：</span>                        
                         </dt>
                         <dd class="SaleFootFrTop">       
                             <el-radio-group style="margin-bottom:10px;" v-model="formData.enxunprice">

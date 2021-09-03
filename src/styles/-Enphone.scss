@@ -687,8 +687,12 @@
           }
         }
         .search-panelThree{
-          padding-left: 10px;
+          padding-left:15px;
+          margin: 5px;
           .el-radio{margin-right:0px;}
+        }
+        .el-checkbox.is-bordered.el-checkbox--mini{
+          margin:5px 5px 5px 0px;
         }
       }
       &.EnphoneSearchThree{
@@ -698,10 +702,29 @@
     }
   }
 }
-.card-header.EnphoneCardHeader{
+.card-header.EnphoneCardHeader{  
+  .search-wrap{
+      input::-webkit-input-placeholder {
+        color: #606266;
+      }
+      input::-moz-input-placeholder {
+        color: #606266;
+      }
+      input::-ms-input-placeholder {
+        color: #606266;
+      }
+  }
   .clues-info.flex-wrap{
     margin-top: 10px;
   }
+}
+.EntableColor{
+  &.el-table.SiteTable td{
+    color:#666;
+  }
+  .EnColor02{color:#468847;}
+  .EnColor05{color:#999797;}
+  .EnColor06{color:#CC0000;font-weight: bold;}
 }
 .mobile{
   .card-header.EnphoneCardHeader{

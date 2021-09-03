@@ -20,7 +20,7 @@
       <div class="abs-panel" ref="mainPane">
         <div class="scroll-panel" ref="scrollPane">
           <div class="EnStatistical" v-if="!phoneID">
-              <div class="tips-list" v-if="(defaultData.custormwarntatus&&defaultData.custormwarntatus!='')||(defaultData.warningstatus&&defaultData.warningstatus!='')">
+              <div class="tips-list" v-if="(defaultData.custormwarntatus==1&&defaultData.custormwarn.length>0)||(defaultData.warningstatus==1&&defaultData.saleswarning.length>0)">
                     <div class="item-tips" :class="item.type=='custormwarn'?'type-1':'type-2'" v-for="(item,index) in defaultData.custorAndsalesmwarn" v-bind:key="index" v-on:click="jumpEditPage(item.id)">
                         <i>{{index+1}}</i>
                         <strong>ID：{{item.id}}</strong>
@@ -29,7 +29,7 @@
               </div>
               <el-card class="box-card" shadow="hover">
                     <div slot="header">
-                        <div class="EnStatisticalTop">
+                        <div class="EnStatisticalTop" ref="headerPane">
                               <ul class="EnStatisticalTopTit">
                                   <li v-for="(item,index) in defaultData.departcountArr" v-bind:key="index"><span v-bind:class="item.isOn?'active':''" v-on:click="topdepartClick(item.dept_id)">{{item.name}}</span></li>
                               </ul>
@@ -86,7 +86,7 @@
               </el-card>
           </div>
           <div class="EnphoneCardFrDate" v-else>
-              <div class="tips-list" v-if="(defaultData.custormwarntatus&&defaultData.custormwarntatus!='')||(defaultData.warningstatus&&defaultData.warningstatus!='')">
+              <div class="tips-list" ref="tipsPane" v-if="(defaultData.custormwarntatus==1&&defaultData.custormwarn.length>0)||(defaultData.warningstatus==1&&defaultData.saleswarning.length>0)">
                     <div class="item-tips" :class="item.type=='custormwarn'?'type-1':'type-2'" v-for="(item,index) in defaultData.custorAndsalesmwarn" v-bind:key="index" v-on:click="jumpEditPage(item.id)">
                         <i>{{index+1}}</i>
                         <strong>ID：{{item.id}}</strong>
@@ -315,9 +315,9 @@
                     :data="tableData"
                     tooltip-effect="dark"
                     stripe
-                    class="SiteTable"
+                    class="SiteTable EntableColor"
                     style="width: 100%"
-                    v-bind:style="'min-height:'+minHeight+'px;'"
+                    v-bind:style="'min-height:'+tableHeight+'px;'"
                     row-key="id"
                     >
                     <el-table-column
@@ -334,7 +334,7 @@
                       <template slot-scope="scope">
                         <div class="table-text">
                           <p>时段：{{scope.row.timeing}}</p>
-                          <p>星期：{{scope.row.weekday}}</p>
+                          <p class="EnColor02">星期：{{scope.row.weekday}}</p>
                           <p>本地：{{scope.row.xuntime}}</p>
                           <p>当地：{{scope.row.foreigntime}}</p>
                         </div>
@@ -360,10 +360,10 @@
                       >
                       <template slot-scope="scope">
                         <div class="table-text">
-                          <p><span>大洲：</span>{{scope.row.continent}}</p>
-                          <p><span>国家：</span>{{scope.row.country}}</p>
-                          <p><span>来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip">IP</a></p>
-                          <p><span>设备：</span>{{scope.row.device}}</p>
+                          <p><span class="EnColor05">大洲：</span>{{scope.row.continent}}</p>
+                          <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
+                          <p><span class="EnColor05">来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip">IP</a></p>
+                          <p><span class="EnColor05">设备：</span>{{scope.row.device}}</p>
                         </div>
                       </template>
                     </el-table-column>
@@ -374,11 +374,11 @@
                       >
                       <template slot-scope="scope">
                         <div class="table-text">
-                          <p><span>产品：</span><span :style="'font-weight:bold;color:'+scope.row.producttypecolor">{{scope.row.producttypename}}</span>/{{scope.row.keyproduct}}</p>
-                          <p><span>物料：</span>{{scope.row.material}}</p>
-                          <p><span>产量：</span>{{scope.row.production}}</p>
-                          <p><span>进料：</span>{{scope.row.infeed}}</p>
-                          <p><span>出料：</span>{{scope.row.outfeed}}</p>
+                          <p><span class="EnColor05">产品：</span><span :style="'font-weight:bold;color:'+scope.row.producttypecolor">{{scope.row.producttypename}}</span>/{{scope.row.keyproduct}}</p>
+                          <p class="EnColor05"><span>物料：</span>{{scope.row.material}}</p>
+                          <p class="EnColor05"><span>产量：</span>{{scope.row.production}}</p>
+                          <p class="EnColor05"><span>进料：</span>{{scope.row.infeed}}</p>
+                          <p class="EnColor05"><span>出料：</span>{{scope.row.outfeed}}</p>
                         </div>
                       </template>
                     </el-table-column>
@@ -399,11 +399,11 @@
                       >
                       <template slot-scope="scope">
                         <div class="table-text">
-                          <p class="table-tag"><span>初次：</span><span class="level"  @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></p>
-                          <p><span>性质：</span>{{scope.row.ennaturename?scope.row.ennaturename:'未判定'}}</p>
-                          <p><span>需求：</span>{{scope.row.enxunpricename?scope.row.enxunpricename:'未判定'}}</p>
-                          <p><span>状态：</span>{{scope.row.managestatus==1?'':'已开始处理'}}</p>
-                          <p><span>异常：</span>{{scope.row.erroring}}</p>
+                          <p class="table-tag"><span class="EnColor05">初次：</span><span class="level"  @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></p>
+                          <p><span class="EnColor05">性质：</span>{{scope.row.ennaturename?scope.row.ennaturename:'未判定'}}</p>
+                          <p><span class="EnColor05">需求：</span>{{scope.row.enxunpricename?scope.row.enxunpricename:'未判定'}}</p>
+                          <p><span class="EnColor05">状态：</span>{{scope.row.managestatus==1?'':'已开始处理'}}</p>
+                          <p><span class="EnColor05">异常：</span>{{scope.row.erroring}}</p>
                         </div>
                       </template>
                     </el-table-column>
@@ -451,7 +451,7 @@
                       min-width="80"
                       >
                       <template slot-scope="scope">
-                        <div class="table-score"><span>{{scope.row.score}}</span></div>
+                        <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
                       </template>
                     </el-table-column>
                     <el-table-column
@@ -818,6 +818,7 @@ export default {
       writepermit:false,
       openClass:false,
       menuButtonPermit:[],
+      tableHeight:200,
       defaultData:{
         custorAndsalesmwarn:[],
         custormwarn:[],
@@ -999,22 +1000,20 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {     
-      if($this.$route.query.phoneID){
-       $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75; 
-      }
+      $this.setTableHeight();
     });
     if($this.$route.query.phoneID){
       window.onresize = () => {
         return (() => {
-          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75; 
+           $this.setTableHeight();
         })()
       }
     }
   },
   watch: {
-      minHeight(val) {
+      tableHeight(val) {
         if (!this.timer) {
-          this.minHeight = val
+          this.tableHeight = val
           this.timer = true
           const $this = this
           setTimeout(function() {
@@ -1046,15 +1045,25 @@ export default {
     $this.initData();
   },
   updated(){
-    var $this =this;
-    if($this.phoneID){
-      $this.$nextTick(() => {
-        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75; 
-        $this.$refs.simpleTable.doLayout();
-      })
-    }
+    this.$nextTick(() => {
+      this.setTableHeight();
+      if(this.$refs.tipsPane){
+         this.$refs.simpleTable.doLayout()
+      }
+    })
   },
   methods:{
+    // 设置高度
+    setTableHeight(){
+      const $this = this;
+      var tipsHeight = 0;
+      if($this.$refs.tipsPane){
+        tipsHeight = $this.$refs.tipsPane.offsetHeight+15;
+        $this.tableHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-tipsHeight-75;
+      }else{
+        $this.tableHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
+      }
+    },
     // 搜索结果
     searchResult(){
       var $this = this;
@@ -1514,7 +1523,7 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['ID', '时段','星期','询盘时间','域名','链接','渠道', '来源类型', '大洲', '国家','IP','设备', '产品分类','意向产品','物料','产量','进料','出料','有效','无效原因','初次等级','性质','需求','其他','异常','备注','添加人','分配人','业务员','添加时间','分配时间','修改时间','业务时间','价值分', '备注1','备注2',  '备注3']
+        const tHeader = ['ID','时段','星期','本地时间','当地时间','域名','渠道','来源类型', '大洲', '国家','IP','设备','产品分类','意向产品','物料','产量','进料','出料','有效','无效原因','初次等级','性质','需求','状态','异常','备注','添加人','分配人','业务员','添加时间','分配时间','修改时间','业务时间','价值分', '备注1','备注2',  '备注3']
         const list = this.tableData
         const data = [];
         list.forEach(function(item,index){
@@ -1523,8 +1532,8 @@ export default {
           itemData.push(item.timeing);
           itemData.push(item.weekday);
           itemData.push(item.xuntime);
+          itemData.push(item.foreigntime);
           itemData.push(item.domain);
-          itemData.push(item.url);
           itemData.push(item.sourcename);
           itemData.push(item.messagetype);
           itemData.push(item.continent);
@@ -1533,7 +1542,7 @@ export default {
           itemData.push(item.device);
           itemData.push(item.producttypename);
           itemData.push(item.keyproduct);
-          itemData.push(item.custormemail);
+          itemData.push(item.material);
           itemData.push(item.production);
           itemData.push(item.infeed);
           itemData.push(item.outfeed);
@@ -1545,6 +1554,7 @@ export default {
           itemData.push(item.managestatus==1?'':'已开始处理');
           itemData.push(item.erroring);
           itemData.push(item.xunremark);
+          itemData.push(item.addusername);
           itemData.push(item.addusername);
           itemData.push(item.allotusername);
           itemData.push(item.hassale);

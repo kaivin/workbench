@@ -190,7 +190,7 @@
                     :data="tableData"
                     tooltip-effect="dark"
                     stripe
-                    class="SiteTable"
+                    class="SiteTable EntableColor"
                     style="width: 100%"
                     v-bind:style="'min-height:'+minHeight+'px;'"
                     row-key="id"

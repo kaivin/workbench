@@ -228,7 +228,7 @@
                         </div>
                     </div>
                     <div class="card-content" ref="tableContent">
-                        <div class="result-wrap">
+                        <div class="result-wrap">                        
                             <el-table
                                 v-if="isClues"
                                 key="a"
@@ -236,162 +236,161 @@
                                 :data="tableData"
                                 tooltip-effect="dark"
                                 stripe
-                                class="SiteTable"
+                                class="SiteTable EntableColor"
                                 style="width: 100%"
                                 v-bind:style="'min-height:'+minHeight+'px;'"
                                 @selection-change="handleSelectionChange"
+                              >
+                              <el-table-column
+                                prop="id"
+                                label="ID"
+                                width="80"
                                 >
-                                <el-table-column
-                                    type="selection"
-                                    align="center"
-                                    width="48">
-                                </el-table-column>
-                                <el-table-column
-                                    prop="id"
-                                    label="ID"
-                                    width="80"
-                                    >
-                                </el-table-column>
-                                <el-table-column
-                                    prop="phonenumber"
-                                    label="电话"
-                                    width="80"
-                                    >
-                                </el-table-column>
-                                <el-table-column
-                                    prop="xuntime"
-                                    label="时间"
-                                    width="150"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                        <p>{{scope.row.xuntime}}</p>
-                                        <p>{{scope.row.weekday}}</p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="sourcename"
-                                    label="域名/渠道"
-                                    width="100"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                        <p><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
-                                        <p>{{scope.row.sourcename}}</p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="sourcename"
-                                    label="地区/归属地"
-                                    width="100"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                        <p>{{scope.row.province}}/{{scope.row.city}}</p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="keyproduct"
-                                    label="意向设备"
-                                    width="100"
-                                    >
-                                    <template slot-scope="scope">
-                                        <span class="product-span" v-bind:class="'level_'+scope.row.productlevel"><i>[{{scope.row.productlevel}}]</i>{{scope.row.keyproduct}}</span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="effective"
-                                    label="有效"
-                                    width="60"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-tag"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                                        <div class="table-text"><p>{{scope.row.invalidcause}}</p></div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="addusername"
-                                    label="添加人"
-                                    width="80"
-                                    >
-                                </el-table-column>
-                                <el-table-column
-                                    prop="addtime"
-                                    label="添加时间"
-                                    width="150"
-                                    >
-                                </el-table-column>
-                                <el-table-column
-                                    prop="levelname"
-                                    label="等级"
-                                    min-width="60"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-tag"><span class="level"  @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="levelname"
-                                    label="备注/原因"
-                                    min-width="120"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p>{{scope.row.custormcause}}</p>
-                                            <p>{{scope.row.custormremark}}</p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="url"
-                                    label="域名/链接"
-                                    min-width="150"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p>{{scope.row.domain}}</p>
-                                            <p>{{scope.row.url}}</p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="searchword"
-                                    label="平台/关键词"
-                                    min-width="110"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p>{{scope.row.search}}</p>
-                                            <p>{{scope.row.searchword}}</p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="remark"
-                                    label="备注"
-                                    min-width="140"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p>{{scope.row.remark}}</p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="searchword"
-                                    label="提供者/设备"
-                                    min-width="100"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p>{{scope.row.useridname}}</p>
-                                            <p>{{scope.row.device}}</p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
+                              </el-table-column>
+                              <el-table-column
+                                prop="xuntime"
+                                label="时间"
+                                width="200"
+                                >
+                                <template slot-scope="scope">
+                                  <div class="table-text">
+                                    <p>时段：{{scope.row.timeing}}</p>
+                                    <p class="EnColor02">星期：{{scope.row.weekday}}</p>
+                                    <p>本地：{{scope.row.xuntime}}</p>
+                                    <p>当地：{{scope.row.foreigntime}}</p>
+                                  </div>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                                prop="sourcename"
+                                label="来源网站"
+                                width="150"
+                                >
+                                <template slot-scope="scope">
+                                  <div class="table-text">
+                                    <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
+                                    <p>{{scope.row.sourcename}}</p>
+                                    <p>{{scope.row.messagetype}}</p>
+                                  </div>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                                prop="sourcename"
+                                label="大洲/地区/IP"
+                                width="150"
+                                >
+                                <template slot-scope="scope">
+                                  <div class="table-text">
+                                    <p><span class="EnColor05">大洲：</span>{{scope.row.continent}}</p>
+                                    <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
+                                    <p><span class="EnColor05">来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip">IP</a></p>
+                                    <p><span class="EnColor05">设备：</span>{{scope.row.device}}</p>
+                                  </div>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                                prop="keyproduct"
+                                label="类型/产品"
+                                min-width="150"
+                                >
+                                <template slot-scope="scope">
+                                  <div class="table-text">
+                                    <p><span class="EnColor05">产品：</span><span :style="'font-weight:bold;color:'+scope.row.producttypecolor">{{scope.row.producttypename}}</span>/{{scope.row.keyproduct}}</p>
+                                    <p class="EnColor05"><span>物料：</span>{{scope.row.material}}</p>
+                                    <p class="EnColor05"><span>产量：</span>{{scope.row.production}}</p>
+                                    <p class="EnColor05"><span>进料：</span>{{scope.row.infeed}}</p>
+                                    <p class="EnColor05"><span>出料：</span>{{scope.row.outfeed}}</p>
+                                  </div>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                                prop="effective"
+                                label="有效/原因"
+                                width="100"
+                                >
+                                <template slot-scope="scope">
+                                  <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
+                                  <div class="table-text" v-if="!scope.row.isEffective"><p>{{scope.row.invalidcause}}<span style="color:#E88401;">{{scope.row.noeffectivetime}}</span></p></div>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                                prop="levelname"
+                                label="首次级别/二次判定"
+                                min-width="140"
+                                >
+                                <template slot-scope="scope">
+                                  <div class="table-text">
+                                    <p class="table-tag"><span class="EnColor05">初次：</span><span class="level"  @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></p>
+                                    <p><span class="EnColor05">性质：</span>{{scope.row.ennaturename?scope.row.ennaturename:'未判定'}}</p>
+                                    <p><span class="EnColor05">需求：</span>{{scope.row.enxunpricename?scope.row.enxunpricename:'未判定'}}</p>
+                                    <p><span class="EnColor05">状态：</span>{{scope.row.managestatus==1?'':'已开始处理'}}</p>
+                                    <p><span class="EnColor05">异常：</span>{{scope.row.erroring}}</p>
+                                  </div>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                                prop="xunremark"
+                                label="备注"
+                                min-width="100"
+                                >
+                              </el-table-column>
+                              <el-table-column
+                                prop="addusername"
+                                label="添加人"
+                                width="120"
+                                >
+                                <template slot-scope="scope">
+                                  <div class="table-text">
+                                    <p><span>添：</span>{{scope.row.addusername}}</p>
+                                    <p><span>分：</span>{{scope.row.allotusername}}</p>
+                                  </div>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                                prop="hassale"
+                                label="业务员"
+                                width="100"
+                                >
+                              </el-table-column>
+                              <el-table-column
+                                prop="addtime"
+                                label="添/分/改/业务时间"
+                                width="160"
+                                >
+                                <template slot-scope="scope">
+                                  <div class="table-text">
+                                    <p>{{scope.row.addtime}}</p>
+                                    <p>{{scope.row.allottime}}</p>
+                                    <p>{{scope.row.updatetime}}</p>
+                                    <p style="color:red;">{{scope.row.managetime}}</p>
+                                  </div>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                                prop="score"
+                                label="价值分"
+                                min-width="80"
+                                >
+                                <template slot-scope="scope">
+                                  <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                                v-if="(permitField.includes('remark1')||permitField.includes('remark2')||permitField.includes('remark3'))"
+                                key="d"
+                                prop="searchword"
+                                label="备注"
+                                min-width="90"
+                                fixed="right"
+                                >
+                                <template slot-scope="scope">
+                                  <div class="table-input">
+                                    <el-input size="small" class="tips-input-2" v-model="scope.row.remark1" v-if="permitField.includes('remark1')"></el-input>
+                                    <el-input size="small" class="tips-input-3" v-model="scope.row.remark2" v-if="permitField.includes('remark2')"></el-input>
+                                    <el-input size="small" class="tips-input-4" v-model="scope.row.remark3" v-if="permitField.includes('remark3')"></el-input>
+                                  </div>
+                                </template>
+                              </el-table-column>
                             </el-table>
                             <el-table
                                 v-if="isUrl"
@@ -1050,25 +1049,6 @@ export default {
         resultData.custormemail = $this.searchData.custormemail;
         resultData.custormphone = $this.searchData.custormphone;
         resultData.ip = $this.searchData.ip;
-        resultData.phoneid = $this.searchData.phoneid;
-        resultData.country = $this.searchData.country;
-        resultData.mode = $this.searchData.mode;
-        resultData.producttype_id = $this.searchData.producttype_id;
-        resultData.timeing = $this.searchData.timeing;
-        resultData.erroring = $this.searchData.erroring;
-        resultData.productid = $this.searchData.productid;
-        resultData.level_id = $this.searchData.level_id;
-        resultData.anymessage = $this.searchData.anymessage;
-        resultData.domain = $this.searchData.domain;
-        resultData.is_adduser = $this.searchData.is_adduser?1:0;
-        resultData.url = $this.searchData.url;
-        resultData.is_url = $this.searchData.is_url?1:0;
-        resultData.effective = $this.searchData.effective?1:0;
-        resultData.is_group = $this.searchData.is_group?1:0;
-        resultData.groupurlproduct = $this.searchData.groupurlproduct;
-        resultData.device = $this.searchData.device;
-        resultData.sort = $this.searchData.sort;
-        resultData.feedback = $this.searchData.feedback;
         if($this.searchData.date&&$this.searchData.date.length>0){
             resultData.starttime = $this.searchData.date[0];
             resultData.endtime = $this.searchData.date[1];
@@ -1076,6 +1056,25 @@ export default {
             resultData.starttime = "";
             resultData.endtime = "";
         }
+        resultData.timeing = $this.searchData.timeing;
+        resultData.mode = $this.searchData.mode;
+        resultData.device = $this.searchData.device;
+        resultData.producttype_id = $this.searchData.producttype_id;
+        resultData.productid = $this.searchData.productid;
+        resultData.feedback = $this.searchData.feedback;
+        resultData.level_id = $this.searchData.level_id;
+        resultData.erroring = $this.searchData.erroring;
+        resultData.country = $this.searchData.country;
+        resultData.anymessage = $this.searchData.anymessage;
+        resultData.domain = $this.searchData.domain;
+        resultData.url = $this.searchData.url;
+        resultData.is_url = $this.searchData.is_url?1:0;
+        resultData.effective = $this.searchData.effective?1:0;
+        resultData.is_adduser = $this.searchData.is_adduser?1:0;
+        resultData.is_group = $this.searchData.is_group?1:0;
+        resultData.sort = $this.searchData.sort;
+        resultData.groupurlproduct = $this.searchData.groupurlproduct;        
+        resultData.phoneid = $this.searchData.phoneid;
         return resultData;
     },
     // 搜索确认
@@ -1333,7 +1332,7 @@ export default {
       var $this = this;
       var FormID={};
       FormID.id = Rid;
-      $this.$store.dispatch('chinaphone/CustormeditlogAction', FormID).then(response=>{
+      $this.$store.dispatch('enphone/CustormeditlogAction', FormID).then(response=>{
         if(response){
           if(response.status){  
             console.log(response,'级别修改记录-response');  

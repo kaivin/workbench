@@ -30,8 +30,8 @@
     <div class="flex-content SaleCardFr">
       <div class="abs-panel" ref="mainPane">
           <div class="scroll-panel" ref="scrollPane">
-            <div class="tips-list" v-if="infoData.warnlist.length>0&&infoData.warnlist" ref="tipsPane">
-                  <div class="item-tips type-1" v-for="(item,index) in infoData.warnlist" v-bind:key="index" v-on:click="editTableRow(item,index,'1')">
+            <div class="tips-list" v-if="defaultData.warningcount>0" ref="tipsPane">
+                  <div class="item-tips type-1" v-for="(item,index) in defaultData.warning" v-bind:key="index" v-on:click="editTableRow(item,index,'1')">
                       <i>{{index+1}}</i>
                       <strong>ID：{{item.id}}</strong>
                       <span>{{item.givesaleswarn}}</span>
@@ -212,7 +212,7 @@
                     :data="tableData"
                     tooltip-effect="dark"
                     stripe
-                    class="SiteTable"
+                    class="SiteTable EntableColor"
                     style="width: 100%"
                     row-key="id"
                     :style="'min-height:'+tableHeight+'px;'"
@@ -239,7 +239,7 @@
                     <template slot-scope="scope">
                         <div class="table-text">
                         <p>{{scope.row.weekday}}-{{scope.row.xuntime}}</p>
-                        <p><span>业务员：</span>{{scope.row.salesusername}}</p>
+                        <p><span>业务员：</span><strong>{{scope.row.salesusername}}</strong></p>
                         <p><span>特别说明：</span><span class="SiteColor-01">{{scope.row.otherremark}}</span></p>
                         </div>
                     </template>
@@ -251,8 +251,8 @@
                     >
                     <template slot-scope="scope">
                         <div class="table-text">
-                          <p><span>大州：</span>{{scope.row.continent}}</p>
-                          <p><span>国家：</span>{{scope.row.country}}</p>
+                          <p><span class="EnColor05">大州：</span>{{scope.row.continent}}</p>
+                          <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
                         </div>
                     </template>
                     </el-table-column>
@@ -263,9 +263,9 @@
                     >
                     <template slot-scope="scope">
                         <div class="table-text">
-                          <p><span>类型：</span>{{scope.row.producttypename}}</p>
-                          <p><span>产品：</span>{{scope.row.keyproduct}}</p>
-                          <p><span>富通：</span>{{scope.row.ftword_id}}</p>
+                          <p><span class="EnColor05">类型：</span>{{scope.row.producttypename}}</p>
+                          <p><span class="EnColor05">产品：</span>{{scope.row.keyproduct}}</p>
+                          <p><span class="EnColor05">富通：</span>{{scope.row.ftword_id}}</p>
                         </div>
                     </template>
                     </el-table-column>
@@ -276,9 +276,9 @@
                     >
                     <template slot-scope="scope">
                         <div class="table-text">
-                        <p><span>称呼：</span>{{scope.row.custormname}}</p>
-                        <p><span>邮箱：</span><span class="SiteColor-02"  v-if="scope.row.custormemail" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;">点击详情查看Email</span></p>
-                        <p><span>电话：</span>{{scope.row.custormphone}}</p>
+                        <p><span class="EnColor05">称呼：</span>{{scope.row.custormname}}</p>
+                        <p><span class="EnColor05">邮箱：</span><span class="SiteColor-02"  v-if="scope.row.custormemail" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;">点击详情查看Email</span></p>
+                        <p><span class="EnColor05">电话：</span>{{scope.row.custormphone}}</p>
                         </div>
                     </template>
                     </el-table-column>
@@ -850,6 +850,8 @@ export default {
           defaultData.waitftwordcount=response.waitftwordcount;
           defaultData.hasdealcount=response.hasdealcount;
           defaultData.hassaycount=response.hassaycount;
+          defaultData.warning=response.warning;
+          defaultData.warningcount=response.warningcount;
           $this.defaultData = defaultData;
           console.log(defaultData,'defaultData');
         }
@@ -894,7 +896,8 @@ export default {
                 itemData.label = item.name;
                 itemData.value = item.id;
                 salesuseridList.push(itemData);
-              });              
+              });
+              $this.salesuseridList=salesuseridList;              
               var dealuserList=[];
               response.dealuser.forEach(function(item,index){
                 var itemData = {};
@@ -902,9 +905,7 @@ export default {
                 itemData.value = item.id;
                 dealuserList.push(itemData);
               });
-              $this.salesuseridList=salesuseridList;
               $this.dealuserList=dealuserList;
-              $this.salesuseridList=salesuseridList;
             }
             if($this.currentStatus=="allotcount"&&response.allotuser.length>0){              
               var salesuseridList=[];
