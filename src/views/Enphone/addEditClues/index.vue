@@ -957,20 +957,10 @@ export default {
         }
       });
     },
-    // 判断字符串是否为链接
-    isURL(str) {
-      var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-      return pattern.test(str);
-    },
     // 来源页面变化切换电话
     urlChangePhone(e){
       var $this = this;
-      if($this.formData.url!=""&&$this.isURL($this.formData.url)){
+      if($this.formData.url!=""){
         $this.$store.dispatch("enphone/cluesUrlGetPhoneAction", {url:$this.formData.url}).then(response=>{
             if(response.status){
               console.log(response);

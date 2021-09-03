@@ -20,6 +20,12 @@
             >
           </el-table-column>
           <el-table-column
+            prop="id"
+            label="ID"
+            width="80"
+            >
+          </el-table-column>
+          <el-table-column
             prop="remarks"
             label="备注"
             min-width="200"

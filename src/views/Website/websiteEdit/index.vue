@@ -48,11 +48,11 @@
                   <div class="AddEditPostItem flex-wrap clearfix WebsiteOneSite">
                       <label>网站：</label>
                       <div class="item-wrap flex-content table-icon">
-                          <span class="icon-title" title="https模式" v-if="isHttps"><i class="svg-i"><svg-icon icon-class="https" class-name="disabled" /></i>ssl证书</span>
+                          <span class="icon-title" title="https模式" v-if="isHttps"><i class="svg-i"><svg-icon icon-class="websiteHttps" class-name="disabled" /></i>ssl证书</span>
                           <template v-for="(item,index) in websiteList">
-                            <span class="icon-title" v-on:click="hrefBlank(item)" :title="item" v-bind:key="index" v-if="item.indexOf('://www.')!=-1"><i class="svg-i"><svg-icon icon-class="pc" class-name="disabled" /></i>{{item}}</span>
-                            <span class="icon-title" v-on:click="hrefBlank(item)" :title="item" v-bind:key="index" v-else-if="item.indexOf('://m.')!=-1"><i class="svg-i"><svg-icon icon-class="mobile" class-name="disabled" /></i>{{item}}</span>
-                            <span class="icon-title" v-on:click="hrefBlank(item)" :title="item" v-bind:key="index" v-else><i class="svg-i"><svg-icon icon-class="internet" class-name="disabled" /></i>{{item}}</span>
+                            <span class="icon-title" v-on:click="hrefBlank(item)" :title="item" v-bind:key="index" v-if="item.indexOf('://www.')!=-1"><i class="svg-i"><svg-icon icon-class="websitePc" class-name="disabled" /></i>{{item}}</span>
+                            <span class="icon-title" v-on:click="hrefBlank(item)" :title="item" v-bind:key="index" v-else-if="item.indexOf('://m.')!=-1"><i class="svg-i"><svg-icon icon-class="websiteMobile" class-name="disabled" /></i>{{item}}</span>
+                            <span class="icon-title" v-on:click="hrefBlank(item)" :title="item" v-bind:key="index" v-else><i class="svg-i"><svg-icon icon-class="websiteMap" class-name="disabled" /></i>{{item}}</span>
                           </template>
                       </div>
                   </div>

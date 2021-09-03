@@ -91,3 +91,11 @@ export function salesmanStatData() {
     method: "POST",
   });
 }
+// 获取中文地区统计数据
+export function cnCluesAreaStatData(data) {
+  return request({
+    url: "/hxindex/Api/chinamapcount",
+    method: "POST",
+    data
+  });
+}

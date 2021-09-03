@@ -11,6 +11,7 @@
   cnCluesStatData,
   enCluesStatData,
   salesmanStatData,
+  cnCluesAreaStatData,
 } from '@/api/api'
 
 const state = {
@@ -307,6 +308,16 @@ const actions = {
     salesmanStatDataAction({ commit, state }) {
       return new Promise((resolve, reject) => {
         salesmanStatData().then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 获取中文地区统计数据
+    cnCluesAreaStatDataAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        cnCluesAreaStatData(data).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)
