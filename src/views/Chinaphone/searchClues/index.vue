@@ -460,7 +460,7 @@ export default {
   name: 'searchClues',
   data() {
     return {
-      minHeight:0,
+      minHeight:"auto",
       phoneID:null,
       currentPhone:'',
       writepermit:false,
@@ -577,11 +577,11 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-           $this.setTableHeight();
+           $this.setHeight();
     });
     window.onresize = () => {
       return (() => {
-           $this.setTableHeight();
+           $this.setHeight();
       })()
     }
   },
@@ -608,30 +608,32 @@ export default {
     })
   },
   methods:{
-    // 设置高度
-    setTableHeight(){
+    // 设置table高度
+    setHeight(){
       var $this = this;
       $this.minHeight = "auto";
-      var trueHeight = $this.$refs.scrollPane.offsetHeight;
-      var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-      var screenHeight = $this.$refs.boxPane.offsetHeight;
-      console.log(trueHeight,"真实高度");
-      console.log(headerHeight,"头部高度");
-      console.log(screenHeight,"视窗高度");
-      if(trueHeight<=screenHeight){
-        $this.minHeight = screenHeight-headerHeight-30;
-      }else{
-        if(trueHeight-screenHeight<=headerHeight){
-          $this.minHeight = "auto";
+      $this.$nextTick(()=>{
+        var trueHeight = $this.$refs.scrollPane.offsetHeight;
+        var headerHeight = $this.$refs.headerPane.offsetHeight+45;
+        var screenHeight = $this.$refs.boxPane.offsetHeight;
+        console.log(trueHeight,"真实高度");
+        console.log(headerHeight,"头部高度");
+        console.log(screenHeight,"视窗高度");
+        if(trueHeight<=screenHeight){
+          $this.minHeight = screenHeight-headerHeight-30;
         }else{
-          if($this.totalDataNum>100){
-            $this.minHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 45;
+          if(trueHeight-screenHeight<=headerHeight){
+            $this.minHeight = "auto";
           }else{
-            $this.minHeight = screenHeight-30;
+            if($this.totalDataNum>20){
+              $this.minHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 45;
+            }else{
+              $this.minHeight = screenHeight - 30;
+            }
           }
         }
-      }
-      console.log($this.minHeight,"表格高度");
+        console.log($this.minHeight,"表格高度");
+      });
     },
     // 搜索结果
     searchResult(){
@@ -733,7 +735,7 @@ export default {
             pageSizeListArr = [searchData.limit];
             $this.pageSizeList = pageSizeListArr;
             $this.$nextTick(function () {
-              $this.setTableHeight();
+              $this.setHeight();
             })
           }else{
             $this.$message({

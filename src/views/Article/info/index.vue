@@ -32,9 +32,7 @@
             </div>
           </div>
         </div>
-        <div class="comment ArticleSixFr" id="comment" 
-          v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||articleData.issay==0&&commentList.length>0" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length>=0?'min-height:'+minHeight+'px!important;':''" 
-          ref="rightPane">
+        <div class="comment ArticleSixFr" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||(articleData.issay==0&&commentList.length>0)" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length>=0?'min-height:'+minHeight+'px!important;':''" ref="rightPane">
           <div class="ArticleSixFrTop" v-bind:class="commentList.length>0?'':'no-comment'">
             <p class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
             <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
@@ -69,7 +67,7 @@ export default {
   components: { VueUeditorWrap },
   data() {
     return {
-      minHeight:0,
+      minHeight:"auto",
       menuButtonPermit:[],
       currentID:0,
       colspanNum:12,
@@ -158,50 +156,50 @@ export default {
     var $this = this;
     $this.initData();
   },
-  updated(){
-    const $this = this;
-    this.$nextTick(function () {
-      $this.setHeight();
-    });
-  },
   methods:{
     // 设置高度
     setHeight(){
       var $this = this;
-      var minHeight= 0;
-      var screenHeight = $this.$refs.mainPane.offsetHeight-30;
-      var leftHeight = $this.$refs.leftPane.offsetHeight;
-      if($this.device==='desktop'){
-        if($this.articleData.issay==1||$this.articleData.issay==0&&$this.commentList.length>0){
-          var rightHeight = $this.$refs.rightPane.offsetHeight;
-          if(leftHeight>rightHeight){
-            minHeight = leftHeight;
-          }else{
-            minHeight = rightHeight;
-          }
-        }else{
-          minHeight = leftHeight;
-        }
-        if(minHeight<screenHeight){
-          minHeight = screenHeight;
-        }
-      }else{
-        if($this.commentList.length>0){
-          if($this.$refs.rightPane){
+      var minHeight= "auto";
+      $this.$nextTick(()=>{
+        var screenHeight = $this.$refs.mainPane.offsetHeight-30;
+        var leftHeight = $this.$refs.leftPane.offsetHeight;
+        if($this.device==='desktop'){
+          if($this.articleData.issay==1||$this.articleData.issay==0&&$this.commentList.length>0){
             var rightHeight = $this.$refs.rightPane.offsetHeight;
-            var scrollHeight = leftHeight + rightHeight + 15;
-            if(scrollHeight<screenHeight){
-              minHeight = rightHeight + (screenHeight+30-scrollHeight);
+            if(leftHeight>rightHeight){
+              minHeight = leftHeight;
+            }else{
+              minHeight = rightHeight;
+            }
+          }else{
+            minHeight = leftHeight;
+          }
+          if(minHeight<=screenHeight){
+            minHeight = screenHeight;
+          }else{
+            if (leftHeight<rightHeight){
+              minHeight = minHeight+40;
             }
           }
         }else{
-          var scrollHeight = leftHeight;
-          if(scrollHeight<screenHeight){
-            minHeight = leftHeight + (screenHeight+30-scrollHeight);
+          if($this.commentList.length>0){
+            if($this.$refs.rightPane){
+              var rightHeight = $this.$refs.rightPane.offsetHeight;
+              var scrollHeight = leftHeight + rightHeight + 15;
+              if(scrollHeight<screenHeight){
+                minHeight = rightHeight + (screenHeight+30-scrollHeight);
+              }
+            }
+          }else{
+            var scrollHeight = leftHeight;
+            if(scrollHeight<screenHeight){
+              minHeight = leftHeight + (screenHeight+30-scrollHeight);
+            }
           }
         }
-      }
-      $this.minHeight = minHeight;
+        $this.minHeight = minHeight;
+      });
     },
     // 初始化数据
     initData(){
@@ -354,7 +352,9 @@ export default {
           if(response){
             if(response.status){
               $this.commentList = response.data;
-              $this.setHeight();
+              $this.$nextTick(()=>{
+                $this.setHeight();
+              });
             }else{
               $this.$message({
                   showClose: true,

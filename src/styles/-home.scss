@@ -167,10 +167,15 @@
                         display: inline-block;
                         width: 16px;
                         height: 16px;
-                        line-height: 12px;
-                        font-size: 11px;
+                        line-height: 13px;
+                        font-size: 12px;
                         text-align: center;
                         border-radius: 1px;
+                        b{
+                            display: block;
+                            font-weight: normal;
+                            transform: scale(.75);
+                        }
                         &.new{
                             border: 1px solid #ff840b;
                             color: #ff840b;

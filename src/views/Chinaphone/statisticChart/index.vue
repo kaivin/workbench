@@ -2187,6 +2187,7 @@ export default {
           xField: 'day',
           yField: 'number',
           appendPadding:[15,15,15,15],
+          smooth:true,
           tooltip: {
             formatter: (datum) => {
               return { name: "询盘个数", value: datum.number };
@@ -2195,33 +2196,6 @@ export default {
               return e.replace(/\n/g," ")
             }
           },
-          annotations: [
-            // 低于中位数颜色变化
-            {
-              type: 'regionFilter',
-              start: ['min', 'median'],
-              end: ['max', '0'],
-              color: '#F4664A',
-            },
-            {
-              type: 'text',
-              position: ['min', 'median'],
-              content: '中位数',
-              offsetY: -4,
-              style: {
-                textBaseline: 'bottom',
-              },
-            },
-            {
-              type: 'line',
-              start: ['min', 'median'],
-              end: ['max', 'median'],
-              style: {
-                stroke: '#F4664A',
-                lineDash: [2, 2],
-              },
-            },
-          ],
         });
         $this.lineDayPlot = lineDayPlot;
         lineDayPlot.render();
@@ -2501,7 +2475,7 @@ export default {
               });
               userView.polygon()
                 .position('longitude*latitude')
-                .color('trend', ['#fbdee2', '#febbc3', '#f1a2a8', '#e89196', '#c95356', '#de7d82', '#d4686c', '#bf3e41', '#f9b1b8', '#b52b2c', '#ac191a','#8f0303' ])
+                .color('trend', '#BAE7FF-#1890FF-#0050B3')
                 .tooltip('name*value')
                 .style({
                   fillOpacity: 0.85

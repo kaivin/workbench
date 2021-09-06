@@ -38,7 +38,7 @@
                         <div class="news-dt">{{item.groupname}}：({{item.number}})条新消息！</div>
                         <div class="item-news flex-box" v-for="item1 in item.article" v-bind:key="item1.id" v-on:click="jumpArticle(item1)">
                           <div class="txt-font flex-content" :title="item1.title">
-                            <span class="txt-icon" v-bind:class="item1.is_new==1?'update':'new'">{{item1.is_new==1?'改':'新'}}</span>
+                            <span class="txt-icon" v-bind:class="item1.is_new==1?'update':'new'"><b>{{item1.is_new==1?'改':'新'}}</b></span>
                             <span class="txt-type" v-if="item1.type==1">【{{item1.domain}} [{{item1.website_id}}]】</span>
                             <span class="txt-type" v-else>【{{item1.typename}}】</span>
                             <span class="txt-title" :style="{color:item1.titlecolor?item1.titlecolor:''}">{{item1.title}}</span>

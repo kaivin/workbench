@@ -22,7 +22,8 @@
         </div>
         <div class="flex-content relative">
             <div class="abs-panel" ref="mainPane">
-                <div class="scroll-panel" ref="scrollPane">
+                <div class="scroll-panel">
+                  <div class="true-height" ref="scrollPane">
                     <el-card class="box-card scroll-card" shadow="hover">
                         <div slot="header">
                             <div class="card-header" ref="headerPane">
@@ -83,7 +84,7 @@
                                 stripe
                                 class="SiteTable msg-table EntableColor"
                                 style="width: 100%"
-                                :style="'min-height:'+tableHeight+'px;'"
+                                :height="minHeight"
                                 row-key="id"
                                 @selection-change="handleSelectionChange"
                                 >
@@ -238,7 +239,8 @@
                             </el-pagination>
                         </div>
                     </el-card>
-                    <el-backtop target=".scroll-panel"></el-backtop>
+                  </div>
+                  <el-backtop target=".scroll-panel"></el-backtop>
                 </div>
             </div>
         </div>
@@ -256,7 +258,7 @@ export default {
         currentDate:"",
         status:1,
         menuButtonPermit:[],
-        tableHeight:0,
+        minHeight:"auto",
         tableData:[],
         page:1,
         limit:50,
@@ -309,18 +311,18 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-      this.setTableHeight();
+      this.setHeight();
     });
     window.onresize = () => {
         return (() => {
-            this.setTableHeight();
+            this.setHeight();
         })()
     }
   },
     watch: {
-      tableHeight(val) {
+      minHeight(val) {
         if (!this.timer) {
-          this.tableHeight = val
+          this.minHeight = val
           this.timer = true
           const $this = this
           setTimeout(function() {
@@ -345,16 +347,37 @@ export default {
     $this.initData();
   },
   methods:{
+    // 设置table高度
+    setHeight(){
+      var $this = this;
+      $this.minHeight = "auto";
+      $this.$nextTick(()=>{
+        var trueHeight = $this.$refs.scrollPane.offsetHeight;
+        var headerHeight = $this.$refs.headerPane.offsetHeight+45;
+        var screenHeight = $this.$refs.boxPane.offsetHeight;
+        console.log(trueHeight,"真实高度");
+        console.log(headerHeight,"头部高度");
+        console.log(screenHeight,"视窗高度");
+        if(trueHeight<=screenHeight){
+          $this.minHeight = screenHeight-headerHeight-30;
+        }else{
+          if(trueHeight-screenHeight<=headerHeight){
+            $this.minHeight = "auto";
+          }else{
+            if($this.totalDataNum>50){
+              $this.minHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 30;
+            }else{
+              $this.minHeight = screenHeight - 30;
+            }
+          }
+        }
+        console.log($this.minHeight,"表格高度");
+      });
+    },
     // 搜索结果
     searchResult(){
       var $this = this;
       $this.initPage();
-    },
-    // 设置高度
-    setTableHeight(){
-      const $this = this;
-      var screenHeight = $this.$refs.mainPane.offsetHeight;
-      $this.tableHeight = screenHeight-$this.$refs.headerPane.offsetHeight-75;
     },
     // 初始化数据
     initData(){
@@ -445,6 +468,9 @@ export default {
             $this.tableData = tableData;
             $this.totalDataNum = response.allcount;
             $this.isLoading = false;
+            $this.$nextTick(()=>{
+              $this.setHeight();
+            });
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
