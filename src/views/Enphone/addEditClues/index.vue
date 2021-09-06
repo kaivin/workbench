@@ -744,8 +744,12 @@ export default {
       $this.formData.invalidcause = $this.defaultInfo.invalidcause;
       $this.formData.phoneid = $this.defaultInfo.phoneid;
       $this.formData.producttype_id = $this.defaultInfo.producttype_id;
-      $this.formData.ennature = $this.defaultInfo.ennature;
-      $this.formData.enxunprice = $this.defaultInfo.enxunprice;
+      if($this.defaultInfo.ennature&&$this.defaultInfo.ennature!=0){
+         $this.formData.ennature = $this.defaultInfo.ennature;
+      }
+      if($this.defaultInfo.enxunprice&&$this.defaultInfo.ennature!=0){
+         $this.formData.enxunprice = $this.defaultInfo.enxunprice;
+      }
       $this.producttypeArr=[$this.defaultInfo.producttype_id];
       $this.formData.keying = [];
       var SandGravelArr=[],OreDressArr=[],FlourArr=[],otherArr=[],keyArr=[];
