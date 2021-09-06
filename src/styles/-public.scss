@@ -105,6 +105,20 @@
           border-radius: 4px;
           padding: 4px 10px;
           cursor: pointer;
+          position: relative;
+          &.tipphone{
+            padding:0px;
+            .el-button.el-tooltip{
+              background: none;
+              border: 0px;
+              font-size: 0px;
+              padding: 4px 10px;
+              clear: both;
+              display: block;
+              width: 100%;
+              text-align:left;
+            }
+          }
           &.active,&:hover{
               border: 1px solid #BDDEFF;
               background-color: #F6FBFF;
@@ -148,6 +162,13 @@
         b{
           color:$menuActiveText;
         }
+    }
+}
+.el-tooltip__popper.is-light {
+    border: 1px solid #e8e6e6!important;
+    color: #929292!important;
+    .popper__arrow {
+        border-right-color: #e8e6e6!important;
     }
 }
 .no-padding{

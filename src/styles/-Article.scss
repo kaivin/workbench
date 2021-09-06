@@ -405,6 +405,20 @@
             .el-select .el-tag__close.el-icon-close{
                 right: -4px;
             }
+            p.type-title{
+                float:left;
+                text-align:right;
+                span{
+                    display:inline-block;
+                    line-height:40px;
+                    vertical-align:middle;
+                    font-size:15px;
+                    color:#1a1a1a;
+                    word-wrap: break-word;
+                    word-break: break-all;
+                    width: 116px;
+                }
+            }
         }
         td.type-title{
             text-align:right;

@@ -9,7 +9,12 @@
           </div>
           <dl class="phone-list" v-for="(item,index) in defaultData.phoneArr" v-bind:key="index">
             <dt><span>{{item.name}}</span></dt>
-            <dd v-for="phone in item.phone" v-bind:class="phone.isOn?'active':''" :key="phone.id" :title="phone.phonenumber+phone.othername" v-on:click="phoneJump(phone.id)"><span>{{phone.shortPhonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
+            <dd v-for="phone in item.phone" class="tipphone" v-bind:class="phone.isOn?'active':''" :key="phone.id" v-on:click="phoneJump(phone.id)">           
+                <el-tooltip placement="right" class="el-tooltip" effect="light">
+                  <div slot="content">{{phone.phonenumber}}{{phone.othername}}<br/>部门：{{phone.departname}}<br/>负责人：{{phone.user}}</div>
+                  <el-button><span>{{phone.shortPhonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b> </el-button>
+                </el-tooltip>
+            </dd>
           </dl>
         </div>
       </el-scrollbar>

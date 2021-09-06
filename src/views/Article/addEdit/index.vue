@@ -23,15 +23,26 @@
                 </td>
               </tr>
               <tr v-if="permitField.includes('mytags')">
-                <td class="type-title"><span>自定义标签：</span></td>
-                <td>
-                    <div class="item-form" style="width:252px;">
+                <td colspan="2">
+                    <p class="type-title" v-if="permitField.includes('mytags')"><span>自定义标签：</span></p>
+                    <div class="item-form" v-if="permitField.includes('mytags')" style="float:left; width:252px;">
                         <el-input
                           placeholder="请输入标签内容"
                           v-model="formData.tag"
                           size="small"
                           clearable>
                         </el-input>
+                    </div>
+                    <p class="type-title" v-if="permitField.includes('uid')"><span>发布人：</span></p>
+                    <div class="item-form itemacces" v-if="permitField.includes('uid')" style="float:left; width:252px;">
+                      <el-select v-model="formData.uid" size="small" filterable placeholder="请选择发布人">
+                        <el-option
+                          v-for="item in userList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
                     </div>
                 </td>
               </tr>
@@ -274,6 +285,7 @@ export default {
         isAllPermit:false,
         readDepart:[],
         readUser:[],
+        uid:'',
         is_markdown:0,
         is_updatetime:false,
       },
@@ -437,13 +449,14 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
+      console.log($this.userInfo,'userInfo')
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res,"操作权限");
+        console.log(res,"操作权限——论坛");
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -531,6 +544,7 @@ export default {
               itemData.label = item.name+"[" + item.id + "]"
               $this.userList.push(itemData);
             });
+            $this.formData.uid=$this.userInfo.id;
             $this.permitField = response.myfield;
             if($this.$route.query.id){
               $this.formData.id = parseInt($this.$route.query.id);
@@ -682,6 +696,11 @@ export default {
       }else{
         $this.formData.readDepart = [];
       }
+      if(data.uid&&data.uid!=''){
+        $this.formData.uid=data.uid;
+      }else{
+        $this.formData.uid=$this.userInfo.id;
+      }
       if(data.lookuserid){
         if(data.lookuserid.indexOf(",")!=-1){
           var readUserArr = data.lookuserid.split(",");
@@ -804,6 +823,9 @@ export default {
       }
       if($this.permitField.includes("lookuserid")){
         formData.lookuserid = $this.formData.readUser;
+      }
+      if($this.permitField.includes("uid")){
+        formData.uid = $this.formData.uid;
       }
       formData.is_top = $this.formData.isTop?1:0;
       formData.issay = $this.formData.isCommentClose?0:1;
