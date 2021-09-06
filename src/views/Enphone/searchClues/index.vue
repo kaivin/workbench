@@ -1356,6 +1356,9 @@ export default {
                 $this.isGroup=false;
                 $this.isProducttype=false;
                 $this.isClues=true;
+                response.data.forEach(function(item,index){
+                  item.isEffective = item.effective==1?true:false;
+                });
                 $this.tableData = response.data;
             }
             if(response.data.length>0){

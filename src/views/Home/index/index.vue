@@ -737,8 +737,8 @@ export default {
               offsetX: 0,
               style: {
                 stroke: '#f16b6b',
-                lineDash: [2, 2],
-                lineWidth: 3,
+                lineDash: [6, 4],
+                lineWidth: 1,
               },
             },
             // 平均值
@@ -760,7 +760,7 @@ export default {
               offsetX: 0,
               style: {
                 stroke: '#6aa343',
-                lineWidth: 2,
+                lineWidth: 1,
               },
             },
             // 目标线
