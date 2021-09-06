@@ -576,9 +576,13 @@ export default {
             };
           },
           yAxis:{
-            max:$this.currentCnDepartData.daytargetnumber+1
+            max:$this.currentCnDepartData.daytargetnumber+1,
+            grid:{
+              line:null
+            }
           },
           xAxis: {
+            tickCount:15,
             label: {
               // 数值格式化为千分位
               formatter: (v) => {
@@ -587,6 +591,17 @@ export default {
               },
               style:{
                 lineHeight:16
+              }
+            },
+            grid:{
+              line:{
+                style:{
+                  stroke: 'black',
+                  lineWidth:1,
+                  lineDash:[6,3],
+                  strokeOpacity:0.1,
+                  shadowBlur:0
+                }
               }
             },
           },
@@ -610,23 +625,20 @@ export default {
               top:true,
               offsetY: 0,
               offsetX: 0,
-              text: {
-                position:['max','max'],
-                content: '平均值：'+$this.currentCnDepartData.avgnumber,
-                autoAdjust:true,
-                style: {
-                  textAlign: 'center',
-                  fontSize: 12,
-                  lineHeight: 20,
-                  fill: '#f16b6b',
-                  textBaseline: 'bottom',
-                },
-              },
               style: {
                 stroke: '#f16b6b',
-                lineDash: [2, 2],
-                lineWidth: 3,
+                lineDash: [6, 4],
+                lineWidth: 1,
               },
+            },
+            // 平均值
+            {
+              type: 'html',
+              position:['max',$this.currentCnDepartData.avgnumber],
+              top:true,
+              html:"<span class='chart-font avg'><span class='txt-font'>"+$this.currentCnDepartData.avgnumber+"</span><i></i></span>",
+              alignX:"left",
+              alignY:"bottom",
             },
             // 目标线
             {
@@ -636,21 +648,19 @@ export default {
               top:true,
               offsetY: 0,
               offsetX: 0,
-              text: {
-                position:['max','max'],
-                content: '目标线：'+$this.currentCnDepartData.daytargetnumber,
-                autoAdjust:true,
-                style: {
-                  textAlign: 'center',
-                  fontSize: 12,
-                  fill: '#6aa343',
-                  textBaseline: 'bottom',
-                },
-              },
               style: {
                 stroke: '#6aa343',
-                lineWidth: 2,
+                lineWidth: 1,
               },
+            },
+            // 目标线
+            {
+              type: 'html',
+              position:['max',$this.currentCnDepartData.daytargetnumber],
+              top:true,
+              html:"<span class='chart-font target'><span class='txt-font'>"+$this.currentCnDepartData.daytargetnumber+"</span><i></i></span>",
+              alignX:"left",
+              alignY:"bottom",
             },
           ],
         });
@@ -676,9 +686,13 @@ export default {
             };
           },
           yAxis:{
-            max:$this.currentEnDepartData.daytargetnumber+1
+            max:$this.currentEnDepartData.daytargetnumber+1,
+            grid:{
+              line:null
+            }
           },
           xAxis: {
+            tickCount:15,
             label: {
               // 数值格式化为千分位
               formatter: (v) => {
@@ -687,6 +701,17 @@ export default {
               },
               style:{
                 lineHeight:16
+              }
+            },
+            grid:{
+              line:{
+                style:{
+                  stroke: 'black',
+                  lineWidth:1,
+                  lineDash:[6,3],
+                  strokeOpacity:0.1,
+                  shadowBlur:0
+                }
               }
             },
           },
@@ -710,23 +735,20 @@ export default {
               top:true,
               offsetY: 0,
               offsetX: 0,
-              text: {
-                position:['max','max'],
-                content: '平均值：'+$this.currentEnDepartData.avgnumber,
-                autoAdjust:true,
-                style: {
-                  textAlign: 'center',
-                  fontSize: 12,
-                  lineHeight: 20,
-                  fill: '#f16b6b',
-                  textBaseline: 'bottom',
-                },
-              },
               style: {
                 stroke: '#f16b6b',
                 lineDash: [2, 2],
                 lineWidth: 3,
               },
+            },
+            // 平均值
+            {
+              type: 'html',
+              position:['max',$this.currentEnDepartData.avgnumber],
+              top:true,
+              html:"<span class='chart-font avg'><span class='txt-font'>"+$this.currentEnDepartData.avgnumber+"</span><i></i></span>",
+              alignX:"left",
+              alignY:"bottom",
             },
             // 目标线
             {
@@ -736,21 +758,19 @@ export default {
               top:true,
               offsetY: 0,
               offsetX: 0,
-              text: {
-                position:['max','max'],
-                content: '目标线：'+$this.currentEnDepartData.daytargetnumber,
-                autoAdjust:true,
-                style: {
-                  textAlign: 'center',
-                  fontSize: 12,
-                  fill: '#6aa343',
-                  textBaseline: 'bottom',
-                },
-              },
               style: {
                 stroke: '#6aa343',
                 lineWidth: 2,
               },
+            },
+            // 目标线
+            {
+              type: 'html',
+              position:['max',$this.currentEnDepartData.daytargetnumber],
+              top:true,
+              html:"<span class='chart-font target'><span class='txt-font'>"+$this.currentEnDepartData.daytargetnumber+"</span><i></i></span>",
+              alignX:"left",
+              alignY:"bottom",
             },
           ],
         });

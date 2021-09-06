@@ -16,399 +16,406 @@
     </div>
     <div class="flex-content relative">
       <div class="abs-panel" ref="mainPane">
-        <div class="scroll-panel">
-            <div class="true-height" ref="scrollPane">
-                <div class="phone-index" v-if="!phoneID">
-                  <div class="ChinaphoneNum" ref="numPane">
-                    <el-card class="box-card" shadow="hover">
-                        <div class="card-header">
-                              <h2>{{currentTeam}}</h2>
-                              <p class="ChinaphoneNumTag">
-                                  <span class="item-clues" v-for="item in topdepart" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="topdepartClick(item.id,item.name)">{{item.name}}</span>
-                              </p>
-                        </div>
-                        <div class="card-content ChinaphoneNumBom" >
-                          <div class="flex-content ChinaphoneNumItem">
-                              <dl>
-                                <dt>今天</dt>
-                                <dd>{{defaultData.alltodaynumber}}</dd>
-                              </dl>
-                              <dl>
-                                <dt>昨天</dt>
-                                <dd>{{defaultData.alllastnumber}}</dd>
-                              </dl>
-                              <dl>
-                                <dt>本月</dt>
-                                <dd>{{defaultData.allnumber}}</dd>
-                              </dl>
-                          </div>
-                        </div>
-                    </el-card>
+        <div class="scroll-panel" ref="scrollPane">
+          <div class="phone-index" v-if="!phoneID">
+            <div class="ChinaphoneNum" ref="numPane">
+              <div class="card-header">
+                <h2>{{currentTeam}}</h2>
+                <p class="ChinaphoneNumTag">
+                    <span class="item-clues" v-for="item in topdepart" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="topdepartClick(item.id,item.name)">{{item.name}}</span>
+                </p>
+              </div>
+              <div class="card-content ChinaphoneNumBom" >
+                <div class="ChinaphoneNumItem">
+                  <div class="item-number">
+                    <dl>
+                      <dt>今天</dt>
+                      <dd>{{defaultData.alltodaynumber}}</dd>
+                    </dl>
                   </div>
-                  <div class="ChinaphoneMap" v-bind:style="'min-height:'+minHeight+'px;'">
-                    <el-card class="box-card canvas-card flex-box" shadow="hover" v-bind:style="'min-height:'+(minHeight-60)+'px;'">
-                      <div class="card-header">
-                          <h2>中文询盘趋势</h2>
-                          <div class="ChinaphoneMapDate">
-                              <el-select v-model="deptChart" size="small" @change="handleCheckTopdepartChange" clearable placeholder="中文总计">
-                                  <el-option
-                                  v-for="item in department"
-                                  :key="item.value"
-                                  :label="item.label"
-                                  :value="item.value">
-                                  </el-option>
-                              </el-select>                        
-                              <el-date-picker
-                                v-model="timeChart"
-                                type="daterange"
-                                align="right"
-                                size="small"
-                                unlink-panels
-                                range-separator="至"
-                                start-placeholder="开始日期"
-                                end-placeholder="结束日期"
-                                value-format = "yyyy-MM-dd"
-                                @change="handleCheckTopdepartChange"
-                                :picker-options="pickerOptions">
-                              </el-date-picker>
-                          </div>
-                      </div>
-                      <div class="card-content ChinaphoneMapChart">
-                        <div class="canvas-wrap" v-if="device==='desktop'">
-                          <div id="cluesChart" class="chart-canvas"></div>
-                        </div>
-                        <div class="canvas-wrap" v-else>
-                          <canvas id="cluesChart" class="chart-canvas"></canvas>
-                        </div>
-                      </div>
-                    </el-card>
+                  
+                  <div class="item-number">
+                    <dl>
+                      <dt>昨天</dt>
+                      <dd>{{defaultData.alllastnumber}}</dd>
+                    </dl>
+                  </div>
+                  <div class="item-number">
+                    <dl>
+                      <dt>本月</dt>
+                      <dd>{{defaultData.allnumber}}</dd>
+                    </dl>
+                  </div>
+                  <div class="item-number" v-bind:class="defaultData.allnumber>defaultData.lastmonthnumber?'rise':defaultData.allnumber<defaultData.lastmonthnumber?'down':'flat'">
+                    <dl>
+                      <dt>环比上月同期<i class="svg-i" v-if="defaultData.allnumber!=defaultData.lastmonthnumber"><svg-icon :icon-class="defaultData.allnumber>defaultData.lastmonthnumber?'rise':'down'" /></i><i class="flat-icon" v-else></i></dt>
+                      <dd>{{defaultData.lastmonthnumber}}</dd>
+                    </dl>
                   </div>
                 </div>
-                <el-card class="box-card scroll-card EnphoneCardFrDate" v-else shadow="hover">
-                  <div slot="header">
-                    <div class="card-header EnphoneCardHeader" ref="headerPane">
-                        <h2 class="clues-title">当前信息：{{currentPhone}}</h2>
-                        <div class="search-wrap" v-if="device==='desktop'">
-                          <div class="item-search" style="width: 240px;">
-                            <el-date-picker
-                                v-model="searchData.date"
-                                class="date-range"
-                                type="daterange"
-                                align="right"
-                                value-format = "yyyy-MM-dd"
-                                unlink-panels
-                                range-separator="至"
-                                start-placeholder="开始日期"
-                                end-placeholder="结束日期"
-                                size="small"
-                                :picker-options="pickerRangeOptions">
-                            </el-date-picker>
-                          </div>
-                          <div class="item-search" style="width: 150px;">
-                            <el-input
-                              placeholder="域名、备注等"
-                              class="tips-input-1"
-                              size="small"
-                              v-model="searchData.name"
-                              clearable>
-                            </el-input>
-                          </div>
-                          <div class="item-search" style="width: 100px;">
-                            <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道">
-                              <el-option
-                                  v-for="item in sourceList"
-                                  :key="item.value"
-                                  :label="item.label"
-                                  :value="item.value">
-                              </el-option>
-                            </el-select>
-                          </div>
-                          <div class="item-search" style="width: 100px;">
-                            <el-select v-model="searchData.typekey" size="small" clearable placeholder="分类">
-                              <el-option
-                                  v-for="item in productTypeList"
-                                  :key="item.value"
-                                  :label="item.label"
-                                  :value="item.value">
-                              </el-option>
-                            </el-select>
-                          </div>
-                          <div class="item-search" style="width: 80px;">
-                            <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别">
-                              <el-option
-                                  v-for="item in levelList"
-                                  :key="item.value"
-                                  :label="item.label"
-                                  :value="item.value">
-                              </el-option>
-                            </el-select>
-                          </div>
-                          <div class="item-search" style="width: 100px;">
-                            <el-select v-model="searchData.productlevel" size="small" clearable placeholder="类别">
-                              <el-option
-                                v-for="item in categoryList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                              </el-option>
-                            </el-select>
-                          </div>
-                          <div class="item-search" style="width: 100px;">
-                            <el-select v-model="searchData.userid" size="small" clearable placeholder="提供者">
-                              <el-option
-                                v-for="item in userList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                              </el-option>
-                            </el-select>
-                          </div>
-                          <div class="item-search" style="width: 80px;">
-                            <el-select v-model="searchData.device" size="small" clearable placeholder="设备">
-                              <el-option
-                                v-for="item in deviceList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                              </el-option>
-                            </el-select>
-                          </div>
-                          <div class="item-search" style="width: 80px;">
-                            <el-select v-model="searchData.effective" size="small" clearable placeholder="价值">
-                              <el-option
-                                v-for="item in effectiveList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                              </el-option>
-                            </el-select>
-                          </div>
-                          <div class="item-search">
-                            <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
-                          </div>
-                        </div>
-                        <div class="clues-info flex-box">
-                            <div class="clues-infoFl flex-content">
-                                  <p><span>共有<strong class="color1">{{infoData.totalCount}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效<strong class="color3">{{infoData.invalidCount}}</strong>条，一类产品<strong class="color4">{{infoData.levelOneCount}}</strong>个，二类产品<b class="color5">{{infoData.levelTwoCount}}</b>个。</span><span>||</span><span>本月共有<strong class="color1">{{infoData.totalCountMonth}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCountMonth}}</strong>条，无效<strong class="color3">{{infoData.invalidCountMonth}}</strong>条，一类产品<strong class="color4">{{infoData.levelOneCountMonth}}</strong>个，二类产品<b class="color5">{{infoData.levelTwoCountMonth}}</b>个。</span></p>
-                            </div>
-                            <div class="clues-title-btn">
-                                <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
-                                <el-button type="primary" size="small" class="editorNote" :disabled="isDisabled" v-if="writepermit&&menuButtonPermit.includes('Chinaphone_othereditall')" v-on:click="editPageNote()"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改当前页备注</el-button>
-                            </div>
-                        </div>
+              </div>
+            </div>
+            <div class="ChinaphoneMap" v-bind:style="'min-height:'+minHeight+'px;'">
+              <el-card class="box-card canvas-card flex-box" shadow="hover" v-bind:style="'min-height:'+(minHeight-60)+'px;'">
+                <div class="card-header">
+                     <h2>中文询盘趋势</h2>
+                     <div class="ChinaphoneMapDate">
+                        <el-select v-model="deptChart" size="small" @change="handleCheckTopdepartChange" clearable placeholder="中文总计">
+                            <el-option
+                            v-for="item in department"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>                        
+                        <el-date-picker
+                          v-model="timeChart"
+                          type="daterange"
+                          class="date-range"
+                          align="right"
+                          size="small"
+                          unlink-panels
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"
+                          value-format = "yyyy-MM-dd"
+                          @change="handleCheckTopdepartChange"
+                          :picker-options="pickerOptions">
+                        </el-date-picker>
+                     </div>
+                </div>
+                <div class="card-content ChinaphoneMapChart">
+                  <div class="canvas-wrap" v-if="device==='desktop'">
+                    <div id="cnCluesChart" class="chart-canvas"></div>
+                  </div>
+                </div>
+              </el-card>
+            </div>
+          </div>
+          <el-card class="box-card scroll-card EnphoneCardFrDate" v-else shadow="hover">
+            <div slot="header">
+              <div class="card-header EnphoneCardHeader" ref="headerPane">
+                  <h2 class="clues-title">当前信息：{{currentPhone}}</h2>
+                  <div class="search-wrap" v-if="device==='desktop'">
+                    <div class="item-search" style="width: 240px;">
+                      <el-date-picker
+                          v-model="searchData.date"
+                          class="date-range"
+                          type="daterange"
+                          align="right"
+                          value-format = "yyyy-MM-dd"
+                          unlink-panels
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"
+                          size="small"
+                          :picker-options="pickerRangeOptions">
+                      </el-date-picker>
+                    </div>
+                    <div class="item-search" style="width: 150px;">
+                      <el-input
+                        placeholder="域名、备注等"
+                        class="tips-input-1"
+                        size="small"
+                        v-model="searchData.name"
+                        clearable>
+                      </el-input>
+                    </div>
+                    <div class="item-search" style="width: 100px;">
+                      <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道">
+                        <el-option
+                            v-for="item in sourceList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width: 100px;">
+                      <el-select v-model="searchData.typekey" size="small" clearable placeholder="分类">
+                        <el-option
+                            v-for="item in productTypeList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width: 80px;">
+                      <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别">
+                        <el-option
+                            v-for="item in levelList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width: 100px;">
+                      <el-select v-model="searchData.productlevel" size="small" clearable placeholder="类别">
+                        <el-option
+                          v-for="item in categoryList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width: 100px;">
+                      <el-select v-model="searchData.userid" size="small" clearable placeholder="提供者">
+                        <el-option
+                          v-for="item in userList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width: 80px;">
+                      <el-select v-model="searchData.device" size="small" clearable placeholder="设备">
+                        <el-option
+                          v-for="item in deviceList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search" style="width: 80px;">
+                      <el-select v-model="searchData.effective" size="small" clearable placeholder="价值">
+                        <el-option
+                          v-for="item in effectiveList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="item-search">
+                      <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                     </div>
                   </div>
-                  <div class="card-content" ref="tableContent">
-                    <el-table
-                      ref="simpleTable"
-                      :data="tableData"
-                      tooltip-effect="dark"
-                      stripe
-                      class="SiteTable EntableColor"
-                      style="width: 100%"
-                      row-key="id"
-                      :height='minHeight'
-                      >
-                      <el-table-column
-                        prop="id"
-                        label="ID"
-                        width="80"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="phoneText"
-                        label="电话"
-                        width="80"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="xuntime"
-                        label="时间"
-                        width="150"
-                        >
-                        <template slot-scope="scope">
-                          <div class="table-text">
-                            <p>{{scope.row.xuntime}}</p>
-                            <p>{{scope.row.weekday}}</p>
-                          </div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        prop="sourcename"
-                        label="域名/渠道"
-                        width="100"
-                        >
-                        <template slot-scope="scope">
-                          <div class="table-text">
-                            <p><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
-                            <p>{{scope.row.sourcename}}</p>
-                          </div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        prop="sourcename"
-                        label="地区/归属地"
-                        width="100"
-                        >
-                        <template slot-scope="scope">
-                          <div class="table-text">
-                            <p>{{scope.row.province}}<span v-if="scope.row.province&&scope.row.city">/</span>{{scope.row.city}}</p>
-                          </div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        prop="keyproduct"
-                        label="意向设备"
-                        width="100"
-                        >
-                        <template slot-scope="scope">
-                          <span class="product-span" v-bind:class="'level_'+scope.row.productlevel"><i>[{{scope.row.productlevel}}]</i>{{scope.row.keyproduct}}</span>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        prop="effective"
-                        label="有效"
-                        width="60"
-                        >
-                        <template slot-scope="scope">
-                          <div class="table-tag"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                          <div class="table-text" v-if="!scope.row.isEffective"><p>{{scope.row.invalidcause}}</p></div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        prop="addusername"
-                        label="添加人"
-                        width="80"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="addtime"
-                        label="添加时间"
-                        width="150"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="levelname"
-                        label="等级"
-                        min-width="60"
-                        >
-                        <template slot-scope="scope">
-                          <div class="table-tag"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        prop="levelname"
-                        label="备注/原因"
-                        min-width="120"
-                        >
-                        <template slot-scope="scope">
-                          <div class="table-text">
-                            <p>{{scope.row.custormcause}}</p>
-                            <p>{{scope.row.custormremark}}</p>
-                          </div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        v-if="writepermit&&(permitField.includes('domain')||permitField.includes('url'))"
-                        key="a"
-                        fixed="right"
-                        prop="url"
-                        label="域名/链接"
-                        min-width="150"
-                        >
-                        <template slot-scope="scope">
-                          <div class="table-input">
-                            <el-input size="small" v-model="scope.row.domain" v-if="permitField.includes('domain')"></el-input>
-                            <el-input size="small" v-model="scope.row.url" v-if="permitField.includes('url')"></el-input>
-                          </div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        v-if="writepermit&&(permitField.includes('search')||permitField.includes('searchword'))"
-                        key="b"
-                        fixed="right"
-                        prop="searchword"
-                        label="平台/关键词"
-                        min-width="110"
-                        >
-                        <template slot-scope="scope">
-                          <div class="table-input">
-                            <el-input size="small" v-model="scope.row.search" v-if="permitField.includes('search')"></el-input>
-                            <el-input size="small" v-model="scope.row.searchword" v-if="permitField.includes('searchword')"></el-input>
-                          </div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        v-if="writepermit&&permitField.includes('remark')"
-                        key="c"
-                        fixed="right"
-                        prop="remark"
-                        label="备注"
-                        min-width="140"
-                        >
-                        <template slot-scope="scope">
-                          <div class="table-input">
-                            <el-input size="small" type="textarea" rows="3" resize="none" v-model="scope.row.remark" v-if="permitField.includes('remark')"></el-input>
-                          </div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        v-if="writepermit&&(permitField.includes('userid')||permitField.includes('device'))"
-                        key="d"
-                        fixed="right"
-                        prop="searchword"
-                        label="提供者/设备"
-                        min-width="100"
-                        >
-                        <template slot-scope="scope">
-                          <div class="table-input">
-                            <el-input size="small" v-model="scope.row.useridname" v-if="permitField.includes('userid')"></el-input>
-                            <el-input size="small" v-model="scope.row.device" v-if="permitField.includes('device')"></el-input>
-                          </div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_otheredit'))&&device==='desktop'"
-                        width="88"
-                        fixed="right"
-                        align="center"
-                        prop="operations"
-                        label="修改">
-                        <template #default="scope">
-                          <div class="table-button">
-                            <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_otheredit')">修改</el-button>
-                          </div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_edit')||menuButtonPermit.includes('Chinaphone_delete'))&&device==='desktop'"
-                        :width="operationsWidth"
-                        align="center"
-                        fixed="right"
-                        prop="operations"
-                        label="操作">
-                        <template #default="scope">
-                          <div class="table-button">
-                            <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_edit')">修改</el-button>
-                            <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_delete')">删除</el-button>
-                          </div>
-                        </template>
-                      </el-table-column>
-                    </el-table>
+                  <div class="clues-info flex-box">
+                      <div class="clues-infoFl flex-content">
+                            <p><span>共有<strong class="color1">{{infoData.totalCount}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效<strong class="color3">{{infoData.invalidCount}}</strong>条，一类产品<strong class="color4">{{infoData.levelOneCount}}</strong>个，二类产品<b class="color5">{{infoData.levelTwoCount}}</b>个。</span><span>||</span><span>本月共有<strong class="color1">{{infoData.totalCountMonth}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCountMonth}}</strong>条，无效<strong class="color3">{{infoData.invalidCountMonth}}</strong>条，一类产品<strong class="color4">{{infoData.levelOneCountMonth}}</strong>个，二类产品<b class="color5">{{infoData.levelTwoCountMonth}}</b>个。</span></p>
+                      </div>
+                      <div class="clues-title-btn">
+                          <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                          <el-button type="primary" size="small" class="editorNote" :disabled="isDisabled" v-if="writepermit&&menuButtonPermit.includes('Chinaphone_othereditall')" v-on:click="editPageNote()"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改当前页备注</el-button>
+                      </div>
                   </div>
-                  <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
-                    <el-pagination
-                      @size-change="handleSizeChange"
-                      @current-change="handleCurrentChange"
-                      :current-page="searchData.page"
-                      :page-sizes="pageSizeList"
-                      :page-size="searchData.limit"
-                      :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
-                      :total="totalDataNum">
-                    </el-pagination>
-                  </div>
-                </el-card>
+              </div>
             </div>
+            <div class="card-content" ref="tableContent">
+              <el-table
+                ref="simpleTable"
+                :data="tableData"
+                tooltip-effect="dark"
+                stripe
+                class="SiteTable EntableColor"
+                style="width: 100%"
+                row-key="id"
+                :height='minHeight'
+                >
+                <el-table-column
+                  prop="id"
+                  label="ID"
+                  width="80"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="phoneText"
+                  label="电话"
+                  width="80"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="xuntime"
+                  label="时间"
+                  width="150"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-text">
+                      <p>{{scope.row.xuntime}}</p>
+                      <p>{{scope.row.weekday}}</p>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="sourcename"
+                  label="域名/渠道"
+                  width="100"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-text">
+                      <p><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
+                      <p>{{scope.row.sourcename}}</p>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="sourcename"
+                  label="地区/归属地"
+                  width="100"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-text">
+                      <p>{{scope.row.province}}<span v-if="scope.row.province&&scope.row.city">/</span>{{scope.row.city}}</p>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="keyproduct"
+                  label="意向设备"
+                  width="100"
+                  >
+                  <template slot-scope="scope">
+                    <span class="product-span" v-bind:class="'level_'+scope.row.productlevel"><i>[{{scope.row.productlevel}}]</i>{{scope.row.keyproduct}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="effective"
+                  label="有效"
+                  width="60"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-tag"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
+                    <div class="table-text" v-if="!scope.row.isEffective"><p>{{scope.row.invalidcause}}</p></div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="addusername"
+                  label="添加人"
+                  width="80"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="addtime"
+                  label="添加时间"
+                  width="150"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="levelname"
+                  label="等级"
+                  min-width="60"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-tag"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="levelname"
+                  label="备注/原因"
+                  min-width="120"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-text">
+                      <p>{{scope.row.custormcause}}</p>
+                      <p>{{scope.row.custormremark}}</p>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-if="writepermit&&(permitField.includes('domain')||permitField.includes('url'))"
+                  key="a"
+                  fixed="right"
+                  prop="url"
+                  label="域名/链接"
+                  min-width="150"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-input">
+                      <el-input size="small" v-model="scope.row.domain" v-if="permitField.includes('domain')"></el-input>
+                      <el-input size="small" v-model="scope.row.url" v-if="permitField.includes('url')"></el-input>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-if="writepermit&&(permitField.includes('search')||permitField.includes('searchword'))"
+                  key="b"
+                  fixed="right"
+                  prop="searchword"
+                  label="平台/关键词"
+                  min-width="110"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-input">
+                      <el-input size="small" v-model="scope.row.search" v-if="permitField.includes('search')"></el-input>
+                      <el-input size="small" v-model="scope.row.searchword" v-if="permitField.includes('searchword')"></el-input>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-if="writepermit&&permitField.includes('remark')"
+                  key="c"
+                  fixed="right"
+                  prop="remark"
+                  label="备注"
+                  min-width="140"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-input">
+                      <el-input size="small" type="textarea" rows="3" resize="none" v-model="scope.row.remark" v-if="permitField.includes('remark')"></el-input>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-if="writepermit&&(permitField.includes('userid')||permitField.includes('device'))"
+                  key="d"
+                  fixed="right"
+                  prop="searchword"
+                  label="提供者/设备"
+                  min-width="100"
+                  >
+                  <template slot-scope="scope">
+                    <div class="table-input">
+                      <el-input size="small" v-model="scope.row.useridname" v-if="permitField.includes('userid')"></el-input>
+                      <el-input size="small" v-model="scope.row.device" v-if="permitField.includes('device')"></el-input>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_otheredit'))&&device==='desktop'"
+                  width="88"
+                  fixed="right"
+                  align="center"
+                  prop="operations"
+                  label="修改">
+                  <template #default="scope">
+                    <div class="table-button">
+                      <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_otheredit')">修改</el-button>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_edit')||menuButtonPermit.includes('Chinaphone_delete'))&&device==='desktop'"
+                  :width="operationsWidth"
+                  align="center"
+                  fixed="right"
+                  prop="operations"
+                  label="操作">
+                  <template #default="scope">
+                    <div class="table-button">
+                      <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_edit')">修改</el-button>
+                      <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_delete')">删除</el-button>
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
+              <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="searchData.page"
+                :page-sizes="pageSizeList"
+                :page-size="searchData.limit"
+                :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                :total="totalDataNum">
+              </el-pagination>
+            </div>
+          </el-card>
         </div>
       </div>
     </div>
@@ -454,7 +461,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { Column } from '@antv/g2plot';
+import { Column,Area } from '@antv/g2plot';
 export default {
   name: 'Chinaphone_phoneindex',
   data() {
@@ -466,10 +473,7 @@ export default {
       menuButtonPermit:[],
       defaultData:{},
       operationsWidth:"",
-      tableData:[],      
-      maxDate:[],
-      minDate:[],
-      maxNum:0,
+      tableData:[],     
       searchData:{
         date:[],
         name:"",
@@ -534,7 +538,7 @@ export default {
         levelOneCountMonth:0,
         levelTwoCountMonth:0,
       },
-      columnPlot:null,
+      cnAreaPlot:null,
       formLabelWidth:"110px",
       exportForm:{
         fileName:"",
@@ -695,25 +699,9 @@ export default {
       $this.$store.dispatch('chinaphone/cluesPhoneIndexDataAction', $this.chartData).then(response=>{
         if(response){
           if(response.status){
-            var numArr = [];
             response.groupmonthtrend.forEach(function(item,index){
               item.date = item.date+"\n"+item.week;
-              numArr.push(item.xunnumber);
             });
-            var maxNum = Math.max(...numArr);
-            var minNum = Math.min(...numArr);
-            var maxDate = [];
-            var minDate = [];
-            response.groupmonthtrend.forEach(function(item,index){
-              if(item.xunnumber === maxNum){
-                maxDate.push(item.date)
-              }else if(item.xunnumber === minNum){
-                minDate.push(item.date);
-              }
-            });
-            $this.maxNum = maxNum;
-            $this.maxDate = maxDate;
-            $this.minDate = minDate;
             var phoneArr=response.data;
             phoneArr.forEach(function(item,index){
                item.phone.forEach(function(item01,index01){
@@ -744,11 +732,12 @@ export default {
               var topdepart=[];
               console.log(response,'response--12212');
               var topdepartObj = {
-                id:'0',
+                id:0,
                 name:'中文总计',
                 alllastday:response.alllastnumber,
                 allnumber:response.allnumber,
                 alltoday:response.alltodaynumber,
+                lastmonthnumber:response.lastmonthnumber,
                 isOn:true,
               };
               topdepart.push(topdepartObj);
@@ -759,6 +748,7 @@ export default {
                 itemData.alllastday = item.alllastday;
                 itemData.allnumber = item.allnumber;
                 itemData.alltoday = item.alltoday;
+                itemData.lastmonthnumber = item.lastmonthnumber;
                 itemData.isOn=false;
                 topdepart.push(itemData);
               });
@@ -965,147 +955,88 @@ export default {
     drawChart(){
       var $this = this;
       if($this.defaultData.groupmonthtrend){
-        if($this.device == "desktop"){
-          const maxColor = '#FF4500';
-          const minColor = '#1CC25E';
-          const defaultColor = '#5B8FF9';
-          const columnPlot = new Column('cluesChart', {
-            data:$this.defaultData.groupmonthtrend,    
-            xField: 'date',
-            yField: 'xunnumber',
-            appendPadding:[15,15,15,15],
-            seriesField: '',
-            color: ({ date }) => {
-              var currentColor = defaultColor;
-              $this.maxDate.forEach(function(item,index){
-                if(date == item){
-                  currentColor = maxColor;
-                }
-              });
-              $this.minDate.forEach(function(item,index){
-                if(date == item){
-                  currentColor = minColor;
-                }
-              });
-              return currentColor;
-            },
-            xAxis:{
-              label:{
-                autoHide:true
+        const cnAreaPlot = new Area('cnCluesChart', {
+          data:$this.defaultData.groupmonthtrend,    
+          xField: 'date',
+          yField: 'xunnumber',
+          appendPadding:[15,15,15,15],
+          smooth:true,
+          areaStyle: () => {
+            return {
+              fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
+            };
+          },
+          yAxis:{
+            grid:{
+              line:null
+            }
+          },
+          xAxis: {
+            tickCount:15,
+            label: {
+              // 数值格式化为千分位
+              formatter: (v) => {
+                var date = v.split("-")[1]+"-"+v.split("-")[2];
+                return date
               },
+              style:{
+                lineHeight:16
+              }
             },
-            label:{
-              position:'top',
-              offsetY:8,
+            grid:{
+              line:{
+                style:{
+                  stroke: 'black',
+                  lineWidth:1,
+                  lineDash:[6,3],
+                  strokeOpacity:0.1,
+                  shadowBlur:0
+                }
+              }
+            },
+          },
+          tooltip: {
+            formatter: (datum) => {
+              return { name: "询盘个数", value: datum.xunnumber };
+            },
+            title:(e)=>{
+              return e.replace(/\n/g," ")
+            }
+          },
+          annotations: [
+            // 平均值
+            {
+              type: 'line',
+              start: ['min', $this.defaultData.avgnumber],
+              end: ['max', $this.defaultData.avgnumber],
+              top:true,
+              offsetY: 0,
+              offsetX: 0,
               style: {
-                fill: '#000',
-                opacity:1
+                stroke: '#f16b6b',
+                lineDash: [6, 4],
+                lineWidth: 1,
               },
             },
-            tooltip: {
-              formatter: (datum) => {
-                return { name: "询盘个数", value: datum.xunnumber };
-              },
-              title:(e)=>{
-                return e.replace(/\n/g," ")
-              }
+            // 平均值
+            {
+              type: 'html',
+              position:['max',$this.defaultData.avgnumber],
+              top:true,
+              html:"<span class='chart-font avg'><span class='txt-font'>"+$this.defaultData.avgnumber+"</span><i></i></span>",
+              alignX:"left",
+              alignY:"bottom",
             },
-            meta: {
-              date: {
-                alias: '日期',
-              },
-              xunnumber: {
-                alias: '询盘个数',
-                max: $this.maxNum,
-                min: 0,
-              },
-            },
-            annotations: [
-              // 平均值
-              {
-                type: 'line',
-                start: ['min', $this.defaultData.avgnumber],
-                end: ['max', $this.defaultData.avgnumber],
-                top:true,
-                offsetY: -2,
-                offsetX: -22,
-                text: {
-                  position:['max','max'],
-                  content: '平均值：'+$this.defaultData.avgnumber,
-                  autoAdjust:true,
-                  style: {
-                    textAlign: 'center',
-                    fontSize: 12,
-                    fill: '#025DF4',
-                    textBaseline: 'bottom',
-                  },
-                },
-                style: {
-                  stroke: '#025DF4',
-                  lineDash: [2, 2],
-                },
-              },
-            ],
-          });
-          $this.columnPlot = columnPlot;
-          columnPlot.render();
-        }else{
-          // Step 1: 创建 Chart 对象
-          const chart = new $this.$F2.Chart({
-            id: 'cluesChart',
-            pixelRatio: window.devicePixelRatio // 指定分辨率
-          });
-          // Step 2: 载入数据源
-          chart.source($this.defaultData.groupmonthtrend, {
-            date: {
-              tickCount: 11
-            }
-          });
-          chart.legend(true);
-          //配置对应方式
-          chart.axis('date', {
-            label: function label(text, index, total) {
-              var textCfg = {};
-              if (index === 0) {
-                textCfg.textAlign = 'left';
-              } else if (index === total - 1) {
-                textCfg.textAlign = 'right';
-              }
-              return textCfg;
-            }
-          });
-          // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
-          chart.interval().position('date*xunnumber');
-    
-          // Step 4: 渲染图表
-          chart.render();
-
-          // 绘制柱状图文本
-          var offset = -5;
-          var canvas = chart.get('canvas');
-          var group = canvas.addGroup();
-          var shapes = {};
-          $this.defaultData.groupmonthtrend.forEach(function(obj) {
-            var point = chart.getPosition(obj);
-            var text = group.addShape('text', {
-              attrs: {
-                x: point.x,
-                y: point.y + offset,
-                text: obj.xunnumber,
-                textAlign: 'center',
-                textBaseline: 'bottom',
-                fill: '#808080'
-              }
-            });
-            shapes[obj.date] = text; // 缓存该 shape, 便于后续查找
-          });
-        }
+          ],
+        });
+        $this.cnAreaPlot = cnAreaPlot;
+        cnAreaPlot.render();
       }
     },
     // 电话点击跳转列表
     phoneJump(id){
-      if(this.columnPlot&&!this.columnPlot.chart.destroyed){
-        this.columnPlot.destroy();
+      if(this.cnAreaPlot&&!this.cnAreaPlot.chart.destroyed){
+        this.cnAreaPlot.destroy();
       }
       var queryObj = {};
       queryObj.phoneID = id;
@@ -1416,6 +1347,7 @@ export default {
           $this.defaultData.alltodaynumber=item.alltoday;
           $this.defaultData.alllastnumber=item.alllastday;
           $this.defaultData.allnumber=item.allnumber;
+          $this.defaultData.lastmonthnumber=item.lastmonthnumber;
         }else{
           item.isOn = false;
         }
@@ -1426,8 +1358,8 @@ export default {
     // 部门选择图表点击事件 
     handleCheckTopdepartChange(){
       var $this = this;
-      if($this.columnPlot&&!$this.columnPlot.chart.destroyed){
-        $this.columnPlot.destroy();
+      if($this.cnAreaPlot&&!$this.cnAreaPlot.chart.destroyed){
+        $this.cnAreaPlot.destroy();
       }
       if($this.timeChart&&$this.timeChart.length>0){
         $this.chartData.starttime = $this.timeChart[0];

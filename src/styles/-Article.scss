@@ -677,9 +677,9 @@
                 float:left;
                 span{
                     float:left;
-                    margin-right:20px;
+                    margin-right:10px;
                     border-radius:4px;
-                    font-size:15px;
+                    font-size:14px;
                     color:#fff;
                     background:-moz-linear-gradient(135deg, #5ca8fe 0%, #0480ff 100%);
                     background:-webkit-linear-gradient(135deg, #5ca8fe 0%, #0480ff 100%);
@@ -687,9 +687,13 @@
                     background:-ms-linear-gradient(135deg, #5ca8fe 0%, #0480ff 100%);
                     background:linear-gradient(135deg, #5ca8fe 0%, #0480ff 100%);
                     line-height:24px;
-                    padding:3px 15px;
+                    padding:3px 10px;
                     .svg-i{
                         margin-right:5px;
+                        width: 16px;
+                        height: 16px;
+                        font-size: 16px;
+                        vertical-align: -1px;
                     }
                     &.back{
                         background: $pink;
@@ -699,17 +703,14 @@
             .ArticleSixFlTopTagFr{
                 float:right;
                 color:#6688b4;
-                font-size:15px;
+                font-size:14px;
                 line-height:24px;
                 padding-top:3px;
                 padding-bottom:3px;
                 span{
                     margin:0 10px;
-                }
-                .svg-i{
-                    margin-right:5px;
-                    font-size: 14px;
-                    vertical-align: top;
+                    color: lighten(#6688b4,30%);
+                    font-size: 12px;
                 }
             }
         }

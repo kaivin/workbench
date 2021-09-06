@@ -128,14 +128,13 @@
       <div class="article-info">
         <div class="ArticleSixFlTop">
           <h1>{{previewData.title}}</h1>
+          <h2>网站：{{website}} [ {{websiteID}} ]</h2>
           <div class="ArticleSixFlTopTag clearfix">
             <p class="ArticleSixFlTopTagFl">
-              <span><i class="svg-i" ><svg-icon icon-class="articleWhite" /></i>{{previewData.typeName}}</span>
-              <span><i class="svg-i" ><svg-icon icon-class="authorWhite" /></i>{{previewData.anthor}}</span>
-              <span><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{previewData.createdTime}}</span>
+              <span><i class="svg-i" ><svg-icon icon-class="art-author" /></i>{{previewData.anthor}}</span>
               <span class="back" v-on:click="backSendPost"><i class="svg-i" ><svg-icon icon-class="back" /></i>点击返回</span>
             </p>
-            <p class="ArticleSixFlTopTagFr"><i class="svg-i" ><svg-icon icon-class="eye_rz" /></i>{{previewData.hits}}<span>|</span><i class="svg-i" ><svg-icon icon-class="read_rz" /></i>{{previewData.updateTime}} </p>
+            <p class="ArticleSixFlTopTagFr">阅读：{{previewData.hits}}<span>|</span>发布时间：{{previewData.createdTime}} </p>
           </div>
         </div>
         <div class="info-content" v-bind:class="formData.is_markdown==1?'vuepress-markdown-body':'rich-text'" v-html="previewData.content"></div>
