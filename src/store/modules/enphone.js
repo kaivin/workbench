@@ -39,7 +39,6 @@
     cluesEdit,
     initCluesEditInfo,
     cluesUrlGetPhone,
-    cluesRegionValid,
     cluesAnalysisInitSystemData,
     customerWarnEdit,
     customerWarnIsRead,
