@@ -860,26 +860,28 @@ export default {
     setTableHeight(){
       var $this = this;
       $this.minHeight = "auto";
-      var trueHeight = $this.$refs.scrollPane.offsetHeight;
-      var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-      var screenHeight = $this.$refs.boxPane.offsetHeight;
-      console.log(trueHeight,"真实高度");
-      console.log(headerHeight,"头部高度");
-      console.log(screenHeight,"视窗高度");
-      if(trueHeight<=screenHeight){
-        $this.minHeight = screenHeight-headerHeight-30;
-      }else{
-        if(trueHeight-screenHeight<=headerHeight){
-          $this.minHeight = "auto";
-        }else{
-          if($this.totalDataNum>100){
-            $this.minHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 45;
+      $this.$nextTick(()=>{
+          var trueHeight = $this.$refs.scrollPane.offsetHeight;
+          var headerHeight = $this.$refs.headerPane.offsetHeight+45;
+          var screenHeight = $this.$refs.boxPane.offsetHeight;
+          console.log(trueHeight,"真实高度");
+          console.log(headerHeight,"头部高度");
+          console.log(screenHeight,"视窗高度");
+          if(trueHeight<=screenHeight){
+            $this.minHeight = screenHeight-headerHeight-30;
           }else{
-            $this.minHeight = screenHeight-30;
+            if(trueHeight-screenHeight<=headerHeight){
+              $this.minHeight = "auto";
+            }else{
+              if($this.totalDataNum>100){
+                $this.minHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 30;
+              }else{
+                $this.minHeight = screenHeight-30;
+              }
+            }
           }
-        }
-      }
-      console.log($this.minHeight,"表格高度");
+          console.log($this.minHeight,"表格高度");
+      });
     },
     // 初始化数据
     initData(){

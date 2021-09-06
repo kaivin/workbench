@@ -1,178 +1,184 @@
 ﻿<template>
   <div class="page-root" ref="boxPane">
-    <el-card class="box-card" shadow="hover">
-      <div slot="header" v-if="canSearch">
-        <div class="card-header WebServerTop" v-if="device==='desktop'" ref="headerPane">
-          <div class="border-wrap post-class" ref="searchPane">
-            <div class="border-row flex-wrap">
-                <div class="border-cell txt-font"><span>语言：</span></div>
-                <div class="border-cell flex-content">
-                    <div class="tag-panel">
-                        <el-select v-model="formData.language" size="small" clearable placeholder="请选择">
-                          <el-option
-                            v-for="item in languageList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                          </el-option>
-                        </el-select>
+      <div class="abs-panel" ref="mainPane">
+        <div class="scroll-panel">
+            <div class="true-height" ref="scrollPane">
+                <el-card class="box-card" shadow="hover">
+                  <div slot="header" v-if="canSearch">
+                    <div class="card-header WebServerTop" v-if="device==='desktop'" ref="headerPane">
+                      <div class="border-wrap post-class" ref="searchPane">
+                        <div class="border-row flex-wrap">
+                            <div class="border-cell txt-font"><span>语言：</span></div>
+                            <div class="border-cell flex-content">
+                                <div class="tag-panel">
+                                    <el-select v-model="formData.language" size="small" clearable placeholder="请选择">
+                                      <el-option
+                                        v-for="item in languageList"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                      </el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+                            <div class="border-cell txt-font"><span>用途：</span></div>
+                            <div class="border-cell flex-content">
+                                <div class="tag-panel">
+                                    <el-select v-model="formData.useringid" size="small" clearable placeholder="请选择">
+                                      <el-option
+                                        v-for="item in useingList"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                      </el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+                            <div class="border-cell txt-font"><span>系统：</span></div>
+                            <div class="border-cell flex-content">
+                                <div class="tag-panel">
+                                    <el-select v-model="formData.systemid" size="small" clearable placeholder="请选择">
+                                      <el-option
+                                        v-for="item in serverList"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                      </el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-row flex-wrap">
+                            <div class="border-cell txt-font"><span>IP/别名：</span></div>
+                            <div class="border-cell flex-content">
+                                <div class="tag-panel">
+                                    <el-input
+                                      style="width: 229px;margin-right:10px;"
+                                      placeholder="输入别名"
+                                      v-model="formData.name"
+                                      size="small"
+                                      clearable>
+                                    </el-input>
+                                    <el-input
+                                      style="width: 229px;margin-right: 5px;"
+                                      placeholder="输入ip"
+                                      v-model="formData.ip"
+                                      size="small"
+                                      clearable>
+                                    </el-input>
+                                    <el-button class="item-input table-icon search" size="small" type="primary" @click="searchResult"><i class="svg-i searchWhite" ><svg-icon icon-class="searchWhite" class-name="disabled" /></i>搜索</el-button>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
                     </div>
-                </div>
-                <div class="border-cell txt-font"><span>用途：</span></div>
-                <div class="border-cell flex-content">
-                    <div class="tag-panel">
-                        <el-select v-model="formData.useringid" size="small" clearable placeholder="请选择">
-                          <el-option
-                            v-for="item in useingList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                          </el-option>
-                        </el-select>
+                    <div class="card-header filter-panel" v-else ref="headerPane">
+                      <div class="search-panel">                              
+                          <el-input placeholder="输入ip" v-model="formData.ip" class="article-search">
+                              <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
+                          </el-input>
+                      </div>
+                      <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
                     </div>
-                </div>
-                <div class="border-cell txt-font"><span>系统：</span></div>
-                <div class="border-cell flex-content">
-                    <div class="tag-panel">
-                        <el-select v-model="formData.systemid" size="small" clearable placeholder="请选择">
-                          <el-option
-                            v-for="item in serverList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                          </el-option>
-                        </el-select>
+                  </div>
+                  <div class="card-content WebServerBom" ref="cardContent">
+                    <div class="card-wrap">
+                      <el-table
+                        ref="simpleTable"
+                        :data="tableData"
+                        :height="tableHeight"
+                        stripe
+                        class="SiteTable"
+                        style="width: 100%"
+                        >
+                        <el-table-column
+                          type="index"
+                          label="序号"
+                          align="center"
+                          width="50">
+                        </el-table-column>
+                        <el-table-column
+                          prop="id"
+                          label="ID"
+                          align="center"
+                          width="60"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="name"
+                          label="别名"
+                          align="left"
+                          min-width="120"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="useringname"
+                          label="用途"
+                          width="80"
+                          align="center"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="systemname"
+                          label="系统"
+                          width="80"
+                          align="left"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="ip"
+                          label="IP"
+                          width="160"
+                          align="left"
+                          >
+                          <template #default="scope">
+                            <div class="table-link"><span class="link" @click="jumpWebsiteList(scope.row,scope.$index)">{{scope.row.ip}}</span></div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="allip"
+                          label="全部IP"
+                          min-width="240"
+                          align="left"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="adminuser"
+                          label="负责人"
+                          width="120"
+                          align="left"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          v-if="(menuButtonPermit.includes('Webserver_edit')||menuButtonPermit.includes('Webserver_delete'))&&device==='desktop'"
+                          :width="operationsWidth"
+                          align="center"
+                          fixed="right"
+                          label="操作">
+                          <template #default="scope">
+                            <el-button v-if="scope.row.editshow===1" size="mini" @click="editTableRow(scope.row,scope.$index)">编辑</el-button>
+                            <el-button v-if="scope.row.deletepermit===1" size="mini" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
+                          </template>
+                        </el-table-column>
+                      </el-table>
+                      <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
+                        <el-pagination
+                          @size-change="handleSizeChange"
+                          @current-change="handleCurrentChange"
+                          :current-page="page"
+                          :page-sizes="pageSizeList"
+                          :page-size="limit"
+                          :pager-count="pagerCount"
+                          :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                          :total="totalDataNum">
+                        </el-pagination>
+                      </div>
                     </div>
-                </div>
+                  </div>
+                </el-card>
             </div>
-            <div class="border-row flex-wrap">
-                <div class="border-cell txt-font"><span>IP/别名：</span></div>
-                <div class="border-cell flex-content">
-                    <div class="tag-panel">
-                        <el-input
-                          style="width: 229px;margin-right:10px;"
-                          placeholder="输入别名"
-                          v-model="formData.name"
-                          size="small"
-                          clearable>
-                        </el-input>
-                        <el-input
-                          style="width: 229px;margin-right: 5px;"
-                          placeholder="输入ip"
-                          v-model="formData.ip"
-                          size="small"
-                          clearable>
-                        </el-input>
-                        <el-button class="item-input table-icon search" size="small" type="primary" @click="searchResult"><i class="svg-i searchWhite" ><svg-icon icon-class="searchWhite" class-name="disabled" /></i>搜索</el-button>
-                    </div>
-                </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-header filter-panel" v-else ref="headerPane">
-          <div class="search-panel">                              
-              <el-input placeholder="输入ip" v-model="formData.ip" class="article-search">
-                  <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
-              </el-input>
-          </div>
-          <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
         </div>
       </div>
-      <div class="card-content WebServerBom" ref="cardContent">
-        <div class="card-wrap">
-          <el-table
-            ref="simpleTable"
-            :data="tableData"
-            :height="tableHeight"
-            stripe
-            class="SiteTable"
-            style="width: 100%"
-            >
-            <el-table-column
-              type="index"
-              label="序号"
-              align="center"
-              width="50">
-            </el-table-column>
-            <el-table-column
-              prop="id"
-              label="ID"
-              align="center"
-              width="60"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="name"
-              label="别名"
-              align="left"
-              min-width="120"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="useringname"
-              label="用途"
-              width="80"
-              align="center"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="systemname"
-              label="系统"
-              width="80"
-              align="left"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="ip"
-              label="IP"
-              width="160"
-              align="left"
-              >
-              <template #default="scope">
-                <div class="table-link"><span class="link" @click="jumpWebsiteList(scope.row,scope.$index)">{{scope.row.ip}}</span></div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="allip"
-              label="全部IP"
-              min-width="240"
-              align="left"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="adminuser"
-              label="负责人"
-              width="120"
-              align="left"
-              >
-            </el-table-column>
-            <el-table-column
-              v-if="(menuButtonPermit.includes('Webserver_edit')||menuButtonPermit.includes('Webserver_delete'))&&device==='desktop'"
-              :width="operationsWidth"
-              align="center"
-              fixed="right"
-              label="操作">
-              <template #default="scope">
-                <el-button v-if="scope.row.editshow===1" size="mini" @click="editTableRow(scope.row,scope.$index)">编辑</el-button>
-                <el-button v-if="scope.row.deletepermit===1" size="mini" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
-            <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="page"
-              :page-sizes="pageSizeList"
-              :page-size="limit"
-              :pager-count="pagerCount"
-              :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
-              :total="totalDataNum">
-            </el-pagination>
-          </div>
-        </div>
-      </div>
-    </el-card>
     <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
     <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
       <div class="flex-content">
@@ -267,9 +273,9 @@ export default {
       };
   },
   watch: {
-      scrollHeight(val) {
+      tableHeight(val) {
         if (!this.timer) {
-          this.scrollHeight = val
+          this.tableHeight = val
           this.timer = true
           const $this = this
           setTimeout(function() {
@@ -284,7 +290,6 @@ export default {
   },
   updated(){
     this.$nextTick(() => {
-      this.setTableHeight();
       this.$refs.simpleTable.doLayout();
     })
   },
@@ -297,19 +302,29 @@ export default {
     // 设置table高度
     setTableHeight(){
       var $this = this;
-      if($this.totalDataNum >10){
-        if($this.device==="desktop"){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-75;
+      $this.tableHeight = "auto";
+      $this.$nextTick(()=>{
+        var trueHeight = $this.$refs.scrollPane.offsetHeight;
+        var headerHeight = $this.$refs.headerPane.offsetHeight+45;
+        var screenHeight = $this.$refs.boxPane.offsetHeight;
+        console.log(trueHeight,"真实高度");
+        console.log(headerHeight,"头部高度");
+        console.log(screenHeight,"视窗高度");
+        if(trueHeight<=screenHeight){
+          $this.tableHeight = screenHeight-headerHeight-30;
         }else{
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-$this.$refs.pagePane.offsetHeight-15;
+          if(trueHeight-screenHeight<=headerHeight){
+            $this.tableHeight = "auto";
+          }else{
+            if($this.totalDataNum>100){
+              $this.tableHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 30;
+            }else{
+              $this.tableHeight = screenHeight-30;
+            }
+          }
         }
-      }else{
-        if($this.device==="desktop"){
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-75;
-        }else{
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight-$this.$refs.headerPane.offsetHeight-15;
-        }
-      }
+        console.log($this.tableHeight,"表格高度");
+      });
     },
     // 搜索结果点击事件
     searchResult(){
@@ -394,6 +409,9 @@ export default {
             if($this.device === "mobile"){
               $this.openClass = false;
             }
+            $this.$nextTick(function () {
+              $this.setTableHeight();
+            })
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({

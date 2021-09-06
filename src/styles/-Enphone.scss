@@ -31,7 +31,10 @@
           .el-card__header{padding:0px;}
           .EnStatisticalTop{
             margin-bottom:15px;
-            .EnStatisticalTopTit{              
+            .EnStatisticalTopTit{  
+              clear: both;
+              display: block;
+              overflow: hidden;            
               background: -webkit-linear-gradient(#ffffff, #edf2f3);
               background: -o-linear-gradient(#ffffff, #edf2f3);
               background: -moz-linear-gradient(#ffffff, #edf2f3);
