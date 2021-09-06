@@ -43,41 +43,6 @@
                                         </div>
                                     </div>
                                     <div class="item-search EnphoneSearchThree">
-                                        <el-input
-                                            size="mini"
-                                            placeholder="ID"
-                                            style="width:80px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.messageid"
-                                            clearable>
-                                        </el-input>
-                                        <el-input
-                                            size="mini"
-                                            placeholder="客户姓名/称呼"
-                                            style="width:100px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.custormname"
-                                            clearable>
-                                        </el-input>
-                                        <el-input
-                                            size="mini"
-                                            placeholder="Email"
-                                            style="width:100px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.custormemail"
-                                            clearable>
-                                        </el-input>
-                                        <el-input
-                                            size="mini"
-                                            placeholder="电话"
-                                            style="width:110px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.custormphone"
-                                            clearable>
-                                        </el-input>
-                                        <el-input
-                                            size="mini"
-                                            placeholder="来自IP"
-                                            style="width:150px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.ip"
-                                            clearable>
-                                        </el-input>
                                         <el-date-picker
                                             v-model="searchData.date"
                                             size="mini"
@@ -107,7 +72,7 @@
                                                 :value="item.value">
                                             </el-option>
                                         </el-select>
-                                        <el-select v-model="searchData.device" clearable placeholder="设备" style="width:100px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                        <el-select v-model="searchData.device" clearable placeholder="设备" style="width:80px;margin-right:10px;margin-bottom:10px;" size="mini">
                                             <el-option
                                                 v-for="item in deviceList"
                                                 :key="item.value"
@@ -131,7 +96,7 @@
                                                 :value="item.value">
                                             </el-option>
                                         </el-select>
-                                        <el-select v-model="searchData.feedback" clearable placeholder="反馈" style="width:120px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                        <el-select v-model="searchData.feedback" clearable placeholder="反馈" style="width:100px;margin-right:10px;margin-bottom:10px;" size="mini">
                                             <el-option
                                                 v-for="item in feedbackList"
                                                 :key="item.value"
@@ -139,7 +104,7 @@
                                                 :value="item.value">
                                             </el-option>
                                         </el-select>
-                                        <el-select v-model="searchData.level_id" clearable placeholder="首次级别" style="width:80px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                        <el-select v-model="searchData.level_id" clearable placeholder="首次级别" style="width:90px;margin-right:10px;margin-bottom:10px;" size="mini">
                                             <el-option
                                                 v-for="item in levelList"
                                                 :key="item.value"
@@ -147,7 +112,7 @@
                                                 :value="item.value">
                                             </el-option>
                                         </el-select>
-                                        <el-select v-model="searchData.erroring" clearable placeholder="异常" style="width:170px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                        <el-select v-model="searchData.erroring" clearable placeholder="异常" style="width:120px;margin-right:10px;margin-bottom:10px;" size="mini">
                                             <el-option
                                                 v-for="item in errorList"
                                                 :key="item.value"
@@ -184,6 +149,41 @@
                                             clearable>
                                         </el-input>
                                         <el-checkbox class="item-checkbox" v-model="searchData.is_url" size="mini" border>精确</el-checkbox>
+                                        <el-input
+                                            size="mini"
+                                            placeholder="ID"
+                                            style="width:80px;margin-right:10px;margin-bottom:10px;"
+                                            v-model="searchData.messageid"
+                                            clearable>
+                                        </el-input>
+                                        <el-input
+                                            size="mini"
+                                            placeholder="客户姓名/称呼"
+                                            style="width:100px;margin-right:10px;margin-bottom:10px;"
+                                            v-model="searchData.custormname"
+                                            clearable>
+                                        </el-input>
+                                        <el-input
+                                            size="mini"
+                                            placeholder="Email"
+                                            style="width:100px;margin-right:10px;margin-bottom:10px;"
+                                            v-model="searchData.custormemail"
+                                            clearable>
+                                        </el-input>
+                                        <el-input
+                                            size="mini"
+                                            placeholder="电话"
+                                            style="width:110px;margin-right:10px;margin-bottom:10px;"
+                                            v-model="searchData.custormphone"
+                                            clearable>
+                                        </el-input>
+                                        <el-input
+                                            size="mini"
+                                            placeholder="来自IP"
+                                            style="width:150px;margin-right:10px;margin-bottom:10px;"
+                                            v-model="searchData.ip"
+                                            clearable>
+                                        </el-input>
                                         <el-checkbox class="item-checkbox" v-model="searchData.effective" size="mini" border>只显示有效</el-checkbox>
                                         <el-checkbox class="item-checkbox" v-model="searchData.is_adduser" size="mini" border>只显示我添加的（客服）</el-checkbox>
                                         <div class="search-panelThree" style="display:inline-block">
@@ -198,7 +198,7 @@
                                     </div> 
                                     <div class="item-search  EnphoneSearchTwo flex-wrap">
                                         <el-checkbox class="item-checkbox" v-model="searchData.is_group" size="mini" border>分组</el-checkbox>
-                                        <div class="team-list customRadio">
+                                        <div class="team-list customRadio small">
                                             <span class="item-clues" v-for="item in groupurlproductList" v-bind:class="item.isOn?'active':''" v-bind:key="item.value" v-on:click="groupurlproductClick(item.value)"><i></i>{{item.label}}</span>
                                         </div>
                                         <div class="search-panelThree flex-content">

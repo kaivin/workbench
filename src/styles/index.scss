@@ -578,6 +578,22 @@
 /*自定义单选*/
 .customRadio{
   margin: 0 -5px;
+  &.small{
+    .item-clues{
+      font-size: 12px;
+      padding:3px 15px 3px 10px;
+      i{
+        width: 12px;
+        height: 12px;
+        margin-top: 4px;
+      }
+      &.active{
+        i{
+          border: 4px solid $menuActiveText;
+        }
+      }
+    }
+  }
   .item-clues{
     float:left;
     position:relative;
@@ -604,7 +620,11 @@
       margin-top:3px;
       margin-right:8px;
     }
-    &:hover,&.active{
+    &:hover{
+      color:$menuActiveText;
+      border-color:#bfdbff;
+    }
+    &.active{
       color:$menuActiveText;
       border-color:#bfdbff;
       background:#edf5ff;

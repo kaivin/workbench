@@ -677,15 +677,11 @@
         }
       }
       &.EnphoneSearchTwo{
-        .team-list{       
+        .team-list{     
+          margin:0;  
           .item-clues{
-            padding: 1px 8px;
-            line-height: 24px;
-            margin-left:10px;
-            margin-right:0px;
-            i{   
-              margin-top: 5px;   
-            }
+            float:none;
+            display: inline-block;
           }
         }
         .search-panelThree{

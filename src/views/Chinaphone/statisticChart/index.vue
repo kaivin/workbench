@@ -343,19 +343,47 @@
                   <el-col :xs="24">
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>热门地区</span></div>
-                      <div class="chart-body" style="height:530px;text-align:center;">
-                          <div class="abs-canvas" v-if="device==='desktop'">
+                      <div class="chart-body" style="height:540px;text-align:center;">
+                        <div class="map-panel flex-box">
+                          <div class="map-chart">
                             <div id="cluesChart10" class="chart-canvas"></div>
                           </div>
-                          <div class="abs-canvas" v-else>
-                            <canvas id="cluesChart10" class="chart-canvas"></canvas>
+                          <div class="flex-content table-panel">
+                            <div class="table-chart">
+                              <el-table
+                                border
+                                ref="simpleTable"
+                                :data="searchResult.regionCount"
+                                tooltip-effect="dark"
+                                stripe
+                                height="480"
+                                style="width: 100%;"
+                                row-key="id"
+                                show-summary
+                                :summary-method="getSummaries"
+                                :default-sort = "{prop: 'number', order: 'descending'}"
+                                >
+                                <el-table-column
+                                  prop="province"
+                                  label="地区"
+                                  >
+                                </el-table-column>
+                                <el-table-column
+                                  prop="number"
+                                  label="数量"
+                                  sortable
+                                  >
+                                </el-table-column>
+                              </el-table>
+                            </div>
                           </div>
+                        </div>
                       </div>
                     </div>
                   </el-col>
                 </el-row>
                 <el-row :gutter="15">
-                  <el-col :sm="24" :md="8">
+                  <el-col :sm="24" :md="12">
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>关键词</span></div>
                       <div class="chart-body">
@@ -389,41 +417,7 @@
                       </div>
                     </div>
                   </el-col>
-                  <el-col :sm="24" :md="8">
-                    <div class="chart-wrapper">
-                      <div class="chart-header"><span>地区</span></div>
-                      <div class="chart-body">
-                        <div class="table-chart">
-                          <el-table
-                            border
-                            ref="simpleRegionTable"
-                            :data="searchResult.regionCount"
-                            tooltip-effect="dark"
-                            stripe
-                            style="width: 100%"
-                            height="540"
-                            row-key="id"
-                            show-summary
-                            :summary-method="getSummaries"
-                            :default-sort = "{prop: 'number', order: 'descending'}"
-                            >
-                            <el-table-column
-                              prop="province"
-                              label="地区"
-                              >
-                            </el-table-column>
-                            <el-table-column
-                              prop="number"
-                              label="数量"
-                              sortable
-                              >
-                            </el-table-column>
-                          </el-table>
-                        </div>
-                      </div>
-                    </div>
-                  </el-col>
-                  <el-col :sm="24" :md="8">
+                  <el-col :sm="24" :md="12">
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>产品</span></div>
                       <div class="chart-body">
@@ -2379,9 +2373,8 @@ export default {
             .then(GeoJSON => {
               const chart = new Chart({
                 container: 'cluesChart10',
-                width: 860,
-                height: 500,
-                padding: [15,50]
+                width: 760,
+                height: 480,
               });
               chart.scale({
                 latitude: { sync: true },
@@ -2403,7 +2396,7 @@ export default {
               });
               chart.axis(false);
               chart.legend('trend', {
-                position: 'left'
+                position: 'right'
               });
               
               var ds = new DataSet();

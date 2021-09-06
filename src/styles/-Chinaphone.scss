@@ -70,6 +70,27 @@
           height: 100%;
         }
       }
+      .map-panel{
+        padding: 30px;
+        .map-chart{
+            padding: 0 50px;
+        }
+        .chart-canvas{
+            width: 760px;
+            height: 480px;
+        }
+        .table-panel{
+            position: relative;
+            .table-chart{
+                position: absolute;
+                left:0;
+                top:0;
+                width: 100%;
+                height: 100%;
+                padding:0;
+            }
+        }
+      }
     }
   }
   .table-chart{
