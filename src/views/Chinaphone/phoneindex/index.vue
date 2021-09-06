@@ -605,7 +605,9 @@ export default {
       if($this.$route.query.phoneID){
         $this.setHeight();
       }else{
-        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
+        if($this.$refs.mainPane&&$this.$refs.numPane){
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
+        }
         $this.drawChart();
       }
     });
@@ -614,7 +616,9 @@ export default {
         if($this.$route.query.phoneID){
           $this.setHeight();
         }else{
-          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
+          if($this.$refs.mainPane&&$this.$refs.numPane){
+            $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
+          }
         }
       })()
     }
@@ -655,7 +659,9 @@ export default {
       if($this.phoneID){
           $this.$refs.simpleTable.doLayout();
       }else{
-        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
+        if($this.$refs.mainPane&&$this.$refs.numPane){
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
+        }
       }
     })
   },

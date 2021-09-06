@@ -799,7 +799,6 @@ export default {
       $this.infoData.warnlist=[];
       $this.isTableRow=true;
       $this.tableData=[];
-      $this.tableHeight=[];
       $this.ids=[];
       $this.Determine.ids=[];
       $this.Determine.userid='';
@@ -1149,9 +1148,6 @@ export default {
             });
           }
           $this.tableData = tableData;
-            $this.$nextTick(function () {
-              $this.setTableHeight();
-            })
         }else{
           $this.$message({
             showClose: true,
@@ -1170,7 +1166,9 @@ export default {
         }
         $this.infoData = infoData;
         $this.totalDataNum = resData.allcount;
-        $this.setTableHeight();
+        $this.$nextTick(function () {
+          $this.setTableHeight();
+        })
       }
     },
     // 获取当前登陆用户在该页面的操作权限

@@ -862,7 +862,7 @@ export default {
       $this.minHeight = "auto";
       $this.$nextTick(()=>{
           var trueHeight = $this.$refs.scrollPane.offsetHeight;
-          var headerHeight = $this.$refs.headerPane.offsetHeight+45;
+          var headerHeight = $this.$refs.headerPane.offsetHeight+63;
           var screenHeight = $this.$refs.boxPane.offsetHeight;
           console.log(trueHeight,"真实高度");
           console.log(headerHeight,"头部高度");

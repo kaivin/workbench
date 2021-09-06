@@ -170,6 +170,7 @@ export default {
         custormemail:'',
         custormphone:'',
         custormneedinfo:'',
+        dealusername:'',
         otherremark:'',
         custormfiles:'',
         custormfilesname:'',
@@ -302,6 +303,7 @@ export default {
       $this.formData.allottime = $this.defaultInfo.allottime;
       $this.formData.leveltime = $this.defaultInfo.leveltime;
       $this.formData.updatetime = $this.defaultInfo.updatetime;
+      $this.formData.dealusername = $this.defaultInfo.dealusername;
       if($this.salesuseridList.length>0){
         $this.salesuseridList.forEach(function(item,index){
             if(item.value==$this.defaultInfo.salesuserid){

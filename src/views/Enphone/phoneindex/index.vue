@@ -1002,10 +1002,10 @@ export default {
   },
   mounted(){
     const $this = this;
-    $this.$nextTick(function () {     
-      $this.setTableHeight();
-    });
     if($this.$route.query.phoneID){
+      $this.$nextTick(function () {     
+        $this.setTableHeight();
+      });
       window.onresize = () => {
         return (() => {
            $this.setTableHeight();
@@ -1059,28 +1059,30 @@ export default {
     setTableHeight(){
       var $this = this;
       $this.tableHeight = "auto";
-      $this.$nextTick(()=>{
-        var trueHeight = $this.$refs.scrollPane.offsetHeight;
-        var headerHeight = $this.$refs.headerPane.offsetHeight;
-        var screenHeight = $this.$refs.boxPane.offsetHeight;
-        console.log(trueHeight,"真实高度");
-        console.log(headerHeight,"头部高度");
-        console.log(screenHeight,"视窗高度");
-        if(trueHeight<=screenHeight){
-          $this.tableHeight = screenHeight-headerHeight-30-15;
-        }else{
-          if(trueHeight-screenHeight<=headerHeight){
-            $this.tableHeight = "auto";
-          }else{
-            if($this.totalDataNum>100){
-              $this.tableHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 30;
+      if($this.$route.query.phoneID){
+          $this.$nextTick(()=>{
+            var trueHeight = $this.$refs.scrollPane.offsetHeight;
+            var headerHeight = $this.$refs.headerPane.offsetHeight;
+            var screenHeight = $this.$refs.boxPane.offsetHeight;
+            console.log(trueHeight,"真实高度");
+            console.log(headerHeight,"头部高度");
+            console.log(screenHeight,"视窗高度");
+            if(trueHeight<=screenHeight){
+              $this.tableHeight = screenHeight-headerHeight-30-15;
             }else{
-              $this.tableHeight = screenHeight-30;
+              if(trueHeight-screenHeight<=headerHeight){
+                $this.tableHeight = "auto";
+              }else{
+                if($this.totalDataNum>100){
+                  $this.tableHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 30;
+                }else{
+                  $this.tableHeight = screenHeight-30;
+                }
+              }
             }
-          }
-        }
-        console.log($this.tableHeight,"表格高度");
-      });
+            console.log($this.tableHeight,"表格高度");
+          });
+      }
     },
     // 搜索结果
     searchResult(){
