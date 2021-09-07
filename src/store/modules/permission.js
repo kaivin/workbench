@@ -185,6 +185,12 @@ function setRoutes(routers){
         component: () => import(/* webpackChunkName: "salesPhoneinfosub" */ "@/views/Sales/phoneinfosub/index.vue"),
         meta: {id:'phoneinfosub-79',title: '业务员询盘修改', icon: null, keepAlive:false},
       },
+      {
+        path: "/Demo/index",
+        name:'Demo_index',
+        component: () => import(/* webpackChunkName: "DemoIndex" */ "@/views/Demo/index/index.vue"),
+        meta: {id:'demo_index-1000',title: '测试页面', icon: null, keepAlive:false},
+      },
     ]
   }]
   accessedRouters.forEach(function(item,index){
