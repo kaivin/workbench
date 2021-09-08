@@ -186,10 +186,28 @@ function setRoutes(routers){
         meta: {id:'phoneinfosub-79',title: '业务员询盘修改', icon: null, keepAlive:false},
       },
       {
+        path: "/Works/addEdit",
+        name:'workOrderAddEdit',
+        component: () => import(/* webpackChunkName: "workOrderAddEdit" */ "@/views/Works/addEdit/index.vue"),
+        meta: {id:'workOrderAddEdit-94',title: '工单发布', icon: null, keepAlive:false},
+      },
+      {
+        path: "/Works/workInfo",
+        name:'workInfo',
+        component: () => import(/* webpackChunkName: "workInfo" */ "@/views/Works/workInfo/index.vue"),
+        meta: {id:'workInfo-94',title: '工单详情', icon: null, keepAlive:false},
+      },
+      {
         path: "/Demo/index",
         name:'Demo_index',
         component: () => import(/* webpackChunkName: "DemoIndex" */ "@/views/Demo/index/index.vue"),
         meta: {id:'demo_index-1000',title: '测试页面', icon: null, keepAlive:false},
+      },
+      {
+        path: "/Demo/test",
+        name:'Demo_test',
+        component: () => import(/* webpackChunkName: "DemoTest" */ "@/views/Demo/test/index.vue"),
+        meta: {id:'demo_test-1001',title: '测试页面2', icon: null, keepAlive:false},
       },
     ]
   }]

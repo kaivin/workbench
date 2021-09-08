@@ -53,6 +53,9 @@
     isWebMsgIpAdd: state => state.api.isWebMsgIpAdd,
     addWebMsgIp:state => state.app.addWebMsgIp,
     msgPage:state => state.webmsg.msgPage,
+    isWorkOrderTagAdd: state => state.api.isWorkOrderTagAdd,
+    addWorkOrderTag:state => state.app.addWorkOrderTag,
+    isWorkOrderAdd: state => state.api.isWorkOrderAdd,
 }
 export default getters
   

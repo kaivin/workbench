@@ -590,7 +590,7 @@
                                     </el-table-column>
                                 </el-table>
                             </div>
-                            <div class="pagination-panel" v-if="totalDataNum>100" ref="pagePane">
+                            <div class="pagination-panel" v-if="totalDataNum>limit" ref="pagePane">
                                 <el-pagination
                                     @size-change="handleSizeChange"
                                     :page-sizes="pageSizeList"
@@ -872,7 +872,7 @@ export default {
             if(trueHeight-screenHeight<=headerHeight){
               $this.minHeight = "auto";
             }else{
-              if($this.totalDataNum>100){
+              if($this.totalDataNum>$this.limit){
                 $this.minHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 30;
               }else{
                 $this.minHeight = screenHeight-30;

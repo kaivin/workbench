@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 ﻿ <template> 
   <div class="page-root flex-box no-padding SaleCard" ref="boxPane">
     <div class="sub-router SaleCardFl"  ref="SaleCardFl">
@@ -552,3 +553,6 @@ export default {
     
 }
 </style>
+=======
+﻿
+>>>>>>> Stashed changes

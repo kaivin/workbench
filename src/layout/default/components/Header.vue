@@ -38,6 +38,8 @@
               <div class="item-button" v-if="isEnCluesAdd" v-on:click="enCluesAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">新增询盘</span></div>
               <div class="item-button" v-if="isWebsiteLogAdd" v-on:click="websiteLogAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加网站日志</span></div>
               <div class="item-button" v-if="isWebMsgIpAdd" v-on:click="webMsgIpAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加IP白名单</span></div>
+              <div class="item-button" v-if="isWorkOrderTagAdd" v-on:click="workOrderTagAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加标签</span></div>
+              <div class="item-button" v-if="isWorkOrderAdd" v-on:click="workOrderAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">工单发布</span></div>
             </div>
         </div>
         <div class="header-right">
@@ -111,6 +113,8 @@ export default {
         'isWebsiteLogAdd',
         'customerTipsCount',
         'isWebMsgIpAdd',
+        'isWorkOrderTagAdd',
+        'isWorkOrderAdd',
       ]),
     },
     methods:{
@@ -263,6 +267,16 @@ export default {
         // 添加网站日志
         webMsgIpAdd(){
           this.$store.dispatch('app/addWebMsgIp')
+        },
+        // 添加工单标签
+        workOrderTagAdd(){
+          this.$store.dispatch('app/addWorkOrderTag')
+        },
+        // 工单发布
+        workOrderAdd(){
+          var $this = this;
+          var routeUrl =  $this.$router.resolve({path:'/Works/addEdit'});
+          window.open(routeUrl.href,'_blank');
         },
     }
 }

@@ -41,6 +41,8 @@ const state = {
     isEnCluesAdd:false,
     isWebsiteLogAdd:false,
     isWebMsgIpAdd:false,
+    isWorkOrderTagAdd:false,
+    isWorkOrderAdd:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -178,6 +180,16 @@ const mutations = {
       state.isWebMsgIpAdd = true;
     }else{
       state.isWebMsgIpAdd = false;
+    }
+    if(permitData.includes("Works_add")&&data.page==""){
+      state.isWorkOrderTagAdd = true;
+    }else{
+      state.isWorkOrderTagAdd = false;
+    }
+    if(permitData.includes("Works_publishwork")&&data.page==""){
+      state.isWorkOrderAdd = true;
+    }else{
+      state.isWorkOrderAdd = false;
     }
   },
 }

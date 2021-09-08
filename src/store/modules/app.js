@@ -27,6 +27,7 @@ const state = {
   addCnMoney:false,
   addWebMsgIp:false,
   addWebsiteLog:1,
+  addWorkOrderTag:false,
 }
 
 const mutations = {
@@ -174,6 +175,12 @@ const mutations = {
   CLOSE_WEBMSGIP: (state) => {
     state.addWebMsgIp = false
   },
+  ADD_WORKORDERTAG: (state) => {
+    state.addWorkOrderTag = true
+  },
+  CLOSE_WORKORDERTAG: (state) => {
+    state.addWorkOrderTag = false
+  },
 }
 
 const actions = {
@@ -311,6 +318,12 @@ const actions = {
   },
   closeWebMsgIp({ commit }) {
     commit('CLOSE_WEBMSGIP')
+  },
+  addWorkOrderTag({ commit }) {
+    commit('ADD_WORKORDERTAG')
+  },
+  closeWorkOrderTag({ commit }) {
+    commit('CLOSE_WORKORDERTAG')
   },
 }
 
