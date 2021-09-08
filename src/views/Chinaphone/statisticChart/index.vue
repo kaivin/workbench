@@ -108,6 +108,15 @@
                                     clearable>
                                 </el-input>
                           </div>
+                          <div class="team-headerItem">
+                                <span class="require">备注：</span>
+                                <el-input
+                                    size="mini"
+                                    v-model="searchData.name"
+                                    placeholder="域名备注等"
+                                    clearable>
+                                </el-input>
+                          </div>
                       </div>
                     </div>
                     <div class="team-panel">
@@ -495,6 +504,7 @@ export default {
         endDate:'',
         province:"",
         domain:'',
+        name:'',
       },
       pickerRangeOptions: {
         shortcuts: [{
@@ -681,6 +691,7 @@ export default {
       $this.searchData.endDate='';
       $this.searchData.province="";
       $this.searchData.domain='';
+      $this.searchData.name='';
       $this.searchResult.hoursCount=[];
       $this.searchResult.deviceCount=[];
       $this.searchResult.dayCount=[];
@@ -715,6 +726,7 @@ export default {
       var searchData = {};
       searchData.province = $this.searchData.province;
       searchData.domain = $this.searchData.domain;
+      searchData.name = $this.searchData.name;
       if($this.device=='desktop'){
         if($this.searchData.date&&$this.searchData.date.length>0){
           searchData.starttime = $this.searchData.date[0];

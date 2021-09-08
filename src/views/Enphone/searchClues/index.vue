@@ -389,7 +389,6 @@
                                     </template>
                                   </el-table-column>
                                   <el-table-column
-                                    v-if="(permitField.includes('remark1')||permitField.includes('remark2')||permitField.includes('remark3'))"
                                     key="d"
                                     prop="searchword"
                                     label="备注"
@@ -398,9 +397,9 @@
                                     >
                                     <template slot-scope="scope">
                                       <div class="table-input">
-                                        <el-input size="small" class="tips-input-2" v-model="scope.row.remark1" v-if="permitField.includes('remark1')"></el-input>
-                                        <el-input size="small" class="tips-input-3" v-model="scope.row.remark2" v-if="permitField.includes('remark2')"></el-input>
-                                        <el-input size="small" class="tips-input-4" v-model="scope.row.remark3" v-if="permitField.includes('remark3')"></el-input>
+                                        <el-input size="small" class="tips-input-2" :disabled="scope.row.isRemark1" v-model="scope.row.remark1"></el-input>
+                                        <el-input size="small" class="tips-input-3" :disabled="scope.row.isRemark2" v-model="scope.row.remark2"></el-input>
+                                        <el-input size="small" class="tips-input-4" :disabled="scope.row.isRemark3" v-model="scope.row.remark3"></el-input>
                                       </div>
                                     </template>
                                   </el-table-column>
@@ -1358,6 +1357,21 @@ export default {
                 $this.isClues=true;
                 response.data.forEach(function(item,index){
                   item.isEffective = item.effective==1?true:false;
+                  if(item.remark1==''||item.remark1==null||item.remark1==undefined){
+                     item.isRemark1=true;
+                  }else{
+                     item.isRemark1=false;
+                  }
+                  if(item.remark2==''||item.remark2==null||item.remark2==undefined){
+                     item.isRemark2=true;
+                  }else{
+                     item.isRemark2=false;
+                  }
+                  if(item.remark3==''||item.remark3==null||item.remark3==undefined){
+                     item.isRemark3=true;
+                  }else{
+                     item.isRemark3=false;
+                  }
                 });
                 $this.tableData = response.data;
             }

@@ -1190,6 +1190,13 @@
         }
     }
 }
+/*禁止复制*/
+.forbid{
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -o-user-select:none;
+  user-select:none;
+}
 /** 穿梭框弹窗统一样式二 穿梭两次 **/
 .transfer-2-dialog{
   .transfer-panel{
@@ -1610,3 +1617,4 @@
     }
   }
 }
+.in_Table .el-table__body-wrapper{display:none!important;}
