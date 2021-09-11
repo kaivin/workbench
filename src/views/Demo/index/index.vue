@@ -29,7 +29,7 @@
     </div>
     <div class="flex-content SaleCardFr">
       <div class="abs-panel" ref="mainPane">
-          <div class="scroll-panel">
+          <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
                <div class="true-height" ref="scrollPane">
                   <el-card class="box-card scroll-card SaleCardFlFrTable tipsHas" shadow="hover">
                     <div slot="header">  
@@ -61,81 +61,54 @@
                     </div>
                     </div>                    
                     <div class="card-content" ref="tableContent">
-                        <div class="frist-table" :style="'height:'+minHeight+'px'">
-                            <div class="frist-content">
-                                <el-table
-                                ref="simpleTable"
-                                tooltip-effect="dark"
-                                class="SiteTable EntableColor table"
-                                :data="tableData">
-                                    <el-table-column prop="date" label="日烦烦烦期" width="130"></el-table-column>
-                                    <el-table-column prop="name" label="姓的方法名" width="130"></el-table-column>
-                                    <el-table-column prop="address" width="130" label="地覆盖址"></el-table-column>
-                                    <el-table-column prop="name" label="姓规范化名" width="130"></el-table-column>
-                                    <el-table-column prop="address" width="130" label="地豆腐干址"></el-table-column>
-                                    <el-table-column prop="name" label="姓的方法名" width="130"></el-table-column>
-                                    <el-table-column prop="name" label="姓的风格和名" width="130"></el-table-column>
-                                    <el-table-column prop="address" width="130" label="地的风格和址"></el-table-column>
-                                    <el-table-column prop="name" label="姓的风格和名" width="130"></el-table-column>
-                                    <el-table-column prop="address" width="130" label="地覆盖址"></el-table-column>
-                                    <el-table-column prop="name" label="姓规范化名" width="130"></el-table-column>
-                                    <el-table-column prop="address" width="130" label="地豆腐干址"></el-table-column>
-                                    <el-table-column prop="name" label="姓的方法名" width="130"></el-table-column>
-                                    <el-table-column prop="name" label="姓的风格和名" width="130"></el-table-column>
-                                    <el-table-column prop="address" width="130" label="地的风格和址"></el-table-column>
-                                    <el-table-column prop="name" label="姓的风格和名1" width="130"></el-table-column>
-                                    <el-table-column prop="address" width="130" label="操作">
-                                    <template slot="scope">
-                                        <p>
-                                        <a>操作11</a>
-                                        </p>
-                                        <p>
-                                        <a>操作22</a>
-                                        </p>
-                                        <p>
-                                        <a>操作33</a>
-                                        </p>
-                                    </template>
-                                    </el-table-column>
-                                </el-table>
-                            </div>
-                            <!-- 表头 -->
-                            <div class="out_Table" ref="out_Table">
-                                <el-table
-                                class="SiteTable in_Table" ref="in_Table"
-                                tooltip-effect="dark">
-                                    <el-table-column label="日烦烦烦期" width="130"></el-table-column>
-                                    <el-table-column label="姓的方法名" width="130"></el-table-column>
-                                    <el-table-column width="130" label="地覆盖址"></el-table-column>
-                                    <el-table-column label="姓规范化名" width="130"></el-table-column>
-                                    <el-table-column width="130" label="地豆腐干址"></el-table-column>
-                                    <el-table-column label="姓的方法名" width="130"></el-table-column>
-                                    <el-table-column label="姓的风格和名" width="130"></el-table-column>
-                                    <el-table-column width="130" label="地的风格和址"></el-table-column>
-                                    <el-table-column label="姓的风格和名" width="130"></el-table-column>
-                                    <el-table-column width="130" label="地覆盖址"></el-table-column>
-                                    <el-table-column label="姓规范化名" width="130"></el-table-column>
-                                    <el-table-column width="130" label="地豆腐干址"></el-table-column>
-                                    <el-table-column label="姓的方法名" width="130"></el-table-column>
-                                    <el-table-column label="姓的风格和名" width="130"></el-table-column>
-                                    <el-table-column width="130" label="地的风格和址"></el-table-column>
-                                    <el-table-column label="姓的风格和名1" width="130"></el-table-column>
-                                    <el-table-column width="130" label="操作"></el-table-column>
-                                </el-table>
-                            </div>
-                            <!-- 滚动条 -->
-                            <div class="out_box" :class="isClass?'fixed':'abso'"
-                            ref="out_box">
-                                <div
-                                    class="in_box"
-                                    @mousedown="mouseDown"
-                                    @mouseup="mouseUp"
-                                    @mouseout="mouseUp"
-                                    :style="old_new"
-                                    ref="in_box"
-                                ></div>
-                            </div>
-                        </div>
+                      <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
+                        <div class="table-mask"></div>
+                        <el-table
+                        ref="simpleTable"
+                        tooltip-effect="dark"
+                        class="SiteTable"
+                        :height="minHeight"
+                        :data="tableData">
+                            <el-table-column prop="date" label="日烦烦烦期" width="130"></el-table-column>
+                            <el-table-column prop="name" label="姓的方法名" width="130"></el-table-column>
+                            <el-table-column prop="address" width="130" label="地覆盖址"></el-table-column>
+                            <el-table-column prop="name" label="姓规范化名" width="130"></el-table-column>
+                            <el-table-column prop="address" width="130" label="地豆腐干址"></el-table-column>
+                            <el-table-column prop="name" label="姓的方法名" width="130"></el-table-column>
+                            <el-table-column prop="name" label="姓的风格和名" width="130"></el-table-column>
+                            <el-table-column prop="address" min-width="130" label="地的风格和址"></el-table-column>
+                            <el-table-column prop="name" label="姓的风格和名" width="130"></el-table-column>
+                            <el-table-column prop="address" min-width="130" label="地的风格和址"></el-table-column>
+                            <el-table-column prop="name" label="姓的风格和名" width="130"></el-table-column>
+                            <el-table-column prop="opaction" width="130" label="操作" fixed="right">
+                              <template slot="scope">
+                                  <p>
+                                  操作11
+                                  </p>
+                                  <p>
+                                  操作22
+                                  </p>
+                                  <p>
+                                  操作33
+                                  </p>
+                              </template>
+                            </el-table-column>
+                        </el-table>
+                      </div>
+                      <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
+                        <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
+                      </div>
+                    </div>
+                    <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
+                      <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="page"
+                        :page-sizes="pageSizeList"
+                        :page-size="limit"
+                        :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                        :total="totalDataNum">
+                      </el-pagination>
                     </div>
                   </el-card>
                </div>
@@ -151,19 +124,6 @@ export default {
   name: 'Scroll',
   data() {
     return {
-      //滚动条参数
-      newx: "", // 第一次坐标
-      oldx: "", // 移动的坐标
-      outBoxWidth: "", // 滚动条长度
-      moveWidth: "", // 可移动的长度
-      old_new: {
-        // 滚动条偏移量
-        left: 0,
-      },
-      windowWidth: document.body.clientWidth - 480, //table宽度
-      f: 0,
-      leftstr: "",
-      //滚动条参数
       tableData: [
         {
           date: "2016-05-02",
@@ -186,11 +146,6 @@ export default {
           address: "上海市普陀区金沙江路 1517 弄",
         },
         {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
           date: "2016-05-04",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1517 弄",
@@ -206,11 +161,6 @@ export default {
           address: "上海市普陀区金沙江路 1517 弄",
         },
         {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
           date: "2016-05-02",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
@@ -219,16 +169,6 @@ export default {
           date: "2016-05-04",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
         },
         {
           date: "2016-05-04",
@@ -271,6 +211,41 @@ export default {
           address: "上海市普陀区金沙江路 1517 弄",
         },
         {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
           date: "2016-05-04",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1517 弄",
@@ -296,6 +271,21 @@ export default {
           address: "上海市普陀区金沙江路 1517 弄",
         },
         {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
           date: "2016-05-02",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
@@ -314,6 +304,196 @@ export default {
           date: "2016-05-02",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
         },
         {
           date: "2016-05-04",
@@ -321,11 +501,35 @@ export default {
           address: "上海市普陀区金沙江路 1517 弄",
         },
       ],
+      page:1,
+      limit:20,
+      pageSizeList:[20, 500, 5000, 10000],
+      totalDataNum:30,
       minHeight:"auto",
-      isClass:false,
-      isTableClass:false,
-      isFixed:false,
-      isH:false,
+      scrollPosition:{
+        width:0,
+        left:0,
+        fixedBottom: 15,
+        insetWidth:0,
+        oldInsetLeft:0,
+        insetLeft:0,
+        ratio:0,
+        startPageX:0,
+        maxScrollWidth:0,
+        isMouseDown:false,
+        isPC:true,
+        isFixed:false,
+      },
+      scrollTable:{
+        scrollDom:null,
+        tableHeaderFixedDom:null,
+        tableFixedRightDom:null,
+        fixedTopHeight:0,
+        tableheaderHeight:0,
+        fixedRightWidth:0,
+        tableBottom:0,
+        clientHeight:0,
+      },
     };
   },
   computed: {
@@ -334,221 +538,228 @@ export default {
       'device',
       'sidebar'
     ]),
+    isOpen() {
+      return this.sidebar.opened;
+    },
+  },
+  watch: {
+      minHeight(val) {
+        if (!this.timer) {
+          this.minHeight = val
+          this.timer = true
+          const $this = this
+          setTimeout(function() {
+            $this.timer = false
+          }, 400)
+        }
+      },
+      isOpen(e){
+        this.setHeight();
+      },
   },
   mounted() {
     var $this = this;
-    console.log($this.sidebar.opened,'sidebar')
     $this.$nextTick(function () {
-        $this.setHeight();
-        $this.ifmove();
-        window.addEventListener('scroll',$this.handleScroll,true);
-    });
-    window.onresize = function () {
-      //监听浏览器窗口
       $this.setHeight();
-      $this.ifmove();
-    };
-    window.onmouseup = () => {
-      $this.mouseUp();
-    };
+      // 监听竖向滚动条滚动事件
+      window.addEventListener('scroll',$this.handleScroll,true);
+    });
+    window.onresize = () => {
+      return (() => {
+        $this.setHeight();
+      })();
+    }
+  },
+  created(){
   },
   methods: {
+    // 判断浏览器类型
+    getBrowserType(){
+      var ua =  navigator.userAgent;
+      if(ua){
+        if(ua.indexOf('Mobile')!=-1){
+          this.scrollPosition.isPC = false;
+        }else{
+          this.scrollPosition.isPC = true;
+        }
+      }else{
+        this.scrollPosition.isPC = true;
+      }
+    },
     // 设置table高度
     setHeight(){
       var $this = this;
       $this.minHeight = "auto";
-      $this.$nextTick(()=>{
-        var trueHeight = $this.$refs.scrollPane.offsetHeight;
-        var headerHeight = $this.$refs.headerPane.offsetHeight;
-        var screenHeight = $this.$refs.boxPane.offsetHeight;
-        console.log(trueHeight,"真实高度");
-        console.log(headerHeight,"头部高度");
-        console.log(screenHeight,"视窗高度");
-        if(trueHeight<=screenHeight){
-          $this.minHeight = screenHeight-headerHeight-30;
-          $this.isClass = false;
-        }else{
-          $this.minHeight = "auto";
-          $this.isClass = true;
-        }
-        console.log($this.minHeight,"表格高度");
-      });
+      var trueHeight = $this.$refs.scrollPane.offsetHeight;
+      var headerHeight = $this.$refs.headerPane.offsetHeight;
+      var screenHeight = $this.$refs.boxPane.offsetHeight;
+      if(trueHeight<=screenHeight){
+        $this.minHeight = screenHeight-headerHeight-45;
+      }
+      $this.getBrowserType();
+      setTimeout(function() {
+        $this.setScrollDom();
+      }, 400);
     },
-    //滚动事件
+    // 设置横向滚动条相关DOM数据
+    setScrollDom(){
+      var $this = this;
+      $this.scrollPosition.insetLeft = 0;
+      $this.scrollPosition.oldInsetLeft = 0;
+      // 表格真实宽度（可能超出屏幕）
+      var scrollWidth = $this.$refs.simpleTable.bodyWrapper.scrollWidth;
+      // 表格可见宽度（屏幕内宽度）
+      var maxWidth = $this.$refs.simpleTable.bodyWrapper.clientWidth;
+      // 获取表格的位置信息（距离视窗左边的位置信息）
+      var rectOBJ = $this.$refs.simpleTable.$el.getBoundingClientRect();
+      // 获取距离视窗左边的宽度
+      var leftWidth = rectOBJ.left;
+      // 根据百分比算出滚动条滑块的宽度
+      var insetWidth = parseInt(maxWidth/scrollWidth*maxWidth);
+      // 算出滚动条与视口比例（滚动条滚动1像素视口需要滚动多少像素）
+      var ratio = (scrollWidth - maxWidth) / (maxWidth - insetWidth);
+      var scrollDom = document.querySelector(".SiteTable .el-table__body-wrapper");
+      var tableHeaderFixedDom = document.querySelector(".SiteTable .el-table__header-wrapper");
+      var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+      $this.scrollPosition.width = maxWidth;
+      $this.scrollPosition.left = leftWidth;
+      $this.scrollPosition.insetWidth = insetWidth;
+      $this.scrollPosition.ratio = parseFloat(ratio);
+      $this.scrollPosition.maxScrollWidth = maxWidth - insetWidth;
+      $this.scrollTable.scrollDom = scrollDom;
+      // 视窗改变时，让自定义滚动条的位置与真实滚动条滚动的位置相吻合
+      $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
+      // 获取表格头吸顶需滚动的高度
+      $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15;
+      $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
+      $this.scrollTable.tableFixedRightDom = tableFixedRightDom;
+      var fixedHeaderObj = $this.scrollTable.tableHeaderFixedDom.getBoundingClientRect();
+      // 获取表格头的高度
+      $this.scrollTable.tableheaderHeight = fixedHeaderObj.height;
+      var fixedRightObj = $this.scrollTable.tableFixedRightDom.getBoundingClientRect();
+      // 获取右侧固定列的总宽度
+      $this.scrollTable.fixedRightWidth = fixedRightObj.width;
+      var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
+      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+60+15;
+      $this.scrollTable.clientHeight = document.documentElement.clientHeight;
+      // 头部固定情况下视窗宽高改变，需要重新设置的一些宽高
+      if($this.scrollPosition.isFixed){
+        var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;";
+        $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+        document.querySelector(".table-mask").style = tableHeaderStyle;
+        var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+        document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+60+15;
+      }
+      // 视窗宽高改变时需要设置默认滚动条的位置
+      if($this.totalDataNum>20){
+        var scrTop = $this.$refs.scrollDom.scrollTop;
+        if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom;
+        }else{
+          $this.scrollPosition.fixedBottom = 15;
+        }
+      }
+    },
+    // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
-	    var scrTop = event.target.scrollTop;
-      var headerHeight = $this.$refs.headerPane.offsetHeight;
-      console.log(scrTop,'scrTop');
-      $this.$nextTick(()=>{
-        console.log($this.isH,'$this.isH');
-        if(!$this.isH&&scrTop>0){
-          if(scrTop>headerHeight){
-            $this.isFixed=true;
+      if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
+        var scrTop = event.target.scrollTop;
+        if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
+          $this.scrollPosition.isFixed = true;
+          var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          document.querySelector(".table-mask").style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
+          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+        }else{// 头部需要变为正常
+          $this.scrollPosition.isFixed = false;
+          var tableHeaderStyle = "width:100%";
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:0";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          var tableStyle3 = "width:auto";
+          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+        }
+        if($this.totalDataNum>20){
+          if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom;
           }else{
-            $this.isFixed=false;    
+            $this.scrollPosition.fixedBottom = 15;
           }
         }
-        console.log($this.isFixed,'$this.isFixed');
-        $this.ifmove();
-      })
-    },
-    //滚动条事件
-    mouseDown(event) {
-      var $this = this;
-      document.oncopy = function(){ return false; };
-      if(event.target.scrollTop>0){
-        $this.isH=true;
       }
-      $this.$nextTick(()=>{
-        var mainArr=document.querySelectorAll(".page-root");
-        mainArr[0].className = 'page-root flex-box no-padding SaleCard forbid';
-        let e = event || window.event;
-        $this.f = 1;
-        $this.newx = e.clientX;
-        $this.leftstr = $this.old_new.left;
-        var tableArr=document.querySelectorAll(".el-table__body-wrapper");
-        var tablescrWidth=tableArr[0].scrollWidth;  //table滚动宽度
-
-        $this.$refs.in_box.addEventListener("mousemove", function (event) {
-            let e = event || window.event;
-            $this.oldx = e.clientX;
-            $this.OfftDis();
-            $this.moveWidth = (1 - $this.windowWidth / tablescrWidth) * $this.windowWidth - parseFloat($this.leftstr); //模拟滚动条可移动长度
-            if ($this.f) {
-              $this.old_new.left =
-                  $this.oldx - $this.newx <= -parseFloat($this.leftstr)
-                  ? "0px"
-                  : $this.oldx - $this.newx >= $this.moveWidth
-                  ? $this.moveWidth + parseFloat($this.leftstr) + "px"
-                  : $this.oldx - $this.newx + parseFloat($this.leftstr) + "px"; //模拟滚动条偏移量
-              document.querySelectorAll(".el-table__body-wrapper")[0].scrollLeft =
-                  $this.oldx - $this.newx <= -parseFloat($this.leftstr)
-                  ? 0
-                  : $this.oldx - $this.newx >= $this.moveWidth
-                  ? ($this.moveWidth + parseFloat($this.leftstr)) *
-                      (tablescrWidth / $this.windowWidth)
-                  : ($this.oldx - $this.newx + parseFloat($this.leftstr)) *
-                      (tablescrWidth / $this.windowWidth); //实际滚动条偏移量
-                document.querySelectorAll(".out_Table")[0].scrollLeft =
-                    $this.oldx - $this.newx <= -parseFloat($this.leftstr)
-                    ? 0
-                    : $this.oldx - $this.newx >= $this.moveWidth
-                    ? ($this.moveWidth + parseFloat($this.leftstr)) *
-                        (tablescrWidth / $this.windowWidth)
-                    : ($this.oldx - $this.newx + parseFloat($this.leftstr)) *
-                        (tablescrWidth / $this.windowWidth); //实际滚动条偏移量
-            }
-        });
-        //表头
-
-      });
     },
-    mouseUp() {
+    // 监听横向滚动条鼠标按下事件
+    mouseDownHandler(e){
+      this.crossMoveStartHandler(e);
+      window.addEventListener('mousemove',this.crossMoveingHandler);
+      window.addEventListener('mouseup',this.crossMoveEndHandler);
+    },
+    // 横向滚动条移动开始事件
+    crossMoveStartHandler(e){
       var $this = this;
-      $this.f = 0;
-      $this.isH=false;
-      var mainArr=document.querySelectorAll(".page-root");
-      mainArr[0].className = 'page-root flex-box no-padding SaleCard';
+      $this.scrollPosition.isMouseDown = true;
+      $this.scrollPosition.startPageX = e.pageX;
     },
-    ifmove() {
-        //防止window.onresize 滥用
-        var $this = this;
-        $this.$nextTick(()=>{
-            var tableArr=document.querySelectorAll(".el-table__body-wrapper");
-            tableArr[0].style.overflow = "hidden";
-            var tablescrWidth=tableArr[0].scrollWidth;  //table滚动宽度
-       
-            console.log(tablescrWidth,'scrollWidth');
-            $this.OfftDis();
-            $this.$refs.in_box.style.width = ($this.windowWidth / tablescrWidth) * $this.windowWidth + "px"; //显示区域占百分比，在滚动条显示
-            $this.moveWidth = (1 - $this.windowWidth / tablescrWidth) * $this.windowWidth; //可移动宽度
-        });
+    // 横向滚动条鼠标移动事件
+    crossMoveingHandler(e){
+      var $this = this;
+      if($this.scrollPosition.isMouseDown){// 只在鼠标按下时监听鼠标移动事件
+        var moveLeft = e.pageX - $this.scrollPosition.startPageX;
+        var scrollWidth = 0;
+        // 判断本次鼠标按下后鼠标移动的距离 大于0为向右移动
+        if(moveLeft>0){
+          // 本次移动距离+历史已移动距离如果大于最大能移动距离，说明向右已经滚动到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft>=$this.scrollPosition.maxScrollWidth){
+            scrollWidth = $this.scrollPosition.maxScrollWidth;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else if(moveLeft<0){
+          // 小于0为向左移动
+          // 本次移动距离+历史已移动距离，如果小于0，说明向左移动已经到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft<0){
+            scrollWidth = 0;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else{// 鼠标按下后，未移动
+          scrollWidth = $this.scrollPosition.insetLeft;
+        }
+        // 计算得出本次移动+历史移动总距离
+        // 自定义滚动条位置改变
+        $this.scrollPosition.insetLeft = scrollWidth;
+        // 真实滚动条滚动距离 = 自定义滚动条滚动距离*自定义滚动条与真实滚动条的滚动比
+        $this.scrollTable.scrollDom.scrollLeft = scrollWidth*$this.scrollPosition.ratio;
+        e.preventDefault();
+      }
     },
-    //偏移函数
-    OfftDis(){
-        var $this = this;
-        var widthMenu=230;
-        var widthAuMenu=$this.$refs.SaleCardFl.clientWidth;
-        if($this.sidebar.opened){
-            widthMenu=230;
-        }else{
-            widthMenu=60;
-        }
-        //定位偏移距离
-        var OffsetDis=widthAuMenu+widthMenu+15;
-        $this.windowWidth = document.body.clientWidth - OffsetDis-20;
-        if($this.isClass){
-            $this.$refs.out_box.style.width = $this.windowWidth + "px";
-            $this.$refs.out_box.style.left = OffsetDis + "px";
-            console.log($this.windowWidth,'fixed');
-            $this.$refs.out_Table.style.width = $this.windowWidth + "px";
-            $this.$refs.out_Table.style.left = OffsetDis + "px";
-        }else{
-            $this.windowWidth = $this.$refs.out_Table.clientWidth;
-            $this.windowWidth = $this.$refs.out_box.clientWidth;
-            console.log($this.windowWidth,'abso');
-        };
-        //表头可视区域长度和位置
-        var tableTit=document.querySelectorAll(".out_Table");
-        tableTit[0].style.opacity = 0;      
-        if($this.isFixed){
-          tableTit[0].style.opacity = 1; 
-        }else{
-          tableTit[0].style.opacity = 0; 
-        }
-    }
-    //滚动条事件
+    // 横向滚动条移动结束事件
+    crossMoveEndHandler(e){
+      var $this = this;
+      $this.scrollPosition.isMouseDown = false;
+      $this.scrollPosition.startPageX = 0;
+      $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
+    },
+    // 每页显示条数改变事件
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.limit = val;
+    },
+    // 当前页改变事件
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.page = val;
+    },
   },
 };
 </script>
-<style scoped>
-.frist-table{position: relative;background:#fff;}
-.frist-table .fixed{position: fixed; bottom:5px;}
-.frist-table .abso{position: absolute;left:0px; bottom:0px; width:100%;}
-.out_box {
-  height: 10px;
-  background:none;
-  z-index: 9;
-  left:0px;
-  bottom: 0px;
-  border-radius: 5px;
-  overflow: hidden;
-  will-change:scroll-position;
-}
-.in_box {
-  position: absolute;
-  z-index: 9;
-  left: 0px;
-  top:0px;
-  height: 10px;
-  background: #bebdbd;
-  cursor: pointer;
-  border-radius: 5px;
-  overflow: hidden;
-  opacity: 0.6;
-}
-.in_box:hover {
-    opacity: 0.4;
-}
-.table{will-change:scroll-position;overflow: visible!important;}
-.out_Table{  
-    position: fixed;
-    left: 0px;
-    top:60px;
-    width: 100%;
-    background: #e2e9ed;
-    overflow: hidden;
-    border-radius: 5px 5px 0px 0px;
-    opacity:0;
-    transition:opacity 0.5s;
-}
-.out_Table .in_Table{
-    clear: both;
-    display: table;
-    vertical-align: inherit;
-    border-color: inherit;
-    color: #909399;
-    
-}
+<style scoped lang="scss">
+
 </style>

@@ -1,0 +1,28 @@
+﻿.dict-page{
+    .main-content{
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 30px;
+    }
+    .item-form{
+        width: 100%;
+        .item-title{
+            height: 42px;
+            line-height: 32px;
+            padding: 5px;
+            font-size: 14px;
+        }
+        .item-input{
+            padding: 5px;
+        }
+        .tips-font{
+            padding: 5px;
+            height: 42px;
+            line-height: 32px;
+            font-size: 14px;
+        }
+        &.btn-panel{
+            padding: 20px;
+        }
+    }
+}

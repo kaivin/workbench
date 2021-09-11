@@ -50,6 +50,8 @@
     EntargetlistAdd,
     EntargetlistEdit,
     EntargetlistDel,
+    allCluesData,
+    allUnAllotCluesData,
 } from '@/api/enphone'
 
 const state = {
@@ -539,6 +541,16 @@ const actions = {
             })
         })
     },
+    // 查看所有询盘信息
+    allCluesDataAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            allCluesData(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
     // 英文询盘本月日标添加/修改-选择部门
     EndeparChooseAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
@@ -573,6 +585,16 @@ const actions = {
     EntargetlistDelAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             EntargetlistDel(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 查看所有未分配询盘信息
+    allUnAllotCluesDataAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            allUnAllotCluesData(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

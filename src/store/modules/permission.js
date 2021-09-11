@@ -198,6 +198,18 @@ function setRoutes(routers){
         meta: {id:'workInfo-94',title: '工单详情', icon: null, keepAlive:false},
       },
       {
+        path: "/Works/statData",
+        name:'workStatData',
+        component: () => import(/* webpackChunkName: "workStatData" */ "@/views/Works/statData/index.vue"),
+        meta: {id:'workStatData-94',title: '工单发布数据统计', icon: null, keepAlive:false},
+      },
+      {
+        path: "/WorkOrder/workInfo",
+        name:'workOrderInfo',
+        component: () => import(/* webpackChunkName: "workOrderInfo" */ "@/views/WorkOrder/workInfo/index.vue"),
+        meta: {id:'workInfo-95',title: '工单详情', icon: null, keepAlive:false},
+      },
+      {
         path: "/Demo/index",
         name:'Demo_index',
         component: () => import(/* webpackChunkName: "DemoIndex" */ "@/views/Demo/index/index.vue"),

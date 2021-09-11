@@ -21,11 +21,70 @@
         }
       }
     }
+    .order-title{
+        cursor: pointer;
+        transition: all .3s;
+        &:hover{
+            padding-left: 5px;
+        }
+        &.time-out{
+            color: red;
+            strong{
+                background-color: red;
+                color: #fff;
+                font-weight: normal;
+                border-radius: 4px;
+                padding: 0 6px;
+                height: 20px;
+                line-height: 20px;
+                display: inline-block;
+                margin-left: 5px;
+            }
+        }
+    }
 }
 .work-add-edit{
   .date-time{
     .el-input__inner{
       padding-left: 30px;
+    }
+  }
+}
+.work-info-page{
+  .time-out{
+    h1{
+      color: red;
+      span{
+        margin-left: 10px;
+      }
+    }
+  }
+  .work-order-attr{
+    margin-top: 20px;
+    p{
+      color:#6688b4;
+      font-size:14px;
+      line-height:24px;
+      padding-top:3px;
+      padding-bottom:3px;
+      mark{
+          margin:0 10px;
+          color: lighten(#6688b4,30%);
+          font-size: 12px;
+          background-color: transparent;
+      }
+      em{
+        display: inline-block;
+        font-style: normal;
+        padding: 2px 8px;
+        line-height: 20px;
+        margin: 2px;
+        border-radius: 4px;
+        font-weight: normal;
+      }
+      b{
+        font-weight: normal;
+      }
     }
   }
 }

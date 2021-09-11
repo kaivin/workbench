@@ -46,6 +46,13 @@ export function issuerList() {
     method: "POST",
   });
 }
+// 获取工单部门数据
+export function departList() {
+  return request({
+    url: "/hxindex/Works/getdepart",
+    method: "POST",
+  });
+}
 // 获取工单系统标签数据
 export function tagList() {
   return request({
@@ -112,6 +119,61 @@ export function workOrderRejected(data) {
 export function workOrderEditInitInfo(data) {
   return request({
     url: "/hxindex/Works/workeditini",
+    method: "POST",
+    data,
+  });
+}
+// 工单统计数据
+export function workOrderStatInfo(data) {
+  return request({
+    url: "/hxindex/Works/workcount",
+    method: "POST",
+    data,
+  });
+}
+// 工单评价保存
+export function workOrderEvaluateSave(data) {
+  return request({
+    url: "/hxindex/Works/addevaluation",
+    method: "POST",
+    data,
+  });
+}
+// 字典表配置获取信息
+export function buckleInitInfo() {
+  return request({
+    url: "/hxindex/Works/buckeinfo",
+    method: "POST",
+  });
+}
+// 字典表配置信息保存
+export function buckleInfoSave(data) {
+  return request({
+    url: "/hxindex/Works/buckle",
+    method: "POST",
+    data,
+  });
+}
+// 获取评论数据
+export function commentInfoList(data) {
+  return request({
+    url: "/hxindex/Works/commentlist",
+    method: "POST",
+    data,
+  });
+}
+// 删除评论数据
+export function deleteCurrentComment(data) {
+  return request({
+    url: "/hxindex/Works/commentdelete",
+    method: "POST",
+    data,
+  });
+}
+// 发布评论
+export function addCommentInfo(data) {
+  return request({
+    url: "/hxindex/Works/addcomment",
     method: "POST",
     data,
   });

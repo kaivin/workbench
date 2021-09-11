@@ -14,7 +14,14 @@
     workOrderConfirm,
     workOrderRejected,
     workOrderEditInitInfo,
-    workOrderInfo,
+    departList,
+    workOrderStatInfo,
+    workOrderEvaluateSave,
+    buckleInitInfo,
+    buckleInfoSave,
+    commentInfoList,
+    deleteCurrentComment,
+    addCommentInfo,
 } from '@/api/works'
 
 const state = {}
@@ -76,6 +83,16 @@ const actions = {
     issuerListAction({ commit, state }) {
         return new Promise((resolve, reject) => {
             issuerList().then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 获取工单系统部门数据
+    departListAction({ commit, state }) {
+        return new Promise((resolve, reject) => {
+            departList().then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -166,6 +183,76 @@ const actions = {
     workOrderEditInitInfoAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             workOrderEditInitInfo(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 工单统计数据
+    workOrderStatInfoAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            workOrderStatInfo(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 评价保存
+    workOrderEvaluateSaveAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            workOrderEvaluateSave(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 字典表配置获取信息
+    buckleInitInfoAction({ commit, state }) {
+        return new Promise((resolve, reject) => {
+            buckleInitInfo().then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 字典表配置信息保存
+    buckleInfoSaveAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            buckleInfoSave(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 获取评论数据
+    commentInfoListAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            commentInfoList(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 删除评论数据
+    deleteCurrentCommentAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            deleteCurrentComment(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 发布评论
+    addCommentInfoAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            addCommentInfo(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

@@ -95,3 +95,19 @@ export function isEmpty(str){
     }
     return false;
 }
+
+/**
+ * @param {string} str
+ * @returns {Boolean}
+ */
+ export function isNumber(str){
+    let value = str.replace('/(^\s*)|(\s*$)','')  //去除字符串前后空格
+    let num = Number(value)  //将字符串转换为数字
+    if(isNaN(num)){  //判断是否是非数字
+        return false
+    }else if(value === ''|| value === null){  //空字符串和null都会被当做数字
+        return false
+    }else{
+        return true
+    }
+}

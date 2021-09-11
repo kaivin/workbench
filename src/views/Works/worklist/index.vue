@@ -42,6 +42,9 @@
                     <div class="item-search">
                       <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                     </div>
+                    <div class="item-search">
+                      <el-button class="item-input" size="small" type="primary" @click="jumpStatPage">数据统计</el-button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,8 +57,7 @@
             class="SiteTable"
             style="width: 100%"
             :height="tableHeight"
-            row-key="id"
-            >
+            row-key="id">
               <el-table-column
                   prop="createname"
                   label="发布人"
@@ -67,7 +69,9 @@
                   min-width="200"
                   >
                   <template slot-scope="scope">
-                      <span v-on:click="jumpArticle(scope.row.id)">{{scope.row.title}}</span>
+                     <div class="order-title" v-bind:class="scope.row.timestatus==2?'time-out':''" v-on:click="jumpArticle(scope.row.id)">
+                        <span>{{scope.row.title}}</span><strong v-if="scope.row.timestatus==2">已逾期</strong>
+                      </div>
                   </template>
               </el-table-column>
               <el-table-column
@@ -118,7 +122,6 @@
                       <el-tag size="small" type="info" v-if="scope.row.status == 4">待审核</el-tag>
                       <el-tag size="small" type="info" v-if="scope.row.status == 5">已驳回</el-tag>
                       <el-tag size="small" type="success" v-if="scope.row.status == 6">已完成</el-tag>
-                      <el-tag size="small" type="danger" v-if="scope.row.timestatus == 0">已逾期</el-tag>
                     </div>
                   </template>
               </el-table-column>
@@ -130,30 +133,55 @@
                   prop="operations"
                   label="操作">
                   <template #default="scope">
-                  <div class="table-button">
-                      <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_workedit')&&scope.row.status==1">编辑</el-button>
-                      <el-button size="mini" @click="cancelTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_workcancel')&&(scope.row.status==1||scope.row.status==2||scope.row.status==4||scope.row.status==5)">撤销</el-button>
-                      <el-button size="mini" @click="confirmTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_workconfirm')&&(scope.row.status==4)">确认完成</el-button>
-                      <el-button size="mini" @click="rejectTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_noconfirm')&&(scope.row.status==4)">驳回</el-button>
-                      <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="scope.row.deleteshow&&menuButtonPermit.includes('Works_workdelete')&&(scope.row.status==0||scope.row.status==1)" type="info" plain>删除</el-button>
-                  </div>
+                    <div class="table-button">
+                        <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_workedit')&&scope.row.status==1">编辑</el-button>
+                        <el-button size="mini" @click="cancelTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_workcancel')&&(scope.row.status==1||scope.row.status==2||scope.row.status==4||scope.row.status==5)">撤销</el-button>
+                        <el-button size="mini" @click="rejectTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_noconfirm')&&(scope.row.status==4)">驳回</el-button>
+                        <el-button size="mini" @click="confirmTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_workconfirm')&&(scope.row.status==4)">确认完成</el-button>
+                        <el-button size="mini" @click="commentTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_addevaluation')&&scope.row.status==6&&scope.row.commentstatus==0">添加评价</el-button>
+                        <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="scope.row.deleteshow&&menuButtonPermit.includes('Works_workdelete')&&(scope.row.status==0||scope.row.status==1)" type="info" plain>删除</el-button>
+                    </div>
                   </template>
               </el-table-column>
             </el-table>
             <div v-if="totalDataNum>20" class="pagination-panel" ref="pagePane">
               <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="searchData.page"
-              :page-sizes="pageSizeList"
-              :page-size="searchData.limit"
-              :pager-count="pagerCount"
-              :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
-              :total="totalDataNum">
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="searchData.page"
+                :page-sizes="pageSizeList"
+                :page-size="searchData.limit"
+                :pager-count="pagerCount"
+                :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                :total="totalDataNum">
               </el-pagination>
           </div>
         </div>
     </el-card>
+    <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Works_addevaluation')&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+      <el-form :model="dialogForm">
+        <div class="item-form">
+            <el-form-item label="评价内容：" :label-width="formLabelWidth">
+              <el-input type="textarea" v-model="dialogForm.commentinfo" :autosize="{ minRows: 2, maxRows: 4}" ref="commentinfo"></el-input>
+            </el-form-item>
+        </div>
+        <div class="item-form">
+            <el-form-item label="评价打分：" :label-width="formLabelWidth">
+              <el-radio-group v-model="dialogForm.commentstatus">
+                <el-radio :label="1">好评</el-radio>
+                <el-radio :label="2">一般</el-radio>
+                <el-radio :label="3">差评</el-radio>
+              </el-radio-group>
+            </el-form-item>
+        </div>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="handleClose">取 消</el-button>
+          <el-button type="primary" @click="saveData">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -166,11 +194,13 @@ export default {
       menuButtonPermit:[],
       tableData:[],
       tableHeight:"auto",
+      dialogFormVisible:false,
+      dialogText:"",
+      formLabelWidth:"110px",
       dialogForm:{
         id:0,
-        name:"",
-        sort:"",
-        namecolor:'#17997f',
+        commentinfo:"",
+        commentstatus:1,
       },
       tagList:[],
       userList:[],
@@ -414,6 +444,12 @@ export default {
       var routeUrl =  $this.$router.resolve({path:'/Works/workInfo',query:{ID:id}});
       window.open(routeUrl.href,'_blank');
     },
+    // 跳转到统计
+    jumpStatPage(){
+      var $this = this;
+      var routeUrl =  $this.$router.resolve({path:'/Works/statData'});
+      window.open(routeUrl.href,'_blank');
+    },
     // 编辑表格行数据
     editTableRow(row,index){
       var $this = this;
@@ -605,6 +641,48 @@ export default {
     handleCurrentChange(val) {
       this.searchData.page = val;
       this.initPage();
+    },
+    // 添加表格行数据
+    commentTableRow(row,index){
+      var $this = this;
+      $this.resetFormData();
+      $this.dialogForm.id = row.id;
+      $this.dialogFormVisible = true;
+      $this.dialogText = "添加评价";
+    },
+    resetFormData(){
+      var $this = this;
+      $this.dialogForm.id = 0;
+      $this.dialogForm.commentinfo = "";
+      $this.dialogForm.commentstatus = 1;
+    },
+    // 关闭弹窗
+    handleClose(){
+      var $this = this;
+      $this.dialogFormVisible = false;
+    },
+    // 保存评价
+    saveData(){
+      var $this = this;
+      $this.$store.dispatch('works/workOrderEvaluateSaveAction', $this.dialogForm).then(response=>{
+        if(response){
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.handleClose();
+            $this.initPage();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
     },
   }
 }

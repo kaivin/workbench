@@ -372,6 +372,14 @@ export function Entargetlist(data) {
     data
   });
 }
+// 查看所有询盘信息
+export function allCluesData(data) {
+  return request({
+    url: "/hxindex/Enphone/lookall",
+    method: "POST",
+    data
+  });
+}
 // 英文询盘本月日标添加/修改-选择部门
 export function EndeparChoose(data) {
   return request({
@@ -404,3 +412,12 @@ export function EntargetlistDel(data) {
     data
   });
 }
+// 查看所有未分配询盘信息
+export function allUnAllotCluesData(data) {
+  return request({
+    url: "/hxindex/Enphone/lookwaitdealall",
+    method: "POST",
+    data
+  });
+}
+

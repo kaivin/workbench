@@ -2,7 +2,7 @@
   <div class="page-root ArticleSix work-info-page">
     <div class="abs-panel" ref="mainPane">
       <div class="scroll-panel" ref="scrollPane">
-        <div class="ArticleSixFl" v-bind:class="articleData.issay==0&&commentList.length==0?'no-comment':''">
+        <div class="ArticleSixFl no-comment">
           <div class="main-article" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length==0?'min-height:'+minHeight+'px!important;':''">
             <div class="article-info" ref="leftPane">
               <div class="ArticleSixFlTop" v-bind:class="articleData.timestatus==2?'time-out':''">
@@ -14,28 +14,6 @@
                   </div>
               </div>
               <div class="info-content rich-text" v-html="articleData.content"></div>
-            </div>
-          </div>
-        </div>
-        <div class="comment ArticleSixFr" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||(articleData.issay==0&&commentList.length>0)" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length>=0?'min-height:'+minHeight+'px!important;':''" ref="rightPane">
-          <div class="ArticleSixFrTop" v-bind:class="commentList.length>0?'':'no-comment'">
-            <p class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
-            <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
-              <div class="ueditor-panel"><vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap></div>
-              <div class="btn-rich">
-                <el-switch class="hide-name" v-model="isHideName" inactive-text="匿名发布"></el-switch>
-                <el-button type="primary" v-on:click="submitComment">提交</el-button>
-              </div>
-            </div>
-          </div>
-          <div class="ArticleSixFrBom" v-if="commentList.length>0">
-            <div class="item-comment" v-for="item in commentList" v-bind:key="item.id">
-              <div class="comment-header">
-                <span class="name" v-if="item.is_hidename==0">{{item.name}}</span><span class="name" v-else>匿名</span>
-                <span class="time">{{item.addtime}}</span>
-                <span v-if="articleData.commentdelete==1&&menuButtonPermit.includes('Works_commentdelete')" class="delete" v-on:click="deleteComment(item.id)" title="删除该条评论"><i class="el-icon-delete-solid"></i></span>
-              </div>
-              <div class="comment-body" v-html="item.content"></div>
             </div>
           </div>
         </div>
@@ -53,10 +31,13 @@ export default {
   data() {
     return {
       minHeight:0,
+      websiteID:"",
+      website:"",
       menuButtonPermit:[],
       currentID:0,
       colspanNum:12,
       articleData:{},
+      userList:{},
       commentList:[],
       content:"",
       isHideName:false,
@@ -200,7 +181,7 @@ export default {
                     $this.menuButtonPermit.push(item.action_route);
                 });
                 if($this.$route.query.ID){
-                  if(!$this.menuButtonPermit.includes('Works_workeditini')){
+                  if(!$this.menuButtonPermit.includes('Worksaccpet_workinfo')){
                     $this.$message({
                       showClose: true,
                       message: "未被分配查看工单详情权限",
@@ -236,12 +217,11 @@ export default {
     initPage(){
       var $this = this;
       $this.currentID = $this.$route.query.ID;
-      $this.$store.dispatch('works/workOrderEditInitInfoAction', {id:$this.currentID}).then(response=>{
+      $this.$store.dispatch('worksaccpet/workOrderInfoAction', {id:$this.currentID}).then(response=>{
           if(response){
             if(response.status){
               console.log(response,"工单详情");
               $this.articleData = response.data;
-              $this.getCommentList();
             }else{
               if(response.permitstatus&&response.permitstatus==2){
                   $this.$message({
@@ -265,108 +245,6 @@ export default {
     ready (editorInstance) {
       console.log(editorInstance);
     },
-    // 重置留言表
-    resetComment(){
-      var $this = this;
-      $this.content = "";
-      $this.isHideName = false;
-    },
-    // 提交留言
-    submitComment(){
-      var $this = this;
-      var formData = {};
-      formData.content= $this.content;
-      formData.workid = $this.currentID;
-      formData.is_hidename = $this.isHideName?1:0;
-      if($this.content==""){
-        $this.$message({
-            showClose: true,
-            message: "留言内容不能为空",
-            type: 'error'
-        });
-        return false;
-      }
-      if(formData.workid==0){
-        $this.$message({
-            showClose: true,
-            message: "请重新进入该文章进行留言",
-            type: 'error'
-        });
-        return false;
-      }
-      $this.$store.dispatch('works/addCommentInfoAction', formData).then(response=>{
-          if(response){
-            if(response.status){
-              $this.resetComment();
-              $this.getCommentList();
-              $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'success'
-              });
-            }else{
-              $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'error'
-              });
-            }
-          }
-      });
-    },
-    // 获取留言列表数据
-    getCommentList(){
-      var $this = this;
-      $this.$store.dispatch('works/commentInfoListAction', {id:$this.currentID}).then(response=>{
-          if(response){
-            if(response.status){
-              $this.commentList = response.data;
-              $this.$nextTick(()=>{
-                $this.setHeight();
-              });
-            }else{
-              $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'error'
-              });
-            }
-          }
-      });
-    },
-    // 删除评论
-    deleteComment(id){
-      var $this = this;
-      $this.$confirm('是否确认删除该评论?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-      }).then(() => {
-        $this.$store.dispatch('works/deleteCurrentCommentAction', {id:id}).then(response=>{
-            if(response){
-              if(response.status){
-                $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'success'
-                });
-                $this.getCommentList();
-              }else{
-                $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'error'
-                });
-              }
-            }
-        });
-      }).catch(() => {
-          $this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-      });
-    }
   }
 }
 </script>

@@ -7,6 +7,10 @@
             <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="searchStatisticsData()"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
             <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_phonecount')" v-on:click="statisticsClues()"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
           </div>
+          <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')">
+              <dd v-on:click="phoneJump('','all')" v-bind:class="currentKey&&currentKey=='all'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookall')"><span>查看所有</span><i>({{linkAll.monthNum}})</i><em>({{linkAll.yestodayNum}})</em><b>({{linkAll.todayNum}})</b></dd>
+              <dd v-on:click="phoneJump('','unAllot')" v-bind:class="currentKey&&currentKey=='unAllot'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookwaitdealall')"><span>未分配</span><i>({{linkAll.unAllotNum}})</i></dd>
+          </dl>
           <template v-for="(item,index) in defaultData.data">
             <dl class="phone-list" v-if="item.phone.length>0" v-bind:key="index">
               <dt><span>{{item.brandname}}</span></dt>
@@ -20,7 +24,7 @@
       <div class="abs-panel" ref="mainPane">
         <div class="scroll-panel">
             <div class="true-height" ref="scrollPane">
-                <div class="EnStatistical" v-if="!phoneID">
+                <div class="EnStatistical" v-if="!phoneID&&!currentKey">
                     <div class="tips-list" v-if="(defaultData.custormwarntatus==1&&defaultData.custormwarn.length>0)||(defaultData.warningstatus==1&&defaultData.saleswarning.length>0)">
                           <div class="item-tips" :class="item.type=='custormwarn'?'type-1':'type-2'" v-for="(item,index) in defaultData.custorAndsalesmwarn" v-bind:key="index" v-on:click="jumpEditPage(item.id)">
                               <i>{{index+1}}</i>
@@ -322,6 +326,8 @@
                           style="width: 100%"
                           :height='tableHeight'
                           row-key="id"
+                          key="a"
+                          v-if="phoneID"
                           >
                           <el-table-column
                             prop="id"
@@ -496,7 +502,197 @@
                             <template #default="scope">
                               <div class="table-button">
                                 <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_edit')">修改</el-button>
-                                <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)">({{scope.row.eidtnumber}})</span>
+                                <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="menuButtonPermit.includes('Enphone_edit')">({{scope.row.eidtnumber}})</span>
+                              </div>
+                            </template>
+                          </el-table-column>
+                        </el-table>
+                        <el-table
+                          ref="simpleTable"
+                          :data="tableData"
+                          tooltip-effect="dark"
+                          stripe
+                          class="SiteTable EntableColor"
+                          style="width: 100%"
+                          :height='tableHeight'
+                          row-key="id"
+                          key="b"
+                          v-else
+                          >
+                          <el-table-column
+                            prop="id"
+                            label="ID"
+                            width="80"
+                            >
+                          </el-table-column>
+                          <el-table-column
+                            prop="xuntime"
+                            label="时间"
+                            width="200"
+                            >
+                            <template slot-scope="scope">
+                              <div class="table-text">
+                                <p>时段：{{scope.row.timeing}}</p>
+                                <p class="EnColor02">星期：{{scope.row.weekday}}</p>
+                                <p>本地：{{scope.row.xuntime}}</p>
+                                <p>当地：{{scope.row.foreigntime}}</p>
+                              </div>
+                            </template>
+                          </el-table-column>
+                          <el-table-column
+                            prop="sourcename"
+                            label="来源网站"
+                            width="150"
+                            >
+                            <template slot-scope="scope">
+                              <div class="table-text">
+                                <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
+                                <p>{{scope.row.sourcename}}</p>
+                                <p>{{scope.row.messagetype}}</p>
+                              </div>
+                            </template>
+                          </el-table-column>
+                          <el-table-column
+                            prop="sourcename"
+                            label="大洲/地区/IP"
+                            width="150"
+                            >
+                            <template slot-scope="scope">
+                              <div class="table-text">
+                                <p><span class="EnColor05">大洲：</span>{{scope.row.continent}}</p>
+                                <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
+                                <p><span class="EnColor05">来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip">IP</a></p>
+                                <p><span class="EnColor05">设备：</span>{{scope.row.device}}</p>
+                              </div>
+                            </template>
+                          </el-table-column>
+                          <el-table-column
+                            prop="keyproduct"
+                            label="类型/产品"
+                            min-width="150"
+                            >
+                            <template slot-scope="scope">
+                              <div class="table-text">
+                                <p><span class="EnColor05">产品：</span><span :style="'font-weight:bold;color:'+scope.row.producttypecolor">{{scope.row.producttypename}}</span>/{{scope.row.keyproduct}}</p>
+                                <p class="EnColor05"><span>物料：</span>{{scope.row.material}}</p>
+                                <p class="EnColor05"><span>产量：</span>{{scope.row.production}}</p>
+                                <p class="EnColor05"><span>进料：</span>{{scope.row.infeed}}</p>
+                                <p class="EnColor05"><span>出料：</span>{{scope.row.outfeed}}</p>
+                              </div>
+                            </template>
+                          </el-table-column>
+                          <el-table-column
+                            prop="effective"
+                            label="有效/原因"
+                            width="100"
+                            >
+                            <template slot-scope="scope">
+                              <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
+                              <div class="table-text" v-if="!scope.row.isEffective"><p>{{scope.row.invalidcause}}<span style="color:#E88401;">{{scope.row.noeffectivetime}}</span></p></div>
+                            </template>
+                          </el-table-column>
+                          <el-table-column
+                            prop="levelname"
+                            label="首次级别/二次判定"
+                            min-width="140"
+                            >
+                            <template slot-scope="scope">
+                              <div class="table-text">
+                                <p class="table-tag"><span class="EnColor05">初次：</span><span class="level"  @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></p>
+                                <p><span class="EnColor05">性质：</span>{{scope.row.ennaturename?scope.row.ennaturename:'未判定'}}</p>
+                                <p><span class="EnColor05">需求：</span>{{scope.row.enxunpricename?scope.row.enxunpricename:'未判定'}}</p>
+                                <p><span class="EnColor05">状态：</span>{{scope.row.managestatus==1?'':'已开始处理'}}</p>
+                                <p><span class="EnColor05">异常：</span>{{scope.row.erroring}}</p>
+                              </div>
+                            </template>
+                          </el-table-column>
+                          <el-table-column
+                            prop="xunremark"
+                            label="备注"
+                            min-width="100"
+                            >
+                          </el-table-column>
+                          <el-table-column
+                            prop="addusername"
+                            label="添加人"
+                            width="120"
+                            >
+                            <template slot-scope="scope">
+                              <div class="table-text">
+                                <p><span>添：</span>{{scope.row.addusername}}</p>
+                                <p><span>分：</span>{{scope.row.allotusername}}</p>
+                              </div>
+                            </template>
+                          </el-table-column>
+                          <el-table-column
+                            prop="hassale"
+                            label="业务员"
+                            width="100"
+                            >
+                          </el-table-column>
+                          <el-table-column
+                            prop="addtime"
+                            label="添/分/改/业务时间"
+                            width="160"
+                            >
+                            <template slot-scope="scope">
+                              <div class="table-text">
+                                <p>{{scope.row.addtime}}</p>
+                                <p>{{scope.row.allottime}}</p>
+                                <p>{{scope.row.updatetime}}</p>
+                                <p style="color:red;">{{scope.row.managetime}}</p>
+                              </div>
+                            </template>
+                          </el-table-column>
+                          <el-table-column
+                            prop="score"
+                            label="价值分"
+                            min-width="80"
+                            >
+                            <template slot-scope="scope">
+                              <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
+                            </template>
+                          </el-table-column>
+                          <el-table-column
+                            v-if="(permitField.includes('remark1')||permitField.includes('remark2')||permitField.includes('remark3'))"
+                            key="d"
+                            prop="searchword"
+                            label="备注"
+                            min-width="90"
+                            fixed="right"
+                            >
+                            <template slot-scope="scope">
+                              <div class="table-input">
+                                <el-input size="small" class="tips-input-2" v-model="scope.row.remark1" v-if="scope.row.writepermit==1&&permitField.includes('remark1')"></el-input>
+                                <el-input size="small" class="tips-input-3" v-model="scope.row.remark2" v-if="scope.row.writepermit==1&&permitField.includes('remark2')"></el-input>
+                                <el-input size="small" class="tips-input-4" v-model="scope.row.remark3" v-if="scope.row.writepermit==1&&permitField.includes('remark3')"></el-input>
+                              </div>
+                            </template>
+                          </el-table-column>
+                          <el-table-column
+                            v-if="(menuButtonPermit.includes('Enphone_otheredit'))&&device==='desktop'"
+                            width="88"
+                            align="center"
+                            prop="operations"
+                            fixed="right"
+                            label="修改">
+                            <template #default="scope">
+                              <div class="table-button">
+                                <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="scope.row.writepermit==1&&menuButtonPermit.includes('Enphone_otheredit')">修改</el-button>
+                              </div>
+                            </template>
+                          </el-table-column>
+                          <el-table-column
+                            v-if="(menuButtonPermit.includes('Enphone_edit'))&&device==='desktop'"
+                            :width="operationsWidth"
+                            align="center"
+                            prop="operations"
+                            fixed="right"
+                            label="操作">
+                            <template #default="scope">
+                              <div class="table-button">
+                                <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.writepermit==1&&menuButtonPermit.includes('Enphone_edit')">修改</el-button>
+                                <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="scope.row.writepermit==1&&menuButtonPermit.includes('Enphone_edit')">({{scope.row.eidtnumber}})</span>
                               </div>
                             </template>
                           </el-table-column>
@@ -991,7 +1187,14 @@ export default {
       isDisabled:true,
       levelPop:[],  
       levelPopBool:false,
-      departcountUlist:[],  
+      departcountUlist:[],
+      linkAll:{
+        todayNum:0,
+        yestodayNum:0,
+        monthNum:0,
+        unAllotNum:0,
+      },
+      currentKey:null,
     }
   },
   computed: {
@@ -1029,9 +1232,15 @@ export default {
         if(this.$route.query.phoneID){
           this.phoneID = parseInt(this.$route.query.phoneID);
           this.searchData.waitstatus = parseInt(this.$route.query.waitstatus);
+          this.currentKey = null;
         }else{
           this.phoneID = null;
           this.searchData.waitstatus=1;
+          if(this.$route.query.key){
+            this.currentKey = this.$route.query.key;
+          }else{
+            this.currentKey = null;
+          }
         }
         this.initData();
       },
@@ -1041,15 +1250,21 @@ export default {
     if($this.$route.query.phoneID){
       $this.phoneID = parseInt($this.$route.query.phoneID);
       $this.searchData.waitstatus = parseInt($this.$route.query.waitstatus);
+      $this.currentKey = null;
     }else{
       $this.phoneID = null;
       $this.searchData.waitstatus=1;
+      if($this.$route.query.key){
+        $this.currentKey = $this.$route.query.key;
+      }else{
+        $this.currentKey = null;
+      }
     }
     $this.initData();
   },
   updated(){
     this.$nextTick(() => {
-      if(this.$route.query.phoneID){
+      if(this.$route.query.phoneID||this.$route.query.key){
          this.$refs.simpleTable.doLayout(); 
       }
     })
@@ -1138,6 +1353,10 @@ export default {
               monthcount:response.allnumber,
               todaycount:response.alltodaynumber,
             }
+            $this.linkAll.todayNum = response.alltodaynumber;
+            $this.linkAll.yestodayNum = response.alllastnumber;
+            $this.linkAll.monthNum = response.allnumber;
+            $this.linkAll.unAllotNum = response.nodealcount;
             departnumberArr.push(totalObj);
             response.departnumber.forEach(function(item){
                 item.user=item.depart;
@@ -1215,6 +1434,20 @@ export default {
                 });
               });
               $this.getCurrentPhoneSearchData();
+            }else{
+              if($this.$route.query.key){
+                $this.defaultData.data.forEach(function(item,index){
+                  item.phone.forEach(function(item1,index1){
+                    item.isOn = false;
+                  });
+                });
+                if($this.$route.query.key=="all"){
+                  $this.currentPhone = "查看所有";
+                }else{
+                  $this.currentPhone = "所有未分配";
+                }
+                $this.getCurrentPhoneSearchData();
+              }
             }
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -1242,8 +1475,10 @@ export default {
       var searchData = {};
       searchData.page = $this.searchData.page;
       searchData.limit = $this.searchData.limit;
-      searchData.phoneid = $this.phoneID;
-      searchData.waitstatus = $this.searchData.waitstatus;
+      if($this.phoneID){
+        searchData.phoneid = $this.phoneID;
+        searchData.waitstatus = $this.searchData.waitstatus;
+      }
       if($this.searchData.timeing&&$this.searchData.timeing!=''){
         searchData.timeing = $this.searchData.timeing;
       }
@@ -1322,7 +1557,19 @@ export default {
     initCluesList(){
       var $this = this;
       var searchData = $this.initSearchData();
-      $this.$store.dispatch('enphone/cluesCurrentPhoneDataAction', searchData).then(response=>{
+      var pathUrl = "";
+      if($this.phoneID){
+        pathUrl = 'enphone/cluesCurrentPhoneDataAction';
+      }else{
+        if($this.currentKey){
+          if($this.currentKey=="all"){
+            pathUrl = "enphone/allCluesDataAction";
+          }else{
+            pathUrl = "enphone/allUnAllotCluesDataAction";
+          }
+        }
+      }
+      $this.$store.dispatch(pathUrl, searchData).then(response=>{
         if(response){
           if(response.status){
             var infoData = {};
@@ -1416,14 +1663,18 @@ export default {
     // 电话点击跳转列表
     phoneJump(id,waitstatus){
       var queryObj = {};
-      queryObj.phoneID = id;
-      queryObj.waitstatus = waitstatus;
+      if(id==""){
+        queryObj.key=waitstatus;
+      }else{
+        queryObj.phoneID = id;
+        queryObj.waitstatus = waitstatus;
+      }
       this.$router.push({page:'Enphone/phoneindex',query:queryObj});
     },
     // 获取当前电话的搜索条件数据
     getCurrentPhoneSearchData(){
       var $this = this;
-      $this.$store.dispatch('enphone/cluesCurrentPhoneSearchDataAction', {phoneid:$this.phoneID}).then(response=>{
+      $this.$store.dispatch('enphone/cluesCurrentPhoneSearchDataAction', null).then(response=>{
         if(response){
           if(response.status){
             console.log(response,"搜索条件信息");
