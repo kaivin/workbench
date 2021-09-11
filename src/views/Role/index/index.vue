@@ -38,6 +38,7 @@
                 <el-button size="mini" @click="allotUser(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Role_getuser')">分配用户</el-button>
                 <el-button size="mini" @click="allotPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_getpermit')">分配菜单权限</el-button>
                 <el-button size="mini" @click="allotPostPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_gettypepermit')">分配论坛权限</el-button>
+                <el-button size="mini" @click="allotWorkOrderPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_getworktypepermit')">分配工单权限</el-button>
                 <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_edit')">编辑</el-button>
                 <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_delete')" type="info" plain>删除</el-button>
               </div>
@@ -212,6 +213,26 @@
         </span>
       </template>
     </el-dialog>
+    <el-dialog :title="workOrderTitle" v-if="(menuButtonPermit.includes('Role_getworktypepermit'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogWorkOrderVisible" width="840px">
+      <div class="transfer-panel">
+        <div class="transfer-wrap">
+          <el-transfer 
+            v-model="workOrderValue" 
+            :data="workOrderData"
+            :titles="['可分配权限', '已分配权限']"
+            filterable
+            :filter-method="filterWorkOrderMethod"
+            filter-placeholder="请输入工单权限关键字"
+          ></el-transfer>
+        </div>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogWorkOrderVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveWorkOrderData">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -287,6 +308,15 @@ export default {
         children: 'children',
         label: 'label'
       },
+      workOrderTitle:"分配工单权限",
+      dialogWorkOrderVisible:false,
+      filterWorkOrderMethod(query, item) {
+          if(item.label){
+            return item.label.indexOf(query) > -1;
+          }
+      },
+      workOrderData:[{key:"",label:""}],
+      workOrderValue:[],
     }
   },
   computed: {
@@ -449,6 +479,9 @@ export default {
                 operationsWidth+=114;
               }
               if($this.menuButtonPermit.includes('Role_gettypepermit')){
+                operationsWidth+=114;
+              }
+              if($this.menuButtonPermit.includes('Role_getworktypepermit')){
                 operationsWidth+=114;
               }
               if($this.menuButtonPermit.includes('Role_edit')){
@@ -1371,6 +1404,158 @@ export default {
               type: 'error'
             });
           }
+        }
+      });
+    },
+    // 重置分配工单数据
+    resetWorkOrderData(){
+      var $this = this;
+      $this.currentRoleID = 0;
+      $this.currentRoleName = "";
+      $this.workOrderData = [];
+      $this.workOrderValue = [];
+    },
+    // 分配工单权限弹窗
+    allotWorkOrderPermit(row,index){
+      var $this = this;
+      $this.resetWorkOrderData();
+      $this.dialogWorkOrderVisible = true;
+      $this.workOrderTitle = "给 " + row.name + " 分配工单权限";
+      $this.currentRoleID = row.id;
+      $this.currentRoleName = row.name;
+      $this.getAllotedWorkOrder();
+      
+    },
+    // 获取当前角色已分配的工单权限数据
+    getAllotedWorkOrder(){
+      var $this = this;
+      $this.$store.dispatch('role/roleWorkOrderAction', {id:$this.currentRoleID}).then(response=>{
+        console.log(response,"已分配工单权限");
+        if(response.status){
+          var roleWorkOrderData = [];
+          var selectedRoleWorkOrderData = [];
+          if(response.data.length>0){
+            response.data.forEach(function(item,index){
+              var itemData = {};
+              itemData.key = item.id;
+              itemData.label = item.permitname;
+              itemData.disabled = false;
+              roleWorkOrderData.push(itemData);
+              selectedRoleWorkOrderData.push(item.id);
+            });
+            $this.workOrderData = roleWorkOrderData;
+            $this.workOrderValue = selectedRoleWorkOrderData;
+          }
+          $this.getAllotingWorkOrder();
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
+    },
+    // 获取登录用户对当前角色可分配的工单权限数据
+    getAllotingWorkOrder(){
+      var $this = this;
+      var workOrderData = [];
+      if($this.workOrderData.length>0){
+        $this.workOrderData.forEach(function(item,index){
+          workOrderData.push(item.key);
+        });
+      }
+      var workOrderDataNow = $this.workOrderData;
+      var workOrderIngData = [];
+      $this.$store.dispatch('role/getWorkOrderAction', {ids:"1"}).then(response=>{
+        console.log(response,"可分配工单权限");
+        if(response.status){
+          if(response.data.length>0){
+            if(workOrderDataNow.length>0){
+              response.data.forEach(function(item,index){
+                workOrderIngData.push(item.id);
+              });
+              workOrderDataNow.forEach(function(item,index){
+                if(workOrderIngData.includes(item.key)){
+                  item.disabled = false;
+                }else{
+                  item.disabled = true;
+                }
+              });
+            }
+            response.data.forEach(function(item,index){
+              if(!workOrderData.includes(item.id)){
+                var itemData = {};
+                itemData.key = item.id;
+                itemData.label = item.permitname;
+                itemData.disabled = false;
+                workOrderDataNow.push(itemData);
+              }
+            });
+            $this.workOrderData = workOrderDataNow;
+          }
+          $this.getUserAllotWorkOrderPermitData();
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
+    },
+    // 获取当前登录用户可分配的工单权限数据
+    getUserAllotWorkOrderPermitData(){
+      var $this = this;
+      $this.$store.dispatch('role/userCanAllotWorkOrderAllPermitAction', null).then(response=>{
+        if(response){
+          if(response.status){
+            if(response.data.length>0){
+              var resData = []
+              response.data.forEach(function(item,index){
+                resData.push(item.id);
+              });
+              var workOrderDataNow = $this.workOrderData;
+              if(workOrderDataNow.length>0){
+                workOrderDataNow.forEach(function(item,index){
+                  if(!resData.includes(item.key)){
+                    item.disabled = true;
+                  }
+                });
+              }
+              $this.workOrderData = workOrderDataNow;
+            }
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    // 工单权限分配保存
+    saveWorkOrderData(){
+      var $this = this;
+      var workOrderData = {};
+      workOrderData.id = $this.currentRoleID;
+      workOrderData.typepermitid = $this.workOrderValue;
+      $this.$store.dispatch('role/roleAllotWorkOrderAction', workOrderData).then(response=>{
+        if(response.status){
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'success'
+          });
+          $this.dialogWorkOrderVisible = false;
+          $this.initData();
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
         }
       });
     },

@@ -1,0 +1,375 @@
+﻿<template>
+  <div class="page-root ArticleSix">
+    <div class="abs-panel" ref="mainPane">
+      <div class="scroll-panel" ref="scrollPane">
+        <div class="ArticleSixFl" v-bind:class="articleData.issay==0&&commentList.length==0?'no-comment':''">
+          <div class="main-article" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length==0?'min-height:'+minHeight+'px!important;':''">
+            <div class="article-info" ref="leftPane">
+              <div class="ArticleSixFlTop">
+                  <h1>{{articleData.title}}</h1>
+                  <div class="ArticleSixFlTopTag clearfix">
+                      <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="art-author" /></i>{{articleData.createname}}</span><span v-if="device==='desktop'"><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.updatetime}}</span></p>
+                      <p class="ArticleSixFlTopTagFr">阅读：{{articleData.hits}}<span>|</span>发布时间：{{articleData.addtime}}</p>
+                  </div>
+              </div>
+              <div class="info-content rich-text" v-html="articleData.content"></div>
+            </div>
+          </div>
+        </div>
+        <div class="comment ArticleSixFr" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||(articleData.issay==0&&commentList.length>0)" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length>=0?'min-height:'+minHeight+'px!important;':''" ref="rightPane">
+          <div class="ArticleSixFrTop" v-bind:class="commentList.length>0?'':'no-comment'">
+            <p class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
+            <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
+              <div class="ueditor-panel"><vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap></div>
+              <div class="btn-rich">
+                <el-switch class="hide-name" v-model="isHideName" inactive-text="匿名发布"></el-switch>
+                <el-button type="primary" v-on:click="submitComment">提交</el-button>
+              </div>
+            </div>
+          </div>
+          <div class="ArticleSixFrBom" v-if="commentList.length>0">
+            <div class="item-comment" v-for="item in commentList" v-bind:key="item.id">
+              <div class="comment-header">
+                <span class="name" v-if="item.is_hidename==0">{{item.name}}</span><span class="name" v-else>匿名</span>
+                <span class="time">{{item.addtime}}</span>
+                <span v-if="articleData.commentdelete==1&&menuButtonPermit.includes('Article_commentdelete')" class="delete" v-on:click="deleteComment(item.id)" title="删除该条评论"><i class="el-icon-delete-solid"></i></span>
+              </div>
+              <div class="comment-body" v-html="item.content"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <el-backtop target=".scroll-panel"></el-backtop>
+  </div>
+</template>
+<script>
+import { mapGetters } from 'vuex'
+export default {
+  name: 'workInfo',
+  data() {
+    return {
+      minHeight:0,
+      websiteID:"",
+      website:"",
+      menuButtonPermit:[],
+      currentID:0,
+      colspanNum:12,
+      articleData:{},
+      userList:{},
+      commentList:[],
+      content:"",
+      isHideName:false,
+      editorConfig: {
+        UEDITOR_HOME_URL: '/ueditor/',
+        // 服务端接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
+        serverUrl: process.env.NODE_ENV=='development'?'http://172.16.10.27:8017/php/controller.php':process.env.VUE_APP_BASE_API+'/php/controller.php',
+        // 编辑器不自动被内容撑高
+        autoHeightEnabled: false,
+        // 工具栏是否可以浮动
+        autoFloatEnabled: false,
+        // 初始容器高度
+        initialFrameHeight:120,
+        // 初始容器宽度
+        initialFrameWidth: '100%',
+        // 关闭自动保存
+        enableAutoSave: false,
+        maximumWords:1000,
+        elementPathEnabled:false,
+        wordCount:false,
+        toolbars: [
+            [
+                'source', //源代码
+                "|",
+                'undo', //撤销
+                'redo', //重做
+                '|',
+                'bold', //加粗
+                'italic', //斜体
+                'forecolor', //字体颜色
+                'backcolor', //背景色
+                '|',
+                'link', //超链接
+                'unlink', //取消链接
+                'anchor', //锚点
+                '|',
+                'inserttable', //插入表格
+                'edittable', //表格属性
+                'edittd', //单元格属性
+                '|',
+                // 'simpleupload', //单图上传
+                'insertimage', //多图上传
+                '|',
+                'emotion', //表情
+                'spechars', //特殊字符
+                '|',
+            ]
+        ]
+      },
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'device'
+    ]),
+  },
+  mounted(){
+      const $this = this;
+      this.$nextTick(function () {
+        $this.setHeight();
+      });
+      window.onresize = () => {
+          return (() => {
+            $this.setHeight();
+          })()
+      };
+  },
+  watch: {
+      minHeight(val) {
+        if (!this.timer) {
+          this.minHeight = val
+          this.timer = true
+          const $this = this
+          setTimeout(function() {
+            $this.timer = false
+          }, 400)
+        }
+      },
+  },
+  created(){
+    var $this = this;
+    $this.initData();
+  },
+  methods:{
+    // 设置高度
+    setHeight(){
+      var $this = this;
+      var minHeight= "auto";
+      $this.$nextTick(()=>{
+        var screenHeight = $this.$refs.mainPane.offsetHeight-30;
+        var leftHeight = $this.$refs.leftPane.offsetHeight;
+        if($this.device==='desktop'){
+          if($this.articleData.issay==1||$this.articleData.issay==0&&$this.commentList.length>0){
+            var rightHeight = $this.$refs.rightPane.offsetHeight;
+            if(leftHeight>rightHeight){
+              minHeight = leftHeight;
+            }else{
+              minHeight = rightHeight;
+            }
+          }else{
+            minHeight = leftHeight;
+          }
+          if(minHeight<=screenHeight){
+            minHeight = screenHeight;
+          }else{
+            if (leftHeight<rightHeight){
+              minHeight = minHeight+40;
+            }
+          }
+        }else{
+          if($this.commentList.length>0){
+            if($this.$refs.rightPane){
+              var rightHeight = $this.$refs.rightPane.offsetHeight;
+              var scrollHeight = leftHeight + rightHeight + 15;
+              if(scrollHeight<screenHeight){
+                minHeight = rightHeight + (screenHeight+30-scrollHeight);
+              }
+            }
+          }else{
+            var scrollHeight = leftHeight;
+            if(scrollHeight<screenHeight){
+              minHeight = leftHeight + (screenHeight+30-scrollHeight);
+            }
+          }
+        }
+        $this.minHeight = minHeight;
+      });
+    },
+    // 初始化数据
+    initData(){
+        var $this = this;
+        $this.getUserMenuButtonPermit();
+    },
+    // 获取当前登陆用户在该页面的操作权限
+    getUserMenuButtonPermit(){
+      var $this = this;
+      $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
+        if(res.status){
+            if(res.data.length>0){
+                res.data.forEach(function(item,index){
+                    $this.menuButtonPermit.push(item.action_route);
+                });
+                if($this.$route.query.ID){
+                  if(!$this.menuButtonPermit.includes('Worksaccpet_workinfo')){
+                    $this.$message({
+                      showClose: true,
+                      message: "未被分配查看工单详情权限",
+                      type: 'error',
+                      duration:6000
+                    });
+                    $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+                  }else{
+                    $this.initPage();
+                  }
+                }else{
+                  $this.$router.push({path:`/404?redirect=${$this.$router.currentRoute.fullPath}`});
+                }
+            }else{
+                $this.$message({
+                  showClose: true,
+                  message: "未被分配查看工单详情权限",
+                  type: 'error',
+                  duration:6000
+                });
+                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
+    },
+    // 初始化页面信息
+    initPage(){
+      var $this = this;
+      $this.currentID = $this.$route.query.ID;
+      $this.$store.dispatch('worksaccpet/workOrderInfoAction', {id:$this.currentID}).then(response=>{
+          if(response){
+            if(response.status){
+              console.log(response,"工单详情");
+              $this.articleData = response.data;
+              $this.getCommentList();
+            }else{
+              if(response.permitstatus&&response.permitstatus==2){
+                  $this.$message({
+                    showClose: true,
+                    message: "未被分配该工单详情访问权限",
+                    type: 'error',
+                    duration:6000
+                  });
+                  $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+                }else{
+                  $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'error'
+                  });
+                }
+            }
+          }
+      });
+    },
+    ready (editorInstance) {
+      console.log(editorInstance);
+    },
+    // 重置留言表
+    resetComment(){
+      var $this = this;
+      $this.content = "";
+      $this.isHideName = false;
+    },
+    // 提交留言
+    submitComment(){
+      var $this = this;
+      var formData = {};
+      formData.content= $this.content;
+      formData.articleid = $this.currentID;
+      formData.is_hidename = $this.isHideName?1:0;
+      if($this.content==""){
+        $this.$message({
+            showClose: true,
+            message: "留言内容不能为空",
+            type: 'error'
+        });
+        return false;
+      }
+      if(formData.articleid==0){
+        $this.$message({
+            showClose: true,
+            message: "请重新进入该文章进行留言",
+            type: 'error'
+        });
+        return false;
+      }
+      $this.$store.dispatch('article/postArticleSubmitCommentAction', formData).then(response=>{
+          if(response){
+            if(response.status){
+              $this.resetComment();
+              $this.getCommentList();
+              $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'success'
+              });
+            }else{
+              $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+              });
+            }
+          }
+      });
+    },
+    // 获取留言列表数据
+    getCommentList(){
+      var $this = this;
+      $this.$store.dispatch('article/postArticleCommentListAction', {id:$this.currentID}).then(response=>{
+          if(response){
+            if(response.status){
+              $this.commentList = response.data;
+              $this.$nextTick(()=>{
+                $this.setHeight();
+              });
+            }else{
+              $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+              });
+            }
+          }
+      });
+    },
+    // 删除评论
+    deleteComment(id){
+      var $this = this;
+      $this.$confirm('是否确认删除该评论?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+      }).then(() => {
+        $this.$store.dispatch('article/deleteCommentAction', {id:id}).then(response=>{
+            if(response){
+              if(response.status){
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'success'
+                });
+                $this.getCommentList();
+              }else{
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'error'
+                });
+              }
+            }
+        });
+      }).catch(() => {
+          $this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+      });
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+</style>

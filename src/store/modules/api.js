@@ -45,6 +45,8 @@ const state = {
     isEncompareListAdd:false,
     isCntargetlistAdd:false,
     isEntargetlistAdd:false,
+    isWorkOrderTagAdd:false,
+    isWorkOrderAdd:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -202,6 +204,16 @@ const mutations = {
       state.isEntargetlistAdd = true;
     }else{
       state.isEntargetlistAdd = false;
+    }
+    if(permitData.includes("Works_add")&&data.page==""){
+      state.isWorkOrderTagAdd = true;
+    }else{
+      state.isWorkOrderTagAdd = false;
+    }
+    if(permitData.includes("Works_publishwork")&&data.page==""){
+      state.isWorkOrderAdd = true;
+    }else{
+      state.isWorkOrderAdd = false;
     }
   },
 }

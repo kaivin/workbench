@@ -12,7 +12,11 @@
     roleAllotPostPermit,
     canAllotPostPermit,
     userCanAllotPost,
-    userCanAllotPostAllPermit
+    userCanAllotPostAllPermit,
+    getWorkOrder,
+    roleWorkOrder,
+    roleAllotWorkOrder,
+    userCanAllotWorkOrderAllPermit,
  } from '@/api/role'
 
 const state = {}
@@ -158,7 +162,47 @@ const actions = {
             reject(error)
         });
     });
-  }
+  },
+  // 当前角色已分配工单权限接口动作
+  roleWorkOrderAction({ commit }, data){
+    return new Promise((resolve, reject) => {
+        roleWorkOrder(data).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        });
+    });
+  },
+  // 当前角色分配工单权限保存动作
+  roleAllotWorkOrderAction({ commit }, data){
+    return new Promise((resolve, reject) => {
+      roleAllotWorkOrder(data).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        });
+    });
+  },
+  // 获取当前登录用户可分配的工单权限
+  getWorkOrderAction({ commit },data){
+    return new Promise((resolve, reject) => {
+        getWorkOrder(data).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        });
+    });
+  },
+  // 获取当前登录用户有权限的工单权限
+  userCanAllotWorkOrderAllPermitAction({ commit }){
+    return new Promise((resolve, reject) => {
+        userCanAllotWorkOrderAllPermit().then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        });
+    });
+  },
 }
 
 export default {

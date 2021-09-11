@@ -61,6 +61,9 @@
     addCntargetlist: state => state.app.addCntargetlist,
     isEntargetlistAdd: state => state.api.isEntargetlistAdd,
     addEntargetlist: state => state.app.addEntargetlist,
+    isWorkOrderTagAdd: state => state.api.isWorkOrderTagAdd,
+    addWorkOrderTag:state => state.app.addWorkOrderTag,
+    isWorkOrderAdd: state => state.api.isWorkOrderAdd,
 }
 export default getters
   

@@ -107,3 +107,34 @@ export function userCanAllotPostAllPermit() {
     method: "POST"
   });
 }
+// 获取当前登陆用户所有可分配工单权限
+export function getWorkOrder(data) {
+  return request({
+    url: "/hxindex/Role/getroleworktypepermit",
+    method: "POST",
+    data,
+  });
+}
+// 获取当前角色已分配的工单权限
+export function roleWorkOrder(data) {
+  return request({
+    url: "/hxindex/Role/roleworktypepermit",
+    method: "POST",
+    data,
+  });
+}
+// 保存当前已分配工单权限
+export function roleAllotWorkOrder(data) {
+  return request({
+    url: "/hxindex/Role/getworktypepermit",
+    method: "POST",
+    data,
+  });
+}
+// 获取当前登录用户有权限的工单权限数据
+export function userCanAllotWorkOrderAllPermit() {
+  return request({
+    url: "/hxindex/Role/myallworktypepermit",
+    method: "POST",
+  });
+}

@@ -31,6 +31,7 @@ const state = {
   addEncompareList:false,
   addCntargetlist:false,
   addEntargetlist:false,
+  addWorkOrderTag:false,
 }
 
 const mutations = {
@@ -200,7 +201,13 @@ const mutations = {
     state.addEntargetlist = true
   },
   CLOSE_ENTARGETLIST: (state) => {
-    state.addEntargetlist = false    
+    state.addEntargetlist = false  
+  },
+  ADD_WORKORDERTAG: (state) => {
+    state.addWorkOrderTag = true
+  },
+  CLOSE_WORKORDERTAG: (state) => {
+    state.addWorkOrderTag = false
   },
 }
 
@@ -365,6 +372,12 @@ const actions = {
     commit('CLOSE_ENTARGETLIST')
   },
 
+  addWorkOrderTag({ commit }) {
+    commit('ADD_WORKORDERTAG')
+  },
+  closeWorkOrderTag({ commit }) {
+    commit('CLOSE_WORKORDERTAG')
+  },
 }
 
 export default {
