@@ -10,6 +10,7 @@
                   <div class="work-order-attr">
                     <p><span>发布时间：{{articleData.addtime}}</span><span><mark>|</mark>截止时间：{{articleData.endtime}}</span></p>
                     <p><span>工单积分：{{articleData.score}}</span><span v-if="articleData.mytags!=''"><mark>|</mark>工单标签：<em v-bind:style="'background:'+articleData.mytagscolor+';color:#fff;'">{{articleData.mytags}}</em></span></p>
+                    <p><span v-if="articleData.accpertusername&&articleData.accpertusername!=''">接单者：{{articleData.accpertusername}}</span><span v-if="articleData.dealusername&&articleData.dealusername!=''"><mark>|</mark>实施者：{{articleData.dealusername}}</span></p>
                     <p><span>工单状态：<b v-if="articleData.status==0">已撤销</b><b v-else-if="articleData.status==1">待接单</b><b v-else-if="articleData.status==2">已接单</b><b v-else-if="articleData.status==4">待审核</b><b v-else-if="articleData.status==5">已驳回</b><b v-else-if="articleData.status==6">已完成待评价</b><b v-else>已完成</b></span></p>
                   </div>
               </div>

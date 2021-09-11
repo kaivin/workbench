@@ -173,11 +173,11 @@ export default {
         score:"",
         a_number:"",
       },
-      pageSizeList:[15],
+      pageSizeList:[15,30,60,120],
       totalDataNum:0,
       searchData:{
         page:1,
-        limit:20,
+        limit:15,
         time:"",
       },
       deptList:[],
@@ -272,7 +272,7 @@ export default {
       $this.$store.dispatch('Compare/deparDealListChooseAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response);
+            console.log(response,"部门");
             if(response.data.length>0){
                 var deptList = [];
                 response.data.forEach(function(item,index){

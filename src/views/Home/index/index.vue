@@ -576,7 +576,6 @@ export default {
             };
           },
           yAxis:{
-            max:$this.currentCnDepartData.daytargetnumber+1,
             grid:{
               line:null
             }
@@ -686,7 +685,6 @@ export default {
             };
           },
           yAxis:{
-            max:$this.currentEnDepartData.daytargetnumber+1,
             grid:{
               line:null
             }
