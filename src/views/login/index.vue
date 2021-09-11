@@ -1,86 +1,104 @@
 <template>
-    <div class="login-container">
-        <Particles />
-        <el-form v-bind:model="loginForm" v-bind:rules="rules" ref="loginForm" class="login-form">
-            <div class="logo"><img class="logo-img" v-bind:src="logo" alt=""><img class="logo-title" v-bind:src="logoFont" alt=""></div>
-            <el-form-item prop="username">
-                <el-input 
-                    v-model="loginForm.username" 
-                    placeholder="用户名" 
-                    clearable
-                    ref='username'
-                    name='username'
-                ></el-input>
-            </el-form-item>
-            <el-tooltip v-model="capsTooltip" content="大写锁定已开启" placement="right" manual>
-                <el-form-item prop="password">
-                    <el-input 
-                        placeholder="密码" 
-                        v-model="loginForm.password" 
-                        show-password
-                        ref='password'
-                        name='password'
-                        v-on:keyup.native="checkCapslock"
-                        v-on:blur="capsTooltip = false"
-                        v-on:keyup.enter="handleLogin('loginForm')"
-                    ></el-input>
-                </el-form-item>
-            </el-tooltip>
-            <el-form-item>
-                <el-button type="primary" v-on:click.prevent="handleLogin('loginForm')">登录</el-button>
-            </el-form-item>
-            <p v-if="device==='desktop'"><span v-on:click="resetPwd">忘记密码？</span></p>
-        </el-form>
-        <el-dialog title="忘记密码" v-if="device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogForgetPwdVisible" width="480px">
-            <el-form :model="dialogForgetPwdForm">
-                <el-form-item label="用户名：" :label-width="formLabelWidth">
-                    <el-input v-model="dialogForgetPwdForm.username" ref="username"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱：" :label-width="formLabelWidth">
-                    <el-input v-model="dialogForgetPwdForm.email" ref="email"></el-input>
-                </el-form-item>
-                <div class="item-form">
-                    <el-form-item label="验证码：" :label-width="formLabelWidth">
-                            <el-input v-model="dialogForgetPwdForm.code" ref="code"></el-input>
+    <div class="login-container flex-wrap">
+        <div class="loginFl">
+             <p class="loginFlPic"></p>
+        </div>
+        <div class="loginFr flex-content">
+            <div class="loginFrTop">
+                <p class="logo"><img class="logo-img" v-bind:src="logo" alt=""><img class="logo-title" v-bind:src="logoFont" alt=""></p>
+                <p class="loginFrTopTxt">
+                   <span>隐私政策</span>
+                   <span>帮助中心</span>
+                </p>
+            </div>
+            <div class="loginFrMid flex-content">
+                <div class="loginFrMidMain">
+                    <h2>欢迎登录</h2>
+                    <el-form v-bind:model="loginForm" v-bind:rules="rules" ref="loginForm" class="login-form">                
+                        <el-form-item prop="username">
+                            <el-input 
+                                v-model="loginForm.username" 
+                                placeholder="用户名" 
+                                clearable
+                                ref='username'
+                                name='username'
+                            ></el-input>
                         </el-form-item>
-                        <el-button class="btn-code" :type="isSend?'info':'primary'" v-bind:disabled="isSend" @click="getCode">{{txtCode}}</el-button>
+                        <el-tooltip v-model="capsTooltip" content="大写锁定已开启" placement="right" manual>
+                            <el-form-item prop="password">
+                                <el-input 
+                                    placeholder="密码" 
+                                    v-model="loginForm.password" 
+                                    show-password
+                                    ref='password'
+                                    name='password'
+                                    v-on:keyup.native="checkCapslock"
+                                    v-on:blur="capsTooltip = false"
+                                    v-on:keyup.enter="handleLogin('loginForm')"
+                                ></el-input>
+                            </el-form-item>
+                        </el-tooltip>
+                        <p class="secret"><i class="svg-i" ><svg-icon icon-class="prompt" /></i>密码仅供本人知晓，不可泄漏和外传</p>
+                        <el-form-item>
+                            <el-button type="primary" v-on:click.prevent="handleLogin('loginForm')">登录</el-button>
+                        </el-form-item>
+                        <p class="forget" v-if="device==='desktop'"><span v-on:click="resetPwd">忘记密码？</span></p>
+                    </el-form>
+                    <p>红星工作台登陆页面</p>
                 </div>
-                <el-tooltip v-model="capsTooltip1" content="大写锁定已开启" placement="right" manual>
-                    <el-form-item label="新密码：" :label-width="formLabelWidth">
-                        <el-input type="password" 
-                            v-model="dialogForgetPwdForm.newpassword" 
-                            v-on:keyup.native="checkCapslock1"
-                            v-on:blur="capsTooltip1 = false" ref="newpassword" show-password></el-input>
+            </div>
+            <div class="loginFrFoot" v-if='isTip'>
+                 <strong>请注意！</strong>
+                 <p>用人单位与劳动者可以在劳动合同中约定保守用人单位的商业秘密和与知识产权相关的保密事项</p>
+                 <span class="CloseTip" v-on:click="CloseTip">关闭提示</span>
+            </div>
+            <el-dialog title="忘记密码" v-if="device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogForgetPwdVisible" width="480px">
+                <el-form :model="dialogForgetPwdForm">
+                    <el-form-item label="用户名：" :label-width="formLabelWidth">
+                        <el-input v-model="dialogForgetPwdForm.username" ref="username"></el-input>
                     </el-form-item>
-                </el-tooltip>
-                <el-tooltip v-model="capsTooltip2" content="大写锁定已开启" placement="right" manual>
-                <el-form-item label="确认新密码：" :label-width="formLabelWidth">
-                    <el-input type="password" v-model="dialogForgetPwdForm.newpassword1"  v-on:keyup.native="checkCapslock2"
-                            v-on:blur="capsTooltip2 = false" ref="newpassword1" show-password></el-input>
-                </el-form-item>
-                </el-tooltip>
-            </el-form>
-            <template #footer>
-                <span class="dialog-footer">
-                <el-button @click="dialogForgetPwdVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveForgetPwdData">确 定</el-button>
-                </span>
-            </template>
-        </el-dialog>
+                    <el-form-item label="邮箱：" :label-width="formLabelWidth">
+                        <el-input v-model="dialogForgetPwdForm.email" ref="email"></el-input>
+                    </el-form-item>
+                    <div class="item-form">
+                        <el-form-item label="验证码：" :label-width="formLabelWidth">
+                                <el-input v-model="dialogForgetPwdForm.code" ref="code"></el-input>
+                            </el-form-item>
+                            <el-button class="btn-code" :type="isSend?'info':'primary'" v-bind:disabled="isSend" @click="getCode">{{txtCode}}</el-button>
+                    </div>
+                    <el-tooltip v-model="capsTooltip1" content="大写锁定已开启" placement="right" manual>
+                        <el-form-item label="新密码：" :label-width="formLabelWidth">
+                            <el-input type="password" 
+                                v-model="dialogForgetPwdForm.newpassword" 
+                                v-on:keyup.native="checkCapslock1"
+                                v-on:blur="capsTooltip1 = false" ref="newpassword" show-password></el-input>
+                        </el-form-item>
+                    </el-tooltip>
+                    <el-tooltip v-model="capsTooltip2" content="大写锁定已开启" placement="right" manual>
+                    <el-form-item label="确认新密码：" :label-width="formLabelWidth">
+                        <el-input type="password" v-model="dialogForgetPwdForm.newpassword1"  v-on:keyup.native="checkCapslock2"
+                                v-on:blur="capsTooltip2 = false" ref="newpassword1" show-password></el-input>
+                    </el-form-item>
+                    </el-tooltip>
+                </el-form>
+                <template #footer>
+                    <span class="dialog-footer">
+                    <el-button @click="dialogForgetPwdVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="saveForgetPwdData">确 定</el-button>
+                    </span>
+                </template>
+            </el-dialog>
+        </div>
     </div>
 </template>
 <script>
-import Particles from '@/components/Particles/index.vue';
 import { validEmail,isEmpty } from '@/utils/validate';
 import { mapGetters } from 'vuex'
 import logo from "@/assets/logo.png";
-import logoTitle from "@/assets/logo_font.png";
+import logoTitle from "@/assets/top_font.png";
 const defaultSettings = require('@/settings.js');
 export default {
     name:'Login',
-    components: {
-        Particles
-    },
     data(){
         const validateUsername = (rule, value, callback) => {
             if (value === '') {
@@ -134,6 +152,7 @@ export default {
             seconds:60,
             capsTooltip1:false,
             capsTooltip2:false,
+            isTip:true,
         }
     },
     computed: {
@@ -427,6 +446,11 @@ export default {
             }else{
                 return false;
             }
+        },
+        //关闭提示框
+        CloseTip(){
+            var $this=this;
+            $this.isTip=false;
         },
     }
 }
