@@ -44,6 +44,11 @@
     cluesAnalysisResultData,
     cluesdepartmentData,
     Custormeditlog,
+    Cntargetlist,
+    CndeparChoose,
+    CntargetlistAdd,
+    CntargetlistEdit,
+    CntargetlistDel,
 } from '@/api/chinaphone'
 
 const state = {}
@@ -502,6 +507,56 @@ const actions = {
     CustormeditlogAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             Custormeditlog(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 部门月度日目标列表
+    CntargetlistAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            Cntargetlist(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 中文询盘本月日标添加/修改-选择部门
+    CndeparChooseAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            CndeparChoose(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 中文询盘本月日标添加
+    CntargetlistAddAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            CntargetlistAdd(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 中文询盘本月日标修改
+    CntargetlistEditAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            CntargetlistEdit(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 中文询盘本月日标删除
+    CntargetlistDelAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            CntargetlistDel(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

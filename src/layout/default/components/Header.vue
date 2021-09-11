@@ -38,6 +38,12 @@
               <div class="item-button" v-if="isEnCluesAdd" v-on:click="enCluesAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">新增询盘</span></div>
               <div class="item-button" v-if="isWebsiteLogAdd" v-on:click="websiteLogAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加网站日志</span></div>
               <div class="item-button" v-if="isWebMsgIpAdd" v-on:click="webMsgIpAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加IP白名单</span></div>
+              <div class="item-button" v-if="iscompareListAdd" v-on:click="compareListAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加部门成交</span></div>
+              <div class="item-button" v-if="isEncompareListAdd" v-on:click="EncompareListAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加部门A</span></div>
+              <div class="item-button" v-if="isCntargetlistAdd" v-on:click="CntargetlistAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加日目标</span></div>
+              <div class="item-button" v-if="isEntargetlistAdd" v-on:click="EntargetlistAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加日目标</span></div>
+
+
             </div>
         </div>
         <div class="header-right">
@@ -111,6 +117,10 @@ export default {
         'isWebsiteLogAdd',
         'customerTipsCount',
         'isWebMsgIpAdd',
+        'iscompareListAdd',
+        'isEncompareListAdd',
+        'isCntargetlistAdd',
+        'isEntargetlistAdd',
       ]),
     },
     methods:{
@@ -263,6 +273,22 @@ export default {
         // 添加网站日志
         webMsgIpAdd(){
           this.$store.dispatch('app/addWebMsgIp')
+        },
+        // 添加部门成交
+        compareListAdd(){
+          this.$store.dispatch('app/addCompareList')
+        },
+        // 添加部门A成交
+        EncompareListAdd(){
+          this.$store.dispatch('app/addEncompareList')
+        },
+        // 中文添加日目标
+        CntargetlistAdd(){
+          this.$store.dispatch('app/addCntargetlist')
+        },
+        // 英文添加日目标
+        EntargetlistAdd(){
+          this.$store.dispatch('app/addEntargetlist')
         },
     }
 }

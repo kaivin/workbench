@@ -41,6 +41,10 @@ const state = {
     isEnCluesAdd:false,
     isWebsiteLogAdd:false,
     isWebMsgIpAdd:false,
+    iscompareListAdd:false,
+    isEncompareListAdd:false,
+    isCntargetlistAdd:false,
+    isEntargetlistAdd:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -178,6 +182,26 @@ const mutations = {
       state.isWebMsgIpAdd = true;
     }else{
       state.isWebMsgIpAdd = false;
+    }
+    if(permitData.includes("Compare_lists")&&data.page==""){
+      state.iscompareListAdd = true;
+    }else{
+      state.iscompareListAdd = false;
+    }
+    if(permitData.includes("Encompare_lists")&&data.page==""){
+      state.isEncompareListAdd = true;
+    }else{
+      state.isEncompareListAdd = false;
+    }
+    if(permitData.includes("Chinaphone_targetlist")&&data.page==""){
+      state.isCntargetlistAdd = true;
+    }else{
+      state.isCntargetlistAdd = false;
+    }
+    if(permitData.includes("Enphone_targetlist")&&data.page==""){
+      state.isEntargetlistAdd = true;
+    }else{
+      state.isEntargetlistAdd = false;
     }
   },
 }

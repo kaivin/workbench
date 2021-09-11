@@ -355,3 +355,43 @@ export function Custormeditlog(data) {
     data
   });
 }
+// 部门月度日目标列表
+export function Cntargetlist(data) {
+  return request({
+    url: "/hxindex/Chinaphone/targetlist",
+    method: "POST",
+    data
+  });
+}
+// 中文询盘本月日标添加/修改-选择部门
+export function CndeparChoose(data) {
+  return request({
+    url: "/hxindex/Chinaphone/chinaphonedepart",
+    method: "POST",
+    data
+  });
+}
+// 中文询盘本月日标添加
+export function CntargetlistAdd(data) {
+  return request({
+    url: "/hxindex/Chinaphone/chinatargetadd",
+    method: "POST",
+    data
+  });
+}
+// 中文询盘本月日标修改
+export function CntargetlistEdit(data) {
+  return request({
+    url: "/hxindex/Chinaphone/chinatargetedit",
+    method: "POST",
+    data
+  });
+}
+// 中文询盘本月日标删除
+export function CntargetlistDel(data) {
+  return request({
+    url: "/hxindex/Chinaphone/chinatargetdelete",
+    method: "POST",
+    data
+  });
+}

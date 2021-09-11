@@ -27,6 +27,10 @@ const state = {
   addCnMoney:false,
   addWebMsgIp:false,
   addWebsiteLog:1,
+  addCompareList:false,
+  addEncompareList:false,
+  addCntargetlist:false,
+  addEntargetlist:false,
 }
 
 const mutations = {
@@ -174,6 +178,30 @@ const mutations = {
   CLOSE_WEBMSGIP: (state) => {
     state.addWebMsgIp = false
   },
+  ADD_COMPARELIST: (state) => {
+    state.addCompareList = true
+  },
+  CLOSE_COMPARELIST: (state) => {
+    state.addCompareList = false
+  },
+  ADD_ENCOMPARELIST: (state) => {
+    state.addEncompareList = true
+  },
+  CLOSE_ENCOMPARELIST: (state) => {
+    state.addEncompareList = false
+  },
+  ADD_CNTARGETLIST: (state) => {
+    state.addCntargetlist = true
+  },
+  CLOSE_CNTARGETLIST: (state) => {
+    state.addCntargetlist = false    
+  },
+  ADD_ENTARGETLIST: (state) => {
+    state.addEntargetlist = true
+  },
+  CLOSE_ENTARGETLIST: (state) => {
+    state.addEntargetlist = false    
+  },
 }
 
 const actions = {
@@ -312,6 +340,31 @@ const actions = {
   closeWebMsgIp({ commit }) {
     commit('CLOSE_WEBMSGIP')
   },
+  addCompareList({ commit }) {
+    commit('ADD_COMPARELIST')
+  },
+  closeCompareList({ commit }) {
+    commit('CLOSE_COMPARELIST')
+  },
+  addEncompareList({ commit }) {
+    commit('ADD_ENCOMPARELIST')
+  },
+  closeEncompareList({ commit }) {
+    commit('CLOSE_ENCOMPARELIST')
+  },  
+  addCntargetlist({ commit }) {
+    commit('ADD_CNTARGETLIST')
+  },
+  closeCntargetlist({ commit }) {
+    commit('CLOSE_CNTARGETLIST')
+  },
+  addEntargetlist({ commit }) {
+    commit('ADD_ENTARGETLIST')
+  },
+  closeEntargetlist({ commit }) {
+    commit('CLOSE_ENTARGETLIST')
+  },
+
 }
 
 export default {

@@ -45,6 +45,11 @@
     salesmanWarnIsRead,
     customerEditHistoryLog,
     Custormeditlog,
+    Entargetlist,
+    EndeparChoose,
+    EntargetlistAdd,
+    EntargetlistEdit,
+    EntargetlistDel,
 } from '@/api/enphone'
 
 const state = {
@@ -518,6 +523,56 @@ const actions = {
     CustormeditlogAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             Custormeditlog(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 部门月度日目标列表
+    EntargetlistAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            Entargetlist(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 英文询盘本月日标添加/修改-选择部门
+    EndeparChooseAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            EndeparChoose(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 英文询盘本月日标添加
+    EntargetlistAddAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            EntargetlistAdd(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 英文询盘本月日标修改
+    EntargetlistEditAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            EntargetlistEdit(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 英文询盘本月日标删除
+    EntargetlistDelAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            EntargetlistDel(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

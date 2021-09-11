@@ -53,6 +53,14 @@
     isWebMsgIpAdd: state => state.api.isWebMsgIpAdd,
     addWebMsgIp:state => state.app.addWebMsgIp,
     msgPage:state => state.webmsg.msgPage,
+    iscompareListAdd: state => state.api.iscompareListAdd,
+    addCompareList: state => state.app.addCompareList,
+    isEncompareListAdd: state => state.api.isEncompareListAdd,
+    addEncompareList: state => state.app.addEncompareList,
+    isCntargetlistAdd: state => state.api.isCntargetlistAdd,
+    addCntargetlist: state => state.app.addCntargetlist,
+    isEntargetlistAdd: state => state.api.isEntargetlistAdd,
+    addEntargetlist: state => state.app.addEntargetlist,
 }
 export default getters
   

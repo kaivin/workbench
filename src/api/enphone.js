@@ -364,3 +364,43 @@ export function Custormeditlog(data) {
     data
   });
 }
+// 部门月度日目标列表
+export function Entargetlist(data) {
+  return request({
+    url: "/hxindex/Enphone/targetlist",
+    method: "POST",
+    data
+  });
+}
+// 英文询盘本月日标添加/修改-选择部门
+export function EndeparChoose(data) {
+  return request({
+    url: "/hxindex/Enphone/enphonedepart",
+    method: "POST",
+    data
+  });
+}
+// 英文询盘本月日标添加
+export function EntargetlistAdd(data) {
+  return request({
+    url: "/hxindex/Enphone/entargetadd",
+    method: "POST",
+    data
+  });
+}
+// 英文询盘本月日标修改
+export function EntargetlistEdit(data) {
+  return request({
+    url: "/hxindex/Enphone/entargetedit",
+    method: "POST",
+    data
+  });
+}
+// 英文询盘本月日标删除
+export function EntargetlistDel(data) {
+  return request({
+    url: "/hxindex/Enphone/entargetdelete",
+    method: "POST",
+    data
+  });
+}

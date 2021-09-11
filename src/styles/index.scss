@@ -25,6 +25,7 @@
 @import '-Enphone.scss';
 @import '-Sale.scss';
 @import '-webMsg.scss';
+@import '-Compart.scss';
 .clear{
   clear:both;
   display:block;  
@@ -1617,4 +1618,3 @@
     }
   }
 }
-.in_Table .el-table__body-wrapper{display:none!important;}

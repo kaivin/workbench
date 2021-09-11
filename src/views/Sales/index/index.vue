@@ -421,7 +421,6 @@
                 </div>
               </div>
               <div class="item-li" v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'">
-                <span class="title-panel">业务员</span>
                 <div class="item-filter">
                     <el-select v-model="searchData.salesuserid" size="small" clearable placeholder="业务员" >
                         <el-option
@@ -434,7 +433,6 @@
                 </div>
               </div>
               <div class="item-li">
-                <span class="title-panel">大洲</span>
                 <div class="item-filter">
                     <el-select v-model="searchData.continent" size="small" clearable placeholder="大洲" >
                         <el-option
@@ -447,7 +445,6 @@
                 </div>
               </div>
               <div class="item-li">
-                <span class="title-panel">产品类型</span>
                 <div class="item-filter">
                     <el-select v-model="searchData.producttype_id" size="small" clearable placeholder="产品类型" @change="currentCateChange" >
                         <el-option
@@ -460,7 +457,6 @@
                 </div>
               </div>
               <div class="item-li">
-                <span class="title-panel">产品</span>
                 <div class="item-filter">
                         <el-select v-model="searchData.productid" size="small" clearable placeholder="产品名" >
                             <el-option
@@ -473,7 +469,6 @@
                 </div>
               </div>
               <div class="item-li">
-                <span class="title-panel">处理</span>
                 <div class="item-filter">
                     <el-select v-model="searchData.managestatus" size="small" clearable placeholder="处理">
                         <el-option
@@ -486,7 +481,6 @@
                 </div>
               </div>
               <div class="item-li">
-                <span class="title-panel">回复</span>
                 <div class="item-filter">
                     <el-select v-model="searchData.replystatus" size="small" clearable placeholder="回复情况">
                         <el-option
@@ -499,7 +493,6 @@
                 </div>
               </div>
               <div class="item-li">
-                <span class="title-panel">性质</span>
                 <div class="item-filter">
                     <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质">
                         <el-option
@@ -512,7 +505,6 @@
                 </div>
               </div>
               <div class="item-li">
-                <span class="title-panel">需求</span>
                 <div class="item-filter">
                     <el-select v-model="searchData.enxunprice" size="small" clearable placeholder="需求">
                         <el-option
@@ -525,7 +517,6 @@
                 </div>
               </div>
               <div class="item-li">
-                <span class="title-panel">反馈</span>
                 <div class="item-filter">
                     <el-checkbox-group v-model="feedbackArr" class="SalesCardcheckbox" @change="feedbackClick">
                       <el-checkbox v-for="item in feedbackList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
@@ -533,7 +524,6 @@
                 </div>
               </div>
               <div class="item-li">
-                <span class="title-panel">客户联系方式</span>
                 <div class="item-filter">
                     <el-input size="small"
                         placeholder="客户联系方式"
@@ -543,7 +533,6 @@
                 </div>
               </div>
               <div class="item-li">
-                <span class="title-panel">富通ID/分配ID</span>
                 <div class="item-filter">
                     <el-input size="small"
                         placeholder="富通ID/分配ID"
