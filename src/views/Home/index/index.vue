@@ -2,31 +2,7 @@
   <div class="page-root scroll-panel home-index" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
       <div class="card-content" ref="tableContent">
-        <div class="item-row flex-box">
-          <div class="item-column flex-content" v-if="permitModules.includes('Module_cnStat')">
-            <div class="item-module">
-              <div class="module-header"><h2>中文总计</h2></div>
-              <div class="module-body">
-                <div class="num-list">
-                  <p><span>今天</span><strong>{{cnCluesData.alltoday}}</strong></p>
-                  <p><span>昨天</span><strong>{{cnCluesData.alllastnumber}}</strong></p>
-                  <p><span>本月</span><strong>{{cnCluesData.allnumber}}</strong></p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="item-column flex-content" v-if="permitModules.includes('Module_enStat')">
-            <div class="item-module">
-              <div class="module-header"><h2>英文总计</h2></div>
-              <div class="module-body">
-                <div class="num-list">
-                  <p><span>今天</span><strong>{{enCluesData.alltoday}}</strong></p>
-                  <p><span>昨天</span><strong>{{enCluesData.alllastnumber}}</strong></p>
-                  <p><span>本月</span><strong>{{enCluesData.allnumber}}</strong></p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="item-row flex-box"> 
           <div class="item-column flex-content" v-if="permitModules.includes('Module_bbs')">
             <div class="item-module">
               <div class="module-header"><h2>消息通知</h2></div>
@@ -53,167 +29,88 @@
             </div>
           </div>
         </div>
-        <div class="item-row" v-if="permitModules.includes('Module_cnStat')">
+        <div class="item-row stat-row">
           <div class="item-column">
-            <div class="item-module stat-module">
-              <div class="module-header">
-                <h2>中文统计</h2>
-                <ul class="depart-list">
-                  <li class="item-depart" v-for="item in cnCluesData.departcount" v-bind:key="item.dept_id" v-bind:class="item.isOn?'active':''" v-on:click="cnDepartChangeHandler(item.dept_id)"><span>{{item.name}}</span></li>
-                </ul>
+            <div class="item-module">
+              <div class="row-title"><h1><span>红星机器数据分析平台</span></h1></div>
+              <div class="btn-panel" v-if="permitModules.includes('Module_cnStat')&&permitModules.includes('Module_enStat')">
+                <el-radio-group v-model="language" size="small" @change="cnEnStatChange">
+                  <el-radio-button v-for="(item,index) in languageList" v-bind:key="index" :label="item.label">{{item.name}}</el-radio-button>
+                </el-radio-group>
               </div>
-              <div class="module-body">
-                <div class="stat-panel flex-box">
-                  <div class="depart-result">
-                    <div class="depart-total">
-                      <div class="result-panel">
-                        <div class="result-list">
-                          <p><span>今天</span><strong v-if="currentCnDepartData.daynumber">{{currentCnDepartData.daynumber.todaynumber}}</strong></p>
-                          <p><span>昨天</span><strong v-if="currentCnDepartData.daynumber">{{currentCnDepartData.daynumber.lastdaynumber}}</strong></p>
-                          <p><span>本月</span><strong v-if="currentCnDepartData.daynumber">{{currentCnDepartData.daynumber.monthnumber}}</strong></p>
-                        </div>
-                      </div>
+              <div class="flex-box">
+                <div class="target-chart" style="width: 360px;">
+                  <h3>各部门日目标</h3>
+                  <div id="radialBarChart" class="chart-canvas"></div>
+                  <h3>各部门成交积分</h3>
+                  <div class="table-chart">
+                    <div class="item-tr">
+                      <div class="item-td">组别</div>
+                      <div class="item-td">中文总计</div>
                     </div>
-                    <div class="history-high-light">
-                      <div class="list-panel">
-                        <p class="flex-box"><span class="txt-title flex-content">本月平均数</span><span class="txt-num">{{currentCnDepartData.avgmonthnumber}}</span></p>
-                        <p class="flex-box"><span class="txt-title flex-content">本月单日最高询盘数</span><span class="txt-num">{{currentCnDepartData.daymaxnumber}}</span></p>
-                        <p class="flex-box"><span class="txt-title flex-content">历史单日最高询盘数</span><span class="txt-num">{{currentCnDepartData.daymaxnumber}}</span></p>
-                        <p class="flex-box">
-                          <span class="txt-title flex-content">距离目标差距</span>
-                          <span class="txt-num" v-if="currentCnDepartData.daynumber">{{currentCnDepartData.daynumber.todaynumber - currentCnDepartData.daytargetnumber>0?'+':''}}{{currentCnDepartData.daynumber.todaynumber - currentCnDepartData.daytargetnumber}}</span>
-                        </p>
-                      </div>
+                    <div class="item-tr">
+                      <div class="item-td">时间</div>
+                      <div class="item-td">2021-09</div>
                     </div>
-                  </div>
-                  <div class="depart-chart flex-content">
-                    <div class="canvas-wrap">
-                      <div class="chart-title">
-                        <h2>近30天询盘趋势</h2>
-                        <ul class="line-list">
-                          <li class="line1">询盘数量</li>
-                          <li class="line2">平均值</li>
-                          <li class="line3">目标线</li>
-                        </ul>
-                      </div>
-                      <div id="cnCluesChart" class="chart-canvas"></div>
+                    <div class="item-tr">
+                      <div class="item-td">积分</div>
+                      <div class="item-td">88</div>
+                    </div>
+                    <div class="item-tr">
+                      <div class="item-td">等级</div>
+                      <div class="item-td">优秀</div>
+                    </div>
+                    <div class="item-tr">
+                      <div class="item-td">成交个数</div>
+                      <div class="item-td">88</div>
+                    </div>
+                    <div class="item-tr">
+                      <div class="item-td">A+数量</div>
+                      <div class="item-td">88</div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" v-if="permitModules.includes('Module_enStat')">
-          <div class="item-column">
-            <div class="item-module stat-module">
-              <div class="module-header">
-                <h2>英文统计</h2>
-                <ul class="depart-list">
-                  <li class="item-depart" v-for="item in enCluesData.departcount" v-bind:key="item.dept_id" v-bind:class="item.isOn?'active':''" v-on:click="enDepartChangeHandler(item.dept_id)"><span>{{item.name}}</span></li>
-                </ul>
-              </div>
-              <div class="module-body">
-                <div class="stat-panel flex-box">
-                  <div class="depart-result">
-                    <div class="depart-total">
-                      <div class="result-panel">
-                        <div class="result-list">
-                          <p><span>今天</span><strong v-if="currentEnDepartData.daynumber">{{currentEnDepartData.daynumber.todaynumber}}</strong></p>
-                          <p><span>昨天</span><strong v-if="currentEnDepartData.daynumber">{{currentEnDepartData.daynumber.lastdaynumber}}</strong></p>
-                          <p><span>本月</span><strong v-if="currentEnDepartData.daynumber">{{currentEnDepartData.daynumber.monthnumber}}</strong></p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="history-high-light">
-                      <div class="list-panel">
-                        <p class="flex-box"><span class="txt-title flex-content">本月平均数</span><span class="txt-num">{{currentEnDepartData.avgmonthnumber}}</span></p>
-                        <p class="flex-box"><span class="txt-title flex-content">本月单日最高询盘数</span><span class="txt-num">{{currentEnDepartData.daymaxnumber}}</span></p>
-                        <p class="flex-box"><span class="txt-title flex-content">历史单日最高询盘数</span><span class="txt-num">{{currentEnDepartData.daymaxnumber}}</span></p>
-                        <p class="flex-box">
-                          <span class="txt-title flex-content">距离目标差距</span>
-                          <span class="txt-num" v-if="currentEnDepartData.daynumber">{{currentEnDepartData.daynumber.todaynumber - currentEnDepartData.daytargetnumber>0?'+':''}}{{currentEnDepartData.daynumber.todaynumber - currentEnDepartData.daytargetnumber}}</span>
-                        </p>
-                      </div>
+                <div class="map-chart flex-content">
+                  <div class="search-panel">
+                    <div class="item-search">
+                      <el-date-picker
+                        v-model="mapDate"
+                        size="mini"
+                        type="daterange"
+                        class="date-range"
+                        align="right"
+                        value-format = "yyyy-MM-dd"
+                        unlink-panels
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        @change="dateRangeChangeHandler"
+                        :picker-options="pickerRangeOptions">
+                      </el-date-picker> 
                     </div>
                   </div>
-                  <div class="depart-chart flex-content">
-                    <div class="canvas-wrap">
-                      <div class="chart-title">
-                        <h2>近30天询盘趋势</h2>
-                        <ul class="line-list">
-                          <li class="line1">询盘数量</li>
-                          <li class="line2">平均值</li>
-                          <li class="line3">目标线</li>
-                        </ul>
-                      </div>
-                      <div id="enCluesChart" class="chart-canvas"></div>
-                    </div>
+                  <div id="areaMapChart" class="chart-canvas"></div>
+                </div>
+                <div class="top-ten">
+                  <h3>TOP10热门地区</h3>
+                  <div id="topTen" class="chart-canva"></div>
+                </div>
+                <div class="clues-chart">
+                  <h3>询盘统计</h3>
+                  <div class="item-liquid-chart">
+                    <div id="cluesLiquidChart1" class="chart-canvas"></div>
+                  </div>
+                  <div class="item-liquid-chart">
+                    <div id="cluesLiquidChart2" class="chart-canvas"></div>
+                  </div>
+                  <div class="item-liquid-chart">
+                    <div id="cluesLiquidChart3" class="chart-canvas"></div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" v-if="permitModules.includes('Module_cnStat')">
-          <div class="item-column">
-            <div class="item-module stat-module">
-              <div class="module-header">
-                <h2>中文地区统计</h2>
-                <div class="search-panel">
-                  <div class="item-search">
-                    <el-date-picker
-                      v-model="mapDate"
-                      size="mini"
-                      type="daterange"
-                      class="date-range"
-                      align="right"
-                      value-format = "yyyy-MM-dd"
-                      unlink-panels
-                      range-separator="至"
-                      start-placeholder="开始日期"
-                      end-placeholder="结束日期"
-                      @change="dateRangeChangeHandler"
-                      :picker-options="pickerRangeOptions">
-                    </el-date-picker> 
-                  </div>
-                </div>
-              </div>
-              <div class="module-body">
-                <div class="map-panel flex-box">
-                  <div class="map-chart">
-                    <div id="areaMapChart" class="chart-canvas"></div>
-                  </div>
-                  <div class="flex-content table-panel">
-                    <div class="table-chart">
-                      <el-table
-                        border
-                        ref="simpleTable"
-                        :data="cnCluesAreaData"
-                        tooltip-effect="dark"
-                        stripe
-                        height="480"
-                        style="width: 100%;"
-                        row-key="id"
-                        show-summary
-                        :summary-method="getSummaries"
-                        :default-sort = "{prop: 'number', order: 'descending'}"
-                        >
-                        <el-table-column
-                          prop="name"
-                          label="地区"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="number"
-                          label="数量"
-                          sortable
-                          >
-                        </el-table-column>
-                      </el-table>
-                    </div>
-                  </div>
-                </div>
+              <div class="flex-box flex-column">
+                <h3>近30天询盘趋势</h3>
+                <div id="cluesChart" class="chart-canvas flex-content"></div>
               </div>
             </div>
           </div>
@@ -241,7 +138,7 @@
 import { mapGetters } from 'vuex';
 import DataSet from '@antv/data-set';
 import { Chart } from '@antv/g2';
-import { Line,Area } from '@antv/g2plot';
+import { Bullet,RadialBar,Liquid,Area, measureTextWidth,Pie } from '@antv/g2plot';
 export default {
   name: 'Home',
   data() {
@@ -255,6 +152,7 @@ export default {
       currentCnDepartData:{},
       currentEnDepartData:{},
       cnCluesAreaData:[],
+      topTenAreaData:[],
       cnAreaPlot:null,
       cnAreaMapChart:null,
       enAreaPlot:null,
@@ -287,6 +185,25 @@ export default {
       },
       mapDate:[],
       today:"",
+      languageList:[
+        {name:"中文",label:"Module_cnStat"},
+        {name:"英文",label:"Module_enStat"},
+      ],
+      language:'Module_cnStat',
+      liquidPlot1:null,
+      liquidPlot2:null,
+      liquidPlot3:null,
+      currentCluesNum:{
+        today:0,
+        todayPercent:0,
+        yesterday:0,
+        yesterdayPercent:0,
+        month:0,
+        monthPercent:0,
+      },
+      pieSourcePlot:null,
+      departTargetNum:[],
+      radialBarPlot:null
     }
   },
   computed: {
@@ -298,14 +215,6 @@ export default {
   created() {
     var $this = this;
     $this.initData();
-  },
-  updated(){
-    var $this = this;
-    $this.$nextTick(function () {
-      if($this.permitModules.includes('Module_cnStat')){
-        $this.$refs.simpleTable.doLayout();
-      }
-    });
   },
   methods: {
     // 初始化数据
@@ -368,14 +277,27 @@ export default {
             if($this.permitModules.includes('Module_bbs')){
               $this.getPostData();
             }
-            if($this.permitModules.includes('Module_cnStat')){
-              $this.getCnCluesStatData();
-              $this.getToday();
-              $this.mapDate = [$this.today,$this.today];
-              $this.getCnCluesAreaStatData();
+            if($this.permitModules.includes('Module_cnStat')&&$this.permitModules.includes('Module_enStat')){
+              $this.language = "Module_cnStat";
+            }else{
+              if($this.permitModules.includes('Module_cnStat')||$this.permitModules.includes('Module_enStat')){
+                if($this.permitModules.includes('Module_cnStat')){
+                  $this.language = "Module_cnStat";
+                }else{
+                  $this.language = "Module_enStat";
+                }
+              }else{
+                $this.language = null;
+              }
             }
-            if($this.permitModules.includes('Module_enStat')){
-              $this.getEnCluesStatData();
+            if($this.language){
+              if($this.language == "Module_cnStat"){
+                $this.getCnCluesStatData();
+                $this.getNearMonth();
+                $this.getCnCluesAreaStatData();
+              }else{
+                $this.getEnCluesStatData();
+              }
             }
             if($this.permitModules.includes('Module_salesman')){
               $this.getSalesmanStatData();
@@ -425,6 +347,7 @@ export default {
         if (response) {
           if (response.status) {
             console.log(response,"中文统计数据");
+            var departTargetNum = [];
             response.departcount.forEach(function(item,index){
               item.tong.forEach(function(item1,index1){
                 item1.date = item1.date+"\n"+item1.week.replace("星期","周");
@@ -436,8 +359,33 @@ export default {
               }else{
                 item.isOn = false;
               }
+              var itemData = {};
+              itemData.id = item.dept_id;
+              itemData.name = item.name;
+              itemData.targetNum = item.daytargetnumber;
+              itemData.dayNum = item.daynumber.todaynumber;
+              var percent = parseFloat((item.daynumber.todaynumber/item.daytargetnumber).toFixed(2))
+              itemData.percent = Number.isNaN(percent)?0:percent;
+              departTargetNum.push(itemData);
             });
+            $this.departTargetNum = departTargetNum;
+            console.log($this.departTargetNum,"部门目标数据");
+            $this.drawDepartTarget();
             $this.cnCluesData = response;
+            if($this.language=="Module_cnStat"){
+              $this.currentCluesNum.today = response.alltoday;
+              $this.currentCluesNum.yesterday = response.alllastnumber;
+              $this.currentCluesNum.month = response.allnumber;
+              var todayPercent = parseFloat((response.alltoday/(response.alltoday+response.enalltoday)).toFixed(2));
+              var yesterdayPercent = parseFloat((response.alllastnumber/(response.alllastnumber+response.enalllastnumber)).toFixed(2));
+              var monthPercent = parseFloat((response.allnumber/(response.allnumber+response.enallnumber)).toFixed(2));
+              $this.currentCluesNum.todayPercent = Number.isNaN(todayPercent)?0:todayPercent;
+              $this.currentCluesNum.yesterdayPercent = Number.isNaN(yesterdayPercent)?0:yesterdayPercent;
+              $this.currentCluesNum.monthPercent = Number.isNaN(monthPercent)?0:monthPercent;
+              $this.drawCluesLiquidChart1();
+              $this.drawCluesLiquidChart2();
+              $this.drawCluesLiquidChart3();
+            }
           } else {
             $this.$message({
               showClose: true,
@@ -455,6 +403,7 @@ export default {
         if (response) {
           if (response.status) {
             console.log(response,"英文统计数据");
+            var departTargetNum = [];
             response.departcount.forEach(function(item,index){
               item.tong.forEach(function(item1,index1){
                 item1.date = item1.date+"\n"+item1.week.replace("星期","周");
@@ -466,8 +415,31 @@ export default {
               }else{
                 item.isOn = false;
               }
+              var itemData = {};
+              itemData.id = item.dept_id;
+              itemData.name = item.name;
+              itemData.targetNum = item.daytargetnumber;
+              itemData.dayNum = item.daynumber.todaynumber;
+              var percent = parseFloat((item.daynumber.todaynumber/item.daytargetnumber).toFixed(2))
+              itemData.percent = Number.isNaN(percent)?0:percent;
+              departTargetNum.push(itemData);
             });
+            $this.departTargetNum = departTargetNum;
+            console.log($this.departTargetNum,"部门目标数据");
+            $this.drawDepartTarget();
             $this.enCluesData = response;
+            $this.currentCluesNum.today = response.alltoday;
+            $this.currentCluesNum.yesterday = response.alllastnumber;
+            $this.currentCluesNum.month = response.allnumber;
+            var todayPercent = parseFloat((response.alltoday/(response.alltoday+response.enalltoday)).toFixed(2));
+            var yesterdayPercent = parseFloat((response.alllastnumber/(response.alllastnumber+response.enalllastnumber)).toFixed(2));
+            var monthPercent = parseFloat((response.allnumber/(response.allnumber+response.enallnumber)).toFixed(2));
+            $this.currentCluesNum.todayPercent = Number.isNaN(todayPercent)?0:todayPercent;
+            $this.currentCluesNum.yesterdayPercent = Number.isNaN(yesterdayPercent)?0:yesterdayPercent;
+            $this.currentCluesNum.monthPercent = Number.isNaN(monthPercent)?0:monthPercent;
+            $this.drawCluesLiquidChart1();
+            $this.drawCluesLiquidChart2();
+            $this.drawCluesLiquidChart3();
           } else {
             $this.$message({
               showClose: true,
@@ -511,8 +483,16 @@ export default {
         if (response) {
           if (response.status) {
             $this.cnCluesAreaData = response.data;
+            var topTenAreaData = [];
+            response.data.forEach(function(item,index){
+              if(index<10){
+                topTenAreaData.push(item);
+              }
+            });
+            $this.topTenAreaData = topTenAreaData;
             console.log(response,"地区询盘统计");
             $this.drawCnCluesAreaChart();
+            $this.drawTopTen();
           } else {
             $this.$message({
               showClose: true,
@@ -563,7 +543,7 @@ export default {
     drawCnAreaChart(){
       var $this = this;
       if($this.currentCnDepartData.tong){
-        const cnAreaPlot = new Area('cnCluesChart', {
+        const cnAreaPlot = new Area('cluesChart', {
           data:$this.currentCnDepartData.tong,    
           xField: 'date',
           yField: 'xunnumber',
@@ -671,109 +651,113 @@ export default {
     drawEnAreaChart(){
       var $this = this;
       if($this.currentEnDepartData.tong){
-        const enAreaPlot = new Area('enCluesChart', {
-          data:$this.currentEnDepartData.tong,    
-          xField: 'date',
-          yField: 'xunnumber',
-          appendPadding:[15,15,15,15],
-          seriesField: '',
-          height: 370,
-          smooth:true,
-          areaStyle: () => {
-            return {
-              fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
-            };
-          },
-          yAxis:{
-            grid:{
-              line:null
-            }
-          },
-          xAxis: {
-            tickCount:15,
-            label: {
-              // 数值格式化为千分位
-              formatter: (v) => {
-                var date = v.split("-")[1]+"-"+v.split("-")[2];
-                return date
-              },
-              style:{
-                lineHeight:16
+        if($this.enAreaPlot&&!$this.enAreaPlot.chart.destroyed){
+          $this.enAreaPlot.changeData($this.currentEnDepartData.tong);
+        }else{
+          const enAreaPlot = new Area('cluesChart', {
+            data:$this.currentEnDepartData.tong,    
+            xField: 'date',
+            yField: 'xunnumber',
+            appendPadding:[15,15,15,15],
+            seriesField: '',
+            height: 370,
+            smooth:true,
+            areaStyle: () => {
+              return {
+                fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
+              };
+            },
+            yAxis:{
+              grid:{
+                line:null
               }
             },
-            grid:{
-              line:{
+            xAxis: {
+              tickCount:15,
+              label: {
+                // 数值格式化为千分位
+                formatter: (v) => {
+                  var date = v.split("-")[1]+"-"+v.split("-")[2];
+                  return date
+                },
                 style:{
-                  stroke: 'black',
-                  lineWidth:1,
-                  lineDash:[6,3],
-                  strokeOpacity:0.1,
-                  shadowBlur:0
+                  lineHeight:16
                 }
+              },
+              grid:{
+                line:{
+                  style:{
+                    stroke: 'black',
+                    lineWidth:1,
+                    lineDash:[6,3],
+                    strokeOpacity:0.1,
+                    shadowBlur:0
+                  }
+                }
+              },
+            },
+            legend: {
+              position: 'right-top'
+            },
+            tooltip: {
+              formatter: (datum) => {
+                return { name: "询盘个数", value: datum.xunnumber };
+              },
+              title:(e)=>{
+                return e.replace(/\n/g," ")
               }
             },
-          },
-          legend: {
-            position: 'right-top'
-          },
-          tooltip: {
-            formatter: (datum) => {
-              return { name: "询盘个数", value: datum.xunnumber };
-            },
-            title:(e)=>{
-              return e.replace(/\n/g," ")
-            }
-          },
-          annotations: [
-            // 平均值
-            {
-              type: 'line',
-              start: ['min', $this.currentEnDepartData.avgnumber],
-              end: ['max', $this.currentEnDepartData.avgnumber],
-              top:true,
-              offsetY: 0,
-              offsetX: 0,
-              style: {
-                stroke: '#f16b6b',
-                lineDash: [6, 4],
-                lineWidth: 1,
+            annotations: [
+              // 平均值
+              {
+                type: 'line',
+                start: ['min', $this.currentEnDepartData.avgnumber],
+                end: ['max', $this.currentEnDepartData.avgnumber],
+                top:true,
+                offsetY: 0,
+                offsetX: 0,
+                style: {
+                  stroke: '#f16b6b',
+                  lineDash: [6, 4],
+                  lineWidth: 1,
+                },
               },
-            },
-            // 平均值
-            {
-              type: 'html',
-              position:['max',$this.currentEnDepartData.avgnumber],
-              top:true,
-              html:"<span class='chart-font avg'><span class='txt-font'>"+$this.currentEnDepartData.avgnumber+"</span><i></i></span>",
-              alignX:"left",
-              alignY:"bottom",
-            },
-            // 目标线
-            {
-              type: 'line',
-              start: ['min', $this.currentEnDepartData.daytargetnumber],
-              end: ['max', $this.currentEnDepartData.daytargetnumber],
-              top:true,
-              offsetY: 0,
-              offsetX: 0,
-              style: {
-                stroke: '#6aa343',
-                lineWidth: 1,
+              // 平均值
+              {
+                type: 'html',
+                position:['max',$this.currentEnDepartData.avgnumber],
+                top:true,
+                html:"<span class='chart-font avg'><span class='txt-font'>"+$this.currentEnDepartData.avgnumber+"</span><i></i></span>",
+                alignX:"left",
+                alignY:"bottom",
               },
-            },
-            // 目标线
-            {
-              type: 'html',
-              position:['max',$this.currentEnDepartData.daytargetnumber],
-              top:true,
-              html:"<span class='chart-font target'><span class='txt-font'>"+$this.currentEnDepartData.daytargetnumber+"</span><i></i></span>",
-              alignX:"left",
-              alignY:"bottom",
-            },
-          ],
-        });
-        $this.enAreaPlot = enAreaPlot;
-        enAreaPlot.render();
+              // 目标线
+              {
+                type: 'line',
+                start: ['min', $this.currentEnDepartData.daytargetnumber],
+                end: ['max', $this.currentEnDepartData.daytargetnumber],
+                top:true,
+                offsetY: 0,
+                offsetX: 0,
+                style: {
+                  stroke: '#6aa343',
+                  lineWidth: 1,
+                },
+              },
+              // 目标线
+              {
+                type: 'html',
+                position:['max',$this.currentEnDepartData.daytargetnumber],
+                top:true,
+                html:"<span class='chart-font target'><span class='txt-font'>"+$this.currentEnDepartData.daytargetnumber+"</span><i></i></span>",
+                alignX:"left",
+                alignY:"bottom",
+              },
+            ],
+          });
+          $this.enAreaPlot = enAreaPlot;
+          enAreaPlot.render();
+        }
       }
     },
     // 中文地区询盘地图
@@ -786,7 +770,7 @@ export default {
           const cnAreaMapChart = new Chart({
             container: 'areaMapChart',
             width: 760,
-            height: 480,
+            height: 560,
           });
           cnAreaMapChart.scale({
             latitude: { sync: true },
@@ -808,7 +792,7 @@ export default {
           });
           cnAreaMapChart.axis(false);
           cnAreaMapChart.legend('trend', {
-            position: 'right',
+            position: 'bottom',
           });
           // 绘制中国地图背景
           var ds = new DataSet();
@@ -880,7 +864,7 @@ export default {
           });
           userView.polygon()
             .position('longitude*latitude')
-            .color('trend', '#BAE7FF-#1890FF-#0050B3')
+            .color('trend', '#0050B3-#1890FF-#BAE7FF')
             .tooltip('name*value')
             .style({
               fillOpacity: 0.85
@@ -930,12 +914,284 @@ export default {
       }
     },
     // 获取今天时间
-    getToday(){
+    getNearMonth(){
         var $this = this;
         const date = new Date();
+        const start = new Date();
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
         date.setTime(date.getTime());
+        var monthDay = start.getFullYear()+"-"+(start.getMonth()+1>9?start.getMonth()+1:'0'+(start.getMonth()+1))+"-"+(start.getDate()+1>9?start.getDate():'0'+(start.getDate()));
         var today = date.getFullYear()+"-"+(date.getMonth()+1>9?date.getMonth()+1:'0'+(date.getMonth()+1))+"-"+(date.getDate()+1>9?date.getDate():'0'+(date.getDate()));
-        $this.today = today;
+        $this.mapDate = [monthDay,today];
+    },
+    // 今天、昨天、本月询盘水波图
+    drawCluesLiquidChart1(){
+      var $this = this;
+      if($this.liquidPlot1&&!$this.liquidPlot1.chart.destroyed){
+        $this.liquidPlot1.changeData($this.currentCluesNum.todayPercent);
+      }else{
+        const liquidPlot1 = new Liquid('cluesLiquidChart1', {
+          percent: $this.currentCluesNum.todayPercent,
+          height:160,
+          outline: {
+            border: 2,
+            distance: 4,
+          },
+          wave: {
+            length: 128,
+          },
+          statistic: {
+            content: {
+              formatter: () => '今日总询盘',
+              style: ({ percent }) => ({
+                lineHeight: 2,
+                fill: percent > 0.65 ? 'white' : 'rgba(44,53,66,0.85)',
+              }),
+            },
+            title: {
+              style: ({ percent }) => ({
+                fontSize: 60,
+                lineHeight: 1,
+                fill: percent > 0.65 ? 'white' : 'rgba(44,53,66,0.85)',
+              }),
+              customHtml: (container, view, { percent }) => {
+                const { width, height } = container.getBoundingClientRect();
+                const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+                const text = `${$this.currentCluesNum.today}`;
+                const textWidth = measureTextWidth(text, { fontSize: 60 });
+                const scale = Math.min(d / textWidth, 1);
+                return `<div style="width:${d}px;display:flex;align-items:center;justify-content:center;font-size:${scale}em;line-height:${
+                  scale <= 1 ? 1 : 'inherit'
+                }">${text}</div>`;
+              },
+            },
+          },
+        });
+        liquidPlot1.render();
+      }
+    },
+    // 今天、昨天、本月询盘水波图
+    drawCluesLiquidChart2(){
+      var $this = this;
+      if($this.liquidPlot2&&!$this.liquidPlot2.chart.destroyed){
+        $this.liquidPlot2.changeData($this.currentCluesNum.yesterdayPercent);
+      }else{
+        const liquidPlot2 = new Liquid('cluesLiquidChart2', {
+          percent: $this.currentCluesNum.yesterdayPercent,
+          height:160,
+          outline: {
+            border: 2,
+            distance: 4,
+          },
+          wave: {
+            length: 128,
+          },
+          statistic: {
+            content: {
+              formatter: () => '昨日总询盘',
+              style: ({ percent }) => ({
+                lineHeight: 2,
+                fill: percent > 0.65 ? 'white' : 'rgba(44,53,66,0.85)',
+              }),
+            },
+            title: {
+              style: ({ percent }) => ({
+                fontSize: 60,
+                lineHeight: 1,
+                fill: percent > 0.65 ? 'white' : 'rgba(44,53,66,0.85)',
+              }),
+              customHtml: (container, view, { percent }) => {
+                const { width, height } = container.getBoundingClientRect();
+                const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+                const text = `${$this.currentCluesNum.yesterday}`;
+                const textWidth = measureTextWidth(text, { fontSize: 60 });
+                const scale = Math.min(d / textWidth, 1);
+                return `<div style="width:${d}px;display:flex;align-items:center;justify-content:center;font-size:${scale}em;line-height:${
+                  scale <= 1 ? 1 : 'inherit'
+                }">${text}</div>`;
+              },
+            },
+          },
+          liquidStyle: ({ percent }) => {
+            return {
+              fill: percent > 0.45 ? '#5B8FF9' : '#FAAD14',
+              stroke: percent > 0.45 ? '#5B8FF9' : '#FAAD14',
+            };
+          },
+          color: () => '#5B8FF9',
+        });
+        liquidPlot2.render();
+      }
+    },
+    // 今天、昨天、本月询盘水波图
+    drawCluesLiquidChart3(){
+      var $this = this;
+      if($this.liquidPlot3&&!$this.liquidPlot3.chart.destroyed){
+        $this.liquidPlot3.changeData($this.currentCluesNum.monthPercent);
+      }else{
+        const liquidPlot3 = new Liquid('cluesLiquidChart3', {
+          percent: $this.currentCluesNum.monthPercent,
+          height:160,
+          outline: {
+            border: 2,
+            distance: 4,
+          },
+          wave: {
+            length: 128,
+          },
+          statistic: {
+            content: {
+              formatter: () => '本月总询盘',
+              style: ({ percent }) => ({
+                lineHeight: 2,
+                fill: percent > 0.65 ? 'white' : 'rgba(44,53,66,0.85)',
+              }),
+            },
+            title: {
+              style: ({ percent }) => ({
+                fontSize: 60,
+                lineHeight: 1,
+                fill: percent > 0.65 ? 'white' : 'rgba(44,53,66,0.85)',
+              }),
+              customHtml: (container, view, { percent }) => {
+                const { width, height } = container.getBoundingClientRect();
+                const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+                const text = `${$this.currentCluesNum.month}`;
+                const textWidth = measureTextWidth(text, { fontSize: 60 });
+                const scale = Math.min(d / textWidth, 1);
+                return `<div style="width:${d}px;display:flex;align-items:center;justify-content:center;font-size:${scale}em;line-height:${
+                  scale <= 1 ? 1 : 'inherit'
+                }">${text}</div>`;
+              },
+            },
+          },
+        });
+        liquidPlot3.render();
+      }
+    },
+    // top10环形图
+    drawTopTen(){
+      var $this = this;
+      if($this.topTenAreaData.length>0){
+        if($this.pieSourcePlot&&!$this.pieSourcePlot.chart.destroyed){
+          $this.pieSourcePlot.changeData($this.topTenAreaData);
+        }else{
+          const pieSourcePlot = new Pie('topTen', {
+            data:$this.topTenAreaData,
+            angleField: 'number',
+            colorField: 'name',
+            appendPadding:[15,15,15,15],
+            radius: 1,
+            innerRadius: 0.64,
+            label: {
+              type: 'inner',
+              offset: '-50%',
+              style: {
+                textAlign: 'center',
+              },
+              autoRotate: false,
+              // content: '{value}',
+              formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+            },
+            legend:{
+              position:'bottom',
+              flipPage:false,
+            },
+            statistic: {
+              title: {
+                offsetY: -4,
+                customHtml: (topTen, view, datum) => {
+                  const { width, height } = topTen.getBoundingClientRect();
+                  const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+                  const text = datum ? datum.name : '总计';
+                  return $this.renderStatistic(d, text, { fontSize: 28 });
+                },
+              },
+              content: {
+                offsetY: 4,
+                style: {
+                  fontSize: '32px',
+                },
+                customHtml: (topTen, view, datum, data) => {
+                  const { width } = topTen.getBoundingClientRect();
+
+                  const text = datum ? `${datum.number}` : `${data.reduce((r, d) => r + d.number, 0)}`;
+                  return $this.renderStatistic(width, text, { fontSize: 32 });
+                },
+              },
+            },
+            // 添加 中心统计文本 交互
+            interactions: [{ type: 'element-selected' }, { type: 'element-active' }, { type: 'pie-statistic-active' }],
+          });
+          $this.pieSourcePlot = pieSourcePlot;
+          pieSourcePlot.render();
+        }
+      }
+    },
+    renderStatistic(containerWidth, text, style) {
+      const { width: textWidth, height: textHeight } = measureTextWidth(text, style);
+      const R = containerWidth / 2;
+      // r^2 = (w / 2)^2 + (h - offsetY)^2
+      var scale = 1;
+      if (containerWidth < textWidth) {
+        scale = Math.min(Math.sqrt(Math.abs(Math.pow(R, 2) / (Math.pow(textWidth / 2, 2) + Math.pow(textHeight, 2)))), 1);
+      }
+      const textStyleStr = `width:${containerWidth}px;`;
+      return `<div style="${textStyleStr};font-size:${scale}em;line-height:${scale < 1 ? 1 : 'inherit'};">${text}</div>`;
+    },
+    // 部门日目标环形进度图
+    drawDepartTarget(){
+      var $this = this;
+      if($this.departTargetNum.length>0){
+        if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
+          $this.radialBarPlot.changeData($this.departTargetNum);
+        }else{
+          const radialBarPlot = new RadialBar('radialBarChart', {
+            data:$this.departTargetNum,
+            xField: 'name',
+            yField: 'percent',
+            width: 320,
+            height:320,
+            maxAngle: 360, //最大旋转角度,
+            radius: 0.8,
+            innerRadius: 0.2,
+            xAxis: false,
+            tooltip: {
+              formatter: (datum) => {
+                var dayNum = 0;
+                $this.departTargetNum.forEach(function(item,index){
+                  if(item.name == datum.name){
+                    dayNum = item.dayNum;
+                  }
+                })
+                return { name: '今日总数', value: dayNum };
+              },
+            },
+            legend: {
+              position: 'left',
+            },
+            colorField: 'name',
+            color: ['#FFbcb8', '#FFe0b0', '#bfeec8', '#5B8FF9', '#61DDAA'],
+            barBackground: {},
+            barStyle: { lineCap: 'round' },
+            interactions: [{ type: 'element-active' }],
+          });
+          $this.radialBarPlot = radialBarPlot;
+          radialBarPlot.render();
+          radialBarPlot.on('element:click', (...args) => {
+            console.log(...args);
+          });
+        }
+      }
+    },
+    // 中英文数据分析切换
+    cnEnStatChange(){
+      var $this = this;
+      if($this.language=="Module_cnStat"){
+        $this.getCnCluesStatData();
+      }else{
+        $this.getEnCluesStatData();
+      }
     },
   }
 }

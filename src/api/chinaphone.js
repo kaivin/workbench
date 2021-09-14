@@ -196,10 +196,25 @@ export function cluesdepartmentData() {
     method: "POST"
   });
 }
+// 询盘系统页面电话列表及询盘统计数字
+export function cluesPhoneStatData() {
+  return request({
+    url: "/hxindex/Chinaphone/leftnumber",
+    method: "POST",
+  });
+}
 // 询盘系统页面默认电话列表数据获取动作
 export function cluesPhoneIndexData(data) {
   return request({
     url: "/hxindex/Chinaphone/phoneindex",
+    method: "POST",
+    data
+  });
+}
+// 询盘系统页面默认图表数据
+export function cluesPhoneChartData(data) {
+  return request({
+    url: "/hxindex/Chinaphone/phoneindexsearch",
     method: "POST",
     data
   });

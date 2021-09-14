@@ -409,4 +409,56 @@
             }
         }
     }
+    .stat-row{
+        .row-title{
+            text-align: center;
+            font-size:0;
+            line-height: 0;
+            h1{
+                display: inline-block;
+                position: relative;
+                span{
+                    display: inline-block;
+                    font-size: 16px;
+                    font-weight: bold;
+                    color: #fff;
+                    line-height: 36px;
+                    position: relative;
+                    z-index: 3;
+                    padding: 0 40px;
+                    height: 36px;
+                    vertical-align: top;
+                    background-color: $menuActiveText;
+                    border-bottom-right-radius: 8px;
+                    border-bottom-left-radius: 8px;
+                }
+            }
+        }
+        .btn-panel{
+            text-align: center;
+            padding: 15px 0;
+        }
+        .clues-chart{
+            width: 160px;
+        }
+        .top-ten{
+            width:240px;
+        }
+        .table-chart{
+            width: 100%;
+            border-top: 1px solid #e6e6e6;
+            border-left: 1px solid #e6e6e6;
+            .item-tr{
+                width: 100%;
+                .item-td{
+                    width: 50%;
+                    float:left;
+                    border-right: 1px solid #e6e6e6;
+                    border-bottom: 1px solid #e6e6e6;
+                    padding: 5px 10px;
+                    line-height: 24px;
+                }
+            }
+        }
+    }
 }

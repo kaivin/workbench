@@ -7,11 +7,16 @@
             <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Chinaphone_search')" v-on:click="searchStatisticsData()"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
             <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="statisticsClues()"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>统计分析</el-button>
           </div>
-          <dl class="phone-list" v-for="(item,index) in defaultData.phoneArr" v-bind:key="index">
+          <dl class="phone-list" v-for="(item,index) in phoneList" v-bind:key="index">
             <dt><span>{{item.name}}</span></dt>
             <dd v-for="phone in item.phone" class="tipphone" v-bind:class="phone.isOn?'active':''" :key="phone.id" v-on:click="phoneJump(phone.id)">           
                 <el-tooltip placement="right" class="el-tooltip" effect="light">
-                  <div slot="content">{{phone.phonenumber}}{{phone.othername}}<br/>部门：{{phone.departname}}<br/>负责人：{{phone.user}}</div>
+                  <div slot="content">
+                    <span v-if="phone.phonenumber&&phone.phonenumber!=''">电话：{{phone.phonenumber}}</span><br v-if="phone.othername&&phone.othername!=''" />
+                    <span v-if="phone.othername&&phone.othername!=''">别名：{{phone.othername}}</span><br v-if="phone.departname&&phone.departname!=''" />
+                    <span v-if="phone.departname&&phone.departname!=''">部门：{{phone.departname}}</span><br v-if="phone.user&&phone.user!=''" />
+                    <span v-if="phone.user&&phone.user!=''">负责人：{{phone.user}}</span>
+                  </div>
                   <el-button><span>{{phone.shortPhonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b> </el-button>
                 </el-tooltip>
             </dd>
@@ -60,19 +65,11 @@
                 </div>
               </div>
             </div>
-            <div class="ChinaphoneMap" v-bind:style="'min-height:'+minHeight+'px;'">
+            <div class="ChinaphoneMap" v-bind:style="'min-height:'+minHeight+'px;'" v-loading="chartLoading">
               <el-card class="box-card canvas-card flex-box" shadow="hover" v-bind:style="'min-height:'+(minHeight-60)+'px;'">
                 <div class="card-header">
-                     <h2>中文询盘趋势</h2>
-                     <div class="ChinaphoneMapDate">
-                        <el-select v-model="deptChart" size="small" @change="handleCheckTopdepartChange" clearable placeholder="中文总计">
-                            <el-option
-                            v-for="item in department"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>                        
+                     <h2>{{currentTeam}}询盘趋势</h2>
+                     <div class="ChinaphoneMapDate">                       
                         <el-date-picker
                           v-model="timeChart"
                           type="daterange"
@@ -84,7 +81,7 @@
                           start-placeholder="开始日期"
                           end-placeholder="结束日期"
                           value-format = "yyyy-MM-dd"
-                          @change="handleCheckTopdepartChange"
+                          @change="getCluesChartData"
                           :picker-options="pickerOptions">
                         </el-date-picker>
                      </div>
@@ -474,7 +471,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { Column,Area } from '@antv/g2plot';
+import { Area } from '@antv/g2plot';
 export default {
   name: 'Chinaphone_phoneindex',
   data() {
@@ -484,7 +481,15 @@ export default {
       currentPhone:'',
       writepermit:false,
       menuButtonPermit:[],
-      defaultData:{},
+      defaultData:{
+        cluesChartData:[],
+        avgnumber:0,
+        alltodaynumber:0,
+        alllastnumber:0,
+        allnumber:0,
+        lastmonthnumber:0,
+      },
+      phoneList:[],
       operationsWidth:"",
       tableData:[],     
       searchData:{
@@ -562,7 +567,6 @@ export default {
       permitField:[],
       isDisabled:true,
       topdepart:[],
-      topdepartChartList:[],      
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -595,13 +599,13 @@ export default {
          starttime:"",
          endtime:"",
       },
+      currentDepartID: 0,
       department:[],
       timeChart:"",
       deptChart:"0",
       tableShow:true,      
       levelPop:[],  
       levelPopBool:false,
-      currentTeam:"中文总计",
       scrollPosition:{
         width:0,
         left:0,
@@ -626,6 +630,9 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
+      currentTeam:"中文合计",
+      isLoading:null,
+      chartLoading:false,
     }
   },
   computed: {
@@ -723,6 +730,16 @@ export default {
         this.scrollPosition.isPC = true;
       }
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 设置高度
     setHeight(){
       var $this = this;
@@ -743,22 +760,40 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
     initPage(){
       var $this = this;
-      $this.$store.dispatch('chinaphone/cluesPhoneIndexDataAction', $this.chartData).then(response=>{
+      if($this.$route.query.phoneID){
+        $this.getPhoneListNum();
+      }else{
+        $this.getPhoneInitData();
+      }
+    },
+    // 获取电话列表初始化页面数据
+    getPhoneInitData(){
+      var $this = this;
+      $this.$store.dispatch('chinaphone/cluesPhoneIndexDataAction', null).then(response=>{
+        console.log(response,"初始化页面信息");
         if(response){
           if(response.status){
             response.groupmonthtrend.forEach(function(item,index){
               item.week = item.week.replace("星期","周");
               item.date = item.date+"\n"+item.week;
             });
+            $this.defaultData.cluesChartData = response.groupmonthtrend;
+            $this.defaultData.avgnumber = response.avgnumber;
+            $this.defaultData.alltodaynumber = response.alltodaynumber;
+            $this.defaultData.alllastnumber = response.alllastnumber;
+            $this.defaultData.allnumber = response.allnumber;
+            $this.defaultData.lastmonthnumber = response.lastmonthnumber;
             var phoneArr=response.data;
             phoneArr.forEach(function(item,index){
                item.phone.forEach(function(item01,index01){
                    var tagphone='-';
+                   item01.isOn = false;
                 　　if(item01.phonenumber.indexOf(tagphone)!=-1){
                        item01.shortPhonenumber=item01.phonenumber.split("-")[1];
                 　　}else{
@@ -766,58 +801,33 @@ export default {
                     }
                });
             });
-            $this.defaultData = response;
-            $this.defaultData.phoneArr=phoneArr;
-            console.log($this.defaultData,"电话信息");
-            if($this.$route.query.phoneID){
-              $this.defaultData.data.forEach(function(item,index){
-                item.phone.forEach(function(item1,index1){
-                  if(item1.id == $this.phoneID){
-                    $this.currentPhone = item1.phonenumber;
-                    item1.isOn = true;
-                  }else{
-                    item1.isOn = false;
-                  }
-                });
-              });
-              $this.getCurrentPhoneSearchData();
-            }else{              
-              var topdepart=[];
-              console.log(response,'response--12212');
-              var topdepartObj = {
-                id:0,
-                name:'中文总计',
-                alllastday:response.alllastnumber,
-                allnumber:response.allnumber,
-                alltoday:response.alltodaynumber,
-                lastmonthnumber:response.lastmonthnumber,
-                isOn:true,
-              };
-              topdepart.push(topdepartObj);
-              response.topdepart.forEach(function(item,index){
-                var itemData = {};
-                itemData.id = item.id;
-                itemData.name = item.name;
-                itemData.alllastday = item.alllastday;
-                itemData.allnumber = item.allnumber;
-                itemData.alltoday = item.alltoday;
-                itemData.lastmonthnumber = item.lastmonthnumber;
-                itemData.isOn=false;
-                topdepart.push(itemData);
-              });
-              $this.topdepart=topdepart;
-              console.log($this.topdepart,'topdepart');
-              var topdepartChartList=[];
-              $this.topdepart.forEach(function(item,index){
-                var itemData = {};
-                itemData.value = item.id;
-                itemData.label = item.name;
-                topdepartChartList.push(itemData);
-              });
-              $this.topdepartChartList=topdepartChartList;
-              $this.departmentData();
-              $this.drawChart();
-            }
+            $this.phoneList=phoneArr;
+            var topdepart=[];
+            var topdepartObj = {
+              id:0,
+              name:'中文合计',
+              alllastday:response.alllastnumber,
+              allnumber:response.allnumber,
+              alltoday:response.alltodaynumber,
+              lastmonthnumber:response.lastmonthnumber,
+              isOn:true,
+            };
+            topdepart.push(topdepartObj);
+            response.topdepart.forEach(function(item,index){
+              var itemData = {};
+              itemData.id = item.id;
+              itemData.name = item.name;
+              itemData.alllastday = item.alllastday;
+              itemData.allnumber = item.allnumber;
+              itemData.alltoday = item.alltoday;
+              itemData.lastmonthnumber = item.lastmonthnumber;
+              itemData.isOn=false;
+              topdepart.push(itemData);
+            });
+            $this.topdepart=topdepart;
+            $this.currentDepartID = "";
+            $this.drawChart();
+            $this.isLoading.close();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -838,32 +848,55 @@ export default {
         }
       });
     },
-    // 获取搜索部门
-    departmentData(){
+    // 获取电话列表及电话统计数字
+    getPhoneListNum(){
       var $this = this;
-      $this.$store.dispatch('chinaphone/cluesdepartmentDataAction', null).then(response=>{
+      $this.$store.dispatch('chinaphone/cluesPhoneStatDataAction', null).then(response=>{
+        console.log(response,"电话列表信息");
         if(response){
           if(response.status){
-              var departmentList = response.data;
-              var department=[];
-              var DepartmentObj = {
-                value:'0',
-                label:'中文总计',
-              };
-              department.push(DepartmentObj);
-              departmentList.forEach(function(item,index){
-                var itemData = {};
-                itemData.value = item.id;
-                itemData.label = item.name;
-                department.push(itemData);
-              });
-              $this.department=department;
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
+            var phoneArr=response.data;
+            phoneArr.forEach(function(item,index){
+               item.phone.forEach(function(item01,index01){
+                   var tagphone='-';
+                   item01.isOn = false;
+                　　if(item01.phonenumber.indexOf(tagphone)!=-1){
+                       item01.shortPhonenumber=item01.phonenumber.split("-")[1];
+                　　}else{
+                      item01.shortPhonenumber=item01.phonenumber;
+                    }
+               });
             });
+            $this.phoneList = phoneArr;
+            if($this.$route.query.phoneID){
+              $this.phoneList.forEach(function(item,index){
+                item.phone.forEach(function(item1,index1){
+                  if(item1.id == $this.phoneID){
+                    $this.currentPhone = item1.phonenumber;
+                    item1.isOn = true;
+                  }else{
+                    item1.isOn = false;
+                  }
+                });
+              });
+              $this.getCurrentPhoneSearchData();
+            }
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
           }
         }
       });
@@ -1007,9 +1040,9 @@ export default {
     // 图表功能
     drawChart(){
       var $this = this;
-      if($this.defaultData.groupmonthtrend){
+      if($this.defaultData.cluesChartData.length>0){
         const cnAreaPlot = new Area('cnCluesChart', {
-          data:$this.defaultData.groupmonthtrend,    
+          data:$this.defaultData.cluesChartData,    
           xField: 'date',
           yField: 'xunnumber',
           appendPadding:[15,15,15,15],
@@ -1098,68 +1131,80 @@ export default {
     // 获取当前电话的搜索条件数据
     getCurrentPhoneSearchData(){
       var $this = this;
-      $this.$store.dispatch('chinaphone/cluesCurrentPhoneSearchDataAction', {phoneid:$this.phoneID}).then(response=>{
-        if(response){
-          if(response.status){
-            console.log(response,"搜索条件信息");
-            var deviceList = [];
-            response.device.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.name;
-              deviceList.push(itemData);
-            });
-            $this.deviceList = deviceList;
-            var productTypeList = [];
-            response.producttype.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.id;
-              productTypeList.push(itemData);
-            });
-            $this.productTypeList = productTypeList;
-            var sourceList = [];
-            response.sourcetype.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.id;
-              sourceList.push(itemData);
-            });
-            $this.sourceList = sourceList;
-            var userList = [];
-            response.userlist.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.id;
-              userList.push(itemData);
-            });
-            $this.userList = userList;
-            var levelList = [];
-            response.xunlevel.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.levelname;
-              itemData.value = item.id;
-              levelList.push(itemData);
-            });
-            $this.levelList = levelList;
-            var categoryList = [];
-            response.xuntype.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.id;
-              categoryList.push(itemData);
-            });
-            $this.categoryList = categoryList;
-            $this.initCluesList();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
+      if($this.$route.query.phoneID){
+        $this.phoneList.forEach(function(item,index){
+          item.phone.forEach(function(item1,index1){
+            if(item1.id == $this.phoneID){
+              $this.currentPhone = item1.phonenumber;
+              item1.isOn = true;
+            }else{
+              item1.isOn = false;
+            }
+          });
+        });
+        $this.$store.dispatch('chinaphone/cluesCurrentPhoneSearchDataAction', {phoneid:$this.phoneID}).then(response=>{
+          if(response){
+            if(response.status){
+              console.log(response,"搜索条件信息");
+              var deviceList = [];
+              response.device.forEach(function(item,index){
+                var itemData = {};
+                itemData.label = item.name;
+                itemData.value = item.name;
+                deviceList.push(itemData);
+              });
+              $this.deviceList = deviceList;
+              var productTypeList = [];
+              response.producttype.forEach(function(item,index){
+                var itemData = {};
+                itemData.label = item.name;
+                itemData.value = item.id;
+                productTypeList.push(itemData);
+              });
+              $this.productTypeList = productTypeList;
+              var sourceList = [];
+              response.sourcetype.forEach(function(item,index){
+                var itemData = {};
+                itemData.label = item.name;
+                itemData.value = item.id;
+                sourceList.push(itemData);
+              });
+              $this.sourceList = sourceList;
+              var userList = [];
+              response.userlist.forEach(function(item,index){
+                var itemData = {};
+                itemData.label = item.name;
+                itemData.value = item.id;
+                userList.push(itemData);
+              });
+              $this.userList = userList;
+              var levelList = [];
+              response.xunlevel.forEach(function(item,index){
+                var itemData = {};
+                itemData.label = item.levelname;
+                itemData.value = item.id;
+                levelList.push(itemData);
+              });
+              $this.levelList = levelList;
+              var categoryList = [];
+              response.xuntype.forEach(function(item,index){
+                var itemData = {};
+                itemData.label = item.name;
+                itemData.value = item.id;
+                categoryList.push(itemData);
+              });
+              $this.categoryList = categoryList;
+              $this.initCluesList();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
           }
-        }
-      });
+        });
+      }
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
@@ -1377,8 +1422,8 @@ export default {
       $this.$store.dispatch('chinaphone/cluesCurrentPhoneUserCanEditFieldAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"字段权限");
             $this.permitField = response.data;
+            $this.isLoading.close();
           }else{
             $this.$message({
               showClose: true,
@@ -1406,11 +1451,13 @@ export default {
         }
       });
       $this.topdepart=topdepart;
-      console.log($this.topdepart,'$this.topdepart');
+      $this.currentDepartID = Tid;
+      $this.getCluesChartData();
     },   
-    // 部门选择图表点击事件 
-    handleCheckTopdepartChange(){
+    // 图表曲线图数据获取
+    getCluesChartData(){
       var $this = this;
+      $this.chartLoading = true;
       if($this.cnAreaPlot&&!$this.cnAreaPlot.chart.destroyed){
         $this.cnAreaPlot.destroy();
       }
@@ -1421,12 +1468,28 @@ export default {
         $this.chartData.starttime='';
         $this.chartData.endtime='';
       }
-      if($this.deptChart&&$this.deptChart!=''&&$this.deptChart!='0'){
-        $this.chartData.dept_id=[$this.deptChart];
-      }else{
-        $this.chartData.dept_id=[];
-      }
-      $this.initPage();
+      $this.chartData.dept_id = $this.currentDepartID == 0?"":[$this.currentDepartID];
+      $this.$store.dispatch('chinaphone/cluesPhoneChartDataAction', $this.chartData).then(response=>{
+        console.log(response,"曲线图表数据");
+        if(response){
+          if(response.status){
+            response.groupmonthtrend.forEach(function(item,index){
+              item.week = item.week.replace("星期","周");
+              item.date = item.date+"\n"+item.week;
+            });
+            $this.defaultData.cluesChartData = response.groupmonthtrend;
+            $this.defaultData.avgnumber = response.avgnumber;
+            $this.drawChart();
+            $this.chartLoading = false;
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
     },
     // 询盘级别修改记录
     handleCustormeditlogClick(Rid){

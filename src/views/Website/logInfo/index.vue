@@ -9,7 +9,7 @@
                   <h1>{{articleData.title}}</h1>
                   <h2>网站：{{website}} [ {{websiteID}} ]</h2>
                   <div class="ArticleSixFlTopTag clearfix">
-                      <p class="ArticleSixFlTopTagFl"><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="art-author" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="art-author" /></i>匿名</span><span v-if="device==='desktop'"><i class="svg-i" ><svg-icon icon-class="editorWhite" /></i>{{articleData.updatetime}}</span></p>
+                      <p class="ArticleSixFlTopTagFl"><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="art-author" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="art-author" /></i>匿名</span><span v-if="device==='desktop'"><i class="svg-i" ><svg-icon icon-class="art-edit-time" /></i>{{articleData.updatetime}}</span></p>
                       <p class="ArticleSixFlTopTagFr">阅读：{{articleData.hits}}<span>|</span>发布时间：{{articleData.addtime}}</p>
                   </div>
                   <div class="ArticleSixFlTopRead" v-if="articleData.readshow==1&&device==='desktop'&&(userList.hasreadusercount>0||userList.notreadusercount>0)">

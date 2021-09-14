@@ -6,10 +6,6 @@
         <div class="loginFr flex-content">
             <div class="loginFrTop">
                 <p class="logo"><img class="logo-img" v-bind:src="logo" alt=""><img class="logo-title" v-bind:src="logoFont" alt=""></p>
-                <p class="loginFrTopTxt">
-                   <span>隐私政策</span>
-                   <span>帮助中心</span>
-                </p>
             </div>
             <div class="loginFrMid flex-content">
                 <div class="loginFrMidMain">

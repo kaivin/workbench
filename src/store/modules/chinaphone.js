@@ -23,7 +23,9 @@
     getCluesList,
     cluesAllotRole,
     cluesAllotedRole,
+    cluesPhoneStatData,
     cluesPhoneIndexData,
+    cluesPhoneChartData,
     cluesCurrentPhoneSearchData,
     cluesCurrentPhoneData,
     cluesCurrentPhoneDataEleEdit,
@@ -310,10 +312,30 @@ const actions = {
             })
         })
     },
+    // 询盘系统页面电话列表及电话询盘统计数字
+    cluesPhoneStatDataAction({ commit, state }) {
+        return new Promise((resolve, reject) => {
+            cluesPhoneStatData().then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
     // 询盘系统页面默认电话列表数据获取动作
     cluesPhoneIndexDataAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             cluesPhoneIndexData(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 询盘系统页面默认图表数据
+    cluesPhoneChartDataAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            cluesPhoneChartData(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
