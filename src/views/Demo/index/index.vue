@@ -630,7 +630,11 @@ export default {
       // 视窗改变时，让自定义滚动条的位置与真实滚动条滚动的位置相吻合
       $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
       // 获取表格头吸顶需滚动的高度
-      $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15;
+      if($this.$refs.headerPane){
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15;
+      }else{
+         $this.scrollTable.fixedTopHeight=15;
+      }
       $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
       $this.scrollTable.tableFixedRightDom = tableFixedRightDom;
       var fixedHeaderObj = $this.scrollTable.tableHeaderFixedDom.getBoundingClientRect();

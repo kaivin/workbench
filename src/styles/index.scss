@@ -1407,6 +1407,28 @@
       float:right;
     }
   }
+  .el-table__fixed .el-table__fixed-header-wrapper{
+    left:auto;
+    box-shadow:5px 0 5px -2px rgba(0, 0 ,0, .12);
+    border-top-left-radius:8px;
+    border-top-right-radius:0px;
+    .el-table__header{
+      float:left;
+    }
+  }
+  .el-table__fixed-right .el-table__fixed-header-wrapper{
+    box-shadow:-5px 0 5px -2px rgba(0, 0 ,0, .12);
+    border-top-right-radius: 8px;
+  }
+  .el-table__fixed-header-wrapper{
+    z-index: 11;
+    overflow: hidden;
+    right:auto!important;
+    top: 75px;
+    .el-table__header{
+      float:right;
+    }
+  }
   .el-table__body-wrapper.is-scrolling-right ~ .el-table__fixed-right{
     .el-table__fixed-header-wrapper{
       box-shadow: none;

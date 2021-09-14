@@ -1,7 +1,7 @@
 ﻿<template>
   <div class="page-root website-list-page" ref="boxPane">
     <div class="abs-panel" ref="mainPane">
-      <div class="scroll-panel">
+      <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
         <div class="true-height" ref="scrollPane">
           <el-card class="box-card scroll-card WebsiteList-card" shadow="hover" v-loading.lock="isLoading">
             <div slot="header">
@@ -107,223 +107,227 @@
               </div>
             </div>
             <div class="card-content WebsiteList-Wrap" ref="cardContent">
-                <div class="card-wrap">
-                  <el-table
-                    ref="simpleTable"
-                    :data="tableData"
-                    :height="minHeight"
-                    stripe
-                    class="SiteTable"
-                    style="width: 100%"
-                    >
-                    <el-table-column
-                      prop="id"
-                      label="ID"
-                      width="60"
+                <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
+                    <div class="table-mask"></div>
+                    <el-table
+                      ref="simpleTable"
+                      :data="tableData"
+                      :style="'min-height:'+minHeight+'px;'"
+                      stripe
+                      class="SiteTable"
+                      style="width: 100%"
                       >
-                    </el-table-column>
-                    <el-table-column
-                      prop="departname"
-                      label="部门"
-                      width="100"
-                      >
-                    </el-table-column>
-                    <el-table-column
-                      prop="is_online"
-                      label="上线"
-                      width="50"
-                      >
-                      <template #default="scope">
-                        <div class="table-icon center">
-                          <i class="svg-i online" v-if="scope.row.is_online" title="在线"><svg-icon icon-class="online" /></i>
-                          <i class="svg-i offline" v-else title="离线"><svg-icon icon-class="offline" /></i>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="openstatus"
-                      label="状态"
-                      width="80"
-                      >
-                      <template #default="scope">
-                        <template v-if="scope.row.is_online">
-                          <div class="table-font" v-if="scope.row.speedcheckstatus==1">
-                            <p class="normal" v-if="scope.row.openstatus==0" title="正常">正常</p>
-                            <p class="timeout" v-else-if="scope.row.openstatus==1" title="超时">超时</p>
-                            <p class="abnormal" v-else title="异常">异常</p>
-                          </div>
-                          <div class="table-font" v-else><p class="NotDetect" title="未检测">未检测</p></div>
-                        </template>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="speed"
-                      label="速度"
-                      width="80"
-                      >
-                      <template #default="scope">
-                        <template v-if="scope.row.is_online">
-                          <div class="table-tag" v-if="scope.row.speedcheckstatus==1">
-                              <template v-if="scope.row.isCn">
-                                <el-tag size="small" v-if="scope.row.speed<1" type="success">{{scope.row.speed}}s</el-tag>
-                                <el-tag size="small" v-else-if="scope.row.speed>=1&&scope.row.speed<2" type="warning">{{scope.row.speed}}s</el-tag>
-                                <el-tag size="small" v-else type="danger">{{scope.row.speed}}s</el-tag>
-                              </template>
-                              <template v-else>
-                                <el-tag size="small" v-if="scope.row.speed<2" type="success">{{scope.row.speed}}s</el-tag>
-                                <el-tag size="small" v-else-if="scope.row.speed>=2&&scope.row.speed<4" type="warning">{{scope.row.speed}}s</el-tag>
-                                <el-tag size="small" v-else type="danger">{{scope.row.speed}}s</el-tag>
-                              </template>
+                      <el-table-column
+                        prop="id"
+                        label="ID"
+                        width="60"
+                        >
+                      </el-table-column>
+                      <el-table-column
+                        prop="departname"
+                        label="部门"
+                        width="100"
+                        >
+                      </el-table-column>
+                      <el-table-column
+                        prop="is_online"
+                        label="上线"
+                        width="50"
+                        >
+                        <template #default="scope">
+                          <div class="table-icon center">
+                            <i class="svg-i online" v-if="scope.row.is_online" title="在线"><svg-icon icon-class="online" /></i>
+                            <i class="svg-i offline" v-else title="离线"><svg-icon icon-class="offline" /></i>
                           </div>
                         </template>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="domainattr"
-                      label="标签"
-                      min-width="240"
-                      >
-                      <template #default="scope">
-                        <div class="table-tag">
-                          <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="(item,index) in scope.row.tagList" v-bind:key="index">{{item.tag}}</el-tag>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="domain"
-                      label="主域名"
-                      min-width="210"
-                      >
-                      <template #default="scope">
-                        <strong>{{scope.row.domain}}</strong>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="hosttag"
-                      label="主机头"
-                      min-width="130"
-                      >
-                      <template #default="scope">
-                        <div class="table-icon">
-                          <i class="svg-i" title="http" v-if="!scope.row.isHttps"><svg-icon icon-class="websiteHttp" class-name="disabled" /></i>
-                          <template v-for="(item,index) in scope.row.hostList">
-                            <i class="svg-i" title="https" v-bind:key="index" v-if="item=='https'"><svg-icon icon-class="websiteHttps" class-name="disabled" /></i>
-                            <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='www'"><svg-icon icon-class="websitePc" class-name="disabled" /></i>
-                            <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='m'"><svg-icon icon-class="websiteMobile" class-name="disabled" /></i>
-                            <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else><svg-icon icon-class="websiteMap" class-name="disabled" /></i>
+                      </el-table-column>
+                      <el-table-column
+                        prop="openstatus"
+                        label="状态"
+                        width="80"
+                        >
+                        <template #default="scope">
+                          <template v-if="scope.row.is_online">
+                            <div class="table-font" v-if="scope.row.speedcheckstatus==1">
+                              <p class="normal" v-if="scope.row.openstatus==0" title="正常">正常</p>
+                              <p class="timeout" v-else-if="scope.row.openstatus==1" title="超时">超时</p>
+                              <p class="abnormal" v-else title="异常">异常</p>
+                            </div>
+                            <div class="table-font" v-else><p class="NotDetect" title="未检测">未检测</p></div>
                           </template>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="website_designuser"
-                      label="设计负责人"
-                      width="94"
-                      >
-                      <template #default="scope">
-                        <div class="table-name" v-if="scope.row.uiList.length>0">
-                          <span class="item-name" v-for="(item,index) in scope.row.uiList" v-bind:key="index">{{item}}</span>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="website_beforeuser"
-                      label="前端负责人"
-                      width="94"
-                      >
-                      <template #default="scope">
-                        <div class="table-name" v-if="scope.row.frontEndList.length>0">
-                          <span class="item-name" v-for="(item,index) in scope.row.frontEndList" v-bind:key="index">{{item}}</span>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="website_backuser"
-                      label="程序负责人"
-                      width="94"
-                      >
-                      <template #default="scope">
-                        <div class="table-name" v-if="scope.row.programList.length>0">
-                          <span class="item-name" v-for="(item,index) in scope.row.programList" v-bind:key="index">{{item}}</span>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="website_pushuser"
-                      label="推广负责人"
-                      width="94"
-                      >
-                      <template #default="scope">
-                        <div class="table-name" v-if="scope.row.promoteList.length>0">
-                          <span class="item-name" v-for="(item,index) in scope.row.promoteList" v-bind:key="index">{{item}}</span>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="website_headuser"
-                      label="组负责人"
-                      width="84"
-                      >
-                      <template #default="scope">
-                        <div class="table-name" v-if="scope.row.teamList.length>0">
-                          <span class="item-name" v-for="(item,index) in scope.row.teamList" v-bind:key="index">{{item}}</span>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="website_serveruser"
-                      label="服务器负责人"
-                      width="110"
-                      >
-                      <template #default="scope">
-                        <div class="table-name" v-if="scope.row.serverList.length>0">
-                          <span class="item-name" v-for="(item,index) in scope.row.serverList" v-bind:key="index">{{item}}</span>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="addtime"
-                      label="添加时间"
-                      width="160"
-                      >
-                    </el-table-column>
-                    <el-table-column
-                      v-if="menuButtonPermit.includes('Website_loglist')"
-                      label="工作日志"
-                      width="140"
-                      fixed="right"
-                      >
-                      <template #default="scope">
-                        <el-button v-if="scope.row.show===1" class="logs-button" size="mini" @click="linkToLog(scope.row,scope.$index)">工作日志<span v-if="scope.row.weblogcount!=0" class="logs-num">({{scope.row.weblogcount}})</span></el-button>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      v-if="(menuButtonPermit.includes('Website_edit')||menuButtonPermit.includes('Website_delete'))&&device==='desktop'"
-                      :width="operationsWidth"
-                      align="center"
-                      fixed="right"
-                      label="操作">
-                      <template #default="scope">
-                        <div class="table-button">
-                          <el-button v-if="scope.row.show===1&&menuButtonPermit.includes('Website_edit')" size="mini" @click="editTableRow(scope.row,scope.$index)">编辑</el-button>
-                          <el-button v-if="scope.row.deletepermit===1&&menuButtonPermit.includes('Website_delete')" size="mini" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
-                        </div>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                  <div v-if="totalDataNum>100" class="pagination-panel" ref="pagePane">
-                    <el-pagination
-                      @size-change="handleSizeChange"
-                      @current-change="handleCurrentChange"
-                      :current-page="page"
-                      :page-sizes="pageSizeList"
-                      :page-size="limit"
-                      :pager-count="pagerCount"
-                      :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
-                      :total="totalDataNum">
-                    </el-pagination>
-                  </div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="speed"
+                        label="速度"
+                        width="80"
+                        >
+                        <template #default="scope">
+                          <template v-if="scope.row.is_online">
+                            <div class="table-tag" v-if="scope.row.speedcheckstatus==1">
+                                <template v-if="scope.row.isCn">
+                                  <el-tag size="small" v-if="scope.row.speed<1" type="success">{{scope.row.speed}}s</el-tag>
+                                  <el-tag size="small" v-else-if="scope.row.speed>=1&&scope.row.speed<2" type="warning">{{scope.row.speed}}s</el-tag>
+                                  <el-tag size="small" v-else type="danger">{{scope.row.speed}}s</el-tag>
+                                </template>
+                                <template v-else>
+                                  <el-tag size="small" v-if="scope.row.speed<2" type="success">{{scope.row.speed}}s</el-tag>
+                                  <el-tag size="small" v-else-if="scope.row.speed>=2&&scope.row.speed<4" type="warning">{{scope.row.speed}}s</el-tag>
+                                  <el-tag size="small" v-else type="danger">{{scope.row.speed}}s</el-tag>
+                                </template>
+                            </div>
+                          </template>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="domainattr"
+                        label="标签"
+                        min-width="240"
+                        >
+                        <template #default="scope">
+                          <div class="table-tag">
+                            <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="(item,index) in scope.row.tagList" v-bind:key="index">{{item.tag}}</el-tag>
+                          </div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="domain"
+                        label="主域名"
+                        min-width="210"
+                        >
+                        <template #default="scope">
+                          <strong>{{scope.row.domain}}</strong>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="hosttag"
+                        label="主机头"
+                        min-width="130"
+                        >
+                        <template #default="scope">
+                          <div class="table-icon">
+                            <i class="svg-i" title="http" v-if="!scope.row.isHttps"><svg-icon icon-class="websiteHttp" class-name="disabled" /></i>
+                            <template v-for="(item,index) in scope.row.hostList">
+                              <i class="svg-i" title="https" v-bind:key="index" v-if="item=='https'"><svg-icon icon-class="websiteHttps" class-name="disabled" /></i>
+                              <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='www'"><svg-icon icon-class="websitePc" class-name="disabled" /></i>
+                              <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='m'"><svg-icon icon-class="websiteMobile" class-name="disabled" /></i>
+                              <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else><svg-icon icon-class="websiteMap" class-name="disabled" /></i>
+                            </template>
+                          </div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="website_designuser"
+                        label="设计负责人"
+                        width="94"
+                        >
+                        <template #default="scope">
+                          <div class="table-name" v-if="scope.row.uiList.length>0">
+                            <span class="item-name" v-for="(item,index) in scope.row.uiList" v-bind:key="index">{{item}}</span>
+                          </div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="website_beforeuser"
+                        label="前端负责人"
+                        width="94"
+                        >
+                        <template #default="scope">
+                          <div class="table-name" v-if="scope.row.frontEndList.length>0">
+                            <span class="item-name" v-for="(item,index) in scope.row.frontEndList" v-bind:key="index">{{item}}</span>
+                          </div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="website_backuser"
+                        label="程序负责人"
+                        width="94"
+                        >
+                        <template #default="scope">
+                          <div class="table-name" v-if="scope.row.programList.length>0">
+                            <span class="item-name" v-for="(item,index) in scope.row.programList" v-bind:key="index">{{item}}</span>
+                          </div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="website_pushuser"
+                        label="推广负责人"
+                        width="94"
+                        >
+                        <template #default="scope">
+                          <div class="table-name" v-if="scope.row.promoteList.length>0">
+                            <span class="item-name" v-for="(item,index) in scope.row.promoteList" v-bind:key="index">{{item}}</span>
+                          </div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="website_headuser"
+                        label="组负责人"
+                        width="84"
+                        >
+                        <template #default="scope">
+                          <div class="table-name" v-if="scope.row.teamList.length>0">
+                            <span class="item-name" v-for="(item,index) in scope.row.teamList" v-bind:key="index">{{item}}</span>
+                          </div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="website_serveruser"
+                        label="服务器负责人"
+                        width="110"
+                        >
+                        <template #default="scope">
+                          <div class="table-name" v-if="scope.row.serverList.length>0">
+                            <span class="item-name" v-for="(item,index) in scope.row.serverList" v-bind:key="index">{{item}}</span>
+                          </div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="addtime"
+                        label="添加时间"
+                        width="160"
+                        >
+                      </el-table-column>
+                      <el-table-column
+                        v-if="menuButtonPermit.includes('Website_loglist')"
+                        label="工作日志"
+                        width="140"
+                        fixed="right"
+                        >
+                        <template #default="scope">
+                          <el-button v-if="scope.row.show===1" class="logs-button" size="mini" @click="linkToLog(scope.row,scope.$index)">工作日志<span v-if="scope.row.weblogcount!=0" class="logs-num">({{scope.row.weblogcount}})</span></el-button>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        v-if="(menuButtonPermit.includes('Website_edit')||menuButtonPermit.includes('Website_delete'))&&device==='desktop'"
+                        :width="operationsWidth"
+                        align="center"
+                        fixed="right"
+                        label="操作">
+                        <template #default="scope">
+                          <div class="table-button">
+                            <el-button v-if="scope.row.show===1&&menuButtonPermit.includes('Website_edit')" size="mini" @click="editTableRow(scope.row,scope.$index)">编辑</el-button>
+                            <el-button v-if="scope.row.deletepermit===1&&menuButtonPermit.includes('Website_delete')" size="mini" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
+                          </div>
+                        </template>
+                      </el-table-column>
+                    </el-table>
                 </div>
+                <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
+                          <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
+                  </div>
+            </div>
+            <div v-if="totalDataNum>100" class="pagination-panel" ref="pagePane">
+              <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page"
+                :page-sizes="pageSizeList"
+                :page-size="limit"
+                :pager-count="pagerCount"
+                :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                :total="totalDataNum">
+              </el-pagination>
             </div>
           </el-card>
         </div>
@@ -518,22 +522,52 @@ export default {
         weblink:"",
       },
       isLoading:false,
+      scrollPosition:{
+        width:0,
+        left:0,
+        fixedBottom: 15,
+        insetWidth:0,
+        oldInsetLeft:0,
+        insetLeft:0,
+        ratio:0,
+        startPageX:0,
+        maxScrollWidth:0,
+        isMouseDown:false,
+        isPC:true,
+        isFixed:false,
+      },
+      scrollTable:{
+        scrollDom:null,
+        tableHeaderFixedDom:null,
+        tableFixedRightDom:null,
+        fixedTopHeight:0,
+        tableheaderHeight:0,
+        fixedRightWidth:0,
+        tableBottom:0,
+        clientHeight:0,
+      },
     }
   },
   computed: {
     ...mapGetters([
       'userInfo',
       'device',
-      'addWebsite'
+      'addWebsite',
+      'sidebar'
     ]),
     isAdd() {
       return this.addWebsite
-    }
+    },
+    isOpen() {
+      return this.sidebar.opened;
+    },
   },
   mounted(){
       const $this = this;
       $this.$nextTick(function () {
         $this.setHeight();
+        // 监听竖向滚动条滚动事件
+        window.addEventListener('scroll',$this.handleScroll,true);
       });
       window.onresize = () => {
         return (() => {
@@ -561,6 +595,9 @@ export default {
       '$route'(to,from) {
         this.initData();
       },
+      isOpen(e){
+        this.setTableHeight();
+      },
   },
   created(){
     var $this = this;
@@ -573,32 +610,30 @@ export default {
     });
   },
   methods:{
+    // 判断浏览器类型
+    getBrowserType(){
+      var ua =  navigator.userAgent;
+      if(ua){
+        if(ua.indexOf('Mobile')!=-1){
+          this.scrollPosition.isPC = false;
+        }else{
+          this.scrollPosition.isPC = true;
+        }
+      }else{
+        this.scrollPosition.isPC = true;
+      }
+    },
     // 设置table高度
     setHeight(){
       var $this = this;
-      $this.minHeight = "auto";
-      $this.$nextTick(()=>{
-        var trueHeight = $this.$refs.scrollPane.offsetHeight;
-        var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-        var screenHeight = $this.$refs.boxPane.offsetHeight;
-        console.log(trueHeight,"真实高度");
-        console.log(headerHeight,"头部高度");
-        console.log(screenHeight,"视窗高度");
-        if(trueHeight<=screenHeight){
-          $this.minHeight = screenHeight-headerHeight-30;
-        }else{
-          if(trueHeight-screenHeight<=headerHeight){
-            $this.minHeight = "auto";
-          }else{
-            if($this.totalDataNum>100){
-              $this.minHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 45;
-            }else{
-              $this.minHeight = screenHeight - 30;
-            }
-          }
-        }
-        console.log($this.minHeight,"表格高度");
-      });
+      $this.minHeight = 0;      
+      var headerHeight = $this.$refs.headerPane.offsetHeight;
+      var screenHeight = $this.$refs.boxPane.offsetHeight;
+      $this.tableHeight = screenHeight-headerHeight-30;
+      $this.getBrowserType();
+        setTimeout(function() {
+          $this.setScrollDom();
+      }, 400);
     },
     // 搜索结果点击事件
     searchResult(){
@@ -720,7 +755,7 @@ export default {
       $this.$store.dispatch('website/websiteListAction', formData).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"网站列表");
+            console.log(response,"网站列表——$this.tableData");
             response.data.forEach(function(item,index){
               if(item.languagename=="中文"){
                 item.isCn = true;
@@ -1326,6 +1361,168 @@ export default {
     searchDialog(){
       var $this = this;
       $this.openClass=!$this.openClass;
+    },
+    // 设置横向滚动条相关DOM数据
+    setScrollDom(){
+      var $this = this;
+      $this.scrollPosition.insetLeft = 0;
+      $this.scrollPosition.oldInsetLeft = 0;
+      // 表格真实宽度（可能超出屏幕）
+      var scrollWidth = $this.$refs.simpleTable.bodyWrapper.scrollWidth;
+      // 表格可见宽度（屏幕内宽度）
+      var maxWidth = $this.$refs.simpleTable.bodyWrapper.clientWidth;
+      // 获取表格的位置信息（距离视窗左边的位置信息）
+      var rectOBJ = $this.$refs.simpleTable.$el.getBoundingClientRect();
+      // 获取距离视窗左边的宽度
+      var leftWidth = rectOBJ.left;
+      // 根据百分比算出滚动条滑块的宽度
+      var insetWidth = parseInt(maxWidth/scrollWidth*maxWidth);
+      // 算出滚动条与视口比例（滚动条滚动1像素视口需要滚动多少像素）
+      var ratio = (scrollWidth - maxWidth) / (maxWidth - insetWidth);
+      var scrollDom = document.querySelector(".SiteTable .el-table__body-wrapper");
+      var tableHeaderFixedDom = document.querySelector(".SiteTable .el-table__header-wrapper");
+      var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+      $this.scrollPosition.width = maxWidth;
+      $this.scrollPosition.left = leftWidth;
+      $this.scrollPosition.insetWidth = insetWidth;
+      $this.scrollPosition.ratio = parseFloat(ratio);
+      $this.scrollPosition.maxScrollWidth = maxWidth - insetWidth;
+      $this.scrollTable.scrollDom = scrollDom;
+      // 视窗改变时，让自定义滚动条的位置与真实滚动条滚动的位置相吻合
+      $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
+      // 获取表格头吸顶需滚动的高度
+      if($this.$refs.headerPane){
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15;
+      }else{
+         $this.scrollTable.fixedTopHeight=15;
+      }
+      $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
+      if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+         $this.scrollTable.tableFixedRightDom = tableFixedRightDom;
+      }
+      var fixedHeaderObj = $this.scrollTable.tableHeaderFixedDom.getBoundingClientRect();
+      // 获取表格头的高度
+      $this.scrollTable.tableheaderHeight = fixedHeaderObj.height;
+      if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+         var fixedRightObj = $this.scrollTable.tableFixedRightDom.getBoundingClientRect();
+         // 获取右侧固定列的总宽度
+         $this.scrollTable.fixedRightWidth = fixedRightObj.width;
+      }
+      var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
+      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+60+15;
+      $this.scrollTable.clientHeight = document.documentElement.clientHeight;
+      // 头部固定情况下视窗宽高改变，需要重新设置的一些宽高
+      if($this.scrollPosition.isFixed){
+        var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;";
+        $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+        document.querySelector(".table-mask").style = tableHeaderStyle;
+        var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";        
+        if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+        }
+        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+60+15;
+      }
+      // 视窗宽高改变时需要设置默认滚动条的位置
+      if($this.totalDataNum>100){
+        var scrTop = $this.$refs.scrollDom.scrollTop;
+        if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+        }else{
+          $this.scrollPosition.fixedBottom = 15;
+        }
+      }
+    },
+    // 竖向滚动条滚动事件
+    handleScroll(event){
+      var $this = this;
+      if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
+        var scrTop = event.target.scrollTop;
+        var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+        if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
+          $this.scrollPosition.isFixed = true;
+          var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          document.querySelector(".table-mask").style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          
+          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          }
+        }else{// 头部需要变为正常
+          $this.scrollPosition.isFixed = false;
+          var tableHeaderStyle = "width:100%";
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:0";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          var tableStyle3 = "width:auto";
+          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          }
+        }
+        if($this.totalDataNum>100){
+          if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+          }else{
+            $this.scrollPosition.fixedBottom = 15;
+          }
+        }
+      }
+    },
+    // 监听横向滚动条鼠标按下事件
+    mouseDownHandler(e){
+      this.crossMoveStartHandler(e);
+      window.addEventListener('mousemove',this.crossMoveingHandler);
+      window.addEventListener('mouseup',this.crossMoveEndHandler);
+    },
+    // 横向滚动条移动开始事件
+    crossMoveStartHandler(e){
+      var $this = this;
+      $this.scrollPosition.isMouseDown = true;
+      $this.scrollPosition.startPageX = e.pageX;
+    },
+    // 横向滚动条鼠标移动事件
+    crossMoveingHandler(e){
+      var $this = this;
+      if($this.scrollPosition.isMouseDown){// 只在鼠标按下时监听鼠标移动事件
+        var moveLeft = e.pageX - $this.scrollPosition.startPageX;
+        var scrollWidth = 0;
+        // 判断本次鼠标按下后鼠标移动的距离 大于0为向右移动
+        if(moveLeft>0){
+          // 本次移动距离+历史已移动距离如果大于最大能移动距离，说明向右已经滚动到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft>=$this.scrollPosition.maxScrollWidth){
+            scrollWidth = $this.scrollPosition.maxScrollWidth;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else if(moveLeft<0){
+          // 小于0为向左移动
+          // 本次移动距离+历史已移动距离，如果小于0，说明向左移动已经到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft<0){
+            scrollWidth = 0;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else{// 鼠标按下后，未移动
+          scrollWidth = $this.scrollPosition.insetLeft;
+        }
+        // 计算得出本次移动+历史移动总距离
+        // 自定义滚动条位置改变
+        $this.scrollPosition.insetLeft = scrollWidth;
+        // 真实滚动条滚动距离 = 自定义滚动条滚动距离*自定义滚动条与真实滚动条的滚动比
+        $this.scrollTable.scrollDom.scrollLeft = scrollWidth*$this.scrollPosition.ratio;
+        e.preventDefault();
+      }
+    },
+    // 横向滚动条移动结束事件
+    crossMoveEndHandler(e){
+      var $this = this;
+      $this.scrollPosition.isMouseDown = false;
+      $this.scrollPosition.startPageX = 0;
+      $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
     },
   }
 }

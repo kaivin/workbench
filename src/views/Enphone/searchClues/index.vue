@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="page-root en-phone-search" ref="boxPane">
         <div class="abs-panel" ref="mainPane">
-            <div class="scroll-panel">
+            <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
                 <div class="true-height" ref="scrollPane">
                     <el-card class="box-card scroll-card" shadow="hover">
                         <div slot="header">
@@ -209,28 +209,29 @@
                                             </el-radio-group>
                                         </div>
                                     </div> 
-                                <div class="clues-info flex-wrap">
-                                    <div class="clues-infoFl flex-content">
-                                        <p v-if="isClues"> <span class="item-span-1">共找到： <strong>{{infoData.allcount}}</strong> 条，有效 <strong>{{infoData.effectivecount}}</strong> 条， 已反馈 <strong>{{infoData.hassaycountscore}}</strong> 分，意向客户 <strong>{{infoData.meancustormscore}}</strong> 分 ，未反馈 <strong>{{infoData.nosaycount}}</strong> 条= <strong>{{infoData.nosaycountscore}}</strong> 分，总分 <strong>{{infoData.allcountscore}}</strong> 分 ！ [A]砂石：<strong>{{infoData.producttypecount1}}</strong>条，  [B]选矿/建材：<strong>{{infoData.producttypecount2}}</strong>条，  [C]磨粉/烘干/压球：<strong>{{infoData.producttypecount3}}</strong>条，  [其他]：<strong>{{infoData.producttypecount4}}</strong>条</span></p>
-                                        
-                                        <p v-if="isUrl"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>条URL，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                                        <p v-if="isProduct"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                                        <p v-if="isCountry"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个国家，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                                        <p v-if="isContinent"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个州，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                                        <p v-if="isGroup"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个小组，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                                        <p v-if="isProducttype"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品分类，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                                    </div>
-                                    <div class="clues-title-btn">
-                                        <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="enCluesSearchData"><i class="svg-i" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
-                                        <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
-                                        <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled"  @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
-                                    </div>
-                                </div> 
+                                    <div class="clues-info flex-wrap">
+                                        <div class="clues-infoFl flex-content">
+                                            <p v-if="isClues"> <span class="item-span-1">共找到： <strong>{{infoData.allcount}}</strong> 条，有效 <strong>{{infoData.effectivecount}}</strong> 条， 已反馈 <strong>{{infoData.hassaycountscore}}</strong> 分，意向客户 <strong>{{infoData.meancustormscore}}</strong> 分 ，未反馈 <strong>{{infoData.nosaycount}}</strong> 条= <strong>{{infoData.nosaycountscore}}</strong> 分，总分 <strong>{{infoData.allcountscore}}</strong> 分 ！ [A]砂石：<strong>{{infoData.producttypecount1}}</strong>条，  [B]选矿/建材：<strong>{{infoData.producttypecount2}}</strong>条，  [C]磨粉/烘干/压球：<strong>{{infoData.producttypecount3}}</strong>条，  [其他]：<strong>{{infoData.producttypecount4}}</strong>条</span></p>
+                                            
+                                            <p v-if="isUrl"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>条URL，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                                            <p v-if="isProduct"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                                            <p v-if="isCountry"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个国家，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                                            <p v-if="isContinent"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个州，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                                            <p v-if="isGroup"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个小组，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                                            <p v-if="isProducttype"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品分类，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                                        </div>
+                                        <div class="clues-title-btn">
+                                            <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="enCluesSearchData"><i class="svg-i" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
+                                            <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+                                            <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled"  @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                                        </div>
+                                    </div> 
                                 </div>
                             </div>
                         </div>
                         <div class="card-content" ref="tableContent">
-                            <div class="result-wrap">                        
+                            <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
+                                <div class="table-mask"></div>                       
                                 <el-table
                                     v-if="isClues"
                                     key="a"
@@ -240,7 +241,7 @@
                                     stripe
                                     class="SiteTable EntableColor"
                                     style="width: 100%"
-                                    :height="minHeight"
+                                    :style="'min-height:'+minHeight+'px;'"
                                     @selection-change="handleSelectionChange"
                                   >
                                   <el-table-column
@@ -413,7 +414,7 @@
                                     tooltip-effect="dark"
                                     stripe
                                     style="width: 100%"
-                                    :height="minHeight"
+                                    :style="'min-height:'+minHeight+'px;'"
                                     >
                                     <el-table-column
                                         prop="url"
@@ -448,7 +449,7 @@
                                     tooltip-effect="dark"
                                     stripe
                                     style="width: 100%"
-                                    :height="minHeight"
+                                    :style="'min-height:'+minHeight+'px;'"
                                     >
                                     <el-table-column
                                         prop="keyproduct"
@@ -478,7 +479,7 @@
                                     tooltip-effect="dark"
                                     stripe
                                     style="width: 100%"
-                                    :height="minHeight"
+                                    :style="'min-height:'+minHeight+'px;'"
                                     >
                                     <el-table-column
                                         prop="country"
@@ -508,7 +509,7 @@
                                     tooltip-effect="dark"
                                     stripe
                                     style="width: 100%"
-                                    :height="minHeight"
+                                    :style="'min-height:'+minHeight+'px;'"
                                     >
                                     <el-table-column
                                         prop="continent"
@@ -538,7 +539,7 @@
                                     tooltip-effect="dark"
                                     stripe
                                     style="width: 100%"
-                                    :height="minHeight"
+                                    :style="'min-height:'+minHeight+'px;'"
                                     >
                                     <el-table-column
                                         prop="phoneid"
@@ -568,7 +569,7 @@
                                     tooltip-effect="dark"
                                     stripe
                                     style="width: 100%"
-                                    :height="minHeight"
+                                    :style="'min-height:'+minHeight+'px;'"
                                     >
                                     <el-table-column
                                         prop="producttypename"
@@ -590,16 +591,19 @@
                                     </el-table-column>
                                 </el-table>
                             </div>
-                            <div class="pagination-panel" v-if="totalDataNum>limit" ref="pagePane">
-                                <el-pagination
-                                    @size-change="handleSizeChange"
-                                    :page-sizes="pageSizeList"
-                                    @current-change="handleCurrentChange"
-                                    :current-page="searchData.page"
-                                    :layout="device==='mobile'?'jumper':'total, sizes, prev, pager, next, jumper'"
-                                    :total="totalDataNum">
-                                </el-pagination>
+                            <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
+                                <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
                             </div>
+                        </div>
+                        <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
+                            <el-pagination
+                                @size-change="handleSizeChange"
+                                :page-sizes="pageSizeList"
+                                @current-change="handleCurrentChange"
+                                :current-page="searchData.page"
+                                :layout="device==='mobile'?'jumper':'total, sizes, prev, pager, next, jumper'"
+                                :total="totalDataNum">
+                            </el-pagination>
                         </div>
                     </el-card>  
                 </div> 
@@ -813,18 +817,48 @@ export default {
         isClues:true,
         levelPop:[],  
         levelPopBool:false,
+        scrollPosition:{
+          width:0,
+          left:0,
+          fixedBottom: 15,
+          insetWidth:0,
+          oldInsetLeft:0,
+          insetLeft:0,
+          ratio:0,
+          startPageX:0,
+          maxScrollWidth:0,
+          isMouseDown:false,
+          isPC:true,
+          isFixed:false,
+        },
+        scrollTable:{
+          scrollDom:null,
+          tableHeaderFixedDom:null,
+          tableFixedRightDom:null,
+          fixedTopHeight:0,
+          tableheaderHeight:0,
+          fixedRightWidth:0,
+          tableBottom:0,
+          clientHeight:0,
+        },
     }
   },
   computed: {
     ...mapGetters([
       'userInfo',
-      'device'
+      'device',
+      'sidebar'
     ]),
+    isOpen() {
+      return this.sidebar.opened;
+    },
   },
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-           $this.setTableHeight();
+        $this.setTableHeight();
+        // 监听竖向滚动条滚动事件
+        window.addEventListener('scroll',$this.handleScroll,true);
     });
     window.onresize = () => {
       return (() => {
@@ -843,6 +877,9 @@ export default {
           }, 400)
         }
       },
+      isOpen(e){
+        this.setTableHeight();
+      },
   },
   created(){
     var $this = this;
@@ -855,32 +892,30 @@ export default {
     })
   },
   methods:{
+    // 判断浏览器类型
+    getBrowserType(){
+      var ua =  navigator.userAgent;
+      if(ua){
+        if(ua.indexOf('Mobile')!=-1){
+          this.scrollPosition.isPC = false;
+        }else{
+          this.scrollPosition.isPC = true;
+        }
+      }else{
+        this.scrollPosition.isPC = true;
+      }
+    },
     // 设置高度
     setTableHeight(){
       var $this = this;
-      $this.minHeight = "auto";
-      $this.$nextTick(()=>{
-          var trueHeight = $this.$refs.scrollPane.offsetHeight;
-          var headerHeight = $this.$refs.headerPane.offsetHeight+63;
-          var screenHeight = $this.$refs.boxPane.offsetHeight;
-          console.log(trueHeight,"真实高度");
-          console.log(headerHeight,"头部高度");
-          console.log(screenHeight,"视窗高度");
-          if(trueHeight<=screenHeight){
-            $this.minHeight = screenHeight-headerHeight-30;
-          }else{
-            if(trueHeight-screenHeight<=headerHeight){
-              $this.minHeight = "auto";
-            }else{
-              if($this.totalDataNum>$this.limit){
-                $this.minHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 30;
-              }else{
-                $this.minHeight = screenHeight-30;
-              }
-            }
-          }
-          console.log($this.minHeight,"表格高度");
-      });
+      $this.minHeight = 0;      
+      var headerHeight = $this.$refs.headerPane.offsetHeight+45;
+      var screenHeight = $this.$refs.boxPane.offsetHeight;
+      $this.minHeight = screenHeight-headerHeight-30;
+      $this.getBrowserType();
+        setTimeout(function() {
+          $this.setScrollDom();
+      }, 400);
     },
     // 初始化数据
     initData(){
@@ -1579,7 +1614,169 @@ export default {
     handleLockClick(){
         var $this=this;
         $this.levelPopBool=!$this.levelPopBool;
-    }
+    },
+    // 设置横向滚动条相关DOM数据
+    setScrollDom(){
+      var $this = this;
+      $this.scrollPosition.insetLeft = 0;
+      $this.scrollPosition.oldInsetLeft = 0;
+      // 表格真实宽度（可能超出屏幕）
+      var scrollWidth = $this.$refs.simpleTable.bodyWrapper.scrollWidth;
+      // 表格可见宽度（屏幕内宽度）
+      var maxWidth = $this.$refs.simpleTable.bodyWrapper.clientWidth;
+      // 获取表格的位置信息（距离视窗左边的位置信息）
+      var rectOBJ = $this.$refs.simpleTable.$el.getBoundingClientRect();
+      // 获取距离视窗左边的宽度
+      var leftWidth = rectOBJ.left;
+      // 根据百分比算出滚动条滑块的宽度
+      var insetWidth = parseInt(maxWidth/scrollWidth*maxWidth);
+      // 算出滚动条与视口比例（滚动条滚动1像素视口需要滚动多少像素）
+      var ratio = (scrollWidth - maxWidth) / (maxWidth - insetWidth);
+      var scrollDom = document.querySelector(".SiteTable .el-table__body-wrapper");
+      var tableHeaderFixedDom = document.querySelector(".SiteTable .el-table__header-wrapper");
+      var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+      $this.scrollPosition.width = maxWidth;
+      $this.scrollPosition.left = leftWidth;
+      $this.scrollPosition.insetWidth = insetWidth;
+      $this.scrollPosition.ratio = parseFloat(ratio);
+      $this.scrollPosition.maxScrollWidth = maxWidth - insetWidth;
+      $this.scrollTable.scrollDom = scrollDom;
+      // 视窗改变时，让自定义滚动条的位置与真实滚动条滚动的位置相吻合
+      $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
+      // 获取表格头吸顶需滚动的高度
+      if($this.$refs.headerPane){
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15;
+      }else{
+         $this.scrollTable.fixedTopHeight=15;
+      }
+      $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
+      if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+         $this.scrollTable.tableFixedRightDom = tableFixedRightDom;
+      }
+      var fixedHeaderObj = $this.scrollTable.tableHeaderFixedDom.getBoundingClientRect();
+      // 获取表格头的高度
+      $this.scrollTable.tableheaderHeight = fixedHeaderObj.height;
+      if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+         var fixedRightObj = $this.scrollTable.tableFixedRightDom.getBoundingClientRect();
+         // 获取右侧固定列的总宽度
+         $this.scrollTable.fixedRightWidth = fixedRightObj.width;
+      }
+      var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
+      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+60+15;
+      $this.scrollTable.clientHeight = document.documentElement.clientHeight;
+      // 头部固定情况下视窗宽高改变，需要重新设置的一些宽高
+      if($this.scrollPosition.isFixed){
+        var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;";
+        $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+        document.querySelector(".table-mask").style = tableHeaderStyle;
+        var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";        
+        if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+        }
+        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+60+15;
+      }
+      // 视窗宽高改变时需要设置默认滚动条的位置
+      if($this.totalDataNum>20){
+        var scrTop = $this.$refs.scrollDom.scrollTop;
+        if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+        }else{
+          $this.scrollPosition.fixedBottom = 15;
+        }
+      }
+    },
+    // 竖向滚动条滚动事件
+    handleScroll(event){
+      var $this = this;
+      if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
+        var scrTop = event.target.scrollTop;
+        var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+        if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
+          $this.scrollPosition.isFixed = true;
+          var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          document.querySelector(".table-mask").style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          
+          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          }
+        }else{// 头部需要变为正常
+          $this.scrollPosition.isFixed = false;
+          var tableHeaderStyle = "width:100%";
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:0";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          var tableStyle3 = "width:auto";
+          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          }
+        }
+        if($this.totalDataNum>20){
+          if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+          }else{
+            $this.scrollPosition.fixedBottom = 15;
+          }
+        }
+      }
+    },
+    // 监听横向滚动条鼠标按下事件
+    mouseDownHandler(e){
+      this.crossMoveStartHandler(e);
+      window.addEventListener('mousemove',this.crossMoveingHandler);
+      window.addEventListener('mouseup',this.crossMoveEndHandler);
+    },
+    // 横向滚动条移动开始事件
+    crossMoveStartHandler(e){
+      var $this = this;
+      $this.scrollPosition.isMouseDown = true;
+      $this.scrollPosition.startPageX = e.pageX;
+    },
+    // 横向滚动条鼠标移动事件
+    crossMoveingHandler(e){
+      var $this = this;
+      if($this.scrollPosition.isMouseDown){// 只在鼠标按下时监听鼠标移动事件
+        var moveLeft = e.pageX - $this.scrollPosition.startPageX;
+        var scrollWidth = 0;
+        // 判断本次鼠标按下后鼠标移动的距离 大于0为向右移动
+        if(moveLeft>0){
+          // 本次移动距离+历史已移动距离如果大于最大能移动距离，说明向右已经滚动到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft>=$this.scrollPosition.maxScrollWidth){
+            scrollWidth = $this.scrollPosition.maxScrollWidth;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else if(moveLeft<0){
+          // 小于0为向左移动
+          // 本次移动距离+历史已移动距离，如果小于0，说明向左移动已经到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft<0){
+            scrollWidth = 0;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else{// 鼠标按下后，未移动
+          scrollWidth = $this.scrollPosition.insetLeft;
+        }
+        // 计算得出本次移动+历史移动总距离
+        // 自定义滚动条位置改变
+        $this.scrollPosition.insetLeft = scrollWidth;
+        // 真实滚动条滚动距离 = 自定义滚动条滚动距离*自定义滚动条与真实滚动条的滚动比
+        $this.scrollTable.scrollDom.scrollLeft = scrollWidth*$this.scrollPosition.ratio;
+        e.preventDefault();
+      }
+    },
+    // 横向滚动条移动结束事件
+    crossMoveEndHandler(e){
+      var $this = this;
+      $this.scrollPosition.isMouseDown = false;
+      $this.scrollPosition.startPageX = 0;
+      $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
+    },
   }
 }
 </script>

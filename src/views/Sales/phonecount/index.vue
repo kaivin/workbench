@@ -2,7 +2,7 @@
 <template>
     <div class="page-root sales-phonecount" ref="boxPane">
         <div class="abs-panel" ref="mainPane">
-            <div class="scroll-panel">
+            <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
                 <div class="true-height" ref="scrollPane">
                     <el-card class="box-card scroll-card" shadow="hover">
                         <div slot="header">
@@ -15,142 +15,148 @@
                             </div>
                         </div>
                         <div class="card-content" ref="tableContent">
-                            <el-table
-                                ref="simpleTable"
-                                :data="tableData"
-                                :height="tableHeight"
-                                tooltip-effect="dark"
-                                stripe
-                                class="SiteTable"
-                                style="width: 100%;text-align:center"
-                                row-key="id"
-                                >
-                                <el-table-column
-                                    prop="id"
-                                    label="业务员ID"
-                                    width="90"
-                                    text-align='center'
-                                    >
-                                </el-table-column>
-                                <el-table-column
-                                    prop="permit"
-                                    label="权限"
-                                    width="90"
-                                    text-align='center'
-                                    >
-                                </el-table-column>
-                                <el-table-column
-                                    prop="name"
-                                    label="姓名"
-                                    width="100"
-                                    >
-                                </el-table-column>
-                                <el-table-column
-                                    prop="allcount"
-                                    label="询盘总数"
-                                    width="100"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p><b style="color:#379bff">{{scope.row.allcount}}</b></p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="countnodeal"
-                                    label="未处理询盘数"
-                                    width="110"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p><b style="color:#ed475e">{{scope.row.countnodeal}}</b></p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="countnoread"
-                                    :label="lastDate+'未反馈数'"
-                                    width="140"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p><b style="color:#f37220">{{scope.row.nofeedcount}}</b></p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="noftwordcount"
-                                    :label="lastDate+'未填富通'"
-                                    width="140"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p><b style="color:#8e4d22">{{scope.row.noftwordcount}}</b></p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="nofeednowcount"
-                                    :label="currentDate+'未反馈数'"
-                                    width="150"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p><b style="color:#7d6c15">{{scope.row.nofeednowcount}}</b></p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="noftwordnowcount"
-                                    :label="currentDate+'未填富通'"
-                                    width="150"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p><b style="color:#848c1c">{{scope.row.noftwordnowcount}}</b></p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="allotcount"
-                                    label="近2日分配询盘数"
-                                    width="140"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p><b style="color:#349b1e">{{scope.row.allotcount}}</b></p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="countnoread"
-                                    label="未读询盘数"
-                                    width="100"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p><b style="color:#791ca2">{{scope.row.countnoread}}</b></p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="countwarn"
-                                    label="提醒未处理"
-                                    width="100"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p><b style="color:#6bd416">{{scope.row.countwarn}}</b></p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="login_time"
-                                    label="上次登录时间"
-                                    min-width="160"
-                                    >
-                                </el-table-column>
-                            </el-table>
+                              <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
+                                    <div class="table-mask"></div>
+                                    <el-table
+                                        ref="simpleTable"
+                                        :data="tableData"
+                                        :style="'min-height:'+tableHeight+'px;'"
+                                        tooltip-effect="dark"
+                                        stripe
+                                        class="SiteTable"
+                                        style="width: 100%;text-align:center"
+                                        row-key="id"
+                                        >
+                                        <el-table-column
+                                            prop="id"
+                                            label="业务员ID"
+                                            width="90"
+                                            text-align='center'
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="permit"
+                                            label="权限"
+                                            width="90"
+                                            text-align='center'
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="name"
+                                            label="姓名"
+                                            width="100"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="allcount"
+                                            label="询盘总数"
+                                            width="100"
+                                            >
+                                            <template slot-scope="scope">
+                                                <div class="table-text">
+                                                    <p><b style="color:#379bff">{{scope.row.allcount}}</b></p>
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="countnodeal"
+                                            label="未处理询盘数"
+                                            width="110"
+                                            >
+                                            <template slot-scope="scope">
+                                                <div class="table-text">
+                                                    <p><b style="color:#ed475e">{{scope.row.countnodeal}}</b></p>
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="countnoread"
+                                            :label="lastDate+'未反馈数'"
+                                            width="140"
+                                            >
+                                            <template slot-scope="scope">
+                                                <div class="table-text">
+                                                    <p><b style="color:#f37220">{{scope.row.nofeedcount}}</b></p>
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="noftwordcount"
+                                            :label="lastDate+'未填富通'"
+                                            width="140"
+                                            >
+                                            <template slot-scope="scope">
+                                                <div class="table-text">
+                                                    <p><b style="color:#8e4d22">{{scope.row.noftwordcount}}</b></p>
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="nofeednowcount"
+                                            :label="currentDate+'未反馈数'"
+                                            width="150"
+                                            >
+                                            <template slot-scope="scope">
+                                                <div class="table-text">
+                                                    <p><b style="color:#7d6c15">{{scope.row.nofeednowcount}}</b></p>
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="noftwordnowcount"
+                                            :label="currentDate+'未填富通'"
+                                            width="150"
+                                            >
+                                            <template slot-scope="scope">
+                                                <div class="table-text">
+                                                    <p><b style="color:#848c1c">{{scope.row.noftwordnowcount}}</b></p>
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="allotcount"
+                                            label="近2日分配询盘数"
+                                            width="140"
+                                            >
+                                            <template slot-scope="scope">
+                                                <div class="table-text">
+                                                    <p><b style="color:#349b1e">{{scope.row.allotcount}}</b></p>
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="countnoread"
+                                            label="未读询盘数"
+                                            width="100"
+                                            >
+                                            <template slot-scope="scope">
+                                                <div class="table-text">
+                                                    <p><b style="color:#791ca2">{{scope.row.countnoread}}</b></p>
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="countwarn"
+                                            label="提醒未处理"
+                                            width="100"
+                                            >
+                                            <template slot-scope="scope">
+                                                <div class="table-text">
+                                                    <p><b style="color:#6bd416">{{scope.row.countwarn}}</b></p>
+                                                </div>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="login_time"
+                                            label="上次登录时间"
+                                            min-width="160"
+                                            >
+                                        </el-table-column>
+                                    </el-table>
+                              </div>
+                              <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
+                                  <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
+                              </div>
                         </div>
                     </el-card>
                 </div>
@@ -178,19 +184,49 @@ export default {
             {label:"有效的（在职）",value:2},
             {label:"无效的（离职）",value:3},
             {label:"分配层的（其他）",value:4},
-        ]
+        ],
+        scrollPosition:{
+          width:0,
+          left:0,
+          fixedBottom: 15,
+          insetWidth:0,
+          oldInsetLeft:0,
+          insetLeft:0,
+          ratio:0,
+          startPageX:0,
+          maxScrollWidth:0,
+          isMouseDown:false,
+          isPC:true,
+          isFixed:false,
+        },
+        scrollTable:{
+          scrollDom:null,
+          tableHeaderFixedDom:null,
+          tableFixedRightDom:null,
+          fixedTopHeight:0,
+          tableheaderHeight:0,
+          fixedRightWidth:0,
+          tableBottom:0,
+          clientHeight:0,
+        },
     }
   },
   computed: {
     ...mapGetters([
       'userInfo',
-      'device'
+      'device',
+      'sidebar'
     ]),
+    isOpen() {
+      return this.sidebar.opened;
+    },
   },
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-           $this.setTableHeight();
+        $this.setTableHeight();
+        // 监听竖向滚动条滚动事件
+        window.addEventListener('scroll',$this.handleScroll,true);
     });
     window.onresize = () => {
         return (() => {
@@ -209,10 +245,9 @@ export default {
           }, 400)
         }
       },
-  },
-  created(){
-    var $this = this;
-    $this.initData();
+      isOpen(e){
+        this.setTableHeight();
+      },
   },
   updated(){
     var $this =this;
@@ -220,33 +255,35 @@ export default {
       this.$refs.simpleTable.doLayout()
     })
   },
+  created(){
+    var $this = this;
+    $this.initData();
+  },
   methods:{
+    // 判断浏览器类型
+    getBrowserType(){
+      var ua =  navigator.userAgent;
+      if(ua){
+        if(ua.indexOf('Mobile')!=-1){
+          this.scrollPosition.isPC = false;
+        }else{
+          this.scrollPosition.isPC = true;
+        }
+      }else{
+        this.scrollPosition.isPC = true;
+      }
+    },
     // 设置高度
     setTableHeight(){
       var $this = this;
-      $this.tableHeight = "auto";
-      $this.$nextTick(()=>{
-        var trueHeight = $this.$refs.scrollPane.offsetHeight;
-        var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-        var screenHeight = $this.$refs.boxPane.offsetHeight;
-        console.log(trueHeight,"真实高度");
-        console.log(headerHeight,"头部高度");
-        console.log(screenHeight,"视窗高度");
-        if(trueHeight<=screenHeight){
-          $this.tableHeight = screenHeight-headerHeight-30;
-        }else{
-          if(trueHeight-screenHeight<=headerHeight){
-            $this.tableHeight = "auto";
-          }else{
-            if($this.totalDataNum>100){
-              $this.tableHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 45;
-            }else{
-              $this.tableHeight = screenHeight-30;
-            }
-          }
-        }
-        console.log($this.tableHeight,"表格高度");
-      });
+      $this.tableHeight = 0;      
+      var headerHeight = $this.$refs.headerPane.offsetHeight+45;
+      var screenHeight = $this.$refs.boxPane.offsetHeight;
+      $this.tableHeight = screenHeight-headerHeight-30;
+      $this.getBrowserType();
+        setTimeout(function() {
+          $this.setScrollDom();
+      }, 400);
     },
     // 初始化数据
     initData(){
@@ -347,7 +384,143 @@ export default {
     valueChangeHandler(e){
       var $this = this;
       $this.initPage();
-    }
+    },
+    // 设置横向滚动条相关DOM数据
+    setScrollDom(){
+      var $this = this;
+      $this.scrollPosition.insetLeft = 0;
+      $this.scrollPosition.oldInsetLeft = 0;
+      // 表格真实宽度（可能超出屏幕）
+      var scrollWidth = $this.$refs.simpleTable.bodyWrapper.scrollWidth;
+      // 表格可见宽度（屏幕内宽度）
+      var maxWidth = $this.$refs.simpleTable.bodyWrapper.clientWidth;
+      // 获取表格的位置信息（距离视窗左边的位置信息）
+      var rectOBJ = $this.$refs.simpleTable.$el.getBoundingClientRect();
+      // 获取距离视窗左边的宽度
+      var leftWidth = rectOBJ.left;
+      // 根据百分比算出滚动条滑块的宽度
+      var insetWidth = parseInt(maxWidth/scrollWidth*maxWidth);
+      // 算出滚动条与视口比例（滚动条滚动1像素视口需要滚动多少像素）
+      var ratio = (scrollWidth - maxWidth) / (maxWidth - insetWidth);
+      var scrollDom = document.querySelector(".SiteTable .el-table__body-wrapper");
+      var tableHeaderFixedDom = document.querySelector(".SiteTable .el-table__header-wrapper");
+      var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+      $this.scrollPosition.width = maxWidth;
+      $this.scrollPosition.left = leftWidth;
+      $this.scrollPosition.insetWidth = insetWidth;
+      $this.scrollPosition.ratio = parseFloat(ratio);
+      $this.scrollPosition.maxScrollWidth = maxWidth - insetWidth;
+      $this.scrollTable.scrollDom = scrollDom;
+      // 视窗改变时，让自定义滚动条的位置与真实滚动条滚动的位置相吻合
+      $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
+      // 获取表格头吸顶需滚动的高度
+      if($this.$refs.headerPane){
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15;
+      }else{
+         $this.scrollTable.fixedTopHeight=15;
+      }
+      $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
+      $this.scrollTable.tableFixedRightDom = tableFixedRightDom;
+      var fixedHeaderObj = $this.scrollTable.tableHeaderFixedDom.getBoundingClientRect();
+      // 获取表格头的高度
+      $this.scrollTable.tableheaderHeight = fixedHeaderObj.height;
+      if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+         var fixedRightObj = $this.scrollTable.tableFixedRightDom.getBoundingClientRect();
+         // 获取右侧固定列的总宽度
+         $this.scrollTable.fixedRightWidth = fixedRightObj.width;
+      }
+      var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
+      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+60+15;
+      $this.scrollTable.clientHeight = document.documentElement.clientHeight;
+      // 头部固定情况下视窗宽高改变，需要重新设置的一些宽高
+      if($this.scrollPosition.isFixed){
+        var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;";
+        $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+        document.querySelector(".table-mask").style = tableHeaderStyle;
+        var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+        document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+60+15;
+      }
+    },
+    // 竖向滚动条滚动事件
+    handleScroll(event){
+      var $this = this;
+      if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
+        var scrTop = event.target.scrollTop;
+        if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
+          $this.scrollPosition.isFixed = true;
+          var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          document.querySelector(".table-mask").style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
+          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+        }else{// 头部需要变为正常
+          $this.scrollPosition.isFixed = false;
+          var tableHeaderStyle = "width:100%";
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:0";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          var tableStyle3 = "width:auto";
+          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+        }
+      }
+    },
+    // 监听横向滚动条鼠标按下事件
+    mouseDownHandler(e){
+      this.crossMoveStartHandler(e);
+      window.addEventListener('mousemove',this.crossMoveingHandler);
+      window.addEventListener('mouseup',this.crossMoveEndHandler);
+    },
+    // 横向滚动条移动开始事件
+    crossMoveStartHandler(e){
+      var $this = this;
+      $this.scrollPosition.isMouseDown = true;
+      $this.scrollPosition.startPageX = e.pageX;
+    },
+    // 横向滚动条鼠标移动事件
+    crossMoveingHandler(e){
+      var $this = this;
+      if($this.scrollPosition.isMouseDown){// 只在鼠标按下时监听鼠标移动事件
+        var moveLeft = e.pageX - $this.scrollPosition.startPageX;
+        var scrollWidth = 0;
+        // 判断本次鼠标按下后鼠标移动的距离 大于0为向右移动
+        if(moveLeft>0){
+          // 本次移动距离+历史已移动距离如果大于最大能移动距离，说明向右已经滚动到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft>=$this.scrollPosition.maxScrollWidth){
+            scrollWidth = $this.scrollPosition.maxScrollWidth;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else if(moveLeft<0){
+          // 小于0为向左移动
+          // 本次移动距离+历史已移动距离，如果小于0，说明向左移动已经到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft<0){
+            scrollWidth = 0;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else{// 鼠标按下后，未移动
+          scrollWidth = $this.scrollPosition.insetLeft;
+        }
+        // 计算得出本次移动+历史移动总距离
+        // 自定义滚动条位置改变
+        $this.scrollPosition.insetLeft = scrollWidth;
+        // 真实滚动条滚动距离 = 自定义滚动条滚动距离*自定义滚动条与真实滚动条的滚动比
+        $this.scrollTable.scrollDom.scrollLeft = scrollWidth*$this.scrollPosition.ratio;
+        e.preventDefault();
+      }
+    },
+    // 横向滚动条移动结束事件
+    crossMoveEndHandler(e){
+      var $this = this;
+      $this.scrollPosition.isMouseDown = false;
+      $this.scrollPosition.startPageX = 0;
+      $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
+    },
   }
 }
 </script>

@@ -211,7 +211,7 @@
                     </div>
                     <div class="card-content" ref="tableContent">
                       <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
-                        <div class="table-mask"></div>
+                            <div class="table-mask"></div>
                             <el-table
                                 ref="simpleTable"
                                 :data="tableData"
@@ -220,7 +220,7 @@
                                 class="SiteTable EntableColor"
                                 style="width: 100%"
                                 row-key="id"
-                                :height="tableHeight"
+                                :style="'min-height:'+tableHeight+'px;'"
                                 @selection-change="handleSelectionChange"
                                 >
                                 <el-table-column
@@ -695,7 +695,6 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:false,
     }
   },
   computed: {
@@ -711,12 +710,9 @@ export default {
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-      if(!$this.isLoading){
-        console.log("执行2");
         $this.setTableHeight();
         // 监听竖向滚动条滚动事件
         window.addEventListener('scroll',$this.handleScroll,true);
-      }
     });
     window.onresize = () => {
         return (() => {
@@ -792,16 +788,13 @@ export default {
     // 设置高度
     setTableHeight(){
       var $this = this;
-      $this.tableHeight = "auto";      
-      var trueHeight = $this.$refs.scrollPane.offsetHeight;
+      $this.tableHeight = 0;      
       var headerHeight = $this.$refs.headerPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
-      if(trueHeight<=screenHeight){
-        $this.tableHeight = screenHeight-headerHeight-30;
-      }
+      $this.tableHeight = screenHeight-headerHeight-30;
       $this.getBrowserType();
-      setTimeout(function() {
-        $this.setScrollDom();
+        setTimeout(function() {
+          $this.setScrollDom();
       }, 400);
     },
     // 数据清空
@@ -884,33 +877,9 @@ export default {
       var $this = this;    
       $this.getUserMenuButtonPermit();
     },
-    // 公共数据
-    publlcData(){
+    // 初始化搜索数据
+    searchInit(){
       var $this = this;
-      $this.$store.dispatch('Sales/getSalesPublicDataAction', null).then(response=>{
-        if(response){        
-          console.log(response,'左侧公共数据');
-          var defaultData = {};
-          defaultData.waitcount=response.waitcount;
-          defaultData.allotcount=response.allotcount;
-          defaultData.personcount=response.personcount;
-          defaultData.waitdealcount=response.waitdealcount;
-          defaultData.monthsaycount=response.monthsaycount;
-          defaultData.hasnosaycount=response.hasnosaycount;
-          defaultData.waitftwordcount=response.waitftwordcount;
-          defaultData.hasdealcount=response.hasdealcount;
-          defaultData.hassaycount=response.hassaycount;
-          defaultData.warning=response.warning;
-          defaultData.warningcount=response.warningcount;
-          $this.defaultData = defaultData;
-          console.log(defaultData,'defaultData');
-        }
-      });
-    },
-    // 初始化页面信息
-    initPage(){
-      var $this = this;
-      $this.publlcData();
       $this.$store.dispatch('Sales/getSalesSearchListAction', null).then(response=>{
         if(response){
           if(response.status){
@@ -985,6 +954,30 @@ export default {
               });
             }
           }
+        }
+      });
+    },
+    // 初始化页面信息
+    initPage(){
+      var $this = this;
+      $this.$store.dispatch('Sales/getSalesPublicDataAction', null).then(response=>{
+        if(response){        
+          console.log(response,'左侧公共数据');
+          var defaultData = {};
+          defaultData.waitcount=response.waitcount;
+          defaultData.allotcount=response.allotcount;
+          defaultData.personcount=response.personcount;
+          defaultData.waitdealcount=response.waitdealcount;
+          defaultData.monthsaycount=response.monthsaycount;
+          defaultData.hasnosaycount=response.hasnosaycount;
+          defaultData.waitftwordcount=response.waitftwordcount;
+          defaultData.hasdealcount=response.hasdealcount;
+          defaultData.hassaycount=response.hassaycount;
+          defaultData.warning=response.warning;
+          defaultData.warningcount=response.warningcount;
+          $this.defaultData = defaultData;
+          console.log(defaultData,'defaultData');
+          $this.searchInit();
         }
       });
     },    
@@ -1192,9 +1185,7 @@ export default {
           }
           $this.infoData = infoData;
           $this.totalDataNum = resData.allcount;
-          $this.isLoading = false;
           $this.$nextTick(function () {
-            console.log("执行1");
             $this.setTableHeight();
           })
         }else{
@@ -1209,7 +1200,6 @@ export default {
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
       var $this = this;
-      $this.isLoading = true;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         console.log(res);
         if(res.status){
@@ -1458,15 +1448,23 @@ export default {
       // 视窗改变时，让自定义滚动条的位置与真实滚动条滚动的位置相吻合
       $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
       // 获取表格头吸顶需滚动的高度
-      $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15;
+      if($this.$refs.headerPane){
+        $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15;
+      }else{
+         $this.scrollTable.fixedTopHeight=15;
+      }
       $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
-      $this.scrollTable.tableFixedRightDom = tableFixedRightDom;
+      if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+         $this.scrollTable.tableFixedRightDom = tableFixedRightDom;
+      }
       var fixedHeaderObj = $this.scrollTable.tableHeaderFixedDom.getBoundingClientRect();
       // 获取表格头的高度
       $this.scrollTable.tableheaderHeight = fixedHeaderObj.height;
-      var fixedRightObj = $this.scrollTable.tableFixedRightDom.getBoundingClientRect();
-      // 获取右侧固定列的总宽度
-      $this.scrollTable.fixedRightWidth = fixedRightObj.width;
+      if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+         var fixedRightObj = $this.scrollTable.tableFixedRightDom.getBoundingClientRect();
+         // 获取右侧固定列的总宽度
+         $this.scrollTable.fixedRightWidth = fixedRightObj.width;
+      }
       var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
       $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+60+15;
       $this.scrollTable.clientHeight = document.documentElement.clientHeight;
@@ -1475,15 +1473,17 @@ export default {
         var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;";
         $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
         document.querySelector(".table-mask").style = tableHeaderStyle;
-        var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
-        document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+        var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";        
+        if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+        }
         $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+60+15;
       }
       // 视窗宽高改变时需要设置默认滚动条的位置
       if($this.totalDataNum>20){
         var scrTop = $this.$refs.scrollDom.scrollTop;
         if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
-          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom;
+          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
         }else{
           $this.scrollPosition.fixedBottom = 15;
         }
@@ -1494,6 +1494,7 @@ export default {
       var $this = this;
       if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
         var scrTop = event.target.scrollTop;
+        var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
         if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
           $this.scrollPosition.isFixed = true;
           var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
@@ -1503,8 +1504,11 @@ export default {
           var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
           var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
           document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
-          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
-          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          
+          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          }
         }else{// 头部需要变为正常
           $this.scrollPosition.isFixed = false;
           var tableHeaderStyle = "width:100%";
@@ -1512,11 +1516,13 @@ export default {
           var tableStyle1 = "padding-top:0";
           document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
           var tableStyle3 = "width:auto";
-          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          }
         }
         if($this.totalDataNum>20){
           if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
-            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom;
+            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
           }else{
             $this.scrollPosition.fixedBottom = 15;
           }
@@ -1574,7 +1580,7 @@ export default {
       $this.scrollPosition.isMouseDown = false;
       $this.scrollPosition.startPageX = 0;
       $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
-    },
+    }
   }
 }
 </script>

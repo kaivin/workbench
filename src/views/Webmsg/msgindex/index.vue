@@ -22,7 +22,7 @@
         </div>
         <div class="flex-content relative">
             <div class="abs-panel" ref="mainPane">
-                <div class="scroll-panel">
+                <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
                   <div class="true-height" ref="scrollPane">
                     <el-card class="box-card scroll-card" shadow="hover">
                         <div slot="header">
@@ -76,156 +76,162 @@
                             </div>
                         </div>
                         <div class="card-content" ref="tableContent">
-                            <el-table
-                                v-loading="isLoading"
-                                ref="simpleTable"
-                                :data="tableData"
-                                tooltip-effect="dark"
-                                stripe
-                                class="SiteTable msg-table EntableColor"
-                                style="width: 100%"
-                                :height="minHeight"
-                                row-key="id"
-                                @selection-change="handleSelectionChange"
-                                >
-                                <el-table-column
-                                    type="selection"
-                                    align="center"
-                                    width="48">
-                                </el-table-column>
-                                <el-table-column
-                                    prop="id"
-                                    label="类型"
-                                    width="90"
+                            <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
+                                <div class="table-mask"></div>
+                                <el-table
+                                    v-loading="isLoading"
+                                    ref="simpleTable"
+                                    :data="tableData"
+                                    tooltip-effect="dark"
+                                    stripe
+                                    class="SiteTable msg-table EntableColor"
+                                    style="width: 100%"
+                                    :style="'min-height:'+minHeight+'px;'"
+                                    row-key="id"
+                                    @selection-change="handleSelectionChange"
                                     >
-                                    <template slot-scope="scope">
-                                      <div class="msg-text">
-                                        <p><strong class="EnColor05">ID：</strong><span class="txt-span">{{scope.row.id}}</span></p>
-                                        <p class="star-p"><strong class="EnColor05">星标：</strong><i class="svg-i" v-if="scope.row.isStar"><svg-icon icon-class="star1" class-name="disabled" /></i></p>
-                                        <p class="txt-api" v-if="scope.row.appid"><strong class="EnColor05">APPID：</strong><span class="txt-span">{{scope.row.appid}}</span></p>
-                                      </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="webdomain"
-                                    label="来源"
-                                    width="160"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="msg-text">
-                                        <p><strong class="EnColor05">域名：</strong><span class="txt-span">{{scope.row.webdomain}}</span></p>
-                                        <p><strong class="EnColor05">网站ID：</strong><span class="txt-span">{{scope.row.website_id}}</span></p>
-                                        <p><strong class="EnColor05">IP：</strong><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" class="txt-link">{{scope.row.ip}}</a><span v-if="scope.row.ip&&scope.row.ip!=''&&scope.row.ipcount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.ip)">({{scope.row.ipcount}})</span></p>
-                                        <p><strong class="EnColor05">URL：</strong><a :href="scope.row.refer" target="_blank" class="txt-link">打开</a></p>
-                                        <p><strong class="EnColor05">标识：</strong><span class="txt-span">{{scope.row.site_feedback}}</span></p>
-                                        <p><strong class="EnColor05">渠道：</strong><span class="txt-span">{{scope.row.from_way}}</span></p>
-                                      </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="name"
-                                    label="联系方式"
-                                    width="160"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="msg-text">
-                                        <p><strong class="EnColor05">联系人：</strong><span class="txt-span">{{scope.row.name}}</span></p>
-                                        <p><strong class="EnColor05">电话：</strong><span class="txt-span">{{scope.row.encryptPhone}}</span><span v-if="scope.row.encryptPhone&&scope.row.encryptPhone!=''&&scope.row.phonecount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.encryptPhone)">({{scope.row.phonecount}})</span></p>
-                                        <p><strong class="EnColor05">Email：</strong><span class="txt-span">{{scope.row.encryptEmail}}</span><span v-if="scope.row.encryptEmail&&scope.row.encryptEmail!=''&&scope.row.emailcount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.encryptEmail)">({{scope.row.emailcount}})</span></p>
-                                        <p><strong class="EnColor05">理想联系方式：</strong><span class="txt-span">{{scope.row.othercontact}}</span></p>
-                                      </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="productname"
-                                    label="留言内容"
-                                    min-width="160"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="msg-text">
-                                        <p><strong class="EnColor05">产品：</strong><span class="txt-span">{{scope.row.productname}}</span></p>
-                                        <p><strong class="EnColor05">标题：</strong><span class="txt-span">{{scope.row.topic}}</span></p>
-                                        <p><strong class="EnColor05">内容：</strong><span class="txt-span">{{scope.row.message}}</span></p>
-                                      </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="remark"
-                                    label="中文备注"
-                                    width="140"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="msg-input">
-                                        <el-input size="small" type="textarea" rows="7" resize="none" v-model="scope.row.remark"></el-input>
-                                      </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="addtime"
-                                    label="时间"
-                                    width="160"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="msg-text">
-                                        <p><strong class="EnColor05">留言时间：</strong><br /><span class="txt-span">{{scope.row.addtime}}</span></p>
-                                        <p><strong class="EnColor05">处理时间：</strong><br /><span class="txt-span">{{scope.row.dealtime?scope.row.dealtime:"未处理"}}</span></p>
-                                        <p><strong class="EnColor05">更新时间：</strong><br /><span class="txt-span">{{scope.row.updatetime}}</span></p>
-                                      </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="dealusername"
-                                    label="分配人员"
-                                    width="190"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="msg-text input-msg">
-                                        <p><el-checkbox v-model="scope.row.isProcessed" label="已处理" border size="mini" class="checkbox-inline"></el-checkbox><span class="txt-span">{{scope.row.dealusername}}</span></p>
-                                        <p><el-checkbox v-model="scope.row.isStar" label="加星标" border size="mini"></el-checkbox></p>
-                                        <p>
-                                          <strong class="txt-strong EnColor05">质量级：</strong>
-                                          <el-select v-model="scope.row.qualitylevel" placeholder="" style="width: 118px;" size="mini">
-                                            <el-option
-                                              v-for="item in levelList"
-                                              :key="item.value"
-                                              :label="item.label"
-                                              :value="item.value">
-                                            </el-option>
-                                          </el-select>
-                                        </p>
-                                        <p><strong class="txt-strong EnColor05">备注项：</strong><el-input size="small" type="textarea" rows="2" resize="none" style="width: 118px;" v-model="scope.row.xunremark"></el-input></p>
-                                      </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="sort"
-                                    label="跟踪"
-                                    width="120"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="msg-text textarea-msg">
-                                        <p><strong class="txt-strong EnColor05">询盘分配：</strong><el-input size="mini" type="textarea" rows="1" resize="none" v-model="scope.row.allotremark"></el-input></p>
-                                        <p><strong class="txt-strong EnColor05">询盘状态：</strong><el-input size="mini" type="textarea" rows="3" resize="none" v-model="scope.row.xunstatusremark"></el-input></p>
-                                      </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    v-if="(menuButtonPermit.includes('Webmsg_edit')||menuButtonPermit.includes('Webmsg_delete')||menuButtonPermit.includes('Webmsg_haswaitdealsub')||menuButtonPermit.indexOf('Webmsg_hasdealsub'))&&device==='desktop'"
-                                    width="120"
-                                    align="center"
-                                    fixed="right"
-                                    prop="operations"
-                                    label="操作">
-                                    <template #default="scope">
-                                      <div class="table-button">
-                                          <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Webmsg_edit')&&currentStatus!=='SNS_1'&&currentStatus!=='SNS_2'">修改</el-button>
-                                          <el-button size="mini" @click="promotePendingEdit(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Webmsg_haswaitdealsub')&&(currentStatus==='Untreated'||currentStatus==='Pending')">推广待处理</el-button>
-                                          <el-button size="mini" @click="promoteProcessedEdit(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Webmsg_hasdealsub')&&currentStatus==='SNS_1'">推广已处理</el-button>
-                                          <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Webmsg_delete')&&(currentStatus==='Untreated'||currentStatus==='Pending')" type="info" plain>删除</el-button>
-                                      </div>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
+                                    <el-table-column
+                                        type="selection"
+                                        align="center"
+                                        width="48">
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="id"
+                                        label="类型"
+                                        width="90"
+                                        >
+                                        <template slot-scope="scope">
+                                          <div class="msg-text">
+                                            <p><strong class="EnColor05">ID：</strong><span class="txt-span">{{scope.row.id}}</span></p>
+                                            <p class="star-p"><strong class="EnColor05">星标：</strong><i class="svg-i" v-if="scope.row.isStar"><svg-icon icon-class="star1" class-name="disabled" /></i></p>
+                                            <p class="txt-api" v-if="scope.row.appid"><strong class="EnColor05">APPID：</strong><span class="txt-span">{{scope.row.appid}}</span></p>
+                                          </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="webdomain"
+                                        label="来源"
+                                        width="160"
+                                        >
+                                        <template slot-scope="scope">
+                                          <div class="msg-text">
+                                            <p><strong class="EnColor05">域名：</strong><span class="txt-span">{{scope.row.webdomain}}</span></p>
+                                            <p><strong class="EnColor05">网站ID：</strong><span class="txt-span">{{scope.row.website_id}}</span></p>
+                                            <p><strong class="EnColor05">IP：</strong><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" class="txt-link">{{scope.row.ip}}</a><span v-if="scope.row.ip&&scope.row.ip!=''&&scope.row.ipcount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.ip)">({{scope.row.ipcount}})</span></p>
+                                            <p><strong class="EnColor05">URL：</strong><a :href="scope.row.refer" target="_blank" class="txt-link">打开</a></p>
+                                            <p><strong class="EnColor05">标识：</strong><span class="txt-span">{{scope.row.site_feedback}}</span></p>
+                                            <p><strong class="EnColor05">渠道：</strong><span class="txt-span">{{scope.row.from_way}}</span></p>
+                                          </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="name"
+                                        label="联系方式"
+                                        width="160"
+                                        >
+                                        <template slot-scope="scope">
+                                          <div class="msg-text">
+                                            <p><strong class="EnColor05">联系人：</strong><span class="txt-span">{{scope.row.name}}</span></p>
+                                            <p><strong class="EnColor05">电话：</strong><span class="txt-span">{{scope.row.encryptPhone}}</span><span v-if="scope.row.encryptPhone&&scope.row.encryptPhone!=''&&scope.row.phonecount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.encryptPhone)">({{scope.row.phonecount}})</span></p>
+                                            <p><strong class="EnColor05">Email：</strong><span class="txt-span">{{scope.row.encryptEmail}}</span><span v-if="scope.row.encryptEmail&&scope.row.encryptEmail!=''&&scope.row.emailcount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.encryptEmail)">({{scope.row.emailcount}})</span></p>
+                                            <p><strong class="EnColor05">理想联系方式：</strong><span class="txt-span">{{scope.row.othercontact}}</span></p>
+                                          </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="productname"
+                                        label="留言内容"
+                                        min-width="160"
+                                        >
+                                        <template slot-scope="scope">
+                                          <div class="msg-text">
+                                            <p><strong class="EnColor05">产品：</strong><span class="txt-span">{{scope.row.productname}}</span></p>
+                                            <p><strong class="EnColor05">标题：</strong><span class="txt-span">{{scope.row.topic}}</span></p>
+                                            <p><strong class="EnColor05">内容：</strong><span class="txt-span">{{scope.row.message}}</span></p>
+                                          </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="remark"
+                                        label="中文备注"
+                                        width="140"
+                                        >
+                                        <template slot-scope="scope">
+                                          <div class="msg-input">
+                                            <el-input size="small" type="textarea" rows="7" resize="none" v-model="scope.row.remark"></el-input>
+                                          </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="addtime"
+                                        label="时间"
+                                        width="160"
+                                        >
+                                        <template slot-scope="scope">
+                                          <div class="msg-text">
+                                            <p><strong class="EnColor05">留言时间：</strong><br /><span class="txt-span">{{scope.row.addtime}}</span></p>
+                                            <p><strong class="EnColor05">处理时间：</strong><br /><span class="txt-span">{{scope.row.dealtime?scope.row.dealtime:"未处理"}}</span></p>
+                                            <p><strong class="EnColor05">更新时间：</strong><br /><span class="txt-span">{{scope.row.updatetime}}</span></p>
+                                          </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="dealusername"
+                                        label="分配人员"
+                                        width="190"
+                                        >
+                                        <template slot-scope="scope">
+                                          <div class="msg-text input-msg">
+                                            <p><el-checkbox v-model="scope.row.isProcessed" label="已处理" border size="mini" class="checkbox-inline"></el-checkbox><span class="txt-span">{{scope.row.dealusername}}</span></p>
+                                            <p><el-checkbox v-model="scope.row.isStar" label="加星标" border size="mini"></el-checkbox></p>
+                                            <p>
+                                              <strong class="txt-strong EnColor05">质量级：</strong>
+                                              <el-select v-model="scope.row.qualitylevel" placeholder="" style="width: 118px;" size="mini">
+                                                <el-option
+                                                  v-for="item in levelList"
+                                                  :key="item.value"
+                                                  :label="item.label"
+                                                  :value="item.value">
+                                                </el-option>
+                                              </el-select>
+                                            </p>
+                                            <p><strong class="txt-strong EnColor05">备注项：</strong><el-input size="small" type="textarea" rows="2" resize="none" style="width: 118px;" v-model="scope.row.xunremark"></el-input></p>
+                                          </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="sort"
+                                        label="跟踪"
+                                        width="120"
+                                        >
+                                        <template slot-scope="scope">
+                                          <div class="msg-text textarea-msg">
+                                            <p><strong class="txt-strong EnColor05">询盘分配：</strong><el-input size="mini" type="textarea" rows="1" resize="none" v-model="scope.row.allotremark"></el-input></p>
+                                            <p><strong class="txt-strong EnColor05">询盘状态：</strong><el-input size="mini" type="textarea" rows="3" resize="none" v-model="scope.row.xunstatusremark"></el-input></p>
+                                          </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        v-if="(menuButtonPermit.includes('Webmsg_edit')||menuButtonPermit.includes('Webmsg_delete')||menuButtonPermit.includes('Webmsg_haswaitdealsub')||menuButtonPermit.indexOf('Webmsg_hasdealsub'))&&device==='desktop'"
+                                        width="120"
+                                        align="center"
+                                        fixed="right"
+                                        prop="operations"
+                                        label="操作">
+                                        <template #default="scope">
+                                          <div class="table-button">
+                                              <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Webmsg_edit')&&currentStatus!=='SNS_1'&&currentStatus!=='SNS_2'">修改</el-button>
+                                              <el-button size="mini" @click="promotePendingEdit(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Webmsg_haswaitdealsub')&&(currentStatus==='Untreated'||currentStatus==='Pending')">推广待处理</el-button>
+                                              <el-button size="mini" @click="promoteProcessedEdit(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Webmsg_hasdealsub')&&currentStatus==='SNS_1'">推广已处理</el-button>
+                                              <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Webmsg_delete')&&(currentStatus==='Untreated'||currentStatus==='Pending')" type="info" plain>删除</el-button>
+                                          </div>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                            <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
+                                <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
+                            </div>
                         </div>
                         <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
                             <el-pagination
@@ -299,23 +305,53 @@ export default {
         permitStatus:[],
         isLoading:false,
         isReady:true,
+        scrollPosition:{
+          width:0,
+          left:0,
+          fixedBottom: 15,
+          insetWidth:0,
+          oldInsetLeft:0,
+          insetLeft:0,
+          ratio:0,
+          startPageX:0,
+          maxScrollWidth:0,
+          isMouseDown:false,
+          isPC:true,
+          isFixed:false,
+        },
+        scrollTable:{
+          scrollDom:null,
+          tableHeaderFixedDom:null,
+          tableFixedRightDom:null,
+          fixedTopHeight:0,
+          tableheaderHeight:0,
+          fixedRightWidth:0,
+          tableBottom:0,
+          clientHeight:0,
+        },
     }
   },
   computed: {
     ...mapGetters([
       'userInfo',
       'device',
-      'msgPage'
+      'msgPage',
+      'sidebar'
     ]),
+    isOpen() {
+      return this.sidebar.opened;
+    },
   },
   mounted(){
     const $this = this;
     $this.$nextTick(function () {
-      this.setHeight();
+        $this.setHeight();
+        // 监听竖向滚动条滚动事件
+        window.addEventListener('scroll',$this.handleScroll,true);
     });
     window.onresize = () => {
         return (() => {
-            this.setHeight();
+            $this.setHeight();
         })()
     }
   },
@@ -330,11 +366,14 @@ export default {
           }, 400)
         }
       },
-        //监听相同路由下参数变化的时候，从而实现异步刷新
-        '$route'(to,from) {
-            var $this = this;
-            $this.initData();
-        },
+      //监听相同路由下参数变化的时候，从而实现异步刷新
+      '$route'(to,from) {
+          var $this = this;
+          $this.initData();
+      },
+      isOpen(e){
+        this.setHeight();
+      },
     },
     updated(){
       var $this = this;
@@ -347,32 +386,30 @@ export default {
     $this.initData();
   },
   methods:{
+    // 判断浏览器类型
+    getBrowserType(){
+      var ua =  navigator.userAgent;
+      if(ua){
+        if(ua.indexOf('Mobile')!=-1){
+          this.scrollPosition.isPC = false;
+        }else{
+          this.scrollPosition.isPC = true;
+        }
+      }else{
+        this.scrollPosition.isPC = true;
+      }
+    },
     // 设置table高度
     setHeight(){
       var $this = this;
-      $this.minHeight = "auto";
-      $this.$nextTick(()=>{
-        var trueHeight = $this.$refs.scrollPane.offsetHeight;
-        var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-        var screenHeight = $this.$refs.boxPane.offsetHeight;
-        console.log(trueHeight,"真实高度");
-        console.log(headerHeight,"头部高度");
-        console.log(screenHeight,"视窗高度");
-        if(trueHeight<=screenHeight){
-          $this.minHeight = screenHeight-headerHeight-30;
-        }else{
-          if(trueHeight-screenHeight<=headerHeight){
-            $this.minHeight = "auto";
-          }else{
-            if($this.totalDataNum>50){
-              $this.minHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 30;
-            }else{
-              $this.minHeight = screenHeight - 30;
-            }
-          }
-        }
-        console.log($this.minHeight,"表格高度");
-      });
+      $this.minHeight = 0;      
+      var headerHeight = $this.$refs.headerPane.offsetHeight+45;
+      var screenHeight = $this.$refs.boxPane.offsetHeight;
+      $this.minHeight = screenHeight-headerHeight-30;
+      $this.getBrowserType();
+        setTimeout(function() {
+          $this.setScrollDom();
+      }, 400);
     },
     // 搜索结果
     searchResult(){
@@ -922,7 +959,169 @@ export default {
       $this.searchData.brand_id = "";
       $this.page = 1;
       $this.limit = 50;
-    }
+    },
+    // 设置横向滚动条相关DOM数据
+    setScrollDom(){
+      var $this = this;
+      $this.scrollPosition.insetLeft = 0;
+      $this.scrollPosition.oldInsetLeft = 0;
+      // 表格真实宽度（可能超出屏幕）
+      var scrollWidth = $this.$refs.simpleTable.bodyWrapper.scrollWidth;
+      // 表格可见宽度（屏幕内宽度）
+      var maxWidth = $this.$refs.simpleTable.bodyWrapper.clientWidth;
+      // 获取表格的位置信息（距离视窗左边的位置信息）
+      var rectOBJ = $this.$refs.simpleTable.$el.getBoundingClientRect();
+      // 获取距离视窗左边的宽度
+      var leftWidth = rectOBJ.left;
+      // 根据百分比算出滚动条滑块的宽度
+      var insetWidth = parseInt(maxWidth/scrollWidth*maxWidth);
+      // 算出滚动条与视口比例（滚动条滚动1像素视口需要滚动多少像素）
+      var ratio = (scrollWidth - maxWidth) / (maxWidth - insetWidth);
+      var scrollDom = document.querySelector(".SiteTable .el-table__body-wrapper");
+      var tableHeaderFixedDom = document.querySelector(".SiteTable .el-table__header-wrapper");
+      var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+      $this.scrollPosition.width = maxWidth;
+      $this.scrollPosition.left = leftWidth;
+      $this.scrollPosition.insetWidth = insetWidth;
+      $this.scrollPosition.ratio = parseFloat(ratio);
+      $this.scrollPosition.maxScrollWidth = maxWidth - insetWidth;
+      $this.scrollTable.scrollDom = scrollDom;
+      // 视窗改变时，让自定义滚动条的位置与真实滚动条滚动的位置相吻合
+      $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
+      // 获取表格头吸顶需滚动的高度
+      if($this.$refs.headerPane){
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15;
+      }else{
+         $this.scrollTable.fixedTopHeight=15;
+      }
+      $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
+      if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+         $this.scrollTable.tableFixedRightDom = tableFixedRightDom;
+      }
+      var fixedHeaderObj = $this.scrollTable.tableHeaderFixedDom.getBoundingClientRect();
+      // 获取表格头的高度
+      $this.scrollTable.tableheaderHeight = fixedHeaderObj.height;
+      if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+         var fixedRightObj = $this.scrollTable.tableFixedRightDom.getBoundingClientRect();
+         // 获取右侧固定列的总宽度
+         $this.scrollTable.fixedRightWidth = fixedRightObj.width;
+      }
+      var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
+      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+60+15;
+      $this.scrollTable.clientHeight = document.documentElement.clientHeight;
+      // 头部固定情况下视窗宽高改变，需要重新设置的一些宽高
+      if($this.scrollPosition.isFixed){
+        var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;";
+        $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+        document.querySelector(".table-mask").style = tableHeaderStyle;
+        var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";        
+        if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+        }
+        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+60+15;
+      }
+      // 视窗宽高改变时需要设置默认滚动条的位置
+      if($this.totalDataNum>50){
+        var scrTop = $this.$refs.scrollDom.scrollTop;
+        if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+        }else{
+          $this.scrollPosition.fixedBottom = 15;
+        }
+      }
+    },
+    // 竖向滚动条滚动事件
+    handleScroll(event){
+      var $this = this;
+      if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
+        var scrTop = event.target.scrollTop;
+        var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+        if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
+          $this.scrollPosition.isFixed = true;
+          var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          document.querySelector(".table-mask").style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          
+          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          }
+        }else{// 头部需要变为正常
+          $this.scrollPosition.isFixed = false;
+          var tableHeaderStyle = "width:100%";
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:0";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          var tableStyle3 = "width:auto";
+          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          }
+        }
+        if($this.totalDataNum>50){
+          if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+          }else{
+            $this.scrollPosition.fixedBottom = 15;
+          }
+        }
+      }
+    },
+    // 监听横向滚动条鼠标按下事件
+    mouseDownHandler(e){
+      this.crossMoveStartHandler(e);
+      window.addEventListener('mousemove',this.crossMoveingHandler);
+      window.addEventListener('mouseup',this.crossMoveEndHandler);
+    },
+    // 横向滚动条移动开始事件
+    crossMoveStartHandler(e){
+      var $this = this;
+      $this.scrollPosition.isMouseDown = true;
+      $this.scrollPosition.startPageX = e.pageX;
+    },
+    // 横向滚动条鼠标移动事件
+    crossMoveingHandler(e){
+      var $this = this;
+      if($this.scrollPosition.isMouseDown){// 只在鼠标按下时监听鼠标移动事件
+        var moveLeft = e.pageX - $this.scrollPosition.startPageX;
+        var scrollWidth = 0;
+        // 判断本次鼠标按下后鼠标移动的距离 大于0为向右移动
+        if(moveLeft>0){
+          // 本次移动距离+历史已移动距离如果大于最大能移动距离，说明向右已经滚动到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft>=$this.scrollPosition.maxScrollWidth){
+            scrollWidth = $this.scrollPosition.maxScrollWidth;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else if(moveLeft<0){
+          // 小于0为向左移动
+          // 本次移动距离+历史已移动距离，如果小于0，说明向左移动已经到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft<0){
+            scrollWidth = 0;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else{// 鼠标按下后，未移动
+          scrollWidth = $this.scrollPosition.insetLeft;
+        }
+        // 计算得出本次移动+历史移动总距离
+        // 自定义滚动条位置改变
+        $this.scrollPosition.insetLeft = scrollWidth;
+        // 真实滚动条滚动距离 = 自定义滚动条滚动距离*自定义滚动条与真实滚动条的滚动比
+        $this.scrollTable.scrollDom.scrollLeft = scrollWidth*$this.scrollPosition.ratio;
+        e.preventDefault();
+      }
+    },
+    // 横向滚动条移动结束事件
+    crossMoveEndHandler(e){
+      var $this = this;
+      $this.scrollPosition.isMouseDown = false;
+      $this.scrollPosition.startPageX = 0;
+      $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
+    },
   }
 }
 </script>

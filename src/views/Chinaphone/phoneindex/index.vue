@@ -21,7 +21,7 @@
     </div>
     <div class="flex-content relative">
       <div class="abs-panel" ref="mainPane">
-        <div class="scroll-panel">
+        <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
           <div class="phone-index" v-if="!phoneID">
             <div class="ChinaphoneNum" ref="numPane">
               <div class="card-header">
@@ -213,202 +213,208 @@
                 </div>
               </div>
               <div class="card-content" ref="tableContent">
-                <el-table
-                  ref="simpleTable"
-                  :data="tableData"
-                  tooltip-effect="dark"
-                  stripe
-                  class="SiteTable EntableColor"
-                  style="width: 100%"
-                  row-key="id"
-                  :height='minHeight'
-                  >
-                  <el-table-column
-                    prop="id"
-                    label="ID"
-                    width="80"
-                    >
-                  </el-table-column>
-                  <el-table-column
-                    prop="phoneText"
-                    label="电话"
-                    width="80"
-                    >
-                  </el-table-column>
-                  <el-table-column
-                    prop="xuntime"
-                    label="时间"
-                    width="150"
-                    >
-                    <template slot-scope="scope">
-                      <div class="table-text">
-                        <p>{{scope.row.xuntime}}</p>
-                        <p>{{scope.row.weekday}}</p>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="sourcename"
-                    label="域名/渠道"
-                    width="100"
-                    >
-                    <template slot-scope="scope">
-                      <div class="table-text">
-                        <p><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
-                        <p>{{scope.row.sourcename}}</p>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="sourcename"
-                    label="地区/归属地"
-                    width="100"
-                    >
-                    <template slot-scope="scope">
-                      <div class="table-text">
-                        <p>{{scope.row.province}}<span v-if="scope.row.province&&scope.row.city">/</span>{{scope.row.city}}</p>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="keyproduct"
-                    label="意向设备"
-                    width="100"
-                    >
-                    <template slot-scope="scope">
-                      <span class="product-span" v-bind:class="'level_'+scope.row.productlevel"><i>[{{scope.row.productlevel}}]</i>{{scope.row.keyproduct}}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="effective"
-                    label="有效"
-                    width="60"
-                    >
-                    <template slot-scope="scope">
-                      <div class="table-tag"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                      <div class="table-text" v-if="!scope.row.isEffective"><p>{{scope.row.invalidcause}}</p></div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="addusername"
-                    label="添加人"
-                    width="80"
-                    >
-                  </el-table-column>
-                  <el-table-column
-                    prop="addtime"
-                    label="添加时间"
-                    width="150"
-                    >
-                  </el-table-column>
-                  <el-table-column
-                    prop="levelname"
-                    label="等级"
-                    min-width="60"
-                    >
-                    <template slot-scope="scope">
-                      <div class="table-tag"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="levelname"
-                    label="备注/原因"
-                    min-width="120"
-                    >
-                    <template slot-scope="scope">
-                      <div class="table-text">
-                        <p>{{scope.row.custormcause}}</p>
-                        <p>{{scope.row.custormremark}}</p>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    v-if="writepermit&&(permitField.includes('domain')||permitField.includes('url'))"
-                    key="a"
-                    fixed="right"
-                    prop="url"
-                    label="域名/链接"
-                    min-width="150"
-                    >
-                    <template slot-scope="scope">
-                      <div class="table-input">
-                        <el-input size="small" v-model="scope.row.domain" v-if="permitField.includes('domain')"></el-input>
-                        <el-input size="small" v-model="scope.row.url" v-if="permitField.includes('url')"></el-input>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    v-if="writepermit&&(permitField.includes('search')||permitField.includes('searchword'))"
-                    key="b"
-                    fixed="right"
-                    prop="searchword"
-                    label="平台/关键词"
-                    min-width="110"
-                    >
-                    <template slot-scope="scope">
-                      <div class="table-input">
-                        <el-input size="small" v-model="scope.row.search" v-if="permitField.includes('search')"></el-input>
-                        <el-input size="small" v-model="scope.row.searchword" v-if="permitField.includes('searchword')"></el-input>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    v-if="writepermit&&permitField.includes('remark')"
-                    key="c"
-                    fixed="right"
-                    prop="remark"
-                    label="备注"
-                    min-width="140"
-                    >
-                    <template slot-scope="scope">
-                      <div class="table-input">
-                        <el-input size="small" type="textarea" rows="3" resize="none" v-model="scope.row.remark" v-if="permitField.includes('remark')"></el-input>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    v-if="writepermit&&(permitField.includes('userid')||permitField.includes('device'))"
-                    key="d"
-                    fixed="right"
-                    prop="searchword"
-                    label="提供者/设备"
-                    min-width="100"
-                    >
-                    <template slot-scope="scope">
-                      <div class="table-input">
-                        <el-input size="small" v-model="scope.row.useridname" v-if="permitField.includes('userid')"></el-input>
-                        <el-input size="small" v-model="scope.row.device" v-if="permitField.includes('device')"></el-input>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_otheredit'))&&device==='desktop'"
-                    width="88"
-                    fixed="right"
-                    align="center"
-                    prop="operations"
-                    label="修改">
-                    <template #default="scope">
-                      <div class="table-button">
-                        <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_otheredit')">修改</el-button>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_edit')||menuButtonPermit.includes('Chinaphone_delete'))&&device==='desktop'"
-                    :width="operationsWidth"
-                    align="center"
-                    fixed="right"
-                    prop="operations"
-                    label="操作">
-                    <template #default="scope">
-                      <div class="table-button">
-                        <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_edit')">修改</el-button>
-                        <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_delete')">删除</el-button>
-                      </div>
-                    </template>
-                  </el-table-column>
-                </el-table>
+                  <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
+                      <div class="table-mask"></div>
+                      <el-table
+                        ref="simpleTable"
+                        :data="tableData"
+                        tooltip-effect="dark"
+                        stripe
+                        class="SiteTable EntableColor"
+                        style="width: 100%"
+                        row-key="id"
+                        :style="'min-height:'+minHeight+'px;'"
+                        >
+                        <el-table-column
+                          prop="id"
+                          label="ID"
+                          width="80"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="phoneText"
+                          label="电话"
+                          width="80"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="xuntime"
+                          label="时间"
+                          width="150"
+                          >
+                          <template slot-scope="scope">
+                            <div class="table-text">
+                              <p>{{scope.row.xuntime}}</p>
+                              <p>{{scope.row.weekday}}</p>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="sourcename"
+                          label="域名/渠道"
+                          width="100"
+                          >
+                          <template slot-scope="scope">
+                            <div class="table-text">
+                              <p><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
+                              <p>{{scope.row.sourcename}}</p>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="sourcename"
+                          label="地区/归属地"
+                          width="100"
+                          >
+                          <template slot-scope="scope">
+                            <div class="table-text">
+                              <p>{{scope.row.province}}<span v-if="scope.row.province&&scope.row.city">/</span>{{scope.row.city}}</p>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="keyproduct"
+                          label="意向设备"
+                          width="100"
+                          >
+                          <template slot-scope="scope">
+                            <span class="product-span" v-bind:class="'level_'+scope.row.productlevel"><i>[{{scope.row.productlevel}}]</i>{{scope.row.keyproduct}}</span>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="effective"
+                          label="有效"
+                          width="60"
+                          >
+                          <template slot-scope="scope">
+                            <div class="table-tag"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
+                            <div class="table-text" v-if="!scope.row.isEffective"><p>{{scope.row.invalidcause}}</p></div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="addusername"
+                          label="添加人"
+                          width="80"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="addtime"
+                          label="添加时间"
+                          width="150"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="levelname"
+                          label="等级"
+                          min-width="60"
+                          >
+                          <template slot-scope="scope">
+                            <div class="table-tag"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="levelname"
+                          label="备注/原因"
+                          min-width="120"
+                          >
+                          <template slot-scope="scope">
+                            <div class="table-text">
+                              <p>{{scope.row.custormcause}}</p>
+                              <p>{{scope.row.custormremark}}</p>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          v-if="writepermit&&(permitField.includes('domain')||permitField.includes('url'))"
+                          key="a"
+                          fixed="right"
+                          prop="url"
+                          label="域名/链接"
+                          min-width="150"
+                          >
+                          <template slot-scope="scope">
+                            <div class="table-input">
+                              <el-input size="small" v-model="scope.row.domain" v-if="permitField.includes('domain')"></el-input>
+                              <el-input size="small" v-model="scope.row.url" v-if="permitField.includes('url')"></el-input>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          v-if="writepermit&&(permitField.includes('search')||permitField.includes('searchword'))"
+                          key="b"
+                          fixed="right"
+                          prop="searchword"
+                          label="平台/关键词"
+                          min-width="110"
+                          >
+                          <template slot-scope="scope">
+                            <div class="table-input">
+                              <el-input size="small" v-model="scope.row.search" v-if="permitField.includes('search')"></el-input>
+                              <el-input size="small" v-model="scope.row.searchword" v-if="permitField.includes('searchword')"></el-input>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          v-if="writepermit&&permitField.includes('remark')"
+                          key="c"
+                          fixed="right"
+                          prop="remark"
+                          label="备注"
+                          min-width="140"
+                          >
+                          <template slot-scope="scope">
+                            <div class="table-input">
+                              <el-input size="small" type="textarea" rows="3" resize="none" v-model="scope.row.remark" v-if="permitField.includes('remark')"></el-input>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          v-if="writepermit&&(permitField.includes('userid')||permitField.includes('device'))"
+                          key="d"
+                          fixed="right"
+                          prop="searchword"
+                          label="提供者/设备"
+                          min-width="100"
+                          >
+                          <template slot-scope="scope">
+                            <div class="table-input">
+                              <el-input size="small" v-model="scope.row.useridname" v-if="permitField.includes('userid')"></el-input>
+                              <el-input size="small" v-model="scope.row.device" v-if="permitField.includes('device')"></el-input>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_otheredit'))&&device==='desktop'"
+                          width="88"
+                          fixed="right"
+                          align="center"
+                          prop="operations"
+                          label="修改">
+                          <template #default="scope">
+                            <div class="table-button">
+                              <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_otheredit')">修改</el-button>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_edit')||menuButtonPermit.includes('Chinaphone_delete'))&&device==='desktop'"
+                          :width="operationsWidth"
+                          align="center"
+                          fixed="right"
+                          prop="operations"
+                          label="操作">
+                          <template #default="scope">
+                            <div class="table-button">
+                              <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_edit')">修改</el-button>
+                              <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_delete')">删除</el-button>
+                            </div>
+                          </template>
+                        </el-table-column>
+                      </el-table>
+                  </div>
+                  <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
+                      <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
+                  </div>
               </div>
               <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
                 <el-pagination
@@ -596,19 +602,49 @@ export default {
       levelPop:[],  
       levelPopBool:false,
       currentTeam:"中文总计",
+      scrollPosition:{
+        width:0,
+        left:0,
+        fixedBottom: 15,
+        insetWidth:0,
+        oldInsetLeft:0,
+        insetLeft:0,
+        ratio:0,
+        startPageX:0,
+        maxScrollWidth:0,
+        isMouseDown:false,
+        isPC:true,
+        isFixed:false,
+      },
+      scrollTable:{
+        scrollDom:null,
+        tableHeaderFixedDom:null,
+        tableFixedRightDom:null,
+        fixedTopHeight:0,
+        tableheaderHeight:0,
+        fixedRightWidth:0,
+        tableBottom:0,
+        clientHeight:0,
+      },
     }
   },
   computed: {
     ...mapGetters([
       'userInfo',
-      'device'
+      'device',
+      'sidebar'
     ]),
+    isOpen() {
+      return this.sidebar.opened;
+    },
   },
   mounted(){
     const $this = this;
     $this.$nextTick(function () {     
       if($this.$route.query.phoneID){
         $this.setHeight();
+        // 监听竖向滚动条滚动事件
+        window.addEventListener('scroll',$this.handleScroll,true);
       }else{
         if($this.$refs.mainPane&&$this.$refs.numPane){
           $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
@@ -648,6 +684,9 @@ export default {
         }
         this.initData();
       },
+      isOpen(e){
+        this.setHeight();
+      },
   },
   created(){
     var $this = this;
@@ -671,32 +710,30 @@ export default {
     })
   },
   methods:{
-    // 设置table高度
+    // 判断浏览器类型
+    getBrowserType(){
+      var ua =  navigator.userAgent;
+      if(ua){
+        if(ua.indexOf('Mobile')!=-1){
+          this.scrollPosition.isPC = false;
+        }else{
+          this.scrollPosition.isPC = true;
+        }
+      }else{
+        this.scrollPosition.isPC = true;
+      }
+    },
+    // 设置高度
     setHeight(){
       var $this = this;
-      $this.minHeight = "auto";
-      $this.$nextTick(()=>{
-        var trueHeight = $this.$refs.scrollPane.offsetHeight;
-        var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-        var screenHeight = $this.$refs.boxPane.offsetHeight;
-        console.log(trueHeight,"真实高度");
-        console.log(headerHeight,"头部高度");
-        console.log(screenHeight,"视窗高度");
-        if(trueHeight<=screenHeight){
-          $this.minHeight = screenHeight-headerHeight-30;
-        }else{
-          if(trueHeight-screenHeight<=headerHeight){
-            $this.minHeight = "auto";
-          }else{
-            if($this.totalDataNum>20){
-              $this.minHeight = screenHeight - $this.$refs.pagePane.offsetHeight - 45;
-            }else{
-              $this.minHeight = screenHeight - 30;
-            }
-          }
-        }
-        console.log($this.minHeight,"表格高度");
-      });
+      $this.minHeight = 0;      
+      var headerHeight = $this.$refs.headerPane.offsetHeight+45;
+      var screenHeight = $this.$refs.boxPane.offsetHeight;
+      $this.minHeight = screenHeight-headerHeight-30;
+      $this.getBrowserType();
+        setTimeout(function() {
+          $this.setScrollDom();
+      }, 400);
     },
     // 搜索结果
     searchResult(){
@@ -900,7 +937,7 @@ export default {
               $this.isDisabled = true;
             }
             $this.writepermit = response.writepermit?true:false;
-            console.log(response,"询盘信息");
+            console.log(response,"询盘信息——$this.tableData");
             $this.tableData = response.data;
             $this.infoData = infoData;
             $this.totalDataNum = response.allcount;
@@ -1417,7 +1454,169 @@ export default {
     handleLockClick(){
         var $this=this;
         $this.levelPopBool=!$this.levelPopBool;
-    }
+    },
+    // 设置横向滚动条相关DOM数据
+    setScrollDom(){
+      var $this = this;
+      $this.scrollPosition.insetLeft = 0;
+      $this.scrollPosition.oldInsetLeft = 0;
+      // 表格真实宽度（可能超出屏幕）
+      var scrollWidth = $this.$refs.simpleTable.bodyWrapper.scrollWidth;
+      // 表格可见宽度（屏幕内宽度）
+      var maxWidth = $this.$refs.simpleTable.bodyWrapper.clientWidth;
+      // 获取表格的位置信息（距离视窗左边的位置信息）
+      var rectOBJ = $this.$refs.simpleTable.$el.getBoundingClientRect();
+      // 获取距离视窗左边的宽度
+      var leftWidth = rectOBJ.left;
+      // 根据百分比算出滚动条滑块的宽度
+      var insetWidth = parseInt(maxWidth/scrollWidth*maxWidth);
+      // 算出滚动条与视口比例（滚动条滚动1像素视口需要滚动多少像素）
+      var ratio = (scrollWidth - maxWidth) / (maxWidth - insetWidth);
+      var scrollDom = document.querySelector(".SiteTable .el-table__body-wrapper");
+      var tableHeaderFixedDom = document.querySelector(".SiteTable .el-table__header-wrapper");
+      var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+      $this.scrollPosition.width = maxWidth;
+      $this.scrollPosition.left = leftWidth;
+      $this.scrollPosition.insetWidth = insetWidth;
+      $this.scrollPosition.ratio = parseFloat(ratio);
+      $this.scrollPosition.maxScrollWidth = maxWidth - insetWidth;
+      $this.scrollTable.scrollDom = scrollDom;
+      // 视窗改变时，让自定义滚动条的位置与真实滚动条滚动的位置相吻合
+      $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
+      // 获取表格头吸顶需滚动的高度
+      if($this.$refs.headerPane){
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15;
+      }else{
+         $this.scrollTable.fixedTopHeight=15;
+      }
+      $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
+      if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+         $this.scrollTable.tableFixedRightDom = tableFixedRightDom;
+      }
+      var fixedHeaderObj = $this.scrollTable.tableHeaderFixedDom.getBoundingClientRect();
+      // 获取表格头的高度
+      $this.scrollTable.tableheaderHeight = fixedHeaderObj.height;
+      if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+         var fixedRightObj = $this.scrollTable.tableFixedRightDom.getBoundingClientRect();
+         // 获取右侧固定列的总宽度
+         $this.scrollTable.fixedRightWidth = fixedRightObj.width;
+      }
+      var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
+      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+60+15;
+      $this.scrollTable.clientHeight = document.documentElement.clientHeight;
+      // 头部固定情况下视窗宽高改变，需要重新设置的一些宽高
+      if($this.scrollPosition.isFixed){
+        var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;";
+        $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+        document.querySelector(".table-mask").style = tableHeaderStyle;
+        var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";        
+        if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+        }
+        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+60+15;
+      }
+      // 视窗宽高改变时需要设置默认滚动条的位置
+      if($this.totalDataNum>20){
+        var scrTop = $this.$refs.scrollDom.scrollTop;
+        if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+        }else{
+          $this.scrollPosition.fixedBottom = 15;
+        }
+      }
+    },
+    // 竖向滚动条滚动事件
+    handleScroll(event){
+      var $this = this;
+      if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
+        var scrTop = event.target.scrollTop;
+        var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+        if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
+          $this.scrollPosition.isFixed = true;
+          var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          document.querySelector(".table-mask").style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          
+          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          }
+        }else{// 头部需要变为正常
+          $this.scrollPosition.isFixed = false;
+          var tableHeaderStyle = "width:100%";
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:0";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          var tableStyle3 = "width:auto";
+          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          }
+        }
+        if($this.totalDataNum>20){
+          if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+          }else{
+            $this.scrollPosition.fixedBottom = 15;
+          }
+        }
+      }
+    },
+    // 监听横向滚动条鼠标按下事件
+    mouseDownHandler(e){
+      this.crossMoveStartHandler(e);
+      window.addEventListener('mousemove',this.crossMoveingHandler);
+      window.addEventListener('mouseup',this.crossMoveEndHandler);
+    },
+    // 横向滚动条移动开始事件
+    crossMoveStartHandler(e){
+      var $this = this;
+      $this.scrollPosition.isMouseDown = true;
+      $this.scrollPosition.startPageX = e.pageX;
+    },
+    // 横向滚动条鼠标移动事件
+    crossMoveingHandler(e){
+      var $this = this;
+      if($this.scrollPosition.isMouseDown){// 只在鼠标按下时监听鼠标移动事件
+        var moveLeft = e.pageX - $this.scrollPosition.startPageX;
+        var scrollWidth = 0;
+        // 判断本次鼠标按下后鼠标移动的距离 大于0为向右移动
+        if(moveLeft>0){
+          // 本次移动距离+历史已移动距离如果大于最大能移动距离，说明向右已经滚动到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft>=$this.scrollPosition.maxScrollWidth){
+            scrollWidth = $this.scrollPosition.maxScrollWidth;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else if(moveLeft<0){
+          // 小于0为向左移动
+          // 本次移动距离+历史已移动距离，如果小于0，说明向左移动已经到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft<0){
+            scrollWidth = 0;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else{// 鼠标按下后，未移动
+          scrollWidth = $this.scrollPosition.insetLeft;
+        }
+        // 计算得出本次移动+历史移动总距离
+        // 自定义滚动条位置改变
+        $this.scrollPosition.insetLeft = scrollWidth;
+        // 真实滚动条滚动距离 = 自定义滚动条滚动距离*自定义滚动条与真实滚动条的滚动比
+        $this.scrollTable.scrollDom.scrollLeft = scrollWidth*$this.scrollPosition.ratio;
+        e.preventDefault();
+      }
+    },
+    // 横向滚动条移动结束事件
+    crossMoveEndHandler(e){
+      var $this = this;
+      $this.scrollPosition.isMouseDown = false;
+      $this.scrollPosition.startPageX = 0;
+      $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
+    },
   }
 }
 </script>
