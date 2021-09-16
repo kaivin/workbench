@@ -384,8 +384,6 @@ export default {
     const $this = this;
     $this.$nextTick(function () {
         this.setHeight();
-        // 监听竖向滚动条滚动事件
-        window.addEventListener('scroll',$this.handleScroll,true);
     });
     window.onresize = () => {
         return (() => {
@@ -393,32 +391,34 @@ export default {
         })()
     }
   },
-    watch: {
-      minHeight(val) {
-        if (!this.timer) {
-          this.minHeight = val
-          this.timer = true
-          const $this = this
-          setTimeout(function() {
-            $this.timer = false
-          }, 400)
-        }
-      },
-      //监听相同路由下参数变化的时候，从而实现异步刷新
-      '$route'(to,from) {
-          var $this = this;
-          $this.initData();
-      },
-      isOpen(e){
-        this.setHeight();
-      },
+  watch: {
+    minHeight(val) {
+      if (!this.timer) {
+        this.minHeight = val
+        this.timer = true
+        const $this = this
+        setTimeout(function() {
+          $this.timer = false
+        }, 400)
+      }
     },
-    updated(){
-      var $this = this;
-      $this.$nextTick(() => {
-        $this.$refs.simpleTable.doLayout()
-      });
+    //监听相同路由下参数变化的时候，从而实现异步刷新
+    '$route'(to,from) {
+        var $this = this;
+        $this.initData();
     },
+    isOpen(e){
+      this.setHeight();
+    },
+  },
+  updated(){
+    var $this = this;
+    $this.$nextTick(() => {
+      $this.$refs.simpleTable.doLayout();
+      // 监听竖向滚动条滚动事件
+      window.addEventListener('scroll',$this.handleScroll,true);
+    });
+  },
   created(){
     var $this = this;
     $this.initData();

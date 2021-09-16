@@ -209,6 +209,7 @@ export default {
           tableBottom:0,
           clientHeight:0,
         },
+        isLoading:null,
     }
   },
   computed: {
@@ -225,8 +226,6 @@ export default {
     const $this = this;
     $this.$nextTick(function () {
         $this.setTableHeight();
-        // 监听竖向滚动条滚动事件
-        window.addEventListener('scroll',$this.handleScroll,true);
     });
     window.onresize = () => {
         return (() => {
@@ -252,7 +251,9 @@ export default {
   updated(){
     var $this =this;
     $this.$nextTick(() => {
-      this.$refs.simpleTable.doLayout()
+      $this.$refs.simpleTable.doLayout();
+      // 监听竖向滚动条滚动事件
+      window.addEventListener('scroll',$this.handleScroll,true);
     })
   },
   created(){
@@ -260,6 +261,16 @@ export default {
     $this.initData();
   },
   methods:{
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -288,6 +299,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -303,6 +315,7 @@ export default {
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
+            $this.isLoading.close();
             console.log(response,"业务员数据统计");
           }else{
             if(response.permitstatus&&response.permitstatus==2){

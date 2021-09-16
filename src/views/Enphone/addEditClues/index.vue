@@ -156,9 +156,10 @@
                             size="small"
                             type="datetime"
                             placeholder="选择日期时间"
-                            value-format = "yyyy-MM-dd HH:mm:ss"
+                            value-format = "yyyy-MM-dd HH:mm"
                             align="right"
-                            :picker-options="pickerOptions">
+                            :picker-options="pickerOptions"
+                            >
                           </el-date-picker>
                       </dd>
                     </dl>
@@ -195,6 +196,7 @@
                             placeholder="号码归属地"
                             size="small"
                             v-model="formData.country"
+                            @change="countryClick"
                             clearable>
                         </el-input>
                       </dd>
@@ -472,7 +474,7 @@ export default {
               picker.$emit('pick', date);
             }
           }]
-        },
+      },
       phoneList:[],
       productList:[],
       producttypeList:[],//分类
@@ -600,6 +602,7 @@ export default {
       $this.ID = parseInt($this.$route.query.ID);
     }else{
       $this.ID = null;
+      $this.currentTime();
     }
     $this.initData();
   },
@@ -1295,6 +1298,48 @@ export default {
             });
           }
       });
+    },
+    // 填写国家自动获取大洲和时差
+    countryClick(){
+      var $this=this;
+      var formCountry = {};
+      formCountry.name=$this.formData.country;
+      $this.$store.dispatch("enphone/getcontientAction", formCountry).then(response=>{
+          if(response.status){
+            console.log(response,'填写国家自动获取大洲和时差');
+            $this.formData.continent=response.data.contient;
+            $this.formData.timediff=response.data.timecha;
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    // 默认当前日期时间
+    currentTime(){
+      var $this=this;
+      var getTime=new Date();
+      var year=getTime.getFullYear();
+      var month=getTime.getMonth()+1;
+      if(month<10){
+         month='0' + month
+      }
+      var day=getTime.getDate();
+      if(day<10){
+         day='0' + day
+      }
+      var hh=getTime.getHours();
+      if(hh<10){
+         hh='0' + hh
+      }
+      var mm=getTime.getMinutes();
+      if(mm<10){
+         mm='0' + mm
+      }
+      $this.formData.xuntime= year + '-' + month + '-' + day + ' ' + hh + ':' + mm;
     },
   }
 }

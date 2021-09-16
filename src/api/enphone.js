@@ -420,4 +420,11 @@ export function allUnAllotCluesData(data) {
     data
   });
 }
-
+//填写国家自动获取大洲和时差
+export function getcontient(data) {
+  return request({
+    url: "/hxindex/Enphone/getcontient",
+    method: "POST",
+    data
+  });
+}

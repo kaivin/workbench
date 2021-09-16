@@ -64,7 +64,7 @@
                               </el-table-column>
                               <el-table-column
                               prop="score"
-                              label="几分数"
+                              label="积分数"
                               >
                               </el-table-column>
                               <el-table-column
@@ -243,8 +243,6 @@ export default {
       const $this = this;
       $this.$nextTick(function () {
         $this.setTableHeight();
-        // 监听竖向滚动条滚动事件
-        window.addEventListener('scroll',$this.handleScroll,true);
       });
       window.onresize = () => {
         return (() => {
@@ -279,6 +277,8 @@ export default {
   updated(){
     this.$nextTick(() => {
       this.$refs.simpleTable.doLayout();
+      // 监听竖向滚动条滚动事件
+      window.addEventListener('scroll',this.handleScroll,true);
     })
   },
   methods:{

@@ -250,7 +250,9 @@
         i{
           font-size: 13px;
           font-weight: bold;
-          width: 16px;
+          padding-left:3px;
+          padding-right:3px;
+          min-width: 22px;
           height:16px;
           text-align: center;
           line-height: 16px;
@@ -748,7 +750,8 @@
   }
   .EnColor02{color:#468847;}
   .EnColor05{color:#999797!important;}
-  .EnColor06{color:#CC0000;font-weight: bold;}
+  .EnColor06{color:$Rougecolor;font-weight: bold;}
+  .EnColor07{color:$red;}
 }
 .tipsHas{
   &.box-card .el-card__header{    

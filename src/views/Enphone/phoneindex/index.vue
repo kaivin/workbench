@@ -235,6 +235,22 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
+                                  <el-select v-if="currentKey&&currentKey=='all'" v-model="searchData.salesownid" size="small" clearable placeholder="业务员" style="width:120px;margin:5px 10px 5px 0px;float:left;">
+                                    <el-option
+                                      v-for="item in salesuserList"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                    </el-option>
+                                  </el-select>
+                                  <el-select v-if="currentKey&&currentKey=='all'"  v-model="searchData.salesdepart_id" size="small" clearable placeholder="业务员部门" style="width:120px;margin:5px 10px 5px 0px;float:left;">
+                                    <el-option
+                                      v-for="item in salesdepartList"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                    </el-option>
+                                  </el-select>
                                   <el-select v-model="searchData.saleswarnstatus" size="small" clearable placeholder="添加人提醒" style="width:120px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in addUserNoticeList"
@@ -329,8 +345,13 @@
                                 :style="'min-height:'+tableHeight+'px;'"
                                 row-key="id"
                                 key="a"
-                                v-if="phoneID"
                                 >
+                                <el-table-column
+                                    type="selection"
+                                    align="center"
+                                    v-if="menuButtonPermit.includes('Enphone_listexport')"
+                                    width="48">
+                                </el-table-column>
                                 <el-table-column
                                   prop="id"
                                   label="ID"
@@ -423,6 +444,12 @@
                                   label="备注"
                                   min-width="100"
                                   >
+                                  <template slot-scope="scope">
+                                    <div class="table-text">
+                                      <p>{{scope.row.xunremark}}</p>
+                                      <p class="EnColor07">{{scope.row.custormremark}}</p>
+                                    </div>
+                                  </template>
                                 </el-table-column>
                                 <el-table-column
                                   prop="addusername"
@@ -505,196 +532,6 @@
                                     <div class="table-button">
                                       <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_edit')">修改</el-button>
                                       <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="menuButtonPermit.includes('Enphone_edit')">({{scope.row.eidtnumber}})</span>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                              </el-table>
-                              <el-table
-                                ref="simpleTable"
-                                :data="tableData"
-                                tooltip-effect="dark"
-                                stripe
-                                class="SiteTable EntableColor"
-                                style="width: 100%"
-                                :style="'min-height:'+tableHeight+'px;'"
-                                row-key="id"
-                                key="b"
-                                v-else
-                                >
-                                <el-table-column
-                                  prop="id"
-                                  label="ID"
-                                  width="80"
-                                  >
-                                </el-table-column>
-                                <el-table-column
-                                  prop="xuntime"
-                                  label="时间"
-                                  width="200"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p>时段：{{scope.row.timeing}}</p>
-                                      <p class="EnColor02">星期：{{scope.row.weekday}}</p>
-                                      <p>本地：{{scope.row.xuntime}}</p>
-                                      <p>当地：{{scope.row.foreigntime}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="sourcename"
-                                  label="来源网站"
-                                  width="150"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
-                                      <p>{{scope.row.sourcename}}</p>
-                                      <p>{{scope.row.messagetype}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="sourcename"
-                                  label="大洲/地区/IP"
-                                  width="150"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p><span class="EnColor05">大洲：</span>{{scope.row.continent}}</p>
-                                      <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
-                                      <p><span class="EnColor05">来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip">IP</a></p>
-                                      <p><span class="EnColor05">设备：</span>{{scope.row.device}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="keyproduct"
-                                  label="类型/产品"
-                                  min-width="150"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p><span class="EnColor05">产品：</span><span :style="'font-weight:bold;color:'+scope.row.producttypecolor">{{scope.row.producttypename}}</span>/{{scope.row.keyproduct}}</p>
-                                      <p class="EnColor05"><span>物料：</span>{{scope.row.material}}</p>
-                                      <p class="EnColor05"><span>产量：</span>{{scope.row.production}}</p>
-                                      <p class="EnColor05"><span>进料：</span>{{scope.row.infeed}}</p>
-                                      <p class="EnColor05"><span>出料：</span>{{scope.row.outfeed}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="effective"
-                                  label="有效/原因"
-                                  width="100"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                                    <div class="table-text" v-if="!scope.row.isEffective"><p>{{scope.row.invalidcause}}<span style="color:#E88401;">{{scope.row.noeffectivetime}}</span></p></div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="levelname"
-                                  label="首次级别/二次判定"
-                                  min-width="140"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p class="table-tag"><span class="EnColor05">初次：</span><span class="level"  @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></p>
-                                      <p><span class="EnColor05">性质：</span>{{scope.row.ennaturename?scope.row.ennaturename:'未判定'}}</p>
-                                      <p><span class="EnColor05">需求：</span>{{scope.row.enxunpricename?scope.row.enxunpricename:'未判定'}}</p>
-                                      <p><span class="EnColor05">状态：</span>{{scope.row.managestatus==1?'':'已开始处理'}}</p>
-                                      <p><span class="EnColor05">异常：</span>{{scope.row.erroring}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="xunremark"
-                                  label="备注"
-                                  min-width="100"
-                                  >
-                                </el-table-column>
-                                <el-table-column
-                                  prop="addusername"
-                                  label="添加人"
-                                  width="120"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p><span>添：</span>{{scope.row.addusername}}</p>
-                                      <p><span>分：</span>{{scope.row.allotusername}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="hassale"
-                                  label="业务员"
-                                  width="100"
-                                  >
-                                </el-table-column>
-                                <el-table-column
-                                  prop="addtime"
-                                  label="添/分/改/业务时间"
-                                  width="160"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p>{{scope.row.addtime}}</p>
-                                      <p>{{scope.row.allottime}}</p>
-                                      <p>{{scope.row.updatetime}}</p>
-                                      <p style="color:red;">{{scope.row.managetime}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="score"
-                                  label="价值分"
-                                  min-width="80"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  v-if="(permitField.includes('remark1')||permitField.includes('remark2')||permitField.includes('remark3'))"
-                                  key="d"
-                                  prop="searchword"
-                                  label="备注"
-                                  min-width="90"
-                                  fixed="right"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-input">
-                                      <el-input size="small" class="tips-input-2" v-model="scope.row.remark1" v-if="scope.row.writepermit==1&&permitField.includes('remark1')"></el-input>
-                                      <el-input size="small" class="tips-input-3" v-model="scope.row.remark2" v-if="scope.row.writepermit==1&&permitField.includes('remark2')"></el-input>
-                                      <el-input size="small" class="tips-input-4" v-model="scope.row.remark3" v-if="scope.row.writepermit==1&&permitField.includes('remark3')"></el-input>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  v-if="(menuButtonPermit.includes('Enphone_otheredit'))&&device==='desktop'"
-                                  width="88"
-                                  align="center"
-                                  prop="operations"
-                                  fixed="right"
-                                  label="修改">
-                                  <template #default="scope">
-                                    <div class="table-button">
-                                      <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="scope.row.writepermit==1&&menuButtonPermit.includes('Enphone_otheredit')">修改</el-button>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  v-if="(menuButtonPermit.includes('Enphone_edit'))&&device==='desktop'"
-                                  :width="operationsWidth"
-                                  align="center"
-                                  prop="operations"
-                                  fixed="right"
-                                  label="操作">
-                                  <template #default="scope">
-                                    <div class="table-button">
-                                      <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.writepermit==1&&menuButtonPermit.includes('Enphone_edit')">修改</el-button>
-                                      <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="scope.row.writepermit==1&&menuButtonPermit.includes('Enphone_edit')">({{scope.row.eidtnumber}})</span>
                                     </div>
                                   </template>
                                 </el-table-column>
@@ -1063,6 +900,8 @@ export default {
         waitstatus:"1",
         startDate:"",
         endDate:"",
+        salesownid:"",
+        salesdepart_id:"",
       },
       pageSizeList:[20, 500, 5000, 10000],
       totalDataNum:0,
@@ -1126,6 +965,8 @@ export default {
         {label:"18-21",value:"18-21"},
         {label:"21-24",value:"21-24"},
       ],
+      salesuserList:[],
+      salesdepartList:[],
       natureList:[],
       productTypeList:[],
       productList:[],
@@ -1225,6 +1066,7 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
+      isLoading:null,
     }
   },
   computed: {
@@ -1239,11 +1081,9 @@ export default {
   },
   mounted(){
     const $this = this;
-    if($this.$route.query.phoneID){
+    if($this.$route.query.phoneID||$this.$route.query.key){
       $this.$nextTick(function () {     
         $this.setTableHeight();
-        // 监听竖向滚动条滚动事件
-        window.addEventListener('scroll',$this.handleScroll,true);
       });
       window.onresize = () => {
         return (() => {
@@ -1280,8 +1120,10 @@ export default {
         }
         this.initData();
       },
-      isOpen(e){
-        this.setTableHeight();
+      isOpen(e){        
+        if(this.$route.query.phoneID||this.$route.query.key){
+            this.setTableHeight();
+        }
       },
   },
   created(){
@@ -1304,11 +1146,23 @@ export default {
   updated(){
     this.$nextTick(() => {
       if(this.$route.query.phoneID||this.$route.query.key){
-         this.$refs.simpleTable.doLayout(); 
+        this.$refs.simpleTable.doLayout(); 
+        // 监听竖向滚动条滚动事件
+        window.addEventListener('scroll',this.handleScroll,true);
       }
     })
   },
   methods:{
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -1329,10 +1183,12 @@ export default {
       var headerHeight = $this.$refs.headerPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       $this.tableHeight = screenHeight-headerHeight-30;
-      $this.getBrowserType();
+      $this.getBrowserType();      
+      if($this.$route.query.phoneID||$this.$route.query.key){
         setTimeout(function() {
-          $this.setScrollDom();
-      }, 400);
+            $this.setScrollDom();
+        }, 400);
+      }
     },
     // 搜索结果
     searchResult(){
@@ -1372,6 +1228,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -1484,6 +1341,7 @@ export default {
                 $this.getCurrentPhoneSearchData();
               }
             }
+            $this.isLoading.close();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -1599,6 +1457,8 @@ export default {
         if($this.currentKey){
           if($this.currentKey=="all"){
             pathUrl = "enphone/allCluesDataAction";
+            searchData.salesownid=$this.searchData.salesownid;
+            searchData.salesdepart_id=$this.searchData.salesdepart_id;
           }else{
             pathUrl = "enphone/allUnAllotCluesDataAction";
           }
@@ -1634,10 +1494,12 @@ export default {
             $this.tableData = response.data;
             $this.infoData = infoData;
             $this.totalDataNum = response.allcount;
-            $this.getPermitField();
-            $this.$nextTick(function () {
-              $this.setTableHeight();
-            })
+            $this.getPermitField();            
+            if($this.$route.query.phoneID||$this.$route.query.key){
+                $this.$nextTick(function () {
+                  $this.setTableHeight();
+                })
+            }
           }else{
             $this.$message({
               showClose: true,
@@ -1697,6 +1559,7 @@ export default {
     },
     // 电话点击跳转列表
     phoneJump(id,waitstatus){
+      var $this=this;
       var queryObj = {};
       if(id==""){
         queryObj.key=waitstatus;
@@ -1704,7 +1567,7 @@ export default {
         queryObj.phoneID = id;
         queryObj.waitstatus = waitstatus;
       }
-      this.$router.push({page:'Enphone/phoneindex',query:queryObj});
+      $this.$router.push({page:'Enphone/phoneindex',query:queryObj});
     },
     // 获取当前电话的搜索条件数据
     getCurrentPhoneSearchData(){
@@ -1760,8 +1623,26 @@ export default {
               itemData.value = item.id;
               priceList.push(itemData);
             });
-            $this.priceList = priceList;
+            $this.priceList = priceList;            
+            var salesuserList = [];
+            response.salesuser.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              salesuserList.push(itemData);
+            });
+            $this.salesuserList = salesuserList;
+            
+            var salesdepartList = [];
+            response.salesdepart.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              salesdepartList.push(itemData);
+            });
+            $this.salesdepartList = salesdepartList;
             $this.initCluesList();
+            $this.isLoading.close();
           }else{
             $this.$message({
               showClose: true,
@@ -1990,6 +1871,7 @@ export default {
           if(response.status){
             console.log(response,"字段权限");
             $this.permitField = response.data;
+            $this.isLoading.close();
           }else{
             $this.$message({
               showClose: true,
@@ -2152,8 +2034,8 @@ export default {
       // 视窗宽高改变时需要设置默认滚动条的位置
       if($this.totalDataNum>20){
         var scrTop = $this.$refs.scrollDom.scrollTop;
-        if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
-          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+        if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-15){
+          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom+15;
         }else{
           $this.scrollPosition.fixedBottom = 15;
         }
@@ -2173,8 +2055,7 @@ export default {
           var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
           var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
           var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
-          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
-          
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;          
           if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
             document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
             document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
@@ -2191,8 +2072,8 @@ export default {
           }
         }
         if($this.totalDataNum>20){
-          if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
-            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+          if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-15){
+            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom+15;
           }else{
             $this.scrollPosition.fixedBottom = 15;
           }

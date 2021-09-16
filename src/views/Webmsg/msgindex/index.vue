@@ -355,32 +355,32 @@ export default {
         })()
     }
   },
-    watch: {
-      minHeight(val) {
-        if (!this.timer) {
-          this.minHeight = val
-          this.timer = true
-          const $this = this
-          setTimeout(function() {
-            $this.timer = false
-          }, 400)
-        }
-      },
-      //监听相同路由下参数变化的时候，从而实现异步刷新
-      '$route'(to,from) {
-          var $this = this;
-          $this.initData();
-      },
-      isOpen(e){
-        this.setHeight();
-      },
+  watch: {
+    minHeight(val) {
+      if (!this.timer) {
+        this.minHeight = val
+        this.timer = true
+        const $this = this
+        setTimeout(function() {
+          $this.timer = false
+        }, 400)
+      }
     },
-    updated(){
-      var $this = this;
-      $this.$nextTick(() => {
-        $this.$refs.simpleTable.doLayout()
-      });
+    //监听相同路由下参数变化的时候，从而实现异步刷新
+    '$route'(to,from) {
+        var $this = this;
+        $this.initData();
     },
+    isOpen(e){
+      this.setHeight();
+    },
+  },
+  updated(){
+    var $this = this;
+    $this.$nextTick(() => {
+        $this.$refs.simpleTable.doLayout();
+    });
+  },
   created(){
     var $this = this;
     $this.initData();
@@ -407,7 +407,7 @@ export default {
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       $this.minHeight = screenHeight-headerHeight-30;
       $this.getBrowserType();
-        setTimeout(function() {
+      setTimeout(function() {
           $this.setScrollDom();
       }, 400);
     },
@@ -1026,7 +1026,7 @@ export default {
         if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
           $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
         }else{
-          $this.scrollPosition.fixedBottom = 15;
+            $this.scrollPosition.fixedBottom = 15;
         }
       }
     },
@@ -1064,9 +1064,9 @@ export default {
         if($this.totalDataNum>50){
           if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
             $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
-          }else{
-            $this.scrollPosition.fixedBottom = 15;
           }
+        }else{
+            $this.scrollPosition.fixedBottom = 15;
         }
       }
     },

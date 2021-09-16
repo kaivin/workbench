@@ -52,6 +52,7 @@
     EntargetlistDel,
     allCluesData,
     allUnAllotCluesData,
+    getcontient,
 } from '@/api/enphone'
 
 const state = {
@@ -595,6 +596,16 @@ const actions = {
     allUnAllotCluesDataAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             allUnAllotCluesData(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 填写国家自动获取大洲和时差
+    getcontientAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getcontient(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

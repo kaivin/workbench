@@ -1049,7 +1049,7 @@ export default {
       // 视窗宽高改变时需要设置默认滚动条的位置
       if($this.totalDataNum>50){
         var scrTop = $this.$refs.scrollDom.scrollTop;
-        if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+        if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-15){
           $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
         }else{
           $this.scrollPosition.fixedBottom = 15;
@@ -1088,7 +1088,7 @@ export default {
           }
         }
         if($this.totalDataNum>50){
-          if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+          if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-15){
             $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
           }else{
             $this.scrollPosition.fixedBottom = 15;

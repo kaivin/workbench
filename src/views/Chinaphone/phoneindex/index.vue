@@ -650,8 +650,6 @@ export default {
     $this.$nextTick(function () {     
       if($this.$route.query.phoneID){
         $this.setHeight();
-        // 监听竖向滚动条滚动事件
-        window.addEventListener('scroll',$this.handleScroll,true);
       }else{
         if($this.$refs.mainPane&&$this.$refs.numPane){
           $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
@@ -691,8 +689,10 @@ export default {
         }
         this.initData();
       },
-      isOpen(e){
-        this.setHeight();
+      isOpen(e){        
+        if(this.$route.query.phoneID){
+          $this.setHeight();
+        }
       },
   },
   created(){
@@ -709,6 +709,8 @@ export default {
     $this.$nextTick(() => {
       if($this.phoneID){
           $this.$refs.simpleTable.doLayout();
+        // 监听竖向滚动条滚动事件
+        window.addEventListener('scroll',$this.handleScroll,true);
       }else{
         if($this.$refs.mainPane&&$this.$refs.numPane){
           $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
@@ -748,7 +750,7 @@ export default {
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       $this.minHeight = screenHeight-headerHeight-30;
       $this.getBrowserType();
-        setTimeout(function() {
+      setTimeout(function() {
           $this.setScrollDom();
       }, 400);
     },
@@ -1121,12 +1123,13 @@ export default {
     },
     // 电话点击跳转列表
     phoneJump(id){
-      if(this.cnAreaPlot&&!this.cnAreaPlot.chart.destroyed){
-        this.cnAreaPlot.destroy();
+      var $this=this;
+      if($this.cnAreaPlot&&!$this.cnAreaPlot.chart.destroyed){
+        $this.cnAreaPlot.destroy();
       }
       var queryObj = {};
       queryObj.phoneID = id;
-      this.$router.push({page:'Chinaphone/phoneindex',query:queryObj});
+      $this.$router.push({page:'Chinaphone/phoneindex',query:queryObj});
     },
     // 获取当前电话的搜索条件数据
     getCurrentPhoneSearchData(){
@@ -1584,7 +1587,7 @@ export default {
         if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
           $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
         }else{
-          $this.scrollPosition.fixedBottom = 15;
+            $this.scrollPosition.fixedBottom = 15;
         }
       }
     },

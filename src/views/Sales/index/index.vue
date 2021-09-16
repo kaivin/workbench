@@ -695,6 +695,7 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
+      isLoading:null,
     }
   },
   computed: {
@@ -712,7 +713,7 @@ export default {
     $this.$nextTick(function () {
         $this.setTableHeight();
         // 监听竖向滚动条滚动事件
-        window.addEventListener('scroll',$this.handleScroll,true);
+        window.addEventListener('scroll',this.handleScroll,true);
     });
     window.onresize = () => {
         return (() => {
@@ -753,7 +754,7 @@ export default {
   },
   updated(){
     this.$nextTick(() => {
-      this.$refs.simpleTable.doLayout()
+      this.$refs.simpleTable.doLayout();
     })
   },
   created(){
@@ -772,6 +773,16 @@ export default {
     $this.initData();
   },
   methods:{
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -793,7 +804,7 @@ export default {
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       $this.tableHeight = screenHeight-headerHeight-30;
       $this.getBrowserType();
-        setTimeout(function() {
+      setTimeout(function() {
           $this.setScrollDom();
       }, 400);
     },
@@ -875,6 +886,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;    
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化搜索数据
@@ -1188,6 +1200,7 @@ export default {
           $this.$nextTick(function () {
             $this.setTableHeight();
           })
+          $this.isLoading.close();
         }else{
           $this.$message({
             showClose: true,
@@ -1522,7 +1535,7 @@ export default {
         }
         if($this.totalDataNum>20){
           if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
-            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom+15;
           }else{
             $this.scrollPosition.fixedBottom = 15;
           }

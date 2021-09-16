@@ -566,8 +566,6 @@ export default {
       const $this = this;
       $this.$nextTick(function () {
         $this.setHeight();
-        // 监听竖向滚动条滚动事件
-        window.addEventListener('scroll',$this.handleScroll,true);
       });
       window.onresize = () => {
         return (() => {
@@ -607,6 +605,8 @@ export default {
     var $this = this;
     $this.$nextTick(function () {
       $this.$refs.simpleTable.doLayout();
+      // 监听竖向滚动条滚动事件
+      window.addEventListener('scroll',$this.handleScroll,true);
     });
   },
   methods:{
