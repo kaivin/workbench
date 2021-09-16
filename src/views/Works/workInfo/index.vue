@@ -2,43 +2,112 @@
   <div class="page-root ArticleSix work-info-page">
     <div class="abs-panel" ref="mainPane">
       <div class="scroll-panel" ref="scrollPane">
-        <div class="ArticleSixFl" v-bind:class="articleData.issay==0&&commentList.length==0?'no-comment':''">
-          <div class="main-article" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length==0?'min-height:'+minHeight+'px!important;':''">
-            <div class="article-info" ref="leftPane">
-              <div class="ArticleSixFlTop" v-bind:class="articleData.timestatus==2?'time-out':''">
-                  <h1>{{articleData.title}}<span>{{articleData.timestatus==2?'[已逾期]':''}}</span></h1>
-                  <div class="work-order-attr">
-                    <p><span>发布时间：{{articleData.addtime}}</span><span><mark>|</mark>截止时间：{{articleData.endtime}}</span></p>
-                    <p><span>工单积分：{{articleData.score}}</span><span v-if="articleData.mytags!=''"><mark>|</mark>工单标签：<em v-bind:style="'background:'+articleData.mytagscolor+';color:#fff;'">{{articleData.mytags}}</em></span></p>
-                    <p><span v-if="articleData.accpertusername&&articleData.accpertusername!=''">接单者：{{articleData.accpertusername}}</span><span v-if="articleData.dealusername&&articleData.dealusername!=''"><mark>|</mark>实施者：{{articleData.dealusername}}</span></p>
-                    <p><span>工单状态：<b v-if="articleData.status==0">已撤销</b><b v-else-if="articleData.status==1">待接单</b><b v-else-if="articleData.status==2">已接单</b><b v-else-if="articleData.status==4">待审核</b><b v-else-if="articleData.status==5">已驳回</b><b v-else-if="articleData.status==6">已完成待评价</b><b v-else>已完成</b></span></p>
-                  </div>
-              </div>
-              <div class="info-content rich-text" v-html="articleData.content"></div>
-            </div>
+        <div class="article-main">
+          <div class="article-content" v-bind:style="'min-height:'+minHeight+'px;'">
+            <h1>{{articleData.title}}</h1>
+            <ul class="base-info">
+              <li>
+                <div class="icon-panel">
+                  <i class="svg-i color6" v-if="articleData.timestatus==2"><svg-icon icon-class="work_overdue" /></i>
+                  <i class="svg-i color7" v-if="articleData.timestatus!=2&&articleData.status==0"><svg-icon icon-class="work_overdue" /></i>
+                  <i class="svg-i color1" v-if="articleData.timestatus!=2&&articleData.status==1"><svg-icon icon-class="work_accept" /></i>
+                  <i class="svg-i color2" v-if="articleData.timestatus!=2&&articleData.status==2"><svg-icon icon-class="work_doing" /></i>
+                  <i class="svg-i color2" v-if="articleData.timestatus!=2&&articleData.status==4"><svg-icon icon-class="work_overdue" /></i>
+                  <i class="svg-i color3" v-if="articleData.timestatus!=2&&articleData.status==5"><svg-icon icon-class="work_reject" /></i>
+                  <i class="svg-i color4" v-if="articleData.timestatus!=2&&articleData.status==6&&articleData.commentstatus==0"><svg-icon icon-class="work_overdue" /></i>
+                  <i class="svg-i color5" v-if="articleData.timestatus!=2&&articleData.status==6&&articleData.commentstatus!=0"><svg-icon icon-class="work_done" /></i>
+                </div>
+                <div class="value-panel" v-if="articleData.timestatus==2">已逾期</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&articleData.status==0">已撤销</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&articleData.status==1">待接单</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&articleData.status==2">进行中</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&articleData.status==4">待审核</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&articleData.status==5">已驳回</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&articleData.status==6&&articleData.commentstatus==0">待评价</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&articleData.status==6&&articleData.commentstatus!=0">已完成</div>
+                <div class="title-panel">当前状态</div>
+              </li>
+              <li>
+                <div class="icon-panel"></div>
+                <div class="value-panel">{{articleData.dealusername}}</div>
+                <div class="title-panel">负责人</div>
+              </li>
+              <li>
+                <div class="icon-panel"><i class="svg-i"><svg-icon icon-class="work_start" /></i></div>
+                <div class="value-panel">{{articleData.addtime}}</div>
+                <div class="title-panel">开始时间</div>
+              </li>
+              <li>
+                <div class="icon-panel"><i class="svg-i"><svg-icon icon-class="work_ending" /></i></div>
+                <div class="value-panel red">{{articleData.endtime}}</div>
+                <div class="title-panel">截止时间</div>
+              </li>
+            </ul>
+            <div class="title-line"><i class="svg-i"><svg-icon icon-class="work_title" /></i><span>基本信息</span></div>
+            <ul class="other-info">
+              <li>
+                <dl class="item-info">
+                  <dt>任务积分</dt>
+                  <dd><p class="score">{{articleData.score}}</p></dd>
+                </dl>
+              </li>
+              <li>
+                <dl class="item-info">
+                  <dt>任务标签</dt>
+                  <dd><p class="tags-list" v-if="articleData.tagsList&&articleData.tagsList.length>0"><span v-for="(item,index) in articleData.tagsList" v-bind:key="index" v-bind:style="'background:'+item.color">{{item.name}}</span></p></dd>
+                </dl>
+              </li>
+              <li>
+                <dl class="item-info">
+                  <dt>已投入时间</dt>
+                  <dd><p class="default-text">{{articleData.timeing}}天</p></dd>
+                </dl>
+              </li>
+              <li>
+                <dl class="item-info">
+                  <dt>工期进度</dt>
+                  <dd><p class="range-date"><span class="range-dom"><i v-bind:style="'width:'+articleData.dayPercent"></i></span><span class="font-dom">{{articleData.dayPercent}}</span></p></dd>
+                </dl>
+              </li>
+            </ul>
+            <dl class="item-info" v-if="articleData.accpertusername!=''">
+              <dt>任务接收人</dt>
+              <dd></dd>
+            </dl>
+            <dl class="item-info" v-if="articleData.mytags!=''">
+              <dt>标签</dt>
+              <dd><p class="tags-list"><span v-bind:style="'background:'+articleData.mytagscolor">{{articleData.mytags}}</span></p></dd>
+            </dl>
+            <dl class="item-info">
+              <dt>任务描述</dt>
+              <dd>
+                <div class="info-content rich-text" v-html="articleData.content"></div>
+              </dd>
+            </dl>
           </div>
         </div>
-        <div class="comment ArticleSixFr" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||(articleData.issay==0&&commentList.length>0)" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length>=0?'min-height:'+minHeight+'px!important;':''" ref="rightPane">
-          <div class="ArticleSixFrTop" v-bind:class="commentList.length>0?'':'no-comment'">
-            <p class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
-            <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
-              <div class="ueditor-panel"><vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap></div>
-              <div class="btn-rich">
-                <el-switch class="hide-name" v-model="isHideName" inactive-text="匿名发布"></el-switch>
-                <el-button type="primary" v-on:click="submitComment">提交</el-button>
-              </div>
-            </div>
-          </div>
-          <div class="ArticleSixFrBom" v-if="commentList.length>0">
-            <div class="item-comment" v-for="item in commentList" v-bind:key="item.id">
-              <div class="comment-header">
-                <span class="name" v-if="item.is_hidename==0">{{item.name}}</span><span class="name" v-else>匿名</span>
-                <span class="time">{{item.addtime}}</span>
-                <span v-if="articleData.commentdelete==1&&menuButtonPermit.includes('Works_commentdelete')" class="delete" v-on:click="deleteComment(item.id)" title="删除该条评论"><i class="el-icon-delete-solid"></i></span>
-              </div>
-              <div class="comment-body" v-html="item.content"></div>
-            </div>
-          </div>
+        <div class="article-log" v-bind:style="'height:'+minHeight+'px;'">
+          <el-timeline>
+            <el-timeline-item timestamp="2018/4/12" placement="top">
+              <el-card>
+                <h4>更新 Github 模板</h4>
+                <p>王小虎 提交于 2018/4/12 20:46</p>
+              </el-card>
+            </el-timeline-item>
+            <el-timeline-item timestamp="2018/4/3" placement="top">
+              <el-card>
+                <h4>更新 Github 模板</h4>
+                <p>王小虎 提交于 2018/4/3 20:46</p>
+              </el-card>
+            </el-timeline-item>
+            <el-timeline-item timestamp="2018/4/2" placement="top">
+              <el-card>
+                <h4>更新 Github 模板</h4>
+                <p>王小虎 提交于 2018/4/2 20:46</p>
+              </el-card>
+            </el-timeline-item>
+          </el-timeline>
+
         </div>
       </div>
     </div>
@@ -145,45 +214,8 @@ export default {
     // 设置高度
     setHeight(){
       var $this = this;
-      var minHeight= "auto";
       $this.$nextTick(()=>{
-        var screenHeight = $this.$refs.mainPane.offsetHeight-30;
-        var leftHeight = $this.$refs.leftPane.offsetHeight;
-        if($this.device==='desktop'){
-          if($this.articleData.issay==1||$this.articleData.issay==0&&$this.commentList.length>0){
-            var rightHeight = $this.$refs.rightPane.offsetHeight;
-            if(leftHeight>rightHeight){
-              minHeight = leftHeight;
-            }else{
-              minHeight = rightHeight;
-            }
-          }else{
-            minHeight = leftHeight;
-          }
-          if(minHeight<=screenHeight){
-            minHeight = screenHeight;
-          }else{
-            if (leftHeight<rightHeight){
-              minHeight = minHeight+40;
-            }
-          }
-        }else{
-          if($this.commentList.length>0){
-            if($this.$refs.rightPane){
-              var rightHeight = $this.$refs.rightPane.offsetHeight;
-              var scrollHeight = leftHeight + rightHeight + 15;
-              if(scrollHeight<screenHeight){
-                minHeight = rightHeight + (screenHeight+30-scrollHeight);
-              }
-            }
-          }else{
-            var scrollHeight = leftHeight;
-            if(scrollHeight<screenHeight){
-              minHeight = leftHeight + (screenHeight+30-scrollHeight);
-            }
-          }
-        }
-        $this.minHeight = minHeight;
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-30;
       });
     },
     // 初始化数据
@@ -241,6 +273,37 @@ export default {
           if(response){
             if(response.status){
               console.log(response,"工单详情");
+              if(response.data.accpertusername!=''&&response.data.accpertusername.indexOf('|')!=-1){
+                response.data.accpertusername = response.data.accpertusername.replace("|","、");
+              }
+              if(response.data.dealusername!=''&&response.data.dealusername.indexOf('|')!=-1){
+                response.data.dealusername = response.data.dealusername.replace("|","、");
+              }
+              var startTime = new Date(response.data.addtime);
+              var endTime = new Date(response.data.endtime);
+              var dateDiff = endTime.getTime() - startTime.getTime();
+              var dayDiff = Math.ceil(dateDiff/(24*3600*1000));
+              response.data.dayDiff = dayDiff;
+              response.data.dayPercent = parseFloat(response.data.timeing/response.data.dayDiff*100).toFixed(2)+"%";
+              var tagsList = [];
+              if(response.data.tagsname!=''){
+                if(response.data.tagsname.indexOf(",")!=-1){
+                  var tagsArr = response.data.tagsname.split(",");
+                  var colorsArr = response.data.tagsnamecolor.split(",");
+                  tagsArr.forEach(function(item,index){
+                    var itemData = {};
+                    itemData.name = item;
+                    itemData.color = colorsArr[index];
+                    tagsList.push(itemData);
+                  });
+                }else{
+                  var itemData = {};
+                  itemData.name = response.data.tagsname;
+                  itemData.color = response.data.tagsnamecolor;
+                  tagsList.push(itemData);
+                }
+              }
+              response.data.tagsList = tagsList;
               $this.articleData = response.data;
               $this.getCommentList();
             }else{

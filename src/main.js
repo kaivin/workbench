@@ -60,7 +60,6 @@ router.beforeEach(async(to, from, next) => {
     var userInfo = Cookies.get('userInfo');
     if (userInfo) {
       userInfo = JSON.parse(userInfo);
-      console.log(userInfo.phone,"用户信息");
       if (to.path === '/login') {
         next()
         NProgress.done()

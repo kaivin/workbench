@@ -1118,7 +1118,7 @@ export default {
             this.currentKey = null;
           }
         }
-        this.initData();
+        this.getCurrentPhoneSearchData();
       },
       isOpen(e){        
         if(this.$route.query.phoneID||this.$route.query.key){

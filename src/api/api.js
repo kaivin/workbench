@@ -71,17 +71,19 @@ export function fileUpload(data) {
     });
 }
 // 获取中文统计数据
-export function cnCluesStatData() {
+export function cnCluesStatData(data) {
   return request({
     url: "/hxindex/Api/chinacount",
     method: "POST",
+    data,
   });
 }
 // 获取英文统计数据
-export function enCluesStatData() {
+export function enCluesStatData(data) {
   return request({
     url: "/hxindex/Api/encount",
     method: "POST",
+    data,
   });
 }
 // 获取业务员统计数据
@@ -92,9 +94,17 @@ export function salesmanStatData() {
   });
 }
 // 获取中文地区统计数据
-export function cnCluesAreaStatData(data) {
+export function cnCluesRegionStatData(data) {
   return request({
     url: "/hxindex/Api/chinamapcount",
+    method: "POST",
+    data
+  });
+}
+// 获取英文地区统计数据
+export function enCluesRegionStatData(data) {
+  return request({
+    url: "/hxindex/Api/enmapcount",
     method: "POST",
     data
   });

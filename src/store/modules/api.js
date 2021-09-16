@@ -11,7 +11,8 @@
   cnCluesStatData,
   enCluesStatData,
   salesmanStatData,
-  cnCluesAreaStatData,
+  cnCluesRegionStatData,
+  enCluesRegionStatData,
 } from '@/api/api'
 
 const state = {
@@ -50,7 +51,6 @@ const state = {
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
-    console.log(data,"设置头部权限");
     var permitData = [];
     data.data.forEach(function(item,index){
       permitData.push(item.action_route);
@@ -321,9 +321,9 @@ const actions = {
       })
     },
     // 获取中文统计数据
-    cnCluesStatDataAction({ commit, state }) {
+    cnCluesStatDataAction({ commit, state },data) {
       return new Promise((resolve, reject) => {
-        cnCluesStatData().then(response => {
+        cnCluesStatData(data).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -331,9 +331,9 @@ const actions = {
       })
     },
     // 获取英文统计数据
-    enCluesStatDataAction({ commit, state }) {
+    enCluesStatDataAction({ commit, state },data) {
       return new Promise((resolve, reject) => {
-        enCluesStatData().then(response => {
+        enCluesStatData(data).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -351,9 +351,19 @@ const actions = {
       })
     },
     // 获取中文地区统计数据
-    cnCluesAreaStatDataAction({ commit, state },data) {
+    cnCluesRegionStatDataAction({ commit, state },data) {
       return new Promise((resolve, reject) => {
-        cnCluesAreaStatData(data).then(response => {
+        cnCluesRegionStatData(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 获取英文地区统计数据
+    enCluesRegionStatDataAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        enCluesRegionStatData(data).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)
