@@ -913,18 +913,6 @@ export default {
             $this.OreDressList = OreDressList;
             $this.FlourList = FlourList;
             $this.otherList = otherList;  
-            if(response.userlist.length>0){
-              var salesuserlist=[];
-              response.userlist.forEach(function(item,index){
-                  var itemChildren = {};
-                  itemChildren.label = item.name;
-                  itemChildren.value = item.id;
-                  salesuserlist.push(itemChildren);
-              });
-              $this.salesuserlist = salesuserlist;
-            }else{
-              $this.salesuserlist=[{label:"",value:0}]
-            }
             $this.phoneList = response.phonelist;
             var natureList = [];
             response.ennature.forEach(function(item,index){
@@ -954,6 +942,34 @@ export default {
           }
         }
       });
+    },
+    // 获取当前电话下的业务员经理
+    getCurrentPhoneUser(){
+      var $this = this;
+      $this.$store.dispatch("enphone/getCurrentPhoneUserAction", {id:$this.formData.phoneid}).then(response=>{
+          if(response.status){
+            console.log(response);
+            if(response.salesuser.length>0){
+              var salesuserlist=[];
+              response.salesuser.forEach(function(item,index){
+                  var itemChildren = {};
+                  itemChildren.label = item.name;
+                  itemChildren.value = item.id;
+                  salesuserlist.push(itemChildren);
+              });
+              $this.salesuserlist = salesuserlist;
+            }else{
+              $this.salesuserlist=[]
+            }
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+      
     },
     // 来源页面变化切换电话
     urlChangePhone(e){
@@ -992,9 +1008,11 @@ export default {
         if(item.id == id){
           if(item.isOn){
             item.isOn = false;
+            $this.salesuserlist=[]
           }else{
             item.isOn = true;
             $this.formData.phoneid = id;
+            $this.getCurrentPhoneUser();
           }
         }else{
           item.isOn = false;

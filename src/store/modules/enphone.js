@@ -54,6 +54,7 @@
     allUnAllotCluesData,
     getcontient,
     getLeftPhoto,
+    getCurrentPhoneUser,
 } from '@/api/enphone'
 
 const state = {
@@ -617,6 +618,16 @@ const actions = {
     getLeftPhotoAction({ commit, state }) {
         return new Promise((resolve, reject) => {
             getLeftPhoto().then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 选择电话获取当前电话下的业务员
+    getCurrentPhoneUserAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getCurrentPhoneUser(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

@@ -435,3 +435,11 @@ export function getLeftPhoto() {
     method: "POST"
   });
 }
+// 选择电话获取当前电话下的业务员
+export function getCurrentPhoneUser(data) {
+  return request({
+    url: "/hxindex/Enphone/getbranduser",
+    method: "POST",
+    data,
+  });
+}
