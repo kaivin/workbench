@@ -1450,6 +1450,10 @@ export default {
       $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
         if(response){
           if(response.status){
+              $this.linkAll.todayNum = response.alltodaynumber;
+              $this.linkAll.yestodayNum = response.alllastnumber;
+              $this.linkAll.monthNum = response.allnumber;
+              $this.linkAll.unAllotNum = response.nodealcount;
               var brand = "";              
               if($this.$route.query.phoneID){
                 response.data.forEach(function(item,index){
@@ -1947,13 +1951,13 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
-      this.initPage();
+      this.initData();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.searchData.page = val;
-      this.initPage();
+      this.initData();
     },
     // 修改询盘
     editTableRow(row,index){

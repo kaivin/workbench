@@ -1460,6 +1460,21 @@
     }
   }
 }
+.breadcrumb{
+  width: 100%;
+  padding-bottom:10px;
+  overflow: hidden;
+  .breadcrumb-link{
+    font-size: 13px;
+    float:left;
+    height: 18px;
+    line-height: 18px;
+    b{
+      font-weight: normal;
+      margin: 0 5px;
+    }
+  }
+}
 @media (max-width:1600px){
   .article-info{
     .ArticleSixFlTop{

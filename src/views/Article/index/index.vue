@@ -1,8 +1,14 @@
 ﻿<template>
     <div class="page-root bbs-panel" ref="boxPane">
       <div class="abs-panel" ref="mainPane">
-          <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
-              <div class="true-height" ref="scrollPane">
+        <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
+          <div class="true-height" ref="scrollPane">
+            <p class="breadcrumb">
+              <router-link class="breadcrumb-link" to="/">首页</router-link>
+              <template v-for="item in breadcrumbList">
+                <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
+              </template>
+            </p>
             <el-card class="box-card scroll-card ArticleMain" v-bind:class="device==='desktop'?'':'mobile'" shadow="hover">
                 <div slot="header">
                     <div class="card-header" v-if="device==='desktop'" ref="headerPane">
@@ -350,6 +356,7 @@ export default {
   data() {
     return {
       minHeight:"auto",
+      breadcrumbList:[],
       menuButtonPermit:[],
       operationsWidth:"",
       tableData:[],
@@ -408,7 +415,8 @@ export default {
     ...mapGetters([
       'userInfo',
       'device',
-      'sidebar'
+      'sidebar',
+      'menuData'
     ]),
     isOpen() {
       return this.sidebar.opened;
@@ -452,6 +460,7 @@ export default {
   },
   created(){
     var $this = this;
+    $this.getBreadcrumbList();
     $this.initData();
   },
   updated(){
@@ -470,6 +479,68 @@ export default {
     });
   },
   methods:{
+    // 获取面包屑路径
+    getBreadcrumbList(){
+      var $this = this;
+      var breadcrumbList = [];
+      var currentID = ""+$this.$router.currentRoute.meta.id;
+      var pageID = 0;
+      if(currentID.indexOf('-')!=-1){
+        pageID = parseInt(currentID.split("-")[1]);
+      }else{
+        pageID = parseInt(currentID);
+      }
+      $this.menuData.forEach(function(item,index){
+        if(item.meta.id == pageID){
+          var itemData = {};
+          itemData.id = item.meta.id;
+          itemData.router = item.path;
+          itemData.title = item.meta.title;
+          breadcrumbList.push(itemData);
+        }else{
+          if(item.children.length>0){
+            item.children.forEach(function(item1,index1){
+              if(item1.meta.id == pageID){
+                var itemData = {};
+                itemData.id = item.meta.id;
+                itemData.router = item.path;
+                itemData.title = item.meta.title;
+                breadcrumbList.push(itemData);
+                var itemData2 = {};
+                itemData2.id = item1.meta.id;
+                itemData2.router = item1.path;
+                itemData2.title = item1.meta.title;
+                breadcrumbList.push(itemData2);
+              }else{
+                if(item1.children.length>0){
+                  item1.children.forEach(function(item2,index2){
+                    if(item2.meta.id == pageID){
+                      var itemData = {};
+                      itemData.id = item.meta.id;
+                      itemData.router = item.path;
+                      itemData.title = item.meta.title;
+                      breadcrumbList.push(itemData);
+                      var itemData2 = {};
+                      itemData2.id = item1.meta.id;
+                      itemData2.router = item1.path;
+                      itemData2.title = item1.meta.title;
+                      breadcrumbList.push(itemData2);
+                      var itemData3 = {};
+                      itemData3.id = item2.meta.id;
+                      itemData3.router = item2.path;
+                      itemData3.title = item2.meta.title;
+                      breadcrumbList.push(itemData3);
+                    }
+                  });
+                }
+              }
+            });
+          }
+        }
+      });
+      $this.breadcrumbList = breadcrumbList;
+      console.log($this.breadcrumbList,"面包屑数据");
+    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;

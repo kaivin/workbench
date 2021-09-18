@@ -137,6 +137,7 @@
                                       >
                                       <el-table-column
                                           prop="username"
+                                          align="center"
                                           label="发布人"
                                           width="100">
                                       </el-table-column>

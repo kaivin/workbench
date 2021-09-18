@@ -12,7 +12,7 @@
               :collapse-transition="false"
               mode="vertical"
               class="sidebar-menu">
-            <sidebar-item v-for="route in menu_data" v-bind:key="route.meta.index" v-bind:item="route" />
+            <sidebar-item v-for="route in menuData" v-bind:key="route.meta.index" v-bind:item="route" />
           </el-menu>
         </el-scrollbar>
       </div>
@@ -35,7 +35,7 @@ export default {
   },
   computed:{
       ...mapGetters([
-        'menu_data',
+        'menuData',
         'sidebar',
         'device',
       ]),

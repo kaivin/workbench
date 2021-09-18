@@ -948,7 +948,6 @@ export default {
     initCluesList(){
       var $this = this;
       var searchData = $this.initSearchData();
-      
       $this.$store.dispatch('chinaphone/cluesCurrentPhoneDataAction', searchData).then(response=>{
         if(response){
           if(response.status){
