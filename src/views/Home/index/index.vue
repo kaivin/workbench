@@ -2,7 +2,7 @@
   <div class="page-root scroll-panel home-index" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
       <div class="card-content" ref="tableContent">
-        <div class="item-row flex-box"> 
+        <div class="item-row flex-box" v-if="newsList.length>0"> 
           <div class="item-column flex-content" v-if="permitModules.includes('Module_bbs')">
             <div class="item-module">
               <div class="module-header"><h2>消息通知</h2></div>

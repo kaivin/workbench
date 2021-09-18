@@ -101,3 +101,11 @@ export function contactEdit(data) {
     data
   });
 }
+
+// 获取品牌数据
+export function getBrandList() {
+  return request({
+    url: "/hxindex/User/brandlist",
+    method: "POST"
+  });
+}

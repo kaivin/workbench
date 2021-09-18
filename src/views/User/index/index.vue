@@ -196,8 +196,15 @@
             </el-form-item>
           </div>
           <div class="item-form">
-            <el-form-item label="部门：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
-              <el-cascader v-model="dialogForm.deptid_othername" :options="departLevelData" ref="departLevel" placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover',multiple:true }" :collapse-tags="true" clearable></el-cascader>
+            <el-form-item label="所属品牌：" :label-width="formLabelWidth">
+              <el-select v-model="dialogForm.SellerIndustryGroup" clearable placeholder="请选择品牌">
+                <el-option
+                  v-for="item in brandList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
             </el-form-item>
           </div>
         </div>
@@ -226,6 +233,11 @@
               </el-select>
             </el-form-item>
           </div>
+        </div>
+        <div class="item-form">
+          <el-form-item label="部门：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
+            <el-cascader v-model="dialogForm.deptid_othername" :options="departLevelData" ref="departLevel" placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover',multiple:true }" :collapse-tags="true" clearable></el-cascader>
+          </el-form-item>
         </div>
         <div class="item-form">
             <el-form-item label="备注：" :label-width="formLabelWidth">
@@ -352,6 +364,7 @@ export default {
       departLevelData:[],
       worknameList:[],
       postionList:[],
+      brandList:[],
       dialogForm:{
         deptid_othername:[],
         role_id:[],
@@ -361,7 +374,8 @@ export default {
         phone:"",
         email:"",
         postion_id:"",
-        workname_id:""
+        workname_id:"",
+        SellerIndustryGroup:'',
       },
       dialogRoleVisible:false,
       roleData:[{key:"",label:""}],
@@ -663,6 +677,7 @@ export default {
       var $this = this;
       $this.getWorkNameList();
       $this.getPostionNameList();
+      $this.getBrandList();
       $this.dialogFormVisible = true;
       $this.dialogText = "添加用户";
       $this.resetFormData();
@@ -672,10 +687,10 @@ export default {
       var $this = this;
       $this.getWorkNameList();
       $this.getPostionNameList();
+      $this.getBrandList();
       $this.dialogFormVisible = true;
       $this.dialogText = "编辑用户";
       $this.resetFormData();
-      console.log(row);
       var departID = [];
       if(row.deptid_othername){
         if(row.deptid_othername.indexOf("|")!=-1){
@@ -718,6 +733,7 @@ export default {
       $this.dialogForm.email = row.email;
       $this.dialogForm.postion_id = row.postion_id==0?'':row.postion_id;
       $this.dialogForm.workname_id = row.workname_id==0?'':row.workname_id;
+      $this.dialogForm.SellerIndustryGroup = row.SellerIndustryGroup==0?'':row.SellerIndustryGroup;
     },
     // 保存添加/编辑数据
     saveData(){
@@ -741,6 +757,7 @@ export default {
       formData.postion_id = $this.dialogForm.postion_id;
       formData.role_id = $this.dialogForm.role_id;
       formData.deptid_othername = departData;
+      formData.SellerIndustryGroup = $this.dialogForm.SellerIndustryGroup;
       var pathUrl = "";
       if($this.dialogText=="编辑用户"){
         pathUrl = "user/userEditAction";
@@ -786,6 +803,7 @@ export default {
       $this.dialogForm.email = "";
       $this.dialogForm.postion_id = "";
       $this.dialogForm.workname_id = "";
+      $this.dialogForm.SellerIndustryGroup = "";
     },
     // 验证是否为空
     validationForm(){
@@ -798,28 +816,6 @@ export default {
         });
         $this.$refs['name'].focus();
         return false;
-      }
-      if($this.dialogForm.phone != ""){
-        if(!validPhone($this.dialogForm.phone)){
-          $this.$message({
-              showClose: true,
-              message: '错误：手机号格式不正确！',
-              type: 'error'
-          });
-          $this.$refs['phone'].focus();
-          return false;
-        }
-      }
-      if($this.dialogForm.email != ""){
-        if(!validEmail($this.dialogForm.email)){
-          $this.$message({
-              showClose: true,
-              message: '错误：邮箱格式不正确！',
-              type: 'error'
-          });
-          $this.$refs['email'].focus();
-          return false;
-        }
       }
       return true;
     },
@@ -1064,6 +1060,30 @@ export default {
       console.log(`当前页: ${val}`);
       this.searchData.page = val;
       this.initPage();
+    },
+    // 获取部门数据
+    getBrandList(){
+      var $this = this;
+      $this.$store.dispatch('user/getBrandListAction', null).then(response=>{
+        if(response.status){
+          if(response.data.length>0){
+            var brandList = [];
+            response.data.forEach(function(item,index){
+              var itemData = {};
+              itemData.value = item.id;
+              itemData.label = item.brandname;
+              brandList.push(itemData);
+            });
+            $this.brandList = brandList;
+          }
+        }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
     },
     // 获取部门数据
     getDepartList(){

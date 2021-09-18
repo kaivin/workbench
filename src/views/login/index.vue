@@ -99,8 +99,6 @@ export default {
         const validateUsername = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error('请输入用户名'));
-            }else if(!this.checkeUsername(this.loginForm.username)){
-                callback(new Error('用户名格式错误'));
             }else{
                 callback();
             }
@@ -108,8 +106,6 @@ export default {
         const validatePassword =  (rule, value, callback) => {
             if (value === '') {
                 callback(new Error('请输入密码'));
-            }else if(!this.checkePassword(this.loginForm.password)){
-                callback(new Error('密码格式错误'));
             }else{
                 callback();
             }

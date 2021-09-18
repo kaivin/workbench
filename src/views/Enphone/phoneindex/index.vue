@@ -1304,18 +1304,16 @@ export default {
           this.phoneID = parseInt(this.$route.query.phoneID);
           this.searchData.waitstatus = parseInt(this.$route.query.waitstatus);
           this.currentKey = null;
-          this.leftPhoto();
         }else{
           this.phoneID = null;
           this.searchData.waitstatus=1;
           if(this.$route.query.key){
             this.currentKey = this.$route.query.key;
-            this.leftPhoto();
           }else{
             this.currentKey = null;
-            this.initData();
           }
         }
+        this.initData();
       },
       isOpen(e){        
         if(this.$route.query.phoneID||this.$route.query.key){
@@ -1329,13 +1327,11 @@ export default {
       $this.phoneID = parseInt($this.$route.query.phoneID);
       $this.searchData.waitstatus = parseInt($this.$route.query.waitstatus);
       $this.currentKey = null;
-      $this.leftPhoto();
     }else{
       $this.phoneID = null;
       $this.searchData.waitstatus=1;
       if($this.$route.query.key){
         $this.currentKey = $this.$route.query.key;
-        $this.leftPhoto();
       }else{
         $this.currentKey = null;
       }
@@ -1428,7 +1424,6 @@ export default {
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){
       var $this=this;
-      $this.loadingFun();
       $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
         if(response){
           if(response.status){
@@ -1456,6 +1451,7 @@ export default {
                   });
                 }
               }
+              $this.defaultData = response;
               if($this.defaultData.data&&$this.defaultData.data.length>0){
                 if($this.$route.query.phoneID){
                     $this.defaultData.data.forEach(function(item,index){
@@ -1471,7 +1467,7 @@ export default {
                   if($this.$route.query.key){
                     $this.defaultData.data.forEach(function(item,index){
                       item.phone.forEach(function(item1,index1){
-                        item.isOn = false;
+                        item1.isOn = false;
                       });
                     });
                     if($this.$route.query.key=="all"){
@@ -1509,7 +1505,7 @@ export default {
       $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
-    // 初始化页面信息
+    // 初始化首页统计页面信息
     initPage(){
       var $this = this;
       $this.$store.dispatch('enphone/cluesPhoneIndexDataAction', null).then(response=>{
@@ -1569,7 +1565,7 @@ export default {
               if($this.$route.query.key){
                 $this.defaultData.data.forEach(function(item,index){
                   item.phone.forEach(function(item1,index1){
-                    item.isOn = false;
+                    item1.isOn = false;
                   });
                 });
                 if($this.$route.query.key=="all"){
@@ -1797,7 +1793,11 @@ export default {
                 operationsWidth+=66;
               }
               $this.operationsWidth = "" + operationsWidth;
-              $this.initPage();
+              if($this.$route.query.phoneID||$this.$route.query.key){
+                $this.leftPhoto();
+              }else{
+                $this.initPage();
+              }
             }else{
               $this.$message({
                 showClose: true,

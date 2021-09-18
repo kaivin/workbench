@@ -1,4 +1,4 @@
-﻿import { getUserList,userAdd,userEdit,userDelete,userShowHide,userResetPwd,userAllotedRole,userCanAllotRole,userAllotRole,userCanDepart,userNameEdit,pwdEdit,contactEdit } from '@/api/user'
+﻿import { getUserList,userAdd,userEdit,userDelete,userShowHide,userResetPwd,userAllotedRole,userCanAllotRole,userAllotRole,userCanDepart,userNameEdit,pwdEdit,contactEdit,getBrandList } from '@/api/user'
 
 const state = {}
 const mutations = {}
@@ -97,6 +97,16 @@ const actions = {
   userCanDepartAction({ commit, state }) {
     return new Promise((resolve, reject) => {
       userCanDepart().then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // 获取品牌列表
+  getBrandListAction({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      getBrandList().then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
