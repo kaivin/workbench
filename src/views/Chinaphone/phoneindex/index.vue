@@ -684,6 +684,9 @@ export default {
       '$route'(to,from) {
         if(this.$route.query.phoneID){
           this.phoneID = parseInt(this.$route.query.phoneID);
+          this.$nextTick(function () {     
+            this.setHeight();
+          });
         }else{
           this.phoneID = null;
         }

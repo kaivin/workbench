@@ -419,8 +419,6 @@ export default {
       this.$nextTick(function () {
         if($this.isSearch||$this.isList){
           $this.setHeight();
-          // 监听竖向滚动条滚动事件
-          window.addEventListener('scroll',$this.handleScroll,true);
         }
       });
       window.onresize = () => {
@@ -461,9 +459,13 @@ export default {
     this.$nextTick(() => {
       if($this.isList){
         $this.$refs.simpleTable.doLayout();
+        // 监听竖向滚动条滚动事件
+        window.addEventListener('scroll',$this.handleScroll,true);
       }
       if($this.isSearch){
         $this.$refs.searchTable.doLayout();
+        // 监听竖向滚动条滚动事件
+        window.addEventListener('scroll',$this.handleScroll,true);
       }
     });
   },
@@ -494,7 +496,7 @@ export default {
          $this.minHeight = screenHeight-headerHeight-30;
       }
       $this.getBrowserType();
-        setTimeout(function() {
+      setTimeout(function() {
           $this.setScrollDom();
       }, 400);
     },

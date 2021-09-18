@@ -34,7 +34,7 @@
                     </div>
                     <el-card class="box-card" shadow="hover">
                           <div slot="header">
-                              <div class="EnStatisticalTop" ref="headerPane">
+                              <div class="EnStatisticalTop" ref="enTopPane">
                                     <ul class="EnStatisticalTopTit">
                                         <li v-for="(item,index) in defaultData.departcountArr" v-bind:key="index"><span v-bind:class="item.isOn?'active':''" v-on:click="topdepartClick(item.dept_id)">{{item.name}}</span></li>
                                     </ul>
@@ -50,7 +50,7 @@
                                     </div>
                               </div>
                           </div>
-                          <div class="card-content EnStatisticalBom">
+                          <div class="card-content EnStatisticalBom"  :style="'min-height:'+tableHeight+'px;'">
                               <div class="EnStatisticalBomBox" v-for="(item,index) in defaultData.departusercount" v-bind:key="index">
                                     <h2>{{item.name}}个人有效询盘数量</h2>
                                     <div class="item">
@@ -1275,7 +1275,7 @@ export default {
     },
   },
   mounted(){
-    const $this = this;
+    const $this = this;    
     if($this.$route.query.phoneID||$this.$route.query.key){
       $this.$nextTick(function () {     
         $this.setTableHeight();
@@ -1285,6 +1285,15 @@ export default {
            $this.setTableHeight();
         })()
       }
+    }else{
+        var headerHeight = $this.$refs.enTopPane.offsetHeight+30;
+        var screenHeight = $this.$refs.boxPane.offsetHeight;
+        $this.tableHeight = screenHeight-headerHeight-30;
+        window.onresize = () => {
+          return (() => {
+              $this.tableHeight = screenHeight-headerHeight-30;
+          })()
+        }
     }
   },
   watch: {
@@ -1304,11 +1313,17 @@ export default {
           this.phoneID = parseInt(this.$route.query.phoneID);
           this.searchData.waitstatus = parseInt(this.$route.query.waitstatus);
           this.currentKey = null;
+          this.$nextTick(function () {     
+            this.setTableHeight();
+          });
         }else{
           this.phoneID = null;
           this.searchData.waitstatus=1;
           if(this.$route.query.key){
             this.currentKey = this.$route.query.key;
+            this.$nextTick(function () {     
+              this.setTableHeight();
+            });
           }else{
             this.currentKey = null;
           }
@@ -1344,6 +1359,12 @@ export default {
         this.$refs.simpleTable.doLayout(); 
         // 监听竖向滚动条滚动事件
         window.addEventListener('scroll',this.handleScroll,true);
+      }else{
+        if(this.$refs.mainPane&&this.$refs.enTopPane){          
+        var headerHeight = this.$refs.enTopPane.offsetHeight+30;
+        var screenHeight = this.$refs.boxPane.offsetHeight;
+        this.tableHeight = screenHeight-headerHeight-30;
+        }
       }
     })
   },
@@ -1374,15 +1395,17 @@ export default {
     // 设置高度
     setTableHeight(){
       var $this = this;
-      $this.tableHeight = 0;      
-      var headerHeight = $this.$refs.headerPane.offsetHeight;
-      var screenHeight = $this.$refs.boxPane.offsetHeight;
-      $this.tableHeight = screenHeight-headerHeight-30;
-      $this.getBrowserType();      
       if($this.$route.query.phoneID||$this.$route.query.key){
-        setTimeout(function() {
-            $this.setScrollDom();
-        }, 400);
+        $this.tableHeight = 0;      
+        var headerHeight = $this.$refs.headerPane.offsetHeight;
+        var screenHeight = $this.$refs.boxPane.offsetHeight;
+        $this.tableHeight = screenHeight-headerHeight-30;
+        $this.getBrowserType();      
+        if($this.$route.query.phoneID||$this.$route.query.key){
+          setTimeout(function() {
+              $this.setScrollDom();
+          }, 400);
+        }
       }
     },
     // 搜索结果

@@ -593,7 +593,7 @@ export default {
         this.initData();
       },
       isOpen(e){
-        this.setTableHeight();
+        this.settableHeight();
       },
   },
   created(){
@@ -638,9 +638,9 @@ export default {
       $this.minHeight = 0;      
       var headerHeight = $this.$refs.headerPane.offsetHeight+45;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
-      $this.tableHeight = screenHeight-headerHeight-30;
+      $this.minHeight = screenHeight-headerHeight-30;
       $this.getBrowserType();
-        setTimeout(function() {
+      setTimeout(function() {
           $this.setScrollDom();
       }, 400);
     },
