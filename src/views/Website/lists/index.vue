@@ -3,7 +3,7 @@
     <div class="abs-panel" ref="mainPane">
       <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
         <div class="true-height" ref="scrollPane">
-          <el-card class="box-card scroll-card WebsiteList-card" shadow="hover" v-loading.lock="isLoading">
+          <el-card class="box-card scroll-card WebsiteList-card" shadow="hover">
             <div slot="header">
               <div class="card-header" v-if="device==='desktop'" ref="headerPane">
                 <div class="border-wrap post-class">
@@ -521,7 +521,6 @@ export default {
         domain:"",
         weblink:"",
       },
-      isLoading:false,
       scrollPosition:{
         width:0,
         left:0,
@@ -610,6 +609,16 @@ export default {
     });
   },
   methods:{
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -627,7 +636,7 @@ export default {
     setHeight(){
       var $this = this;
       $this.minHeight = 0;      
-      var headerHeight = $this.$refs.headerPane.offsetHeight;
+      var headerHeight = $this.$refs.headerPane.offsetHeight+45;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       $this.tableHeight = screenHeight-headerHeight-30;
       $this.getBrowserType();
@@ -658,7 +667,7 @@ export default {
     // 初始化页面数据
     initData(){
       var $this = this;
-      $this.isLoading = true;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -857,12 +866,11 @@ export default {
             });
             $this.tableData = response.data;
             $this.totalDataNum = response.allcount;
-            $this.isLoading = false;
             $this.$nextTick(function () {
               $this.setHeight();
             });
+            $this.isLoading.close();
           }else{
-            $this.isLoading = false;
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
                 showClose: true,

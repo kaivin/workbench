@@ -1296,11 +1296,7 @@ export default {
     jumpLink(status){
         var $this = this;
         $this.DataEmpty();
-        if($this.currentStatus==status){
-          $this.initPage();
-        }else{
-          $this.$router.push({path:'/Sales/index',query:{Status:status}});
-        }
+        $this.$router.push({path:'/Sales/index',query:{Status:status}});
     },
     // 跳转数据分析页面
     dataStatistic(){

@@ -1440,8 +1440,7 @@ export default {
             $this.pageSizeList = pageSizeListArr;
             $this.$nextTick(function () {
               $this.setTableHeight();
-            })   
-            $this.isLoading.close();         
+            })         
           }else{
             $this.$message({
                 showClose: true,
@@ -1450,6 +1449,7 @@ export default {
             });
           }
         }
+        $this.isLoading.close();   
       });
     },
     // 重置表单

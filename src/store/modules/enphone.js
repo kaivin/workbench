@@ -53,6 +53,7 @@
     allCluesData,
     allUnAllotCluesData,
     getcontient,
+    getLeftPhoto,
 } from '@/api/enphone'
 
 const state = {
@@ -606,6 +607,16 @@ const actions = {
     getcontientAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             getcontient(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 电话首页-左侧电话括号小数字
+    getLeftPhotoAction({ commit, state }) {
+        return new Promise((resolve, reject) => {
+            getLeftPhoto().then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

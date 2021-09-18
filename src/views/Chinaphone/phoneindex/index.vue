@@ -32,7 +32,7 @@
               <div class="card-header">
                 <h2>{{currentTeam}}</h2>
                 <p class="ChinaphoneNumTag">
-                    <span class="item-clues" v-for="item in topdepart" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="topdepartClick(item.id,item.name)">{{item.name}}</span>
+                    <span class="item-clues" v-for="item in topdepart" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="topdepartClick(item.id,item.name,item.isOn)">{{item.name}}</span>
                 </p>
               </div>
               <div class="card-content ChinaphoneNumBom" >
@@ -757,6 +757,7 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
+      $this.loadingFun();
       $this.initCluesList();
     },
     // 初始化数据
@@ -944,6 +945,7 @@ export default {
     initCluesList(){
       var $this = this;
       var searchData = $this.initSearchData();
+      
       $this.$store.dispatch('chinaphone/cluesCurrentPhoneDataAction', searchData).then(response=>{
         if(response){
           if(response.status){
@@ -975,13 +977,13 @@ export default {
             console.log(response,"询盘信息——$this.tableData");
             $this.tableData = response.data;
             $this.infoData = infoData;
-            $this.totalDataNum = response.allcount;
-            $this.getPermitField();                
+            $this.totalDataNum = response.allcount;              
             if($this.$route.query.phoneID){
                 $this.$nextTick(function () {
                   $this.setHeight();
                 })
             }
+            $this.getPermitField();  
           }else{
             $this.$message({
               showClose: true,
@@ -1438,8 +1440,11 @@ export default {
       });
     },
     // 部门点击事件
-    topdepartClick(Tid,name){
+    topdepartClick(Tid,name,isOn){
       var $this = this;
+      if(isOn){
+        return false;
+      }
       var topdepart = $this.topdepart;
       $this.currentTeam = name;
       topdepart.forEach(function(item){

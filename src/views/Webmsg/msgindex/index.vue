@@ -79,7 +79,6 @@
                             <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
                                 <div class="table-mask"></div>
                                 <el-table
-                                    v-loading="isLoading"
                                     ref="simpleTable"
                                     :data="tableData"
                                     tooltip-effect="dark"
@@ -303,7 +302,6 @@ export default {
         isDisabled:true,
         selectedData:[],
         permitStatus:[],
-        isLoading:false,
         isReady:true,
         scrollPosition:{
           width:0,
@@ -386,6 +384,16 @@ export default {
     $this.initData();
   },
   methods:{
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -414,12 +422,13 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
+      $this.loadingFun();
       $this.initPage();
     },
     // 初始化数据
     initData(){
       var $this = this;
-      $this.isLoading = true;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前状态分类的数据
@@ -504,10 +513,10 @@ export default {
             });
             $this.tableData = tableData;
             $this.totalDataNum = response.allcount;
-            $this.isLoading = false;
             $this.$nextTick(()=>{
               $this.setHeight();
             });
+            $this.isLoading.close();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -525,8 +534,6 @@ export default {
               });
             }
           }
-        }else{
-          $this.isLoading = false;
         }
       });
     },
@@ -566,7 +573,6 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
-      $this.isLoading = true;
       $this.$store.dispatch('webmsg/webMsgInitDataAction', null).then(response=>{
         if(response){
           if(response.status){
@@ -709,6 +715,7 @@ export default {
     // 获取第三方平台中文留言信息
     getCnMsgData(){
       var $this = this;
+      $this.loadingFun();
       $this.isReady = false;
       $this.$store.dispatch('webmsg/webMsgSyncPlatMsgAction', {number:$this.msgPage}).then(response=>{
         if(response){

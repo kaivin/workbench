@@ -428,3 +428,10 @@ export function getcontient(data) {
     data
   });
 }
+//电话首页-左侧电话括号小数字
+export function getLeftPhoto() {
+  return request({
+    url: "/hxindex/Enphone/leftnumber",
+    method: "POST"
+  });
+}

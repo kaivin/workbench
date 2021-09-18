@@ -596,6 +596,7 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
+      isLoading:null,
     }
   },
   computed: {
@@ -644,6 +645,16 @@ export default {
     })
   },
   methods:{
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -661,7 +672,7 @@ export default {
     setHeight(){
       var $this = this;
       $this.minHeight = 0;      
-      var headerHeight = $this.$refs.headerPane.offsetHeight;
+      var headerHeight = $this.$refs.headerPane.offsetHeight+45;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       $this.minHeight = screenHeight-headerHeight-30;
       $this.getBrowserType();
@@ -672,6 +683,7 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
+      $this.loadingFun();
       $this.initCluesList();
     },
     // 初始化数据
@@ -682,6 +694,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
+      $this.loadingFun();
       $this.getSearchSelectData();
     },
     // 组装搜索接口所需数据
@@ -771,6 +784,7 @@ export default {
             $this.$nextTick(function () {
               $this.setHeight();
             })
+            $this.isLoading.close();
           }else{
             $this.$message({
               showClose: true,
@@ -875,6 +889,7 @@ export default {
               categoryList.push(itemData);
             });
             $this.categoryList = categoryList;
+            $this.isLoading.close();
           }else{
             $this.$message({
               showClose: true,
