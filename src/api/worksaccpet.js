@@ -115,3 +115,11 @@ export function workOrderInfo(data) {
       data,
     });
 }
+// 工单详情信息数据
+export function workOrderNoAllotInfo(data) {
+    return request({
+      url: "/hxindex/Worksaccpet/waitworkinfo",
+      method: "POST",
+      data,
+    });
+}

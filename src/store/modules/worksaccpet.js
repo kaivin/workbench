@@ -14,6 +14,7 @@
     undoWorkOrder,
     confirmDoneWorkOrder,
     workOrderInfo,
+    workOrderNoAllotInfo,
 } from '@/api/worksaccpet'
 
 const state = {}
@@ -153,6 +154,16 @@ const actions = {
     workOrderUserListAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             workOrderUserList(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 工单详情信息数据
+    workOrderNoAllotInfoAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            workOrderNoAllotInfo(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

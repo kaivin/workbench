@@ -2,19 +2,129 @@
   <div class="page-root ArticleSix work-info-page">
     <div class="abs-panel" ref="mainPane">
       <div class="scroll-panel" ref="scrollPane">
-        <div class="ArticleSixFl no-comment">
-          <div class="main-article" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length==0?'min-height:'+minHeight+'px!important;':''">
-            <div class="article-info" ref="leftPane">
-              <div class="ArticleSixFlTop" v-bind:class="articleData.timestatus==2?'time-out':''">
-                  <h1>{{articleData.title}}<span>{{articleData.timestatus==2?'[已逾期]':''}}</span></h1>
-                  <div class="work-order-attr">
-                    <p><span>发布时间：{{articleData.addtime}}</span><span><mark>|</mark>截止时间：{{articleData.endtime}}</span></p>
-                    <p><span>工单积分：{{articleData.score}}</span><span v-if="articleData.mytags!=''"><mark>|</mark>工单标签：<em v-bind:style="'background:'+articleData.mytagscolor+';color:#fff;'">{{articleData.mytags}}</em></span></p>
-                    <p><span>接单者：{{articleData.accpetusername}}</span><span v-if="articleData.dealusername&&articleData.dealusername!=''"><mark>|</mark>实施者：{{articleData.dealusername}}</span></p>
-                    <p><span>工单状态：<b v-if="articleData.status==0">已撤销</b><b v-else-if="articleData.status==1">待接单</b><b v-else-if="articleData.status==2">已接单</b><b v-else-if="articleData.status==4">待审核</b><b v-else-if="articleData.status==5">已驳回</b><b v-else-if="articleData.status==6">已完成待评价</b><b v-else>已完成</b></span></p>
-                  </div>
+        <div class="article-main">
+          <div class="article-content" v-bind:style="'min-height:'+minHeight+'px;'">
+            <h1>{{articleData.title}}</h1>
+            <ul class="base-info">
+              <li>
+                <div class="icon-panel">
+                  <i class="svg-i color6" v-if="articleData.timestatus==2"><svg-icon icon-class="work_overdue" /></i>
+                  <i class="svg-i color1" v-if="articleData.timestatus!=2&&currentStatus=='receive'"><svg-icon icon-class="work_accept" /></i>
+                  <i class="svg-i color1" v-if="articleData.timestatus!=2&&currentStatus=='allot'"><svg-icon icon-class="work_allot" /></i>
+                  <i class="svg-i color2" v-if="articleData.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&articleData.workstatus==0"><svg-icon icon-class="work_doing" /></i>
+                  <i class="svg-i color2" v-if="articleData.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&articleData.workstatus==1"><svg-icon icon-class="work_accept" /></i>
+                  <i class="svg-i color3" v-if="articleData.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&articleData.workstatus==2"><svg-icon icon-class="work_reject" /></i>
+                  <i class="svg-i color4" v-if="articleData.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&articleData.workstatus==3&&articleData.commentstatus==0"><svg-icon icon-class="work_evaluate" /></i>
+                  <i class="svg-i color5" v-if="articleData.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&articleData.workstatus==3&&articleData.commentstatus!=0"><svg-icon icon-class="work_done" /></i>
+                </div>
+                <div class="value-panel" v-if="articleData.timestatus==2">已逾期</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&currentStatus=='receive'">待接单</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&currentStatus=='allot'">待分配</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&articleData.workstatus==0">进行中</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&articleData.workstatus==1">待审核</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&articleData.workstatus==2">已驳回</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&articleData.workstatus==3&&articleData.commentstatus==0">待评价</div>
+                <div class="value-panel" v-if="articleData.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&articleData.workstatus==3&&articleData.commentstatus!=0">已完成</div>
+                <div class="title-panel">当前状态</div>
+              </li>
+              <li>
+                <div class="icon-panel"><i class="svg-i"><svg-icon icon-class="work_head" /></i></div>
+                <div class="value-panel">{{!articleData.dealusername||articleData.dealusername==''?'暂无':articleData.dealusername}}</div>
+                <div class="title-panel">负责人</div>
+              </li>
+              <li>
+                <div class="icon-panel"><i class="svg-i"><svg-icon icon-class="work_start" /></i></div>
+                <div class="value-panel">{{articleData.addtime}}</div>
+                <div class="title-panel">开始时间</div>
+              </li>
+              <li>
+                <div class="icon-panel"><i class="svg-i"><svg-icon icon-class="work_ending" /></i></div>
+                <div class="value-panel red">{{articleData.endtime}}</div>
+                <div class="title-panel">截止时间</div>
+              </li>
+            </ul>
+            <div class="title-line"><i class="svg-i"><svg-icon icon-class="work_title" /></i><span>基本信息</span></div>
+            <ul class="other-info">
+              <li>
+                <dl class="item-info">
+                  <dt>任务积分</dt>
+                  <dd>
+                    <p class="score" v-if="currentStatus=='receive'">{{articleData.score}}<span v-if="articleData.accpetscore!=0">(剩余积分：{{articleData.score-articleData.accpetscore}})</span></p>
+                    <p class="score" v-else>{{articleData.accpetscore}}</p>
+                  </dd>
+                </dl>
+              </li>
+              <li>
+                <dl class="item-info">
+                  <dt>任务标签</dt>
+                  <dd><p class="tags-list" v-if="articleData.tagsList&&articleData.tagsList.length>0"><span v-for="(item,index) in articleData.tagsList" v-bind:key="index" v-bind:style="'background:'+item.color">{{item.name}}</span></p></dd>
+                </dl>
+              </li>
+              <li>
+                <dl class="item-info">
+                  <dt>已投入时间</dt>
+                  <dd><p class="default-text">{{articleData.timeing}}天</p></dd>
+                </dl>
+              </li>
+              <li>
+                <dl class="item-info">
+                  <dt>任务时间进度</dt>
+                  <dd><p class="range-date"><span class="range-dom"><i v-bind:style="'width:'+articleData.dayPercent"></i></span><span class="font-dom">{{articleData.dayPercent}}</span></p></dd>
+                </dl>
+              </li>
+            </ul>
+            <dl class="item-info" v-if="articleData.accpetusername!=''">
+              <dt>任务接收人</dt>
+              <dd><p class="default-text">{{articleData.accpetusername}}</p></dd>
+            </dl>
+            <dl class="item-info" v-if="articleData.mytags!=''">
+              <dt>标签</dt>
+              <dd><p class="tags-list"><span v-bind:style="'background:'+articleData.mytagscolor">{{articleData.mytags}}</span></p></dd>
+            </dl>
+            <dl class="item-info">
+              <dt>任务描述</dt>
+              <dd>
+                <div class="info-content rich-text" v-html="articleData.content"></div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+        <div class="article-log" ref="rightPane">
+          <div class="log-content" v-bind:style="'height:'+minHeight+'px;width:'+rightWidth+'px;'" v-bind:class="menuButtonPermit.includes('Works_addcomments')?'has-comment':''">
+            <div class="log-title"><span>项目日志</span></div>
+            <div class="log-panel">
+              <el-scrollbar wrap-class="scrollbar-wrapper">
+                <ul class="log-list">
+                  <li v-for="(item,index) in logList" v-bind:key="index">
+                    <dl>
+                      <dt><span>{{item.date}}</span></dt>
+                      <dd>
+                        <div class="item-log flex-box" v-for="(child,idx) in item.children" v-bind:key="idx">
+                          <div class="time"><span>{{child.time}}</span><i class="svg-i"><svg-icon icon-class="work_time" /></i></div>
+                          <div class="time-icon">
+                            <i class="svg-i" v-if="child.loginfo.indexOf('创建')!=-1"><svg-icon icon-class="work_add" /></i>
+                            <i class="svg-i color1" v-else-if="child.loginfo.indexOf('发布了评论')!=-1"><svg-icon icon-class="work_msg" /></i>
+                            <i class="svg-i color2" v-else-if="child.loginfo.indexOf('完成')!=-1"><svg-icon icon-class="work_done" /></i>
+                            <i class="svg-i" v-else><svg-icon icon-class="work_edit" /></i>
+                          </div>
+                          <div class="time-content flex-content">
+                            <div class="time-title"><strong>{{child.uname}}</strong><span>{{child.loginfo}}</span></div>
+                            <div class="time-info">{{child.commentinfo}}</div>
+                          </div>
+                        </div>
+                      </dd>
+                    </dl>
+                  </li>
+                </ul>
+              </el-scrollbar>
+            </div>
+            <div class="message-panel" v-if="menuButtonPermit.includes('Works_addcomments')">
+              <div class="message-content" v-bind:class="isFocus?'focus':''" v-clickOutside="onBlur">
+                <div class="input-content">
+                  <el-input type="textarea" autosize resize="none" @focus="onFocus" @keydown.enter.native="keyDownHandler" placeholder="请输入内容，按ctrl+enter发布内容" v-model="content"></el-input>
+                </div>
+                <div class="button-content"><el-button type="primary" size="small" v-on:click="sendMessage">发布</el-button></div>
               </div>
-              <div class="info-content rich-text" v-html="articleData.content"></div>
             </div>
           </div>
         </div>
@@ -25,69 +135,46 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import VueUeditorWrap from 'vue-ueditor-wrap'
 export default {
   name: 'workInfo',
-  components: { VueUeditorWrap },
   data() {
     return {
       minHeight:0,
-      websiteID:"",
-      website:"",
+      rightWidth:0,
       menuButtonPermit:[],
       currentID:0,
+      currentStatus:'',
       colspanNum:12,
       articleData:{},
-      userList:{},
-      commentList:[],
+      logList:[],
       content:"",
       isHideName:false,
-      editorConfig: {
-        UEDITOR_HOME_URL: '/ueditor/',
-        // 服务端接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
-        serverUrl: process.env.NODE_ENV=='development'?'http://172.16.10.27:8017/php/controller.php':process.env.VUE_APP_BASE_API+'/php/controller.php',
-        // 编辑器不自动被内容撑高
-        autoHeightEnabled: false,
-        // 工具栏是否可以浮动
-        autoFloatEnabled: false,
-        // 初始容器高度
-        initialFrameHeight:120,
-        // 初始容器宽度
-        initialFrameWidth: '100%',
-        // 关闭自动保存
-        enableAutoSave: false,
-        maximumWords:1000,
-        elementPathEnabled:false,
-        wordCount:false,
-        toolbars: [
-            [
-                'source', //源代码
-                "|",
-                'undo', //撤销
-                'redo', //重做
-                '|',
-                'bold', //加粗
-                'italic', //斜体
-                'forecolor', //字体颜色
-                'backcolor', //背景色
-                '|',
-                'link', //超链接
-                'unlink', //取消链接
-                'anchor', //锚点
-                '|',
-                'inserttable', //插入表格
-                'edittable', //表格属性
-                'edittd', //单元格属性
-                '|',
-                // 'simpleupload', //单图上传
-                'insertimage', //多图上传
-                '|',
-                'emotion', //表情
-                'spechars', //特殊字符
-                '|',
-            ]
-        ]
+      isFocus:false,
+    }
+  },
+  directives:{
+    clickOutside:{
+      bind(el, binding, vnode) {
+        function clickHandler(e) {
+          // 这里判断点击的元素是否是本身，是本身，则返回
+          if (el.contains(e.target)) {
+            return false;
+          }
+          // 判断指令中是否绑定了函数
+          if (binding.expression) {
+            // 如果绑定了函数 则调用那个函数，此处binding.value就是handleClose方法
+            binding.value(e);
+          }
+        }
+        // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
+        el.__vueClickOutside__ = clickHandler;
+        document.addEventListener("click", clickHandler);
       },
+      unbind(el, binding) {
+        // 解除事件监听
+        document.removeEventListener("click", el.__vueClickOutside__);
+        delete el.__vueClickOutside__; // 删除属性
+      }
     }
   },
   computed: {
@@ -126,45 +213,9 @@ export default {
     // 设置高度
     setHeight(){
       var $this = this;
-      var minHeight= "auto";
       $this.$nextTick(()=>{
-        var screenHeight = $this.$refs.mainPane.offsetHeight-30;
-        var leftHeight = $this.$refs.leftPane.offsetHeight;
-        if($this.device==='desktop'){
-          if($this.articleData.issay==1||$this.articleData.issay==0&&$this.commentList.length>0){
-            var rightHeight = $this.$refs.rightPane.offsetHeight;
-            if(leftHeight>rightHeight){
-              minHeight = leftHeight;
-            }else{
-              minHeight = rightHeight;
-            }
-          }else{
-            minHeight = leftHeight;
-          }
-          if(minHeight<=screenHeight){
-            minHeight = screenHeight;
-          }else{
-            if (leftHeight<rightHeight){
-              minHeight = minHeight+40;
-            }
-          }
-        }else{
-          if($this.commentList.length>0){
-            if($this.$refs.rightPane){
-              var rightHeight = $this.$refs.rightPane.offsetHeight;
-              var scrollHeight = leftHeight + rightHeight + 15;
-              if(scrollHeight<screenHeight){
-                minHeight = rightHeight + (screenHeight+30-scrollHeight);
-              }
-            }
-          }else{
-            var scrollHeight = leftHeight;
-            if(scrollHeight<screenHeight){
-              minHeight = leftHeight + (screenHeight+30-scrollHeight);
-            }
-          }
-        }
-        $this.minHeight = minHeight;
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-30;
+        $this.rightWidth = $this.$refs.rightPane.offsetWidth;
       });
     },
     // 初始化数据
@@ -218,10 +269,75 @@ export default {
     initPage(){
       var $this = this;
       $this.currentID = $this.$route.query.ID;
-      $this.$store.dispatch('worksaccpet/workOrderInfoAction', {id:$this.currentID}).then(response=>{
+      $this.currentStatus = $this.$route.query.Status;
+      var pathUrl = "";
+      if($this.currentStatus=='receive'){
+        pathUrl = "worksaccpet/workOrderNoAllotInfoAction";
+      }else{
+        pathUrl = "worksaccpet/workOrderInfoAction";
+      }
+      $this.$store.dispatch(pathUrl, {id:$this.currentID}).then(response=>{
           if(response){
             if(response.status){
-              console.log(response,"工单详情");
+              if(response.data.accpetusername&&response.data.accpetusername!=''&&response.data.accpetusername.indexOf('|')!=-1){
+                response.data.accpetusername = response.data.accpetusername.replace("|","、");
+              }
+              if(response.data.dealusername&&response.data.dealusername!=''&&response.data.dealusername.indexOf('|')!=-1){
+                response.data.dealusername = response.data.dealusername.replace("|","、");
+              }
+              var startTime = new Date(response.data.addtime);
+              var endTime = new Date(response.data.endtime);
+              var dateDiff = endTime.getTime() - startTime.getTime();
+              var dayDiff = Math.ceil(dateDiff/(24*3600*1000));
+              response.data.dayDiff = dayDiff;
+              response.data.dayPercent = parseFloat(response.data.timeing/response.data.dayDiff*100).toFixed(2)+"%";
+              var tagsList = [];
+              if(response.data.tagsname!=''){
+                if(response.data.tagsname.indexOf(",")!=-1){
+                  var tagsArr = response.data.tagsname.split(",");
+                  var colorsArr = response.data.tagsnamecolor.split(",");
+                  tagsArr.forEach(function(item,index){
+                    var itemData = {};
+                    itemData.name = item;
+                    itemData.color = colorsArr[index];
+                    tagsList.push(itemData);
+                  });
+                }else{
+                  var itemData = {};
+                  itemData.name = response.data.tagsname;
+                  itemData.color = response.data.tagsnamecolor;
+                  tagsList.push(itemData);
+                }
+              }
+              response.data.tagsList = tagsList;
+              var logList = [];
+              var dateArr = [];
+              response.loglist.forEach(function(item,index){
+                var dateTime = item.addtime.split(" ");
+                var date = dateTime[0];
+                if(!dateArr.includes(date)){
+                  dateArr.push(date);
+                }
+                item.date = date;
+                item.time = dateTime[1].split(":")[0]+":"+dateTime[1].split(":")[1];
+              });
+              dateArr.forEach(function(item,index){
+                var itemData = {};
+                itemData.date = item;
+                itemData.children = [];
+                response.loglist.forEach(function(item1,index1){
+                  if(item == item1.date){
+                    var itemChildren = {};
+                    itemChildren.time = item1.time;
+                    itemChildren.loginfo = item1.loginfo;
+                    itemChildren.uname = item1.uname;
+                    itemChildren.commentinfo = item1.commentinfo;
+                    itemData.children.push(itemChildren);
+                  }
+                });
+                logList.push(itemData);
+              });
+              $this.logList = logList;
               $this.articleData = response.data;
             }else{
               if(response.permitstatus&&response.permitstatus==2){
@@ -243,8 +359,70 @@ export default {
           }
       });
     },
-    ready (editorInstance) {
-      console.log(editorInstance);
+    // 重置留言表
+    resetComment(){
+      var $this = this;
+      $this.content = "";
+      $this.isHideName = false;
+    },
+    // 获取焦点
+    onFocus(e){
+      var $this = this;
+      $this.isFocus = true;
+    },
+    // 失去焦点
+    onBlur(e){
+      var $this = this;
+      $this.isFocus = false;
+    },
+    // 键盘事件监听
+    keyDownHandler(e){
+      if(e.ctrlKey && e.keyCode==13){
+        this.sendMessage();
+      }
+    },
+    // 发送留言
+    sendMessage(){
+      var $this = this;
+      var formData = {};
+      formData.content= $this.content;
+      formData.workid = $this.currentID;
+      formData.is_hidename = $this.isHideName?1:0;
+      if($this.content==""){
+        $this.$message({
+            showClose: true,
+            message: "留言内容不能为空",
+            type: 'error'
+        });
+        return false;
+      }
+      if(formData.workid==0){
+        $this.$message({
+            showClose: true,
+            message: "请重新进入该页面进行留言",
+            type: 'error'
+        });
+        return false;
+      }
+      $this.$store.dispatch('works/addCommentInfoAction', formData).then(response=>{
+          if(response){
+            if(response.status){
+              $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'success'
+              });
+              $this.resetComment();
+              $this.initPage();
+            }else{
+              $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+              });
+            }
+          }
+      });
     },
   }
 }

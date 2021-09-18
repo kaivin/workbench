@@ -66,4 +66,30 @@
             }
         }
     }
+    .table-tag{
+        span{
+            &.color1{
+                color: #94c2ff;
+            }
+            &.color2{
+                color: #ffa415;
+            }
+            &.color3{
+                color: #bdbdbd;
+            }
+            &.color4{
+                color: #94c2ff;
+            }
+            &.color5{
+                color: #61d071;
+            }
+            &.color6{
+                color: #ee3c40;
+            }
+            &.color7{
+                color: #94c2ff;
+            }
+
+        }
+    }
 }

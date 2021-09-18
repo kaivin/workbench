@@ -1473,6 +1473,38 @@
         }
     }
   }
+  .work-info-page{
+    .article-main{
+      width: 100%;
+      padding-right:0;
+      float:none;
+    }
+    .article-log{
+      width: 100%;
+      margin-top: 15px;
+      float:none;
+      .log-content{
+        padding:0;
+        width: 100%!important;
+        height:auto!important;
+        position: relative;
+        &.has-comment{
+          padding:0;
+        }
+        .log-title{
+          position: relative;
+        }
+        .log-panel{
+          height:auto;
+        }
+        .message-panel{
+          position: relative;
+          left:inherit;
+          bottom:inherit;
+        }
+      }
+    }
+  }
 }
 @media (max-width:1440px){
   .ArticleSix{
@@ -1529,6 +1561,24 @@
               clear:both;
               display:block;
           }
+      }
+    }
+  }
+  .work-info-page{
+    .article-main{
+      .article-content{
+        .base-info{
+          margin: 0 0 40px;
+          li{
+            width: 50%;
+            margin-top: 30px;
+          }
+        }
+        .other-info{
+          li{
+            width: 50%;
+          }
+        }
       }
     }
   }

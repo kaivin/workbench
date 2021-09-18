@@ -74,8 +74,8 @@
                                     min-width="200"
                                     >
                                     <template slot-scope="scope">
-                                      <div class="order-title" v-bind:class="scope.row.timestatus==2?'time-out':''" v-on:click="jumpArticle(scope.row.id)">
-                                          <span>{{scope.row.title}}</span><strong v-if="scope.row.timestatus==2">已逾期</strong>
+                                      <div class="order-title" v-on:click="jumpArticle(scope.row.id)">
+                                          <span>{{scope.row.title}}</span>
                                         </div>
                                     </template>
                                 </el-table-column>
@@ -121,12 +121,14 @@
                                     width="90">
                                     <template #default="scope">
                                       <div class="table-tag">
-                                        <el-tag size="small" type="warning" v-if="scope.row.status == 0">已撤销</el-tag>
-                                        <el-tag size="small" type="primary" v-if="scope.row.status == 1">待接单</el-tag>
-                                        <el-tag size="small" type="success" v-if="scope.row.status == 2">已接单</el-tag>
-                                        <el-tag size="small" type="info" v-if="scope.row.status == 4">待审核</el-tag>
-                                        <el-tag size="small" type="info" v-if="scope.row.status == 5">已驳回</el-tag>
-                                        <el-tag size="small" type="success" v-if="scope.row.status == 6">已完成</el-tag>
+                                          <span class="color6" v-if="scope.row.timestatus==2">已逾期</span>
+                                          <span class="color7" v-if="scope.row.timestatus!=2&&scope.row.status == 0">已撤销</span>
+                                          <span class="color1" v-if="scope.row.timestatus!=2&&scope.row.status == 1">待接单</span>
+                                          <span class="color2" v-if="scope.row.timestatus!=2&&scope.row.status == 2">进行中</span>
+                                          <span class="color2" v-if="scope.row.timestatus!=2&&scope.row.status == 4">待审核</span>
+                                          <span class="color3" v-if="scope.row.timestatus!=2&&scope.row.status == 5">已驳回</span>
+                                          <span class="color4" v-if="scope.row.timestatus!=2&&scope.row.status == 6&&scope.row.commentstatus==0">待评价</span>
+                                          <span class="color5" v-if="scope.row.timestatus!=2&&scope.row.status == 6&&scope.row.commentstatus!=0">已完成</span>
                                       </div>
                                     </template>
                                 </el-table-column>

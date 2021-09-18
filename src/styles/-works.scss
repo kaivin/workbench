@@ -42,6 +42,32 @@
             }
         }
     }
+    
+    .table-tag{
+      span{
+          &.color1{
+              color: #94c2ff;
+          }
+          &.color2{
+              color: #ffa415;
+          }
+          &.color3{
+              color: #bdbdbd;
+          }
+          &.color4{
+              color: #94c2ff;
+          }
+          &.color5{
+              color: #61d071;
+          }
+          &.color6{
+              color: #ee3c40;
+          }
+          &.color7{
+              color: #94c2ff;
+          }
+      }
+  }
 }
 .work-add-edit{
   .date-time{
@@ -327,9 +353,232 @@
   .article-log{
     float:right;
     width:26%;
-    background:#fff!important;
-    padding:20px;
-    margin:0!important;
-    border-radius:8px;
+    position: relative;
+    .log-content{
+      background:#fff;
+      padding:74px 0 20px;
+      border-radius:8px;
+      width: 100%;
+      position: fixed;
+      &.has-comment{
+        padding:74px 0 90px;
+      }
+      .log-title{
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 64px;
+        padding: 25px 30px 0;
+        span{
+          display: block;
+          line-height: 32px;
+          color: #4292ff;
+          color: 16px;
+          font-weight: 500;
+        }
+        &:before,&:after{
+          content:'';
+          display: block;
+          position: absolute;
+          bottom:0;
+          left:30px;
+        }
+        &:before{
+          height: 1px;
+          z-index: 1;
+          background: #eeeeee;
+          right: 30px;
+        }
+        &:after{
+          height: 2px;
+          z-index: 2;
+          background: #4292ff;
+          width: 70px;
+        }
+      }
+      .log-panel{
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        .el-scrollbar{
+          height:100%;
+        }
+        .scrollbar-wrapper{
+          overflow-x: hidden;
+        }
+      }
+      .log-list{
+        width: 100%;
+        padding: 0 30px;
+        overflow: hidden;
+        li{
+          width: 100%;
+          margin-top: 20px;
+          padding-bottom: 10px;
+          overflow: hidden;
+          dl{
+            width: 100%;
+            overflow: hidden;
+            position:relative;
+            dt{
+              width: 100%;
+              padding: 0 30px;
+              span{
+                display: block;
+                float:left;
+                height: 24px;
+                line-height: 24px;
+                border-radius: 12px;
+                padding: 0 10px;
+                font-size: 12px;
+                color: #999ca1;
+                background: #ececec;
+              }
+            }
+            dd{
+              width:100%;
+              overflow: hidden;
+              position: relative;
+              &:before{
+                content:'';
+                width: 70px;
+                top:0;
+                position: absolute;
+                left:0;
+                bottom: 40px;
+                border-right: 1px dashed #c4c8cd;
+              }
+              .item-log{
+                width: 100%;
+                padding-top: 20px;
+                .time{
+                  width: 56px;
+                  height: 36px;
+                  position: relative;
+                  z-index: 2;
+                  >span{
+                    display: block;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #999ca1;
+                    height: 16px;
+                    line-height: 16px;
+                    margin-top: 4px;
+                  }
+                  .svg-i{
+                    display: block;
+                    width: 16px;
+                    height: 16px;
+                    margin: 0 auto;
+                    font-size: 13px;
+                    color: #999ca1;
+                    text-align: center;
+                    line-height: 16px;
+                  }
+                }
+                .time-icon{
+                  width: 28px;
+                  height: 36px;
+                  position: relative;
+                  z-index: 2;
+                  .svg-i{
+                    width: 20px;
+                    height: 20px;
+                    display: block;
+                    margin: 8px auto;
+                    border-radius: 100%;
+                    background: #c4c8cd;
+                    color: #fff;
+                    font-size: 13px;
+                    text-align: center;
+                    line-height: 20px;
+                    &.color1{
+                      background: #ffa415;
+                    }
+                    &.color2{
+                      background: #61d071;
+                    }
+                  }
+                }
+                .time-content{
+                  padding: 0 0 0 15px;
+                  .time-title{
+                    height: 36px;
+                    line-height:0;
+                    font-size:0;
+                    strong,span{
+                      font-size: 14px;
+                      line-height: 36px;
+                    }
+                    strong{
+                      color: #3a3a3a;
+                      font-weight: normal;
+                    }
+                    span{
+                      color: #b2b2b2;
+                      margin-left: 30px;
+                    }
+                  }
+                  .time-info{
+                    min-height: 24px;
+                    line-height: 24px;
+                    font-size: 14px;
+                    color: #3a3a3a;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      .message-panel{
+        padding: 20px;
+        border-top: 1px solid #eee;
+        position: absolute;
+        bottom:0;
+        left: 0;
+        width:100%;
+        z-index: 10;
+        background: #fff;
+        .message-content{
+          border: 1px solid #eee;
+          border-radius: 4px;
+          padding: 6px 10px;
+          height: 38px;
+          transition: height,.3s;
+          overflow: hidden;
+          &.focus{
+            border: 1px solid $menuActiveText;
+            height: 160px;
+            .el-textarea{
+              .el-textarea__inner{
+                min-height: 95px!important;
+                height: 95px!important;
+                padding: 0 5px;
+              }
+            }
+          }
+          .el-textarea{
+            .el-textarea__inner{
+              min-height: 24px;
+              height: 24px;
+              padding: 0;
+              line-height: 24px;
+              border:none;
+              transition: all,.3s;
+              &:hover,&:focus{
+                border:none;
+              }
+            }
+          }
+          .button-content{
+            text-align: right;
+            padding: 10px 5px 9px 5px;
+            overflow: hidden;
+          }
+        }
+      }
+    }
   }
 }

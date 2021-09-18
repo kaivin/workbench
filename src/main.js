@@ -58,6 +58,18 @@ router.beforeEach(async(to, from, next) => {
     NProgress.start()
     document.title = getPageTitle(to.meta.title);
     var userInfo = Cookies.get('userInfo');
+    var ua =  navigator.userAgent;
+    console.log(ua,"判断浏览器");
+    if(oneRun){
+      if(ua.indexOf('Chrome')==-1){
+        Element.Notification({
+          title:'提醒',
+          message: '系统君检测到您目前所使用的浏览器可能会影响您的浏览体验，系统君建议您更换为谷歌浏览器访问本系统！~',
+          type: 'error',
+          duration: 0
+        });
+      }
+    }
     if (userInfo) {
       userInfo = JSON.parse(userInfo);
       if (to.path === '/login') {

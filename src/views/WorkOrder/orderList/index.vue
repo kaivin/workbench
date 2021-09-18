@@ -182,12 +182,14 @@
                                           >
                                           <template #default="scope">
                                             <div class="table-tag">
-                                              <el-tag size="small" type="success" v-if="currentStatus == 'receive'">待接单</el-tag>
-                                              <el-tag size="small" type="success" v-if="currentStatus == 'allot'">待分配</el-tag>
-                                              <el-tag size="small" type="success" v-if="currentStatus != 'allot'&&scope.row.workstatus == 0">进行中</el-tag>
-                                              <el-tag size="small" type="primary" v-if="scope.row.workstatus == 1">审核中</el-tag>
-                                              <el-tag size="small" type="warning" v-if="scope.row.workstatus == 2">已驳回</el-tag>
-                                              <el-tag size="small" type="success" v-if="scope.row.workstatus == 3">已完成</el-tag>
+                                              <span class="color6" v-if="scope.row.timestatus==2">已逾期</span>
+                                              <span class="color1" v-if="scope.row.timestatus!=2&&currentStatus == 'receive'">待接单</span>
+                                              <span class="color1" v-if="scope.row.timestatus!=2&&currentStatus == 'allot'">待分配</span>
+                                              <span class="color2" v-if="scope.row.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==0">进行中</span>
+                                              <span class="color2" v-if="scope.row.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==1">待审核</span>
+                                              <span class="color3" v-if="scope.row.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==2">已驳回</span>
+                                              <span class="color4" v-if="scope.row.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus==0">待评价</span>
+                                              <span class="color5" v-if="scope.row.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus!=0">已完成</span>
                                             </div>
                                           </template>
                                       </el-table-column>
@@ -721,7 +723,7 @@ export default {
     // 跳转到详情
     jumpArticle(id){
       var $this = this;
-      var routeUrl =  $this.$router.resolve({path:'/WorkOrder/workInfo',query:{ID:id}});
+      var routeUrl =  $this.$router.resolve({path:'/WorkOrder/workInfo',query:{ID:id,Status:$this.currentStatus}});
       window.open(routeUrl.href,'_blank');
     },
     // 页面自跳转

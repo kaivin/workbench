@@ -9,12 +9,12 @@
               <li>
                 <div class="icon-panel">
                   <i class="svg-i color6" v-if="articleData.timestatus==2"><svg-icon icon-class="work_overdue" /></i>
-                  <i class="svg-i color7" v-if="articleData.timestatus!=2&&articleData.status==0"><svg-icon icon-class="work_overdue" /></i>
+                  <i class="svg-i color7" v-if="articleData.timestatus!=2&&articleData.status==0"><svg-icon icon-class="work_undo" /></i>
                   <i class="svg-i color1" v-if="articleData.timestatus!=2&&articleData.status==1"><svg-icon icon-class="work_accept" /></i>
                   <i class="svg-i color2" v-if="articleData.timestatus!=2&&articleData.status==2"><svg-icon icon-class="work_doing" /></i>
-                  <i class="svg-i color2" v-if="articleData.timestatus!=2&&articleData.status==4"><svg-icon icon-class="work_overdue" /></i>
+                  <i class="svg-i color2" v-if="articleData.timestatus!=2&&articleData.status==4"><svg-icon icon-class="work_accept" /></i>
                   <i class="svg-i color3" v-if="articleData.timestatus!=2&&articleData.status==5"><svg-icon icon-class="work_reject" /></i>
-                  <i class="svg-i color4" v-if="articleData.timestatus!=2&&articleData.status==6&&articleData.commentstatus==0"><svg-icon icon-class="work_overdue" /></i>
+                  <i class="svg-i color4" v-if="articleData.timestatus!=2&&articleData.status==6&&articleData.commentstatus==0"><svg-icon icon-class="work_evaluate" /></i>
                   <i class="svg-i color5" v-if="articleData.timestatus!=2&&articleData.status==6&&articleData.commentstatus!=0"><svg-icon icon-class="work_done" /></i>
                 </div>
                 <div class="value-panel" v-if="articleData.timestatus==2">已逾期</div>
@@ -28,8 +28,8 @@
                 <div class="title-panel">当前状态</div>
               </li>
               <li>
-                <div class="icon-panel"></div>
-                <div class="value-panel">{{articleData.dealusername}}</div>
+                <div class="icon-panel"><i class="svg-i"><svg-icon icon-class="work_head" /></i></div>
+                <div class="value-panel">{{articleData.dealusername==''?'暂无':articleData.dealusername}}</div>
                 <div class="title-panel">负责人</div>
               </li>
               <li>
@@ -65,14 +65,14 @@
               </li>
               <li>
                 <dl class="item-info">
-                  <dt>工期进度</dt>
+                  <dt>任务时间进度</dt>
                   <dd><p class="range-date"><span class="range-dom"><i v-bind:style="'width:'+articleData.dayPercent"></i></span><span class="font-dom">{{articleData.dayPercent}}</span></p></dd>
                 </dl>
               </li>
             </ul>
             <dl class="item-info" v-if="articleData.accpertusername!=''">
               <dt>任务接收人</dt>
-              <dd></dd>
+              <dd><p class="default-text">{{articleData.accpertusername}}</p></dd>
             </dl>
             <dl class="item-info" v-if="articleData.mytags!=''">
               <dt>标签</dt>
@@ -86,28 +86,44 @@
             </dl>
           </div>
         </div>
-        <div class="article-log" v-bind:style="'height:'+minHeight+'px;'">
-          <el-timeline>
-            <el-timeline-item timestamp="2018/4/12" placement="top">
-              <el-card>
-                <h4>更新 Github 模板</h4>
-                <p>王小虎 提交于 2018/4/12 20:46</p>
-              </el-card>
-            </el-timeline-item>
-            <el-timeline-item timestamp="2018/4/3" placement="top">
-              <el-card>
-                <h4>更新 Github 模板</h4>
-                <p>王小虎 提交于 2018/4/3 20:46</p>
-              </el-card>
-            </el-timeline-item>
-            <el-timeline-item timestamp="2018/4/2" placement="top">
-              <el-card>
-                <h4>更新 Github 模板</h4>
-                <p>王小虎 提交于 2018/4/2 20:46</p>
-              </el-card>
-            </el-timeline-item>
-          </el-timeline>
-
+        <div class="article-log" ref="rightPane">
+          <div class="log-content" v-bind:style="'height:'+minHeight+'px;width:'+rightWidth+'px;'" v-bind:class="menuButtonPermit.includes('Works_addcomments')&&articleData.status!=0?'has-comment':''">
+            <div class="log-title"><span>项目日志</span></div>
+            <div class="log-panel">
+              <el-scrollbar wrap-class="scrollbar-wrapper">
+                <ul class="log-list">
+                  <li v-for="(item,index) in logList" v-bind:key="index">
+                    <dl>
+                      <dt><span>{{item.date}}</span></dt>
+                      <dd>
+                        <div class="item-log flex-box" v-for="(child,idx) in item.children" v-bind:key="idx">
+                          <div class="time"><span>{{child.time}}</span><i class="svg-i"><svg-icon icon-class="work_time" /></i></div>
+                          <div class="time-icon">
+                            <i class="svg-i" v-if="child.loginfo.indexOf('创建')!=-1"><svg-icon icon-class="work_add" /></i>
+                            <i class="svg-i color1" v-else-if="child.loginfo.indexOf('发布了评论')!=-1"><svg-icon icon-class="work_msg" /></i>
+                            <i class="svg-i color2" v-else-if="child.loginfo.indexOf('完成')!=-1"><svg-icon icon-class="work_done" /></i>
+                            <i class="svg-i" v-else><svg-icon icon-class="work_edit" /></i>
+                          </div>
+                          <div class="time-content flex-content">
+                            <div class="time-title"><strong>{{child.uname}}</strong><span>{{child.loginfo}}</span></div>
+                            <div class="time-info">{{child.commentinfo}}</div>
+                          </div>
+                        </div>
+                      </dd>
+                    </dl>
+                  </li>
+                </ul>
+              </el-scrollbar>
+            </div>
+            <div class="message-panel" v-if="menuButtonPermit.includes('Works_addcomments')&&articleData.status!=0">
+              <div class="message-content" v-bind:class="isFocus?'focus':''" v-clickOutside="onBlur">
+                <div class="input-content">
+                  <el-input type="textarea" autosize resize="none" @focus="onFocus" @keydown.enter.native="keyDownHandler" placeholder="请输入内容，按ctrl+enter发布内容" v-model="content"></el-input>
+                </div>
+                <div class="button-content"><el-button type="primary" size="small" v-on:click="sendMessage">发布</el-button></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -116,66 +132,45 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import VueUeditorWrap from 'vue-ueditor-wrap'
 export default {
   name: 'workInfo',
-  components: { VueUeditorWrap },
   data() {
     return {
       minHeight:0,
+      rightWidth:0,
       menuButtonPermit:[],
       currentID:0,
       colspanNum:12,
       articleData:{},
-      commentList:[],
+      logList:[],
       content:"",
       isHideName:false,
-      editorConfig: {
-        UEDITOR_HOME_URL: '/ueditor/',
-        // 服务端接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
-        serverUrl: process.env.NODE_ENV=='development'?'http://172.16.10.27:8017/php/controller.php':process.env.VUE_APP_BASE_API+'/php/controller.php',
-        // 编辑器不自动被内容撑高
-        autoHeightEnabled: false,
-        // 工具栏是否可以浮动
-        autoFloatEnabled: false,
-        // 初始容器高度
-        initialFrameHeight:120,
-        // 初始容器宽度
-        initialFrameWidth: '100%',
-        // 关闭自动保存
-        enableAutoSave: false,
-        maximumWords:1000,
-        elementPathEnabled:false,
-        wordCount:false,
-        toolbars: [
-            [
-                'source', //源代码
-                "|",
-                'undo', //撤销
-                'redo', //重做
-                '|',
-                'bold', //加粗
-                'italic', //斜体
-                'forecolor', //字体颜色
-                'backcolor', //背景色
-                '|',
-                'link', //超链接
-                'unlink', //取消链接
-                'anchor', //锚点
-                '|',
-                'inserttable', //插入表格
-                'edittable', //表格属性
-                'edittd', //单元格属性
-                '|',
-                // 'simpleupload', //单图上传
-                'insertimage', //多图上传
-                '|',
-                'emotion', //表情
-                'spechars', //特殊字符
-                '|',
-            ]
-        ]
+      isFocus:false,
+    }
+  },
+  directives:{
+    clickOutside:{
+      bind(el, binding, vnode) {
+        function clickHandler(e) {
+          // 这里判断点击的元素是否是本身，是本身，则返回
+          if (el.contains(e.target)) {
+            return false;
+          }
+          // 判断指令中是否绑定了函数
+          if (binding.expression) {
+            // 如果绑定了函数 则调用那个函数，此处binding.value就是handleClose方法
+            binding.value(e);
+          }
+        }
+        // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
+        el.__vueClickOutside__ = clickHandler;
+        document.addEventListener("click", clickHandler);
       },
+      unbind(el, binding) {
+        // 解除事件监听
+        document.removeEventListener("click", el.__vueClickOutside__);
+        delete el.__vueClickOutside__; // 删除属性
+      }
     }
   },
   computed: {
@@ -216,6 +211,7 @@ export default {
       var $this = this;
       $this.$nextTick(()=>{
         $this.minHeight = $this.$refs.mainPane.offsetHeight-30;
+        $this.rightWidth = $this.$refs.rightPane.offsetWidth;
       });
     },
     // 初始化数据
@@ -304,8 +300,35 @@ export default {
                 }
               }
               response.data.tagsList = tagsList;
+              var logList = [];
+              var dateArr = [];
+              response.loglist.forEach(function(item,index){
+                var dateTime = item.addtime.split(" ");
+                var date = dateTime[0];
+                if(!dateArr.includes(date)){
+                  dateArr.push(date);
+                }
+                item.date = date;
+                item.time = dateTime[1].split(":")[0]+":"+dateTime[1].split(":")[1];
+              });
+              dateArr.forEach(function(item,index){
+                var itemData = {};
+                itemData.date = item;
+                itemData.children = [];
+                response.loglist.forEach(function(item1,index1){
+                  if(item == item1.date){
+                    var itemChildren = {};
+                    itemChildren.time = item1.time;
+                    itemChildren.loginfo = item1.loginfo;
+                    itemChildren.uname = item1.uname;
+                    itemChildren.commentinfo = item1.commentinfo;
+                    itemData.children.push(itemChildren);
+                  }
+                });
+                logList.push(itemData);
+              });
+              $this.logList = logList;
               $this.articleData = response.data;
-              $this.getCommentList();
             }else{
               if(response.permitstatus&&response.permitstatus==2){
                   $this.$message({
@@ -326,17 +349,31 @@ export default {
           }
       });
     },
-    ready (editorInstance) {
-      console.log(editorInstance);
-    },
     // 重置留言表
     resetComment(){
       var $this = this;
       $this.content = "";
       $this.isHideName = false;
     },
-    // 提交留言
-    submitComment(){
+    // 获取焦点
+    onFocus(e){
+      var $this = this;
+      console.log(e);
+      $this.isFocus = true;
+    },
+    // 失去焦点
+    onBlur(e){
+      var $this = this;
+      $this.isFocus = false;
+    },
+    // 键盘事件监听
+    keyDownHandler(e){
+      if(e.ctrlKey && e.keyCode==13){
+        this.sendMessage();
+      }
+    },
+    // 发送留言
+    sendMessage(){
       var $this = this;
       var formData = {};
       formData.content= $this.content;
@@ -353,7 +390,7 @@ export default {
       if(formData.workid==0){
         $this.$message({
             showClose: true,
-            message: "请重新进入该文章进行留言",
+            message: "请重新进入该页面进行留言",
             type: 'error'
         });
         return false;
@@ -361,13 +398,13 @@ export default {
       $this.$store.dispatch('works/addCommentInfoAction', formData).then(response=>{
           if(response){
             if(response.status){
-              $this.resetComment();
-              $this.getCommentList();
               $this.$message({
                   showClose: true,
                   message: response.info,
                   type: 'success'
               });
+              $this.resetComment();
+              $this.initPage();
             }else{
               $this.$message({
                   showClose: true,
@@ -378,59 +415,6 @@ export default {
           }
       });
     },
-    // 获取留言列表数据
-    getCommentList(){
-      var $this = this;
-      $this.$store.dispatch('works/commentInfoListAction', {id:$this.currentID}).then(response=>{
-          if(response){
-            if(response.status){
-              $this.commentList = response.data;
-              $this.$nextTick(()=>{
-                $this.setHeight();
-              });
-            }else{
-              $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'error'
-              });
-            }
-          }
-      });
-    },
-    // 删除评论
-    deleteComment(id){
-      var $this = this;
-      $this.$confirm('是否确认删除该评论?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-      }).then(() => {
-        $this.$store.dispatch('works/deleteCurrentCommentAction', {id:id}).then(response=>{
-            if(response){
-              if(response.status){
-                $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'success'
-                });
-                $this.getCommentList();
-              }else{
-                $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'error'
-                });
-              }
-            }
-        });
-      }).catch(() => {
-          $this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-      });
-    }
   }
 }
 </script>

@@ -579,11 +579,11 @@ export default {
       if($this.regionMapChart&&!$this.regionMapChart.destroyed){
         $this.regionMapChart.destroy();
       }
-      $this.currentCluesData.topTenRegionData = [];
       $this.$store.dispatch("api/enCluesRegionStatDataAction", resultData).then((response) => {
         if (response) {
           if (response.status) {
             $this.currentCluesData.cluesRegionData = worldCountry(response.data);
+            $this.currentCluesData.cluesRegionData.sort($this.sortNumber);
             var topTenRegionData = [];
             $this.currentCluesData.cluesRegionData.forEach(function(item,index){
               if(index<10){
@@ -591,7 +591,8 @@ export default {
               }
             });
             $this.currentCluesData.topTenRegionData = topTenRegionData;
-            console.log(response,"地区询盘统计");
+            console.log($this.currentCluesData.cluesRegionData,"地区询盘统计");
+            console.log($this.currentCluesData.topTenRegionData,"top10");
             $this.drawEnCluesRegionChart();
             $this.drawTopTen();
           } else {
@@ -603,6 +604,10 @@ export default {
           }
         }
       });
+    },
+    // 根据地区的询盘数量做降序排序
+    sortNumber(a,b){
+      return b.number - a.number;
     },
     // 近30天询盘统计趋势图
     drawAreaTrendChart(){
@@ -765,7 +770,7 @@ export default {
           $this.currentCluesData.cluesRegionData.forEach(function(item,index){
             var itemData = {};
             itemData.name = item.name;
-            itemData.value = item.number;
+            itemData.number = item.number;
             userData.push(itemData);
           });
           const userDv = ds.createView().source(userData).transform({
@@ -777,25 +782,25 @@ export default {
           }).transform({
             type: 'map',
             callback: obj => {
-              if(obj.value <10){
+              if(obj.number <10){
                   obj.trend="0-10";
-              }else if(obj.value <20 && obj.value>=10){
+              }else if(obj.number <20 && obj.number>=10){
                   obj.trend="10-20";
-              }else if(obj.value <30 && obj.value>=20){
+              }else if(obj.number <30 && obj.number>=20){
                   obj.trend="20-30";
-              }else if(obj.value <40 && obj.value>=30){
+              }else if(obj.number <40 && obj.number>=30){
                   obj.trend="30-40";
-              }else if(obj.value <50 && obj.value>=40){
+              }else if(obj.number <50 && obj.number>=40){
                   obj.trend="40-50";
-              }else if(obj.value <60 && obj.value>=50){
+              }else if(obj.number <60 && obj.number>=50){
                   obj.trend="50-60";
-              }else if(obj.value <100 && obj.value>=60){
+              }else if(obj.number <100 && obj.number>=60){
                   obj.trend="60-100";
-              }else if(obj.value <300 && obj.value>=100){
+              }else if(obj.number <300 && obj.number>=100){
                   obj.trend="100-300";
-              }else if(obj.value <500 && obj.value>=300){
+              }else if(obj.number <500 && obj.number>=300){
                   obj.trend="300-500";
-              }else if(obj.value <800 && obj.value>=500){
+              }else if(obj.number <800 && obj.number>=500){
                   obj.trend="500-800";
               }else{
                   obj.trend="大于800";
@@ -807,7 +812,7 @@ export default {
           const userView = regionMapChart.createView();
           userView.data(userDv.rows);
           userView.scale({
-            value: {
+            number: {
               alias: '数量'
             },
             name:{
@@ -817,7 +822,7 @@ export default {
           userView.polygon()
             .position('longitude*latitude')
             .color('trend', '#0050B3-#1890FF-#BAE7FF')
-            .tooltip('name*value')
+            .tooltip('name*number')
             .style({
               fillOpacity: 0.85
             }).animate({
@@ -879,31 +884,31 @@ export default {
         const userDv = ds.createView().source(userData).transform({
           // sizeByCount: true,
           geoDataView: worldMap,
-          field: 'name',
+          field: 'country',
           type: 'geo.region',
           as: ['longitude', 'latitude']
         }).transform({
           type: 'map',
           callback: obj => {
-            if(obj.value <10){
+            if(obj.number <10){
                 obj.trend="0-10";
-            }else if(obj.value <20 && obj.value>=10){
+            }else if(obj.number <20 && obj.number>=10){
                 obj.trend="10-20";
-            }else if(obj.value <30 && obj.value>=20){
+            }else if(obj.number <30 && obj.number>=20){
                 obj.trend="20-30";
-            }else if(obj.value <40 && obj.value>=30){
+            }else if(obj.number <40 && obj.number>=30){
                 obj.trend="30-40";
-            }else if(obj.value <50 && obj.value>=40){
+            }else if(obj.number <50 && obj.number>=40){
                 obj.trend="40-50";
-            }else if(obj.value <60 && obj.value>=50){
+            }else if(obj.number <60 && obj.number>=50){
                 obj.trend="50-60";
-            }else if(obj.value <100 && obj.value>=60){
+            }else if(obj.number <100 && obj.number>=60){
                 obj.trend="60-100";
-            }else if(obj.value <300 && obj.value>=100){
+            }else if(obj.number <300 && obj.number>=100){
                 obj.trend="100-300";
-            }else if(obj.value <500 && obj.value>=300){
+            }else if(obj.number <500 && obj.number>=300){
                 obj.trend="300-500";
-            }else if(obj.value <800 && obj.value>=500){
+            }else if(obj.number <800 && obj.number>=500){
                 obj.trend="500-800";
             }else{
                 obj.trend="大于800";
@@ -915,20 +920,20 @@ export default {
         const userView = regionMapChart.createView();
         userView.data(userDv.rows);
         userView.scale({
-          value: {
+          number: {
             alias: '数量'
           },
           name:{
-            alias:"英文名"
+            alias:"国家"
           },
           country:{
-            alias:"国家"
+            alias:"英文名"
           }
         });
         userView.polygon()
           .position('longitude*latitude')
           .color('trend', '#0050B3-#1890FF-#BAE7FF')
-          .tooltip('name*country*value')
+          .tooltip('name*country*number')
           .style({
             fillOpacity: 0.85
           }).animate({
@@ -1130,7 +1135,6 @@ export default {
                 textAlign: 'center',
               },
               autoRotate: false,
-              // content: '{value}',
               formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
             },
             legend:{
