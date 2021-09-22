@@ -127,6 +127,23 @@ export default {
         'isWorkOrderAdd',
       ]),
     },
+  watch: {
+      //监听相同路由下参数变化的时候，从而实现异步刷新
+      '$route'(to,from) {
+        if(to.path=="/Article/index"){
+          if(!to.query.keyword){
+            this.searchWord = "";
+          }
+        }
+      },
+  },
+  created(){
+    if(this.$route.path=="/Article/index"){
+      if(this.$route.query.keyword){
+        this.searchWord = this.$route.query.keyword;
+      }
+    }
+  },
     methods:{
         // 退出登录
         async logout() {

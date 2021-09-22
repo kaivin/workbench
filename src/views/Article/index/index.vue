@@ -313,6 +313,7 @@
           </div>
         </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
       <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
       <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
         <div class="flex-content">
@@ -544,6 +545,16 @@ export default {
       $this.breadcrumbList = breadcrumbList;
       console.log($this.breadcrumbList,"面包屑数据");
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -713,6 +724,7 @@ export default {
     // 获取当前登录用户可看到的部门成员信息
     getUserCanReadDepartUser(){
       var $this = this;
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('article/postArticleAction', null).then(response=>{
         if(response){
           if(response.status){
@@ -739,6 +751,8 @@ export default {
           $this.keyword = "";
           $this.searchKey = "";
           $this.searchData = [];
+          $this.limit = 50;
+          $this.page = 1;
           if($this.$route.query.tagName){// 标签切换
             $this.currentTagName = $this.$route.query.tagName;
             if($this.$route.query.tagID){
@@ -762,6 +776,8 @@ export default {
           $this.isDefault = false;
           $this.isList = false;
           $this.isSearch = true;
+          $this.limit = 50;
+          $this.page = 1;
           $this.getPostSearchList();
         }else{
           $this.currentID = 0;
@@ -775,6 +791,8 @@ export default {
           $this.isSearch = false;
           $this.keyword = "";
           $this.searchKey = "";
+          $this.limit = 50;
+          $this.page = 1;
           $this.getUserCanReadDepartUser();
         }
         $this.changePostType($this.postTypeData,$this.currentID,$this);
@@ -841,13 +859,22 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.limit = val;
-      this.initData();
+      this.page = 1;
+      if(this.$route.query.id){
+        this.getPostList();
+      }else{
+        this.getPostSearchList();
+      }
     },
     // 当前页改变事件
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.page = val;
-      this.initData();
+      if(this.$route.query.id){
+        this.getPostList();
+      }else{
+        this.getPostSearchList();
+      }
     },
     // 获取文章列表数据
     getPostList(){
@@ -858,6 +885,8 @@ export default {
       dataParam.typeid = $this.currentID;
       dataParam.tags = $this.currentTagName;
       dataParam.tagsid = $this.currentTagID;
+      $this.loadingFun();
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('article/postListAction',dataParam).then(res=>{
         console.log(res);
         if(res.status){
@@ -913,6 +942,7 @@ export default {
           }
           $this.tableData = res.data;
           $this.totalDataNum = res.allcount;
+          $this.isLoading.close();
           if($this.isSearch||$this.isList){
             $this.$nextTick(() => {
               $this.setHeight();
@@ -958,6 +988,8 @@ export default {
       dataParam.page = $this.page;
       dataParam.limit = $this.limit;
       dataParam.keywords = $this.keyword;
+      $this.loadingFun();
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('article/postSearchListAction',dataParam).then(res=>{
         if(res.status){
           if(res.data.length>0){
@@ -1152,40 +1184,43 @@ export default {
     handleScroll(event){
       var $this = this;
       console.log("论坛页面监听事件");
+      console.log(event.target.scrollTop,"滚动条监听");
       if($this.isSearch||$this.isList){
         if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
           var scrTop = event.target.scrollTop;
           var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
-          if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
-            $this.scrollPosition.isFixed = true;
-            var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
-            $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
-            document.querySelector(".table-mask").style = tableHeaderStyle;
-            var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
-            var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
-            var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
-            document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
-            
-            if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
-              document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
-              document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          if(scrTop!=0&&$this.scrollTable.fixedTopHeight!=0){
+            if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
+              $this.scrollPosition.isFixed = true;
+              var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
+              $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+              document.querySelector(".table-mask").style = tableHeaderStyle;
+              var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
+              var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
+              var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+              document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+              
+              if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+                document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
+                document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+              }
+            }else{// 头部需要变为正常
+              $this.scrollPosition.isFixed = false;
+              var tableHeaderStyle = "width:100%";
+              $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+              var tableStyle1 = "padding-top:0";
+              document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+              var tableStyle3 = "width:auto";
+              if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+                document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+              }
             }
-          }else{// 头部需要变为正常
-            $this.scrollPosition.isFixed = false;
-            var tableHeaderStyle = "width:100%";
-            $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
-            var tableStyle1 = "padding-top:0";
-            document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
-            var tableStyle3 = "width:auto";
-            if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
-              document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
-            }
-          }
-          if($this.totalDataNum>50){
-            if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-15){
-              $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
-            }else{
-              $this.scrollPosition.fixedBottom = 15;
+            if($this.totalDataNum>50){
+              if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-15){
+                $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+              }else{
+                $this.scrollPosition.fixedBottom = 15;
+              }
             }
           }
         }

@@ -138,7 +138,7 @@
                         <el-button type="primary" class="updateBtn" size="small" v-on:click="searchResult"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>查询</el-button>
                     </div>
                 </div>               
-                <div class="card-content SaleCardDataBom" v-if="tableData.length>0">                 
+                <div class="card-content SaleCardDataBom" v-if="tableData.length>0" id="resultPane" ref="resultPane">                 
                   <el-table
                     ref="simpleTable"
                     :data="tableData"
@@ -180,6 +180,7 @@
           </div>
       </div>
     </div>
+    <el-backtop target=".scroll-panel"></el-backtop>
   </div>
 </template>
 
@@ -281,6 +282,7 @@ export default {
           }
         }]
       },
+        isLoading:null,
     }
   },
   computed: {
@@ -293,7 +295,6 @@ export default {
   created(){
     var $this = this;
     $this.getBreadcrumbList();
-    $this.publlcData();
     $this.initData();
   },
   methods:{
@@ -359,6 +360,16 @@ export default {
       $this.breadcrumbList = breadcrumbList;
       console.log($this.breadcrumbList,"面包屑数据");
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 搜索结果
     searchResult(){
       var $this = this;
@@ -400,6 +411,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;    
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息-数据分析查询条件
@@ -429,6 +441,7 @@ export default {
               });
               $this.userlist=userlist;
             }
+            $this.isLoading.close();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -484,11 +497,16 @@ export default {
     initCluesList(){
       var $this = this;
       var searchData = $this.initSearchData();
+      $this.loadingFun();
       $this.$store.dispatch('Sales/getSalesDataAnalysisAction', searchData).then(response=>{
         if(response){
           if(response.status){
             console.log(response);
             $this.tableData = response.data;
+            $this.$nextTick(()=>{
+              document.getElementById("resultPane").scrollIntoView({behavior: "smooth"});
+            });
+            $this.isLoading.close();
           }else{
             $this.$message({
               showClose: true,
@@ -500,6 +518,7 @@ export default {
           infoData.allcount=response.allcount;
           infoData.warnlist=response.warnlist;
           $this.infoData = infoData;
+          $this.isLoading.close();
         }
       });
     },
@@ -519,6 +538,7 @@ export default {
           defaultData.hasdealcount=response.hasdealcount;
           defaultData.hassaycount=response.hassaycount;
           $this.defaultData = defaultData;
+          $this.initPage();
         }
       });
     },
@@ -534,7 +554,7 @@ export default {
               $this.menuButtonPermit.push(item.action_route);
             });
             if($this.menuButtonPermit.includes('Sales_search')){
-              $this.initPage();
+               $this.publlcData();
             }else{
               $this.$message({
                 showClose: true,

@@ -354,7 +354,7 @@ export default {
       searchData:{
           uname:"",
           page:1,
-          limit:10,
+          limit:20,
           dept_id:0,
           is_delete:"",
       },
@@ -618,6 +618,7 @@ export default {
       if($this.searchData.is_delete===0){
         formData.is_delete = $this.searchData.is_delete;
       }
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('user/userListAction', formData).then(response=>{
         if(response){
           if(response.status){
@@ -1144,6 +1145,7 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
+      this.searchData.page = 1;
       this.initPage();
     },
     // 当前页改变事件

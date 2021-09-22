@@ -167,6 +167,7 @@
                 </div>
             </div>
         </div>
+    <el-backtop target=".scroll-panel"></el-backtop>
     </div>
 </template>
 
@@ -250,16 +251,6 @@ export default {
   },
   watch: {
       tableHeight(val) {
-        if (!this.timer) {
-          this.tableHeight = val
-          this.timer = true
-          const $this = this
-          setTimeout(function() {
-            $this.timer = false
-          }, 400)
-        }
-      },
-      pageHeight(val) {
         if (!this.timer) {
           this.tableHeight = val
           this.timer = true
@@ -395,6 +386,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
+      $this.loadingFun();
       $this.$store.dispatch('enphone/cluesAnalysisInitSystemDataAction', {status:$this.status}).then(response=>{
         if(response){
           if(response.status){

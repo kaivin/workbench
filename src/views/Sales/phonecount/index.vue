@@ -169,6 +169,7 @@
                 </div>
             </div>
         </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     </div>
 </template>
 
@@ -381,6 +382,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('Sales/getSalesSalesmanDataAction', {status:$this.status}).then(response=>{
         if(response){
           if(response.status){
@@ -392,7 +394,6 @@ export default {
               $this.setTableHeight();
             })
             $this.isLoading.close();
-            console.log(response,"业务员数据统计");
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({

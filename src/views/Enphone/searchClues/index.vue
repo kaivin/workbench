@@ -616,6 +616,7 @@
                 </div> 
             </div>
         </div>     
+        <el-backtop target=".scroll-panel"></el-backtop>
         <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="400px">
             <el-form :inline="true" :model="exportForm">
                 <el-form-item label="文件名称：" :label-width="formLabelWidth">
@@ -1299,10 +1300,10 @@ export default {
     // 搜索确认
     enCluesSearchData(){
         var $this = this;
-        $this.loadingFun();
         $this.searchData.phoneid= $this.searchData.phoneid.concat($this.deptOneId,$this.deptFiveId,$this.deptSixId,$this.deptOtherId);
         var resultData = $this.getSearchResultData();
-        console.log(resultData,"搜索条件");
+        $this.loadingFun();
+        document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
         $this.$store.dispatch('enphone/getCurrentCluesSearchListAction', resultData).then(response=>{
         if(response){
           if(response.status){
@@ -1672,13 +1673,14 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
-      this.initCluesList();
+      this.searchData.page = 1;
+      this.enCluesSearchData();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.searchData.page = val;
-      this.initCluesList();
+      this.enCluesSearchData();
     },
     // 询盘级别修改记录
     handleCustormeditlogClick(Rid){

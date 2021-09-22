@@ -390,6 +390,7 @@
           </div>
       </div>
     </div>
+    <el-backtop target=".scroll-panel"></el-backtop>
     <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
     <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
       <div class="flex-content">
@@ -1168,6 +1169,8 @@ export default {
     initCluesList(){
       var $this = this;
       var searchData = $this.initSearchData();
+      $this.loadingFun();
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       if($this.currentStatus=="waitcount"){
         $this.$store.dispatch('Sales/getSalesWaitDistribuAction', searchData).then(response=>{
             $this.resData(response,'等待分配');
@@ -1427,13 +1430,14 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
-      this.initPage();
+      this.searchData.page = 1;
+      this.initCluesList();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.searchData.page = val;
-      this.initPage();
+      this.initCluesList();
     },
     // 反馈点击事件
     feedbackClick(){

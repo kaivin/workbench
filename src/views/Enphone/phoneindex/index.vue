@@ -132,7 +132,7 @@
                                       range-separator="至"
                                       start-placeholder="开始日期"
                                       end-placeholder="结束日期"
-                                      style="float:left;margin:5px 10px 5px 0px;"
+                                      style="float:left;margin:5px 10px 5px 0px;width:240px;"
                                       :picker-options="pickerRangeOptions">
                                   </el-date-picker>
                                   <el-select v-model="searchData.timeing" clearable placeholder="时段" size="small" style="width:80px;margin:5px 10px 5px 0px;float:left;">
@@ -247,7 +247,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-if="currentKey&&currentKey=='all'" v-model="searchData.salesownid" size="small" clearable placeholder="业务员" style="width:120px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-if="currentKey&&currentKey=='all'" v-model="searchData.salesownid" size="small" clearable placeholder="业务员" style="width:90px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in salesuserList"
                                       :key="item.value"
@@ -764,6 +764,7 @@
         </div>
       </div>
     </div>
+    <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="440px">
       <el-form :inline="true" :model="exportForm">
         <el-form-item label="文件名称：" :label-width="formLabelWidth">
@@ -1111,7 +1112,7 @@ export default {
         salesownid:"",
         salesdepart_id:"",
       },
-      pageSizeList:[20, 500, 5000, 10000],
+      pageSizeList:[20, 50, 100, 500],
       totalDataNum:0,
       pickerRangeOptions: {
         shortcuts: [{
@@ -1494,7 +1495,6 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
-      $this.loadingFun();
       var isSearch = true;
       if($this.device==="mobile"){
         if(($this.searchData.startDate==""&&$this.searchData.endDate!="")||($this.searchData.startDate!=""&&$this.searchData.endDate=="")){
@@ -1530,6 +1530,7 @@ export default {
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){
       var $this=this;
+      $this.loadingFun();
       $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
         if(response){
           if(response.status){
@@ -1820,6 +1821,8 @@ export default {
           }
         }
       }
+      $this.loadingFun();
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch(pathUrl, searchData).then(response=>{
         if(response){
           if(response.status){
@@ -2011,13 +2014,14 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
-      this.initData();
+      this.searchData.page = 1;
+      this.leftPhoto();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.searchData.page = val;
-      this.initData();
+      this.leftPhoto();
     },
     // 修改询盘
     editTableRow(row,index){
@@ -2412,35 +2416,37 @@ export default {
           if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
             var scrTop = event.target.scrollTop;
             var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
-            if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
-              $this.scrollPosition.isFixed = true;
-              var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
-              $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
-              document.querySelector(".table-mask").style = tableHeaderStyle;
-              var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
-              var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
-              var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
-              document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;          
-              if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
-                document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
-                document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+            if(scrTop!=0){
+              if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
+                $this.scrollPosition.isFixed = true;
+                var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
+                $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+                document.querySelector(".table-mask").style = tableHeaderStyle;
+                var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
+                var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
+                var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+                document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;          
+                if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+                  document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
+                  document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+                }
+              }else{// 头部需要变为正常
+                $this.scrollPosition.isFixed = false;
+                var tableHeaderStyle = "width:100%";
+                $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+                var tableStyle1 = "padding-top:0";
+                document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+                var tableStyle3 = "width:auto";
+                if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+                  document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+                }
               }
-            }else{// 头部需要变为正常
-              $this.scrollPosition.isFixed = false;
-              var tableHeaderStyle = "width:100%";
-              $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
-              var tableStyle1 = "padding-top:0";
-              document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
-              var tableStyle3 = "width:auto";
-              if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
-                document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
-              }
-            }
-            if($this.totalDataNum>20){
-              if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-15){
-                $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom+15;
-              }else{
-                $this.scrollPosition.fixedBottom = 15;
+              if($this.totalDataNum>20){
+                if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-15){
+                  $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom+15;
+                }else{
+                  $this.scrollPosition.fixedBottom = 15;
+                }
               }
             }
           }

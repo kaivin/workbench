@@ -612,6 +612,7 @@ export default {
       minProduct:[],
       maxProductNum:0,
       minProductNum:0,
+      isLoading:null,
     }
   },
   computed: {
@@ -688,6 +689,16 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
       console.log($this.breadcrumbList,"面包屑数据");
+    },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
     },
     // 重置选择项
     resetData(){
@@ -785,6 +796,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -953,7 +965,6 @@ export default {
               levelList.push(itemData);
             });
             $this.levelList = levelList;
-            console.log($this.levelList);
             var categoryList = [];
             response.xuntype.forEach(function(item,index){
               var itemData = {};
@@ -962,7 +973,7 @@ export default {
               categoryList.push(itemData);
             });
             $this.categoryList = categoryList;
-            console.log($this.categoryList);
+            $this.isLoading.close();
           }else{
             $this.$message({
               showClose: true,
@@ -1036,6 +1047,7 @@ export default {
       if($this.chart&&!$this.chart.destroyed){
         $this.chart.destroy();
       }
+      $this.loadingFun();
       $this.$store.dispatch('chinaphone/cluesAnalysisResultDataAction', searchData).then(response=>{
         if(response){
           if(response.status){
@@ -1049,7 +1061,6 @@ export default {
               });
             }
             $this.searchResult.deviceCount = deviceCount;
-            console.log($this.searchResult.deviceCount,'$this.searchResult.deviceCount');
             $this.searchResult.dayCount = response.everydaycount;
             $this.searchResult.productCount = response.hotproductcount;
             $this.searchResult.sourceCount = response.modecount;
@@ -1167,6 +1178,7 @@ export default {
                 $this.drawChart9();
               }
               $this.drawChart10();
+              $this.isLoading.close();
             });
           }else{
             $this.$message({

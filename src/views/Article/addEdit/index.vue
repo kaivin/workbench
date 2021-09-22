@@ -432,6 +432,7 @@ export default {
       },
       isInit:false,
       count:0,
+      isLoading:null,
     }
   },
   computed: {
@@ -508,6 +509,16 @@ export default {
       $this.breadcrumbList = breadcrumbList;
       console.log($this.breadcrumbList,"面包屑数据");
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 重置页面
     resetFormData(){
       var $this = this;
@@ -519,7 +530,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      console.log($this.userInfo,'userInfo')
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -619,6 +630,8 @@ export default {
             if($this.$route.query.id){
               $this.formData.id = parseInt($this.$route.query.id);
               $this.getArticleInfo();
+            }else{
+              $this.isLoading.close();
             }
           }else{
             $this.$message({
@@ -677,6 +690,7 @@ export default {
           if(response){
             if(response.status){
               $this.articleData = response.data;
+              $this.isLoading.close();
               $this.initArticle($this.articleData)
             }else{
               if(response.permitstatus&&response.permitstatus==2){
@@ -965,6 +979,7 @@ export default {
     backSendPost(){
       var $this = this;
       $this.isPreview = false;
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.resetPreviewData();
     },
     // 重置预览信息
@@ -1011,6 +1026,7 @@ export default {
         $this.previewData.title = $this.formData.title;
         $this.previewData.content = $this.formData.content;
       }
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
     },
     // 获取当前时间
     getNowTime(){

@@ -129,6 +129,7 @@ export default {
             ]
         ]
       },
+      isLoading:null,
     }
   },
   computed: {
@@ -228,6 +229,16 @@ export default {
       $this.breadcrumbList = breadcrumbList;
       console.log($this.breadcrumbList,"面包屑数据");
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 设置高度
     setHeight(){
       var $this = this;
@@ -275,6 +286,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -423,6 +435,7 @@ export default {
           if(response){
             if(response.status){
               $this.commentList = response.data;
+              $this.isLoading.close();
               $this.$nextTick(()=>{
                 $this.setHeight();
               });

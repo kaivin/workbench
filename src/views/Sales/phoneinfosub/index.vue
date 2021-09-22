@@ -128,6 +128,7 @@
             </div>
         </div>
     </el-card>
+    <el-backtop target=".scroll-panel"></el-backtop>
   </div>
 </template>
 
@@ -226,6 +227,7 @@ export default {
       },      
       isSalesman:false,
       feedback:'未反馈',
+        isLoading:null,
     }
   },
   computed: {
@@ -320,12 +322,23 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
     initPage(){
       var $this = this;
       $this.getSystemData();
+    },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
     },
     // 询盘编辑获取初始化询盘信息
     initCluesInfo(){
@@ -433,7 +446,7 @@ export default {
       $this.formData.givesaleswarn = $this.defaultInfo.givesaleswarn;
       $this.formData.saleswarnstatus = $this.defaultInfo.saleswarnstatus;
       $this.formData.salesremark = $this.defaultInfo.salesremark;
-      console.log($this.formData,'$this.formData');
+      $this.isLoading.close();
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){

@@ -441,6 +441,7 @@
         </div>
       </div>
     </div>
+    <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="440px">
       <el-form :inline="true" :model="exportForm">
         <el-form-item label="文件名称：" :label-width="formLabelWidth">
@@ -939,6 +940,7 @@ export default {
     // 获取电话列表及电话统计数字
     getPhoneListNum(){
       var $this = this;
+      $this.loadingFun();
       $this.$store.dispatch('chinaphone/cluesPhoneStatDataAction', null).then(response=>{
         console.log(response,"电话列表信息");
         if(response){
@@ -1030,6 +1032,7 @@ export default {
     initCluesList(){
       var $this = this;
       var searchData = $this.initSearchData();
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('chinaphone/cluesCurrentPhoneDataAction', searchData).then(response=>{
         if(response){
           if(response.status){
@@ -1294,6 +1297,7 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
+      this.searchData.page = 1;
       this.initPage();
     },
     // 当前页改变事件

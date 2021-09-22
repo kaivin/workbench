@@ -761,6 +761,7 @@ export default {
     searchResult(){
       var $this = this;
       $this.loadingFun();
+      $this.searchData.page = 1;
       $this.initCluesList();
     },
     // 初始化数据
@@ -810,6 +811,8 @@ export default {
     initCluesList(){
       var $this = this;
       var searchData = $this.initSearchData();
+      $this.loadingFun();
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('chinaphone/getCurrentCluesSearchListAction', searchData).then(response=>{
         if(response){
           if(response.status){
@@ -1013,6 +1016,7 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
+      this.searchData.page = 1;
       this.initCluesList();
     },
     // 当前页改变事件

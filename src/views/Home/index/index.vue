@@ -29,7 +29,7 @@
             </div>
           </div>
         </div>
-        <div class="item-row stat-row">
+        <div class="item-row stat-row" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
           <div class="item-column">
             <div class="item-module">
               <div class="row-title"><h1><span>红星机器数据分析平台</span></h1></div>
@@ -210,7 +210,7 @@ export default {
         {name:"中文",label:"Module_cnStat"},
         {name:"英文",label:"Module_enStat"},
       ],
-      language:'Module_cnStat',
+      language:null,
       areaTrendPlot:null,
       regionMapChart:null,
       liquidPlot1:null,
@@ -288,8 +288,12 @@ export default {
           if($this.permitModules.includes('Module_enStat')){
             $this.language = "Module_enStat";
             $this.currentCluesData.departName = "英文";
+          }else{
+            $this.language = null;
           }
         }
+      }else{
+        $this.language = null;
       }
       if($this.language){
         $this.getNearMonth();
