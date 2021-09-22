@@ -2,7 +2,13 @@
   <div class="page-root" ref="boxPane">
       <div class="abs-panel" ref="mainPane">
           <div class="scroll-panel" ref="scrollDom">
-              <div class="true-height" ref="scrollPane">
+              <div class="true-height" ref="scrollPane">              
+                  <p class="breadcrumb" ref="breadcrumbPane">
+                      <router-link class="breadcrumb-link" to="/">首页</router-link>
+                      <template v-for="item in breadcrumbList">
+                        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
+                      </template>
+                  </p>
                   <el-card class="box-card" shadow="hover">
                     <div class="card-content" ref="tableContent">
                       <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
@@ -102,6 +108,7 @@ export default {
   name: 'websiteArrtList',
   data() {
     return {
+      breadcrumbList:[],
       menuButtonPermit:[],
       tableData:[],
       tableHeight:200,
@@ -153,7 +160,8 @@ export default {
     ...mapGetters([
       'device',
       'addWebsiteAttr',
-      'sidebar'
+      'sidebar',
+      'menuData'
     ]),
     isOpen() {
       return this.sidebar.opened;
@@ -195,6 +203,7 @@ export default {
   },
   created(){
     var $this = this;
+    $this.getBreadcrumbList();
     $this.initData();
   },
   updated(){
@@ -205,6 +214,68 @@ export default {
     })
   },
   methods:{
+    // 获取面包屑路径
+    getBreadcrumbList(){
+      var $this = this;
+      var breadcrumbList = [];
+      var currentID = ""+$this.$router.currentRoute.meta.id;
+      var pageID = 0;
+      if(currentID.indexOf('-')!=-1){
+        pageID = parseInt(currentID.split("-")[1]);
+      }else{
+        pageID = parseInt(currentID);
+      }
+      $this.menuData.forEach(function(item,index){
+        if(item.meta.id == pageID){
+          var itemData = {};
+          itemData.id = item.meta.id;
+          itemData.router = item.path;
+          itemData.title = item.meta.title;
+          breadcrumbList.push(itemData);
+        }else{
+          if(item.children.length>0){
+            item.children.forEach(function(item1,index1){
+              if(item1.meta.id == pageID){
+                var itemData = {};
+                itemData.id = item.meta.id;
+                itemData.router = item.path;
+                itemData.title = item.meta.title;
+                breadcrumbList.push(itemData);
+                var itemData2 = {};
+                itemData2.id = item1.meta.id;
+                itemData2.router = item1.path;
+                itemData2.title = item1.meta.title;
+                breadcrumbList.push(itemData2);
+              }else{
+                if(item1.children.length>0){
+                  item1.children.forEach(function(item2,index2){
+                    if(item2.meta.id == pageID){
+                      var itemData = {};
+                      itemData.id = item.meta.id;
+                      itemData.router = item.path;
+                      itemData.title = item.meta.title;
+                      breadcrumbList.push(itemData);
+                      var itemData2 = {};
+                      itemData2.id = item1.meta.id;
+                      itemData2.router = item1.path;
+                      itemData2.title = item1.meta.title;
+                      breadcrumbList.push(itemData2);
+                      var itemData3 = {};
+                      itemData3.id = item2.meta.id;
+                      itemData3.router = item2.path;
+                      itemData3.title = item2.meta.title;
+                      breadcrumbList.push(itemData3);
+                    }
+                  });
+                }
+              }
+            });
+          }
+        }
+      });
+      $this.breadcrumbList = breadcrumbList;
+      console.log($this.breadcrumbList,"面包屑数据");
+    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -221,9 +292,10 @@ export default {
     // 设置高度
     setTableHeight(){
       var $this = this;
-      $this.tableHeight = 0;      
+      $this.tableHeight = 0; 
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;     
       var screenHeight = $this.$refs.boxPane.offsetHeight;
-      $this.tableHeight = screenHeight-30;
+      $this.tableHeight = screenHeight-breadcrumbHeight-30;
       $this.getBrowserType();
         setTimeout(function() {
           $this.setScrollDom();
@@ -462,9 +534,9 @@ export default {
       $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
       // 获取表格头吸顶需滚动的高度
       if($this.$refs.headerPane){
-        $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15;
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15;
       }else{
-         $this.scrollTable.fixedTopHeight=15;
+         $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15;
       }
       $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
       if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){

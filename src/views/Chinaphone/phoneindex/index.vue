@@ -26,8 +26,14 @@
     </div>
     <div class="flex-content relative">
       <div class="abs-panel" ref="mainPane">
-        <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
+        <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position"> 
           <div class="phone-index" v-if="!phoneID">
+            <p class="breadcrumb" ref="breadcrumbPane">
+                <router-link class="breadcrumb-link" to="/">首页</router-link>
+                <template v-for="item in breadcrumbList">
+                  <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
+                </template>
+            </p>
             <div class="ChinaphoneNum" ref="numPane">
               <div class="card-header">
                 <h2>{{currentTeam}}</h2>
@@ -94,7 +100,13 @@
               </el-card>
             </div>
           </div>
-          <div class="true-height" v-else ref="scrollPane">
+          <div class="true-height" v-else ref="scrollPane">       
+            <p class="breadcrumb" ref="breadcrumbPane">
+                <router-link class="breadcrumb-link" to="/">首页</router-link>
+                <template v-for="item in breadcrumbList">
+                  <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
+                </template>
+            </p>
             <el-card class="box-card scroll-card EnphoneCardFrDate" shadow="hover">
               <div slot="header">
                 <div class="card-header EnphoneCardHeader" ref="headerPane">
@@ -477,6 +489,7 @@ export default {
   data() {
     return {
       minHeight:"auto",
+      breadcrumbList:[],
       phoneID:null,
       currentPhone:'',
       writepermit:false,
@@ -639,7 +652,8 @@ export default {
     ...mapGetters([
       'userInfo',
       'device',
-      'sidebar'
+      'sidebar',
+      'menuData'
     ]),
     isOpen() {
       return this.sidebar.opened;
@@ -651,8 +665,8 @@ export default {
       if($this.$route.query.phoneID){
         $this.setHeight();
       }else{
-        if($this.$refs.mainPane&&$this.$refs.numPane){
-          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
+        if($this.$refs.mainPane&&$this.$refs.numPane){  
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-45-15; 
         }
         $this.drawChart();
       }
@@ -663,7 +677,7 @@ export default {
           $this.setHeight();
         }else{
           if($this.$refs.mainPane&&$this.$refs.numPane){
-            $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
+            $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-45-15; 
           }
         }
       })()
@@ -705,6 +719,7 @@ export default {
     }else{
       $this.phoneID = null;
     }
+    $this.getBreadcrumbList();
     $this.initData();
   },
   updated(){
@@ -716,12 +731,74 @@ export default {
         window.addEventListener('scroll',$this.handleScroll,true);
       }else{
         if($this.$refs.mainPane&&$this.$refs.numPane){
-          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45; 
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-45-15;  
         }
       }
     })
   },
   methods:{
+    // 获取面包屑路径
+    getBreadcrumbList(){
+      var $this = this;
+      var breadcrumbList = [];
+      var currentID = ""+$this.$router.currentRoute.meta.id;
+      var pageID = 0;
+      if(currentID.indexOf('-')!=-1){
+        pageID = parseInt(currentID.split("-")[1]);
+      }else{
+        pageID = parseInt(currentID);
+      }
+      $this.menuData.forEach(function(item,index){
+        if(item.meta.id == pageID){
+          var itemData = {};
+          itemData.id = item.meta.id;
+          itemData.router = item.path;
+          itemData.title = item.meta.title;
+          breadcrumbList.push(itemData);
+        }else{
+          if(item.children.length>0){
+            item.children.forEach(function(item1,index1){
+              if(item1.meta.id == pageID){
+                var itemData = {};
+                itemData.id = item.meta.id;
+                itemData.router = item.path;
+                itemData.title = item.meta.title;
+                breadcrumbList.push(itemData);
+                var itemData2 = {};
+                itemData2.id = item1.meta.id;
+                itemData2.router = item1.path;
+                itemData2.title = item1.meta.title;
+                breadcrumbList.push(itemData2);
+              }else{
+                if(item1.children.length>0){
+                  item1.children.forEach(function(item2,index2){
+                    if(item2.meta.id == pageID){
+                      var itemData = {};
+                      itemData.id = item.meta.id;
+                      itemData.router = item.path;
+                      itemData.title = item.meta.title;
+                      breadcrumbList.push(itemData);
+                      var itemData2 = {};
+                      itemData2.id = item1.meta.id;
+                      itemData2.router = item1.path;
+                      itemData2.title = item1.meta.title;
+                      breadcrumbList.push(itemData2);
+                      var itemData3 = {};
+                      itemData3.id = item2.meta.id;
+                      itemData3.router = item2.path;
+                      itemData3.title = item2.meta.title;
+                      breadcrumbList.push(itemData3);
+                    }
+                  });
+                }
+              }
+            });
+          }
+        }
+      });
+      $this.breadcrumbList = breadcrumbList;
+      console.log($this.breadcrumbList,"面包屑数据");
+    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -750,8 +827,9 @@ export default {
       var $this = this;
       $this.minHeight = 0;      
       var headerHeight = $this.$refs.headerPane.offsetHeight+45;
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
-      $this.minHeight = screenHeight-headerHeight-30;
+      $this.minHeight = screenHeight-headerHeight-breadcrumbHeight-30;
       $this.getBrowserType();
       setTimeout(function() {
           $this.setScrollDom();
@@ -1558,9 +1636,9 @@ export default {
       $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
       // 获取表格头吸顶需滚动的高度
       if($this.$refs.headerPane){
-         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15;
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15;
       }else{
-         $this.scrollTable.fixedTopHeight=15;
+         $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15;
       }
       $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
       if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){

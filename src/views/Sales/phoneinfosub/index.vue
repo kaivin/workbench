@@ -1,5 +1,11 @@
 ﻿<template>
   <div class="page-root scroll-panel" ref="boxPane">
+    <p class="breadcrumb" ref="breadcrumbPane">
+        <router-link class="breadcrumb-link" to="/">首页</router-link>
+        <template v-for="item in breadcrumbList">
+          <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
+        </template>
+    </p>
     <el-card class="box-card scroll-card" shadow="hover">
         <ul class="SaleTips" v-if="menuButtonPermit.includes('Sales_warnread')&&ID&&isSalesman">
             <li><i class="svg-i tips" ><svg-icon icon-class="prompt" /></i><b>{{formData.givesaleswarn}}</b><el-button class="item-input" size="mini" type="primary" @click="salesmanWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></li>
@@ -132,6 +138,7 @@ export default {
     return {
       ID:null,
       status:null,
+      breadcrumbList:[],
       menuButtonPermit:[],
       pickerOptions: {
           shortcuts: [{
@@ -223,7 +230,8 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device'
+      'device',
+      'menuData'
     ]),
   },
   created(){
@@ -242,9 +250,72 @@ export default {
     formValidate.status=$this.status;
     formValidate.id=$this.ID;
     $this.formValidate=formValidate;
+    $this.getBreadcrumbList();
     $this.initData();
   },
   methods:{
+    // 获取面包屑路径
+    getBreadcrumbList(){
+      var $this = this;
+      var breadcrumbList = [];
+      var currentID = ""+$this.$router.currentRoute.meta.id;
+      var pageID = 0;
+      if(currentID.indexOf('-')!=-1){
+        pageID = parseInt(currentID.split("-")[1]);
+      }else{
+        pageID = parseInt(currentID);
+      }
+      $this.menuData.forEach(function(item,index){
+        if(item.meta.id == pageID){
+          var itemData = {};
+          itemData.id = item.meta.id;
+          itemData.router = item.path;
+          itemData.title = item.meta.title;
+          breadcrumbList.push(itemData);
+        }else{
+          if(item.children.length>0){
+            item.children.forEach(function(item1,index1){
+              if(item1.meta.id == pageID){
+                var itemData = {};
+                itemData.id = item.meta.id;
+                itemData.router = item.path;
+                itemData.title = item.meta.title;
+                breadcrumbList.push(itemData);
+                var itemData2 = {};
+                itemData2.id = item1.meta.id;
+                itemData2.router = item1.path;
+                itemData2.title = item1.meta.title;
+                breadcrumbList.push(itemData2);
+              }else{
+                if(item1.children.length>0){
+                  item1.children.forEach(function(item2,index2){
+                    if(item2.meta.id == pageID){
+                      var itemData = {};
+                      itemData.id = item.meta.id;
+                      itemData.router = item.path;
+                      itemData.title = item.meta.title;
+                      breadcrumbList.push(itemData);
+                      var itemData2 = {};
+                      itemData2.id = item1.meta.id;
+                      itemData2.router = item1.path;
+                      itemData2.title = item1.meta.title;
+                      breadcrumbList.push(itemData2);
+                      var itemData3 = {};
+                      itemData3.id = item2.meta.id;
+                      itemData3.router = item2.path;
+                      itemData3.title = item2.meta.title;
+                      breadcrumbList.push(itemData3);
+                    }
+                  });
+                }
+              }
+            });
+          }
+        }
+      });
+      $this.breadcrumbList = breadcrumbList;
+      console.log($this.breadcrumbList,"面包屑数据");
+    },
     // 初始化数据
     initData(){
       var $this = this;

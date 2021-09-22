@@ -3,7 +3,7 @@
       <div class="abs-panel" ref="mainPane">
         <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
           <div class="true-height" ref="scrollPane">
-            <p class="breadcrumb">
+            <p class="breadcrumb" ref="breadcrumbPane">
               <router-link class="breadcrumb-link" to="/">首页</router-link>
               <template v-for="item in breadcrumbList">
                 <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
@@ -559,12 +559,13 @@ export default {
       var $this = this;
       $this.minHeight = 0;
       var headerHeight = $this.$refs.headerPane.offsetHeight+45;
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;      
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       if($this.isSearch){
          var searchTit = $this.$refs.searchTit.offsetHeight; 
-         $this.minHeight = screenHeight-headerHeight-searchTit-30;       
+         $this.minHeight = screenHeight-headerHeight-searchTit-breadcrumbHeight-30;       
       }else{
-         $this.minHeight = screenHeight-headerHeight-30;
+         $this.minHeight = screenHeight-headerHeight-breadcrumbHeight-30;
       }
       $this.getBrowserType();
       setTimeout(function() {
