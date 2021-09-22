@@ -320,7 +320,8 @@ export default {
         doneCount:0,
         checkingCount:0,
         overdueCount:0,
-      }
+      },
+      isLoading:null
     }
   },
   computed: {
@@ -463,14 +464,26 @@ export default {
           $this.setScrollDom();
       }, 400);
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 搜索结果
     searchResult(){
       var $this = this;
+      $this.loadingFun();
       $this.initPage();
     },
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -519,6 +532,7 @@ export default {
             infoData.checkingCount = response.waitcheckcount;
             infoData.overdueCount = response.hasouttimecount;
             $this.infoData = infoData;
+            $this.isLoading.close();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({

@@ -7,7 +7,8 @@
                     <router-link class="breadcrumb-link" to="/">首页</router-link>
                     <template v-for="item in breadcrumbList">
                       <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
-                    </template>
+                    </template>                    
+                    <router-link class="breadcrumb-link" to="/Chinaphone/searchClues"><b>-</b>搜索数据</router-link>
                 </p>
                 <el-card class="box-card scroll-card" shadow="hover">
                   <div slot="header">

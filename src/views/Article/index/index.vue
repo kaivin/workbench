@@ -409,6 +409,7 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
+      isLoading:null,
     }
   },
   computed: {
@@ -574,9 +575,20 @@ export default {
           $this.setScrollDom();
       }, 400);
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 搜索结果点击事件
     searchResult(){
       var $this = this;
+      $this.loadingFun();
       if($this.keyword!=""){
         $this.$router.push({path:'/Article/index',query:{keyword:$this.keyword}});
       }else{
@@ -586,6 +598,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 树形菜单
@@ -704,6 +717,7 @@ export default {
         if(response){
           if(response.status){
             $this.departUser = response.data;
+            $this.isLoading.close();
           }else{
             $this.$message({
                 showClose: true,
@@ -927,6 +941,7 @@ export default {
             $this.tags = [];
             $this.tagData = [];
           }
+          $this.isLoading.close();
         }else{
           $this.$message({
             showClose: true,
@@ -982,6 +997,7 @@ export default {
           }
           $this.searchData = res.data;
           $this.totalDataNum = res.allcount;
+          $this.isLoading.close();
           $this.$nextTick(() => {
             $this.setHeight();
           });

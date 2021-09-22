@@ -289,6 +289,7 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
+      isLoading:null
     }
   },
   computed: {
@@ -437,16 +438,28 @@ export default {
           $this.setScrollDom();
       }, 400);
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 搜索结果点击事件
     searchResult(){
       var $this = this;
       $this.openClass = false;
       $this.page = 1;
+      $this.loadingFun();
       $this.getWebsiteListData();
     },
     // 初始化页面数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -520,6 +533,7 @@ export default {
             if($this.device === "mobile"){
               $this.openClass = false;
             }
+            $this.isLoading.close();
             $this.$nextTick(function () {
               $this.setTableHeight();
             })

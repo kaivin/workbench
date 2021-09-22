@@ -12,7 +12,7 @@
                     <li v-if="menuButtonPermit.includes('Webmsg_testmsg')" v-bind:class="currentStatus === 'Test'?'active':''" v-on:click="jumpLink('Test')"><span>测试数据</span><b>({{defaultData.testNum}})</b></li>
                     <li v-if="menuButtonPermit.includes('Webmsg_pushwaitdeal')" v-bind:class="currentStatus === 'SNS_1'?'active':''" v-on:click="jumpLink('SNS_1')" style="margin-top:32px;"><span>推广待处理</span><b>({{defaultData.sns1Num}})</b></li>
                     <li v-if="menuButtonPermit.includes('Webmsg_pushhasdeal')" v-bind:class="currentStatus === 'SNS_2'?'active':''" v-on:click="jumpLink('SNS_2')"><span>推广已处理</span><b>({{defaultData.sns2Num}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Webmsg_filetermsg')" v-bind:class="currentStatus === 'Filter'?'active':''" v-on:click="jumpLink('Filter')" style="margin-top:32px;"><span>已过滤垃圾信息</span><b>({{defaultData.filterNum}})</b></li>
+                    <li v-if="menuButtonPermit.includes('Webmsg_filetermsg')" v-bind:class="currentStatus === 'Filter'?'active':''" v-on:click="jumpLink('Filter')" style="margin-cctop:32px;"><span>已过滤垃圾信息</span><b>({{defaultData.filterNum}})</b></li>
                     <li v-if="menuButtonPermit.includes('Webmsg_deletemsg')" v-bind:class="currentStatus === 'Recycle'?'active':''" v-on:click="jumpLink('Recycle')" style="margin-top:32px;"><span>回收站</span><b>({{defaultData.recycleNum}})</b></li>
                 </ul>
                 <div class="tips">
@@ -27,8 +27,9 @@
                     <p class="breadcrumb" ref="breadcrumbPane">
                         <router-link class="breadcrumb-link" to="/">首页</router-link>
                         <template v-for="item in breadcrumbList">
-                          <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
+                          <router-link class="breadcrumb-link" :to="item.router+'?Status=Untreated'" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
                         </template>
+                        <span class="breadcrumb-link"><b>-</b>{{breadcrumbName}}</span>
                     </p>
                     <el-card class="box-card scroll-card" shadow="hover">
                         <div slot="header">
@@ -265,6 +266,7 @@ export default {
   data() {
     return {
         breadcrumbList:[],
+        breadcrumbName:'未处理',
         currentStatus:"Untreated",
         lastDate:"",
         currentDate:"",
@@ -334,6 +336,7 @@ export default {
           tableBottom:0,
           clientHeight:0,
         },
+        isLoading:null,
     }
   },
   computed: {
@@ -721,6 +724,42 @@ export default {
               if($this.$route.query.Status){
                 if($this.permitStatus.includes($this.$route.query.Status)){
                   $this.currentStatus = $this.$route.query.Status;
+                  if($this.currentStatus=="All"){
+                    $this.breadcrumbName='全部';
+                  }
+                  if($this.currentStatus=="Untreated"){
+                    $this.breadcrumbName='未处理';
+                  }
+                  if($this.currentStatus=="Pending"){
+                    $this.breadcrumbName='个人待处理';
+                  }
+                  if($this.currentStatus=="Processed"){
+                    $this.breadcrumbName='已处理';
+                  }
+                  if($this.currentStatus=="Starred"){
+                    $this.breadcrumbName='加星标';
+                  }
+                  if($this.currentStatus=="waitftwordcount"){
+                    $this.breadcrumbName='垃圾信息';
+                  }
+                  if($this.currentStatus=="Spam"){
+                    $this.breadcrumbName='所有未反馈';
+                  }
+                  if($this.currentStatus=="Test"){
+                    $this.breadcrumbName='测试数据';
+                  }
+                  if($this.currentStatus=="SNS_1"){
+                    $this.breadcrumbName='推广待处理';
+                  }
+                  if($this.currentStatus=="SNS_2"){
+                    $this.breadcrumbName='推广已处理';
+                  }
+                  if($this.currentStatus=="Filter"){
+                    $this.breadcrumbName='已过滤垃圾信息';
+                  }
+                  if($this.currentStatus=="Recycle"){
+                    $this.breadcrumbName='回收站';
+                  }
                   if($this.$route.query.keyword){
                     $this.searchData.keyword = $this.$route.query.keyword;
                   }
@@ -834,6 +873,7 @@ export default {
     // 添加到个人待处理
     allotToPending(){
       var $this = this;
+      $this.loadingFun();
       if($this.selectedData.length>0){
         var resultData = {};
         resultData.id = [];
@@ -863,6 +903,7 @@ export default {
     // 留言修改
     editTableRow(row,index){
       var $this = this;
+      $this.loadingFun();
       var resultData = {};
       resultData.id = row.id;
       resultData.remark = row.remark;
@@ -894,6 +935,7 @@ export default {
     // 删除表格行
     deleteTableRow(row,index){
       var $this = this;
+      $this.loadingFun();
       var resultData = {};
       resultData.id =[];
       if(row.id){
@@ -993,6 +1035,7 @@ export default {
     // 改为推广待处理
     promotePendingEdit(row,index){
       var $this = this;
+      $this.loadingFun();
       $this.$store.dispatch('webmsg/webMsgPromotePendingAction', {id:row.id}).then(response=>{
         if(response){
           if(response.status){
@@ -1015,6 +1058,7 @@ export default {
     // 改为推广已处理
     promoteProcessedEdit(row,index){
       var $this = this;
+      $this.loadingFun();
       $this.$store.dispatch('webmsg/webMsgPromoteProcessedAction', {id:row.id}).then(response=>{
         if(response){
           if(response.status){

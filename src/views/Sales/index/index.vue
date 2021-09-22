@@ -34,8 +34,9 @@
                   <p class="breadcrumb" ref="breadcrumbPane">
                       <router-link class="breadcrumb-link" to="/">首页</router-link>
                       <template v-for="item in breadcrumbList">
-                        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
+                        <router-link class="breadcrumb-link" :to="item.router+'?Status=personcount'" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
                       </template>
+                      <span class="breadcrumb-link"><b>-</b>{{breadcrumbName}}</span>
                   </p>
                   <el-card class="box-card scroll-card SaleCardFlFrTable tipsHas" shadow="hover">
                     <div slot="header">  
@@ -569,6 +570,7 @@ export default {
   data() {
     return {
       breadcrumbList:[],
+      breadcrumbName:'个人所有询盘',
       currentStatus:"personcount",
       status:1,
       menuButtonPermit:[],
@@ -1064,7 +1066,7 @@ export default {
           defaultData.warning=response.warning;
           defaultData.warningcount=response.warningcount;
           $this.defaultData = defaultData;
-          console.log(defaultData,'defaultData');
+          console.log(defaultData,'defaultData');          
           $this.searchInit();
         }
       });
@@ -1328,6 +1330,33 @@ export default {
               if($this.$route.query.Status){
                 if($this.permitStatus.includes($this.$route.query.Status)){
                   $this.currentStatus = $this.$route.query.Status;
+                  if($this.currentStatus=="waitcount"){
+                    $this.breadcrumbName='等待分配';
+                  }
+                  if($this.currentStatus=="allotcount"){
+                    $this.breadcrumbName='所有已分配询盘';
+                  }
+                  if($this.currentStatus=="personcount"){
+                    $this.breadcrumbName='个人所有询盘';
+                  }
+                  if($this.currentStatus=="waitdealcount"){
+                    $this.breadcrumbName='等待处理';
+                  }
+                  if($this.currentStatus=="monthsaycount"){
+                    $this.breadcrumbName='月底前需反馈';
+                  }
+                  if($this.currentStatus=="hasnosaycount"){
+                    $this.breadcrumbName='所有未反馈';
+                  }
+                  if($this.currentStatus=="waitftwordcount"){
+                    $this.breadcrumbName='等待添加富通ID';
+                  }
+                  if($this.currentStatus=="hasdealcount"){
+                    $this.breadcrumbName='已处理';
+                  }
+                  if($this.currentStatus=="hassaycount"){
+                    $this.breadcrumbName='已做反馈';
+                  }
                   $this.initPage();
                 }else{
                   $this.$router.push({path:'/Sales/index',query:{Status:$this.permitStatus[0]}});

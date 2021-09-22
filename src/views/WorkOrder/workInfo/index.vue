@@ -5,8 +5,9 @@
         <p class="breadcrumb" ref="breadcrumbPane">
             <router-link class="breadcrumb-link" to="/">首页</router-link>
             <template v-for="item in breadcrumbList">
-              <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
+              <router-link class="breadcrumb-link" :to="item.router+'?Status=person'" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
             </template>
+            <span class="breadcrumb-link"><b>-</b>详情</span>
         </p>
         <div class="article-main">
           <div class="article-content" v-bind:style="'min-height:'+minHeight+'px;'">

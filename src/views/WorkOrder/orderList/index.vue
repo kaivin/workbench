@@ -20,8 +20,9 @@
                     <p class="breadcrumb" ref="breadcrumbPane">
                         <router-link class="breadcrumb-link" to="/">首页</router-link>
                         <template v-for="item in breadcrumbList">
-                          <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
+                          <router-link class="breadcrumb-link" :to="item.router+'?Status=person'" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
                         </template>
+                        <span class="breadcrumb-link"><b>-</b>{{breadcrumbName}}</span>
                     </p>
                     <el-card class="box-card scroll-card" shadow="hover">
                         <div slot="header" v-if="currentStatus=='person'||currentStatus=='alloted'||currentStatus=='doing'||currentStatus=='done'||currentStatus=='stat'">
@@ -294,7 +295,8 @@ export default {
   name: 'WorkOrder_orderList',
   data() {
     return {
-      breadcrumbList:[],
+        breadcrumbList:[],
+        breadcrumbName:'个人已分配',
         operationsWidth:"",
         currentStatus:"person",
         status:1,
@@ -326,7 +328,6 @@ export default {
         isDisabled:true,
         selectedData:[],
         permitStatus:[],
-        isLoading:false,
         pickerRangeOptions: {
           shortcuts: [{
             text: '最近一旬',
@@ -378,6 +379,7 @@ export default {
           tableBottom:0,
           clientHeight:0,
         },
+        isLoading:null,
     }
   },
   computed: {
@@ -440,6 +442,16 @@ export default {
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 获取面包屑路径
     getBreadcrumbList(){
       var $this = this;
@@ -540,7 +552,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      $this.isLoading = true;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前状态分类的数据
@@ -634,7 +646,7 @@ export default {
               }
             }
             $this.tableData = tableData;
-            $this.isLoading = false;
+            $this.isLoading.close();
             $this.$nextTick(()=>{
               $this.setHeight();
             });
@@ -656,14 +668,33 @@ export default {
             }
           }
         }else{
-          $this.isLoading = false;
         }
       });
     },
     // 初始化页面信息
     initPage(){
-      var $this = this;
-      $this.isLoading = true;
+      var $this = this;   
+      if($this.currentStatus=="receive"){
+        $this.breadcrumbName='待接收';
+      }
+      if($this.currentStatus=="allot"){
+        $this.breadcrumbName='待分配';
+      }
+      if($this.currentStatus=="alloted"){
+        $this.breadcrumbName='所有已分配';
+      }
+      if($this.currentStatus=="person"){
+        $this.breadcrumbName='个人已分配';
+      }
+      if($this.currentStatus=="doing"){
+        $this.breadcrumbName='进行中';
+      }
+      if($this.currentStatus=="done"){
+        $this.breadcrumbName='已完成';
+      }
+      if($this.currentStatus=="stat"){
+        $this.breadcrumbName='数据统计';
+      }
       $this.$store.dispatch('worksaccpet/workOrderPublicDataAction', null).then(response=>{
         if(response){
           if(response.status){

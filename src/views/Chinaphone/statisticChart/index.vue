@@ -7,6 +7,7 @@
             <template v-for="item in breadcrumbList">
               <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
             </template>
+            <router-link class="breadcrumb-link" to="/Chinaphone/statisticChart"><b>-</b>统计分析</router-link>
         </p>
         <el-card class="box-card scroll-card" shadow="hover">
             <div class="card-content ChinaphoneTwoBox" ref="tableContent">

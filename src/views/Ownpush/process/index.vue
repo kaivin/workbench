@@ -626,6 +626,7 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
+      isLoading:null
     }
   },
   computed: {
@@ -785,6 +786,16 @@ export default {
           $this.setScrollDom();
       }, 400);
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 序号列
     indexMethod(index) {
         return index+1;
@@ -800,6 +811,7 @@ export default {
     // 搜索数据
     searchResult(){
         var $this = this;
+        $this.loadingFun();
         var isSearch = true;
         if($this.device==="mobile"){
           if(($this.searchData.startDate==""&&$this.searchData.endDate!="")||($this.searchData.startDate!=""&&$this.searchData.endDate=="")){
@@ -869,6 +881,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -889,6 +902,7 @@ export default {
             if($this.device === "mobile"){
               $this.openClass = false;
             };
+            $this.isLoading.close();
             $this.$nextTick(function () {
               $this.setTableHeight();
             })

@@ -7,6 +7,7 @@
               <template v-for="item in breadcrumbList">
                 <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
               </template>
+              <span class="breadcrumb-link"><b>-</b>{{breadcrumbName}}</span>
           </p>
           <el-card class="box-card scroll-card" shadow="hover">
               <div class="card-content bg-white" ref="cardContent" v-bind:style="'min-height:'+minHeight+'px;'">
@@ -194,6 +195,7 @@ export default {
     return {
       minHeight:0,
       breadcrumbList:[],
+      breadcrumbName:'',
       menuButtonPermit:[],
       formData:{
         id:0,
@@ -227,11 +229,11 @@ export default {
   mounted(){
       const $this = this;
       $this.$nextTick(function () {
-        $this.minHeight = $this.$refs.mainPane.offsetHeight-30;
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-30;
       });
       window.onresize = () => {
         return (() => {
-          $this.minHeight = $this.$refs.mainPane.offsetHeight-30;
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-30;
         })()
       };
   },
@@ -330,7 +332,7 @@ export default {
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
-            if($this.$route.query.werberverID){
+            if($this.$route.query.webserverID){
               if(!$this.menuButtonPermit.includes('Webserver_edit')){
                 $this.$message({
                   showClose: true,
@@ -341,6 +343,7 @@ export default {
                 $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
               }else{
                 if($this.device==="desktop"){
+                  $this.breadcrumbName="编辑服务器";
                   $this.getSearchItemData();
                 }else{
                   $this.$message({
@@ -363,6 +366,7 @@ export default {
                 $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
               }else{
                 if($this.device==="desktop"){
+                  $this.breadcrumbName="添加服务器";
                   $this.getSearchItemData();
                 }else{
                   $this.$message({

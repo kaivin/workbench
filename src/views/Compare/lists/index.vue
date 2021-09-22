@@ -231,6 +231,7 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
+      isLoading:null
     }
   },
   computed: {
@@ -383,17 +384,28 @@ export default {
           $this.setScrollDom();
       }, 400);
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
-      $this.dealData();
     },
     // 搜索点击事件
     searchResult(){
       var $this = this;
+      $this.loadingFun();
       $this.searchData.page = 1;
-      $this.initPage();
+      $this.dealData();
     },
     // 初始化部门数据
     dealData(){
@@ -414,6 +426,7 @@ export default {
             }else{
               $this.deptList=[]
             }
+            $this.initPage();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -466,6 +479,7 @@ export default {
             }else{
               $this.tableData = [];
             }
+            $this.isLoading.close();
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
@@ -508,7 +522,7 @@ export default {
                 operationsWidth+=66;
               }
               $this.operationsWidth = "" + operationsWidth;
-              $this.initPage();
+              $this.dealData();
             }else{
               $this.$message({
                 showClose: true,

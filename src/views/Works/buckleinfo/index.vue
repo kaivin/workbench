@@ -38,6 +38,7 @@ export default {
         score:"",
       },
       serverData:{},
+      isLoading:null
     }
   },
   computed: {
@@ -115,15 +116,27 @@ export default {
       $this.breadcrumbList = breadcrumbList;
       console.log($this.breadcrumbList,"面包屑数据");
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 重置页面
     resetFormData(){
       var $this = this;
+      $this.loadingFun();
       $this.clearFormData();
       $this.initInfo($this.serverData);
     },
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -187,6 +200,7 @@ export default {
     initInfo(data){
       var $this = this;
       $this.formData.score = data.bucklescore;
+      $this.isLoading.close();
     },
     // 重置添加文章表单
     clearFormData(){
@@ -209,6 +223,7 @@ export default {
     // 保存修改数据
     saveInfo(){
       var $this = this;
+      $this.loadingFun();
       if(!$this.validationForm()){
         return false;
       }

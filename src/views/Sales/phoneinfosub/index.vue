@@ -5,6 +5,7 @@
         <template v-for="item in breadcrumbList">
           <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
         </template>
+        <span class="breadcrumb-link"><b>-</b><span>详情</span></span>
     </p>
     <el-card class="box-card scroll-card" shadow="hover">
         <ul class="SaleTips" v-if="menuButtonPermit.includes('Sales_warnread')&&ID&&isSalesman">

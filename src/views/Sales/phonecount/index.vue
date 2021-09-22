@@ -9,7 +9,8 @@
                         <template v-for="item in breadcrumbList">
                           <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
                         </template>
-                    </p>
+                        <router-link class="breadcrumb-link" to="/Sales/phonecount"><b>-</b>业务员数据统计</router-link>
+                       </p>
                     <el-card class="box-card scroll-card" shadow="hover">
                         <div slot="header">
                             <div class="card-header" ref="headerPane">

@@ -5,6 +5,7 @@
         <template v-for="item in breadcrumbList">
           <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
         </template>
+        <span class="breadcrumb-link"><b>-</b>{{breadcrumbName}}</span>
     </p>
     <el-card class="box-card ArticleCard scroll-card" shadow="hover">
         <div class="card-content" ref="cardContent">
@@ -146,6 +147,7 @@ export default {
   data() {
     return {
       breadcrumbList:[],
+      breadcrumbName:'',
       menuButtonPermit:[],
       typeList:[],
       systemTag:[],
@@ -388,6 +390,7 @@ export default {
                 $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
               }else{
                 if($this.device==="desktop"){
+                  $this.breadcrumbName='工单发布';
                   $this.getShowData();
                 }else{
                   $this.$message({
@@ -410,6 +413,7 @@ export default {
                 $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
               }else{
                 if($this.device==="desktop"){
+                  $this.breadcrumbName='工单发布';
                   $this.getShowData();
                 }else{
                   $this.$message({

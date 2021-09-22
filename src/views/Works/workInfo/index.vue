@@ -7,6 +7,7 @@
             <template v-for="item in breadcrumbList">
               <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
             </template>
+            <span class="breadcrumb-link"><b>-</b>详情</span>
         </p>
         <div class="article-main">
           <div class="article-content" v-bind:style="'min-height:'+minHeight+'px;'">
