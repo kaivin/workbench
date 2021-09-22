@@ -644,6 +644,8 @@ export default {
   },
   mounted(){
       const $this = this;
+      // 监听竖向滚动条滚动事件
+      window.addEventListener('scroll',this.handleScroll,true);
       $this.$nextTick(function () {
         $this.setTableHeight();
         // 监听竖向滚动条滚动事件
@@ -684,6 +686,10 @@ export default {
     this.$nextTick(() => {
       this.$refs.simpleTable.doLayout();
     })
+  },
+  destroyed(){
+    console.log("走了销毁1");
+    window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
     // 获取面包屑路径

@@ -153,8 +153,8 @@
                                           min-width="200"
                                           >
                                           <template slot-scope="scope">
-                                            <div class="order-title" v-bind:class="scope.row.worktimestatus==2?'time-out':''" v-on:click="jumpArticle(scope.row.id)">
-                                              <span>{{scope.row.title}}</span><strong v-if="scope.row.worktimestatus==2">已逾期</strong>
+                                            <div class="order-title" v-on:click="jumpArticle(scope.row.id)">
+                                              <span>{{scope.row.title}}</span>
                                             </div>
                                           </template>
                                       </el-table-column>
@@ -189,14 +189,14 @@
                                           >
                                           <template #default="scope">
                                             <div class="table-tag">
-                                              <span class="color6" v-if="scope.row.timestatus==2">已逾期</span>
-                                              <span class="color1" v-if="scope.row.timestatus!=2&&currentStatus == 'receive'">待接单</span>
-                                              <span class="color1" v-if="scope.row.timestatus!=2&&currentStatus == 'allot'">待分配</span>
-                                              <span class="color2" v-if="scope.row.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==0">进行中</span>
-                                              <span class="color2" v-if="scope.row.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==1">待审核</span>
-                                              <span class="color3" v-if="scope.row.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==2">已驳回</span>
-                                              <span class="color4" v-if="scope.row.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus==0">待评价</span>
-                                              <span class="color5" v-if="scope.row.timestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus!=0">已完成</span>
+                                              <span class="color6" v-if="scope.row.timestatus==2||scope.row.worktimestatus==2">已逾期</span>
+                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'receive'">待接单</span>
+                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'allot'">待分配</span>
+                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==0">进行中</span>
+                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==1">待审核</span>
+                                              <span class="color3" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==2">已驳回</span>
+                                              <span class="color4" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus==0">待评价</span>
+                                              <span class="color5" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus!=0">已完成</span>
                                             </div>
                                           </template>
                                       </el-table-column>
@@ -393,6 +393,8 @@ export default {
   },
   mounted(){
     const $this = this;
+    // 监听竖向滚动条滚动事件
+    window.addEventListener('scroll',$this.handleScroll,true);
     $this.$nextTick(function () {
         this.setHeight();
     });
@@ -426,14 +428,16 @@ export default {
     var $this = this;
     $this.$nextTick(() => {
       $this.$refs.simpleTable.doLayout();
-      // 监听竖向滚动条滚动事件
-      window.addEventListener('scroll',$this.handleScroll,true);
     });
   },
   created(){
     var $this = this;
     $this.getBreadcrumbList();
     $this.initData();
+  },
+  destroyed(){
+    console.log("走了销毁1");
+    window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
     // 获取面包屑路径

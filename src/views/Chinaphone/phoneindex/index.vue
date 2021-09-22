@@ -661,6 +661,8 @@ export default {
   },
   mounted(){
     const $this = this;
+    // 监听竖向滚动条滚动事件
+    window.addEventListener('scroll',$this.handleScroll,true);
     $this.$nextTick(function () {     
       if($this.$route.query.phoneID){
         $this.setHeight();
@@ -727,14 +729,16 @@ export default {
     $this.$nextTick(() => {
       if($this.phoneID){
           $this.$refs.simpleTable.doLayout();
-        // 监听竖向滚动条滚动事件
-        window.addEventListener('scroll',$this.handleScroll,true);
       }else{
         if($this.$refs.mainPane&&$this.$refs.numPane){
           $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-45-15;  
         }
       }
     })
+  },
+  destroyed(){
+    console.log("走了销毁1");
+    window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
     // 获取面包屑路径
@@ -1057,12 +1061,7 @@ export default {
             console.log(response,"询盘信息——$this.tableData");
             $this.tableData = response.data;
             $this.infoData = infoData;
-            $this.totalDataNum = response.allcount;              
-            if($this.$route.query.phoneID){
-                $this.$nextTick(function () {
-                  $this.setHeight();
-                })
-            }
+            $this.totalDataNum = response.allcount;   
             $this.getPermitField();  
           }else{
             $this.$message({
@@ -1507,7 +1506,12 @@ export default {
       $this.$store.dispatch('chinaphone/cluesCurrentPhoneUserCanEditFieldAction', null).then(response=>{
         if(response){
           if(response.status){
-            $this.permitField = response.data;
+            $this.permitField = response.data;           
+            if($this.$route.query.phoneID){
+                $this.$nextTick(function () {
+                  $this.setHeight();
+                })
+            }
             $this.isLoading.close();
           }else{
             $this.$message({
@@ -1679,6 +1683,7 @@ export default {
     // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
+      console.log("中文询盘页面监听事件");
       if($this.$route.query.phoneID){        
           if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
             var scrTop = event.target.scrollTop;

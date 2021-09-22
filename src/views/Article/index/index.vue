@@ -424,6 +424,8 @@ export default {
   },
   mounted(){
       const $this = this;
+      // 监听竖向滚动条滚动事件
+      window.addEventListener('scroll',$this.handleScroll,true);
       this.$nextTick(function () {
         if($this.isSearch||$this.isList){
           $this.setHeight();
@@ -468,15 +470,15 @@ export default {
     this.$nextTick(() => {
       if($this.isList){
         $this.$refs.simpleTable.doLayout();
-        // 监听竖向滚动条滚动事件
-        window.addEventListener('scroll',$this.handleScroll,true);
       }
       if($this.isSearch){
         $this.$refs.searchTable.doLayout();
-        // 监听竖向滚动条滚动事件
-        window.addEventListener('scroll',$this.handleScroll,true);
       }
     });
+  },
+  destroyed(){
+    console.log("走了销毁2");
+    window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
     // 获取面包屑路径
@@ -1133,39 +1135,42 @@ export default {
     // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
-      if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
-        var scrTop = event.target.scrollTop;
-        var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
-        if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
-          $this.scrollPosition.isFixed = true;
-          var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
-          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
-          document.querySelector(".table-mask").style = tableHeaderStyle;
-          var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
-          var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
-          var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
-          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
-          
-          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
-            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
-            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+      console.log("论坛页面监听事件");
+      if($this.isSearch||$this.isList){
+        if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
+          var scrTop = event.target.scrollTop;
+          var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+          if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
+            $this.scrollPosition.isFixed = true;
+            var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
+            $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+            document.querySelector(".table-mask").style = tableHeaderStyle;
+            var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
+            var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
+            var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+            document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+            
+            if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+              document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
+              document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+            }
+          }else{// 头部需要变为正常
+            $this.scrollPosition.isFixed = false;
+            var tableHeaderStyle = "width:100%";
+            $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+            var tableStyle1 = "padding-top:0";
+            document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+            var tableStyle3 = "width:auto";
+            if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+              document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+            }
           }
-        }else{// 头部需要变为正常
-          $this.scrollPosition.isFixed = false;
-          var tableHeaderStyle = "width:100%";
-          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
-          var tableStyle1 = "padding-top:0";
-          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
-          var tableStyle3 = "width:auto";
-          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
-            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
-          }
-        }
-        if($this.totalDataNum>50){
-          if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-15){
-            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
-          }else{
-            $this.scrollPosition.fixedBottom = 15;
+          if($this.totalDataNum>50){
+            if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-15){
+              $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+            }else{
+              $this.scrollPosition.fixedBottom = 15;
+            }
           }
         }
       }

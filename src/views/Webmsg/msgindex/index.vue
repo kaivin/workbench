@@ -350,10 +350,10 @@ export default {
   },
   mounted(){
     const $this = this;
+    // 监听竖向滚动条滚动事件
+    window.addEventListener('scroll',$this.handleScroll,true);
     $this.$nextTick(function () {
         $this.setHeight();
-        // 监听竖向滚动条滚动事件
-        window.addEventListener('scroll',$this.handleScroll,true);
     });
     window.onresize = () => {
         return (() => {
@@ -391,6 +391,10 @@ export default {
     var $this = this;
     $this.getBreadcrumbList();
     $this.initData();
+  },
+  destroyed(){
+    console.log("走了销毁1");
+    window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
     // 获取面包屑路径

@@ -48,12 +48,27 @@
                                         </el-option>
                                     </el-select>
                                   </div>
+                                  <div class="item-search" style="width: 100px;">
+                                    <el-select v-model="searchData.status" size="small" clearable placeholder="工单状态">
+                                        <el-option
+                                            v-for="item in statusList"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                  </div>
                                   <div class="item-search">
                                     <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                                   </div>
                                   <div class="item-search">
                                     <el-button class="item-input" size="small" type="primary" @click="jumpStatPage">数据统计</el-button>
                                   </div>
+                              </div>
+                              <div class="clues-info flex-box" style="margin-top:10px;">
+                                <div class="clues-infoFl flex-content">
+                                      <p><span>当前结果集共有<strong class="color1">{{infoData.totalCount}}</strong>条工单信息，进行中<strong class="color2">{{infoData.doingCount}}</strong>条，待审核<strong class="color3">{{infoData.checkingCount}}</strong>条，逾期未完成<strong class="color4">{{infoData.overdueCount}}</strong>条，已完成<b class="color5">{{infoData.doneCount}}</b>条。</span></p>
+                                </div>
                               </div>
                           </div>
                       </div>
@@ -226,6 +241,16 @@ export default {
       },
       tagList:[],
       userList:[],
+      statusList:[
+        {label:"已撤销",value:7},
+        {label:"待接单",value:1},
+        {label:"进行中",value:2},
+        {label:"待审核",value:4},
+        {label:"已驳回",value:5},
+        {label:"待评价",value:8},
+        {label:"已完成",value:6},
+        {label:"已逾期",value:9},
+      ],
       searchData:{
         date:[],
         tags:"",
@@ -233,6 +258,7 @@ export default {
         limit:20,
         tagsid:"",
         uid:'',
+        status:'',
       },
       pageSizeList:[20,50,100,200,500],
       pagerCount:5,
@@ -288,6 +314,13 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
+      infoData:{
+        totalCount:0,
+        doingCount:0,
+        doneCount:0,
+        checkingCount:0,
+        overdueCount:0,
+      }
     }
   },
   computed: {
@@ -302,6 +335,8 @@ export default {
   },
   mounted(){
       const $this = this;
+      // 监听竖向滚动条滚动事件
+      window.addEventListener('scroll',this.handleScroll,true);
       this.$nextTick(function () {
         $this.setTableHeight();
       });
@@ -334,9 +369,10 @@ export default {
   updated(){
     this.$nextTick(() => {
       this.$refs.simpleTable.doLayout();
-      // 监听竖向滚动条滚动事件
-      window.addEventListener('scroll',this.handleScroll,true);
     })
+  },
+  destroyed(){
+    window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
     // 获取面包屑路径
@@ -476,6 +512,13 @@ export default {
             });
             $this.tableData = response.data;
             $this.totalDataNum = response.allcount;
+            var infoData = {};
+            infoData.totalCount = response.allcount;
+            infoData.doingCount = response.workincount;
+            infoData.doneCount = response.hasfinishcount;
+            infoData.checkingCount = response.waitcheckcount;
+            infoData.overdueCount = response.hasouttimecount;
+            $this.infoData = infoData;
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -503,6 +546,7 @@ export default {
       searchData.page = $this.searchData.page;
       searchData.limit = $this.searchData.limit;
       searchData.uid = $this.searchData.uid;
+      searchData.status = $this.searchData.status;
       if($this.searchData.tagsid>0){
         searchData.tagsid = $this.searchData.tagsid;
         searchData.tags = "";

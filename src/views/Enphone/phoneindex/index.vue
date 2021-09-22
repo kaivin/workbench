@@ -1290,6 +1290,8 @@ export default {
   },
   mounted(){
     const $this = this;    
+    // 监听竖向滚动条滚动事件
+    window.addEventListener('scroll',this.handleScroll,true);
     if($this.$route.query.phoneID||$this.$route.query.key){
       $this.$nextTick(function () {     
         $this.setTableHeight();
@@ -1373,8 +1375,6 @@ export default {
     this.$nextTick(() => {
       if(this.$route.query.phoneID||this.$route.query.key){
         this.$refs.simpleTable.doLayout(); 
-        // 监听竖向滚动条滚动事件
-        window.addEventListener('scroll',this.handleScroll,true);
       }else{
         if(this.$refs.mainPane&&this.$refs.enTopPane){          
         var headerHeight = this.$refs.enTopPane.offsetHeight+30;
@@ -1384,6 +1384,9 @@ export default {
         }
       }
     })
+  }, 
+  destroyed(){
+    window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
     // 获取面包屑路径
@@ -1541,11 +1544,14 @@ export default {
                   item.phone.forEach(function(item1,index1){
                     if(item1.id == $this.phoneID&&item1.waitstatus==$this.searchData.waitstatus){
                       $this.currentID = item1.id;
+                      item1.isOn = true;
                       if(item1.phonenumber.indexOf("-")!=-1){
                         $this.currentPhone = item1.phonenumber;
                       }else{
                         $this.currentPhone = brand+"-"+item1.phonenumber;
                       }
+                    }else{
+                      item1.isOn = false;
                     }
                   });
                 });
@@ -1556,35 +1562,14 @@ export default {
                       item.isOn = false;
                     });
                   });
-                }
-              }
-              $this.defaultData = response;
-              if($this.defaultData.data&&$this.defaultData.data.length>0){
-                if($this.$route.query.phoneID){
-                    $this.defaultData.data.forEach(function(item,index){
-                      item.phone.forEach(function(item1,index1){
-                        if(item1.id == $this.currentID){
-                          item1.isOn = true;
-                        }else{
-                          item1.isOn = false;
-                        }
-                      });
-                    });
-                }else{
-                  if($this.$route.query.key){
-                    $this.defaultData.data.forEach(function(item,index){
-                      item.phone.forEach(function(item1,index1){
-                        item1.isOn = false;
-                      });
-                    });
-                    if($this.$route.query.key=="all"){
-                      $this.currentPhone = "查看所有";
-                    }else{
-                      $this.currentPhone = "所有未分配";
-                    }
+                  if($this.$route.query.key=="all"){
+                    $this.currentPhone = "查看所有";
+                  }else{
+                    $this.currentPhone = "所有未分配";
                   }
                 }
               }
+              $this.defaultData = response;
               $this.getCurrentPhoneSearchData();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -1866,11 +1851,6 @@ export default {
             $this.infoData = infoData;
             $this.totalDataNum = response.allcount;
             $this.getPermitField();            
-            if($this.$route.query.phoneID||$this.$route.query.key){
-                $this.$nextTick(function () {
-                  $this.setTableHeight();
-                })
-            }
           }else{
             $this.$message({
               showClose: true,
@@ -2245,6 +2225,11 @@ export default {
           if(response.status){
             console.log(response,"字段权限");
             $this.permitField = response.data;
+            if($this.$route.query.phoneID||$this.$route.query.key){
+                $this.$nextTick(function () {
+                  $this.setTableHeight();
+                })
+            }
             $this.isLoading.close();
           }else{
             $this.$message({
@@ -2422,6 +2407,7 @@ export default {
     // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
+      console.log("英文询盘页面监听事件");
       if($this.$route.query.phoneID||$this.$route.query.key){
           if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
             var scrTop = event.target.scrollTop;

@@ -231,6 +231,8 @@ export default {
   },
   mounted(){
     const $this = this;
+    // 监听竖向滚动条滚动事件
+    window.addEventListener('scroll',$this.handleScroll,true);
     $this.$nextTick(function () {
         $this.setTableHeight();
     });
@@ -259,14 +261,16 @@ export default {
     var $this =this;
     $this.$nextTick(() => {
       $this.$refs.simpleTable.doLayout();
-      // 监听竖向滚动条滚动事件
-      window.addEventListener('scroll',$this.handleScroll,true);
     })
   },
   created(){
     var $this = this;
     $this.getBreadcrumbList();
     $this.initData();
+  },
+  destroyed(){
+    console.log("走了销毁1");
+    window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
     // 获取面包屑路径
@@ -529,6 +533,7 @@ export default {
     // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
+      console.log("业务员询盘页面监听事件");
       if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
         var scrTop = event.target.scrollTop;
         if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定

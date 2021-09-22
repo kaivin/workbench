@@ -571,6 +571,8 @@ export default {
   },
   mounted(){
       const $this = this;
+      // 监听竖向滚动条滚动事件
+      window.addEventListener('scroll',$this.handleScroll,true);
       $this.$nextTick(function () {
         $this.setHeight();
         // 监听竖向滚动条滚动事件
@@ -616,6 +618,9 @@ export default {
     $this.$nextTick(function () {
       $this.$refs.simpleTable.doLayout();
     });
+  },
+  destroyed(){
+    window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
     // 获取面包屑路径
@@ -936,8 +941,8 @@ export default {
                 }
               }
             });
-            $this.tableData = response.data;
             $this.totalDataNum = response.allcount;
+            $this.tableData = response.data;
             $this.$nextTick(function () {
               $this.setHeight();
             });
@@ -1515,6 +1520,7 @@ export default {
     // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
+      console.log("网站页面监听事件");
       if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
         var scrTop = event.target.scrollTop;
         var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");

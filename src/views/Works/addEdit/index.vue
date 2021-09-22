@@ -172,7 +172,7 @@ export default {
         // 工具栏是否可以浮动
         autoFloatEnabled: false,
         // 初始容器高度
-        initialFrameHeight: 300,
+        initialFrameHeight: 500,
         // 初始容器宽度
         initialFrameWidth: '100%',
         // 关闭自动保存
