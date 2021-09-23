@@ -23,7 +23,7 @@
                       <dl>
                         <dt><span><i>*</i>处理业务员：</span><strong>{{formData.dealusername}}</strong> </dt>
                         <dt><span>来自地区：</span><strong>{{formData.continent}}-{{formData.country}}</strong></dt>
-                        <dt><span>需求产品：</span><strong>{{formData.producttype_id}}-{{formData.keying}}</strong> </dt>
+                        <dt><span>需求产品：</span><strong>{{formData.producttypename}}-{{formData.keyproduct}}</strong> </dt>
                       </dl>
                       <dl>
                         <dt><span>客户姓名/称呼：</span><strong>{{formData.custormname}}</strong> </dt>
@@ -174,8 +174,8 @@ export default {
         salesuserid:'',
         continent:'',
         country:'',
-        keying:[],
-        producttype_id:'',
+        producttypename:'',
+        keyproduct:'',
         custormname:'',
         custormemail:'',
         custormphone:'',
@@ -200,8 +200,6 @@ export default {
         status:null,
       },
       salesuseridList:[],
-      productidList:[],
-      producttype_idList:[],
       ennatureList:[],
       enxunpriceList:[],
       replystatusArr:[],
@@ -210,11 +208,6 @@ export default {
         {label:"已回复",value:2},
         {label:"未回复",value:3},
       ],
-      SandGravelList:[],//沙石
-      OreDressList:[],//选矿建材
-      FlourList:[],//磨粉
-      otherList:[],//其它
-      keying:[],
       defaultInfo:{},
       formSaveData:{
         id: "",
@@ -399,29 +392,9 @@ export default {
       }
       $this.formData.continent = $this.defaultInfo.continent;
       $this.formData.country = $this.defaultInfo.country;
-      $this.formData.keying = [];
-      var keyArr=[];
-      if($this.defaultInfo.keying){
-          if($this.defaultInfo.keying.indexOf(",")!=-1){
-              keyArr = $this.defaultInfo.keying.split(",");              
-          }else{
-              keyArr = [$this.defaultInfo.keying]
-          }
-          keyArr.forEach(function(item,index){
-            $this.keying.forEach(function(item01,index01){
-               if(parseInt(item)==item01.value){
-                 $this.formData.keying.push(item01.label);
-               }
-            });
-          });
-      }
-      if($this.producttype_idList.length>0){
-        $this.producttype_idList.forEach(function(item,index){
-            if(item.value==$this.defaultInfo.producttype_id){
-              $this.formData.producttype_id=item.label;
-            }
-        });
-      }
+      $this.formData.country = $this.defaultInfo.country;
+      $this.formData.producttypename = $this.defaultInfo.producttypename;
+      $this.formData.keyproduct = $this.defaultInfo.keyproduct;
       $this.formData.custormname = $this.defaultInfo.custormname;
       $this.formData.custormemail = $this.defaultInfo.custormemail;
       $this.formData.custormphone = $this.defaultInfo.custormphone;
@@ -495,14 +468,6 @@ export default {
       $this.$store.dispatch('Sales/getSalesSearchListAction', null).then(response=>{
         if(response){
           if(response.status){
-            var producttype_idList=[];
-            response.producttype.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.id;
-              producttype_idList.push(itemData);
-            });
-            $this.producttype_idList=producttype_idList;
             var salesuseridList=[];
             response.dealuser.forEach(function(item,index){
               var itemData = {};
@@ -512,7 +477,6 @@ export default {
             });
             $this.salesuseridList=salesuseridList;
             console.log(response,"搜索条件");
-            $this.getProductData();
             $this.initCluesInfo();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -530,58 +494,6 @@ export default {
                 type: 'error'
               });
             }
-          }
-        }
-      });
-    },
-    // 获取当前页面的产品数据
-    getProductData(){
-      var $this = this;
-      $this.$store.dispatch('enphone/cluesAddEditDataAction', null).then(response=>{
-        if(response){
-          if(response.status){
-            console.log(response.product,"获取当前页面的产品数据");
-            var SandGravelList=[];
-            response.product[0].product.forEach(function(item,index){
-                var itemChildren = {};
-                itemChildren.label = item.name;
-                itemChildren.value = item.id;
-                SandGravelList.push(itemChildren);
-            });
-            $this.SandGravelList = SandGravelList;
-            var OreDressList=[];
-            response.product[1].product.forEach(function(item,index){
-                var itemChildren = {};
-                itemChildren.label = item.name;
-                itemChildren.value = item.id;
-                OreDressList.push(itemChildren);
-            });
-            $this.OreDressList = OreDressList;
-            var FlourList=[];
-            response.product[2].product.forEach(function(item,index){
-                var itemChildren = {};
-                itemChildren.label = item.name;
-                itemChildren.value = item.id;
-                FlourList.push(itemChildren);
-            });
-            $this.FlourList = FlourList;
-            var otherList=[];
-            response.product[3].product.forEach(function(item,index){
-                var itemChildren = {};
-                itemChildren.label = item.name;
-                itemChildren.value = item.id;
-                otherList.push(itemChildren);
-            });
-            $this.otherList = otherList;
-            var keying=[];
-            keying=keying.concat($this.SandGravelList,$this.OreDressList,$this.FlourList,$this.otherList);
-            $this.keying=keying;
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
           }
         }
       });
