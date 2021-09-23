@@ -27,7 +27,7 @@
                     <p class="breadcrumb" ref="breadcrumbPane">
                       <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
                       <template v-for="item in breadcrumbList">
-                        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+                        <router-link class="breadcrumb-link" :to="item.router+'?Status=Untreated'" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
                         <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
                       </template>
                       <span class="breadcrumb-link"><b>-</b><span>{{breadcrumbName}}</span></span>
