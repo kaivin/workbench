@@ -65,6 +65,7 @@
               </div>
           </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Enphone_producttypeadd')||menuButtonPermit.includes('Enphone_producttypeedit'))&&device==='desktop'" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="440px">
       <el-form :model="dialogForm">
         <div class="item-form">
@@ -301,6 +302,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('enphone/productTypeListAction', null).then(response=>{
         if(response){
           if(response.status){

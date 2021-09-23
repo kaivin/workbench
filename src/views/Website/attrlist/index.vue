@@ -75,6 +75,7 @@
               </div>
           </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Website_attradd')||menuButtonPermit.includes('Website_attredit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
@@ -372,6 +373,7 @@ export default {
     // 页面初始化
     initPage(){
       var $this = this;
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('website/websiteAttrListAction', null).then(response=>{
         if(response){
           if(response.status){

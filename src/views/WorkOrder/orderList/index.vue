@@ -284,6 +284,7 @@
                   <el-backtop target=".scroll-panel"></el-backtop>
                 </div>
             </div>
+            <el-backtop target=".scroll-panel"></el-backtop>
         </div>
     </div>
 </template>
@@ -547,6 +548,7 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
+      $this.loadingFun();
       $this.getCurrentStatusData();
     },
     // 初始化数据
@@ -596,7 +598,8 @@ export default {
         }
       }else{
           searchData = null
-      }
+      }      
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch(pathUrl, searchData).then(response=>{
         if(response){
           if(response.status){
@@ -821,6 +824,7 @@ export default {
     // 每页显示条数改变事件
     handleSizeChange(val) {
       this.limit = val;
+      this.page = 1;
       this.getCurrentStatusData();
     },
     // 当前页改变事件

@@ -185,6 +185,7 @@
           </el-card>
         </div>
     </div>
+    <el-backtop target=".scroll-panel"></el-backtop>
   </div>
 </template>
 <script>

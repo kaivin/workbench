@@ -255,6 +255,7 @@
                   <el-backtop target=".scroll-panel"></el-backtop>
                 </div>
             </div>
+            <el-backtop target=".scroll-panel"></el-backtop>
         </div>
     </div>
 </template>
@@ -543,6 +544,7 @@ export default {
       }else{
         pathUrl = "webmsg/webMsgRecycleListAction";
       }
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch(pathUrl, searchData).then(response=>{
         if(response){
           if(response.status){
@@ -806,11 +808,14 @@ export default {
     // 每页显示条数改变事件
     handleSizeChange(val) {
       this.limit = val;
+      this.page = 1;
+      this.loadingFun();
       this.initData();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
       this.page = val;
+      this.loadingFun();
       this.initData();
     },
     // 页面自跳转

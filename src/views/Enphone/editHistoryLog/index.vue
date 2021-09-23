@@ -82,6 +82,7 @@
             </div>
         </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     </div>
 </template>
 

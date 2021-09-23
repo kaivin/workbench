@@ -8,6 +8,7 @@
                       <template v-for="item in breadcrumbList">
                         <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
                       </template>
+                      <span class="breadcrumb-link"><b>-</b>数据统计</span>
                   </p>
                   <el-card class="box-card" shadow="hover">
                       <div slot="header">
@@ -127,6 +128,7 @@
               </div>
           </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
   </div>
 </template>
 <script>
@@ -376,6 +378,7 @@ export default {
     initPage(){
       var $this =this;
       var searchData = $this.initSearchData();
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('works/workOrderStatInfoAction', searchData).then(response=>{
         if(response){
           console.log(response,"工单列表");
@@ -480,16 +483,6 @@ export default {
           }
         }
       });
-    },
-    // 每页显示条数改变事件
-    handleSizeChange(val) {
-      this.searchData.limit = val;
-      this.initPage();
-    },
-    // 当前页改变事件
-    handleCurrentChange(val) {
-      this.searchData.page = val;
-      this.initPage();
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){

@@ -339,6 +339,7 @@
         </div>
       </div>
     </div>
+    <el-backtop target=".scroll-panel"></el-backtop>
     <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
     <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
       <div class="flex-content">
@@ -838,6 +839,7 @@ export default {
       if($this.formData.openstatus){
         formData.openstatus = $this.formData.openstatus
       }
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('website/websiteListAction', formData).then(response=>{
         if(response){
           if(response.status){
@@ -1329,12 +1331,15 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.limit = val;
+      this.page = 1;
+      this.loadingFun();
       this.initData();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.page = val;
+      this.loadingFun();
       this.initData();
     },
     // 关闭添加网站弹窗

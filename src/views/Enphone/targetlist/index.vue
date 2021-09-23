@@ -99,6 +99,7 @@
               </div>
           </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Enphone_targetlistadd')||menuButtonPermit.includes('Enphone_targetlistedit'))&&device==='desktop'" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="440px">
       <el-form :model="dialogForm">
         <div class="item-form Compart-time-width">
@@ -416,6 +417,7 @@ export default {
     initPage(){
       var $this = this;
       var formData = $this.restearch();
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('enphone/EntargetlistAction', formData).then(response=>{
         if(response){
           if(response.status){
@@ -629,13 +631,16 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
-      this.initPage();
+      this.searchData.page = 1;
+      this.loadingFun();
+      this.dealData();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.searchData.page = val;
-      this.initPage();
+      this.loadingFun();
+      this.dealData();
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){

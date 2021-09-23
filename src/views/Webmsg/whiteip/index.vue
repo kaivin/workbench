@@ -106,6 +106,7 @@
               </div>
           </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Webmsg_addip')||menuButtonPermit.includes('Webmsg_editip'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
@@ -400,6 +401,7 @@ export default {
       searchData.page = $this.page;
       searchData.limit = $this.limit;
       searchData.ip = $this.ip;
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('webmsg/webMsgWhiteIpListAction', searchData).then(response=>{
         if(response){
           if(response.status){
@@ -554,12 +556,15 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.limit = val;
+      this.page = 1;
+      this.loadingFun();
       this.initPage();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.page = val;
+      this.loadingFun();
       this.initPage();
     },
     // 表格多选改变事件

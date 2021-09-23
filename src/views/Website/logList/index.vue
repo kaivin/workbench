@@ -135,6 +135,7 @@
           </div>
         </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
   </div>
 </template>
 
@@ -526,6 +527,7 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.limit = val;
+      this.page = 1;
       this.initData();
     },
     // 当前页改变事件

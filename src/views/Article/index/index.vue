@@ -971,6 +971,7 @@ export default {
             $this.tags = [];
             $this.tagData = [];
           }
+          $this.isLoading.close();
         }else{
           $this.$message({
             showClose: true,
@@ -1188,7 +1189,7 @@ export default {
         if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
           var scrTop = event.target.scrollTop;
           var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
-          if($this.scrollTable.fixedTopHeight!=0){
+          if(scrTop!=0&&$this.scrollTable.fixedTopHeight!=0){
             if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
               $this.scrollPosition.isFixed = true;
               var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"

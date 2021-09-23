@@ -61,6 +61,7 @@
               </div>
           </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog title="分配角色" v-if="menuButtonPermit.includes('Webmsg_getrole')&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
       <div class="transfer-panel">
         <div class="transfer-wrap">
@@ -333,6 +334,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('webmsg/webMsgPermitFieldListAction', null).then(response=>{
         if(response){
           if(response.status){

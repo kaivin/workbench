@@ -763,6 +763,7 @@
             </div>
         </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     </div>
     <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="440px">

@@ -137,6 +137,7 @@
               </div>
           </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_pushadd')||menuButtonPermit.includes('Ownpush_pushedit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="720px">
       <el-form :model="dialogForm">
         <div class="item-form-group">
@@ -365,9 +366,9 @@ export default {
         $this.setTableHeight();
       });
       window.onresize = () => {
-          return (() => {
-            $this.setTableHeight();
-          })()
+        return (() => {
+          $this.setTableHeight();
+        })()
       }
   },
   watch: {
@@ -510,7 +511,8 @@ export default {
     },
     // 初始化页面信息
     initPage(){
-      var $this = this;
+      var $this = this;      
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('ownpush/accountListAction', null).then(response=>{
         if(response){
           if(response.status){

@@ -194,6 +194,7 @@
               </div>
           </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Works_addevaluation')&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
@@ -490,6 +491,7 @@ export default {
     initPage(){
       var $this =this;
       var searchData = $this.initSearchData();
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('works/workOrderListAction', searchData).then(response=>{
         if(response){
           console.log(response,"工单列表");
@@ -830,6 +832,7 @@ export default {
     // 每页显示条数改变事件
     handleSizeChange(val) {
       this.searchData.limit = val;
+      this.page = 1;
       this.initPage();
     },
     // 当前页改变事件

@@ -56,6 +56,7 @@
               </div>
           </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_pushtypeadd')||menuButtonPermit.includes('Ownpush_pushtypeedit'))&&device==='desktop'" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
@@ -286,10 +287,11 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('ownpush/cnChannelListAction', null).then(response=>{
         if(response){
           if(response.status){
-              console.log(response);
+            console.log(response);
             if(response.data.length>0){
               $this.tableData = response.data;
             }else{

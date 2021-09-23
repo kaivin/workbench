@@ -2,64 +2,65 @@
   <div class="page-root" ref="boxPane">
     <el-card class="box-card" shadow="hover">
       <div class="card-content" ref="tableContent">
-      <div class="abs-panel" ref="mainPane">
-          <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
-              <div class="true-height" ref="scrollPane">              
-                      <p class="breadcrumb" ref="breadcrumbPane">
-                          <router-link class="breadcrumb-link" to="/">首页</router-link>
-                          <template v-for="item in breadcrumbList">
-                            <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
-                          </template>
-                      </p>
-                      <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
-                          <div class="table-mask"></div>
-                          <el-table
-                            ref="simpleTable"
-                            :data="tableData"
-                            tooltip-effect="dark"
-                            stripe
-                            class="SiteTable"
-                            style="width: 100%"
-                            :style="'min-height:'+tableHeight+'px;'"
-                            row-key="id"
-                            >
-                            <el-table-column
-                              prop="id"
-                              label="ID"
-                              width="60"
-                              >
-                            </el-table-column>
-                            <el-table-column
-                              prop="title"
-                              label="模块名"
-                              min-width="120"
-                              >
-                            </el-table-column>
-                            <el-table-column
-                              prop="modulekey"
-                              label="唯一标识名"
-                              min-width="120"
-                              >
-                            </el-table-column>
-                            <el-table-column
-                              v-if="menuButtonPermit.includes('Modulelist_getrole')&&device==='desktop'"
-                              :width="operationsWidth"
-                              align="center"
-                              fixed="right"
-                              prop="operations"
-                              label="操作">
-                              <template #default="scope">
-                                <el-button size="mini" @click="allotRole(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Modulelist_getrole')">分配角色</el-button>
+          <div class="abs-panel" ref="mainPane">
+              <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
+                  <div class="true-height" ref="scrollPane">              
+                          <p class="breadcrumb" ref="breadcrumbPane">
+                              <router-link class="breadcrumb-link" to="/">首页</router-link>
+                              <template v-for="item in breadcrumbList">
+                                <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
                               </template>
-                            </el-table-column>
-                          </el-table>
-                      </div>
-                      <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
-                          <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
-                      </div>
+                          </p>
+                          <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
+                              <div class="table-mask"></div>
+                              <el-table
+                                ref="simpleTable"
+                                :data="tableData"
+                                tooltip-effect="dark"
+                                stripe
+                                class="SiteTable"
+                                style="width: 100%"
+                                :style="'min-height:'+tableHeight+'px;'"
+                                row-key="id"
+                                >
+                                <el-table-column
+                                  prop="id"
+                                  label="ID"
+                                  width="60"
+                                  >
+                                </el-table-column>
+                                <el-table-column
+                                  prop="title"
+                                  label="模块名"
+                                  min-width="120"
+                                  >
+                                </el-table-column>
+                                <el-table-column
+                                  prop="modulekey"
+                                  label="唯一标识名"
+                                  min-width="120"
+                                  >
+                                </el-table-column>
+                                <el-table-column
+                                  v-if="menuButtonPermit.includes('Modulelist_getrole')&&device==='desktop'"
+                                  :width="operationsWidth"
+                                  align="center"
+                                  fixed="right"
+                                  prop="operations"
+                                  label="操作">
+                                  <template #default="scope">
+                                    <el-button size="mini" @click="allotRole(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Modulelist_getrole')">分配角色</el-button>
+                                  </template>
+                                </el-table-column>
+                              </el-table>
+                          </div>
+                          <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
+                              <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
+                          </div>
+                  </div>
               </div>
           </div>
-      </div>
+          <el-backtop target=".scroll-panel"></el-backtop>
       </div>
     </el-card>
     <el-dialog title="分配角色" v-if="menuButtonPermit.includes('Modulelist_getrole')&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
@@ -334,6 +335,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('modulelist/homePageModuleListAction', null).then(response=>{
         if(response){
           if(response.status){
@@ -385,6 +387,7 @@ export default {
                 type: 'success'
               });
               $this.dialogRoleVisible = false;
+              $this.loadingFun();
               $this.initPage();
           }else{
               $this.$message({

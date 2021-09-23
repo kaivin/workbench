@@ -189,6 +189,7 @@
             </div>
         </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
     <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
       <div class="flex-content">
@@ -632,6 +633,7 @@ export default {
     // 每页显示条数改变事件
     handleSizeChange(val) {
       this.limit = val;
+      this.page = 1;
       this.initData();
     },
     // 当前页改变事件

@@ -102,6 +102,7 @@
               </div>
           </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit')) &&device === 'desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="680px">
       <el-form :model="dialogForm">
         <div class="item-form-group">
@@ -508,6 +509,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch("menu/menuListAction", null).then((response) => {
         if (response) {
           if (response.status) {
@@ -766,6 +768,7 @@ export default {
             type: "success",
           });
           $this.handleClose();
+          $this.loadingFun();
           $this.initPage();
         } else {
           $this.$message({

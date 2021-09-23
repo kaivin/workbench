@@ -65,192 +65,193 @@
               </div>
           </div>
       </div>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Role_add')||menuButtonPermit.includes('Role_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
-      <el-form :model="dialogForm">
-        <div class="item-form">
-          <el-form-item label="父级角色：" :label-width="formLabelWidth" v-if="roleLevelData.length>0">
-            <el-cascader v-model="dialogForm.f_id" :options="roleLevelData" ref="menuLevel" filterable placeholder="请选择父级角色" :props="{ checkStrictly: true,expandTrigger: 'hover' }" clearable></el-cascader>
-          </el-form-item>
-        </div>
-        <div class="item-form">
-          <el-form-item label="角色名称：" :label-width="formLabelWidth">
-            <el-input v-model="dialogForm.name" ref="name"></el-input>
-          </el-form-item>
-        </div>
-        <div class="item-form" v-if="menuButtonPermit.includes('Role_getroledepart')">
-          <el-form-item label="部门权限：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
-            <el-cascader v-model="dialogForm.role_depart" :options="departLevelData" ref="departLevel" placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover',multiple:true }" :collapse-tags="true" clearable></el-cascader>
-          </el-form-item>
-        </div>
-        <div class="item-form" v-if="menuButtonPermit.includes('Role_readdepartwebsite')">
-          <el-form-item label="网站管理：" :label-width="formLabelWidth">
-            <el-select
-              v-model="dialogForm.readdepartwebsite"
-              multiple
-              collapse-tags
-              placeholder="请选择">
-              <el-option
-                v-for="item in websiteDepart"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <div class="item-form-group itemwebmsg" v-if="menuButtonPermit.includes('Role_getwebmsg')">
-          <el-form-item label="留言管理：" :label-width="formLabelWidth">
-            <div class="item-form">
-                <el-select
-                  v-model="dialogForm.readwebmsglangauge"
-                  multiple
-                  collapse-tags
-                  placeholder="语言选择">
-                  <el-option
-                    v-for="item in webmsglangauge"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-            </div>
-            <div class="item-form">
-                <el-select
-                  v-model="dialogForm.readwebmsgbrand"
-                  multiple
-                  collapse-tags
-                  placeholder="品牌选择">
-                  <el-option
-                    v-for="item in webmsgbrand"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-            </div>
-          </el-form-item>
-        </div>
-        <div class="item-form">
-            <el-form-item label="角色备注：" :label-width="formLabelWidth">
-              <el-input type="textarea" v-model="dialogForm.remarks" :autosize="{ minRows: 2, maxRows: 4}" ref="remarks"></el-input>
+      <el-backtop target=".scroll-panel"></el-backtop>
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Role_add')||menuButtonPermit.includes('Role_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+        <el-form :model="dialogForm">
+          <div class="item-form">
+            <el-form-item label="父级角色：" :label-width="formLabelWidth" v-if="roleLevelData.length>0">
+              <el-cascader v-model="dialogForm.f_id" :options="roleLevelData" ref="menuLevel" filterable placeholder="请选择父级角色" :props="{ checkStrictly: true,expandTrigger: 'hover' }" clearable></el-cascader>
             </el-form-item>
-        </div>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <el-dialog :title="permitTitle" v-if="(menuButtonPermit.includes('Role_getpermit'))&&device==='desktop'" custom-class="transfer-2-dialog" :visible.sync="dialogPermitVisible" width="916px">
-      <div class="transfer-panel">
-        <div class="list-panel">
-          <div class="title-panel">菜单列表</div>
-          <div class="list-wrap">
-            <el-tree
-              :data="menuTreeData"
-              show-checkbox
-              node-key="id"
-              ref="tree"
-              :props="defaultProps"
-              @check-change="handleMenuCheckChange">
-            </el-tree>
+          </div>
+          <div class="item-form">
+            <el-form-item label="角色名称：" :label-width="formLabelWidth">
+              <el-input v-model="dialogForm.name" ref="name"></el-input>
+            </el-form-item>
+          </div>
+          <div class="item-form" v-if="menuButtonPermit.includes('Role_getroledepart')">
+            <el-form-item label="部门权限：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
+              <el-cascader v-model="dialogForm.role_depart" :options="departLevelData" ref="departLevel" placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover',multiple:true }" :collapse-tags="true" clearable></el-cascader>
+            </el-form-item>
+          </div>
+          <div class="item-form" v-if="menuButtonPermit.includes('Role_readdepartwebsite')">
+            <el-form-item label="网站管理：" :label-width="formLabelWidth">
+              <el-select
+                v-model="dialogForm.readdepartwebsite"
+                multiple
+                collapse-tags
+                placeholder="请选择">
+                <el-option
+                  v-for="item in websiteDepart"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+          <div class="item-form-group itemwebmsg" v-if="menuButtonPermit.includes('Role_getwebmsg')">
+            <el-form-item label="留言管理：" :label-width="formLabelWidth">
+              <div class="item-form">
+                  <el-select
+                    v-model="dialogForm.readwebmsglangauge"
+                    multiple
+                    collapse-tags
+                    placeholder="语言选择">
+                    <el-option
+                      v-for="item in webmsglangauge"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+              </div>
+              <div class="item-form">
+                  <el-select
+                    v-model="dialogForm.readwebmsgbrand"
+                    multiple
+                    collapse-tags
+                    placeholder="品牌选择">
+                    <el-option
+                      v-for="item in webmsgbrand"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+              </div>
+            </el-form-item>
+          </div>
+          <div class="item-form">
+              <el-form-item label="角色备注：" :label-width="formLabelWidth">
+                <el-input type="textarea" v-model="dialogForm.remarks" :autosize="{ minRows: 2, maxRows: 4}" ref="remarks"></el-input>
+              </el-form-item>
+          </div>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" @click="saveData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <el-dialog :title="permitTitle" v-if="(menuButtonPermit.includes('Role_getpermit'))&&device==='desktop'" custom-class="transfer-2-dialog" :visible.sync="dialogPermitVisible" width="916px">
+        <div class="transfer-panel">
+          <div class="list-panel">
+            <div class="title-panel">菜单列表</div>
+            <div class="list-wrap">
+              <el-tree
+                :data="menuTreeData"
+                show-checkbox
+                node-key="id"
+                ref="tree"
+                :props="defaultProps"
+                @check-change="handleMenuCheckChange">
+              </el-tree>
+            </div>
+          </div>
+          <div class="button-panel"><el-button type="primary" v-on:click="getCheckedKeys"><i class="el-icon-arrow-right"></i></el-button></div>
+          <div class="transfer-wrap">
+            <el-transfer 
+              v-model="permitValue" 
+              :data="permitData"
+              :titles="['待分配权限', '已分配权限']"
+              filterable
+              :filter-method="filterPermitMethod"
+              filter-placeholder="请输入权限关键字"
+            ></el-transfer>
           </div>
         </div>
-        <div class="button-panel"><el-button type="primary" v-on:click="getCheckedKeys"><i class="el-icon-arrow-right"></i></el-button></div>
-        <div class="transfer-wrap">
-          <el-transfer 
-            v-model="permitValue" 
-            :data="permitData"
-            :titles="['待分配权限', '已分配权限']"
-            filterable
-            :filter-method="filterPermitMethod"
-            filter-placeholder="请输入权限关键字"
-          ></el-transfer>
-        </div>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogPermitVisible = false">取 消</el-button>
-          <el-button type="primary" @click="savePermitData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <el-dialog :title="userTitle" v-if="(menuButtonPermit.includes('Role_getuser'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogUserVisible" width="840px">
-      <div class="transfer-panel">
-        <div class="transfer-wrap">
-          <el-transfer 
-            v-model="userValue" 
-            :data="userData"
-            :titles="['可分配用户', '已分配用户']"
-            filterable
-            :filter-method="filterUserMethod"
-            filter-placeholder="请输入用户关键字"
-          ></el-transfer>
-        </div>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogUserVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveUserData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <el-dialog :title="postTitle" v-if="(menuButtonPermit.includes('Role_gettypepermit'))&&device==='desktop'" custom-class="transfer-2-dialog" :visible.sync="dialogPostVisible" width="916px">
-      <div class="transfer-panel">
-        <div class="list-panel">
-          <div class="title-panel">论坛栏目列表</div>
-          <div class="list-wrap">
-            <el-tree
-              :data="postData"
-              show-checkbox
-              node-key="id"
-              ref="postTree"
-              :props="defaultPostProps"
-              @check-change="handlePostCheckChange">
-            </el-tree>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogPermitVisible = false">取 消</el-button>
+            <el-button type="primary" @click="savePermitData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <el-dialog :title="userTitle" v-if="(menuButtonPermit.includes('Role_getuser'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogUserVisible" width="840px">
+        <div class="transfer-panel">
+          <div class="transfer-wrap">
+            <el-transfer 
+              v-model="userValue" 
+              :data="userData"
+              :titles="['可分配用户', '已分配用户']"
+              filterable
+              :filter-method="filterUserMethod"
+              filter-placeholder="请输入用户关键字"
+            ></el-transfer>
           </div>
         </div>
-        <div class="button-panel"><el-button type="primary" v-on:click="getPostCheckedKeys"><i class="el-icon-arrow-right"></i></el-button></div>
-        <div class="transfer-wrap">
-          <el-transfer 
-            v-model="postPermitValue" 
-            :data="postPermitData"
-            :titles="['待分配权限', '已分配权限']"
-            filterable
-            :filter-method="filterPostPermitMethod"
-            filter-placeholder="请输入权限关键字"
-          ></el-transfer>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogUserVisible = false">取 消</el-button>
+            <el-button type="primary" @click="saveUserData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <el-dialog :title="postTitle" v-if="(menuButtonPermit.includes('Role_gettypepermit'))&&device==='desktop'" custom-class="transfer-2-dialog" :visible.sync="dialogPostVisible" width="916px">
+        <div class="transfer-panel">
+          <div class="list-panel">
+            <div class="title-panel">论坛栏目列表</div>
+            <div class="list-wrap">
+              <el-tree
+                :data="postData"
+                show-checkbox
+                node-key="id"
+                ref="postTree"
+                :props="defaultPostProps"
+                @check-change="handlePostCheckChange">
+              </el-tree>
+            </div>
+          </div>
+          <div class="button-panel"><el-button type="primary" v-on:click="getPostCheckedKeys"><i class="el-icon-arrow-right"></i></el-button></div>
+          <div class="transfer-wrap">
+            <el-transfer 
+              v-model="postPermitValue" 
+              :data="postPermitData"
+              :titles="['待分配权限', '已分配权限']"
+              filterable
+              :filter-method="filterPostPermitMethod"
+              filter-placeholder="请输入权限关键字"
+            ></el-transfer>
+          </div>
         </div>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogPostVisible = false">取 消</el-button>
-          <el-button type="primary" @click="savePostData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <el-dialog :title="workOrderTitle" v-if="(menuButtonPermit.includes('Role_getworktypepermit'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogWorkOrderVisible" width="840px">
-      <div class="transfer-panel">
-        <div class="transfer-wrap">
-          <el-transfer 
-            v-model="workOrderValue" 
-            :data="workOrderData"
-            :titles="['可分配权限', '已分配权限']"
-            filterable
-            :filter-method="filterWorkOrderMethod"
-            filter-placeholder="请输入工单权限关键字"
-          ></el-transfer>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogPostVisible = false">取 消</el-button>
+            <el-button type="primary" @click="savePostData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <el-dialog :title="workOrderTitle" v-if="(menuButtonPermit.includes('Role_getworktypepermit'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogWorkOrderVisible" width="840px">
+        <div class="transfer-panel">
+          <div class="transfer-wrap">
+            <el-transfer 
+              v-model="workOrderValue" 
+              :data="workOrderData"
+              :titles="['可分配权限', '已分配权限']"
+              filterable
+              :filter-method="filterWorkOrderMethod"
+              filter-placeholder="请输入工单权限关键字"
+            ></el-transfer>
+          </div>
         </div>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogWorkOrderVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveWorkOrderData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogWorkOrderVisible = false">取 消</el-button>
+            <el-button type="primary" @click="saveWorkOrderData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>

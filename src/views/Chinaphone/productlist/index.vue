@@ -111,6 +111,7 @@
               </div>
           </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Chinaphone_productadd')||menuButtonPermit.includes('Chinaphone_productedit'))&&device==='desktop'" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="440px">
       <el-form :model="dialogForm">
         <div class="item-form">
@@ -395,6 +396,7 @@ export default {
       formData.page = $this.searchData.page;
       formData.limit = $this.searchData.limit;
       formData.name = $this.searchData.name;
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('chinaphone/productListAction', formData).then(response=>{
         if(response){
           if(response.status){
@@ -605,12 +607,15 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
+      this.searchData.page = 1;
+      this.loadingFun();
       this.initPage();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.searchData.page = val;
+      this.loadingFun();
       this.initPage();
     },
     // 获取产品添加编辑是需要的系统数据

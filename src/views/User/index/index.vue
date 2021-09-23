@@ -181,6 +181,7 @@
               </div>
           </div>
       </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
     <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('User_add')||menuButtonPermit.includes('User_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="680px">
       <el-form :model="dialogForm">
         <div class="item-form-group">
@@ -1010,14 +1011,17 @@ export default {
       if(row==0){
         if($this.dialogForm.id == 0){
             if($this.roleValue.length==0){
+              $this.loadingFun();
               $this.getAllotingRole();
             }
         }else{
           $this.currentUserID = $this.dialogForm.id;
+          $this.loadingFun();
           $this.getAllotedRole();
         }
       }else{
         $this.currentUserID = row.id;
+        $this.loadingFun();
         $this.getAllotedRole();
       }
     },
@@ -1131,6 +1135,7 @@ export default {
               }
             });
             $this.roleData = roleDataNow;
+            $this.isLoading.close();
           }
         }else{
             $this.$message({
@@ -1144,6 +1149,7 @@ export default {
     // 每页显示条数改变事件
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
+      this.loadingFun();
       this.searchData.limit = val;
       this.searchData.page = 1;
       this.initPage();
@@ -1151,6 +1157,7 @@ export default {
     // 当前页改变事件
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+      this.loadingFun();
       this.searchData.page = val;
       this.initPage();
     },
