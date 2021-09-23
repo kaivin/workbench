@@ -1093,7 +1093,6 @@ export default {
       $this.depart.forEach(function(item,index){
         if(dept_id==item.dept_id){
           if(item.isOn){
-            item.isOnshow =true;
             var checkedList = [];
             item.child.forEach(function(items,indexs){
                 checkedList.push(items.value);
@@ -1103,9 +1102,9 @@ export default {
                     deptOneId.push(item);   
                 }
             }); 
+            item.isOnshow =true;
             $this.deptOneId=deptOneId;
           }else{
-            item.isOnshow =false;
             var checkedList = [];
             item.child.forEach(function(items,indexs){
                 checkedList.push(items.value);
@@ -1117,6 +1116,7 @@ export default {
                 }
             });
             $this.deptOneId=newArr;
+            item.isOnshow =false;
           }          
         }        
       });

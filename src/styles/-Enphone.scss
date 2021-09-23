@@ -689,6 +689,40 @@
           }
           .all-select{
             vertical-align: middle;
+            margin-top:4px;
+            margin-bottom:4px;            
+            .el-checkbox__input.is-indeterminate{
+              .el-checkbox__inner{
+                background-color:#2e84f6 !important;
+                border-color:#2e84f6 !important;
+              }
+            }            
+            &.is-checked,&:hover,&:focus{
+                border-color:#2e84f6 !important;
+                .el-checkbox__label{
+                    color:#2e84f6;
+                }
+                .el-checkbox__input{
+                    .el-checkbox__inner{
+                        background-color:#2e84f6;
+                        border-color:#2e84f6;
+                        &::after{display: none;}
+                        &::before{
+                            box-sizing:content-box;
+                            content:"";
+                            background: none;
+                            border:1px solid #FFFFFF;
+                            border-left:0;
+                            border-top:0;
+                            height:7px;
+                            width:3px;
+                            left:3px;
+                            top:0px;
+                            transform:rotate(45deg) scaleY(1);
+                        }
+                    }
+                }
+            }
           }
           .team-list{            
             display: inline-block;
