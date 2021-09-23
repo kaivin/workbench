@@ -4,17 +4,14 @@
           <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
               <div class="true-height" ref="scrollPane">
                   <p class="breadcrumb" ref="breadcrumbPane">
-                      <router-link class="breadcrumb-link" to="/">首页</router-link>
-                      <template v-for="item in breadcrumbList">
-                        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
-                      </template>
+                    <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+                    <template v-for="item in breadcrumbList">
+                      <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+                      <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+                    </template>
+                    <span class="breadcrumb-link"><b>-</b><span>{{website}}工作日志</span></span>
                   </p>
                   <el-card class="box-card" shadow="hover">
-                    <div slot="header">
-                      <div class="card-header" ref="headerPane">
-                          <h2 class="clues-title">{{website}} 工作日志</h2>
-                      </div>
-                    </div>
                     <div class="card-content" ref="tableContent">
                         <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
                             <div class="table-mask"></div>
@@ -344,10 +341,9 @@ export default {
     setTableHeight(){
       var $this = this;
       $this.tableHeight = 0;      
-      var headerHeight = $this.$refs.headerPane.offsetHeight+15;
       var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
-      $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-30;
+      $this.tableHeight = screenHeight-breadcrumbHeight-30;
       $this.getBrowserType();
       setTimeout(function() {
           $this.setScrollDom();

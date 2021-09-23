@@ -1,10 +1,12 @@
 ﻿<template>
   <div class="page-root bbs-panel scroll-panel" ref="boxPane">
     <p class="breadcrumb">
-      <router-link class="breadcrumb-link" to="/">首页</router-link>
+      <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
       <template v-for="item in breadcrumbList">
-        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
+        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+        <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
       </template>
+      <span class="breadcrumb-link"><b>-</b><span>发布文章</span></span>
     </p>
     <el-card class="box-card ArticleCard scroll-card" v-show="!isPreview" shadow="hover">
         <div class="card-content" ref="cardContent">
@@ -545,6 +547,7 @@ export default {
             });
             if($this.$route.query.id){
               if(!$this.menuButtonPermit.includes('Article_edit')){
+                $this.isLoading.close();
                 $this.$message({
                   showClose: true,
                   message: "未被分配该文章修改权限",
@@ -556,6 +559,7 @@ export default {
                 if($this.device==="desktop"){
                   $this.getShowData();
                 }else{
+                  $this.isLoading.close();
                   $this.$message({
                     showClose: true,
                     message: "请前往PC端做修改操作",
@@ -567,6 +571,7 @@ export default {
               }
             }else{
               if(!$this.menuButtonPermit.includes('Article_add')){
+                $this.isLoading.close();
                 $this.$message({
                   showClose: true,
                   message: "未被分配文章发布权限",
@@ -578,6 +583,7 @@ export default {
                 if($this.device==="desktop"){
                   $this.getShowData();
                 }else{
+                  $this.isLoading.close();
                   $this.$message({
                     showClose: true,
                     message: "请前往PC端做添加操作",
@@ -589,6 +595,7 @@ export default {
               }
             }
           }else{
+            $this.isLoading.close();
             $this.$message({
               showClose: true,
               message: "未被分配文章发布修改权限",
@@ -598,6 +605,7 @@ export default {
             $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
           }
         }else{
+          $this.isLoading.close();
           $this.$message({
             showClose: true,
             message: response.info,
@@ -693,6 +701,7 @@ export default {
               $this.isLoading.close();
               $this.initArticle($this.articleData)
             }else{
+              $this.isLoading.close();
               if(response.permitstatus&&response.permitstatus==2){
                 $this.$message({
                   showClose: true,
@@ -709,6 +718,8 @@ export default {
                 });
               }
             }
+          }else{
+            $this.isLoading.close();
           }
       });
     },

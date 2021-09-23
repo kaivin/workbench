@@ -59,7 +59,6 @@ router.beforeEach(async(to, from, next) => {
     document.title = getPageTitle(to.meta.title);
     var userInfo = Cookies.get('userInfo');
     var ua =  navigator.userAgent;
-    console.log(ua,"判断浏览器");
     if(oneRun){
       if(ua.indexOf('Chrome')==-1){
         Element.Notification({

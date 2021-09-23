@@ -1,10 +1,13 @@
 ﻿<template>
   <div class="page-root bbs-panel scroll-panel" ref="boxPane">
     <p class="breadcrumb" ref="breadcrumbPane">
-        <router-link class="breadcrumb-link" to="/">首页</router-link>
-        <template v-for="item in breadcrumbList">
-          <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
-        </template>
+      <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+      <template v-for="item in breadcrumbList">
+        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+        <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+      </template>
+      <router-link class="breadcrumb-link" :to="'/Website/logList?websiteID='+websiteID+'&website='+website"><b>-</b><span>{{website}}工作日志</span></router-link>
+      <span class="breadcrumb-link"><b>-</b><span>发布日志</span></span>
     </p>
     <el-card v-show="!isPreview" class="box-card WebsiteCard scroll-card" shadow="hover">
       <div class="card-content" ref="cardContent">

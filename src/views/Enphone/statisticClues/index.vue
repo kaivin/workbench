@@ -5,11 +5,12 @@
             <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
                 <div class="true-height" ref="scrollPane">
                     <p class="breadcrumb" ref="breadcrumbPane">
-                        <router-link class="breadcrumb-link" to="/">统计分析</router-link>
-                        <template v-for="item in breadcrumbList">
-                          <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
-                        </template>
-                        <router-link class="breadcrumb-link" to="/Enphone/searchClues"><b>-</b>搜索数据</router-link>
+                      <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+                      <template v-for="item in breadcrumbList">
+                        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+                        <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+                      </template>
+                      <span class="breadcrumb-link"><b>-</b><span>业务员数据统计</span></span>
                     </p>
                     <el-card class="box-card scroll-card" shadow="hover">
                         <div slot="header">

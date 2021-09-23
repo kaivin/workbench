@@ -20,10 +20,31 @@
 <script>
 export default {
   name: 'Page404',
+  data() {
+    return {
+      isLoading:null,
+    }
+  },
   computed: {
     message() {
       return '进入了一个不存在的页面，可能原因：'
     }
+  },
+    created(){
+      this.loadingFun();
+      this.isLoading.close();
+    },
+  methods: {
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
   }
 }
 </script>

@@ -29,10 +29,11 @@
         <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position"> 
           <div class="phone-index" v-if="!phoneID">
             <p class="breadcrumb" ref="breadcrumbPane">
-                <router-link class="breadcrumb-link" to="/">首页</router-link>
-                <template v-for="item in breadcrumbList">
-                  <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
-                </template>
+              <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+              <template v-for="item in breadcrumbList">
+                <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+                <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+              </template>
             </p>
             <div class="ChinaphoneNum" ref="numPane">
               <div class="card-header">

@@ -25,11 +25,12 @@
                 <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
                   <div class="true-height" ref="scrollPane">
                     <p class="breadcrumb" ref="breadcrumbPane">
-                        <router-link class="breadcrumb-link" to="/">首页</router-link>
-                        <template v-for="item in breadcrumbList">
-                          <router-link class="breadcrumb-link" :to="item.router+'?Status=Untreated'" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
-                        </template>
-                        <span class="breadcrumb-link"><b>-</b>{{breadcrumbName}}</span>
+                      <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+                      <template v-for="item in breadcrumbList">
+                        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+                        <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+                      </template>
+                      <span class="breadcrumb-link"><b>-</b><span>{{breadcrumbName}}</span></span>
                     </p>
                     <el-card class="box-card scroll-card" shadow="hover">
                         <div slot="header">
@@ -397,7 +398,6 @@ export default {
     $this.initData();
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -461,7 +461,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // loading自定义
     loadingFun(){
@@ -684,7 +683,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
-          console.log(res,'请求权限')
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);

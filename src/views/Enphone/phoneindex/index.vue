@@ -26,10 +26,11 @@
             <div class="true-height" ref="scrollPane">
                 <div class="EnStatistical" v-if="!phoneID&&!currentKey">
                     <p class="breadcrumb" ref="breadcrumbPane">
-                        <router-link class="breadcrumb-link" to="/">首页</router-link>
-                        <template v-for="item in breadcrumbList">
-                          <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
-                        </template>
+                      <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+                      <template v-for="item in breadcrumbList">
+                        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+                        <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+                      </template>
                     </p>
                     <div class="tips-list" v-if="(defaultData.custormwarntatus==1&&defaultData.custormwarn.length>0)||(defaultData.warningstatus==1&&defaultData.saleswarning.length>0)">
                           <div class="item-tips" :class="item.type=='custormwarn'?'type-1':'type-2'" v-for="(item,index) in defaultData.custorAndsalesmwarn" v-bind:key="index" v-on:click="jumpEditPage(item.id)">
@@ -247,7 +248,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-if="currentKey&&currentKey=='all'" v-model="searchData.salesownid" size="small" clearable placeholder="业务员" style="width:90px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)" v-model="searchData.salesownid" size="small" clearable placeholder="业务员" style="width:90px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in salesuserList"
                                       :key="item.value"
@@ -1277,6 +1278,7 @@ export default {
         clientHeight:0,
       },
       isLoading:null,
+      brandID:null,
     }
   },
   computed: {
@@ -1539,7 +1541,8 @@ export default {
               $this.linkAll.yestodayNum = response.alllastnumber;
               $this.linkAll.monthNum = response.allnumber;
               $this.linkAll.unAllotNum = response.nodealcount;
-              var brand = "";              
+              var brand = "";
+              var brandID = null;              
               if($this.$route.query.phoneID){
                 response.data.forEach(function(item,index){
                   brand = item.brandname;
@@ -1547,6 +1550,7 @@ export default {
                     if(item1.id == $this.phoneID&&item1.waitstatus==$this.searchData.waitstatus){
                       $this.currentID = item1.id;
                       item1.isOn = true;
+                      brandID = item.id;
                       if(item1.phonenumber.indexOf("-")!=-1){
                         $this.currentPhone = item1.phonenumber;
                       }else{
@@ -1571,6 +1575,7 @@ export default {
                   }
                 }
               }
+              $this.brandID = brandID;
               $this.defaultData = response;
               $this.getCurrentPhoneSearchData();
           }else{
@@ -1811,6 +1816,9 @@ export default {
       var pathUrl = "";
       if($this.phoneID){
         pathUrl = 'enphone/cluesCurrentPhoneDataAction';
+        if($this.phoneID>800&&$this.searchData.waitstatus==1){
+          searchData.salesownid=$this.searchData.salesownid;
+        }
       }else{
         if($this.currentKey){
           if($this.currentKey=="all"){
@@ -1930,8 +1938,14 @@ export default {
     },
     // 获取当前电话的搜索条件数据
     getCurrentPhoneSearchData(){
-      var $this = this;  
-      $this.$store.dispatch('enphone/cluesCurrentPhoneSearchDataAction', null).then(response=>{
+      var $this = this;
+      var resultData = {};
+      if($this.brandID){
+        resultData.brand_id = $this.brandID;
+      }else{
+        resultData = null;
+      }
+      $this.$store.dispatch('enphone/cluesCurrentPhoneSearchDataAction', resultData).then(response=>{
         if(response){
           if(response.status){
             console.log(response,"搜索条件信息");

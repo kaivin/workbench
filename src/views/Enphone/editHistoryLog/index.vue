@@ -5,10 +5,12 @@
         <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
             <div class="true-height" ref="scrollPane">
                 <p class="breadcrumb" ref="breadcrumbPane">
-                    <router-link class="breadcrumb-link" to="/">首页</router-link>
-                    <template v-for="item in breadcrumbList">
-                      <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
-                    </template>
+                  <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+                  <template v-for="item in breadcrumbList">
+                    <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+                    <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+                  </template>
+                  <span class="breadcrumb-link"><b>-</b><span>询盘修改日志</span></span>
                 </p>
                 <el-card class="box-card scroll-card no-padding" shadow="hover">
                     <div class="card-content" ref="tableContent">

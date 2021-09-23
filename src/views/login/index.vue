@@ -145,6 +145,7 @@ export default {
             capsTooltip1:false,
             capsTooltip2:false,
             isTip:true,
+            isLoading:null,
         }
     },
     computed: {
@@ -171,6 +172,10 @@ export default {
         }else if(isEmpty($this.loginForm.password)){
              $this.$refs.password.focus();
         }
+    },
+    created(){
+      this.loadingFun();
+      this.isLoading.close();
     },
     methods:{
         // 登录操作
@@ -201,6 +206,16 @@ export default {
                     return false;
                 }
             });
+        },
+        // loading自定义
+        loadingFun(){
+        var $this = this;
+        $this.isLoading = $this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+        });
         },
         getOtherQuery(query) {
             return Object.keys(query).reduce((acc, cur) => {

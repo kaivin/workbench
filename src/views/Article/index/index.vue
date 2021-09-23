@@ -4,9 +4,10 @@
         <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
           <div class="true-height" ref="scrollPane">
             <p class="breadcrumb" ref="breadcrumbPane">
-              <router-link class="breadcrumb-link" to="/">首页</router-link>
+              <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
               <template v-for="item in breadcrumbList">
-                <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
+                <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+                <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
               </template>
             </p>
             <el-card class="box-card scroll-card ArticleMain" v-bind:class="device==='desktop'?'':'mobile'" shadow="hover">
@@ -479,7 +480,6 @@ export default {
     });
   },
   destroyed(){
-    console.log("走了销毁2");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -650,6 +650,7 @@ export default {
             });
             if($this.menuButtonPermit.includes('Article_index')){
               if(!$this.menuButtonPermit.includes('Article_search')&&$this.$route.query.keyword){
+                $this.isLoading.close();
                 $this.$message({
                   showClose: true,
                   message: "未被分配该页面的搜索权限",
@@ -659,6 +660,7 @@ export default {
                 $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
               }
               if(!$this.menuButtonPermit.includes('Article_lists')&&$this.$route.query.id){
+                $this.isLoading.close();
                 $this.$message({
                   showClose: true,
                   message: "未被分配该页面的文章访问权限",
@@ -677,6 +679,7 @@ export default {
               $this.operationsWidth = "" + operationsWidth;
               $this.getPostTypeData();
             }else{
+              $this.isLoading.close();
               $this.$message({
                 showClose: true,
                 message: "未被分配该页面的访问权限",
@@ -686,6 +689,7 @@ export default {
               $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
             }
           }else{
+          $this.isLoading.close();
             $this.$message({
               showClose: true,
               message: "未被分配该页面的访问权限",
@@ -695,6 +699,7 @@ export default {
             $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
           }
         }else{
+          $this.isLoading.close();
           $this.$message({
             showClose: true,
             message: response.info,
@@ -731,6 +736,7 @@ export default {
             $this.departUser = response.data;
             $this.isLoading.close();
           }else{
+            $this.isLoading.close();
             $this.$message({
                 showClose: true,
                 message: response.info,

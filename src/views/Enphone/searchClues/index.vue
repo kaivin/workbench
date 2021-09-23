@@ -4,11 +4,12 @@
             <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
                 <div class="true-height" ref="scrollPane">
                     <p class="breadcrumb" ref="breadcrumbPane">
-                        <router-link class="breadcrumb-link" to="/">首页</router-link>
-                        <template v-for="item in breadcrumbList">
-                          <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
-                        </template>
-                        <router-link class="breadcrumb-link" to="/Enphone/searchClues"><b>-</b>搜索数据</router-link>
+                      <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+                      <template v-for="item in breadcrumbList">
+                        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+                        <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+                      </template>
+                      <span class="breadcrumb-link"><b>-</b><span>搜索数据</span></span>
                     </p>
                     <el-card class="box-card scroll-card" shadow="hover">
                         <div slot="header">
@@ -193,7 +194,7 @@
                                     </div> 
                                     <div class="clues-info flex-wrap">
                                         <div class="clues-infoFl flex-content">
-                                            <p v-if="isClues"> <span class="item-span-1">共找到： <strong>{{infoData.allcount}}</strong> 条，有效 <strong>{{infoData.effectivecount}}</strong> 条， 已反馈 <strong>{{infoData.hassaycountscore}}</strong> 分，意向客户 <strong>{{infoData.meancustormscore}}</strong> 分 ，未反馈 <strong>{{infoData.nosaycount}}</strong> 条= <strong>{{infoData.nosaycountscore}}</strong> 分，总分 <strong>{{infoData.allcountscore}}</strong> 分 ！ [A]砂石：<strong>{{infoData.producttypecount1}}</strong>条，  [B]选矿/建材：<strong>{{infoData.producttypecount2}}</strong>条，  [C]磨粉/烘干/压球：<strong>{{infoData.producttypecount3}}</strong>条，  [其他]：<strong>{{infoData.producttypecount4}}</strong>条</span></p>
+                                            <p v-if="isClues"> <span class="item-span-1">共找到： <strong>{{infoData.allcount}}</strong> 条，有效 <strong>{{infoData.effectivecount}}</strong> 条， 已反馈 <strong>{{infoData.hassaycountscore}}</strong> 分，意向客户 <strong>{{infoData.meancustormscore}}</strong> 分 ，未反馈 <strong>{{infoData.nosaycount}}</strong> 条，共计 <strong>{{infoData.nosaycountscore}}</strong> 分，总分 <strong>{{infoData.allcountscore}}</strong> 分 ！ [A]砂石：<strong>{{infoData.producttypecount1}}</strong>条，  [B]选矿/建材：<strong>{{infoData.producttypecount2}}</strong>条，  [C]磨粉/烘干/压球：<strong>{{infoData.producttypecount3}}</strong>条，  [其他]：<strong>{{infoData.producttypecount4}}</strong>条</span></p>
                                             
                                             <p v-if="isUrl"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>条URL，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
                                             <p v-if="isProduct"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>

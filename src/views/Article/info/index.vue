@@ -3,10 +3,12 @@
     <div class="abs-panel" ref="mainPane">
       <div class="scroll-panel" ref="scrollPane">
         <p class="breadcrumb" ref="breadcrumbPane">
-            <router-link class="breadcrumb-link" to="/">首页</router-link>
-            <template v-for="item in breadcrumbList">
-              <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
-            </template>
+          <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+          <template v-for="item in breadcrumbList">
+            <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+            <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+          </template>
+          <span class="breadcrumb-link"><b>-</b><span>{{articleData.title}}</span></span>
         </p>
         <div class="ArticleSixFl" v-bind:class="articleData.issay==0&&commentList.length==0?'no-comment':''">
           <div class="main-article" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length==0?'min-height:'+minHeight+'px!important;':''">
