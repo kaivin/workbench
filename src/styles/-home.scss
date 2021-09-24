@@ -462,6 +462,15 @@
     .Clinch-chart{
         width:270px;
         margin-left:15px;
+        h3{
+            span{
+                display: inline-block;
+                margin-left:10px;
+                color:#666;
+                font-size:14px;
+                font-weight:normal;
+            }
+        }
         .table-chart{
             background:#fff;
             height:490px;
@@ -509,13 +518,6 @@
               margin-top:0px!important;
               margin-bottom:0px!important;
               padding-right:20px;
-              span{
-                  display: inline-block;
-                  margin-left:10px;
-                  color:#666;
-                  font-size:14px;
-                  font-weight:normal;
-              }
           }
           .item-search{
             .el-input__inner{
@@ -529,11 +531,13 @@
             height:490px;
             border-radius:8px;
             position: relative;
+            padding:20px 100px 0px 20px;
             &.mapCNpad{
-                padding:20px 100px 0px 70px;
             }
             &.mapENpad{
-                padding:20px 100px 0px 20px;
+                .map-chart{
+                    padding-top:30px;
+                }
             }
             .map-chart{
                 .chart-canvas{

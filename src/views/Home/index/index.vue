@@ -66,6 +66,7 @@
                           type="daterange"
                           class="date-range"
                           align="right"
+                          style="width:220px;"
                           value-format = "yyyy-MM-dd"
                           unlink-panels
                           range-separator="至"
@@ -98,7 +99,7 @@
                   </div>
                   <div class="item-tr">
                     <div class="item-td">{{currentCluesData.scoreData.snumber}}</div>
-                    <div class="item-td">{{language=='Module_cnStat'?'成交数量':'A数量'}}</div>
+                    <div class="item-td">{{language=='Module_cnStat'?'成交数量':'A+数量'}}</div>
                   </div>
                   <div class="item-tr" v-if="language=='Module_cnStat'">
                     <div class="item-td">{{currentCluesData.scoreData.a_number}}</div>
@@ -847,8 +848,8 @@ export default {
       .then(mapData => {
         const regionMapChart = new G2.Chart({
           container: 'regionMapChart',
-          width: 760,
-          height: 450,
+          width: 800,
+          height: 350,
         });
         regionMapChart.tooltip({
           showTitle: false,
@@ -866,7 +867,7 @@ export default {
         });
         regionMapChart.axis(false);
         regionMapChart.legend('trend', {
-          position: 'bottom',
+          position: 'left',
         });
         // 绘制世界地图背景
         var ds = new DataSet();
