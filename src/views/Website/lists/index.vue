@@ -553,6 +553,7 @@ export default {
         fixedRightWidth:0,
         tableBottom:0,
         clientHeight:0,
+        scrollNum:0,
       },
     }
   },
@@ -577,8 +578,6 @@ export default {
       window.addEventListener('scroll',$this.handleScroll,true);
       $this.$nextTick(function () {
         $this.setHeight();
-        // 监听竖向滚动条滚动事件
-        window.addEventListener('scroll',$this.handleScroll,true);
       });
       window.onresize = () => {
         return (() => {
@@ -841,6 +840,7 @@ export default {
         formData.openstatus = $this.formData.openstatus
       }
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
+      $this.scrollTable.scrollNum=0;
       $this.$store.dispatch('website/websiteListAction', formData).then(response=>{
         if(response){
           if(response.status){
@@ -1522,6 +1522,8 @@ export default {
           $this.scrollPosition.fixedBottom = 15;
         }
       }
+      console.log(tableObj.height,"表格高度1");
+      console.log($this.scrollTable.tableBottom,"表格底距离页面顶的距离11");
     },
     // 竖向滚动条滚动事件
     handleScroll(event){
@@ -1529,6 +1531,12 @@ export default {
       console.log("网站页面监听事件");
       if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
         var scrTop = event.target.scrollTop;
+        if($this.scrollTable.scrollNum==0){
+          var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
+          $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+60+15;
+          console.log(tableObj.height,"表格高度2");
+          $this.scrollTable.scrollNum++;
+        }
         var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
         if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
           $this.scrollPosition.isFixed = true;
@@ -1556,6 +1564,9 @@ export default {
           }
         }
         if($this.totalDataNum>100){
+          console.log($this.scrollTable.clientHeight,"视窗高度");
+          console.log($this.scrollTable.tableBottom,"表格底距离页面顶的距离");
+          console.log(scrTop,"滚动距离");
           if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
             $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
           }else{

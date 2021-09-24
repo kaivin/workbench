@@ -169,7 +169,7 @@ export default {
       editorConfig: {
         UEDITOR_HOME_URL: '/ueditor/',
         // 服务端接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
-        serverUrl: process.env.NODE_ENV=='development'?'http://172.16.10.27:8017/php/controller.php':process.env.VUE_APP_BASE_API+'/php/controller.php',
+        serverUrl: process.env.NODE_ENV=='development'?'http://172.16.10.24:8017/php/controller.php':process.env.VUE_APP_BASE_API+'/php/controller.php',
         // 编辑器不自动被内容撑高
         autoHeightEnabled: false,
         // 工具栏是否可以浮动
