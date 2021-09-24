@@ -54,6 +54,26 @@
                                           :picker-options="pickerRangeOptions">
                                       </el-date-picker>
                                     </div>
+                                    <div class="item-search" style="width: 110px;" v-if="currentStatus === 'alloted'">
+                                      <el-select v-model="searchData.workstatus" size="small" clearable placeholder="工单状态">
+                                          <el-option
+                                              v-for="item in statusList"
+                                              :key="item.value"
+                                              :label="item.label"
+                                              :value="item.value">
+                                          </el-option>
+                                      </el-select>
+                                    </div>
+                                    <div class="item-search" style="width: 120px;" v-if="currentStatus === 'alloted'">
+                                      <el-select v-model="searchData.dealuserid" size="small" filterable clearable placeholder="负责人">
+                                          <el-option
+                                              v-for="item in userList"
+                                              :key="item.value"
+                                              :label="item.label"
+                                              :value="item.value">
+                                          </el-option>
+                                      </el-select>
+                                    </div>
                                     <div class="item-search">
                                         <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                                     </div>
@@ -229,13 +249,13 @@
                                           </template>
                                       </el-table-column>
                                       <el-table-column
-                                          v-if="currentStatus=='allot'"
+                                          v-if="currentStatus!='receive'"
                                           prop="ownScore"
                                           label="负责人"
                                           width="120">
                                           <template slot-scope="scope">
                                               <div class="table-input">
-                                                  <el-select v-model="scope.row.dealuserid" size="small" clearable placeholder="负责人">
+                                                  <el-select v-model="scope.row.dealuserid" size="small" :disabled="currentStatus!='allot'" clearable placeholder="负责人">
                                                     <el-option
                                                         v-for="item in userList"
                                                         :key="item.value"
@@ -314,10 +334,19 @@ export default {
         searchData:{
             date:[],
             timetype:"",
+            dealuserid:'',
+            workstatus:'',
         },
         timeTypeList:[
           {label:"按接单时间",value:2},
           {label:"按分配时间",value:1},
+        ],
+        statusList:[
+          {label:"进行中",value:5},
+          {label:"待审核",value:1},
+          {label:"已驳回",value:2},
+          {label:"已完成",value:3},
+          {label:"已逾期",value:4},
         ],
         defaultData:{
           receiveNum:0,
@@ -589,6 +618,10 @@ export default {
             searchData.starttime = "";
             searchData.endtime = "";
         }
+        if($this.currentStatus==="alloted"){
+          searchData.dealuserid = $this.searchData.dealuserid;
+          searchData.workstatus = $this.searchData.workstatus;
+        }
       }else if($this.currentStatus==="stat"){
         if($this.searchData.date&&$this.searchData.date.length>0){
             searchData.starttime = $this.searchData.date[0];
@@ -708,7 +741,7 @@ export default {
             $this.defaultData.personNum = response.personcount;
             $this.defaultData.doingNum = response.makeingcount;
             $this.defaultData.doneNum = response.hasfinishcount;
-            if($this.currentStatus=="allot"){
+            if($this.currentStatus!="receive"&&$this.currentStatus!="stat"){
               $this.getWorkOrderUser();
             }else{
               $this.getCurrentStatusData();

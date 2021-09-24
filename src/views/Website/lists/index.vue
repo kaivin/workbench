@@ -123,7 +123,12 @@
                       stripe
                       class="SiteTable"
                       style="width: 100%"
-                      >
+                      >    
+                      <el-table-column
+                        type="index"
+                        label="序号"
+                        width="50">
+                      </el-table-column>
                       <el-table-column
                         prop="id"
                         label="ID"
@@ -1528,15 +1533,8 @@ export default {
     // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
-      console.log("网站页面监听事件");
       if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
         var scrTop = event.target.scrollTop;
-        if($this.scrollTable.scrollNum==0){
-          var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
-          $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+60+15;
-          console.log(tableObj.height,"表格高度2");
-          $this.scrollTable.scrollNum++;
-        }
         var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
         if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
           $this.scrollPosition.isFixed = true;
@@ -1554,6 +1552,8 @@ export default {
           }
         }else{// 头部需要变为正常
           $this.scrollPosition.isFixed = false;
+          var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
+          $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+60+15;
           var tableHeaderStyle = "width:100%";
           $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
           var tableStyle1 = "padding-top:0";
@@ -1564,9 +1564,6 @@ export default {
           }
         }
         if($this.totalDataNum>100){
-          console.log($this.scrollTable.clientHeight,"视窗高度");
-          console.log($this.scrollTable.tableBottom,"表格底距离页面顶的距离");
-          console.log(scrTop,"滚动距离");
           if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
             $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
           }else{

@@ -377,7 +377,11 @@ export default {
               var dateDiff = endTime.getTime() - startTime.getTime();
               var dayDiff = Math.ceil(dateDiff/(24*3600*1000));
               response.data.dayDiff = dayDiff;
-              response.data.dayPercent = parseFloat(response.data.timeing/response.data.dayDiff*100).toFixed(2)+"%";
+              if(response.data.timeing/response.data.dayDiff>1){
+                response.data.dayPercent = "100%";
+              }else{
+                response.data.dayPercent = parseFloat(response.data.timeing/response.data.dayDiff*100).toFixed(2)+"%";
+              }
               var tagsList = [];
               if(response.data.tagsname!=''){
                 if(response.data.tagsname.indexOf(",")!=-1){
