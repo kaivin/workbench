@@ -2,101 +2,47 @@
   <div class="page-root scroll-panel home-index" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
       <div class="card-content" ref="tableContent">
-        <div class="item-row flex-box" v-if="newsList.length>0"> 
-          <div class="item-column flex-content" v-if="permitModules.includes('Module_bbs')">
-            <div class="item-module">
-              <div class="module-header"><h2>消息通知</h2></div>
-              <div class="module-body">
-                <div class="news-panel">
-                  <el-scrollbar wrap-class="scrollbar-wrapper">
-                    <div class="news-list">
-                      <div class="news-dl" v-for="(item,index) in newsList" v-bind:key="index">
-                        <div class="news-dt">{{item.groupname}}：({{item.number}})条新消息！</div>
-                        <div class="item-news flex-box" v-for="item1 in item.article" v-bind:key="item1.id" v-on:click="jumpArticle(item1)">
-                          <div class="txt-font flex-content" :title="item1.title">
-                            <span class="txt-icon" v-bind:class="item1.is_new==1?'update':'new'"><b>{{item1.is_new==1?'改':'新'}}</b></span>
-                            <span class="txt-type" v-if="item1.type==1">【{{item1.domain}} [{{item1.website_id}}]】</span>
-                            <span class="txt-type" v-else>【{{item1.typename}}】</span>
-                            <span class="txt-title" :style="{color:item1.titlecolor?item1.titlecolor:''}">{{item1.title}}</span>
-                          </div>
-                          <div class="txt-time">({{item1.updatetime}})</div>
-                        </div>
+        <div class="item-row flex-box Module_bbs" v-if="newsList.length>0"> 
+            <div class="news-list flex-content" v-if="permitModules.includes('Module_bbs')">
+              <dl class="news-dl flex-wrap" v-for="(item,index) in newsList" v-bind:key="index">
+                <dt class="news-dt">{{item.groupname}}：</dt>
+                <dd class="news-dd flex-content">
+                    <div class="item-news flex-box" v-for="item1 in item.article" v-bind:key="item1.id" v-on:click="jumpArticle(item1)">
+                      <div class="txt-font flex-content" :title="item1.title">
+                        <span class="txt-icon" v-bind:class="item1.is_new==1?'update':'new'"><b>{{item1.is_new==1?'改':'新'}}</b></span>
+                        <span class="txt-type" v-if="item1.type==1">【{{item1.domain}} [{{item1.website_id}}]】</span>
+                        <span class="txt-type" v-else>【{{item1.typename}}】</span>
+                        <span class="txt-title" :style="{color:item1.titlecolor?item1.titlecolor:''}">{{item1.title}}</span>
                       </div>
+                      <div class="txt-time">({{item1.updatetime}})</div>
                     </div>
-                  </el-scrollbar>
-                </div>
-              </div>
+                </dd>
+              </dl>
             </div>
-          </div>
         </div>
         <div class="item-row stat-row" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
-          <div class="item-column">
-            <div class="item-module">
-              <div class="row-title"><h1><span>红星机器数据分析平台</span></h1></div>
-              <div class="btn-panel" v-if="permitModules.includes('Module_cnStat')&&permitModules.includes('Module_enStat')">
-                <el-radio-group v-model="language" size="small" @change="cnEnStatChange">
-                  <el-radio-button v-for="(item,index) in languageList" v-bind:key="index" :label="item.label">{{item.name}}</el-radio-button>
-                </el-radio-group>
+          <div class="btn-panel" v-if="permitModules.includes('Module_cnStat')&&permitModules.includes('Module_enStat')">
+            <el-radio-group v-model="language" size="small" @change="cnEnStatChange">
+              <el-radio-button v-for="(item,index) in languageList" v-bind:key="index" :label="item.label">{{item.name}}统计</el-radio-button>
+            </el-radio-group>
+          </div>
+          <div class="flex-box flex-wrap">
+            <div class="target-chart">
+              <h3>{{language=='Module_cnStat'?'中文':'英文'}}各部门日目标</h3>
+              <div class="target-chartItem">
+                  <div id="radialBarChart" style="float:left; width:285px;" class="chart-canvas"></div>
+                  <ul class="deptData">
+                      <li v-for="(item,index) in currentCluesData.targetData" :key='index' @click="handleDepart(item)">
+                          <span>{{item.name}}</span>
+                          <em>{{item.targetNum}}</em>
+                          <strong>{{item.dayNum}}</strong>
+                      </li>
+                  </ul>
               </div>
-              <div class="flex-box">
-                <div class="target-chart" style="width: 360px;">
-                  <h3>{{language=='Module_cnStat'?'中文':'英文'}}各部门日目标</h3>
-                  <div id="radialBarChart" class="chart-canvas"></div>
-                  <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文总':'英文总'}}成交统计</h3>
-                  <div class="table-chart" v-if="currentCluesData.targetData">
-                    <div class="item-tr">
-                      <div class="item-td">组别</div>
-                      <div class="item-td">{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文总计':'英文总计'}}</div>
-                    </div>
-                    <div class="item-tr">
-                      <div class="item-td">时间</div>
-                      <div class="item-td">{{currentCluesData.scoreData.mtime}}</div>
-                    </div>
-                    <div class="item-tr" v-if="language=='Module_cnStat'">
-                      <div class="item-td">积分</div>
-                      <div class="item-td">{{currentCluesData.scoreData.score}}</div>
-                    </div>
-                    <div class="item-tr" v-if="currentCluesData.scoreData.level!=''">
-                      <div class="item-td">等级</div>
-                      <div class="item-td">{{currentCluesData.scoreData.level}}</div>
-                    </div>
-                    <div class="item-tr">
-                      <div class="item-td">{{language=='Module_cnStat'?'成交数量':'A数量'}}</div>
-                      <div class="item-td">{{currentCluesData.scoreData.snumber}}</div>
-                    </div>
-                    <div class="item-tr" v-if="language=='Module_cnStat'">
-                      <div class="item-td">A数量</div>
-                      <div class="item-td">{{currentCluesData.scoreData.a_number}}</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="map-chart flex-content">
-                  <div class="search-panel">
-                    <div class="item-search">
-                      <el-date-picker
-                        v-model="mapDate"
-                        size="mini"
-                        type="daterange"
-                        class="date-range"
-                        align="right"
-                        value-format = "yyyy-MM-dd"
-                        unlink-panels
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        @change="dateRangeChangeHandler"
-                        :picker-options="pickerRangeOptions">
-                      </el-date-picker> 
-                    </div>
-                  </div>
-                  <div id="regionMapChart" class="chart-canvas"></div>
-                </div>
-                <div class="top-ten">
-                  <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}热门{{language=='Module_cnStat'?'地区':'国家'}}TOP10</h3>
-                  <div id="topTen" class="chart-canva"></div>
-                </div>
-                <div class="clues-chart">
-                  <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}询盘统计</h3>
+            </div>
+            <div class="clues-chart flex-content">
+              <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}询盘统计</h3>
+              <div class="clues-chartItem flex-wrap">
                   <div class="item-liquid-chart">
                     <div id="cluesLiquidChart1" class="chart-canvas"></div>
                   </div>
@@ -106,23 +52,73 @@
                   <div class="item-liquid-chart">
                     <div id="cluesLiquidChart3" class="chart-canvas"></div>
                   </div>
-                </div>
-              </div>
-              <div class="flex-box flex-column">
-                <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}近30天询盘趋势</h3>
-                <div id="cluesChart" class="chart-canvas flex-content"></div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="item-row flex-box salesman" v-if="permitModules.includes('Module_salesman')">
-          <div class="item-column flex-content">
-            <div class="num-list">
-              <p><span>消息提醒</span><strong>{{salesmanData.warningcount}}</strong></p>
-              <p><span>询盘总数</span><strong>{{salesmanData.personcount}}</strong></p>
-              <p><span>待处理询盘总数</span><strong>{{salesmanData.waitdealcount}}</strong></p>
-              <p><span>月底前需反馈询盘总数</span><strong>{{salesmanData.monthsaycount}}</strong></p>
-            </div>
+          <div class="flex-box flex-wrap">
+              <div class="map-Top-chart flex-content">
+                  <div class="map-Top-chartTit flex-wrap">
+                      <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}热门{{language=='Module_cnStat'?'地区':'国家'}}TOP10</h3>
+                      <div class="item-search flex-content">
+                        <el-date-picker
+                          v-model="mapDate"
+                          size="mini"
+                          type="daterange"
+                          class="date-range"
+                          align="right"
+                          value-format = "yyyy-MM-dd"
+                          unlink-panels
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"
+                          @change="dateRangeChangeHandler"
+                          :picker-options="pickerRangeOptions">
+                        </el-date-picker> 
+                      </div>
+                  </div>
+                  <div class="map-Top-chartItem flex-wrap" :class="language=='Module_cnStat'?'mapCNpad':'mapENpad'">
+                      <div class="map-chart flex-content">
+                        <div id="regionMapChart" class="chart-canvas"></div>
+                      </div>
+                      <div class="top-ten">
+                        <div id="topTen" class="chart-canva"></div>
+                      </div>
+                  </div>
+              </div>
+              <div class="Clinch-chart">
+                <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文总':'英文总'}}成交统计<span>({{thisMonth}})</span></h3>
+                <div class="table-chart flex-wrap" v-if="currentCluesData.targetData">
+                  <div class="item-tr" v-if="language=='Module_cnStat'">
+                    <div class="item-td">{{currentCluesData.scoreData.score}}</div>
+                    <div class="item-td">成交积分</div>
+                  </div>
+                  <div class="item-tr" v-if="language=='Module_enStat'">
+                    <div class="item-td">{{currentCluesData.scoreData.allxuncount}}</div>
+                    <div class="item-td">询盘数量</div>
+                  </div>
+                  <div class="item-tr">
+                    <div class="item-td">{{currentCluesData.scoreData.snumber}}</div>
+                    <div class="item-td">{{language=='Module_cnStat'?'成交数量':'A数量'}}</div>
+                  </div>
+                  <div class="item-tr" v-if="language=='Module_cnStat'">
+                    <div class="item-td">{{currentCluesData.scoreData.a_number}}</div>
+                    <div class="item-td">A数量</div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="flex-box flex-column">
+            <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}近30天询盘趋势</h3>
+            <div id="cluesChart" class="chart-canvas flex-content trend-chart"></div>
+          </div>
+          <div class="salesman" v-if="permitModules.includes('Module_salesman')">
+              <h3>业务员数据统计</h3>
+              <div class="num-list flex-wrap">
+                <p><span>消息提醒</span><strong>{{salesmanData.warningcount}}</strong></p>
+                <p><span>询盘总数</span><strong>{{salesmanData.personcount}}</strong></p>
+                <p><span>待处理询盘总数</span><strong>{{salesmanData.waitdealcount}}</strong></p>
+                <p><span>月底前需反馈询盘总数</span><strong>{{salesmanData.monthsaycount}}</strong></p>
+              </div>
           </div>
         </div>
       </div>
@@ -142,6 +138,7 @@ export default {
     return {
       menuButtonPermit:[],
       permitModules:[],
+      thisMonth:'',
       currentCluesData:{
         departName:"中文",
         departID:null,
@@ -308,6 +305,7 @@ export default {
       var $this = this;
       $this.$store.dispatch("modulelist/getPermitModuleListAction", null).then((response) => {
         if (response) {
+          console.log(response,'当前登录用户首页拥有阅读权限的模块');
           if (response.status) {
             $this.permitModules = response.data;
             $this.initPage();
@@ -338,6 +336,7 @@ export default {
       $this.$store.dispatch("api/getNewPostArticleAction", null).then((response) => {
         if (response) {
           if (response.status) {
+            console.log(response.data,'论坛最新资讯')
             $this.newsList = response.data;
           } else {
             $this.$message({
@@ -450,7 +449,7 @@ export default {
       $this.$store.dispatch("api/enCluesStatDataAction", resultData).then((response) => {
         if (response) {
           if (response.status) {
-            console.log(response,"英文统计数据");
+            console.log(response,"英文统计数据01");
             response.tong.forEach(function(item,index){
               item.date = item.date+"\n"+item.week.replace("星期","周");
             });
@@ -730,8 +729,8 @@ export default {
         .then(GeoJSON => {
           const regionMapChart = new G2.Chart({
             container: 'regionMapChart',
-            width: 760,
-            height: 560,
+            width: 720,
+            height:450,
           });
           regionMapChart.scale({
             latitude: { sync: true },
@@ -753,7 +752,7 @@ export default {
           });
           regionMapChart.axis(false);
           regionMapChart.legend('trend', {
-            position: 'bottom',
+            position: 'left',
           });
           // 绘制中国地图背景
           var ds = new DataSet();
@@ -849,7 +848,7 @@ export default {
         const regionMapChart = new G2.Chart({
           container: 'regionMapChart',
           width: 760,
-          height: 400,
+          height: 450,
         });
         regionMapChart.tooltip({
           showTitle: false,
@@ -969,6 +968,7 @@ export default {
         var monthDay = start.getFullYear()+"-"+(start.getMonth()+1>9?start.getMonth()+1:'0'+(start.getMonth()+1))+"-"+(start.getDate()+1>9?start.getDate():'0'+(start.getDate()));
         var today = date.getFullYear()+"-"+(date.getMonth()+1>9?date.getMonth()+1:'0'+(date.getMonth()+1))+"-"+(date.getDate()+1>9?date.getDate():'0'+(date.getDate()));
         $this.mapDate = [monthDay,today];
+        $this.thisMonth=date.getFullYear()+"-"+(date.getMonth()+1>9?date.getMonth()+1:'0'+(date.getMonth()+1));
     },
     // 今天、昨天、本月询盘水波图
     drawCluesLiquidChart1(){
@@ -978,10 +978,11 @@ export default {
       }else{
         const liquidPlot1 = new Liquid('cluesLiquidChart1', {
           percent: $this.currentCluesData.cluesNum.todayPercent,
-          height:160,
+          height:200,
+          width:200,
           outline: {
-            border: 2,
-            distance: 4,
+            border: 3,
+            distance: 5,
           },
           wave: {
             length: 128,
@@ -990,21 +991,22 @@ export default {
             content: {
               formatter: () => '今日总询盘',
               style: ({ percent }) => ({
+                fontSize: 16,
                 lineHeight: 2,
-                fill: percent > 0.65 ? 'white' : 'rgba(44,53,66,0.85)',
+                fill: percent > 0.65 ? 'white' : 'rgba(26,26,26,1)',
               }),
             },
             title: {
               style: ({ percent }) => ({
-                fontSize: 60,
+                fontSize: 48,
                 lineHeight: 1,
-                fill: percent > 0.65 ? 'white' : 'rgba(44,53,66,0.85)',
+                fill: percent > 0.65 ? 'white' : 'rgba(26,26,26,1)',
               }),
               customHtml: (container, view, { percent }) => {
                 const { width, height } = container.getBoundingClientRect();
                 const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
                 const text = `${$this.currentCluesData.cluesNum.today}`;
-                const textWidth = measureTextWidth(text, { fontSize: 60 });
+                const textWidth = measureTextWidth(text, { fontSize: 48 });
                 const scale = Math.min(d / textWidth, 1);
                 return `<div style="width:${d}px;display:flex;align-items:center;justify-content:center;font-size:${scale}em;line-height:${
                   scale <= 1 ? 1 : 'inherit'
@@ -1012,6 +1014,13 @@ export default {
               },
             },
           },
+          liquidStyle: ({ percent }) => {
+            return {
+              fill: percent > 0.45 ? '#62daab' : '#74ecbd',
+              stroke: percent > 0.45 ? '#62daab' : '#74ecbd',
+            };
+          },
+          color: () => '#62daab',
         });
         $this.liquidPlot1 = liquidPlot1;
         liquidPlot1.render();
@@ -1025,10 +1034,11 @@ export default {
       }else{
         const liquidPlot2 = new Liquid('cluesLiquidChart2', {
           percent: $this.currentCluesData.cluesNum.yesterdayPercent,
-          height:160,
+          height:200,
+          width:200,
           outline: {
-            border: 2,
-            distance: 4,
+            border: 3,
+            distance: 5,
           },
           wave: {
             length: 128,
@@ -1037,21 +1047,22 @@ export default {
             content: {
               formatter: () => '昨日总询盘',
               style: ({ percent }) => ({
+                fontSize: 16,
                 lineHeight: 2,
-                fill: percent > 0.65 ? 'white' : 'rgba(44,53,66,0.85)',
+                fill: percent > 0.65 ? 'white' : 'rgba(26,26,26,1)',
               }),
             },
             title: {
               style: ({ percent }) => ({
-                fontSize: 60,
+                fontSize: 48,
                 lineHeight: 1,
-                fill: percent > 0.65 ? 'white' : 'rgba(44,53,66,0.85)',
+                fill: percent > 0.65 ? 'white' : 'rgba(26,26,26,1)',
               }),
               customHtml: (container, view, { percent }) => {
                 const { width, height } = container.getBoundingClientRect();
                 const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
                 const text = `${$this.currentCluesData.cluesNum.yesterday}`;
-                const textWidth = measureTextWidth(text, { fontSize: 60 });
+                const textWidth = measureTextWidth(text, { fontSize: 48 });
                 const scale = Math.min(d / textWidth, 1);
                 return `<div style="width:${d}px;display:flex;align-items:center;justify-content:center;font-size:${scale}em;line-height:${
                   scale <= 1 ? 1 : 'inherit'
@@ -1061,11 +1072,11 @@ export default {
           },
           liquidStyle: ({ percent }) => {
             return {
-              fill: percent > 0.45 ? '#5B8FF9' : '#FAAD14',
-              stroke: percent > 0.45 ? '#5B8FF9' : '#FAAD14',
+              fill: percent > 0.45 ? '#f7b05b' : '#fec47c',
+              stroke: percent > 0.45 ? '#f7b05b' : '#fec47c',
             };
           },
-          color: () => '#5B8FF9',
+          color: () => '#f7b05b',
         });
         $this.liquidPlot2 = liquidPlot2;
         liquidPlot2.render();
@@ -1079,10 +1090,11 @@ export default {
       }else{
         const liquidPlot3 = new Liquid('cluesLiquidChart3', {
           percent: $this.currentCluesData.cluesNum.monthPercent,
-          height:160,
+          height:200,
+          width:200,
           outline: {
-            border: 2,
-            distance: 4,
+            border: 3,
+            distance: 5,
           },
           wave: {
             length: 128,
@@ -1091,21 +1103,22 @@ export default {
             content: {
               formatter: () => '本月总询盘',
               style: ({ percent }) => ({
+                fontSize: 16,
                 lineHeight: 2,
-                fill: percent > 0.65 ? 'white' : 'rgba(44,53,66,0.85)',
+                fill: percent > 0.65 ? 'white' : 'rgba(26,26,26,1)',
               }),
             },
             title: {
               style: ({ percent }) => ({
-                fontSize: 60,
+                fontSize: 48,
                 lineHeight: 1,
-                fill: percent > 0.65 ? 'white' : 'rgba(44,53,66,0.85)',
+                fill: percent > 0.65 ? 'white' : 'rgba(26,26,26,1)',
               }),
               customHtml: (container, view, { percent }) => {
                 const { width, height } = container.getBoundingClientRect();
                 const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
                 const text = `${$this.currentCluesData.cluesNum.month}`;
-                const textWidth = measureTextWidth(text, { fontSize: 60 });
+                const textWidth = measureTextWidth(text, { fontSize: 48 });
                 const scale = Math.min(d / textWidth, 1);
                 return `<div style="width:${d}px;display:flex;align-items:center;justify-content:center;font-size:${scale}em;line-height:${
                   scale <= 1 ? 1 : 'inherit'
@@ -1113,6 +1126,13 @@ export default {
               },
             },
           },
+          liquidStyle: ({ percent }) => {
+            return {
+              fill: percent > 0.45 ? '#ee876d' : '#fe9d84',
+              stroke: percent > 0.45 ? '#ee876d' : '#fe9d84',
+            };
+          },
+          color: () => '#ee876d',
         });
         $this.liquidPlot3 = liquidPlot3;
         liquidPlot3.render();
@@ -1198,8 +1218,8 @@ export default {
             data:$this.currentCluesData.targetData,
             xField: 'name',
             yField: 'percent',
-            width: 320,
-            height:320,
+            width:285,
+            height:285,
             maxAngle: 360, //最大旋转角度,
             radius: 0.8,
             innerRadius: 0.2,
@@ -1219,11 +1239,8 @@ export default {
                 );
               },
             },
-            legend: {
-              position: 'left',
-            },
             colorField: 'name',
-            color: ['#FFbcb8', '#FFe0b0', '#bfeec8', '#5B8FF9', '#61DDAA'],
+            color: ['#ee876d', '#f7b05b', '#1ad0b2', '#6294f9', '#3dd195'],
             barBackground: {},
             barStyle: { lineCap: 'round' },
             interactions: [{ type: 'element-highlight' }, { type: 'hover-cursor' }],
@@ -1244,6 +1261,13 @@ export default {
         }
       }
     },
+    //点击部门
+    handleDepart(Dep){
+      var $this = this;
+      $this.currentCluesData.departID = Dep.id;
+      $this.currentCluesData.departName = Dep.name;
+      $this.statDataApi();
+    },
     // 中英文数据分析切换
     cnEnStatChange(){
       var $this = this;
@@ -1253,6 +1277,13 @@ export default {
       }else{
         $this.currentCluesData.departName = "英文";
       }
+      $this.radialBarPlot.destroy();
+      $this.liquidPlot1.destroy();
+      $this.liquidPlot2.destroy();
+      $this.liquidPlot3.destroy();
+      $this.regionMapChart.destroy();
+      $this.pieSourcePlot.destroy();
+      $this.areaTrendPlot.destroy();
       $this.statDataApi();
     },
     // 调用数据分析接口
