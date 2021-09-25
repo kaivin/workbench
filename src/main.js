@@ -112,28 +112,23 @@ router.beforeEach(async(to, from, next) => {
             NProgress.done()
           }
         }else{
-          if(userInfo.phone==""||userInfo.email==""){
-            if(isFirst){
-              if(to.path === '/User/personset'){
-                next()
-                NProgress.done() 
-              }else{
-                MessageBox.confirm('请前往个人中心完善个人联系方式','提示',{
-                  confirmButtonText: '确定',
-                  cancelButtonText: '取消',
-                  type: 'warning'
-                }).then(() => {
-                  next(`/User/personset`);
-                  NProgress.done();
-                }).catch(() => {
-                  isFirst = false;
-                  next()
-                  NProgress.done()       
-                });
-              }
+          if(!userInfo.phone||userInfo.phone==""||userInfo.email==""||!userInfo.email){
+            if(to.path === '/User/personset'){
+              next()
+              NProgress.done() 
             }else{
-              next();
-              NProgress.done()
+              MessageBox.confirm('请前往个人中心完善个人联系方式','提示',{
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                next(`/User/personset`);
+                NProgress.done();
+              }).catch(() => {
+                isFirst = false;
+                next()
+                NProgress.done()       
+              });
             }
           }else{
             next();
