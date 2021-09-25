@@ -20,13 +20,13 @@
               </dl>
             </div>
         </div>
-        <div class="item-row stat-row" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
+        <div class="item-row stat-row">
           <div class="btn-panel" v-if="permitModules.includes('Module_cnStat')&&permitModules.includes('Module_enStat')">
             <el-radio-group v-model="language" size="small" @change="cnEnStatChange">
               <el-radio-button v-for="(item,index) in languageList" v-bind:key="index" :label="item.label">{{item.name}}统计</el-radio-button>
             </el-radio-group>
           </div>
-          <div class="flex-box flex-wrap">
+          <div class="flex-box flex-wrap" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
             <div class="target-chart">
               <h3>{{language=='Module_cnStat'?'中文':'英文'}}各部门日目标</h3>
               <div class="target-chartItem">
@@ -55,7 +55,7 @@
               </div>
             </div>
           </div>
-          <div class="flex-box flex-wrap">
+          <div class="flex-box flex-wrap" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
               <div class="map-Top-chart flex-content">
                   <div class="map-Top-chartTit flex-wrap">
                       <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}热门{{language=='Module_cnStat'?'地区':'国家'}}TOP10</h3>
@@ -108,7 +108,7 @@
                 </div>
               </div>
           </div>
-          <div class="flex-box flex-column">
+          <div class="flex-box flex-column" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
             <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}近30天询盘趋势</h3>
             <div id="cluesChart" class="chart-canvas flex-content trend-chart"></div>
           </div>
@@ -812,7 +812,7 @@ export default {
               return obj;
             }
           });
-          console.log(userDv,"用户数据");
+          console.log(userDv,"用户数据02");
           const userView = regionMapChart.createView();
           userView.data(userDv.rows);
           userView.scale({
@@ -920,7 +920,7 @@ export default {
             return obj;
           }
         });
-        console.log(userDv,"用户数据");
+        console.log(userDv,"用户数据01");
         const userView = regionMapChart.createView();
         userView.data(userDv.rows);
         userView.scale({

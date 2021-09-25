@@ -62,7 +62,7 @@
                                   <div class="item-search">
                                     <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                                   </div>
-                                  <div class="item-search">
+                                  <div class="item-search" v-if="menuButtonPermit.includes('Works_workcount')">
                                     <el-button class="item-input" size="small" type="primary" @click="jumpStatPage">数据统计</el-button>
                                   </div>
                               </div>
