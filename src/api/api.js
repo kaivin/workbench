@@ -109,3 +109,11 @@ export function enCluesRegionStatData(data) {
     data
   });
 }
+// 意见反馈
+export function getAddsay(data) {
+  return request({
+    url: "/hxindex/Api/addsay",
+    method: "POST",
+    data
+  });
+}

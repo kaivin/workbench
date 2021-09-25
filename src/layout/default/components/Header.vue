@@ -181,15 +181,15 @@ export default {
         // 提交反馈
         saveData(){
           var $this = this;
-          $this.$store.dispatch('works/workOrderEvaluateSaveAction', $this.dialogForm).then(response=>{
+          $this.$store.dispatch('api/getAddsayAction', $this.dialogForm).then(response=>{
             if(response){
               if(response.status){
-                $this.dialogForm.content = "";
                 $this.$message({
                   showClose: true,
                   message: response.info,
                   type: 'success'
                 });
+                $this.dialogForm.content = "";
                 $this.handleClose();
               }else{
                 $this.$message({

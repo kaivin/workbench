@@ -13,6 +13,7 @@
   salesmanStatData,
   cnCluesRegionStatData,
   enCluesRegionStatData,
+  getAddsay,
 } from '@/api/api'
 
 const state = {
@@ -364,6 +365,16 @@ const actions = {
     enCluesRegionStatDataAction({ commit, state },data) {
       return new Promise((resolve, reject) => {
         enCluesRegionStatData(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 意见反馈
+    getAddsayAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getAddsay(data).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)
