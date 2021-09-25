@@ -232,7 +232,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 设置高度
     setHeight(){
@@ -339,7 +338,6 @@ export default {
       $this.$store.dispatch('website/websiteLogInfoAction', {id:$this.currentID}).then(response=>{
           if(response){
             if(response.status){
-              console.log(response,"文章详情");
               $this.articleData = response.data;
               if($this.articleData.readshow==1){
                 $this.getReadUser();
@@ -388,7 +386,6 @@ export default {
       document.getElementById("comment").scrollIntoView();
     },
     ready (editorInstance) {
-      console.log(editorInstance);
     },
     // 重置留言表
     resetComment(){

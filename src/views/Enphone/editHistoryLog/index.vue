@@ -234,7 +234,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 判断浏览器类型
     getBrowserType(){
@@ -289,7 +288,6 @@ export default {
                 }
             });
             $this.tableData = tableData;
-            console.log(tableData);
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({

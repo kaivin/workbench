@@ -115,7 +115,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // loading自定义
     loadingFun(){
@@ -144,7 +143,6 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res,"操作权限——工单发布");
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){

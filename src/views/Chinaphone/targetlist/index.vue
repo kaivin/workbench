@@ -248,7 +248,6 @@ export default {
     })
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -312,7 +311,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 判断浏览器类型
     getBrowserType(){
@@ -369,7 +367,6 @@ export default {
       $this.$store.dispatch('chinaphone/CndeparChooseAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response);
             if(response.data.length>0){
                 var deptList = [];
                 response.data.forEach(function(item,index){
@@ -422,7 +419,6 @@ export default {
       $this.$store.dispatch('chinaphone/CntargetlistAction', formData).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,'初始化搜索数据');
             if(response.data.length>0){
                 response.data.forEach(function(item){
                    $this.deptList.forEach(function(items){
@@ -466,7 +462,6 @@ export default {
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
           if(res.data.length>0){
-            console.log(res.data,"操作权限")
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
@@ -630,7 +625,6 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
       this.searchData.page = 1;
       this.loadingFun();
@@ -638,7 +632,6 @@ export default {
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.searchData.page = val;
       this.loadingFun();
       this.dealData();

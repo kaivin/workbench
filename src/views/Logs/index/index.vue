@@ -280,7 +280,6 @@ export default {
     $this.initData();
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -344,7 +343,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 高级筛选
     searchDialog(){
@@ -495,7 +493,6 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -574,7 +571,6 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
       this.searchData.page = 1;
       this.loadingFun();
@@ -582,7 +578,6 @@ export default {
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.searchData.page = val;
       this.loadingFun();
       this.initPage();
@@ -600,7 +595,6 @@ export default {
     // 选择动作切换事件
     actionChangeHandler(e){
       var $this = this;
-      console.log(e);
       $this.searchResult();
     },
     // 设置横向滚动条相关DOM数据

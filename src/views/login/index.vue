@@ -1,13 +1,11 @@
 <template>
     <div class="login-container flex-wrap">
-        <div class="loginFl">
-             <p class="loginFlPic"></p>
-        </div>
         <div class="loginFr flex-content">
             <div class="loginFrTop">
-                <p class="logo"><img class="logo-img" v-bind:src="logo" alt=""><img class="logo-title" v-bind:src="logoFont" alt=""></p>
+                <p class="logo"><img class="logo-title" v-bind:src="logoFont" alt=""></p>
             </div>
             <div class="loginFrMid flex-content">
+                <p class="loginFrMidIcon"><img class="logo-Icon" v-bind:src="logoIcon" alt=""></p>
                 <div class="loginFrMidMain">
                     <h2>欢迎登录</h2>
                     <el-form v-bind:model="loginForm" v-bind:rules="rules" ref="loginForm" class="login-form">                
@@ -41,7 +39,6 @@
                         </el-form-item>
                         <p class="forget" v-if="device==='desktop'"><span v-on:click="resetPwd">忘记密码？</span></p>
                     </el-form>
-                    <p>红星工作台登陆页面</p>
                 </div>
             </div>
             <div class="loginFrFoot" v-if='isTip'>
@@ -91,7 +88,7 @@
 <script>
 import { validEmail,isEmpty } from '@/utils/validate';
 import { mapGetters } from 'vuex'
-import logo from "@/assets/logo.png";
+import logoIcon from "@/assets/images/loginIcon.png";
 import logoTitle from "@/assets/top_font.png";
 const defaultSettings = require('@/settings.js');
 export default {
@@ -113,7 +110,7 @@ export default {
         };
         return{
             websiteName:defaultSettings.title,
-            logo: logo,
+            logoIcon:logoIcon,
             logoFont:logoTitle,
             loginForm:{
                 username:'',

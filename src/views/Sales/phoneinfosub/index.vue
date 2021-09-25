@@ -311,7 +311,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 初始化数据
     initData(){
@@ -339,8 +338,7 @@ export default {
       var $this = this;
       $this.$store.dispatch('Sales/getSalesDetailsAction',$this.formValidate).then(response=>{
         if(response){
-          if(response.status){
-            console.log(response,"初始化询盘信息");            
+          if(response.status){           
             $this.defaultInfo = response.data;
             if(response.data.saleswarnstatus==3){
               $this.isSalesman=true;
@@ -377,7 +375,6 @@ export default {
     // 设置询盘初始化信息
     setCluesInfo(){
       var $this = this;
-      console.log($this.defaultInfo,'$this.defaultInfo');
       $this.formData.id = $this.defaultInfo.id;
       $this.formData.allottime = $this.defaultInfo.allottime;
       $this.formData.leveltime = $this.defaultInfo.leveltime;
@@ -426,9 +423,7 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
-          console.log(res,"操作权限")
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
@@ -476,7 +471,6 @@ export default {
               salesuseridList.push(itemData);
             });
             $this.salesuseridList=salesuseridList;
-            console.log(response,"搜索条件");
             $this.initCluesInfo();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -518,7 +512,6 @@ export default {
       var $this = this;
       var formSaveData = $this.initFormData();      
       $this.formSaveData = formSaveData;
-      console.log(formSaveData,"formSaveData 添加保存")
       $this.$store.dispatch("Sales/getSalesDetailsModifyAction", formSaveData).then(response=>{
           if(response.status){
             $this.$message({
@@ -526,7 +519,6 @@ export default {
               message: response.info,
               type: 'success'
             });
-            console.log(response,'formSaveData 添加保存结果01');
             $this.initCluesInfo();
           }else{
             $this.$message({
@@ -557,7 +549,6 @@ export default {
       var resultData = {};
       resultData.id = $this.formData.id;
       $this.$store.dispatch("Sales/getSalesConfirmrRemindAction", resultData).then(response=>{
-          console.log(response,'阅读提醒')
           if(response.status){
             $this.$message({
               showClose: true,

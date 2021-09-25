@@ -3,7 +3,11 @@
     height:100%;
     overflow: hidden;
     position: relative;
-    background:#fff;
+    background-color: #fefdfe;
+    background-image: url('../assets/images/loginBg.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
     .add-edit-dialog{
         .el-form{
             padding-right: 20px;
@@ -20,108 +24,85 @@
         }
     }
 }
-.loginFl{
-    float: left;
-    display: block;
-    width: 19.0104%;
-    max-width: 365px;
-    .loginFlPic{
-        width: 100%;
-        height: 100%;
-        background-color: #020616;
-        background-image: url('../assets/images/login_bg.jpg');
-        background-size: cover;
-        background-position: center center;
-        background-repeat: no-repeat;
-    }
-}
 .loginFr{
     position: relative;
     display: flex;
     flex-direction: column;
     .loginFrTop{  
-        padding:25px 30px 0px 30px;      
+        padding-top:3.125%;   
+        width:91.6667%;
+        margin: 0 auto;   
         .logo{
             float: left;
             text-align:left;
             line-height: 0;
             font-size:0;
-            .logo-img{
-                display: inline-block;
-                height:32px;
-                vertical-align: middle;
-                margin-right: 15px;
-            }
             .logo-title{
                 display: inline-block;
-                height:22px;
+                height:50px;
                 vertical-align: middle;
-            }
-        }
-        .loginFrTopTxt{
-            float: right;
-            span{
-                float: left;
-                font-size: 13px;
-                color:$placeholderText;
-                margin-left: 20px;
-                line-height:32px;
-                cursor: pointer;
-                &:hover{
-                    color:$pink;
-                }
             }
         }
     }
     .loginFrMid{
         display: flex;
-        display: -webkit-flex;
+        padding-bottom: 90px;
+        width: 91.6667%;
+        margin: 0 auto;
         align-items: center;
-        justify-content: center;
-        flex: 1;
-        padding-bottom:90px;
+        justify-content: space-between;
+        &:before,&:after{display: none;}
+        .loginFrMidIcon{
+            float: left;
+            width:42.6136%;
+            margin-left:6.4772%;
+            img{width:100%;}
+        }
         .loginFrMidMain{
-            clear: both;
+            float: right;
             display: block;
-            width: 460px;
-            padding:0px;
-            box-shadow:0px 0px 35px rgba(104,126,144,0.1);
+            width:29.5454%;
+            margin-right:16.875%;
             h2{
                 clear: both;
                 display: block;
-                padding:60px 50px 40px 50px;
-                color:#2b2b2b;
-                font-size: 28px;
-                line-height:35px;
+                padding:60px 8.6538%;
+                color:#000000;
+                font-size:48px;
+                line-height:60px;
                 text-align: left;
             }
+            .el-form-item{margin-bottom:30px;}
             .login-form{
                 position: relative;
                 text-align: left;
-                padding:0px 50px 70px 50px;
+                padding:0px 8.6538%;
                 .secret{
                     clear: both;
                     display: block;
-                    color:#4f4f4f;
-                    font-size:14px;
-                    line-height:24px;
+                    color: #4f4f4f;
+                    font-size: 14px;
+                    line-height: 24px;
                     text-align: left;
-                    padding-bottom:50px;
-                    padding-left:5px;
+                    padding-bottom: 30px;
+                    padding-left: 5px;
+                    padding-top: 23px;
                     i{
                         display: inline-block;
-                        color:#ff840b;
+                        color:#2e88ff;
                         margin-right:10px;
                     }
                 }
                 .forget{
                     width: 100%;
-                    height: 20px;
-                    text-align:left;                 
-                    margin: -12px 0 0;
+                    text-align:center;                 
+                    margin:0;
+                    padding-top:33px;
+                    padding-bottom:50px;
+                    border-bottom:1px solid #ebebeb;
                     span{
                         font-size: 13px;
-                        line-height: 20px;
+                        line-height:1;
                         cursor: pointer;
                         transition: all .3s;
                         color: #2e88ff;   
@@ -140,7 +121,7 @@
                         font-size: 15px;
                         color: #858587;
                         transition: all 0.2s;
-                        border-radius: 4px;
+                        border-radius: 16px;
                     }
                     input:-moz-placeholder{color:#858587}
                     input:-ms-input-placeholder{color:#858587}
@@ -159,7 +140,7 @@
                     transition: all 0.2s;
                     background: #2e88ff;
                     border: 0px;
-                    border-radius: 4px;
+                    border-radius: 16px;
                     line-height: 60px;
                     font-size: 17px;
                 }
@@ -171,16 +152,6 @@
                     border:0;
                 }
             }
-            &>p{
-                clear: both;
-                display: block;
-                border-top:1px solid #ebebeb;
-                font-size:15px;
-                color:#b1b1b1;
-                text-align: center;
-                line-height:30px;
-                padding:20px 15px;
-            }
         }
     }
     .loginFrFoot{
@@ -189,7 +160,7 @@
         bottom:0px;
         right:0px;
         padding:25px 30px 20px 30px;
-        background:#f4f4f4;
+        background:#ffffff;
         strong{
             clear: both;
             display: block;

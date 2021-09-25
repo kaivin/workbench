@@ -438,7 +438,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 判断浏览器类型
     getBrowserType(){
@@ -495,7 +494,6 @@ export default {
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('works/workOrderListAction', searchData).then(response=>{
         if(response){
-          console.log(response,"工单列表");
           if(response.status){
             response.data.forEach(function(item,index){
               item.tagList = [];
@@ -584,7 +582,6 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -783,7 +780,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('works/issuerListAction', null).then(response=>{
         if(response){
-          console.log(response,"发布人数据");
           if(response.status){
             var userList = [];
             response.data.forEach(function(item,index){
@@ -809,7 +805,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('works/tagListAction', null).then(response=>{
         if(response){
-          console.log(response,"系统标签数据");
           if(response.status){
             var tagList = [];
             response.data.forEach(function(item,index){

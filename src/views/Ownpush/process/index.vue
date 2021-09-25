@@ -691,7 +691,6 @@ export default {
     })
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -755,7 +754,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 判断浏览器类型
     getBrowserType(){
@@ -895,7 +893,6 @@ export default {
       $this.$store.dispatch('ownpush/cnProcessListAction', searchData).then(response=>{
         if(response){
           if(response.status){
-            console.log(response);
             response.data.forEach(function(item,index){
               item.processmoney = item.processmoney.toFixed(2);
               item.hitsprice = item.hitsprice.toFixed(2);
@@ -936,7 +933,6 @@ export default {
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
           if(res.data.length>0){
-            console.log(res.data,"操作权限")
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
@@ -1138,7 +1134,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('ownpush/accountListAllAction', null).then(response=>{
           if(response.status){
-            console.log(response,"账户数据");
             var accountList = [];
             response.data.forEach(function(item,index){
               var itemData = {};
@@ -1164,7 +1159,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('ownpush/cnChannelListAction', null).then(response=>{
           if(response.status){
-            console.log(response);
             var channelList = [];
             response.data.forEach(function(item,index){
               var itemData = {};
@@ -1189,7 +1183,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('ownpush/userListAction', null).then(response=>{
           if(response.status){
-            console.log(response);
             var userList = [];
             response.data.forEach(function(item,index){
               var itemData = {};
@@ -1211,14 +1204,12 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
       this.searchData.page = 1;
       this.initPage();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.searchData.page = val;
       this.initPage();
     },
@@ -1241,7 +1232,6 @@ export default {
       var channelList = $this.channelList;
       var userList = $this.userList;
       var accountList = $this.accountList;
-      console.log(accountList,"账户数据");
       results.forEach(function(item,index){
         var itemData = {}
         itemData.processeffect = item.效果;
@@ -1275,7 +1265,6 @@ export default {
         dataList.push(itemData);
       });
       $this.importData = dataList;
-      console.log($this.importData,"导入数据");
       $this.$message.success({
         message: '数据导入成功！',
         type: 'success'
@@ -1286,7 +1275,6 @@ export default {
       var $this =this;
       $this.$store.dispatch('ownpush/cnProcessImportAction', $this.importData).then(response=>{
           if(response.status){
-            console.log(response);
             $this.$message.success({
               message: '数据上传成功！',
               type: 'success'

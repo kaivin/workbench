@@ -469,7 +469,6 @@ export default {
     $this.initData();
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -543,7 +542,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 判断浏览器类型
     getBrowserType(){
@@ -639,7 +637,6 @@ export default {
           if(response.status){
             var tableData = response.data;
             if($this.currentStatus==="stat"){
-              console.log(tableData,"统计数据");
             }else{
               tableData.forEach(function(item,index){
                 item.ownScore = "";
@@ -761,7 +758,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
-          console.log(res,'请求权限')
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
@@ -1081,7 +1077,6 @@ export default {
             });
             $this.userList = userList;
             $this.getCurrentStatusData();
-            console.log(response,"工单负责人数据");
           }else{
             $this.$message({
               showClose: true,

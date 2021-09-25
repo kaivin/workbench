@@ -359,7 +359,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // loading自定义
     loadingFun(){
@@ -421,7 +420,6 @@ export default {
       $this.$store.dispatch('Sales/getSalesAnalysisConditionAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,'数据分析查询条件01');
             var productList=[];
             if(response.producttype.length>1){
               response.producttype.forEach(function(item,index){
@@ -503,7 +501,6 @@ export default {
       $this.$store.dispatch('Sales/getSalesDataAnalysisAction', searchData).then(response=>{
         if(response){
           if(response.status){
-            console.log(response);
             $this.tableData = response.data;
             $this.$nextTick(()=>{
               document.getElementById("resultPane").scrollIntoView({behavior: "smooth"});
@@ -548,9 +545,7 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
-          console.log(res,"数据分析操作权限")
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
@@ -707,7 +702,6 @@ export default {
     //待处理已处理点击事件
     handleCheckedmanagestatuschange(e){
       var $this = this;
-      console.log(e,'e')
       var checkedCount = e.length;
       if(checkedCount === $this.managestatusList.length){
         $this.checkAllmanagestatus = true;
@@ -742,7 +736,6 @@ export default {
     // 已回复无回复点击事件
     handleCheckedReplystatuschange(e){
       var $this = this;
-      console.log(e,'e')
       var checkedCount = e.length;
       if(checkedCount === $this.replystatusList.length){
         $this.checkAllReplystatus = true;

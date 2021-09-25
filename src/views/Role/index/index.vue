@@ -423,7 +423,6 @@ export default {
     })
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -487,7 +486,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 判断浏览器类型
     getBrowserType(){
@@ -614,7 +612,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
-          console.log(res,"操作权限")
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
@@ -1141,7 +1138,6 @@ export default {
       });
     },
     handleMenuCheckChange(data, checked, indeterminate) {
-      console.log(data, checked, indeterminate);
     },
     // 获取当前被选中的树节点数组
     getCheckedKeys() {
@@ -1432,7 +1428,6 @@ export default {
       });
     },
     handlePostCheckChange(data, checked, indeterminate) {
-      console.log(data, checked, indeterminate);
     },
     // 获取当前被选中的树节点数组
     getPostCheckedKeys() {
@@ -1505,7 +1500,6 @@ export default {
         if(response.status){
           var rolePostPermitData = [];
           var selectedRolePostPermitData = [];
-          console.log(response,"已分配权限")
           if(response.data.length>0){
             response.data.forEach(function(item,index){
               var itemData = {};
@@ -1582,7 +1576,6 @@ export default {
     getAllotedWorkOrder(){
       var $this = this;
       $this.$store.dispatch('role/roleWorkOrderAction', {id:$this.currentRoleID}).then(response=>{
-        console.log(response,"已分配工单权限");
         if(response.status){
           var roleWorkOrderData = [];
           var selectedRoleWorkOrderData = [];
@@ -1620,7 +1613,6 @@ export default {
       var workOrderDataNow = $this.workOrderData;
       var workOrderIngData = [];
       $this.$store.dispatch('role/getWorkOrderAction', {ids:"1"}).then(response=>{
-        console.log(response,"可分配工单权限");
         if(response.status){
           if(response.data.length>0){
             if(workOrderDataNow.length>0){

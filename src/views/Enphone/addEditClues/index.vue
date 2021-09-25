@@ -35,7 +35,7 @@
                   </dl>
                 </div>
                 <div class="EnphoneAddEditMainItem customer-info">
-                    <dl style="width:160px;">
+                    <dl style="width:194px;">
                       <dt>客户姓名/称呼：</dt>
                       <dd>
                         <el-input
@@ -46,7 +46,7 @@
                         </el-input>
                       </dd>
                     </dl>
-                    <dl style="width:160px;">
+                    <dl style="width:194px;">
                       <dt>客户Email：</dt>
                       <dd>
                         <el-input
@@ -57,7 +57,7 @@
                         </el-input>
                       </dd>
                     </dl>
-                    <dl style="width:160px;">
+                    <dl style="width:194px;">
                       <dt>客户电话：</dt>
                       <dd>
                         <el-input
@@ -68,7 +68,7 @@
                         </el-input>
                       </dd>
                     </dl>
-                    <dl style="width:160px;">
+                    <dl style="width:194px;">
                       <dt>分配的业务员：</dt>
                       <dd>
                         <el-select size="small" v-model="formData.salesuserid" placeholder="请选择">
@@ -81,7 +81,7 @@
                         </el-select>
                       </dd>
                     </dl>
-                    <dl style="width:160px;">
+                    <dl style="width:194px;">
                       <dt>富通天下ID</dt>
                       <dd>
                         <el-input
@@ -90,19 +90,6 @@
                             v-model="formData.ftword_id"
                             clearable>
                         </el-input>
-                      </dd>
-                    </dl>
-                    <dl style="width:160px;">
-                      <dt>价值：</dt>
-                      <dd>
-                        <el-select v-model="formData.enxunprice" style="width:100%" size="small" clearable placeholder="请选择">
-                            <el-option
-                            v-for="item in priceList"
-                            :key="item.label"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
                       </dd>
                     </dl>
                 </div>
@@ -210,6 +197,32 @@
                       </dd>
                     </dl>
                     <dl style="width:160px;">
+                      <dt>设备：</dt>
+                      <dd>
+                        <el-select v-model="formData.device" size="small" style="width:100%" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in deviceList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                      </dd>
+                    </dl>
+                    <dl style="width:160px;">
+                      <dt>IP：</dt>
+                      <dd>
+                        <el-input
+                            placeholder="IP"
+                            size="small"
+                            v-model="formData.ip"
+                            clearable>
+                        </el-input>
+                      </dd>
+                    </dl>
+                </div>
+                <div class="EnphoneAddEditMainItem customer-info">
+                    <dl style="width:160px;">
                       <dt>来自类型：<span>*</span></dt>
                       <dd>
                         <el-select v-model="formData.messagetype" size="small" clearable placeholder="请选择">
@@ -224,21 +237,6 @@
                       </dd>
                     </dl>
                     <dl style="width:160px;">
-                      <dt>设备：</dt>
-                      <dd>
-                        <el-select v-model="formData.device" size="small" style="width:100%" clearable placeholder="请选择">
-                            <el-option
-                            v-for="item in deviceList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                      </dd>
-                    </dl>
-                </div>
-                <div class="EnphoneAddEditMainItem customer-info">
-                    <dl style="width:160px;">
                       <dt>渠道：<span>*</span></dt>
                       <dd>
                         <el-select v-model="formData.mode" size="small" style="width:100%" clearable placeholder="请选择">
@@ -251,7 +249,7 @@
                         </el-select>
                       </dd>
                     </dl>
-                    <dl style="width:330px;">
+                    <dl style="width:230px;">
                       <dt>来自网页：<span>(渠道为外部链接的请备注URL)</span></dt>
                       <dd>
                         <el-input
@@ -263,23 +261,25 @@
                         </el-input>
                       </dd>
                     </dl>
-                    <dl style="width:160px;">
-                      <dt>IP：</dt>
-                      <dd>
-                        <el-input
-                            placeholder="IP"
-                            size="small"
-                            v-model="formData.ip"
-                            clearable>
-                        </el-input>
-                      </dd>
-                    </dl>
-                    <dl style="width:160px;">
+                    <dl style="width:90px;">
                       <dt>级别：</dt>
                       <dd>
                         <el-select v-model="formData.level_id" size="small" style="width:100%" clearable placeholder="请选择">
                             <el-option
                             v-for="item in levelList"
+                            :key="item.label"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                      </dd>
+                    </dl>
+                    <dl style="width:160px;">
+                      <dt>价值：</dt>
+                      <dd>
+                        <el-select v-model="formData.enxunprice" style="width:100%" size="small" clearable placeholder="请选择">
+                            <el-option
+                            v-for="item in priceList"
                             :key="item.label"
                             :label="item.label"
                             :value="item.value">
@@ -678,7 +678,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 初始化数据
     initData(){
@@ -737,7 +736,6 @@ export default {
       $this.$store.dispatch('enphone/initCluesEditInfoAction', {id:$this.ID}).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"询盘信息");
             $this.defaultInfo = response.data;
             $this.isCustomer = response.custormselfwarnshow?true:false;
             $this.isSalesman = response.givecustormwarnshow?true:false;
@@ -873,7 +871,6 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -925,7 +922,6 @@ export default {
       $this.$store.dispatch('enphone/cluesAddEditDataAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"条件信息01");
             var modeList = [];
             response.source.forEach(function(item,index){
               var itemData = {};
@@ -976,7 +972,7 @@ export default {
                 SandGravelList.push(itemData);
               }else if(item.typeid==2||item.typeid==3){
                 OreDressList.push(itemData);
-              }else if(item.typeid==4||item.typeid==5||item.typeid==7){
+              }else if(item.typeid==4||item.typeid==8||item.typeid==9){
                 FlourList.push(itemData);
               }else{
                 otherList.push(itemData);
@@ -1021,7 +1017,6 @@ export default {
       var $this = this;
       $this.$store.dispatch("enphone/getCurrentPhoneUserAction", {id:$this.formData.phoneid}).then(response=>{
           if(response.status){
-            console.log(response);
             if(response.salesuser.length>0){
               var salesuserlist=[];
               response.salesuser.forEach(function(item,index){
@@ -1050,7 +1045,6 @@ export default {
       if($this.formData.url!=""){
         $this.$store.dispatch("enphone/cluesUrlGetPhoneAction", {url:$this.formData.url}).then(response=>{
             if(response.status){
-              console.log(response);
               if(response.phone){
                 var phoneList = $this.phoneList;
                 phoneList.forEach(function(item,index){
@@ -1099,7 +1093,6 @@ export default {
       var formData = new FormData();
       formData.append('file',parm.file);
       $this.$store.dispatch('api/fileUploadAction', formData).then(response=>{
-        console.log(response,"文件信息");
         if(response){
           if(response.status){
             $this.$message({
@@ -1170,7 +1163,6 @@ export default {
       if(!$this.validationForm()){
         return false;
       }
-      console.log(formData,"formData 添加保存")
       var pathUrl = "";
       if($this.formData.id==0){
         pathUrl = "enphone/cluesAddAction";
@@ -1188,6 +1180,10 @@ export default {
               $this.initCluesInfo();
             }else{
               $this.clearFormData();
+              if($this.device==="desktop"){
+                var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:response.enid}});
+                window.open(routeUrl.href,'_blank');
+              }
             }
           }else{
             $this.$message({
@@ -1213,6 +1209,7 @@ export default {
       $this.formData.saleswarnstatus=false;
       $this.formData.custormfiles="";
       $this.formData.custormfilesname="";
+      $this.fileList = [];
       $this.formData.xuntime="";
       $this.formData.timediff="";
       $this.formData.continent="";
@@ -1236,7 +1233,7 @@ export default {
       $this.formData.phoneid = "";
       $this.formData.keying = [];
       $this.formData.enxunprice = "";
-      $this.formData.ennature = "";
+      $this.formData.ennature = "";      
       var phoneList = $this.phoneList;
       phoneList.forEach(function(item,index){
         item.isOn = false;
@@ -1397,7 +1394,6 @@ export default {
       formCountry.name=$this.formData.country;
       $this.$store.dispatch("enphone/getcontientAction", formCountry).then(response=>{
           if(response.status){
-            console.log(response,'填写国家自动获取大洲和时差');
             $this.formData.continent=response.data.contient;
             $this.formData.timediff=response.data.timecha;
           }else{

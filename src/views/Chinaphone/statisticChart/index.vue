@@ -689,7 +689,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // loading自定义
     loadingFun(){
@@ -842,14 +841,12 @@ export default {
       var checkedA6Product = $this.checkedA6Product;
       var checkedA7Product = $this.checkedA7Product;
       searchData.productid=checkedA1Product.concat(checkedA2Product).concat(checkedA3Product).concat(checkedA4Product).concat(checkedA5Product).concat(checkedA6Product).concat(checkedA7Product)
-      console.log(searchData);
       return searchData;
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -890,7 +887,6 @@ export default {
       $this.$store.dispatch('chinaphone/cluesAnalysisSystemDataAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"搜索条件信息");
             var deviceList = [];
             response.device.forEach(function(item,index){
               var itemData = {};
@@ -2552,7 +2548,6 @@ export default {
                   return obj;
                 }
               });
-              console.log(userDv,"用户数据");
               const userView = chart.createView();
               userView.data(userDv.rows);
               userView.scale({

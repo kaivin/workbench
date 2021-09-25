@@ -355,7 +355,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 重置页面
     resetFormData(){
@@ -374,7 +373,6 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res,"操作权限——工单发布");
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -451,7 +449,6 @@ export default {
       $this.$store.dispatch('works/getSystemDataAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"所有展示数据")
             response.userwritetypepermit.forEach(function(item,index){
                 if(index == 0){
                     item.plain = true;
@@ -515,14 +512,12 @@ export default {
     // 5、 你可以在ready方法中拿到editorInstance实例,所有API和官方的实例是一样了。http://fex.baidu.com/ueditor/#api-common
     ready (ue) {
       ue.addListener('ready', () => {
-          console.log(ue);
       })
     },
     // 获取编辑工单详情
     getArticleInfo(){
       var $this = this;
       $this.$store.dispatch('works/workOrderEditInitInfoAction', {id:$this.formData.id}).then(response=>{
-        console.log(response,"工单详情");
           if(response){
             if(response.status){
               $this.articleData = response.data;

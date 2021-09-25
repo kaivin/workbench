@@ -739,7 +739,6 @@ export default {
     })
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -803,7 +802,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 判断浏览器类型
     getBrowserType(){
@@ -866,7 +864,6 @@ export default {
     getPhoneInitData(){
       var $this = this;
       $this.$store.dispatch('chinaphone/cluesPhoneIndexDataAction', null).then(response=>{
-        console.log(response,"初始化页面信息");
         if(response){
           if(response.status){
             response.groupmonthtrend.forEach(function(item,index){
@@ -943,7 +940,6 @@ export default {
       var $this = this;
       $this.loadingFun();
       $this.$store.dispatch('chinaphone/cluesPhoneStatDataAction', null).then(response=>{
-        console.log(response,"电话列表信息");
         if(response){
           if(response.status){
             var phoneArr=response.data;
@@ -1062,7 +1058,6 @@ export default {
               $this.isDisabled = true;
             }
             $this.writepermit = response.writepermit?true:false;
-            console.log(response,"询盘信息——$this.tableData");
             $this.tableData = response.data;
             $this.infoData = infoData;
             $this.totalDataNum = response.allcount;   
@@ -1081,7 +1076,6 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -1233,7 +1227,6 @@ export default {
         $this.$store.dispatch('chinaphone/cluesCurrentPhoneSearchDataAction', {phoneid:$this.phoneID}).then(response=>{
           if(response){
             if(response.status){
-              console.log(response,"搜索条件信息");
               var deviceList = [];
               response.device.forEach(function(item,index){
                 var itemData = {};
@@ -1296,14 +1289,12 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
       this.searchData.page = 1;
       this.initPage();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.searchData.page = val;
       this.initPage();
     },
@@ -1409,7 +1400,6 @@ export default {
         });
         resultData.push(itemData);
       });
-      console.log(resultData,"批量修改提交数据");
       $this.$store.dispatch('chinaphone/cluesCurrentPhoneDataEleEditPageAction', resultData).then(response=>{
         if(response){
           if(response.status){
@@ -1567,7 +1557,6 @@ export default {
       }
       $this.chartData.dept_id = $this.currentDepartID == 0?"":[$this.currentDepartID];
       $this.$store.dispatch('chinaphone/cluesPhoneChartDataAction', $this.chartData).then(response=>{
-        console.log(response,"曲线图表数据");
         if(response){
           if(response.status){
             response.groupmonthtrend.forEach(function(item,index){
@@ -1596,7 +1585,6 @@ export default {
       $this.$store.dispatch('chinaphone/CustormeditlogAction', FormID).then(response=>{
         if(response){
           if(response.status){  
-            console.log(response,'级别修改记录-response');  
             if(response.data.length>0){
               $this.levelPopBool=true;
               $this.levelPop=response.data;
@@ -1688,7 +1676,6 @@ export default {
     // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
-      console.log("中文询盘页面监听事件");
       if($this.$route.query.phoneID){        
           if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
             var scrTop = event.target.scrollTop;

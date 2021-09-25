@@ -248,7 +248,6 @@ export default {
     })
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -312,7 +311,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // loading自定义
     loadingFun(){
@@ -359,9 +357,7 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
-            console.log(res,"权限")
             if(res.data.length>0){
                 res.data.forEach(function(item,index){
                     $this.menuButtonPermit.push(item.action_route);
@@ -415,7 +411,6 @@ export default {
           formData.website_id = $this.$route.query.websiteID;
           $this.$store.dispatch('website/websiteLogListAction', formData).then(response=>{
               if(response){
-                  console.log(response,"日志数据");
                   if(response.status){
                       response.data.forEach(function(item,index){
                           item.tagList = [];
@@ -521,14 +516,12 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.limit = val;
       this.page = 1;
       this.initData();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.page = val;
       this.initData();
     },

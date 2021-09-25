@@ -271,7 +271,6 @@ export default {
     $this.initData();
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -335,7 +334,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // loading自定义
     loadingFun(){
@@ -399,7 +397,6 @@ export default {
               $this.setTableHeight();
             })
             $this.isLoading.close();
-            console.log(response,"业务员数据统计——$this.tableData");
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -424,7 +421,6 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){

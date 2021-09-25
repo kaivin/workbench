@@ -379,7 +379,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 初始化数据
     initData(){
@@ -418,7 +417,6 @@ export default {
       $this.$store.dispatch('chinaphone/initCluesEditInfoAction', {id:$this.ID}).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"询盘信息");
             $this.defaultInfo = response.data;
             $this.setCluesInfo();
           }else{
@@ -498,7 +496,6 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -550,7 +547,6 @@ export default {
       $this.$store.dispatch('chinaphone/cluesAddEditDataAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"条件信息");
             var sourceList = [];
             response.source.forEach(function(item,index){
               var itemData = {};
@@ -597,7 +593,6 @@ export default {
       if($this.formData.url!=""){
         $this.$store.dispatch("chinaphone/cluesUrlGetPhoneAction", {url:$this.formData.url}).then(response=>{
             if(response.status){
-              console.log(response);
               if(response.phone){
                 var phoneList = $this.phoneList;
                 phoneList.forEach(function(item,index){
@@ -752,6 +747,10 @@ export default {
               $this.initCluesInfo();
             }else{
               $this.clearFormData();
+              if($this.device==="desktop"){
+                var routeUrl =  $this.$router.resolve({path:'/Chinaphone/addEditClues',query:{ID:response.id}});
+                window.open(routeUrl.href,'_blank');
+              }
             }
           }else{
             $this.$message({

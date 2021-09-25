@@ -689,7 +689,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // loading自定义
     loadingFun(){
@@ -759,7 +758,6 @@ export default {
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
           if(res.data.length>0){
-            console.log(res.data,"操作权限");
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
@@ -849,7 +847,6 @@ export default {
       $this.$store.dispatch('website/websiteListAction', formData).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"网站列表——$this.tableData");
             response.data.forEach(function(item,index){
               if(item.languagename=="中文"){
                 item.isCn = true;
@@ -981,7 +978,6 @@ export default {
       $this.$store.dispatch('website/websitePropertyAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"查询条件数据");
             var brandSelectList = [];
             response.brand.forEach(function(item,index){
               var itemData = {};
@@ -1335,7 +1331,6 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.limit = val;
       this.page = 1;
       this.loadingFun();
@@ -1343,7 +1338,6 @@ export default {
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.page = val;
       this.loadingFun();
       this.initData();
@@ -1527,8 +1521,6 @@ export default {
           $this.scrollPosition.fixedBottom = 15;
         }
       }
-      console.log(tableObj.height,"表格高度1");
-      console.log($this.scrollTable.tableBottom,"表格底距离页面顶的距离11");
     },
     // 竖向滚动条滚动事件
     handleScroll(event){

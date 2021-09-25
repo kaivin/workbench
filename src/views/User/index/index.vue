@@ -486,7 +486,6 @@ export default {
     })
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -550,7 +549,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 判断浏览器类型
     getBrowserType(){
@@ -639,7 +637,6 @@ export default {
               $this.openClass = false;
             }
             $this.isLoading.close();
-            console.log(response,'$this.tableData')
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
@@ -710,7 +707,6 @@ export default {
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
           if(res.data.length>0){
-            console.log(res.data,"操作权限")
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
@@ -1074,7 +1070,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('user/userAllotedRoleAction', {id:$this.currentUserID}).then(response=>{
         if(response.status){
-          console.log(response,"已分配")
           var roleUserData = [];
           var selectedRoleUserData = [];
           if(response.data.length>0){
@@ -1112,7 +1107,6 @@ export default {
       var roleIngData = [];
       $this.$store.dispatch('user/userCanAllotRoleAction', null).then(response=>{
         if(response.status){
-          console.log(response,"可分配")
           if(response.data.length>0){
             if(roleDataNow.length>0){
               response.data.forEach(function(item,index){
@@ -1149,7 +1143,6 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.loadingFun();
       this.searchData.limit = val;
       this.searchData.page = 1;
@@ -1157,7 +1150,6 @@ export default {
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.loadingFun();
       this.searchData.page = val;
       this.initPage();

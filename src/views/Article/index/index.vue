@@ -543,7 +543,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // loading自定义
     loadingFun(){
@@ -642,7 +641,6 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res,"操作权限");
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -863,7 +861,6 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.limit = val;
       this.page = 1;
       if(this.$route.query.id){
@@ -874,7 +871,6 @@ export default {
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.page = val;
       if(this.$route.query.id){
         this.getPostList();
@@ -894,7 +890,6 @@ export default {
       $this.loadingFun();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('article/postListAction',dataParam).then(res=>{
-        console.log(res);
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -969,7 +964,6 @@ export default {
       var dataParam = {}
       dataParam.id = $this.currentID;
       $this.$store.dispatch('article/postTagListAction',dataParam).then(res=>{
-        console.log(res);
         if(res.status){
           if(res.data.length>0){
             $this.changeTagType(res.data,$this.currentTagID,$this.currentTagName,$this);
@@ -1189,8 +1183,6 @@ export default {
     // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
-      console.log("论坛页面监听事件");
-      console.log(event.target.scrollTop,"滚动条监听");
       if($this.isSearch||$this.isList){
         if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
           var scrTop = event.target.scrollTop;

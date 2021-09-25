@@ -306,7 +306,6 @@ export default {
       var $this = this;
       $this.$store.dispatch("modulelist/getPermitModuleListAction", null).then((response) => {
         if (response) {
-          console.log(response,'当前登录用户首页拥有阅读权限的模块');
           if (response.status) {
             $this.permitModules = response.data;
             $this.initPage();
@@ -337,7 +336,6 @@ export default {
       $this.$store.dispatch("api/getNewPostArticleAction", null).then((response) => {
         if (response) {
           if (response.status) {
-            console.log(response.data,'论坛最新资讯')
             $this.newsList = response.data;
           } else {
             $this.$message({
@@ -364,7 +362,6 @@ export default {
       $this.$store.dispatch("api/cnCluesStatDataAction", resultData).then((response) => {
         if (response) {
           if (response.status) {
-            console.log(response,"中文统计数据");
             response.tong.forEach(function(item,index){
               item.date = item.date+"\n"+item.week.replace("星期","周");
             });
@@ -450,7 +447,6 @@ export default {
       $this.$store.dispatch("api/enCluesStatDataAction", resultData).then((response) => {
         if (response) {
           if (response.status) {
-            console.log(response,"英文统计数据01");
             response.tong.forEach(function(item,index){
               item.date = item.date+"\n"+item.week.replace("星期","周");
             });
@@ -551,7 +547,6 @@ export default {
               }
             });
             $this.currentCluesData.topTenRegionData = topTenRegionData;
-            console.log(response,"地区询盘统计");
             $this.drawCnCluesRegionChart();
             $this.drawTopTen();
           } else {
@@ -595,8 +590,6 @@ export default {
               }
             });
             $this.currentCluesData.topTenRegionData = topTenRegionData;
-            console.log($this.currentCluesData.cluesRegionData,"地区询盘统计");
-            console.log($this.currentCluesData.topTenRegionData,"top10");
             $this.drawEnCluesRegionChart();
             $this.drawTopTen();
           } else {
@@ -812,7 +805,6 @@ export default {
               return obj;
             }
           });
-          console.log(userDv,"用户数据02");
           const userView = regionMapChart.createView();
           userView.data(userDv.rows);
           userView.scale({
@@ -920,7 +912,6 @@ export default {
             return obj;
           }
         });
-        console.log(userDv,"用户数据01");
         const userView = regionMapChart.createView();
         userView.data(userDv.rows);
         userView.scale({
@@ -1304,7 +1295,6 @@ export default {
       $this.$store.dispatch("api/salesmanStatDataAction", null).then((response) => {
         if (response) {
           if (response.status) {
-            console.log(response,"业务员统计数据");
             $this.salesmanData = response;
           } else {
             $this.$message({

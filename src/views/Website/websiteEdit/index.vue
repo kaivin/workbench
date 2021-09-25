@@ -667,7 +667,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 初始化数据
     initData(){
@@ -684,7 +683,6 @@ export default {
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
           if(res.data.length>0){
-            console.log(res.data,"操作权限");
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
@@ -733,7 +731,6 @@ export default {
       $this.$store.dispatch('website/websiteEditSystemInfoAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"系统展示数据");
             var brandSelectList = [];
             response.brand.forEach(function(item,index){
               var itemData = {};
@@ -796,7 +793,6 @@ export default {
           $this.$store.dispatch('website/websiteEditInfoAction', {id:$this.formData.id}).then(response=>{
               if(response){
                 if(response.status){
-                  console.log(response,"网站详情");
                   $this.websiteInfo = response.data;
                   $this.initWebsiteInfo($this.websiteInfo);
                 }else{

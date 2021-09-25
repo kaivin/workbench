@@ -182,7 +182,6 @@ export default {
     })
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -246,7 +245,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 判断浏览器类型
     getBrowserType(){
@@ -293,7 +291,6 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -403,7 +400,6 @@ export default {
     getAllotedRole(){
       var $this = this;
       $this.$store.dispatch('modulelist/homePageModuleAllotedRoleListAction', {module_id:$this.currentID}).then(response=>{
-        console.log(response,"已分配可读角色");
         if(response.status){
           var roleUserData = [];
           var selectedRoleUserData = [];

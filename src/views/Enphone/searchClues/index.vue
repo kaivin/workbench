@@ -866,7 +866,6 @@ export default {
     })
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -930,7 +929,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // loading自定义
     loadingFun(){
@@ -980,7 +978,6 @@ export default {
       $this.$store.dispatch('enphone/cluesSearchSelectDataAction', null).then(response=>{
         if(response){
           if(response.status){
-              console.log(response,"搜索数据02")
               var departData=response.phone;
               //数组去重然后放在一个新的数组里面
               var newStrArr = [];
@@ -1200,7 +1197,6 @@ export default {
         $this.$store.dispatch('enphone/getCurrentCluesSearchListAction', resultData).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"搜索条件数据01");
             var infoData = {};
             infoData.totalCount = response.allcount;
             if($this.searchData.is_group){
@@ -1475,7 +1471,6 @@ export default {
           $this.$store.dispatch('enphone/getCurrentCateProductListAction', {typeid:e}).then(response=>{
               if(response){
                   if(response.status){
-                      console.log(response,"搜索条件信息phoneindex");
                       var productList = [];
                       response.data.forEach(function(item,index){
                           var itemData = {};
@@ -1564,14 +1559,12 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
       this.searchData.page = 1;
       this.enCluesSearchData();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.searchData.page = val;
       this.enCluesSearchData();
     },
@@ -1582,8 +1575,7 @@ export default {
       FormID.id = Rid;
       $this.$store.dispatch('enphone/CustormeditlogAction', FormID).then(response=>{
         if(response){
-          if(response.status){  
-            console.log(response,'级别修改记录-response');  
+          if(response.status){   
             if(response.data.length>0){
               $this.levelPopBool=true;
               $this.levelPop=response.data;

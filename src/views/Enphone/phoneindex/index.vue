@@ -1453,7 +1453,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // loading自定义
     loadingFun(){
@@ -1703,7 +1702,6 @@ export default {
             }
             $this.defaultData.custorAndsalesmwarn=custorAndsalesmwarn.concat(custormwarn,saleswarning);
             $this.defaultData.departcountArr = departcountArr;
-            console.log(response,"电话信息");
             $this.isLoading.close();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -1858,7 +1856,6 @@ export default {
               $this.isDisabled = true;
             }
             $this.writepermit = response.writepermit?true:false;
-            console.log(response,"询盘信息——$this.tableData");
             $this.tableData = response.data;
             $this.infoData = infoData;
             $this.totalDataNum = response.allcount;
@@ -1877,7 +1874,6 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -1948,7 +1944,6 @@ export default {
       $this.$store.dispatch('enphone/cluesCurrentPhoneSearchDataAction', resultData).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"搜索条件信息");
             var natureList = [];
             response.nature.forEach(function(item,index){
               var itemData = {};
@@ -2027,14 +2022,12 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
       this.searchData.page = 1;
       this.leftPhoto();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.searchData.page = val;
       this.leftPhoto();
     },
@@ -2157,7 +2150,6 @@ export default {
         itemData.remark3 = item.remark3;
         resultData.push(itemData);
       });
-      console.log(resultData,"批量修改提交数据");
       $this.$store.dispatch('enphone/cluesCurrentPhoneDataEleEditPageAction', resultData).then(response=>{
         if(response){
           if(response.status){
@@ -2242,7 +2234,6 @@ export default {
       $this.$store.dispatch('enphone/cluesCurrentPhoneUserCanEditFieldAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"字段权限");
             $this.permitField = response.data;
             if($this.$route.query.phoneID||$this.$route.query.key){
                 $this.$nextTick(function () {
@@ -2268,7 +2259,6 @@ export default {
           $this.$store.dispatch('enphone/getCurrentCateProductListAction', {typeid:e}).then(response=>{
               if(response){
                   if(response.status){
-                      console.log(response,"搜索条件信息phoneindex");
                       var productList = [];
                       response.data.forEach(function(item,index){
                           var itemData = {};
@@ -2299,7 +2289,6 @@ export default {
       $this.$store.dispatch('enphone/CustormeditlogAction', FormID).then(response=>{
         if(response){
           if(response.status){  
-            console.log(response,'级别修改记录-response');  
             if(response.data.length>0){
               $this.levelPopBool=true;
               $this.levelPop=response.data;
@@ -2332,7 +2321,6 @@ export default {
           item.isOn = false;
         }
       });
-      console.log($this.departcountUlist,'$this.departcountUlist');
     },  
     // 高级筛选
     searchDialog(){
@@ -2426,7 +2414,6 @@ export default {
     // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
-      console.log("英文询盘页面监听事件");
       if($this.$route.query.phoneID||$this.$route.query.key){
           if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
             var scrTop = event.target.scrollTop;

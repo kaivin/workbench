@@ -325,7 +325,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 判断浏览器类型
     getBrowserType(){
@@ -382,7 +381,6 @@ export default {
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('works/workOrderStatInfoAction', searchData).then(response=>{
         if(response){
-          console.log(response,"工单列表");
           if(response.status){
             $this.tableData = response.data;
             $this.isLoading.close();

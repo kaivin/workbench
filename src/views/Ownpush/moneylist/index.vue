@@ -507,7 +507,6 @@ export default {
     })
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -571,7 +570,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 判断浏览器类型
     getBrowserType(){
@@ -706,7 +704,6 @@ export default {
       $this.$store.dispatch('ownpush/cnCostListAction', searchData).then(response=>{
         if(response){
           if(response.status){
-              console.log(response);
               response.data.forEach(function(item,index){
                 item.money1 = item.money1.toFixed(2);
                 item.money2 = item.money2.toFixed(2);
@@ -769,7 +766,6 @@ export default {
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
           if(res.data.length>0){
-            console.log(res.data,"操作权限")
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
@@ -939,7 +935,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('ownpush/userListAction', null).then(response=>{
           if(response.status){
-            console.log(response);
             var userList = [];
             response.data.forEach(function(item,index){
               var itemData = {};
@@ -962,7 +957,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('ownpush/accountListAllAction', null).then(response=>{
           if(response.status){
-            console.log(response);
             var accountList = [];
             response.data.forEach(function(item,index){
               var itemData = {};
@@ -987,7 +981,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('ownpush/cnChannelListAction', null).then(response=>{
           if(response.status){
-            console.log(response);
             var channelList = [];
             response.data.forEach(function(item,index){
               var itemData = {};
@@ -1012,7 +1005,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('ownpush/userListAction', null).then(response=>{
           if(response.status){
-            console.log(response);
             var userList = [];
             response.data.forEach(function(item,index){
               var itemData = {};
@@ -1034,7 +1026,6 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.loadingFun();
       this.searchData.limit = val;
       this.searchData.page = 1;
@@ -1042,7 +1033,6 @@ export default {
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.loadingFun();
       this.searchData.page = val;
       this.initPage();

@@ -178,7 +178,6 @@ export default {
     })
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -242,7 +241,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 判断浏览器类型
     getBrowserType(){
@@ -292,7 +290,6 @@ export default {
       $this.$store.dispatch('ownpush/cnChannelListAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response);
             if(response.data.length>0){
               $this.tableData = response.data;
             }else{
@@ -328,7 +325,6 @@ export default {
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
           if(res.data.length>0){
-            console.log(res.data,"操作权限")
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });

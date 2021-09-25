@@ -317,7 +317,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 初始化数据
     initData(){
@@ -330,7 +329,6 @@ export default {
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
           if(res.data.length>0){
-            console.log(res.data,"操作权限");
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });

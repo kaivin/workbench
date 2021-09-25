@@ -786,7 +786,6 @@ export default {
     $this.initData();
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -850,7 +849,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // loading自定义
     loadingFun(){
@@ -975,7 +973,6 @@ export default {
       $this.$store.dispatch('Sales/getSalesSearchListAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"搜索条件");
             var producttype_idList=[];
             response.producttype.forEach(function(item,index){
               var itemData = {};
@@ -1054,7 +1051,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('Sales/getSalesPublicDataAction', null).then(response=>{
         if(response){        
-          console.log(response,'左侧公共数据');
           var defaultData = {};
           defaultData.waitcount=response.waitcount;
           defaultData.allotcount=response.allotcount;
@@ -1067,8 +1063,7 @@ export default {
           defaultData.hassaycount=response.hassaycount;
           defaultData.warning=response.warning;
           defaultData.warningcount=response.warningcount;
-          $this.defaultData = defaultData;
-          console.log(defaultData,'defaultData');          
+          $this.defaultData = defaultData;         
           $this.searchInit();
         }
       });
@@ -1081,7 +1076,6 @@ export default {
           $this.$store.dispatch('enphone/getCurrentCateProductListAction', {typeid:e}).then(response=>{
               if(response){
                   if(response.status){
-                      console.log(response,"搜索条件信息phoneindex");
                       var productidList = [];
                       response.data.forEach(function(item,index){
                           var itemData = {};
@@ -1223,7 +1217,6 @@ export default {
       var $this = this;
       if(resData){
         if(resData.status){
-          console.log(resData,T);
           var tableData = resData.data;
           if(tableData.length>0){
             tableData.forEach(function(item,index){   
@@ -1296,9 +1289,7 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
-          console.log(res,"操作权限")
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
@@ -1429,14 +1420,12 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
       this.searchData.page = 1;
       this.initCluesList();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.searchData.page = val;
       this.initCluesList();
     },
@@ -1511,7 +1500,6 @@ export default {
           var $this = this;
           if(response){
             if(response.status){
-              console.log(response,"确定分配-response");
               $this.initPage();
             }else{
               $this.$message({
@@ -1611,7 +1599,6 @@ export default {
     // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
-      console.log("业务员询盘页面监听事件");
       if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
         var scrTop = event.target.scrollTop;
         var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");

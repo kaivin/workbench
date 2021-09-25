@@ -277,7 +277,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // 设置高度
     setHeight(){
@@ -342,7 +341,6 @@ export default {
       $this.$store.dispatch('works/workOrderEditInitInfoAction', {id:$this.currentID}).then(response=>{
           if(response){
             if(response.status){
-              console.log(response,"工单详情");
               if(response.data.accpertusername!=''&&response.data.accpertusername.indexOf('|')!=-1){
                 response.data.accpertusername = response.data.accpertusername.replace("|","、");
               }
@@ -436,7 +434,6 @@ export default {
     // 获取焦点
     onFocus(e){
       var $this = this;
-      console.log(e);
       $this.isFocus = true;
     },
     // 失去焦点

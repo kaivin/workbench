@@ -656,7 +656,6 @@ export default {
     })
   },
   destroyed(){
-    console.log("走了销毁1");
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
@@ -720,7 +719,6 @@ export default {
         }
       });
       $this.breadcrumbList = breadcrumbList;
-      console.log($this.breadcrumbList,"面包屑数据");
     },
     // loading自定义
     loadingFun(){
@@ -851,7 +849,6 @@ export default {
             }else{
               $this.isExportDisabled = true;
             }
-            console.log(response,"询盘信息——$this.tableData");
             $this.tableData = response.data;
             $this.infoData = infoData;
             $this.totalDataNum = response.allcount;
@@ -880,7 +877,6 @@ export default {
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
-        console.log(res);
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -921,7 +917,6 @@ export default {
       $this.$store.dispatch('chinaphone/cluesSearchSelectDataAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,"搜索条件信息");
             var deviceList = [];
             response.device.forEach(function(item,index){
               var itemData = {};
@@ -989,7 +984,6 @@ export default {
           $this.$store.dispatch('chinaphone/getCurrentCateProductListAction', {typeid:e}).then(response=>{
               if(response){
                   if(response.status){
-                      console.log(response,"搜索条件信息");
                       var productList = [];
                       response.data.forEach(function(item,index){
                           var itemData = {};
@@ -1015,14 +1009,12 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.searchData.limit = val;
       this.searchData.page = 1;
       this.initCluesList();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.searchData.page = val;
       this.initCluesList();
     },
@@ -1091,7 +1083,6 @@ export default {
         levelID.push(item.id);
       });
       postData.id = levelID;
-      console.log(postData,"发送数据");
       $this.$store.dispatch('chinaphone/currentCluesSetALevelAction', postData).then(response=>{
         if(response){
           if(response.status){
@@ -1118,8 +1109,7 @@ export default {
       FormID.id = Rid;
       $this.$store.dispatch('chinaphone/CustormeditlogAction', FormID).then(response=>{
         if(response){
-          if(response.status){  
-            console.log(response,'级别修改记录-response');  
+          if(response.status){   
             if(response.data.length>0){
               $this.levelPopBool=true;
               $this.levelPop=response.data;
