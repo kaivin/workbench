@@ -49,6 +49,9 @@
             </div>
         </div>
         <div class="header-right">
+          <span class="feedback-icon" v-on:click="openDialog" title="意见反馈">
+            <svg-icon icon-class="feedback" class-name="disabled" />
+          </span>
           <div class="notice-button" v-if="isEnCluesAdd&&customerTipsCount>0">
             <el-badge :value="customerTipsCount" :hidden="customerTipsCount==0" :max="99" class="item">
               <i class="svg-i"><svg-icon icon-class="notice" class-name="disabled" /></i>
@@ -69,6 +72,22 @@
           </el-dropdown>
           <span class="nav-button" v-if="device==='mobile'" v-on:click="toggleSideBar"><i></i></span>
         </div>
+        <el-dialog title="意见反馈" custom-class="add-edit-dialog feedback" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+          <el-form :model="dialogForm">
+            <div class="item-form">
+                <el-input type="textarea" v-model="dialogForm.content" :autosize="{ minRows: 4, maxRows: 8}" placeholder="请尽可能的描述清楚具体页面出现的具体问题" ref="content"></el-input>
+            </div>
+            <div class="item-form">
+                <p class="tips">您在本系统使用过程中遇到任何问题，都可以在这里反馈给我们，我们会尽快第一时间解决您所提出的问题</p>
+            </div>
+          </el-form>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="handleClose">取 消</el-button>
+              <el-button type="primary" @click="saveData">确 定</el-button>
+            </span>
+          </template>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -82,6 +101,10 @@ export default {
           logo: logo,
           logoFont:logoTitle,
           searchWord:"",
+          dialogFormVisible:false,
+          dialogForm:{
+            content:"",
+          },
         }
     },
     components: {
@@ -145,6 +168,39 @@ export default {
     }
   },
     methods:{
+        // 打开意见反馈弹窗
+        openDialog(){
+          var $this = this;
+          $this.dialogFormVisible = true;
+        },
+        // 关闭弹窗
+        handleClose(){
+          var $this = this;
+          $this.dialogFormVisible = false;
+        },
+        // 提交反馈
+        saveData(){
+          var $this = this;
+          $this.$store.dispatch('works/workOrderEvaluateSaveAction', $this.dialogForm).then(response=>{
+            if(response){
+              if(response.status){
+                $this.dialogForm.content = "";
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'success'
+                });
+                $this.handleClose();
+              }else{
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+                });
+              }
+            }
+          });
+        },
         // 退出登录
         async logout() {
             var $this = this;

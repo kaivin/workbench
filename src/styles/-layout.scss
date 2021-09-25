@@ -1,14 +1,12 @@
 ﻿.header-layout{
     height: auto!important;
     position: relative;
-    z-index: 10;
     background: #1d212a;
     padding:0!important;
     .header-panel{
         width:100%;
         position: relative;
         height: 60px;
-        z-index: 1100;
         display: flex;
         -webkit-box-align: center;
         align-items: center;
@@ -53,6 +51,18 @@
             .el-dropdown-link{
                 font-size:0;
                 line-height:0;
+                cursor: pointer;
+            }
+            .feedback-icon{
+                display: inline-block;
+                width: 32px;
+                height: 32px;
+                font-size: 32px;
+                text-align: center;
+                line-height: 32px;
+                vertical-align: middle;
+                color: #d8d8d8;
+                margin-right: 16px;
                 cursor: pointer;
             }
             .user-icon{

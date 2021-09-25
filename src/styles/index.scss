@@ -1034,6 +1034,20 @@
 .clearfix:after{content:"."; display:block; height:0; clear:both; visibility:hidden; font-size:0px; }
 /** 添加编辑弹窗统一样式 **/
 .add-edit-dialog{
+  &.feedback{
+    .el-dialog__body{
+      padding: 20px 30px;
+    }
+    .item-form{
+      padding:0;
+      .tips{
+        margin-top: 10px;
+        font-size: 13px;
+        color: #999;
+        line-height: 24px;
+      }
+    }
+  }
     .item-form.icon{
         padding-right:76px;
     }
