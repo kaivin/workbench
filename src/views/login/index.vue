@@ -34,7 +34,7 @@
                             </el-form-item>
                         </el-tooltip>
                         <p class="secret"><i class="svg-i" ><svg-icon icon-class="prompt" /></i>密码仅供本人知晓，不可泄漏和外传</p>
-                        <el-form-item>
+                        <el-form-item style="margin:0">
                             <el-button type="primary" :disabled="isDisabled" v-on:click.prevent="handleLogin('loginForm')">登录</el-button>
                         </el-form-item>
                         <p class="forget" v-if="device==='desktop'"><span v-on:click="resetPwd">忘记密码？</span></p>

@@ -29,9 +29,9 @@
     display: flex;
     flex-direction: column;
     .loginFrTop{  
-        padding-top:3.125%;   
-        width:91.6667%;
-        margin: 0 auto;   
+        padding-top:60px;   
+        width:100%;
+        padding-left: 80/1920*100%;  
         .logo{
             float: left;
             text-align:left;
@@ -45,64 +45,85 @@
         }
     }
     .loginFrMid{
-        display: flex;
-        padding-bottom: 90px;
-        width: 91.6667%;
-        margin: 0 auto;
-        align-items: center;
-        justify-content: space-between;
+        padding-bottom: 100px;
+        padding-top: 40px;
+        width: 100%;
         &:before,&:after{display: none;}
         .loginFrMidIcon{
             float: left;
-            width:42.6136%;
-            margin-left:6.4772%;
+            width:1010/1920*100%;
+            padding-right: 60/1920*100%;
+            padding-left: 200/1920*100%;
+            padding-top: 6%;
             img{width:100%;}
         }
         .loginFrMidMain{
             float: right;
             display: block;
-            width:29.5454%;
-            margin-right:16.875%;
+            width: 910/1920*100%;
+            padding-right: 385/1920*100%;
             h2{
                 clear: both;
                 display: block;
-                padding:60px 8.6538%;
+                padding:0 36/525*100% 64px 50/525*100%;
                 color:#000000;
                 font-size:48px;
-                line-height:60px;
+                line-height:65px;
                 text-align: left;
+                font-family: PingFang SC,-apple-system,BlinkMacSystemFont,Helvetica Neue,Tahoma,Microsoft Yahei,Arial,Hiragino Sans GB,sans-serif;
+                font-weight: bold;
             }
-            .el-form-item{margin-bottom:30px;}
+            .el-form-item{
+                margin-bottom:30px;
+                .el-form-item__error{
+                    padding:0 0 0 10px;
+                    height: 24px;
+                    line-height: 24px;
+                }
+            }
             .login-form{
                 position: relative;
                 text-align: left;
-                padding:0px 8.6538%;
+                padding:0px 36/525*100% 0 50/530*100%;
                 .secret{
                     clear: both;
                     display: block;
                     color: #4f4f4f;
                     font-size: 14px;
-                    line-height: 24px;
+                    line-height: 28px;
                     text-align: left;
-                    padding-bottom: 30px;
                     padding-left: 5px;
-                    padding-top: 23px;
-                    i{
+                    height: 28px;
+                    .svg-i{
                         display: inline-block;
                         color:#2e88ff;
-                        margin-right:10px;
+                        margin-right:6px;
+                        width: 16px;
+                        height: 28px;
+                        line-height: 28px;
+                        font-size: 16px;
                     }
                 }
                 .forget{
                     width: 100%;
                     text-align:center;                 
                     margin:0;
-                    padding-top:33px;
-                    padding-bottom:50px;
-                    border-bottom:1px solid #ebebeb;
+                    padding-top:24px;
+                    padding-bottom:40px;
+                    position: relative;
+                    &:before{
+                        content:'';
+                        display: block;
+                        position: absolute;
+                        bottom:0;
+                        left:-30px;
+                        right: -20px;
+                        height: 1px;
+                        background: #fff;
+                    }
                     span{
                         font-size: 13px;
-                        line-height:1;
+                        line-height:30px;
                         cursor: pointer;
                         transition: all .3s;
                         color: #2e88ff;   
@@ -118,10 +139,10 @@
                         height:60px;
                         line-height: 60px;
                         background: #f9f9f9;
-                        font-size: 15px;
+                        font-size: 16px;
                         color: #858587;
                         transition: all 0.2s;
-                        border-radius: 16px;
+                        border-radius: 12px;
                     }
                     input:-moz-placeholder{color:#858587}
                     input:-ms-input-placeholder{color:#858587}
@@ -140,9 +161,10 @@
                     transition: all 0.2s;
                     background: #2e88ff;
                     border: 0px;
-                    border-radius: 16px;
+                    border-radius: 12px;
                     line-height: 60px;
-                    font-size: 17px;
+                    font-size: 18px;
+                    margin-top: 30px;
                     &.is-disabled{
                         background: #97c4ff;
                         cursor: default;
@@ -164,22 +186,24 @@
         left:0px;
         bottom:0px;
         right:0px;
-        padding:25px 30px 20px 30px;
+        padding:24px 30px 20px 30px;
         background:#ffffff;
         strong{
             clear: both;
             display: block;
             color:#3d3d3d;
-            font-size:14px;
-            line-height:1;
+            font-size:16px;
+            line-height:26px;
             padding-bottom:5px;
+            font-family: PingFang SC,-apple-system,BlinkMacSystemFont,Helvetica Neue,Tahoma,Microsoft Yahei,Arial,Hiragino Sans GB,sans-serif;
         }
         p{
             clear: both;
             display: block;
             color:#505050;
-            font-size:12px;
+            font-size:14px;
             line-height:24px;
+            font-family: PingFang SC,-apple-system,BlinkMacSystemFont,Helvetica Neue,Tahoma,Microsoft Yahei,Arial,Hiragino Sans GB,sans-serif;
         }
         span{
             position: absolute;
@@ -189,13 +213,14 @@
             height:34px;
             line-height:32px;
             text-align: center;
-            font-size:13px;
+            font-size:14px;
             line-height:32px;
             right: 30px;
             top:50%;
             margin-top:-17px;
             cursor: pointer;
             border-radius: 4px;
+            font-family: PingFang SC,-apple-system,BlinkMacSystemFont,Helvetica Neue,Tahoma,Microsoft Yahei,Arial,Hiragino Sans GB,sans-serif;
             &:hover{
                 border-color:$pink;
                 color:$pink;
