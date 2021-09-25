@@ -143,6 +143,7 @@
 </template>
 <script>
 import { validEmail,validPhone } from '@/utils/validate';
+import Cookies from 'js-cookie'
 import { mapGetters } from 'vuex'
 export default {
   name: 'userPersonset',
@@ -520,7 +521,13 @@ export default {
                 message: response.info,
                 type: 'success'
             });
-            $this.dialogPhoneVisible = false;
+            var userInfo = Cookies.get('userInfo');      
+            userInfo = JSON.parse(userInfo);
+            userInfo.phone=$this.dialogPhoneForm.phone;
+            userInfo.email=$this.dialogPhoneForm.email;
+            userInfo = JSON.stringify(userInfo);
+            Cookies.set('userInfo', userInfo);
+            $this.dialogPhoneVisible = false;            
             $this.initData();
         }else{
             $this.$message({

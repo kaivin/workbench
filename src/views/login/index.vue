@@ -18,6 +18,7 @@
                                 clearable
                                 ref='username'
                                 name='username'
+                                @keyup.enter.native="handleLogin('loginForm')"
                             ></el-input>
                         </el-form-item>
                         <el-tooltip v-model="capsTooltip" content="大写锁定已开启" placement="right" manual>
@@ -30,7 +31,7 @@
                                     name='password'
                                     v-on:keyup.native="checkCapslock"
                                     v-on:blur="capsTooltip = false"
-                                    v-on:keyup.enter="handleLogin('loginForm')"
+                                    @keyup.enter.native="handleLogin('loginForm')"
                                 ></el-input>
                             </el-form-item>
                         </el-tooltip>
