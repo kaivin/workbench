@@ -143,6 +143,11 @@
                     border-radius: 16px;
                     line-height: 60px;
                     font-size: 17px;
+                    &.is-disabled{
+                        background: #97c4ff;
+                        cursor: default;
+                        &:hover,&:active{box-shadow: none;}
+                    }
                 }
                 button.el-button:hover{
                     box-shadow:0 15px 30px 0 rgba(255,255,255,.15) inset,0 2px 7px 0 rgba(0,0,0,.2)

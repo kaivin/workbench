@@ -35,7 +35,7 @@
                         </el-tooltip>
                         <p class="secret"><i class="svg-i" ><svg-icon icon-class="prompt" /></i>密码仅供本人知晓，不可泄漏和外传</p>
                         <el-form-item>
-                            <el-button type="primary" v-on:click.prevent="handleLogin('loginForm')">登录</el-button>
+                            <el-button type="primary" :disabled="isDisabled" v-on:click.prevent="handleLogin('loginForm')">登录</el-button>
                         </el-form-item>
                         <p class="forget" v-if="device==='desktop'"><span v-on:click="resetPwd">忘记密码？</span></p>
                     </el-form>
@@ -144,6 +144,8 @@ export default {
             capsTooltip2:false,
             isTip:true,
             isLoading:null,
+            isDisplay:false,
+            isDisabled:false,
         }
     },
     computed: {
@@ -185,13 +187,32 @@ export default {
             $this.$refs[formName].validate(valid => {
                 if (valid) {
                     $this.$store.dispatch('login/loginAction', loginFormData).then(response=>{
-                        if(response.status){
+                        if(response.status==1){
                             $this.$message({
                                 showClose: true,
                                 message: response.info,
                                 type: 'success'
                             });
                             $this.$router.push({ path: $this.redirect || '/' });
+                        }else if(response.loginnumber==2||response.status==4){
+                            if(response.loginnumber){
+                                if(response.loginnumber==2){
+                                    $this.$message({
+                                        showClose: true,
+                                        message:'密码错误超过三次，请10分钟后再次登陆',
+                                        type: 'error'
+                                    });
+                                }
+                            }else{
+                                 if(response.status==4){
+                                    $this.$message({
+                                        showClose: true,
+                                        message: response.info,
+                                        type: 'error'
+                                    });
+                                 }
+                            }
+                            $this.isDisabled=true;
                         }else{
                             $this.$message({
                                 showClose: true,
