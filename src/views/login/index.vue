@@ -88,7 +88,7 @@
 <script>
 import { validEmail,isEmpty } from '@/utils/validate';
 import { mapGetters } from 'vuex'
-import logoIcon from "@/assets/images/loginIcon.png";
+import logoIcon from "@/assets/images/loginIcon.gif";
 import logoTitle from "@/assets/top_font.png";
 const defaultSettings = require('@/settings.js');
 export default {
