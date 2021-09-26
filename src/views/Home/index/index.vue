@@ -26,7 +26,7 @@
               <el-radio-button v-for="(item,index) in languageList" v-bind:key="index" :label="item.label">{{item.name}}统计</el-radio-button>
             </el-radio-group>
           </div>
-          <div class="flex-box flex-wrap" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
+          <div class="flex-box flex-wrap tarFlex" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
             <div class="target-chart">
               <h3>{{language=='Module_cnStat'?'中文':'英文'}}各部门日目标</h3>
               <div class="target-chartItem">

@@ -48,7 +48,8 @@ import router from './router'
 import store from './store'
 import getPageTitle from '@/utils/get-page-title'
 import './icons' // icon
-
+import Meta from "vue-meta";
+Vue.use(Meta);
 
 const whiteList = ['/login']; // 不需要登录就可以显示的页面白名单
 let oneRun = true;

@@ -16,9 +16,9 @@
         }
     }
     .item-row+.item-row{
-        margin-top:-20px;
         &.stat-row{
             .btn-panel{
+                margin-top:-20px;
                 .el-radio-group{
                     .el-radio-button--small{
                         .el-radio-button__inner{
@@ -618,6 +618,62 @@
                 height:auto;
               }
            }
+        }
+    }
+}
+@media (max-width:1200px){
+    .home-index{
+        .flex-wrap.tarFlex{
+            flex-direction:column;
+            .target-chart{
+                margin-right:0px;
+                .target-chartItem{
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    .deptData{
+                        flex:1;
+                        position:relative;
+                        right:auto;
+                        top:auto;
+                        transform:none;
+                        width:auto;
+                        padding-left: 50px;
+                    }
+                }
+            }
+        }
+        .flex-wrap.mapFlex{            
+           flex-direction:column;
+           .Clinch-chart{               
+              width:100%;
+              margin-left:0px;
+              .table-chart{    
+                flex-direction:row;
+                height:auto;
+              }
+           }
+           .map-Top-chart{
+               .map-Top-chartItem {
+                  height:auto;
+                  padding-right:20px;
+                  padding-bottom:20px;
+                  flex-direction:column;
+                  align-items: center;
+               }
+           }
+        }
+        .news-list{
+            .news-dl{
+                .news-dd{
+                    .item-news{
+                        float: none;
+                        width:100%;
+                        margin-right: 0%;
+                    }
+                }
+            }
         }
     }
 }
