@@ -1,104 +1,129 @@
 ﻿<template>
-  <div class="page-root" ref="boxPane">
-    <div class="abs-panel" ref="mainPane">
-      <div class="scroll-panel" ref="scrollPane">
-        <p class="breadcrumb" ref="breadcrumbPane">
-          <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
-          <template v-for="item in breadcrumbList">
-            <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
-            <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
-          </template>
-          <span class="breadcrumb-link"><b>-</b><span>添加|编辑询盘</span></span>
-        </p>
-        <el-card class="box-card scroll-card" shadow="hover">
-            <div class="card-content EnphoneAddEdit" :style="'min-height:'+minHeight+'px;'" ref="tableContent">
-                <div class="EnphoneAddEditMain CnphoneAdd">
-                    <div class="EnphoneAddEditMainItem phone-list">
-                      <dl>
-                        <dt>来源电话：<span>*</span></dt>
-                        <dd>
-                          <div class="clues-list customRadio">
-                            <span class="item-clues" v-for="item in phoneList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="phoneClick(item.id)"><i></i>{{item.phonenumber}}</span>
-                          </div>
-                        </dd>
-                      </dl>
-                    </div>
-                    <div class="EnphoneAddEditMainItem customer-info">
-                        <dl style="width: 190px;">
-                          <dt>来源时间：<span>*</span></dt>
+  <div class="page-root flex-box no-padding cn-phone-index" ref="boxPane">
+    <div class="sub-router">
+      <el-scrollbar wrap-class="scrollbar-wrapper">
+        <div class="sub-wrapper">
+          <div class="side-button">
+            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Chinaphone_search')" v-on:click="searchStatisticsData()"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
+            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="statisticsClues()"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>统计分析</el-button>
+          </div>
+          <dl class="phone-list" v-for="(item,index) in phoneBrandList" v-bind:key="index">
+            <dt><span>{{item.name}}</span></dt>
+            <dd v-for="phone in item.phone" class="tipphone" v-bind:class="phone.isOn?'active':''" :key="phone.id" v-on:click="phoneJump(phone.id)">           
+                <el-tooltip placement="right" class="el-tooltip" effect="light">
+                  <div slot="content">
+                    <span v-if="phone.phonenumber&&phone.phonenumber!=''">电话：{{phone.phonenumber}}</span><br v-if="phone.othername&&phone.othername!=''" />
+                    <span v-if="phone.othername&&phone.othername!=''">别名：{{phone.othername}}</span><br v-if="phone.departname&&phone.departname!=''" />
+                    <span v-if="phone.departname&&phone.departname!=''">部门：{{phone.departname}}</span><br v-if="phone.user&&phone.user!=''" />
+                    <span v-if="phone.user&&phone.user!=''">负责人：{{phone.user}}</span>
+                  </div>
+                  <el-button><span>{{phone.shortPhonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b> </el-button>
+                </el-tooltip>
+            </dd>
+          </dl>
+        </div>
+      </el-scrollbar>
+    </div>
+    <div class="flex-content relative">
+      <div class="abs-panel" ref="mainPane">
+        <div class="scroll-panel" ref="scrollPane">
+          <p class="breadcrumb" ref="breadcrumbPane">
+            <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+            <template v-for="item in breadcrumbList">
+              <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+              <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+            </template>
+            <span class="breadcrumb-link"><b>-</b><span>添加|编辑询盘</span></span>
+          </p>
+          <el-card class="box-card scroll-card" shadow="hover">
+              <div class="card-content EnphoneAddEdit" :style="'min-height:'+minHeight+'px;'" ref="tableContent">
+                  <div class="EnphoneAddEditMain CnphoneAdd">
+                      <div class="EnphoneAddEditMainItem phone-list">
+                        <dl>
+                          <dt>来源电话：<span>*</span></dt>
                           <dd>
-                            <el-date-picker
-                                v-model="formData.xuntime"
-                                class="date-time"
-                                size="small"
-                                type="datetime"
-                                placeholder="选择日期时间"
-                                value-format = "yyyy-MM-dd HH:mm:ss"
-                                align="right"
-                                :picker-options="pickerOptions">
-                              </el-date-picker>
+                            <div class="clues-list customRadio">
+                              <span class="item-clues" v-for="item in phoneList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="phoneClick(item.id)"><i></i>{{item.phonenumber}}</span>
+                            </div>
                           </dd>
                         </dl>
-                        <dl style="width: 100px;">
-                          <dt>客户省份：</dt>
+                      </div>
+                      <div class="EnphoneAddEditMainItem customer-info">
+                          <dl style="width: 190px;">
+                            <dt>来源时间：<span>*</span></dt>
+                            <dd>
+                              <el-date-picker
+                                  v-model="formData.xuntime"
+                                  class="date-time"
+                                  size="small"
+                                  type="datetime"
+                                  placeholder="选择日期时间"
+                                  value-format = "yyyy-MM-dd HH:mm:ss"
+                                  align="right"
+                                  :picker-options="pickerOptions">
+                                </el-date-picker>
+                            </dd>
+                          </dl>
+                          <dl style="width: 100px;">
+                            <dt>客户省份：</dt>
+                            <dd>
+                              <el-input
+                                  placeholder="地区"
+                                  @blur="provinceChangeHandler"
+                                  size="small"
+                                  v-model="formData.province"
+                                  clearable>
+                              </el-input>
+                            </dd>
+                          </dl>
+                          <dl style="width: 120px;">
+                            <dt>客户城市：</dt>
+                            <dd>
+                              <el-input
+                                  placeholder="号码归属地"
+                                  @blur="cityChangeHandler"
+                                  size="small"
+                                  v-model="formData.city"
+                                  clearable>
+                              </el-input>
+                            </dd>
+                          </dl>
+                          <dl style="width: 100px;">
+                            <dt>来源渠道：<span>*</span></dt>
+                            <dd>
+                              <el-select v-model="formData.mode" size="small" clearable placeholder="设备">
+                                  <el-option
+                                  v-for="item in sourceList"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                                  </el-option>
+                              </el-select>
+                            </dd>
+                          </dl>
+                          <dl style="width: 250px;">
+                            <dt>来源网页：</dt>
+                            <dd>
+                              <el-input
+                                  placeholder="来源页面"
+                                  size="small"
+                                  v-model="formData.url"
+                                  @blur="urlChangePhone"
+                                  clearable>
+                              </el-input>
+                            </dd>
+                          </dl>
+                      </div>
+                      <div class="EnphoneAddEditMainItem CnIntentionEquipment">
+                        <dl>
+                          <dt>意向设备：<span>* （注：如果为其他生产线、配件、其他产品，请在备注中注明具体产品）</span></dt>
                           <dd>
-                            <el-input
-                                placeholder="地区"
-                                @blur="provinceChangeHandler"
-                                size="small"
-                                v-model="formData.province"
-                                clearable>
-                            </el-input>
+                            <div class="clues-list">
+                              <span class="item-clues" v-for="item in productList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="productClick(item.id)"><i></i>{{item.name}}</span>
+                            </div>
                           </dd>
                         </dl>
-                        <dl style="width: 120px;">
-                          <dt>客户城市：</dt>
-                          <dd>
-                            <el-input
-                                placeholder="号码归属地"
-                                @blur="cityChangeHandler"
-                                size="small"
-                                v-model="formData.city"
-                                clearable>
-                            </el-input>
-                          </dd>
-                        </dl>
-                        <dl style="width: 100px;">
-                          <dt>来源渠道：<span>*</span></dt>
-                          <dd>
-                            <el-select v-model="formData.mode" size="small" clearable placeholder="设备">
-                                <el-option
-                                v-for="item in sourceList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                          </dd>
-                        </dl>
-                        <dl style="width: 250px;">
-                          <dt>来源网页：</dt>
-                          <dd>
-                            <el-input
-                                placeholder="来源页面"
-                                size="small"
-                                v-model="formData.url"
-                                @blur="urlChangePhone"
-                                clearable>
-                            </el-input>
-                          </dd>
-                        </dl>
-                    </div>
-                    <div class="EnphoneAddEditMainItem CnIntentionEquipment">
-                      <dl>
-                        <dt>意向设备：<span>* （注：如果为其他生产线、配件、其他产品，请在备注中注明具体产品）</span></dt>
-                        <dd>
-                          <div class="clues-list">
-                            <span class="item-clues" v-for="item in productList" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="productClick(item.id)"><i></i>{{item.name}}</span>
-                          </div>
-                        </dd>
-                      </dl>
-                    </div>
+                      </div>
                     <div class="EnphoneAddEditMainItem material">
                       <dl style="width: 250px;">
                         <dt>用途：</dt>
@@ -219,9 +244,10 @@
                           </dd>
                         </dl>
                     </div>
-                </div>
-            </div>
-        </el-card>
+                  </div>
+              </div>
+          </el-card>
+        </div>
       </div>
     </div>
   </div>
@@ -235,6 +261,7 @@ export default {
     return {
       ID:null,
       minHeight:0,
+      phoneBrandList:[],
       breadcrumbList:[],
       menuButtonPermit:[],
       pickerOptions: {
@@ -283,6 +310,7 @@ export default {
         price_id:"",
       },
       defaultInfo:{},
+      isLoading:null,
     }
   },
   computed: {
@@ -387,15 +415,26 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
     initPage(){
       var $this = this;
-      $this.getSystemData();
+      $this.getPhoneListNum();
     },
     // 组装搜索接口所需数据
     initFormData(){
@@ -500,6 +539,7 @@ export default {
         }
       });
       $this.productList = productList;
+      $this.isLoading.close();
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
@@ -585,6 +625,8 @@ export default {
             $this.phoneList = response.phonelist;
             if($this.ID){
               $this.initCluesInfo();
+            }else{
+              $this.isLoading.close();
             }
           }else{
             $this.$message({
@@ -592,6 +634,63 @@ export default {
               message: response.info,
               type: 'error'
             });
+          }
+        }
+      });
+    },
+    // 电话点击跳转列表
+    phoneJump(id){
+      var $this=this;
+      var queryObj = {};
+      queryObj.phoneID = id;
+      $this.$router.push({path:'/Chinaphone/phoneindex',query:queryObj});
+    },
+    // 搜索统计数据跳转
+    searchStatisticsData(){
+      var $this = this;
+      $this.$router.push({path:'/Chinaphone/searchClues'});
+    },
+    // 统计分析跳转
+    statisticsClues(){
+      var $this = this;
+      $this.$router.push({path:'/Chinaphone/statisticChart'});
+    },
+    // 获取电话列表及电话统计数字
+    getPhoneListNum(){
+      var $this = this;
+      $this.$store.dispatch('chinaphone/cluesPhoneStatDataAction', null).then(response=>{
+        if(response){
+          if(response.status){
+            var phoneArr=response.data;
+            phoneArr.forEach(function(item,index){
+               item.phone.forEach(function(item01,index01){
+                   var tagphone='-';
+                   item01.isOn = false;
+                　　if(item01.phonenumber.indexOf(tagphone)!=-1){
+                       item01.shortPhonenumber=item01.phonenumber.split("-")[1];
+                　　}else{
+                      item01.shortPhonenumber=item01.phonenumber;
+                    }
+               });
+            });
+            $this.phoneBrandList = phoneArr;
+            $this.getSystemData();
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
           }
         }
       });

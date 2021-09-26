@@ -582,7 +582,7 @@ export default {
     jumpLink(status){
         var $this = this;
         var routeUrl = $this.$router.resolve({path:'/Sales/index',query:{Status:status}});
-        window.open(routeUrl.href,'_blank');
+        window.open(routeUrl.href,'_self');
     },
     //分组点击事件
     groupClick(id){
@@ -769,8 +769,7 @@ export default {
     // 跳转数据统计页面
     datastatisticClues(){
       var $this = this;
-      var routeUrl = $this.$router.resolve({path:'/Sales/phonecount'});
-      window.open(routeUrl.href,'_blank');
+      $this.$router.push({path:'/Sales/phonecount'});
     },
   }
 }

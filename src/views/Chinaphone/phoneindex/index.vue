@@ -298,7 +298,7 @@
                           >
                           <template slot-scope="scope">
                             <div class="table-tag"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                            <div class="table-text" v-if="!scope.row.isEffective"><p>{{scope.row.invalidcause}}</p></div>
+                            <div class="table-text" v-if="!scope.row.isEffective"><p v-html="scope.row.invalidcause"></p></div>
                           </template>
                         </el-table-column>
                         <el-table-column
@@ -1300,20 +1300,17 @@ export default {
     // 修改询盘
     editTableRow(row,index){
       var $this = this;
-      var routeUrl =  $this.$router.resolve({path:'/Chinaphone/addEditClues',query:{ID:row.id}});
-      window.open(routeUrl.href,'_self');
+      $this.$router.push({path:'/Chinaphone/addEditClues',query:{ID:row.id}});
     },
     // 搜索统计数据跳转
     searchStatisticsData(){
       var $this = this;
-      var routeUrl =  $this.$router.resolve({path:'/Chinaphone/searchClues'});
-      window.open(routeUrl.href,'_blank');
+      $this.$router.push({path:'/Chinaphone/searchClues'});
     },
     // 统计分析跳转
     statisticsClues(){
       var $this = this;
-      var routeUrl =  $this.$router.resolve({path:'/Chinaphone/statisticChart'});
-      window.open(routeUrl.href,'_blank');
+      $this.$router.push({path:'/Chinaphone/statisticChart'});
     },
     // 导出当前页数据
     handleDownload() {

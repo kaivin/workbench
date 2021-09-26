@@ -166,12 +166,12 @@ const mutations = {
     }else{
       state.isCnMoneyAdd = false;
     }
-    if(permitData.includes("Chinaphone_add")&&data.page==""){
+    if(permitData.includes("Chinaphone_add")&&data.page!="addEditClues"){
       state.isCnCluesAdd = true;
     }else{
       state.isCnCluesAdd = false;
     }
-    if(permitData.includes("Enphone_add")&&data.page==""){
+    if(permitData.includes("Enphone_add")&&data.page!="addEditEnClues"){
       state.isEnCluesAdd = true;
     }else{
       state.isEnCluesAdd = false;

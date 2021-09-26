@@ -1,6 +1,34 @@
 ﻿
 <template>
-    <div class="page-root sales-phonecount" ref="boxPane">
+    <div class="page-root flex-box no-padding SaleCard sales-phonecount" ref="boxPane">
+      <div class="sub-router SaleCardFl" ref="SaleCardFl">
+        <el-scrollbar wrap-class="scrollbar-wrapper">
+          <div class="sub-wrapper">
+            <div class="side-button">
+              <dl class="Sales-list">
+                  <dt v-if="menuButtonPermit.includes('Sales_lookphoneall')||menuButtonPermit.includes('Sales_phonecount')" v-bind:class="currentStatus === 'stat'?'active':''" v-on:click="datastatisticClues()"><span>业务员数据统计</span></dt>
+                  <dt v-if="menuButtonPermit.includes('Sales_waitphone')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitcount'?'active':''" v-on:click="jumpLink('waitcount')"><span>等待分配</span><i>({{defaultData.waitcount}})</i></dt>
+                  <dt v-if="menuButtonPermit.includes('Sales_allphone')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'allotcount'?'active':''" v-on:click="jumpLink('allotcount')"><span>所有已分配询盘</span><i>({{defaultData.allotcount}})</i></dt>
+              </dl>
+            </div>
+            <dl class="Salelist">
+                <dt v-if="menuButtonPermit.includes('Sales_index')" v-bind:class="currentStatus === 'personcount'?'active':''" v-on:click="jumpLink('personcount')"><span>个人所有询盘</span><i>({{defaultData.personcount}})</i></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_waitdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitdealcount'?'active':''" v-on:click="jumpLink('waitdealcount')"><span>等待处理</span><i>({{defaultData.waitdealcount}})</i></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_monthsay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'monthsaycount'?'active':''" v-on:click="jumpLink('monthsaycount')"><span>月底前需反馈</span><i>({{defaultData.monthsaycount}})</i></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_hasnosay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasnosaycount'?'active':''" v-on:click="jumpLink('hasnosaycount')"><span>所有未反馈</span><i>({{defaultData.hasnosaycount}})</i></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_waitftword')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitftwordcount'?'active':''" v-on:click="jumpLink('waitftwordcount')"><span>等待添加富通ID</span><i>({{defaultData.waitftwordcount}})</i></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_hasdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasdealcount'?'active':''" v-on:click="jumpLink('hasdealcount')"><span>已处理</span><i>({{defaultData.hasdealcount}})</i></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_hassay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hassaycount'?'active':''" v-on:click="jumpLink('hassaycount')"><span>已做反馈</span><i>({{defaultData.hassaycount}})</i></dt>
+            </dl>
+            <div class="side-button">
+              <dl class="Sales-list">
+                  <dt v-if="menuButtonPermit.includes('Sales_search')" v-on:click="dataStatistic()"><span>数据分析</span></dt>
+              </dl>
+            </div>
+          </div>
+        </el-scrollbar>
+      </div>
+      <div class="flex-content SaleCardFr">
         <div class="abs-panel" ref="mainPane">
             <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
                 <div class="true-height" ref="scrollPane">
@@ -15,8 +43,8 @@
                     <el-card class="box-card scroll-card" shadow="hover">
                         <div slot="header">
                             <div class="card-header" ref="headerPane">
-                                <div class="search-wrap">
-                                    <div class="item-search">
+                                <div class="search-wrap" style="padding:0;">
+                                    <div class="item-search" style="margin:0;">
                                         <el-radio v-for="(item,index) in statusList" border size="small" @change="valueChangeHandler" v-bind:key="index" v-model="status" :label="item.value">{{item.label}}</el-radio>
                                     </div>
                                 </div>
@@ -170,6 +198,7 @@
                 </div>
             </div>
         </div>
+      </div>
       <el-backtop target=".scroll-panel"></el-backtop>
     </div>
 </template>
@@ -182,6 +211,9 @@ export default {
     return {
         lastDate:"",
         currentDate:"",
+        permitStatus:[],
+        currentStatus:'stat',
+        defaultData:{},
         time1:'',
         time2:'',
         status:1,
@@ -381,6 +413,33 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
+      $this.getLeftData();
+    },
+    // 获取左侧数据
+    getLeftData(){
+      var $this = this;
+      $this.$store.dispatch('Sales/getSalesPublicDataAction', null).then(response=>{
+        if(response){        
+          var defaultData = {};
+          defaultData.waitcount=response.waitcount;
+          defaultData.allotcount=response.allotcount;
+          defaultData.personcount=response.personcount;
+          defaultData.waitdealcount=response.waitdealcount;
+          defaultData.monthsaycount=response.monthsaycount;
+          defaultData.hasnosaycount=response.hasnosaycount;
+          defaultData.waitftwordcount=response.waitftwordcount;
+          defaultData.hasdealcount=response.hasdealcount;
+          defaultData.hassaycount=response.hassaycount;
+          defaultData.warning=response.warning;
+          defaultData.warningcount=response.warningcount;
+          $this.defaultData = defaultData;         
+          $this.getStatData();
+        }
+      });
+    },
+    // 获取统计数据
+    getStatData(){
+      var $this = this;
       $this.$store.dispatch('Sales/getSalesSalesmanDataAction', {status:$this.status}).then(response=>{
         if(response){
           if(response.status){
@@ -412,6 +471,21 @@ export default {
         }
       });
     },
+    // 页面自跳转
+    jumpLink(status){
+        var $this = this;
+        $this.$router.push({path:'/Sales/index',query:{Status:status}});
+    },
+    // 跳转数据分析页面
+    dataStatistic(){
+      var $this = this;
+      $this.$router.push({path:'/Sales/search'});
+    },
+    // 跳转数据统计页面
+    datastatisticClues(){
+      var $this = this;
+      $this.$router.push({path:'/Sales/phonecount'});
+    },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
       var $this = this;
@@ -420,6 +494,33 @@ export default {
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
+              if(item.action_route=="Sales_waitphone"){
+                $this.permitStatus.push("waitcount");
+              }
+              if(item.action_route=="Sales_allphone"){
+                $this.permitStatus.push("allotcount");
+              }
+              if(item.action_route=="Sales_index"){
+                $this.permitStatus.push("personcount");
+              }
+              if(item.action_route=="Sales_waitdeal"){
+                $this.permitStatus.push("waitdealcount");
+              }
+              if(item.action_route=="Sales_monthsay"){
+                $this.permitStatus.push("monthsaycount");
+              }
+              if(item.action_route=="Sales_hasnosay"){
+                $this.permitStatus.push("hasnosaycount");
+              }
+              if(item.action_route=="Sales_waitftword"){
+                $this.permitStatus.push("waitftwordcount");
+              }
+              if(item.action_route=="Sales_hasdeal"){
+                $this.permitStatus.push("hasdealcount");
+              }
+              if(item.action_route=="Sales_hassay"){
+                $this.permitStatus.push("hassaycount");
+              }
             });
             if($this.menuButtonPermit.includes('Sales_phonecount')){
               $this.initPage();

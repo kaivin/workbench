@@ -1180,14 +1180,12 @@ export default {
     // 跳转数据分析页面
     dataStatistic(){
       var $this = this;
-      var routeUrl = $this.$router.resolve({path:'/Sales/search'});
-      window.open(routeUrl.href,'_blank');
+      $this.$router.push({path:'/Sales/search'});
     },
     // 跳转数据统计页面
     datastatisticClues(){
       var $this = this;
-      var routeUrl = $this.$router.resolve({path:'/Sales/phonecount'});
-      window.open(routeUrl.href,'_blank');
+      $this.$router.push({path:'/Sales/phonecount'});
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
@@ -1219,8 +1217,7 @@ export default {
     // 修改询盘
     editTableRow(row,index,num){
       var $this = this;
-      var routeUrl =  $this.$router.resolve({path:'/Sales/phoneinfosub',query:{ID:row.id,status:num}});
-      window.open(routeUrl.href,'_blank');
+      $this.$router.path({path:'/Sales/phoneinfosub',query:{ID:row.id,status:num}});
     },
     // 表格多选改变事件
     handleSelectionChange(val) {

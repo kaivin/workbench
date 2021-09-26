@@ -328,7 +328,7 @@
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                                          <div class="table-text" v-if="!scope.row.isEffective"><p>{{scope.row.invalidcause}}<span style="color:#E88401;">{{scope.row.noeffectivetime}}</span></p></div>
+                                          <div class="table-text" v-if="!scope.row.isEffective"><p v-html="scope.row.invalidcause"></p></div>
                                         </template>
                                       </el-table-column>
                                       <el-table-column
