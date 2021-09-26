@@ -48,20 +48,26 @@
         padding-bottom: 100px;
         padding-top: 40px;
         width: 100%;
+        position: relative;
         &:before,&:after{display: none;}
         .loginFrMidIcon{
-            float: left;
+            position: absolute;
+            left:0;
             width:1010/1920*100%;
             padding-right: 100/1920*100%;
             padding-left: 150/1920*100%;
-            padding-top: 4%;
+            top: 50%;
+            transform: translateY(-65%);
             img{width:100%;}
         }
         .loginFrMidMain{
-            float: right;
+            position: absolute;
+            right:0;
             display: block;
             width: 910/1920*100%;
             padding-right: 385/1920*100%;
+            top: 50%;
+            transform: translateY(-65%);
             h2{
                 clear: both;
                 display: block;
