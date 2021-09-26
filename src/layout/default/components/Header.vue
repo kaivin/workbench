@@ -332,13 +332,13 @@ export default {
         cnCluesAdd(){
           var $this = this;
           var routeUrl =  $this.$router.resolve({path:'/Chinaphone/addEditClues'});
-          window.open(routeUrl.href,'_blank');
+          window.open(routeUrl.href,'_self');
         },
         // 添加英文询盘
         enCluesAdd(){
           var $this = this;
           var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues'});
-          window.open(routeUrl.href,'_blank');
+          window.open(routeUrl.href,'_self');
         },
         // 添加网站日志
         websiteLogAdd(){

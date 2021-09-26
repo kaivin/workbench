@@ -24,7 +24,7 @@
                       </dl>
                     </div>
                     <div class="EnphoneAddEditMainItem customer-info">
-                        <dl style="width: 160px;">
+                        <dl style="width: 190px;">
                           <dt>来源时间：<span>*</span></dt>
                           <dd>
                             <el-date-picker
@@ -305,6 +305,7 @@ export default {
       $this.ID = parseInt($this.$route.query.ID);
     }else{
       $this.ID = null;
+      $this.currentTime();
     }
     $this.getBreadcrumbList();
     $this.initData();
@@ -737,9 +738,10 @@ export default {
             if($this.formData.id!=0){
               $this.initCluesInfo();
             }else{
-              $this.clearFormData();
-              var routeUrl =  $this.$router.resolve({path:'/Chinaphone/addEditClues',query:{ID:response.id}});
-              window.open(routeUrl.href,'_blank');
+              var queryObj = {};
+              queryObj.phoneID = $this.formData.phoneid;
+              var routeUrl =  $this.$router.resolve({path:'/Chinaphone/phoneindex',query:queryObj});
+              window.open(routeUrl.href,'_self');
             }
           }else{
             $this.$message({
@@ -834,7 +836,30 @@ export default {
       }else{
         $this.setCluesInfo();
       }
-    }
+    },
+    // 默认当前日期时间
+    currentTime(){
+      var $this=this;
+      var getTime=new Date();
+      var year=getTime.getFullYear();
+      var month=getTime.getMonth()+1;
+      if(month<10){
+         month='0' + month
+      }
+      var day=getTime.getDate();
+      if(day<10){
+         day='0' + day
+      }
+      var hh=getTime.getHours();
+      if(hh<10){
+         hh='0' + hh
+      }
+      var mm=getTime.getMinutes();
+      if(mm<10){
+         mm='0' + mm
+      }
+      $this.formData.xuntime= year + '-' + month + '-' + day + ' ' + hh + ':' + mm;
+    },
   }
 }
 </script>

@@ -1178,10 +1178,13 @@ export default {
             if($this.formData.id!=0){
               $this.initCluesInfo();
             }else{
-              $this.clearFormData();
-              var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:response.enid}});
-              window.open(routeUrl.href,'_blank');
+              var queryObj = {};
+              queryObj.phoneID = $this.formData.phoneid;
+              queryObj.waitstatus = "1";
+              var routeUrl =  $this.$router.resolve({path:'/Enphone/phoneindex',query:queryObj});
+              window.open(routeUrl.href,'_self');
             }
+
           }else{
             $this.$message({
               showClose: true,

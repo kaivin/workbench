@@ -1301,7 +1301,7 @@ export default {
     editTableRow(row,index){
       var $this = this;
       var routeUrl =  $this.$router.resolve({path:'/Chinaphone/addEditClues',query:{ID:row.id}});
-      window.open(routeUrl.href,'_blank');
+      window.open(routeUrl.href,'_self');
     },
     // 搜索统计数据跳转
     searchStatisticsData(){
