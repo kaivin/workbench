@@ -1,6 +1,5 @@
 <template>
     <el-container v-bind:class="classObj">
-      <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" ></div>
       <el-header class="header-layout">
         <header-pane />
       </el-header>
@@ -35,14 +34,12 @@ export default {
   computed:{
     ...mapState({
       sidebar: state => state.app.sidebar,
-      device: state => state.app.device,
     }),
     classObj() {
       return {
         hideSidebar: !this.sidebar.opened,
         openSidebar: this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
-        mobile: this.device === 'mobile'
       }
     },
     cachedViews() {
@@ -66,9 +63,9 @@ export default {
     // }
   },
   methods: {
-    handleClickOutside() {
-      this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
-    },
+    //handleClickOutside() {
+    //  this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
+    //},
     reload(){
       this.isRefresh = false;
       this.$nextTick(()=>this.isRefresh = true)

@@ -14,7 +14,7 @@
                   <el-card class="box-card" shadow="hover">
                       <div slot="header">
                           <div class="card-header" ref="headerPane">
-                              <div class="search-wrap" v-if="device==='desktop'">
+                              <div class="search-wrap">
                                   <div class="item-search" style="width: 240px;">
                                       <el-date-picker
                                           v-model="searchData.date"
@@ -210,7 +210,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'sidebar',
       'menuData'
     ]),
@@ -221,21 +220,13 @@ export default {
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        if($this.device==="desktop"){
-          $this.setTableHeight();
-          // 监听竖向滚动条滚动事件
-          window.addEventListener('scroll',this.handleScroll,true);
-        }else{
-          $this.tableHeight = $this.$refs.boxPane.offsetHeight;
-        }
+        $this.setTableHeight();
+        // 监听竖向滚动条滚动事件
+        window.addEventListener('scroll',this.handleScroll,true);
       });
       window.onresize = () => {
           return (() => {
-            if($this.device==="desktop"){
-               $this.setTableHeight();
-            }else{
-              $this.tableHeight = $this.$refs.boxPane.offsetHeight;
-            }
+            $this.setTableHeight();
           })()
       }
   },

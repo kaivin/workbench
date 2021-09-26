@@ -604,6 +604,20 @@
                 }
             }
         }
+    }    
+}
+@media (max-width:1600px){
+    .home-index{
+        .flex-wrap.mapFlex{            
+           flex-direction:column;
+           .Clinch-chart{               
+              width:100%;
+              margin-left:0px;
+              .table-chart{    
+                flex-direction:row;
+                height:auto;
+              }
+           }
+        }
     }
-    
 }

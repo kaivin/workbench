@@ -22,14 +22,14 @@
         </tr>
         <tr>
             <td><span>用户名：</span></td>
-            <td>{{userData.username}}<el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="editName" v-if="(menuButtonPermit.includes('User_personuser'))&&device==='desktop'">修改用户名</el-button></td>
+            <td>{{userData.username}}<el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="editName" v-if="(menuButtonPermit.includes('User_personuser'))">修改用户名</el-button></td>
         </tr>
-        <tr v-if="device==='desktop'">
+        <tr>
             <td><span>密码：</span></td>
             <td><el-button type="primary" size="mini" icon="el-icon-edit" v-on:click="editPwd" v-if="menuButtonPermit.includes('User_personpwd')">修改密码</el-button><el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="resetPwd">忘记密码</el-button></td>
         </tr>
         <tr>
-            <th colspan="2">联系方式<el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="editPhone" v-if="(menuButtonPermit.includes('User_personset'))&&device==='desktop'">修改联系方式</el-button></th>
+            <th colspan="2">联系方式<el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="editPhone" v-if="(menuButtonPermit.includes('User_personset'))">修改联系方式</el-button></th>
         </tr>
         <tr>
             <td><span>手机号：</span></td>
@@ -40,7 +40,7 @@
             <td>{{userData.email}}</td>
           </tr>
     </table>
-    <el-dialog title="修改用户名" v-if="(menuButtonPermit.includes('User_personuser'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogNameVisible" width="480px">
+    <el-dialog title="修改用户名" v-if="(menuButtonPermit.includes('User_personuser'))" custom-class="add-edit-dialog" :visible.sync="dialogNameVisible" width="480px">
       <el-form :model="dialogNameForm">
           <el-form-item label="原用户名：" :label-width="formLabelWidth">
             <el-input v-model="dialogNameForm.username" ref="username"></el-input>
@@ -59,7 +59,7 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog title="修改密码" v-if="(menuButtonPermit.includes('User_personpwd'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogPwdVisible" width="480px">
+    <el-dialog title="修改密码" v-if="(menuButtonPermit.includes('User_personpwd'))" custom-class="add-edit-dialog" :visible.sync="dialogPwdVisible" width="480px">
       <el-form :model="dialogPwdForm">
           <el-tooltip v-model="capsTooltip" content="大写锁定已开启" placement="right" manual>
             <el-form-item label="原密码：" :label-width="formLabelWidth">
@@ -87,7 +87,7 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog title="忘记密码" v-if="device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogForgetPwdVisible" width="480px">
+    <el-dialog title="忘记密码" custom-class="add-edit-dialog" :visible.sync="dialogForgetPwdVisible" width="480px">
       <el-form :model="dialogForgetPwdForm">
           <el-form-item label="用户名：" :label-width="formLabelWidth">
             <el-input v-model="dialogForgetPwdForm.username" ref="username"></el-input>
@@ -123,7 +123,7 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog title="修改联系方式" v-if="(menuButtonPermit.includes('User_personset'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogPhoneVisible" width="480px">
+    <el-dialog title="修改联系方式" v-if="(menuButtonPermit.includes('User_personset'))" custom-class="add-edit-dialog" :visible.sync="dialogPhoneVisible" width="480px">
       <el-form :model="dialogPhoneForm">
           <el-form-item label="手机号：" :label-width="formLabelWidth">
             <el-input v-model="dialogPhoneForm.phone" ref="phone"></el-input>
@@ -191,7 +191,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device'
     ]),
   },
   created(){

@@ -116,7 +116,7 @@
                               </template>
                             </el-table-column>
                             <el-table-column
-                              v-if="(menuButtonPermit.indexOf('Ownpush_pushedit'))&&device==='desktop'"
+                              v-if="(menuButtonPermit.indexOf('Ownpush_pushedit'))"
                               :width="operationsWidth"
                               align="center"
                               fixed="right"
@@ -139,7 +139,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_pushadd')||menuButtonPermit.includes('Ownpush_pushedit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="720px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_pushadd')||menuButtonPermit.includes('Ownpush_pushedit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="720px">
       <el-form :model="dialogForm">
         <div class="item-form-group">
           <div class="item-form">
@@ -347,7 +347,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addPromotedAccount',
       'sidebar',
       'menuData'

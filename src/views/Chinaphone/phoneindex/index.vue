@@ -94,7 +94,7 @@
                      </div>
                 </div>
                 <div class="card-content ChinaphoneMapChart">
-                  <div class="canvas-wrap" v-if="device==='desktop'">
+                  <div class="canvas-wrap">
                     <div id="cnCluesChart" class="chart-canvas"></div>
                   </div>
                 </div>
@@ -112,7 +112,7 @@
               <div slot="header">
                 <div class="card-header EnphoneCardHeader" ref="headerPane">
                     <h2 class="clues-title">当前信息：{{currentPhone}}</h2>
-                    <div class="search-wrap" v-if="device==='desktop'">
+                    <div class="search-wrap">
                       <div class="item-search" style="width: 240px;">
                         <el-date-picker
                             v-model="searchData.date"
@@ -394,7 +394,7 @@
                           </template>
                         </el-table-column>
                         <el-table-column
-                          v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_otheredit'))&&device==='desktop'"
+                          v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_otheredit'))"
                           width="88"
                           fixed="right"
                           align="center"
@@ -407,7 +407,7 @@
                           </template>
                         </el-table-column>
                         <el-table-column
-                          v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_edit')||menuButtonPermit.includes('Chinaphone_delete'))&&device==='desktop'"
+                          v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_edit')||menuButtonPermit.includes('Chinaphone_delete'))"
                           :width="operationsWidth"
                           align="center"
                           fixed="right"
@@ -433,7 +433,7 @@
                   :current-page="searchData.page"
                   :page-sizes="pageSizeList"
                   :page-size="searchData.limit"
-                  :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                  :layout="'total, sizes, prev, pager, next, jumper'"
                   :total="totalDataNum">
                 </el-pagination>
               </div>
@@ -653,7 +653,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'sidebar',
       'menuData'
     ]),
@@ -1307,22 +1306,14 @@ export default {
     // 搜索统计数据跳转
     searchStatisticsData(){
       var $this = this;
-      if($this.device==='desktop'){
-        var routeUrl =  $this.$router.resolve({path:'/Chinaphone/searchClues'});
-        window.open(routeUrl.href,'_blank');
-      }else{
-        $this.$router.push({path:'/Chinaphone/searchClues'});
-      }
+      var routeUrl =  $this.$router.resolve({path:'/Chinaphone/searchClues'});
+      window.open(routeUrl.href,'_blank');
     },
     // 统计分析跳转
     statisticsClues(){
       var $this = this;
-      if($this.device==='desktop'){
-        var routeUrl =  $this.$router.resolve({path:'/Chinaphone/statisticChart'});
-        window.open(routeUrl.href,'_blank');
-      }else{
-        $this.$router.push({path:'/Chinaphone/statisticChart'});
-      }
+      var routeUrl =  $this.$router.resolve({path:'/Chinaphone/statisticChart'});
+      window.open(routeUrl.href,'_blank');
     },
     // 导出当前页数据
     handleDownload() {

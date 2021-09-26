@@ -18,8 +18,7 @@
                                     <div class="item-search EnphoneSearchOne ">
                                         <div class="item flex-wrap" v-for="item in depart" :key="item.dept_id">
                                             <strong>{{item.departname}}</strong>
-                                            <el-checkbox class="all-select"
-                                            v-if="device=='desktop'" :indeterminate="item.isOnshow" border size="mini" v-model="item.isOn" @change="handleCheckAllOneChange(item.dept_id)">全选</el-checkbox>
+                                            <el-checkbox class="all-select" :indeterminate="item.isOnshow" border size="mini" v-model="item.isOn" @change="handleCheckAllOneChange(item.dept_id)">全选</el-checkbox>
                                             <el-checkbox-group class="team-list flex-content" v-model="deptOneId" @change="handleCheckedOneChange" size="mini">
                                                 <el-checkbox class="item-checkbox" v-for="items in item.child" :key="items.value" :label="items.value" border>{{items.label}}</el-checkbox>
                                             </el-checkbox-group>                                   
@@ -584,7 +583,7 @@
                                 :page-sizes="pageSizeList"
                                 @current-change="handleCurrentChange"
                                 :current-page="searchData.page"
-                                :layout="device==='mobile'?'jumper':'total, sizes, prev, pager, next, jumper'"
+                                :layout="'total, sizes, prev, pager, next, jumper'"
                                 :total="totalDataNum">
                             </el-pagination>
                         </div>
@@ -818,7 +817,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'sidebar',
       'menuData'
     ]),

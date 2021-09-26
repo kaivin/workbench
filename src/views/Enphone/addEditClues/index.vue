@@ -602,7 +602,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'menuData'
     ]),
   },
@@ -1180,10 +1179,8 @@ export default {
               $this.initCluesInfo();
             }else{
               $this.clearFormData();
-              if($this.device==="desktop"){
-                var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:response.enid}});
-                window.open(routeUrl.href,'_blank');
-              }
+              var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:response.enid}});
+              window.open(routeUrl.href,'_blank');
             }
           }else{
             $this.$message({

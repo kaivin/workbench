@@ -273,26 +273,17 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'menuData'
     ]),
   },
   mounted(){
       const $this = this;
       this.$nextTick(function () {
-        if($this.device==="desktop"){
           $this.minHeight = $this.$refs.boxPane.offsetHeight-30;
-        }else{
-          $this.minHeight = $this.$refs.boxPane.offsetHeight;
-        }
       });
       window.onresize = () => {
           return (() => {
-            if($this.device==="desktop"){
               $this.minHeight = $this.$refs.boxPane.offsetHeight-30;
-            }else{
-              $this.minHeight = $this.$refs.boxPane.offsetHeight;
-            }
           })()
       }
   },
@@ -747,10 +738,8 @@ export default {
               $this.initCluesInfo();
             }else{
               $this.clearFormData();
-              if($this.device==="desktop"){
-                var routeUrl =  $this.$router.resolve({path:'/Chinaphone/addEditClues',query:{ID:response.id}});
-                window.open(routeUrl.href,'_blank');
-              }
+              var routeUrl =  $this.$router.resolve({path:'/Chinaphone/addEditClues',query:{ID:response.id}});
+              window.open(routeUrl.href,'_blank');
             }
           }else{
             $this.$message({

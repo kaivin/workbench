@@ -35,7 +35,7 @@
                                   >
                               </el-table-column>
                               <el-table-column
-                                  v-if="(menuButtonPermit.indexOf('Ownpush_pushtypeedit'))&&device==='desktop'"
+                                  v-if="(menuButtonPermit.indexOf('Ownpush_pushtypeedit'))"
                                   :width="operationsWidth"
                                   align="center"
                                   fixed="right"
@@ -58,7 +58,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_pushtypeadd')||menuButtonPermit.includes('Ownpush_pushtypeedit'))&&device==='desktop'" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="480px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_pushtypeadd')||menuButtonPermit.includes('Ownpush_pushtypeedit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
             <el-form-item label="渠道名称：" :label-width="formLabelWidth">
@@ -122,7 +122,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addPromotedChannel',
       'sidebar',
       'menuData'

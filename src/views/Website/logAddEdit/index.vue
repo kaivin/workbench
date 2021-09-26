@@ -326,7 +326,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'menuData'
     ]),
   },
@@ -442,17 +441,7 @@ export default {
                     $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
                   }else{
                     if($this.$route.query.websiteID&&$this.$route.query.website){
-                      if($this.device==="desktop"){
-                        $this.getSystemTagData();
-                      }else{
-                        $this.$message({
-                          showClose: true,
-                          message: "请前往PC端做修改操作",
-                          type: 'error',
-                          duration:6000
-                        });
-                        $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-                      }
+                      $this.getSystemTagData();
                     }else{
                       $this.$router.push({path:`/404?redirect=${$this.$router.currentRoute.fullPath}`});
                     }
@@ -468,17 +457,7 @@ export default {
                     $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
                   }else{
                     if($this.$route.query.websiteID&&$this.$route.query.website){
-                      if($this.device==="desktop"){
-                        $this.getSystemTagData();
-                      }else{
-                        $this.$message({
-                          showClose: true,
-                          message: "请前往PC端做添加操作",
-                          type: 'error',
-                          duration:6000
-                        });
-                        $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-                      }
+                      $this.getSystemTagData();
                     }else{
                       $this.$router.push({path:`/404?redirect=${$this.$router.currentRoute.fullPath}`});
                     }

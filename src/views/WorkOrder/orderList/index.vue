@@ -267,7 +267,7 @@
                                           </template>
                                       </el-table-column>
                                       <el-table-column
-                                          v-if="(menuButtonPermit.includes('Worksaccpet_confirmwork')||menuButtonPermit.includes('Worksaccpet_confirmdeal')||menuButtonPermit.includes('Worksaccpet_backwork')||menuButtonPermit.includes('Worksaccpet_confirmfinish')||menuButtonPermit.includes('Worksaccpet_workcancel'))&&device==='desktop'&&(currentStatus=='receive'||currentStatus=='allot'||currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')"
+                                          v-if="(menuButtonPermit.includes('Worksaccpet_confirmwork')||menuButtonPermit.includes('Worksaccpet_confirmdeal')||menuButtonPermit.includes('Worksaccpet_backwork')||menuButtonPermit.includes('Worksaccpet_confirmfinish')||menuButtonPermit.includes('Worksaccpet_workcancel'))&&(currentStatus=='receive'||currentStatus=='allot'||currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')"
                                           :width="operationsWidth"
                                           align="center"
                                           fixed="right"
@@ -296,7 +296,7 @@
                                 :current-page="page"
                                 :page-sizes="pageSizeList"
                                 :page-size="limit"
-                                :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                                :layout="'total, sizes, prev, pager, next, jumper'"
                                 :total="totalDataNum">
                             </el-pagination>
                         </div>
@@ -416,7 +416,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'sidebar',
       'menuData'
     ]),

@@ -12,7 +12,7 @@
                 </p>
                 <el-card class="box-card" shadow="hover">
                   <div slot="header">
-                    <div class="card-header" v-if="device==='desktop'" ref="headerPane">
+                    <div class="card-header" ref="headerPane">
                       <div class="search-wrap" ref="searchPane">
                         <div class="item-search">
                             <el-input
@@ -31,13 +31,6 @@
                         </div>
                       </div>
                     </div>
-                    <div class="card-header filter-panel" v-else ref="headerPane">
-                      <div class="search-panel">                              
-                          <el-input placeholder="请输入IP" v-model="ip" class="article-search">
-                              <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
-                          </el-input>
-                      </div>
-                    </div>
                   </div>
                   <div class="card-content" ref="tableContent">
                       <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
@@ -54,7 +47,6 @@
                               @selection-change="handleSelectionChange"
                               >
                               <el-table-column
-                                v-if="device==='desktop'"
                                   type="selection"
                                   align="center"
                                   width="48">
@@ -72,7 +64,7 @@
                               >
                             </el-table-column>
                             <el-table-column
-                              v-if="(menuButtonPermit.includes('Webmsg_editip')||menuButtonPermit.includes('Webmsg_ipdelete'))&&device==='desktop'"
+                              v-if="(menuButtonPermit.includes('Webmsg_editip')||menuButtonPermit.includes('Webmsg_ipdelete'))"
                               :width="operationsWidth"
                               align="center"
                               fixed="right"
@@ -99,7 +91,7 @@
                       :page-sizes="pageSizeList"
                       :page-size="limit"
                       :pager-count="pagerCount"
-                      :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                      :layout="'total, sizes, prev, pager, next, jumper'"
                       :total="totalDataNum">
                     </el-pagination>
                   </div>
@@ -108,7 +100,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Webmsg_addip')||menuButtonPermit.includes('Webmsg_editip'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Webmsg_addip')||menuButtonPermit.includes('Webmsg_editip'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
           <el-form-item label="IP白名单：" :label-width="formLabelWidth">
@@ -181,7 +173,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addWebMsgIp',
       'sidebar',
       'menuData'

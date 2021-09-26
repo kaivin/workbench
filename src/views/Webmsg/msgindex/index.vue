@@ -35,7 +35,7 @@
                     <el-card class="box-card scroll-card" shadow="hover">
                         <div slot="header">
                             <div class="card-header" ref="headerPane">
-                                <div class="search-wrap" v-if="device==='desktop'">
+                                <div class="search-wrap">
                                     <div class="item-search">
                                         <el-select v-model="searchData.language" size="small" clearable placeholder="请选择语言">
                                             <el-option
@@ -219,7 +219,7 @@
                                         </template>
                                     </el-table-column>
                                     <el-table-column
-                                        v-if="(menuButtonPermit.includes('Webmsg_edit')||menuButtonPermit.includes('Webmsg_delete')||menuButtonPermit.includes('Webmsg_haswaitdealsub')||menuButtonPermit.indexOf('Webmsg_hasdealsub'))&&device==='desktop'"
+                                        v-if="(menuButtonPermit.includes('Webmsg_edit')||menuButtonPermit.includes('Webmsg_delete')||menuButtonPermit.includes('Webmsg_haswaitdealsub')||menuButtonPermit.indexOf('Webmsg_hasdealsub'))"
                                         width="120"
                                         align="center"
                                         fixed="right"
@@ -247,7 +247,7 @@
                                 :current-page="page"
                                 :page-sizes="pageSizeList"
                                 :page-size="limit"
-                                :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                                :layout="'total, sizes, prev, pager, next, jumper'"
                                 :total="totalDataNum">
                             </el-pagination>
                         </div>
@@ -344,7 +344,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'msgPage',
       'sidebar',
       'menuData'

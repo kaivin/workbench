@@ -13,7 +13,7 @@
                   <el-card class="box-card" shadow="hover">
                       <div slot="header">
                           <div class="card-header" ref="headerPane">
-                              <div class="search-wrap" v-if="device==='desktop'">
+                              <div class="search-wrap">
                                   <div class="item-search" style="width: 240px;">
                                   <el-date-picker
                                       v-model="searchData.date"
@@ -156,7 +156,7 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column
-                                    v-if="(menuButtonPermit.includes('Works_workedit')||menuButtonPermit.includes('Works_workcancel')||menuButtonPermit.includes('Works_workconfirm')||menuButtonPermit.includes('Works_noconfirm')||menuButtonPermit.includes('Works_workdelete'))&&device==='desktop'"
+                                    v-if="(menuButtonPermit.includes('Works_workedit')||menuButtonPermit.includes('Works_workcancel')||menuButtonPermit.includes('Works_workconfirm')||menuButtonPermit.includes('Works_noconfirm')||menuButtonPermit.includes('Works_workdelete'))"
                                     :width="operationsWidth"
                                     align="center"
                                     fixed="right"
@@ -187,7 +187,7 @@
                           :page-sizes="pageSizeList"
                           :page-size="searchData.limit"
                           :pager-count="pagerCount"
-                          :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                          :layout="'total, sizes, prev, pager, next, jumper'"
                           :total="totalDataNum">
                         </el-pagination>
                       </div>
@@ -196,7 +196,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Works_addevaluation')&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+    <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Works_addevaluation')" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
             <el-form-item label="评价内容：" :label-width="formLabelWidth">
@@ -328,7 +328,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'sidebar',
       'menuData'
     ]),

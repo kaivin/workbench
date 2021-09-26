@@ -67,7 +67,7 @@
                                   >
                                 </el-table-column>
                                 <el-table-column
-                                  v-if="(menuButtonPermit.includes('Enphone_getenphonereadrole')||menuButtonPermit.includes('Enphone_getenphonewriterole')||menuButtonPermit.includes('Enphone_getphonedomain')||menuButtonPermit.indexOf('Enphone_phoneedit')||menuButtonPermit.indexOf('Enphone_phonedelete'))&&device==='desktop'"
+                                  v-if="(menuButtonPermit.includes('Enphone_getenphonereadrole')||menuButtonPermit.includes('Enphone_getenphonewriterole')||menuButtonPermit.includes('Enphone_getphonedomain')||menuButtonPermit.indexOf('Enphone_phoneedit')||menuButtonPermit.indexOf('Enphone_phonedelete'))"
                                   :width="operationsWidth"
                                   align="center"
                                   fixed="right"
@@ -94,7 +94,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Enphone_phoneadd')||menuButtonPermit.includes('Enphone_phoneedit'))&&device==='desktop'" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="480px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Enphone_phoneadd')||menuButtonPermit.includes('Enphone_phoneedit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
           <el-form-item label="电话号码：" :label-width="formLabelWidth">
@@ -155,7 +155,7 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog :title="roleDialogText" v-if="(menuButtonPermit.includes('Enphone_getenphonereadrole')||menuButtonPermit.includes('Enphone_getenphonewriterole'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
+    <el-dialog :title="roleDialogText" v-if="(menuButtonPermit.includes('Enphone_getenphonereadrole')||menuButtonPermit.includes('Enphone_getenphonewriterole'))" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
       <div class="transfer-panel">
         <div class="transfer-wrap">
           <el-transfer 
@@ -175,7 +175,7 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog :title="domainDialogText" v-if="(menuButtonPermit.includes('Enphone_getphonedomain'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogDomainVisible" width="840px">
+    <el-dialog :title="domainDialogText" v-if="(menuButtonPermit.includes('Enphone_getphonedomain'))" custom-class="transfer-dialog" :visible.sync="dialogDomainVisible" width="840px">
       <div class="transfer-panel">
         <div class="transfer-wrap">
           <el-transfer 
@@ -273,7 +273,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addEnPhone',
       'sidebar',
       'menuData'

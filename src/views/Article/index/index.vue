@@ -10,17 +10,17 @@
                 <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
               </template>
             </p>
-            <el-card class="box-card scroll-card ArticleMain" v-bind:class="device==='desktop'?'':'mobile'" shadow="hover">
+            <el-card class="box-card scroll-card ArticleMain" shadow="hover">
                 <div slot="header">
-                    <div class="card-header" v-if="device==='desktop'" ref="headerPane">
-                        <div class="border-wrap post-class ArticleOne" v-bind:class="device==='desktop'?'':'mobile'" v-if="postTypeData.length>0">
+                    <div class="card-header" ref="headerPane">
+                        <div class="border-wrap post-class ArticleOne" v-if="postTypeData.length>0">
                             <div class="border-row flex-wrap" v-for="item in postTypeData" v-bind:key="item.id" v-bind:class="item.id==isArticleTit?'active':''">
                                 <div class="border-cell txt-font" v-on:click="handArticleTit(item.id)">
                                     <span>{{item.typename}}</span>
                                 </div>
                                 <div class="border-cell flex-content" style="left:0px;">
                                     <div class="tag-panel">
-                                        <el-button type="primary" plain v-bind:class="type.plain?'is-active':''" :size="device==='desktop'?'small':'mini'" v-for="type in item.children" v-bind:key="type.id" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
+                                        <el-button type="primary" plain v-bind:class="type.plain?'is-active':''" size="small" v-for="type in item.children" v-bind:key="type.id" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
                                     </div>
                                 </div>
                             </div>
@@ -43,14 +43,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-header filter-panel" v-else ref="headerPane">
-                        <div class="search-panel">                              
-                            <el-input placeholder="请输入内容" v-model="keyword" class="article-search">
-                                <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
-                            </el-input>
-                        </div>
-                        <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
                     </div>
                 </div>
                 <div class="card-content ArticleThree" ref="cardContent" v-if="isDefault&&departUser.length>0">
@@ -171,7 +163,7 @@
                               >
                               </el-table-column>
                               <el-table-column
-                              v-if="(menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_delete'))&&device==='desktop'"
+                              v-if="(menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_delete'))"
                               :width="operationsWidth"
                               fixed="right"
                               prop="operations"
@@ -196,7 +188,7 @@
                         :page-sizes="pageSizeList"
                         :page-size="limit"
                         :pager-count="pagerCount"
-                        :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                        :layout="'total, sizes, prev, pager, next, jumper'"
                         :total="totalDataNum">
                         </el-pagination>
                     </div>
@@ -279,7 +271,7 @@
                             >
                             </el-table-column>
                             <el-table-column
-                            v-if="(menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_delete'))&&device==='desktop'"
+                            v-if="(menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_delete'))"
                             :width="operationsWidth"
                             align="center"
                             fixed="right"
@@ -305,7 +297,7 @@
                         :current-page="page"
                         :page-sizes="pageSizeList"
                         :page-size="limit"
-                        :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                        :layout="'total, sizes, prev, pager, next, jumper'"
                         :total="totalDataNum">
                         </el-pagination>
                     </div>
@@ -315,40 +307,6 @@
         </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-      <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
-      <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
-        <div class="flex-content">
-          <div class="abs-scroll">
-            <ul>
-              <li v-for="item in postTypeData" v-bind:key="item.id" v-bind:class="item.id==isArticleTit?'active':''">
-                <span class="title-panel">{{item.typename}}</span>
-                <div class="tag-panel">
-                  <div class="item-button" v-for="type in item.children" v-bind:key="type.id">
-                    <el-button type="primary" v-bind:class="type.plain?'is-plain':''"  size="small" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
-                  </div>
-                </div>
-              </li>
-              <li v-if="tagData.length>0&&tags.systemList.length>0&&isList">
-                <span class="title-panel">系统标签</span>
-                <div class="tag-panel">
-                  <div class="item-button" v-for="item in tags.systemList" v-bind:key="item.id">
-                    <el-tag v-bind:class="item.plain?'is-plain':''" size="small" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
-                  </div>
-                </div>
-              </li>
-              <li v-if="tagData.length>0&&tags.customList.length>0&&isList">
-                <span class="title-panel">自定义标签</span>
-                <div class="tag-panel">
-                  <div class="item-button" v-for="(item,index) in tags.customList" v-bind:key="index">
-                    <el-tag v-bind:class="item.plain?'is-plain':''" size="small" v-on:click="clickTagHandle(item.id,item.name)">{{item.name}}</el-tag>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <p class="footer-button"><span class="btn-yes" v-on:click="searchDialog()">确定</span></p>
-      </div>
     </div>
 </template>
 <script>
@@ -377,7 +335,6 @@ export default {
       pagerCount:5,
       pageSizeList:[50, 100, 150, 200],
       totalDataNum:0,
-      openClass:false,
       isDefault:true,
       isList:false,
       isSearch:false,
@@ -417,7 +374,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'sidebar',
       'menuData'
     ]),
@@ -1094,11 +1050,6 @@ export default {
          $this.isArticleTit=Nt;
          $this.isArticleTitId=Nt;
        }
-    },
-    // 高级筛选
-    searchDialog(){
-      var $this = this;
-      $this.openClass=!$this.openClass;
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){

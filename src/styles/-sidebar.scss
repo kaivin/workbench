@@ -226,23 +226,6 @@
         }
     }
 }
-.mobile{
-  .sidebar-container{
-    position: fixed;
-    left:0;
-    top:0;
-    bottom:0;
-    height: 100%;
-    overflow: hidden;
-    transition: left .5s;
-    z-index: 2001;
-  }
-  &.hideSidebar{
-    .sidebar-container{
-      left: -220px;
-    }
-  }
-}
 .el-menu--collapse .el-menu .el-submenu {
   min-width: $sideBarWidth !important;
 }

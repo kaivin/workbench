@@ -12,7 +12,7 @@
                   </p>
                   <el-card class="box-card" shadow="hover">
                     <div slot="header">      
-                      <div class="card-header SaleCard" v-if="device==='desktop'" ref="headerPane">
+                      <div class="card-header SaleCard" ref="headerPane">
                           <div class="search-wrap Compart-search-wrap" ref="searchPane">          
                               <div class="item-search" style="width:200px;">                              
                                     <el-date-picker v-model="searchData.time" format="yyyy 年 MM 月" value-format="yyyy-MM" type="month" size="small" placeholder="选择月"></el-date-picker>
@@ -21,12 +21,6 @@
                                 <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                               </div>
                           </div>
-                      </div>
-                      <div class="card-header filter-panel Compart-search-wrap" v-else ref="headerPane">
-                        <div class="search-panel">
-                            <el-date-picker v-model="searchData.time" format="yyyy 年 MM 月" value-format="yyyy-MM" type="month" size="small" placeholder="选择月"></el-date-picker>
-                            <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
-                        </div>
                       </div>
                     </div>
                     <div class="card-content" ref="tableContent">
@@ -80,7 +74,7 @@
                               >
                               </el-table-column>
                               <el-table-column
-                                v-if="(menuButtonPermit.indexOf('Compare_edit')||menuButtonPermit.indexOf('Compare_delete'))&&device==='desktop'"
+                                v-if="(menuButtonPermit.indexOf('Compare_edit')||menuButtonPermit.indexOf('Compare_delete'))"
                                 :width="operationsWidth"
                                 align="center"
                                 fixed="right"
@@ -107,7 +101,7 @@
                         :page-sizes="pageSizeList"
                         :page-size="searchData.limit"
                         :pager-count="pagerCount"
-                        :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                        :layout="'total, sizes, prev, pager, next, jumper'"
                         :total="totalDataNum">
                       </el-pagination>
                     </div>
@@ -116,7 +110,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Compare_add')||menuButtonPermit.includes('Compare_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="440px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Compare_add')||menuButtonPermit.includes('Compare_edit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="440px">
       <el-form :model="dialogForm">
         <div class="item-form Compart-time-width">
             <el-form-item label="添加时间：" :label-width="formLabelWidth">
@@ -238,7 +232,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addCompareList',
       'sidebar',
       'menuData'

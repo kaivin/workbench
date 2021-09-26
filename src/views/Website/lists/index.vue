@@ -12,7 +12,7 @@
           </p>
           <el-card class="box-card scroll-card WebsiteList-card" shadow="hover">
             <div slot="header">
-              <div class="card-header" v-if="device==='desktop'" ref="headerPane">
+              <div class="card-header" ref="headerPane">
                 <div class="border-wrap post-class">
                   <div class="border-row flex-wrap">
                       <div class="border-cell txt-font"><span>行业：</span></div>
@@ -103,14 +103,6 @@
                       </div>
                   </div>
                 </div>
-              </div>
-              <div class="card-header filter-panel" v-else ref="headerPane">
-                  <div class="search-panel">                              
-                      <el-input placeholder="输入ip或域名" v-model="formData.ip" class="article-search">
-                        <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
-                      </el-input>
-                  </div>
-                  <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
               </div>
             </div>
             <div class="card-content WebsiteList-Wrap" ref="cardContent">
@@ -311,7 +303,7 @@
                         </template>
                       </el-table-column>
                       <el-table-column
-                        v-if="(menuButtonPermit.includes('Website_edit')||menuButtonPermit.includes('Website_delete'))&&device==='desktop'"
+                        v-if="(menuButtonPermit.includes('Website_edit')||menuButtonPermit.includes('Website_delete'))"
                         :width="operationsWidth"
                         align="center"
                         fixed="right"
@@ -337,7 +329,7 @@
                 :page-sizes="pageSizeList"
                 :page-size="limit"
                 :pager-count="pagerCount"
-                :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                :layout="'total, sizes, prev, pager, next, jumper'"
                 :total="totalDataNum">
               </el-pagination>
             </div>
@@ -346,79 +338,7 @@
       </div>
     </div>
     <el-backtop target=".scroll-panel"></el-backtop>
-    <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
-    <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
-      <div class="flex-content">
-        <div class="abs-scroll"> 
-          <ul>
-            <li>
-              <span class="title-panel">行业：</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="(item,index) in brandList" v-bind:key="index">
-                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickBrand(item.id)">{{item.brandname}}</el-button>
-                </div>
-              </div>
-            </li>
-            <li>
-              <span class="title-panel">语言：</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="item in languageList" v-bind:key="item.id">
-                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickLanguage(item.id)">{{item.languagename}}</el-button>
-                </div>
-              </div>
-            </li>
-            <li>
-              <span class="title-panel">排序：</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="(item,index) in sort" v-bind:key="index">
-                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickSort(item.key)">{{item.name}}</el-button>
-                </div>
-              </div>
-            </li>
-            <li>
-              <span class="title-panel">部门：</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="(item,index) in departList" v-bind:key="index">
-                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickDepart(item.id)">{{item.name}}</el-button>
-                </div>
-              </div>
-            </li>
-            <li>
-              <span class="title-panel">模式：</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="(item,index) in websiteStatus" v-bind:key="index">
-                  <el-button :type="item.type" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickStatus(item.cate,item.key)">{{item.name}}</el-button>
-                </div>
-              </div>
-            </li>
-            <li>
-              <span class="title-panel">标签：</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="(item,index) in attrTagList" v-bind:key="index">
-                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickAttrTag(item.name,item.id)">{{item.name}}</el-button>
-                </div>
-              </div>
-            </li>
-            <li>
-              <span class="title-panel">主机头：</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="(item,index) in hostTagList" v-bind:key="index">
-                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickHostTag(item.name,item.id)">{{item.name}}</el-button>
-                </div>
-              </div>
-            </li>
-            <li class="column-2">
-              <div class="tag-panel">
-                <div class="item-button"><el-button type="primary" v-bind:class="formData.headeruser?'is-plain':''" size="small" v-on:click="clickManage">个人负责网站</el-button></div>
-                <div class="item-button"><el-button type="primary" v-bind:class="formData.personuser?'is-plain':''" size="small" v-on:click="clickDevelop">个人开发网站</el-button></div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <p class="footer-button"><span class="btn-yes" v-on:click="searchDialog()">确定</span></p>
-    </div>
-    <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Website_add')&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+    <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Website_add')" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
           <el-form-item label="品牌：" :label-width="formLabelWidth">
@@ -474,7 +394,6 @@ export default {
       breadcrumbList:[],
       minHeight:"auto",
       operationsWidth:"",
-      openClass:false,
       menuButtonPermit:[],
       tableData:[],
       page:1,
@@ -565,7 +484,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'addWebsite',
       'sidebar',
       'menuData'
@@ -1312,22 +1230,14 @@ export default {
     // 跳转到网站日志列表页
     linkToLog(row,index){
       var $this = this;
-      if($this.device=="desktop"){
-        var routeUrl =  $this.$router.resolve({name:'websiteLogList',query:{websiteID:row.id,website:row.domain}});
-        window.open(routeUrl.href,'_blank');
-      }else{
-        $this.$router.push({name:'websiteLogList',query:{websiteID:row.id,website:row.domain}});
-      }
+      var routeUrl =  $this.$router.resolve({name:'websiteLogList',query:{websiteID:row.id,website:row.domain}});
+      window.open(routeUrl.href,'_blank');
     },
     // 修改网站数据
     editTableRow(row,index){
       var $this = this;
-      if($this.device=="desktop"){
-        var routeUrl =  $this.$router.resolve({name:'websiteEdit',query:{websiteID:row.id,website:row.domain}});
-        window.open(routeUrl.href,'_blank');
-      }else{
-        $this.$router.push({name:'websiteEdit',query:{websiteID:row.id,website:row.domain}});
-      }
+      var routeUrl =  $this.$router.resolve({name:'websiteEdit',query:{websiteID:row.id,website:row.domain}});
+      window.open(routeUrl.href,'_blank');
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
@@ -1446,11 +1356,6 @@ export default {
             message: '已取消删除'
           });          
       });
-    },
-    // 高级筛选
-    searchDialog(){
-      var $this = this;
-      $this.openClass=!$this.openClass;
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){

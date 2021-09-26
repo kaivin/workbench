@@ -12,7 +12,7 @@
                 </p>
                 <el-card class="box-card" shadow="hover">
                   <div slot="header" v-if="canSearch">
-                    <div class="card-header WebServerTop" v-if="device==='desktop'" ref="headerPane">
+                    <div class="card-header WebServerTop" ref="headerPane">
                       <div class="border-wrap post-class" ref="searchPane">
                         <div class="border-row flex-wrap">
                             <div class="border-cell txt-font"><span>语言：</span></div>
@@ -78,14 +78,6 @@
                             </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="card-header filter-panel" v-else ref="headerPane">
-                      <div class="search-panel">                              
-                          <el-input placeholder="输入ip" v-model="formData.ip" class="article-search">
-                              <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
-                          </el-input>
-                      </div>
-                      <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
                     </div>
                   </div>
                   <div class="card-content WebServerBom" ref="cardContent">
@@ -158,7 +150,7 @@
                               >
                             </el-table-column>
                             <el-table-column
-                              v-if="(menuButtonPermit.includes('Webserver_edit')||menuButtonPermit.includes('Webserver_delete'))&&device==='desktop'"
+                              v-if="(menuButtonPermit.includes('Webserver_edit')||menuButtonPermit.includes('Webserver_delete'))"
                               :width="operationsWidth"
                               align="center"
                               fixed="right"
@@ -182,7 +174,7 @@
                         :page-sizes="pageSizeList"
                         :page-size="limit"
                         :pager-count="pagerCount"
-                        :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                        :layout="'total, sizes, prev, pager, next, jumper'"
                         :total="totalDataNum">
                       </el-pagination>
                     </div>
@@ -191,51 +183,6 @@
         </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
-    <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
-      <div class="flex-content">
-        <div class="abs-scroll">
-          <ul>
-            <li>
-              <span class="title-panel">语言</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="item in languageList" v-bind:key="item.value">
-                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''"  size="small" v-on:click="clickLanguageHandler(item)">{{item.label}}</el-button>
-                </div>
-              </div>
-            </li>
-            <li class="column-2">
-              <span class="title-panel">用途</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="item in useingList" v-bind:key="item.value">
-                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickUseingHandler(item)">{{item.label}}</el-tag>
-                </div>
-              </div>
-            </li>
-            <li class="column-2">
-              <span class="title-panel">系统</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="item in serverList" v-bind:key="item.value">
-                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickSystemHandler(item)">{{item.label}}</el-tag>
-                </div>
-              </div>
-            </li>
-            <li>
-              <span class="title-panel">别名</span>
-              <div class="item-filter">
-                <el-input
-                  placeholder="输入别名"
-                  v-model="formData.name"
-                  size="small"
-                  clearable>
-                </el-input>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <p class="footer-button"><span class="btn-yes" v-on:click="searchResult()">确定</span></p>
-    </div>
   </div>
 </template>
 <script>
@@ -266,7 +213,6 @@ export default {
         useringid:"",
       },
       dialogSearchVisible:false,
-      openClass:false,
       scrollPosition:{
         width:0,
         left:0,
@@ -296,7 +242,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'sidebar',
       'menuData'
     ]),
@@ -420,11 +365,6 @@ export default {
         this.scrollPosition.isPC = true;
       }
     },
-    // 高级筛选
-    searchDialog(){
-      var $this = this;
-      $this.openClass=!$this.openClass;
-    },
     // 设置table高度
     setTableHeight(){
       var $this = this;
@@ -451,7 +391,6 @@ export default {
     // 搜索结果点击事件
     searchResult(){
       var $this = this;
-      $this.openClass = false;
       $this.page = 1;
       $this.loadingFun();
       $this.getWebsiteListData();
@@ -528,9 +467,6 @@ export default {
             $this.tableData = response.data;
             $this.totalDataNum = response.allcount;
             $this.canSearch = response.searchshow?true:false;
-            if($this.device === "mobile"){
-              $this.openClass = false;
-            }
             $this.isLoading.close();
             $this.$nextTick(function () {
               $this.setTableHeight();
@@ -602,12 +538,8 @@ export default {
     // 跳转到网站列表页
     jumpWebsiteList(row,index){
       var $this = this;
-      if($this.device=="desktop"){
-        var routeUrl =  $this.$router.resolve({name:'Website_lists',query:{key:row.ip}});
-        window.open(routeUrl.href,'_blank');
-      }else{
-        $this.$router.push({name:'Website_lists',query:{key:row.ip}});
-      }
+      var routeUrl =  $this.$router.resolve({name:'Website_lists',query:{key:row.ip}});
+      window.open(routeUrl.href,'_blank');
     },
     // 修改网站数据
     editTableRow(row,index){
@@ -734,60 +666,6 @@ export default {
             message: '已取消删除'
           });          
       });
-    },
-    // 移动端语言选择事件
-    clickLanguageHandler(e){
-      var $this = this;
-      var languageList = $this.languageList;
-      languageList.forEach(function(item,index){
-        if(item.value == e.value){
-          item.isOn = !item.isOn;
-          if(item.isOn){
-            $this.formData.language = item.value;
-          }else{
-            $this.formData.language = "";
-          }
-        }else{
-          item.isOn = false;
-        }
-      });
-      $this.languageList = languageList;
-    },
-    // 移动端用途选择事件
-    clickUseingHandler(e){
-      var $this = this;
-      var useingList = $this.useingList;
-      useingList.forEach(function(item,index){
-        if(item.value == e.value){
-          item.isOn = !item.isOn;
-          if(item.isOn){
-            $this.formData.useringid = item.value;
-          }else{
-            $this.formData.useringid = "";
-          }
-        }else{
-          item.isOn = false;
-        }
-      });
-      $this.useingList = useingList;
-    },
-    // 移动端系统选择事件
-    clickSystemHandler(e){
-      var $this = this;
-      var serverList = $this.serverList;
-      serverList.forEach(function(item,index){
-        if(item.value == e.value){
-          item.isOn = !item.isOn;
-          if(item.isOn){
-            $this.formData.systemid = item.value;
-          }else{
-            $this.formData.systemid = "";
-          }
-        }else{
-          item.isOn = false;
-        }
-      });
-      $this.serverList = serverList;
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){

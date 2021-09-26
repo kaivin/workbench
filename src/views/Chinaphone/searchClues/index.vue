@@ -14,7 +14,7 @@
                 <el-card class="box-card scroll-card" shadow="hover">
                   <div slot="header">
                       <div class="card-header EnphoneCardHeader" ref="headerPane">
-                          <div class="search-wrap" v-if="device==='desktop'">
+                          <div class="search-wrap">
                             <div class="item-search" style="width: 240px;">
                               <el-date-picker
                                   v-model="searchData.date"
@@ -184,7 +184,7 @@
                                   <p v-if="isProduct"><span>共计：<strong class="color1">{{infoData.groupCount}}</strong>种产品，条URL，询盘<strong class="color2">{{infoData.totalCount}}</strong>个。</span></p>
                               </div>
                               <div class="clues-title-btn">                          
-                                <el-button type="primary" size="small" class="serchBtn" v-if="device==='desktop'" @click="searchResult"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>查询</el-button>
+                                <el-button type="primary" size="small" class="serchBtn" @click="searchResult"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>查询</el-button>
                                 <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
                                 <el-button type="primary" size="small" class="editorNote" v-bind:disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_custormgivea')" v-on:click="setALevel"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>标记为A+</el-button>
                               </div>
@@ -420,7 +420,7 @@
                           :page-sizes="pageSizeList"
                           @current-change="handleCurrentChange"
                           :current-page="searchData.page"
-                          :layout="device==='mobile'?'jumper':'total, sizes, prev, pager, next, jumper'"
+                          :layout="'total, sizes, prev, pager, next, jumper'"
                           :total="totalDataNum">
                       </el-pagination>
                   </div>
@@ -611,7 +611,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'sidebar',
       'menuData'
     ]),

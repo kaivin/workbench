@@ -597,7 +597,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'menuData'
     ]),
   },
@@ -687,17 +686,7 @@ export default {
               $this.menuButtonPermit.push(item.action_route);
             });
             if($this.menuButtonPermit.includes('Website_edit')){
-              if($this.device==="desktop"){
-                $this.getWebsiteSystemData();
-              }else{
-                $this.$message({
-                  showClose: true,
-                  message: "请前往PC端做修改查看操作",
-                  type: 'error',
-                  duration:6000
-                });
-                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-              }
+              $this.getWebsiteSystemData();
             }else{
               $this.$message({
                 showClose: true,
@@ -1176,12 +1165,8 @@ export default {
     linkPage(){
       var $this = this;
       if($this.formData.ip!=""){
-        if($this.device=="desktop"){
-          var routeUrl =  $this.$router.resolve({path:'/Webserver/lists',query:{IP:$this.formData.ip}});
-          window.open(routeUrl.href,'_blank');
-        }else{
-          $this.$router.push({path:'/Webserver/lists',query:{IP:$this.formData.ip}});
-        }
+        var routeUrl =  $this.$router.resolve({path:'/Webserver/lists',query:{IP:$this.formData.ip}});
+        window.open(routeUrl.href,'_blank');
       }
     },
   }

@@ -53,7 +53,7 @@
                                 </template>
                               </el-table-column>
                               <el-table-column
-                                v-if="(menuButtonPermit.includes('Website_attredit')||menuButtonPermit.includes('Website_attrdelete'))&&device==='desktop'"
+                                v-if="(menuButtonPermit.includes('Website_attredit')||menuButtonPermit.includes('Website_attrdelete'))"
                                 :width="operationsWidth"
                                 align="center"
                                 fixed="right"
@@ -77,7 +77,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Website_attradd')||menuButtonPermit.includes('Website_attredit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Website_attradd')||menuButtonPermit.includes('Website_attredit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
           <el-form-item label="标签名称：" :label-width="formLabelWidth">
@@ -161,7 +161,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addWebsiteAttr',
       'sidebar',
       'menuData'

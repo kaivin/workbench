@@ -12,7 +12,7 @@
                 </p>
                 <el-card class="box-card" shadow="hover">
                   <div slot="header">
-                    <div class="card-header" v-if="device==='desktop'" ref="headerPane">
+                    <div class="card-header" ref="headerPane">
                       <div class="search-wrap" ref="searchPane">
                         <div class="item-search">
                           <el-cascader v-model="searchData.dept_id" size="small" class="cascader-panel" :options="departLevelData" ref="menuLevel" filterable placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover' }" clearable></el-cascader>
@@ -40,15 +40,6 @@
                           <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                         </div>
                       </div>
-                      <el-button type="primary" size="small" icon="el-icon-search" @click="openSearchDialog()" v-if="device==='mobile'">高级查询</el-button>
-                    </div>
-                    <div class="card-header filter-panel" v-else ref="headerPane">
-                      <div class="search-panel">                              
-                          <el-input placeholder="请输入真实姓名关键字" v-model="searchData.uname" class="article-search">
-                              <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
-                          </el-input>
-                      </div>
-                      <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
                     </div>
                   </div>
                   <div class="card-content" ref="tableContent">
@@ -143,7 +134,7 @@
                               >
                             </el-table-column>
                             <el-table-column
-                              v-if="(menuButtonPermit.includes('User_getrole')||menuButtonPermit.includes('User_resetpwd')||menuButtonPermit.indexOf('User_edit')||menuButtonPermit.indexOf('User_delete'))&&device==='desktop'"
+                              v-if="(menuButtonPermit.includes('User_getrole')||menuButtonPermit.includes('User_resetpwd')||menuButtonPermit.indexOf('User_edit')||menuButtonPermit.indexOf('User_delete'))"
                               :width="operationsWidth"
                               align="center"
                               fixed="right"
@@ -174,7 +165,7 @@
                       :page-sizes="pageSizeList"
                       :page-size="searchData.limit"
                       :pager-count="pagerCount"
-                      :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                      :layout="'total, sizes, prev, pager, next, jumper'"
                       :total="totalDataNum">
                     </el-pagination>
                   </div>
@@ -183,7 +174,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('User_add')||menuButtonPermit.includes('User_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="680px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('User_add')||menuButtonPermit.includes('User_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="680px">
       <el-form :model="dialogForm">
         <div class="item-form-group">
           <div class="item-form">
@@ -265,7 +256,7 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog title="分配角色" v-if="(menuButtonPermit.includes('User_getrole'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
+    <el-dialog title="分配角色" v-if="(menuButtonPermit.includes('User_getrole'))" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
       <div class="transfer-panel">
         <div class="transfer-wrap">
           <el-transfer 
@@ -286,59 +277,6 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog title="高级查询" v-if="device==='mobile'" custom-class="search-dialog block-search" :visible.sync="dialogSearchVisible">
-      <div class="search-dialog-wrap">
-        <div class="item-search">
-          <el-select v-model="searchData.is_delete" clearable placeholder="请选择用户状态">
-            <el-option
-              v-for="item in userStatus"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="item-search">
-          <el-input
-            placeholder="请输入真实姓名关键字"
-            v-model="searchData.uname"
-            clearable>
-          </el-input>
-        </div>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogSearchVisible = false">取 消</el-button>
-          <el-button type="primary" @click="searchResult">查询</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
-    <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
-      <div class="flex-content">
-        <div class="abs-scroll">
-          <ul>
-            <li>
-              <span class="title-panel">部门</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="item in departLevelData" v-bind:key="item.value">
-                  <el-button type="primary" v-bind:class="item.isOn?'is-plain':''"  size="small" v-on:click="clickDepartHandler(item)">{{item.label}}</el-button>
-                </div>
-              </div>
-            </li>
-            <li class="column-2">
-              <span class="title-panel">用户状态</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="item in userStatus" v-bind:key="item.value">
-                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickTagHandler(item)">{{item.label}}</el-tag>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <p class="footer-button"><span class="btn-yes" v-on:click="searchResult()">确定</span></p>
-    </div>
   </div>
 </template>
 <script>
@@ -400,7 +338,6 @@ export default {
         label: 'label'
       },
       dialogSearchVisible:false,
-      openClass:false,
       scrollPosition:{
         width:0,
         left:0,
@@ -430,7 +367,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addUser',
       'sidebar',
       'menuData'
@@ -563,11 +499,6 @@ export default {
         this.scrollPosition.isPC = true;
       }
     },
-    // 高级筛选
-    searchDialog(){
-      var $this = this;
-      $this.openClass=!$this.openClass;
-    },
     // 设置table高度
     setTableHeight(){
       var $this = this;
@@ -633,9 +564,6 @@ export default {
               $this.tableData = [];
             }
             $this.totalDataNum = response.allcount;
-            if($this.device === "mobile"){
-              $this.openClass = false;
-            }
             $this.isLoading.close();
             $this.$nextTick(function () {
               $this.setTableHeight();
@@ -1258,42 +1186,6 @@ export default {
             });
           }
       });
-    },
-    // 移动端部门选择事件
-    clickDepartHandler(e){
-      var $this = this;
-      var departLevelData = $this.departLevelData;
-      departLevelData.forEach(function(item,index){
-        if(item.value == e.value){
-          item.isOn = !item.isOn;
-          if(item.isOn){
-            $this.searchData.dept_id = item.value;
-          }else{
-            $this.searchData.dept_id = 0;
-          }
-        }else{
-          item.isOn = false;
-        }
-      });
-      $this.departLevelData = departLevelData;
-    },
-    // 移动端用户状态选择事件
-    clickTagHandler(e){
-      var $this = this;
-      var userStatus = $this.userStatus;
-      userStatus.forEach(function(item,index){
-        if(item.value == e.value){
-          item.isOn = !item.isOn;
-          if(item.isOn){
-            $this.searchData.is_delete = item.value;
-          }else{
-            $this.searchData.is_delete = "";
-          }
-        }else{
-          item.isOn = false;
-        }
-      });
-      $this.userStatus = userStatus;
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){

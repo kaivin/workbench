@@ -3,7 +3,7 @@
       <div class="abs-panel">
         <el-scrollbar wrap-class="scrollbar-wrapper">
            <el-tooltip class="item" effect="dark" :content="sidebar.opened?'收起':'展开'" placement="right">
-              <hamburger id="hamburger-container" v-if="device=='desktop'" v-bind:is-fold="!sidebar.opened" class="hamburger-container" v-on:toggleClick="toggleSideBar" />
+              <hamburger id="hamburger-container" v-bind:is-fold="!sidebar.opened" class="hamburger-container" v-on:toggleClick="toggleSideBar" />
             </el-tooltip>
           <el-menu
               :default-active="activeMenu"
@@ -37,7 +37,6 @@ export default {
       ...mapGetters([
         'menuData',
         'sidebar',
-        'device',
       ]),
       activeMenu(){
         const route = this.$route;

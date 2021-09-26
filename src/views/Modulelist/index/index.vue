@@ -43,7 +43,7 @@
                         >
                       </el-table-column>
                       <el-table-column
-                        v-if="menuButtonPermit.includes('Modulelist_getrole')&&device==='desktop'"
+                        v-if="menuButtonPermit.includes('Modulelist_getrole')"
                         :width="operationsWidth"
                         align="center"
                         fixed="right"
@@ -64,7 +64,7 @@
         </div>
       </div>
     </el-card>
-    <el-dialog title="分配角色" v-if="menuButtonPermit.includes('Modulelist_getrole')&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
+    <el-dialog title="分配角色" v-if="menuButtonPermit.includes('Modulelist_getrole')" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
       <div class="transfer-panel">
         <div class="transfer-wrap">
           <el-transfer 
@@ -135,7 +135,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'sidebar',
       'menuData'
     ]),

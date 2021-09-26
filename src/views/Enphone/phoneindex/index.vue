@@ -115,14 +115,8 @@
                                   </div>
                             </div>
                             <div class="tipsHasItem">
-                                <div class="filter-panel" v-if="device==='mobile'">
-                                    <div class="search-panel">
-                                        <h2>当前信息：{{currentPhone}}</h2>
-                                    </div>
-                                    <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
-                                </div>
-                                <h2 class="clues-title" v-if="device==='desktop'">当前信息：{{currentPhone}}</h2>
-                                <div class="search-wrap" v-if="device==='desktop'">
+                                <h2 class="clues-title">当前信息：{{currentPhone}}</h2>
+                                <div class="search-wrap">
                                   <el-date-picker
                                       v-model="searchData.date"
                                       size="small"
@@ -520,7 +514,7 @@
                                   </template>
                                 </el-table-column>
                                 <el-table-column
-                                  v-if="writepermit&&(menuButtonPermit.includes('Enphone_otheredit'))&&device==='desktop'"
+                                  v-if="writepermit&&(menuButtonPermit.includes('Enphone_otheredit'))"
                                   width="88"
                                   align="center"
                                   prop="operations"
@@ -533,7 +527,7 @@
                                   </template>
                                 </el-table-column>
                                 <el-table-column
-                                  v-if="writepermit&&(menuButtonPermit.includes('Enphone_edit'))&&device==='desktop'"
+                                  v-if="writepermit&&(menuButtonPermit.includes('Enphone_edit'))"
                                   :width="operationsWidth"
                                   align="center"
                                   prop="operations"
@@ -716,7 +710,7 @@
                                   </template>
                                 </el-table-column>
                                 <el-table-column
-                                  v-if="menuButtonPermit.includes('Enphone_otheredit')&&device==='desktop'"
+                                  v-if="menuButtonPermit.includes('Enphone_otheredit')"
                                   width="88"
                                   align="center"
                                   prop="operations"
@@ -729,7 +723,7 @@
                                   </template>
                                 </el-table-column>
                                 <el-table-column
-                                  v-if="menuButtonPermit.includes('Enphone_edit')&&device==='desktop'"
+                                  v-if="menuButtonPermit.includes('Enphone_edit')"
                                   :width="operationsWidth"
                                   align="center"
                                   prop="operations"
@@ -755,7 +749,7 @@
                           :current-page="searchData.page"
                           :page-sizes="pageSizeList"
                           :page-size="searchData.limit"
-                          :layout="device==='mobile'?'sizes, jumper':'total, sizes, prev, pager, next, jumper'"
+                          :layout="'total, sizes, prev, pager, next, jumper'"
                           :total="totalDataNum">
                         </el-pagination>
                       </div>
@@ -804,257 +798,6 @@
           </span>
         </template>
     </el-dialog>
-    <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
-    <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
-      <div class="flex-content">
-        <div class="abs-scroll">
-          <ul>
-            <li>
-              <div class="item-li">
-                <span class="title-panel">开始时间</span>
-                <div class="item-filter">
-                  <el-date-picker
-                    v-model="searchData.startDate"
-                    size="small"
-                    type="datetime"
-                    placeholder="选择开始时间"
-                    value-format="yyyy-MM-dd HH:mm:ss">
-                  </el-date-picker>
-                </div>
-              </div>
-              <div class="item-li">
-                <span class="title-panel">结束时间</span>
-                <div class="item-filter">
-                  <el-date-picker
-                    v-model="searchData.endDate"
-                    size="small"
-                    type="datetime"
-                    placeholder="选择结束时间"
-                    value-format="yyyy-MM-dd HH:mm:ss">
-                  </el-date-picker>
-                </div>
-              </div>
-              <div class="item-li">
-                <div class="item-En">
-                    <el-select v-model="searchData.continent" size="small" clearable placeholder="大洲">
-                        <el-option
-                            v-for="item in continentsList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="item-En">
-                    <el-select v-model="searchData.typekey" size="small" clearable placeholder="分类" @change="currentCateChange">
-                        <el-option
-                            v-for="item in productTypeList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-              </div>
-              <div class="item-li">
-                <div class="item-En">
-                    <el-select v-model="searchData.productid" size="small" clearable placeholder="产品">
-                        <el-option
-                            v-for="item in productList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="item-En">
-                    <el-select v-model="searchData.messagetype" size="small" clearable placeholder="留言类型">
-                        <el-option
-                            v-for="item in messageList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-              </div>
-              <div class="item-li">
-                <div class="item-En">
-                    <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道">
-                        <el-option
-                            v-for="item in sourceList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="item-En">
-                    <el-select v-model="searchData.device" size="small" clearable placeholder="设备">
-                      <el-option
-                        v-for="item in deviceList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                </div>
-              </div>
-              <div class="item-li">
-                <div class="item-En">
-                    <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别">
-                        <el-option
-                            v-for="item in levelList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="item-En">
-                    <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质">
-                        <el-option
-                            v-for="item in natureList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-              </div>
-              <div class="item-li">
-                <div class="item-En">
-                    <el-select v-model="searchData.enxunprice" size="small" clearable placeholder="需求">
-                        <el-option
-                            v-for="item in priceList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="item-En">
-                    <el-select v-model="searchData.erroring" size="small" clearable placeholder="异常" >
-                        <el-option
-                            v-for="item in errorList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-              </div>
-              <div class="item-li">
-                <div class="item-En">
-                    <el-select v-model="searchData.adduser" size="small" clearable placeholder="添加人">
-                      <el-option
-                        v-for="item in userList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                </div>
-                <div class="item-En">
-                    <el-select v-model="searchData.production" size="small" clearable placeholder="产量">
-                      <el-option
-                        v-for="item in productionList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                </div>
-              </div>
-              <div class="item-li">
-                <div class="item-En">
-                    <el-select v-model="searchData.custormwarnstatus" size="small" clearable placeholder="业务员提醒">
-                      <el-option
-                        v-for="item in salesUserNoticeList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                </div>
-                <div class="item-En">
-                    <el-select v-model="searchData.saleswarnstatus" size="small" clearable placeholder="添加人提醒">
-                      <el-option
-                        v-for="item in addUserNoticeList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                </div>
-              </div>
-              <div class="item-li">
-                <div class="item-En">
-                    <el-select v-model="searchData.effective" size="small" clearable placeholder="有效性">
-                      <el-option
-                        v-for="item in effectiveList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                </div>
-                <div class="item-En">
-                    <el-select v-model="searchData.feedback" size="small" clearable placeholder="反馈" >
-                      <el-option
-                        v-for="item in feedbackList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                </div>
-              </div>
-              <div class="item-li">
-                <div class="item-filter">
-                    <el-select v-model="searchData.sort" size="small" placeholder="排序">
-                      <el-option
-                        v-for="item in sortList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                </div>
-              </div>
-              <div class="item-li">
-                <div class="item-filter">
-                    <el-input size="small"
-                      placeholder="模糊搜索、备注1"
-                      v-model="searchData.remark1"
-                      clearable>
-                    </el-input>
-                </div>
-              </div>
-              <div class="item-li">
-                <div class="item-filter">
-                    <el-input size="small"
-                      placeholder="备注2"
-                      v-model="searchData.remark2"
-                      clearable>
-                    </el-input>
-                </div>
-              </div>
-              <div class="item-li">
-                <div class="item-filter">
-                    <el-input size="small"
-                      placeholder="备注3"
-                      v-model="searchData.remark3"
-                      clearable>
-                    </el-input>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <p class="footer-button"><span class="btn-yes" v-on:click="searchResult">确定</span></p>
-    </div>
   </div>
 </template>
 
@@ -1068,7 +811,6 @@ export default {
       breadcrumbList:[],
       currentPhone:'',
       writepermit:false,
-      openClass:false,
       menuButtonPermit:[],
       tableHeight:200,
       defaultData:{
@@ -1109,8 +851,6 @@ export default {
         feedback:"",
         sort:"xuntime",
         waitstatus:"1",
-        startDate:"",
-        endDate:"",
         salesownid:"",
         salesdepart_id:"",
       },
@@ -1284,7 +1024,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'sidebar',
       'menuData'
     ]),
@@ -1497,36 +1236,6 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
-      var isSearch = true;
-      if($this.device==="mobile"){
-        if(($this.searchData.startDate==""&&$this.searchData.endDate!="")||($this.searchData.startDate!=""&&$this.searchData.endDate=="")){
-          isSearch = false;
-        }else{
-          if($this.searchData.startDate!=""&&$this.searchData.endDate!=""){
-            if(!$this.compareDate($this.searchData.startDate,$this.searchData.endDate)){
-              isSearch = false;
-            }
-          }
-        }
-      }
-      if(!isSearch){
-        if($this.searchData.startDate==""&&$this.searchData.endDate!=""){
-          $this.$alert('结束时间不为空时开始时间不能为空', '警告', {
-            confirmButtonText: '确定',
-          });
-        }
-        if($this.searchData.startDate!=""&&$this.searchData.endDate==""){
-          $this.$alert('开始时间不为空时结束时间不能为空', '警告', {
-            confirmButtonText: '确定',
-          });
-        }
-        if($this.searchData.startDate!=""&&$this.searchData.endDate!=""){
-          $this.$alert('开始时间不能大于结束时间', '警告', {
-            confirmButtonText: '确定',
-          });
-        }
-        return false;
-      }
       $this.initCluesList();
     },
     // 右侧标题-左侧电话括号小数字
@@ -1796,14 +1505,9 @@ export default {
       if($this.searchData.sort!=''){
         searchData.sort = $this.searchData.sort;
       }    
-      if($this.device === "mobile"){
-        searchData.starttime = $this.searchData.startDate;
-        searchData.endtime = $this.searchData.endDate;
-      }else{
-        if($this.searchData.date!=''){
-          searchData.starttime = $this.searchData.date[0];
-          searchData.endtime = $this.searchData.date[1];
-        }
+      if($this.searchData.date!=''){
+        searchData.starttime = $this.searchData.date[0];
+        searchData.endtime = $this.searchData.date[1];
       }
       return searchData;
     },
@@ -1834,7 +1538,6 @@ export default {
         if(response){
           if(response.status){
             var infoData = {};
-            $this.openClass=false;
             infoData.totalCount=response.allcount;
             infoData.effectiveCount=response.effectivecount;
             infoData.invalidCount=response.noeffectivecount;
@@ -2034,46 +1737,32 @@ export default {
     // 修改询盘
     editTableRow(row,index){
       var $this = this;
-      if($this.device==="desktop"){
-        var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:row.id}});
-        window.open(routeUrl.href,'_blank');
-      }
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:row.id}});
+      window.open(routeUrl.href,'_blank');
     },
     // 提醒跳转到编辑页面
     jumpEditPage(id){
       var $this = this;
-      if($this.device==="desktop"){
-        var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:id}});
-        window.open(routeUrl.href,'_blank');
-      }
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:id}});
+      window.open(routeUrl.href,'_blank');
     },
     // 跳转询盘修改历史页面
     jumpEditHistoryPage(id){
       var $this = this;
-      if($this.device==="desktop"){
-        var routeUrl =  $this.$router.resolve({path:'/Enphone/editHistoryLog',query:{ID:id}});
-        window.open(routeUrl.href,'_blank');
-      }
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/editHistoryLog',query:{ID:id}});
+      window.open(routeUrl.href,'_blank');
     },
     // 搜索统计数据跳转
     searchStatisticsData(){
       var $this = this;
-      if($this.device==="desktop"){
-        var routeUrl =  $this.$router.resolve({path:'/Enphone/searchClues'});
-        window.open(routeUrl.href,'_blank');
-      }else{
-        $this.$router.push({path:'/Enphone/searchClues'});
-      }
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/searchClues'});
+      window.open(routeUrl.href,'_blank');
     },
     // 统计分析跳转
     statisticsClues(){
       var $this = this;
-      if($this.device==="desktop"){
-        var routeUrl =  $this.$router.resolve({path:'/Enphone/statisticClues'});
-        window.open(routeUrl.href,'_blank');
-      }else{
-        $this.$router.push({path:'/Enphone/statisticClues'});
-      }
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/statisticClues'});
+      window.open(routeUrl.href,'_blank');
     },
     // 导出当前页数据
     handleDownload() {
@@ -2322,21 +2011,6 @@ export default {
         }
       });
     },  
-    // 高级筛选
-    searchDialog(){
-      var $this = this;
-      $this.openClass=!$this.openClass;
-    },
-    // 比较两个时间的先后
-    compareDate(date1,date2){
-      var oDate1 = new Date(date1);
-      var oDate2 = new Date(date2);
-      if(oDate1.getTime() > oDate2.getTime()){
-          return false;
-      }else{
-          return true;
-      }
-    },
     enterBtn(){
       var $this=this;
       $this.searchResult();

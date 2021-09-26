@@ -59,33 +59,6 @@
     }
   }
 }
-.mobile{
-  .page-root,.scroll-panel{
-    padding:0;
-  }
-  .box-card{
-    border-radius:0;
-    .el-card__header{
-      padding: 0;
-      border-radius:0;
-    }
-    .el-card__body{
-      .card-content{
-        border-radius:0;
-      }
-    }
-    .pagination-panel{
-      text-align:center;
-      .el-pagination{
-        margin-top: 15px;
-        margin-bottom: 15px;
-      }
-    }
-  }
-  .el-table.SiteTable{
-    border-radius:0;
-  }
-}
 /** 模块默认样式 **/
 .init-style{
   padding:15px;
@@ -381,13 +354,13 @@
     }
   }
 }
-.mobile{
-  .clues-info{
-    .clues-infoFl{
-      margin-right:0px;
-    }  
-  }
-}
+//.mobile{
+//  .clues-info{
+//    .clues-infoFl{
+//      margin-right:0px;
+//    }  
+//  }
+//}
 /** 自定义表格 **/
 .border-wrap{
   display:block;
@@ -1664,93 +1637,6 @@
     .el-picker-panel__content{
       width:90%!important;
       margin:5%!important;
-    }
-  }
-}
-@media (max-width:992px){
-  .ArticleSix{
-      &.flex-wrap{
-          display:flex;
-          align-content:flex-start;
-          flex-flow:row wrap;
-      }
-      .ArticleSixFl{
-          flex:0 0 100%;
-      }
-      .ArticleSixFr{            
-          float:none;
-          clear:both;
-          width:100%;
-          min-width:100%;
-          max-width:100%;
-          flex:0 0 100%;
-          .ArticleSixFrTop{
-              margin-bottom:0px;
-              &:after{
-                  display:none;
-              }
-          }
-      }
-  }
-  .article-info{
-    .ArticleSixFlTop{
-        h1{
-            font-size:24px;
-        }
-        .ArticleSixFlTopTag{
-            padding-top:10px;
-            padding-bottom:15px;
-            .ArticleSixFlTopTagFl{
-                span{
-                    margin-right:5px;
-                    font-size:12px;
-                    line-height:18px;
-                    padding:3px 7px;
-                }
-            }
-            .ArticleSixFlTopTagFr{
-                font-size:12px;
-                line-height:20px;
-                padding-top:8px;
-            }
-        }
-      }
-
-  }
-}
-@media (max-width:750px){
-  .article-info{
-    padding:20px;
-    .ArticleSixFlTop{
-      h1{
-          font-size:22px;
-      }
-    }
-  }
-}
-@media (max-width:576px){
-  .article-info{
-    .ArticleSixFlTop{
-      h1{
-          font-size:20px;
-      }
-      h2{
-          font-size:15px;
-      }
-    }
-  }
-}
-@media (max-width:450px) {
-  .search-dialog.block-search{
-    width:90%;
-    left:5%;
-    margin:0!important;
-  }
-  .article-info{
-    .ArticleSixFlTop{
-      h1{
-          font-size:18px;
-      }
     }
   }
 }

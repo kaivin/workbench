@@ -12,7 +12,7 @@
                   </p>
                   <el-card class="box-card" shadow="hover">
                     <div slot="header">
-                      <div class="card-header" v-if="device==='desktop'" ref="headerPane">
+                      <div class="card-header" ref="headerPane">
                         <div class="search-wrap" ref="searchPane">
                           <div class="item-search">
                             <el-input
@@ -26,13 +26,6 @@
                           <div class="item-search">
                             <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                           </div>
-                        </div>
-                      </div>
-                      <div class="card-header filter-panel" v-else ref="headerPane">
-                        <div class="search-panel">                              
-                            <el-input placeholder="请输入产品名" v-model="searchData.name" class="article-search">
-                                <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
-                            </el-input>
                         </div>
                       </div>
                     </div>
@@ -77,7 +70,7 @@
                               >
                             </el-table-column>
                             <el-table-column
-                              v-if="(menuButtonPermit.indexOf('Chinaphone_productedit')||menuButtonPermit.indexOf('Chinaphone_productdelete'))&&device==='desktop'"
+                              v-if="(menuButtonPermit.indexOf('Chinaphone_productedit')||menuButtonPermit.indexOf('Chinaphone_productdelete'))"
                               :width="operationsWidth"
                               align="center"
                               fixed="right"
@@ -104,7 +97,7 @@
                         :page-sizes="pageSizeList"
                         :page-size="searchData.limit"
                         :pager-count="pagerCount"
-                        :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                        :layout="'total, sizes, prev, pager, next, jumper'"
                         :total="totalDataNum">
                       </el-pagination>
                     </div>
@@ -113,7 +106,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Chinaphone_productadd')||menuButtonPermit.includes('Chinaphone_productedit'))&&device==='desktop'" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="440px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Chinaphone_productadd')||menuButtonPermit.includes('Chinaphone_productedit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="440px">
       <el-form :model="dialogForm">
         <div class="item-form">
             <el-form-item label="产品名称：" :label-width="formLabelWidth">
@@ -219,7 +212,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addCnProduct',
       'sidebar',
       'menuData'

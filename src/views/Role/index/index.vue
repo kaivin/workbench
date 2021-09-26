@@ -38,7 +38,7 @@
                                 >
                               </el-table-column>
                               <el-table-column
-                                v-if="(menuButtonPermit.includes('Role_add')||menuButtonPermit.includes('Role_getuser')||menuButtonPermit.includes('Role_getpermit')||menuButtonPermit.includes('Role_gettypepermit')||menuButtonPermit.includes('Role_edit')||menuButtonPermit.includes('Role_delete'))&&device==='desktop'"
+                                v-if="(menuButtonPermit.includes('Role_add')||menuButtonPermit.includes('Role_getuser')||menuButtonPermit.includes('Role_getpermit')||menuButtonPermit.includes('Role_gettypepermit')||menuButtonPermit.includes('Role_edit')||menuButtonPermit.includes('Role_delete'))"
                                 align="center"
                                 fixed="right"
                                 prop="operations"
@@ -67,7 +67,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Role_add')||menuButtonPermit.includes('Role_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Role_add')||menuButtonPermit.includes('Role_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
         <el-form :model="dialogForm">
           <div class="item-form">
             <el-form-item label="父级角色：" :label-width="formLabelWidth" v-if="roleLevelData.length>0">
@@ -145,7 +145,7 @@
           </span>
         </template>
       </el-dialog>
-      <el-dialog :title="permitTitle" v-if="(menuButtonPermit.includes('Role_getpermit'))&&device==='desktop'" custom-class="transfer-2-dialog" :visible.sync="dialogPermitVisible" width="916px">
+      <el-dialog :title="permitTitle" v-if="(menuButtonPermit.includes('Role_getpermit'))" custom-class="transfer-2-dialog" :visible.sync="dialogPermitVisible" width="916px">
         <div class="transfer-panel">
           <div class="list-panel">
             <div class="title-panel">菜单列表</div>
@@ -179,7 +179,7 @@
           </span>
         </template>
       </el-dialog>
-      <el-dialog :title="userTitle" v-if="(menuButtonPermit.includes('Role_getuser'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogUserVisible" width="840px">
+      <el-dialog :title="userTitle" v-if="(menuButtonPermit.includes('Role_getuser'))" custom-class="transfer-dialog" :visible.sync="dialogUserVisible" width="840px">
         <div class="transfer-panel">
           <div class="transfer-wrap">
             <el-transfer 
@@ -199,7 +199,7 @@
           </span>
         </template>
       </el-dialog>
-      <el-dialog :title="postTitle" v-if="(menuButtonPermit.includes('Role_gettypepermit'))&&device==='desktop'" custom-class="transfer-2-dialog" :visible.sync="dialogPostVisible" width="916px">
+      <el-dialog :title="postTitle" v-if="(menuButtonPermit.includes('Role_gettypepermit'))" custom-class="transfer-2-dialog" :visible.sync="dialogPostVisible" width="916px">
         <div class="transfer-panel">
           <div class="list-panel">
             <div class="title-panel">论坛栏目列表</div>
@@ -233,7 +233,7 @@
           </span>
         </template>
       </el-dialog>
-      <el-dialog :title="workOrderTitle" v-if="(menuButtonPermit.includes('Role_getworktypepermit'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogWorkOrderVisible" width="840px">
+      <el-dialog :title="workOrderTitle" v-if="(menuButtonPermit.includes('Role_getworktypepermit'))" custom-class="transfer-dialog" :visible.sync="dialogWorkOrderVisible" width="840px">
         <div class="transfer-panel">
           <div class="transfer-wrap">
             <el-transfer 
@@ -367,7 +367,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addRole',
       'sidebar',
       'menuData'

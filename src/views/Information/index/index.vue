@@ -38,7 +38,7 @@
                               >
                             </el-table-column>
                             <el-table-column
-                              v-if="(menuButtonPermit.includes('Information_add')||menuButtonPermit.includes('Information_edit')||menuButtonPermit.includes('Information_delete'))&&device==='desktop'"
+                              v-if="(menuButtonPermit.includes('Information_add')||menuButtonPermit.includes('Information_edit')||menuButtonPermit.includes('Information_delete'))"
                               :width="operationsWidth"
                               align="center"
                               fixed="right"
@@ -63,7 +63,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Information_add')||menuButtonPermit.includes('Information_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Information_add')||menuButtonPermit.includes('Information_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
           <el-form-item label="父级栏目：" :label-width="formLabelWidth" v-if="typeLevelData.length>0">
@@ -155,7 +155,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addInformation',
       'sidebar',
       'menuData'

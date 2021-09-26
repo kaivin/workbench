@@ -224,7 +224,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'menuData'
     ]),
   },
@@ -342,18 +341,8 @@ export default {
                 });
                 $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
               }else{
-                if($this.device==="desktop"){
-                  $this.breadcrumbName="编辑服务器";
-                  $this.getSearchItemData();
-                }else{
-                  $this.$message({
-                    showClose: true,
-                    message: "请前往PC端做修改操作",
-                    type: 'error',
-                    duration:6000
-                  });
-                  $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-                }
+                $this.breadcrumbName="编辑服务器";
+                $this.getSearchItemData();
               }
             }else{
               if(!$this.menuButtonPermit.includes('Webserver_add')){
@@ -365,18 +354,8 @@ export default {
                 });
                 $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
               }else{
-                if($this.device==="desktop"){
-                  $this.breadcrumbName="添加服务器";
-                  $this.getSearchItemData();
-                }else{
-                  $this.$message({
-                    showClose: true,
-                    message: "请前往PC端做添加操作",
-                    type: 'error',
-                    duration:6000
-                  });
-                  $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-                }
+                $this.breadcrumbName="添加服务器";
+                $this.getSearchItemData();
               }
             }
           }else{

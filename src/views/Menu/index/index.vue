@@ -79,7 +79,7 @@
                               </template>
                             </el-table-column>
                             <el-table-column
-                              v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit')||menuButtonPermit.includes('Menu_delete')) &&device === 'desktop'"
+                              v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit')||menuButtonPermit.includes('Menu_delete'))"
                               :width="operationsWidth"
                               align="center"
                               fixed="right"
@@ -104,7 +104,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit')) &&device === 'desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="680px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="680px">
       <el-form :model="dialogForm">
         <div class="item-form-group">
           <div class="item-form">
@@ -217,7 +217,7 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog title="选择图标" v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit'))&&device === 'desktop'" custom-class="icon-dialog" :visible.sync="dialogIconVisible" width="960px">
+    <el-dialog title="选择图标" v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit'))" custom-class="icon-dialog" :visible.sync="dialogIconVisible" width="960px">
       <el-tabs v-model="activeTabName" type="border-card" @tab-click="handleTabClick">
         <el-tab-pane label="svg图标" name="svg">
           <div class="scroll-panel">
@@ -338,7 +338,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      "device",
       'addMenu',
       'sidebar',
       'menuData'

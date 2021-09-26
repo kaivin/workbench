@@ -99,7 +99,7 @@
                                     >
                                 </el-table-column>
                               <el-table-column
-                                v-if="(menuButtonPermit.includes('Website_logedit')||menuButtonPermit.includes('Website_logdelete'))&&device==='desktop'"
+                                v-if="(menuButtonPermit.includes('Website_logedit')||menuButtonPermit.includes('Website_logdelete'))"
                                 :width="operationsWidth"
                                 align="center"
                                 fixed="right"
@@ -124,7 +124,7 @@
                         :page-sizes="pageSizeList"
                         :page-size="limit"
                         :pager-count="pagerCount"
-                        :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                        :layout="'total, sizes, prev, pager, next, jumper'"
                         :total="totalDataNum">
                         </el-pagination>
                     </div>
@@ -192,7 +192,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addWebsiteLog',
       'sidebar',
       'menuData'
@@ -476,12 +475,8 @@ export default {
     // 编辑表格行数据
     editTableRow(row,index){
       var $this = this;
-      if($this.device=="desktop"){
-        var routeUrl =  $this.$router.resolve({path:'/Website/logAddEdit',query:{logID:row.id,websiteID:$this.websiteID,website:$this.website}});
-        window.open(routeUrl.href,'_blank');
-      }else{
-        $this.$router.push({path:'/Website/logAddEdit',query:{logID:row.id,websiteID:$this.websiteID,website:$this.website}});
-      }
+      var routeUrl =  $this.$router.resolve({path:'/Website/logAddEdit',query:{logID:row.id,websiteID:$this.websiteID,website:$this.website}});
+      window.open(routeUrl.href,'_blank');
     },
     // 删除表格行
     deleteTableRow(row,index){
@@ -528,12 +523,8 @@ export default {
     // 跳转到文章详情
     jumpArticle(id){
       var $this = this;
-      if($this.device=="desktop"){
-        var routeUrl =  $this.$router.resolve({path:'/Website/logInfo',query:{logID:id,websiteID:$this.websiteID,website:$this.website}});
-        window.open(routeUrl.href,'_blank');
-      }else{
-        $this.$router.push({path:'/Website/logInfo',query:{logID:id,websiteID:$this.websiteID,website:$this.website}});
-      }
+      var routeUrl =  $this.$router.resolve({path:'/Website/logInfo',query:{logID:id,websiteID:$this.websiteID,website:$this.website}});
+      window.open(routeUrl.href,'_blank');
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){

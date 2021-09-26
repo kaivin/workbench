@@ -189,7 +189,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'menuData'
     ]),
   },

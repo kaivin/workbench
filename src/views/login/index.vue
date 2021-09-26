@@ -37,7 +37,7 @@
                         <el-form-item style="margin:0">
                             <el-button type="primary" :disabled="isDisabled" v-on:click.prevent="handleLogin('loginForm')">登录</el-button>
                         </el-form-item>
-                        <p class="forget" v-if="device==='desktop'"><span v-on:click="resetPwd">忘记密码？</span></p>
+                        <p class="forget"><span v-on:click="resetPwd">忘记密码？</span></p>
                     </el-form>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                  <p>用人单位与劳动者可以在劳动合同中约定保守用人单位的商业秘密和与知识产权相关的保密事项</p>
                  <span class="CloseTip" v-on:click="CloseTip">关闭提示</span>
             </div>
-            <el-dialog title="忘记密码" v-if="device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogForgetPwdVisible" width="480px">
+            <el-dialog title="忘记密码" custom-class="add-edit-dialog" :visible.sync="dialogForgetPwdVisible" width="480px">
                 <el-form :model="dialogForgetPwdForm">
                     <el-form-item label="用户名：" :label-width="formLabelWidth">
                         <el-input v-model="dialogForgetPwdForm.username" ref="username"></el-input>
@@ -88,7 +88,6 @@
 <script>
 import { validEmail,isEmpty } from '@/utils/validate';
 import Cookies from 'js-cookie'
-import { mapGetters } from 'vuex'
 import logoIcon from "@/assets/images/loginImg.png";
 import logoTitle from "@/assets/top_font.png";
 const defaultSettings = require('@/settings.js');
@@ -148,11 +147,6 @@ export default {
             isDisplay:false,
             isDisabled:false,
         }
-    },
-    computed: {
-        ...mapGetters([
-        'device'
-        ]),
     },
     watch: {
         $route: {

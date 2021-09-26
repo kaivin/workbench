@@ -12,7 +12,7 @@
                   </p>
                   <el-card class="box-card" shadow="hover">
                     <div slot="header">
-                      <div class="card-header" v-if="device==='desktop'" ref="headerPane">
+                      <div class="card-header" ref="headerPane">
                         <div class="search-wrap" ref="searchPane">
                           <div class="item-search">
                             <el-date-picker
@@ -73,12 +73,6 @@
                             <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                           </div>
                         </div> 
-                      </div>
-                      <div class="card-header filter-panel" v-else ref="headerPane">
-                        <div class="search-panel">                              
-                            <p class="search-info">当前共有 <span>{{totalDataNum}}</span> 条搜索结果。</p>
-                        </div>
-                        <span class="filter-button" v-on:click="searchDialog()">筛选<i class="svg-i"><svg-icon icon-class="filter" class-name="disabled" /></i></span>
                       </div>
                     </div>
                     <div class="card-content" ref="tableContent">
@@ -243,7 +237,7 @@
                               </template>
                             </el-table-column>
                             <el-table-column
-                              v-if="(menuButtonPermit.indexOf('Ownpush_processedit')||menuButtonPermit.includes('Ownpush_processdelete'))&&device==='desktop'"
+                              v-if="(menuButtonPermit.indexOf('Ownpush_processedit')||menuButtonPermit.includes('Ownpush_processdelete'))"
                               :width="operationsWidth"
                               align="center"
                               fixed="right"
@@ -270,7 +264,7 @@
                         :page-sizes="pageSizeList"
                         :page-size="searchData.limit"
                         :pager-count="pagerCount"
-                        :layout="device==='mobile'?'prev, pager, next':'total, sizes, prev, pager, next, jumper'"
+                        :layout="'total, sizes, prev, pager, next, jumper'"
                         :total="totalDataNum">
                       </el-pagination>
                     </div>
@@ -279,7 +273,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_processadd')||menuButtonPermit.includes('Ownpush_processedit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="760px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_processadd')||menuButtonPermit.includes('Ownpush_processedit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="760px">
       <el-form :model="dialogForm">
         <div class="item-form-group">
           <div class="item-form">
@@ -414,74 +408,6 @@
         </span>
       </template>
     </el-dialog>
-    <div class="mobile-filter-mask" v-bind:class="openClass?'open':''" v-if="device!=='desktop'" v-on:click="searchDialog()"></div>
-    <div class="mobile-filter-dialog flex-box flex-column" v-bind:class="openClass?'open':''" v-if="device!=='desktop'">
-      <div class="flex-content">
-        <div class="abs-scroll">
-          <ul>
-            <li>
-              <div class="item-li">
-                <span class="title-panel">开始时间</span>
-                <div class="item-filter">
-                  <el-date-picker
-                    v-model="searchData.startDate"
-                    size="small"
-                    type="date"
-                    placeholder="选择开始时间"
-                    value-format="yyyy-MM-dd">
-                  </el-date-picker>
-                </div>
-              </div>
-              <div class="item-li">
-                <span class="title-panel">结束时间</span>
-                <div class="item-filter">
-                  <el-date-picker
-                    v-model="searchData.endDate"
-                    size="small"
-                    type="date"
-                    placeholder="选择结束时间"
-                    value-format="yyyy-MM-dd">
-                  </el-date-picker>
-                </div>
-              </div>
-            </li>
-            <li class="column-2">
-              <span class="title-panel">品牌</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="item in brandList" v-bind:key="item.value">
-                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickBrandHandler(item)">{{item.label}}</el-tag>
-                </div>
-              </div>
-            </li>
-            <li class="column-2">
-              <span class="title-panel">账户</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="item in accountList" v-bind:key="item.value">
-                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickAccountHandler(item)">{{item.label}}</el-tag>
-                </div>
-              </div>
-            </li>
-            <li>
-              <span class="title-panel">渠道</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="item in channelList" v-bind:key="item.value">
-                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickChannelHandler(item)">{{item.label}}</el-tag>
-                </div>
-              </div>
-            </li>
-            <li>
-              <span class="title-panel">负责人</span>
-              <div class="tag-panel">
-                <div class="item-button" v-for="item in userList" v-bind:key="item.value">
-                  <el-tag v-bind:class="item.isOn?'is-plain':''" size="small" v-on:click="clickUserHandler(item)">{{item.label}}</el-tag>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <p class="footer-button"><span class="btn-yes" v-on:click="searchResult()">确定</span></p>
-    </div>
   </div>
 </template>
 <script>
@@ -529,8 +455,6 @@ export default {
           processtype:[],
           processuserid:[],
           brand_id:[],
-          startDate:"",
-          endDate:""
       },
       pageSizeList:[50, 500, 5000, 10000],
       totalDataNum:0,
@@ -603,7 +527,6 @@ export default {
       importData:[],
       dialogExportVisible:false,
       downloadLoading: false,
-      openClass:false,
       scrollPosition:{
         width:0,
         left:0,
@@ -633,7 +556,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addCnProcess',
       'sidebar',
       'menuData'
@@ -768,11 +690,6 @@ export default {
         this.scrollPosition.isPC = true;
       }
     },
-    // 高级筛选
-    searchDialog(){
-      var $this = this;
-      $this.openClass=!$this.openClass;
-    },
     // 设置table高度
     setTableHeight(){
       var $this = this;
@@ -812,48 +729,8 @@ export default {
     searchResult(){
         var $this = this;
         $this.loadingFun();
-        var isSearch = true;
-        if($this.device==="mobile"){
-          if(($this.searchData.startDate==""&&$this.searchData.endDate!="")||($this.searchData.startDate!=""&&$this.searchData.endDate=="")){
-            isSearch = false;
-          }else{
-            if($this.searchData.startDate!=""&&$this.searchData.endDate!=""){
-              if(!$this.compareDate($this.searchData.startDate,$this.searchData.endDate)){
-                isSearch = false;
-              }
-            }
-          }
-        }
-        if(!isSearch){
-          if($this.searchData.startDate==""&&$this.searchData.endDate!=""){
-            $this.$alert('结束时间不为空时开始时间不能为空', '警告', {
-              confirmButtonText: '确定',
-            });
-          }
-          if($this.searchData.startDate!=""&&$this.searchData.endDate==""){
-            $this.$alert('开始时间不为空时结束时间不能为空', '警告', {
-              confirmButtonText: '确定',
-            });
-          }
-          if($this.searchData.startDate!=""&&$this.searchData.endDate!=""){
-            $this.$alert('开始时间不能大于结束时间', '警告', {
-              confirmButtonText: '确定',
-            });
-          }
-          return false;
-        }
         $this.searchData.page = 1;
         $this.initPage();
-    },
-    // 比较两个时间的先后
-    compareDate(date1,date2){
-      var oDate1 = new Date(date1);
-      var oDate2 = new Date(date2);
-      if(oDate1.getTime() > oDate2.getTime()){
-          return false;
-      }else{
-          return true;
-      }
     },
     searchDataInit(){
       var $this = this;
@@ -864,17 +741,12 @@ export default {
       searchData.processuserid = $this.searchData.processuserid;
       searchData.account_id = $this.searchData.account_id;
       searchData.brand = $this.searchData.brand_id;
-      if($this.device === "mobile"){
-        searchData.starttime = $this.searchData.startDate;
-        searchData.endtime = $this.searchData.endDate;
+      if(!$this.searchData.date||$this.searchData.date.length==0){
+        searchData.starttime = "";
+        searchData.endtime = "";
       }else{
-        if(!$this.searchData.date||$this.searchData.date.length==0){
-          searchData.starttime = "";
-          searchData.endtime = "";
-        }else{
-          searchData.starttime = $this.searchData.date[0];
-          searchData.endtime = $this.searchData.date[1];
-        }
+        searchData.starttime = $this.searchData.date[0];
+        searchData.endtime = $this.searchData.date[1];
       }
       return searchData;
     },
@@ -900,9 +772,6 @@ export default {
             });
             $this.tableData = response.data;
             $this.totalDataNum = response.allcount;
-            if($this.device === "mobile"){
-              $this.openClass = false;
-            };
             $this.isLoading.close();
             $this.$nextTick(function () {
               $this.setTableHeight();

@@ -45,7 +45,7 @@
                                 >
                               </el-table-column>
                               <el-table-column
-                                v-if="(menuButtonPermit.indexOf('Chinaphone_producttypeedit')||menuButtonPermit.indexOf('Chinaphone_producttypedelete'))&&device==='desktop'"
+                                v-if="(menuButtonPermit.indexOf('Chinaphone_producttypeedit')||menuButtonPermit.indexOf('Chinaphone_producttypedelete'))"
                                 :width="operationsWidth"
                                 align="center"
                                 fixed="right"
@@ -69,7 +69,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Chinaphone_producttypeadd')||menuButtonPermit.includes('Chinaphone_producttypeedit'))&&device==='desktop'" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="440px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Chinaphone_producttypeadd')||menuButtonPermit.includes('Chinaphone_producttypeedit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="440px">
       <el-form :model="dialogForm">
         <div class="item-form">
           <el-form-item label="分类名称：" :label-width="formLabelWidth">
@@ -139,7 +139,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addCnCate',
       'sidebar',
       'menuData'

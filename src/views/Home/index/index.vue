@@ -55,7 +55,7 @@
               </div>
             </div>
           </div>
-          <div class="flex-box flex-wrap" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
+          <div class="flex-box flex-wrap mapFlex" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
               <div class="map-Top-chart flex-content">
                   <div class="map-Top-chartTit flex-wrap">
                       <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}热门{{language=='Module_cnStat'?'地区':'国家'}}TOP10</h3>
@@ -221,7 +221,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device'
     ]),
   },
   created() {
@@ -985,14 +984,14 @@ export default {
               style: ({ percent }) => ({
                 fontSize: 16,
                 lineHeight: 2,
-                fill: percent > 0.65 ? 'white' : 'rgba(26,26,26,1)',
+                fill: percent > 0.85 ? 'white' : 'rgba(26,26,26,1)',
               }),
             },
             title: {
               style: ({ percent }) => ({
                 fontSize: 48,
                 lineHeight: 1,
-                fill: percent > 0.65 ? 'white' : 'rgba(26,26,26,1)',
+                fill: percent > 0.85 ? 'white' : 'rgba(26,26,26,1)',
               }),
               customHtml: (container, view, { percent }) => {
                 const { width, height } = container.getBoundingClientRect();
@@ -1041,14 +1040,14 @@ export default {
               style: ({ percent }) => ({
                 fontSize: 16,
                 lineHeight: 2,
-                fill: percent > 0.65 ? 'white' : 'rgba(26,26,26,1)',
+                fill: percent > 0.85 ? 'white' : 'rgba(26,26,26,1)',
               }),
             },
             title: {
               style: ({ percent }) => ({
                 fontSize: 48,
                 lineHeight: 1,
-                fill: percent > 0.65 ? 'white' : 'rgba(26,26,26,1)',
+                fill: percent > 0.85 ? 'white' : 'rgba(26,26,26,1)',
               }),
               customHtml: (container, view, { percent }) => {
                 const { width, height } = container.getBoundingClientRect();
@@ -1097,14 +1096,14 @@ export default {
               style: ({ percent }) => ({
                 fontSize: 16,
                 lineHeight: 2,
-                fill: percent > 0.65 ? 'white' : 'rgba(26,26,26,1)',
+                fill: percent > 0.85 ? 'white' : 'rgba(26,26,26,1)',
               }),
             },
             title: {
               style: ({ percent }) => ({
                 fontSize: 48,
                 lineHeight: 1,
-                fill: percent > 0.65 ? 'white' : 'rgba(26,26,26,1)',
+                fill: percent > 0.85 ? 'white' : 'rgba(26,26,26,1)',
               }),
               customHtml: (container, view, { percent }) => {
                 const { width, height } = container.getBoundingClientRect();

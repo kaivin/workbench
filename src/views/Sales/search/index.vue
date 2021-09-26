@@ -44,7 +44,7 @@
                       <div class="group-header"><span>业务员</span></div>
                       <div class="group-body">
                         <div class="team-panel">
-                            <el-checkbox class="all-select" v-if="device=='desktop'"
+                            <el-checkbox class="all-select" 
                             v-model="checkAllUser"
                             :indeterminate="isAllUser" 
                             @change="handleCheckAllUserChange"  border size="mini">全选</el-checkbox>
@@ -87,7 +87,7 @@
                       <div class="group-header"><span>属性</span></div>
                       <div class="group-body">
                         <div class="team-panel">
-                            <el-checkbox class="all-select" v-if="device=='desktop'"
+                            <el-checkbox class="all-select"
                             v-model="checkAllArea"
                             :indeterminate="isAllArea" 
                             @change="handleCheckAllAreaChange"  border size="mini">全选</el-checkbox>
@@ -97,7 +97,7 @@
                             </el-checkbox-group>
                         </div>
                         <div class="team-panel" v-if="productList.length>0">
-                            <el-checkbox class="all-select" v-if="device=='desktop'" 
+                            <el-checkbox class="all-select"
                             v-model="checkAllProductType"
                             :indeterminate="isProductType" 
                             @change="handleCheckAllProductTypeChange"
@@ -107,7 +107,7 @@
                             </el-checkbox-group>
                         </div>
                         <div class="team-panel">
-                            <el-checkbox class="all-select" v-if="device=='desktop'" 
+                            <el-checkbox class="all-select"
                             v-model="checkAllmanagestatus"
                             :indeterminate="ismanagestatus" 
                             @change="handleCheckAllmanagestatusChange" 
@@ -117,7 +117,7 @@
                             </el-checkbox-group>
                         </div>
                         <div class="team-panel">
-                            <el-checkbox class="all-select" v-if="device=='desktop'"
+                            <el-checkbox class="all-select"
                             v-model="checkAllReplystatus"
                             :indeterminate="isReplystatus" 
                             @change="handleCheckAllReplystatusChange" border size="mini">全选</el-checkbox>
@@ -289,7 +289,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'menuData'
     ]),
   },
@@ -582,12 +581,8 @@ export default {
     // 页面自跳转
     jumpLink(status){
         var $this = this;
-        if($this.device==="desktop"){
-          var routeUrl = $this.$router.resolve({path:'/Sales/index',query:{Status:status}});
-          window.open(routeUrl.href,'_blank');
-        }else{
-          $this.$router.push({path:'/Sales/index',query:{Status:status}});
-        }
+        var routeUrl = $this.$router.resolve({path:'/Sales/index',query:{Status:status}});
+        window.open(routeUrl.href,'_blank');
     },
     //分组点击事件
     groupClick(id){
@@ -774,12 +769,8 @@ export default {
     // 跳转数据统计页面
     datastatisticClues(){
       var $this = this;
-      if($this.device==="desktop"){
-        var routeUrl = $this.$router.resolve({path:'/Sales/phonecount'});
-        window.open(routeUrl.href,'_blank');
-      }else{
-        $this.$router.push({path:'/Sales/phonecount'});
-      }
+      var routeUrl = $this.$router.resolve({path:'/Sales/phonecount'});
+      window.open(routeUrl.href,'_blank');
     },
   }
 }

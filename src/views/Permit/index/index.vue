@@ -50,7 +50,7 @@
                               </template>
                             </el-table-column>
                             <el-table-column
-                              v-if="(menuButtonPermit.includes('Permit_add')||menuButtonPermit.includes('Permit_edit')||menuButtonPermit.includes('Permit_delete'))&&device==='desktop'"
+                              v-if="(menuButtonPermit.includes('Permit_add')||menuButtonPermit.includes('Permit_edit')||menuButtonPermit.includes('Permit_delete'))"
                               :width="operationsWidth"
                               align="center"
                               fixed="right"
@@ -75,7 +75,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Permit_add')||menuButtonPermit.includes('Permit_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Permit_add')||menuButtonPermit.includes('Permit_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
           <el-form-item label="权限所属菜单：" :label-width="formLabelWidth" v-if="permitLevelData.length>0">
@@ -154,7 +154,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addPermit',
       'sidebar',
       'menuData'

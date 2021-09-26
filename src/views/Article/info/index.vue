@@ -11,15 +11,15 @@
           <span class="breadcrumb-link"><b>-</b><span>{{articleData.title}}</span></span>
         </p>
         <div class="ArticleSixFl" v-bind:class="articleData.issay==0&&commentList.length==0?'no-comment':''">
-          <div class="main-article" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length==0?'min-height:'+minHeight+'px!important;':''">
+          <div class="main-article" v-bind:style="'min-height:'+minHeight+'px;'">
             <div class="article-info" ref="leftPane">
               <div class="ArticleSixFlTop">
                 <h1>{{articleData.title}}</h1>
                 <div class="ArticleSixFlTopTag clearfix">
-                  <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="art-depart" /></i>{{articleData.typename}}</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="art-author" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="art-author" /></i>匿名</span><span v-if="device==='desktop'"><i class="svg-i" ><svg-icon icon-class="art-edit-time" /></i>{{articleData.updatetime}}</span></p>
+                  <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="art-depart" /></i>{{articleData.typename}}</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="art-author" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="art-author" /></i>匿名</span><span><i class="svg-i" ><svg-icon icon-class="art-edit-time" /></i>{{articleData.updatetime}}</span></p>
                   <p class="ArticleSixFlTopTagFr">阅读：{{articleData.hits}}<span>|</span>发布时间：{{articleData.addtime}} </p>
                 </div>
-                <div class="ArticleSixFlTopRead" v-if="articleData.readshow==1&&device==='desktop'&&(userList.hasreadusercount>0||userList.notreadusercount>0)">
+                <div class="ArticleSixFlTopRead" v-if="articleData.readshow==1&&(userList.hasreadusercount>0||userList.notreadusercount>0)">
                   <p class="article-user" v-if="userList.hasreadusercount>0">
                     <strong>{{userList.hasreadusercount}}人已读</strong>
                     <template v-for="(item,index) in userList.hasreaduser">
@@ -40,10 +40,10 @@
             </div>
           </div>
         </div>
-        <div class="comment ArticleSixFr" id="comment" v-if="articleData.issay==1&&device==='desktop'||articleData.issay==1&&device==='mobile'&&commentList.length>0||(articleData.issay==0&&commentList.length>0)" v-bind:style="device==='desktop'?'min-height:'+minHeight+'px;':commentList.length>=0?'min-height:'+minHeight+'px!important;':''" ref="rightPane">
+        <div class="comment ArticleSixFr" id="comment" v-if="articleData.issay==1||articleData.issay==1&&commentList.length>0||(articleData.issay==0&&commentList.length>0)" v-bind:style="'min-height:'+minHeight+'px;'" ref="rightPane">
           <div class="ArticleSixFrTop" v-bind:class="commentList.length>0?'':'no-comment'">
-            <p class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1&&device==='desktop'">（可匿名）</span></p>
-            <div class="ArticleSixFrTopMain" v-if="articleData.issay==1&&device==='desktop'">
+            <p class="clearfix ArticleSixFrTopHeader"><strong>评论</strong><span v-if="articleData.issay==1">（可匿名）</span></p>
+            <div class="ArticleSixFrTopMain" v-if="articleData.issay==1">
               <div class="ueditor-panel"><vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap></div>
               <div class="btn-rich">
                 <el-switch class="hide-name" v-model="isHideName" inactive-text="匿名发布"></el-switch>
@@ -136,7 +136,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'menuData'
     ]),
   },
@@ -247,38 +246,21 @@ export default {
       $this.$nextTick(()=>{
         var screenHeight = $this.$refs.mainPane.offsetHeight-30;
         var leftHeight = $this.$refs.leftPane.offsetHeight;
-        if($this.device==='desktop'){
-          if($this.articleData.issay==1||$this.articleData.issay==0&&$this.commentList.length>0){
-            var rightHeight = $this.$refs.rightPane.offsetHeight;
-            if(leftHeight>rightHeight){
-              minHeight = leftHeight;
-            }else{
-              minHeight = rightHeight;
-            }
-          }else{
+        if($this.articleData.issay==1||$this.articleData.issay==0&&$this.commentList.length>0){
+          var rightHeight = $this.$refs.rightPane.offsetHeight;
+          if(leftHeight>rightHeight){
             minHeight = leftHeight;
-          }
-          if(minHeight<=screenHeight){
-            minHeight = screenHeight;
           }else{
-            if (leftHeight<rightHeight){
-              minHeight = minHeight+40;
-            }
+            minHeight = rightHeight;
           }
         }else{
-          if($this.commentList.length>0){
-            if($this.$refs.rightPane){
-              var rightHeight = $this.$refs.rightPane.offsetHeight;
-              var scrollHeight = leftHeight + rightHeight + 15;
-              if(scrollHeight<screenHeight){
-                minHeight = rightHeight + (screenHeight+30-scrollHeight);
-              }
-            }
-          }else{
-            var scrollHeight = leftHeight;
-            if(scrollHeight<screenHeight){
-              minHeight = leftHeight + (screenHeight+30-scrollHeight);
-            }
+          minHeight = leftHeight;
+        }
+        if(minHeight<=screenHeight){
+          minHeight = screenHeight;
+        }else{
+          if (leftHeight<rightHeight){
+            minHeight = minHeight+40;
           }
         }
         $this.minHeight = minHeight;

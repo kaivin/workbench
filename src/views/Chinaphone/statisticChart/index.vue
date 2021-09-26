@@ -19,41 +19,36 @@
                   <div class="group-body">
                     <div class="team-panel" v-for="item in phoneList" v-bind:key="item.id">
                       <div class="team-header" v-if="item.icon=='sem'">
-                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSemPhone" border size="mini" v-model="checkAllSemPhone" @change="handleCheckAllSemPhoneChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSemPhone" border size="mini" v-model="checkAllSemPhone" @change="handleCheckAllSemPhoneChange">{{item.name}}全选</el-checkbox>
+                        <span class="require">{{item.name}}：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllSemPhone" border size="mini" v-model="checkAllSemPhone" @change="handleCheckAllSemPhoneChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedSem" @change="handleCheckedSemChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                         </el-checkbox-group>
                       </div>
                       <div class="team-header" v-else-if="item.icon=='seo'">
-                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSeoPhone" border size="mini" v-model="checkAllSeoPhone" @change="handleCheckAllSeoPhoneChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSeoPhone" border size="mini" v-model="checkAllSeoPhone" @change="handleCheckAllSeoPhoneChange">{{item.name}}全选</el-checkbox>
+                        <span class="require">{{item.name}}：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllSeoPhone" border size="mini" v-model="checkAllSeoPhone" @change="handleCheckAllSeoPhoneChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedSeo" @change="handleCheckedSeoChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                         </el-checkbox-group>
                       </div>
                       <div class="team-header" v-else-if="item.icon=='we-media'">
-                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllMediaPhone" border size="mini" v-model="checkAllMediaPhone" @change="handleCheckAllMediaPhoneChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllMediaPhone" border size="mini" v-model="checkAllMediaPhone" @change="handleCheckAllMediaPhoneChange">{{item.name}}全选</el-checkbox>
+                        <span class="require">{{item.name}}：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllMediaPhone" border size="mini" v-model="checkAllMediaPhone" @change="handleCheckAllMediaPhoneChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedMedia" @change="handleCheckedMediaChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                         </el-checkbox-group>
                       </div>
                       <div class="team-header" v-else-if="item.icon=='sns'">
-                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSnsPhone" border size="mini" v-model="checkAllSnsPhone" @change="handleCheckAllSnsPhoneChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSnsPhone" border size="mini" v-model="checkAllSnsPhone" @change="handleCheckAllSnsPhoneChange">{{item.name}}全选</el-checkbox>
+                        <span class="require">{{item.name}}：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllSnsPhone" border size="mini" v-model="checkAllSnsPhone" @change="handleCheckAllSnsPhoneChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedSns" @change="handleCheckedSnsChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                         </el-checkbox-group>
                       </div>
                       <div class="team-header" v-else>
-                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllOtherPhone" border size="mini" v-model="checkAllOtherPhone" @change="handleCheckAllOtherPhoneChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllOtherPhone" border size="mini" v-model="checkAllOtherPhone" @change="handleCheckAllOtherPhoneChange">{{item.name}}全选</el-checkbox>
+                        <span class="require">{{item.name}}：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllOtherPhone" border size="mini" v-model="checkAllOtherPhone" @change="handleCheckAllOtherPhoneChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedOther" @change="handleCheckedOtherChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                         </el-checkbox-group>
@@ -77,28 +72,8 @@
                                     range-separator="至"
                                     start-placeholder="开始日期"
                                     end-placeholder="结束日期"
-                                    v-if="device=='desktop'"
                                     :picker-options="pickerRangeOptions">
-                                </el-date-picker> 
-                                <div class="mobileTime flex-box" v-if="device=='mobile'">          
-                                    <el-date-picker
-                                      v-model="searchData.startDate"
-                                      size="mini"
-                                      type="date"       
-                                      class="flex-content"   
-                                      value-format="yyyy-MM-dd"                            
-                                      placeholder="开始日期">
-                                    </el-date-picker> 
-                                    <i>至</i>
-                                    <el-date-picker
-                                      v-model="searchData.endDate"
-                                      size="mini"
-                                      type="date"
-                                      class="flex-content"
-                                      value-format="yyyy-MM-dd" 
-                                      placeholder="结束日期">
-                                    </el-date-picker>
-                                </div>                 
+                                </el-date-picker>              
                           </div>
                           <div class="team-headerItem">
                                 <span class="require">域名：</span>
@@ -129,9 +104,8 @@
                     </div>
                     <div class="team-panel">
                       <div class="team-header">
-                        <span class="require" v-if="device=='desktop'">渠道：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllSource" border size="mini" v-model="checkAllSource" @change="handleCheckAllSourceChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllSource" border size="mini" v-model="checkAllSource" @change="handleCheckAllSourceChange">渠道全选</el-checkbox>
+                        <span class="require">渠道：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllSource" border size="mini" v-model="checkAllSource" @change="handleCheckAllSourceChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedSource" @change="handleCheckedSourceChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="item in sourceList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
                         </el-checkbox-group>
@@ -139,9 +113,8 @@
                     </div>
                     <div class="team-panel">
                       <div class="team-header">
-                        <span class="require" v-if="device=='desktop'">级别：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllLevel" border size="mini" v-model="checkAllLevel" @change="handleCheckAllLevelChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllLevel" border size="mini" v-model="checkAllLevel" @change="handleCheckAllLevelChange">级别全选</el-checkbox>
+                        <span class="require">级别：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllLevel" border size="mini" v-model="checkAllLevel" @change="handleCheckAllLevelChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedLevel" @change="handleCheckedLevelChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="item in levelList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
                         </el-checkbox-group>
@@ -149,9 +122,8 @@
                     </div>
                     <div class="team-panel">
                       <div class="team-header">
-                        <span class="require" v-if="device=='desktop'">类别：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllCategory" border size="mini" v-model="checkAllCategory" @change="handleCheckAllCategoryChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllCategory" border size="mini" v-model="checkAllCategory" @change="handleCheckAllCategoryChange">类别全选</el-checkbox>
+                        <span class="require">类别：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllCategory" border size="mini" v-model="checkAllCategory" @change="handleCheckAllCategoryChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedCategory" @change="handleCheckedCategoryChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="item in categoryList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
                         </el-checkbox-group>
@@ -159,9 +131,8 @@
                     </div>
                     <div class="team-panel">
                       <div class="team-header">
-                        <span class="require" v-if="device=='desktop'">设备：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllDevice" border size="mini" v-model="checkAllDevice" @change="handleCheckAllDeviceChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllDevice" border size="mini" v-model="checkAllDevice" @change="handleCheckAllDeviceChange">全选</el-checkbox>
+                        <span class="require">设备：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllDevice" border size="mini" v-model="checkAllDevice" @change="handleCheckAllDeviceChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedDevice" @change="handleCheckedDeviceChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="item in deviceList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
                         </el-checkbox-group>
@@ -175,57 +146,50 @@
                   <div class="group-body">
                     <div class="team-panel" v-for="item in productList" v-bind:key="item.id">
                       <div class="team-header" v-if="item.icon=='a1'">
-                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA1Product" border size="mini" v-model="checkAllA1Product" @change="handleCheckAllA1ProductChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA1Product" border size="mini" v-model="checkAllA1Product" @change="handleCheckAllA1ProductChange">{{item.name}}全选</el-checkbox>
+                        <span class="require">{{item.name}}：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllA1Product" border size="mini" v-model="checkAllA1Product" @change="handleCheckAllA1ProductChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedA1Product" @change="handleCheckedA1ProductChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                         </el-checkbox-group>
                       </div>
                       <div class="team-header" v-else-if="item.icon=='a2'">
-                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA2Product" border size="mini" v-model="checkAllA2Product" @change="handleCheckAllA2ProductChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA2Product" border size="mini" v-model="checkAllA2Product" @change="handleCheckAllA2ProductChange">{{item.name}}全选</el-checkbox>
+                        <span class="require">{{item.name}}：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllA2Product" border size="mini" v-model="checkAllA2Product" @change="handleCheckAllA2ProductChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedA2Product" @change="handleCheckedA2ProductChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                         </el-checkbox-group>
                       </div>
                       <div class="team-header" v-else-if="item.icon=='a3'">
-                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA3Product" border size="mini" v-model="checkAllA3Product" @change="handleCheckAllA3ProductChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA3Product" border size="mini" v-model="checkAllA3Product" @change="handleCheckAllA3ProductChange">{{item.name}}全选</el-checkbox>
+                        <span class="require">{{item.name}}：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllA3Product" border size="mini" v-model="checkAllA3Product" @change="handleCheckAllA3ProductChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedA3Product" @change="handleCheckedA3ProductChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                         </el-checkbox-group>
                       </div>
                       <div class="team-header" v-else-if="item.icon=='a4'">
-                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA4Product" border size="mini" v-model="checkAllA4Product" @change="handleCheckAllA4ProductChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA4Product" border size="mini" v-model="checkAllA4Product" @change="handleCheckAllA4ProductChange">{{item.name}}全选</el-checkbox>
+                        <span class="require">{{item.name}}：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllA4Product" border size="mini" v-model="checkAllA4Product" @change="handleCheckAllA4ProductChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedA4Product" @change="handleCheckedA4ProductChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                         </el-checkbox-group>
                       </div>
                       <div class="team-header" v-else-if="item.icon=='a5'">
-                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA5Product" border size="mini" v-model="checkAllA5Product" @change="handleCheckAllA5ProductChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA5Product" border size="mini" v-model="checkAllA5Product" @change="handleCheckAllA5ProductChange">{{item.name}}全选</el-checkbox>
+                        <span class="require">{{item.name}}：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllA5Product" border size="mini" v-model="checkAllA5Product" @change="handleCheckAllA5ProductChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedA5Product" @change="handleCheckedA5ProductChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                         </el-checkbox-group>
                       </div>
                       <div class="team-header" v-else-if="item.icon=='a6'">
-                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA6Product" border size="mini" v-model="checkAllA6Product" @change="handleCheckAllA6ProductChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA6Product" border size="mini" v-model="checkAllA6Product" @change="handleCheckAllA6ProductChange">{{item.name}}全选</el-checkbox>
+                        <span class="require">{{item.name}}：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllA6Product" border size="mini" v-model="checkAllA6Product" @change="handleCheckAllA6ProductChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedA6Product" @change="handleCheckedA6ProductChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                         </el-checkbox-group>
                       </div>
                       <div class="team-header" v-else>
-                        <span class="require" v-if="device=='desktop'">{{item.name}}：</span>
-                        <el-checkbox class="all-select" v-if="device=='desktop'" :indeterminate="isAllA7Product" border size="mini" v-model="checkAllA7Product" @change="handleCheckAllA7ProductChange">全选</el-checkbox>
-                        <el-checkbox class="all-select" v-if="device=='mobile'" :indeterminate="isAllA7Product" border size="mini" v-model="checkAllA7Product" @change="handleCheckAllA7ProductChange">{{item.name}}全选</el-checkbox>
+                        <span class="require">{{item.name}}：</span>
+                        <el-checkbox class="all-select" :indeterminate="isAllA7Product" border size="mini" v-model="checkAllA7Product" @change="handleCheckAllA7ProductChange">全选</el-checkbox>
                         <el-checkbox-group class="team-list" v-model="checkedA7Product" @change="handleCheckedA7ProductChange" size="mini">
                           <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                         </el-checkbox-group>
@@ -247,12 +211,9 @@
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>电话总数（{{searchResult.phoneTotalNum}}）</span></div>
                       <div class="chart-body" style="height:640px;">                        
-                          <div class="abs-canvas" v-if="device==='desktop'">
+                          <div class="abs-canvas">
                             <div id="cluesChart1" class="chart-canvas"></div>
-                          </div>
-                          <div class="abs-canvas" v-else>
-                            <canvas id="cluesChart1" class="chart-canvas"></canvas>
-                          </div>                        
+                          </div>                      
                       </div>
                     </div>
                   </el-col>
@@ -260,11 +221,8 @@
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>有效电话（{{searchResult.phoneEffectiveNum}}）</span></div>
                       <div class="chart-body" style="height:640px;">                              
-                          <div class="abs-canvas" v-if="device==='desktop'">
+                          <div class="abs-canvas">
                             <div id="cluesChart2" class="chart-canvas"></div>
-                          </div>
-                          <div class="abs-canvas" v-else>
-                            <canvas id="cluesChart2" class="chart-canvas"></canvas>
                           </div>
                       </div>
                     </div>
@@ -275,11 +233,8 @@
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>使用设备</span></div>
                       <div class="chart-body" style="height:400px;">                                              
-                          <div class="abs-canvas" v-if="device==='desktop'">
+                          <div class="abs-canvas">
                             <div id="cluesChart3" class="chart-canvas"></div>
-                          </div>
-                          <div class="abs-canvas" v-else>
-                            <canvas id="cluesChart3" class="chart-canvas"></canvas>
                           </div>
                       </div>
                     </div>
@@ -298,11 +253,8 @@
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>平均星期电话量</span></div>
                       <div class="chart-body" style="height:400px;">
-                          <div class="abs-canvas" v-if="device==='desktop'">
+                          <div class="abs-canvas">
                             <div id="cluesChart5" class="chart-canvas"></div>
-                          </div>
-                          <div class="abs-canvas" v-else>
-                            <canvas id="cluesChart5" class="chart-canvas"></canvas>
                           </div>
                       </div>
                     </div>
@@ -331,11 +283,8 @@
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>平均小时电话量</span></div>
                       <div class="chart-body" style="height:400px;">
-                          <div class="abs-canvas" v-if="device==='desktop'">
+                          <div class="abs-canvas">
                             <div id="cluesChart8" class="chart-canvas"></div>
-                          </div>
-                          <div class="abs-canvas" v-else>
-                            <canvas id="cluesChart8" class="chart-canvas"></canvas>
                           </div>
                       </div>
                     </div>
@@ -346,11 +295,8 @@
                     <div class="chart-wrapper">
                       <div class="chart-header"><span>热门产品</span></div>
                       <div class="chart-body" style="height:400px;">
-                          <div class="abs-canvas" v-if="device==='desktop'">
+                          <div class="abs-canvas">
                             <div id="cluesChart9" class="chart-canvas"></div>
-                          </div>
-                          <div class="abs-canvas" v-else>
-                            <canvas id="cluesChart9" class="chart-canvas"></canvas>
                           </div>
                       </div>
                     </div>
@@ -509,8 +455,6 @@ export default {
       checkedOther:[],
       searchData:{
         date:[],
-        startDate:'',
-        endDate:'',
         province:"",
         domain:'',
         name:'',
@@ -619,7 +563,6 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'device',
       'menuData'
     ]),
   },
@@ -770,8 +713,6 @@ export default {
       $this.minProduct=[];
       $this.maxProductNum=0;
       $this.minProductNum=0;
-      $this.searchData.startDate='';
-      $this.searchData.endDate='';
       $this.searchData.province="";
       $this.searchData.domain='';
       $this.searchData.name='';
@@ -811,17 +752,12 @@ export default {
       searchData.province = $this.searchData.province;
       searchData.domain = $this.searchData.domain;
       searchData.name = $this.searchData.name;
-      if($this.device=='desktop'){
-        if($this.searchData.date&&$this.searchData.date.length>0){
-          searchData.starttime = $this.searchData.date[0];
-          searchData.endtime = $this.searchData.date[1];
-        }else{
-          searchData.starttime = "";
-          searchData.endtime = "";
-        }
+      if($this.searchData.date&&$this.searchData.date.length>0){
+        searchData.starttime = $this.searchData.date[0];
+        searchData.endtime = $this.searchData.date[1];
       }else{
-          searchData.starttime = $this.searchData.startDate;
-          searchData.endtime = $this.searchData.endDate;
+        searchData.starttime = "";
+        searchData.endtime = "";
       }
       var checkedSem = $this.checkedSem;
       var checkedSeo = $this.checkedSeo;
@@ -980,16 +916,6 @@ export default {
           }
         }
       });
-    },    
-    // 比较两个时间的先后
-    compareDate(date1,date2){
-      var oDate1 = new Date(date1);
-      var oDate2 = new Date(date2);
-      if(oDate1.getTime() > oDate2.getTime()){
-          return false;
-      }else{
-          return true;
-      }
     },
     // 获取统计数据
     getCluesAnalysisData(){
@@ -1003,37 +929,7 @@ export default {
         });
         return false;
       }
-      var isSearch = true;
-      if($this.device==="mobile"){
-        if(($this.searchData.startDate==""&&$this.searchData.endDate!="")||($this.searchData.startDate!=""&&$this.searchData.endDate=="")){
-          isSearch = false;
-        }else{
-          if($this.searchData.startDate!=""&&$this.searchData.endDate!=""){
-            if(!$this.compareDate($this.searchData.startDate,$this.searchData.endDate)){
-              isSearch = false;
-            }
-          }
-        }
-      }
-      if(!isSearch){
-        if($this.searchData.startDate==""&&$this.searchData.endDate!=""){
-          $this.$alert('结束时间不为空时开始时间不能为空', '警告', {
-            confirmButtonText: '确定',
-          });
-        }
-        if($this.searchData.startDate!=""&&$this.searchData.endDate==""){
-          $this.$alert('开始时间不为空时结束时间不能为空', '警告', {
-            confirmButtonText: '确定',
-          });
-        }
-        if($this.searchData.startDate!=""&&$this.searchData.endDate!=""){
-          $this.$alert('开始时间不能大于结束时间', '警告', {
-            confirmButtonText: '确定',
-          });
-        }
-        return false;
-      }
-      if($this.searchData.date.length == 0&&$this.device==="desktop"){
+      if($this.searchData.date.length == 0){
         $this.$message({
             showClose: true,
             message: '错误：请选择查询时间范围！',
@@ -1912,186 +1808,100 @@ export default {
     // 图表功能
     drawChart1(){
       var $this = this;
-      if($this.searchResult.phoneCount.length>0){        
-        if($this.device == "desktop"){
-          const barPhoneTotalPlot = new Bar('cluesChart1', {
-            data:$this.searchResult.phoneCount,
-            xField: 'number',
-            yField: 'phonenumber',
-            appendPadding:[15,15,15,15],
-            seriesField: 'phonenumber',
-            label: {
-              // 可手动配置 label 数据标签位置
-              position: 'middle', // 'top', 'bottom', 'middle',
-              // 配置样式
-              style: {
-                fill: '#FFFFFF',
-                opacity:1,
-              },
+      if($this.searchResult.phoneCount.length>0){
+        const barPhoneTotalPlot = new Bar('cluesChart1', {
+          data:$this.searchResult.phoneCount,
+          xField: 'number',
+          yField: 'phonenumber',
+          appendPadding:[15,15,15,15],
+          seriesField: 'phonenumber',
+          label: {
+            // 可手动配置 label 数据标签位置
+            position: 'middle', // 'top', 'bottom', 'middle',
+            // 配置样式
+            style: {
+              fill: '#FFFFFF',
+              opacity:1,
             },
-            tooltip: {
-              formatter: (datum) => {
-                return { name: "询盘个数", value: datum.number };
-              }
-            },
-            meta: {
-              number: {
-                alias: '询盘个数',
-              },
-              phonenumber: {
-                alias: '电话',
-              },
-            },
-          });
-          $this.barPhoneTotalPlot = barPhoneTotalPlot;
-          barPhoneTotalPlot.render();
-        }else{
-          // Step 1: 创建 Chart 对象
-          const chart = new $this.$F2.Chart({
-            id: 'cluesChart1',
-            pixelRatio: window.devicePixelRatio // 指定分辨率
-          });
-          // Step 2: 载入数据源
-          chart.source($this.searchResult.phoneCount, {
-            number: {
-              tickCount:5
+          },
+          tooltip: {
+            formatter: (datum) => {
+              return { name: "询盘个数", value: datum.number };
             }
-          });
-          chart.coord({
-            transposed: true
-          });
-          // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
-          chart.interval()
-            .position('phonenumber*number')
-            .color('phonenumber');
-
-          // Step 4: 渲染图表
-          chart.render();
-        }
+          },
+          meta: {
+            number: {
+              alias: '询盘个数',
+            },
+            phonenumber: {
+              alias: '电话',
+            },
+          },
+        });
+        $this.barPhoneTotalPlot = barPhoneTotalPlot;
+        barPhoneTotalPlot.render();
       }
     },
     // 图表功能
     drawChart2(){
       var $this = this;
-      if($this.searchResult.phoneEffectiveCount.length>0){               
-        if($this.device == "desktop"){
-          const barPhoneEffectivePlot = new Bar('cluesChart2', {
-            data:$this.searchResult.phoneEffectiveCount,
-            xField: 'number',
-            yField: 'phonenumber',
-            appendPadding:[15,15,15,15],
-            seriesField: 'phonenumber',
-            label: {
-              // 可手动配置 label 数据标签位置
-              position: 'middle', // 'top', 'bottom', 'middle',
-              // 配置样式
-              style: {
-                fill: '#FFFFFF',
-                opacity:1,
-              },
+      if($this.searchResult.phoneEffectiveCount.length>0){
+        const barPhoneEffectivePlot = new Bar('cluesChart2', {
+          data:$this.searchResult.phoneEffectiveCount,
+          xField: 'number',
+          yField: 'phonenumber',
+          appendPadding:[15,15,15,15],
+          seriesField: 'phonenumber',
+          label: {
+            // 可手动配置 label 数据标签位置
+            position: 'middle', // 'top', 'bottom', 'middle',
+            // 配置样式
+            style: {
+              fill: '#FFFFFF',
+              opacity:1,
             },
-            tooltip: {
-              formatter: (datum) => {
-                return { name: "询盘个数", value: datum.number };
-              }
-            },
-            meta: {
-              number: {
-                alias: '询盘个数',
-              },
-              phonenumber: {
-                alias: '电话',
-              },
-            },
-          });
-          $this.barPhoneEffectivePlot = barPhoneEffectivePlot;
-          barPhoneEffectivePlot.render();
-        }else{
-          // Step 1: 创建 Chart 对象
-          const chart = new $this.$F2.Chart({
-            id: 'cluesChart2',
-            pixelRatio: window.devicePixelRatio // 指定分辨率
-          });
-          // Step 2: 载入数据源
-          chart.source($this.searchResult.phoneEffectiveCount, {
-            number: {
-              tickCount:5
+          },
+          tooltip: {
+            formatter: (datum) => {
+              return { name: "询盘个数", value: datum.number };
             }
-          });
-          chart.coord({
-            transposed: true
-          });
-          // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
-          chart.interval()
-            .position('phonenumber*number')
-            .color('phonenumber');
-
-          // Step 4: 渲染图表
-          chart.render();
-        }
+          },
+          meta: {
+            number: {
+              alias: '询盘个数',
+            },
+            phonenumber: {
+              alias: '电话',
+            },
+          },
+        });
+        $this.barPhoneEffectivePlot = barPhoneEffectivePlot;
+        barPhoneEffectivePlot.render();
       }
     },
     // 图表功能
     drawChart3(){
       var $this = this;
-      if($this.searchResult.deviceCount.length>0){            
-        if($this.device == "desktop"){
-            const pieDevicePlot = new Pie('cluesChart3', {
-              data:$this.searchResult.deviceCount,
-              angleField: 'number',
-              colorField: 'devicename',
-              appendPadding:[15,15,15,15],
-              radius: 0.8,
-              label: {
-                type: 'outer',
-                content: '{name} {percentage}',
-              },
-              tooltip: {
-                formatter: (datum) => {
-                  return { name: "询盘个数", value: datum.number };
-                }
-              },
-              interactions: [{ type: 'pie-legend-active' }, { type: 'element-active' }],
-            });
-            $this.pieDevicePlot = pieDevicePlot;
-            pieDevicePlot.render();
-        }else{
-            const chart = new $this.$F2.Chart({
-              id: 'cluesChart3',
-              pixelRatio: window.devicePixelRatio
-            });
-
-            chart.source($this.searchResult.deviceCount);
-            chart.coord('polar', {
-              transposed: true,
-              radius: 0.75
-            });
-            chart.legend(false);
-            chart.axis(false);
-            chart.tooltip(false);
-            // 添加饼图文本
-            //chart.pieLabel({
-            //  sidePadding: 40,
-            //  label1: function label1(data, color) {
-            //    return {
-            //      text: data.devicename,
-            //      fill: color
-            //    };
-            //  },
-            //  label2: function label2(data) {
-            //    return {
-            //      text: '￥' + String(Math.floor(data.percenter * 100) / 100).replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-            //      fill: '#808080',
-            //      fontWeight: 'bold'
-            //    };
-            //  }
-            //});
-            chart.interval()
-              .position('const*devicename')
-              .color('devicename', [ '#1890FF', '#13C2C2', '#2FC25B', '#FACC14', '#F04864' ])
-              .adjust('stack');
-            chart.render();
-        }
+      if($this.searchResult.deviceCount.length>0){
+        const pieDevicePlot = new Pie('cluesChart3', {
+          data:$this.searchResult.deviceCount,
+          angleField: 'number',
+          colorField: 'devicename',
+          appendPadding:[15,15,15,15],
+          radius: 0.8,
+          label: {
+            type: 'outer',
+            content: '{name} {percentage}',
+          },
+          tooltip: {
+            formatter: (datum) => {
+              return { name: "询盘个数", value: datum.number };
+            }
+          },
+          interactions: [{ type: 'pie-legend-active' }, { type: 'element-active' }],
+        });
+        $this.pieDevicePlot = pieDevicePlot;
+        pieDevicePlot.render();
       }
     },
     // 图表功能
@@ -2123,84 +1933,63 @@ export default {
     drawChart5(){
       var $this = this;
       if($this.searchResult.weekCount.length>0){
-        if($this.device == "desktop"){
-            const maxColor = '#FF4500';
-            const minColor = '#1CC25E';
-            const defaultColor = '#5B8FF9';
-            const columnWeekPlot = new Column('cluesChart5', {
-              data:$this.searchResult.weekCount,
-              xField: 'weekday',
-              yField: 'number',
-              appendPadding:[15,15,15,15],
-              seriesField: '',
-              color: ({ weekday }) => {
-                var currentColor = defaultColor;
-                $this.maxWeek.forEach(function(item,index){
-                  if(weekday == item){
-                    currentColor = maxColor;
-                  }
-                });
-                $this.minWeek.forEach(function(item,index){
-                  if(weekday == item){
-                    currentColor = minColor;
-                  }
-                });
-                return currentColor;
-              },
-              xAxis:{
-                label:{
-                  autoHide:true
-                },
-              },
-              label:{
-                position:'top',
-                offsetY:8,
-                style: {
-                  fill: '#000',
-                  opacity:1
-                },
-              },
-              tooltip: {
-                formatter: (datum) => {
-                  return { name: "询盘个数", value: datum.number };
-                },
-                title:(e)=>{
-                  return e.replace(/\n/g," ")
-                }
-              },
-              meta: {
-                weekday: {
-                  alias: '星期',
-                },
-                number: {
-                  alias: '询盘个数',
-                  max: $this.maxWeekNum,
-                  min: 0,
-                },
-              },
+        const maxColor = '#FF4500';
+        const minColor = '#1CC25E';
+        const defaultColor = '#5B8FF9';
+        const columnWeekPlot = new Column('cluesChart5', {
+          data:$this.searchResult.weekCount,
+          xField: 'weekday',
+          yField: 'number',
+          appendPadding:[15,15,15,15],
+          seriesField: '',
+          color: ({ weekday }) => {
+            var currentColor = defaultColor;
+            $this.maxWeek.forEach(function(item,index){
+              if(weekday == item){
+                currentColor = maxColor;
+              }
             });
-            $this.columnWeekPlot = columnWeekPlot;
-            columnWeekPlot.render();
-        }else{
-          // Step 1: 创建 Chart 对象
-          const chart = new $this.$F2.Chart({
-            id: 'cluesChart5',
-            pixelRatio: window.devicePixelRatio // 指定分辨率
-          });
-          // Step 2: 载入数据源
-          chart.source($this.searchResult.weekCount, {
-            number: {
-              tickCount:4
+            $this.minWeek.forEach(function(item,index){
+              if(weekday == item){
+                currentColor = minColor;
+              }
+            });
+            return currentColor;
+          },
+          xAxis:{
+            label:{
+              autoHide:true
+            },
+          },
+          label:{
+            position:'top',
+            offsetY:8,
+            style: {
+              fill: '#000',
+              opacity:1
+            },
+          },
+          tooltip: {
+            formatter: (datum) => {
+              return { name: "询盘个数", value: datum.number };
+            },
+            title:(e)=>{
+              return e.replace(/\n/g," ")
             }
-          });
-          // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
-          chart.interval()
-            .position('weekday*number')
-            .color('weekday');
-
-          // Step 4: 渲染图表
-          chart.render();
-        }
+          },
+          meta: {
+            weekday: {
+              alias: '星期',
+            },
+            number: {
+              alias: '询盘个数',
+              max: $this.maxWeekNum,
+              min: 0,
+            },
+          },
+        });
+        $this.columnWeekPlot = columnWeekPlot;
+        columnWeekPlot.render();
       }
     },
     // 图表功能
@@ -2291,317 +2080,245 @@ export default {
     // 图表功能
     drawChart8(){
       var $this = this;
-      if($this.searchResult.hoursCount.length>0){        
-        if($this.device == "desktop"){
-            const maxColor = '#FF4500';
-            const minColor = '#1CC25E';
-            const defaultColor = '#5B8FF9';
-            const columnHoursPlot = new Column('cluesChart8', {
-              data:$this.searchResult.hoursCount,
-              xField: 'hours',
-              yField: 'number',
-              appendPadding:[15,15,15,15],
-              seriesField: '',
-              color: ({ hours }) => {
-                var currentColor = defaultColor;
-                $this.maxHours.forEach(function(item,index){
-                  if(hours == item){
-                    currentColor = maxColor;
-                  }
-                });
-                $this.minHours.forEach(function(item,index){
-                  if(hours == item){
-                    currentColor = minColor;
-                  }
-                });
-                return currentColor;
-              },
-              xAxis:{
-                label:{
-                  autoHide:true
-                },
-              },
-              label:{
-                position:'top',
-                offsetY:8,
-                style: {
-                  fill: '#000',
-                  opacity:1
-                },
-              },
-              tooltip: {
-                formatter: (datum) => {
-                  return { name: "询盘个数", value: datum.number };
-                },
-                title:(e)=>{
-                  return e.replace(/\n/g," ")
-                }
-              },
-              meta: {
-                weekday: {
-                  alias: '时段',
-                },
-                number: {
-                  alias: '询盘个数',
-                  max: $this.maxHoursNum,
-                  min: 0,
-                },
-              },
+      if($this.searchResult.hoursCount.length>0){
+        const maxColor = '#FF4500';
+        const minColor = '#1CC25E';
+        const defaultColor = '#5B8FF9';
+        const columnHoursPlot = new Column('cluesChart8', {
+          data:$this.searchResult.hoursCount,
+          xField: 'hours',
+          yField: 'number',
+          appendPadding:[15,15,15,15],
+          seriesField: '',
+          color: ({ hours }) => {
+            var currentColor = defaultColor;
+            $this.maxHours.forEach(function(item,index){
+              if(hours == item){
+                currentColor = maxColor;
+              }
             });
-            $this.columnHoursPlot = columnHoursPlot;
-            columnHoursPlot.render();
-        }else{
-          // Step 1: 创建 Chart 对象
-          const chart = new $this.$F2.Chart({
-            id: 'cluesChart8',
-            pixelRatio: window.devicePixelRatio // 指定分辨率
-          });
-          // Step 2: 载入数据源
-          chart.source($this.searchResult.hoursCount, {
-            number: {
-              tickCount:12
+            $this.minHours.forEach(function(item,index){
+              if(hours == item){
+                currentColor = minColor;
+              }
+            });
+            return currentColor;
+          },
+          xAxis:{
+            label:{
+              autoHide:true
+            },
+          },
+          label:{
+            position:'top',
+            offsetY:8,
+            style: {
+              fill: '#000',
+              opacity:1
+            },
+          },
+          tooltip: {
+            formatter: (datum) => {
+              return { name: "询盘个数", value: datum.number };
+            },
+            title:(e)=>{
+              return e.replace(/\n/g," ")
             }
-          });
-          // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
-          chart.interval()
-            .position('hours*number')
-            .color('hours');
-
-          // Step 4: 渲染图表
-          chart.render();
-        }
+          },
+          meta: {
+            weekday: {
+              alias: '时段',
+            },
+            number: {
+              alias: '询盘个数',
+              max: $this.maxHoursNum,
+              min: 0,
+            },
+          },
+        });
+        $this.columnHoursPlot = columnHoursPlot;
+        columnHoursPlot.render();
       }
     },
     // 图表功能
     drawChart9(){
       var $this = this;
-      if($this.searchResult.productCount.length>0){       
-        if($this.device == "desktop"){
-            const maxColor = '#FF4500';
-            const minColor = '#1CC25E';
-            const defaultColor = '#5B8FF9';
-            const columnProductPlot = new Column('cluesChart9', {
-              data:$this.searchResult.productCount,
-              xField: 'name',
-              yField: 'number',
-              appendPadding:[15,15,15,15],
-              seriesField: '',
-              color: ({ name }) => {
-                var currentColor = defaultColor;
-                $this.maxProduct.forEach(function(item,index){
-                  if(name == item){
-                    currentColor = maxColor;
-                  }
-                });
-                $this.minProduct.forEach(function(item,index){
-                  if(name == item){
-                    currentColor = minColor;
-                  }
-                });
-                return currentColor;
-              },
-              xAxis:{
-                label:{
-                  autoHide:true
-                },
-              },
-              label:{
-                position:'top',
-                offsetY:8,
-                style: {
-                  fill: '#000',
-                  opacity:1
-                },
-              },
-              tooltip: {
-                formatter: (datum) => {
-                  return { name: "询盘个数", value: datum.number };
-                },
-                title:(e)=>{
-                  return e.replace(/\n/g," ")
-                }
-              },
-              meta: {
-                name: {
-                  alias: '产品',
-                },
-                number: {
-                  alias: '询盘个数',
-                  max: $this.maxProductNum,
-                  min: 0,
-                },
-              },
+      if($this.searchResult.productCount.length>0){ 
+        const maxColor = '#FF4500';
+        const minColor = '#1CC25E';
+        const defaultColor = '#5B8FF9';
+        const columnProductPlot = new Column('cluesChart9', {
+          data:$this.searchResult.productCount,
+          xField: 'name',
+          yField: 'number',
+          appendPadding:[15,15,15,15],
+          seriesField: '',
+          color: ({ name }) => {
+            var currentColor = defaultColor;
+            $this.maxProduct.forEach(function(item,index){
+              if(name == item){
+                currentColor = maxColor;
+              }
             });
-            $this.columnProductPlot = columnProductPlot;
-            columnProductPlot.render();
-        }else{
-          // Step 1: 创建 Chart 对象
-          const chart = new $this.$F2.Chart({
-            id: 'cluesChart9',
-            pixelRatio: window.devicePixelRatio // 指定分辨率
-          });
-          // Step 2: 载入数据源
-          chart.source($this.searchResult.productCount, {
-            number: {
-              tickCount:10
+            $this.minProduct.forEach(function(item,index){
+              if(name == item){
+                currentColor = minColor;
+              }
+            });
+            return currentColor;
+          },
+          xAxis:{
+            label:{
+              autoHide:true
+            },
+          },
+          label:{
+            position:'top',
+            offsetY:8,
+            style: {
+              fill: '#000',
+              opacity:1
+            },
+          },
+          tooltip: {
+            formatter: (datum) => {
+              return { name: "询盘个数", value: datum.number };
+            },
+            title:(e)=>{
+              return e.replace(/\n/g," ")
             }
-          });
-          // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
-          chart.interval()
-            .position('name*number')
-            .color('name');
-
-          // Step 4: 渲染图表
-          chart.render();
-        }
+          },
+          meta: {
+            name: {
+              alias: '产品',
+            },
+            number: {
+              alias: '询盘个数',
+              max: $this.maxProductNum,
+              min: 0,
+            },
+          },
+        });
+        $this.columnProductPlot = columnProductPlot;
+        columnProductPlot.render();
       }
     },
     // 图表功能
     drawChart10(){
       var $this = this;
-      if($this.searchResult.regionMap.length>0){     
-        if($this.device == "desktop"){
-            fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
-            .then(res => res.json())
-            .then(GeoJSON => {
-              const chart = new Chart({
-                container: 'cluesChart10',
-                width: 760,
-                height: 480,
-              });
-              chart.scale({
-                latitude: { sync: true },
-                longitude: { sync: true }
-              });
-              chart.tooltip({
-                showTitle: false,
-                showMarkers: false,
-                shared: true,
-              });
-              // 同步度量
-              chart.scale({
-                longitude: {
-                  sync: true
-                },
-                latitude: {
-                  sync: true
-                }
-              });
-              chart.axis(false);
-              chart.legend('trend', {
-                position: 'right'
-              });
-              
-              var ds = new DataSet();
-              const geoDv = ds.createView('back').source(GeoJSON, {type: 'GeoJSON'});
-              const geoView = chart.createView();
-              geoView.data(geoDv.rows);
-              geoView.tooltip(false);
-              geoView.polygon()
-                .position('longitude*latitude')
-                .color('grey')
-                .style({
-                  fill: '#fff',
-                  stroke: '#ccc',
-                  lineWidth: 1,
-                });
-
-              const userData = [];
-              $this.searchResult.regionMap.forEach(function(item,index){
-                var itemData = {};
-                itemData.name = item.name;
-                itemData.value = item.number;
-                userData.push(itemData);
-              });
-              const userDv = ds.createView().source(userData).transform({
-                // sizeByCount: true,
-                geoDataView: geoDv,
-                field: 'name',
-                type: 'geo.region',
-                as: ['longitude', 'latitude']
-              }).transform({
-                type: 'map',
-                callback: obj => {
-                  if(obj.value <10){
-                      obj.trend="0-10";
-                  }else if(obj.value <20 && obj.value>=10){
-                      obj.trend="10-20";
-                  }else if(obj.value <30 && obj.value>=20){
-                      obj.trend="20-30";
-                  }else if(obj.value <40 && obj.value>=30){
-                      obj.trend="30-40";
-                  }else if(obj.value <50 && obj.value>=40){
-                      obj.trend="40-50";
-                  }else if(obj.value <60 && obj.value>=50){
-                      obj.trend="50-60";
-                  }else if(obj.value <100 && obj.value>=60){
-                      obj.trend="60-100";
-                  }else if(obj.value <300 && obj.value>=100){
-                      obj.trend="100-300";
-                  }else if(obj.value <500 && obj.value>=300){
-                      obj.trend="300-500";
-                  }else if(obj.value <800 && obj.value>=500){
-                      obj.trend="500-800";
-                  }else{
-                      obj.trend="大于800";
-                  }
-                  return obj;
-                }
-              });
-              const userView = chart.createView();
-              userView.data(userDv.rows);
-              userView.scale({
-                value: {
-                  alias: '数量'
-                },
-                name:{
-                  alias:"地区"
-                }
-              });
-              userView.polygon()
-                .position('longitude*latitude')
-                .color('trend', '#BAE7FF-#1890FF-#0050B3')
-                .tooltip('name*value')
-                .style({
-                  fillOpacity: 0.85
-                }).animate({
-                  leave: {
-                    animation: 'fade-out'
-                  }
-                });
-              userView.interaction('element-active');
-              $this.chart = chart;
-              chart.render();
+      if($this.searchResult.regionMap.length>0){
+        fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
+        .then(res => res.json())
+        .then(GeoJSON => {
+          const chart = new Chart({
+            container: 'cluesChart10',
+            width: 760,
+            height: 480,
+          });
+          chart.scale({
+            latitude: { sync: true },
+            longitude: { sync: true }
+          });
+          chart.tooltip({
+            showTitle: false,
+            showMarkers: false,
+            shared: true,
+          });
+          // 同步度量
+          chart.scale({
+            longitude: {
+              sync: true
+            },
+            latitude: {
+              sync: true
+            }
+          });
+          chart.axis(false);
+          chart.legend('trend', {
+            position: 'right'
+          });
+          
+          var ds = new DataSet();
+          const geoDv = ds.createView('back').source(GeoJSON, {type: 'GeoJSON'});
+          const geoView = chart.createView();
+          geoView.data(geoDv.rows);
+          geoView.tooltip(false);
+          geoView.polygon()
+            .position('longitude*latitude')
+            .color('grey')
+            .style({
+              fill: '#fff',
+              stroke: '#ccc',
+              lineWidth: 1,
             });
-        }else{                  
-          //const DataSet = window.DataSet;
-          //fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
-          //  .then(res => res.json())
-          //  .then(GeoJSON => {
-          //    const geoDv = new DataSet.View().source(GeoJSON, {
-          //      type: 'GeoJSON'
-          //    });
-          //    const chart = new $this.$F2.Chart({
-          //      id: 'cluesChart10',
-          //      padding: 0,
-          //      pixelRatio: window.devicePixelRatio
-          //    });
-          //    chart.legend(false);
-          //    chart.axis(false);
-          //    chart.tooltip(false);
-          //    chart.source(geoDv.rows);
-          //    chart.polygon()
-          //      .position('longitude*latitude')
-          //      .color('grey')
-          //      .style({
-          //        fill: '#fff',
-          //        stroke: '#ccc',
-          //        lineWidth: 1,
-          //      });
 
-          //    chart.render();
-          //  });
-          }
+          const userData = [];
+          $this.searchResult.regionMap.forEach(function(item,index){
+            var itemData = {};
+            itemData.name = item.name;
+            itemData.value = item.number;
+            userData.push(itemData);
+          });
+          const userDv = ds.createView().source(userData).transform({
+            // sizeByCount: true,
+            geoDataView: geoDv,
+            field: 'name',
+            type: 'geo.region',
+            as: ['longitude', 'latitude']
+          }).transform({
+            type: 'map',
+            callback: obj => {
+              if(obj.value <10){
+                  obj.trend="0-10";
+              }else if(obj.value <20 && obj.value>=10){
+                  obj.trend="10-20";
+              }else if(obj.value <30 && obj.value>=20){
+                  obj.trend="20-30";
+              }else if(obj.value <40 && obj.value>=30){
+                  obj.trend="30-40";
+              }else if(obj.value <50 && obj.value>=40){
+                  obj.trend="40-50";
+              }else if(obj.value <60 && obj.value>=50){
+                  obj.trend="50-60";
+              }else if(obj.value <100 && obj.value>=60){
+                  obj.trend="60-100";
+              }else if(obj.value <300 && obj.value>=100){
+                  obj.trend="100-300";
+              }else if(obj.value <500 && obj.value>=300){
+                  obj.trend="300-500";
+              }else if(obj.value <800 && obj.value>=500){
+                  obj.trend="500-800";
+              }else{
+                  obj.trend="大于800";
+              }
+              return obj;
+            }
+          });
+          const userView = chart.createView();
+          userView.data(userDv.rows);
+          userView.scale({
+            value: {
+              alias: '数量'
+            },
+            name:{
+              alias:"地区"
+            }
+          });
+          userView.polygon()
+            .position('longitude*latitude')
+            .color('trend', '#BAE7FF-#1890FF-#0050B3')
+            .tooltip('name*value')
+            .style({
+              fillOpacity: 0.85
+            }).animate({
+              leave: {
+                animation: 'fade-out'
+              }
+            });
+          userView.interaction('element-active');
+          $this.chart = chart;
+          chart.render();
+        });
       }
     },
     getSummaries(param){

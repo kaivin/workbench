@@ -3,16 +3,16 @@
         <div class="logo">
             <router-link class="logo-link" to="/">
                 <img class="logo-img" v-bind:src="logo" alt="">
-                <img class="logo-title" v-if="device==='desktop'" v-bind:src="logoFont" alt="">
+                <img class="logo-title" v-bind:src="logoFont" alt="">
             </router-link>
         </div>
         <div class="header-center">
-            <div class="header-search" v-if="isArticleSearch&&device==='desktop'">
+            <div class="header-search" v-if="isArticleSearch">
               <el-input placeholder="请输入内容" v-model="searchWord" size="small" class="article-search">
-                <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span><span class="search-font" v-if="device==='desktop'">搜索</span></el-button>
+                <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span><span class="search-font">搜索</span></el-button>
               </el-input>
             </div>
-            <div class="header-button" v-if="device==='desktop'">
+            <div class="header-button">
               <div class="item-button" v-if="isArticleAdd" v-on:click="articleAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">发布文章</span></div>
               <div class="item-button" v-if="isWebsiteAdd" v-on:click="websiteAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加网站</span></div>
               <div class="item-button" v-if="isWebserverAdd" v-on:click="webserverAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加服务器</span></div>
@@ -60,17 +60,15 @@
           <el-dropdown class="user-button" @command="handleCommand">
             <div class="el-dropdown-link">
               <span class="user-icon">
-                <svg-icon icon-class="user1" v-if="device==='desktop'" class-name="disabled" />
-                <svg-icon icon-class="user2" v-else class-name="disabled" />
+                <svg-icon icon-class="user1" class-name="disabled" />
               </span>
-              <span class="user-name" v-if="device==='desktop'">您好：{{userInfo.name}}</span>
+              <span class="user-name">您好：{{userInfo.name}}</span>
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item icon="el-icon-user-solid" command="a" v-on:click="linkTo">个人中心</el-dropdown-item>
               <el-dropdown-item divided command="b" v-on:click="logout"><i class="svg-i"><svg-icon icon-class="exit" class-name="disabled" /></i>退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <span class="nav-button" v-if="device==='mobile'" v-on:click="toggleSideBar"><i></i></span>
         </div>
         <el-dialog title="意见反馈" custom-class="add-edit-dialog feedback" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
           <el-form :model="dialogForm">
@@ -114,7 +112,6 @@ export default {
       ...mapGetters([
         'sidebar',
         'userInfo',
-        'device',
         'isArticleSearch',
         'isArticleAdd',
         'isWebsiteAdd',
@@ -217,9 +214,9 @@ export default {
             });
         },
         // 侧边导航伸缩
-        toggleSideBar() {
-            this.$store.dispatch('app/toggleSideBar')
-        },
+        //toggleSideBar() {
+        //    this.$store.dispatch('app/toggleSideBar')
+        //},
         // 跳转到个人中心
         linkTo(){
           var $this = this;

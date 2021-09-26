@@ -44,7 +44,7 @@
                               >
                             </el-table-column>
                             <el-table-column
-                              v-if="(menuButtonPermit.includes('Depart_getdepartrole')||menuButtonPermit.includes('Depart_add')||menuButtonPermit.includes('Depart_edit')||menuButtonPermit.includes('Depart_delete'))&&device==='desktop'"
+                              v-if="(menuButtonPermit.includes('Depart_getdepartrole')||menuButtonPermit.includes('Depart_add')||menuButtonPermit.includes('Depart_edit')||menuButtonPermit.includes('Depart_delete'))"
                               :width="operationsWidth"
                               align="center"
                               fixed="right"
@@ -70,7 +70,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Depart_add')||menuButtonPermit.includes('Depart_edit'))&&device==='desktop'" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Depart_add')||menuButtonPermit.includes('Depart_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
       <el-form :model="dialogForm">
         <div class="item-form">
           <el-form-item label="父级部门：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
@@ -95,7 +95,7 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog title="分配角色" v-if="(menuButtonPermit.includes('Depart_getdepartrole'))&&device==='desktop'" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
+    <el-dialog title="分配角色" v-if="(menuButtonPermit.includes('Depart_getdepartrole'))" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
       <div class="transfer-panel">
         <div class="transfer-wrap">
           <el-transfer 
@@ -178,7 +178,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'device',
       'addDepart',
       'sidebar',
       'menuData'
