@@ -1737,14 +1737,12 @@ export default {
     // 修改询盘
     editTableRow(row,index){
       var $this = this;
-      var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:row.id}});
-      window.open(routeUrl.href,'_self');
+      $this.$router.push({path:'/Enphone/addEditClues',query:{ID:row.id}});
     },
     // 提醒跳转到编辑页面
     jumpEditPage(id){
       var $this = this;
-      var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:id}});
-      window.open(routeUrl.href,'_blank');
+      $this.$router.push({path:'/Enphone/addEditClues',query:{ID:id}});
     },
     // 跳转询盘修改历史页面
     jumpEditHistoryPage(id){

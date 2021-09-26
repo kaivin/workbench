@@ -376,13 +376,25 @@
                                     prop="searchword"
                                     label="备注"
                                     min-width="90"
-                                    fixed="right"
                                     >
                                     <template slot-scope="scope">
                                       <div class="table-input">
-                                        <el-input size="small" class="tips-input-2" :disabled="scope.row.isRemark1" v-model="scope.row.remark1"></el-input>
-                                        <el-input size="small" class="tips-input-3" :disabled="scope.row.isRemark2" v-model="scope.row.remark2"></el-input>
-                                        <el-input size="small" class="tips-input-4" :disabled="scope.row.isRemark3" v-model="scope.row.remark3"></el-input>
+                                        <el-input size="small" class="tips-input-2" disabled v-model="scope.row.remark1"></el-input>
+                                        <el-input size="small" class="tips-input-3" disabled v-model="scope.row.remark2"></el-input>
+                                        <el-input size="small" class="tips-input-4" disabled v-model="scope.row.remark3"></el-input>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    v-if="menuButtonPermit.includes('Enphone_edit')"
+                                    width="90"
+                                    align="center"
+                                    prop="operations"
+                                    fixed="right"
+                                    label="操作">
+                                    <template #default="scope">
+                                      <div class="table-button">
+                                        <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')">修改</el-button>
                                       </div>
                                     </template>
                                   </el-table-column>
@@ -1591,6 +1603,11 @@ export default {
     handleLockClick(){
         var $this=this;
         $this.levelPopBool=!$this.levelPopBool;
+    },
+    // 修改询盘
+    editTableRow(row,index){
+      var $this = this;
+      $this.$router.push({path:'/Enphone/addEditClues',query:{ID:row.id}});
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){

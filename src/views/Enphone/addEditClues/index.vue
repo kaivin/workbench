@@ -744,7 +744,6 @@ export default {
             }else{
               $this.noRead = false;
             }
-            
             $this.setCluesInfo();
           }else{
             $this.$message({
@@ -865,6 +864,7 @@ export default {
         }
       });
       $this.phoneList = phoneList;
+      $this.getCurrentPhoneUser();
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
@@ -998,6 +998,14 @@ export default {
               priceList.push(itemData);
             });
             $this.priceList = priceList;
+            var salesuserlist = [];
+            response.userlist.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              salesuserlist.push(itemData);
+            });
+            $this.salesuserlist = salesuserlist;
             if($this.ID){
               $this.initCluesInfo();
             }
