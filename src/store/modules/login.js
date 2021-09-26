@@ -2,7 +2,6 @@
 import { login, logout, userForgetPwd,userGetCode } from '@/api/login'
 import { getSessionID, setSessionID, removeSessionID } from '@/utils/session'
 import { resetRouter } from '@/router'
-
 const state = {
   userInfo:Cookies.get('userInfo') ? JSON.parse(Cookies.get('userInfo')) : "",
   session: getSessionID()
