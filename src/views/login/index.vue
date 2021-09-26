@@ -214,8 +214,6 @@ export default {
                                  }
                             }
                             $this.isDisabled=true;
-                            Cookies.remove('userInfo', '');
-                            Cookies.remove('session_id', '');                            
                         }else{
                             $this.$message({
                                 showClose: true,

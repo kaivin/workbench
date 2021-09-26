@@ -6,7 +6,6 @@ export function getSessionID() {
 }
 
 export function setSessionID(data) {
-
     return Cookies.set(session_id, data);
 }
 

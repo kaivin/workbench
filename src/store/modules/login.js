@@ -15,7 +15,9 @@ const mutations = {
   SET_INFO: (state, data) => {
     state.userInfo = data;
     var cookieData = JSON.stringify(data);
-    Cookies.set('userInfo', cookieData);
+    if(cookieData!=undefined){
+      Cookies.set('userInfo', cookieData);
+    }
   },
 }
 const actions = {
