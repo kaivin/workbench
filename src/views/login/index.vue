@@ -87,6 +87,7 @@
 </template>
 <script>
 import { validEmail,isEmpty } from '@/utils/validate';
+import Cookies from 'js-cookie'
 import { mapGetters } from 'vuex'
 import logoIcon from "@/assets/images/loginIcon.gif";
 import logoTitle from "@/assets/top_font.png";
@@ -213,6 +214,8 @@ export default {
                                  }
                             }
                             $this.isDisabled=true;
+                            Cookies.remove('userInfo', '');
+                            Cookies.remove('session_id', '');                            
                         }else{
                             $this.$message({
                                 showClose: true,
