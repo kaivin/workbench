@@ -1,609 +1,631 @@
 ﻿<template>
-    <div class="page-root en-phone-search" ref="boxPane">
-        <div class="abs-panel" ref="mainPane">
-            <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
-                <div class="true-height" ref="scrollPane">
-                    <p class="breadcrumb" ref="breadcrumbPane">
-                      <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
-                      <template v-for="item in breadcrumbList">
-                        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
-                        <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
-                      </template>
-                      <span class="breadcrumb-link"><b>-</b><span>搜索数据</span></span>
-                    </p>
-                    <el-card class="box-card scroll-card" shadow="hover">
-                        <div slot="header">
-                            <div class="card-header EnphoneCardHeader" ref="headerPane">
-                                <div class="search-wrap">
-                                    <div class="item-search EnphoneSearchOne ">
-                                        <div class="item flex-wrap" v-for="item in depart" :key="item.dept_id">
-                                            <strong>{{item.departname}}</strong>
-                                            <el-checkbox class="all-select" :indeterminate="item.isOnshow" border size="mini" v-model="item.isOn" @change="handleCheckAllOneChange(item.dept_id)">全选</el-checkbox>
-                                            <el-checkbox-group class="team-list flex-content" v-model="deptOneId" @change="handleCheckedOneChange" size="mini">
-                                                <el-checkbox class="item-checkbox" v-for="items in item.child" :key="items.value" :label="items.value" border>{{items.label}}</el-checkbox>
-                                            </el-checkbox-group>                                   
+    <div class="page-root en-phone-search  flex-box no-padding EnphoneCard" ref="boxPane">
+        <div class="sub-router">
+          <el-scrollbar wrap-class="scrollbar-wrapper">
+            <div class="sub-wrapper">
+              <div class="side-button">
+                <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="searchStatisticsData()"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
+                <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_phonecount')" v-on:click="statisticsClues()"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
+              </div>
+              <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')">
+                  <dd v-on:click="phoneJump('','all')" v-bind:class="currentKey&&currentKey=='all'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookall')"><span>查看所有</span><i>({{linkAll.monthNum}})</i><em>({{linkAll.yestodayNum}})</em><b>({{linkAll.todayNum}})</b></dd>
+                  <dd v-on:click="phoneJump('','unAllot')" v-bind:class="currentKey&&currentKey=='unAllot'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookwaitdealall')"><span>未分配</span><i>({{linkAll.unAllotNum}})</i></dd>
+              </dl>
+              <template v-for="(item,index) in defaultData.data">
+                <dl class="phone-list" v-if="item.phone.length>0" v-bind:key="index">
+                  <dt><span>{{item.brandname}}</span></dt>
+                  <dd v-for="(phone,index) in item.phone" v-bind:class="phone.isOn?'active':''" :key="index" :title="phone.phonenumber+phone.othername" v-on:click="phoneJump(phone.id,phone.waitstatus)"><span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
+                </dl>
+              </template>
+            </div>
+          </el-scrollbar>
+        </div>
+        <div class="flex-content relative EnphoneCardFr">
+            <div class="abs-panel" ref="mainPane">
+                <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
+                    <div class="true-height" ref="scrollPane">
+                        <p class="breadcrumb" ref="breadcrumbPane">
+                          <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+                          <template v-for="item in breadcrumbList">
+                            <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+                            <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+                          </template>
+                          <span class="breadcrumb-link"><b>-</b><span>搜索数据</span></span>
+                        </p>
+                        <el-card class="box-card scroll-card" shadow="hover">
+                            <div slot="header">
+                                <div class="card-header EnphoneCardHeader" ref="headerPane">
+                                    <div class="search-wrap">
+                                        <div class="item-search EnphoneSearchOne ">
+                                            <div class="item flex-wrap" v-for="item in depart" :key="item.dept_id">
+                                                <strong>{{item.departname}}</strong>
+                                                <el-checkbox class="all-select" :indeterminate="item.isOnshow" border size="mini" v-model="item.isOn" @change="handleCheckAllOneChange(item.dept_id)">全选</el-checkbox>
+                                                <el-checkbox-group class="team-list flex-content" v-model="deptOneId" @change="handleCheckedOneChange" size="mini">
+                                                    <el-checkbox class="item-checkbox" v-for="items in item.child" :key="items.value" :label="items.value" border>{{items.label}}</el-checkbox>
+                                                </el-checkbox-group>                                   
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="item-search EnphoneSearchThree">
-                                        <el-date-picker
-                                            v-model="searchData.date"
-                                            size="mini"
-                                            type="daterange"
-                                            align="right"
-                                            style="width:250px;margin-right:10px;margin-bottom:10px;vertical-align: top;"
-                                            value-format = "yyyy-MM-dd"
-                                            unlink-panels
-                                            range-separator="至"
-                                            start-placeholder="开始日期"
-                                            end-placeholder="结束日期"
-                                            :picker-options="pickerRangeOptions">
-                                        </el-date-picker>
-                                        <el-select v-model="searchData.timeing" clearable placeholder="时段" style="width:70px;margin-right:10px;margin-bottom:10px;" size="mini">
-                                            <el-option
-                                                v-for="item in timeList"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                        <el-select v-model="searchData.mode" clearable placeholder="渠道" style="width:110px;margin-right:10px;margin-bottom:10px;" size="mini">
-                                            <el-option
-                                                v-for="item in sourceList"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                        <el-select v-model="searchData.device" clearable placeholder="设备" style="width:80px;margin-right:10px;margin-bottom:10px;" size="mini">
-                                            <el-option
-                                                v-for="item in deviceList"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                        <el-select v-model="searchData.producttype_id" clearable placeholder="产品分类" style="width:100px;margin-right:10px;margin-bottom:10px;" @change="currentCateChange" size="mini">
-                                            <el-option
-                                                v-for="item in cateList"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                        <el-select v-model="searchData.productid" clearable placeholder="产品" style="width:100px;margin-right:10px;margin-bottom:10px;" size="mini">
-                                            <el-option
-                                                v-for="item in productList"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                        <el-select v-model="searchData.feedback" clearable placeholder="反馈" style="width:100px;margin-right:10px;margin-bottom:10px;" size="mini">
-                                            <el-option
-                                                v-for="item in feedbackList"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                        <el-select v-model="searchData.level_id" clearable placeholder="首次级别" style="width:90px;margin-right:10px;margin-bottom:10px;" size="mini">
-                                            <el-option
-                                                v-for="item in levelList"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                        <el-select v-model="searchData.erroring" clearable placeholder="异常" style="width:120px;margin-right:10px;margin-bottom:10px;" size="mini">
-                                            <el-option
-                                                v-for="item in errorList"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                        <el-input
-                                            size="mini"
-                                            placeholder="国家"
-                                            style="width:100px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.country"
-                                            clearable>
-                                        </el-input>
-                                        <el-input
-                                            size="mini"
-                                            placeholder="备注"
-                                            style="width:150px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.anymessage"
-                                            clearable>
-                                        </el-input>
-                                        <el-input
-                                            size="mini"
-                                            placeholder="域名"
-                                            style="width:150px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.domain"
-                                            clearable>
-                                        </el-input>
-                                        <el-input
-                                            size="mini"
-                                            placeholder="URL"
-                                            style="width:200px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.url"
-                                            clearable>
-                                        </el-input>
-                                        <el-checkbox class="item-checkbox" v-model="searchData.is_url" size="mini" border>精确</el-checkbox>
-                                        <el-input
-                                            size="mini"
-                                            placeholder="ID"
-                                            style="width:80px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.messageid"
-                                            clearable>
-                                        </el-input>
-                                        <el-input
-                                            size="mini"
-                                            placeholder="客户姓名/称呼"
-                                            style="width:100px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.custormname"
-                                            clearable>
-                                        </el-input>
-                                        <el-input
-                                            size="mini"
-                                            placeholder="Email"
-                                            style="width:100px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.custormemail"
-                                            clearable>
-                                        </el-input>
-                                        <el-input
-                                            size="mini"
-                                            placeholder="电话"
-                                            style="width:110px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.custormphone"
-                                            clearable>
-                                        </el-input>
-                                        <el-input
-                                            size="mini"
-                                            placeholder="来自IP"
-                                            style="width:150px;margin-right:10px;margin-bottom:10px;"
-                                            v-model="searchData.ip"
-                                            clearable>
-                                        </el-input>
-                                        <el-checkbox class="item-checkbox" v-model="searchData.effective" size="mini" border>只显示有效</el-checkbox>
-                                        <el-checkbox class="item-checkbox" v-model="searchData.is_adduser" size="mini" border>只显示我添加的（客服）</el-checkbox>
-                                        <div class="search-panelThree" style="display:inline-block">
-                                            <span style="float:left;line-height:28px;font-size:12px;">显示条数：</span>
+                                        <div class="item-search EnphoneSearchThree">
+                                            <el-date-picker
+                                                v-model="searchData.date"
+                                                size="mini"
+                                                type="daterange"
+                                                align="right"
+                                                style="width:250px;margin-right:10px;margin-bottom:10px;vertical-align: top;"
+                                                value-format = "yyyy-MM-dd"
+                                                unlink-panels
+                                                range-separator="至"
+                                                start-placeholder="开始日期"
+                                                end-placeholder="结束日期"
+                                                :picker-options="pickerRangeOptions">
+                                            </el-date-picker>
+                                            <el-select v-model="searchData.timeing" clearable placeholder="时段" style="width:70px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                                <el-option
+                                                    v-for="item in timeList"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                            <el-select v-model="searchData.mode" clearable placeholder="渠道" style="width:110px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                                <el-option
+                                                    v-for="item in sourceList"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                            <el-select v-model="searchData.device" clearable placeholder="设备" style="width:80px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                                <el-option
+                                                    v-for="item in deviceList"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                            <el-select v-model="searchData.producttype_id" clearable placeholder="产品分类" style="width:100px;margin-right:10px;margin-bottom:10px;" @change="currentCateChange" size="mini">
+                                                <el-option
+                                                    v-for="item in cateList"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                            <el-select v-model="searchData.productid" clearable placeholder="产品" style="width:100px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                                <el-option
+                                                    v-for="item in productList"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                            <el-select v-model="searchData.feedback" clearable placeholder="反馈" style="width:100px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                                <el-option
+                                                    v-for="item in feedbackList"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                            <el-select v-model="searchData.level_id" clearable placeholder="首次级别" style="width:90px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                                <el-option
+                                                    v-for="item in levelList"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                            <el-select v-model="searchData.erroring" clearable placeholder="异常" style="width:120px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                                <el-option
+                                                    v-for="item in errorList"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                </el-option>
+                                            </el-select>
                                             <el-input
                                                 size="mini"
-                                                style="width:40px;"
-                                                v-model="searchData.limit"
+                                                placeholder="国家"
+                                                style="width:100px;margin-right:10px;margin-bottom:10px;"
+                                                v-model="searchData.country"
                                                 clearable>
                                             </el-input>
-                                        </div>
-                                    </div> 
-                                    <div class="item-search  EnphoneSearchTwo flex-wrap">
-                                        <el-checkbox class="item-checkbox" v-model="searchData.is_group" size="mini" border>分组</el-checkbox>
-                                        <div class="team-list customRadio small">
-                                            <span class="item-clues" v-for="item in groupurlproductList" v-bind:class="item.isOn?'active':''" v-bind:key="item.value" v-on:click="groupurlproductClick(item.value)"><i></i>{{item.label}}</span>
-                                        </div>
-                                        <div class="search-panelThree flex-content">
-                                            <span style="float:left;line-height:28px;font-size:12px;">排序：</span>
-                                            <el-radio-group class="team-list" v-model="searchData.sort" size="mini">
-                                                <el-radio class="item-radio" label="asc" border>升序</el-radio>
-                                                <el-radio class="item-radio" label="desc" border>降序</el-radio>
-                                            </el-radio-group>
-                                        </div>
-                                    </div> 
-                                    <div class="clues-info flex-wrap">
-                                        <div class="clues-infoFl flex-content">
-                                            <p v-if="isClues"> <span class="item-span-1">共找到： <strong>{{infoData.allcount}}</strong> 条，有效 <strong>{{infoData.effectivecount}}</strong> 条， 已反馈 <strong>{{infoData.hassaycountscore}}</strong> 分，意向客户 <strong>{{infoData.meancustormscore}}</strong> 分 ，未反馈 <strong>{{infoData.nosaycount}}</strong> 条，共计 <strong>{{infoData.nosaycountscore}}</strong> 分，总分 <strong>{{infoData.allcountscore}}</strong> 分 ！ [A]砂石：<strong>{{infoData.producttypecount1}}</strong>条，  [B]选矿/建材：<strong>{{infoData.producttypecount2}}</strong>条，  [C]磨粉/烘干/压球：<strong>{{infoData.producttypecount3}}</strong>条，  [其他]：<strong>{{infoData.producttypecount4}}</strong>条</span></p>
-                                            
-                                            <p v-if="isUrl"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>条URL，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                                            <p v-if="isProduct"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                                            <p v-if="isCountry"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个国家，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                                            <p v-if="isContinent"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个州，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                                            <p v-if="isGroup"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个小组，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                                            <p v-if="isProducttype"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品分类，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
-                                        </div>
-                                        <div class="clues-title-btn">
-                                            <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="enCluesSearchData"><i class="svg-i" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
-                                            <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
-                                            <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled"  @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
-                                        </div>
-                                    </div> 
+                                            <el-input
+                                                size="mini"
+                                                placeholder="备注"
+                                                style="width:150px;margin-right:10px;margin-bottom:10px;"
+                                                v-model="searchData.anymessage"
+                                                clearable>
+                                            </el-input>
+                                            <el-input
+                                                size="mini"
+                                                placeholder="域名"
+                                                style="width:150px;margin-right:10px;margin-bottom:10px;"
+                                                v-model="searchData.domain"
+                                                clearable>
+                                            </el-input>
+                                            <el-input
+                                                size="mini"
+                                                placeholder="URL"
+                                                style="width:200px;margin-right:10px;margin-bottom:10px;"
+                                                v-model="searchData.url"
+                                                clearable>
+                                            </el-input>
+                                            <el-checkbox class="item-checkbox" v-model="searchData.is_url" size="mini" border>精确</el-checkbox>
+                                            <el-input
+                                                size="mini"
+                                                placeholder="ID"
+                                                style="width:80px;margin-right:10px;margin-bottom:10px;"
+                                                v-model="searchData.messageid"
+                                                clearable>
+                                            </el-input>
+                                            <el-input
+                                                size="mini"
+                                                placeholder="客户姓名/称呼"
+                                                style="width:100px;margin-right:10px;margin-bottom:10px;"
+                                                v-model="searchData.custormname"
+                                                clearable>
+                                            </el-input>
+                                            <el-input
+                                                size="mini"
+                                                placeholder="Email"
+                                                style="width:100px;margin-right:10px;margin-bottom:10px;"
+                                                v-model="searchData.custormemail"
+                                                clearable>
+                                            </el-input>
+                                            <el-input
+                                                size="mini"
+                                                placeholder="电话"
+                                                style="width:110px;margin-right:10px;margin-bottom:10px;"
+                                                v-model="searchData.custormphone"
+                                                clearable>
+                                            </el-input>
+                                            <el-input
+                                                size="mini"
+                                                placeholder="来自IP"
+                                                style="width:150px;margin-right:10px;margin-bottom:10px;"
+                                                v-model="searchData.ip"
+                                                clearable>
+                                            </el-input>
+                                            <el-checkbox class="item-checkbox" v-model="searchData.effective" size="mini" border>只显示有效</el-checkbox>
+                                            <el-checkbox class="item-checkbox" v-model="searchData.is_adduser" size="mini" border>只显示我添加的（客服）</el-checkbox>
+                                            <div class="search-panelThree" style="display:inline-block">
+                                                <span style="float:left;line-height:28px;font-size:12px;">显示条数：</span>
+                                                <el-input
+                                                    size="mini"
+                                                    style="width:40px;"
+                                                    v-model="searchData.limit"
+                                                    clearable>
+                                                </el-input>
+                                            </div>
+                                        </div> 
+                                        <div class="item-search  EnphoneSearchTwo flex-wrap">
+                                            <el-checkbox class="item-checkbox" v-model="searchData.is_group" size="mini" border>分组</el-checkbox>
+                                            <div class="team-list customRadio small">
+                                                <span class="item-clues" v-for="item in groupurlproductList" v-bind:class="item.isOn?'active':''" v-bind:key="item.value" v-on:click="groupurlproductClick(item.value)"><i></i>{{item.label}}</span>
+                                            </div>
+                                            <div class="search-panelThree flex-content">
+                                                <span style="float:left;line-height:28px;font-size:12px;">排序：</span>
+                                                <el-radio-group class="team-list" v-model="searchData.sort" size="mini">
+                                                    <el-radio class="item-radio" label="asc" border>升序</el-radio>
+                                                    <el-radio class="item-radio" label="desc" border>降序</el-radio>
+                                                </el-radio-group>
+                                            </div>
+                                        </div> 
+                                        <div class="clues-info flex-wrap">
+                                            <div class="clues-infoFl flex-content">
+                                                <p v-if="isClues"> <span class="item-span-1">共找到： <strong>{{infoData.allcount}}</strong> 条，有效 <strong>{{infoData.effectivecount}}</strong> 条， 已反馈 <strong>{{infoData.hassaycountscore}}</strong> 分，意向客户 <strong>{{infoData.meancustormscore}}</strong> 分 ，未反馈 <strong>{{infoData.nosaycount}}</strong> 条，共计 <strong>{{infoData.nosaycountscore}}</strong> 分，总分 <strong>{{infoData.allcountscore}}</strong> 分 ！ [A]砂石：<strong>{{infoData.producttypecount1}}</strong>条，  [B]选矿/建材：<strong>{{infoData.producttypecount2}}</strong>条，  [C]磨粉/烘干/压球：<strong>{{infoData.producttypecount3}}</strong>条，  [其他]：<strong>{{infoData.producttypecount4}}</strong>条</span></p>
+                                                
+                                                <p v-if="isUrl"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>条URL，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                                                <p v-if="isProduct"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                                                <p v-if="isCountry"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个国家，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                                                <p v-if="isContinent"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个州，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                                                <p v-if="isGroup"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个小组，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                                                <p v-if="isProducttype"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品分类，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                                            </div>
+                                            <div class="clues-title-btn">
+                                                <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="enCluesSearchData"><i class="svg-i" ><svg-icon icon-class="planeWhite" /></i>搜索</el-button>
+                                                <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+                                                <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled"  @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                                            </div>
+                                        </div> 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-content" ref="tableContent">
-                            <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
-                                <div class="table-mask"></div>                       
-                                <el-table
-                                    v-if="isClues"
-                                    key="a"
-                                    ref="simpleTable"
-                                    :data="tableData"
-                                    tooltip-effect="dark"
-                                    stripe
-                                    class="SiteTable EntableColor"
-                                    style="width: 100%"
-                                    :style="'min-height:'+minHeight+'px;'"
-                                    @selection-change="handleSelectionChange"
-                                  >
-                                  <el-table-column
-                                    prop="id"
-                                    label="ID"
-                                    width="80"
-                                    >
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="xuntime"
-                                    label="品牌"
-                                    width="100"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="table-text">
-                                        <p>{{scope.row.brandname}}</p>
-                                        <p>{{scope.row.phonenumber}}</p>
-                                      </div>
-                                    </template>
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="xuntime"
-                                    label="时间"
-                                    width="200"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="table-text">
-                                        <p>时段：{{scope.row.timeing}}</p>
-                                        <p class="EnColor02">星期：{{scope.row.weekday}}</p>
-                                        <p>本地：{{scope.row.xuntime}}</p>
-                                        <p>当地：{{scope.row.foreigntime}}</p>
-                                      </div>
-                                    </template>
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="sourcename"
-                                    label="来源网站"
-                                    width="100"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="table-text">
-                                        <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
-                                        <p>{{scope.row.sourcename}}</p>
-                                        <p>{{scope.row.messagetype}}</p>
-                                      </div>
-                                    </template>
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="sourcename"
-                                    label="大洲/地区/IP"
-                                    width="150"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="table-text">
-                                        <p><span class="EnColor05">大洲：</span>{{scope.row.continent}}</p>
-                                        <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
-                                        <p><span class="EnColor05">轨迹：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip">IP</a></p>
-                                        <p><span class="EnColor05">设备：</span>{{scope.row.device}}</p>
-                                      </div>
-                                    </template>
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="keyproduct"
-                                    label="类型/产品"
-                                    min-width="150"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="table-text">
-                                        <p><span class="EnColor05">产品：</span><span :style="'font-weight:bold;color:'+scope.row.producttypecolor">{{scope.row.producttypename}}</span>/{{scope.row.keyproduct}}</p>
-                                        <p class="EnColor05"><span>物料：</span>{{scope.row.material}}</p>
-                                        <p class="EnColor05"><span>产量：</span>{{scope.row.production}}</p>
-                                        <p class="EnColor05"><span>进料：</span>{{scope.row.infeed}}</p>
-                                        <p class="EnColor05"><span>出料：</span>{{scope.row.outfeed}}</p>
-                                      </div>
-                                    </template>
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="effective"
-                                    label="有效/原因"
-                                    width="100"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                                      <div class="table-text" v-if="!scope.row.isEffective"><p>{{scope.row.invalidcause}}<span style="color:#E88401;">{{scope.row.noeffectivetime}}</span></p></div>
-                                    </template>
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="levelname"
-                                    label="首次级别/二次判定"
-                                    min-width="140"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="table-text">
-                                        <p class="table-tag"><span class="EnColor05">初次：</span><span class="level"  @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></p>
-                                        <p><span class="EnColor05">性质：</span>{{scope.row.ennaturename?scope.row.ennaturename:'未判定'}}</p>
-                                        <p><span class="EnColor05">需求：</span>{{scope.row.enxunpricename?scope.row.enxunpricename:'未判定'}}</p>
-                                        <p><span class="EnColor05">状态：</span>{{scope.row.managestatus==1?'':'已开始处理'}}</p>
-                                        <p><span class="EnColor05">异常：</span>{{scope.row.erroring}}</p>
-                                      </div>
-                                    </template>
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="xunremark"
-                                    label="备注"
-                                    min-width="150"
-                                    >
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="addusername"
-                                    label="添加人"
-                                    width="100"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="table-text">
-                                        <p>{{scope.row.addusername}}</p>
-                                      </div>
-                                    </template>
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="hassale"
-                                    label="业务员"
-                                    width="80"
-                                    >
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="addtime"
-                                    label="添/分/改/业务时间"
-                                    width="160"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="table-text">
-                                        <p>{{scope.row.addtime}}</p>
-                                        <p>{{scope.row.allottime}}</p>
-                                        <p>{{scope.row.updatetime}}</p>
-                                        <p style="color:red;">{{scope.row.managetime}}</p>
-                                      </div>
-                                    </template>
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="score"
-                                    label="积分"
-                                    min-width="80"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
-                                    </template>
-                                  </el-table-column>
-                                  <el-table-column
-                                    key="d"
-                                    prop="searchword"
-                                    label="备注"
-                                    min-width="90"
-                                    >
-                                    <template slot-scope="scope">
-                                      <div class="table-input">
-                                        <el-input size="small" class="tips-input-2" disabled v-model="scope.row.remark1"></el-input>
-                                        <el-input size="small" class="tips-input-3" disabled v-model="scope.row.remark2"></el-input>
-                                        <el-input size="small" class="tips-input-4" disabled v-model="scope.row.remark3"></el-input>
-                                      </div>
-                                    </template>
-                                  </el-table-column>
-                                  <el-table-column
-                                    v-if="menuButtonPermit.includes('Enphone_edit')"
-                                    width="90"
-                                    align="center"
-                                    prop="operations"
-                                    fixed="right"
-                                    label="操作">
-                                    <template #default="scope">
-                                      <div class="table-button">
-                                        <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')">修改</el-button>
-                                      </div>
-                                    </template>
-                                  </el-table-column>
-                                </el-table>
-                                <el-table
-                                    v-if="isUrl"
-                                    key="b"
-                                    ref="simpleTable"
-                                    :data="tableData"
-                                    class="SiteTable"
-                                    tooltip-effect="dark"
-                                    stripe
-                                    style="width: 100%"
-                                    :style="'min-height:'+minHeight+'px;'"
-                                    >
-                                    <el-table-column
-                                        prop="url"
-                                        label="按URL"
-                                        min-width="200"
+                            <div class="card-content" ref="tableContent">
+                                <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
+                                    <div class="table-mask"></div>                       
+                                    <el-table
+                                        v-if="isClues"
+                                        key="a"
+                                        ref="simpleTable"
+                                        :data="tableData"
+                                        tooltip-effect="dark"
+                                        stripe
+                                        class="SiteTable EntableColor"
+                                        style="width: 100%"
+                                        :style="'min-height:'+minHeight+'px;'"
+                                        @selection-change="handleSelectionChange"
+                                      >
+                                      <el-table-column
+                                        prop="id"
+                                        label="ID"
+                                        width="80"
                                         >
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="number"
-                                        label="数量"
-                                        min-width="120"
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="xuntime"
+                                        label="品牌"
+                                        width="100"
                                         >
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="allscore"
-                                        label="积分"
-                                        min-width="120"
+                                        <template slot-scope="scope">
+                                          <div class="table-text">
+                                            <p>{{scope.row.brandname}}</p>
+                                            <p>{{scope.row.phonenumber}}</p>
+                                          </div>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="xuntime"
+                                        label="时间"
+                                        width="200"
                                         >
-                                    <template slot-scope="scope">
-                                      <div class="table-text">
-                                        <p>{{scope.row.allscore}}</p>
-                                      </div>
-                                    </template>
-                                    </el-table-column>
-                                </el-table>
-                                <el-table
-                                    v-if="isProduct"
-                                    key="c"
-                                    ref="simpleTable"
-                                    :data="tableData"
-                                    class="SiteTable"
-                                    tooltip-effect="dark"
-                                    stripe
-                                    style="width: 100%"
-                                    :style="'min-height:'+minHeight+'px;'"
-                                    >
-                                    <el-table-column
+                                        <template slot-scope="scope">
+                                          <div class="table-text">
+                                            <p>时段：{{scope.row.timeing}}</p>
+                                            <p class="EnColor02">星期：{{scope.row.weekday}}</p>
+                                            <p>本地：{{scope.row.xuntime}}</p>
+                                            <p>当地：{{scope.row.foreigntime}}</p>
+                                          </div>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="sourcename"
+                                        label="来源网站"
+                                        width="100"
+                                        >
+                                        <template slot-scope="scope">
+                                          <div class="table-text">
+                                            <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
+                                            <p>{{scope.row.sourcename}}</p>
+                                            <p>{{scope.row.messagetype}}</p>
+                                          </div>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="sourcename"
+                                        label="大洲/地区/IP"
+                                        width="150"
+                                        >
+                                        <template slot-scope="scope">
+                                          <div class="table-text">
+                                            <p><span class="EnColor05">大洲：</span>{{scope.row.continent}}</p>
+                                            <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
+                                            <p><span class="EnColor05">轨迹：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip">IP</a></p>
+                                            <p><span class="EnColor05">设备：</span>{{scope.row.device}}</p>
+                                          </div>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column
                                         prop="keyproduct"
-                                        label="按产品"
-                                        min-width="200"
+                                        label="类型/产品"
+                                        min-width="150"
                                         >
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="number"
-                                        label="数量"
-                                        min-width="120"
+                                        <template slot-scope="scope">
+                                          <div class="table-text">
+                                            <p><span class="EnColor05">产品：</span><span :style="'font-weight:bold;color:'+scope.row.producttypecolor">{{scope.row.producttypename}}</span>/{{scope.row.keyproduct}}</p>
+                                            <p class="EnColor05"><span>物料：</span>{{scope.row.material}}</p>
+                                            <p class="EnColor05"><span>产量：</span>{{scope.row.production}}</p>
+                                            <p class="EnColor05"><span>进料：</span>{{scope.row.infeed}}</p>
+                                            <p class="EnColor05"><span>出料：</span>{{scope.row.outfeed}}</p>
+                                          </div>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="effective"
+                                        label="有效/原因"
+                                        width="100"
                                         >
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="allscore"
+                                        <template slot-scope="scope">
+                                          <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
+                                          <div class="table-text" v-if="!scope.row.isEffective"><p>{{scope.row.invalidcause}}<span style="color:#E88401;">{{scope.row.noeffectivetime}}</span></p></div>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="levelname"
+                                        label="首次级别/二次判定"
+                                        min-width="140"
+                                        >
+                                        <template slot-scope="scope">
+                                          <div class="table-text">
+                                            <p class="table-tag"><span class="EnColor05">初次：</span><span class="level"  @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></p>
+                                            <p><span class="EnColor05">性质：</span>{{scope.row.ennaturename?scope.row.ennaturename:'未判定'}}</p>
+                                            <p><span class="EnColor05">需求：</span>{{scope.row.enxunpricename?scope.row.enxunpricename:'未判定'}}</p>
+                                            <p><span class="EnColor05">状态：</span>{{scope.row.managestatus==1?'':'已开始处理'}}</p>
+                                            <p><span class="EnColor05">异常：</span>{{scope.row.erroring}}</p>
+                                          </div>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="xunremark"
+                                        label="备注"
+                                        min-width="150"
+                                        >
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="addusername"
+                                        label="添加人"
+                                        width="100"
+                                        >
+                                        <template slot-scope="scope">
+                                          <div class="table-text">
+                                            <p>{{scope.row.addusername}}</p>
+                                          </div>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="hassale"
+                                        label="业务员"
+                                        width="80"
+                                        >
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="addtime"
+                                        label="添/分/改/业务时间"
+                                        width="160"
+                                        >
+                                        <template slot-scope="scope">
+                                          <div class="table-text">
+                                            <p>{{scope.row.addtime}}</p>
+                                            <p>{{scope.row.allottime}}</p>
+                                            <p>{{scope.row.updatetime}}</p>
+                                            <p style="color:red;">{{scope.row.managetime}}</p>
+                                          </div>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="score"
                                         label="积分"
-                                        min-width="120"
+                                        min-width="80"
                                         >
-                                    </el-table-column>
-                                </el-table>
-                                <el-table
-                                    v-if="isCountry"
-                                    key="d"
-                                    ref="simpleTable"
-                                    :data="tableData"
-                                    class="SiteTable"
-                                    tooltip-effect="dark"
-                                    stripe
-                                    style="width: 100%"
-                                    :style="'min-height:'+minHeight+'px;'"
-                                    >
-                                    <el-table-column
-                                        prop="country"
-                                        label="按国家"
-                                        min-width="200"
+                                        <template slot-scope="scope">
+                                          <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                        key="d"
+                                        prop="searchword"
+                                        label="备注"
+                                        min-width="90"
                                         >
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="number"
-                                        label="数量"
-                                        min-width="120"
+                                        <template slot-scope="scope">
+                                          <div class="table-input">
+                                            <el-input size="small" class="tips-input-2" disabled v-model="scope.row.remark1"></el-input>
+                                            <el-input size="small" class="tips-input-3" disabled v-model="scope.row.remark2"></el-input>
+                                            <el-input size="small" class="tips-input-4" disabled v-model="scope.row.remark3"></el-input>
+                                          </div>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                        v-if="menuButtonPermit.includes('Enphone_edit')"
+                                        width="90"
+                                        align="center"
+                                        prop="operations"
+                                        fixed="right"
+                                        label="操作">
+                                        <template #default="scope">
+                                          <div class="table-button">
+                                            <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')">修改</el-button>
+                                          </div>
+                                        </template>
+                                      </el-table-column>
+                                    </el-table>
+                                    <el-table
+                                        v-if="isUrl"
+                                        key="b"
+                                        ref="simpleTable"
+                                        :data="tableData"
+                                        class="SiteTable"
+                                        tooltip-effect="dark"
+                                        stripe
+                                        style="width: 100%"
+                                        :style="'min-height:'+minHeight+'px;'"
                                         >
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="allscore"
-                                        label="积分"
-                                        min-width="120"
+                                        <el-table-column
+                                            prop="url"
+                                            label="按URL"
+                                            min-width="200"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="number"
+                                            label="数量"
+                                            min-width="120"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="allscore"
+                                            label="积分"
+                                            min-width="120"
+                                            >
+                                        <template slot-scope="scope">
+                                          <div class="table-text">
+                                            <p>{{scope.row.allscore}}</p>
+                                          </div>
+                                        </template>
+                                        </el-table-column>
+                                    </el-table>
+                                    <el-table
+                                        v-if="isProduct"
+                                        key="c"
+                                        ref="simpleTable"
+                                        :data="tableData"
+                                        class="SiteTable"
+                                        tooltip-effect="dark"
+                                        stripe
+                                        style="width: 100%"
+                                        :style="'min-height:'+minHeight+'px;'"
                                         >
-                                    </el-table-column>
-                                </el-table>
-                                <el-table
-                                    v-if="isContinent"
-                                    key="e"
-                                    ref="simpleTable"
-                                    :data="tableData"
-                                    class="SiteTable"
-                                    tooltip-effect="dark"
-                                    stripe
-                                    style="width: 100%"
-                                    :style="'min-height:'+minHeight+'px;'"
-                                    >
-                                    <el-table-column
-                                        prop="continent"
-                                        label="按大洲"
-                                        min-width="200"
+                                        <el-table-column
+                                            prop="keyproduct"
+                                            label="按产品"
+                                            min-width="200"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="number"
+                                            label="数量"
+                                            min-width="120"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="allscore"
+                                            label="积分"
+                                            min-width="120"
+                                            >
+                                        </el-table-column>
+                                    </el-table>
+                                    <el-table
+                                        v-if="isCountry"
+                                        key="d"
+                                        ref="simpleTable"
+                                        :data="tableData"
+                                        class="SiteTable"
+                                        tooltip-effect="dark"
+                                        stripe
+                                        style="width: 100%"
+                                        :style="'min-height:'+minHeight+'px;'"
                                         >
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="number"
-                                        label="数量"
-                                        min-width="120"
+                                        <el-table-column
+                                            prop="country"
+                                            label="按国家"
+                                            min-width="200"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="number"
+                                            label="数量"
+                                            min-width="120"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="allscore"
+                                            label="积分"
+                                            min-width="120"
+                                            >
+                                        </el-table-column>
+                                    </el-table>
+                                    <el-table
+                                        v-if="isContinent"
+                                        key="e"
+                                        ref="simpleTable"
+                                        :data="tableData"
+                                        class="SiteTable"
+                                        tooltip-effect="dark"
+                                        stripe
+                                        style="width: 100%"
+                                        :style="'min-height:'+minHeight+'px;'"
                                         >
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="allscore"
-                                        label="积分"
-                                        min-width="120"
+                                        <el-table-column
+                                            prop="continent"
+                                            label="按大洲"
+                                            min-width="200"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="number"
+                                            label="数量"
+                                            min-width="120"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="allscore"
+                                            label="积分"
+                                            min-width="120"
+                                            >
+                                        </el-table-column>
+                                    </el-table>
+                                    <el-table
+                                        v-if="isGroup"
+                                        key="f"
+                                        ref="simpleTable"
+                                        :data="tableData"
+                                        class="SiteTable"
+                                        tooltip-effect="dark"
+                                        stripe
+                                        style="width: 100%"
+                                        :style="'min-height:'+minHeight+'px;'"
                                         >
-                                    </el-table-column>
-                                </el-table>
-                                <el-table
-                                    v-if="isGroup"
-                                    key="f"
-                                    ref="simpleTable"
-                                    :data="tableData"
-                                    class="SiteTable"
-                                    tooltip-effect="dark"
-                                    stripe
-                                    style="width: 100%"
-                                    :style="'min-height:'+minHeight+'px;'"
-                                    >
-                                    <el-table-column
-                                        prop="phoneid"
-                                        label="按组别"
-                                        min-width="200"
+                                        <el-table-column
+                                            prop="phoneid"
+                                            label="按组别"
+                                            min-width="200"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="number"
+                                            label="数量"
+                                            min-width="120"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="allscore"
+                                            label="积分"
+                                            min-width="120"
+                                            >
+                                        </el-table-column>
+                                    </el-table>
+                                    <el-table
+                                        v-if="isProducttype"
+                                        key="g"
+                                        ref="simpleTable"
+                                        :data="tableData"
+                                        class="SiteTable"
+                                        tooltip-effect="dark"
+                                        stripe
+                                        style="width: 100%"
+                                        :style="'min-height:'+minHeight+'px;'"
                                         >
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="number"
-                                        label="数量"
-                                        min-width="120"
-                                        >
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="allscore"
-                                        label="积分"
-                                        min-width="120"
-                                        >
-                                    </el-table-column>
-                                </el-table>
-                                <el-table
-                                    v-if="isProducttype"
-                                    key="g"
-                                    ref="simpleTable"
-                                    :data="tableData"
-                                    class="SiteTable"
-                                    tooltip-effect="dark"
-                                    stripe
-                                    style="width: 100%"
-                                    :style="'min-height:'+minHeight+'px;'"
-                                    >
-                                    <el-table-column
-                                        prop="producttypename"
-                                        label="按产品分类"
-                                        min-width="200"
-                                        >
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="number"
-                                        label="数量"
-                                        min-width="120"
-                                        >
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="allscore"
-                                        label="积分"
-                                        min-width="120"
-                                        >
-                                    </el-table-column>
-                                </el-table>
+                                        <el-table-column
+                                            prop="producttypename"
+                                            label="按产品分类"
+                                            min-width="200"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="number"
+                                            label="数量"
+                                            min-width="120"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="allscore"
+                                            label="积分"
+                                            min-width="120"
+                                            >
+                                        </el-table-column>
+                                    </el-table>
+                                </div>
+                                <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
+                                    <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
+                                </div>
                             </div>
-                            <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
-                                <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
+                            <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
+                                <el-pagination
+                                    @size-change="handleSizeChange"
+                                    :page-sizes="pageSizeList"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="searchData.page"
+                                    :layout="'total, sizes, prev, pager, next, jumper'"
+                                    :total="totalDataNum">
+                                </el-pagination>
                             </div>
-                        </div>
-                        <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
-                            <el-pagination
-                                @size-change="handleSizeChange"
-                                :page-sizes="pageSizeList"
-                                @current-change="handleCurrentChange"
-                                :current-page="searchData.page"
-                                :layout="'total, sizes, prev, pager, next, jumper'"
-                                :total="totalDataNum">
-                            </el-pagination>
-                        </div>
-                    </el-card>  
-                </div> 
-            </div>
-        </div>     
-        <el-backtop target=".scroll-panel"></el-backtop>
+                        </el-card>  
+                    </div> 
+                </div>
+            </div>     
+            <el-backtop target=".scroll-panel"></el-backtop>
+        </div>
         <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="400px">
             <el-form :inline="true" :model="exportForm">
                 <el-form-item label="文件名称：" :label-width="formLabelWidth">
@@ -651,6 +673,18 @@ export default {
   data() {
     return {
       breadcrumbList:[],
+      defaultData:{
+        custorAndsalesmwarn:[],
+        custormwarn:[],
+        saleswarning:[],
+      },
+      currentKey:null,
+      linkAll:{
+        todayNum:0,
+        yestodayNum:0,
+        monthNum:0,
+        unAllotNum:0,
+      },
         minHeight:0,
         menuButtonPermit:[],
         tableData:[],
@@ -982,6 +1016,74 @@ export default {
       $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
+    // 右侧标题-左侧电话括号小数字
+    leftPhoto(){
+      var $this=this;
+      $this.loadingFun();
+      $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
+        if(response){
+          if(response.status){
+              $this.linkAll.todayNum = response.alltodaynumber;
+              $this.linkAll.yestodayNum = response.alllastnumber;
+              $this.linkAll.monthNum = response.allnumber;
+              $this.linkAll.unAllotNum = response.nodealcount;
+              var brand = "";
+              var brandID = null;              
+              if($this.$route.query.phoneID){
+                response.data.forEach(function(item,index){
+                  brand = item.brandname;
+                  item.phone.forEach(function(item1,index1){
+                    if(item1.id == $this.phoneID&&item1.waitstatus==$this.searchData.waitstatus){
+                      $this.currentID = item1.id;
+                      item1.isOn = true;
+                      brandID = item.id;
+                      if(item1.phonenumber.indexOf("-")!=-1){
+                        $this.currentPhone = item1.phonenumber;
+                      }else{
+                        $this.currentPhone = brand+"-"+item1.phonenumber;
+                      }
+                    }else{
+                      item1.isOn = false;
+                    }
+                  });
+                });
+              }else{
+                if($this.$route.query.key){
+                  response.data.forEach(function(item,index){
+                    item.phone.forEach(function(item1,index1){
+                      item.isOn = false;
+                    });
+                  });
+                  if($this.$route.query.key=="all"){
+                    $this.currentPhone = "查看所有";
+                  }else{
+                    $this.currentPhone = "所有未分配";
+                  }
+                }
+              }
+              $this.brandID = brandID;
+              $this.defaultData = response;
+              $this.initPage();
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          }
+        }
+      });
+    },
     // 初始化页面信息
     initPage(){
       var $this = this;
@@ -1065,7 +1167,7 @@ export default {
               $this.menuButtonPermit.push(item.action_route);
             });
             if($this.menuButtonPermit.includes('Enphone_phoneindex')&&$this.menuButtonPermit.includes('Enphone_search')){
-                $this.initPage();
+                $this.leftPhoto();
             }else{
               $this.$message({
                 showClose: true,
@@ -1093,7 +1195,7 @@ export default {
         }
       });
     },
-    // 电商一部全选
+    // 电商全选
     handleCheckAllOneChange(dept_id){
       var $this = this;
       var deptOneId=$this.deptOneId;
@@ -1441,6 +1543,14 @@ export default {
         $this.searchData.custormphone="";
         $this.searchData.ip="";
         $this.searchData.phoneid=[];
+        $this.deptOneId=[];        
+        $this.depart.forEach(function(item,index){
+          item.isOn=false;
+          item.isOnshow=false;          
+          item.child.forEach(function(items,indexs){
+             items.isOn=false;
+          });      
+        });
         $this.searchData.timeing="";
         $this.searchData.device="";
         $this.searchData.mode="";
@@ -1770,6 +1880,30 @@ export default {
       $this.scrollPosition.isMouseDown = false;
       $this.scrollPosition.startPageX = 0;
       $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
+    },
+    // 搜索统计数据跳转
+    searchStatisticsData(){
+      var $this = this;
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/searchClues'});
+    },
+    // 统计分析跳转
+    statisticsClues(){
+      var $this = this;
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/statisticClues'});
+      window.open(routeUrl.href,'_self');
+    },
+    // 电话点击跳转列表
+    phoneJump(id,waitstatus){
+      var $this=this;
+      var queryObj = {};
+      if(id==""){
+        queryObj.key=waitstatus;
+      }else{
+        queryObj.phoneID = id;
+        queryObj.waitstatus = waitstatus;
+      }
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/phoneindex',query:queryObj});
+      window.open(routeUrl.href,'_self');
     },
   }
 }

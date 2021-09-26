@@ -347,12 +347,15 @@
     .target-chart{
         margin-right:15px;
         .target-chartItem{
-            padding:0px 45px 0px 0px;
+            padding:25px 0px 0px 0px;
             background:#fff;
             border-radius:8px;
             position: relative;
             height: 275px;
             width:550px;
+            #radialBarChart{
+                float:left; width:285px;
+            }
             .deptData{
                 position: absolute;
                 right:45px;
@@ -443,8 +446,7 @@
                         strong{color:#3dd195;}
                     }
                 }
-            }
-                
+            }                
         }
 
     }
@@ -632,6 +634,10 @@
                     display: flex;
                     flex-direction: row;
                     align-items: center;
+                    padding: 25px;
+                    #radialBarChart{
+                        width:450px;
+                    }
                     .deptData{
                         flex:1;
                         position:relative;

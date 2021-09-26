@@ -129,6 +129,20 @@
                         </dd>
                       </dl>
                       <dl style="width: 250px;">
+                        <dt>纷享销客编号：</dt>
+                        <dd>
+                          <el-input
+                              placeholder="纷享销客编号"
+                              type="textarea"
+                              :rows="4"
+                              resize="none"
+                              size="small"
+                              v-model="formData.shareinfo"
+                              clearable>
+                          </el-input>
+                        </dd>
+                      </dl>
+                      <dl style="width: 250px;">
                         <dt>原因：</dt>
                         <dd>
                           <el-input
@@ -261,6 +275,7 @@ export default {
         keying:[],
         useing:"",
         custormremark:"",
+        shareinfo:'',
         custormcause:"",
         invalidcause:"",
         phoneid:"",
@@ -391,6 +406,7 @@ export default {
       formData.effective = $this.formData.effective?1:2;
       formData.useing = $this.formData.useing;
       formData.custormremark = $this.formData.custormremark;
+      formData.shareinfo = $this.formData.shareinfo;      
       formData.custormcause = $this.formData.custormcause;
       formData.invalidcause = $this.formData.invalidcause;
       formData.xuntime = $this.formData.xuntime;
@@ -430,6 +446,7 @@ export default {
       $this.formData.effective = $this.defaultInfo.effective==1?true:false;
       $this.formData.useing = $this.defaultInfo.useing;
       $this.formData.custormremark = $this.defaultInfo.custormremark;
+      $this.formData.shareinfo = $this.defaultInfo.shareinfo;
       $this.formData.custormcause = $this.defaultInfo.custormcause;
       $this.formData.invalidcause = $this.defaultInfo.invalidcause;
       $this.formData.xuntime = $this.defaultInfo.xuntime;
@@ -765,6 +782,7 @@ export default {
       $this.formData.keying=[];
       $this.formData.useing="";
       $this.formData.custormremark="";
+      $this.formData.shareinfo = "";
       $this.formData.custormcause="";
       $this.formData.invalidcause="";
       $this.formData.phoneid="";

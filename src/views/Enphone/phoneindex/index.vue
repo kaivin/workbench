@@ -1738,6 +1738,7 @@ export default {
     editTableRow(row,index){
       var $this = this;
       $this.$router.push({path:'/Enphone/addEditClues',query:{ID:row.id}});
+      window.open(routeUrl.href,'_blank');
     },
     // 提醒跳转到编辑页面
     jumpEditPage(id){

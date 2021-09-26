@@ -1,174 +1,196 @@
 ﻿
 <template>
-    <div class="page-root en-phone sale-en-phone" ref="boxPane">
-        <div class="abs-panel" ref="mainPane">
-            <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
-                <div class="true-height" ref="scrollPane">
-                    <p class="breadcrumb" ref="breadcrumbPane">
-                      <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
-                      <template v-for="item in breadcrumbList">
-                        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
-                        <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
-                      </template>
-                      <span class="breadcrumb-link"><b>-</b><span>业务员数据统计</span></span>
-                    </p>
-                    <el-card class="box-card scroll-card" shadow="hover">
-                        <div slot="header">
-                            <div class="card-header" ref="headerPane">
-                                <div class="search-wrap">
-                                    <div class="item-search">
-                                        <el-radio v-for="(item,index) in statusList" border @change="searchResult" size="small" v-bind:key="index" v-model="status" :label="item.value">{{item.label}}</el-radio>
+    <div class="page-root en-phone sale-en-phone flex-box no-padding EnphoneCard" ref="boxPane">
+        <div class="sub-router">
+          <el-scrollbar wrap-class="scrollbar-wrapper">
+            <div class="sub-wrapper">
+              <div class="side-button">
+                <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="searchStatisticsData()"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
+                <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_phonecount')" v-on:click="statisticsClues()"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
+              </div>
+              <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')">
+                  <dd v-on:click="phoneJump('','all')" v-bind:class="currentKey&&currentKey=='all'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookall')"><span>查看所有</span><i>({{linkAll.monthNum}})</i><em>({{linkAll.yestodayNum}})</em><b>({{linkAll.todayNum}})</b></dd>
+                  <dd v-on:click="phoneJump('','unAllot')" v-bind:class="currentKey&&currentKey=='unAllot'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookwaitdealall')"><span>未分配</span><i>({{linkAll.unAllotNum}})</i></dd>
+              </dl>
+              <template v-for="(item,index) in defaultData.data">
+                <dl class="phone-list" v-if="item.phone.length>0" v-bind:key="index">
+                  <dt><span>{{item.brandname}}</span></dt>
+                  <dd v-for="(phone,index) in item.phone" v-bind:class="phone.isOn?'active':''" :key="index" :title="phone.phonenumber+phone.othername" v-on:click="phoneJump(phone.id,phone.waitstatus)"><span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
+                </dl>
+              </template>
+            </div>
+          </el-scrollbar>
+        </div>
+        <div class="flex-content relative EnphoneCardFr">
+            <div class="abs-panel" ref="mainPane">
+                <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
+                    <div class="true-height" ref="scrollPane">
+                        <p class="breadcrumb" ref="breadcrumbPane">
+                          <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+                          <template v-for="item in breadcrumbList">
+                            <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+                            <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+                          </template>
+                          <span class="breadcrumb-link"><b>-</b><span>业务员数据统计</span></span>
+                        </p>
+                        <el-card class="box-card scroll-card" shadow="hover">
+                            <div slot="header">
+                                <div class="card-header" ref="headerPane">
+                                    <div class="search-wrap">
+                                        <div class="item-search">
+                                            <el-radio v-for="(item,index) in statusList" border @change="searchResult" size="small" v-bind:key="index" v-model="status" :label="item.value">{{item.label}}</el-radio>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-content" ref="tableContent">
-                            <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
-                              <div class="table-mask"></div>
-                                  <el-table
-                                      ref="simpleTable"
-                                      :data="tableData"
-                                      tooltip-effect="dark"
-                                      stripe
-                                      :style="'min-height:'+tableHeight+'px;'"
-                                      class="SiteTable"
-                                      style="width: 100%"
-                                      row-key="id"
-                                      >
-                                      <el-table-column
-                                          prop="id"
-                                          label="业务员ID"
-                                          width="90"
+                            <div class="card-content" ref="tableContent">
+                                <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
+                                  <div class="table-mask"></div>
+                                      <el-table
+                                          ref="simpleTable"
+                                          :data="tableData"
+                                          tooltip-effect="dark"
+                                          stripe
+                                          :style="'min-height:'+tableHeight+'px;'"
+                                          class="SiteTable"
+                                          style="width: 100%"
+                                          row-key="id"
                                           >
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="permit"
-                                          label="权限"
-                                          width="100"
-                                          >
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="name"
-                                          label="姓名"
-                                          width="100"
-                                          >
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="allcount"
-                                          label="询盘总数"
-                                          width="100"
-                                          >
-                                          <template slot-scope="scope">
-                                              <div class="table-text">
-                                                  <p><b style="color:#379bff">{{scope.row.allcount}}</b></p>
-                                              </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="countnodeal"
-                                          label="未处理询盘数"
-                                          width="110"
-                                          >
-                                          <template slot-scope="scope">
-                                              <div class="table-text">
-                                                  <p><b style="color:#ed475e">{{scope.row.countnodeal}}</b></p>
-                                              </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="nofeedcount"
-                                          :label="lastDate+'未反馈数'"
-                                          width="140"
-                                          >
-                                          <template slot-scope="scope">
-                                              <div class="table-text">
-                                                  <p><b style="color:#f37220">{{scope.row.nofeedcount}}</b></p>
-                                              </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="noftwordcount"
-                                          :label="lastDate+'未填富通'"
-                                          width="140"
-                                          >
-                                          <template slot-scope="scope">
-                                              <div class="table-text">
-                                                  <p><b style="color:#8e4d22">{{scope.row.noftwordcount}}</b></p>
-                                              </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="nofeednowcount"
-                                          :label="currentDate+'未反馈数'"
-                                          width="150"
-                                          >
-                                          <template slot-scope="scope">
-                                              <div class="table-text">
-                                                  <p><b style="color:#7d6c15">{{scope.row.nofeednowcount}}</b></p>
-                                              </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="noftwordnowcount"
-                                          :label="currentDate+'未填富通'"
-                                          width="150"
-                                          >
-                                          <template slot-scope="scope">
-                                              <div class="table-text">
-                                                  <p><b style="color:#848c1c">{{scope.row.noftwordnowcount}}</b></p>
-                                              </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="allotcount"
-                                          label="近2日分配询盘数"
-                                          width="140"
-                                          >
-                                          <template slot-scope="scope">
-                                              <div class="table-text">
-                                                  <p><b style="color:#349b1e">{{scope.row.allotcount}}</b></p>
-                                              </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="countnoread"
-                                          label="未读询盘数"
-                                          width="100"
-                                          >
-                                          <template slot-scope="scope">
-                                              <div class="table-text">
-                                                  <p><b style="color:#791ca2">{{scope.row.countnoread}}</b></p>
-                                              </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="countwarn"
-                                          label="提醒未处理"
-                                          width="100"
-                                          >
-                                          <template slot-scope="scope">
-                                              <div class="table-text">
-                                                  <p><b style="color:#6bd416">{{scope.row.countwarn}}</b></p>
-                                              </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="login_time"
-                                          label="上次登录时间"
-                                          min-width="160"
-                                          >
-                                      </el-table-column>
-                                  </el-table>
+                                          <el-table-column
+                                              prop="id"
+                                              label="业务员ID"
+                                              width="90"
+                                              >
+                                          </el-table-column>
+                                          <el-table-column
+                                              prop="permit"
+                                              label="权限"
+                                              width="100"
+                                              >
+                                          </el-table-column>
+                                          <el-table-column
+                                              prop="name"
+                                              label="姓名"
+                                              width="100"
+                                              >
+                                          </el-table-column>
+                                          <el-table-column
+                                              prop="allcount"
+                                              label="询盘总数"
+                                              width="100"
+                                              >
+                                              <template slot-scope="scope">
+                                                  <div class="table-text">
+                                                      <p><b style="color:#379bff">{{scope.row.allcount}}</b></p>
+                                                  </div>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column
+                                              prop="countnodeal"
+                                              label="未处理询盘数"
+                                              width="110"
+                                              >
+                                              <template slot-scope="scope">
+                                                  <div class="table-text">
+                                                      <p><b style="color:#ed475e">{{scope.row.countnodeal}}</b></p>
+                                                  </div>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column
+                                              prop="nofeedcount"
+                                              :label="lastDate+'未反馈数'"
+                                              width="140"
+                                              >
+                                              <template slot-scope="scope">
+                                                  <div class="table-text">
+                                                      <p><b style="color:#f37220">{{scope.row.nofeedcount}}</b></p>
+                                                  </div>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column
+                                              prop="noftwordcount"
+                                              :label="lastDate+'未填富通'"
+                                              width="140"
+                                              >
+                                              <template slot-scope="scope">
+                                                  <div class="table-text">
+                                                      <p><b style="color:#8e4d22">{{scope.row.noftwordcount}}</b></p>
+                                                  </div>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column
+                                              prop="nofeednowcount"
+                                              :label="currentDate+'未反馈数'"
+                                              width="150"
+                                              >
+                                              <template slot-scope="scope">
+                                                  <div class="table-text">
+                                                      <p><b style="color:#7d6c15">{{scope.row.nofeednowcount}}</b></p>
+                                                  </div>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column
+                                              prop="noftwordnowcount"
+                                              :label="currentDate+'未填富通'"
+                                              width="150"
+                                              >
+                                              <template slot-scope="scope">
+                                                  <div class="table-text">
+                                                      <p><b style="color:#848c1c">{{scope.row.noftwordnowcount}}</b></p>
+                                                  </div>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column
+                                              prop="allotcount"
+                                              label="近2日分配询盘数"
+                                              width="140"
+                                              >
+                                              <template slot-scope="scope">
+                                                  <div class="table-text">
+                                                      <p><b style="color:#349b1e">{{scope.row.allotcount}}</b></p>
+                                                  </div>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column
+                                              prop="countnoread"
+                                              label="未读询盘数"
+                                              width="100"
+                                              >
+                                              <template slot-scope="scope">
+                                                  <div class="table-text">
+                                                      <p><b style="color:#791ca2">{{scope.row.countnoread}}</b></p>
+                                                  </div>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column
+                                              prop="countwarn"
+                                              label="提醒未处理"
+                                              width="100"
+                                              >
+                                              <template slot-scope="scope">
+                                                  <div class="table-text">
+                                                      <p><b style="color:#6bd416">{{scope.row.countwarn}}</b></p>
+                                                  </div>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column
+                                              prop="login_time"
+                                              label="上次登录时间"
+                                              min-width="160"
+                                              >
+                                          </el-table-column>
+                                      </el-table>
+                                </div>
+                                <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
+                                    <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
+                                </div>
                             </div>
-                            <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
-                                <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
-                            </div>
-                        </div>
-                    </el-card>
+                        </el-card>
+                    </div>
                 </div>
             </div>
+            <el-backtop target=".scroll-panel"></el-backtop>
         </div>
-    <el-backtop target=".scroll-panel"></el-backtop>
     </div>
 </template>
 
@@ -179,6 +201,18 @@ export default {
   data() {
     return {
         breadcrumbList:[],
+      defaultData:{
+        custorAndsalesmwarn:[],
+        custormwarn:[],
+        saleswarning:[],
+      },
+      currentKey:null,
+      linkAll:{
+        todayNum:0,
+        yestodayNum:0,
+        monthNum:0,
+        unAllotNum:0,
+      },
         lastDate:"",
         currentDate:"",
         time1:'',
@@ -373,13 +407,81 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
-      $this.initPage();
+      $this.leftPhoto();
     },
     // 初始化数据
     initData(){
       var $this = this;
       $this.loadingFun();
       $this.getUserMenuButtonPermit();
+    },
+    // 右侧标题-左侧电话括号小数字
+    leftPhoto(){
+      var $this=this;
+      $this.loadingFun();
+      $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
+        if(response){
+          if(response.status){
+              $this.linkAll.todayNum = response.alltodaynumber;
+              $this.linkAll.yestodayNum = response.alllastnumber;
+              $this.linkAll.monthNum = response.allnumber;
+              $this.linkAll.unAllotNum = response.nodealcount;
+              var brand = "";
+              var brandID = null;              
+              if($this.$route.query.phoneID){
+                response.data.forEach(function(item,index){
+                  brand = item.brandname;
+                  item.phone.forEach(function(item1,index1){
+                    if(item1.id == $this.phoneID&&item1.waitstatus==$this.searchData.waitstatus){
+                      $this.currentID = item1.id;
+                      item1.isOn = true;
+                      brandID = item.id;
+                      if(item1.phonenumber.indexOf("-")!=-1){
+                        $this.currentPhone = item1.phonenumber;
+                      }else{
+                        $this.currentPhone = brand+"-"+item1.phonenumber;
+                      }
+                    }else{
+                      item1.isOn = false;
+                    }
+                  });
+                });
+              }else{
+                if($this.$route.query.key){
+                  response.data.forEach(function(item,index){
+                    item.phone.forEach(function(item1,index1){
+                      item.isOn = false;
+                    });
+                  });
+                  if($this.$route.query.key=="all"){
+                    $this.currentPhone = "查看所有";
+                  }else{
+                    $this.currentPhone = "所有未分配";
+                  }
+                }
+              }
+              $this.brandID = brandID;
+              $this.defaultData = response;
+              $this.initPage();
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          }
+        }
+      });
     },
     // 初始化页面信息
     initPage(){
@@ -426,7 +528,7 @@ export default {
               $this.menuButtonPermit.push(item.action_route);
             });
             if($this.menuButtonPermit.includes('Enphone_phonecount')){
-              $this.initPage();
+              $this.leftPhoto();
             }else{
               $this.$message({
                 showClose: true,
@@ -615,6 +717,30 @@ export default {
       $this.scrollPosition.isMouseDown = false;
       $this.scrollPosition.startPageX = 0;
       $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
+    },
+    // 搜索统计数据跳转
+    searchStatisticsData(){
+      var $this = this;
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/searchClues'});
+    },
+    // 统计分析跳转
+    statisticsClues(){
+      var $this = this;
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/statisticClues'});
+      window.open(routeUrl.href,'_self');
+    },
+    // 电话点击跳转列表
+    phoneJump(id,waitstatus){
+      var $this=this;
+      var queryObj = {};
+      if(id==""){
+        queryObj.key=waitstatus;
+      }else{
+        queryObj.phoneID = id;
+        queryObj.waitstatus = waitstatus;
+      }
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/phoneindex',query:queryObj});
+      window.open(routeUrl.href,'_self');
     },
   }
 }

@@ -1192,7 +1192,6 @@ export default {
               var routeUrl =  $this.$router.resolve({path:'/Enphone/phoneindex',query:queryObj});
               window.open(routeUrl.href,'_self');
             }
-
           }else{
             $this.$message({
               showClose: true,

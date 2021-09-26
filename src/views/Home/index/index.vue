@@ -30,14 +30,14 @@
             <div class="target-chart">
               <h3>{{language=='Module_cnStat'?'中文':'英文'}}各部门日目标</h3>
               <div class="target-chartItem">
-                  <div id="radialBarChart" style="float:left; width:285px;" class="chart-canvas"></div>
-                  <ul class="deptData">
-                      <li v-for="(item,index) in currentCluesData.targetData" :key='index' @click="handleDepart(item)">
-                          <span>{{item.name}}</span>
-                          <em>{{item.targetNum}}</em>
-                          <strong>{{item.dayNum}}</strong>
-                      </li>
-                  </ul>
+                   <div id="radialBarChart" class="chart-canvas"></div>
+                    <ul class="deptData">
+                        <li v-for="(item,index) in currentCluesData.targetData" :key='index' @click="handleDepart(item)">
+                            <span>{{item.name}}</span>
+                            <em>{{item.targetNum[0]}}</em>
+                            <strong>{{item.dayNum[0]}}</strong>
+                        </li>
+                    </ul>
               </div>
             </div>
             <div class="clues-chart flex-content">
@@ -375,19 +375,8 @@ export default {
                 var itemData = {};
                 itemData.id = item.id;
                 itemData.name = item.departname;
-                itemData.targetNum = item.daytargetnumber;
-                itemData.dayNum = item.daynumber;
-                var percent = 1;
-                if(itemData.dayNum==0){
-                  percent = 0;
-                }else{
-                  if(itemData.targetNum==0){
-                    percent = 1;
-                  }else{
-                    percent = parseFloat((item.daynumber/item.daytargetnumber).toFixed(2));
-                  }
-                }
-                itemData.percent = percent;
+                itemData.targetNum = [item.daytargetnumber];
+                itemData.dayNum = [item.daynumber];
                 departTargetNum.push(itemData);
               });
               $this.currentCluesData.targetData = departTargetNum;
@@ -460,19 +449,8 @@ export default {
                 var itemData = {};
                 itemData.id = item.id;
                 itemData.name = item.departname;
-                itemData.targetNum = item.daytargetnumber;
-                itemData.dayNum = item.daynumber;
-                var percent = 1;
-                if(itemData.dayNum==0){
-                  percent = 0;
-                }else{
-                  if(itemData.targetNum==0){
-                    percent = 1;
-                  }else{
-                    percent = parseFloat((item.daynumber/item.daytargetnumber).toFixed(2));
-                  }
-                }
-                itemData.percent = percent;
+                itemData.targetNum = [item.daytargetnumber];
+                itemData.dayNum = [item.daynumber];
                 departTargetNum.push(itemData);
               });
               $this.currentCluesData.targetData = departTargetNum;
@@ -1205,48 +1183,32 @@ export default {
         if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
           $this.radialBarPlot.changeData($this.currentCluesData.targetData);
         }else{
-          const radialBarPlot = new RadialBar('radialBarChart', {
+          const radialBarPlot = new Bullet('radialBarChart', {
             data:$this.currentCluesData.targetData,
+            measureField: 'dayNum',
+            rangeField: 'targetNum',
+            targetField: 'targetNum',
             xField: 'name',
-            yField: 'percent',
-            width:285,
-            height:285,
-            maxAngle: 360, //最大旋转角度,
-            radius: 0.8,
-            innerRadius: 0.2,
-            xAxis: false,
-            tooltip: {
-              customContent: (value, items) => {
-                if (!items || items.length <= 0) return;
-                const { data: itemData } = items[0];
-                return (
-                  `<div class='custorm-tooltip'>` +
-                  `<div class='box'>` +
-                  `<div class='title'>${itemData.name}</div>` +
-                  `<div class='tooltip-item'><span>今日总数：</span><span>${itemData.dayNum}</span></div>` +
-                  `<div class='tooltip-item'><span>今日目标：</span><span>${itemData.targetNum}</span></div>` +
-                  `</div>` +
-                  `</div>`
-                );
-              },
+            height:230,
+            color: {
+              range: '#f0efff',
+              measure: '#5B8FF9',
+              percent: '#f0efff',
             },
-            colorField: 'name',
-            color: ['#ee876d', '#f7b05b', '#1ad0b2', '#6294f9', '#3dd195'],
-            barBackground: {},
-            barStyle: { lineCap: 'round' },
-            interactions: [{ type: 'element-highlight' }, { type: 'hover-cursor' }],
-          });
-          G2.registerInteraction('hover-cursor', {
-            showEnable: [
-              { trigger: 'element:mouseenter', action: 'cursor:pointer' },
-              { trigger: 'element:mouseleave', action: 'cursor:default' },
-            ],
-          });
-          radialBarPlot.on('element:click', (...args) => {
-            $this.currentCluesData.departID = args[0].data.data.id;
-            $this.currentCluesData.departName = args[0].data.data.name;
-            $this.statDataApi();
-          });
+            xAxis: {
+              line: null,
+            },
+            yAxis: false,
+            layout: 'vertical',
+            label: {
+              measure: {
+                position: 'middle',
+                style: {
+                  fill: '#333',
+                },
+              },
+            }, 
+          });           
           $this.radialBarPlot = radialBarPlot;
           radialBarPlot.render();
         }
