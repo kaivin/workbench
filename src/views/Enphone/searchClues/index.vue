@@ -67,7 +67,7 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.mode" clearable placeholder="渠道" style="width:110px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.mode" clearable placeholder="渠道" style="width:125px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in sourceList"
                                                     :key="item.value"
@@ -75,7 +75,7 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.device" clearable placeholder="设备" style="width:80px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.device" clearable placeholder="设备" style="width:90px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in deviceList"
                                                     :key="item.value"
@@ -91,7 +91,7 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.productid" clearable placeholder="产品" style="width:100px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.productid" clearable placeholder="产品" style="width:130px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in productList"
                                                     :key="item.value"
@@ -115,7 +115,7 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.erroring" clearable placeholder="异常" style="width:120px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.erroring" clearable placeholder="异常" style="width:160px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in errorList"
                                                     :key="item.value"
@@ -902,6 +902,12 @@ export default {
     var $this = this;
     $this.getBreadcrumbList();
     $this.initData();
+    document.onkeydown = function(e) {
+    var key = window.event.keyCode;
+      if (key == 13) {
+        $this.enCluesSearchData();
+      }
+    }
   },
   updated(){
     var $this =this;
@@ -1001,7 +1007,7 @@ export default {
     setTableHeight(){
       var $this = this;
       $this.minHeight = 0;      
-      var headerHeight = $this.$refs.headerPane.offsetHeight+62;
+      var headerHeight = $this.$refs.headerPane.offsetHeight+45;
       var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       $this.minHeight = screenHeight-headerHeight-breadcrumbHeight-30;
@@ -1146,6 +1152,9 @@ export default {
                   cateList.push(itemData);
               });
               $this.cateList = cateList;
+              $this.$nextTick(function () {
+                $this.setTableHeight();
+              })
               $this.isLoading.close();
           }else{
             $this.$message({

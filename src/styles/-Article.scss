@@ -705,6 +705,18 @@
                     &.back{
                         background: $pink;
                     }
+                    &.logEdit{
+                        background:-moz-linear-gradient(135deg, #fdb21b 0%, #f9a500 100%);
+                        background:-webkit-linear-gradient(135deg, #fdb21b 0%, #f9a500 100%);
+                        background:-o-linear-gradient(135deg, #fdb21b 0%, #f9a500 100%);
+                        background:-ms-linear-gradient(135deg, #fdb21b 0%, #f9a500 100%);
+                        background:linear-gradient(135deg, #fdb21b 0%, #f9a500 100%);
+                        cursor: pointer;
+                        transition: all 0.5s;
+                        &:hover{
+                            opacity: 0.6;
+                        }
+                    }
                 }
             }
             .ArticleSixFlTopTagFr{

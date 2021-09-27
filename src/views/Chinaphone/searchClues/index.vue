@@ -687,6 +687,12 @@ export default {
     var $this = this;
     $this.getBreadcrumbList();
     $this.initData();
+    document.onkeydown = function(e) {
+    var key = window.event.keyCode;
+      if (key == 13) {
+        $this.searchResult();
+      }
+    }
   },
   updated(){
     var $this =this;
