@@ -71,10 +71,12 @@
                                     </dd>
                                   </dl>
                                   <dl style="width:194px;">
-                                    <dt>客户Email：</dt>
+                                    <dt>客户Email：<span style="font-size:12px;">多个Email请用“,”分割</span></dt>
                                     <dd>
                                       <el-input
                                           placeholder="邮箱"
+                                          type="textarea"
+                                          autosize
                                           size="small"
                                           v-model="formData.custormemail"
                                           clearable>
@@ -82,10 +84,12 @@
                                     </dd>
                                   </dl>
                                   <dl style="width:194px;">
-                                    <dt>客户电话：</dt>
+                                    <dt>客户电话：<span style="font-size:12px;">多个电话请用“,”分割</span></dt>
                                     <dd>
                                       <el-input
                                           placeholder="电话"
+                                          type="textarea"
+                                          autosize
                                           size="small"
                                           v-model="formData.custormphone"
                                           clearable>
@@ -1106,12 +1110,17 @@ export default {
             });
             $this.priceList = priceList;
             var salesuserlist = [];
+            var salesuserlistObj={
+              label:'无',
+              value:0
+            }
             response.userlist.forEach(function(item,index){
               var itemData = {};
               itemData.label = item.name;
               itemData.value = item.id;
               salesuserlist.push(itemData);
             });
+              salesuserlist.push(salesuserlistObj);
             $this.salesuserlist = salesuserlist;
             if($this.ID){
               $this.initCluesInfo();
@@ -1133,12 +1142,17 @@ export default {
           if(response.status){
             if(response.salesuser.length>0){
               var salesuserlist=[];
-              response.salesuser.forEach(function(item,index){
+              var salesuserlistObj={
+                label:'无',
+                value:0
+              }
+            response.salesuser.forEach(function(item,index){
                   var itemChildren = {};
                   itemChildren.label = item.name;
                   itemChildren.value = item.id;
                   salesuserlist.push(itemChildren);
               });
+              salesuserlist.push(salesuserlistObj);
               $this.salesuserlist = salesuserlist;
             }else{
               $this.salesuserlist=[]

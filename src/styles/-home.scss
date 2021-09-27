@@ -347,14 +347,14 @@
     .target-chart{
         margin-right:15px;
         .target-chartItem{
-            padding:25px 0px 0px 0px;
+            padding:25px;
             background:#fff;
             border-radius:8px;
             position: relative;
             height: 275px;
             width:630px;
             #radialBarChart{
-                float:left; width:365px;
+                float:left; width:335px;
             }
             .deptData{
                 position: absolute;
@@ -367,10 +367,13 @@
                     display: block;
                     border-bottom:1px solid #dee0e4;
                     line-height:30px;
-                    padding-top:8px;
-                    padding-bottom:8px;
+                    padding-top:9px;
+                    padding-bottom:9px;
                     text-align: right;
                     cursor: pointer;
+                    &:first-child{
+                        padding-top:0px;
+                    }
                     span{
                         float: left;
                         font-size: 14px;
