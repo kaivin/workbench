@@ -223,6 +223,11 @@ export default {
       'userInfo',
     ]),
   },
+  beforeCreate(){
+    // if(this.$router.currentRoute.query.status){
+    //   window.location.reload();
+    // }
+  },
   created() {
     var $this = this;
     $this.initData();

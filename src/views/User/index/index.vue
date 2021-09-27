@@ -142,6 +142,7 @@
                               label="操作">
                               <template #default="scope">
                                 <div class="table-button">
+                                  <el-button size="mini" @click="userLogin(scope.row,scope.$index)" v-if="menuButtonPermit.includes('User_tabuser')">用户登陆</el-button>
                                   <el-button size="mini" @click="allotRole(scope.row,scope.$index)" v-if="menuButtonPermit.includes('User_getrole')">分配角色</el-button>
                                   <el-button size="mini" @click="resetPassword(scope.row,scope.$index)" v-if="menuButtonPermit.includes('User_resetpwd')">重置密码</el-button>
                                   <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('User_edit')">编辑</el-button>
@@ -280,7 +281,7 @@
   </div>
 </template>
 <script>
-import { validEmail,validPhone } from '@/utils/validate';
+import router from '@/router'
 import { mapGetters } from 'vuex'
 export default {
   name: 'userIndex',
@@ -654,6 +655,9 @@ export default {
               }
               if($this.menuButtonPermit.includes('User_showhide')){
                 operationsWidth+=66;
+              }
+              if($this.menuButtonPermit.includes('User_tabuser')){
+                operationsWidth+=90;
               }
               $this.operationsWidth = "" + operationsWidth;
               $this.getDepartList();
@@ -1081,6 +1085,44 @@ export default {
       this.loadingFun();
       this.searchData.page = val;
       this.initPage();
+    },
+    // 切换用户登陆
+    userLogin(row,index){
+      var $this = this;
+      $this.$store.dispatch('user/changeUserLoginAction', {id:row.id}).then(response=>{
+        if(response.status){
+          $this.$store.dispatch('login/changeLogin', response).then(res=>{
+            if(res.status){
+              $this.$store.dispatch('api/getRouteAction').then(res1=>{
+                if(res1.status){
+                  if(res1.data.length>0){
+                    $this.$store.dispatch('permission/generateRoutes', res1.data).then(res2=>{
+                      if(res2.length>0){
+                        router.addRoutes(res2);
+                        router.addRoutes([{path: '*',name:'error404',redirect:"/404",meta: {title: '404', icon: null,hidden:true,keepAlive:false }}]);
+                        $this.$router.push({ path: '/Home/index' });
+                      }
+                    });
+                  }
+                }else{
+                  $this.$message({
+                    message: response.info,
+                    type: 'error',
+                    duration: 5 * 1000
+                  });
+                  $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+                }
+              });
+            }
+          });
+        }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
     },
     // 获取部门数据
     getBrandList(){

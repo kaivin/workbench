@@ -22,11 +22,33 @@
         </tr>
         <tr>
             <td><span>用户名：</span></td>
-            <td>{{userData.username}}<el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="editName" v-if="(menuButtonPermit.includes('User_personuser'))">修改用户名</el-button></td>
+            <td>{{userData.username}}<el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="editName" v-if="(menuButtonPermit.includes('User_personuser'))">修改用户名</el-button>
+              <el-popover
+                placement="right"
+                width="440"
+                trigger="hover">
+                <div class="remarks-content">
+                  <p>用户名格式：只能包含大小写字母、数字、下划线，且在3-20位</p>
+                </div>
+                <i slot="reference" class="svg-i" style="color:red;margin-left: 15px;cursor: pointer;"><svg-icon icon-class="tips" class-name="disabled" /></i>
+              </el-popover>
+            </td>
         </tr>
         <tr>
             <td><span>密码：</span></td>
-            <td><el-button type="primary" size="mini" icon="el-icon-edit" v-on:click="editPwd" v-if="menuButtonPermit.includes('User_personpwd')">修改密码</el-button><el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="resetPwd">忘记密码</el-button></td>
+            <td>
+              <el-button type="primary" size="mini" icon="el-icon-edit" v-on:click="editPwd" v-if="menuButtonPermit.includes('User_personpwd')">修改密码</el-button>
+              <el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="resetPwd">忘记密码</el-button>
+              <el-popover
+                placement="right"
+                width="400"
+                trigger="hover">
+                <div class="remarks-content">
+                  <p>密码格式：只能包含大小写字母、数字、.、_，且在6-32位</p>
+                </div>
+                <i slot="reference" class="svg-i" style="color:red;margin-left: 15px;cursor: pointer;"><svg-icon icon-class="tips" class-name="disabled" /></i>
+              </el-popover>
+            </td>
         </tr>
         <tr>
             <th colspan="2">联系方式<el-button style="margin-left: 15px;" type="primary" size="mini" icon="el-icon-edit" v-on:click="editPhone" v-if="(menuButtonPermit.includes('User_personset'))">修改联系方式</el-button></th>

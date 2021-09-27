@@ -668,7 +668,6 @@ export default {
       $this.$store.dispatch('article/userCanReadPostAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response);
             $this.postTypeData = $this.dataToTree(response.data,$this);
             $this.initPage();
           }else{

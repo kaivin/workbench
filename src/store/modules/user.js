@@ -1,4 +1,7 @@
-﻿import { getUserList,userAdd,userEdit,userDelete,userShowHide,userResetPwd,userAllotedRole,userCanAllotRole,userAllotRole,userCanDepart,userNameEdit,pwdEdit,contactEdit,getBrandList } from '@/api/user'
+﻿import { getUserList,userAdd,userEdit,userDelete,userShowHide,userResetPwd,userAllotedRole,userCanAllotRole,userAllotRole,userCanDepart,userNameEdit,pwdEdit,
+  contactEdit,
+  getBrandList,
+  changeUserLogin,} from '@/api/user'
 
 const state = {}
 const mutations = {}
@@ -140,6 +143,16 @@ const actions = {
   contactEditAction({ commit, state },data) {
     return new Promise((resolve, reject) => {
         contactEdit(data).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // 切换登陆用户
+  changeUserLoginAction({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+      changeUserLogin(data).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)

@@ -109,3 +109,11 @@ export function getBrandList() {
     method: "POST"
   });
 }
+// 切换登陆用户
+export function changeUserLogin(data) {
+  return request({
+    url: "/hxindex/User/tabuser",
+    method: "POST",
+    data,
+  });
+}

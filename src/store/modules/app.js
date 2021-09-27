@@ -1,7 +1,7 @@
 ﻿import Cookies from 'js-cookie'
 const state = {
   sidebar: {
-    opened:false,
+    opened: false,
     withoutAnimation: false
   },
   device: 'desktop',

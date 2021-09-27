@@ -753,12 +753,10 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.limit = val;
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.page = val;
     },
   },

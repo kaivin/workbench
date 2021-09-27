@@ -59,7 +59,7 @@ export function validEmail(email) {
  * @returns {Boolean}
  */
  export function validPhone(phone) {
-    const reg = /^1[34578]\d{9}$/;
+    const reg = /^1[3456789]\d{9}$/;
     return reg.test(phone);
 }
   

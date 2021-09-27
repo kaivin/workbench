@@ -42,6 +42,7 @@ service.interceptors.request.use(
       // please modify it according to the actual situation
       config.headers['session_id'] = getSessionID()
     }
+    // console.log(config,"请求数据");
     return config
   },
   error => {
@@ -64,6 +65,7 @@ service.interceptors.response.use(
    */
   response => {
     const res = response;
+    // console.log(res,"请求响应");
     // if the custom code is not 20000, it is judged as an error.
     if (res.status !== 200) {
       Message({

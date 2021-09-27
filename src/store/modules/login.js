@@ -34,6 +34,15 @@ const actions = {
       })
     })
   },
+  // 切换登陆用户
+  changeLogin({commit},data){
+    return new Promise((resolve, reject) => {
+      commit('SET_INFO', data.data);
+      commit('SET_SESSION', data.session_id);
+      setSessionID(data.session_id);
+      resolve(data);
+    })
+  },
   // 退出登录
   logoutAction({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
