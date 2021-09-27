@@ -137,6 +137,7 @@
                                 <el-input
                                     placeholder="来源平台/关键词"
                                     size="small"
+                                    class="tips-input-2"
                                     v-model="searchData.search"
                                     clearable>
                                 </el-input>
@@ -145,6 +146,7 @@
                                 <el-input
                                       placeholder="备注/提供者"
                                       size="small"
+                                    class="tips-input-3"
                                       v-model="searchData.anymessage"
                                       clearable>
                                   </el-input>
@@ -161,6 +163,7 @@
                                 <el-input
                                   placeholder="来源URL(默认模糊匹配)"
                                   size="small"
+                                    class="tips-input-4"
                                   v-model="searchData.url"
                                   clearable>
                                 </el-input>
@@ -251,11 +254,12 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="xuntime"
-                                    label="时间"
+                                    label="添加/询盘时间"
                                     width="150"
                                     >
                                     <template slot-scope="scope">
                                         <div class="table-text">
+                                        <p>{{scope.row.addtime}}</p>
                                         <p>{{scope.row.xuntime}}</p>
                                         <p>{{scope.row.weekday}}</p>
                                         </div>
@@ -280,7 +284,7 @@
                                     >
                                     <template slot-scope="scope">
                                         <div class="table-text">
-                                        <p>{{scope.row.province}}/{{scope.row.city}}</p>
+                                        <p>{{scope.row.province}}<span v-if="scope.row.province&&scope.row.city">/</span>{{scope.row.city}}</p>
                                         </div>
                                     </template>
                                 </el-table-column>
@@ -310,12 +314,6 @@
                                     >
                                 </el-table-column>
                                 <el-table-column
-                                    prop="addtime"
-                                    label="添加时间"
-                                    width="150"
-                                    >
-                                </el-table-column>
-                                <el-table-column
                                     prop="levelname"
                                     label="等级"
                                     min-width="60"
@@ -338,48 +336,38 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="url"
-                                    label="域名/链接"
-                                    min-width="150"
+                                    label="域名/链接/关键词"
+                                    min-width="130"
                                     >
                                     <template slot-scope="scope">
                                         <div class="table-text">
                                             <p>{{scope.row.domain}}</p>
                                             <p>{{scope.row.url}}</p>
+                                            <p>{{scope.row.searchword}}</p>
                                         </div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="searchword"
-                                    label="平台/关键词"
-                                    min-width="110"
+                                    label="平台/提供者/设备"
+                                    min-width="130"
                                     >
                                     <template slot-scope="scope">
                                         <div class="table-text">
                                             <p>{{scope.row.search}}</p>
-                                            <p>{{scope.row.searchword}}</p>
+                                            <p>{{scope.row.useridname}}</p>
+                                            <p>{{scope.row.device}}</p>
                                         </div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="remark"
                                     label="备注"
-                                    min-width="140"
+                                    min-width="120"
                                     >
                                     <template slot-scope="scope">
                                         <div class="table-text">
                                             <p>{{scope.row.remark}}</p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="searchword"
-                                    label="提供者/设备"
-                                    min-width="100"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p>{{scope.row.useridname}}</p>
-                                            <p>{{scope.row.device}}</p>
                                         </div>
                                     </template>
                                 </el-table-column>

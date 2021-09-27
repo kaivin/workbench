@@ -360,13 +360,13 @@
                                 <el-table-column
                                   prop="id"
                                   label="ID"
-                                  width="80"
+                                  width="70"
                                   >
                                 </el-table-column>
                                 <el-table-column
                                   prop="xuntime"
                                   label="时间"
-                                  width="200"
+                                  width="190"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -380,7 +380,7 @@
                                 <el-table-column
                                   prop="sourcename"
                                   label="来源网站"
-                                  width="150"
+                                  width="110"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -393,13 +393,13 @@
                                 <el-table-column
                                   prop="sourcename"
                                   label="大洲/地区/IP"
-                                  width="150"
+                                  width="110"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
                                       <p><span class="EnColor05">大洲：</span>{{scope.row.continent}}</p>
                                       <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
-                                      <p><span class="EnColor05">来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip">IP</a></p>
+                                      <p><span class="EnColor05">来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip" :title="scope.row.ip">IP</a></p>
                                       <p><span class="EnColor05">设备：</span>{{scope.row.device}}</p>
                                     </div>
                                   </template>
@@ -407,7 +407,7 @@
                                 <el-table-column
                                   prop="keyproduct"
                                   label="类型/产品"
-                                  min-width="150"
+                                  min-width="130"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -422,7 +422,7 @@
                                 <el-table-column
                                   prop="effective"
                                   label="有效/原因"
-                                  width="100"
+                                  width="90"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
@@ -447,7 +447,7 @@
                                 <el-table-column
                                   prop="xunremark"
                                   label="备注"
-                                  min-width="100"
+                                  min-width="80"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -459,7 +459,7 @@
                                 <el-table-column
                                   prop="addusername"
                                   label="添加人"
-                                  width="120"
+                                  width="100"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -471,13 +471,13 @@
                                 <el-table-column
                                   prop="hassale"
                                   label="业务员"
-                                  width="100"
+                                  width="80"
                                   >
                                 </el-table-column>
                                 <el-table-column
                                   prop="addtime"
                                   label="添/分/改/业务时间"
-                                  width="160"
+                                  width="150"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -491,7 +491,7 @@
                                 <el-table-column
                                   prop="score"
                                   label="价值分"
-                                  min-width="80"
+                                  min-width="70"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
@@ -556,13 +556,13 @@
                                 <el-table-column
                                   prop="id"
                                   label="ID"
-                                  width="80"
+                                  width="70"
                                   >
                                 </el-table-column>
                                 <el-table-column
                                   prop="xuntime"
                                   label="时间"
-                                  width="200"
+                                  width="190"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -576,11 +576,11 @@
                                 <el-table-column
                                   prop="sourcename"
                                   label="来源网站"
-                                  width="150"
+                                  width="110"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
-                                      <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
+                                      <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank" :title="scope.row.url">{{scope.row.domain}}</a></p>
                                       <p>{{scope.row.sourcename}}</p>
                                       <p>{{scope.row.messagetype}}</p>
                                     </div>
@@ -589,13 +589,13 @@
                                 <el-table-column
                                   prop="sourcename"
                                   label="大洲/地区/IP"
-                                  width="150"
+                                  width="110"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
                                       <p><span class="EnColor05">大洲：</span>{{scope.row.continent}}</p>
                                       <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
-                                      <p><span class="EnColor05">来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip">IP</a></p>
+                                      <p><span class="EnColor05">来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip" :title="scope.row.ip">IP</a></p>
                                       <p><span class="EnColor05">设备：</span>{{scope.row.device}}</p>
                                     </div>
                                   </template>
@@ -603,7 +603,7 @@
                                 <el-table-column
                                   prop="keyproduct"
                                   label="类型/产品"
-                                  min-width="150"
+                                  min-width="130"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -618,7 +618,7 @@
                                 <el-table-column
                                   prop="effective"
                                   label="有效/原因"
-                                  width="100"
+                                  width="90"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
@@ -643,7 +643,7 @@
                                 <el-table-column
                                   prop="xunremark"
                                   label="备注"
-                                  min-width="100"
+                                  min-width="80"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -655,7 +655,7 @@
                                 <el-table-column
                                   prop="addusername"
                                   label="添加人"
-                                  width="120"
+                                  width="100"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -667,13 +667,13 @@
                                 <el-table-column
                                   prop="hassale"
                                   label="业务员"
-                                  width="100"
+                                  width="80"
                                   >
                                 </el-table-column>
                                 <el-table-column
                                   prop="addtime"
                                   label="添/分/改/业务时间"
-                                  width="160"
+                                  width="150"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -687,7 +687,7 @@
                                 <el-table-column
                                   prop="score"
                                   label="价值分"
-                                  min-width="80"
+                                  min-width="70"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>

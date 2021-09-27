@@ -391,7 +391,11 @@
     }
   }
 }
-
+.cnClues.table-input{
+  .el-textarea .el-textarea__inner{
+    height: 116px;
+  }
+}
 @media (max-width:1400px){
   .ChinaphoneNum{
     .ChinaphoneNumItem{

@@ -112,25 +112,25 @@
                             <el-table-column
                               prop="email"
                               label="邮箱"
-                              min-width="180"
+                              min-width="150"
                               >
                             </el-table-column>
                             <el-table-column
                               prop="login_ip"
                               label="最近登录IP"
-                              width="130"
+                              width="100"
                               >
                             </el-table-column>
                             <el-table-column
                               prop="login_time"
                               label="最近登录时间"
-                              width="160"
+                              width="150"
                               >
                             </el-table-column>
                             <el-table-column
                               prop="remarks"
                               label="备注"
-                              min-width="220"
+                              min-width="80"
                               >
                             </el-table-column>
                             <el-table-column

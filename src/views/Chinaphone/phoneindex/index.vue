@@ -249,11 +249,12 @@
                         </el-table-column>
                         <el-table-column
                           prop="xuntime"
-                          label="时间"
+                          label="添加/询盘时间"
                           width="150"
                           >
                           <template slot-scope="scope">
                             <div class="table-text">
+                              <p>{{scope.row.addtime}}</p>
                               <p>{{scope.row.xuntime}}</p>
                               <p>{{scope.row.weekday}}</p>
                             </div>
@@ -308,12 +309,6 @@
                           >
                         </el-table-column>
                         <el-table-column
-                          prop="addtime"
-                          label="添加时间"
-                          width="150"
-                          >
-                        </el-table-column>
-                        <el-table-column
                           prop="levelname"
                           label="等级"
                           min-width="60"
@@ -335,32 +330,34 @@
                           </template>
                         </el-table-column>
                         <el-table-column
-                          v-if="writepermit&&(permitField.includes('domain')||permitField.includes('url'))"
+                          v-if="writepermit&&(permitField.includes('domain')||permitField.includes('url')||permitField.includes('searchword'))"
                           key="a"
                           fixed="right"
                           prop="url"
-                          label="域名/链接"
-                          min-width="150"
+                          label="域名/链接/关键词"
+                          min-width="130"
                           >
                           <template slot-scope="scope">
                             <div class="table-input">
                               <el-input size="small" v-model="scope.row.domain" v-if="permitField.includes('domain')"></el-input>
                               <el-input size="small" v-model="scope.row.url" v-if="permitField.includes('url')"></el-input>
+                              <el-input size="small" v-model="scope.row.searchword" v-if="permitField.includes('searchword')"></el-input>
                             </div>
                           </template>
                         </el-table-column>
                         <el-table-column
-                          v-if="writepermit&&(permitField.includes('search')||permitField.includes('searchword'))"
+                          v-if="writepermit&&(permitField.includes('search')||permitField.includes('userid')||permitField.includes('device'))"
                           key="b"
                           fixed="right"
                           prop="searchword"
-                          label="平台/关键词"
-                          min-width="110"
+                          label="平台/提供者/设备"
+                          min-width="130"
                           >
                           <template slot-scope="scope">
                             <div class="table-input">
                               <el-input size="small" v-model="scope.row.search" v-if="permitField.includes('search')"></el-input>
-                              <el-input size="small" v-model="scope.row.searchword" v-if="permitField.includes('searchword')"></el-input>
+                              <el-input size="small" v-model="scope.row.useridname" v-if="permitField.includes('userid')"></el-input>
+                              <el-input size="small" v-model="scope.row.device" v-if="permitField.includes('device')"></el-input>
                             </div>
                           </template>
                         </el-table-column>
@@ -373,23 +370,8 @@
                           min-width="140"
                           >
                           <template slot-scope="scope">
-                            <div class="table-input">
-                              <el-input size="small" type="textarea" rows="3" resize="none" v-model="scope.row.remark" v-if="permitField.includes('remark')"></el-input>
-                            </div>
-                          </template>
-                        </el-table-column>
-                        <el-table-column
-                          v-if="writepermit&&(permitField.includes('userid')||permitField.includes('device'))"
-                          key="d"
-                          fixed="right"
-                          prop="searchword"
-                          label="提供者/设备"
-                          min-width="100"
-                          >
-                          <template slot-scope="scope">
-                            <div class="table-input">
-                              <el-input size="small" v-model="scope.row.useridname" v-if="permitField.includes('userid')"></el-input>
-                              <el-input size="small" v-model="scope.row.device" v-if="permitField.includes('device')"></el-input>
+                            <div class="table-input cnClues">
+                              <el-input size="small" type="textarea" rows="5" resize="none" v-model="scope.row.remark" v-if="permitField.includes('remark')"></el-input>
                             </div>
                           </template>
                         </el-table-column>

@@ -130,7 +130,7 @@
                       <el-table-column
                         prop="departname"
                         label="部门"
-                        width="100"
+                        width="80"
                         >
                       </el-table-column>
                       <el-table-column
@@ -186,7 +186,7 @@
                       <el-table-column
                         prop="domainattr"
                         label="标签"
-                        min-width="240"
+                        min-width="220"
                         >
                         <template #default="scope">
                           <div class="table-tag">
@@ -197,7 +197,7 @@
                       <el-table-column
                         prop="domain"
                         label="主域名"
-                        min-width="210"
+                        min-width="160"
                         >
                         <template #default="scope">
                           <strong>{{scope.row.domain}}</strong>
@@ -222,8 +222,8 @@
                       </el-table-column>
                       <el-table-column
                         prop="website_designuser"
-                        label="设计负责人"
-                        width="94"
+                        label="设计"
+                        width="70"
                         >
                         <template #default="scope">
                           <div class="table-name" v-if="scope.row.uiList.length>0">
@@ -233,8 +233,8 @@
                       </el-table-column>
                       <el-table-column
                         prop="website_beforeuser"
-                        label="前端负责人"
-                        width="94"
+                        label="前端"
+                        width="70"
                         >
                         <template #default="scope">
                           <div class="table-name" v-if="scope.row.frontEndList.length>0">
@@ -244,8 +244,8 @@
                       </el-table-column>
                       <el-table-column
                         prop="website_backuser"
-                        label="程序负责人"
-                        width="94"
+                        label="程序"
+                        width="70"
                         >
                         <template #default="scope">
                           <div class="table-name" v-if="scope.row.programList.length>0">
@@ -255,8 +255,8 @@
                       </el-table-column>
                       <el-table-column
                         prop="website_pushuser"
-                        label="推广负责人"
-                        width="94"
+                        label="推广"
+                        width="70"
                         >
                         <template #default="scope">
                           <div class="table-name" v-if="scope.row.promoteList.length>0">
@@ -266,8 +266,8 @@
                       </el-table-column>
                       <el-table-column
                         prop="website_headuser"
-                        label="组负责人"
-                        width="84"
+                        label="站长"
+                        width="70"
                         >
                         <template #default="scope">
                           <div class="table-name" v-if="scope.row.teamList.length>0">
@@ -277,8 +277,8 @@
                       </el-table-column>
                       <el-table-column
                         prop="website_serveruser"
-                        label="服务器负责人"
-                        width="110"
+                        label="服务器"
+                        width="70"
                         >
                         <template #default="scope">
                           <div class="table-name" v-if="scope.row.serverList.length>0">

@@ -8,7 +8,7 @@
         </div>
         <div class="header-center">
             <div class="header-search" v-if="isArticleSearch">
-              <el-input placeholder="请输入内容" v-model="searchWord" size="small" class="article-search">
+              <el-input placeholder="请输入内容" v-model="searchWord" @keypress.native.enter="searchResult" size="small" class="article-search">
                 <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span><span class="search-font">搜索</span></el-button>
               </el-input>
             </div>

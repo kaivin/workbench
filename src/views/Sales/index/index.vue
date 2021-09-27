@@ -227,22 +227,16 @@
                                     width="48">
                                 </el-table-column>
                                 <el-table-column
-                                prop="id"
-                                label="ID"
-                                width="50"
-                                align="center"
-                                >
-                                </el-table-column>
-                                <el-table-column
                                 prop="weekday"
-                                label="咨询时间与说明"
+                                label="ID/时间/说明"
                                 width="190"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
+                                    <p><span class="EnColor05">ID：</span>{{scope.row.id}}</p>
                                     <p>{{scope.row.weekday}}-{{scope.row.xuntime}}</p>
-                                    <p><span>业务员：</span><strong>{{scope.row.salesusername}}</strong></p>
-                                    <p><span>特别说明：</span><span class="SiteColor-01">{{scope.row.otherremark}}</span></p>
+                                    <p><span class="EnColor05">业务员：</span><strong>{{scope.row.salesusername}}</strong></p>
+                                    <p><span class="EnColor05">特别说明：</span><span class="SiteColor-01">{{scope.row.otherremark}}</span></p>
                                     </div>
                                 </template>
                                 </el-table-column>
@@ -287,7 +281,7 @@
                                 <el-table-column
                                 prop="custormneedinfo"
                                 label="需求详情"
-                                min-width="300"
+                                min-width="260"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">                        
@@ -311,7 +305,7 @@
                                 <el-table-column
                                 prop="SalesEnnature"
                                 label="客户性质"
-                                width="120"
+                                width="100"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
@@ -323,7 +317,7 @@
                                 <el-table-column
                                 prop="salesremark"
                                 label="个人备注"
-                                width="200"
+                                width="150"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
@@ -334,7 +328,7 @@
                                 <el-table-column
                                 prop="addtime"
                                 label="添加/修改时间"
-                                width="230"
+                                width="210"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
@@ -353,8 +347,8 @@
                                 label="操作">
                                 <template #default="scope">
                                     <div class="table-button">
-                                    <el-button size="mini" @click="editTableRow(scope.row,scope.$index,'2')">详情</el-button>
-                                    <span class="SiteColor-03" v-if="scope.row.is_read==1">未读</span>
+                                    <el-button size="mini" @click="editTableRow(scope.row,scope.$index,'2')">详情</el-button><br />
+                                    <span class="SiteColor-03" style="cursor:pointer;" v-if="scope.row.is_read==1">未读</span>
                                     </div>
                                 </template>
                                 </el-table-column>
