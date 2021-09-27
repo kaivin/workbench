@@ -250,7 +250,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-if="currentKey&&currentKey=='all'"  v-model="searchData.salesdepart_id" size="small" clearable placeholder="业务员部门" style="width:120px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)"  v-model="searchData.salesdepart_id" size="small" clearable placeholder="业务员部门" style="width:120px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in salesdepartList"
                                       :key="item.value"
@@ -1704,6 +1704,7 @@ export default {
             });
             $this.salesuserList = salesuserList;
             
+
             var salesdepartList = [];
             response.salesdepart.forEach(function(item,index){
               var itemData = {};
@@ -1712,6 +1713,8 @@ export default {
               salesdepartList.push(itemData);
             });
             $this.salesdepartList = salesdepartList;
+
+
             $this.initCluesList();
           }else{
             $this.$message({
