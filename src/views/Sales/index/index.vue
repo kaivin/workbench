@@ -1211,7 +1211,11 @@ export default {
     // 修改询盘
     editTableRow(row,index,num){
       var $this = this;
-      $this.$router.path({path:'/Sales/phoneinfosub',query:{ID:row.id,status:num}});
+      var queryObj = {};
+      queryObj.ID = row.id;
+      queryObj.status = num;
+      var routeUrl =  $this.$router.resolve({path:'/Sales/phoneinfosub',query:queryObj});
+      window.open(routeUrl.href,'_self');
     },
     // 表格多选改变事件
     handleSelectionChange(val) {
