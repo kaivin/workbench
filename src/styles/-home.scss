@@ -352,9 +352,9 @@
             border-radius:8px;
             position: relative;
             height: 275px;
-            width:550px;
+            width:630px;
             #radialBarChart{
-                float:left; width:285px;
+                float:left; width:365px;
             }
             .deptData{
                 position: absolute;
@@ -610,21 +610,6 @@
 }
 @media (max-width:1600px){
     .home-index{
-        .flex-wrap.mapFlex{            
-           flex-direction:column;
-           .Clinch-chart{               
-              width:100%;
-              margin-left:0px;
-              .table-chart{    
-                flex-direction:row;
-                height:auto;
-              }
-           }
-        }
-    }
-}
-@media (max-width:1200px){
-    .home-index{
         .flex-wrap.tarFlex{
             flex-direction:column;
             .target-chart{
@@ -650,6 +635,21 @@
                 }
             }
         }
+        .flex-wrap.mapFlex{            
+           flex-direction:column;
+           .Clinch-chart{               
+              width:100%;
+              margin-left:0px;
+              .table-chart{    
+                flex-direction:row;
+                height:auto;
+              }
+           }
+        }
+    }
+}
+@media (max-width:1200px){
+    .home-index{
         .flex-wrap.mapFlex{            
            flex-direction:column;
            .Clinch-chart{               

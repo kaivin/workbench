@@ -286,7 +286,7 @@
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-text">
-                                            <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
+                                            <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank" :title="scope.row.url">{{scope.row.domain}}</a></p>
                                             <p>{{scope.row.sourcename}}</p>
                                             <p>{{scope.row.messagetype}}</p>
                                           </div>
@@ -1717,7 +1717,8 @@ export default {
     // 修改询盘
     editTableRow(row,index){
       var $this = this;
-      $this.$router.push({path:'/Enphone/addEditClues',query:{ID:row.id}});
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:row.id}});
+      window.open(routeUrl.href,'_blank');
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){

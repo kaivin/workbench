@@ -1183,22 +1183,42 @@ export default {
         if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
           $this.radialBarPlot.changeData($this.currentCluesData.targetData);
         }else{
+          var tagData = [];
+          $this.currentCluesData.targetData.forEach(function(item){
+               tagData.push(item);
+          });
           const radialBarPlot = new Bullet('radialBarChart', {
-            data:$this.currentCluesData.targetData,
+            data:tagData.reverse(),
             measureField: 'dayNum',
             rangeField: 'targetNum',
             targetField: 'targetNum',
             xField: 'name',
             height:230,
             color: {
-              range: '#f0efff',
+              range: '#ffe0b0',
               measure: '#5B8FF9',
-              percent: '#f0efff',
+              target: '#ffe0b0',
             },
             xAxis: {
               line: null,
             },
-            yAxis: false,
+            yAxis: {
+              grid: {
+                line: {
+                  style: {
+                    stroke: '#cccccc',
+                    lineWidth: 1,
+                    lineDash: [3, 2],
+                    strokeOpacity: 0.7,
+                    shadowColor: null,
+                    shadowBlur: 0,
+                    shadowOffsetX:0,
+                    shadowOffsetY:0,
+                    cursor: 'pointer'
+                  }
+                }
+              }
+            },
             layout: 'vertical',
             label: {
               measure: {

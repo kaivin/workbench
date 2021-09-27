@@ -384,7 +384,7 @@
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
-                                      <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
+                                      <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank" :title="scope.row.url">{{scope.row.domain}}</a></p>
                                       <p>{{scope.row.sourcename}}</p>
                                       <p>{{scope.row.messagetype}}</p>
                                     </div>
@@ -1737,7 +1737,7 @@ export default {
     // 修改询盘
     editTableRow(row,index){
       var $this = this;
-      $this.$router.push({path:'/Enphone/addEditClues',query:{ID:row.id}});
+      var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues',query:{ID:row.id}});
       window.open(routeUrl.href,'_blank');
     },
     // 提醒跳转到编辑页面
@@ -1749,7 +1749,7 @@ export default {
     jumpEditHistoryPage(id){
       var $this = this;
       var routeUrl =  $this.$router.resolve({path:'/Enphone/editHistoryLog',query:{ID:id}});
-      window.open(routeUrl.href,'_blank');
+      window.open(routeUrl.href,'_self');
     },
     // 搜索统计数据跳转
     searchStatisticsData(){

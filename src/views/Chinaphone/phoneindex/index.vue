@@ -266,7 +266,7 @@
                           >
                           <template slot-scope="scope">
                             <div class="table-text">
-                              <p><a :href="scope.row.url" target="_blank">{{scope.row.domain}}</a></p>
+                              <p><a :href="scope.row.url" target="_blank" :title="scope.row.url">{{scope.row.domain}}</a></p>
                               <p>{{scope.row.sourcename}}</p>
                             </div>
                           </template>
