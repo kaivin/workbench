@@ -55,6 +55,7 @@
     getcontient,
     getLeftPhoto,
     getCurrentPhoneUser,
+    cluesPhoneIndexSearchData,
 } from '@/api/enphone'
 
 const state = {
@@ -634,6 +635,17 @@ const actions = {
             })
         })
     },
+    // 电话首页-部门搜索
+    cluesPhoneIndexSearchDataAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            cluesPhoneIndexSearchData(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    
 }
 
 export default {

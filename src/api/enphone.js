@@ -443,3 +443,11 @@ export function getCurrentPhoneUser(data) {
     data,
   });
 }
+// 电话首页-部门搜索
+export function cluesPhoneIndexSearchData(data) {
+  return request({
+    url: "/hxindex/Enphone/phoneindexsearch",
+    method: "POST",
+    data,
+  });
+}

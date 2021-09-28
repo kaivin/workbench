@@ -808,6 +808,7 @@ export default {
   data() {
     return {
       phoneID:null,
+      dept_id:'',
       breadcrumbList:[],
       currentPhone:'',
       writepermit:false,
@@ -1312,12 +1313,47 @@ export default {
       $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
+    // 电话首页-部门搜索
+    initHomePage(){
+      var $this = this;
+      $this.$store.dispatch('enphone/cluesPhoneIndexSearchDataAction', $this.dept_id).then(response=>{
+        if(response){
+          if(response.status){
+             console.log(response,'电话首页-部门搜索')
+             $this.initPage();
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          }
+        }
+      });
+    },
     // 初始化首页统计页面信息
     initPage(){
       var $this = this;
       $this.$store.dispatch('enphone/cluesPhoneIndexDataAction', null).then(response=>{
         if(response){
           if(response.status){
+            console.log(response,'response');
+            $this.linkAll.todayNum = response.alltodaynumber;
+            $this.linkAll.yestodayNum = response.alllastnumber;
+            $this.linkAll.monthNum = response.allnumber;
+            $this.linkAll.unAllotNum = response.nodealcount;
+
+
             var departnumberArr=[];
             var totalObj={              
               user: "总数",
@@ -1326,10 +1362,6 @@ export default {
               monthcount:response.allnumber,
               todaycount:response.alltodaynumber,
             }
-            $this.linkAll.todayNum = response.alltodaynumber;
-            $this.linkAll.yestodayNum = response.alllastnumber;
-            $this.linkAll.monthNum = response.allnumber;
-            $this.linkAll.unAllotNum = response.nodealcount;
             departnumberArr.push(totalObj);
             response.departnumber.forEach(function(item){
                 item.user=item.depart;
@@ -1338,6 +1370,7 @@ export default {
                 item.todaycount=item.todaynumber;
                 departnumberArr.push(item);
             });
+
             var departcountArr=[];          
             var departcountObj={
               dept_id:0,
@@ -1358,6 +1391,9 @@ export default {
             });
             $this.departcountUlist = departcountUlist;
             $this.defaultData = response;
+            $this.defaultData.departcountArr = departcountArr;
+            
+
             if($this.$route.query.phoneID){
                 $this.defaultData.data.forEach(function(item,index){
                   item.phone.forEach(function(item1,index1){
@@ -1410,7 +1446,6 @@ export default {
                 });
             }
             $this.defaultData.custorAndsalesmwarn=custorAndsalesmwarn.concat(custormwarn,saleswarning);
-            $this.defaultData.departcountArr = departcountArr;
             $this.isLoading.close();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -1594,7 +1629,7 @@ export default {
               if($this.$route.query.phoneID||$this.$route.query.key){
                 $this.leftPhoto();
               }else{
-                $this.initPage();
+                $this.initHomePage();
               }
             }else{
               $this.$message({
