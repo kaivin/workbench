@@ -291,7 +291,7 @@
                                 <el-table-column
                                     prop="keyproduct"
                                     label="意向设备"
-                                    width="100"
+                                    min-width="100"
                                     >
                                     <template slot-scope="scope">
                                         <span class="product-span" v-bind:class="'level_'+scope.row.productlevel"><i>[{{scope.row.productlevel}}]</i>{{scope.row.keyproduct}}</span>
@@ -316,7 +316,7 @@
                                 <el-table-column
                                     prop="levelname"
                                     label="等级"
-                                    min-width="60"
+                                    width="60"
                                     >
                                     <template slot-scope="scope">
                                         <div class="table-tag"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
