@@ -295,23 +295,22 @@
                         <el-table-column
                           prop="effective"
                           label="有效"
-                          width="60"
+                          width="50"
                           >
                           <template slot-scope="scope">
                             <div class="table-tag"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                            <div class="table-text" v-if="!scope.row.isEffective"><p v-html="scope.row.invalidcause"></p></div>
                           </template>
                         </el-table-column>
                         <el-table-column
                           prop="addusername"
                           label="添加人"
-                          width="80"
+                          width="65"
                           >
                         </el-table-column>
                         <el-table-column
                           prop="levelname"
                           label="等级"
-                          width="60"
+                          width="50"
                           >
                           <template slot-scope="scope">
                             <div class="table-tag"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
@@ -319,13 +318,14 @@
                         </el-table-column>
                         <el-table-column
                           prop="levelname"
-                          label="备注/原因"
-                          min-width="120"
+                          label="备注/原因/无效原因"
+                          min-width="200"
                           >
                           <template slot-scope="scope">
                             <div class="table-text">
                               <p>{{scope.row.custormcause}}</p>
                               <p>{{scope.row.custormremark}}</p>
+                              <p v-if="!scope.row.isEffective">无效原因：{{scope.row.invalidcause}}</p>
                             </div>
                           </template>
                         </el-table-column>

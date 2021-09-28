@@ -108,6 +108,11 @@
             background-color:#2e88ff!important;
             border-color:#2e88ff!important;
         }
+        &.isDisabled,&.isDisabled:hover{
+            background-color: #8cbcf9 !important;
+            border-color: #8cbcf9 !important;
+            cursor: default;
+        }
     }
     .el-button.resetBtn{
         background-color:#f5f7fa !important;

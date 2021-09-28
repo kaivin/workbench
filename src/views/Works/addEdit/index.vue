@@ -130,7 +130,7 @@
             </table>      
             <div class="card-header WebServerAddEditBtn ArticleFive" ref="headerPane">
               <div class="header-content">
-                <el-button type="primary" class="updateBtn" size="small" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Works_workedit')||menuButtonPermit.includes('Works_publishwork')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>发布</el-button>
+                <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" size="small" :disabled="isDisabled" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Works_workedit')||menuButtonPermit.includes('Works_publishwork')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>发布</el-button>
                 <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
               </div>
             </div>
@@ -280,6 +280,7 @@ export default {
         ]
       },
       articleData:{},
+      isDisabled:false,
     }
   },
   computed: {
@@ -617,6 +618,7 @@ export default {
       if(!$this.validationForm()){
         return false;
       }
+      $this.isDisabled=true;
       var formData = {}
       formData.id = $this.formData.id;
       formData.typeid = $this.formData.typeid;
@@ -642,13 +644,17 @@ export default {
               message: response.info,
               type: 'success'
             });
+            if($this.formData.id==0){
+               $this.clearFormData();
+               $this.isDisabled=false;
+            }
           }else{
             $this.$message({
               showClose: true,
               message: response.info,
               type: 'error'
             });
-          }
+          } 
       });
     },
   }

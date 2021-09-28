@@ -169,7 +169,7 @@
                                             <el-input
                                                 size="mini"
                                                 placeholder="Email"
-                                                style="width:100px;margin-right:10px;margin-bottom:10px;"
+                                                style="width:150px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.custormemail"
                                                 clearable>
                                             </el-input>
@@ -323,7 +323,7 @@
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                                          <div class="table-text" v-if="!scope.row.isEffective"><p v-html="scope.row.invalidcause"></p></div>
+                                          <div class="table-text" v-if="!scope.row.isEffective">{{scope.row.invalidcause}}<span class="redTip">{{scope.row.noeffectivetime}}</span></div>
                                         </template>
                                       </el-table-column>
                                       <el-table-column

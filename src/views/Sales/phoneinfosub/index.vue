@@ -651,6 +651,21 @@ export default {
           }
       });
     },
+    // 页面自跳转
+    jumpLink(status){
+        var $this = this;
+        $this.$router.push({path:'/Sales/index',query:{Status:status}});
+    },
+    // 跳转数据分析页面
+    dataStatistic(){
+      var $this = this;
+      $this.$router.push({path:'/Sales/search'});
+    },
+    // 跳转数据统计页面
+    datastatisticClues(){
+      var $this = this;
+      $this.$router.push({path:'/Sales/phonecount'});
+    },
   }
 }
 </script>
