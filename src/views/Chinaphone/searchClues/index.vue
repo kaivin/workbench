@@ -304,7 +304,6 @@
                                     >
                                     <template slot-scope="scope">
                                         <div class="table-tag"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                                        <div class="table-text"><p>{{scope.row.invalidcause}}</p></div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
@@ -324,13 +323,14 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="levelname"
-                                    label="备注/原因"
+                                    label="备注/原因/无效原因"
                                     min-width="120"
                                     >
                                     <template slot-scope="scope">
                                         <div class="table-text">
                                             <p>{{scope.row.custormcause}}</p>
                                             <p>{{scope.row.custormremark}}</p>
+                                            <p class="redTip" v-if="!scope.row.isEffective">无效原因：{{scope.row.invalidcause}}</p>
                                         </div>
                                     </template>
                                 </el-table-column>

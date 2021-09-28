@@ -325,7 +325,7 @@
                             <div class="table-text">
                               <p>{{scope.row.custormcause}}</p>
                               <p>{{scope.row.custormremark}}</p>
-                              <p v-if="!scope.row.isEffective">无效原因：{{scope.row.invalidcause}}</p>
+                              <p class="redTip" v-if="!scope.row.isEffective">无效原因：{{scope.row.invalidcause}}</p>
                             </div>
                           </template>
                         </el-table-column>
