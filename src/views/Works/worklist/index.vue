@@ -103,6 +103,12 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column
+                                    prop="dealusername"
+                                    label="负责人"
+                                    min-width="200"
+                                    >
+                                </el-table-column>
+                                <el-table-column
                                     prop="tags"
                                     align="left"
                                     label="标签"

@@ -928,7 +928,7 @@ export default {
       if($this.currentStatus=="waitcount"&&$this.searchData.salesuserid&&$this.searchData.salesuserid!=''){
           searchData.salesuserid = $this.searchData.salesuserid;
       }
-      if($this.currentStatus=="allotcount"&&$this.searchData.salesuserid&&$this.searchData.salesuserid!=''){
+      if(($this.currentStatus=="allotcount"||$this.currentStatus=="hasnosaycount")&&$this.searchData.salesuserid&&$this.searchData.salesuserid!=''){
           searchData.salesownid = $this.searchData.salesuserid;
       }
       return searchData;

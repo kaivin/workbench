@@ -722,8 +722,14 @@
     }
   }
   &.rich-text{
+    line-height:1.8;
     >p,>div{
       margin:15px 0;
+    }
+    >ol,>ul{
+      li{
+        margin:5px 0px;
+      }
     }
   }
 }

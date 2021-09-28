@@ -750,6 +750,12 @@
         padding-top:15px; 
         table {width: 100%; border-collapse: collapse; border: solid #a8d3ff; border-width: 1px 0 0 1px; } 
         table td {border: 1px solid #a8d3ff !important;padding: 12px 10px !important;} 
+        a{
+            color:$red;
+            &:hover{
+                text-decoration: underline;
+            }
+        }
     }
 }
 .bbs-panel{

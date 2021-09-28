@@ -159,6 +159,7 @@
                                           name="file"
                                           action=""
                                           accept="aplication/zip"
+                                          :on-preview="handlePreview"
                                           :http-request="httpZipRequest"
                                           :limit="1"
                                           :on-exceed="handleExceed"
@@ -1593,6 +1594,18 @@ export default {
       }
       var routeUrl =  $this.$router.resolve({path:'/Enphone/phoneindex',query:queryObj});
       window.open(routeUrl.href,'_self');
+    },
+    // 在线查看，可下载文件
+    handlePreview(file) {
+      //document.location.href = file.url
+
+       const downloadElement = document.createElement('a')
+       downloadElement.href = file.url
+       document.body.appendChild(downloadElement)
+       downloadElement.click() // 点击下载
+       document.body.removeChild(downloadElement) // 下载完成移除元素
+
+
     },
   }
 }
