@@ -99,7 +99,7 @@
                                   <dl style="width:194px;">
                                     <dt>分配的业务员：</dt>
                                     <dd>
-                                      <el-select size="small" v-model="formData.salesuserid" placeholder="请选择">
+                                      <el-select size="small" v-model="formData.salesuserid" :placeholder="salesuserDefault">
                                         <el-option
                                           v-for="item in salesuserlist"
                                           :key="item.value"
@@ -538,6 +538,8 @@ export default {
       otherList:[],//其它
       fileList:[],//上传文件
       salesuserlist:[],//业务员
+      salesuserDefault:'',
+      salesusertypeId:'',//业务经理id员
       messagetypeList:[
         {value: '留言板',label:'留言板'},
         {value: '商务通',label:'商务通'},
@@ -606,6 +608,7 @@ export default {
         custormneedinfo:"",
         otherremark:"",
         givesaleswarn:"",
+        salesownid:'',
         saleswarnstatus:false,
         custormfiles:"",
         custormfilesname:"",
@@ -806,7 +809,11 @@ export default {
       formData.custormname = $this.formData.custormname;
       formData.custormemail = $this.formData.custormemail;
       formData.custormphone = $this.formData.custormphone;
-      formData.salesuserid = $this.formData.salesuserid;
+      if($this.formData.salesuserid!=0&&$this.formData.salesuserid){
+        formData.salesuserid = $this.formData.salesuserid;
+      }else{
+        formData.salesuserid = $this.salesusertypeId;
+      }
       formData.ftword_id = $this.formData.ftword_id;
       formData.custormneedinfo = $this.formData.custormneedinfo;
       formData.otherremark = $this.formData.otherremark;
@@ -874,14 +881,17 @@ export default {
       $this.formData.custormemail = $this.defaultInfo.custormemail;
       $this.formData.custormphone = $this.defaultInfo.custormphone;
       if($this.defaultInfo.salesownid!=0&&$this.defaultInfo.salesownid){
-         $this.formData.salesuserid=$this.defaultInfo.salesownid;
-      }else{ 
-        if($this.defaultInfo.salesuserid!=0){
-          $this.formData.salesuserid = $this.defaultInfo.salesuserid;
-        }else{
-          $this.formData.salesuserid="";
-        }       
+         $this.formData.salesuserid="";
+         $this.salesuserDefault=$this.defaultInfo.salesusername;
+      }else{         
+         $this.salesuserDefault="";
+         if($this.defaultInfo.salesuserid!=0){
+            $this.formData.salesuserid = $this.defaultInfo.salesuserid;
+         }else{
+            $this.formData.salesuserid="";
+         }       
       }
+      $this.salesusertypeId=$this.defaultInfo.salesuserid;
       $this.formData.ftword_id = $this.defaultInfo.ftword_id;
       $this.formData.custormneedinfo = $this.defaultInfo.custormneedinfo;
       $this.formData.otherremark = $this.defaultInfo.otherremark;
@@ -1142,43 +1152,33 @@ export default {
     // 获取当前电话下的业务员经理
     getCurrentPhoneUser(){
       var $this = this;
-      if($this.formData.salesuserid&&$this.formData.salesuserid!=0){
-          var salesuserlist=[];
-          var salesuserlistObj={
-            label:$this.defaultInfo.salesusername,
-            value:$this.defaultInfo.salesownid
-          }
-          salesuserlist.push(salesuserlistObj);
-          $this.salesuserlist=salesuserlist;
-      }else{
-        $this.$store.dispatch("enphone/getCurrentPhoneUserAction", {id:$this.formData.phoneid}).then(response=>{
-            if(response.status){
-              if(response.salesuser.length>0){
-                var salesuserlist=[];
-                var salesuserlistObj={
-                  label:'无',
-                  value:0
-                }
-                response.salesuser.forEach(function(item,index){
-                    var itemChildren = {};
-                    itemChildren.label = item.name;
-                    itemChildren.value = item.id;
-                    salesuserlist.push(itemChildren);
-                });
-                salesuserlist.push(salesuserlistObj);
-                $this.salesuserlist = salesuserlist;
-              }else{
-                $this.salesuserlist=[]
+      $this.$store.dispatch("enphone/getCurrentPhoneUserAction", {id:$this.formData.phoneid}).then(response=>{
+          if(response.status){
+            if(response.salesuser.length>0){
+              var salesuserlist=[];
+              var salesuserlistObj={
+                label:'无',
+                value:0
               }
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
+              response.salesuser.forEach(function(item,index){
+                  var itemChildren = {};
+                  itemChildren.label = item.name;
+                  itemChildren.value = item.id;
+                  salesuserlist.push(itemChildren);
               });
+              salesuserlist.push(salesuserlistObj);
+              $this.salesuserlist = salesuserlist;
+            }else{
+              $this.salesuserlist=[]
             }
-        });   
-      }   
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      }); 
     },
     // 来源页面变化切换电话
     urlChangePhone(e){

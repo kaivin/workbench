@@ -1555,6 +1555,7 @@ export default {
         pathUrl = 'enphone/cluesCurrentPhoneDataAction';
         if($this.phoneID>800&&$this.searchData.waitstatus==1){
           searchData.salesownid=$this.searchData.salesownid;
+          searchData.salesdepart_id=$this.searchData.salesdepart_id;
         }
       }else{
         if($this.currentKey){
@@ -1629,7 +1630,7 @@ export default {
               if($this.$route.query.phoneID||$this.$route.query.key){
                 $this.leftPhoto();
               }else{
-                $this.initHomePage();
+                $this.initPage();
               }
             }else{
               $this.$message({
