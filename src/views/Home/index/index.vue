@@ -215,7 +215,8 @@ export default {
       liquidPlot2:null,
       liquidPlot3:null,
       pieSourcePlot:null,
-      radialBarPlot:null
+      radialBarPlot:null,
+      loading:false,
     }
   },
   computed: {
@@ -415,6 +416,7 @@ export default {
             $this.drawCluesLiquidChart1();
             $this.drawCluesLiquidChart2();
             $this.drawCluesLiquidChart3();
+            $this.loading=false;
           } else {
             $this.$message({
               showClose: true,
@@ -489,6 +491,7 @@ export default {
             $this.drawCluesLiquidChart1();
             $this.drawCluesLiquidChart2();
             $this.drawCluesLiquidChart3();
+            $this.loading=false;
           } else {
             $this.$message({
               showClose: true,
@@ -1249,20 +1252,23 @@ export default {
     // 中英文数据分析切换
     cnEnStatChange(){
       var $this = this;
-      $this.currentCluesData.departID = null;
-      if($this.language=="Module_cnStat"){
-        $this.currentCluesData.departName = "中文";
-      }else{
-        $this.currentCluesData.departName = "英文";
+      if(!$this.loading){
+        $this.loading=true;
+        $this.currentCluesData.departID = null;
+        if($this.language=="Module_cnStat"){
+          $this.currentCluesData.departName = "中文";
+        }else{
+          $this.currentCluesData.departName = "英文";
+        }
+        $this.radialBarPlot.destroy();
+        $this.liquidPlot1.destroy();
+        $this.liquidPlot2.destroy();
+        $this.liquidPlot3.destroy();
+        $this.regionMapChart.destroy();
+        $this.pieSourcePlot.destroy();
+        $this.areaTrendPlot.destroy();
+        $this.statDataApi();
       }
-      $this.radialBarPlot.destroy();
-      $this.liquidPlot1.destroy();
-      $this.liquidPlot2.destroy();
-      $this.liquidPlot3.destroy();
-      $this.regionMapChart.destroy();
-      $this.pieSourcePlot.destroy();
-      $this.areaTrendPlot.destroy();
-      $this.statDataApi();
     },
     // 调用数据分析接口
     statDataApi(){

@@ -43,11 +43,11 @@
                           <div slot="header">
                               <div class="EnStatisticalTop" ref="enTopPane">
                                     <ul class="EnStatisticalTopTit">
-                                        <li v-for="(item,index) in defaultData.departcountArr" v-bind:key="index"><span v-bind:class="item.isOn?'active':''" v-on:click="topdepartClick(item.dept_id)">{{item.name}}</span></li>
+                                        <li v-for="(item,index) in defaultData.departArr" v-bind:key="index"><span v-bind:class="item.isOn?'active':''" v-on:click="topdepartClick(item.depart_id)">{{item.depart}}</span></li>
                                     </ul>
                                     <div class="EnStatisticalTopBox">
-                                          <dl v-for="(item,index) in departcountUlist" v-bind:key="index" :class="item.user=='总数'?'dep':''">
-                                              <dt>{{item.user}}</dt>
+                                          <dl v-for="(item,index) in departcountUlist" v-bind:key="index" :class="item.depart=='总数'?'dep':''">
+                                              <dt>{{item.depart}}</dt>
                                               <dd>
                                                   <p>今天<span>{{item.todaycount}}</span></p>
                                                   <p>昨天<span>{{item.lastdaycount}}</span></p>
@@ -57,13 +57,13 @@
                                     </div>
                               </div>
                           </div>
-                          <div class="card-content EnStatisticalBom"  :style="'min-height:'+tableHeight+'px;'">
-                              <div class="EnStatisticalBomBox" v-for="(item,index) in defaultData.departusercount" v-bind:key="index">
+                          <div v-if="depart_id==0?false:true" class="card-content EnStatisticalBom"  :style="'min-height:'+tableHeight+'px;'">
+                              <div class="EnStatisticalBomBox" v-for="(item,index) in dept_Data" v-bind:key="index">
                                     <h2>{{item.name}}个人有效询盘数量</h2>
                                     <div class="item">
                                         <div class="itemPane" v-for="(items,indexs) in item.ulist" v-bind:key="indexs">
                                               <h3>{{items.user}}组</h3>   
-                                              <div class="itemPaneTable">                                                                      
+                                              <div class="itemPaneTable">
                                                   <el-table
                                                     :data="items.xunlist"
                                                     stripe
@@ -808,7 +808,8 @@ export default {
   data() {
     return {
       phoneID:null,
-      dept_id:'',
+      depart_id:0,
+      dept_Data:[],
       breadcrumbList:[],
       currentPhone:'',
       writepermit:false,
@@ -1316,11 +1317,25 @@ export default {
     // 电话首页-部门搜索
     initHomePage(){
       var $this = this;
-      $this.$store.dispatch('enphone/cluesPhoneIndexSearchDataAction', $this.dept_id).then(response=>{
+      var deptForm={};
+      deptForm.dept_id=$this.depart_id;
+      $this.$store.dispatch('enphone/cluesPhoneIndexSearchDataAction', deptForm).then(response=>{
         if(response){
           if(response.status){
              console.log(response,'电话首页-部门搜索')
-             $this.initPage();
+             $this.dept_Data=[];
+             var departcountUlist=[];
+             response.departcount.forEach(function(item){
+                if(item.dept_id==$this.depart_id){
+                  item.ulist.forEach(function(items,indexs){
+                      items.depart=items.user;
+                  })
+                  departcountUlist=item.ulist;
+                }
+             });
+             $this.departcountUlist = departcountUlist;             
+             $this.dept_Data=response.departusercount;
+             $this.isLoading.close();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -1352,48 +1367,6 @@ export default {
             $this.linkAll.yestodayNum = response.alllastnumber;
             $this.linkAll.monthNum = response.allnumber;
             $this.linkAll.unAllotNum = response.nodealcount;
-
-
-            var departnumberArr=[];
-            var totalObj={              
-              user: "总数",
-              depart: "总数",
-              lastdaycount:response.alllastnumber,
-              monthcount:response.allnumber,
-              todaycount:response.alltodaynumber,
-            }
-            departnumberArr.push(totalObj);
-            response.departnumber.forEach(function(item){
-                item.user=item.depart;
-                item.lastdaycount=item.lastdaynumber;
-                item.monthcount=item.monthnumber;
-                item.todaycount=item.todaynumber;
-                departnumberArr.push(item);
-            });
-
-            var departcountArr=[];          
-            var departcountObj={
-              dept_id:0,
-              name: "总数",
-              isOn:true,
-              ulist: departnumberArr
-            }
-            departcountArr.push(departcountObj);
-            response.departcount.forEach(function(item){
-                item.isOn=false;
-                departcountArr.push(item);
-            });
-            var departcountUlist=[];
-            departcountArr.forEach(function(item){
-              if(item.dept_id==0){
-                departcountUlist=item.ulist;
-              }
-            });
-            $this.departcountUlist = departcountUlist;
-            $this.defaultData = response;
-            $this.defaultData.departcountArr = departcountArr;
-            
-
             if($this.$route.query.phoneID){
                 $this.defaultData.data.forEach(function(item,index){
                   item.phone.forEach(function(item1,index1){
@@ -1416,6 +1389,44 @@ export default {
                 }else{
                   $this.currentPhone = "所有未分配";
                 }
+              }else{
+                var departArr=[];
+                var departObj={     
+                  depart_id:0,
+                  depart: "总数",
+                  isOn:true,
+                }
+                departArr.push(departObj);
+                response.departnumber.forEach(function(item){
+                    item.depart_id=item.depart_id;
+                    item.depart=item.depart;
+                    item.isOn=false,
+                    departArr.push(item);
+                });
+
+
+                var departcountUlist=[];
+                var totalObj={     
+                  depart_id:0,
+                  isOn:true,
+                  depart: "总数",
+                  lastdaycount:response.alllastnumber,
+                  monthcount:response.allnumber,
+                  todaycount:response.alltodaynumber,
+                }
+                departcountUlist.push(totalObj);
+                response.departnumber.forEach(function(item){
+                    item.depart_id=item.depart_id;
+                    item.isOn=false,
+                    item.depart=item.depart;
+                    item.lastdaycount=item.lastdaynumber;
+                    item.monthcount=item.monthnumber;
+                    item.todaycount=item.todaynumber;
+                    departcountUlist.push(item);
+                });
+                $this.departcountUlist = departcountUlist;
+                $this.defaultData = response;
+                $this.defaultData.departArr = departArr;
               }
             }
             var custorAndsalesmwarn=[];
@@ -2037,17 +2048,21 @@ export default {
     // 部门点击事件
     topdepartClick(Tid){
       var $this = this;
-      var topdepart = $this.defaultData.departcountArr;
+      $this.loadingFun();
+      var topdepart = $this.defaultData.departArr;
       topdepart.forEach(function(item){
-        if(item.dept_id == Tid){
+        if(item.depart_id == Tid){
           item.isOn = true;
-          var departcountUlist=[];
-          departcountUlist=item.ulist;
-          $this.departcountUlist = departcountUlist;
         }else{
           item.isOn = false;
         }
       });
+      $this.depart_id=Tid;
+      if($this.depart_id!=0){
+        $this.initHomePage();
+      }else{
+        $this.isLoading.close();
+      }
     },  
     enterBtn(){
       var $this=this;
