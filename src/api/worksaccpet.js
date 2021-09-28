@@ -123,3 +123,11 @@ export function workOrderNoAllotInfo(data) {
       data,
     });
 }
+// 工单详情评论
+export function workOrderComment(data) {
+    return request({
+      url: "/hxindex/Worksaccpet/addcomment",
+      method: "POST",
+      data,
+    });
+}

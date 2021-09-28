@@ -49,6 +49,7 @@
                                     <el-button size="mini" @click="addTableRow(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_add')">添加子角色</el-button>
                                     <el-button size="mini" @click="allotUser(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Role_getuser')">分配用户</el-button>
                                     <el-button size="mini" @click="allotPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_getpermit')">分配菜单权限</el-button>
+                                    <!-- <el-button size="mini" @click="allotNetworkPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_getpermit')">外网菜单权限</el-button> -->
                                     <el-button size="mini" @click="allotPostPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_gettypepermit')">分配论坛权限</el-button>
                                     <el-button size="mini" @click="allotWorkOrderPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_getworktypepermit')">分配工单权限</el-button>
                                     <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_edit')">编辑</el-button>
@@ -67,42 +68,46 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Role_add')||menuButtonPermit.includes('Role_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Role_add')||menuButtonPermit.includes('Role_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="640px">
         <el-form :model="dialogForm">
-          <div class="item-form">
-            <el-form-item label="父级角色：" :label-width="formLabelWidth" v-if="roleLevelData.length>0">
-              <el-cascader v-model="dialogForm.f_id" :options="roleLevelData" ref="menuLevel" filterable placeholder="请选择父级角色" :props="{ checkStrictly: true,expandTrigger: 'hover' }" clearable></el-cascader>
-            </el-form-item>
+          <div class="item-form-group">
+            <div class="item-form">
+              <el-form-item label="父级角色：" :label-width="formLabelWidth" v-if="roleLevelData.length>0">
+                <el-cascader v-model="dialogForm.f_id" :options="roleLevelData" ref="menuLevel" filterable placeholder="请选择父级角色" :props="{ checkStrictly: true,expandTrigger: 'hover' }" clearable></el-cascader>
+              </el-form-item>
+            </div>
+            <div class="item-form">
+              <el-form-item label="角色名称：" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.name" ref="name"></el-input>
+              </el-form-item>
+            </div>
           </div>
-          <div class="item-form">
-            <el-form-item label="角色名称：" :label-width="formLabelWidth">
-              <el-input v-model="dialogForm.name" ref="name"></el-input>
-            </el-form-item>
-          </div>
-          <div class="item-form" v-if="menuButtonPermit.includes('Role_getroledepart')">
-            <el-form-item label="部门权限：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
-              <el-cascader v-model="dialogForm.role_depart" :options="departLevelData" ref="departLevel" placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover',multiple:true }" :collapse-tags="true" clearable></el-cascader>
-            </el-form-item>
-          </div>
-          <div class="item-form" v-if="menuButtonPermit.includes('Role_readdepartwebsite')">
-            <el-form-item label="网站管理：" :label-width="formLabelWidth">
-              <el-select
-                v-model="dialogForm.readdepartwebsite"
-                multiple
-                collapse-tags
-                placeholder="请选择">
-                <el-option
-                  v-for="item in websiteDepart"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
+          <div class="item-form-group">
+            <div class="item-form" v-if="menuButtonPermit.includes('Role_getroledepart')">
+              <el-form-item label="部门权限：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
+                <el-cascader v-model="dialogForm.role_depart" :options="departLevelData" ref="departLevel" placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover',multiple:true }" :collapse-tags="true" clearable></el-cascader>
+              </el-form-item>
+            </div>
+            <div class="item-form" v-if="menuButtonPermit.includes('Role_readdepartwebsite')">
+              <el-form-item label="网站管理：" :label-width="formLabelWidth">
+                <el-select
+                  v-model="dialogForm.readdepartwebsite"
+                  multiple
+                  collapse-tags
+                  placeholder="请选择">
+                  <el-option
+                    v-for="item in websiteDepart"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </div>
           </div>
           <div class="item-form-group itemwebmsg" v-if="menuButtonPermit.includes('Role_getwebmsg')">
             <el-form-item label="留言管理：" :label-width="formLabelWidth">
-              <div class="item-form">
+              <div class="item-form" style="padding-right:55px;">
                   <el-select
                     v-model="dialogForm.readwebmsglangauge"
                     multiple
@@ -116,7 +121,7 @@
                     </el-option>
                   </el-select>
               </div>
-              <div class="item-form">
+              <div class="item-form" style="padding-left:55px;">
                   <el-select
                     v-model="dialogForm.readwebmsgbrand"
                     multiple
@@ -135,6 +140,11 @@
           <div class="item-form">
               <el-form-item label="角色备注：" :label-width="formLabelWidth">
                 <el-input type="textarea" v-model="dialogForm.remarks" :autosize="{ minRows: 2, maxRows: 4}" ref="remarks"></el-input>
+              </el-form-item>
+          </div>
+          <div class="item-form" v-if="dialogText=='编辑角色'">
+              <el-form-item label="IP白名单：" :label-width="formLabelWidth" style="margin-bottom:0;">
+                <el-input type="textarea" v-model="dialogForm.readip" :autosize="{ minRows: 2, maxRows: 4}" placeholder="该角色可在哪些ip上访问本系统，多个ip用英文逗号分隔" ref="remarks"></el-input>
               </el-form-item>
           </div>
         </el-form>
@@ -253,6 +263,26 @@
           </span>
         </template>
       </el-dialog>
+      <el-dialog :title="networkTitle" v-if="(menuButtonPermit.includes('Role_getworktypepermit'))" custom-class="transfer-dialog" :visible.sync="dialogNetworkVisible" width="840px">
+        <div class="transfer-panel">
+          <div class="transfer-wrap">
+            <el-transfer 
+              v-model="networkValue" 
+              :data="networkData"
+              :titles="['可分配权限', '已分配权限']"
+              filterable
+              :filter-method="filterNetworkMethod"
+              filter-placeholder="请输入菜单关键字"
+            ></el-transfer>
+          </div>
+        </div>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogNetworkVisible = false">取 消</el-button>
+            <el-button type="primary" @click="saveNetworkData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
@@ -338,6 +368,15 @@ export default {
       },
       workOrderData:[{key:"",label:""}],
       workOrderValue:[],
+      networkTitle:"分配外网访问菜单权限",
+      dialogNetworkVisible:false,
+      filterNetworkMethod(query, item) {
+          if(item.label){
+            return item.label.indexOf(query) > -1;
+          }
+      },
+      networkData:[{key:"",label:""}],
+      networkValue:[],
       scrollPosition:{
         width:0,
         left:0,
@@ -865,6 +904,7 @@ export default {
       var pathUrl = "";
       if($this.dialogText=="编辑角色"){
         pathUrl = "role/roleEditAction";
+        formData.readip = $this.dialogForm.readip;
       }else{
         pathUrl = "role/roleAddAction";
       }

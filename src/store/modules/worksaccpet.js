@@ -15,6 +15,7 @@
     confirmDoneWorkOrder,
     workOrderInfo,
     workOrderNoAllotInfo,
+    workOrderComment,
 } from '@/api/worksaccpet'
 
 const state = {}
@@ -174,6 +175,16 @@ const actions = {
     workOrderInfoAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             workOrderInfo(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 工单详情评论
+    workOrderCommentAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            workOrderComment(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

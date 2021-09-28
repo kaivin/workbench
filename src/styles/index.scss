@@ -1065,6 +1065,7 @@
     }
     .item-form-group {
       width:100%;
+      padding-right: 30px;
       &:before,
       &:after {
         content:"";
@@ -1103,6 +1104,7 @@
       .item-form {
         width:50%;
         float:left;
+        padding-right: 0;
       }
       &.itemwebmsg{
         .el-select__tags{
@@ -1112,6 +1114,9 @@
     }
     .el-select,.el-cascader{
       display:block!important;
+    }
+    .el-form-item{
+      margin-bottom: 15px;
     }
 }
 /** 穿梭框弹窗统一样式 穿梭一次 **/

@@ -123,7 +123,7 @@
                 </ul>
               </el-scrollbar>
             </div>
-            <div class="message-panel" v-if="menuButtonPermit.includes('Works_addcomments')&&articleData.status!=0">
+            <div class="message-panel" v-if="menuButtonPermit.includes('Works_addcomment')&&articleData.status!=0">
               <div class="message-content" v-bind:class="isFocus?'focus':''" v-clickOutside="onBlur">
                 <div class="input-content">
                   <el-input type="textarea" autosize resize="none" @focus="onFocus" @keydown.enter.native="keyDownHandler" placeholder="请输入内容，按ctrl+enter发布内容" v-model="content"></el-input>

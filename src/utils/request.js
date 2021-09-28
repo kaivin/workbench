@@ -65,7 +65,7 @@ service.interceptors.response.use(
    */
   response => {
     const res = response;
-    //console.log(res,"请求响应");
+    // console.log(res,"请求响应");
     // if the custom code is not 20000, it is judged as an error.
     if (res.status !== 200) {
       Message({

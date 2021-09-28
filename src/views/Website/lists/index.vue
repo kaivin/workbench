@@ -95,6 +95,7 @@
                                 style="width:100%;margin:0px!important;"
                                 placeholder="IP/域名搜索："
                                 v-model="formData.ip"
+                                @keypress.native.enter="searchResult"
                                 size="small"
                                 clearable>
                               </el-input>
