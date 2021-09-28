@@ -1403,8 +1403,6 @@ export default {
                     item.isOn=false,
                     departArr.push(item);
                 });
-
-
                 var departcountUlist=[];
                 var totalObj={     
                   depart_id:0,
@@ -2060,7 +2058,27 @@ export default {
       $this.depart_id=Tid;
       if($this.depart_id!=0){
         $this.initHomePage();
-      }else{
+      }else{        
+        var departcountUlist=[];
+        var totalObj={     
+          depart_id:0,
+          isOn:true,
+          depart: "总数",
+          lastdaycount:$this.defaultData.alllastnumber,
+          monthcount:$this.defaultData.allnumber,
+          todaycount:$this.defaultData.alltodaynumber,
+        }
+        departcountUlist.push(totalObj);
+        $this.defaultData.departnumber.forEach(function(item){
+            item.depart_id=item.depart_id;
+            item.isOn=false,
+            item.depart=item.depart;
+            item.lastdaycount=item.lastdaynumber;
+            item.monthcount=item.monthnumber;
+            item.todaycount=item.todaynumber;
+            departcountUlist.push(item);
+        });
+        $this.departcountUlist = departcountUlist;
         $this.isLoading.close();
       }
     },  
