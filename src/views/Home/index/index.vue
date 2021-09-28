@@ -1245,9 +1245,14 @@ export default {
     //点击部门
     handleDepart(Dep){
       var $this = this;
-      $this.currentCluesData.departID = Dep.id;
-      $this.currentCluesData.departName = Dep.name;
-      $this.statDataApi();
+      if(!$this.loading){
+        $this.loading=true;
+        $this.currentCluesData.departID = Dep.id;
+        $this.currentCluesData.departName = Dep.name;
+        $this.regionMapChart.destroy();
+        $this.areaTrendPlot.destroy();
+        $this.statDataApi();
+      }
     },
     // 中英文数据分析切换
     cnEnStatChange(){

@@ -178,7 +178,7 @@
                         </el-select>
                       </div>
                       <div class="item-search" style="width: 100px;">
-                        <el-select v-model="searchData.userid" size="small" clearable placeholder="提供者">
+                        <el-select v-model="searchData.userid" size="small" filterable clearable placeholder="提供者">
                           <el-option
                             v-for="item in userList"
                             :key="item.value"
@@ -988,7 +988,7 @@ export default {
       if($this.searchData.productlevel&&$this.searchData.productlevel!=''){
         searchData.productlevel = $this.searchData.productlevel;
       }
-      if($this.searchData.userid&&$this.searchData.userid!=''){
+      if($this.searchData.userid===0||($this.searchData.userid&&$this.searchData.userid!='')){
         searchData.userid = $this.searchData.userid;
       }
       if($this.searchData.device&&$this.searchData.device!=''){

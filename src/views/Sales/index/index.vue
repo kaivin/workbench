@@ -76,7 +76,7 @@
                                   :picker-options="pickerRangeOptions">
                                 </el-date-picker>
                               </div>
-                              <div class="item-search" v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'" style="width:100px;">
+                              <div class="item-search" v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'||currentStatus === 'hasnosaycount'" style="width:100px;">
                                 <el-select v-model="searchData.salesuserid" size="small" clearable placeholder="业务员">
                                   <el-option
                                       v-for="item in salesuseridList"
@@ -793,7 +793,7 @@ export default {
               });
               $this.dealuserList=dealuserList;
             }
-            if($this.currentStatus=="allotcount"&&response.allotuser.length>0){              
+            if(($this.currentStatus=="allotcount"||$this.currentStatus=="hasnosaycount")&&response.allotuser.length>0){              
               var salesuseridList=[];
               response.dealuser.forEach(function(item,index){
                 var itemData = {};
