@@ -22,9 +22,7 @@
         </div>
         <div class="item-row stat-row">
           <div class="btn-panel" v-if="permitModules.includes('Module_cnStat')&&permitModules.includes('Module_enStat')">
-            <el-radio-group v-model="language" size="small" @change="cnEnStatChange">
-              <el-radio-button v-for="(item,index) in languageList" v-bind:key="index" :label="item.label">{{item.name}}统计</el-radio-button>
-            </el-radio-group>
+            <span class="btn-span" v-bind:class="item.isOn?'active':''" v-for="(item,index) in languageList" v-bind:key="index" v-on:click="cnEnStatChange(item.label)">{{item.name}}统计</span>
           </div>
           <div class="flex-box flex-wrap tarFlex" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
             <div class="target-chart">
@@ -205,11 +203,10 @@ export default {
       },
       mapDate:[],
       languageList:[
-        {name:"中文",label:"Module_cnStat"},
-        {name:"英文",label:"Module_enStat"},
+        {name:"中文",label:"Module_cnStat",isOn:false},
+        {name:"英文",label:"Module_enStat",isOn:false},
       ],
       language:null,
-      langVal:null,
       areaTrendPlot:null,
       regionMapChart:null,
       liquidPlot1:null,
@@ -217,7 +214,7 @@ export default {
       liquidPlot3:null,
       pieSourcePlot:null,
       radialBarPlot:null,
-      loading:true,
+      loading:false,
       clickID:'',
     }
   },
@@ -301,6 +298,7 @@ export default {
         $this.language = null;
       }
       if($this.language){
+        $this.cnEnActiveChange();
         $this.getNearMonth();
         $this.statDataApi();
       }
@@ -377,6 +375,7 @@ export default {
             $this.currentCluesData.targetNum = response.daytargetnumber;
             $this.drawAreaTrendChart();
             $this.currentCluesData.scoreData = response.deptscore;
+            console.log($this.currentCluesData.departID,"当前中文部门ID");
             if(!$this.currentCluesData.departID){
               $this.currentCluesData.targetData=[];
               var departTargetNum = [];
@@ -419,9 +418,6 @@ export default {
             $this.drawCluesLiquidChart1();
             $this.drawCluesLiquidChart2();
             $this.drawCluesLiquidChart3();
-            $this.loading=true;
-            $this.langVal=$this.language;
-            console.log($this.loading,'cn渲染完毕');
           } else {
             $this.$message({
               showClose: true,
@@ -455,6 +451,7 @@ export default {
             $this.currentCluesData.targetNum = response.daytargetnumber;
             $this.drawAreaTrendChart();
             $this.currentCluesData.scoreData = response.deptscore;
+            console.log($this.currentCluesData.departID,"当前英文部门ID");
             if(!$this.currentCluesData.departID){
              $this.currentCluesData.targetData=[];
               var departTargetNum = [];
@@ -497,9 +494,6 @@ export default {
             $this.drawCluesLiquidChart1();
             $this.drawCluesLiquidChart2();
             $this.drawCluesLiquidChart3();
-            $this.loading=true;
-            $this.langVal=$this.language;
-            console.log($this.loading,'en渲染完毕');
           } else {
             $this.$message({
               showClose: true,
@@ -1200,95 +1194,129 @@ export default {
           $this.currentCluesData.targetData.forEach(function(item){
                tagData.push(item);
           });
-          const radialBarPlot = new Bullet('radialBarChart', {
-            data:tagData.reverse(),
-            measureField: 'dayNum',
-            rangeField: 'targetNum',
-            targetField: 'targetNum',
-            xField: 'name',
-            height:230,
-            color: {
-              range: '#ffe0b0',
-              measure: '#5B8FF9',
-              target: '#ffe0b0',
-            },
-            xAxis: {
-              line: null,
-            },
-            yAxis: {
-              grid: {
-                line: {
-                  style: {
-                    stroke: '#cccccc',
-                    lineWidth: 1,
-                    lineDash: [3, 2],
-                    strokeOpacity: 0.7,
-                    shadowColor: null,
-                    shadowBlur: 0,
-                    shadowOffsetX:0,
-                    shadowOffsetY:0,
-                    cursor: 'pointer'
+          var resultData = tagData.reverse();
+          if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
+            $this.radialBarPlot.changeData(resultData);
+          }else{
+            const radialBarPlot = new Bullet('radialBarChart', {
+              data:resultData,
+              measureField: 'dayNum',
+              rangeField: 'targetNum',
+              targetField: 'targetNum',
+              xField: 'name',
+              height:230,
+              color: {
+                range: '#ffe0b0',
+                measure: '#5B8FF9',
+                target: '#ffe0b0',
+              },
+              xAxis: {
+                line: null,
+              },
+              yAxis: {
+                grid: {
+                  line: {
+                    style: {
+                      stroke: '#cccccc',
+                      lineWidth: 1,
+                      lineDash: [3, 2],
+                      strokeOpacity: 0.7,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX:0,
+                      shadowOffsetY:0,
+                      cursor: 'pointer'
+                    }
                   }
                 }
-              }
-            },
-            layout: 'vertical',
-            label: {
-              measure: {
-                position: 'middle',
-                style: {
-                  fill: '#333',
-                },
               },
-            }, 
-          });           
-          $this.radialBarPlot = radialBarPlot;
-          radialBarPlot.render();
+              layout: 'vertical',
+              label: {
+                measure: {
+                  position: 'middle',
+                  style: {
+                    fill: '#333',
+                  },
+                },
+              }, 
+            });           
+            $this.radialBarPlot = radialBarPlot;
+            radialBarPlot.render();
+          }
       }
     },
     //点击部门
     handleDepart(Dep){
       var $this = this;
-      if($this.clickID!=Dep.id){
-        $this.clickID=Dep.id;
-        if($this.loading){
-          $this.loading=false;
+      if(!$this.loading){
+        $this.loading = true;
+        setTimeout(() => {
+          $this.loading = false;
+        }, 600);
+        if($this.clickID!=Dep.id){
+          $this.clickID=Dep.id;
           $this.currentCluesData.departID = Dep.id;
           $this.currentCluesData.departName = Dep.name;
-          $this.regionMapChart.destroy();
-          $this.areaTrendPlot.destroy();
+          if($this.regionMapChart&&!$this.regionMapChart.destroyed){
+            $this.regionMapChart.destroy();
+          }
+          if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
+            $this.areaTrendPlot.destroy();
+          }
           $this.statDataApi();
         }
       }
     },
-    // 中英文数据分析切换
-    cnEnStatChange(langDate){
+    // 中英文选中状态切换
+    cnEnActiveChange(){
       var $this = this;
-      if($this.langVal!=$this.language){
-        if($this.loading){
-            console.log($this.loading,'1渲染中......');
-            $this.loading=false;
-            $this.languageList.forEach(function(item,index){
-              if(item.label==$this.language){
-                item.isOn=true;
-              }else{
-                item.isOn=false;
-              }
-            });
-            $this.currentCluesData.departID = null;
+      $this.languageList.forEach(function(item,index){
+        if(item.label==$this.language){
+          item.isOn = true;
+        }else{
+          item.isOn = false;
+        }
+      });
+    },
+    // 中英文数据分析切换
+    cnEnStatChange(language){
+      var $this = this;
+      if(!$this.loading){
+        $this.loading = true;
+        setTimeout(() => {
+          $this.loading = false;
+        }, 600);
+        if($this.language!=language){
+          $this.language = language;
+          $this.cnEnActiveChange();
+          $this.currentCluesData.departID = null;
+          if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
             $this.radialBarPlot.destroy();
+          }
+          if($this.liquidPlot1&&!$this.liquidPlot1.chart.destroyed){
             $this.liquidPlot1.destroy();
+          }
+          if($this.liquidPlot2&&!$this.liquidPlot2.chart.destroyed){
             $this.liquidPlot2.destroy();
+          }
+          if($this.liquidPlot3&&!$this.liquidPlot3.chart.destroyed){
             $this.liquidPlot3.destroy();
-            $this.regionMapChart.destroy();
+          }
+          if($this.pieSourcePlot&&!$this.pieSourcePlot.chart.destroyed){
             $this.pieSourcePlot.destroy();
+          }
+          if($this.regionMapChart&&!$this.regionMapChart.destroyed){
+            $this.regionMapChart.destroy();
+          }
+          if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
             $this.areaTrendPlot.destroy();
-            if($this.language=="Module_cnStat"){
-              $this.currentCluesData.departName = "中文";
-            }else{
-              $this.currentCluesData.departName = "英文";
-            }
-            $this.statDataApi();
+          }
+          if($this.language=="Module_cnStat"){
+            $this.currentCluesData.departName = "中文";
+          }else{
+            $this.currentCluesData.departName = "英文";
+          }
+          $this.statDataApi();
         }
       }
     },
