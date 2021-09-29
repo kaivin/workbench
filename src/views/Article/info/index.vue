@@ -16,7 +16,7 @@
               <div class="ArticleSixFlTop">
                 <h1>{{articleData.title}}</h1>
                 <div class="ArticleSixFlTopTag clearfix">
-                  <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="art-depart" /></i>{{articleData.typename}}</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="art-author" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="art-author" /></i>匿名</span><span><i class="svg-i" ><svg-icon icon-class="art-edit-time" /></i>{{articleData.updatetime}}</span><!--<span v-on:click="logEdit()" class="logEdit"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改</span>--></p>
+                  <p class="ArticleSixFlTopTagFl"><span><i class="svg-i" ><svg-icon icon-class="art-depart" /></i>{{articleData.typename}}</span><span v-if="articleData.is_hidename==0"><i class="svg-i" ><svg-icon icon-class="art-author" /></i>{{articleData.createname}}</span><span v-else><i class="svg-i" ><svg-icon icon-class="art-author" /></i>匿名</span><span><i class="svg-i" ><svg-icon icon-class="art-edit-time" /></i>{{articleData.updatetime}}</span><span v-if="articleData.editshow==1" v-on:click="logEdit()" class="logEdit"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>修改</span></p>
                   <p class="ArticleSixFlTopTagFr">阅读：{{articleData.hits}}<span>|</span>发布时间：{{articleData.addtime}} </p>
                 </div>
                 <div class="ArticleSixFlTopRead" v-if="articleData.readshow==1&&(userList.hasreadusercount>0||userList.notreadusercount>0)">

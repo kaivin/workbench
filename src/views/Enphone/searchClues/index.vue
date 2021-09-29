@@ -323,7 +323,7 @@
                                         width="90"
                                         >
                                         <template slot-scope="scope">
-                                          <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
+                                          <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>                                          
                                           <div class="table-text">{{scope.row.invalidcause}}<span class="redTip">{{scope.row.noeffectivetime}}</span></div>
                                         </template>
                                       </el-table-column>
@@ -347,6 +347,12 @@
                                         label="备注"
                                         min-width="80"
                                         >
+                                        <template slot-scope="scope">
+                                          <div class="table-text">
+                                            <p>{{scope.row.xunremark}}</p>
+                                            <p class="EnColor07">{{scope.row.custormremark}}</p>
+                                          </div>
+                                        </template>
                                       </el-table-column>
                                       <el-table-column
                                         prop="addusername"

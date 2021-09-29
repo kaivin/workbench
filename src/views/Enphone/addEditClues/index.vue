@@ -1413,14 +1413,6 @@ export default {
         });
         return false;
       }
-      if($this.formData.timediff == ""||!$this.formData.timediff){
-        $this.$message({
-            showClose: true,
-            message: '错误：客户当地时间不能为空！',
-            type: 'error'
-        });
-        return false;
-      }
       if($this.formData.messagetype == ""||!$this.formData.messagetype){
         $this.$message({
             showClose: true,
