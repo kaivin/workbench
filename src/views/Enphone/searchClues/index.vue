@@ -57,6 +57,7 @@
                                                 range-separator="至"
                                                 start-placeholder="开始日期"
                                                 end-placeholder="结束日期"
+                                                @change="timeSearch"
                                                 :picker-options="pickerRangeOptions">
                                             </el-date-picker>
                                             <el-select v-model="searchData.timeing" clearable placeholder="时段" style="width:70px;margin-right:10px;margin-bottom:10px;" size="mini">
@@ -1296,6 +1297,11 @@ export default {
         resultData.groupurlproduct = $this.searchData.groupurlproduct;        
         resultData.phoneid = $this.searchData.phoneid;
         return resultData;
+    },
+    // 时间搜索
+    timeSearch(){
+      var $this = this;
+      $this.enCluesSearchData();
     },
     // 搜索确认
     enCluesSearchData(){

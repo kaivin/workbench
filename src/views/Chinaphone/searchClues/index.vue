@@ -52,6 +52,7 @@
                                     range-separator="至"
                                     start-placeholder="开始日期"
                                     end-placeholder="结束日期"
+                                    @change="timeSearch"
                                     :picker-options="pickerRangeOptions">
                                 </el-date-picker>
                               </div>
@@ -782,6 +783,11 @@ export default {
         setTimeout(function() {
           $this.setScrollDom();
       }, 400);
+    },
+    // 时间搜索
+    timeSearch(){
+      var $this = this;
+      $this.searchResult();
     },
     // 搜索结果
     searchResult(){

@@ -448,7 +448,7 @@
                                     </dd>
                                   </dl>
                                   <dl style="width:247px;">
-                                    <dt>无效原因：</dt>
+                                    <dt>无效原因：<span style="color:#f60;" v-if="formData.noeffectivetime">{{formData.noeffectivetime}}</span></dt>
                                     <dd>
                                       <el-input
                                           placeholder="该项只在无效情况下填写"
@@ -611,6 +611,7 @@ export default {
         givesaleswarn:"",
         salesownid:'',
         saleswarnstatus:false,
+        noeffectivetime:"",
         custormfiles:"",
         custormfilesname:"",
         xuntime:"",
@@ -810,6 +811,7 @@ export default {
       formData.custormname = $this.formData.custormname;
       formData.custormemail = $this.formData.custormemail;
       formData.custormphone = $this.formData.custormphone;
+      formData.noeffectivetime = $this.formData.noeffectivetime;
       if($this.formData.salesuserid!=0&&$this.formData.salesuserid){
         formData.salesuserid = $this.formData.salesuserid;
       }else{
@@ -880,6 +882,7 @@ export default {
       $this.formData.id = $this.defaultInfo.id;
       $this.formData.custormname = $this.defaultInfo.custormname;
       $this.formData.custormemail = $this.defaultInfo.custormemail;
+      $this.formData.noeffectivetime = $this.defaultInfo.noeffectivetime;
       $this.formData.custormphone = $this.defaultInfo.custormphone;
       if($this.defaultInfo.salesownid!=0&&$this.defaultInfo.salesownid){
          $this.formData.salesuserid="";
