@@ -302,6 +302,12 @@ export default {
     var $this = this;
     $this.getBreadcrumbList();
     $this.initData();
+    document.onkeydown = function(e) {
+    var key = window.event.keyCode;
+      if (key == 13) {
+        $this.searchResult();
+      }
+    }
   },
   destroyed(){
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件

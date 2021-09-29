@@ -703,6 +703,12 @@ export default {
     var $this = this;
     if($this.$route.query.phoneID){
       $this.phoneID = parseInt($this.$route.query.phoneID);
+      document.onkeydown = function(e) {
+      var key = window.event.keyCode;
+        if (key == 13) {
+          $this.searchResult();
+        }
+      }
     }else{
       $this.phoneID = null;
     }
@@ -978,7 +984,7 @@ export default {
       searchData.page = $this.searchData.page;
       searchData.limit = $this.searchData.limit;
       searchData.phoneid = $this.phoneID;
-      if($this.searchData.mod&&$this.searchData.mode!=''){
+      if($this.searchData.mode&&$this.searchData.mode!=''){
         searchData.mode = $this.searchData.mode;
       }
       if($this.searchData.typekey&&$this.searchData.typekey!=''){

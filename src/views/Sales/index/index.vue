@@ -273,7 +273,13 @@
                                 <template slot-scope="scope">
                                     <div class="table-text">
                                     <p><span class="EnColor05">称呼：</span>{{scope.row.custormname}}</p>
-                                    <p><span class="EnColor05">邮箱：</span><span class="SiteColor-02"  v-if="scope.row.custormemail" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;">点击详情查看Email</span></p>
+                                    <p>
+                                      <span class="EnColor05">邮箱：</span>
+                                      <span class="SiteColor-02"  v-if="scope.row.custormemail" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;"> 
+                                          <i style="font-style:normal;" v-if="scope.row.managestatus==2">{{scope.row.custormemail}}</i>
+                                          <i style="font-style:normal;" v-else>点击详情查看Email</i>
+                                      </span>
+                                    </p>
                                     <p><span class="EnColor05">电话：</span>{{scope.row.custormphone}}</p>
                                     </div>
                                 </template>
@@ -1034,6 +1040,7 @@ export default {
             });
           }
           $this.tableData = tableData;
+          console.log($this.tableData,'$this.tableData');
           var infoData = {};
           infoData.allcount=resData.allcount;
           infoData.warnlist=resData.warnlist;

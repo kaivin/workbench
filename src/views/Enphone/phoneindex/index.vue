@@ -170,7 +170,7 @@
                                           :value="item.value">
                                       </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道" style="width:140px;margin:5px 10px 5px 0px;float:left;">
                                       <el-option
                                           v-for="item in sourceList"
                                           :key="item.value"
@@ -307,7 +307,7 @@
                                     </el-option>
                                   </el-select>
                                   <span style="float:left;line-height:32px;font-size:13px;margin:5px;">排序：</span>
-                                  <el-select v-model="searchData.sort" size="small" placeholder="排序" style="width:100px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.sort" size="small" placeholder="排序" style="width:130px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in sortList"
                                       :key="item.value"
@@ -1104,6 +1104,12 @@ export default {
       $this.phoneID = parseInt($this.$route.query.phoneID);
       $this.searchData.waitstatus = parseInt($this.$route.query.waitstatus);
       $this.currentKey = null;
+      document.onkeydown = function(e) {
+      var key = window.event.keyCode;
+        if (key == 13) {
+          $this.searchResult();
+        }
+      }
     }else{
       $this.phoneID = null;
       $this.searchData.waitstatus=1;

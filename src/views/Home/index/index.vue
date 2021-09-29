@@ -216,7 +216,7 @@ export default {
       liquidPlot3:null,
       pieSourcePlot:null,
       radialBarPlot:null,
-      loading:false,
+      loading:true,
       clickID:'',
     }
   },
@@ -362,9 +362,9 @@ export default {
       }else{
         resultData = null;
       }
-      if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
-        $this.areaTrendPlot.destroy();
-      }
+      //if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
+      //  $this.areaTrendPlot.destroy();
+      //}
       $this.$store.dispatch("api/cnCluesStatDataAction", resultData).then((response) => {
         if (response) {
           if (response.status) {
@@ -418,6 +418,7 @@ export default {
             $this.drawCluesLiquidChart2();
             $this.drawCluesLiquidChart3();
             $this.loading=false;
+            console.log($this.loading,'$this.loading');
           } else {
             $this.$message({
               showClose: true,
@@ -437,9 +438,9 @@ export default {
       }else{
         resultData = null;
       }
-      if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
-        $this.areaTrendPlot.destroy();
-      }
+      //if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
+      //  $this.areaTrendPlot.destroy();
+      //}
       $this.$store.dispatch("api/enCluesStatDataAction", resultData).then((response) => {
         if (response) {
           if (response.status) {
@@ -492,7 +493,7 @@ export default {
             $this.drawCluesLiquidChart1();
             $this.drawCluesLiquidChart2();
             $this.drawCluesLiquidChart3();
-            $this.loading=false;
+            $this.loading=true;
           } else {
             $this.$message({
               showClose: true,
@@ -1189,9 +1190,6 @@ export default {
     drawDepartTarget(){
       var $this = this;
       if($this.currentCluesData.targetData.length>0){
-        if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
-          $this.radialBarPlot.changeData($this.currentCluesData.targetData);
-        }else{
           var tagData = [];
           $this.currentCluesData.targetData.forEach(function(item){
                tagData.push(item);
@@ -1240,7 +1238,6 @@ export default {
           });           
           $this.radialBarPlot = radialBarPlot;
           radialBarPlot.render();
-        }
       }
     },
     //点击部门
@@ -1248,8 +1245,8 @@ export default {
       var $this = this;
       if($this.clickID!=Dep.id){
         $this.clickID=Dep.id;
-        if(!$this.loading){
-          $this.loading=true;
+        if($this.loading){
+          $this.loading=false;
           $this.currentCluesData.departID = Dep.id;
           $this.currentCluesData.departName = Dep.name;
           $this.regionMapChart.destroy();
@@ -1261,9 +1258,10 @@ export default {
     // 中英文数据分析切换
     cnEnStatChange(){
       var $this = this;
-      if(!$this.loading){
-        $this.loading=true;
+        if($this.loading){
+          $this.loading=false;
         $this.currentCluesData.departID = null;
+        $this.currentCluesData.targetData=[];
         if($this.language=="Module_cnStat"){
           $this.currentCluesData.departName = "中文";
         }else{

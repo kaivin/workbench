@@ -381,7 +381,7 @@ export default {
                 response.data.dayPercent = parseFloat(response.data.timeing/response.data.dayDiff*100).toFixed(2)+"%";
               }
               var tagsList = [];
-              if(response.data.tagsname!=''){
+              if(response.data.tagsname&&response.data.tagsname!=''){
                 if(response.data.tagsname.indexOf(",")!=-1){
                   var tagsArr = response.data.tagsname.split(",");
                   var colorsArr = response.data.tagsnamecolor.split(",");
