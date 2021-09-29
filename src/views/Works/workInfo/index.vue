@@ -95,7 +95,7 @@
           </div>
         </div>
         <div class="article-log" ref="rightPane">
-          <div class="log-content" v-bind:style="'height:'+minHeight+'px;width:'+rightWidth+'px;'" v-bind:class="menuButtonPermit.includes('Works_addcomments')&&articleData.status!=0?'has-comment':''">
+          <div class="log-content" v-bind:style="'height:'+minHeight+'px;width:'+rightWidth+'px;'" v-bind:class="menuButtonPermit.includes('Works_addcomment')&&articleData.status!=0?'has-comment':''">
             <div class="log-title"><span>项目日志</span></div>
             <div class="log-panel">
               <el-scrollbar wrap-class="scrollbar-wrapper">

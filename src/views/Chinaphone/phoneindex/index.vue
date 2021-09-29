@@ -65,7 +65,7 @@
                   </div>
                   <div class="item-number" v-bind:class="defaultData.allnumber>defaultData.lastmonthnumber?'rise':defaultData.allnumber<defaultData.lastmonthnumber?'down':'flat'">
                     <dl>
-                      <dt>环比上月同期<i class="svg-i" v-if="defaultData.allnumber!=defaultData.lastmonthnumber"><svg-icon :icon-class="defaultData.allnumber>defaultData.lastmonthnumber?'rise':'down'" /></i><i class="flat-icon" v-else></i></dt>
+                      <dt>上月同期<i class="svg-i" v-if="defaultData.allnumber!=defaultData.lastmonthnumber"><svg-icon :icon-class="defaultData.allnumber>defaultData.lastmonthnumber?'rise':'down'" /></i><i class="flat-icon" v-else></i></dt>
                       <dd>{{defaultData.lastmonthnumber}}</dd>
                     </dl>
                   </div>
@@ -294,6 +294,7 @@
                         </el-table-column>
                         <el-table-column
                           prop="effective"
+                          align="center"
                           label="有效"
                           width="50"
                           >
@@ -304,12 +305,13 @@
                         <el-table-column
                           prop="addusername"
                           label="添加人"
-                          width="65"
+                          width="80"
                           >
                         </el-table-column>
                         <el-table-column
                           prop="levelname"
                           label="等级"
+                          align="center"
                           width="50"
                           >
                           <template slot-scope="scope">
@@ -335,7 +337,7 @@
                           fixed="right"
                           prop="url"
                           label="域名/链接/关键词"
-                          min-width="130"
+                          width="130"
                           >
                           <template slot-scope="scope">
                             <div class="table-input">
@@ -351,7 +353,7 @@
                           fixed="right"
                           prop="searchword"
                           label="平台/提供者/设备"
-                          min-width="130"
+                          width="130"
                           >
                           <template slot-scope="scope">
                             <div class="table-input">
@@ -367,7 +369,7 @@
                           fixed="right"
                           prop="remark"
                           label="备注"
-                          min-width="140"
+                          width="120"
                           >
                           <template slot-scope="scope">
                             <div class="table-input cnClues">
