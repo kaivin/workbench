@@ -1597,15 +1597,13 @@ export default {
     },
     // 在线查看，可下载文件
     handlePreview(file) {
-      //document.location.href = file.url
-
-       const downloadElement = document.createElement('a')
-       downloadElement.href = file.url
-       document.body.appendChild(downloadElement)
-       downloadElement.click() // 点击下载
-       document.body.removeChild(downloadElement) // 下载完成移除元素
-
-
+      let link = document.createElement("a");
+      link.style.display = "none";
+      link.href = file.url;
+      link.setAttribute("download", file.url); //指定下载后的文件名，防跳转
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link)
     },
   }
 }

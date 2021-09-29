@@ -217,6 +217,7 @@ export default {
       pieSourcePlot:null,
       radialBarPlot:null,
       loading:false,
+      clickID:'',
     }
   },
   computed: {
@@ -1245,13 +1246,16 @@ export default {
     //点击部门
     handleDepart(Dep){
       var $this = this;
-      if(!$this.loading){
-        $this.loading=true;
-        $this.currentCluesData.departID = Dep.id;
-        $this.currentCluesData.departName = Dep.name;
-        $this.regionMapChart.destroy();
-        $this.areaTrendPlot.destroy();
-        $this.statDataApi();
+      if($this.clickID!=Dep.id){
+        $this.clickID=Dep.id;
+        if(!$this.loading){
+          $this.loading=true;
+          $this.currentCluesData.departID = Dep.id;
+          $this.currentCluesData.departName = Dep.name;
+          $this.regionMapChart.destroy();
+          $this.areaTrendPlot.destroy();
+          $this.statDataApi();
+        }
       }
     },
     // 中英文数据分析切换

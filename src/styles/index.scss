@@ -695,8 +695,14 @@
 /** 论坛文章、网站日志详情页默认样式 **/
 .info-content{
   width:100%;
-  padding:0;
+  padding:15px 0px 0px 0px;
   overflow:hidden;
+  a{
+      color:$red;
+      &:hover{
+          text-decoration: underline;
+      }
+  }
   p,div{
     font-size:16px;
     line-height:2;
@@ -707,16 +713,16 @@
   table{
     max-width:100%;
     border:none!important;
-    border-top:1px solid $primaryBorder!important;
-    border-left:1px solid $primaryBorder!important;
-    background:none!important;
+    border-top:1px solid #c3c0c0!important;
+    border-left:1px solid #c3c0c0!important;
+    background:#f2f2f2!important;
     tr{
       td{
         border:none!important;
-        border-bottom:1px solid $primaryBorder!important;
-        border-right:1px solid $primaryBorder!important;
-        padding:3px 10px!important;
-        background:none!important;
+        border-bottom:1px solid #c3c0c0!important;
+        border-right:1px solid #c3c0c0!important;
+        padding:10px 10px!important;
+        background:#f2f2f2!important;
         font-size:16px;
       }
     }

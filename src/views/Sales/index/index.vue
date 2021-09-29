@@ -1215,7 +1215,7 @@ export default {
       queryObj.ID = row.id;
       queryObj.status = num;
       var routeUrl =  $this.$router.resolve({path:'/Sales/phoneinfosub',query:queryObj});
-      window.open(routeUrl.href,'_self');
+      window.open(routeUrl.href,'_blank');
     },
     // 表格多选改变事件
     handleSelectionChange(val) {
