@@ -633,6 +633,19 @@
     padding:20px 0px 20px 0px;
   }
 }
+.el-select.salesuserDefault{
+  .el-input--small{
+    input::-webkit-input-placeholder {
+      color: #303133!important;
+    }
+    input::-moz-input-placeholder {
+      color: #303133!important;
+    }
+    input::-ms-input-placeholder {
+      color: #303133!important;
+    }
+  }
+}
 .en-phone{
   .box-card{
     .search-wrap{

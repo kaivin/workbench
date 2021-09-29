@@ -427,7 +427,7 @@
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                                    <div class="table-text" v-if="!scope.row.isEffective"><p v-html="scope.row.invalidcause"></p><p class="redTip" v-html="scope.row.noeffectivetime"></p></div>
+                                    <div class="table-text">{{scope.row.invalidcause}}<span class="redTip">{{scope.row.noeffectivetime}}</span></div>
                                   </template>
                                 </el-table-column>
                                 <el-table-column
@@ -622,8 +622,8 @@
                                   width="90"
                                   >
                                   <template slot-scope="scope">
-                                    <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>                                    
-                                    <div class="table-text" v-if="!scope.row.isEffective">{{scope.row.invalidcause}}<span class="redTip">{{scope.row.noeffectivetime}}</span></div>
+                                    <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
+                                    <div class="table-text">{{scope.row.invalidcause}}<span class="redTip">{{scope.row.noeffectivetime}}</span></div>
                                   </template>
                                 </el-table-column>
                                 <el-table-column

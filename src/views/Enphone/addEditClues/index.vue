@@ -99,7 +99,7 @@
                                   <dl style="width:194px;">
                                     <dt>分配的业务员：</dt>
                                     <dd>
-                                      <el-select size="small" v-model="formData.salesuserid" :placeholder="salesuserDefault">
+                                      <el-select size="small" :class="salesuserDefault?'salesuserDefault':''" v-model="formData.salesuserid" :placeholder="salesuserDefault">
                                         <el-option
                                           v-for="item in salesuserlist"
                                           :key="item.value"

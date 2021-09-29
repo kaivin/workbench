@@ -209,6 +209,7 @@ export default {
         {name:"英文",label:"Module_enStat"},
       ],
       language:null,
+      langVal:null,
       areaTrendPlot:null,
       regionMapChart:null,
       liquidPlot1:null,
@@ -362,9 +363,9 @@ export default {
       }else{
         resultData = null;
       }
-      //if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
-      //  $this.areaTrendPlot.destroy();
-      //}
+      if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
+        $this.areaTrendPlot.destroy();
+      }
       $this.$store.dispatch("api/cnCluesStatDataAction", resultData).then((response) => {
         if (response) {
           if (response.status) {
@@ -377,6 +378,7 @@ export default {
             $this.drawAreaTrendChart();
             $this.currentCluesData.scoreData = response.deptscore;
             if(!$this.currentCluesData.departID){
+              $this.currentCluesData.targetData=[];
               var departTargetNum = [];
               response.groupcount.forEach(function(item,index){
                 var itemData = {};
@@ -417,8 +419,9 @@ export default {
             $this.drawCluesLiquidChart1();
             $this.drawCluesLiquidChart2();
             $this.drawCluesLiquidChart3();
-            $this.loading=false;
-            console.log($this.loading,'$this.loading');
+            $this.loading=true;
+            $this.langVal=$this.language;
+            console.log($this.loading,'cn渲染完毕');
           } else {
             $this.$message({
               showClose: true,
@@ -438,9 +441,9 @@ export default {
       }else{
         resultData = null;
       }
-      //if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
-      //  $this.areaTrendPlot.destroy();
-      //}
+      if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
+        $this.areaTrendPlot.destroy();
+      }
       $this.$store.dispatch("api/enCluesStatDataAction", resultData).then((response) => {
         if (response) {
           if (response.status) {
@@ -453,6 +456,7 @@ export default {
             $this.drawAreaTrendChart();
             $this.currentCluesData.scoreData = response.deptscore;
             if(!$this.currentCluesData.departID){
+             $this.currentCluesData.targetData=[];
               var departTargetNum = [];
               response.groupcount.forEach(function(item,index){
                 var itemData = {};
@@ -494,6 +498,8 @@ export default {
             $this.drawCluesLiquidChart2();
             $this.drawCluesLiquidChart3();
             $this.loading=true;
+            $this.langVal=$this.language;
+            console.log($this.loading,'en渲染完毕');
           } else {
             $this.$message({
               showClose: true,
@@ -1256,25 +1262,34 @@ export default {
       }
     },
     // 中英文数据分析切换
-    cnEnStatChange(){
+    cnEnStatChange(langDate){
       var $this = this;
+      if($this.langVal!=$this.language){
         if($this.loading){
-          $this.loading=false;
-        $this.currentCluesData.departID = null;
-        $this.currentCluesData.targetData=[];
-        if($this.language=="Module_cnStat"){
-          $this.currentCluesData.departName = "中文";
-        }else{
-          $this.currentCluesData.departName = "英文";
+            console.log($this.loading,'1渲染中......');
+            $this.loading=false;
+            $this.languageList.forEach(function(item,index){
+              if(item.label==$this.language){
+                item.isOn=true;
+              }else{
+                item.isOn=false;
+              }
+            });
+            $this.currentCluesData.departID = null;
+            $this.radialBarPlot.destroy();
+            $this.liquidPlot1.destroy();
+            $this.liquidPlot2.destroy();
+            $this.liquidPlot3.destroy();
+            $this.regionMapChart.destroy();
+            $this.pieSourcePlot.destroy();
+            $this.areaTrendPlot.destroy();
+            if($this.language=="Module_cnStat"){
+              $this.currentCluesData.departName = "中文";
+            }else{
+              $this.currentCluesData.departName = "英文";
+            }
+            $this.statDataApi();
         }
-        $this.radialBarPlot.destroy();
-        $this.liquidPlot1.destroy();
-        $this.liquidPlot2.destroy();
-        $this.liquidPlot3.destroy();
-        $this.regionMapChart.destroy();
-        $this.pieSourcePlot.destroy();
-        $this.areaTrendPlot.destroy();
-        $this.statDataApi();
       }
     },
     // 调用数据分析接口
