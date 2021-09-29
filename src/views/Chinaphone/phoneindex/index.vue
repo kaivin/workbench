@@ -703,12 +703,6 @@ export default {
     var $this = this;
     if($this.$route.query.phoneID){
       $this.phoneID = parseInt($this.$route.query.phoneID);
-      document.onkeydown = function(e) {
-      var key = window.event.keyCode;
-        if (key == 13) {
-          $this.searchResult();
-        }
-      }
     }else{
       $this.phoneID = null;
     }

@@ -1104,12 +1104,6 @@ export default {
       $this.phoneID = parseInt($this.$route.query.phoneID);
       $this.searchData.waitstatus = parseInt($this.$route.query.waitstatus);
       $this.currentKey = null;
-      document.onkeydown = function(e) {
-      var key = window.event.keyCode;
-        if (key == 13) {
-          $this.searchResult();
-        }
-      }
     }else{
       $this.phoneID = null;
       $this.searchData.waitstatus=1;
