@@ -29,8 +29,7 @@
               }
               i{
                 margin-left: 5px;
-                font-weight: bold;
-                color: $red;
+                color:#888;
                 font-size: 12px;
               }
             }
@@ -59,9 +58,11 @@
             }
             i{
               margin-left: 5px;
-              font-weight: bold;
-              color: $red;
+              color:#888;
               font-size: 12px;
+              &.redsale{
+                font-weight: bold;
+              }
             }
           }
         }

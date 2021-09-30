@@ -812,7 +812,7 @@ export default {
       formData.custormemail = $this.formData.custormemail;
       formData.custormphone = $this.formData.custormphone;
       formData.noeffectivetime = $this.formData.noeffectivetime;
-      if($this.formData.salesuserid!=0&&$this.formData.salesuserid){
+      if($this.formData.salesuserid!=''||($this.formData.salesuserid==0||$this.formData.salesuserid)){
         formData.salesuserid = $this.formData.salesuserid;
       }else{
         formData.salesuserid = $this.salesusertypeId;
@@ -889,7 +889,7 @@ export default {
          $this.salesuserDefault=$this.defaultInfo.salesusername;
       }else{         
          $this.salesuserDefault="";
-         if($this.defaultInfo.salesuserid!=0){
+         if($this.defaultInfo.salesuserid!=''||($this.defaultInfo.salesuserid==0||$this.defaultInfo.salesuserid)){
             $this.formData.salesuserid = $this.defaultInfo.salesuserid;
          }else{
             $this.formData.salesuserid="";

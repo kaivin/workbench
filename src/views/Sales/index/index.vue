@@ -12,7 +12,7 @@
           </div>
           <dl class="Salelist">
               <dt v-if="menuButtonPermit.includes('Sales_index')" v-bind:class="currentStatus === 'personcount'?'active':''" v-on:click="jumpLink('personcount')"><span>个人所有询盘</span><i>({{defaultData.personcount}})</i></dt>
-              <dt v-if="menuButtonPermit.includes('Sales_waitdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitdealcount'?'active':''" v-on:click="jumpLink('waitdealcount')"><span>等待处理</span><i>({{defaultData.waitdealcount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_waitdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitdealcount'?'active':''" v-on:click="jumpLink('waitdealcount')"><span>等待处理</span><i class="redsale">({{defaultData.waitdealcount}})</i></dt>
               <dt v-if="menuButtonPermit.includes('Sales_monthsay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'monthsaycount'?'active':''" v-on:click="jumpLink('monthsaycount')"><span>月底前需反馈</span><i>({{defaultData.monthsaycount}})</i></dt>
               <dt v-if="menuButtonPermit.includes('Sales_hasnosay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasnosaycount'?'active':''" v-on:click="jumpLink('hasnosaycount')"><span>所有未反馈</span><i>({{defaultData.hasnosaycount}})</i></dt>
               <dt v-if="menuButtonPermit.includes('Sales_waitftword')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitftwordcount'?'active':''" v-on:click="jumpLink('waitftwordcount')"><span>等待添加富通ID</span><i>({{defaultData.waitftwordcount}})</i></dt>
@@ -229,13 +229,12 @@
                                 </el-table-column>
                                 <el-table-column
                                 prop="weekday"
-                                label="ID/时间/说明"
-                                width="190"
+                                label="ID/说明"
+                                width="120"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
                                     <p><span class="EnColor05">ID：</span>{{scope.row.id}}</p>
-                                    <p>{{scope.row.weekday}}-{{scope.row.xuntime}}</p>
                                     <p><span class="EnColor05">业务员：</span><strong>{{scope.row.salesusername}}</strong></p>
                                     <p><span class="EnColor05">特别说明：</span><span class="SiteColor-01">{{scope.row.otherremark}}</span></p>
                                     </div>
@@ -256,7 +255,7 @@
                                 <el-table-column
                                 prop="producttypename"
                                 label="类型/产品"
-                                width="150"
+                                width="120"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
@@ -269,14 +268,14 @@
                                 <el-table-column
                                 prop="custormname"
                                 label="联系方式"
-                                width="180"
+                                width="120"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
                                     <p><span class="EnColor05">称呼：</span>{{scope.row.custormname}}</p>
                                     <p>
                                       <span class="EnColor05">邮箱：</span>
-                                      <span class="SiteColor-02"  v-if="scope.row.custormemail" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;"> 
+                                      <span v-if="scope.row.custormemail" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;"> 
                                           <i style="font-style:normal;" v-if="scope.row.managestatus==2">{{scope.row.custormemail}}</i>
                                           <i style="font-style:normal;" v-else>点击详情查看Email</i>
                                       </span>
@@ -287,44 +286,34 @@
                                 </el-table-column>
                                 <el-table-column
                                 prop="custormneedinfo"
-                                label="需求详情"
-                                min-width="260"
+                                label="需求"
+                                min-width="120"
                                 >
                                 <template slot-scope="scope">
-                                    <div class="table-text">                        
+                                    <div class="table-text">                       
                                         <p v-if="scope.row.contentedittime"><span class="SiteColor-01">内容有修改：修改时间{{scope.row.contentedittime}}</span></p>
                                         <p>{{scope.row.Salescustormneedinfo}}<span class="SiteColor-03 clear" style="cursor:pointer;" v-if="scope.row.Salescustormneedinfo.length>150" @click="editTableRow(scope.row,scope.$index,'2')">#查看更多</span></p>
                                     </div>
                                 </template>
                                 </el-table-column>
                                 <el-table-column
-                                prop="Salesmanagestatus"
-                                label="处理/回复"
-                                width="90"
+                                prop="SalesEnnature"
+                                label="处理/客户性质/回复"
+                                min-width="90"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
                                         <p :style="scope.row.managestatus==1?'color:#d02c34':'color:#1a6fdf'">{{scope.row.Salesmanagestatus}}</p>
-                                        <p :style="scope.row.replystatus==1?'color:#d02c34':'color:#49c96a'">{{scope.row.Salesreplystatus}}</p>
+                                        <p>{{scope.row.SalesEnnature}}</p>
+                                        <p>{{scope.row.SalesEnxunprice}}</p>
+                                        <p :style="scope.row.replystatus==1?'color:#d02c34':'color:#49c96a'">{{scope.row.Salesreplystatus}}</p> 
                                     </div>
                                 </template>
                                 </el-table-column>
                                 <el-table-column
                                 prop="SalesEnnature"
-                                label="客户性质"
-                                width="100"
-                                >
-                                <template slot-scope="scope">
-                                    <div class="table-text">
-                                        <p>{{scope.row.SalesEnnature}}</p>
-                                        <p>{{scope.row.SalesEnxunprice}}</p>
-                                    </div>
-                                </template>
-                                </el-table-column>
-                                <el-table-column
-                                prop="salesremark"
                                 label="个人备注"
-                                width="150"
+                                min-width="120"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
@@ -335,23 +324,26 @@
                                 <el-table-column
                                 prop="addtime"
                                 label="添加/修改时间"
-                                width="210"
+                                width="190"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
-                                        <p><span>添加时间：</span>{{scope.row.xuntime}}</p>
-                                        <p><span>分配时间：</span>{{scope.row.addtime}}</p>
-                                        <p><span>更新时间：</span>{{scope.row.updatetime}}</p>
+                                        <p><span>询盘：</span>{{scope.row.weekday}}</p>
+                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{scope.row.xuntime}}</p>
+                                        <p><span>添加：</span>{{scope.row.xuntime}}</p>
+                                        <p><span>分配：</span>{{scope.row.addtime}}</p>
+                                        <p><span>更新：</span>{{scope.row.updatetime}}</p>
                                     </div>
                                 </template>
                                 </el-table-column>
                                 <el-table-column
                                 v-if="menuButtonPermit.includes('Sales_phoneinfosub')"
-                                :width="operationsWidth"
                                 align="center"
                                 prop="operations"
                                 fixed="right"
-                                label="操作">
+                                label="操作"
+                                width="80"
+                                >
                                 <template #default="scope">
                                     <div class="table-button">
                                     <el-button size="mini" @click="editTableRow(scope.row,scope.$index,'2')">详情</el-button><br />
@@ -397,7 +389,6 @@ export default {
       status:1,
       menuButtonPermit:[],
       defaultData:{},
-      operationsWidth:"",
       tableData:[],
       tableHeight:200,
       searchData:{

@@ -453,7 +453,7 @@
                                   <template slot-scope="scope">
                                     <div class="table-text">
                                       <p>{{scope.row.xunremark}}</p>
-                                      <p class="EnColor07">{{scope.row.custormremark}}</p>
+                                      <p v-if="permitField.includes('custormremark')" class="EnColor07">{{scope.row.custormremark}}</p>
                                     </div>
                                   </template>
                                 </el-table-column>
