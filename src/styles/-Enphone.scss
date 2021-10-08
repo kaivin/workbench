@@ -375,6 +375,11 @@
               font-size: 12px;
               font-weight: normal;
             }
+            em{
+              font-style: normal;
+              margin-left: 10px;
+              font-size: 12px;
+            }
           }
           dd{
             .clues-list{
@@ -451,6 +456,10 @@
                 height: 32px;
                 line-height: 32px;
                 clear:right;
+                em{
+                  font-style: normal;
+                  margin-left: 10px;
+                }
               }
               .el-upload-list{
                 width: 100%;

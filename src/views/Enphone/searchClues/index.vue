@@ -1018,6 +1018,29 @@ export default {
       $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
+    // 获取当前登录用户有可写权限的询盘字段
+    getPermitField(){
+      var $this = this;
+      $this.$store.dispatch('enphone/cluesCurrentPhoneUserCanEditFieldAction', null).then(response=>{
+        if(response){
+          if(response.status){
+            $this.permitField = response.data;
+            if($this.$route.query.phoneID||$this.$route.query.key){
+                $this.$nextTick(function () {
+                  $this.setTableHeight();
+                })
+            }
+            $this.isLoading.close();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){
       var $this=this;
@@ -1527,10 +1550,7 @@ export default {
             }
             pageSizeListArr = [$this.searchData.limit];
             $this.pageSizeList = pageSizeListArr;
-            $this.$nextTick(function () {
-              $this.setTableHeight();
-            })  
-            $this.isLoading.close();         
+            $this.getPermitField();       
           }else{
             $this.$message({
                 showClose: true,

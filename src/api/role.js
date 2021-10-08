@@ -138,3 +138,27 @@ export function userCanAllotWorkOrderAllPermit() {
     method: "POST",
   });
 }
+// 获取当前登陆用户所有可分配外网访问菜单权限
+export function getNetwork(data) {
+  return request({
+    url: "/hxindex/Role/getdealmenu",
+    method: "POST",
+    data,
+  });
+}
+// 获取当前角色已分配的外网访问菜单权限
+export function roleNetwork(data) {
+  return request({
+    url: "/hxindex/Role/hasdealmenu",
+    method: "POST",
+    data,
+  });
+}
+// 保存当前已分配外网访问菜单权限
+export function roleAllotNetwork(data) {
+  return request({
+    url: "/hxindex/Role/giverolemenu",
+    method: "POST",
+    data,
+  });
+}

@@ -226,6 +226,13 @@
                           <dd>
                             <el-input
                                 size="small"
+                                v-model="defaultInfo.addusername"
+                                v-if="ID&&defaultInfo.addusername"
+                                disabled>
+                            </el-input>
+                            <el-input
+                                size="small"
+                                v-else
                                 v-model="userInfo.name"
                                 disabled>
                             </el-input>

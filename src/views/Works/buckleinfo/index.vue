@@ -18,6 +18,32 @@
                         </div>
                     </div>
                 </div> 
+                <div class="item-form">
+                    <div class="flex-box" style="width: 360px;">
+                        <div class="item-title">外网IP的系统访问权限：</div>
+                        <div class="flex-content flex-box item-content">
+                          <div class="flex-content item-input">
+                            <el-radio-group v-model="formData.limit_ip" size="small">
+                              <el-radio-button label="1">可访问</el-radio-button>
+                              <el-radio-button label="2">不可访问</el-radio-button>
+                            </el-radio-group>
+                          </div>
+                        </div>
+                    </div>
+                </div> 
+                <div class="item-form">
+                    <div class="flex-box" style="width: 360px;">
+                        <div class="item-title">外网IP权限菜单的访问权限：</div>
+                        <div class="flex-content flex-box item-content">
+                          <div class="flex-content item-input">
+                            <el-radio-group v-model="formData.permitip" size="small">
+                              <el-radio-button label="1">可访问</el-radio-button>
+                              <el-radio-button label="2">不可访问</el-radio-button>
+                            </el-radio-group>
+                          </div>
+                        </div>
+                    </div>
+                </div> 
                 <div class="item-form btn-panel">
                     <el-button type="primary" size="large" v-on:click="saveInfo()">保存</el-button>
                     <el-button type="info" plain size="large" v-on:click="resetFormData()">重置</el-button>
@@ -37,6 +63,8 @@ export default {
       menuButtonPermit:[],
       formData:{
         score:"",
+        limit_ip:"1",
+        permitip:"1",
       },
       serverData:{},
       isLoading:null
@@ -183,6 +211,7 @@ export default {
         if(response){
           if(response.status){
             $this.serverData = response.data;
+            console.log(response)
             $this.initInfo($this.serverData);
           }else{
             $this.$message({
@@ -198,12 +227,16 @@ export default {
     initInfo(data){
       var $this = this;
       $this.formData.score = data.bucklescore;
+      $this.formData.limit_ip = ""+data.limit_ip;
+      $this.formData.permitip = ""+data.permitip;
       $this.isLoading.close();
     },
     // 重置添加文章表单
     clearFormData(){
       var $this = this;
-      $this.formData.score = "";
+      $this.formData.score = $this.serverData.bucklescore;
+      $this.formData.limit_ip = ""+$this.serverData.limit_ip;
+      $this.formData.permitip = ""+$this.serverData.permitip;
     },
     // 验证是否为空
     validationForm(){
@@ -227,6 +260,8 @@ export default {
       }
       var formData = {}
       formData.score = $this.formData.score;
+      formData.limit_ip = $this.formData.limit_ip;
+      formData.permitip = $this.formData.permitip;
       $this.$store.dispatch('works/buckleInfoSaveAction', formData).then(response=>{
           if(response.status){
             $this.$message({

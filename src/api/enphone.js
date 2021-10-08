@@ -451,3 +451,11 @@ export function cluesPhoneIndexSearchData(data) {
     data,
   });
 }
+// 新增/修改询盘用户输入input框的下拉数据获取
+export function inputKeywordList(data) {
+  return request({
+    url: "/hxindex/Enphone/getkeyword",
+    method: "POST",
+    data,
+  });
+}

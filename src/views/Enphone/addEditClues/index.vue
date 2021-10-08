@@ -99,7 +99,7 @@
                                   <dl style="width:194px;">
                                     <dt>分配的业务员：</dt>
                                     <dd>
-                                      <el-select size="small" :class="salesuserDefault?'salesuserDefault':''" v-model="formData.salesuserid" :placeholder="salesuserDefault">
+                                      <el-select size="small" v-on:change="salesmanChange" :class="salesuserDefault?'salesuserDefault':''" v-model="formData.salesuserid" :placeholder="salesuserDefault">
                                         <el-option
                                           v-for="item in salesuserlist"
                                           :key="item.value"
@@ -134,23 +134,31 @@
                                     </dd>
                                   </dl>
                                   <dl style="width:500px;">
-                                    <dt>备注与提醒：</dt>
+                                    <dt>分配特别说明：<em v-if="ID&&defaultInfo.otherremark_time">(最后修改时间：{{defaultInfo.otherremark_time}})</em></dt>
                                     <dd>
-                                      <el-input
-                                          size="small"
-                                          v-model="formData.otherremark"
-                                          placeholder="分配/特别说明"
-                                          clearable>
-                                      </el-input>
+                                      <el-autocomplete
+                                      style="display:block;"
+                                        size="small"
+                                        clearable
+                                        v-model="formData.otherremark"
+                                        :fetch-suggestions="otherRemarkQuerySearch"
+                                        placeholder="分配/特别说明"
+                                        :trigger-on-focus="false"
+                                        @select="otherRemarkHandleSelect"
+                                      ></el-autocomplete>
                                     </dd>
+                                    <dt style="margin-top:6px;">提醒：<em v-if="ID&&defaultInfo.givesaleswarn_time">(最后修改时间：{{defaultInfo.givesaleswarn_time}})</em></dt>
                                     <dd class="flex-box">
-                                      <el-input
-                                          size="small"
-                                          v-model="formData.givesaleswarn"
-                                          class="flex-content"
-                                          placeholder="提醒/首页提醒"
-                                          clearable>
-                                      </el-input>
+                                      <el-autocomplete
+                                        class="flex-content"
+                                        size="small"
+                                        clearable
+                                        v-model="formData.givesaleswarn"
+                                        :fetch-suggestions="noticeQuerySearch"
+                                        placeholder="提醒/首页提醒"
+                                        :trigger-on-focus="false"
+                                        @select="noticeHandleSelect"
+                                      ></el-autocomplete>
                                       <el-checkbox v-model="formData.saleswarnstatus" style="margin-left: 10px;" size="small" border>修改提醒</el-checkbox>
                                     </dd>
                                     <dd class="upload">
@@ -165,7 +173,7 @@
                                           :on-exceed="handleExceed"
                                           :file-list="fileList">
                                           <el-button size="small" type="primary">点击上传</el-button>
-                                          <div slot="tip" class="el-upload__tip">(上传文件大小需控制在50M以内)</div>
+                                          <div slot="tip" class="el-upload__tip">(上传文件大小需控制在50M以内)<em v-if="ID&&defaultInfo.custormfiles_time">(上传时间：{{defaultInfo.custormfiles_time}})</em></div>
                                       </el-upload>
                                     </dd>
                                   </dl>
@@ -374,12 +382,16 @@
                                 <dl style="width: 160px;">
                                   <dt>物料：</dt>
                                   <dd>
-                                      <el-input
-                                        placeholder="物料"
+                                    <el-autocomplete
+                                      style="display:block;"
                                         size="small"
+                                        clearable
                                         v-model="formData.material"
-                                        clearable>
-                                      </el-input>
+                                        :fetch-suggestions="wlQuerySearch"
+                                        placeholder="物料"
+                                        :trigger-on-focus="false"
+                                        @select="wlHandleSelect"
+                                      ></el-autocomplete>
                                   </dd>
                                 </dl>
                                 <dl style="width: 160px;">
@@ -398,45 +410,65 @@
                                 <dl style="width: 160px;">
                                   <dt>进料：</dt>
                                   <dd>
-                                      <el-input
-                                        placeholder="进料"
+                                    <el-autocomplete
+                                      style="display:block;"
                                         size="small"
+                                        clearable
                                         v-model="formData.infeed"
-                                        clearable>
-                                      </el-input>
+                                        :fetch-suggestions="jlQuerySearch"
+                                        placeholder="进料"
+                                        :trigger-on-focus="false"
+                                        @select="jlHandleSelect"
+                                      ></el-autocomplete>
                                   </dd>
                                 </dl>
                                 <dl style="width: 160px;">
                                   <dt>出料：</dt>
                                   <dd>
-                                      <el-input
-                                        placeholder="出料"
+                                    <el-autocomplete
+                                      style="display:block;"
                                         size="small"
+                                        clearable
                                         v-model="formData.outfeed"
-                                        clearable>
-                                      </el-input>
+                                        :fetch-suggestions="clQuerySearch"
+                                        placeholder="出料"
+                                        :trigger-on-focus="false"
+                                        @select="clHandleSelect"
+                                      ></el-autocomplete>
                                   </dd>
                                 </dl>
-                                <dl style="width: 160px;">
-                                  <dt>询盘备注：</dt>
+                              </div>
+                              <div class="EnphoneAddEditMainItem material">
+                                <dl style="width: 670px;">
+                                  <dt>询盘备注：<em v-if="ID&&defaultInfo.xunremark_time">(最后修改时间：{{defaultInfo.xunremark_time}})</em></dt>
                                   <dd>
-                                      <el-input
-                                        placeholder="询盘备注"
+                                    <el-autocomplete
+                                      style="display:block;"
                                         size="small"
+                                        clearable
                                         v-model="formData.xunremark"
-                                        clearable>
-                                      </el-input>
+                                        :fetch-suggestions="xunRemarkQuerySearch"
+                                        placeholder="询盘备注"
+                                        :trigger-on-focus="false"
+                                        @select="xunRemarkHandleSelect"
+                                      ></el-autocomplete>
                                   </dd>
                                 </dl>
-                                <dl style="width: 160px;">
-                                  <dt>客服备注：<span>(仅客服部可见)</span></dt>
+                              </div>
+                              <div class="EnphoneAddEditMainItem material">
+                                <dl style="width: 670px;">
+                                  <dt>客服备注：<span>(仅客服部可见)</span><em v-if="ID&&defaultInfo.custormremark_time">(最后修改时间：{{defaultInfo.custormremark_time}})</em></dt>
                                   <dd>
-                                    <el-input
-                                      placeholder="客服部备注"
-                                      size="small"
-                                      v-model="formData.custormremark"
-                                      clearable>
-                                    </el-input>
+                                    <el-autocomplete
+                                      style="display:block;"
+                                        size="small"
+                                        clearable
+                                        v-model="formData.custormremark"
+                                        :fetch-suggestions="custormRemarkQuerySearch"
+                                        placeholder="客服部备注"
+                                        :trigger-on-focus="false"
+                                        @select="custormRemarkHandleSelect"
+                                      ></el-autocomplete>
                                   </dd>
                                 </dl>
                               </div>
@@ -462,12 +494,18 @@
                                   <dl>
                                     <dt>添加人：</dt>
                                     <dd>
-                                      <el-input
-                                          size="small"
-                                          v-model="userInfo.name"
-                                          disabled
-                                          clearable>
-                                      </el-input>
+                                        <el-input
+                                            size="small"
+                                            v-model="defaultInfo.addusername"
+                                            v-if="ID&&defaultInfo.addusername"
+                                            disabled>
+                                        </el-input>
+                                        <el-input
+                                            size="small"
+                                            v-else
+                                            v-model="userInfo.name"
+                                            disabled>
+                                        </el-input>
                                     </dd>
                                   </dl>
                               </div>
@@ -540,7 +578,8 @@ export default {
       fileList:[],//上传文件
       salesuserlist:[],//业务员
       salesuserDefault:'',
-      salesusertypeId:'',//业务经理id员
+      salesuserid:'',//业务经理id员
+      salesusertypeId:'',
       messagetypeList:[
         {value: '留言板',label:'留言板'},
         {value: '商务通',label:'商务通'},
@@ -646,6 +685,7 @@ export default {
       isCustomer:false,
       isSalesman:false,
       isCustomerSalesman:false,
+      restaurants:[],
     }
   },
   computed: {
@@ -812,10 +852,10 @@ export default {
       formData.custormemail = $this.formData.custormemail;
       formData.custormphone = $this.formData.custormphone;
       formData.noeffectivetime = $this.formData.noeffectivetime;
-      if($this.formData.salesuserid!=''||($this.formData.salesuserid==0||$this.formData.salesuserid)){
+      if($this.formData.salesuserid!=''&&$this.formData.salesuserid!=null){
         formData.salesuserid = $this.formData.salesuserid;
       }else{
-        formData.salesuserid = $this.salesusertypeId;
+        formData.salesuserid = $this.salesuserid;
       }
       formData.ftword_id = $this.formData.ftword_id;
       formData.custormneedinfo = $this.formData.custormneedinfo;
@@ -876,6 +916,11 @@ export default {
         }
       });
     },
+    // 分配业务员发生变化时
+    salesmanChange(e){
+      $this.salesuserid = e;
+      $this.salesuserDefault="";
+    },
     // 设置询盘初始化信息
     setCluesInfo(){
       var $this = this;
@@ -884,18 +929,14 @@ export default {
       $this.formData.custormemail = $this.defaultInfo.custormemail;
       $this.formData.noeffectivetime = $this.defaultInfo.noeffectivetime;
       $this.formData.custormphone = $this.defaultInfo.custormphone;
-      if($this.defaultInfo.salesownid!=0&&$this.defaultInfo.salesownid){
+      if($this.defaultInfo.salesownid!=0){
          $this.formData.salesuserid="";
          $this.salesuserDefault=$this.defaultInfo.salesusername;
       }else{         
          $this.salesuserDefault="";
-         if($this.defaultInfo.salesuserid!=''||($this.defaultInfo.salesuserid==0||$this.defaultInfo.salesuserid)){
-            $this.formData.salesuserid = $this.defaultInfo.salesuserid;
-         }else{
-            $this.formData.salesuserid="";
-         }       
+         $this.formData.salesuserid = $this.defaultInfo.salesuserid;   
       }
-      $this.salesusertypeId=$this.defaultInfo.salesuserid;
+      $this.salesuserid = $this.defaultInfo.salesuserid;
       $this.formData.ftword_id = $this.defaultInfo.ftword_id;
       $this.formData.custormneedinfo = $this.defaultInfo.custormneedinfo;
       $this.formData.otherremark = $this.defaultInfo.otherremark;
@@ -1599,6 +1640,216 @@ export default {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link)
+    },
+    // 特别说明下拉框
+    otherRemarkQuerySearch(queryString,cb){
+      var $this = this;
+      var resultData = {};
+      var returnData = [];
+      resultData.keywork = queryString;
+      resultData.status = 1;
+      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+          if(response.status){
+            if(response.data.length>0){
+              response.data.forEach(function(item){
+                var itemData = {};
+                itemData.value = item.name;
+                returnData.push(itemData);
+              });
+            }
+            cb(returnData);
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    // 特别说明下拉框选择改变事件
+    otherRemarkHandleSelect(e){
+      console.log(e);
+    },
+    // 提醒下拉框
+    noticeQuerySearch(queryString,cb){
+      var $this = this;
+      var resultData = {};
+      var returnData = [];
+      resultData.keywork = queryString;
+      resultData.status = 2;
+      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+          if(response.status){
+            if(response.data.length>0){
+              response.data.forEach(function(item){
+                var itemData = {};
+                itemData.value = item.name;
+                returnData.push(itemData);
+              });
+            }
+            cb(returnData);
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    // 提醒下拉框选择改变事件
+    noticeHandleSelect(e){
+      console.log(e);
+    },
+    // 物料下拉框
+    wlQuerySearch(queryString,cb){
+      var $this = this;
+      var resultData = {};
+      var returnData = [];
+      resultData.keywork = queryString;
+      resultData.status = 3;
+      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+          if(response.status){
+            if(response.data.length>0){
+              response.data.forEach(function(item){
+                var itemData = {};
+                itemData.value = item.name;
+                returnData.push(itemData);
+              });
+            }
+            cb(returnData);
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    // 物料下拉框选择改变事件
+    wlHandleSelect(e){
+      console.log(e);
+    },
+    // 进料下拉框
+    jlQuerySearch(queryString,cb){
+      var $this = this;
+      var resultData = {};
+      var returnData = [];
+      resultData.keywork = queryString;
+      resultData.status = 4;
+      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+          if(response.status){
+            if(response.data.length>0){
+              response.data.forEach(function(item){
+                var itemData = {};
+                itemData.value = item.name;
+                returnData.push(itemData);
+              });
+            }
+            cb(returnData);
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    // 进料下拉框选择改变事件
+    jlHandleSelect(e){
+      console.log(e);
+    },
+    // 出料下拉框
+    clQuerySearch(queryString,cb){
+      var $this = this;
+      var resultData = {};
+      var returnData = [];
+      resultData.keywork = queryString;
+      resultData.status = 5;
+      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+          if(response.status){
+            if(response.data.length>0){
+              response.data.forEach(function(item){
+                var itemData = {};
+                itemData.value = item.name;
+                returnData.push(itemData);
+              });
+            }
+            cb(returnData);
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    // 出料下拉框选择改变事件
+    clHandleSelect(e){
+      console.log(e);
+    },
+    // 询盘备注下拉框
+    xunRemarkQuerySearch(queryString,cb){
+      var $this = this;
+      var resultData = {};
+      var returnData = [];
+      resultData.keywork = queryString;
+      resultData.status = 6;
+      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+          if(response.status){
+            if(response.data.length>0){
+              response.data.forEach(function(item){
+                var itemData = {};
+                itemData.value = item.name;
+                returnData.push(itemData);
+              });
+            }
+            cb(returnData);
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    // 询盘备注下拉框选择改变事件
+    xunRemarkHandleSelect(e){
+      console.log(e);
+    },
+    // 客服备注下拉框
+    custormRemarkQuerySearch(queryString,cb){
+      var $this = this;
+      var resultData = {};
+      var returnData = [];
+      resultData.keywork = queryString;
+      resultData.status = 7;
+      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+          if(response.status){
+            if(response.data.length>0){
+              response.data.forEach(function(item){
+                var itemData = {};
+                itemData.value = item.name;
+                returnData.push(itemData);
+              });
+            }
+            cb(returnData);
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    // 客服备注下拉框选择改变事件
+    custormRemarkHandleSelect(e){
+      console.log(e);
     },
   }
 }

@@ -49,7 +49,7 @@
                                     <el-button size="mini" @click="addTableRow(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_add')">添加子角色</el-button>
                                     <el-button size="mini" @click="allotUser(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Role_getuser')">分配用户</el-button>
                                     <el-button size="mini" @click="allotPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_getpermit')">分配菜单权限</el-button>
-                                    <!-- <el-button size="mini" @click="allotNetworkPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_getpermit')">外网菜单权限</el-button> -->
+                                    <el-button size="mini" @click="allotNetworkPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_giverolemenu')">外网菜单权限</el-button>
                                     <el-button size="mini" @click="allotPostPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_gettypepermit')">分配论坛权限</el-button>
                                     <el-button size="mini" @click="allotWorkOrderPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_getworktypepermit')">分配工单权限</el-button>
                                     <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_edit')">编辑</el-button>
@@ -263,13 +263,13 @@
           </span>
         </template>
       </el-dialog>
-      <el-dialog :title="networkTitle" v-if="(menuButtonPermit.includes('Role_getworktypepermit'))" custom-class="transfer-dialog" :visible.sync="dialogNetworkVisible" width="840px">
+      <el-dialog :title="networkTitle" v-if="(menuButtonPermit.includes('Role_giverolemenu'))" custom-class="transfer-dialog" :visible.sync="dialogNetworkVisible" width="840px">
         <div class="transfer-panel">
           <div class="transfer-wrap">
             <el-transfer 
               v-model="networkValue" 
               :data="networkData"
-              :titles="['可分配权限', '已分配权限']"
+              :titles="['可分配的外网访问菜单', '已分配可外网访问的菜单']"
               filterable
               :filter-method="filterNetworkMethod"
               filter-placeholder="请输入菜单关键字"
@@ -676,6 +676,9 @@ export default {
               }
               if($this.menuButtonPermit.includes('Role_delete')){
                 operationsWidth+=66;
+              }
+              if($this.menuButtonPermit.includes('Role_giverolemenu')){
+                operationsWidth+=114;
               }
               $this.operationsWidth = "" + operationsWidth;
               $this.getRoleList();
@@ -1732,6 +1735,126 @@ export default {
             type: 'success'
           });
           $this.dialogWorkOrderVisible = false;
+          $this.initData();
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
+    },
+    // 重置分配工单数据
+    resetNetworkData(){
+      var $this = this;
+      $this.currentRoleID = 0;
+      $this.currentRoleName = "";
+      $this.networkData = [];
+      $this.networkValue = [];
+    },
+    // 分配外网访问菜单权限弹窗
+    allotNetworkPermit(row,index){
+      var $this = this;
+      $this.resetNetworkData();
+      $this.dialogNetworkVisible = true;
+      $this.networkTitle = "给 " + row.name + " 分配外网访问菜单权限";
+      $this.currentRoleID = row.id;
+      $this.currentRoleName = row.name;
+      $this.getAllotedNetwork();
+      
+    },
+    // 获取当前角色已分配的外网访问菜单权限数据
+    getAllotedNetwork(){
+      var $this = this;
+      $this.$store.dispatch('role/roleNetworkAction', {rid:$this.currentRoleID}).then(response=>{
+        console.log(response);
+        if(response.status){
+          var roleNetworkData = [];
+          var selectedRoleNetworkData = [];
+          if(response.data.length>0){
+            response.data.forEach(function(item,index){
+              var itemData = {};
+              itemData.key = item.id;
+              itemData.label = item.name;
+              itemData.disabled = false;
+              roleNetworkData.push(itemData);
+              selectedRoleNetworkData.push(item.id);
+            });
+            $this.networkData = roleNetworkData;
+            $this.networkValue = selectedRoleNetworkData;
+          }
+          $this.getAllotingNetwork();
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
+    },
+    // 获取当前角色可分配的外网访问菜单权限数据
+    getAllotingNetwork(){
+      var $this = this;
+      var networkData = [];
+      if($this.networkData.length>0){
+        $this.networkData.forEach(function(item,index){
+          networkData.push(item.key);
+        });
+      }
+      var networkDataNow = $this.networkData;
+      var networkIngData = [];
+      $this.$store.dispatch('role/getNetworkAction', {rid:$this.currentRoleID}).then(response=>{
+        console.log(response,"可分配");
+        if(response.status){
+          if(response.data.length>0){
+            if(networkDataNow.length>0){
+              response.data.forEach(function(item,index){
+                networkIngData.push(item.id);
+              });
+              networkDataNow.forEach(function(item,index){
+                if(networkIngData.includes(item.key)){
+                  item.disabled = false;
+                }else{
+                  item.disabled = true;
+                }
+              });
+            }
+            response.data.forEach(function(item,index){
+              if(!networkData.includes(item.id)){
+                var itemData = {};
+                itemData.key = item.id;
+                itemData.label = item.name;
+                itemData.disabled = false;
+                networkDataNow.push(itemData);
+              }
+            });
+            $this.networkData = networkDataNow;
+          }
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
+    },
+    // 外网访问菜单权限分配保存
+    saveNetworkData(){
+      var $this = this;
+      var networkData = {};
+      networkData.rid = $this.currentRoleID;
+      networkData.menuids = $this.networkValue;
+      $this.$store.dispatch('role/roleAllotNetworkAction', networkData).then(response=>{
+        if(response.status){
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'success'
+          });
+          $this.dialogNetworkVisible = false;
           $this.initData();
         }else{
           $this.$message({

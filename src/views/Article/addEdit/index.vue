@@ -918,6 +918,7 @@ export default {
               message: response.info,
               type: 'success'
             });
+            $this.$router.push({path:'/Article/index',query:{id:$this.formData.postTypeID}});
           }else{
             $this.$message({
               showClose: true,

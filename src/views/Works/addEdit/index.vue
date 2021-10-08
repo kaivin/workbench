@@ -78,6 +78,7 @@
                             type="datetime"
                             placeholder="选择日期时间"
                             class="date-time"
+                            default-time="17:30:00"
                             value-format = "yyyy-MM-dd HH:mm:ss">
                         </el-date-picker>
                       </div>

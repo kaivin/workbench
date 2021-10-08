@@ -77,7 +77,7 @@
                                   :picker-options="pickerRangeOptions">
                                 </el-date-picker>
                               </div>
-                              <div class="item-search" v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'||currentStatus === 'hasnosaycount'" style="width:100px;">
+                              <div class="item-search" v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'||currentStatus === 'hasnosaycount'||currentStatus === 'monthsaycount'" style="width:100px;">
                                 <el-select v-model="searchData.salesuserid" size="small" clearable placeholder="业务员">
                                   <el-option
                                       v-for="item in salesuseridList"
@@ -796,7 +796,7 @@ export default {
               });
               $this.dealuserList=dealuserList;
             }
-            if(($this.currentStatus=="allotcount"||$this.currentStatus=="hasnosaycount")&&response.allotuser.length>0){              
+            if(($this.currentStatus=="allotcount"||$this.currentStatus=="hasnosaycount"||$this.currentStatus=="monthsaycount")&&response.allotuser.length>0){              
               var salesuseridList=[];
               response.dealuser.forEach(function(item,index){
                 var itemData = {};
@@ -931,7 +931,7 @@ export default {
       if($this.currentStatus=="waitcount"&&$this.searchData.salesuserid&&$this.searchData.salesuserid!=''){
           searchData.salesuserid = $this.searchData.salesuserid;
       }
-      if(($this.currentStatus=="allotcount"||$this.currentStatus=="hasnosaycount")&&$this.searchData.salesuserid&&$this.searchData.salesuserid!=''){
+      if(($this.currentStatus=="allotcount"||$this.currentStatus=="hasnosaycount"||$this.currentStatus=="monthsaycount")&&$this.searchData.salesuserid&&$this.searchData.salesuserid!=''){
           searchData.salesownid = $this.searchData.salesuserid;
       }
       return searchData;
@@ -1037,7 +1037,6 @@ export default {
             });
           }
           $this.tableData = tableData;
-          console.log($this.tableData,'$this.tableData');
           var infoData = {};
           infoData.allcount=resData.allcount;
           infoData.warnlist=resData.warnlist;

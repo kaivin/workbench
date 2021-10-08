@@ -56,6 +56,7 @@
     getLeftPhoto,
     getCurrentPhoneUser,
     cluesPhoneIndexSearchData,
+    inputKeywordList,
 } from '@/api/enphone'
 
 const state = {
@@ -645,7 +646,16 @@ const actions = {
             })
         })
     },
-    
+    // 新增/修改询盘用户输入input框的下拉数据获取
+    inputKeywordListAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            inputKeywordList(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
 }
 
 export default {

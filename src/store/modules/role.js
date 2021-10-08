@@ -17,6 +17,9 @@
     roleWorkOrder,
     roleAllotWorkOrder,
     userCanAllotWorkOrderAllPermit,
+    getNetwork,
+    roleNetwork,
+    roleAllotNetwork,
  } from '@/api/role'
 
 const state = {}
@@ -197,6 +200,36 @@ const actions = {
   userCanAllotWorkOrderAllPermitAction({ commit }){
     return new Promise((resolve, reject) => {
         userCanAllotWorkOrderAllPermit().then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        });
+    });
+  },
+  // 当前角色已分配外网访问菜单权限接口动作
+  roleNetworkAction({ commit }, data){
+    return new Promise((resolve, reject) => {
+        roleNetwork(data).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        });
+    });
+  },
+  // 当前角色分配外网访问菜单权限保存动作
+  roleAllotNetworkAction({ commit }, data){
+    return new Promise((resolve, reject) => {
+        roleAllotNetwork(data).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        });
+    });
+  },
+  // 获取当前登录用户可分配的外网访问菜单权限
+  getNetworkAction({ commit },data){
+    return new Promise((resolve, reject) => {
+        getNetwork(data).then(response => {
             resolve(response)
         }).catch(error => {
             reject(error)
