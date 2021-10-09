@@ -1251,6 +1251,7 @@ export default {
       var $this=this;
       $this.loadingFun();
       $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
+        console.log(response,"左侧数据")
         if(response){
           if(response.status){
               $this.linkAll.todayNum = response.alltodaynumber;
@@ -1293,6 +1294,34 @@ export default {
               }
               $this.brandID = brandID;
               $this.defaultData = response;
+              var custorAndsalesmwarn=[];
+              var custormwarn=[];
+              var saleswarning=[];
+              if(response.custormwarn.length>0){
+                  response.custormwarn.forEach(function(item){
+                      var Obj={
+                        id:0,
+                        warning:'',
+                        type:'custormwarn',
+                      }
+                      Obj.id=item.id;
+                      Obj.warning=item.custormselfwarn;
+                      custormwarn.push(Obj);
+                  });
+              }
+              if(response.saleswarning.length>0){
+                  response.saleswarning.forEach(function(item){
+                      var Obj={
+                        id:'0',
+                        warning:'',
+                        type:'saleswarning',
+                      }
+                      Obj.id=item.id;
+                      Obj.warning=item.givecustormwarn;
+                      saleswarning.push(Obj);
+                  });
+              }
+              $this.defaultData.custorAndsalesmwarn=custorAndsalesmwarn.concat(custormwarn,saleswarning);
               $this.getCurrentPhoneSearchData();
           }else{
             if(response.permitstatus&&response.permitstatus==2){

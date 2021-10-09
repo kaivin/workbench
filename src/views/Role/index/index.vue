@@ -313,6 +313,7 @@ export default {
         remarks:"",
         readwebmsglangauge:[],
         readwebmsgbrand:[],
+        readip:"",
       },
       dialogPermitVisible:false,
       dialogUserVisible:false,
@@ -794,6 +795,7 @@ export default {
       $this.dialogForm.f_id = row.f_id;
       $this.dialogForm.id = row.id;
       $this.dialogForm.name = row.name;
+      $this.dialogForm.readip = row.readip?row.readip:'';
       if($this.menuButtonPermit.includes('Role_readdepartwebsite')){
         var websiteDepart = [];
         if(row.readdepartwebsite&&row.readdepartwebsite!=''){
@@ -942,6 +944,7 @@ export default {
       $this.dialogForm.remarks = "";
       $this.dialogForm.readwebmsglangauge = [];
       $this.dialogForm.readwebmsgbrand = [];
+      $this.dialogForm.readip = '';
     },
     // 验证是否为空
     validationForm(){

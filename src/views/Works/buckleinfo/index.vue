@@ -226,7 +226,7 @@ export default {
     // 初始化页面数据
     initInfo(data){
       var $this = this;
-      $this.formData.score = data.bucklescore;
+      $this.formData.score = ""+data.bucklescore;
       $this.formData.limit_ip = ""+data.limit_ip;
       $this.formData.permitip = ""+data.permitip;
       $this.isLoading.close();
@@ -234,7 +234,7 @@ export default {
     // 重置添加文章表单
     clearFormData(){
       var $this = this;
-      $this.formData.score = $this.serverData.bucklescore;
+      $this.formData.score = ""+$this.serverData.bucklescore;
       $this.formData.limit_ip = ""+$this.serverData.limit_ip;
       $this.formData.permitip = ""+$this.serverData.permitip;
     },

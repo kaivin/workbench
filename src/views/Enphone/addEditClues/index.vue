@@ -59,7 +59,7 @@
                                 </dl>
                               </div>
                               <div class="EnphoneAddEditMainItem customer-info">
-                                  <dl style="width:194px;">
+                                  <dl style="width:160px;">
                                     <dt>客户姓名/称呼：</dt>
                                     <dd>
                                       <el-input
@@ -70,33 +70,7 @@
                                       </el-input>
                                     </dd>
                                   </dl>
-                                  <dl style="width:194px;">
-                                    <dt>客户Email：<span style="font-size:12px;">多个Email请用“,”分割</span></dt>
-                                    <dd>
-                                      <el-input
-                                          placeholder="邮箱"
-                                          type="textarea"
-                                          autosize
-                                          size="small"
-                                          v-model="formData.custormemail"
-                                          clearable>
-                                      </el-input>
-                                    </dd>
-                                  </dl>
-                                  <dl style="width:194px;">
-                                    <dt>客户电话：<span style="font-size:12px;">多个电话请用“,”分割</span></dt>
-                                    <dd>
-                                      <el-input
-                                          placeholder="电话"
-                                          type="textarea"
-                                          autosize
-                                          size="small"
-                                          v-model="formData.custormphone"
-                                          clearable>
-                                      </el-input>
-                                    </dd>
-                                  </dl>
-                                  <dl style="width:194px;">
+                                  <dl style="width:160px;">
                                     <dt>分配的业务员：</dt>
                                     <dd>
                                       <el-select size="small" v-on:change="salesmanChange" :class="salesuserDefault?'salesuserDefault':''" v-model="formData.salesuserid" :placeholder="salesuserDefault">
@@ -109,7 +83,7 @@
                                       </el-select>
                                     </dd>
                                   </dl>
-                                  <dl style="width:194px;">
+                                  <dl style="width:160px;">
                                     <dt>富通天下ID</dt>
                                     <dd>
                                       <el-input
@@ -133,6 +107,32 @@
                                       </el-input>
                                     </dd>
                                   </dl>
+                                  <dl style="width:280px;">
+                                    <dt>客户Email：<span style="font-size:12px;">(多个Email请用换行分隔)</span></dt>
+                                    <dd class="spectextarea">
+                                      <el-input
+                                          placeholder="邮箱"
+                                          type="textarea"
+                                          size="small"
+                                          v-model="formData.custormemail"
+                                          clearable>
+                                      </el-input>
+                                    </dd>
+                                  </dl>
+                                  <dl style="width:210px;">
+                                    <dt>客户电话：<span style="font-size:12px;">(多个电话请用换行分隔)</span></dt>
+                                    <dd class="spectextarea">
+                                      <el-input
+                                          placeholder="电话"
+                                          type="textarea"
+                                          size="small"
+                                          v-model="formData.custormphone"
+                                          clearable>
+                                      </el-input>
+                                    </dd>
+                                  </dl>
+                              </div>
+                              <div class="EnphoneAddEditMainItem specifications">
                                   <dl style="width:500px;">
                                     <dt>分配特别说明：<em v-if="ID&&defaultInfo.otherremark_time">(最后修改时间：{{defaultInfo.otherremark_time}})</em></dt>
                                     <dd>
@@ -147,7 +147,9 @@
                                         @select="otherRemarkHandleSelect"
                                       ></el-autocomplete>
                                     </dd>
-                                    <dt style="margin-top:6px;">提醒：<em v-if="ID&&defaultInfo.givesaleswarn_time">(最后修改时间：{{defaultInfo.givesaleswarn_time}})</em></dt>
+                                  </dl>
+                                  <dl style="width:500px;">
+                                    <dt>提醒：<em v-if="ID&&defaultInfo.givesaleswarn_time">(最后修改时间：{{defaultInfo.givesaleswarn_time}})</em></dt>
                                     <dd class="flex-box">
                                       <el-autocomplete
                                         class="flex-content"
@@ -161,22 +163,26 @@
                                       ></el-autocomplete>
                                       <el-checkbox v-model="formData.saleswarnstatus" style="margin-left: 10px;" size="small" border>修改提醒</el-checkbox>
                                     </dd>
-                                    <dd class="upload">
-                                      <el-upload
-                                          class="upload-demo"
-                                          name="file"
-                                          action=""
-                                          accept="aplication/zip"
-                                          :on-preview="handlePreview"
-                                          :http-request="httpZipRequest"
-                                          :limit="1"
-                                          :on-exceed="handleExceed"
-                                          :file-list="fileList">
-                                          <el-button size="small" type="primary">点击上传</el-button>
-                                          <div slot="tip" class="el-upload__tip">(上传文件大小需控制在50M以内)<em v-if="ID&&defaultInfo.custormfiles_time">(上传时间：{{defaultInfo.custormfiles_time}})</em></div>
-                                      </el-upload>
-                                    </dd>
                                   </dl>
+                              </div>
+                              <div class="EnphoneAddEditMainItem specifications">
+                                <dl style="margin:0 5px">
+                                  <dd class="upload">
+                                    <el-upload
+                                        class="upload-demo"
+                                        name="file"
+                                        action=""
+                                        accept="aplication/zip"
+                                        :on-preview="handlePreview"
+                                        :http-request="httpZipRequest"
+                                        :limit="1"
+                                        :on-exceed="handleExceed"
+                                        :file-list="fileList">
+                                        <el-button size="small" type="primary">点击上传</el-button>
+                                        <div slot="tip" class="el-upload__tip">(上传文件大小需控制在50M以内)<em v-if="ID&&defaultInfo.custormfiles_time">(上传时间：{{defaultInfo.custormfiles_time}})</em></div>
+                                    </el-upload>
+                                  </dd>
+                                </dl>
                               </div>
                               <div class="EnphoneAddEditMainItem customer-info">
                                   <dl style="width:190px;">
@@ -234,32 +240,6 @@
                                     </dd>
                                   </dl>
                                   <dl style="width:160px;">
-                                    <dt>设备：</dt>
-                                    <dd>
-                                      <el-select v-model="formData.device" size="small" style="width:100%" clearable placeholder="请选择">
-                                          <el-option
-                                          v-for="item in deviceList"
-                                          :key="item.value"
-                                          :label="item.label"
-                                          :value="item.value">
-                                          </el-option>
-                                      </el-select>
-                                    </dd>
-                                  </dl>
-                                  <dl style="width:160px;">
-                                    <dt>IP：</dt>
-                                    <dd>
-                                      <el-input
-                                          placeholder="IP"
-                                          size="small"
-                                          v-model="formData.ip"
-                                          clearable>
-                                      </el-input>
-                                    </dd>
-                                  </dl>
-                              </div>
-                              <div class="EnphoneAddEditMainItem customer-info">
-                                  <dl style="width:160px;">
                                     <dt>来自类型：<span>*</span></dt>
                                     <dd>
                                       <el-select v-model="formData.messagetype" size="small" clearable placeholder="请选择">
@@ -286,7 +266,9 @@
                                       </el-select>
                                     </dd>
                                   </dl>
-                                  <dl style="width:230px;">
+                              </div>
+                              <div class="EnphoneAddEditMainItem customer-info">
+                                  <dl style="width:500px;">
                                     <dt>来自网页：<span>(渠道为外部链接的请备注URL)</span></dt>
                                     <dd>
                                       <el-input
@@ -298,7 +280,31 @@
                                       </el-input>
                                     </dd>
                                   </dl>
-                                  <dl style="width:90px;">
+                                  <dl style="width:160px;">
+                                    <dt>IP：</dt>
+                                    <dd>
+                                      <el-input
+                                          placeholder="IP"
+                                          size="small"
+                                          v-model="formData.ip"
+                                          clearable>
+                                      </el-input>
+                                    </dd>
+                                  </dl>
+                                  <dl style="width:160px;">
+                                    <dt>设备：</dt>
+                                    <dd>
+                                      <el-select v-model="formData.device" size="small" style="width:100%" clearable placeholder="请选择">
+                                          <el-option
+                                          v-for="item in deviceList"
+                                          :key="item.value"
+                                          :label="item.label"
+                                          :value="item.value">
+                                          </el-option>
+                                      </el-select>
+                                    </dd>
+                                  </dl>
+                                  <dl style="width:160px;">
                                     <dt>级别：</dt>
                                     <dd>
                                       <el-select v-model="formData.level_id" size="small" style="width:100%" clearable placeholder="请选择">
@@ -311,6 +317,8 @@
                                       </el-select>
                                     </dd>
                                   </dl>
+                              </div>
+                              <div class="EnphoneAddEditMainItem customer-info">
                                   <dl style="width:160px;">
                                     <dt>价值：</dt>
                                     <dd>
@@ -380,6 +388,19 @@
                               </div>
                               <div class="EnphoneAddEditMainItem material">
                                 <dl style="width: 160px;">
+                                  <dt>产量：</dt>
+                                  <dd>
+                                    <el-select v-model="formData.production" size="small" clearable placeholder="请选择">
+                                        <el-option
+                                        v-for="item in productionList"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                  </dd>
+                                </dl>
+                                <dl style="width: 270px;">
                                   <dt>物料：</dt>
                                   <dd>
                                     <el-autocomplete
@@ -394,20 +415,7 @@
                                       ></el-autocomplete>
                                   </dd>
                                 </dl>
-                                <dl style="width: 160px;">
-                                  <dt>产量：</dt>
-                                  <dd>
-                                    <el-select v-model="formData.production" size="small" clearable placeholder="请选择">
-                                        <el-option
-                                        v-for="item in productionList"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                        </el-option>
-                                    </el-select>
-                                  </dd>
-                                </dl>
-                                <dl style="width: 160px;">
+                                <dl style="width: 270px;">
                                   <dt>进料：</dt>
                                   <dd>
                                     <el-autocomplete
@@ -422,7 +430,7 @@
                                       ></el-autocomplete>
                                   </dd>
                                 </dl>
-                                <dl style="width: 160px;">
+                                <dl style="width: 280px;">
                                   <dt>出料：</dt>
                                   <dd>
                                     <el-autocomplete
@@ -439,7 +447,7 @@
                                 </dl>
                               </div>
                               <div class="EnphoneAddEditMainItem material">
-                                <dl style="width: 670px;">
+                                <dl style="width: 440px;">
                                   <dt>询盘备注：<em v-if="ID&&defaultInfo.xunremark_time">(最后修改时间：{{defaultInfo.xunremark_time}})</em></dt>
                                   <dd>
                                     <el-autocomplete
@@ -454,9 +462,7 @@
                                       ></el-autocomplete>
                                   </dd>
                                 </dl>
-                              </div>
-                              <div class="EnphoneAddEditMainItem material">
-                                <dl style="width: 670px;">
+                                <dl style="width: 560px;">
                                   <dt>客服备注：<span>(仅客服部可见)</span><em v-if="ID&&defaultInfo.custormremark_time">(最后修改时间：{{defaultInfo.custormremark_time}})</em></dt>
                                   <dd>
                                     <el-autocomplete
@@ -479,7 +485,7 @@
                                       <el-checkbox v-model="formData.effective" label="有效" border size="small"></el-checkbox>
                                     </dd>
                                   </dl>
-                                  <dl style="width:247px;">
+                                  <dl style="width:797px;">
                                     <dt>无效原因：<span style="color:#f60;" v-if="formData.noeffectivetime">{{formData.noeffectivetime}}</span></dt>
                                     <dd>
                                       <el-input
@@ -491,7 +497,7 @@
                                       </el-input>
                                     </dd>
                                   </dl>
-                                  <dl>
+                                  <dl style="width:120px;">
                                     <dt>添加人：</dt>
                                     <dd>
                                         <el-input
@@ -686,6 +692,7 @@ export default {
       isSalesman:false,
       isCustomerSalesman:false,
       restaurants:[],
+      isLoading:null,
     }
   },
   computed: {
@@ -767,9 +774,20 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 右侧标题-左侧电话括号小数字
@@ -849,8 +867,8 @@ export default {
       var $this = this;
       var formData = {};
       formData.custormname = $this.formData.custormname;
-      formData.custormemail = $this.formData.custormemail;
-      formData.custormphone = $this.formData.custormphone;
+      formData.custormemail = $this.formData.custormemail.replace(/\n/g,",");
+      formData.custormphone = $this.formData.custormphone.replace(/\n/g,",");
       formData.noeffectivetime = $this.formData.noeffectivetime;
       if($this.formData.salesuserid!=''&&$this.formData.salesuserid!=null){
         formData.salesuserid = $this.formData.salesuserid;
@@ -926,9 +944,9 @@ export default {
       var $this = this;
       $this.formData.id = $this.defaultInfo.id;
       $this.formData.custormname = $this.defaultInfo.custormname;
-      $this.formData.custormemail = $this.defaultInfo.custormemail;
+      $this.formData.custormemail = $this.defaultInfo.custormemail?$this.defaultInfo.custormemail.replace(/,/g,"\n"):'';
       $this.formData.noeffectivetime = $this.defaultInfo.noeffectivetime;
-      $this.formData.custormphone = $this.defaultInfo.custormphone;
+      $this.formData.custormphone = $this.defaultInfo.custormphone?$this.defaultInfo.custormphone.replace(/,/g,"\n"):'';
       if($this.defaultInfo.salesownid!=0){
          $this.formData.salesuserid="";
          $this.salesuserDefault=$this.defaultInfo.salesusername;
@@ -1183,6 +1201,8 @@ export default {
             $this.salesuserlist = salesuserlist;
             if($this.ID){
               $this.initCluesInfo();
+            }else{
+              $this.isLoading.close();
             }
           }else{
             $this.$message({
@@ -1216,6 +1236,7 @@ export default {
             }else{
               $this.salesuserlist=[]
             }
+            $this.isLoading.close();
           }else{
             $this.$message({
               showClose: true,
@@ -1355,6 +1376,7 @@ export default {
       }else{
         pathUrl = "enphone/cluesEditAction";
       }
+      $this.loadingFun();
       $this.$store.dispatch(pathUrl, formData).then(response=>{
           if(response.status){
             $this.$message({

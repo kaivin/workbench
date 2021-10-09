@@ -447,11 +447,10 @@
                 margin-bottom: 10px;
               }
               .el-upload__tip{
-                float: left;
+                float: right;
                 margin-bottom: 10px;
                 margin-left: 10px;
                 margin-top:0;
-                width: 410px;
                 border-radius: 4px;
                 height: 32px;
                 line-height: 32px;
@@ -462,8 +461,9 @@
                 }
               }
               .el-upload-list{
-                width: 100%;
-                clear:both;
+                width: 410px;
+                margin-left: 10px;
+                float: left;
                 border: 1px solid #dcdfe6;
                 border-radius: 4px;
                 height: 32px;
