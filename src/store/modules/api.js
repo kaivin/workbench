@@ -49,6 +49,7 @@ const state = {
     isEntargetlistAdd:false,
     isWorkOrderTagAdd:false,
     isWorkOrderAdd:false,
+    isDepartScoreAdd:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -215,6 +216,11 @@ const mutations = {
       state.isWorkOrderAdd = true;
     }else{
       state.isWorkOrderAdd = false;
+    }
+    if(permitData.includes("Depart_departscoreadd")&&data.page==""){
+      state.isDepartScoreAdd = true;
+    }else{
+      state.isDepartScoreAdd = false;
     }
   },
 }

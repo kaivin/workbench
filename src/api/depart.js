@@ -53,3 +53,42 @@ export function departAllotRole(data) {
     data
   });
 }
+// 部门月度积分设置列表-获取部门
+export function getdepart() {
+  return request({
+    url: "/hxindex/Depart/getdepart",
+    method: "POST",
+  });
+}
+// 部门月度积分设置列表
+export function departScore(data) {
+  return request({
+    url: "/hxindex/Depart/departscore",
+    method: "POST",
+    data
+  });
+}
+// 部门月度可用积分添加
+export function departScoreAdd(data) {
+  return request({
+    url: "/hxindex/Depart/departscoreadd",
+    method: "POST",
+    data
+  });
+}
+// 部门月度可用积分修改
+export function departScoreEdit(data) {
+  return request({
+    url: "/hxindex/Depart/departscoreedit",
+    method: "POST",
+    data
+  });
+}
+// 部门月度可用积分删除
+export function departScoreDelete(data) {
+  return request({
+    url: "/hxindex/Depart/departscoredelete",
+    method: "POST",
+    data
+  });
+}

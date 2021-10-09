@@ -188,7 +188,13 @@ export default {
                                 message: response.info,
                                 type: 'success'
                             });
-                            $this.$router.push({ path: $this.redirect || '/' });
+                            var userInfo = Cookies.get('userInfo');
+                            userInfo = JSON.parse(userInfo);
+                            if(userInfo.issales==2){
+                                $this.$router.push({ path: $this.redirect || '/Sales/index?Status=personcount' });
+                            }else{
+                                $this.$router.push({ path: $this.redirect || '/' });
+                            }
                         }else if(response.loginnumber==2||response.status==4){
                             if(response.loginnumber){
                                 if(response.loginnumber==2){
@@ -223,13 +229,13 @@ export default {
         },
         // loading自定义
         loadingFun(){
-        var $this = this;
-        $this.isLoading = $this.$loading({
-            lock: true,
-            text: 'Loading',
-            spinner: 'el-icon-loading',
-            background: 'rgba(0, 0, 0, 0.7)'
-        });
+            var $this = this;
+            $this.isLoading = $this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
         },
         getOtherQuery(query) {
             return Object.keys(query).reduce((acc, cur) => {

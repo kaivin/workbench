@@ -234,6 +234,15 @@
             </el-form-item>
           </div>
         </div>
+        <div class="item-form userType">
+            <label class="el-form-item__label" style="width: 110px;">用户类型：</label>
+            <el-radio-group v-model="dialogForm.issales">
+              <el-radio
+                  v-for="item in issalesList"
+                  :key="item.value"
+                  :label="item.value">{{item.label}}</el-radio>
+            </el-radio-group>
+        </div>
         <div class="item-form">
           <el-form-item label="部门：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
             <el-cascader v-model="dialogForm.deptid_othername" :options="departLevelData" ref="departLevel" placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover',multiple:true }" :collapse-tags="true" clearable></el-cascader>
@@ -323,8 +332,13 @@ export default {
         email:"",
         postion_id:"",
         workname_id:"",
+        issales:1,
         SellerIndustryGroup:'',
       },
+      issalesList:[
+        {label:"正常",value:1},
+        {label:"业务员",value:2},
+      ],
       dialogRoleVisible:false,
       roleData:[{key:"",label:""}],
       roleValue:[],
@@ -753,6 +767,7 @@ export default {
       $this.dialogForm.remarks = row.remarks;
       $this.dialogForm.phone = row.phone;
       $this.dialogForm.email = row.email;
+      $this.dialogForm.issales = row.issales;
       $this.dialogForm.postion_id = row.postion_id==0?'':row.postion_id;
       $this.dialogForm.workname_id = row.workname_id==0?'':row.workname_id;
       $this.dialogForm.SellerIndustryGroup = row.SellerIndustryGroup==0?'':row.SellerIndustryGroup;
@@ -778,6 +793,7 @@ export default {
       formData.workname_id = $this.dialogForm.workname_id;
       formData.postion_id = $this.dialogForm.postion_id;
       formData.role_id = $this.dialogForm.role_id;
+      formData.issales = $this.dialogForm.issales;
       formData.deptid_othername = departData;
       formData.SellerIndustryGroup = $this.dialogForm.SellerIndustryGroup;
       var pathUrl = "";
@@ -823,6 +839,7 @@ export default {
       $this.dialogForm.remarks = "";
       $this.dialogForm.phone = "";
       $this.dialogForm.email = "";
+      $this.dialogForm.issales = 1;
       $this.dialogForm.postion_id = "";
       $this.dialogForm.workname_id = "";
       $this.dialogForm.SellerIndustryGroup = "";
@@ -1100,7 +1117,12 @@ export default {
                       if(res2.length>0){
                         router.addRoutes(res2);
                         router.addRoutes([{path: '*',name:'error404',redirect:"/404",meta: {title: '404', icon: null,hidden:true,keepAlive:false }}]);
-                        $this.$router.push({ path: '/Home/index' });
+                        if(response.data.issales==2){
+                            var routeUrl =  $this.$router.resolve({path: '/Sales/index?Status=personcount' });
+                            window.open(routeUrl.href,'_self');
+                        }else{
+                           $this.$router.push({ path: '/Home/index' });
+                        }
                       }
                     });
                   }

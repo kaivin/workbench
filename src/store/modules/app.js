@@ -32,6 +32,7 @@ const state = {
   addCntargetlist:false,
   addEntargetlist:false,
   addWorkOrderTag:false,
+  addDepartScore:false,
 }
 
 const mutations = {
@@ -203,6 +204,12 @@ const mutations = {
   CLOSE_WORKORDERTAG: (state) => {
     state.addWorkOrderTag = false
   },
+  ADD_DEPARTSCORE: (state) => {
+    state.addDepartScore = true
+  },
+  CLOSE_DEPARTSCORE: (state) => {
+    state.addDepartScore = false
+  },
 }
 
 const actions = {
@@ -371,6 +378,13 @@ const actions = {
   },
   closeWorkOrderTag({ commit }) {
     commit('CLOSE_WORKORDERTAG')
+  },
+
+  addDepartScore({ commit }) {
+    commit('ADD_DEPARTSCORE')
+  },
+  closeDepartScore({ commit }) {
+    commit('CLOSE_DEPARTSCORE')
   },
 }
 

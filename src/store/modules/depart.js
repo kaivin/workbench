@@ -1,4 +1,4 @@
-﻿import { getDataList, departAdd,departEdit,departDelete,departAllotedRole,departCanAllotRole,departAllotRole } from '@/api/depart'
+﻿import { getDataList, departAdd,departEdit,departDelete,departAllotedRole,departCanAllotRole,departAllotRole,departScore,departScoreAdd,departScoreEdit,departScoreDelete,getdepart } from '@/api/depart'
 
 const state = {}
 const mutations = {}
@@ -67,6 +67,56 @@ const actions = {
     departAllotRoleAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             departAllotRole(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 部门月度积分设置列表
+    departScoreAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            departScore(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 部门月度可用积分添加
+    departScoreAddAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            departScoreAdd(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 部门月度可用积分修改
+    departScoreEditAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            departScoreEdit(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 部门月度可用积分删除
+    departScoreDeleteAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            departScoreDelete(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 部门月度积分设置列表-获取部门
+    getdepartAction({ commit, state }) {
+        return new Promise((resolve, reject) => {
+            getdepart().then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

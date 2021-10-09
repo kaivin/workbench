@@ -12,6 +12,9 @@
         <div class="card-content" ref="cardContent">
           <div class="main-content">
             <table class="ArticleFour">
+              <tr v-if="hasscore==1">
+                <td colspan='2'><span class="redsale" style="font-size:12px;">本月剩余可用积分：<strong>{{nowscore}}</strong></span></td>
+              </tr>
               <tr>
                 <td class="type-title"><span>工单标题：</span></td>
                 <td>
@@ -154,6 +157,8 @@ export default {
       typeList:[],
       systemTag:[],
       userList:[],
+      hasscore:'',
+      nowscore:'',
       formData:{
         id:0,
         typeid:0,
@@ -446,6 +451,8 @@ export default {
             itemUser.label = $this.userInfo.name;
             itemUser.value = $this.userInfo.id;
             userList.push(itemUser);
+            $this.hasscore = response.hasscore;
+            $this.nowscore = response.nowscore;
             $this.userList = userList;
             if($this.$route.query.ID){
               $this.formData.id = parseInt($this.$route.query.ID);

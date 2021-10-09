@@ -63,6 +63,8 @@
     isWorkOrderTagAdd: state => state.api.isWorkOrderTagAdd,
     addWorkOrderTag:state => state.app.addWorkOrderTag,
     isWorkOrderAdd: state => state.api.isWorkOrderAdd,
+    isDepartScoreAdd: state => state.api.isDepartScoreAdd,
+    addDepartScore:state => state.app.addDepartScore,
 }
 export default getters
   

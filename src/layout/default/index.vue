@@ -4,7 +4,7 @@
         <header-pane />
       </el-header>
       <el-container class="container-layout">
-        <sidebar />
+        <sidebar v-if="isSales" />
         <el-main class="main-layout" v-if="isRefresh">
             <transition name="fade-transform" mode="out-in">
               <router-view :key="key"></router-view>
@@ -18,6 +18,7 @@
 import { Sidebar, HeaderPane } from './components/index';
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
+import Cookies from 'js-cookie'
 export default {
   name: 'Layout',
   components: {
@@ -29,6 +30,7 @@ export default {
     return{
       isRefresh:true,
       screenWidth:0,
+      isSales:true
     }
   },
   metaInfo: {
@@ -52,6 +54,14 @@ export default {
     },
     key() {
       return this.$route.path
+    }
+  },
+  created(){
+    var $this = this;
+    var userInfo = Cookies.get('userInfo');
+    userInfo = JSON.parse(userInfo);
+    if(userInfo.issales==2){
+      $this.isSales=false;
     }
   },
   mounted(){

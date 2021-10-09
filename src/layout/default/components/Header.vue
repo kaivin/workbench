@@ -46,6 +46,8 @@
 
               <div class="item-button" v-if="isWorkOrderTagAdd" v-on:click="workOrderTagAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加标签</span></div>
               <div class="item-button" v-if="isWorkOrderAdd" v-on:click="workOrderAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">工单发布</span></div>
+
+              <div class="item-button" v-if="isDepartScoreAdd" v-on:click="DepartScoreAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">部门月度积分添加</span></div>
             </div>
         </div>
         <div class="header-right">
@@ -145,6 +147,7 @@ export default {
         'isEntargetlistAdd',
         'isWorkOrderTagAdd',
         'isWorkOrderAdd',
+        'isDepartScoreAdd',
       ]),
     },
   watch: {
@@ -203,7 +206,8 @@ export default {
             var $this = this;
             await $this.$store.dispatch('login/logoutAction').then(response=>{
               if(response.status){
-                $this.$router.push(`/login?redirect=${$this.$route.fullPath}`)
+                $this.$router.push(`/login`)
+                //$this.$router.push(`/login?redirect=${$this.$route.fullPath}`)
               }else{
                 $this.$message({
                   showClose: true,
@@ -373,6 +377,10 @@ export default {
           var $this = this;
           var routeUrl =  $this.$router.resolve({path:'/Works/addEdit'});
           window.open(routeUrl.href,'_blank');
+        },
+        // 部门月度积分添加
+        DepartScoreAdd(){
+          this.$store.dispatch('app/addDepartScore')
         },
     }
 }
