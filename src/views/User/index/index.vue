@@ -1121,7 +1121,8 @@ export default {
                             var routeUrl =  $this.$router.resolve({path: '/Sales/index?Status=personcount' });
                             window.open(routeUrl.href,'_self');
                         }else{
-                           $this.$router.push({ path: '/Home/index' });
+                          var routeUrl =  $this.$router.resolve({path: '/Home/index' });
+                          window.open(routeUrl.href,'_self');
                         }
                       }
                     });

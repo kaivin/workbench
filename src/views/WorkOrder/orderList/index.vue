@@ -145,6 +145,12 @@
                                           >
                                       </el-table-column>
                                       <el-table-column
+                                          prop="monthscore"
+                                          label="本月已获得积分"
+                                          width="120"
+                                          >
+                                      </el-table-column>
+                                      <el-table-column
                                           prop="allscorre"
                                           label="总积分"
                                           width="120"

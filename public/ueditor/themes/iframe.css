@@ -30,16 +30,19 @@ body.view img,body.view video,body.view table{
 }
 body.view table{
     border:none!important;
-	border-top: 1px solid #a8d3ff!important;
-    border-left: 1px solid #a8d3ff!important;
+	border-top: 1px solid #c3c0c0!important;
+    border-left: 1px solid #c3c0c0!important;
     background: none!important;
+	margin:15px 0;
 }
 body.view table tr td{
     border:none!important;
-	border-bottom: 1px solid #a8d3ff!important;
-	border-right: 1px solid #a8d3ff!important;
-	padding: 3px 10px!important;
+	border-bottom: 1px solid #c3c0c0!important;
+	border-right: 1px solid #c3c0c0!important;
+	padding: 10px!important;
+	background-color: #f2f2f2;
+	font-size: 16px;
 }
-body.view table tr td,body.view table tr th{
-    background: none!important;
+body.view table.is-center tr th,body.view table.is-center tr td{
+	text-align: center!important;
 }

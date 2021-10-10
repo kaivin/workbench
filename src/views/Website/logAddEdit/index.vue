@@ -69,7 +69,8 @@
             <tr v-if="postSystemTag.length>0">
               <td class="type-title"><span>内容：</span></td>
               <td>
-                <div class="item-form">
+                  <div class="item-form editor-panel">
+                    <div class="ueditor-button" v-if="activeTab=='textarea'"><el-checkbox v-model="formData.is_center" @change="changeCenterHandler" style="margin-right: 5px;" label="表格文字水平居中" size="mini" border></el-checkbox><span class="btn" v-on:click="removeSpace">清除空格</span><span class="btn" v-on:click="removeTableStyle">清除表格默认样式</span><span class="btn" v-on:click="removeHtmlStyle">清除所有默认样式</span></div>
                   <el-tabs v-model="activeTab" type="border-card" class="tab-card" :before-leave="tabClickHandler">
                     <el-tab-pane label="富文本编辑器" name="textarea" id="editor-rich">
                       <vue-ueditor-wrap v-model="formData.content" :config="editorConfig" @ready="ready" editor-id="editor-rich-text"></vue-ueditor-wrap>
@@ -186,6 +187,7 @@ export default {
         isAnonymous:false,
         isTop:false,
         is_markdown:0,
+        is_center:false,
       },
       predefineColors: [
         '#222222',
@@ -557,6 +559,7 @@ export default {
       $this.formData.remarks = $this.articleData.remarks;
       $this.formData.isCommentClose = $this.articleData.issay==0?true:false;
       $this.formData.isAnonymous = $this.articleData.is_hidename==0?false:true;
+      $this.formData.is_center= $this.articleData.is_center==1?false:true;
       $this.formData.isTop = $this.articleData.is_top==0?false:true;
       if($this.articleData.tagsid){
         if($this.articleData.tagsid.indexOf(",")!=-1){
@@ -588,6 +591,7 @@ export default {
       $this.formData.isCommentClose = false;
       $this.formData.isAnonymous = false;
       $this.formData.isTop = false;
+      $this.formData.is_center = false;
       $this.activeTab = "textarea";
     },
     // 验证是否为空
@@ -632,6 +636,7 @@ export default {
       formData.is_top = $this.formData.isTop?1:0;
       formData.issay = $this.formData.isCommentClose?0:1;
       formData.is_hidename = $this.formData.isAnonymous?1:0;
+      formData.is_center = $this.formData.is_center?2:1;
       formData.titlecolor = $this.formData.titleColor;
       var pathUrl = "";
       if($this.formData.id!==0){
@@ -670,11 +675,13 @@ export default {
         if(activeName=="markdown"){
           $this.formData.is_markdown = 1;
           $this.formData.content = "";
+          $this.formData.is_center = false;
           // $this.activeTab = "markdown";
         }else{
           $this.formData.is_markdown = 0;
           $this.formData.content = "";
           $this.formData.markdownContent = "";
+          $this.formData.is_center = false;
           // $this.activeTab = "textarea";
         }
       }).catch(() => {
@@ -744,7 +751,57 @@ export default {
          titleColor=ValColor;
        }
        $this.formData.titleColor=ValColor;
-    }
+    },
+    
+    // 清除所有默认样式
+    removeHtmlStyle(){
+      var $this = this;
+      var html = $this.formData.content;
+      let relStyle = /style\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let relClass = /class\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let relWidth = /width\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let relHeight = /height\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let newHtml = "";
+      if (html) {
+        newHtml = html.replace(relStyle, "").replace(relClass, "").replace(relWidth, "").replace(relHeight, "");
+      }
+      $this.formData.content = newHtml;
+    },
+    // 清除空格
+    removeSpace(){
+      var $this = this;
+      var html = $this.formData.content;
+      let relSpace = /&nbsp;/g;
+      html = html.replace(relSpace,'');
+      $this.formData.content = html;
+    },
+    // 清除表格默认样式
+    removeTableStyle(){
+      var $this = this;
+      var html = $this.formData.content;
+      let relStyle = /style\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let relClass = /class\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let relWidth = /width\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let relHeight = /height\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      html = html.replace(/(<(table|tr|col|colgroup|tbody|thead|tfooter))[^>]*(>)/gi,'$1$3');
+      html = html.replace(/<td[^>]*>/gi,function(match,capture){
+        var itemTd = match.replace(relStyle, "").replace(relClass, "").replace(relWidth, "").replace(relHeight, "");
+        return itemTd;
+      });
+      $this.formData.content = html;
+    },
+    // 表格文字水平居中
+    changeCenterHandler(e){
+      var $this = this;
+      console.log(e);
+      var html = $this.formData.content;
+      if(e){
+        html = html.replace(/<table/gi, "<table class='is-center'");
+      }else{
+        html = html.replace(/<table class="is-center"/gi, "<table");
+      }
+      $this.formData.content = html;
+    },
   }
 }
 </script>

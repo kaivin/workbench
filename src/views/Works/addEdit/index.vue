@@ -623,47 +623,54 @@ export default {
     // 发布工单
     saveArticle(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isDisabled){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isDisabled=true;
+        var formData = {}
+        formData.id = $this.formData.id;
+        formData.typeid = $this.formData.typeid;
+        formData.title = $this.formData.title;
+        formData.content = $this.formData.content;
+        formData.tags_id = $this.formData.tags_id;
+        formData.mytags = $this.formData.mytags;
+        formData.publishuserid = $this.formData.publishuserid;
+        formData.issay = $this.formData.issay?0:1;
+        formData.isedit = $this.formData.isedit?1:0;
+        formData.score = $this.formData.score;
+        formData.endtime = $this.formData.endtime;
+        var pathUrl = "";
+        if($this.formData.id!==0){
+          pathUrl = 'works/workOrderEditAction';
+        }else{
+          pathUrl = 'works/workOrderAddAction';
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              if($this.formData.id==0){
+                $this.clearFormData();
+              }
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            } 
+        });
       }
-      $this.isDisabled=true;
-      var formData = {}
-      formData.id = $this.formData.id;
-      formData.typeid = $this.formData.typeid;
-      formData.title = $this.formData.title;
-      formData.content = $this.formData.content;
-      formData.tags_id = $this.formData.tags_id;
-      formData.mytags = $this.formData.mytags;
-      formData.publishuserid = $this.formData.publishuserid;
-      formData.issay = $this.formData.issay?0:1;
-      formData.isedit = $this.formData.isedit?1:0;
-      formData.score = $this.formData.score;
-      formData.endtime = $this.formData.endtime;
-      var pathUrl = "";
-      if($this.formData.id!==0){
-        pathUrl = 'works/workOrderEditAction';
-      }else{
-        pathUrl = 'works/workOrderAddAction';
-      }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            if($this.formData.id==0){
-               $this.clearFormData();
-               $this.isDisabled=false;
-            }
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          } 
-      });
     },
   }
 }

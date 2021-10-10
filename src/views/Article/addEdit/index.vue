@@ -79,7 +79,8 @@
               <tr v-if="userList.length>0">
                 <td class="type-title"><span>内容：</span></td>
                 <td>
-                  <div class="item-form">
+                  <div class="item-form editor-panel">
+                    <div class="ueditor-button" v-if="activeTab=='textarea'"><el-checkbox v-model="formData.is_center" @change="changeCenterHandler" style="margin-right: 5px;"  label="表格文字水平居中" size="mini" border></el-checkbox><span class="btn" v-on:click="removeSpace">清除空格</span><span class="btn" v-on:click="removeTableStyle">清除表格默认样式</span><span class="btn" v-on:click="removeHtmlStyle">清除所有默认样式</span></div>
                     <el-tabs v-model="activeTab" type="border-card" class="tab-card" :before-leave="tabClickHandler">
                       <el-tab-pane label="富文本编辑器" name="textarea" id="editor-rich">
                         <vue-ueditor-wrap v-model="formData.content" :config="editorConfig" @ready="ready" editor-id="editor-rich-text"></vue-ueditor-wrap>
@@ -297,6 +298,7 @@ export default {
         uid:'',
         is_markdown:0,
         is_updatetime:false,
+        is_center:false,
       },
       predefineColors: [
         '#222222',
@@ -418,9 +420,6 @@ export default {
                 'map', //Baidu地图
                 'scrawl', //涂鸦
                 'fullscreen', //全屏
-                '|',
-                'removeStyle',
-                'removeTableStyle',
                 '|',
             ]
         ]
@@ -649,41 +648,6 @@ export default {
     // 5、 你可以在ready方法中拿到editorInstance实例,所有API和官方的实例是一样了。http://fex.baidu.com/ueditor/#api-common
     ready (ue) {
       ue.addListener('ready', () => {
-        ue.registerUI('removeStyle removeTableStyle', function(editor, uiname) {
-           //注册按钮执行时的command命令，使用命令默认就会带有回退操作
-            editor.registerCommand(uiName, {
-                execCommand: function() {
-                    alert('execCommand:' + uiName)
-                }
-            });
-            //创建一个button
-            var btn = new UE.ui.Button({
-                //按钮的名字
-                name: uiName,
-                //提示
-                title: uiName,
-                //添加额外样式，指定icon图标，这里默认使用一个重复的icon
-                cssRules: 'background-position: -500px 0;',
-                //点击时执行的命令
-                onclick: function() {
-                    //这里可以不用执行命令,做你自己的操作也可
-                    editor.execCommand(uiName);
-                }
-            });
-            //当点到编辑内容上时，按钮要做的状态反射
-            editor.addListener('selectionchange', function() {
-                var state = editor.queryCommandState(uiName);
-                if (state == -1) {
-                    btn.setDisabled(true);
-                    btn.setChecked(false);
-                } else {
-                    btn.setDisabled(false);
-                    btn.setChecked(state);
-                }
-            });
-            //因为你是添加button,所以需要返回这个button
-            return btn;
-        });
       });
     },
     // 改变可选部门状态
@@ -762,6 +726,7 @@ export default {
       $this.formData.day = data.showdays;
       $this.formData.isAllPermit = data.readpermit==0?false:true;
       $this.formData.is_updatetime = data.is_updatetime==0?false:true;
+      $this.formData.is_center = data.is_center==1?false:true;
       if(data.tagsid){
         if(data.tagsid.indexOf(",")!=-1){
           var systemTagArr = data.tagsid.split(",");
@@ -845,6 +810,7 @@ export default {
       $this.formData.readDepart = [];
       $this.formData.readUser = [];
       $this.formData.is_updatetime = false;
+      $this.formData.is_center = false;
       $this.activeTab = "textarea";
       $this.changePostType($this.postType,$this.formData.postTypeID,$this);
       $this.changeDepartSelected($this.departList);
@@ -910,6 +876,7 @@ export default {
       formData.markdowntext = $this.formData.markdownContent;
       formData.is_markdown = $this.formData.is_markdown;
       formData.tags_id = $this.formData.systemTag;
+      formData.is_center = $this.formData.is_center?2:1;
       if($this.isSort){
         formData.sort = $this.formData.sort;
       }
@@ -986,11 +953,13 @@ export default {
             $this.formData.is_markdown = 1;
             $this.formData.content = "";
             // $this.activeTab = "markdown";
+            $this.formData.is_center = false;
           }else{
             $this.formData.is_markdown = 0;
             $this.formData.content = "";
             $this.formData.markdownContent = "";
             // $this.activeTab = "textarea";
+            $this.formData.is_center = false;
           }
         }).catch(() => {
           throw new Error("已取消切换");        
@@ -1075,7 +1044,56 @@ export default {
          titleColor=ValColor;
        }
        $this.formData.titleColor=ValColor;
-    }
+    },
+    // 清除所有默认样式
+    removeHtmlStyle(){
+      var $this = this;
+      var html = $this.formData.content;
+      let relStyle = /style\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let relClass = /class\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let relWidth = /width\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let relHeight = /height\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let newHtml = "";
+      if (html) {
+        newHtml = html.replace(relStyle, "").replace(relClass, "").replace(relWidth, "").replace(relHeight, "");
+      }
+      $this.formData.content = newHtml;
+    },
+    // 清除表格默认样式
+    removeTableStyle(){
+      var $this = this;
+      var html = $this.formData.content;
+      let relStyle = /style\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let relClass = /class\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let relWidth = /width\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      let relHeight = /height\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      html = html.replace(/(<(table|tr|col|colgroup|tbody|thead|tfooter))[^>]*(>)/gi,'$1$3');
+      html = html.replace(/<td[^>]*>/gi,function(match,capture){
+        var itemTd = match.replace(relStyle, "").replace(relClass, "").replace(relWidth, "").replace(relHeight, "");
+        return itemTd;
+      });
+      $this.formData.content = html;
+    },
+    // 清除空格
+    removeSpace(){
+      var $this = this;
+      var html = $this.formData.content;
+      let relSpace = /&nbsp;/g;
+      html = html.replace(relSpace,'');
+      $this.formData.content = html;
+    },
+    // 表格文字水平居中
+    changeCenterHandler(e){
+      var $this = this;
+      console.log(e);
+      var html = $this.formData.content;
+      if(e){
+        html = html.replace(/<table/gi, "<table class='is-center'");
+      }else{
+        html = html.replace(/<table class="is-center"/gi, "<table");
+      }
+      $this.formData.content = html;
+    },
   }
 }
 </script>

@@ -717,13 +717,20 @@
     border-top:1px solid #c3c0c0!important;
     border-left:1px solid #c3c0c0!important;
     background:#f2f2f2!important;
+    &.is-center{
+      tr{
+        td,th{
+          text-align: center!important;
+        }
+      }
+    }
     tr{
       td{
         border:none!important;
         border-bottom:1px solid #c3c0c0!important;
         border-right:1px solid #c3c0c0!important;
         padding:10px 10px!important;
-        background:#f2f2f2!important;
+        background:#f2f2f2;
         font-size:16px;
       }
     }
@@ -1477,6 +1484,27 @@
     b{
       font-weight: normal;
       margin: 0 5px;
+    }
+  }
+}
+.editor-panel{
+  position: relative;
+  .ueditor-button{
+    height: 40px;
+    position: absolute;
+    right:10px;
+    top:0;
+    z-index: 1;
+    .btn{
+      display: inline-block;
+      font-size: 12px;
+      padding: 4px 10px;
+      border: 1px solid $menuActiveText;
+      color: $menuActiveText;
+      border-radius: 4px;
+      margin: 7px 5px;
+      line-height: 16px;
+      cursor: pointer;
     }
   }
 }

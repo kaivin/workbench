@@ -156,14 +156,21 @@
                                             <el-input
                                                 size="mini"
                                                 placeholder="ID"
-                                                style="width:80px;margin-right:10px;margin-bottom:10px;"
+                                                style="width:120px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.messageid"
                                                 clearable>
                                             </el-input>
                                             <el-input
                                                 size="mini"
+                                                placeholder="富通ID(多个用,分隔)"
+                                                style="width:180px;margin-right:10px;margin-bottom:10px;"
+                                                v-model="searchData.ftword_id"
+                                                clearable>
+                                            </el-input>
+                                            <el-input
+                                                size="mini"
                                                 placeholder="客户姓名/称呼"
-                                                style="width:100px;margin-right:10px;margin-bottom:10px;"
+                                                style="width:140px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.custormname"
                                                 clearable>
                                             </el-input>
@@ -718,6 +725,7 @@ export default {
             is_group:false,
             groupurlproduct:"1",
             sort:"asc",
+            ftword_id:"",
         },
         pageSizeList:[20],
         totalDataNum:0,
@@ -1295,6 +1303,7 @@ export default {
         resultData.page = $this.searchData.page;
         resultData.limit = $this.searchData.limit;
         resultData.messageid = $this.searchData.messageid;
+        resultData.ftword_id = $this.searchData.ftword_id;
         resultData.custormname = $this.searchData.custormname;
         resultData.custormemail = $this.searchData.custormemail;
         resultData.custormphone = $this.searchData.custormphone;
@@ -1568,6 +1577,7 @@ export default {
         $this.searchData.page=1;
         $this.searchData.limit=20;
         $this.searchData.messageid="";
+        $this.searchData.ftword_id="";
         $this.searchData.custormname="";
         $this.searchData.custormemail="";
         $this.searchData.custormphone="";
