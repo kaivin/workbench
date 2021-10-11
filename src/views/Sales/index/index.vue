@@ -230,7 +230,7 @@
                                 <el-table-column
                                 prop="weekday"
                                 label="ID/说明"
-                                width="120"
+                                min-width="140"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
@@ -243,7 +243,7 @@
                                 <el-table-column
                                 prop="continent"
                                 label="大州/地区"
-                                width="100"
+                                min-width="120"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
@@ -255,7 +255,7 @@
                                 <el-table-column
                                 prop="producttypename"
                                 label="类型/产品"
-                                width="120"
+                                min-width="130"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
@@ -268,38 +268,40 @@
                                 <el-table-column
                                 prop="custormname"
                                 label="联系方式"
-                                width="120"
+                                min-width="170"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
                                     <p><span class="EnColor05">称呼：</span>{{scope.row.custormname}}</p>
                                     <p>
                                       <span class="EnColor05">邮箱：</span>
-                                      <span v-if="scope.row.custormemail" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;"> 
-                                          <i style="font-style:normal;" v-if="scope.row.managestatus==2">{{scope.row.custormemail}}</i>
-                                          <i style="font-style:normal;" v-else>点击详情查看Email</i>
+                                      <span v-if="scope.row.custormemail&&scope.row.managestatus==2" style="cursor: pointer;"> 
+                                          <i style="font-style:normal;" v-for="(item,index) in scope.row.emailList" v-bind:key="index"><em style="font-style:normal;display:inline-block;">{{item}}</em></i>
+                                      </span>
+                                      <span v-if="scope.row.custormemail&&scope.row.managestatus!=2" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;"> 
+                                          <i style="font-style:normal;">查看Email</i>
                                       </span>
                                     </p>
-                                    <p><span class="EnColor05">电话：</span>{{scope.row.custormphone}}</p>
+                                    <p><span class="EnColor05">电话：</span><i style="font-style:normal" v-for="(item,index) in scope.row.phoneList" v-bind:key="index"><em style="font-style:normal;display:inline-block;">{{item}}</em><br/></i></p>
                                     </div>
                                 </template>
                                 </el-table-column>
                                 <el-table-column
                                 prop="custormneedinfo"
                                 label="需求"
-                                min-width="120"
+                                min-width="210"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">                       
                                         <p v-if="scope.row.contentedittime"><span class="SiteColor-01">内容有修改：修改时间{{scope.row.contentedittime}}</span></p>
-                                        <p>{{scope.row.Salescustormneedinfo}}<span class="SiteColor-03 clear" style="cursor:pointer;" v-if="scope.row.Salescustormneedinfo.length>150" @click="editTableRow(scope.row,scope.$index,'2')">#查看更多</span></p>
+                                        <p>{{scope.row.Salescustormneedinfo}}<span class="SiteColor-03 clear" style="cursor:pointer;" v-if="scope.row.Salescustormneedinfo.length>150" @click="editTableRow(scope.row,scope.$index,'2')" :title="scope.row.custormneedinfo">#查看更多</span></p>
                                     </div>
                                 </template>
                                 </el-table-column>
                                 <el-table-column
                                 prop="SalesEnnature"
-                                label="处理/客户性质/回复"
-                                min-width="90"
+                                label="处理/客户性质/回复/个人备注"
+                                min-width="120"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
@@ -307,16 +309,6 @@
                                         <p>{{scope.row.SalesEnnature}}</p>
                                         <p>{{scope.row.SalesEnxunprice}}</p>
                                         <p :style="scope.row.replystatus==1?'color:#d02c34':'color:#49c96a'">{{scope.row.Salesreplystatus}}</p> 
-                                    </div>
-                                </template>
-                                </el-table-column>
-                                <el-table-column
-                                prop="SalesEnnature"
-                                label="个人备注"
-                                min-width="120"
-                                >
-                                <template slot-scope="scope">
-                                    <div class="table-text">
                                         <p>{{scope.row.salesremark}}</p>
                                     </div>
                                 </template>
@@ -324,7 +316,7 @@
                                 <el-table-column
                                 prop="addtime"
                                 label="添加/修改时间"
-                                width="190"
+                                min-width="130"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
@@ -1022,6 +1014,24 @@ export default {
                   }else{
                     Salescustormneedinfo=item.custormneedinfo;
                   }
+              }
+              if(item.custormemail){
+                if(item.custormemail.indexOf(",")!=-1){
+                  item.emailList = item.custormemail.split(",");
+                }else{
+                  item.emailList = [item.custormemail];
+                }
+              }else{
+                item.emailList = [];
+              }
+              if(item.custormphone){
+                if(item.custormphone.indexOf(",")!=-1){
+                  item.phoneList = item.custormphone.split(",");
+                }else{
+                  item.phoneList = [item.custormphone];
+                }
+              }else{
+                item.phoneList = [];
               }
               item.Salescustormneedinfo=Salescustormneedinfo;
               item.Salesmanagestatus=Salesmanagestatus;

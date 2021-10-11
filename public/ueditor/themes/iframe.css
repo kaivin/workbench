@@ -34,6 +34,7 @@ body.view table{
     border-left: 1px solid #c3c0c0!important;
     background: none!important;
 	margin:15px 0;
+	width: 100%;
 }
 body.view table tr td{
     border:none!important;

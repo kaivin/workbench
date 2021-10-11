@@ -327,11 +327,18 @@
             dt{
               flex: 1;
               display: flex;
-              line-height:32px;
+              line-height:28px;
               strong{
                 flex: 1;
                 color:$menuActiveText;
                 color:#060606;
+                em{
+                  font-style: normal;
+                  display: block;
+                  line-height:28px;
+                  color:#060606;
+                  cursor: pointer;
+                }
               }
               span{
                 display: inline-block;

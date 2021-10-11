@@ -174,7 +174,7 @@
                               </div>
                               <div class="item-search" style="width:240px;">
                                 <el-input
-                                    placeholder="询盘ID，多个以|分隔"
+                                    placeholder="询盘ID，多个以空格分隔"
                                     size="small"
                                     v-model="searchData.idlist"
                                     clearable>

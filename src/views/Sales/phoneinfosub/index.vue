@@ -12,7 +12,7 @@
             </div>
             <dl class="Salelist">
                 <dt v-if="menuButtonPermit.includes('Sales_index')" v-bind:class="currentStatus === 'personcount'?'active':''" v-on:click="jumpLink('personcount')"><span>个人所有询盘</span><i>({{defaultData.personcount}})</i></dt>
-                <dt v-if="menuButtonPermit.includes('Sales_waitdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitdealcount'?'active':''" v-on:click="jumpLink('waitdealcount')"><span>等待处理</span><i>({{defaultData.waitdealcount}})</i></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_waitdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitdealcount'?'active':''" v-on:click="jumpLink('waitdealcount')"><span>等待处理</span><i class="redsale">({{defaultData.waitdealcount}})</i></dt>
                 <dt v-if="menuButtonPermit.includes('Sales_monthsay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'monthsaycount'?'active':''" v-on:click="jumpLink('monthsaycount')"><span>月底前需反馈</span><i>({{defaultData.monthsaycount}})</i></dt>
                 <dt v-if="menuButtonPermit.includes('Sales_hasnosay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasnosaycount'?'active':''" v-on:click="jumpLink('hasnosaycount')"><span>所有未反馈</span><i>({{defaultData.hasnosaycount}})</i></dt>
                 <dt v-if="menuButtonPermit.includes('Sales_waitftword')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitftwordcount'?'active':''" v-on:click="jumpLink('waitftwordcount')"><span>等待添加富通ID</span><i>({{defaultData.waitftwordcount}})</i></dt>
@@ -58,8 +58,8 @@
                                     </dl>
                                     <dl>
                                       <dt><span>客户姓名/称呼：</span><strong>{{formData.custormname}}</strong> </dt>
-                                      <dt><span>客户Email：</span><strong>{{formData.custormemail}}</strong></dt>
-                                      <dt><span>客户电话：</span><strong>{{formData.custormphone}}</strong></dt>
+                                      <dt><span>客户Email：</span><strong><em v-for="(item,index) in formData.custormemail" v-bind:key="index" @click="textCopy(item,$event)">{{item}}</em></strong></dt>
+                                      <dt><span>客户电话：</span><strong><em v-for="(item,index) in formData.custormphone" v-bind:key="index" @click="textCopy(item,$event)">{{item}}</em></strong></dt>
                                     </dl>
                               </div>
                               <div class="SaleAddEditMainItem needCustomers">
@@ -69,7 +69,7 @@
                                           <div class="needCustomersBox">
                                             {{formData.custormneedinfo}}
                                           </div>    
-                                          <p><span>特别说明：{{formData.otherremark}}</span><el-link target="_blank" style='display:inline-block; padding-left:15px;' :underline="false" :href="formData.custormfiles" v-if="formData.custormfiles">附件：{{formData.custormfilesname}}</el-link></p>                     
+                                          <p><span>特别说明：{{formData.otherremark}}</span><el-link target="_blank" style='display:inline-block; padding-left:15px;vertical-align: top;' :underline="false" :href="formData.custormfiles" v-if="formData.custormfiles">附件：{{formData.custormfilesname}}</el-link></p>                     
                                       </dd>
                                     </dl>
                               </div>
@@ -169,6 +169,7 @@
 </template>
 
 <script>
+import copyText from '@/utils/clipboard';
 import { mapGetters } from 'vuex';
 export default {
   name: 'Sales_phoneinfosub',
@@ -215,8 +216,8 @@ export default {
         producttypename:'',
         keyproduct:'',
         custormname:'',
-        custormemail:'',
-        custormphone:'',
+        custormemail:[],
+        custormphone:[],
         custormneedinfo:'',
         dealusername:'',
         otherremark:'',
@@ -288,6 +289,10 @@ export default {
     $this.initData();
   },
   methods:{
+    // 复制文本
+    textCopy(text,event) {
+        copyText(text,event)
+    },
     // 获取面包屑路径
     getBreadcrumbList(){
       var $this = this;
@@ -430,8 +435,24 @@ export default {
       $this.formData.producttypename = $this.defaultInfo.producttypename;
       $this.formData.keyproduct = $this.defaultInfo.keyproduct;
       $this.formData.custormname = $this.defaultInfo.custormname;
-      $this.formData.custormemail = $this.defaultInfo.custormemail;
-      $this.formData.custormphone = $this.defaultInfo.custormphone;
+      if($this.defaultInfo.custormemail){
+        if($this.defaultInfo.custormemail.indexOf(",")!=-1){
+          $this.formData.custormemail = $this.defaultInfo.custormemail.split(",");
+        }else{
+          $this.formData.custormemail = [$this.defaultInfo.custormemail];
+        }
+      }else{
+        $this.formData.custormemail = [];
+      }
+      if($this.defaultInfo.custormphone){
+        if($this.defaultInfo.custormphone.indexOf(",")!=-1){
+          $this.formData.custormphone = $this.defaultInfo.custormphone.split(",");
+        }else{
+          $this.formData.custormphone = [$this.defaultInfo.custormphone];
+        }
+      }else{
+        $this.formData.custormphone = [];
+      }
       $this.formData.contentedittime = $this.defaultInfo.contentedittime;
       $this.formData.custormneedinfo = $this.defaultInfo.custormneedinfo;
       $this.formData.otherremark = $this.defaultInfo.otherremark;
