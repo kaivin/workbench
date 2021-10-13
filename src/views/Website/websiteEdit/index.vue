@@ -526,7 +526,7 @@
               </li>
           </ul>
           <div class="card-header WebServerAddEditBtn WebsiteOneBtn">
-              <el-button type="primary" class="updateBtn" size="small" v-on:click="updateWebsiteInfo()" v-if="menuButtonPermit.includes('Website_edit')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>更新</el-button>
+              <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" v-on:click="updateWebsiteInfo()" v-if="menuButtonPermit.includes('Website_edit')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>更新</el-button>
               <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
           </div>
         </div>
@@ -591,7 +591,8 @@ export default {
       hostTagList:[],
       attrTagList:[],
       readPermit:[],
-      writePermit:[]
+      writePermit:[],
+      isDisabled:false,
     }
   },
   computed: {
@@ -606,6 +607,16 @@ export default {
     $this.initData();
   },
   methods:{
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 获取面包屑路径
     getBreadcrumbList(){
       var $this = this;
@@ -671,6 +682,7 @@ export default {
     initData(){
         var $this = this;
         if($this.$router.currentRoute.meta.id){
+           $this.loadingFun();
           $this.getUserMenuButtonPermit();
         }else{
           $this.$router.push({path:`/404?redirect=${$this.$router.currentRoute.fullPath}`});
@@ -947,6 +959,7 @@ export default {
           $this.formData.website_serveruser = [parseInt(data.website_serveruser)]
         }
       }
+      $this.isLoading.close();
     },
     // 清空信息
     clearForm(){
@@ -998,52 +1011,63 @@ export default {
     // 更新网站信息
     updateWebsiteInfo(){
       var $this = this;
-      var formData = {}
-      formData.id = $this.formData.id;
-      formData.brand = $this.formData.brand;
-      formData.language = $this.formData.language;
-      formData.domain = $this.formData.domain;
-      formData.weblink = $this.formData.weblink;
-      formData.ip = $this.formData.ip;
-      formData.ftpuser = $this.formData.ftpuser;
-      formData.ftppassword = $this.formData.ftppassword;
-      formData.ftpremarks = $this.formData.ftpremarks;
-      formData.iisftpuser = $this.formData.iisftpuser;
-      formData.iisftppwd = $this.formData.iisftppwd;
-      formData.logspath = $this.formData.logspath;
-      formData.websiteurl = $this.formData.websiteurl;
-      formData.websiteuser = $this.formData.websiteuser;
-      formData.websitepassword = $this.formData.websitepassword;
-      formData.websiteremarks = $this.formData.websiteremarks;
-      formData.remarks = $this.formData.remarks;
-      formData.is_online = $this.formData.is_online?1:0;
-      formData.domain_outtime = $this.formData.domain_outtime;
-      formData.server_outtime = $this.formData.server_outtime;
-      formData.website_backuser = $this.formData.website_backuser;
-      formData.website_beforeuser = $this.formData.website_beforeuser;
-      formData.website_designuser = $this.formData.website_designuser;
-      formData.website_headuser = $this.formData.website_headuser;
-      formData.website_pushuser = $this.formData.website_pushuser;
-      formData.domain_header = $this.formData.domain_header;
-      formData.domain_attr = $this.formData.domain_attr;
-      formData.website_departid = $this.formData.website_departid;
-      formData.sort = $this.formData.sort;
-      formData.website_serveruser = $this.formData.website_serveruser;
-      $this.$store.dispatch('website/websiteEditAction', formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
+      if(!$this.isDisabled){
+        $this.isDisabled=true;
+        $this.loadingFun();
+        var formData = {}
+        formData.id = $this.formData.id;
+        formData.brand = $this.formData.brand;
+        formData.language = $this.formData.language;
+        formData.domain = $this.formData.domain;
+        formData.weblink = $this.formData.weblink;
+        formData.ip = $this.formData.ip;
+        formData.ftpuser = $this.formData.ftpuser;
+        formData.ftppassword = $this.formData.ftppassword;
+        formData.ftpremarks = $this.formData.ftpremarks;
+        formData.iisftpuser = $this.formData.iisftpuser;
+        formData.iisftppwd = $this.formData.iisftppwd;
+        formData.logspath = $this.formData.logspath;
+        formData.websiteurl = $this.formData.websiteurl;
+        formData.websiteuser = $this.formData.websiteuser;
+        formData.websitepassword = $this.formData.websitepassword;
+        formData.websiteremarks = $this.formData.websiteremarks;
+        formData.remarks = $this.formData.remarks;
+        formData.is_online = $this.formData.is_online?1:0;
+        formData.domain_outtime = $this.formData.domain_outtime;
+        formData.server_outtime = $this.formData.server_outtime;
+        formData.website_backuser = $this.formData.website_backuser;
+        formData.website_beforeuser = $this.formData.website_beforeuser;
+        formData.website_designuser = $this.formData.website_designuser;
+        formData.website_headuser = $this.formData.website_headuser;
+        formData.website_pushuser = $this.formData.website_pushuser;
+        formData.domain_header = $this.formData.domain_header;
+        formData.domain_attr = $this.formData.domain_attr;
+        formData.website_departid = $this.formData.website_departid;
+        formData.sort = $this.formData.sort;
+        formData.website_serveruser = $this.formData.website_serveruser;
+        $this.$store.dispatch('website/websiteEditAction', formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.isLoading.close();
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
+        });
+      }
     },
     // 外部打开网站
     hrefBlank(url){

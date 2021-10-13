@@ -41,7 +41,7 @@
                                     </el-select>
                                   </div>
                                   <div class="item-search">
-                                    <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
+                                    <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                                   </div>
                               </div>
                           </div>
@@ -206,6 +206,7 @@ export default {
         clientHeight:0,
       },
       isLoading:null,
+      isSearchResult:false,
     }
   },
   computed: {
@@ -356,8 +357,11 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
-      $this.loadingFun();
-      $this.initPage();
+      if(!$this.isSearchResult){
+        $this.isSearchResult=true;
+        $this.loadingFun();
+        $this.initPage();
+      }
     },
     // 初始化数据
     initData(){
@@ -375,6 +379,9 @@ export default {
           if(response.status){
             $this.tableData = response.data;
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSearchResult=false;
+            },1000);
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -390,6 +397,9 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isSearchResult=false;
+              },1000);
             }
           }
         }

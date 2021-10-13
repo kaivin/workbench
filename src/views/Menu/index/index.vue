@@ -104,164 +104,164 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="680px">
-      <el-form :model="dialogForm">
-        <div class="item-form-group">
-          <div class="item-form">
-            <el-form-item label="父级菜单：" :label-width="formLabelWidth" v-if="menuLevelData.length > 0">
-              <el-cascader
-                v-model="dialogForm.uid"
-                :options="menuLevelData"
-                ref="menuLevel"
-                filterable
-                placeholder="请选择父级菜单"
-                :props="{ checkStrictly: true, expandTrigger: 'hover' }"
-                clearable></el-cascader>
-            </el-form-item>
-          </div>
-          <div class="item-form">
-            <el-form-item label="菜单名称：" :label-width="formLabelWidth">
-              <el-input v-model="dialogForm.name" ref="name"></el-input>
-            </el-form-item>
-          </div>
-        </div>
-        <div class="item-form">
-          <el-form-item label="唯一标识名：" :label-width="formLabelWidth">
-            <el-input v-model="dialogForm.route" ref="route"></el-input>
-          </el-form-item>
-        </div>
-        <div class="item-form">
-          <el-form-item label="链接：" :label-width="formLabelWidth">
-            <el-input v-model="dialogForm.url" ref="url"></el-input>
-          </el-form-item>
-        </div>
-        <div class="item-form">
-          <el-form-item label="重定向链接：" :label-width="formLabelWidth">
-            <el-input v-model="dialogForm.redirecturl" ref="redirecturl"></el-input>
-          </el-form-item>
-        </div>
-        <div class="item-form-group">
-          <div class="item-form">
-            <el-form-item label="排序：" :label-width="formLabelWidth">
-              <el-input v-model="dialogForm.sort" ref="sort"></el-input>
-            </el-form-item>
-          </div>
-          <div class="item-form icon">
-            <el-form-item label="图标：" :label-width="formLabelWidth">
-              <el-input v-model="dialogForm.icon" :disabled="true" clearable ref="icon"></el-input>
-            </el-form-item>
-            <div class="icon-button" v-on:click="chooseIcon()">
-              <template v-if="dialogText == '编辑菜单'">
-                <template v-if="dialogForm.icon && dialogForm.icon != ''">
-                  <svg-icon v-if="dialogForm.icon.indexOf('el-icon-') == -1" :icon-class="dialogForm.icon" />
-                  <i v-else :class="dialogForm.icon"></i>
-                </template>
-                <template v-else>
-                  <i class="el-icon-plus"></i>
-                </template>
-              </template>
-              <template v-else>
-                <template v-if="dialogForm.icon == ''">
-                  <i class="el-icon-plus"></i>
-                </template>
-                <template v-else>
-                  <svg-icon v-if="selectedIcon.activeTabName == 'svg'" :icon-class="dialogForm.icon" />
-                  <i v-else :class="dialogForm.icon"></i>
-                </template>
-              </template>
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="680px">
+        <el-form :model="dialogForm">
+          <div class="item-form-group">
+            <div class="item-form">
+              <el-form-item label="父级菜单：" :label-width="formLabelWidth" v-if="menuLevelData.length > 0">
+                <el-cascader
+                  v-model="dialogForm.uid"
+                  :options="menuLevelData"
+                  ref="menuLevel"
+                  filterable
+                  placeholder="请选择父级菜单"
+                  :props="{ checkStrictly: true, expandTrigger: 'hover' }"
+                  clearable></el-cascader>
+              </el-form-item>
+            </div>
+            <div class="item-form">
+              <el-form-item label="菜单名称：" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.name" ref="name"></el-input>
+              </el-form-item>
             </div>
           </div>
-        </div>
-        <div class="item-form-group">
-          <div class="item-form-3">
-            <el-form-item label="是否隐藏：" :label-width="formLabelWidth">
-              <el-switch
-                v-model="dialogForm.is_hide"
-                active-color="#2e84f6"
-                inactive-color="#bbbbbb"
-                active-value="1"
-                inactive-value="0">
-              </el-switch>
+          <div class="item-form">
+            <el-form-item label="唯一标识名：" :label-width="formLabelWidth">
+              <el-input v-model="dialogForm.route" ref="route"></el-input>
             </el-form-item>
           </div>
-          <div class="item-form-3" v-if="isCaches">
-            <el-form-item label="是否固定：" :label-width="formLabelWidth">
-              <el-switch
-                v-model="dialogForm.is_fixed"
-                active-color="#2e84f6"
-                inactive-color="#bbbbbb"
-                active-value="1"
-                inactive-value="0"
-                v-on:change="handleFixedChange">
-              </el-switch>
+          <div class="item-form">
+            <el-form-item label="链接：" :label-width="formLabelWidth">
+              <el-input v-model="dialogForm.url" ref="url"></el-input>
             </el-form-item>
           </div>
-          <div class="item-form-3" v-if="isCaches">
-            <el-form-item label="是否缓存：" :label-width="formLabelWidth">
-              <el-switch
-                v-model="dialogForm.is_redis"
-                active-color="#2e84f6"
-                inactive-color="#bbbbbb"
-                active-value="1"
-                inactive-value="0"
-                :disabled="redisDisabled">
-              </el-switch>
+          <div class="item-form">
+            <el-form-item label="重定向链接：" :label-width="formLabelWidth">
+              <el-input v-model="dialogForm.redirecturl" ref="redirecturl"></el-input>
             </el-form-item>
           </div>
-        </div>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <el-dialog title="选择图标" v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit'))" custom-class="icon-dialog" :visible.sync="dialogIconVisible" width="960px">
-      <el-tabs v-model="activeTabName" type="border-card" @tab-click="handleTabClick">
-        <el-tab-pane label="svg图标" name="svg">
-          <div class="scroll-panel">
-            <div class="grid">
-              <div v-for="(item, index) of svgIcons" :key="item" @click="handleIconClick(item, index)">
-                <el-tooltip placement="top">
-                  <template v-slot:content>
-                    <div>{{ generateIconCode(item) }}</div>
+          <div class="item-form-group">
+            <div class="item-form">
+              <el-form-item label="排序：" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.sort" ref="sort"></el-input>
+              </el-form-item>
+            </div>
+            <div class="item-form icon">
+              <el-form-item label="图标：" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.icon" :disabled="true" clearable ref="icon"></el-input>
+              </el-form-item>
+              <div class="icon-button" v-on:click="chooseIcon()">
+                <template v-if="dialogText == '编辑菜单'">
+                  <template v-if="dialogForm.icon && dialogForm.icon != ''">
+                    <svg-icon v-if="dialogForm.icon.indexOf('el-icon-') == -1" :icon-class="dialogForm.icon" />
+                    <i v-else :class="dialogForm.icon"></i>
                   </template>
-                  <div class="icon-item" v-bind:class="activeTabName == 'svg' && currentIndex == index?'is-active':''">
-                    <svg-icon :icon-class="item" class-name="disabled" />
-                    <span>{{ item }}</span>
-                  </div>
-                </el-tooltip>
+                  <template v-else>
+                    <i class="el-icon-plus"></i>
+                  </template>
+                </template>
+                <template v-else>
+                  <template v-if="dialogForm.icon == ''">
+                    <i class="el-icon-plus"></i>
+                  </template>
+                  <template v-else>
+                    <svg-icon v-if="selectedIcon.activeTabName == 'svg'" :icon-class="dialogForm.icon" />
+                    <i v-else :class="dialogForm.icon"></i>
+                  </template>
+                </template>
               </div>
             </div>
           </div>
-        </el-tab-pane>
-        <el-tab-pane label="饿了么图标" name="element">
-          <div class="scroll-panel">
-            <div class="grid">
-              <div v-for="(item, index) of elementIcons" :key="item" @click="handleIconClick(item, index)">
-                <el-tooltip placement="top">
-                  <template v-slot:content>
-                    <div>{{ generateElementIconCode(item) }}</div>
-                  </template>
-                  <div class="icon-item" v-bind:class="activeTabName == 'element' && currentIndex == index?'is-active':''">
-                    <i :class="'el-icon-' + item" />
-                    <span>{{ item }}</span>
-                  </div>
-                </el-tooltip>
-              </div>
+          <div class="item-form-group">
+            <div class="item-form-3">
+              <el-form-item label="是否隐藏：" :label-width="formLabelWidth">
+                <el-switch
+                  v-model="dialogForm.is_hide"
+                  active-color="#2e84f6"
+                  inactive-color="#bbbbbb"
+                  active-value="1"
+                  inactive-value="0">
+                </el-switch>
+              </el-form-item>
+            </div>
+            <div class="item-form-3" v-if="isCaches">
+              <el-form-item label="是否固定：" :label-width="formLabelWidth">
+                <el-switch
+                  v-model="dialogForm.is_fixed"
+                  active-color="#2e84f6"
+                  inactive-color="#bbbbbb"
+                  active-value="1"
+                  inactive-value="0"
+                  v-on:change="handleFixedChange">
+                </el-switch>
+              </el-form-item>
+            </div>
+            <div class="item-form-3" v-if="isCaches">
+              <el-form-item label="是否缓存：" :label-width="formLabelWidth">
+                <el-switch
+                  v-model="dialogForm.is_redis"
+                  active-color="#2e84f6"
+                  inactive-color="#bbbbbb"
+                  active-value="1"
+                  inactive-value="0"
+                  :disabled="redisDisabled">
+                </el-switch>
+              </el-form-item>
             </div>
           </div>
-        </el-tab-pane>
-      </el-tabs>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogIconVisible = false">取 消</el-button>
-          <el-button @click="clearIcon">清空选择</el-button>
-          <el-button type="primary" @click="handleSelectedIcon">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <el-dialog title="选择图标" v-if="(menuButtonPermit.includes('Menu_add')||menuButtonPermit.includes('Menu_edit'))" custom-class="icon-dialog" :visible.sync="dialogIconVisible" width="960px">
+        <el-tabs v-model="activeTabName" type="border-card" @tab-click="handleTabClick">
+          <el-tab-pane label="svg图标" name="svg">
+            <div class="scroll-panel">
+              <div class="grid">
+                <div v-for="(item, index) of svgIcons" :key="item" @click="handleIconClick(item, index)">
+                  <el-tooltip placement="top">
+                    <template v-slot:content>
+                      <div>{{ generateIconCode(item) }}</div>
+                    </template>
+                    <div class="icon-item" v-bind:class="activeTabName == 'svg' && currentIndex == index?'is-active':''">
+                      <svg-icon :icon-class="item" class-name="disabled" />
+                      <span>{{ item }}</span>
+                    </div>
+                  </el-tooltip>
+                </div>
+              </div>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="饿了么图标" name="element">
+            <div class="scroll-panel">
+              <div class="grid">
+                <div v-for="(item, index) of elementIcons" :key="item" @click="handleIconClick(item, index)">
+                  <el-tooltip placement="top">
+                    <template v-slot:content>
+                      <div>{{ generateElementIconCode(item) }}</div>
+                    </template>
+                    <div class="icon-item" v-bind:class="activeTabName == 'element' && currentIndex == index?'is-active':''">
+                      <i :class="'el-icon-' + item" />
+                      <span>{{ item }}</span>
+                    </div>
+                  </el-tooltip>
+                </div>
+              </div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogIconVisible = false">取 消</el-button>
+            <el-button @click="clearIcon">清空选择</el-button>
+            <el-button type="primary" @click="handleSelectedIcon">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
@@ -333,7 +333,8 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isSaveData:false,
     };
   },
   computed: {
@@ -527,6 +528,9 @@ export default {
               $this.tableData = [];
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSaveData=false;
+            },1000);
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
@@ -545,6 +549,9 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
             }
           }
         }
@@ -740,41 +747,47 @@ export default {
     // 保存添加/编辑数据
     saveData() {
       var $this = this;
-      if (!$this.validationForm()) {
-        return false;
-      }
-      var formData = $this.dialogForm;
-      if (formData.uid) {
-        formData.uid = Array.isArray(formData.uid)
-          ? formData.uid.length == 0 ? 0 :formData.uid[formData.uid.length - 1]
-          : formData.uid;
-      } else {
-        formData.uid = 0;
-      }
-      var pathUrl = "";
-      if ($this.dialogText == "编辑菜单") {
-        pathUrl = "menu/menuEditAction";
-      } else {
-        pathUrl = "menu/menuAddAction";
-      }
-      $this.$store.dispatch(pathUrl, formData).then((response) => {
-        if (response.status) {
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: "success",
-          });
-          $this.handleClose();
-          $this.loadingFun();
-          $this.initPage();
-        } else {
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: "error",
-          });
+      if(!$this.isSaveData){
+        if (!$this.validationForm()) {
+          return false;
         }
-      });
+        $this.isSaveData=true;
+        var formData = $this.dialogForm;
+        if (formData.uid) {
+          formData.uid = Array.isArray(formData.uid)
+            ? formData.uid.length == 0 ? 0 :formData.uid[formData.uid.length - 1]
+            : formData.uid;
+        } else {
+          formData.uid = 0;
+        }
+        var pathUrl = "";
+        if ($this.dialogText == "编辑菜单") {
+          pathUrl = "menu/menuEditAction";
+        } else {
+          pathUrl = "menu/menuAddAction";
+        }
+        $this.$store.dispatch(pathUrl, formData).then((response) => {
+          if (response.status) {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "success",
+            });
+            $this.handleClose();
+            $this.loadingFun();
+            $this.initPage();
+          } else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+            setTimeout(()=>{
+              $this.isSaveData=false;
+            },1000);
+          }
+        });
+      }
     },
     // 重置添加数据表单
     resetFormData() {

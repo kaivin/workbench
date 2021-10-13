@@ -316,7 +316,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
+                                  <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
                                 </div>
                                 <div class="clues-info flex-wrap">
                                     <div class="clues-infoFl flex-content">
@@ -1022,6 +1022,7 @@ export default {
       },
       isLoading:null,
       brandID:null,
+      isSearchResult:false,
     }
   },
   computed: {
@@ -1584,7 +1585,7 @@ export default {
       if($this.searchData.sort!=''){
         searchData.sort = $this.searchData.sort;
       }    
-      if($this.searchData.date!=''){
+      if($this.searchData.date&&$this.searchData.date.length>0){
         searchData.starttime = $this.searchData.date[0];
         searchData.endtime = $this.searchData.date[1];
       }
@@ -1593,65 +1594,71 @@ export default {
     // 初始化询盘列表数据
     initCluesList(){
       var $this = this;
-      var searchData = $this.initSearchData();
-      var pathUrl = "";
-      if($this.phoneID){
-        pathUrl = 'enphone/cluesCurrentPhoneDataAction';
-        if($this.phoneID>800&&$this.searchData.waitstatus==1){
-          searchData.salesownid=$this.searchData.salesownid;
-          searchData.salesdepart_id=$this.searchData.salesdepart_id;
-        }
-      }else{
-        if($this.currentKey){
-          if($this.currentKey=="all"){
-            pathUrl = "enphone/allCluesDataAction";
+      if(!$this.isSearchResult){
+        $this.isSearchResult=true;
+        var searchData = $this.initSearchData();
+        var pathUrl = "";
+        if($this.phoneID){
+          pathUrl = 'enphone/cluesCurrentPhoneDataAction';
+          if($this.phoneID>800&&$this.searchData.waitstatus==1){
             searchData.salesownid=$this.searchData.salesownid;
             searchData.salesdepart_id=$this.searchData.salesdepart_id;
-          }else{
-            pathUrl = "enphone/allUnAllotCluesDataAction";
           }
-        }
-      }
-      $this.loadingFun();
-      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch(pathUrl, searchData).then(response=>{
-        if(response){
-          if(response.status){
-            var infoData = {};
-            infoData.totalCount=response.allcount;
-            infoData.effectiveCount=response.effectivecount;
-            infoData.invalidCount=response.noeffectivecount;
-            infoData.totalScore=response.countscore;
-            infoData.totalCountMonth=response.nowmonthnumber;
-            infoData.effectiveCountMonth=response.noweffectivenumber;
-            infoData.invalidCountMonth=response.nownoeffectivenumber;
-            infoData.totalScoreMonth=response.countmonthscore;
-            infoData.totalCountLastMonth=response.lastmonthnumber;
-            infoData.effectiveCountLastMonth=response.lasteffectivenumber;
-            infoData.invalidCountLastMonth=response.lastnoeffectivenumber;
-            infoData.totalScoreLastMonth=response.countlastmonthscore;
-            if(response.data.length>0){
-              response.data.forEach(function(item,index){
-                item.isEffective = item.effective==1?true:false;
-              });
-              $this.isDisabled = false;
+        }else{
+          if($this.currentKey){
+            if($this.currentKey=="all"){
+              pathUrl = "enphone/allCluesDataAction";
+              searchData.salesownid=$this.searchData.salesownid;
+              searchData.salesdepart_id=$this.searchData.salesdepart_id;
             }else{
-              $this.isDisabled = true;
+              pathUrl = "enphone/allUnAllotCluesDataAction";
             }
-            $this.writepermit = response.writepermit?true:false;
-            $this.tableData = response.data;
-            $this.infoData = infoData;
-            $this.totalDataNum = response.allcount;
-            $this.getPermitField();            
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
           }
         }
-      });
+        $this.loadingFun();
+        document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
+        $this.$store.dispatch(pathUrl, searchData).then(response=>{
+          if(response){
+            if(response.status){
+              var infoData = {};
+              infoData.totalCount=response.allcount;
+              infoData.effectiveCount=response.effectivecount;
+              infoData.invalidCount=response.noeffectivecount;
+              infoData.totalScore=response.countscore;
+              infoData.totalCountMonth=response.nowmonthnumber;
+              infoData.effectiveCountMonth=response.noweffectivenumber;
+              infoData.invalidCountMonth=response.nownoeffectivenumber;
+              infoData.totalScoreMonth=response.countmonthscore;
+              infoData.totalCountLastMonth=response.lastmonthnumber;
+              infoData.effectiveCountLastMonth=response.lasteffectivenumber;
+              infoData.invalidCountLastMonth=response.lastnoeffectivenumber;
+              infoData.totalScoreLastMonth=response.countlastmonthscore;
+              if(response.data.length>0){
+                response.data.forEach(function(item,index){
+                  item.isEffective = item.effective==1?true:false;
+                });
+                $this.isDisabled = false;
+              }else{
+                $this.isDisabled = true;
+              }
+              $this.writepermit = response.writepermit?true:false;
+              $this.tableData = response.data;
+              $this.infoData = infoData;
+              $this.totalDataNum = response.allcount;
+              $this.getPermitField();            
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSearchResult=false;
+              },1000);
+            }
+          }
+        });
+      }
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
@@ -2012,12 +2019,18 @@ export default {
                 })
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSearchResult=false;
+            },1000);
           }else{
             $this.$message({
               showClose: true,
               message: response.info,
               type: 'error'
             });
+            setTimeout(()=>{
+              $this.isSearchResult=false;
+            },1000);
           }
         }
       });

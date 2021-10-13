@@ -567,6 +567,11 @@
             &:hover{
               opacity: 0.6;
             }
+            &.isDisabled,&.isDisabled:hover{
+                background-color: #8cbcf9 !important;
+                border-color: #8cbcf9 !important;
+                cursor:no-drop;
+            }
           }
         }
       }

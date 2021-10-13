@@ -227,7 +227,7 @@
             </table>      
             <div class="card-header WebServerAddEditBtn ArticleFive" ref="headerPane">
               <div class="header-content">
-                <el-button type="primary" class="updateBtn" size="small" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_add')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>发布</el-button>
+                <el-button type="primary" class="updateBtn" size="small" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_add')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>发布</el-button>
                 <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
                 <el-button type="primary" class="resetBtn" size="small" v-on:click="perviewPage()" v-if="menuButtonPermit.includes('Article_edit')||menuButtonPermit.includes('Article_add')">预览</el-button>
               </div>
@@ -290,7 +290,7 @@ export default {
         isAnonymous:false,
         sort:"",
         isTop:false,
-        day:"3",
+        day:"2",
         recomDepart:[],
         isAllPermit:false,
         readDepart:[],
@@ -437,6 +437,7 @@ export default {
       isInit:false,
       count:0,
       isLoading:null,
+      isDisabled:false,
     }
   },
   computed: {
@@ -865,73 +866,79 @@ export default {
     // 发布文章
     saveArticle(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isDisabled){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isDisabled=true;
+        var formData = {}
+        formData.id = $this.formData.id;
+        formData.typeid = $this.formData.postTypeID;
+        formData.title = $this.formData.title;
+        formData.content = $this.formData.content;
+        formData.markdowntext = $this.formData.markdownContent;
+        formData.is_markdown = $this.formData.is_markdown;
+        formData.tags_id = $this.formData.systemTag;
+        formData.is_center = $this.formData.is_center?2:1;
+        if($this.isSort){
+          formData.sort = $this.formData.sort;
+        }
+        if($this.permitField.includes("mytags")){
+          formData.mytags = $this.formData.tag;
+        }
+        formData.remarks = $this.formData.remarks;
+        if($this.permitField.includes("showdays")){
+          formData.showdays = $this.formData.day;
+        }
+        if($this.permitField.includes("indexshowdepart")){
+          formData.indexshowdepart = $this.formData.recomDepart;
+        }
+        if($this.permitField.includes("lookpermitdepart")){
+          formData.lookpermitdepart = $this.formData.readDepart;
+        }
+        if($this.permitField.includes("lookuserid")){
+          formData.lookuserid = $this.formData.readUser;
+        }
+        if($this.permitField.includes("uid")){
+          formData.uid = $this.formData.uid;
+        }
+        formData.is_top = $this.formData.isTop?1:0;
+        formData.issay = $this.formData.isCommentClose?0:1;
+        formData.isedit = $this.formData.isEditShareOpen?1:0;
+        formData.is_hidename = $this.formData.isAnonymous?1:0;
+        formData.titlecolor = $this.formData.titleColor;
+        if($this.permitField.includes("readpermit")){
+          formData.readpermit = $this.formData.isAllPermit?1:0;
+        }
+        if($this.permitField.includes("is_updatetime")){
+          formData.is_updatetime = $this.formData.is_updatetime?1:0;
+        }
+        var pathUrl = "";
+        if($this.formData.id!==0){
+          pathUrl = 'article/postArticleEditAction';
+        }else{
+          pathUrl = 'article/postArticleAddAction';
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.$router.push({path:'/Article/index',query:{id:$this.formData.postTypeID}});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
+        });
       }
-      var formData = {}
-      formData.id = $this.formData.id;
-      formData.typeid = $this.formData.postTypeID;
-      formData.title = $this.formData.title;
-      formData.content = $this.formData.content;
-      formData.markdowntext = $this.formData.markdownContent;
-      formData.is_markdown = $this.formData.is_markdown;
-      formData.tags_id = $this.formData.systemTag;
-      formData.is_center = $this.formData.is_center?2:1;
-      if($this.isSort){
-        formData.sort = $this.formData.sort;
-      }
-      if($this.permitField.includes("mytags")){
-        formData.mytags = $this.formData.tag;
-      }
-      formData.remarks = $this.formData.remarks;
-      if($this.permitField.includes("showdays")){
-        formData.showdays = $this.formData.day;
-      }
-      if($this.permitField.includes("indexshowdepart")){
-        formData.indexshowdepart = $this.formData.recomDepart;
-      }
-      if($this.permitField.includes("lookpermitdepart")){
-        formData.lookpermitdepart = $this.formData.readDepart;
-      }
-      if($this.permitField.includes("lookuserid")){
-        formData.lookuserid = $this.formData.readUser;
-      }
-      if($this.permitField.includes("uid")){
-        formData.uid = $this.formData.uid;
-      }
-      formData.is_top = $this.formData.isTop?1:0;
-      formData.issay = $this.formData.isCommentClose?0:1;
-      formData.isedit = $this.formData.isEditShareOpen?1:0;
-      formData.is_hidename = $this.formData.isAnonymous?1:0;
-      formData.titlecolor = $this.formData.titleColor;
-      if($this.permitField.includes("readpermit")){
-        formData.readpermit = $this.formData.isAllPermit?1:0;
-      }
-      if($this.permitField.includes("is_updatetime")){
-        formData.is_updatetime = $this.formData.is_updatetime?1:0;
-      }
-      var pathUrl = "";
-      if($this.formData.id!==0){
-        pathUrl = 'article/postArticleEditAction';
-      }else{
-        pathUrl = 'article/postArticleAddAction';
-      }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.$router.push({path:'/Article/index',query:{id:$this.formData.postTypeID}});
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
     },
     // markdown文本发生变化时执行事件
     changeMarkdownHandler(text,html){

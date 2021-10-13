@@ -96,7 +96,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
+          <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -150,7 +150,8 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isSaveData:false,
     }
   },
   computed: {
@@ -410,6 +411,9 @@ export default {
               $this.tableData = [];
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSaveData=false;
+            },1000);
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
@@ -428,6 +432,9 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
             }
           }
         }
@@ -462,38 +469,44 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isSaveData){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isSaveData=true;
+        var formData = {}
+        formData.id = $this.dialogForm.id;
+        formData.fid = $this.dialogForm.fid==""?0:$this.dialogForm.fid;
+        formData.typename = $this.dialogForm.typename;
+        formData.groupname = $this.dialogForm.groupname;
+        formData.sort = $this.dialogForm.sort;
+        var pathUrl = "";
+        if($this.dialogText=="编辑栏目"){
+          pathUrl = "information/postEditAction";
+        }else{
+          pathUrl = "information/postAddAction";
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'success'
+                });
+                $this.handleClose();
+                $this.initData();
+            }else{
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isSaveData=false;
+                },1000);
+            }
+        });
       }
-      var formData = {}
-      formData.id = $this.dialogForm.id;
-      formData.fid = $this.dialogForm.fid==""?0:$this.dialogForm.fid;
-      formData.typename = $this.dialogForm.typename;
-      formData.groupname = $this.dialogForm.groupname;
-      formData.sort = $this.dialogForm.sort;
-      var pathUrl = "";
-      if($this.dialogText=="编辑栏目"){
-        pathUrl = "information/postEditAction";
-      }else{
-        pathUrl = "information/postAddAction";
-      }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-              $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'success'
-              });
-              $this.handleClose();
-              $this.initData();
-          }else{
-              $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'error'
-              });
-          }
-      });
     },
     // 重置添加数据表单
     resetFormData(){

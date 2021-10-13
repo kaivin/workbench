@@ -94,107 +94,107 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Chinaphone_phoneadd')||menuButtonPermit.includes('Chinaphone_phoneedit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="480px">
-      <el-form :model="dialogForm">
-        <div class="item-form">
-          <el-form-item label="电话号码：" :label-width="formLabelWidth">
-            <el-input v-model="dialogForm.phonenumber" ref="phonenumber"></el-input>
-          </el-form-item>
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Chinaphone_phoneadd')||menuButtonPermit.includes('Chinaphone_phoneedit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="480px">
+        <el-form :model="dialogForm">
+          <div class="item-form">
+            <el-form-item label="电话号码：" :label-width="formLabelWidth">
+              <el-input v-model="dialogForm.phonenumber" ref="phonenumber"></el-input>
+            </el-form-item>
+          </div>
+          <div class="item-form">
+            <el-form-item label="电话类型：" :label-width="formLabelWidth">
+              <el-select v-model="dialogForm.typeid" clearable placeholder="请选择电话类型">
+                <el-option
+                  v-for="item in phoneTypeList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+          <div class="item-form">
+            <el-form-item label="部门：" :label-width="formLabelWidth">
+              <el-select v-model="dialogForm.dept_id" clearable placeholder="请选择部门">
+                <el-option
+                  v-for="item in departList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+          <div class="item-form">
+            <el-form-item label="负责人：" :label-width="formLabelWidth">
+              <el-select v-model="dialogForm.userid" filterable clearable collapse-tags multiple placeholder="请选择负责人">
+                <el-option
+                  v-for="item in userList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+          <div class="item-form">
+            <el-form-item label="别名：" :label-width="formLabelWidth">
+              <el-input v-model="dialogForm.othername" ref="othername"></el-input>
+            </el-form-item>
+          </div>
+          <div class="item-form">
+            <el-form-item label="排序：" :label-width="formLabelWidth">
+              <el-input v-model="dialogForm.sort" ref="sort"></el-input>
+            </el-form-item>
+          </div>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <el-dialog :title="roleDialogText" v-if="(menuButtonPermit.includes('Chinaphone_getchinaphonereadrole')||menuButtonPermit.includes('Chinaphone_getchinaphonewriterole'))" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
+        <div class="transfer-panel">
+          <div class="transfer-wrap">
+            <el-transfer 
+              v-model="roleValue" 
+              :data="roleData"
+              :titles="['可分配角色', '已分配角色']"
+              filterable
+              :filter-method="filterRoleMethod"
+              filter-placeholder="请输入角色关键字"
+            ></el-transfer>
+          </div>
         </div>
-        <div class="item-form">
-          <el-form-item label="电话类型：" :label-width="formLabelWidth">
-            <el-select v-model="dialogForm.typeid" clearable placeholder="请选择电话类型">
-              <el-option
-                v-for="item in phoneTypeList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogRoleVisible = false">取 消</el-button>
+            <el-button type="primary" :class="isSaveRoleData?'isDisabled':''" :disabled="isSaveRoleData" @click="saveRoleData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <el-dialog :title="domainDialogText" v-if="(menuButtonPermit.includes('Chinaphone_getphonedomain'))" custom-class="transfer-dialog" :visible.sync="dialogDomainVisible" width="840px">
+        <div class="transfer-panel">
+          <div class="transfer-wrap">
+            <el-transfer 
+              v-model="domainValue" 
+              :data="domainData"
+              :titles="['可分配域名', '已分配域名']"
+              filterable
+              :filter-method="filterDomainMethod"
+              filter-placeholder="请输入域名关键字"
+            ></el-transfer>
+          </div>
         </div>
-        <div class="item-form">
-          <el-form-item label="部门：" :label-width="formLabelWidth">
-            <el-select v-model="dialogForm.dept_id" clearable placeholder="请选择部门">
-              <el-option
-                v-for="item in departList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <div class="item-form">
-          <el-form-item label="负责人：" :label-width="formLabelWidth">
-            <el-select v-model="dialogForm.userid" filterable clearable collapse-tags multiple placeholder="请选择负责人">
-              <el-option
-                v-for="item in userList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <div class="item-form">
-          <el-form-item label="别名：" :label-width="formLabelWidth">
-            <el-input v-model="dialogForm.othername" ref="othername"></el-input>
-          </el-form-item>
-        </div>
-        <div class="item-form">
-          <el-form-item label="排序：" :label-width="formLabelWidth">
-            <el-input v-model="dialogForm.sort" ref="sort"></el-input>
-          </el-form-item>
-        </div>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <el-dialog :title="roleDialogText" v-if="(menuButtonPermit.includes('Chinaphone_getchinaphonereadrole')||menuButtonPermit.includes('Chinaphone_getchinaphonewriterole'))" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
-      <div class="transfer-panel">
-        <div class="transfer-wrap">
-          <el-transfer 
-            v-model="roleValue" 
-            :data="roleData"
-            :titles="['可分配角色', '已分配角色']"
-            filterable
-            :filter-method="filterRoleMethod"
-            filter-placeholder="请输入角色关键字"
-          ></el-transfer>
-        </div>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogRoleVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveRoleData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <el-dialog :title="domainDialogText" v-if="(menuButtonPermit.includes('Chinaphone_getphonedomain'))" custom-class="transfer-dialog" :visible.sync="dialogDomainVisible" width="840px">
-      <div class="transfer-panel">
-        <div class="transfer-wrap">
-          <el-transfer 
-            v-model="domainValue" 
-            :data="domainData"
-            :titles="['可分配域名', '已分配域名']"
-            filterable
-            :filter-method="filterDomainMethod"
-            filter-placeholder="请输入域名关键字"
-          ></el-transfer>
-        </div>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogDomainVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveDomainData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogDomainVisible = false">取 消</el-button>
+            <el-button type="primary" :class="isSaveDomainData?'isDisabled':''" :disabled="isSaveDomainData" @click="saveDomainData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
@@ -268,7 +268,10 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isSaveData:false,
+      isSaveRoleData:false,
+      isSaveDomainData:false,
     }
   },
   computed: {
@@ -446,6 +449,11 @@ export default {
               $this.tableData = [];
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+                $this.isSaveData=false;
+                $this.isSaveRoleData=false;
+                $this.isSaveDomainData=false;
+            },1000);
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
@@ -464,6 +472,11 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+                $this.isSaveRoleData=false;
+                $this.isSaveDomainData=false;
+              },1000);
             }
           }
         }
@@ -567,40 +580,46 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isSaveData){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isSaveData=true;
+        var formData = {}
+        formData.id = $this.dialogForm.id;
+        formData.phonenumber = $this.dialogForm.phonenumber;
+        formData.userid = $this.dialogForm.userid;
+        formData.typeid = $this.dialogForm.typeid;
+        formData.othername = $this.dialogForm.othername;
+        formData.dept_id = $this.dialogForm.dept_id;
+        formData.sort = $this.dialogForm.sort;
+        var pathUrl = "";
+        if($this.dialogText=="编辑电话"){
+          pathUrl = "chinaphone/phoneEditAction";
+        }else{
+          pathUrl = "chinaphone/phoneAddAction";
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
+        });
       }
-      var formData = {}
-      formData.id = $this.dialogForm.id;
-      formData.phonenumber = $this.dialogForm.phonenumber;
-      formData.userid = $this.dialogForm.userid;
-      formData.typeid = $this.dialogForm.typeid;
-      formData.othername = $this.dialogForm.othername;
-      formData.dept_id = $this.dialogForm.dept_id;
-      formData.sort = $this.dialogForm.sort;
-      var pathUrl = "";
-      if($this.dialogText=="编辑电话"){
-        pathUrl = "chinaphone/phoneEditAction";
-      }else{
-        pathUrl = "chinaphone/phoneAddAction";
-      }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.handleClose();
-            $this.initPage();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
     },
     // 重置添加数据表单
     resetFormData(){
@@ -727,32 +746,38 @@ export default {
     // 角色分配保存
     saveRoleData(){
         var $this = this;
-        var rolePhoneData = {};
-        rolePhoneData.chinaphone_id = $this.currentID;
-        rolePhoneData.role_id = $this.roleValue;
-        var pathUrl = "";
-        if($this.isRead){
-          pathUrl = "chinaphone/phoneAllotReadRoleAction";
-        }else{
-          pathUrl = "chinaphone/phoneAllotWriteRoleAction";
-        }
-        $this.$store.dispatch(pathUrl, rolePhoneData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.dialogRoleVisible = false;
-            $this.initPage();
+        if(!$this.isSaveRoleData){
+          $this.isSaveRoleData=true;
+          var rolePhoneData = {};
+          rolePhoneData.chinaphone_id = $this.currentID;
+          rolePhoneData.role_id = $this.roleValue;
+          var pathUrl = "";
+          if($this.isRead){
+            pathUrl = "chinaphone/phoneAllotReadRoleAction";
           }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
+            pathUrl = "chinaphone/phoneAllotWriteRoleAction";
           }
-        });
+          $this.$store.dispatch(pathUrl, rolePhoneData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.dialogRoleVisible = false;
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveRoleData=false;
+              },1000);
+            }
+          });
+        }
     },
     // 获取当前字段可读权限已分配的角色数据
     getAllotedReadRole(){
@@ -871,26 +896,32 @@ export default {
     // 电话绑定域名保存
     saveDomainData(){
         var $this = this;
-        var domainPhoneData = {};
-        domainPhoneData.phoneid = $this.currentID;
-        domainPhoneData.domain_id = $this.domainValue;
-        $this.$store.dispatch("chinaphone/phoneAllotDomainAction", domainPhoneData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.dialogDomainVisible = false;
-            $this.initPage();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-        });
+        if(!$this.isSaveDomainData){
+          $this.isSaveDomainData=true;
+          var domainPhoneData = {};
+          domainPhoneData.phoneid = $this.currentID;
+          domainPhoneData.domain_id = $this.domainValue;
+          $this.$store.dispatch("chinaphone/phoneAllotDomainAction", domainPhoneData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.dialogDomainVisible = false;
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveDomainData=false;
+              },1000);
+            }
+          });
+        }
     },
     // 获取当前电话已绑定的域名
     getAllotedDomain(){

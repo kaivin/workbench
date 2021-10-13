@@ -75,7 +75,7 @@
                                       </el-select>
                                     </div>
                                     <div class="item-search">
-                                        <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
+                                        <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                                     </div>
                                 </div>
                             </div>
@@ -362,7 +362,6 @@ export default {
           doingNum:0,
           doneNum:0,
         },
-        isDisabled:true,
         selectedData:[],
         permitStatus:[],
         pickerRangeOptions: {
@@ -417,6 +416,7 @@ export default {
           clientHeight:0,
         },
         isLoading:null,
+        isDisabled:false,
     }
   },
   computed: {
@@ -581,8 +581,11 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
-      $this.loadingFun();
-      $this.getCurrentStatusData();
+      if(!$this.isDisabled){
+        $this.isDisabled=true;
+        $this.loadingFun();
+        $this.getCurrentStatusData();
+      }
     },
     // 初始化数据
     initData(){
@@ -686,6 +689,9 @@ export default {
             }
             $this.tableData = tableData;
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
             $this.$nextTick(()=>{
               $this.setHeight();
             });
@@ -704,9 +710,15 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
             }
           }
         }else{
+          setTimeout(()=>{
+            $this.isDisabled=false;
+          },1000);
         }
       });
     },
@@ -1048,16 +1060,6 @@ export default {
               }
           }
       });
-    },
-    // 表格多选改变事件
-    handleSelectionChange(val) {
-        var $this = this;
-        $this.selectedData = val;
-        if($this.selectedData.length>0){
-          $this.isDisabled = false;
-        }else{
-          $this.isDisabled = true;
-        }
     },
     // 重置搜索条件
     resetSearchData(){

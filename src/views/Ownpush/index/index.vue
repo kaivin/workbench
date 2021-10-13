@@ -139,121 +139,121 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_pushadd')||menuButtonPermit.includes('Ownpush_pushedit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="720px">
-      <el-form :model="dialogForm">
-        <div class="item-form-group">
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_pushadd')||menuButtonPermit.includes('Ownpush_pushedit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="720px">
+        <el-form :model="dialogForm">
+          <div class="item-form-group">
+            <div class="item-form">
+                <el-form-item label="账户名称：" :label-width="formLabelWidth">
+                    <el-input v-model="dialogForm.pushname" ref="pushname"></el-input>
+                </el-form-item>
+            </div>
+            <div class="item-form">
+                <el-form-item label="账户密码：" :label-width="formLabelWidth">
+                    <el-input v-model="dialogForm.pushpwd" ref="pushpwd"></el-input>
+                </el-form-item>
+            </div>
+          </div>
+          <div class="item-form-group">
+            <div class="item-form">
+                <el-form-item label="绑定电话：" :label-width="formLabelWidth">
+                    <el-input v-model="dialogForm.pushphone" ref="pushphone"></el-input>
+                </el-form-item>
+            </div>
+            <div class="item-form">
+                <el-form-item label="绑定邮箱：" :label-width="formLabelWidth">
+                    <el-input v-model="dialogForm.pushemail" ref="pushemail"></el-input>
+                </el-form-item>
+            </div>
+          </div>
+          <div class="item-form-group">
+            <div class="item-form">
+                <el-form-item label="所属品牌：" :label-width="formLabelWidth">
+                    <el-select v-model="dialogForm.pushbrand" clearable placeholder="请选择品牌">
+                        <el-option
+                            v-for="item in brandList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </div>
+            <div class="item-form">
+                <el-form-item label="负责人：" :label-width="formLabelWidth">
+                    <el-select v-model="dialogForm.pushuser_id" clearable multiple collapse-tags placeholder="请选择负责人">
+                        <el-option
+                            v-for="item in userList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </div>
+          </div>
+          <div class="item-form-group">
+            <div class="item-form">
+                <el-form-item label="账户类型：" :label-width="formLabelWidth">
+                    <el-select v-model="dialogForm.pushlanguage" clearable placeholder="请选择账户类型">
+                        <el-option
+                            v-for="item in languageList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </div>
+            <div class="item-form">
+                <el-form-item label="账户状态：" :label-width="formLabelWidth">
+                    <el-select v-model="dialogForm.pushstatus" clearable placeholder="请选择账户状态">
+                        <el-option
+                            v-for="item in statusList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </div>
+          </div>
+          <!-- <div class="item-form">
+              <el-form-item label="归属账户：" :label-width="formLabelWidth">
+                <el-select v-model="dialogForm.account_id" filterable clearabl placeholder="请选择归属账户">
+                    <el-option
+                        v-for="item in accountList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+              </el-form-item>
+          </div> -->
           <div class="item-form">
-              <el-form-item label="账户名称：" :label-width="formLabelWidth">
-                  <el-input v-model="dialogForm.pushname" ref="pushname"></el-input>
+              <el-form-item label="所属渠道：" :label-width="formLabelWidth">
+                <el-select v-model="dialogForm.pushtype" filterable clearable multiple collapse-tags placeholder="请选择渠道">
+                    <el-option
+                        v-for="item in channelList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
               </el-form-item>
           </div>
           <div class="item-form">
-              <el-form-item label="账户密码：" :label-width="formLabelWidth">
-                  <el-input v-model="dialogForm.pushpwd" ref="pushpwd"></el-input>
+              <el-form-item label="当前余额：" :label-width="formLabelWidth">
+                  <el-input v-model="dialogForm.overmoney" ref="overmoney"></el-input>
               </el-form-item>
           </div>
-        </div>
-        <div class="item-form-group">
-          <div class="item-form">
-              <el-form-item label="绑定电话：" :label-width="formLabelWidth">
-                  <el-input v-model="dialogForm.pushphone" ref="pushphone"></el-input>
-              </el-form-item>
-          </div>
-          <div class="item-form">
-              <el-form-item label="绑定邮箱：" :label-width="formLabelWidth">
-                  <el-input v-model="dialogForm.pushemail" ref="pushemail"></el-input>
-              </el-form-item>
-          </div>
-        </div>
-        <div class="item-form-group">
-          <div class="item-form">
-              <el-form-item label="所属品牌：" :label-width="formLabelWidth">
-                  <el-select v-model="dialogForm.pushbrand" clearable placeholder="请选择品牌">
-                      <el-option
-                          v-for="item in brandList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                      </el-option>
-                  </el-select>
-              </el-form-item>
-          </div>
-          <div class="item-form">
-              <el-form-item label="负责人：" :label-width="formLabelWidth">
-                  <el-select v-model="dialogForm.pushuser_id" clearable multiple collapse-tags placeholder="请选择负责人">
-                      <el-option
-                          v-for="item in userList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                      </el-option>
-                  </el-select>
-              </el-form-item>
-          </div>
-        </div>
-        <div class="item-form-group">
-          <div class="item-form">
-              <el-form-item label="账户类型：" :label-width="formLabelWidth">
-                  <el-select v-model="dialogForm.pushlanguage" clearable placeholder="请选择账户类型">
-                      <el-option
-                          v-for="item in languageList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                      </el-option>
-                  </el-select>
-              </el-form-item>
-          </div>
-          <div class="item-form">
-              <el-form-item label="账户状态：" :label-width="formLabelWidth">
-                  <el-select v-model="dialogForm.pushstatus" clearable placeholder="请选择账户状态">
-                      <el-option
-                          v-for="item in statusList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                      </el-option>
-                  </el-select>
-              </el-form-item>
-          </div>
-        </div>
-        <!-- <div class="item-form">
-            <el-form-item label="归属账户：" :label-width="formLabelWidth">
-              <el-select v-model="dialogForm.account_id" filterable clearabl placeholder="请选择归属账户">
-                  <el-option
-                      v-for="item in accountList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                  </el-option>
-              </el-select>
-            </el-form-item>
-        </div> -->
-        <div class="item-form">
-            <el-form-item label="所属渠道：" :label-width="formLabelWidth">
-              <el-select v-model="dialogForm.pushtype" filterable clearable multiple collapse-tags placeholder="请选择渠道">
-                  <el-option
-                      v-for="item in channelList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                  </el-option>
-              </el-select>
-            </el-form-item>
-        </div>
-        <div class="item-form">
-            <el-form-item label="当前余额：" :label-width="formLabelWidth">
-                <el-input v-model="dialogForm.overmoney" ref="overmoney"></el-input>
-            </el-form-item>
-        </div>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" @click="saveData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
@@ -342,7 +342,8 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isDisabled:false,
     }
   },
   computed: {
@@ -566,6 +567,9 @@ export default {
               $this.tableData = [];
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -581,6 +585,9 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
             }
           }
         }
@@ -687,32 +694,38 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isDisabled){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isDisabled=true;
+        var pathUrl = "";
+        if($this.dialogText=="编辑账户"){
+          pathUrl = "ownpush/accountEditAction";
+        }else{
+          pathUrl = "ownpush/accountAddAction";
+        }
+        $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
+        });
       }
-      var pathUrl = "";
-      if($this.dialogText=="编辑账户"){
-        pathUrl = "ownpush/accountEditAction";
-      }else{
-        pathUrl = "ownpush/accountAddAction";
-      }
-      $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.handleClose();
-            $this.initPage();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
     },
     // 重置添加数据表单
     resetFormData(){

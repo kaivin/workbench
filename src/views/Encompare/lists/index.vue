@@ -18,7 +18,7 @@
                                     <el-date-picker v-model="searchData.time" format="yyyy 年 MM 月" value-format="yyyy-MM" type="month" size="small" placeholder="选择月"></el-date-picker>
                               </div>
                               <div class="item-search">
-                                <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
+                                <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                               </div>
                           </div>
                       </div>
@@ -140,7 +140,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
+          <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -206,7 +206,9 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isSearchResult:false,
+      isSaveData:false,
     }
   },
   computed: {
@@ -375,9 +377,12 @@ export default {
     // 搜索点击事件
     searchResult(){
       var $this = this;
-      $this.loadingFun();
-      $this.searchData.page = 1;
-      $this.dealData();
+      if(!$this.isSearchResult){  
+        $this.isSearchResult=true; 
+        $this.loadingFun();
+        $this.searchData.page = 1;
+        $this.dealData();
+      }
     },
     // 初始化部门数据
     dealData(){
@@ -413,6 +418,9 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isSearchResult=false;
+              },1000);
             }
           }
         }
@@ -451,6 +459,10 @@ export default {
               $this.tableData = [];
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSearchResult=false;
+              $this.isSaveData=false;
+            },1000);
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
@@ -469,6 +481,10 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isSearchResult=false;
+                $this.isSaveData=false;
+              },1000);
             }
           }
         }
@@ -548,40 +564,46 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isSaveData){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isSaveData=true;
+        var formData = {}
+        if($this.dialogForm.id&&$this.dialogForm.id!=0){
+            formData.id = $this.dialogForm.id;
+        }
+        formData.dept_id = $this.dialogForm.dept_id;
+        formData.mtime = $this.dialogForm.mtime;
+        formData.level = $this.dialogForm.level;
+        formData.snumber = $this.dialogForm.snumber;
+        var pathUrl = "";
+        if($this.dialogText=="编辑部门成交"){
+          pathUrl = "Encompare/EndeparDealEditAction";
+        }else{
+          pathUrl = "Encompare/EndeparDealListAddAction";
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
+        });
       }
-      var formData = {}
-      if($this.dialogForm.id&&$this.dialogForm.id!=0){
-          formData.id = $this.dialogForm.id;
-      }
-      formData.dept_id = $this.dialogForm.dept_id;
-      formData.mtime = $this.dialogForm.mtime;
-      formData.level = $this.dialogForm.level;
-      formData.snumber = $this.dialogForm.snumber;
-      var pathUrl = "";
-      if($this.dialogText=="编辑部门成交"){
-        pathUrl = "Encompare/EndeparDealEditAction";
-      }else{
-        pathUrl = "Encompare/EndeparDealListAddAction";
-      }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.handleClose();
-            $this.initPage();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
     },
     // 重置添加数据表单
     resetFormData(){

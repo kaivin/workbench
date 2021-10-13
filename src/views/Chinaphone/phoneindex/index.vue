@@ -209,7 +209,7 @@
                         </el-select>
                       </div>
                       <div class="item-search">
-                        <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
+                        <el-button class="item-input"  :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                       </div>
                     </div>
                     <div class="clues-info flex-box">
@@ -633,6 +633,7 @@ export default {
       currentTeam:"中文合计",
       isLoading:null,
       chartLoading:false,
+      isSearchResult:false,
     }
   },
   computed: {
@@ -1017,49 +1018,55 @@ export default {
     // 初始化询盘列表数据
     initCluesList(){
       var $this = this;
-      var searchData = $this.initSearchData();
-      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('chinaphone/cluesCurrentPhoneDataAction', searchData).then(response=>{
-        if(response){
-          if(response.status){
-            var infoData = {};
-            infoData.totalCount=response.allcount;
-            infoData.effectiveCount=response.effectivecount;
-            infoData.invalidCount=response.noeffectivecount;
-            infoData.levelOneCount=response.productonecount;
-            infoData.levelTwoCount=response.producttwocount;
-            infoData.totalCountMonth=response.nowmonthnumber;
-            infoData.effectiveCountMonth=response.noweffectivenumber;
-            infoData.invalidCountMonth=response.nownoeffectivenumber;
-            infoData.levelOneCountMonth=response.nowmonthone;
-            infoData.levelTwoCountMonth=response.nowmonthtwo;
-            if(response.data.length>0){
-              response.data.forEach(function(item,index){
-                if(item.phonenumber.indexOf("-")!=-1){
-                  item.phoneText = item.phonenumber.split("-")[1];
-                }else{
-                  item.phoneText = item.phonenumber;
-                }
-                item.isEffective = item.effective==1?true:false;
-              });
-              $this.isDisabled = false;
+      if(!$this.isSearchResult){
+        $this.isSearchResult=true;
+        var searchData = $this.initSearchData();
+        document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
+        $this.$store.dispatch('chinaphone/cluesCurrentPhoneDataAction', searchData).then(response=>{
+          if(response){
+            if(response.status){
+              var infoData = {};
+              infoData.totalCount=response.allcount;
+              infoData.effectiveCount=response.effectivecount;
+              infoData.invalidCount=response.noeffectivecount;
+              infoData.levelOneCount=response.productonecount;
+              infoData.levelTwoCount=response.producttwocount;
+              infoData.totalCountMonth=response.nowmonthnumber;
+              infoData.effectiveCountMonth=response.noweffectivenumber;
+              infoData.invalidCountMonth=response.nownoeffectivenumber;
+              infoData.levelOneCountMonth=response.nowmonthone;
+              infoData.levelTwoCountMonth=response.nowmonthtwo;
+              if(response.data.length>0){
+                response.data.forEach(function(item,index){
+                  if(item.phonenumber.indexOf("-")!=-1){
+                    item.phoneText = item.phonenumber.split("-")[1];
+                  }else{
+                    item.phoneText = item.phonenumber;
+                  }
+                  item.isEffective = item.effective==1?true:false;
+                });
+                $this.isDisabled = false;
+              }else{
+                $this.isDisabled = true;
+              }
+              $this.writepermit = response.writepermit?true:false;
+              $this.tableData = response.data;
+              $this.infoData = infoData;
+              $this.totalDataNum = response.allcount;   
+              $this.getPermitField();  
             }else{
-              $this.isDisabled = true;
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSearchResult=false;
+              },1000);
             }
-            $this.writepermit = response.writepermit?true:false;
-            $this.tableData = response.data;
-            $this.infoData = infoData;
-            $this.totalDataNum = response.allcount;   
-            $this.getPermitField();  
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
           }
-        }
-      });
+        });
+      }
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
@@ -1486,12 +1493,18 @@ export default {
                 })
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSearchResult=false;
+            },1000);
           }else{
             $this.$message({
               showClose: true,
               message: response.info,
               type: 'error'
             });
+            setTimeout(()=>{
+              $this.isSearchResult=false;
+            },1000);
           }
         }
       });

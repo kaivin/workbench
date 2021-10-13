@@ -242,7 +242,7 @@
                     <div class="EnphoneAddEditMainItem btn-item">
                         <dl>
                           <dd>
-                            <el-button type="primary" class="updateBtn" size="large" v-if="menuButtonPermit.includes('Chinaphone_add')||menuButtonPermit.includes('Chinaphone_edit')" @click="saveData"><i class="svg-i planeWhite"><svg-icon icon-class="planeWhite" /></i>保存</el-button>
+                            <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="large" v-if="menuButtonPermit.includes('Chinaphone_add')||menuButtonPermit.includes('Chinaphone_edit')" @click="saveData"><i class="svg-i planeWhite"><svg-icon icon-class="planeWhite" /></i>保存</el-button>
                           </dd>
                         </dl>
                         <dl>
@@ -318,6 +318,7 @@ export default {
       },
       defaultInfo:{},
       isLoading:null,
+      isDisabled:false,
     }
   },
   computed: {
@@ -479,6 +480,9 @@ export default {
               message: response.info,
               type: 'error'
             });
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
           }
         }
       });
@@ -547,6 +551,9 @@ export default {
       });
       $this.productList = productList;
       $this.isLoading.close();
+      setTimeout(()=>{
+        $this.isDisabled=false;
+      },1000);
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
@@ -841,39 +848,46 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
-      }
-      var formData = $this.initFormData();
-      var pathUrl = "";
-      if($this.formData.id==0){
-        pathUrl = "chinaphone/cluesAddAction";
-      }else{
-        pathUrl = "chinaphone/cluesEditAction";
-      }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            if($this.formData.id!=0){
-              $this.initCluesInfo();
+      if(!$this.isDisabled){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isDisabled=true;
+        $this.loadingFun();
+        var formData = $this.initFormData();
+        var pathUrl = "";
+        if($this.formData.id==0){
+          pathUrl = "chinaphone/cluesAddAction";
+        }else{
+          pathUrl = "chinaphone/cluesEditAction";
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              if($this.formData.id!=0){
+                $this.initCluesInfo();
+              }else{
+                var queryObj = {};
+                queryObj.phoneID = $this.formData.phoneid;
+                var routeUrl =  $this.$router.resolve({path:'/Chinaphone/phoneindex',query:queryObj});
+                window.open(routeUrl.href,'_self');
+              }
             }else{
-              var queryObj = {};
-              queryObj.phoneID = $this.formData.phoneid;
-              var routeUrl =  $this.$router.resolve({path:'/Chinaphone/phoneindex',query:queryObj});
-              window.open(routeUrl.href,'_self');
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
             }
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
+        });
+      }
     },
     // 清空添加数据表单
     clearFormData(){

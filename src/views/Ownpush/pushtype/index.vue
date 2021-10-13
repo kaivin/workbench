@@ -58,21 +58,21 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_pushtypeadd')||menuButtonPermit.includes('Ownpush_pushtypeedit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="480px">
-      <el-form :model="dialogForm">
-        <div class="item-form">
-            <el-form-item label="渠道名称：" :label-width="formLabelWidth">
-                <el-input v-model="dialogForm.name" ref="name"></el-input>
-            </el-form-item>
-        </div>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_pushtypeadd')||menuButtonPermit.includes('Ownpush_pushtypeedit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="480px">
+        <el-form :model="dialogForm">
+          <div class="item-form">
+              <el-form-item label="渠道名称：" :label-width="formLabelWidth">
+                  <el-input v-model="dialogForm.name" ref="name"></el-input>
+              </el-form-item>
+          </div>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
@@ -117,7 +117,8 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isSaveData:false,
     }
   },
   computed: {
@@ -295,6 +296,9 @@ export default {
               $this.tableData = [];
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSaveData=false;
+            },1000);
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
@@ -313,6 +317,9 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
             }
           }
         }
@@ -386,32 +393,38 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isSaveData){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isSaveData=true;
+        var pathUrl = "";
+        if($this.dialogText=="编辑渠道"){
+          pathUrl = "ownpush/cnChannelEditAction";
+        }else{
+          pathUrl = "ownpush/cnChannelAddAction";
+        }
+        $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
+        });
       }
-      var pathUrl = "";
-      if($this.dialogText=="编辑渠道"){
-        pathUrl = "ownpush/cnChannelEditAction";
-      }else{
-        pathUrl = "ownpush/cnChannelAddAction";
-      }
-      $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.handleClose();
-            $this.initPage();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
     },
     // 重置添加数据表单
     resetFormData(){

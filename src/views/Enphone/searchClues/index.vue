@@ -232,7 +232,7 @@
                                                 <p v-if="isProducttype"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品分类，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
                                             </div>
                                             <div class="clues-title-btn">
-                                                <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="enCluesSearchData"><i class="svg-i" ><svg-icon icon-class="planeWhite" /></i>搜索</el-button>
+                                                <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="enCluesSearchData"><i class="svg-i" ><svg-icon icon-class="planeWhite" /></i>搜索</el-button>
                                                 <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                                                 <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled"  @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
                                             </div>
@@ -253,7 +253,6 @@
                                         class="SiteTable EntableColor"
                                         style="width: 100%"
                                         :style="'min-height:'+minHeight+'px;'"
-                                        @selection-change="handleSelectionChange"
                                       >
                                       <el-table-column
                                         prop="xuntime"
@@ -832,7 +831,6 @@ export default {
         downloadLoading: false,
         permitField:[],
         isExportDisabled:true,
-        isDisabled:true,
         pageSizeList:[20],
         isUrl:false,
         isProduct:false,
@@ -868,6 +866,7 @@ export default {
           clientHeight:0,
         },
         isLoading:null,
+        isDisabled:false,
     }
   },
   computed: {
@@ -1039,12 +1038,18 @@ export default {
                 })
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
           }else{
             $this.$message({
               showClose: true,
               message: response.info,
               type: 'error'
             });
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
           }
         }
       });
@@ -1344,231 +1349,237 @@ export default {
     // 搜索确认
     enCluesSearchData(){
         var $this = this;
+      if(!$this.isDisabled){
+        $this.isDisabled=true;
         $this.searchData.phoneid= $this.deptOneId;
         var resultData = $this.getSearchResultData();
         $this.loadingFun();
         document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
         $this.$store.dispatch('enphone/getCurrentCluesSearchListAction', resultData).then(response=>{
-        if(response){
-          if(response.status){
-            var infoData = {};
-            infoData.totalCount = response.allcount;
-            if($this.searchData.is_group){
-                $this.isClues=false;
-                infoData.groupCount = response.countgroup;
-                if($this.searchData.groupurlproduct == 1){
-                    $this.isUrl=true;
-                    $this.isProduct=false;
-                    $this.isCountry=false;
-                    $this.isContinent=false;
-                    $this.isGroup=false;
-                    $this.isProducttype=false;
-                    if(response.data.length>0){
-                      var searArr=[];
-                      response.data.forEach(function(item){
-                          var obj={
-                            allscore:0,
-                            number:0,
-                            url: ""
-                          }
-                          obj.allscore=parseFloat(item.allscore).toFixed(2);
-                          obj.number=item.number;
-                          obj.url=item.url;
-                          searArr.push(obj);
-                      });
-                      $this.tableData = searArr;
+          if(response){
+            if(response.status){
+              var infoData = {};
+              infoData.totalCount = response.allcount;
+              if($this.searchData.is_group){
+                  $this.isClues=false;
+                  infoData.groupCount = response.countgroup;
+                  if($this.searchData.groupurlproduct == 1){
+                      $this.isUrl=true;
+                      $this.isProduct=false;
+                      $this.isCountry=false;
+                      $this.isContinent=false;
+                      $this.isGroup=false;
+                      $this.isProducttype=false;
+                      if(response.data.length>0){
+                        var searArr=[];
+                        response.data.forEach(function(item){
+                            var obj={
+                              allscore:0,
+                              number:0,
+                              url: ""
+                            }
+                            obj.allscore=parseFloat(item.allscore).toFixed(2);
+                            obj.number=item.number;
+                            obj.url=item.url;
+                            searArr.push(obj);
+                        });
+                        $this.tableData = searArr;
+                      }
+                  }
+                  if($this.searchData.groupurlproduct == 2){
+                      $this.isUrl=false;
+                      $this.isProduct=true;
+                      $this.isCountry=false;
+                      $this.isContinent=false;
+                      $this.isGroup=false;
+                      $this.isProducttype=false;
+                      if(response.data.length>0){
+                        var searArr=[];
+                        response.data.forEach(function(item){
+                            var obj={
+                              allscore:0,
+                              number:0,
+                              keying: "",
+                              keyproduct: "",
+                            }
+                            obj.allscore=parseFloat(item.allscore).toFixed(2);
+                            obj.number=item.number;
+                            obj.keying=item.keying;
+                            obj.keyproduct=item.keyproduct;
+                            searArr.push(obj);
+                        });
+                        $this.tableData = searArr;
+                      }
+                  }
+                  if($this.searchData.groupurlproduct == 3){
+                      $this.isUrl=false;
+                      $this.isProduct=false;
+                      $this.isCountry=true;
+                      $this.isContinent=false;
+                      $this.isGroup=false;
+                      $this.isProducttype=false;
+                      if(response.data.length>0){
+                        var searArr=[];
+                        response.data.forEach(function(item){
+                            var obj={
+                              allscore:0,
+                              number:0,
+                              country: "",
+                              percenter: "",
+                            }
+                            obj.allscore=parseFloat(item.allscore).toFixed(2);
+                            obj.number=item.number;
+                            obj.country=item.country;
+                            obj.percenter=item.percenter;
+                            searArr.push(obj);
+                        });
+                        $this.tableData = searArr;
+                      }
+                  }
+                  if($this.searchData.groupurlproduct == 4){
+                      $this.isUrl=false;
+                      $this.isProduct=false;
+                      $this.isCountry=false;
+                      $this.isContinent=true;
+                      $this.isGroup=false;
+                      $this.isProducttype=false;
+                      if(response.data.length>0){
+                        var searArr=[];
+                        response.data.forEach(function(item){
+                            var obj={
+                              allscore:0,
+                              number:0,
+                              continent: "",
+                              percenter: "",
+                            }
+                            obj.allscore=parseFloat(item.allscore).toFixed(2);
+                            obj.number=item.number;
+                            obj.continent=item.continent;
+                            obj.percenter=item.percenter;
+                            searArr.push(obj);
+                        });
+                        $this.tableData = searArr;
+                      }
+                  }
+                  if($this.searchData.groupurlproduct == 5){
+                      $this.isUrl=false;
+                      $this.isProduct=false;
+                      $this.isCountry=false;
+                      $this.isContinent=false;
+                      $this.isGroup=true;
+                      $this.isProducttype=false;
+                      if(response.data.length>0){
+                        var searArr=[];
+                        response.data.forEach(function(item){
+                            var obj={
+                              allscore:0,
+                              number:0,
+                              phoneid: "",
+                              percenter: "",
+                            }
+                            obj.allscore=parseFloat(item.allscore).toFixed(2);
+                            obj.number=item.number;
+                            obj.phoneid=item.phoneid;
+                            obj.percenter=item.percenter;
+                            searArr.push(obj);
+                        });
+                        $this.tableData = searArr;
+                      }
+                  }
+                  if($this.searchData.groupurlproduct == 6){
+                      $this.isUrl=false;
+                      $this.isProduct=false;
+                      $this.isCountry=false;
+                      $this.isContinent=false;
+                      $this.isGroup=false;
+                      $this.isProducttype=true;
+                      if(response.data.length>0){
+                        var searArr=[];
+                        response.data.forEach(function(item){
+                            var obj={
+                              allscore:0,
+                              number:0,
+                              producttype_id: "",
+                              producttypename: "",
+                            }
+                            obj.allscore=parseFloat(item.allscore).toFixed(2);
+                            obj.number=item.number;
+                            obj.producttype_id=item.producttype_id;
+                            obj.producttypename=item.producttypename;
+                            searArr.push(obj);
+                        });
+                        $this.tableData = searArr;
+                      }
+                  }
+              }else{
+                  infoData.allcount = response.allcount;
+                  infoData.allcountscore = response.allcountscore;
+                  infoData.effectivecount = response.effectivecount;
+                  infoData.hassaycount = response.hassaycount;
+                  infoData.hassaycountscore = response.hassaycountscore;
+                  infoData.nosaycount = response.nosaycount;
+                  infoData.nosaycountscore = response.nosaycountscore;
+                  infoData.meancustormscore = response.meancustormscore;
+                  infoData.noeffectivecount = response.noeffectivecount;
+                  infoData.producttypecount1 = response.producttypecount1;
+                  infoData.producttypecount2 = response.producttypecount2;
+                  infoData.producttypecount3 = response.producttypecount3;
+                  infoData.producttypecount4 = response.producttypecount4;
+                  $this.isUrl=false;
+                  $this.isProduct=false;
+                  $this.isCountry=false;
+                  $this.isContinent=false;
+                  $this.isGroup=false;
+                  $this.isProducttype=false;
+                  $this.isClues=true;
+                  response.data.forEach(function(item,index){
+                    item.isEffective = item.effective==1?true:false;
+                    if(item.remark1==''||item.remark1==null||item.remark1==undefined){
+                      item.isRemark1=true;
+                    }else{
+                      item.isRemark1=false;
                     }
-                }
-                if($this.searchData.groupurlproduct == 2){
-                    $this.isUrl=false;
-                    $this.isProduct=true;
-                    $this.isCountry=false;
-                    $this.isContinent=false;
-                    $this.isGroup=false;
-                    $this.isProducttype=false;
-                    if(response.data.length>0){
-                      var searArr=[];
-                      response.data.forEach(function(item){
-                          var obj={
-                            allscore:0,
-                            number:0,
-                            keying: "",
-                            keyproduct: "",
-                          }
-                          obj.allscore=parseFloat(item.allscore).toFixed(2);
-                          obj.number=item.number;
-                          obj.keying=item.keying;
-                          obj.keyproduct=item.keyproduct;
-                          searArr.push(obj);
-                      });
-                      $this.tableData = searArr;
+                    if(item.remark2==''||item.remark2==null||item.remark2==undefined){
+                      item.isRemark2=true;
+                    }else{
+                      item.isRemark2=false;
                     }
-                }
-                if($this.searchData.groupurlproduct == 3){
-                    $this.isUrl=false;
-                    $this.isProduct=false;
-                    $this.isCountry=true;
-                    $this.isContinent=false;
-                    $this.isGroup=false;
-                    $this.isProducttype=false;
-                    if(response.data.length>0){
-                      var searArr=[];
-                      response.data.forEach(function(item){
-                          var obj={
-                            allscore:0,
-                            number:0,
-                            country: "",
-                            percenter: "",
-                          }
-                          obj.allscore=parseFloat(item.allscore).toFixed(2);
-                          obj.number=item.number;
-                          obj.country=item.country;
-                          obj.percenter=item.percenter;
-                          searArr.push(obj);
-                      });
-                      $this.tableData = searArr;
+                    if(item.remark3==''||item.remark3==null||item.remark3==undefined){
+                      item.isRemark3=true;
+                    }else{
+                      item.isRemark3=false;
                     }
-                }
-                if($this.searchData.groupurlproduct == 4){
-                    $this.isUrl=false;
-                    $this.isProduct=false;
-                    $this.isCountry=false;
-                    $this.isContinent=true;
-                    $this.isGroup=false;
-                    $this.isProducttype=false;
-                    if(response.data.length>0){
-                      var searArr=[];
-                      response.data.forEach(function(item){
-                          var obj={
-                            allscore:0,
-                            number:0,
-                            continent: "",
-                            percenter: "",
-                          }
-                          obj.allscore=parseFloat(item.allscore).toFixed(2);
-                          obj.number=item.number;
-                          obj.continent=item.continent;
-                          obj.percenter=item.percenter;
-                          searArr.push(obj);
-                      });
-                      $this.tableData = searArr;
-                    }
-                }
-                if($this.searchData.groupurlproduct == 5){
-                    $this.isUrl=false;
-                    $this.isProduct=false;
-                    $this.isCountry=false;
-                    $this.isContinent=false;
-                    $this.isGroup=true;
-                    $this.isProducttype=false;
-                    if(response.data.length>0){
-                      var searArr=[];
-                      response.data.forEach(function(item){
-                          var obj={
-                            allscore:0,
-                            number:0,
-                            phoneid: "",
-                            percenter: "",
-                          }
-                          obj.allscore=parseFloat(item.allscore).toFixed(2);
-                          obj.number=item.number;
-                          obj.phoneid=item.phoneid;
-                          obj.percenter=item.percenter;
-                          searArr.push(obj);
-                      });
-                      $this.tableData = searArr;
-                    }
-                }
-                if($this.searchData.groupurlproduct == 6){
-                    $this.isUrl=false;
-                    $this.isProduct=false;
-                    $this.isCountry=false;
-                    $this.isContinent=false;
-                    $this.isGroup=false;
-                    $this.isProducttype=true;
-                    if(response.data.length>0){
-                      var searArr=[];
-                      response.data.forEach(function(item){
-                          var obj={
-                            allscore:0,
-                            number:0,
-                            producttype_id: "",
-                            producttypename: "",
-                          }
-                          obj.allscore=parseFloat(item.allscore).toFixed(2);
-                          obj.number=item.number;
-                          obj.producttype_id=item.producttype_id;
-                          obj.producttypename=item.producttypename;
-                          searArr.push(obj);
-                      });
-                      $this.tableData = searArr;
-                    }
-                }
+                  });
+                  $this.tableData = response.data;
+              }
+              if(response.data.length>0){
+                $this.isExportDisabled = false;
+              }else{
+                $this.isExportDisabled = true;
+              }
+              $this.infoData = infoData;
+              $this.totalDataNum = response.allcount;
+              $this.pageSizeList;            
+              var pageSizeListArr = [$this.pageSizeList];
+              if (pageSizeListArr.length > 1) {
+                pageSizeListArr.shift();
+              }
+              pageSizeListArr = [$this.searchData.limit];
+              $this.pageSizeList = pageSizeListArr;
+              $this.getPermitField();       
             }else{
-                infoData.allcount = response.allcount;
-                infoData.allcountscore = response.allcountscore;
-                infoData.effectivecount = response.effectivecount;
-                infoData.hassaycount = response.hassaycount;
-                infoData.hassaycountscore = response.hassaycountscore;
-                infoData.nosaycount = response.nosaycount;
-                infoData.nosaycountscore = response.nosaycountscore;
-                infoData.meancustormscore = response.meancustormscore;
-                infoData.noeffectivecount = response.noeffectivecount;
-                infoData.producttypecount1 = response.producttypecount1;
-                infoData.producttypecount2 = response.producttypecount2;
-                infoData.producttypecount3 = response.producttypecount3;
-                infoData.producttypecount4 = response.producttypecount4;
-                $this.isUrl=false;
-                $this.isProduct=false;
-                $this.isCountry=false;
-                $this.isContinent=false;
-                $this.isGroup=false;
-                $this.isProducttype=false;
-                $this.isClues=true;
-                response.data.forEach(function(item,index){
-                  item.isEffective = item.effective==1?true:false;
-                  if(item.remark1==''||item.remark1==null||item.remark1==undefined){
-                     item.isRemark1=true;
-                  }else{
-                     item.isRemark1=false;
-                  }
-                  if(item.remark2==''||item.remark2==null||item.remark2==undefined){
-                     item.isRemark2=true;
-                  }else{
-                     item.isRemark2=false;
-                  }
-                  if(item.remark3==''||item.remark3==null||item.remark3==undefined){
-                     item.isRemark3=true;
-                  }else{
-                     item.isRemark3=false;
-                  }
-                });
-                $this.tableData = response.data;
+              $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
             }
-            if(response.data.length>0){
-              $this.isExportDisabled = false;
-            }else{
-              $this.isExportDisabled = true;
-            }
-            $this.infoData = infoData;
-            $this.totalDataNum = response.allcount;
-            $this.pageSizeList;            
-            var pageSizeListArr = [$this.pageSizeList];
-            if (pageSizeListArr.length > 1) {
-              pageSizeListArr.shift();
-            }
-            pageSizeListArr = [$this.searchData.limit];
-            $this.pageSizeList = pageSizeListArr;
-            $this.getPermitField();       
-          }else{
-            $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-            });
-          }
-        } 
-      });
+          } 
+        });
+      }
     },
     // 重置表单
     resetData(){
@@ -1612,16 +1623,6 @@ export default {
         $this.isAllTeam=false;
         $this.checkAllTeam=false;
         $this.pageSizeList=[20];
-    },
-    // 表格多选改变事件
-    handleSelectionChange(val) {
-        var $this = this;
-        $this.selectedData = val;
-        if($this.selectedData.length>0){
-          $this.isDisabled = false;
-        }else{
-          $this.isDisabled = true;
-        }
     },
     // 当前产品分类改变触发事件
     currentCateChange(e){

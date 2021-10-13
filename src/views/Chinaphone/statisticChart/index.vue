@@ -223,7 +223,7 @@
                     </div>
                   </div>
                   <div class="card-header WebServerAddEditBtn ChinaphoneTwoBtn">
-                      <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="getCluesAnalysisData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
+                      <el-button type="primary" class="updateBtn"  :class="isDisabled?'isDisabled':''" :disabled="isDisabled"  size="small" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="getCluesAnalysisData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
                       <el-button type="primary" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                   </div>
               </div>
@@ -585,6 +585,7 @@ export default {
       maxProductNum:0,
       minProductNum:0,
       isLoading:null,
+      isDisabled:false,
     }
   },
   computed: {
@@ -1004,168 +1005,177 @@ export default {
     // 获取统计数据
     getCluesAnalysisData(){
       var $this = this;
-      var searchData = $this.initSearchData();
-      if(searchData.phoneid.length == 0){
-        $this.$message({
-            showClose: true,
-            message: '错误：请至少选择一个电话！',
-            type: 'error'
-        });
-        return false;
-      }
-      if($this.searchData.date.length == 0){
-        $this.$message({
-            showClose: true,
-            message: '错误：请选择查询时间范围！',
-            type: 'error'
-        });
-        return false;
-      }
-      if($this.chart&&!$this.chart.destroyed){
-        $this.chart.destroy();
-      }
-      $this.loadingFun();
-      $this.$store.dispatch('chinaphone/cluesAnalysisResultDataAction', searchData).then(response=>{
-        if(response){
-          if(response.status){
-            $this.isSearch=true;
-            $this.searchResult.hoursCount = response.avghourscount;
-            var deviceCount=[];
-            if(response.devicecount.length>0){
-              response.devicecount.forEach(function(item){
-                   item.count="count";
-                   deviceCount.push(item);
-              });
-            }
-            $this.searchResult.deviceCount = deviceCount;
-            $this.searchResult.dayCount = response.everydaycount;
-            $this.searchResult.productCount = response.hotproductcount;
-            $this.searchResult.sourceCount = response.modecount;
-            $this.searchResult.phoneCount = response.phonecount;
-            $this.searchResult.phoneEffectiveCount = response.phonecounteffective;
-            $this.searchResult.phoneTotalNum = response.phonenumber;
-            $this.searchResult.phoneEffectiveNum = response.phonenumbereffective;
-            $this.searchResult.productTypeCount = response.producttypecount;
-            $this.searchResult.regionCount = response.provincecoun;
-            $this.searchResult.regionMap = response.provincecountmap;
-            $this.searchResult.searchWordCount = response.searchwordcount;
-            var numArr = [];
-            response.weekdaycount.forEach(function(item,index){
-              numArr.push(item.number);
-            });
-            var maxWeekNum = Math.max(...numArr);
-            var minWeekNum = Math.min(...numArr);
-            var maxWeek = [];
-            var minWeek = [];
-            response.weekdaycount.forEach(function(item,index){
-              if(item.number === maxWeekNum){
-                maxWeek.push(item.weekday)
-              }else if(item.number === minWeekNum){
-                minWeek.push(item.weekday);
-              }
-            });
-            $this.maxWeekNum = maxWeekNum;
-            $this.minWeekNum = minWeekNum;
-            $this.maxWeek = maxWeek;
-            $this.minWeek = minWeek;
-            $this.searchResult.weekCount = response.weekdaycount;
-            var numHoursArr = [];
-            response.avghourscount.forEach(function(item,index){
-              numHoursArr.push(item.number);
-            });
-            var maxHoursNum = Math.max(...numHoursArr);
-            var minHoursNum = Math.min(...numHoursArr);
-            var maxHours = [];
-            var minHours = [];
-            response.avghourscount.forEach(function(item,index){
-              if(item.number === maxHoursNum){
-                maxHours.push(item.hours)
-              }else if(item.number === minHoursNum){
-                minHours.push(item.hours);
-              }
-            });
-            $this.maxHoursNum = maxHoursNum;
-            $this.minHoursNum = minHoursNum;
-            $this.maxHours = maxHours;
-            $this.minHours = minHours;
-            var numProductArr = [];
-            response.hotproductcount.forEach(function(item,index){
-              numProductArr.push(item.number);
-            });
-            var maxProductNum = Math.max(...numProductArr);
-            var minProductNum = Math.min(...numProductArr);
-            var maxProduct = [];
-            var minProduct = [];
-            response.hotproductcount.forEach(function(item,index){
-              if(item.number === maxProductNum){
-                maxProduct.push(item.name)
-              }else if(item.number === minProductNum){
-                minProduct.push(item.name);
-              }
-            });
-            $this.maxProductNum = maxProductNum;
-            $this.minProductNum = minProductNum;
-            $this.maxProduct = maxProduct;
-            $this.minProduct = minProduct;
-            $this.$nextTick(()=>{
-              document.getElementById("canvasPane").scrollIntoView({behavior: "smooth"});
-              if($this.barPhoneTotalPlot){
-                $this.barPhoneTotalPlot.changeData($this.searchResult.phoneCount);
-              }else{
-                $this.drawChart1();
-              }
-              if($this.barPhoneEffectivePlot){
-                $this.barPhoneEffectivePlot.changeData($this.searchResult.phoneEffectiveCount);
-              }else{
-                $this.drawChart2();
-              }
-              if($this.pieDevicePlot){
-                $this.pieDevicePlot.changeData($this.searchResult.deviceCount);
-              }else{
-                $this.drawChart3();
-              }
-              if($this.pieProductTypePlot){
-                $this.pieProductTypePlot.changeData($this.searchResult.productTypeCount);
-              }else{
-                $this.drawChart4();
-              }
-              if($this.columnWeekPlot){
-                $this.columnWeekPlot.changeData($this.searchResult.weekCount);
-              }else{
-                $this.drawChart5();
-              }
-              if($this.pieSourcePlot){
-                $this.pieSourcePlot.changeData($this.searchResult.sourceCount);
-              }else{
-                $this.drawChart6();
-              }
-              if($this.lineDayPlot){
-                $this.lineDayPlot.changeData($this.searchResult.dayCount);
-              }else{
-                $this.drawChart7();
-              }
-              if($this.columnHoursPlot){
-                $this.columnHoursPlot.changeData($this.searchResult.hoursCount);
-              }else{
-                $this.drawChart8();
-              }
-              if($this.columnProductPlot){
-                $this.columnProductPlot.changeData($this.searchResult.productCount);
-              }else{
-                $this.drawChart9();
-              }
-              $this.drawChart10();
-              $this.isLoading.close();
-            });
-          }else{
-            $this.$message({
+      if(!$this.isDisabled){
+        var searchData = $this.initSearchData();
+        if(searchData.phoneid.length == 0){
+          $this.$message({
               showClose: true,
-              message: response.info,
+              message: '错误：请至少选择一个电话！',
               type: 'error'
-            });
-          }
+          });
+          return false;
         }
-      });
+        if($this.searchData.date.length == 0){
+          $this.$message({
+              showClose: true,
+              message: '错误：请选择查询时间范围！',
+              type: 'error'
+          });
+          return false;
+        }
+        $this.isDisabled=true;
+        if($this.chart&&!$this.chart.destroyed){
+          $this.chart.destroy();
+        }
+        $this.loadingFun();
+        $this.$store.dispatch('chinaphone/cluesAnalysisResultDataAction', searchData).then(response=>{
+          if(response){
+            if(response.status){
+              $this.isSearch=true;
+              $this.searchResult.hoursCount = response.avghourscount;
+              var deviceCount=[];
+              if(response.devicecount.length>0){
+                response.devicecount.forEach(function(item){
+                    item.count="count";
+                    deviceCount.push(item);
+                });
+              }
+              $this.searchResult.deviceCount = deviceCount;
+              $this.searchResult.dayCount = response.everydaycount;
+              $this.searchResult.productCount = response.hotproductcount;
+              $this.searchResult.sourceCount = response.modecount;
+              $this.searchResult.phoneCount = response.phonecount;
+              $this.searchResult.phoneEffectiveCount = response.phonecounteffective;
+              $this.searchResult.phoneTotalNum = response.phonenumber;
+              $this.searchResult.phoneEffectiveNum = response.phonenumbereffective;
+              $this.searchResult.productTypeCount = response.producttypecount;
+              $this.searchResult.regionCount = response.provincecoun;
+              $this.searchResult.regionMap = response.provincecountmap;
+              $this.searchResult.searchWordCount = response.searchwordcount;
+              var numArr = [];
+              response.weekdaycount.forEach(function(item,index){
+                numArr.push(item.number);
+              });
+              var maxWeekNum = Math.max(...numArr);
+              var minWeekNum = Math.min(...numArr);
+              var maxWeek = [];
+              var minWeek = [];
+              response.weekdaycount.forEach(function(item,index){
+                if(item.number === maxWeekNum){
+                  maxWeek.push(item.weekday)
+                }else if(item.number === minWeekNum){
+                  minWeek.push(item.weekday);
+                }
+              });
+              $this.maxWeekNum = maxWeekNum;
+              $this.minWeekNum = minWeekNum;
+              $this.maxWeek = maxWeek;
+              $this.minWeek = minWeek;
+              $this.searchResult.weekCount = response.weekdaycount;
+              var numHoursArr = [];
+              response.avghourscount.forEach(function(item,index){
+                numHoursArr.push(item.number);
+              });
+              var maxHoursNum = Math.max(...numHoursArr);
+              var minHoursNum = Math.min(...numHoursArr);
+              var maxHours = [];
+              var minHours = [];
+              response.avghourscount.forEach(function(item,index){
+                if(item.number === maxHoursNum){
+                  maxHours.push(item.hours)
+                }else if(item.number === minHoursNum){
+                  minHours.push(item.hours);
+                }
+              });
+              $this.maxHoursNum = maxHoursNum;
+              $this.minHoursNum = minHoursNum;
+              $this.maxHours = maxHours;
+              $this.minHours = minHours;
+              var numProductArr = [];
+              response.hotproductcount.forEach(function(item,index){
+                numProductArr.push(item.number);
+              });
+              var maxProductNum = Math.max(...numProductArr);
+              var minProductNum = Math.min(...numProductArr);
+              var maxProduct = [];
+              var minProduct = [];
+              response.hotproductcount.forEach(function(item,index){
+                if(item.number === maxProductNum){
+                  maxProduct.push(item.name)
+                }else if(item.number === minProductNum){
+                  minProduct.push(item.name);
+                }
+              });
+              $this.maxProductNum = maxProductNum;
+              $this.minProductNum = minProductNum;
+              $this.maxProduct = maxProduct;
+              $this.minProduct = minProduct;
+              $this.$nextTick(()=>{
+                document.getElementById("canvasPane").scrollIntoView({behavior: "smooth"});
+                if($this.barPhoneTotalPlot){
+                  $this.barPhoneTotalPlot.changeData($this.searchResult.phoneCount);
+                }else{
+                  $this.drawChart1();
+                }
+                if($this.barPhoneEffectivePlot){
+                  $this.barPhoneEffectivePlot.changeData($this.searchResult.phoneEffectiveCount);
+                }else{
+                  $this.drawChart2();
+                }
+                if($this.pieDevicePlot){
+                  $this.pieDevicePlot.changeData($this.searchResult.deviceCount);
+                }else{
+                  $this.drawChart3();
+                }
+                if($this.pieProductTypePlot){
+                  $this.pieProductTypePlot.changeData($this.searchResult.productTypeCount);
+                }else{
+                  $this.drawChart4();
+                }
+                if($this.columnWeekPlot){
+                  $this.columnWeekPlot.changeData($this.searchResult.weekCount);
+                }else{
+                  $this.drawChart5();
+                }
+                if($this.pieSourcePlot){
+                  $this.pieSourcePlot.changeData($this.searchResult.sourceCount);
+                }else{
+                  $this.drawChart6();
+                }
+                if($this.lineDayPlot){
+                  $this.lineDayPlot.changeData($this.searchResult.dayCount);
+                }else{
+                  $this.drawChart7();
+                }
+                if($this.columnHoursPlot){
+                  $this.columnHoursPlot.changeData($this.searchResult.hoursCount);
+                }else{
+                  $this.drawChart8();
+                }
+                if($this.columnProductPlot){
+                  $this.columnProductPlot.changeData($this.searchResult.productCount);
+                }else{
+                  $this.drawChart9();
+                }
+                $this.drawChart10();
+                $this.isLoading.close();
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
+          }
+        });
+      }
     },
     // 选中所有电话事件
     handleCheckAllPhoneChange(e){

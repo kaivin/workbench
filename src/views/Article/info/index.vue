@@ -47,7 +47,7 @@
               <div class="ueditor-panel"><vue-ueditor-wrap v-model="content" :config="editorConfig" @ready="ready"></vue-ueditor-wrap></div>
               <div class="btn-rich">
                 <el-switch class="hide-name" v-model="isHideName" inactive-text="匿名发布"></el-switch>
-                <el-button type="primary" v-on:click="submitComment">提交</el-button>
+                <el-button type="primary" :class="isSubmitComment?'isDisabled':''" :disabled="isSubmitComment" v-on:click="submitComment">提交</el-button>
               </div>
             </div>
           </div>
@@ -132,6 +132,7 @@ export default {
         ]
       },
       isLoading:null,
+      isSubmitComment:false,
     }
   },
   computed: {
@@ -369,45 +370,51 @@ export default {
     // 提交留言
     submitComment(){
       var $this = this;
-      var formData = {};
-      formData.content= $this.content;
-      formData.articleid = $this.currentID;
-      formData.is_hidename = $this.isHideName?1:0;
-      if($this.content==""){
-        $this.$message({
-            showClose: true,
-            message: "留言内容不能为空",
-            type: 'error'
-        });
-        return false;
-      }
-      if(formData.articleid==0){
-        $this.$message({
-            showClose: true,
-            message: "请重新进入该文章进行留言",
-            type: 'error'
-        });
-        return false;
-      }
-      $this.$store.dispatch('article/postArticleSubmitCommentAction', formData).then(response=>{
-          if(response){
-            if(response.status){
-              $this.resetComment();
-              $this.getCommentList();
-              $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'success'
-              });
-            }else{
-              $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'error'
-              });
+      if(!$this.isSubmitComment){
+        var formData = {};
+        formData.content= $this.content;
+        formData.articleid = $this.currentID;
+        formData.is_hidename = $this.isHideName?1:0;
+        if($this.content==""){
+          $this.$message({
+              showClose: true,
+              message: "留言内容不能为空",
+              type: 'error'
+          });
+          return false;
+        }
+        if(formData.articleid==0){
+          $this.$message({
+              showClose: true,
+              message: "请重新进入该文章进行留言",
+              type: 'error'
+          });
+          return false;
+        }
+        $this.isSubmitComment=true;
+        $this.$store.dispatch('article/postArticleSubmitCommentAction', formData).then(response=>{
+            if(response){
+              if(response.status){
+                $this.resetComment();
+                $this.getCommentList();
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'success'
+                });
+              }else{
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isSubmitComment=false;
+                },1000);
+              }
             }
-          }
-      });
+        });
+      }
     },
     // 获取留言列表数据
     getCommentList(){
@@ -417,6 +424,9 @@ export default {
             if(response.status){
               $this.commentList = response.data;
               $this.isLoading.close();
+              setTimeout(()=>{
+                $this.isSubmitComment=false;
+              },1000);
               $this.$nextTick(()=>{
                 $this.setHeight();
               });
@@ -426,6 +436,9 @@ export default {
                   message: response.info,
                   type: 'error'
               });
+              setTimeout(()=>{
+                $this.isSubmitComment=false;
+              },1000);
             }
           }
       });

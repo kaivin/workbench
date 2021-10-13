@@ -48,7 +48,7 @@
                             </el-select>
                           </div>
                           <div class="item-search">
-                            <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+                            <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                           </div>
                         </div>
                       </div>
@@ -167,7 +167,8 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isSearchResult:false,
     }
   },
   computed: {
@@ -319,9 +320,12 @@ export default {
     // 搜索点击事件
     searchResult(){
       var $this = this;
-      $this.loadingFun();
-      $this.searchData.page = 1;
-      $this.initPage();
+      if(!$this.isSearchResult){
+        $this.isSearchResult=true;
+        $this.loadingFun();
+        $this.searchData.page = 1;
+        $this.initPage();
+      }
     },
     // 初始化数据
     initData(){
@@ -358,6 +362,9 @@ export default {
                 $this.tableData = response.data;
                 $this.totalDataNum = response.allcount;
                 $this.isLoading.close();
+                setTimeout(()=>{
+                  $this.isSearchResult=false;
+                },1000);
                 $this.$nextTick(function () {
                   $this.setTableHeight();
                 })
@@ -377,6 +384,9 @@ export default {
                   message: response.info,
                   type: 'error'
                 });
+                setTimeout(()=>{
+                  $this.isSearchResult=false;
+                },1000);
               }
             }
           }

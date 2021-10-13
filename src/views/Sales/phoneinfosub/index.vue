@@ -155,7 +155,7 @@
                                     style="display:inline-block; width:300px;"
                                     v-model="formData.givecustormwarn">
                                   </el-input>
-                                  <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Sales_phoneinfosub')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
+                                  <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" v-if="menuButtonPermit.includes('Sales_phoneinfosub')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
                               </div>
                           </div>
                       </div>
@@ -260,7 +260,8 @@ export default {
       },      
       isSalesman:false,
       feedback:'未反馈',
-        isLoading:null,
+      isLoading:null,
+      isDisabled:false,
     }
   },
   computed: {
@@ -410,6 +411,9 @@ export default {
               message: response.info,
               type: 'error'
             });
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
           }
         }
       });
@@ -476,6 +480,9 @@ export default {
       $this.formData.saleswarnstatus = $this.defaultInfo.saleswarnstatus;
       $this.formData.salesremark = $this.defaultInfo.salesremark;
       $this.isLoading.close();
+      setTimeout(()=>{
+        $this.isDisabled=false;
+      },1000);
     },
     // 获取左侧数据
     getLeftData(){
@@ -617,24 +624,31 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      var formSaveData = $this.initFormData();      
-      $this.formSaveData = formSaveData;
-      $this.$store.dispatch("Sales/getSalesDetailsModifyAction", formSaveData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.initCluesInfo();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
+      if(!$this.isDisabled){
+        $this.isDisabled=true;
+        $this.loadingFun();
+        var formSaveData = $this.initFormData();      
+        $this.formSaveData = formSaveData;
+        $this.$store.dispatch("Sales/getSalesDetailsModifyAction", formSaveData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.initCluesInfo();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
+        });
+      }
     },  
     // 是否回复点击事件
     replystatusClick(){

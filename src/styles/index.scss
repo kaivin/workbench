@@ -248,6 +248,15 @@
            background:#f73a3e;
            border-color:#f73a3e;
          }
+         &.isDisabled{
+           cursor: default;
+           opacity: 0.6;
+           &:hover{
+              background:#2e88ff;
+              border-color:#2e88ff;
+              opacity: 0.6;
+           }
+         }
       }
       &.derived{
           background:#fff;
@@ -428,6 +437,10 @@
               width:100%!important;
               height:100%!important;
             }
+          }
+          &.isDisabled{
+            opacity: 0.6;
+            cursor:no-drop;
           }
       }
       .el-button{
@@ -1053,7 +1066,7 @@
           height:36px;
           position:absolute;
           top:0;
-          right:30px;
+          right:0px;
           border:1px solid #C0C4CC;
           border-radius:4px;
           text-align:center;

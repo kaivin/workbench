@@ -181,7 +181,7 @@
                                 </el-input>
                               </div>
                               <div class="item-search">
-                                <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult()">查询</el-button>
+                                <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" type="primary" icon="el-icon-search" @click="searchResult()">查询</el-button>
                               </div>  
                             </div>
                             <div class="clues-info flex-box">
@@ -509,6 +509,7 @@ export default {
         clientHeight:0,
       },
       isLoading:null,
+      isDisabled:false,
     }
   },
   computed: {
@@ -720,13 +721,16 @@ export default {
     // 搜索结果
     searchResult(DealVal){
       var $this = this; 
-      $this.tableData=[];
-      if(DealVal&&DealVal!=''&&DealVal!=undefined){
-        $this.searchData.deal=DealVal;
-      }else{
-        $this.searchData.deal='';
+      if(!$this.isDisabled){
+        $this.isDisabled=true;
+        $this.tableData=[];
+        if(DealVal&&DealVal!=''&&DealVal!=undefined){
+          $this.searchData.deal=DealVal;
+        }else{
+          $this.searchData.deal='';
+        }
+        $this.initCluesList();
       }
-      $this.initCluesList();
     },    
     // 初始化数据
     initData(){
@@ -1056,12 +1060,18 @@ export default {
             $this.setTableHeight();
           })
           $this.isLoading.close();
+          setTimeout(()=>{
+            $this.isDisabled=false;
+          },1000);
         }else{
           $this.$message({
             showClose: true,
             message: resData.info,
             type: 'error'
           });
+          setTimeout(()=>{
+            $this.isDisabled=false;
+          },1000);
         }
       }
     },

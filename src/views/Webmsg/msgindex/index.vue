@@ -66,7 +66,7 @@
                                         </el-input>
                                     </div>
                                     <div class="item-search">
-                                        <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
+                                        <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                                     </div>
                                     <div class="item-search">
                                         <el-button class="item-input" size="small" type="primary" :disabled="!isReady" :icon="isReady?'':'el-icon-loading'" v-if="menuButtonPermit.includes('Webmsg_getmsg')" @click="getCnMsgData">同步中文留言</el-button>
@@ -339,6 +339,7 @@ export default {
           clientHeight:0,
         },
         isLoading:null,
+        isSearchResult:false,
     }
   },
   computed: {
@@ -596,6 +597,9 @@ export default {
               $this.setHeight();
             });
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSearchResult=false;
+            },1000);
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -611,6 +615,9 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isSearchResult=false;
+              },1000);
             }
           }
         }
@@ -652,30 +659,36 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
-      $this.$store.dispatch('webmsg/webMsgInitDataAction', null).then(response=>{
-        if(response){
-          if(response.status){
-            $this.defaultData.totalNum = response.countall;
-            $this.defaultData.untreatedNum = response.nodealcount;
-            $this.defaultData.pendingNum = response.selfnodealcount;
-            $this.defaultData.processedNum = response.hasdealcount;
-            $this.defaultData.starNum = response.hasstarcount;
-            $this.defaultData.spamNum = response.rubblishcount;
-            $this.defaultData.testNum = response.testcount;
-            $this.defaultData.sns1Num = response.pushnodealcount;
-            $this.defaultData.sns2Num = response.pushhasdealcount;
-            $this.defaultData.filterNum = response.filtercount;
-            $this.defaultData.recycleNum = response.deletecount;
-            $this.getCurrentStatusData();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
+      if(!$this.isSearchResult){
+        $this.isSearchResult=true;
+        $this.$store.dispatch('webmsg/webMsgInitDataAction', null).then(response=>{
+          if(response){
+            if(response.status){
+              $this.defaultData.totalNum = response.countall;
+              $this.defaultData.untreatedNum = response.nodealcount;
+              $this.defaultData.pendingNum = response.selfnodealcount;
+              $this.defaultData.processedNum = response.hasdealcount;
+              $this.defaultData.starNum = response.hasstarcount;
+              $this.defaultData.spamNum = response.rubblishcount;
+              $this.defaultData.testNum = response.testcount;
+              $this.defaultData.sns1Num = response.pushnodealcount;
+              $this.defaultData.sns2Num = response.pushhasdealcount;
+              $this.defaultData.filterNum = response.filtercount;
+              $this.defaultData.recycleNum = response.deletecount;
+              $this.getCurrentStatusData();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSearchResult=false;
+              },1000);
+            }
           }
-        }
-      });
+        });      
+      }
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){

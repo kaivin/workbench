@@ -136,7 +136,7 @@
                       </div>
                     </div>
                     <div class="WebServerAddEditBtn ChinaphoneTwoBtn">
-                        <el-button type="primary" class="updateBtn" size="small" v-on:click="searchResult"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>查询</el-button>
+                        <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" v-on:click="searchResult"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>查询</el-button>
                     </div>
                 </div>               
                 <div class="card-content SaleCardDataBom" v-if="tableData.length>0" id="resultPane" ref="resultPane">                 
@@ -283,7 +283,8 @@ export default {
           }
         }]
       },
-        isLoading:null,
+      isLoading:null,
+      isDisabled:false,
     }
   },
   computed: {
@@ -372,40 +373,44 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
-      if($this.searchData.is_group==''){
-        $this.$message({
-            showClose: true,
-            message: '错误：请至少选择一个分组！',
-            type: 'error'
-        });
-        return false;
+      if(!$this.isDisabled){
+        if($this.searchData.is_group==''){
+          $this.$message({
+              showClose: true,
+              message: '错误：请至少选择一个分组！',
+              type: 'error'
+          });
+          return false;
+        }
+        if($this.searchData.is_group == '1'&&$this.searchData.producttype_id.length<1){
+          $this.$message({
+              showClose: true,
+              message: '错误：请至少选择一个产品！',
+              type: 'error'
+          });
+          return false;
+        }
+        if($this.searchData.is_group == '2'&&$this.searchData.area.length<1){
+          $this.$message({
+              showClose: true,
+              message: '错误：请至少选择一个地区！',
+              type: 'error'
+          });
+          return false;
+        }
+        if($this.searchData.is_group == '3'&&$this.searchData.userid.length<1){
+          $this.$message({
+              showClose: true,
+              message: '错误：请至少选择一个业务员！',
+              type: 'error'
+          });
+          return false;
+        }
+        $this.isDisabled=true;
+        $this.loadingFun();
+        $this.is_groupData=$this.searchData.is_group;
+        $this.initCluesList();
       }
-      if($this.searchData.is_group == '1'&&$this.searchData.producttype_id.length<1){
-        $this.$message({
-            showClose: true,
-            message: '错误：请至少选择一个产品！',
-            type: 'error'
-        });
-        return false;
-      }
-      if($this.searchData.is_group == '2'&&$this.searchData.area.length<1){
-        $this.$message({
-            showClose: true,
-            message: '错误：请至少选择一个地区！',
-            type: 'error'
-        });
-        return false;
-      }
-      if($this.searchData.is_group == '3'&&$this.searchData.userid.length<1){
-        $this.$message({
-            showClose: true,
-            message: '错误：请至少选择一个业务员！',
-            type: 'error'
-        });
-        return false;
-      }
-      $this.is_groupData=$this.searchData.is_group;
-      $this.initCluesList();
     },    
     // 初始化数据
     initData(){
@@ -505,12 +510,18 @@ export default {
               document.getElementById("resultPane").scrollIntoView({behavior: "smooth"});
             });
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
           }else{
             $this.$message({
               showClose: true,
               message: response.info,
               type: 'error'
             });
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
           }
           var infoData = {};
           infoData.allcount=response.allcount;

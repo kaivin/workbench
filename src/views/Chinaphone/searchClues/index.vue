@@ -212,8 +212,8 @@
                                     <p v-if="isUrl"><span>共计：<strong class="color1">{{infoData.groupCount}}</strong>条URL，询盘<strong class="color2">{{infoData.totalCount}}</strong>个。</span></p>
                                     <p v-if="isProduct"><span>共计：<strong class="color1">{{infoData.groupCount}}</strong>种产品，条URL，询盘<strong class="color2">{{infoData.totalCount}}</strong>个。</span></p>
                                 </div>
-                                <div class="clues-title-btn">                          
-                                  <el-button type="primary" size="small" class="serchBtn" @click="searchResult"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>查询</el-button>
+                                <div class="clues-title-btn">  
+                                  <el-button type="primary" size="small" class="serchBtn"  :class="isSerchBtn?'isDisabled':''" :disabled="isSerchBtn" @click="searchResult"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>查询</el-button>
                                   <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
                                   <el-button type="primary" size="small" class="editorNote" v-bind:disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_custormgivea')" v-on:click="setALevel"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>标记为A+</el-button>
                                 </div>
@@ -635,6 +635,7 @@ export default {
         clientHeight:0,
       },
       isLoading:null,
+      isSerchBtn:false,
     }
   },
   computed: {
@@ -842,69 +843,78 @@ export default {
     // 初始化询盘列表数据
     initCluesList(){
       var $this = this;
-      var searchData = $this.initSearchData();
-      $this.loadingFun();
-      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('chinaphone/getCurrentCluesSearchListAction', searchData).then(response=>{
-        if(response){
-          if(response.status){
-            var infoData = {};
-            infoData.totalCount = response.allcount;
-            if($this.searchData.is_group){
-              infoData.groupCount = response.countgroup;
-              if($this.searchData.groupurlproduct ==1){
-                $this.isUrl=true;
-                $this.isProduct=false;
+      if(!$this.isSerchBtn){
+        $this.isSerchBtn=true;
+        var searchData = $this.initSearchData();
+        $this.loadingFun();
+        document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
+        $this.$store.dispatch('chinaphone/getCurrentCluesSearchListAction', searchData).then(response=>{
+          if(response){
+            if(response.status){
+              var infoData = {};
+              infoData.totalCount = response.allcount;
+              if($this.searchData.is_group){
+                infoData.groupCount = response.countgroup;
+                if($this.searchData.groupurlproduct ==1){
+                  $this.isUrl=true;
+                  $this.isProduct=false;
+                }else{
+                  $this.isUrl=false;
+                  $this.isProduct=true;
+                }
+                $this.isClues=false;
               }else{
+                infoData.effectiveCount = response.effectivecount;
+                infoData.invalidCount = response.noeffectivecount;
+                if(response.data.length>0){
+                  response.data.forEach(function(item,index){
+                    if(item.phonenumber.indexOf("-")!=-1){
+                      item.phoneText = item.phonenumber.split("-")[1];
+                    }else{
+                      item.phoneText = item.phonenumber;
+                    }
+                    item.isEffective = item.effective==1?true:false;
+                  });
+                }
                 $this.isUrl=false;
-                $this.isProduct=true;
+                $this.isProduct=false;
+                $this.isClues=true;
               }
-              $this.isClues=false;
-            }else{
-              infoData.effectiveCount = response.effectivecount;
-              infoData.invalidCount = response.noeffectivecount;
               if(response.data.length>0){
-                response.data.forEach(function(item,index){
-                  if(item.phonenumber.indexOf("-")!=-1){
-                    item.phoneText = item.phonenumber.split("-")[1];
-                  }else{
-                    item.phoneText = item.phonenumber;
-                  }
-                  item.isEffective = item.effective==1?true:false;
-                });
+                $this.isExportDisabled = false;
+              }else{
+                $this.isExportDisabled = true;
               }
-              $this.isUrl=false;
-              $this.isProduct=false;
-              $this.isClues=true;
-            }
-            if(response.data.length>0){
-              $this.isExportDisabled = false;
+              $this.tableData = response.data;
+              $this.infoData = infoData;
+              $this.totalDataNum = response.allcount;
+              $this.pageSizeList;            
+              var pageSizeListArr = [$this.pageSizeList];
+              if (pageSizeListArr.length > 1) {
+                pageSizeListArr.shift();
+              }
+              pageSizeListArr = [searchData.limit];
+              $this.pageSizeList = pageSizeListArr;
+              $this.$nextTick(function () {
+                $this.setHeight();
+              })
+              setTimeout(()=>{
+                $this.isSerchBtn=false;
+              },1000);
+              $this.isLoading.close();
             }else{
-              $this.isExportDisabled = true;
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSerchBtn=false;
+              },1000);
             }
-            $this.tableData = response.data;
-            $this.infoData = infoData;
-            $this.totalDataNum = response.allcount;
-            $this.pageSizeList;            
-            var pageSizeListArr = [$this.pageSizeList];
-            if (pageSizeListArr.length > 1) {
-              pageSizeListArr.shift();
-            }
-            pageSizeListArr = [searchData.limit];
-            $this.pageSizeList = pageSizeListArr;
-            $this.$nextTick(function () {
-              $this.setHeight();
-            })
-            $this.isLoading.close();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
           }
-        }
-      });
+        });
+      }
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){

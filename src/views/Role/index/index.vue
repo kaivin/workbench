@@ -28,7 +28,7 @@
                               <el-table-column
                                 prop="name"
                                 label="角色名"
-                                min-width="200"
+                                width="200"
                                 >
                               </el-table-column>
                               <el-table-column
@@ -151,7 +151,7 @@
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="handleClose">取 消</el-button>
-            <el-button type="primary" @click="saveData">确 定</el-button>
+            <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
           </span>
         </template>
       </el-dialog>
@@ -185,7 +185,7 @@
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="dialogPermitVisible = false">取 消</el-button>
-            <el-button type="primary" @click="savePermitData">确 定</el-button>
+            <el-button type="primary" :class="isSavePermitData?'isDisabled':''" :disabled="isSavePermitData" @click="savePermitData">确 定</el-button>
           </span>
         </template>
       </el-dialog>
@@ -205,7 +205,7 @@
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="dialogUserVisible = false">取 消</el-button>
-            <el-button type="primary" @click="saveUserData">确 定</el-button>
+            <el-button type="primary" :class="isSaveUserData?'isDisabled':''" :disabled="isSaveUserData" @click="saveUserData">确 定</el-button>
           </span>
         </template>
       </el-dialog>
@@ -239,7 +239,7 @@
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="dialogPostVisible = false">取 消</el-button>
-            <el-button type="primary" @click="savePostData">确 定</el-button>
+            <el-button type="primary" :class="isSavePostData?'isDisabled':''" :disabled="isSavePostData" @click="savePostData">确 定</el-button>
           </span>
         </template>
       </el-dialog>
@@ -259,7 +259,7 @@
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="dialogWorkOrderVisible = false">取 消</el-button>
-            <el-button type="primary" @click="saveWorkOrderData">确 定</el-button>
+            <el-button type="primary" :class="isSaveWorkOrderData?'isDisabled':''" :disabled="isSaveWorkOrderData" @click="saveWorkOrderData">确 定</el-button>
           </span>
         </template>
       </el-dialog>
@@ -279,7 +279,7 @@
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="dialogNetworkVisible = false">取 消</el-button>
-            <el-button type="primary" @click="saveNetworkData">确 定</el-button>
+            <el-button type="primary" :class="isSaveNetworkData?'isDisabled':''" :disabled="isSaveNetworkData" @click="saveNetworkData">确 定</el-button>
           </span>
         </template>
       </el-dialog>
@@ -402,7 +402,13 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isSaveNetworkData:false,
+      isSaveWorkOrderData:false,
+      isSavePostData:false,
+      isSaveUserData:false,
+      isSavePermitData:false,
+      isSaveData:false,
     }
   },
   computed: {
@@ -589,6 +595,14 @@ export default {
               $this.tableData = [];
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSaveNetworkData=false;
+              $this.isSaveWorkOrderData=false;
+              $this.isSavePostData=false;
+              $this.isSaveUserData=false;
+              $this.isSavePermitData=false;
+              $this.isSaveData=false;
+            },1000);
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -604,6 +618,14 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isSaveNetworkData=false;
+                $this.isSaveWorkOrderData=false;
+                $this.isSavePostData=false;
+                $this.isSaveUserData=false;
+                $this.isSavePermitData=false;
+                $this.isSaveData=false;
+              },1000);
             }
           }
         }
@@ -882,56 +904,60 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
-      }
-      var formData = {}
-      if($this.menuButtonPermit.includes('Role_getroledepart')){
-        var departID = [];
-        $this.dialogForm.role_depart.forEach(function(item,index){
-          var itemData = item.join(",");
-          departID.push(itemData);
+      if(!$this.isSaveData){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isSaveData=true;
+        var formData = {}
+        if($this.menuButtonPermit.includes('Role_getroledepart')){
+          var departID = [];
+          $this.dialogForm.role_depart.forEach(function(item,index){
+            var itemData = item.join(",");
+            departID.push(itemData);
+          });
+          var departData = departID.join("|");
+          formData.role_depart = departData;
+        }
+        formData.id = $this.dialogForm.id;
+        formData.f_id = Array.isArray($this.dialogForm.f_id)?$this.dialogForm.f_id.length == 0 ? 0 :$this.dialogForm.f_id[$this.dialogForm.f_id.length-1]:$this.dialogForm.f_id;
+        formData.name = $this.dialogForm.name;
+        if($this.menuButtonPermit.includes('Role_readdepartwebsite')){
+          formData.readdepartwebsite = $this.dialogForm.readdepartwebsite;
+        }
+        formData.remarks = $this.dialogForm.remarks;
+        if($this.menuButtonPermit.includes('Role_getwebmsg')){
+          formData.readwebmsglangauge = $this.dialogForm.readwebmsglangauge;
+          formData.readwebmsgbrand = $this.dialogForm.readwebmsgbrand;
+        }
+        var pathUrl = "";
+        if($this.dialogText=="编辑角色"){
+          pathUrl = "role/roleEditAction";
+          formData.readip = $this.dialogForm.readip;
+        }else{
+          pathUrl = "role/roleAddAction";
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initData();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
         });
-        var departData = departID.join("|");
-        formData.role_depart = departData;
       }
-      formData.id = $this.dialogForm.id;
-      formData.f_id = Array.isArray($this.dialogForm.f_id)?$this.dialogForm.f_id.length == 0 ? 0 :$this.dialogForm.f_id[$this.dialogForm.f_id.length-1]:$this.dialogForm.f_id;
-      formData.name = $this.dialogForm.name;
-      if($this.menuButtonPermit.includes('Role_readdepartwebsite')){
-        formData.readdepartwebsite = $this.dialogForm.readdepartwebsite;
-      }
-      formData.remarks = $this.dialogForm.remarks;
-      if($this.menuButtonPermit.includes('Role_getwebmsg')){
-        formData.readwebmsglangauge = $this.dialogForm.readwebmsglangauge;
-        formData.readwebmsgbrand = $this.dialogForm.readwebmsgbrand;
-      }
-      var pathUrl = "";
-      if($this.dialogText=="编辑角色"){
-        pathUrl = "role/roleEditAction";
-        formData.readip = $this.dialogForm.readip;
-      }else{
-        pathUrl = "role/roleAddAction";
-      }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.handleClose();
-            $this.initData();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-
-
-      });
     },
     // 重置添加数据表单
     resetFormData(){
@@ -1136,51 +1162,63 @@ export default {
     // 权限分配保存
     savePermitData(){
       var $this = this;
-      var permitPostData = {};
-      permitPostData.rid = $this.currentRoleID;
-      permitPostData.name = $this.currentRoleName;
-      permitPostData.permit = $this.permitValue;
-      $this.$store.dispatch('role/rolePermitAction', permitPostData).then(response=>{
-        if(response.status){
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: 'success'
-          });
-          $this.dialogPermitVisible = false;
-          $this.initData();
-        }else{
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: 'error'
-          });
-        }
-      });
+      if(!$this.isSsavePermitData){
+        $this.isSsavePermitData=true;
+        var permitPostData = {};
+        permitPostData.rid = $this.currentRoleID;
+        permitPostData.name = $this.currentRoleName;
+        permitPostData.permit = $this.permitValue;
+        $this.$store.dispatch('role/rolePermitAction', permitPostData).then(response=>{
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.dialogPermitVisible = false;
+            $this.initData();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+            setTimeout(()=>{
+              $this.isSsavePermitData=false;
+            },1000);
+          }
+        });
+      }
     },
     // 用户分配保存
     saveUserData(){
       var $this = this;
-      var userPostData = {};
-      userPostData.rid = $this.currentRoleID;
-      userPostData.uid = $this.userValue;
-      $this.$store.dispatch('role/roleAllotUserAction', userPostData).then(response=>{
-        if(response.status){
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: 'success'
-          });
-          $this.dialogUserVisible = false;
-          $this.initData();
-        }else{
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: 'error'
-          });
-        }
-      });
+      if(!$this.isSaveUserData){ 
+        $this.isSaveUserData=true;       
+        var userPostData = {};
+        userPostData.rid = $this.currentRoleID;
+        userPostData.uid = $this.userValue;
+        $this.$store.dispatch('role/roleAllotUserAction', userPostData).then(response=>{
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.dialogUserVisible = false;
+            $this.initData();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+            setTimeout(()=>{
+              $this.isSaveUserData=false;
+            },1000);
+          }
+        });
+      }
     },
     handleMenuCheckChange(data, checked, indeterminate) {
     },
@@ -1451,26 +1489,32 @@ export default {
     // 论坛管理权限分配保存
     savePostData(){
       var $this = this;
-      var permitPostData = {};
-      permitPostData.id = $this.currentRoleID;
-      permitPostData.typepermitid = $this.postPermitValue;
-      $this.$store.dispatch('role/roleAllotPostPermitAction', permitPostData).then(response=>{
-        if(response.status){
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: 'success'
-          });
-          $this.dialogPostVisible = false;
-          $this.initData();
-        }else{
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: 'error'
-          });
-        }
-      });
+      if(!$this.isSavePostData){
+        $this.isSavePostData=true;
+        var permitPostData = {};
+        permitPostData.id = $this.currentRoleID;
+        permitPostData.typepermitid = $this.postPermitValue;
+        $this.$store.dispatch('role/roleAllotPostPermitAction', permitPostData).then(response=>{
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.dialogPostVisible = false;
+            $this.initData();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+            setTimeout(()=>{
+              $this.isSavePostData=false;
+            },1000);
+          }
+        });
+      }
     },
     handlePostCheckChange(data, checked, indeterminate) {
     },
@@ -1727,26 +1771,32 @@ export default {
     // 工单权限分配保存
     saveWorkOrderData(){
       var $this = this;
-      var workOrderData = {};
-      workOrderData.id = $this.currentRoleID;
-      workOrderData.typepermitid = $this.workOrderValue;
-      $this.$store.dispatch('role/roleAllotWorkOrderAction', workOrderData).then(response=>{
-        if(response.status){
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: 'success'
-          });
-          $this.dialogWorkOrderVisible = false;
-          $this.initData();
-        }else{
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: 'error'
-          });
-        }
-      });
+      if(!$this.isSaveWorkOrderData){
+        $this.isSaveWorkOrderData=true;
+        var workOrderData = {};
+        workOrderData.id = $this.currentRoleID;
+        workOrderData.typepermitid = $this.workOrderValue;
+        $this.$store.dispatch('role/roleAllotWorkOrderAction', workOrderData).then(response=>{
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.dialogWorkOrderVisible = false;
+            $this.initData();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+            setTimeout(()=>{
+              $this.isSaveWorkOrderData=false;
+            },1000);
+          }
+        });
+      }
     },
     // 重置分配工单数据
     resetNetworkData(){
@@ -1847,26 +1897,32 @@ export default {
     // 外网访问菜单权限分配保存
     saveNetworkData(){
       var $this = this;
-      var networkData = {};
-      networkData.rid = $this.currentRoleID;
-      networkData.menuids = $this.networkValue;
-      $this.$store.dispatch('role/roleAllotNetworkAction', networkData).then(response=>{
-        if(response.status){
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: 'success'
-          });
-          $this.dialogNetworkVisible = false;
-          $this.initData();
-        }else{
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: 'error'
-          });
-        }
-      });
+      if(!$this.isSaveNetworkData){
+        $this.isSaveNetworkData=true;
+        var networkData = {};
+        networkData.rid = $this.currentRoleID;
+        networkData.menuids = $this.networkValue;
+        $this.$store.dispatch('role/roleAllotNetworkAction', networkData).then(response=>{
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.dialogNetworkVisible = false;
+            $this.initData();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+            setTimeout(()=>{
+              $this.isSaveNetworkData=false;
+            },1000);
+          }
+        });
+      }
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){

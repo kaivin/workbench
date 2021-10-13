@@ -73,7 +73,7 @@
                                       size="small"
                                       clearable>
                                     </el-input>
-                                    <el-button class="item-input table-icon search" size="small" type="primary" @click="searchResult"><i class="svg-i searchWhite" ><svg-icon icon-class="searchWhite" class-name="disabled" /></i>搜索</el-button>
+                                    <el-button class="item-input table-icon search" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" type="primary" @click="searchResult"><i class="svg-i searchWhite" ><svg-icon icon-class="searchWhite" class-name="disabled" /></i>搜索</el-button>
                                 </div>
                             </div>
                         </div>
@@ -237,7 +237,8 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isDisabled:false,
     }
   },
   computed: {
@@ -450,46 +451,55 @@ export default {
     // 获取服务器列表数据
     getWebsiteListData(){
       var $this = this;
-      if($this.$route.query.IP&&$this.formData.ip==""){
-        $this.formData.ip = $this.$route.query.IP
-      }
-      var formData = {};
-      formData.page = $this.page;
-      formData.limit = $this.limit;
-      formData.name = $this.formData.name;
-      formData.language = $this.formData.language;
-      formData.useringid = $this.formData.useringid;
-      formData.systemid = $this.formData.systemid;
-      formData.ip = $this.formData.ip;
-      $this.$store.dispatch('webserver/webserverListAction', formData).then(response=>{
-        if(response){
-          if(response.status){
-            $this.tableData = response.data;
-            $this.totalDataNum = response.allcount;
-            $this.canSearch = response.searchshow?true:false;
-            $this.isLoading.close();
-            $this.$nextTick(function () {
-              $this.setTableHeight();
-            })
-          }else{
-            if(response.permitstatus&&response.permitstatus==2){
-              $this.$message({
-                showClose: true,
-                message: "未被分配该页面访问权限",
-                type: 'error',
-                duration:6000
-              });
-              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+      if(!$this.isDisabled){
+        $this.isDisabled=true;
+        if($this.$route.query.IP&&$this.formData.ip==""){
+          $this.formData.ip = $this.$route.query.IP
+        }
+        var formData = {};
+        formData.page = $this.page;
+        formData.limit = $this.limit;
+        formData.name = $this.formData.name;
+        formData.language = $this.formData.language;
+        formData.useringid = $this.formData.useringid;
+        formData.systemid = $this.formData.systemid;
+        formData.ip = $this.formData.ip;
+        $this.$store.dispatch('webserver/webserverListAction', formData).then(response=>{
+          if(response){
+            if(response.status){
+              $this.tableData = response.data;
+              $this.totalDataNum = response.allcount;
+              $this.canSearch = response.searchshow?true:false;
+              $this.isLoading.close();
+              $this.$nextTick(function () {
+                $this.setTableHeight();
+              })
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
             }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
+              if(response.permitstatus&&response.permitstatus==2){
+                $this.$message({
+                  showClose: true,
+                  message: "未被分配该页面访问权限",
+                  type: 'error',
+                  duration:6000
+                });
+                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+              }else{
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isDisabled=false;
+                },1000);
+              }
             }
           }
-        }
-      });
+        });
+      }
     },
     // 获取查询相关展示数据
     getSearchItemData(){

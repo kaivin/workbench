@@ -81,7 +81,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogRoleVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveRoleData">确 定</el-button>
+          <el-button type="primary" :class="isSaveRoleData?'isDisabled':''" :disabled="isSaveRoleData" @click="saveRoleData">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -137,7 +137,8 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isSaveRoleData:false,
     }
   },
   computed: {
@@ -302,6 +303,9 @@ export default {
           if(response.status){
             $this.tableData = response.data;
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSaveRoleData=false;
+            },1000);
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
@@ -320,6 +324,9 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isSaveRoleData=false;
+              },1000);
             }
           }
         }
@@ -380,6 +387,8 @@ export default {
     // 角色分配保存
     saveRoleData(){
         var $this = this;
+      if(!$this.isSaveRoleData){
+        $this.isSaveRoleData=true;
         var rolePostData = {};
         rolePostData.name = $this.currentName;
         rolePostData.role_id = $this.roleValue;
@@ -398,8 +407,12 @@ export default {
               message: response.info,
               type: 'error'
             });
+            setTimeout(()=>{
+              $this.isSaveRoleData=false;
+            },1000);
           }
-        });
+        });        
+      }
     },
     // 获取当前字段已分配的角色数据
     getAllotedRole(){

@@ -379,7 +379,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveWebsiteAddData">确 定</el-button>
+          <el-button type="primary" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" @click="saveWebsiteAddData">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -480,6 +480,7 @@ export default {
         clientHeight:0,
         scrollNum:0,
       },
+      isDisabled:false,
     }
   },
   computed: {
@@ -871,6 +872,9 @@ export default {
               $this.setHeight();
             });
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -887,6 +891,9 @@ export default {
                 type: 'error'
               });
             }
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
           }
         }
       });
@@ -1016,6 +1023,9 @@ export default {
                 message: response.info,
                 type: 'error'
             });
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
           }
         }
       });
@@ -1268,26 +1278,32 @@ export default {
     // 保存添加网站数据
     saveWebsiteAddData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isDisabled){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isDisabled=true;
+        $this.$store.dispatch('website/websiteAddAction', $this.dialogForm).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initData();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
+        });
       }
-      $this.$store.dispatch('website/websiteAddAction', $this.dialogForm).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.handleClose();
-            $this.initData();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
     },
     // 重置添加数据表单
     resetFormData(){

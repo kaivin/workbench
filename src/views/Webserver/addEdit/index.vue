@@ -179,7 +179,7 @@
                     </li>
                 </ul>
                 <div class="card-header WebServerAddEditBtn" ref="headerPane">
-                  <el-button type="primary" class="updateBtn" size="small" v-on:click="updateWebserverInfo()" v-if="menuButtonPermit.includes('Webserver_add')||menuButtonPermit.includes('Webserver_edit')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>更新</el-button>
+                  <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" v-on:click="updateWebserverInfo()" v-if="menuButtonPermit.includes('Webserver_add')||menuButtonPermit.includes('Webserver_edit')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>更新</el-button>
                   <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
                 </div>
               </div>
@@ -219,6 +219,7 @@ export default {
       serverList:[],
       useingList:[],
       userList:[],
+      isDisabled:false,
     }
   },
   computed: {
@@ -317,9 +318,20 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 初始化数据
     initData(){
         var $this = this;
+        $this.loadingFun();
         $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -450,10 +462,13 @@ export default {
                       message: response.info,
                       type: 'error'
                     });
+                    $this.isLoading.close();
                   }
                 }
               }
           });
+      }else{
+        $this.isLoading.close();
       }
     },
     // 初始化网站信息
@@ -479,6 +494,7 @@ export default {
       }else{
         $this.formData.adminuserid = [parseInt(data.adminuserid)]
       }
+      $this.isLoading.close();
     },
     // 清空信息
     clearForm(){
@@ -506,40 +522,52 @@ export default {
     // 更新服务器信息
     updateWebserverInfo(){
       var $this = this;
-      var actionPath = "";
-      var formData = {}
-      formData.id = $this.formData.id;
-      formData.name = $this.formData.name;
-      formData.languageid = $this.formData.languageid;
-      formData.useringid = $this.formData.useringid;
-      formData.systemid = $this.formData.systemid;
-      formData.ip = $this.formData.ip;
-      formData.allip = $this.formData.allip;
-      formData.servername = $this.formData.servername;
-      formData.serverpwd = $this.formData.serverpwd;
-      formData.remarks = $this.formData.remarks;
-      formData.sort = $this.formData.sort;
-      formData.adminuserid = $this.formData.adminuserid;
-      if(formData.id==0){
-        actionPath = 'webserver/webserverAddAction';
-      }else{
-        actionPath = 'webserver/webserverEditAction';
+      if(!$this.isDisabled){
+        $this.isDisabled=true;
+        $this.loadingFun();
+        var actionPath = "";
+        var formData = {}
+        formData.id = $this.formData.id;
+        formData.name = $this.formData.name;
+        formData.languageid = $this.formData.languageid;
+        formData.useringid = $this.formData.useringid;
+        formData.systemid = $this.formData.systemid;
+        formData.ip = $this.formData.ip;
+        formData.allip = $this.formData.allip;
+        formData.servername = $this.formData.servername;
+        formData.serverpwd = $this.formData.serverpwd;
+        formData.remarks = $this.formData.remarks;
+        formData.sort = $this.formData.sort;
+        formData.adminuserid = $this.formData.adminuserid;
+        if(formData.id==0){
+          actionPath = 'webserver/webserverAddAction';
+        }else{
+          actionPath = 'webserver/webserverEditAction';
+        }
+        $this.$store.dispatch(actionPath, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.isLoading.close();
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              $this.isLoading.close();
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
+        });
       }
-      $this.$store.dispatch(actionPath, formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
     },
     // 跳转到服务器管理
     linkPage(){

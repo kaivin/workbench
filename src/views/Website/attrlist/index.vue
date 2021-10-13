@@ -77,29 +77,29 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Website_attradd')||menuButtonPermit.includes('Website_attredit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
-      <el-form :model="dialogForm">
-        <div class="item-form">
-          <el-form-item label="标签名称：" :label-width="formLabelWidth">
-            <el-input v-model="dialogForm.name" ref="name"></el-input>
-          </el-form-item>
-        </div>
-        <div class="item-form" style="width:180px;">
-            <el-form-item label="背景色：" :label-width="formLabelWidth">
-              <el-color-picker
-                v-model="dialogForm.namecolor"
-                :predefine="predefineColors">
-              </el-color-picker>
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Website_attradd')||menuButtonPermit.includes('Website_attredit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+        <el-form :model="dialogForm">
+          <div class="item-form">
+            <el-form-item label="标签名称：" :label-width="formLabelWidth">
+              <el-input v-model="dialogForm.name" ref="name"></el-input>
             </el-form-item>
-        </div>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+          </div>
+          <div class="item-form" style="width:180px;">
+              <el-form-item label="背景色：" :label-width="formLabelWidth">
+                <el-color-picker
+                  v-model="dialogForm.namecolor"
+                  :predefine="predefineColors">
+                </el-color-picker>
+              </el-form-item>
+          </div>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 
@@ -156,7 +156,8 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isSaveData:false,
     }
   },
   computed: {
@@ -380,6 +381,9 @@ export default {
               $this.tableData = [];
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSaveData=false;
+            },1000);
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
@@ -398,6 +402,9 @@ export default {
                   message: response.info,
                   type: 'error'
                 });
+                setTimeout(()=>{
+                  $this.isSaveData=false;
+                },1000);
               }
           }
         }
@@ -427,36 +434,42 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isSaveData){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isSaveData=true;
+        var formData = {}
+        formData.id = $this.dialogForm.id;
+        formData.name = $this.dialogForm.name;
+        formData.namecolor = $this.dialogForm.namecolor;
+        var pathUrl = "";
+        if($this.dialogText=="编辑标签"){
+          pathUrl = "website/websiteAttrEditAction";
+        }else{
+          pathUrl = "website/websiteAttrAddAction";
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'success'
+                });
+                $this.handleClose();
+                $this.initData();
+            }else{
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isSaveData=false;
+                },1000);
+            }
+        });
       }
-      var formData = {}
-      formData.id = $this.dialogForm.id;
-      formData.name = $this.dialogForm.name;
-      formData.namecolor = $this.dialogForm.namecolor;
-      var pathUrl = "";
-      if($this.dialogText=="编辑标签"){
-        pathUrl = "website/websiteAttrEditAction";
-      }else{
-        pathUrl = "website/websiteAttrAddAction";
-      }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-              $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'success'
-              });
-              $this.handleClose();
-              $this.initData();
-          }else{
-              $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'error'
-              });
-          }
-      });
     },
     // 重置添加数据表单
     resetFormData(){

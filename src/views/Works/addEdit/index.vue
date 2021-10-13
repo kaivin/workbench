@@ -134,7 +134,7 @@
             </table>      
             <div class="card-header WebServerAddEditBtn ArticleFive" ref="headerPane">
               <div class="header-content">
-                <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" size="small" :disabled="isDisabled" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Works_workedit')||menuButtonPermit.includes('Works_publishwork')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>发布</el-button>
+                <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Works_workedit')||menuButtonPermit.includes('Works_publishwork')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>发布</el-button>
                 <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
               </div>
             </div>
@@ -362,6 +362,16 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 重置页面
     resetFormData(){
       var $this = this;
@@ -373,6 +383,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -457,6 +468,8 @@ export default {
             if($this.$route.query.ID){
               $this.formData.id = parseInt($this.$route.query.ID);
               $this.getArticleInfo();
+            }else{
+              $this.isLoading.close();
             }
           }else{
             $this.$message({
@@ -496,6 +509,9 @@ export default {
             });
         }
         $this.typeList = data;
+        setTimeout(()=>{
+          $this.isDisabled=false;
+        },1000);
     },
     // 5、 你可以在ready方法中拿到editorInstance实例,所有API和官方的实例是一样了。http://fex.baidu.com/ueditor/#api-common
     ready (ue) {
@@ -557,6 +573,7 @@ export default {
       }else{
         $this.formData.tags_id = [];
       }
+      $this.isLoading.close();
     },
     // 重置添加文章表单
     clearFormData(){
@@ -628,6 +645,7 @@ export default {
           return false;
         }
         $this.isDisabled=true;
+        $this.loadingFun();
         var formData = {}
         formData.id = $this.formData.id;
         formData.typeid = $this.formData.typeid;
@@ -655,10 +673,12 @@ export default {
               });
               if($this.formData.id==0){
                 $this.clearFormData();
+              }else{
+                $this.isLoading.close();
+                setTimeout(()=>{
+                  $this.isDisabled=false;
+                },1000);
               }
-              setTimeout(()=>{
-                $this.isDisabled=false;
-              },1000);
             }else{
               $this.$message({
                 showClose: true,

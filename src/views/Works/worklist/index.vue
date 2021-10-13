@@ -60,7 +60,7 @@
                                     </el-select>
                                   </div>
                                   <div class="item-search">
-                                    <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
+                                    <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                                   </div>
                                   <div class="item-search" v-if="menuButtonPermit.includes('Works_workcount')">
                                     <el-button class="item-input" size="small" type="primary" @click="jumpStatPage">数据统计</el-button>
@@ -329,7 +329,8 @@ export default {
         checkingCount:0,
         overdueCount:0,
       },
-      isLoading:null
+      isLoading:null,
+      isDisabled:false,
     }
   },
   computed: {
@@ -495,69 +496,78 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this =this;
-      var searchData = $this.initSearchData();
-      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('works/workOrderListAction', searchData).then(response=>{
-        if(response){
-          if(response.status){
-            response.data.forEach(function(item,index){
-              item.tagList = [];
-              if(item.tags&&item.tags != ""){
-                if(item.tags.indexOf("|")!=-1){
-                  var tagArr = item.tags.split("|");
-                  tagArr.forEach(function(item1,index1){
+      if(!$this.isDisabled){
+        $this.isDisabled=true;
+        var searchData = $this.initSearchData();
+        document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
+        $this.$store.dispatch('works/workOrderListAction', searchData).then(response=>{
+          if(response){
+            if(response.status){
+              response.data.forEach(function(item,index){
+                item.tagList = [];
+                if(item.tags&&item.tags != ""){
+                  if(item.tags.indexOf("|")!=-1){
+                    var tagArr = item.tags.split("|");
+                    tagArr.forEach(function(item1,index1){
+                      var itemData = {};
+                      if(item1.indexOf("-")!=-1){
+                        itemData.tag = item1.split("-")[0];
+                        itemData.color = item1.split("-")[1];
+                      }else{
+                        itemData.tag = item1;
+                        itemData.color = "#1b3f75";
+                      }
+                      item.tagList.push(itemData);
+                    });
+                  }else{
                     var itemData = {};
-                    if(item1.indexOf("-")!=-1){
-                      itemData.tag = item1.split("-")[0];
-                      itemData.color = item1.split("-")[1];
+                    if(item.tags.indexOf("-")!=-1){
+                      itemData.tag = item.tags.split("-")[0];
+                      itemData.color = item.tags.split("-")[1];
                     }else{
-                      itemData.tag = item1;
+                      itemData.tag = item.tags;
                       itemData.color = "#1b3f75";
                     }
                     item.tagList.push(itemData);
-                  });
-                }else{
-                  var itemData = {};
-                  if(item.tags.indexOf("-")!=-1){
-                    itemData.tag = item.tags.split("-")[0];
-                    itemData.color = item.tags.split("-")[1];
-                  }else{
-                    itemData.tag = item.tags;
-                    itemData.color = "#1b3f75";
                   }
-                  item.tagList.push(itemData);
                 }
-              }
-            });
-            $this.tableData = response.data;
-            $this.totalDataNum = response.allcount;
-            var infoData = {};
-            infoData.totalCount = response.allcount;
-            infoData.doingCount = response.workincount;
-            infoData.doneCount = response.hasfinishcount;
-            infoData.checkingCount = response.waitcheckcount;
-            infoData.overdueCount = response.hasouttimecount;
-            $this.infoData = infoData;
-            $this.isLoading.close();
-          }else{
-            if(response.permitstatus&&response.permitstatus==2){
-              $this.$message({
-                showClose: true,
-                message: "未被分配该页面访问权限",
-                type: 'error',
-                duration:6000
               });
-              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+              $this.tableData = response.data;
+              $this.totalDataNum = response.allcount;
+              var infoData = {};
+              infoData.totalCount = response.allcount;
+              infoData.doingCount = response.workincount;
+              infoData.doneCount = response.hasfinishcount;
+              infoData.checkingCount = response.waitcheckcount;
+              infoData.overdueCount = response.hasouttimecount;
+              $this.infoData = infoData;
+              $this.isLoading.close();
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
             }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
+              if(response.permitstatus&&response.permitstatus==2){
+                $this.$message({
+                  showClose: true,
+                  message: "未被分配该页面访问权限",
+                  type: 'error',
+                  duration:6000
+                });
+                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+              }else{
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isDisabled=false;
+                },1000);
+              }
             }
           }
-        }
-      });
+        });
+      }
     },
     // 组装搜索接口所需数据
     initSearchData(){

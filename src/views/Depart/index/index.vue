@@ -28,7 +28,7 @@
                             <el-table-column
                               prop="name"
                               label="部门名称"
-                              min-width="200"
+                              width="200"
                               >
                             </el-table-column>
                             <el-table-column
@@ -70,54 +70,53 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Depart_add')||menuButtonPermit.includes('Depart_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
-      <el-form :model="dialogForm">
-        <div class="item-form">
-          <el-form-item label="父级部门：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
-            <el-cascader v-model="dialogForm.fid" :options="departLevelData" ref="menuLevel" filterable placeholder="请选择父级部门" :props="{ checkStrictly: true,expandTrigger: 'hover' }" clearable></el-cascader>
-          </el-form-item>
-        </div>
-        <div class="item-form">
-          <el-form-item label="部门名称：" :label-width="formLabelWidth">
-            <el-input v-model="dialogForm.name" ref="name"></el-input>
-          </el-form-item>
-        </div>
-        <div class="item-form">
-            <el-form-item label="备注：" :label-width="formLabelWidth">
-              <el-input type="textarea" v-model="dialogForm.remarks" :autosize="{ minRows: 2, maxRows: 4}" ref="remarks"></el-input>
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Depart_add')||menuButtonPermit.includes('Depart_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+        <el-form :model="dialogForm">
+          <div class="item-form">
+            <el-form-item label="父级部门：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
+              <el-cascader v-model="dialogForm.fid" :options="departLevelData" ref="menuLevel" filterable placeholder="请选择父级部门" :props="{ checkStrictly: true,expandTrigger: 'hover' }" clearable></el-cascader>
             </el-form-item>
+          </div>
+          <div class="item-form">
+            <el-form-item label="部门名称：" :label-width="formLabelWidth">
+              <el-input v-model="dialogForm.name" ref="name"></el-input>
+            </el-form-item>
+          </div>
+          <div class="item-form">
+              <el-form-item label="备注：" :label-width="formLabelWidth">
+                <el-input type="textarea" v-model="dialogForm.remarks" :autosize="{ minRows: 2, maxRows: 4}" ref="remarks"></el-input>
+              </el-form-item>
+          </div>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <el-dialog title="分配角色" v-if="(menuButtonPermit.includes('Depart_getdepartrole'))" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
+        <div class="transfer-panel">
+          <div class="transfer-wrap">
+            <el-transfer 
+              v-model="roleValue" 
+              :data="roleData"
+              :titles="['可分配角色', '已分配角色']"
+              filterable
+              :filter-method="filterRoleMethod"
+              filter-placeholder="请输入角色关键字"
+            ></el-transfer>
+          </div>
         </div>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <el-dialog title="分配角色" v-if="(menuButtonPermit.includes('Depart_getdepartrole'))" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
-      <div class="transfer-panel">
-        <div class="transfer-wrap">
-          <el-transfer 
-            v-model="roleValue" 
-            :data="roleData"
-            :titles="['可分配角色', '已分配角色']"
-            filterable
-            :filter-method="filterRoleMethod"
-            filter-placeholder="请输入角色关键字"
-          ></el-transfer>
-        </div>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogRoleVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveRoleData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogRoleVisible = false">取 消</el-button>
+            <el-button type="primary" :class="isSaveRoleData?'isDisabled':''" :disabled="isSaveRoleData" @click="saveRoleData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
-
 
 <script>
 import { mapGetters } from 'vuex'
@@ -173,7 +172,9 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isSaveData:false,
+      isSaveRoleData:false,
     }
   },
   computed: {
@@ -361,6 +362,10 @@ export default {
               $this.tableData = [];
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSaveData=false;
+              $this.isSaveRoleData=false;
+            },1000);
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
@@ -379,6 +384,10 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+                $this.isSaveRoleData=false;
+              },1000);
             }
           }
         }
@@ -572,37 +581,43 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isSaveData){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isSaveData=true;
+        var formData = {}
+        formData.id = $this.dialogForm.id;
+        formData.fid = Array.isArray($this.dialogForm.fid)?$this.dialogForm.fid.length == 0 ? 0 :$this.dialogForm.fid[$this.dialogForm.fid.length-1]:$this.dialogForm.fid;
+        formData.name = $this.dialogForm.name;
+        formData.remarks = $this.dialogForm.remarks;
+        var pathUrl = "";
+        if($this.dialogText=="编辑部门"){
+          pathUrl = "depart/departEditAction";
+        }else{
+          pathUrl = "depart/departAddAction";
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'success'
+                });
+                $this.handleClose();
+                $this.initData();
+            }else{
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isSaveData=false;
+                },1000);
+            }
+        });
       }
-      var formData = {}
-      formData.id = $this.dialogForm.id;
-      formData.fid = Array.isArray($this.dialogForm.fid)?$this.dialogForm.fid.length == 0 ? 0 :$this.dialogForm.fid[$this.dialogForm.fid.length-1]:$this.dialogForm.fid;
-      formData.name = $this.dialogForm.name;
-      formData.remarks = $this.dialogForm.remarks;
-      var pathUrl = "";
-      if($this.dialogText=="编辑部门"){
-        pathUrl = "depart/departEditAction";
-      }else{
-        pathUrl = "depart/departAddAction";
-      }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-              $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'success'
-              });
-              $this.handleClose();
-              $this.initData();
-          }else{
-              $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'error'
-              });
-          }
-      });
     },
     // 重置添加数据表单
     resetFormData(){
@@ -670,26 +685,32 @@ export default {
     // 角色分配保存
     saveRoleData(){
         var $this = this;
-        var rolePostData = {};
-        rolePostData.id = $this.currentDepartID;
-        rolePostData.role_id = $this.roleValue;
-        $this.$store.dispatch('depart/departAllotRoleAction', rolePostData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.dialogRoleVisible = false;
-            $this.initData();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-        });
+        if(!$this.isSaveRoleData){
+          $this.isSaveRoleData=true;
+          var rolePostData = {};
+          rolePostData.id = $this.currentDepartID;
+          rolePostData.role_id = $this.roleValue;
+          $this.$store.dispatch('depart/departAllotRoleAction', rolePostData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.dialogRoleVisible = false;
+              $this.initData();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveRoleData=false;
+              },1000);
+            }
+          });
+        }
     },
     // 获取当前用户已分配的角色数据
     getAllotedRole(){

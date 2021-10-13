@@ -37,7 +37,7 @@
                           </el-input>
                         </div>
                         <div class="item-search">
-                          <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+                          <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                         </div>
                       </div>
                     </div>
@@ -175,118 +175,118 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('User_add')||menuButtonPermit.includes('User_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="680px">
-      <el-form :model="dialogForm">
-        <div class="item-form-group">
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('User_add')||menuButtonPermit.includes('User_edit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="680px">
+        <el-form :model="dialogForm">
+          <div class="item-form-group">
+            <div class="item-form">
+              <el-form-item label="真实姓名：" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.name" ref="name"></el-input>
+              </el-form-item>
+            </div>
+            <div class="item-form">
+              <el-form-item label="手机号：" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.phone" ref="phone"></el-input>
+              </el-form-item>
+            </div>
+          </div>
+          <div class="item-form-group">
+            <div class="item-form">
+              <el-form-item label="邮箱：" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.email" ref="email"></el-input>
+              </el-form-item>
+            </div>
+            <div class="item-form">
+              <el-form-item label="所属品牌：" :label-width="formLabelWidth">
+                <el-select v-model="dialogForm.SellerIndustryGroup" clearable placeholder="请选择品牌">
+                  <el-option
+                    v-for="item in brandList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+          </div>
+          <div class="item-form-group">
+            <div class="item-form">
+              <el-form-item label="职位：" :label-width="formLabelWidth">
+                <el-select v-model="dialogForm.workname_id" clearable placeholder="请选择职位">
+                  <el-option
+                    v-for="item in worknameList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="item-form">
+              <el-form-item label="职称：" :label-width="formLabelWidth">
+                <el-select v-model="dialogForm.postion_id" clearable placeholder="请选择职称">
+                  <el-option
+                    v-for="item in postionList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+          </div>
+          <div class="item-form userType">
+              <label class="el-form-item__label" style="width: 110px;">用户类型：</label>
+              <el-radio-group v-model="dialogForm.issales">
+                <el-radio
+                    v-for="item in issalesList"
+                    :key="item.value"
+                    :label="item.value">{{item.label}}</el-radio>
+              </el-radio-group>
+          </div>
           <div class="item-form">
-            <el-form-item label="真实姓名：" :label-width="formLabelWidth">
-              <el-input v-model="dialogForm.name" ref="name"></el-input>
+            <el-form-item label="部门：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
+              <el-cascader v-model="dialogForm.deptid_othername" :options="departLevelData" ref="departLevel" placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover',multiple:true }" :collapse-tags="true" clearable></el-cascader>
             </el-form-item>
           </div>
           <div class="item-form">
-            <el-form-item label="手机号：" :label-width="formLabelWidth">
-              <el-input v-model="dialogForm.phone" ref="phone"></el-input>
-            </el-form-item>
+              <el-form-item label="备注：" :label-width="formLabelWidth">
+                <el-input type="textarea" v-model="dialogForm.remarks" :autosize="{ minRows: 2, maxRows: 4}" ref="remarks"></el-input>
+              </el-form-item>
+          </div>
+          <div class="item-form" style="width: 240px;">
+              <el-form-item label="分配角色：" :label-width="formLabelWidth">
+                <el-button type="primary" @click="allotRole(0,0)">分配角色</el-button>
+              </el-form-item>
+          </div>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <el-dialog title="分配角色" v-if="(menuButtonPermit.includes('User_getrole'))" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
+        <div class="transfer-panel">
+          <div class="transfer-wrap">
+            <el-transfer 
+              v-model="roleValue" 
+              :data="roleData"
+              :titles="['可分配角色', '已分配角色']"
+              filterable
+              :filter-method="filterRoleMethod"
+              filter-placeholder="请输入角色关键字"
+            ></el-transfer>
           </div>
         </div>
-        <div class="item-form-group">
-          <div class="item-form">
-            <el-form-item label="邮箱：" :label-width="formLabelWidth">
-              <el-input v-model="dialogForm.email" ref="email"></el-input>
-            </el-form-item>
-          </div>
-          <div class="item-form">
-            <el-form-item label="所属品牌：" :label-width="formLabelWidth">
-              <el-select v-model="dialogForm.SellerIndustryGroup" clearable placeholder="请选择品牌">
-                <el-option
-                  v-for="item in brandList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-        </div>
-        <div class="item-form-group">
-          <div class="item-form">
-            <el-form-item label="职位：" :label-width="formLabelWidth">
-              <el-select v-model="dialogForm.workname_id" clearable placeholder="请选择职位">
-                <el-option
-                  v-for="item in worknameList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-          <div class="item-form">
-            <el-form-item label="职称：" :label-width="formLabelWidth">
-              <el-select v-model="dialogForm.postion_id" clearable placeholder="请选择职称">
-                <el-option
-                  v-for="item in postionList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-        </div>
-        <div class="item-form userType">
-            <label class="el-form-item__label" style="width: 110px;">用户类型：</label>
-            <el-radio-group v-model="dialogForm.issales">
-              <el-radio
-                  v-for="item in issalesList"
-                  :key="item.value"
-                  :label="item.value">{{item.label}}</el-radio>
-            </el-radio-group>
-        </div>
-        <div class="item-form">
-          <el-form-item label="部门：" :label-width="formLabelWidth" v-if="departLevelData.length>0">
-            <el-cascader v-model="dialogForm.deptid_othername" :options="departLevelData" ref="departLevel" placeholder="请选择部门" :props="{ checkStrictly: true,expandTrigger: 'hover',multiple:true }" :collapse-tags="true" clearable></el-cascader>
-          </el-form-item>
-        </div>
-        <div class="item-form">
-            <el-form-item label="备注：" :label-width="formLabelWidth">
-              <el-input type="textarea" v-model="dialogForm.remarks" :autosize="{ minRows: 2, maxRows: 4}" ref="remarks"></el-input>
-            </el-form-item>
-        </div>
-        <div class="item-form" style="width: 240px;">
-            <el-form-item label="分配角色：" :label-width="formLabelWidth">
-              <el-button type="primary" @click="allotRole(0,0)">分配角色</el-button>
-            </el-form-item>
-        </div>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <el-dialog title="分配角色" v-if="(menuButtonPermit.includes('User_getrole'))" custom-class="transfer-dialog" :visible.sync="dialogRoleVisible" width="840px">
-      <div class="transfer-panel">
-        <div class="transfer-wrap">
-          <el-transfer 
-            v-model="roleValue" 
-            :data="roleData"
-            :titles="['可分配角色', '已分配角色']"
-            filterable
-            :filter-method="filterRoleMethod"
-            filter-placeholder="请输入角色关键字"
-          ></el-transfer>
-        </div>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogRoleVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveAddRoleData" v-if="dialogFormVisible">确 定</el-button>
-          <el-button type="primary" @click="saveRoleData" v-else>确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogRoleVisible = false">取 消</el-button>
+            <el-button type="primary" :class="isSaveAddRoleData?'isDisabled':''" :disabled="isSaveAddRoleData" @click="saveAddRoleData" v-if="dialogFormVisible">确 定</el-button>
+            <el-button type="primary" :class="isSaveRoleData?'isDisabled':''" :disabled="isSaveRoleData" @click="saveRoleData" v-else>确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
@@ -377,7 +377,10 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isSaveData:false,
+      isDisabled:false,
+      isSaveRoleData:false,
     }
   },
   computed: {
@@ -540,9 +543,12 @@ export default {
     // 搜索点击事件
     searchResult(){
       var $this = this;
-      $this.loadingFun();
-      $this.searchData.page = 1;
-      $this.initPage();
+      if(!$this.isDisabled){
+        $this.isDisabled=true;
+        $this.loadingFun();
+        $this.searchData.page = 1;
+        $this.initPage();
+      }
     },
     // 初始化数据
     initData(){
@@ -580,6 +586,11 @@ export default {
             }
             $this.totalDataNum = response.allcount;
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isDisabled=false;
+              $this.isSaveData=false;
+              $this.isSaveRoleData=false;
+            },1000);
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
@@ -598,6 +609,11 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+                $this.isSaveData=false;
+                $this.isSaveRoleData=false;
+              },1000);
             }
           }
         }
@@ -775,50 +791,56 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isSaveData){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isSaveData=true;
+        var formData = {}
+        var departID = [];
+        $this.dialogForm.deptid_othername.forEach(function(item,index){
+          var itemData = item.join(",");
+          departID.push(itemData);
+        });
+        var departData = departID.join("|");
+        formData.id = $this.dialogForm.id;
+        formData.phone = $this.dialogForm.phone;
+        formData.email = $this.dialogForm.email;
+        formData.name = $this.dialogForm.name;
+        formData.remarks = $this.dialogForm.remarks;
+        formData.workname_id = $this.dialogForm.workname_id;
+        formData.postion_id = $this.dialogForm.postion_id;
+        formData.role_id = $this.dialogForm.role_id;
+        formData.issales = $this.dialogForm.issales;
+        formData.deptid_othername = departData;
+        formData.SellerIndustryGroup = $this.dialogForm.SellerIndustryGroup;
+        var pathUrl = "";
+        if($this.dialogText=="编辑用户"){
+          pathUrl = "user/userEditAction";
+        }else{
+          pathUrl = "user/userAddAction";
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
+        });
       }
-      var formData = {}
-      var departID = [];
-      $this.dialogForm.deptid_othername.forEach(function(item,index){
-        var itemData = item.join(",");
-        departID.push(itemData);
-      });
-      var departData = departID.join("|");
-      formData.id = $this.dialogForm.id;
-      formData.phone = $this.dialogForm.phone;
-      formData.email = $this.dialogForm.email;
-      formData.name = $this.dialogForm.name;
-      formData.remarks = $this.dialogForm.remarks;
-      formData.workname_id = $this.dialogForm.workname_id;
-      formData.postion_id = $this.dialogForm.postion_id;
-      formData.role_id = $this.dialogForm.role_id;
-      formData.issales = $this.dialogForm.issales;
-      formData.deptid_othername = departData;
-      formData.SellerIndustryGroup = $this.dialogForm.SellerIndustryGroup;
-      var pathUrl = "";
-      if($this.dialogText=="编辑用户"){
-        pathUrl = "user/userEditAction";
-      }else{
-        pathUrl = "user/userAddAction";
-      }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.handleClose();
-            $this.initPage();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
     },
     // 重置搜索数据
     resetSearchData(){
@@ -974,45 +996,57 @@ export default {
     // 添加用户时保存角色分配
     saveAddRoleData(){
         var $this = this;
-        if($this.roleValue.length==0){
-          $this.$message({
-            showClose: true,
-            message: "您并未给用户分配任何角色",
-            type: 'warning'
-          });
-        }else{
-          $this.$message({
-            showClose: true,
-            message: "已成功分配角色",
-            type: 'success'
-          });
+        if(!$this.isSaveAddRoleData){
+          if($this.roleValue.length==0){
+            $this.$message({
+              showClose: true,
+              message: "您并未给用户分配任何角色",
+              type: 'warning'
+            });
+          }else{
+            $this.$message({
+              showClose: true,
+              message: "已成功分配角色",
+              type: 'success'
+            });
+          }
+          $this.isSaveAddRoleData=true;
+          $this.dialogForm.role_id = $this.roleValue;
+          $this.dialogRoleVisible = false;
+          setTimeout(()=>{
+            $this.isSaveAddRoleData=false;
+          },1000);
         }
-        $this.dialogForm.role_id = $this.roleValue;
-        $this.dialogRoleVisible = false;
     },
     // 角色分配保存
     saveRoleData(){
         var $this = this;
-        var rolePostData = {};
-        rolePostData.id = $this.currentUserID;
-        rolePostData.role_id = $this.roleValue;
-        $this.$store.dispatch('user/userAllotRoleAction', rolePostData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.dialogRoleVisible = false;
-            $this.initData();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-        });
+        if(!$this.isSaveRoleData){
+          $this.isSaveRoleData=true;
+          var rolePostData = {};
+          rolePostData.id = $this.currentUserID;
+          rolePostData.role_id = $this.roleValue;
+          $this.$store.dispatch('user/userAllotRoleAction', rolePostData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.dialogRoleVisible = false;
+              $this.initData();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveRoleData=false;
+              },1000);
+            }
+          });
+        }
     },
     // 获取当前用户已分配的角色数据
     getAllotedRole(){

@@ -70,7 +70,7 @@
                             </el-select>
                           </div>
                           <div class="item-search">
-                            <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+                            <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                           </div>
                         </div> 
                       </div>
@@ -375,7 +375,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
+          <el-button :class="isSaveData?'isDisabled':''" :disabled="isSaveData"  type="primary" @click="saveData">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -551,7 +551,9 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isDisabled:false,
+      isSaveData:false,
     }
   },
   computed: {
@@ -727,10 +729,13 @@ export default {
     },
     // 搜索数据
     searchResult(){
-        var $this = this;
+      var $this = this;
+      if(!$this.isDisabled){
+        $this.isDisabled=true;
         $this.loadingFun();
         $this.searchData.page = 1;
         $this.initPage();
+      }
     },
     searchDataInit(){
       var $this = this;
@@ -760,7 +765,6 @@ export default {
     initPage(){
       var $this = this;
       var searchData = $this.searchDataInit();
-      $this.loadingFun();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('ownpush/cnProcessListAction', searchData).then(response=>{
         if(response){
@@ -776,6 +780,12 @@ export default {
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
+            setTimeout(()=>{
+              $this.isSaveData=false;
+            },1000);
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -791,6 +801,12 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
             }
           }
         }
@@ -878,32 +894,38 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isSaveData){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isSaveData=true;
+        var pathUrl = "";
+        if($this.dialogText=="编辑数据"){
+          pathUrl = "ownpush/cnProcessEditAction";
+        }else{
+          pathUrl = "ownpush/cnProcessAddAction";
+        }
+        $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
+        });
       }
-      var pathUrl = "";
-      if($this.dialogText=="编辑数据"){
-        pathUrl = "ownpush/cnProcessEditAction";
-      }else{
-        pathUrl = "ownpush/cnProcessAddAction";
-      }
-      $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.handleClose();
-            $this.initPage();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
     },
     // 重置添加数据表单
     resetFormData(){

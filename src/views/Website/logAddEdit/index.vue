@@ -127,7 +127,7 @@
             </tr>
           </table>
           <div class="card-header WebServerAddEditBtn ArticleFive">
-            <el-button type="primary" class="updateBtn" size="small" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Website_logedit')||menuButtonPermit.includes('Website_logadd')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>发布</el-button>
+            <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" v-on:click="saveArticle()" v-if="menuButtonPermit.includes('Website_logedit')||menuButtonPermit.includes('Website_logadd')"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>发布</el-button>
             <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
             <el-button type="primary" class="resetBtn" size="small" v-on:click="perviewPage()" v-if="menuButtonPermit.includes('Website_logedit')||menuButtonPermit.includes('Website_logadd')">预览</el-button>
           </div>
@@ -322,7 +322,8 @@ export default {
         hits:0,
         title:"",
         content:"",
-      }
+      },
+      isDisabled:false,
     }
   },
   computed: {
@@ -410,6 +411,16 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 重置页面
     resetFormPage(){
       var $this = this;
@@ -421,6 +432,7 @@ export default {
     // 初始化数据
     initData(){
         var $this = this;
+        $this.loadingFun();
         $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -508,10 +520,10 @@ export default {
     },
     // 获取编辑文章详情
     getArticleInfo(){
-        var $this = this;
-        $this.websiteID = $this.$route.query.websiteID;
-        $this.website = $this.$route.query.website;
-        if($this.$route.query.logID){
+      var $this = this;
+      $this.websiteID = $this.$route.query.websiteID;
+      $this.website = $this.$route.query.website;
+      if($this.$route.query.logID){
           $this.formData.id = parseInt($this.$route.query.logID);
           $this.$store.dispatch('website/websiteLogEditInfoAction', {id:$this.formData.id}).then(response=>{
             if(response){
@@ -537,6 +549,8 @@ export default {
               }
             }
         });
+      }else{
+        $this.isLoading.close();
       }
     },
     // 初始化页面信息
@@ -574,6 +588,7 @@ export default {
       }else{
         $this.formData.systemTag = [];
       }
+      $this.isLoading.close();
     },
     // 重置添加文章表单
     clearFormData(){
@@ -619,46 +634,57 @@ export default {
     // 发布文章
     saveArticle(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isDisabled){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isDisabled=true;
+        $this.loadingFun();
+        var formData = {}
+        formData.website_id = $this.websiteID;
+        formData.id = $this.formData.id;
+        formData.title = $this.formData.title;
+        formData.content = $this.formData.content;
+        formData.markdowntext = $this.formData.markdownContent;
+        formData.is_markdown = $this.formData.is_markdown;
+        formData.tags_id = $this.formData.systemTag;
+        formData.mytags = $this.formData.tag;
+        formData.mytagscolor = $this.formData.tagBgColor;
+        formData.remarks = $this.formData.remarks;
+        formData.is_top = $this.formData.isTop?1:0;
+        formData.issay = $this.formData.isCommentClose?0:1;
+        formData.is_hidename = $this.formData.isAnonymous?1:0;
+        formData.is_center = $this.formData.is_center?2:1;
+        formData.titlecolor = $this.formData.titleColor;
+        var pathUrl = "";
+        if($this.formData.id!==0){
+          pathUrl = 'website/websiteLogEditAction';
+        }else{
+          pathUrl = 'website/websiteLogAddAction';
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.isLoading.close();
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
+        });
       }
-      var formData = {}
-      formData.website_id = $this.websiteID;
-      formData.id = $this.formData.id;
-      formData.title = $this.formData.title;
-      formData.content = $this.formData.content;
-      formData.markdowntext = $this.formData.markdownContent;
-      formData.is_markdown = $this.formData.is_markdown;
-      formData.tags_id = $this.formData.systemTag;
-      formData.mytags = $this.formData.tag;
-      formData.mytagscolor = $this.formData.tagBgColor;
-      formData.remarks = $this.formData.remarks;
-      formData.is_top = $this.formData.isTop?1:0;
-      formData.issay = $this.formData.isCommentClose?0:1;
-      formData.is_hidename = $this.formData.isAnonymous?1:0;
-      formData.is_center = $this.formData.is_center?2:1;
-      formData.titlecolor = $this.formData.titleColor;
-      var pathUrl = "";
-      if($this.formData.id!==0){
-        pathUrl = 'website/websiteLogEditAction';
-      }else{
-        pathUrl = 'website/websiteLogAddAction';
-      }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
     },
     // markdown文本发生变化时执行事件
     changeMarkdownHandler(text,html){

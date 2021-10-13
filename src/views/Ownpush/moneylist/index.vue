@@ -70,7 +70,7 @@
                             </el-select>
                           </div>
                           <div class="item-search">
-                            <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+                            <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled"  type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                           </div>
                         </div>
                       </div>
@@ -192,46 +192,46 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_moneyadd')||menuButtonPermit.includes('Ownpush_moneyedit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="400px">
-      <el-form :model="dialogForm">
-        <div class="item-form">
-          <el-form-item label="日期：" :label-width="formLabelWidth">
-            <el-date-picker
-                v-model="dialogForm.addtime"
-                align="right"
-                :default-value="dialogForm.addtime"
-                value-format = "yyyy-MM-dd"
-                type="date"
-                placeholder="选择日期"
-                :picker-options="pickerOptions">
-            </el-date-picker>
-          </el-form-item>
-        </div>
-        <div class="item-form">
-            <el-form-item label="账户：" :label-width="formLabelWidth">
-                <el-select v-model="dialogForm.marketname" filterable clearable placeholder="请选择账户">
-                    <el-option
-                        v-for="item in accountList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_moneyadd')||menuButtonPermit.includes('Ownpush_moneyedit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="400px">
+        <el-form :model="dialogForm">
+          <div class="item-form">
+            <el-form-item label="日期：" :label-width="formLabelWidth">
+              <el-date-picker
+                  v-model="dialogForm.addtime"
+                  align="right"
+                  :default-value="dialogForm.addtime"
+                  value-format = "yyyy-MM-dd"
+                  type="date"
+                  placeholder="选择日期"
+                  :picker-options="pickerOptions">
+              </el-date-picker>
             </el-form-item>
-        </div>
-        <div class="item-form">
-            <el-form-item label="充值金额：" :label-width="formLabelWidth">
-                <el-input v-model="dialogForm.money2" ref="money2"></el-input>
-            </el-form-item>
-        </div>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+          </div>
+          <div class="item-form">
+              <el-form-item label="账户：" :label-width="formLabelWidth">
+                  <el-select v-model="dialogForm.marketname" filterable clearable placeholder="请选择账户">
+                      <el-option
+                          v-for="item in accountList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+              </el-form-item>
+          </div>
+          <div class="item-form">
+              <el-form-item label="充值金额：" :label-width="formLabelWidth">
+                  <el-input v-model="dialogForm.money2" ref="money2"></el-input>
+              </el-form-item>
+          </div>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
@@ -362,7 +362,9 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isDisabled:false,
+      isSaveData:false,
     }
   },
   computed: {
@@ -534,9 +536,12 @@ export default {
     // 搜索数据
     searchResult(){
         var $this = this;
-        $this.loadingFun();
-        $this.searchData.page = 1;
-        $this.initPage();
+        if(!$this.isDisabled){
+          $this.isDisabled=true;
+          $this.loadingFun();
+          $this.searchData.page = 1;
+          $this.initPage();
+        }
     },
     searchDataInit(){
       var $this = this;
@@ -600,6 +605,12 @@ export default {
               $this.tableData = response.data;
               $this.totalDataNum = response.allcount;
               $this.isLoading.close();
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
               $this.$nextTick(function () {
                 $this.setTableHeight();
               })
@@ -618,6 +629,12 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
             }
           }
         }
@@ -696,32 +713,38 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isSaveData){          
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isSaveData=true;
+        var pathUrl = "";
+        if($this.dialogText=="编辑充值记录"){
+          pathUrl = "ownpush/cnCostEditAction";
+        }else{
+          pathUrl = "ownpush/cnCostAddAction";
+        }
+        $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
+        });
       }
-      var pathUrl = "";
-      if($this.dialogText=="编辑充值记录"){
-        pathUrl = "ownpush/cnCostEditAction";
-      }else{
-        pathUrl = "ownpush/cnCostAddAction";
-      }
-      $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.handleClose();
-            $this.initPage();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
     },
     // 重置添加数据表单
     resetFormData(){

@@ -24,7 +24,7 @@
                             </el-input>
                         </div>
                         <div class="item-search">
-                          <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+                          <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                         </div>
                         <div class="item-search">
                           <el-button class="item-input" :disabled="isDisabled" type="primary" size="small" @click="deleteTableRow">批量删除</el-button>
@@ -100,22 +100,22 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Webmsg_addip')||menuButtonPermit.includes('Webmsg_editip'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
-      <el-form :model="dialogForm">
-        <div class="item-form">
-          <el-form-item label="IP白名单：" :label-width="formLabelWidth">
-            <el-input type="textarea" v-model="dialogForm.ip" placeholder="多个ip用|分隔" ref="ip" v-if="dialogForm.id==0"></el-input>
-            <el-input v-model="dialogForm.ip" ref="ip" v-else></el-input>
-          </el-form-item>
-        </div>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Webmsg_addip')||menuButtonPermit.includes('Webmsg_editip'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+        <el-form :model="dialogForm">
+          <div class="item-form">
+            <el-form-item label="IP白名单：" :label-width="formLabelWidth">
+              <el-input type="textarea" v-model="dialogForm.ip" placeholder="多个ip用|分隔" ref="ip" v-if="dialogForm.id==0"></el-input>
+              <el-input v-model="dialogForm.ip" ref="ip" v-else></el-input>
+            </el-form-item>
+          </div>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
@@ -168,7 +168,9 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isSearchResult:false,
+      isSaveData:false,
     }
   },
   computed: {
@@ -328,8 +330,11 @@ export default {
     // 查询结果
     searchResult(){
       var $this = this;
-      $this.loadingFun();
-      $this.initPage();
+      if(!$this.isSearchResult){
+        $this.isSearchResult=true;
+        $this.loadingFun();
+        $this.initPage();
+      }
     },
     // 初始化数据
     initData(){
@@ -401,6 +406,10 @@ export default {
               $this.tableData = [];
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSearchResult=false;
+              $this.isSaveData=false;
+            },1000);
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
@@ -419,6 +428,10 @@ export default {
                   message: response.info,
                   type: 'error'
                 });
+                setTimeout(()=>{
+                  $this.isSearchResult=false;
+                  $this.isSaveData=false;
+                },1000);
               }
           }
         }
@@ -447,35 +460,41 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
-      }
-      var formData = {}
-      formData.id = $this.dialogForm.id;
-      formData.ip = $this.dialogForm.ip;
-      var pathUrl = "";
-      if($this.dialogText=="修改IP"){
-        pathUrl = "webmsg/webMsgWhiteIpEditAction";
-      }else{
-        pathUrl = "webmsg/webMsgWhiteIpAddAction";
-      }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-              $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'success'
-              });
-              $this.handleClose();
-              $this.initPage();
-          }else{
+      if(!$this.isSaveData){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isSaveData=true;
+        var formData = {}
+        formData.id = $this.dialogForm.id;
+        formData.ip = $this.dialogForm.ip;
+        var pathUrl = "";
+        if($this.dialogText=="修改IP"){
+          pathUrl = "webmsg/webMsgWhiteIpEditAction";
+        }else{
+          pathUrl = "webmsg/webMsgWhiteIpAddAction";
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'success'
+                });
+                $this.handleClose();
+                $this.initPage();
+            }else{
               $this.$message({
                   showClose: true,
                   message: response.info,
                   type: 'error'
               });
-          }
-      });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
+        });
+      }
     },
     // 重置添加数据表单
     resetFormData(){

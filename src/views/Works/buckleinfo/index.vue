@@ -45,7 +45,7 @@
                     </div>
                 </div> 
                 <div class="item-form btn-panel">
-                    <el-button type="primary" size="large" v-on:click="saveInfo()">保存</el-button>
+                    <el-button type="primary" size="large" :class="isSaveInfo?'isDisabled':''" :disabled="isSaveInfo" v-on:click="saveInfo()">保存</el-button>
                     <el-button type="info" plain size="large" v-on:click="resetFormData()">重置</el-button>
                 </div>
             </div>
@@ -67,7 +67,8 @@ export default {
         permitip:"1",
       },
       serverData:{},
-      isLoading:null
+      isLoading:null,
+      isSaveInfo:false,
     }
   },
   computed: {
@@ -210,8 +211,7 @@ export default {
       $this.$store.dispatch('works/buckleInitInfoAction', null).then(response=>{
         if(response){
           if(response.status){
-            $this.serverData = response.data;
-            console.log(response)
+            $this.serverData = response.data;            
             $this.initInfo($this.serverData);
           }else{
             $this.$message({
@@ -219,6 +219,9 @@ export default {
                 message: response.info,
                 type: 'error'
             });
+            setTimeout(()=>{
+              $this.isSaveInfo=false;
+            },1000);
           }
         }
       });
@@ -229,7 +232,10 @@ export default {
       $this.formData.score = ""+data.bucklescore;
       $this.formData.limit_ip = ""+data.limit_ip;
       $this.formData.permitip = ""+data.permitip;
-      $this.isLoading.close();
+      $this.isLoading.close();      
+      setTimeout(()=>{
+        $this.isSaveInfo=false;
+      },1000);
     },
     // 重置添加文章表单
     clearFormData(){
@@ -254,30 +260,36 @@ export default {
     // 保存修改数据
     saveInfo(){
       var $this = this;
-      $this.loadingFun();
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isSaveInfo){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isSaveInfo=true;
+        $this.loadingFun();
+        var formData = {}
+        formData.score = $this.formData.score;
+        formData.limit_ip = $this.formData.limit_ip;
+        formData.permitip = $this.formData.permitip;
+        $this.$store.dispatch('works/buckleInfoSaveAction', formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveInfo=false;
+              },1000);
+            }
+        });
       }
-      var formData = {}
-      formData.score = $this.formData.score;
-      formData.limit_ip = $this.formData.limit_ip;
-      formData.permitip = $this.formData.permitip;
-      $this.$store.dispatch('works/buckleInfoSaveAction', formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.initPage();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
     },
   }
 }

@@ -34,8 +34,8 @@
                   </p>
                   <el-card class="box-card scroll-card" shadow="hover">
                       <ul class="SaleTips" v-if="(ID&&isCustomer)||(ID&&isSalesman)">
-                          <li v-if="ID&&isCustomer"><i class="svg-i tips" ><svg-icon icon-class="prompt" /></i><b>{{formData.custormselfwarn}}</b><el-button class="item-input" size="mini" type="primary" @click="customerWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></li>
-                          <li class="SaleTipRed" v-if="ID&&isSalesman"><i class="svg-i tips" ><svg-icon icon-class="prompt" /></i><b>{{formData.givecustormwarn}}</b><el-button class="item-input" size="mini" type="primary" @click="salesmanWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></li>
+                          <li v-if="ID&&isCustomer"><i class="svg-i tips" ><svg-icon icon-class="prompt" /></i><b>{{formData.custormselfwarn}}</b><el-button class="item-input" :class="isCustomerWarnRead?'isDisabled':''" :disabled="isCustomerWarnRead" size="mini" type="primary" @click="customerWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></li>
+                          <li class="SaleTipRed" v-if="ID&&isSalesman"><i class="svg-i tips" ><svg-icon icon-class="prompt" /></i><b>{{formData.givecustormwarn}}</b><el-button class="item-input" :class="isSalesmanWarnRead?'isDisabled':''" :disabled="isSalesmanWarnRead" size="mini" type="primary" @click="salesmanWarnRead">已了解/解决(取消提醒)</el-button><em>*注意：请先修改并点击下方保存后再点击取消提醒</em></li>
                       </ul>        
                       <div class="card-content EnphoneAddEdit" ref="tableContent">
                           <div class="EnphoneAddEditMain">
@@ -46,7 +46,7 @@
                                 <div class="item-input"><el-input v-model="formData.custormselfwarn" size="small" placeholder=""></el-input></div>
                                 <div class="item-input" v-if="isCustomerSalesman"><span class="tips-title">业务员提醒：</span></div>
                                 <div class="item-input" v-if="isCustomerSalesman"><el-input v-model="formData.givecustormwarn" size="small" disabled placeholder=""></el-input></div>
-                                <div class="item-input"><el-button class="item-input" size="small" type="primary" icon="el-icon-edit" @click="editCustomerWarn">修改</el-button></div>
+                                <div class="item-input"><el-button class="item-input" :class="isEditCustomerWarn?'isDisabled':''" :disabled="isEditCustomerWarn" size="small" type="primary" icon="el-icon-edit" @click="editCustomerWarn">修改</el-button></div>
                               </div>
                               <div class="EnphoneAddEditMainItem phone-list">
                                 <dl>
@@ -517,7 +517,7 @@
                               </div>
                           </div>
                           <div class="card-header WebServerAddEditBtn EnphoneAddEditBtn">
-                              <el-button type="primary" class="updateBtn" size="small" v-if="menuButtonPermit.includes('Enphone_add')||menuButtonPermit.includes('Enphone_edit')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
+                              <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" v-if="menuButtonPermit.includes('Enphone_add')||menuButtonPermit.includes('Enphone_edit')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
                               <el-button type="primary" class="resetBtn" size="small" v-on:click="resetFormData()">重置</el-button>
                           </div>
                       </div>
@@ -693,6 +693,10 @@ export default {
       isCustomerSalesman:false,
       restaurants:[],
       isLoading:null,
+      isDisabled:false,
+      isCustomerWarnRead:false,
+      isEditCustomerWarn:false,
+      isSalesmanWarnRead:false,
     }
   },
   computed: {
@@ -930,6 +934,12 @@ export default {
               message: response.info,
               type: 'error'
             });
+            setTimeout(()=>{
+              $this.isDisabled=false;
+              $this.isEditCustomerWarn=false;
+              $this.isCustomerWarnRead=false;
+              $this.isSalesmanWarnRead=false;
+            },1000);
           }
         }
       });
@@ -1237,12 +1247,24 @@ export default {
               $this.salesuserlist=[]
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isDisabled=false;
+              $this.isEditCustomerWarn=false;
+              $this.isCustomerWarnRead=false;
+              $this.isSalesmanWarnRead=false;
+            },1000);
           }else{
             $this.$message({
               showClose: true,
               message: response.info,
               type: 'error'
             });
+            setTimeout(()=>{
+              $this.isDisabled=false;
+              $this.isEditCustomerWarn=false;
+              $this.isCustomerWarnRead=false;
+              $this.isSalesmanWarnRead=false;
+            },1000);
           }
       }); 
     },
@@ -1366,41 +1388,47 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      var formData = $this.initFormData();
-      if(!$this.validationForm()){
-        return false;
-      }
-      var pathUrl = "";
-      if($this.formData.id==0){
-        pathUrl = "enphone/cluesAddAction";
-      }else{
-        pathUrl = "enphone/cluesEditAction";
-      }
-      $this.loadingFun();
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            if($this.formData.id!=0){
-              $this.initCluesInfo();
+      if(!$this.isDisabled){
+        var formData = $this.initFormData();
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isDisabled=true;
+        var pathUrl = "";
+        if($this.formData.id==0){
+          pathUrl = "enphone/cluesAddAction";
+        }else{
+          pathUrl = "enphone/cluesEditAction";
+        }
+        $this.loadingFun();
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              if($this.formData.id!=0){
+                $this.initCluesInfo();
+              }else{
+                var queryObj = {};
+                queryObj.phoneID = $this.formData.phoneid;
+                queryObj.waitstatus = "1";
+                var routeUrl =  $this.$router.resolve({path:'/Enphone/phoneindex',query:queryObj});
+                window.open(routeUrl.href,'_self');
+              }
             }else{
-              var queryObj = {};
-              queryObj.phoneID = $this.formData.phoneid;
-              queryObj.waitstatus = "1";
-              var routeUrl =  $this.$router.resolve({path:'/Enphone/phoneindex',query:queryObj});
-              window.open(routeUrl.href,'_self');
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
             }
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
+        });
+      }
     },
     // 清空添加数据表单
     clearFormData(){
@@ -1522,70 +1550,87 @@ export default {
     // 修改客服内部提醒
     editCustomerWarn(){
       var $this = this;
-      var resultData = {};
-      resultData.id = $this.formData.id;
-      resultData.custormselfwarn = $this.formData.custormselfwarn;
-      resultData.custormselfwarnstatus = $this.noRead?3:2;
-      $this.$store.dispatch("enphone/customerWarnEditAction", resultData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.initCluesInfo();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
+      if(!$this.isEditCustomerWarn){
+        $this.isEditCustomerWarn=true;
+        var resultData = {};
+        resultData.id = $this.formData.id;
+        resultData.custormselfwarn = $this.formData.custormselfwarn;
+        resultData.custormselfwarnstatus = $this.noRead?3:2;
+        $this.$store.dispatch("enphone/customerWarnEditAction", resultData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.initCluesInfo();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isEditCustomerWarn=false;
+              },1000);
+            }
+        });
+      }
     },
     // 确认阅读客服内部提醒
     customerWarnRead(){
       var $this = this;
-      var resultData = {};
-      resultData.id = $this.formData.id;
-      $this.$store.dispatch("enphone/customerWarnIsReadAction", resultData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.initCluesInfo();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
+      if(!$this.isCustomerWarnRead){
+        var resultData = {};
+        resultData.id = $this.formData.id;
+        $this.$store.dispatch("enphone/customerWarnIsReadAction", resultData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.initCluesInfo();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isCustomerWarnRead=false;
+              },1000);
+            }
+        });
+      }
     },
     // 确认阅读业务员提醒
     salesmanWarnRead(){
       var $this = this;
-      var resultData = {};
-      resultData.id = $this.formData.id;
-      $this.$store.dispatch("enphone/salesmanWarnIsReadAction", resultData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.initCluesInfo();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
+      if(!$this.isSalesmanWarnRead){
+        $this.isSalesmanWarnRead=true;
+        var resultData = {};
+        resultData.id = $this.formData.id;
+        $this.$store.dispatch("enphone/salesmanWarnIsReadAction", resultData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.initCluesInfo();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSalesmanWarnRead=false;
+              },1000);
+            }
+        });
+      }
     },
     // 填写国家自动获取大洲和时差
     countryClick(){

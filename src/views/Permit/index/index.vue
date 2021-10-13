@@ -28,14 +28,14 @@
                             <el-table-column
                               prop="name"
                               label="名称"
-                              min-width="180"
+                              min-width="200"
                               fixed="left"
                               >
                             </el-table-column>
                             <el-table-column
                               prop="route"
                               label="唯一标识名"
-                              min-width="160"
+                              min-width="200"
                               >
                             </el-table-column>
                             <el-table-column
@@ -51,7 +51,7 @@
                             </el-table-column>
                             <el-table-column
                               v-if="(menuButtonPermit.includes('Permit_add')||menuButtonPermit.includes('Permit_edit')||menuButtonPermit.includes('Permit_delete'))"
-                              :width="operationsWidth"
+                              :min-width="operationsWidth"
                               align="center"
                               fixed="right"
                               prop="operations"
@@ -96,7 +96,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
+          <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -149,7 +149,8 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null
+      isLoading:null,
+      isSaveData:false,
     }
   },
   computed: {
@@ -361,6 +362,9 @@ export default {
               $this.tableData = [];
             }
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isSaveData=false;
+            },1000);
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
@@ -379,6 +383,9 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
             }
           }
         }
@@ -496,37 +503,43 @@ export default {
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
-      if(!$this.validationForm()){
-        return false;
+      if(!$this.isSaveData){
+        if(!$this.validationForm()){
+          return false;
+        }
+        $this.isSaveData=true;
+        var formData = {}
+        formData.id = $this.dialogForm.id!=0?parseInt($this.dialogForm.id.split("-")[1]):0;
+        formData.mid = Array.isArray($this.dialogForm.mid)?$this.dialogForm.mid.length == 0 ? 0 :$this.dialogForm.mid[$this.dialogForm.mid.length-1]:$this.dialogForm.mid;
+        formData.name = $this.dialogForm.name;
+        formData.action = $this.dialogForm.route;
+        var pathUrl = "";
+        if($this.dialogText=="编辑权限"){
+          pathUrl = "permit/permitEditAction";
+        }else{
+          pathUrl = "permit/permitAddAction";
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initData();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
+        });
       }
-      var formData = {}
-      formData.id = $this.dialogForm.id!=0?parseInt($this.dialogForm.id.split("-")[1]):0;
-      formData.mid = Array.isArray($this.dialogForm.mid)?$this.dialogForm.mid.length == 0 ? 0 :$this.dialogForm.mid[$this.dialogForm.mid.length-1]:$this.dialogForm.mid;
-      formData.name = $this.dialogForm.name;
-      formData.action = $this.dialogForm.route;
-      var pathUrl = "";
-      if($this.dialogText=="编辑权限"){
-        pathUrl = "permit/permitEditAction";
-      }else{
-        pathUrl = "permit/permitAddAction";
-      }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.handleClose();
-            $this.initData();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
     },
     // 重置添加数据表单
     resetFormData(){

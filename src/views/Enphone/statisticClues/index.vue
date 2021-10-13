@@ -38,7 +38,7 @@
                                 <div class="card-header" ref="headerPane">
                                     <div class="search-wrap">
                                         <div class="item-search">
-                                            <el-radio v-for="(item,index) in statusList" border @change="searchResult" size="small" v-bind:key="index" v-model="status" :label="item.value">{{item.label}}</el-radio>
+                                            <el-radio v-for="(item,index) in statusList" border :class="isDisabled?'isDisabled':''" :disabled="isDisabled"  @change="searchResult" size="small" v-bind:key="index" v-model="status" :label="item.value">{{item.label}}</el-radio>
                                         </div>
                                     </div>
                                 </div>
@@ -213,45 +213,46 @@ export default {
         monthNum:0,
         unAllotNum:0,
       },
-        lastDate:"",
-        currentDate:"",
-        time1:'',
-        time2:'',
-        status:1,
-        menuButtonPermit:[],
-        tableHeight:0,
-        tableData:[],
-        statusList:[
-            {label:"所有",value:1},
-            {label:"有效的（在职）",value:2},
-            {label:"无效的（离职）",value:3},
-            {label:"分配层的（其他）",value:4},
-        ],
-        scrollPosition:{
-          width:0,
-          left:0,
-          fixedBottom: 15,
-          insetWidth:0,
-          oldInsetLeft:0,
-          insetLeft:0,
-          ratio:0,
-          startPageX:0,
-          maxScrollWidth:0,
-          isMouseDown:false,
-          isPC:true,
-          isFixed:false,
-        },
-        scrollTable:{
-          scrollDom:null,
-          tableHeaderFixedDom:null,
-          tableFixedRightDom:null,
-          fixedTopHeight:0,
-          tableheaderHeight:0,
-          fixedRightWidth:0,
-          tableBottom:0,
-          clientHeight:0,
-        },
-        isLoading:null,
+      lastDate:"",
+      currentDate:"",
+      time1:'',
+      time2:'',
+      status:1,
+      menuButtonPermit:[],
+      tableHeight:0,
+      tableData:[],
+      statusList:[
+          {label:"所有",value:1},
+          {label:"有效的（在职）",value:2},
+          {label:"无效的（离职）",value:3},
+          {label:"分配层的（其他）",value:4},
+      ],
+      scrollPosition:{
+        width:0,
+        left:0,
+        fixedBottom: 15,
+        insetWidth:0,
+        oldInsetLeft:0,
+        insetLeft:0,
+        ratio:0,
+        startPageX:0,
+        maxScrollWidth:0,
+        isMouseDown:false,
+        isPC:true,
+        isFixed:false,
+      },
+      scrollTable:{
+        scrollDom:null,
+        tableHeaderFixedDom:null,
+        tableFixedRightDom:null,
+        fixedTopHeight:0,
+        tableheaderHeight:0,
+        fixedRightWidth:0,
+        tableBottom:0,
+        clientHeight:0,
+      },
+      isLoading:null,
+      isDisabled:false,
     }
   },
   computed: {
@@ -418,70 +419,76 @@ export default {
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){
       var $this=this;
-      $this.loadingFun();
-      $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
-        if(response){
-          if(response.status){
-              $this.linkAll.todayNum = response.alltodaynumber;
-              $this.linkAll.yestodayNum = response.alllastnumber;
-              $this.linkAll.monthNum = response.allnumber;
-              $this.linkAll.unAllotNum = response.nodealcount;
-              var brand = "";
-              var brandID = null;              
-              if($this.$route.query.phoneID){
-                response.data.forEach(function(item,index){
-                  brand = item.brandname;
-                  item.phone.forEach(function(item1,index1){
-                    if(item1.id == $this.phoneID&&item1.waitstatus==$this.searchData.waitstatus){
-                      $this.currentID = item1.id;
-                      item1.isOn = true;
-                      brandID = item.id;
-                      if(item1.phonenumber.indexOf("-")!=-1){
-                        $this.currentPhone = item1.phonenumber;
-                      }else{
-                        $this.currentPhone = brand+"-"+item1.phonenumber;
-                      }
-                    }else{
-                      item1.isOn = false;
-                    }
-                  });
-                });
-              }else{
-                if($this.$route.query.key){
+      if(!$this.isDisabled){
+        $this.isDisabled=true;
+        $this.loadingFun();
+        $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
+          if(response){
+            if(response.status){
+                $this.linkAll.todayNum = response.alltodaynumber;
+                $this.linkAll.yestodayNum = response.alllastnumber;
+                $this.linkAll.monthNum = response.allnumber;
+                $this.linkAll.unAllotNum = response.nodealcount;
+                var brand = "";
+                var brandID = null;              
+                if($this.$route.query.phoneID){
                   response.data.forEach(function(item,index){
+                    brand = item.brandname;
                     item.phone.forEach(function(item1,index1){
-                      item.isOn = false;
+                      if(item1.id == $this.phoneID&&item1.waitstatus==$this.searchData.waitstatus){
+                        $this.currentID = item1.id;
+                        item1.isOn = true;
+                        brandID = item.id;
+                        if(item1.phonenumber.indexOf("-")!=-1){
+                          $this.currentPhone = item1.phonenumber;
+                        }else{
+                          $this.currentPhone = brand+"-"+item1.phonenumber;
+                        }
+                      }else{
+                        item1.isOn = false;
+                      }
                     });
                   });
-                  if($this.$route.query.key=="all"){
-                    $this.currentPhone = "查看所有";
-                  }else{
-                    $this.currentPhone = "所有未分配";
+                }else{
+                  if($this.$route.query.key){
+                    response.data.forEach(function(item,index){
+                      item.phone.forEach(function(item1,index1){
+                        item.isOn = false;
+                      });
+                    });
+                    if($this.$route.query.key=="all"){
+                      $this.currentPhone = "查看所有";
+                    }else{
+                      $this.currentPhone = "所有未分配";
+                    }
                   }
                 }
-              }
-              $this.brandID = brandID;
-              $this.defaultData = response;
-              $this.initPage();
-          }else{
-            if(response.permitstatus&&response.permitstatus==2){
-              $this.$message({
-                showClose: true,
-                message: "未被分配该页面访问权限",
-                type: 'error',
-                duration:6000
-              });
-              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+                $this.brandID = brandID;
+                $this.defaultData = response;
+                $this.initPage();
             }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
+              if(response.permitstatus&&response.permitstatus==2){
+                $this.$message({
+                  showClose: true,
+                  message: "未被分配该页面访问权限",
+                  type: 'error',
+                  duration:6000
+                });
+                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+              }else{
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isDisabled=false;
+                },1000);
+              }
             }
           }
-        }
-      });
+        });
+      }
     },
     // 初始化页面信息
     initPage(){
@@ -498,6 +505,9 @@ export default {
               $this.setTableHeight();
             })
             $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -513,6 +523,9 @@ export default {
                 message: response.info,
                 type: 'error'
               });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
             }
           }
         }
