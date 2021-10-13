@@ -44,6 +44,11 @@ body.view table tr td{
 	background-color: #f2f2f2;
 	font-size: 16px;
 }
+body.view table tr td,body.view table tr th{
+	width: 5%;
+	word-break: break-all;
+    word-wrap: break-word;
+}
 body.view table.is-center tr th,body.view table.is-center tr td{
 	text-align: center!important;
 }

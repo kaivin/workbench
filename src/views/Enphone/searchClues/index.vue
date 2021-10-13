@@ -234,6 +234,7 @@
                                             <div class="clues-title-btn">
                                                 <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="enCluesSearchData"><i class="svg-i" ><svg-icon icon-class="planeWhite" /></i>搜索</el-button>
                                                 <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+                                                <el-button type="info" plain size="small" v-on:click="clearCache">清除缓存</el-button>
                                                 <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled"  @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
                                             </div>
                                         </div> 
@@ -255,22 +256,20 @@
                                         :style="'min-height:'+minHeight+'px;'"
                                       >
                                       <el-table-column
-                                        prop="xuntime"
-                                        label="ID/品牌/小组"
-                                        width="120"
+                                        prop="id"
+                                        label="ID"
+                                        width="70"
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-text">
                                             <p>{{scope.row.id}}</p>
-                                            <p>{{scope.row.brandname}}</p>
-                                            <p>{{scope.row.phonenumber}}</p>
                                           </div>
                                         </template>
                                       </el-table-column>
                                       <el-table-column
                                         prop="xuntime"
                                         label="时间"
-                                        width="190"
+                                        min-width="120"
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-text">
@@ -283,8 +282,8 @@
                                       </el-table-column>
                                       <el-table-column
                                         prop="sourcename"
-                                        label="来源网站"
-                                        width="110"
+                                        label="来源"
+                                        min-width="110"
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-text">
@@ -297,13 +296,13 @@
                                       <el-table-column
                                         prop="sourcename"
                                         label="大洲/地区/IP"
-                                        width="110"
+                                        min-width="90"
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-text">
                                             <p><span class="EnColor05">大洲：</span>{{scope.row.continent}}</p>
                                             <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
-                                            <p><span class="EnColor05">轨迹：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip" :title="scope.row.ip">IP</a></p>
+                                            <p><span class="EnColor05">来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip" :title="scope.row.ip">IP</a></p>
                                             <p><span class="EnColor05">设备：</span>{{scope.row.device}}</p>
                                           </div>
                                         </template>
@@ -326,17 +325,17 @@
                                       <el-table-column
                                         prop="effective"
                                         label="有效/原因"
-                                        width="90"
+                                        min-width="90"
                                         >
                                         <template slot-scope="scope">
-                                          <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>                                          
+                                          <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
                                           <div class="table-text">{{scope.row.invalidcause}}<span class="redTip">{{scope.row.noeffectivetime}}</span></div>
                                         </template>
                                       </el-table-column>
                                       <el-table-column
                                         prop="levelname"
-                                        label="首次级别/二次判定"
-                                        min-width="140"
+                                        label="首次/二次"
+                                        min-width="100"
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-text">
@@ -351,7 +350,7 @@
                                       <el-table-column
                                         prop="xunremark"
                                         label="备注"
-                                        min-width="80"
+                                        min-width="90"
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-text">
@@ -362,25 +361,31 @@
                                       </el-table-column>
                                       <el-table-column
                                         prop="addusername"
-                                        label="添加人"
+                                        label="添/分人员"
                                         width="100"
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-text">
-                                            <p>{{scope.row.addusername}}</p>
+                                            <p><span>添：</span>{{scope.row.addusername}}</p>
+                                            <p><span>分：</span>{{scope.row.allotusername}}</p>
                                           </div>
                                         </template>
                                       </el-table-column>
                                       <el-table-column
-                                        prop="hassale"
-                                        label="业务员"
+                                        prop="addusername"
+                                        label="业务人员"
                                         width="80"
                                         >
+                                        <template slot-scope="scope">
+                                          <div class="table-text">
+                                            <p>{{scope.row.hassale}}</p>
+                                          </div>
+                                        </template>
                                       </el-table-column>
                                       <el-table-column
                                         prop="addtime"
                                         label="添/分/改/业务时间"
-                                        width="150"
+                                        min-width="90"
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-text">
@@ -392,9 +397,9 @@
                                         </template>
                                       </el-table-column>
                                       <el-table-column
-                                        prop="score"
-                                        label="积分"
-                                        min-width="70"
+                                        prop="sourcename"
+                                        label="价值分"
+                                        width="70"
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
@@ -404,7 +409,7 @@
                                         key="d"
                                         prop="searchword"
                                         label="备注"
-                                        min-width="90"
+                                        width="100"
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-input">
@@ -416,14 +421,14 @@
                                       </el-table-column>
                                       <el-table-column
                                         v-if="menuButtonPermit.includes('Enphone_edit')"
-                                        width="90"
+                                        width="88"
                                         align="center"
                                         prop="operations"
                                         fixed="right"
                                         label="操作">
                                         <template #default="scope">
                                           <div class="table-button">
-                                            <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')">修改</el-button>
+                                            <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')">编辑</el-button>
                                           </div>
                                         </template>
                                       </el-table-column>
@@ -922,6 +927,29 @@ export default {
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
+    // 清除缓存
+    clearCache(){
+      var $this = this;
+      var type = "s";
+      $this.$store.dispatch('api/clearCacheAction', {cachename:type}).then(response=>{
+        if(response){
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.enCluesSearchData();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
     // 获取面包屑路径
     getBreadcrumbList(){
       var $this = this;
@@ -1009,7 +1037,7 @@ export default {
     // 设置高度
     setTableHeight(){
       var $this = this;
-      $this.minHeight = 0;      
+      $this.minHeight = "auto";      
       var headerHeight = $this.$refs.headerPane.offsetHeight+45;
       var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
@@ -1032,11 +1060,9 @@ export default {
         if(response){
           if(response.status){
             $this.permitField = response.data;
-            if($this.$route.query.phoneID||$this.$route.query.key){
-                $this.$nextTick(function () {
-                  $this.setTableHeight();
-                })
-            }
+            $this.$nextTick(function () {
+              $this.setTableHeight();
+            });
             $this.isLoading.close();
             setTimeout(()=>{
               $this.isDisabled=false;
@@ -1829,6 +1855,8 @@ export default {
         }else{
           $this.scrollPosition.fixedBottom = 15;
         }
+      }else{
+          $this.scrollPosition.fixedBottom = 15;
       }
     },
     // 竖向滚动条滚动事件
@@ -1868,7 +1896,9 @@ export default {
           }else{
             $this.scrollPosition.fixedBottom = 15;
           }
-        }
+        }else{
+            $this.scrollPosition.fixedBottom = 15;
+          }
       }
     },
     // 监听横向滚动条鼠标按下事件

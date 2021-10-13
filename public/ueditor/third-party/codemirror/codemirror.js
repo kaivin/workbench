@@ -2344,8 +2344,16 @@ var CodeMirror = (function() {
             lines.splice.apply(lines, [lines.length, 0].concat(this.lines));
         },
         insertHeight: function(at, lines, height) {
-            this.height += height;
-            this.lines.splice.apply(this.lines, [at, 0].concat(lines));
+            var $this = this;
+            $this.height += height;
+            // this.lines.splice.apply(this.lines, [at, 0].concat(lines));
+            var chunk = 10000;
+            var timeCount = Math.ceil(lines.length/chunk);
+            var i;
+            for(i=0;i<timeCount;i++){
+                $this.lines.splice.apply($this.lines,[at+(i*chunk), 0].concat(lines.slice(i*chunk,(i+1)*chunk)))
+            }
+            console.log($this.lines);
             for (var i = 0, e = lines.length; i < e; ++i) lines[i].parent = this;
         },
         iterN: function(at, n, op) {

@@ -747,6 +747,11 @@
         background:#f2f2f2;
         font-size:16px;
       }
+      td,th{
+        width: 5%;
+        word-break: break-all;
+        word-wrap: break-word;
+      }
     }
   }
   &.rich-text{
@@ -1023,6 +1028,14 @@
           text-decoration:underline;
         }
       }
+      span.txt-title{
+        color:#959595;
+      }
+    }
+  }
+  .table-button{
+    .el-button{
+      margin: 5px;
     }
   }
   .export-dialog{
@@ -1055,9 +1068,6 @@
       }
     }
   }
-    .item-form.icon{
-        padding-right:76px;
-    }
     .item-form{
         padding-right:30px;
         position:relative;
@@ -1134,6 +1144,9 @@
           cursor:pointer;
           color:#bbb;
         }
+      }
+      .item-form.icon{
+          padding-right:46px;
       }
       .item-form {
         width:50%;

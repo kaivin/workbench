@@ -33,6 +33,8 @@ const state = {
   addEntargetlist:false,
   addWorkOrderTag:false,
   addDepartScore:false,
+  addResourceType:false,
+  addResource:false,
 }
 
 const mutations = {
@@ -210,6 +212,18 @@ const mutations = {
   CLOSE_DEPARTSCORE: (state) => {
     state.addDepartScore = false
   },
+  ADD_RESOURCETYPE: (state) => {
+    state.addResourceType = true
+  },
+  CLOSE_RESOURCETYPE: (state) => {
+    state.addResourceType = false
+  },
+  ADD_RESOURCE: (state) => {
+    state.addResource = true
+  },
+  CLOSE_RESOURCE: (state) => {
+    state.addResource = false
+  },
 }
 
 const actions = {
@@ -385,6 +399,18 @@ const actions = {
   },
   closeDepartScore({ commit }) {
     commit('CLOSE_DEPARTSCORE')
+  },
+  addResourceType({ commit }) {
+    commit('ADD_RESOURCETYPE')
+  },
+  closeResourceType({ commit }) {
+    commit('CLOSE_RESOURCETYPE')
+  },
+  addResource({ commit }) {
+    commit('ADD_RESOURCE')
+  },
+  closeResource({ commit }) {
+    commit('CLOSE_RESOURCE')
   },
 }
 

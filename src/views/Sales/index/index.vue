@@ -334,7 +334,7 @@
                                 prop="operations"
                                 fixed="right"
                                 label="操作"
-                                width="80"
+                                width="88"
                                 >
                                 <template #default="scope">
                                     <div class="table-button">

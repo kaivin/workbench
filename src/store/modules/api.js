@@ -14,6 +14,7 @@
   cnCluesRegionStatData,
   enCluesRegionStatData,
   getAddsay,
+  clearCache,
 } from '@/api/api'
 
 const state = {
@@ -50,6 +51,8 @@ const state = {
     isWorkOrderTagAdd:false,
     isWorkOrderAdd:false,
     isDepartScoreAdd:false,
+    isResourceTypeAdd:false,
+    isResourceAdd:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -222,6 +225,16 @@ const mutations = {
     }else{
       state.isDepartScoreAdd = false;
     }
+    if(permitData.includes("Resource_typeadd")&&data.page==""){
+      state.isResourceTypeAdd = true;
+    }else{
+      state.isResourceTypeAdd = false;
+    }
+    if(permitData.includes("Resource_resourceadd")&&data.page==""){
+      state.isResourceAdd = true;
+    }else{
+      state.isResourceAdd = false;
+    }
   },
 }
 
@@ -381,6 +394,16 @@ const actions = {
     getAddsayAction({ commit, state },data) {
       return new Promise((resolve, reject) => {
         getAddsay(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 意见反馈
+    clearCacheAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        clearCache(data).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)

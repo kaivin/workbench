@@ -59,25 +59,27 @@
                                           <el-table-column
                                               prop="id"
                                               label="业务员ID"
-                                              width="90"
+                                              min-width="65"
+                                              text-align='center'
                                               >
                                           </el-table-column>
                                           <el-table-column
                                               prop="permit"
                                               label="权限"
-                                              width="100"
+                                              min-width="75"
+                                              text-align='center'
                                               >
                                           </el-table-column>
                                           <el-table-column
                                               prop="name"
                                               label="姓名"
-                                              width="100"
+                                              min-width="80"
                                               >
                                           </el-table-column>
                                           <el-table-column
                                               prop="allcount"
                                               label="询盘总数"
-                                              width="100"
+                                              min-width="80"
                                               >
                                               <template slot-scope="scope">
                                                   <div class="table-text">
@@ -88,7 +90,7 @@
                                           <el-table-column
                                               prop="countnodeal"
                                               label="未处理询盘数"
-                                              width="110"
+                                              min-width="70"
                                               >
                                               <template slot-scope="scope">
                                                   <div class="table-text">
@@ -99,7 +101,7 @@
                                           <el-table-column
                                               prop="nofeedcount"
                                               :label="lastDate+'未反馈数'"
-                                              width="140"
+                                              min-width="100"
                                               >
                                               <template slot-scope="scope">
                                                   <div class="table-text">
@@ -110,7 +112,7 @@
                                           <el-table-column
                                               prop="noftwordcount"
                                               :label="lastDate+'未填富通'"
-                                              width="140"
+                                              min-width="100"
                                               >
                                               <template slot-scope="scope">
                                                   <div class="table-text">
@@ -121,7 +123,7 @@
                                           <el-table-column
                                               prop="nofeednowcount"
                                               :label="currentDate+'未反馈数'"
-                                              width="150"
+                                              min-width="100"
                                               >
                                               <template slot-scope="scope">
                                                   <div class="table-text">
@@ -132,7 +134,7 @@
                                           <el-table-column
                                               prop="noftwordnowcount"
                                               :label="currentDate+'未填富通'"
-                                              width="150"
+                                              min-width="100"
                                               >
                                               <template slot-scope="scope">
                                                   <div class="table-text">
@@ -143,7 +145,7 @@
                                           <el-table-column
                                               prop="allotcount"
                                               label="近2日分配询盘数"
-                                              width="140"
+                                              min-width="85"
                                               >
                                               <template slot-scope="scope">
                                                   <div class="table-text">
@@ -154,7 +156,7 @@
                                           <el-table-column
                                               prop="countnoread"
                                               label="未读询盘数"
-                                              width="100"
+                                              min-width="50"
                                               >
                                               <template slot-scope="scope">
                                                   <div class="table-text">
@@ -165,7 +167,7 @@
                                           <el-table-column
                                               prop="countwarn"
                                               label="提醒未处理"
-                                              width="100"
+                                              min-width="50"
                                               >
                                               <template slot-scope="scope">
                                                   <div class="table-text">
@@ -176,7 +178,7 @@
                                           <el-table-column
                                               prop="login_time"
                                               label="上次登录时间"
-                                              min-width="160"
+                                              min-width="150"
                                               >
                                           </el-table-column>
                                       </el-table>
@@ -735,6 +737,7 @@ export default {
     searchStatisticsData(){
       var $this = this;
       var routeUrl =  $this.$router.resolve({path:'/Enphone/searchClues'});
+      window.open(routeUrl.href,'_self');
     },
     // 统计分析跳转
     statisticsClues(){

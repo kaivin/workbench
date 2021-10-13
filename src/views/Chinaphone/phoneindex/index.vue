@@ -238,20 +238,20 @@
                         >
                         <el-table-column
                           prop="id"
-                          label="ID"
-                          width="80"
+                          label="ID/电话"
+                          min-width="120"
                           >
-                        </el-table-column>
-                        <el-table-column
-                          prop="phoneText"
-                          label="电话"
-                          width="80"
-                          >
+                          <template slot-scope="scope">
+                            <div class="table-text">
+                              <p><span class="txt-title">ID：</span><span style="display:inline-block;">{{scope.row.id}}</span></p>
+                              <p><span class="txt-title">电话：</span><span style="display:inline-block;">{{scope.row.phonenumber}}</span></p>
+                            </div>
+                          </template>
                         </el-table-column>
                         <el-table-column
                           prop="xuntime"
                           label="添加/询盘时间"
-                          width="150"
+                          min-width="90"
                           >
                           <template slot-scope="scope">
                             <div class="table-text">
@@ -263,23 +263,13 @@
                         </el-table-column>
                         <el-table-column
                           prop="sourcename"
-                          label="域名/渠道"
-                          width="100"
+                          label="域名/渠道/地区/归属地"
+                          min-width="100"
                           >
                           <template slot-scope="scope">
                             <div class="table-text">
                               <p><a :href="scope.row.url" target="_blank" :title="scope.row.url">{{scope.row.domain}}</a></p>
                               <p>{{scope.row.sourcename}}</p>
-                            </div>
-                          </template>
-                        </el-table-column>
-                        <el-table-column
-                          prop="sourcename"
-                          label="地区/归属地"
-                          width="100"
-                          >
-                          <template slot-scope="scope">
-                            <div class="table-text">
                               <p>{{scope.row.province}}<span v-if="scope.row.province&&scope.row.city">/</span>{{scope.row.city}}</p>
                             </div>
                           </template>
@@ -287,7 +277,7 @@
                         <el-table-column
                           prop="keyproduct"
                           label="意向设备"
-                          min-width="100"
+                          min-width="120"
                           >
                           <template slot-scope="scope">
                             <span class="product-span" v-bind:class="'level_'+scope.row.productlevel"><i>[{{scope.row.productlevel}}]</i>{{scope.row.keyproduct}}</span>
@@ -295,34 +285,23 @@
                         </el-table-column>
                         <el-table-column
                           prop="effective"
-                          align="center"
-                          label="有效"
-                          width="50"
+                          label="添加人/有效/级别"
+                          min-width="90"
                           >
                           <template slot-scope="scope">
-                            <div class="table-tag"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                          </template>
-                        </el-table-column>
-                        <el-table-column
-                          prop="addusername"
-                          label="添加人"
-                          width="80"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="levelname"
-                          label="等级"
-                          align="center"
-                          width="50"
-                          >
-                          <template slot-scope="scope">
-                            <div class="table-tag"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
+                            <div>
+                              <div class="table-text">
+                                <p style="text-align:center;">{{scope.row.addusername}}</p>
+                              </div>
+                              <div class="table-tag" style="text-align:center;margin: 5px auto;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
+                              <div class="table-tag" style="text-align:center;"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
+                            </div>
                           </template>
                         </el-table-column>
                         <el-table-column
                           prop="levelname"
                           label="备注/原因/无效原因"
-                          min-width="200"
+                          min-width="120"
                           >
                           <template slot-scope="scope">
                             <div class="table-text">
@@ -379,28 +358,16 @@
                           </template>
                         </el-table-column>
                         <el-table-column
-                          v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_otheredit'))"
+                          v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_edit')||menuButtonPermit.includes('Chinaphone_delete')||menuButtonPermit.includes('Chinaphone_otheredit'))"
                           width="88"
-                          fixed="right"
-                          align="center"
-                          prop="operations"
-                          label="修改">
-                          <template #default="scope">
-                            <div class="table-button">
-                              <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_otheredit')">修改</el-button>
-                            </div>
-                          </template>
-                        </el-table-column>
-                        <el-table-column
-                          v-if="writepermit&&(menuButtonPermit.includes('Chinaphone_edit')||menuButtonPermit.includes('Chinaphone_delete'))"
-                          :width="operationsWidth"
                           align="center"
                           fixed="right"
                           prop="operations"
                           label="操作">
                           <template #default="scope">
                             <div class="table-button">
-                              <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_edit')">修改</el-button>
+                              <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_otheredit')">修改</el-button>
+                              <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_edit')">编辑</el-button>
                               <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_delete')">删除</el-button>
                             </div>
                           </template>

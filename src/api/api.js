@@ -117,3 +117,11 @@ export function getAddsay(data) {
     data
   });
 }
+// 意见反馈
+export function clearCache(data) {
+  return request({
+    url: "/hxindex/Api/deltecache",
+    method: "POST",
+    data
+  });
+}

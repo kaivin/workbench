@@ -2,15 +2,13 @@ import Vue from 'vue'
 import Element from 'element-ui'
 import {MessageBox} from 'element-ui'
 import Cookies from 'js-cookie'
-import F2 from '@antv/f2'
-Vue.prototype.$F2 = F2;
 import VueMarkdownEditor from '@kangc/v-md-editor';
 import '@kangc/v-md-editor/lib/style/base-editor.css';
 import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
 import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
 import Prism from 'prismjs';
 // codemirror 编辑器的相关资源
-import Codemirror from 'codemirror';
+import Codemirrors from 'codemirror';
 // mode
 import 'codemirror/mode/markdown/markdown';
 // placeholder
@@ -22,7 +20,7 @@ import 'codemirror/addon/scroll/simplescrollbars';
 import 'codemirror/addon/scroll/simplescrollbars.css';
 // style
 import 'codemirror/lib/codemirror.css';
-VueMarkdownEditor.Codemirror = Codemirror;
+VueMarkdownEditor.Codemirrors = Codemirrors;
 VueMarkdownEditor.use(vuepressTheme, {
   Prism,
   extend(md) {

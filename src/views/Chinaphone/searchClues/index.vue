@@ -243,20 +243,20 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="id"
-                                    label="ID"
-                                    width="80"
+                                    label="ID/电话"
+                                    min-width="120"
                                     >
-                                </el-table-column>
-                                <el-table-column
-                                    prop="phoneText"
-                                    label="电话"
-                                    width="80"
-                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p><span class="txt-title">ID：</span><span style="display:inline-block;">{{scope.row.id}}</span></p>
+                                        <p><span class="txt-title">电话：</span><span style="display:inline-block;">{{scope.row.phonenumber}}</span></p>
+                                      </div>
+                                    </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="xuntime"
                                     label="添加/询盘时间"
-                                    width="150"
+                                    min-width="90"
                                     >
                                     <template slot-scope="scope">
                                         <div class="table-text">
@@ -268,31 +268,21 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="sourcename"
-                                    label="域名/渠道"
-                                    width="100"
+                                    label="域名/渠道/地区/归属地"
+                                    min-width="100"
                                     >
                                     <template slot-scope="scope">
                                         <div class="table-text">
-                                        <p><a :href="scope.row.lookurl" target="_blank" :title="scope.row.lookurl">{{scope.row.lookdomain}}</a></p>
-                                        <p>{{scope.row.sourcename}}</p>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="sourcename"
-                                    label="地区/归属地"
-                                    width="100"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-text">
-                                        <p>{{scope.row.province}}<span v-if="scope.row.province&&scope.row.city">/</span>{{scope.row.city}}</p>
+                                          <p><a :href="scope.row.lookurl" target="_blank" :title="scope.row.lookurl">{{scope.row.lookdomain}}</a></p>
+                                          <p>{{scope.row.sourcename}}</p>
+                                          <p>{{scope.row.province}}<span v-if="scope.row.province&&scope.row.city">/</span>{{scope.row.city}}</p>
                                         </div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="keyproduct"
                                     label="意向设备"
-                                    min-width="100"
+                                    min-width="120"
                                     >
                                     <template slot-scope="scope">
                                         <span class="product-span" v-bind:class="'level_'+scope.row.productlevel"><i>[{{scope.row.productlevel}}]</i>{{scope.row.keyproduct}}</span>
@@ -300,32 +290,23 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="effective"
-                                    label="有效"
-                                    width="60"
+                                    label="添加人/有效/级别"
+                                    min-width="90"
                                     >
                                     <template slot-scope="scope">
-                                        <div class="table-tag"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    prop="addusername"
-                                    label="添加人"
-                                    width="80"
-                                    >
-                                </el-table-column>
-                                <el-table-column
-                                    prop="levelname"
-                                    label="等级"
-                                    width="60"
-                                    >
-                                    <template slot-scope="scope">
-                                        <div class="table-tag"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
+                                      <div>
+                                        <div class="table-text">
+                                          <p style="text-align:center;">{{scope.row.addusername}}</p>
+                                        </div>
+                                        <div class="table-tag" style="text-align:center;margin: 5px auto;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
+                                        <div class="table-tag" style="text-align:center;"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
+                                      </div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="levelname"
                                     label="备注/原因/无效原因"
-                                    min-width="120"
+                                    min-width="100"
                                     >
                                     <template slot-scope="scope">
                                         <div class="table-text">
@@ -338,50 +319,50 @@
                                 <el-table-column
                                     prop="url"
                                     label="域名/链接/关键词"
-                                    min-width="130"
+                                    width="130"
                                     >
                                     <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p>{{scope.row.domain}}</p>
-                                            <p>{{scope.row.url}}</p>
-                                            <p>{{scope.row.searchword}}</p>
-                                        </div>
+                                      <div class="table-input">
+                                        <el-input size="small" v-model="scope.row.domain"></el-input>
+                                        <el-input size="small" v-model="scope.row.url"></el-input>
+                                        <el-input size="small" v-model="scope.row.searchword"></el-input>
+                                      </div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="searchword"
                                     label="平台/提供者/设备"
-                                    min-width="130"
+                                    width="130"
                                     >
                                     <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p>{{scope.row.search}}</p>
-                                            <p>{{scope.row.useridname}}</p>
-                                            <p>{{scope.row.device}}</p>
-                                        </div>
+                                      <div class="table-input">
+                                        <el-input size="small" v-model="scope.row.search"></el-input>
+                                        <el-input size="small" v-model="scope.row.useridname"></el-input>
+                                        <el-input size="small" v-model="scope.row.device"></el-input>
+                                      </div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="remark"
                                     label="备注"
-                                    min-width="120"
+                                    width="120"
                                     >
                                     <template slot-scope="scope">
-                                        <div class="table-text">
-                                            <p>{{scope.row.remark}}</p>
-                                        </div>
+                                      <div class="table-input cnClues">
+                                        <el-input size="small" type="textarea" rows="5" resize="none" v-model="scope.row.remark"></el-input>
+                                      </div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                   v-if="menuButtonPermit.includes('Chinaphone_edit')"
-                                  width="90"
+                                  width="88"
                                   align="center"
                                   fixed="right"
                                   prop="operations"
                                   label="操作">
                                   <template #default="scope">
                                     <div class="table-button">
-                                      <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Chinaphone_edit')">修改</el-button>
+                                      <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Chinaphone_edit')">编辑</el-button>
                                     </div>
                                   </template>
                                 </el-table-column>

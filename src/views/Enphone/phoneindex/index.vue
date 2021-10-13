@@ -363,11 +363,16 @@
                                   label="ID"
                                   width="70"
                                   >
+                                  <template slot-scope="scope">
+                                    <div class="table-text">
+                                      <p>{{scope.row.id}}</p>
+                                    </div>
+                                  </template>
                                 </el-table-column>
                                 <el-table-column
                                   prop="xuntime"
                                   label="时间"
-                                  width="190"
+                                  min-width="120"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -380,8 +385,8 @@
                                 </el-table-column>
                                 <el-table-column
                                   prop="sourcename"
-                                  label="来源网站"
-                                  width="110"
+                                  label="来源"
+                                  min-width="110"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -394,7 +399,7 @@
                                 <el-table-column
                                   prop="sourcename"
                                   label="大洲/地区/IP"
-                                  width="110"
+                                  min-width="90"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -423,7 +428,7 @@
                                 <el-table-column
                                   prop="effective"
                                   label="有效/原因"
-                                  width="90"
+                                  min-width="90"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
@@ -432,8 +437,8 @@
                                 </el-table-column>
                                 <el-table-column
                                   prop="levelname"
-                                  label="首次级别/二次判定"
-                                  min-width="140"
+                                  label="首次/二次"
+                                  min-width="100"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -448,7 +453,7 @@
                                 <el-table-column
                                   prop="xunremark"
                                   label="备注"
-                                  min-width="80"
+                                  min-width="90"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -459,7 +464,7 @@
                                 </el-table-column>
                                 <el-table-column
                                   prop="addusername"
-                                  label="添加人"
+                                  label="添/分人员"
                                   width="100"
                                   >
                                   <template slot-scope="scope">
@@ -470,15 +475,20 @@
                                   </template>
                                 </el-table-column>
                                 <el-table-column
-                                  prop="hassale"
-                                  label="业务员"
+                                  prop="addusername"
+                                  label="业务人员"
                                   width="80"
                                   >
+                                  <template slot-scope="scope">
+                                    <div class="table-text">
+                                      <p>{{scope.row.hassale}}</p>
+                                    </div>
+                                  </template>
                                 </el-table-column>
                                 <el-table-column
                                   prop="addtime"
                                   label="添/分/改/业务时间"
-                                  width="150"
+                                  min-width="90"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -490,9 +500,9 @@
                                   </template>
                                 </el-table-column>
                                 <el-table-column
-                                  prop="score"
+                                  prop="sourcename"
                                   label="价值分"
-                                  min-width="70"
+                                  width="70"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
@@ -503,7 +513,7 @@
                                   key="d"
                                   prop="searchword"
                                   label="备注"
-                                  min-width="90"
+                                  width="100"
                                   fixed="right"
                                   >
                                   <template slot-scope="scope">
@@ -515,29 +525,17 @@
                                   </template>
                                 </el-table-column>
                                 <el-table-column
-                                  v-if="writepermit&&(menuButtonPermit.includes('Enphone_otheredit'))"
+                                  v-if="writepermit&&(menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit'))"
                                   width="88"
-                                  align="center"
-                                  prop="operations"
-                                  fixed="right"
-                                  label="修改">
-                                  <template #default="scope">
-                                    <div class="table-button">
-                                      <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_otheredit')">修改</el-button>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  v-if="writepermit&&(menuButtonPermit.includes('Enphone_edit'))"
-                                  :width="operationsWidth"
                                   align="center"
                                   prop="operations"
                                   fixed="right"
                                   label="操作">
                                   <template #default="scope">
                                     <div class="table-button">
-                                      <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_edit')">修改</el-button>
-                                      <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="menuButtonPermit.includes('Enphone_edit')">({{scope.row.eidtnumber}})</span>
+                                      <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_otheredit')">修改</el-button>
+                                      <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_edit')">编辑</el-button>
+                                      <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="menuButtonPermit.includes('Enphone_edit')" style="color:red;">({{scope.row.eidtnumber}})</span>
                                     </div>
                                   </template>
                                 </el-table-column>
@@ -559,11 +557,16 @@
                                   label="ID"
                                   width="70"
                                   >
+                                  <template slot-scope="scope">
+                                    <div class="table-text">
+                                      <p>{{scope.row.id}}</p>
+                                    </div>
+                                  </template>
                                 </el-table-column>
                                 <el-table-column
                                   prop="xuntime"
                                   label="时间"
-                                  width="190"
+                                  min-width="120"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -576,8 +579,8 @@
                                 </el-table-column>
                                 <el-table-column
                                   prop="sourcename"
-                                  label="来源网站"
-                                  width="110"
+                                  label="来源"
+                                  min-width="110"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -590,7 +593,7 @@
                                 <el-table-column
                                   prop="sourcename"
                                   label="大洲/地区/IP"
-                                  width="110"
+                                  min-width="90"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -619,7 +622,7 @@
                                 <el-table-column
                                   prop="effective"
                                   label="有效/原因"
-                                  width="90"
+                                  min-width="90"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
@@ -628,8 +631,8 @@
                                 </el-table-column>
                                 <el-table-column
                                   prop="levelname"
-                                  label="首次级别/二次判定"
-                                  min-width="140"
+                                  label="首次/二次"
+                                  min-width="100"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -644,18 +647,18 @@
                                 <el-table-column
                                   prop="xunremark"
                                   label="备注"
-                                  min-width="80"
+                                  min-width="90"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
                                       <p>{{scope.row.xunremark}}</p>
-                                      <p class="EnColor07">{{scope.row.custormremark}}</p>
+                                      <p v-if="permitField.includes('custormremark')" class="EnColor07">{{scope.row.custormremark}}</p>
                                     </div>
                                   </template>
                                 </el-table-column>
                                 <el-table-column
                                   prop="addusername"
-                                  label="添加人"
+                                  label="添/分人员"
                                   width="100"
                                   >
                                   <template slot-scope="scope">
@@ -666,15 +669,20 @@
                                   </template>
                                 </el-table-column>
                                 <el-table-column
-                                  prop="hassale"
-                                  label="业务员"
+                                  prop="addusername"
+                                  label="业务人员"
                                   width="80"
                                   >
+                                  <template slot-scope="scope">
+                                    <div class="table-text">
+                                      <p>{{scope.row.hassale}}</p>
+                                    </div>
+                                  </template>
                                 </el-table-column>
                                 <el-table-column
                                   prop="addtime"
                                   label="添/分/改/业务时间"
-                                  width="150"
+                                  min-width="90"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-text">
@@ -686,9 +694,9 @@
                                   </template>
                                 </el-table-column>
                                 <el-table-column
-                                  prop="score"
+                                  prop="sourcename"
                                   label="价值分"
-                                  min-width="70"
+                                  width="70"
                                   >
                                   <template slot-scope="scope">
                                     <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
@@ -699,7 +707,7 @@
                                   key="d"
                                   prop="searchword"
                                   label="备注"
-                                  min-width="90"
+                                  width="100"
                                   fixed="right"
                                   >
                                   <template slot-scope="scope">
@@ -711,29 +719,17 @@
                                   </template>
                                 </el-table-column>
                                 <el-table-column
-                                  v-if="menuButtonPermit.includes('Enphone_otheredit')"
+                                  v-if="menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')"
                                   width="88"
-                                  align="center"
-                                  prop="operations"
-                                  fixed="right"
-                                  label="修改">
-                                  <template #default="scope">
-                                    <div class="table-button">
-                                      <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_otheredit')">修改</el-button>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  v-if="menuButtonPermit.includes('Enphone_edit')"
-                                  :width="operationsWidth"
                                   align="center"
                                   prop="operations"
                                   fixed="right"
                                   label="操作">
                                   <template #default="scope">
                                     <div class="table-button">
-                                      <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')">修改</el-button>
-                                      <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')">({{scope.row.eidtnumber}})</span>
+                                      <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_otheredit')">修改</el-button>
+                                      <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')">编辑</el-button>
+                                      <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')" style="color:red;">({{scope.row.eidtnumber}})</span>
                                     </div>
                                   </template>
                                 </el-table-column>
@@ -1252,7 +1248,6 @@ export default {
       var $this=this;
       $this.loadingFun();
       $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
-        console.log(response,"左侧数据")
         if(response){
           if(response.status){
               $this.linkAll.todayNum = response.alltodaynumber;
@@ -1358,7 +1353,6 @@ export default {
       $this.$store.dispatch('enphone/cluesPhoneIndexSearchDataAction', deptForm).then(response=>{
         if(response){
           if(response.status){
-             console.log(response,'电话首页-部门搜索')
              $this.dept_Data=[];
              var departcountUlist=[];
              response.departcount.forEach(function(item){
@@ -1398,7 +1392,6 @@ export default {
       $this.$store.dispatch('enphone/cluesPhoneIndexDataAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,'response');
             $this.linkAll.todayNum = response.alltodaynumber;
             $this.linkAll.yestodayNum = response.alllastnumber;
             $this.linkAll.monthNum = response.allnumber;

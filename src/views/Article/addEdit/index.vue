@@ -326,7 +326,7 @@ export default {
         // 关闭自动保存
         enableAutoSave: false,
         saveInterval: 24*60*60*60*1000,
-        maximumWords:20000,
+        maximumWords:100000000000,
         insertorderedlist:{
           //自定的样式
           'num1': '1),2),3)...',

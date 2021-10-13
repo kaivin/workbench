@@ -65,6 +65,10 @@
     isWorkOrderAdd: state => state.api.isWorkOrderAdd,
     isDepartScoreAdd: state => state.api.isDepartScoreAdd,
     addDepartScore:state => state.app.addDepartScore,
+    isResourceTypeAdd: state => state.api.isResourceTypeAdd,
+    addResourceType:state => state.app.addResourceType,
+    isResourceAdd: state => state.api.isResourceAdd,
+    addResource:state => state.app.addResource,
 }
 export default getters
   

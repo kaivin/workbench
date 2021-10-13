@@ -12,7 +12,7 @@
                 <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span><span class="search-font">搜索</span></el-button>
               </el-input>
             </div>
-            <div class="header-button">
+            <div class="header-button" v-if="isArticleAdd||isWebsiteAdd||isWebserverAdd||isCnPhoneAdd||isEnPhoneAdd||isEnCateAdd||isEnProductAdd||isCnCateAdd||isCnProductAdd||isWebsiteAttrAdd||isInformationAdd||isTagAdd||isUserAdd||isDepartAdd||isRoleAdd||isMenuAdd||isPermitAdd||isPromotedAccountAdd||isPromotedChannelAdd||isCnProcessAdd||isCnMoneyAdd||isCnCluesAdd||isEnCluesAdd||isWebsiteLogAdd||isWebMsgIpAdd||iscompareListAdd||isEncompareListAdd||isCntargetlistAdd||isEntargetlistAdd||isWorkOrderTagAdd||isWorkOrderAdd||isDepartScoreAdd">
               <div class="item-button" v-if="isArticleAdd" v-on:click="articleAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">发布文章</span></div>
               <div class="item-button" v-if="isWebsiteAdd" v-on:click="websiteAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加网站</span></div>
               <div class="item-button" v-if="isWebserverAdd" v-on:click="webserverAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加服务器</span></div>
@@ -48,9 +48,14 @@
               <div class="item-button" v-if="isWorkOrderAdd" v-on:click="workOrderAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">工单发布</span></div>
 
               <div class="item-button" v-if="isDepartScoreAdd" v-on:click="DepartScoreAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">部门月度积分添加</span></div>
+              <div class="item-button" v-if="isResourceTypeAdd" v-on:click="resourceTypeAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加资源类型</span></div>
+              <div class="item-button" v-if="isResourceAdd" v-on:click="resourceAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加资源</span></div>
             </div>
         </div>
         <div class="header-right">
+          <span class="cache-icon" v-on:click="clearCache" title="清除数据缓存">
+            <svg-icon icon-class="clearCache" class-name="disabled" />
+          </span>
           <span class="feedback-icon" v-on:click="openDialog" title="意见反馈">
             <svg-icon icon-class="feedback" class-name="disabled" />
           </span>
@@ -148,6 +153,8 @@ export default {
         'isWorkOrderTagAdd',
         'isWorkOrderAdd',
         'isDepartScoreAdd',
+        'isResourceTypeAdd',
+        'isResourceAdd',
       ]),
     },
   watch: {
@@ -168,6 +175,29 @@ export default {
     }
   },
     methods:{
+        // 清除缓存
+        clearCache(){
+          var $this = this;
+          var type = "all";
+          $this.$store.dispatch('api/clearCacheAction', {cachename:type}).then(response=>{
+            if(response){
+              if(response.status){
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'success'
+                });
+                $this.enCluesSearchData();
+              }else{
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+                });
+              }
+            }
+          });
+        },
         // 打开意见反馈弹窗
         openDialog(){
           var $this = this;
@@ -381,6 +411,14 @@ export default {
         // 部门月度积分添加
         DepartScoreAdd(){
           this.$store.dispatch('app/addDepartScore')
+        },
+        // 资源类型添加
+        resourceTypeAdd(){
+          this.$store.dispatch('app/addResourceType')
+        },
+        // 资源添加
+        resourceAdd(){
+          this.$store.dispatch('app/addResource')
         },
     }
 }
