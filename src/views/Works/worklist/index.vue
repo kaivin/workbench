@@ -26,11 +26,12 @@
                                       start-placeholder="开始日期"
                                       end-placeholder="结束日期"
                                       size="small"
-                                      :picker-options="pickerRangeOptions">
+                                      :picker-options="pickerRangeOptions"
+                                      :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
                                   </el-date-picker>
                                   </div>
                                   <div class="item-search" style="width: 140px;">
-                                    <el-select v-model="searchData.uid" size="small" filterable clearable placeholder="发布人">
+                                    <el-select v-model="searchData.uid" size="small" filterable clearable placeholder="发布人" :class="searchData.uid!=''?'el-xzstate':''">
                                         <el-option
                                             v-for="item in userList"
                                             :key="item.value"
@@ -40,7 +41,7 @@
                                     </el-select>
                                   </div>
                                   <div class="item-search" style="width: 100px;">
-                                    <el-select v-model="searchData.tagsid" size="small" clearable placeholder="标签">
+                                    <el-select v-model="searchData.tagsid" size="small" clearable placeholder="标签" :class="searchData.tagsid!=''?'el-xzstate':''">
                                         <el-option
                                             v-for="item in tagList"
                                             :key="item.value"
@@ -50,7 +51,7 @@
                                     </el-select>
                                   </div>
                                   <div class="item-search" style="width: 100px;">
-                                    <el-select v-model="searchData.status" size="small" clearable placeholder="工单状态">
+                                    <el-select v-model="searchData.status" size="small" clearable placeholder="工单状态" :class="searchData.status!=''?'el-xzstate':''">
                                         <el-option
                                             v-for="item in statusList"
                                             :key="item.value"
@@ -64,6 +65,9 @@
                                   </div>
                                   <div class="item-search" v-if="menuButtonPermit.includes('Works_workcount')">
                                     <el-button class="item-input" size="small" type="primary" @click="jumpStatPage">数据统计</el-button>
+                                  </div>
+                                  <div class="item-search">
+                                    <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                                   </div>
                               </div>
                               <div class="clues-info flex-box" style="margin-top:10px;">
@@ -486,6 +490,17 @@ export default {
       var $this = this;
       $this.loadingFun();
       $this.initPage();
+    },
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.searchData.date=[];
+        $this.searchData.page=1;
+        $this.searchData.limit=20;
+        $this.searchData.tagsid='';
+        $this.searchData.uid='';
+        $this.searchData.status='';
+        $this.searchResult();
     },
     // 初始化数据
     initData(){

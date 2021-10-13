@@ -97,7 +97,8 @@
                                       range-separator="至"
                                       start-placeholder="开始日期"
                                       end-placeholder="结束日期"
-                                      :picker-options="pickerRangeOptions">
+                                      :picker-options="pickerRangeOptions"
+                                      :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
                                   </el-date-picker>              
                             </div>
                             <div class="team-headerItem">
@@ -105,6 +106,7 @@
                                   <el-input
                                       size="mini"
                                       v-model="searchData.domain"
+                                      :class="searchData.domain!=''?'el-xzstate':''"
                                       clearable>
                                   </el-input>
                             </div>
@@ -113,6 +115,7 @@
                                   <el-input
                                       size="mini"
                                       v-model="searchData.province"
+                                      :class="searchData.province!=''?'el-xzstate':''"
                                       clearable>
                                   </el-input>
                             </div>
@@ -121,6 +124,7 @@
                                   <el-input
                                       size="mini"
                                       v-model="searchData.name"
+                                      :class="searchData.name!=''?'el-xzstate':''"
                                       placeholder="域名备注等"
                                       clearable>
                                   </el-input>
@@ -741,6 +745,7 @@ export default {
       $this.minProduct=[];
       $this.maxProductNum=0;
       $this.minProductNum=0;
+      $this.searchData.date=[];
       $this.searchData.province="";
       $this.searchData.domain='';
       $this.searchData.name='';

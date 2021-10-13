@@ -33,11 +33,13 @@
                             size="small"
                             placeholder="请输入真实姓名关键字"
                             v-model="searchData.uname"
+                            @keyup.enter.native="searchResult"
                             clearable>
                           </el-input>
                         </div>
                         <div class="item-search">
                           <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+                          <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                         </div>
                       </div>
                     </div>
@@ -549,6 +551,16 @@ export default {
         $this.searchData.page = 1;
         $this.initPage();
       }
+    },
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.searchData.uname='';
+        $this.searchData.page=1;
+        $this.searchData.limit=20;
+        $this.searchData.dept_id=0;
+        $this.searchData.is_delete='';
+        $this.searchResult();
     },
     // 初始化数据
     initData(){

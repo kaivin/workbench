@@ -34,6 +34,7 @@
                                   size="small"
                                   placeholder="请输入真实姓名关键字"
                                   v-model="searchData.uname"
+                                  @keyup.enter.native="searchResult"
                                   clearable>
                               </el-input>
                           </div>
@@ -49,6 +50,7 @@
                           </div>
                           <div class="item-search">
                             <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+                            <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                           </div>
                         </div>
                       </div>
@@ -326,6 +328,16 @@ export default {
         $this.searchData.page = 1;
         $this.initPage();
       }
+    },
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.searchData.uname='';
+        $this.searchData.page=1;
+        $this.searchData.limit=50;
+        $this.searchData.action='';
+        $this.searchData.date='';
+        $this.searchResult();
     },
     // 初始化数据
     initData(){

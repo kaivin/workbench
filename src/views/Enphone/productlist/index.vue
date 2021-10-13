@@ -19,12 +19,14 @@
                               class="input-panel"
                               placeholder="请输入产品名"
                               v-model="searchData.name"
+                              @keyup.enter.native="searchResult"
                               size="small"
                               clearable>
                             </el-input>
                           </div>
                           <div class="item-search">
                             <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
+                            <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                           </div>
                         </div>
                       </div>
@@ -367,6 +369,14 @@ export default {
         $this.searchData.page = 1;
         $this.initPage();
       }
+    },
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.searchData.page=1;
+        $this.searchData.limit=15;
+        $this.searchData.name='';
+        $this.searchResult();
     },
     // 初始化数据
     initData(){

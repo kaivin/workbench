@@ -58,9 +58,10 @@
                                                 start-placeholder="开始日期"
                                                 end-placeholder="结束日期"
                                                 @change="timeSearch"
-                                                :picker-options="pickerRangeOptions">
+                                                :picker-options="pickerRangeOptions"
+                                                :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
                                             </el-date-picker>
-                                            <el-select v-model="searchData.timeing" clearable placeholder="时段" style="width:70px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.timeing" clearable placeholder="时段" :class="searchData.timeing!=''?'el-xzstate':''" style="width:70px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in timeList"
                                                     :key="item.value"
@@ -68,7 +69,8 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.mode" clearable placeholder="渠道" style="width:125px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.mode" clearable placeholder="渠道" :class="searchData.mode!=''?'el-xzstate':''" 
+                                            style="width:125px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in sourceList"
                                                     :key="item.value"
@@ -76,7 +78,8 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.device" clearable placeholder="设备" style="width:90px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.device" clearable placeholder="设备" :class="searchData.device!=''?'el-xzstate':''" 
+                                            style="width:90px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in deviceList"
                                                     :key="item.value"
@@ -84,7 +87,10 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.producttype_id" clearable placeholder="产品分类" style="width:100px;margin-right:10px;margin-bottom:10px;" @change="currentCateChange" size="mini">
+                                            <el-select v-model="searchData.producttype_id" clearable placeholder="产品分类" 
+                                            :class="searchData.producttype_id!=''?'el-xzstate':''" 
+                                            style="width:100px;margin-right:10px;margin-bottom:10px;" 
+                                            @change="currentCateChange" size="mini">
                                                 <el-option
                                                     v-for="item in cateList"
                                                     :key="item.value"
@@ -92,7 +98,7 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.productid" clearable placeholder="产品" style="width:130px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.productid" clearable placeholder="产品" :class="searchData.productid!=''?'el-xzstate':''" style="width:130px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in productList"
                                                     :key="item.value"
@@ -100,7 +106,7 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.feedback" clearable placeholder="反馈" style="width:100px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.feedback" clearable placeholder="反馈" :class="searchData.feedback!=''?'el-xzstate':''" style="width:100px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in feedbackList"
                                                     :key="item.value"
@@ -108,7 +114,7 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.level_id" clearable placeholder="首次级别" style="width:90px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.level_id" clearable placeholder="首次级别" :class="searchData.level_id!=''?'el-xzstate':''" style="width:90px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in levelList"
                                                     :key="item.value"
@@ -116,7 +122,7 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.erroring" clearable placeholder="异常" style="width:160px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.erroring" clearable placeholder="异常" :class="searchData.erroring!=''?'el-xzstate':''" style="width:160px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in errorList"
                                                     :key="item.value"
@@ -129,6 +135,8 @@
                                                 placeholder="国家"
                                                 style="width:100px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.country"
+                                                @keyup.enter.native="enCluesSearchData"
+                                                :class="searchData.country!=''?'el-xzstate':''"
                                                 clearable>
                                             </el-input>
                                             <el-input
@@ -136,6 +144,8 @@
                                                 placeholder="备注"
                                                 style="width:150px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.anymessage"
+                                                @keyup.enter.native="enCluesSearchData"
+                                                :class="searchData.anymessage!=''?'el-xzstate':''"
                                                 clearable>
                                             </el-input>
                                             <el-input
@@ -143,6 +153,8 @@
                                                 placeholder="域名"
                                                 style="width:150px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.domain"
+                                                @keyup.enter.native="enCluesSearchData"
+                                                :class="searchData.domain!=''?'el-xzstate':''"
                                                 clearable>
                                             </el-input>
                                             <el-input
@@ -150,6 +162,8 @@
                                                 placeholder="URL"
                                                 style="width:200px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.url"
+                                                @keyup.enter.native="enCluesSearchData"
+                                                :class="searchData.url!=''?'el-xzstate':''"
                                                 clearable>
                                             </el-input>
                                             <el-checkbox class="item-checkbox" v-model="searchData.is_url" size="mini" border>精确</el-checkbox>
@@ -158,6 +172,8 @@
                                                 placeholder="ID"
                                                 style="width:120px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.messageid"
+                                                @keyup.enter.native="enCluesSearchData"
+                                                :class="searchData.messageid!=''?'el-xzstate':''"
                                                 clearable>
                                             </el-input>
                                             <el-input
@@ -165,6 +181,8 @@
                                                 placeholder="富通ID(多个用,分隔)"
                                                 style="width:180px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.ftword_id"
+                                                @keyup.enter.native="enCluesSearchData"
+                                                :class="searchData.ftword_id!=''?'el-xzstate':''"
                                                 clearable>
                                             </el-input>
                                             <el-input
@@ -172,6 +190,8 @@
                                                 placeholder="客户姓名/称呼"
                                                 style="width:140px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.custormname"
+                                                @keyup.enter.native="enCluesSearchData"
+                                                :class="searchData.custormname!=''?'el-xzstate':''"
                                                 clearable>
                                             </el-input>
                                             <el-input
@@ -179,6 +199,8 @@
                                                 placeholder="Email"
                                                 style="width:150px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.custormemail"
+                                                @keyup.enter.native="enCluesSearchData"
+                                                :class="searchData.custormemail!=''?'el-xzstate':''"
                                                 clearable>
                                             </el-input>
                                             <el-input
@@ -186,6 +208,8 @@
                                                 placeholder="电话"
                                                 style="width:110px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.custormphone"
+                                                @keyup.enter.native="enCluesSearchData"
+                                                :class="searchData.custormphone!=''?'el-xzstate':''"
                                                 clearable>
                                             </el-input>
                                             <el-input
@@ -193,6 +217,8 @@
                                                 placeholder="来自IP"
                                                 style="width:150px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.ip"
+                                                @keyup.enter.native="enCluesSearchData"
+                                                :class="searchData.ip!=''?'el-xzstate':''"
                                                 clearable>
                                             </el-input>
                                             <el-checkbox class="item-checkbox" v-model="searchData.effective" size="mini" border>只显示有效</el-checkbox>
@@ -1649,6 +1675,7 @@ export default {
         $this.isAllTeam=false;
         $this.checkAllTeam=false;
         $this.pageSizeList=[20];
+        $this.enCluesSearchData();
     },
     // 当前产品分类改变触发事件
     currentCateChange(e){

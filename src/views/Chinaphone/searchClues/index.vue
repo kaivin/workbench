@@ -53,11 +53,12 @@
                                     start-placeholder="开始日期"
                                     end-placeholder="结束日期"
                                     @change="timeSearch"
-                                    :picker-options="pickerRangeOptions">
+                                    :picker-options="pickerRangeOptions"
+                                    :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
                                 </el-date-picker>
                               </div>
                               <div class="item-search" style="width:100px;">
-                                <el-select v-model="searchData.phoneid" size="small" clearable placeholder="电话">
+                                <el-select v-model="searchData.phoneid" size="small" clearable placeholder="电话" :class="searchData.phoneid!=''?'el-xzstate':''">
                                   <el-option
                                   v-for="item in phoneList"
                                   :key="item.value"
@@ -67,7 +68,7 @@
                                 </el-select>
                               </div>
                               <div class="item-search" style="width:100px;">
-                                <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道">
+                                <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道" :class="searchData.mode!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in sourceList"
                                       :key="item.value"
@@ -77,7 +78,7 @@
                                 </el-select>
                               </div>
                               <div class="item-search" style="width:80px;">
-                                <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别">
+                                <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别" :class="searchData.level_id!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in levelList"
                                       :key="item.value"
@@ -87,7 +88,8 @@
                                 </el-select>
                               </div>
                               <div class="item-search" style="width:100px;">
-                                <el-select v-model="searchData.typekey" size="small" clearable placeholder="选择分类" @change="currentCateChange">
+                                <el-select v-model="searchData.typekey" size="small" clearable placeholder="选择分类" @change="currentCateChange"
+                                :class="searchData.typekey!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in productTypeList"
                                       :key="item.value"
@@ -97,7 +99,7 @@
                                 </el-select>
                               </div>
                               <div class="item-search" style="width:120px;">
-                                <el-select v-model="searchData.productid" size="small" clearable placeholder="选择产品">
+                                <el-select v-model="searchData.productid" size="small" clearable placeholder="选择产品" :class="searchData.productid!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in productList"
                                       :key="item.value"
@@ -107,7 +109,7 @@
                                 </el-select>
                               </div>
                               <div class="item-search" style="width:100px;">
-                                <el-select v-model="searchData.productlevel" size="small" clearable placeholder="产品类别">
+                                <el-select v-model="searchData.productlevel" size="small" clearable placeholder="产品类别" :class="searchData.productlevel!=''?'el-xzstate':''">
                                   <el-option
                                   v-for="item in categoryList"
                                   :key="item.value"
@@ -117,7 +119,7 @@
                                 </el-select>
                               </div>
                               <div class="item-search" style="width:80px;">
-                                <el-select v-model="searchData.device" size="small" clearable placeholder="设备">
+                                <el-select v-model="searchData.device" size="small" clearable placeholder="设备" :class="searchData.device!=''?'el-xzstate':''">
                                   <el-option
                                     v-for="item in deviceList"
                                     :key="item.value"
@@ -131,6 +133,8 @@
                                     placeholder="地区"
                                     size="small"
                                     v-model="searchData.province"
+                                    @keyup.enter.native="searchResult"
+                                    :class="searchData.province!=''?'el-xzstate':''"
                                     clearable>
                                 </el-input>
                               </div>
@@ -140,6 +144,8 @@
                                     size="small"
                                     class="tips-input-2"
                                     v-model="searchData.search"
+                                    @keyup.enter.native="searchResult"
+                                    :class="searchData.search!=''?'el-xzstate':''"
                                     clearable>
                                 </el-input>
                               </div>
@@ -147,8 +153,10 @@
                                 <el-input
                                       placeholder="备注/提供者"
                                       size="small"
-                                    class="tips-input-3"
+                                      class="tips-input-3"
                                       v-model="searchData.anymessage"
+                                      @keyup.enter.native="searchResult"
+                                      :class="searchData.anymessage!=''?'el-xzstate':''"
                                       clearable>
                                   </el-input>
                               </div>
@@ -157,6 +165,8 @@
                                       placeholder="域名(精确匹配)"
                                       size="small"
                                       v-model="searchData.domain"
+                                      @keyup.enter.native="searchResult"
+                                      :class="searchData.domain!=''?'el-xzstate':''"
                                       clearable>
                                   </el-input>
                               </div>
@@ -164,8 +174,10 @@
                                 <el-input
                                   placeholder="来源URL(默认模糊匹配)"
                                   size="small"
-                                    class="tips-input-4"
+                                  class="tips-input-4"
                                   v-model="searchData.url"
+                                  @keyup.enter.native="searchResult"
+                                  :class="searchData.url!=''?'el-xzstate':''"
                                   clearable>
                                 </el-input>
                               </div>
@@ -177,6 +189,8 @@
                                     placeholder="询盘ID，多个以空格分隔"
                                     size="small"
                                     v-model="searchData.idlist"
+                                    @keyup.enter.native="searchResult"
+                                    :class="searchData.idlist!=''?'el-xzstate':''"
                                     clearable>
                                 </el-input>
                               </div>
@@ -187,7 +201,7 @@
                                 <el-checkbox v-model="searchData.is_group" label="分组统计" border size="small"></el-checkbox>
                               </div>
                               <div class="item-search" style="width:90px;">
-                                <el-select v-model="searchData.groupurlproduct" size="small" placeholder="分组类型">
+                                <el-select v-model="searchData.groupurlproduct" size="small" placeholder="分组类型" :class="searchData.groupurlproduct!=''?'el-xzstate':''">
                                   <el-option
                                     v-for="item in groupList"
                                     :key="item.value"
@@ -213,7 +227,8 @@
                                     <p v-if="isProduct"><span>共计：<strong class="color1">{{infoData.groupCount}}</strong>种产品，条URL，询盘<strong class="color2">{{infoData.totalCount}}</strong>个。</span></p>
                                 </div>
                                 <div class="clues-title-btn">  
-                                  <el-button type="primary" size="small" class="serchBtn"  :class="isSerchBtn?'isDisabled':''" :disabled="isSerchBtn" @click="searchResult"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>查询</el-button>
+                                  <el-button type="primary" size="small" class="serchBtn"  :class="isSerchBtn?'isDisabled':''" :disabled="isSerchBtn" @click="searchResult"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>查询</el-button>                       
+                                  <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                                   <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
                                   <el-button type="primary" size="small" class="editorNote" v-bind:disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_custormgivea')" v-on:click="setALevel"><i class="svg-i" ><svg-icon icon-class="editorNote" /></i>标记为A+</el-button>
                                 </div>
@@ -777,6 +792,31 @@ export default {
       $this.loadingFun();
       $this.searchData.page = 1;
       $this.initCluesList();
+    },
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.searchData.date=[];
+        $this.searchData.page=1;
+        $this.searchData.limit=20;
+        $this.searchData.mode="";
+        $this.searchData.typekey="";
+        $this.searchData.level_id="";
+        $this.searchData.productlevel="";
+        $this.searchData.productid="";
+        $this.searchData.phoneid="";
+        $this.searchData.device="";
+        $this.searchData.effective=false;
+        $this.searchData.province="";
+        $this.searchData.search="";
+        $this.searchData.anymessage="";
+        $this.searchData.domain="";
+        $this.searchData.url="";
+        $this.searchData.is_url=false;
+        $this.searchData.is_group=false;
+        $this.searchData.idlist="";
+        $this.searchData.groupurlproduct=1;
+        $this.searchResult(); 
     },
     // 初始化数据
     initData(){

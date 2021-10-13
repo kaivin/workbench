@@ -52,7 +52,7 @@
                         <div class="tipsHasItem">
                             <div class="search-wrap">
                               <div class="item-search" style="width:130px;">
-                                <el-select v-model="searchData.timetype" size="small" clearable placeholder="分配时间">
+                                <el-select v-model="searchData.timetype" size="small" clearable placeholder="分配时间" :class="searchData.timetype!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in timetypelist"
                                       :key="item.value"
@@ -74,11 +74,12 @@
                                   start-placeholder="开始日期"
                                   end-placeholder="结束日期"
                                   @change="timeSearch"
-                                  :picker-options="pickerRangeOptions">
+                                  :picker-options="pickerRangeOptions"
+                                  :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
                                 </el-date-picker>
                               </div>
                               <div class="item-search" v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'||currentStatus === 'hasnosaycount'||currentStatus === 'monthsaycount'" style="width:100px;">
-                                <el-select v-model="searchData.salesuserid" size="small" clearable placeholder="业务员">
+                                <el-select v-model="searchData.salesuserid" size="small" clearable placeholder="业务员" :class="searchData.salesuserid!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in salesuseridList"
                                       :key="item.value"
@@ -88,7 +89,7 @@
                                 </el-select>
                               </div>
                               <div class="item-search" style="width:90px;">
-                                <el-select v-model="searchData.continent" size="small" clearable placeholder="大洲">
+                                <el-select v-model="searchData.continent" size="small" clearable placeholder="大洲" :class="searchData.continent!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in continentlist"
                                       :key="item.value"
@@ -98,7 +99,8 @@
                                 </el-select>
                               </div>
                               <div class="item-search" style="width:100px;">
-                                <el-select v-model="searchData.producttype_id" size="small" clearable placeholder="产品类型"  @change="currentCateChange" >
+                                <el-select v-model="searchData.producttype_id" size="small" clearable placeholder="产品类型"  @change="currentCateChange"
+                                :class="searchData.producttype_id!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in producttype_idList"
                                       :key="item.value"
@@ -108,7 +110,7 @@
                                 </el-select>
                               </div>
                               <div class="item-search" style="width:90px;">
-                                <el-select v-model="searchData.productid" size="small" clearable placeholder="产品名">
+                                <el-select v-model="searchData.productid" size="small" clearable placeholder="产品名" :class="searchData.productid!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in productidList"
                                       :key="item.value"
@@ -118,7 +120,7 @@
                                 </el-select>
                               </div>
                               <div class="item-search" style="width:90px;">
-                                <el-select v-model="searchData.managestatus" size="small" clearable placeholder="处理">
+                                <el-select v-model="searchData.managestatus" size="small" clearable placeholder="处理" :class="searchData.managestatus!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in managestatusList"
                                       :key="item.value"
@@ -128,7 +130,7 @@
                                 </el-select>
                               </div>
                               <div class="item-search" style="width:100px;">
-                                <el-select v-model="searchData.replystatus" size="small" clearable placeholder="回复情况">
+                                <el-select v-model="searchData.replystatus" size="small" clearable placeholder="回复情况" :class="searchData.replystatus!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in replystatusList"
                                       :key="item.value"
@@ -138,7 +140,7 @@
                                 </el-select>
                               </div>
                               <div class="item-search" style="width:100px;">
-                                <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质">
+                                <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质" :class="searchData.ennature!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in ennatureList"
                                       :key="item.value"
@@ -148,7 +150,7 @@
                                 </el-select>
                               </div>
                               <div class="item-search" style="width:100px;">
-                                <el-select v-model="searchData.enxunprice" size="small" clearable placeholder="需求">
+                                <el-select v-model="searchData.enxunprice" size="small" clearable placeholder="需求" :class="searchData.enxunprice!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in enxunpriceList"
                                       :key="item.value"
@@ -168,6 +170,8 @@
                                   class="tips-input-2"
                                   placeholder="客户联系方式"
                                   v-model="searchData.keyword"
+                                  @keyup.enter.native="searchResult"
+                                  :class="searchData.keyword!=''?'el-xzstate':''"
                                   clearable>
                                 </el-input>
                               </div>
@@ -177,11 +181,14 @@
                                   class="tips-input-3"
                                   placeholder="富通ID/分配ID"
                                   v-model="searchData.ftword_id"
+                                  @keyup.enter.native="searchResult"
+                                  :class="searchData.ftword_id!=''?'el-xzstate':''"
                                   clearable>
                                 </el-input>
                               </div>
                               <div class="item-search">
                                 <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" type="primary" icon="el-icon-search" @click="searchResult()">查询</el-button>
+                                <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                               </div>  
                             </div>
                             <div class="clues-info flex-box">
@@ -732,6 +739,26 @@ export default {
         $this.initCluesList();
       }
     },    
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.searchData.date=[];
+        $this.searchData.page=1;
+        $this.searchData.limit=20;
+        $this.searchData.timetype='';
+        $this.searchData.salesownid='';
+        $this.searchData.continent='';
+        $this.searchData.producttype_id='';
+        $this.searchData.productid='';
+        $this.searchData.ennature='';
+        $this.searchData.enxunprice='';
+        $this.searchData.managestatus='';
+        $this.searchData.replystatus='';
+        $this.feedbackArr=[];
+        $this.searchData.keyword='';
+        $this.searchData.ftword_id='';
+        $this.searchResult();
+    },
     // 初始化数据
     initData(){
       var $this = this;    

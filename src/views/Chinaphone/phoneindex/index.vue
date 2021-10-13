@@ -126,7 +126,8 @@
                             end-placeholder="结束日期"
                             @change="timeSearch"
                             size="small"
-                            :picker-options="pickerRangeOptions">
+                            :picker-options="pickerRangeOptions"
+                            :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
                         </el-date-picker>
                       </div>
                       <div class="item-search" style="width: 150px;">
@@ -135,11 +136,13 @@
                           class="tips-input-1"
                           size="small"
                           v-model="searchData.name"
+                          @keyup.enter.native="searchResult"
+                          :class="searchData.name!=''?'el-xzstate':''"
                           clearable>
                         </el-input>
                       </div>
                       <div class="item-search" style="width: 100px;">
-                        <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道">
+                        <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道" :class="searchData.mode!=''?'el-xzstate':''">
                           <el-option
                               v-for="item in sourceList"
                               :key="item.value"
@@ -149,7 +152,7 @@
                         </el-select>
                       </div>
                       <div class="item-search" style="width: 100px;">
-                        <el-select v-model="searchData.typekey" size="small" clearable placeholder="分类">
+                        <el-select v-model="searchData.typekey" size="small" clearable placeholder="分类" :class="searchData.typekey!=''?'el-xzstate':''">
                           <el-option
                               v-for="item in productTypeList"
                               :key="item.value"
@@ -159,7 +162,7 @@
                         </el-select>
                       </div>
                       <div class="item-search" style="width: 80px;">
-                        <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别">
+                        <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别" :class="searchData.level_id!=''?'el-xzstate':''">
                           <el-option
                               v-for="item in levelList"
                               :key="item.value"
@@ -169,7 +172,7 @@
                         </el-select>
                       </div>
                       <div class="item-search" style="width: 100px;">
-                        <el-select v-model="searchData.productlevel" size="small" clearable placeholder="类别">
+                        <el-select v-model="searchData.productlevel" size="small" clearable placeholder="类别" :class="searchData.productlevel!=''?'el-xzstate':''">
                           <el-option
                             v-for="item in categoryList"
                             :key="item.value"
@@ -179,7 +182,7 @@
                         </el-select>
                       </div>
                       <div class="item-search" style="width: 100px;">
-                        <el-select v-model="searchData.userid" size="small" filterable clearable placeholder="提供者">
+                        <el-select v-model="searchData.userid" size="small" filterable clearable placeholder="提供者" :class="searchData.userid!=''?'el-xzstate':''">
                           <el-option
                             v-for="item in userList"
                             :key="item.value"
@@ -189,7 +192,7 @@
                         </el-select>
                       </div>
                       <div class="item-search" style="width: 80px;">
-                        <el-select v-model="searchData.device" size="small" clearable placeholder="设备">
+                        <el-select v-model="searchData.device" size="small" clearable placeholder="设备" :class="searchData.device!=''?'el-xzstate':''">
                           <el-option
                             v-for="item in deviceList"
                             :key="item.value"
@@ -199,7 +202,7 @@
                         </el-select>
                       </div>
                       <div class="item-search" style="width: 80px;">
-                        <el-select v-model="searchData.effective" size="small" clearable placeholder="价值">
+                        <el-select v-model="searchData.effective" size="small" clearable placeholder="价值" :class="searchData.effective!=''?'el-xzstate':''">
                           <el-option
                             v-for="item in effectiveList"
                             :key="item.value"
@@ -210,6 +213,7 @@
                       </div>
                       <div class="item-search">
                         <el-button class="item-input"  :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
+                        <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                       </div>
                     </div>
                     <div class="clues-info flex-box">
@@ -801,6 +805,22 @@ export default {
       var $this = this;
       $this.loadingFun();
       $this.initCluesList();
+    },
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.searchData.date=[];
+        $this.searchData.name="";
+        $this.searchData.page=1;
+        $this.searchData.limit=20;
+        $this.searchData.mode="";
+        $this.searchData.typekey="";
+        $this.searchData.level_id="";
+        $this.searchData.productlevel="";
+        $this.searchData.userid="";
+        $this.searchData.device="";
+        $this.searchData.effective="";
+        $this.searchResult();    
     },
     // 初始化数据
     initData(){

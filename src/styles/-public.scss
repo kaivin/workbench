@@ -218,6 +218,17 @@
         }
     }
 }
+/** 表单选中状态 **/
+.el-xzstate{
+  border-color: #2e88ff !important;
+  .el-input__inner{
+    border-color: #2e88ff !important;
+    color: #2e88ff !important;
+  }
+  .el-select__caret,.el-range-input,.el-input__icon,.el-range-separator{
+    color: #2e88ff !important;
+  }
+}
 @media (max-width:1024px) {
   html, body, #app, #app > .el-container{
     width: 1000px;

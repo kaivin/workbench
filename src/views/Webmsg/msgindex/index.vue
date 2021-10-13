@@ -37,7 +37,8 @@
                             <div class="card-header" ref="headerPane">
                                 <div class="search-wrap">
                                     <div class="item-search">
-                                        <el-select v-model="searchData.language" size="small" clearable placeholder="请选择语言">
+                                        <el-select v-model="searchData.language" size="small" clearable placeholder="请选择语言" 
+                                        :class="searchData.language!=''?'el-xzstate':''">
                                             <el-option
                                                 v-for="item in languageList"
                                                 :key="item.value"
@@ -47,7 +48,8 @@
                                         </el-select>
                                     </div>
                                     <div class="item-search">
-                                        <el-select v-model="searchData.brand_id" size="small" clearable placeholder="请选择品牌">
+                                        <el-select v-model="searchData.brand_id" size="small" clearable placeholder="请选择品牌" 
+                                        :class="searchData.brand_id!=''?'el-xzstate':''">
                                             <el-option
                                                 v-for="item in brandList"
                                                 :key="item.value"
@@ -61,7 +63,9 @@
                                             style="width: 280px;"
                                             placeholder="网站、URL、标识、Email、客户名等"
                                             v-model="searchData.keyword"
+                                            @keyup.enter.native="searchResult"
                                             size="small"
+                                            :class="searchData.keyword!=''?'el-xzstate':''"
                                             clearable>
                                         </el-input>
                                     </div>
@@ -79,6 +83,9 @@
                                     </div>
                                     <div class="item-search" v-if="menuButtonPermit.includes('Webmsg_delete')||(currentStatus==='Recycle'&&menuButtonPermit.includes('Webmsg_deleteconfirm'))">
                                         <el-button class="item-input" size="small" type="primary" :disabled="isDisabled" @click="deleteTableRow">删除</el-button>
+                                    </div>
+                                    <div class="item-search">
+                                        <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                                     </div>
                                 </div>
                             </div>
@@ -503,6 +510,14 @@ export default {
       var $this = this;
       $this.loadingFun();
       $this.initPage();
+    },
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.searchData.language='';
+        $this.searchData.brand_id='';
+        $this.searchData.keyword='';
+        $this.searchResult();
     },
     // 初始化数据
     initData(){

@@ -30,7 +30,8 @@
                             <div class="card-header" ref="headerPane">
                                 <div class="search-wrap">
                                     <div class="item-search" style="width:150px;" v-if="currentStatus!='stat'">
-                                        <el-select v-model="searchData.timetype" size="small" clearable placeholder="请选择时间类型">
+                                        <el-select v-model="searchData.timetype" size="small" clearable placeholder="请选择时间类型" 
+                                        :class="searchData.timetype!=''?'el-xzstate':''">
                                             <el-option
                                                 v-for="item in timeTypeList"
                                                 :key="item.value"
@@ -51,11 +52,13 @@
                                           start-placeholder="开始日期"
                                           end-placeholder="结束日期"
                                           size="small"
-                                          :picker-options="pickerRangeOptions">
+                                          :picker-options="pickerRangeOptions"
+                                          :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
                                       </el-date-picker>
                                     </div>
                                     <div class="item-search" style="width: 110px;" v-if="currentStatus === 'alloted'">
-                                      <el-select v-model="searchData.workstatus" size="small" clearable placeholder="工单状态">
+                                      <el-select v-model="searchData.workstatus" size="small" clearable placeholder="工单状态" 
+                                      :class="searchData.workstatus!=''?'el-xzstate':''">
                                           <el-option
                                               v-for="item in statusList"
                                               :key="item.value"
@@ -65,7 +68,8 @@
                                       </el-select>
                                     </div>
                                     <div class="item-search" style="width: 120px;" v-if="currentStatus === 'alloted'">
-                                      <el-select v-model="searchData.dealuserid" size="small" filterable clearable placeholder="负责人">
+                                      <el-select v-model="searchData.dealuserid" size="small" filterable clearable placeholder="负责人"
+                                      :class="searchData.dealuserid!=''?'el-xzstate':''">
                                           <el-option
                                               v-for="item in userList"
                                               :key="item.value"
@@ -76,6 +80,9 @@
                                     </div>
                                     <div class="item-search">
                                         <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
+                                    </div>
+                                    <div class="item-search">
+                                      <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                                     </div>
                                 </div>
                             </div>
@@ -586,6 +593,15 @@ export default {
         $this.loadingFun();
         $this.getCurrentStatusData();
       }
+    },
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.searchData.date=[];
+        $this.searchData.timetype='';
+        $this.searchData.dealuserid='';
+        $this.searchData.workstatus='';
+        $this.searchResult();
     },
     // 初始化数据
     initData(){

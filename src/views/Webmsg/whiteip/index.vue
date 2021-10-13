@@ -20,6 +20,7 @@
                                 size="small"
                                 placeholder="请输入IP"
                                 v-model="ip"
+                                @keyup.enter.native="searchResult"
                                 clearable>
                             </el-input>
                         </div>
@@ -28,6 +29,9 @@
                         </div>
                         <div class="item-search">
                           <el-button class="item-input" :disabled="isDisabled" type="primary" size="small" @click="deleteTableRow">批量删除</el-button>
+                        </div>
+                        <div class="item-search">
+                          <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                         </div>
                       </div>
                     </div>
@@ -335,6 +339,12 @@ export default {
         $this.loadingFun();
         $this.initPage();
       }
+    },
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.ip='';
+        $this.searchResult();
     },
     // 初始化数据
     initData(){

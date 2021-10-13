@@ -129,9 +129,10 @@
                                       end-placeholder="结束日期"
                                       @change="timeSearch"
                                       style="float:left;margin:5px 10px 5px 0px;width:240px;"
-                                      :picker-options="pickerRangeOptions">
+                                      :picker-options="pickerRangeOptions"
+                                      :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
                                   </el-date-picker>
-                                  <el-select v-model="searchData.timeing" clearable placeholder="时段" size="small" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.timeing" clearable placeholder="时段" size="small" :class="searchData.timeing!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
                                       <el-option
                                           v-for="item in timeList"
                                           :key="item.value"
@@ -139,7 +140,7 @@
                                           :value="item.value">
                                       </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.continent" size="small" clearable placeholder="大洲" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.continent" size="small" clearable placeholder="大洲" :class="searchData.continent!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
                                       <el-option
                                           v-for="item in continentsList"
                                           :key="item.value"
@@ -147,7 +148,8 @@
                                           :value="item.value">
                                       </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.typekey" size="small" clearable placeholder="分类" @change="currentCateChange" style="width:90px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.typekey" size="small" clearable placeholder="分类" @change="currentCateChange"
+                                  :class="searchData.typekey!=''?'el-xzstate':''" style="width:90px;margin:5px 10px 5px 0px;float:left;">
                                       <el-option
                                           v-for="item in productTypeList"
                                           :key="item.value"
@@ -155,7 +157,7 @@
                                           :value="item.value">
                                       </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.productid" size="small" clearable placeholder="产品" style="width:90px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.productid" size="small" clearable placeholder="产品" :class="searchData.productid!=''?'el-xzstate':''" style="width:90px;margin:5px 10px 5px 0px;float:left;">
                                       <el-option
                                           v-for="item in productList"
                                           :key="item.value"
@@ -163,7 +165,7 @@
                                           :value="item.value">
                                       </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.messagetype" size="small" clearable placeholder="留言类型" style="width:100px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.messagetype" size="small" clearable placeholder="留言类型" :class="searchData.messagetype!=''?'el-xzstate':''" style="width:100px;margin:5px 10px 5px 0px;float:left;">
                                       <el-option
                                           v-for="item in messageList"
                                           :key="item.value"
@@ -171,7 +173,7 @@
                                           :value="item.value">
                                       </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道" style="width:140px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道" :class="searchData.mode!=''?'el-xzstate':''" style="width:140px;margin:5px 10px 5px 0px;float:left;">
                                       <el-option
                                           v-for="item in sourceList"
                                           :key="item.value"
@@ -179,7 +181,7 @@
                                           :value="item.value">
                                       </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.device" size="small" clearable placeholder="设备" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.device" size="small" clearable placeholder="设备" :class="searchData.device!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in deviceList"
                                       :key="item.value"
@@ -187,7 +189,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别" :class="searchData.level_id!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
                                       <el-option
                                           v-for="item in levelList"
                                           :key="item.value"
@@ -195,7 +197,7 @@
                                           :value="item.value">
                                       </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质" :class="searchData.ennature!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
                                       <el-option
                                           v-for="item in natureList"
                                           :key="item.value"
@@ -203,7 +205,7 @@
                                           :value="item.value">
                                       </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.enxunprice" size="small" clearable placeholder="需求" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.enxunprice" size="small" clearable placeholder="需求" :class="searchData.enxunprice!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
                                       <el-option
                                           v-for="item in priceList"
                                           :key="item.value"
@@ -211,7 +213,7 @@
                                           :value="item.value">
                                       </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.erroring" size="small" clearable placeholder="异常" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.erroring" size="small" clearable placeholder="异常" :class="searchData.erroring!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
                                       <el-option
                                           v-for="item in errorList"
                                           :key="item.value"
@@ -219,7 +221,7 @@
                                           :value="item.value">
                                       </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.adduser" size="small" clearable placeholder="添加人" style="width:90px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.adduser" size="small" clearable placeholder="添加人" :class="searchData.adduser!=''?'el-xzstate':''" style="width:90px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in userList"
                                       :key="item.value"
@@ -227,7 +229,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.production" size="small" clearable placeholder="产量" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.production" size="small" clearable placeholder="产量" :class="searchData.production!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in productionList"
                                       :key="item.value"
@@ -235,7 +237,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.custormwarnstatus" size="small" clearable placeholder="业务员提醒" style="width:120px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.custormwarnstatus" size="small" clearable placeholder="业务员提醒" :class="searchData.custormwarnstatus!=''?'el-xzstate':''" style="width:120px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in salesUserNoticeList"
                                       :key="item.value"
@@ -243,7 +245,8 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)" v-model="searchData.salesownid" size="small" clearable placeholder="业务员" style="width:90px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)" v-model="searchData.salesownid" size="small" clearable placeholder="业务员" :class="searchData.salesownid!=''?'el-xzstate':''" 
+                                    style="width:90px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in salesuserList"
                                       :key="item.value"
@@ -251,7 +254,8 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)"  v-model="searchData.salesdepart_id" size="small" clearable placeholder="业务员部门" style="width:120px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)"  v-model="searchData.salesdepart_id" size="small" clearable placeholder="业务员部门" :class="searchData.salesdepart_id!=''?'el-xzstate':''" 
+                                    style="width:120px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in salesdepartList"
                                       :key="item.value"
@@ -259,7 +263,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.saleswarnstatus" size="small" clearable placeholder="添加人提醒" style="width:120px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.saleswarnstatus" size="small" clearable placeholder="添加人提醒" :class="searchData.saleswarnstatus!=''?'el-xzstate':''" style="width:120px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in addUserNoticeList"
                                       :key="item.value"
@@ -273,6 +277,7 @@
                                     placeholder="模糊搜索、备注1"
                                     v-model="searchData.remark1"
                                     @keyup.enter.native="enterBtn"
+                                    :class="searchData.remark1!=''?'el-xzstate':''"
                                     clearable>
                                   </el-input>
                                   <el-input
@@ -281,6 +286,7 @@
                                     placeholder="备注2"
                                     v-model="searchData.remark2"
                                     @keyup.enter.native="enterBtn"
+                                    :class="searchData.remark2!=''?'el-xzstate':''"
                                     clearable>
                                   </el-input>
                                   <el-input
@@ -289,9 +295,10 @@
                                     placeholder="备注3"
                                     v-model="searchData.remark3"
                                     @keyup.enter.native="enterBtn"
+                                    :class="searchData.remark3!=''?'el-xzstate':''"
                                     clearable>
                                   </el-input>
-                                  <el-select v-model="searchData.effective" size="small" clearable placeholder="有效性" style="width:100px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.effective" size="small" clearable placeholder="有效性" :class="searchData.effective!=''?'el-xzstate':''" style="width:100px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in effectiveList"
                                       :key="item.value"
@@ -299,7 +306,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.feedback" size="small" clearable placeholder="反馈" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.feedback" size="small" clearable placeholder="反馈" :class="searchData.feedback!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in feedbackList"
                                       :key="item.value"
@@ -308,7 +315,8 @@
                                     </el-option>
                                   </el-select>
                                   <span style="float:left;line-height:32px;font-size:13px;margin:5px;">排序：</span>
-                                  <el-select v-model="searchData.sort" size="small" placeholder="排序" style="width:130px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-model="searchData.sort" size="small" placeholder="排序" :class="searchData.sort!=''?'el-xzstate':''" 
+                                  style="width:130px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in sortList"
                                       :key="item.value"
@@ -317,6 +325,7 @@
                                     </el-option>
                                   </el-select>
                                   <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
+                                  <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()" style="margin:5px 10px 5px 0px;float:left;">重置</el-button>
                                 </div>
                                 <div class="clues-info flex-wrap">
                                     <div class="clues-infoFl flex-content">
@@ -1242,6 +1251,37 @@ export default {
     searchResult(){
       var $this = this;
       $this.initCluesList();
+    },
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.searchData.date=[];
+        $this.searchData.timeing="";
+        $this.searchData.continent="";
+        $this.searchData.page=1;
+        $this.searchData.limit=20;
+        $this.searchData.mode="";
+        $this.searchData.typekey="";
+        $this.searchData.productid="";
+        $this.searchData.level_id="";
+        $this.searchData.messagetype="";
+        $this.searchData.adduser="";
+        $this.searchData.device="";
+        $this.searchData.ennature="";
+        $this.searchData.enxunprice="";
+        $this.searchData.erroring="";
+        $this.searchData.production="";
+        $this.searchData.custormwarnstatus="";
+        $this.searchData.saleswarnstatus="";
+        $this.searchData.effective="";
+        $this.searchData.remark1="";
+        $this.searchData.remark2="";
+        $this.searchData.remark3="";
+        $this.searchData.feedback="";
+        $this.searchData.sort="xuntime";
+        $this.searchData.salesownid="";
+        $this.searchData.salesdepart_id="";
+        $this.searchResult();
     },
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){

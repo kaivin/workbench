@@ -59,7 +59,8 @@
                       <div class="group-header"><span>时间</span></div>
                       <div class="group-body">
                         <div class="team-panel">
-                            <el-select v-model="searchData.timetype" size="small" clearable placeholder="选择时间" style="width:140px;margin:5px 10px 5px 4px;float:left;">
+                            <el-select v-model="searchData.timetype" size="small" clearable placeholder="选择时间" :class="searchData.timetype!=''?'el-xzstate':''"
+                            style="width:140px;margin:5px 10px 5px 4px;float:left;">
                                 <el-option
                                     v-for="item in timetypeList"
                                     :key="item.value"
@@ -78,7 +79,8 @@
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期"
                                 style="float:left;margin:5px 10px 5px 0px; width:280px;"
-                                :picker-options="pickerRangeOptions">
+                                :picker-options="pickerRangeOptions"
+                                :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
                             </el-date-picker>
                         </div>
                       </div>

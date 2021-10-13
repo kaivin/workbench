@@ -26,11 +26,13 @@
                                 range-separator="至"
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期"
-                                :picker-options="pickerRangeOptions">
+                                :picker-options="pickerRangeOptions"
+                                :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
                             </el-date-picker>
                           </div>
                           <div class="item-search">
-                            <el-select v-model="searchData.account_id" size="small" filterable clearable multiple collapse-tags placeholder="请选择账户" class="select-panel">
+                            <el-select v-model="searchData.account_id" size="small" filterable clearable multiple collapse-tags placeholder="请选择账户" 
+                            :class="searchData.account_id!=''?'el-xzstate':''" class="select-panel">
                                 <el-option
                                     v-for="item in accountList"
                                     :key="item.value"
@@ -40,7 +42,8 @@
                             </el-select>
                           </div>
                           <div class="item-search">
-                            <el-select v-model="searchData.processtype" size="small" filterable clearable multiple collapse-tags placeholder="请选择渠道" class="select-panel">
+                            <el-select v-model="searchData.processtype" size="small" filterable clearable multiple collapse-tags placeholder="请选择渠道" 
+                            :class="searchData.processtype!=''?'el-xzstate':''" class="select-panel">
                                 <el-option
                                     v-for="item in channelList"
                                     :key="item.value"
@@ -50,7 +53,8 @@
                             </el-select>
                           </div>
                           <div class="item-search">
-                            <el-select v-model="searchData.processuserid" size="small" filterable clearable multiple collapse-tags placeholder="请选择负责人" class="select-panel">
+                            <el-select v-model="searchData.processuserid" size="small" filterable clearable multiple collapse-tags placeholder="请选择负责人" 
+                            :class="searchData.processuserid!=''?'el-xzstate':''" class="select-panel">
                                 <el-option
                                     v-for="item in userList"
                                     :key="item.value"
@@ -60,7 +64,8 @@
                             </el-select>
                           </div>
                           <div class="item-search">
-                            <el-select v-model="searchData.brand_id" size="small" clearable multiple collapse-tags placeholder="请选择品牌" class="select-panel">
+                            <el-select v-model="searchData.brand_id" size="small" clearable multiple collapse-tags placeholder="请选择品牌" 
+                            :class="searchData.brand_id!=''?'el-xzstate':''" class="select-panel">
                               <el-option
                                 v-for="item in brandList"
                                 :key="item.value"
@@ -71,6 +76,7 @@
                           </div>
                           <div class="item-search">
                             <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled"  type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+                            <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                           </div>
                         </div>
                       </div>
@@ -542,6 +548,18 @@ export default {
           $this.searchData.page = 1;
           $this.initPage();
         }
+    },
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.searchData.date=[];
+        $this.searchData.page=1;
+        $this.searchData.limit=50;
+        $this.searchData.account_id=[];
+        $this.searchData.processtype=[];
+        $this.searchData.processuserid=[];
+        $this.searchData.brand_id=[];
+        $this.searchResult();
     },
     searchDataInit(){
       var $this = this;

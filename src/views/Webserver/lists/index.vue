@@ -18,7 +18,7 @@
                             <div class="border-cell txt-font"><span>语言：</span></div>
                             <div class="border-cell flex-content">
                                 <div class="tag-panel">
-                                    <el-select v-model="formData.language" size="small" clearable placeholder="请选择">
+                                    <el-select v-model="formData.language" size="small" clearable placeholder="请选择" :class="formData.language!=''?'el-xzstate':''">
                                       <el-option
                                         v-for="item in languageList"
                                         :key="item.value"
@@ -31,7 +31,7 @@
                             <div class="border-cell txt-font"><span>用途：</span></div>
                             <div class="border-cell flex-content">
                                 <div class="tag-panel">
-                                    <el-select v-model="formData.useringid" size="small" clearable placeholder="请选择">
+                                    <el-select v-model="formData.useringid" size="small" clearable placeholder="请选择" :class="formData.useringid!=''?'el-xzstate':''">
                                       <el-option
                                         v-for="item in useingList"
                                         :key="item.value"
@@ -44,7 +44,7 @@
                             <div class="border-cell txt-font"><span>系统：</span></div>
                             <div class="border-cell flex-content">
                                 <div class="tag-panel">
-                                    <el-select v-model="formData.systemid" size="small" clearable placeholder="请选择">
+                                    <el-select v-model="formData.systemid" size="small" clearable placeholder="请选择" :class="formData.systemid!=''?'el-xzstate':''">
                                       <el-option
                                         v-for="item in serverList"
                                         :key="item.value"
@@ -63,17 +63,22 @@
                                       style="width: 229px;margin-right:10px;"
                                       placeholder="输入别名"
                                       v-model="formData.name"
+                                      @keyup.enter.native="searchResult"
                                       size="small"
+                                      :class="formData.name!=''?'el-xzstate':''"
                                       clearable>
                                     </el-input>
                                     <el-input
                                       style="width: 229px;margin-right: 5px;"
                                       placeholder="输入ip"
                                       v-model="formData.ip"
+                                      @keyup.enter.native="searchResult"
                                       size="small"
+                                      :class="formData.ip!=''?'el-xzstate':''"
                                       clearable>
                                     </el-input>
                                     <el-button class="item-input table-icon search" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" type="primary" @click="searchResult"><i class="svg-i searchWhite" ><svg-icon icon-class="searchWhite" class-name="disabled" /></i>搜索</el-button>
+                                    <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                                 </div>
                             </div>
                         </div>
@@ -395,6 +400,16 @@ export default {
       $this.page = 1;
       $this.loadingFun();
       $this.getWebsiteListData();
+    },
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.formData.ip='';
+        $this.formData.systemid='';
+        $this.formData.language='';
+        $this.formData.name='';
+        $this.formData.useringid='';
+        $this.searchResult();
     },
     // 初始化页面数据
     initData(){
