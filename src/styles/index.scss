@@ -1616,6 +1616,20 @@
         }
     }
   }
+  .el-card.WebsiteList-card{
+    .el-card__header{
+      .post-class{
+        .item-line{
+          .item-inline{
+            width: 100%;
+          }
+          .item-inline+.item-inline{
+            width: 50%;
+          }
+        }
+      }
+    }
+  }
 }
 @media (max-width:1280px){
   .article-info{

@@ -52,6 +52,7 @@
                                     <el-button size="mini" @click="allotNetworkPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_giverolemenu')">外网菜单权限</el-button>
                                     <el-button size="mini" @click="allotPostPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_gettypepermit')">分配论坛权限</el-button>
                                     <el-button size="mini" @click="allotWorkOrderPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_getworktypepermit')">分配工单权限</el-button>
+                                    <el-button size="mini" @click="allotResourcePermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_getsourcetypepermit')">分配资源管理权限</el-button>
                                     <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_edit')">编辑</el-button>
                                     <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_delete')" type="info" plain>删除</el-button>
                                   </div>
@@ -283,6 +284,26 @@
           </span>
         </template>
       </el-dialog>
+      <el-dialog :title="resourceTitle" v-if="(menuButtonPermit.includes('Role_getsourcetypepermit'))" custom-class="transfer-dialog" :visible.sync="dialogResourceVisible" width="840px">
+        <div class="transfer-panel">
+          <div class="transfer-wrap">
+            <el-transfer 
+              v-model="resourceValue" 
+              :data="resourceData"
+              :titles="['可分配的资源管理权限', '已分配的资源管理权限']"
+              filterable
+              :filter-method="filterResourceMethod"
+              filter-placeholder="请输入资源管理权限关键字"
+            ></el-transfer>
+          </div>
+        </div>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogResourceVisible = false">取 消</el-button>
+            <el-button type="primary" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" @click="saveResourceData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
@@ -378,6 +399,15 @@ export default {
       },
       networkData:[{key:"",label:""}],
       networkValue:[],
+      resourceTitle:"分配资源管理权限",
+      dialogResourceVisible:false,
+      filterResourceMethod(query, item) {
+          if(item.label){
+            return item.label.indexOf(query) > -1;
+          }
+      },
+      resourceData:[{key:"",label:""}],
+      resourceValue:[],
       scrollPosition:{
         width:0,
         left:0,
@@ -409,6 +439,7 @@ export default {
       isSaveUserData:false,
       isSavePermitData:false,
       isSaveData:false,
+      isDisabled:false,
     }
   },
   computed: {
@@ -702,6 +733,9 @@ export default {
               }
               if($this.menuButtonPermit.includes('Role_giverolemenu')){
                 operationsWidth+=114;
+              }
+              if($this.menuButtonPermit.includes('Role_getsourcetypepermit')){
+                operationsWidth+=150;
               }
               $this.operationsWidth = "" + operationsWidth;
               $this.getRoleList();
@@ -1798,7 +1832,7 @@ export default {
         });
       }
     },
-    // 重置分配工单数据
+    // 重置外网访问数据
     resetNetworkData(){
       var $this = this;
       $this.currentRoleID = 0;
@@ -1919,6 +1953,165 @@ export default {
             });
             setTimeout(()=>{
               $this.isSaveNetworkData=false;
+            },1000);
+          }
+        });
+      }
+    },
+    // 重置分配资源权限数据
+    resetResourceData(){
+      var $this = this;
+      $this.currentRoleID = 0;
+      $this.currentRoleName = "";
+      $this.resourceData = [];
+      $this.resourceValue = [];
+    },
+    // 分配资源权限弹窗
+    allotResourcePermit(row,index){
+      var $this = this;
+      $this.resetResourceData();
+      $this.dialogResourceVisible = true;
+      $this.resourceTitle = "给 " + row.name + " 分配资源管理权限";
+      $this.currentRoleID = row.id;
+      $this.currentRoleName = row.name;
+      $this.getAllotedResource();
+      
+    },
+    // 获取当前角色已分配的资源权限数据
+    getAllotedResource(){
+      var $this = this;
+      $this.$store.dispatch('role/roleResourceAction', {id:$this.currentRoleID}).then(response=>{
+        if(response.status){
+          var roleResourceData = [];
+          var selectedRoleResourceData = [];
+          if(response.data.length>0){
+            response.data.forEach(function(item,index){
+              var itemData = {};
+              itemData.key = item.id;
+              itemData.label = item.permitname;
+              itemData.disabled = false;
+              roleResourceData.push(itemData);
+              selectedRoleResourceData.push(item.id);
+            });
+            $this.resourceData = roleResourceData;
+            $this.resourceValue = selectedRoleResourceData;
+          }
+          $this.getAllotingResource();
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
+    },
+    // 获取登录用户对当前角色可分配的资源权限数据
+    getAllotingResource(){
+      var $this = this;
+      var resourceData = [];
+      if($this.resourceData.length>0){
+        $this.resourceData.forEach(function(item,index){
+          resourceData.push(item.key);
+        });
+      }
+      var resourceDataNow = $this.resourceData;
+      var resourceIngData = [];
+      $this.$store.dispatch('role/getResourceAction', {ids:"1"}).then(response=>{
+        if(response.status){
+          if(response.data.length>0){
+            if(resourceDataNow.length>0){
+              response.data.forEach(function(item,index){
+                resourceIngData.push(item.id);
+              });
+              resourceDataNow.forEach(function(item,index){
+                if(resourceIngData.includes(item.key)){
+                  item.disabled = false;
+                }else{
+                  item.disabled = true;
+                }
+              });
+            }
+            response.data.forEach(function(item,index){
+              if(!resourceData.includes(item.id)){
+                var itemData = {};
+                itemData.key = item.id;
+                itemData.label = item.permitname;
+                itemData.disabled = false;
+                resourceDataNow.push(itemData);
+              }
+            });
+            $this.resourceData = resourceDataNow;
+          }
+          $this.getUserAllotResourcePermitData();
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
+    },
+    // 获取当前登录用户可分配的资源权限数据
+    getUserAllotResourcePermitData(){
+      var $this = this;
+      $this.$store.dispatch('role/userCanAllotResourceAllPermitAction', null).then(response=>{
+        if(response){
+          if(response.status){
+            if(response.data.length>0){
+              var resData = []
+              response.data.forEach(function(item,index){
+                resData.push(item.id);
+              });
+              var resourceDataNow = $this.resourceData;
+              if(resourceDataNow.length>0){
+                resourceDataNow.forEach(function(item,index){
+                  if(!resData.includes(item.key)){
+                    item.disabled = true;
+                  }
+                });
+              }
+              $this.resourceData = resourceDataNow;
+            }
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    // 资源权限分配保存
+    saveResourceData(){
+      var $this = this;
+      if(!$this.isDisabled){
+        $this.isDisabled=true;
+        var resourceData = {};
+        resourceData.id = $this.currentRoleID;
+        resourceData.typepermitid = $this.resourceValue;
+        $this.$store.dispatch('role/roleAllotResourceAction', resourceData).then(response=>{
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.dialogResourceVisible = false;
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
+            $this.initData();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+            setTimeout(()=>{
+              $this.isDisabled=false;
             },1000);
           }
         });

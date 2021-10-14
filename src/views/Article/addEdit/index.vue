@@ -267,7 +267,6 @@ export default {
       breadcrumbList:[],
       activeTab:"textarea",
       isPreview:false,
-      isSort:false,
       postType:[],
       postSystemTag:[],
       departList:[],
@@ -880,9 +879,7 @@ export default {
         formData.is_markdown = $this.formData.is_markdown;
         formData.tags_id = $this.formData.systemTag;
         formData.is_center = $this.formData.is_center?2:1;
-        if($this.isSort){
-          formData.sort = $this.formData.sort;
-        }
+        formData.sort = $this.formData.sort;
         if($this.permitField.includes("mytags")){
           formData.mytags = $this.formData.tag;
         }

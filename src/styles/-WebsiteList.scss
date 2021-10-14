@@ -8,13 +8,15 @@
         margin-bottom:15px;
         background:#fff;
         padding:15px 10px;
-        .border-wrap{
-            border:0px!important;
-            overflow:initial;
-            .borderver{width:1px;height:15px;background:#a5a5a5;display:inline-block;margin-top:13px;}
-            .border-row + .border-row{border:0px;}
-            .border-row .border-cell + .border-cell{border:0px;}
-            &.post-class .txt-font.border-cell{
+        .post-class{
+            .item-line{
+                width: 100%;
+                .item-inline{
+                    width: 33%;
+                    float:left;
+                }
+            }
+            .txt-font{
                 line-height:30px;
                 width:75px;
                 font-weight:normal;
@@ -22,91 +24,95 @@
                 color:#999;
                 padding:5px 0px;
                 border:0px;
+                text-align: right;
             }
-            &.post-class .flex-content.border-cell{
+            .flex-content{
                 border:0px;
                 padding:5px 0px;
-                .tag-panel{
-                    &.WebsiteListSearch{
-                        width:380px;
-                        height:36px;
-                        position:relative;
-                        padding-right:105px;
-                        border:1px solid #1e252e;
-                        border-radius:4px;
-                        background:#fff;
-                        box-shadow:9px 9px 21px rgba(100,130,171,0.35);
-                        transition: all .3s;
-                        &:hover{
-                            box-shadow:none;
-                        }
-                        .el-button{
-                            position:absolute;
-                            right:0px;
-                            top:0px;
-                            width:98px;
-                            line-height:36px;
-                            text-align:center;
-                            color:#fff;
-                            background:#1e252e;
-                            border-radius:0px 4px 4px 0px;
-                            font-size:16px;
-                            height:36px;
-                            display:block;
-                            margin-right:0px!important;
-                            transition: all .3s;
-                            span{
-                                display:inline-block;
-                                .svg-i{
-                                    width:16px;
-                                    height:16px;
-                                    margin-right:10px;
-                                }
-                            }
-                            &:active{
-                                font-size: 14px;
-                            }
-                        }
-                        .el-input--suffix{
-                            .el-input__inner{
-                                clear:both;
-                                display:block;
-                                width:100%;
-                                line-height:34px;
-                                font-size:15px;
-                                color:#a5a5a5;
-                                text-align:left;
-                                border:none;
-                                border-radius:0px;
-                                height:34px;
-                                padding:0px 10px;                               
-                            }
-                        }
+                &.buttons{
+                    padding:0 0 0 15px;
+                }
+            }
+            .tag-panel{
+                &.WebsiteListSearch{
+                    width:380px;
+                    height:36px;
+                    position:relative;
+                    padding-right:105px;
+                    border:1px solid #1e252e;
+                    border-radius:4px;
+                    background:#fff;
+                    box-shadow:9px 9px 21px rgba(100,130,171,0.35);
+                    transition: all .3s;
+                    &:hover{
+                        box-shadow:none;
                     }
                     .el-button{
-                        padding:0px 10px;
-                        margin:0px 5px 0px 0px!important;
-                        font-size:14px;
-                        border-radius:3px;
-                        line-height:30px;
-                        border:0px;
+                        position:absolute;
+                        right:0px;
+                        top:0px;
+                        width:98px;
+                        line-height:36px;
+                        text-align:center;
                         color:#fff;
-                        background:-moz-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                        background:-webkit-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                        background:-o-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                        background:-ms-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                        background:linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                        &.is-plain{
-                            color:#1a1a1a;
-                            background:#fff;
-                            &:hover{
-                                color:#fff;
-                                background:-moz-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                                background:-webkit-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                                background:-o-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                                background:-ms-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
-                                background:linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                        background:#1e252e;
+                        border-radius:0px 4px 4px 0px;
+                        font-size:16px;
+                        height:36px;
+                        display:block;
+                        margin-right:0px!important;
+                        transition: all .3s;
+                        span{
+                            display:inline-block;
+                            .svg-i{
+                                width:16px;
+                                height:16px;
+                                margin-right:10px;
                             }
+                        }
+                        &:active{
+                            font-size: 14px;
+                        }
+                    }
+                    .el-input--suffix{
+                        .el-input__inner{
+                            clear:both;
+                            display:block;
+                            width:100%;
+                            line-height:34px;
+                            font-size:15px;
+                            color:#a5a5a5;
+                            text-align:left;
+                            border:none;
+                            border-radius:0px;
+                            height:34px;
+                            padding:0px 10px;                               
+                        }
+                    }
+                }
+                .el-button{
+                    padding:0px 10px;
+                    margin:0px 5px 0px 0px!important;
+                    font-size:14px;
+                    border-radius:3px;
+                    line-height:30px;
+                    border:0px;
+                    color:#fff;
+                    background:-moz-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                    background:-webkit-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                    background:-o-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                    background:-ms-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                    background:linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                    &.is-plain{
+                        color:#1a1a1a;
+                        background:#fff;
+                        &:hover{
+                            color:#fff;
+                            background:-moz-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                            background:-webkit-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                            background:-o-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                            background:-ms-linear-gradient(135deg, #2e84f6 0%, #136add 100%);
+                            background:linear-gradient(135deg, #2e84f6 0%, #136add 100%);
                         }
                     }
                 }

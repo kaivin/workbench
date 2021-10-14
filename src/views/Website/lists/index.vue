@@ -13,38 +13,42 @@
           <el-card class="box-card scroll-card WebsiteList-card" shadow="hover">
             <div slot="header">
               <div class="card-header" ref="headerPane">
-                <div class="border-wrap post-class">
-                  <div class="border-row flex-wrap">
-                      <div class="border-cell txt-font"><span>行业：</span></div>
-                      <div class="border-cell flex-content">
+                <div class="post-class">
+                  <div class="item-line">
+                    <div class="item-inline flex-box">
+                      <div class="txt-font"><span>行业：</span></div>
+                      <div class="flex-content">
                           <div class="tag-panel">
                               <template v-for="(item,index) in brandList">
                                   <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickBrand(item.id)">{{item.brandname}}</el-button>
                               </template>
                           </div>
                       </div>
-                      <span class="borderver"></span>
-                      <div class="border-cell txt-font"><span>语言：</span></div>
-                      <div class="border-cell flex-content">
+                    </div>
+                    <div class="item-inline flex-box">
+                      <div class="txt-font"><span>语言：</span></div>
+                      <div class="flex-content">
                           <div class="tag-panel">
                               <template v-for="item in languageList">
                                   <el-button type="primary" v-bind:key="item.id" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickLanguage(item.id)">{{item.languagename}}</el-button>
                               </template>
                           </div>
                       </div>
-                      <span class="borderver"></span>
-                      <div class="border-cell txt-font"><span>排序：</span></div>
-                      <div class="border-cell flex-content">
+                    </div>
+                    <div class="item-inline flex-box">
+                      <div class="txt-font"><span>排序：</span></div>
+                      <div class="flex-content">
                           <div class="tag-panel">
                               <template v-for="(item,index) in sort">
                                   <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickSort(item.key)">{{item.name}}</el-button>
                               </template>
                           </div>
                       </div>
+                    </div>
                   </div>
-                  <div class="border-row flex-wrap">
-                      <div class="border-cell txt-font"><span>部门：</span></div>
-                      <div class="border-cell flex-content">
+                  <div class="item-line flex-box">
+                    <div class="txt-font"><span>部门：</span></div>
+                      <div class="flex-content">
                           <div class="tag-panel">
                               <template v-for="(item,index) in departList">
                                   <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickDepart(item.id)">{{item.name}}</el-button>
@@ -52,9 +56,9 @@
                           </div>
                       </div>
                   </div>
-                  <div class="border-row flex-wrap">
-                      <div class="border-cell txt-font"><span>模式：</span></div>
-                      <div class="border-cell flex-content">
+                  <div class="item-line flex-box">
+                    <div class="txt-font"><span>模式：</span></div>
+                      <div class="flex-content">
                           <div class="tag-panel">
                               <template v-for="(item,index) in websiteStatus">
                                   <el-button :type="item.type" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickStatus(item.cate,item.key)">{{item.name}}</el-button>
@@ -62,9 +66,9 @@
                           </div>
                       </div>
                   </div>
-                  <div class="border-row flex-wrap">
-                      <div class="border-cell txt-font"><span>标签：</span></div>
-                      <div class="border-cell flex-content">
+                  <div class="item-line flex-box">
+                      <div class="txt-font"><span>标签：</span></div>
+                      <div class="flex-content">
                           <div class="tag-panel">
                               <template v-for="(item,index) in attrTagList">
                                   <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickAttrTag(item.name,item.id)">{{item.name}}</el-button>
@@ -72,36 +76,42 @@
                           </div>
                       </div>
                   </div>
-                  <div class="border-row flex-wrap">
-                      <div class="border-cell txt-font"><span>主机头：</span></div>
-                      <div class="border-cell flex-content">
-                          <div class="tag-panel">
-                              <template v-for="(item,index) in hostTagList">
-                                  <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickHostTag(item.name,item.id)">{{item.name}}</el-button>
-                              </template>
-                          </div>
-                      </div>
-                      <span class="borderver"></span>
-                      <div class="border-cell txt-font"><span>其他：</span></div>
-                      <div class="border-cell flex-content">
+                  <div class="item-line">
+                    <div class="item-inline flex-box">
+                       <div class="txt-font"><span>主机头：</span></div>
+                        <div class="flex-content">
+                            <div class="tag-panel">
+                                <template v-for="(item,index) in hostTagList">
+                                    <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickHostTag(item.name,item.id)">{{item.name}}</el-button>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-inline flex-box">
+                      <div class="txt-font"><span>其他：</span></div>
+                      <div class="flex-content">
                           <div class="tag-panel">
                               <el-button type="primary" v-bind:class="formData.headeruser?'':'is-plain'" size="small" v-on:click="clickManage">个人负责网站</el-button>
                               <el-button type="primary" v-bind:class="formData.personuser?'':'is-plain'" size="small" v-on:click="clickDevelop">个人开发网站</el-button>
                           </div>
                       </div>
-                      <div class="border-cell flex-content">
-                          <div class="tag-panel WebsiteListSearch">
-                              <el-input
-                                style="width:100%;margin:0px!important;"
-                                placeholder="IP/域名搜索："
-                                v-model="formData.ip"
-                                @keypress.native.enter="searchResult"
-                                size="small"
-                                clearable>
-                              </el-input>
-                              <el-button class="item-input" size="small" type="primary" @click="searchResult"><i class="svg-i searchWhite" ><svg-icon icon-class="searchWhite" /></i>搜索</el-button>
-                          </div>
+                    </div>
+                    <div class="item-inline flex-box">
+                      <div class="tag-panel WebsiteListSearch">
+                          <el-input
+                            style="width:100%;margin:0px!important;"
+                            placeholder="IP/域名搜索："
+                            v-model="formData.ip"
+                            @keypress.native.enter="searchResult"
+                            size="small"
+                            clearable>
+                          </el-input>
+                          <el-button class="item-input" size="small" type="primary" @click="searchResult"><i class="svg-i searchWhite" ><svg-icon icon-class="searchWhite" /></i>搜索</el-button>
                       </div>
+                      <div class="flex-content buttons">
+                        <el-button type="info" class="resetBtn" plain v-on:click="resetData">重置</el-button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -549,6 +559,22 @@ export default {
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
+    // 重置搜索条件
+    resetData(){
+      var $this = this;
+      $this.formData.ip="";
+      $this.formData.brand=null;
+      $this.formData.language=null;
+      $this.formData.departid=null;
+      $this.formData.domainattr=null;
+      $this.formData.domainheader=null;
+      $this.formData.headeruser=null;
+      $this.formData.personuser=null;
+      $this.formData.order=null;
+      $this.formData.is_online=null;
+      $this.formData.openstatus=null;
+      $this.linkTo();
+    },
     // 获取面包屑路径
     getBreadcrumbList(){
       var $this = this;

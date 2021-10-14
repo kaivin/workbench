@@ -3,7 +3,8 @@
 export function resourceList(data) {
   return request({
     url: "/hxindex/Resource/index",
-    method: "POST"
+    method: "POST",
+    data,
   });
 }
 // 添加资源接口

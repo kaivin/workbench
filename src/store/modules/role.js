@@ -20,6 +20,10 @@
     getNetwork,
     roleNetwork,
     roleAllotNetwork,
+    getResource,
+    roleResource,
+    roleAllotResource,
+    userCanAllotResourceAllPermit,
  } from '@/api/role'
 
 const state = {}
@@ -230,6 +234,46 @@ const actions = {
   getNetworkAction({ commit },data){
     return new Promise((resolve, reject) => {
         getNetwork(data).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        });
+    });
+  },
+  // 当前角色已分配的资源管理权限接口动作
+  roleResourceAction({ commit }, data){
+    return new Promise((resolve, reject) => {
+        roleResource(data).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        });
+    });
+  },
+  // 当前角色分配资源管理权限保存动作
+  roleAllotResourceAction({ commit }, data){
+    return new Promise((resolve, reject) => {
+        roleAllotResource(data).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        });
+    });
+  },
+  // 获取当前登录用户可分配的资源管理权限
+  getResourceAction({ commit },data){
+    return new Promise((resolve, reject) => {
+        getResource(data).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        });
+    });
+  },
+  // 获取当前登录用户有权限的资源管理权限
+  userCanAllotResourceAllPermitAction({ commit }){
+    return new Promise((resolve, reject) => {
+        userCanAllotResourceAllPermit().then(response => {
             resolve(response)
         }).catch(error => {
             reject(error)

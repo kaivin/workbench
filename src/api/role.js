@@ -162,3 +162,34 @@ export function roleAllotNetwork(data) {
     data,
   });
 }
+// 获取当前登录用户可分配的资源管理权限
+export function getResource(data) {
+  return request({
+    url: "/hxindex/Role/getrolesourcetypepermit",
+    method: "POST",
+    data,
+  });
+}
+// 当前角色已分配的资源管理权限接口
+export function roleResource(data) {
+  return request({
+    url: "/hxindex/Role/rolesourcetypepermit",
+    method: "POST",
+    data,
+  });
+}
+// 当前角色分配资源管理权限保存
+export function roleAllotResource(data) {
+  return request({
+    url: "/hxindex/Role/getsourcetypepermit",
+    method: "POST",
+    data,
+  });
+}
+// 获取当前登录用户有权限的资源管理权限
+export function userCanAllotResourceAllPermit() {
+  return request({
+    url: "/hxindex/Role/myallsourcetypepermit",
+    method: "POST",
+  });
+}
