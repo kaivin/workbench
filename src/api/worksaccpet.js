@@ -131,3 +131,19 @@ export function workOrderComment(data) {
       data,
     });
 }
+//个人工单列表-负责人填写进度百分比（2021-10-13）
+export function workOrderpercenter(data) {
+  return request({
+    url: "/hxindex/Worksaccpet/updatepercenter",
+    method: "POST",
+    data,
+  });
+}
+//个人工单列表-负责人确认完成开始做工单（2021-10-13）
+export function workOrderconfirmstart(data) {
+  return request({
+    url: "/hxindex/Worksaccpet/confirmstart",
+    method: "POST",
+    data,
+  });
+}

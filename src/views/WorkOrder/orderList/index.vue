@@ -28,7 +28,7 @@
                     <el-card class="box-card scroll-card" shadow="hover">
                         <div slot="header" v-if="currentStatus=='person'||currentStatus=='alloted'||currentStatus=='doing'||currentStatus=='done'||currentStatus=='stat'">
                             <div class="card-header" ref="headerPane">
-                                <div class="search-wrap">
+                                <div class="search-wrap" style="padding-bottom:10px;">
                                     <div class="item-search" style="width:150px;" v-if="currentStatus!='stat'">
                                         <el-select v-model="searchData.timetype" size="small" clearable placeholder="请选择时间类型" 
                                         :class="searchData.timetype!=''?'el-xzstate':''">
@@ -85,6 +85,13 @@
                                       <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                                     </div>
                                 </div>
+                                <div class="clues-info flex-wrap" v-if="currentStatus=='alloted'||currentStatus=='stat'">
+                                    <div class="clues-infoFl flex-content">
+                                          <p>
+                                            <span v-for="(item,index) in groupScore" :key='index'><strong>{{item.name}}</strong> 本月接收总分<strong  class="color1">{{item.monthaccpetscore}}</strong>，本月获得总分<strong  class="color2">{{item.monthfinishscore}}</strong></span>
+                                          </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="card-content" ref="tableContent">
@@ -96,6 +103,7 @@
                                       :data="tableData"
                                       tooltip-effect="dark"
                                       stripe
+                                      show-summary
                                       class="SiteTable"
                                       style="width: 100%"
                                       :style="'min-height:'+minHeight+'px;'"
@@ -111,56 +119,56 @@
                                           prop="depart"
                                           align="left"
                                           label="部门"
-                                          width="160"
+                                          width="150"
                                           >
                                       </el-table-column>
                                       <el-table-column
                                           prop="departgroup"
                                           align="left"
                                           label="小组"
-                                          min-width="160"
+                                          width="150"
                                           >
                                       </el-table-column>
                                       <el-table-column
                                           prop="workingcount"
                                           label="进行中工单数"
-                                          width="150"
+                                          min-width="150"
                                           >
                                       </el-table-column>
                                       <el-table-column
                                           prop="finishcount"
                                           label="已完成工单数"
-                                          width="150"
+                                          min-width="150"
                                           >
                                       </el-table-column>
                                       <el-table-column
                                           prop="outtimecount"
                                           label="已逾期工单数"
-                                          width="150"
+                                          min-width="150"
                                           >
                                       </el-table-column>
                                       <el-table-column
                                           prop="allcount"
                                           label="总工单数"
-                                          width="150"
+                                          min-width="150"
                                           >
                                       </el-table-column>
                                       <el-table-column
                                           prop="hasscore"
                                           label="已获得积分"
-                                          width="120"
+                                          min-width="120"
                                           >
                                       </el-table-column>
                                       <el-table-column
                                           prop="monthscore"
                                           label="本月已获得积分"
-                                          width="120"
+                                          min-width="120"
                                           >
                                       </el-table-column>
                                       <el-table-column
                                           prop="allscorre"
                                           label="总积分"
-                                          width="120"
+                                          min-width="120"
                                           >
                                       </el-table-column>
                                   </el-table>
@@ -197,7 +205,7 @@
                                           prop="tags"
                                           align="left"
                                           label="标签"
-                                          width="160"
+                                          min-width="160"
                                           >
                                           <template #default="scope">
                                               <div class="table-tag">
@@ -206,32 +214,77 @@
                                           </template>
                                       </el-table-column>
                                       <el-table-column
-                                          prop="addtime"
-                                          label="开始时间"
-                                          width="150"
+                                          prop="percenter"
+                                          label="进度"
+                                          width="90"
+                                          v-if="currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing'"
                                           >
+                                          <template slot-scope="scope">
+                                              <div class="table-input">
+                                                  <el-input size="small" v-if="currentStatus=='person'" @change="changePercenter(scope.row.id,scope.row.percenter)" v-model="scope.row.percenter"></el-input>
+                                                  <span v-else>{{scope.row.percenter}}%</span>
+                                              </div>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="startdotime"
+                                          sortable
+                                          label="开工时间"
+                                          min-width="110"
+                                          >
+                                          <template slot-scope="scope">
+                                              <p class="timenewline">{{scope.row.startdotimeDate}}<span>{{scope.row.startdotimeTime}}</span></p>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="starttime"
+                                          sortable
+                                          label="开始时间"
+                                          min-width="110"
+                                          >
+                                          <template slot-scope="scope">
+                                              <p class="timenewline">{{scope.row.starttimeDate}}<span>{{scope.row.starttimeTime}}</span></p>
+                                          </template>
                                       </el-table-column>
                                       <el-table-column
                                           prop="endtime"
+                                          sortable
                                           label="截止时间"
-                                          width="150"
+                                          min-width="110"
                                           >
+                                          <template slot-scope="scope">
+                                              <p class="timenewline">{{scope.row.endtimeDate}}<span>{{scope.row.endtimeTime}}</span></p>
+                                          </template>
                                       </el-table-column>
                                       <el-table-column
                                           prop="status"
                                           label="工单状态"
-                                          width="80"
+                                          width="90"
                                           >
                                           <template #default="scope">
                                             <div class="table-tag">
-                                              <span class="color6" v-if="scope.row.timestatus==2||scope.row.worktimestatus==2">已逾期</span>
+                                              <span class="color1" v-if="!scope.row.startdotime&&(currentStatus == 'person'||currentStatus == 'alloted')">待进行</span>  
+                                              <span v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus==3">
+                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
+                                                    <el-button>已完成(<span class="color6">已逾期</span>)</el-button>
+                                                  </el-tooltip>
+                                              </span>   
+                                              <span class="color6" v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus!=3">已逾期</span>
                                               <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'receive'">待接单</span>
                                               <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'allot'">待分配</span>
-                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==0">进行中</span>
+                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==0&&scope.row.startdotime">进行中</span>
                                               <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==1">待审核</span>
-                                              <span class="color3" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==2">已驳回</span>
+                                              <span v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==2">
+                                                  <el-tooltip class="item color3" effect="dark" :content="scope.row.rejectinfo" placement="right">
+                                                    <el-button>已驳回</el-button>
+                                                  </el-tooltip>
+                                              </span>
                                               <span class="color4" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus==0">待评价</span>
-                                              <span class="color5" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus!=0">已完成</span>
+                                              <span v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus!=0">
+                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
+                                                    <el-button>已完成</el-button>
+                                                  </el-tooltip>
+                                              </span>
                                             </div>
                                           </template>
                                       </el-table-column>
@@ -268,14 +321,15 @@
                                           width="120">
                                           <template slot-scope="scope">
                                               <div class="table-input">
-                                                  <el-select v-model="scope.row.dealuserid" size="small" :disabled="currentStatus!='allot'" clearable placeholder="负责人">
-                                                    <el-option
-                                                        v-for="item in userList"
-                                                        :key="item.value"
-                                                        :label="item.label"
-                                                        :value="item.value">
-                                                    </el-option>
-                                                </el-select>
+                                                  <el-select v-model="scope.row.dealuserid" size="small" :disabled="currentStatus!='allot'" v-if="currentStatus=='allot'" clearable placeholder="负责人">
+                                                      <el-option
+                                                          v-for="item in userList"
+                                                          :key="item.value"
+                                                          :label="item.label"
+                                                          :value="item.value">
+                                                      </el-option>
+                                                  </el-select>
+                                                  <span v-if="currentStatus!='allot'">{{scope.row.dealusername}}</span>
                                               </div>
                                           </template>
                                       </el-table-column>
@@ -289,6 +343,9 @@
                                           <template #default="scope">
                                             <div class="table-button">
                                                 <el-button size="mini" @click="receiveTableRow(scope.row,scope.$index)" v-if="currentStatus=='receive'&&menuButtonPermit.includes('Worksaccpet_confirmwork')">认领工单</el-button>
+
+                                                <el-button size="mini" @click="confirmstartRow(scope.row,scope.$index)" v-if="currentStatus=='person'&&(scope.row.startdotime==''||scope.row.startdotime==null)&&menuButtonPermit.includes('Worksaccpet_confirmstart')">开始工单</el-button>
+
                                                 <el-button size="mini" @click="cancelTableRow(scope.row,scope.$index)" v-if="currentStatus!='receive'&&(scope.row.workstatus!=1&&scope.row.workstatus!=3)&&menuButtonPermit.includes('Worksaccpet_backwork')">工单退回</el-button>
                                                 <el-button size="mini" @click="confirmAllotTableRow(scope.row,scope.$index)" v-if="currentStatus=='allot'&&menuButtonPermit.includes('Worksaccpet_confirmdeal')">确认分配</el-button>
                                                 <el-button size="mini" @click="confirmDoneTableRow(scope.row,scope.$index)" v-if="(currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')&&scope.row.workstatus!=1&&scope.row.workstatus!=3&&(scope.row.status==2||scope.row.status==5)&&menuButtonPermit.includes('Worksaccpet_confirmfinish')">提交审核</el-button>
@@ -318,7 +375,23 @@
                   <el-backtop target=".scroll-panel"></el-backtop>
                 </div>
             </div>
-            <el-backtop target=".scroll-panel"></el-backtop>
+            <el-backtop target=".scroll-panel"></el-backtop>    
+            <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Worksaccpet_personwork')" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+              <el-form :model="dialogForm">
+                <div class="item-form">
+                    <el-radio-group class="team-list" v-model="dialogForm.status" size="mini">
+                        <el-radio class="item-radio" label="1" border>是</el-radio>
+                        <el-radio class="item-radio" label="2" border>否</el-radio>
+                    </el-radio-group>
+                </div>
+              </el-form>              
+              <template #footer>
+                <span class="dialog-footer">
+                  <el-button @click="handleClose">取 消</el-button>
+                  <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
+                </span>
+              </template>
+            </el-dialog>        
         </div>
     </div>
 </template>
@@ -330,6 +403,13 @@ export default {
   name: 'WorkOrder_orderList',
   data() {
     return {
+        dialogFormVisible:false,
+        dialogText:"",
+        formLabelWidth:"110px",
+        dialogForm:{
+          id:0,
+          status:"1",
+        },
         breadcrumbList:[],
         breadcrumbName:'个人已分配',
         operationsWidth:"",
@@ -339,6 +419,7 @@ export default {
         minHeight:"auto",
         tableData:[],
         statData:[],
+        groupScore:[],
         page:1,
         limit:50,
         pageSizeList:[50, 100, 150, 200],
@@ -351,6 +432,7 @@ export default {
             workstatus:'',
         },
         timeTypeList:[
+          {label:"按完成时间",value:3},
           {label:"按接单时间",value:2},
           {label:"按分配时间",value:1},
         ],
@@ -396,7 +478,38 @@ export default {
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
               picker.$emit('pick', [start, end]);
             }
-          }]
+          }, {
+            text: '上月',
+            onClick(picker) {
+              var date = new Date();
+              var year = date.getFullYear().toString();
+              var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
+              var prevMonth=month-1;
+              if(prevMonth==0){
+                 year=year-1;
+                 prevMonth=12;
+              }
+              var prevEnd=new Date(year,prevMonth,0).getDate();  //计算上月的天数
+              var prevEndDay =year + '-' + prevMonth + '-' + prevEnd;
+              const end = prevEndDay  //最后一天
+              const start = year + '-' + prevMonth + '-01'    //上月第一天
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '本月',
+            onClick(picker) {
+              var date = new Date();
+              var year = date.getFullYear().toString();
+              //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
+              var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
+              //获取天，判断是否小于10，如果是在字符串前面拼接'0'
+              var day = date.getDate() < 10 ? '0'+date.getDate().toString():date.getDate().toString();
+              //字符串拼接，开始时间，结束时间
+              const end = year + '-' + month + '-' + day;  //当天
+              const start = year + '-' + month + '-01';    //当月第一天
+              picker.$emit('pick', [start, end]);
+            }
+          },]
         },
         scrollPosition:{
           width:0,
@@ -424,6 +537,7 @@ export default {
         },
         isLoading:null,
         isDisabled:false,
+        isSaveData:false,
     }
   },
   computed: {
@@ -614,6 +728,7 @@ export default {
       var $this = this;
       var searchData = {};
       var pathUrl = "";
+      $this.groupScore=[];
       if($this.currentStatus==="receive"){
         pathUrl = "worksaccpet/receiveWorkOrderDataAction";
       }else if($this.currentStatus==="allot"){
@@ -661,6 +776,7 @@ export default {
           if(response.status){
             var tableData = response.data;
             if($this.currentStatus==="stat"){
+                $this.groupScore=response.group;
             }else{
               tableData.forEach(function(item,index){
                 item.ownScore = "";
@@ -696,13 +812,44 @@ export default {
                     item.dealuserid = "";
                   }
                 }
+                var startdotime=[];
+                var starttime=[];
+                var endtime=[];
+                if(item.startdotime){
+                  startdotime=item.startdotime.split(" ");
+                  item.startdotimeDate=startdotime[0];
+                  item.startdotimeTime=startdotime[1];
+                }else{
+                  item.startdotimeDate='';
+                  item.startdotimeTime='';
+                }
+                if(item.starttime){
+                  starttime=item.starttime.split(" ");
+                  item.starttimeDate=starttime[0];
+                  item.starttimeTime=starttime[1];
+                }else{
+                  item.starttimeDate='';
+                  item.starttimeTime='';
+                }
+                if(item.endtime){
+                  endtime=item.endtime.split(" ");
+                  item.endtimeDate=endtime[0];
+                  item.endtimeTime=endtime[1];
+                }else{
+                  item.endtimeDate='';
+                  item.endtimeTime='';
+                }
               });
               if($this.currentStatus==="alloted"||$this.currentStatus==="person"||$this.currentStatus==="doing"||$this.currentStatus==="done"){
                   $this.totalDataNum = response.allcount;
               }else{
                   $this.totalDataNum = 0;
               }
+              if($this.currentStatus==="alloted"){
+                $this.groupScore=response.group;
+              }
             }
+            console.log(response,'response');
             $this.tableData = tableData;
             $this.isLoading.close();
             setTimeout(()=>{
@@ -786,11 +933,37 @@ export default {
         }
       });
     },
+    //个人工单列表-负责人填写进度百分比（2021-10-13）
+    changePercenter(varID,varPercenter){
+      var $this = this;
+      var dateForm={};
+      dateForm.id=varID;
+      dateForm.percenter=varPercenter;
+      $this.$store.dispatch('worksaccpet/workOrderpercenterAction',dateForm).then(res=>{
+          if(res){
+              if(res.status){
+                  $this.$message({
+                      showClose: true,
+                      message: res.info,
+                      type: 'success'
+                  });
+                  $this.initPage();
+              }else{
+                  $this.$message({
+                      showClose: true,
+                      message: res.info,
+                      type: 'error'
+                  });
+              }
+          }
+      })
+    },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
+          console.log(res,'res')
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
@@ -839,6 +1012,9 @@ export default {
                     if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')){
                         operationsWidth+=90;
                     }
+                    if($this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
+                        operationsWidth+=90;
+                    }
                     if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
                         operationsWidth+=90;
                     }
@@ -884,6 +1060,56 @@ export default {
         }
       });
     },
+    // 关闭弹窗
+    handleClose(){
+      var $this = this;
+      $this.dialogFormVisible = false;
+      setTimeout(()=>{
+        $this.isSaveData=false;
+      },1000);
+    },
+    // 保存评价
+    saveData(){
+      var $this = this;
+      if(!$this.isSaveData){
+        $this.isSaveData=true;
+        $this.$store.dispatch('worksaccpet/confirmDoneWorkOrderAction', $this.dialogForm).then(response=>{
+            if(response){
+                if(response.status){
+                    $this.$message({
+                        showClose: true,
+                        message: response.info,
+                        type: 'success'
+                    });
+                    $this.handleClose();
+                    $this.initPage();
+                }else{
+                    $this.$message({
+                        showClose: true,
+                        message: response.info,
+                        type: 'error'
+                    });
+                    setTimeout(()=>{
+                      $this.isSaveData=false;
+                    },1000);
+                }
+            }
+        });
+      }
+    },
+    // 提交审核
+    confirmDoneTableRow(row,index){
+      var $this = this;
+      $this.noconfirmData();
+      $this.dialogFormVisible = true;
+      $this.dialogText = "是否新修改";
+      $this.dialogForm.id=row.id
+    },
+    noconfirmData(){
+      var $this = this;
+      $this.dialogForm.id = 0;
+      $this.dialogForm.status = '1';
+    },
     // 每页显示条数改变事件
     handleSizeChange(val) {
       this.limit = val;
@@ -906,10 +1132,33 @@ export default {
         var $this = this;
         $this.resetSearchData();
         if($this.currentStatus==status){
+          $this.tableData=[];
           $this.initPage();
         }else{
           $this.$router.push({path:'/WorkOrder/orderList',query:{Status:status}});
         }
+    },
+    // 确认开始做工单
+    confirmstartRow(row,index){
+      var $this = this;
+      $this.$store.dispatch('worksaccpet/workOrderconfirmstartAction', {id:row.id}).then(response=>{
+          if(response){
+              if(response.status){
+                  $this.$message({
+                      showClose: true,
+                      message: response.info,
+                      type: 'success'
+                  });
+                  $this.initPage();
+              }else{
+                  $this.$message({
+                      showClose: true,
+                      message: response.info,
+                      type: 'error'
+                  });
+              }
+          }
+      });
     },
     // 工单退回
     cancelTableRow(row,index){
@@ -1053,28 +1302,6 @@ export default {
             type: 'info',
             message: '已取消'
           });          
-      });
-    },
-    // 提交审核
-    confirmDoneTableRow(row,index){
-      var $this = this;
-      $this.$store.dispatch('worksaccpet/confirmDoneWorkOrderAction', {id:row.id}).then(response=>{
-          if(response){
-              if(response.status){
-                  $this.$message({
-                      showClose: true,
-                      message: response.info,
-                      type: 'success'
-                  });
-                  $this.initPage();
-              }else{
-                  $this.$message({
-                      showClose: true,
-                      message: response.info,
-                      type: 'error'
-                  });
-              }
-          }
       });
     },
     // 重置搜索条件

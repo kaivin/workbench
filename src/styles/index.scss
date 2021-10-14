@@ -86,6 +86,9 @@
     }
   }
 }
+.el-input.is-disabled .el-input__inner {
+  color: #888!important;
+}
 /** 区域滚动样式 **/
 .scroll-panel{
   width:100%;

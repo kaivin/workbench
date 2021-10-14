@@ -16,6 +16,8 @@
     workOrderInfo,
     workOrderNoAllotInfo,
     workOrderComment,
+    workOrderpercenter,
+    workOrderconfirmstart,
 } from '@/api/worksaccpet'
 
 const state = {}
@@ -191,6 +193,26 @@ const actions = {
             })
         })
     },
+    // 个人工单列表-负责人填写进度百分比（2021-10-13）
+    workOrderpercenterAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            workOrderpercenter(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    //个人工单列表-负责人确认完成开始做工单（2021-10-13）
+    workOrderconfirmstartAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            workOrderconfirmstart(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },    
 }
 
 export default {

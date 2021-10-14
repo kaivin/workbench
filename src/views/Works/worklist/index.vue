@@ -13,7 +13,7 @@
                   <el-card class="box-card" shadow="hover">
                       <div slot="header">
                           <div class="card-header" ref="headerPane">
-                              <div class="search-wrap">
+                              <div class="search-wrap" style="padding-bottom:10px;">
                                   <div class="item-search" style="width: 240px;">
                                   <el-date-picker
                                       v-model="searchData.date"
@@ -70,7 +70,7 @@
                                     <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                                   </div>
                               </div>
-                              <div class="clues-info flex-box" style="margin-top:10px;">
+                              <div class="clues-info flex-box">
                                 <div class="clues-infoFl flex-content">
                                       <p><span>当前结果集共有<strong class="color1">{{infoData.totalCount}}</strong>条工单信息，进行中<strong class="color2">{{infoData.doingCount}}</strong>条，待审核<strong class="color3">{{infoData.checkingCount}}</strong>条，逾期未完成<strong class="color4">{{infoData.overdueCount}}</strong>条，已完成<b class="color5">{{infoData.doneCount}}</b>条。</span></p>
                                 </div>
@@ -108,15 +108,15 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="dealusername"
-                                    label="负责人"
-                                    min-width="200"
+                                    label="负责人(进度)"
+                                    width="140"
                                     >
                                 </el-table-column>
                                 <el-table-column
                                     prop="tags"
                                     align="left"
                                     label="标签"
-                                    width="160"
+                                    min-width="160"
                                     >
                                     <template #default="scope">
                                       <div class="table-tag">
@@ -137,7 +137,8 @@
                                     >
                                 </el-table-column>
                                 <el-table-column
-                                    prop="addtime"
+                                    prop="starttime"
+                                    sortable
                                     label="开始时间"
                                     width="160"
                                     >
@@ -145,6 +146,7 @@
                                 <el-table-column
                                     prop="endtime"
                                     label="截止时间"
+                                    sortable
                                     width="160"
                                     >
                                 </el-table-column>
@@ -154,7 +156,8 @@
                                     width="90">
                                     <template #default="scope">
                                       <div class="table-tag">
-                                          <span class="color6" v-if="scope.row.timestatus==2">已逾期</span>
+                                          <span class="color5" v-if="scope.row.status == 6&&scope.row.timestatus==2">已完成(<span class="color6">已逾期</span>)</span>
+                                          <span class="color6" v-if="scope.row.status!=6&&scope.row.timestatus==2">已逾期</span>
                                           <span class="color7" v-if="scope.row.timestatus!=2&&scope.row.status == 0">已撤销</span>
                                           <span class="color1" v-if="scope.row.timestatus!=2&&scope.row.status == 1">待接单</span>
                                           <span class="color2" v-if="scope.row.timestatus!=2&&scope.row.status == 2">进行中</span>
@@ -206,30 +209,30 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Works_addevaluation')" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
-      <el-form :model="dialogForm">
-        <div class="item-form">
-            <el-form-item label="评价内容：" :label-width="formLabelWidth">
-              <el-input type="textarea" v-model="dialogForm.commentinfo" :autosize="{ minRows: 2, maxRows: 4}" ref="commentinfo"></el-input>
-            </el-form-item>
-        </div>
-        <div class="item-form">
-            <el-form-item label="评价打分：" :label-width="formLabelWidth">
-              <el-radio-group v-model="dialogForm.commentstatus">
-                <el-radio :label="1">好评</el-radio>
-                <el-radio :label="2">一般</el-radio>
-                <el-radio :label="3">差评</el-radio>
-              </el-radio-group>
-            </el-form-item>
-        </div>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="saveData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+      <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Works_addevaluation')" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+        <el-form :model="dialogForm">
+          <div class="item-form">
+              <el-form-item :label="dialogText=='添加评价'?'评价内容：':'驳回内容：'" :label-width="formLabelWidth">
+                <el-input type="textarea" v-model="dialogForm.commentinfo" :autosize="{ minRows: 2, maxRows: 4}" ref="commentinfo"></el-input>
+              </el-form-item>
+          </div>
+          <div class="item-form" v-if="dialogText=='添加评价'">
+              <el-form-item label="评价打分：" :label-width="formLabelWidth">
+                <el-radio-group v-model="dialogForm.commentstatus">
+                  <el-radio :label="1">好评</el-radio>
+                  <el-radio :label="2">一般</el-radio>
+                  <el-radio :label="3">差评</el-radio>
+                </el-radio-group>
+              </el-form-item>
+          </div>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" @click="saveData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
@@ -246,6 +249,10 @@ export default {
       dialogFormVisible:false,
       dialogText:"",
       formLabelWidth:"110px",
+      noconfirmForm:{
+        id:0,
+        rejectinfo:"",
+      },
       dialogForm:{
         id:0,
         commentinfo:"",
@@ -300,7 +307,38 @@ export default {
             start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
             picker.$emit('pick', [start, end]);
           }
-        }]
+        }, {
+            text: '上月',
+            onClick(picker) {
+              var date = new Date();
+              var year = date.getFullYear().toString();
+              var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
+              var prevMonth=month-1;
+              if(prevMonth==0){
+                 year=year-1;
+                 prevMonth=12;
+              }
+              var prevEnd=new Date(year,prevMonth,0).getDate();  //计算上月的天数
+              var prevEndDay =year + '-' + prevMonth + '-' + prevEnd;
+              const end = prevEndDay  //最后一天
+              const start = year + '-' + prevMonth + '-01'    //上月第一天
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '本月',
+            onClick(picker) {
+              var date = new Date();
+              var year = date.getFullYear().toString();
+              //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
+              var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
+              //获取天，判断是否小于10，如果是在字符串前面拼接'0'
+              var day = date.getDate() < 10 ? '0'+date.getDate().toString():date.getDate().toString();
+              //字符串拼接，开始时间，结束时间
+              const end = year + '-' + month + '-' + day;  //当天
+              const start = year + '-' + month + '-01';    //当月第一天
+              picker.$emit('pick', [start, end]);
+            }
+          }]
       },
       scrollPosition:{
         width:0,
@@ -684,33 +722,16 @@ export default {
     // 驳回表格行
     rejectTableRow(row,index){
       var $this = this;
-      $this.$confirm('是否确认驳回该工单?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-      }).then(() => {
-          $this.$store.dispatch('works/workOrderRejectedAction', {id:row.id}).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.initPage();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-            }
-          });
-      }).catch(() => {
-          $this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-      });
+      $this.noconfirmData();
+      $this.dialogFormVisible = true;
+      $this.dialogText = "驳回原因";
+      $this.noconfirmForm.id = row.id;
+    },
+    noconfirmData(){
+      var $this = this;
+      $this.noconfirmForm.id = 0;
+      $this.noconfirmForm.rejectinfo = "";
+      $this.dialogForm.commentinfo = "";
     },
     // 确认表格行
     confirmTableRow(row,index){
@@ -870,8 +891,8 @@ export default {
     commentTableRow(row,index){
       var $this = this;
       $this.resetFormData();
-      $this.dialogForm.id = row.id;
       $this.dialogFormVisible = true;
+      $this.dialogForm.id = row.id;
       $this.dialogText = "添加评价";
     },
     resetFormData(){
@@ -888,7 +909,18 @@ export default {
     // 保存评价
     saveData(){
       var $this = this;
-      $this.$store.dispatch('works/workOrderEvaluateSaveAction', $this.dialogForm).then(response=>{
+      var pathUrl = "";
+      var pathformData = "";
+      if($this.dialogText == "添加评价"){
+          pathUrl = "works/workOrderEvaluateSaveAction";
+          pathformData=$this.dialogForm;
+      }
+      if($this.dialogText == "驳回原因"){
+          pathUrl = "works/workOrderRejectedAction";
+          $this.noconfirmForm.rejectinfo = $this.dialogForm.commentinfo;
+          pathformData=$this.noconfirmForm;
+      }
+      $this.$store.dispatch(pathUrl, pathformData).then(response=>{
         if(response){
           if(response.status){
             $this.$message({

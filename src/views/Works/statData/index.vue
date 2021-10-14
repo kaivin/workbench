@@ -53,75 +53,77 @@
                           <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
                               <div class="table-mask"></div>
                               <el-table
-                              ref="simpleTable"
-                              :data="tableData"
-                              tooltip-effect="dark"
-                              stripe
-                              class="SiteTable"
-                              style="width: 100%"
-                              :style="'min-height:'+tableHeight+'px;'"
-                              row-key="id">
+                                ref="simpleTable"
+                                :data="tableData"
+                                tooltip-effect="dark"
+                                stripe
+                                class="SiteTable"
+                                style="width: 100%"
+                                :style="'min-height:'+tableHeight+'px;'"
+                                row-key="sID"
+                                :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+                                >
                                 <el-table-column
-                                      prop="name"
-                                      label="姓名"
-                                      width="100">
-                                  </el-table-column>
-                                  <el-table-column
-                                      prop="depart"
-                                      align="left"
-                                      label="部门"
-                                      width="160"
-                                      >
-                                  </el-table-column>
-                                  <el-table-column
-                                      prop="departgroup"
-                                      align="left"
-                                      label="小组"
-                                      min-width="160"
-                                      >
-                                  </el-table-column>
-                                  <el-table-column
-                                      prop="waitcount"
-                                      label="待接单工单数"
-                                      width="150"
-                                      >
-                                  </el-table-column>
-                                  <el-table-column
-                                      prop="timeingcount"
-                                      label="进行中工单数"
-                                      width="150"
-                                      >
-                                  </el-table-column>
-                                  <el-table-column
-                                      prop="waitcheck"
-                                      label="待审核工单数"
-                                      width="150"
-                                      >
-                                  </el-table-column>
-                                  <el-table-column
-                                      prop="finishcount"
-                                      label="已完成工单数"
-                                      width="150"
-                                      >
-                                  </el-table-column>
-                                  <el-table-column
-                                      prop="outimecount"
-                                      label="已逾期工单数"
-                                      width="150"
-                                      >
-                                  </el-table-column>
-                                  <el-table-column
-                                      prop="allcount"
-                                      label="总工单数"
-                                      width="150"
-                                      >
-                                  </el-table-column>
-                                  <el-table-column
-                                      prop="allscorre"
-                                      label="总积分"
-                                      width="120"
-                                      >
-                                  </el-table-column>
+                                    prop="name"
+                                    label="姓名"
+                                    width="140">
+                                </el-table-column>
+                                <el-table-column
+                                    prop="depart"
+                                    align="left"
+                                    label="部门"
+                                    width="160"
+                                    >
+                                </el-table-column>
+                                <el-table-column
+                                    prop="departgroup"
+                                    align="left"
+                                    label="小组"
+                                    width="240"
+                                    >
+                                </el-table-column>
+                                <el-table-column
+                                    prop="waitcount"
+                                    label="待接单工单数"
+                                    min-width="150"
+                                    >
+                                </el-table-column>
+                                <el-table-column
+                                    prop="timeingcount"
+                                    label="进行中工单数"
+                                    min-width="150"
+                                    >
+                                </el-table-column>
+                                <el-table-column
+                                    prop="waitcheck"
+                                    label="待审核工单数"
+                                    min-width="150"
+                                    >
+                                </el-table-column>
+                                <el-table-column
+                                    prop="finishcount"
+                                    label="已完成工单数"
+                                    min-width="150"
+                                    >
+                                </el-table-column>
+                                <el-table-column
+                                    prop="outimecount"
+                                    label="已逾期工单数"
+                                    min-width="150"
+                                    >
+                                </el-table-column>
+                                <el-table-column
+                                    prop="allcount"
+                                    label="总工单数"
+                                    min-width="150"
+                                    >
+                                </el-table-column>
+                                <el-table-column
+                                    prop="allscorre"
+                                    label="总积分"
+                                    min-width="120"
+                                    >
+                                </el-table-column>
                               </el-table>
                           </div>
                           <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
@@ -153,6 +155,7 @@ export default {
         namecolor:'#17997f',
       },
       departList:[],
+      groupArr:[],
       searchData:{
         date:[],
         dept_id:"",
@@ -387,7 +390,39 @@ export default {
       $this.$store.dispatch('works/workOrderStatInfoAction', searchData).then(response=>{
         if(response){
           if(response.status){
-            $this.tableData = response.data;
+            var dept_Date = response.data;
+            var dept_group = response.group;
+            var groupArr=[];
+            dept_Date.forEach(function(item,index){
+              item.sID=index+dept_group.length+1;
+            });
+            dept_group.forEach(function(item,index){
+              item.sID=index+1
+            });
+
+            dept_Date.forEach(function(item,index){
+              if(item.dept_id==0){
+                groupArr.push(item);
+              }
+            });
+            dept_group.forEach(function(item,index){
+               var oBj={
+                 children:[],
+                 depart:'',
+               }
+               item.depart=item.name;
+               item.children=oBj.children;
+               dept_Date.forEach(function(items,indexs){
+                 if(items.dept_id!=0){
+                    if(item.name==items.depart){
+                       item.children.push(items);
+                    }
+                 }
+               });
+            });
+            $this.groupArr=$this.groupArr.concat(groupArr,dept_group);
+            $this.tableData = $this.groupArr;
+            console.log($this.tableData,"11");
             $this.isLoading.close();
             setTimeout(()=>{
               $this.isSearchResult=false;

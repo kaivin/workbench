@@ -36,13 +36,8 @@
                 <div class="title-panel">当前状态</div>
               </li>
               <li>
-                <div class="icon-panel"><i class="svg-i"><svg-icon icon-class="work_head" /></i></div>
-                <div class="value-panel">{{!articleData.dealusername||articleData.dealusername==''?'暂无':articleData.dealusername}}</div>
-                <div class="title-panel">负责人</div>
-              </li>
-              <li>
                 <div class="icon-panel"><i class="svg-i"><svg-icon icon-class="work_start" /></i></div>
-                <div class="value-panel">{{articleData.addtime}}</div>
+                <div class="value-panel">{{articleData.starttime}}</div>
                 <div class="title-panel">开始时间</div>
               </li>
               <li>
@@ -52,13 +47,19 @@
               </li>
             </ul>
             <div class="title-line"><i class="svg-i"><svg-icon icon-class="work_title" /></i><span>基本信息</span></div>
-            <ul class="other-info">
+            <ul class="other-info" v-for='(item,index) in ulist' :key="index">
+              <li>
+                <dl class="item-info">
+                  <dt>负责人</dt>
+                  <dd><p class="score">{{item.dealusername}}</p></dd>
+                </dl>
+              </li>
               <li>
                 <dl class="item-info">
                   <dt>任务积分</dt>
                   <dd>
                     <p class="score" v-if="currentStatus=='receive'">{{articleData.score}}<span v-if="articleData.accpetscore!=0">(剩余积分：{{articleData.score-articleData.accpetscore}})</span></p>
-                    <p class="score" v-else>{{articleData.accpetscore}}</p>
+                    <p class="score" v-else>{{item.score}}</p>
                   </dd>
                 </dl>
               </li>
@@ -70,14 +71,8 @@
               </li>
               <li>
                 <dl class="item-info">
-                  <dt>已投入时间</dt>
-                  <dd><p class="default-text">{{articleData.timeing}}天</p></dd>
-                </dl>
-              </li>
-              <li>
-                <dl class="item-info">
                   <dt>任务时间进度</dt>
-                  <dd><p class="range-date"><span class="range-dom"><i v-bind:style="'width:'+articleData.dayPercent"></i></span><span class="font-dom">{{articleData.dayPercent}}</span></p></dd>
+                  <dd><p class="range-date"><span class="range-dom"><i v-bind:style="'width:'+item.percenter+'%'"></i></span><span class="font-dom">{{item.percenter}}%</span></p></dd>
                 </dl>
               </li>
             </ul>
@@ -160,6 +155,7 @@ export default {
       isHideName:false,
       isFocus:false,
       isLoading:null,
+      ulist:[],
     }
   },
   directives:{
@@ -427,6 +423,7 @@ export default {
                 logList.push(itemData);
               });
               $this.logList = logList;
+              $this.ulist=response.ulist;
               $this.articleData = response.data;
               $this.isLoading.close();
             }else{

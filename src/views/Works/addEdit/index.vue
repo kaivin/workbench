@@ -74,6 +74,19 @@
                       </div>
                     </div>
                     <div class="item-form inline-item other-td">
+                      <strong>开始时间：</strong>
+                      <div class="item-form-panel">
+                        <el-date-picker
+                            v-model="formData.starttime"
+                            type="datetime"
+                            placeholder="选择日期时间"
+                            class="date-time"
+                            default-time="17:30:00"
+                            value-format = "yyyy-MM-dd HH:mm:ss">
+                        </el-date-picker>
+                      </div>
+                    </div>
+                    <div class="item-form inline-item other-td">
                       <strong>截止时间：</strong>
                       <div class="item-form-panel">
                         <el-date-picker
@@ -170,6 +183,7 @@ export default {
         isedit:false,
         publishuserid:'',
         score:"",
+        starttime:"",
         endtime:"",
       },
       editorConfig: {
@@ -509,6 +523,7 @@ export default {
             });
         }
         $this.typeList = data;
+        $this.isLoading.close();
         setTimeout(()=>{
           $this.isDisabled=false;
         },1000);
@@ -555,6 +570,7 @@ export default {
       $this.formData.id = data.id;
       $this.formData.title = data.title;
       $this.formData.content = data.content;
+      $this.formData.starttime = data.starttime;
       $this.formData.endtime = data.endtime;
       $this.formData.score = data.score;
       $this.formData.mytags = data.mytags;
@@ -586,6 +602,7 @@ export default {
       $this.formData.content = "";
       $this.formData.publishuserid = "";
       $this.formData.score = "";
+      $this.formData.starttime = "";
       $this.formData.endtime = "";
       $this.formData.issay = false;
       $this.formData.isedit = false;
@@ -627,6 +644,14 @@ export default {
         });
         return false;
       }
+      if($this.formData.starttime == ""){
+        $this.$message({
+            showClose: true,
+            message: '错误：工单开始时间不能为空！',
+            type: 'error'
+        });
+        return false;
+      }
       if($this.formData.endtime == ""){
         $this.$message({
             showClose: true,
@@ -657,6 +682,7 @@ export default {
         formData.issay = $this.formData.issay?0:1;
         formData.isedit = $this.formData.isedit?1:0;
         formData.score = $this.formData.score;
+        formData.starttime = $this.formData.starttime;
         formData.endtime = $this.formData.endtime;
         var pathUrl = "";
         if($this.formData.id!==0){

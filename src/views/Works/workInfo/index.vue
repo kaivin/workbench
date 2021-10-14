@@ -36,13 +36,8 @@
                 <div class="title-panel">当前状态</div>
               </li>
               <li>
-                <div class="icon-panel"><i class="svg-i"><svg-icon icon-class="work_head" /></i></div>
-                <div class="value-panel">{{articleData.dealusername==''?'暂无':articleData.dealusername}}</div>
-                <div class="title-panel">负责人</div>
-              </li>
-              <li>
                 <div class="icon-panel"><i class="svg-i"><svg-icon icon-class="work_start" /></i></div>
-                <div class="value-panel">{{articleData.addtime}}</div>
+                <div class="value-panel">{{articleData.starttime}}</div>
                 <div class="title-panel">开始时间</div>
               </li>
               <li>
@@ -51,12 +46,18 @@
                 <div class="title-panel">截止时间</div>
               </li>
             </ul>
-            <div class="title-line"><i class="svg-i"><svg-icon icon-class="work_title" /></i><span>基本信息</span></div>
-            <ul class="other-info">
+            <div class="title-line"><i class="svg-i"><svg-icon icon-class="work_title" /></i><span>基本信息</span></div>            
+            <ul class="other-info" v-for="(item,index) in acpetuser" :key="index">
+              <li>
+                <dl class="item-info">
+                  <dt>负责人</dt>
+                  <dd><p class="score">{{item.dealusername}}</p></dd>
+                </dl>
+              </li>
               <li>
                 <dl class="item-info">
                   <dt>任务积分</dt>
-                  <dd><p class="score">{{articleData.score}}</p></dd>
+                  <dd><p class="score">{{item.score}}</p></dd>
                 </dl>
               </li>
               <li>
@@ -67,14 +68,8 @@
               </li>
               <li>
                 <dl class="item-info">
-                  <dt>已投入时间</dt>
-                  <dd><p class="default-text">{{articleData.timeing}}天</p></dd>
-                </dl>
-              </li>
-              <li>
-                <dl class="item-info">
                   <dt>任务时间进度</dt>
-                  <dd><p class="range-date"><span class="range-dom"><i v-bind:style="'width:'+articleData.dayPercent"></i></span><span class="font-dom">{{articleData.dayPercent}}</span></p></dd>
+                  <dd><p class="range-date"><span class="range-dom"><i v-bind:style="'width:'+item.percenter+'%'"></i></span><span class="font-dom">{{item.percenter}}%</span></p></dd>
                 </dl>
               </li>
             </ul>
@@ -151,6 +146,7 @@ export default {
       currentID:0,
       colspanNum:12,
       articleData:{},
+      acpetuser:[],
       logList:[],
       content:"",
       isHideName:false,
@@ -340,6 +336,7 @@ export default {
       $this.$store.dispatch('works/workOrderEditInitInfoAction', {id:$this.currentID}).then(response=>{
           if(response){
             if(response.status){
+              console.log(response,'response');
               if(response.data.accpertusername!=''&&response.data.accpertusername.indexOf('|')!=-1){
                 response.data.accpertusername = response.data.accpertusername.replace("|","、");
               }
@@ -403,6 +400,7 @@ export default {
                 logList.push(itemData);
               });
               $this.logList = logList;
+              $this.acpetuser=response.acpetuser;
               $this.articleData = response.data;
             }else{
               if(response.permitstatus&&response.permitstatus==2){
