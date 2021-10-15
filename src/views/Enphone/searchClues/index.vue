@@ -1305,7 +1305,7 @@ export default {
                     deptOneId.push(item);   
                 }
             }); 
-            item.isOnshow =true;
+            item.isOnshow =false;
             $this.deptOneId=deptOneId;
           }else{
             var checkedList = [];

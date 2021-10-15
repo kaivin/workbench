@@ -40,6 +40,15 @@
                     <div slot="header">
                         <div class="card-header EnphoneCardHeader" ref="headerPane">
                             <div class="search-wrap">
+                              <div class="item-search EnphoneSearchOne" style="width:100%;float:none;">
+                                <div class="item flex-wrap" v-for="item in phoneList" :key="item.id">
+                                    <strong>{{item.name}}</strong>
+                                    <el-checkbox class="all-select" :indeterminate="item.isAll" border size="mini" v-model="item.isOn" @change="handleCheckAllOneChange(item.id)">全选</el-checkbox>
+                                    <el-checkbox-group class="team-list flex-content" v-model="phoneSelected" @change="handleCheckedOneChange" size="mini">
+                                        <el-checkbox class="item-checkbox" v-for="items in item.children" :key="items.value" :label="items.value" border>{{items.label}}</el-checkbox>
+                                    </el-checkbox-group>                                   
+                                </div>
+                              </div>
                               <div class="item-search" style="width: 240px;">
                                 <el-date-picker
                                     v-model="searchData.date"
@@ -56,16 +65,6 @@
                                     :picker-options="pickerRangeOptions"
                                     :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
                                 </el-date-picker>
-                              </div>
-                              <div class="item-search" style="width:100px;">
-                                <el-select v-model="searchData.phoneid" size="small" clearable placeholder="电话" :class="searchData.phoneid!=''?'el-xzstate':''">
-                                  <el-option
-                                  v-for="item in phoneList"
-                                  :key="item.value"
-                                  :label="item.label"
-                                  :value="item.value">
-                                  </el-option>
-                                </el-select>
                               </div>
                               <div class="item-search" style="width:100px;">
                                 <el-select v-model="searchData.mode" size="small" clearable placeholder="渠道" :class="searchData.mode!=''?'el-xzstate':''">
@@ -511,6 +510,7 @@ export default {
       minDate:[],
       maxNum:0,
       pageSizeList:[20],
+      phoneSelected:[],
       searchData:{
         date:[],
         messageid:"",
@@ -835,7 +835,7 @@ export default {
       var searchData = {};
       searchData.page = $this.searchData.page;
       searchData.limit = $this.searchData.limit;
-      searchData.phoneid = $this.searchData.phoneid;
+      searchData.phoneid = $this.phoneSelected;
       searchData.messageid = $this.searchData.messageid;
       searchData.province = $this.searchData.province;
       searchData.search = $this.searchData.search;
@@ -980,6 +980,7 @@ export default {
       var $this = this;
       $this.$store.dispatch('chinaphone/cluesSearchSelectDataAction', null).then(response=>{
         if(response){
+          console.log(response,"搜索条件数据");
           if(response.status){
             var deviceList = [];
             response.device.forEach(function(item,index){
@@ -1006,13 +1007,31 @@ export default {
             });
             $this.sourceList = sourceList;
             var phoneList = [];
+            var departIDList = [];
             response.phone.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.phonenumber;
-              itemData.value = item.id;
-              phoneList.push(itemData);
+              if(!departIDList.includes(item.dept_id)){
+                var itemData = {};
+                departIDList.push(item.dept_id);
+                itemData.id = item.dept_id;
+                itemData.name = item.departname;
+                itemData.isAll = false;
+                itemData.isOn = false;
+                itemData.children = [];
+                phoneList.push(itemData);
+              }
+            });
+            phoneList.forEach(function(item,index){
+              response.phone.forEach(function(item1,index1){
+                if(item.id == item1.dept_id){
+                  var itemData = {};
+                  itemData.label = item1.phonenumber;
+                  itemData.value = item1.id;
+                  item.children.push(itemData);
+                }
+              });
             });
             $this.phoneList = phoneList;
+            console.log($this.phoneList,"部门电话");
             var levelList = [];
             response.xunlevel.forEach(function(item,index){
               var itemData = {};
@@ -1039,6 +1058,74 @@ export default {
           }
         }
       });
+    },
+    // 电商全选改变事件
+    handleCheckAllOneChange(id){
+      var $this = this;
+      var phoneSelected=$this.phoneSelected;
+      var phoneList = $this.phoneList;
+      phoneList.forEach(function(item,index){
+        if(id==item.id){
+          if(item.isOn){
+            var checkedList = [];
+            item.children.forEach(function(items,indexs){
+                checkedList.push(items.value);
+            });  
+            checkedList.forEach(function(item,index){
+                if(phoneSelected.indexOf(item)==-1){  
+                    phoneSelected.push(item);   
+                }
+            }); 
+            item.isAll =false;
+            $this.phoneSelected=phoneSelected;
+          }else{
+            var checkedList = [];
+            item.children.forEach(function(items,indexs){
+                checkedList.push(items.value);
+            });
+            var newArr=[];
+            phoneSelected.forEach(function(item,index){
+                if(checkedList.indexOf(item)==-1){  
+                   newArr.push(item);
+                }
+            });
+            $this.phoneSelected=newArr;
+            item.isAll =false;
+          }          
+        }        
+      });
+      $this.phoneList = phoneList;
+    },
+    // 电商一部选择改变事件
+    handleCheckedOneChange(e){
+      var $this = this;
+      console.log(e);
+      var phoneSelected=e;
+      if(phoneSelected.length>0){
+        $this.phoneList.forEach(function(item,index){
+          var TNum=0;
+          item.children.forEach(function(items,indexs){
+              if(phoneSelected.indexOf(items.value)>-1){
+                  TNum=TNum+1;       
+              }
+              if(TNum>0&&TNum<indexs+1){
+                item.isAll=true;
+              }else{
+                item.isAll = false;
+              }
+              if(TNum>indexs){
+                item.isOn=true;
+              }else{
+                item.isOn=false;
+              }
+          });
+        });
+      }else{
+        $this.phoneList.forEach(function(item,index){
+          item.isOn=false;
+          item.isAll = false;
+        });
+      }
     },
     // 修改询盘
     editTableRow(row,index){
