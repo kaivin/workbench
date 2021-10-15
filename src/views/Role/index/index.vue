@@ -1196,8 +1196,8 @@ export default {
     // 权限分配保存
     savePermitData(){
       var $this = this;
-      if(!$this.isSsavePermitData){
-        $this.isSsavePermitData=true;
+      if(!$this.isSavePermitData){
+        $this.isSavePermitData=true;
         var permitPostData = {};
         permitPostData.rid = $this.currentRoleID;
         permitPostData.name = $this.currentRoleName;
@@ -1218,7 +1218,7 @@ export default {
               type: 'error'
             });
             setTimeout(()=>{
-              $this.isSsavePermitData=false;
+              $this.isSavePermitData=false;
             },1000);
           }
         });

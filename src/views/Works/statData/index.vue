@@ -380,32 +380,40 @@ export default {
             var dept_Date = response.data;
             var dept_group = response.group;
             var groupArr=[];
-            dept_Date.forEach(function(item,index){
-              item.sID=index+dept_group.length+1;
-            });
-            dept_group.forEach(function(item,index){
-              item.sID=index+1
-            });
-            dept_Date.forEach(function(item,index){
-              if(item.dept_id==0){
-                groupArr.push(item);
-              }
-            });
-            dept_group.forEach(function(item,index){
-               var oBj={
-                 children:[],
-                 depart:'',
-               }
-               item.depart=item.name;
-               item.children=oBj.children;
-               dept_Date.forEach(function(items,indexs){
-                 if(items.dept_id!=0){
-                    if(item.name==items.depart){
-                       item.children.push(items);
-                    }
-                 }
-               });
-            });
+            if(dept_Date.length>0){
+              dept_Date.forEach(function(item,index){
+                item.sID=index+dept_group.length+1;
+              });
+            }
+            if(dept_group.length>0){
+              dept_group.forEach(function(item,index){
+                item.sID=index+1
+              });
+            }
+            if(dept_Date.length>0){
+              dept_Date.forEach(function(item,index){
+                if(item.dept_id==0){
+                  groupArr.push(item);
+                }
+              });
+            }
+            if(dept_group.length>0){
+              dept_group.forEach(function(item,index){
+                var oBj={
+                  children:[],
+                  depart:'',
+                }
+                item.depart=item.name;
+                item.children=oBj.children;
+                dept_Date.forEach(function(items,indexs){
+                  if(items.dept_id!=0){
+                      if(item.name==items.depart){
+                        item.children.push(items);
+                      }
+                  }
+                });
+              });
+            }
             var groupArrw=[];            
             groupArrw=groupArrw.concat(groupArr,dept_group);
             $this.groupArr=groupArrw;
