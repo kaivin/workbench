@@ -73,6 +73,10 @@
                               <div class="clues-info flex-box">
                                 <div class="clues-infoFl flex-content">
                                       <p><span>当前结果集共有<strong class="color1">{{infoData.totalCount}}</strong>条工单信息，进行中<strong class="color2">{{infoData.doingCount}}</strong>条，待审核<strong class="color3">{{infoData.checkingCount}}</strong>条，逾期未完成<strong class="color4">{{infoData.overdueCount}}</strong>条，已完成<b class="color5">{{infoData.doneCount}}</b>条。</span></p>
+                                      
+                                      <p>
+                                        <span v-for="(item,index) in groupScore" :key='index'><strong>{{item.name}}</strong> ，本月总积分<strong  class="color1">{{item.score}}</strong>，本月剩余积分<strong  class="color2">{{item.nowscore}}</strong></span>
+                                      </p>
                                 </div>
                               </div>
                           </div>
@@ -245,6 +249,7 @@ export default {
       operationsWidth:"",
       menuButtonPermit:[],
       tableData:[],
+      groupScore:[],
       tableHeight:"auto",
       dialogFormVisible:false,
       dialogText:"",
@@ -555,6 +560,7 @@ export default {
         document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
         $this.$store.dispatch('works/workOrderListAction', searchData).then(response=>{
           if(response){
+            console.log(response,'00');
             if(response.status){
               response.data.forEach(function(item,index){
                 item.tagList = [];
@@ -585,6 +591,7 @@ export default {
                   }
                 }
               });
+              $this.groupScore=response.departscore;
               $this.tableData = response.data;
               $this.totalDataNum = response.allcount;
               var infoData = {};

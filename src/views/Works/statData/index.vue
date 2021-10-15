@@ -30,16 +30,6 @@
                                           :picker-options="pickerRangeOptions">
                                       </el-date-picker>
                                   </div>
-                                  <div class="item-search" style="width: 140px;">
-                                    <el-select v-model="searchData.dept_id" size="small" clearable placeholder="部门">
-                                        <el-option
-                                            v-for="item in departList"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value">
-                                        </el-option>
-                                    </el-select>
-                                  </div>
                                   <div class="item-search">
                                     <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                                   </div>
@@ -154,11 +144,9 @@ export default {
         sort:"",
         namecolor:'#17997f',
       },
-      departList:[],
       groupArr:[],
       searchData:{
         date:[],
-        dept_id:"",
       },
       pickerRangeOptions: {
         shortcuts: [{
@@ -373,7 +361,6 @@ export default {
     resetData(){
         var $this = this;
         $this.searchData.date=[];
-        $this.searchData.dept_id='';
         $this.searchResult();
     },
     // 初始化数据
@@ -399,7 +386,6 @@ export default {
             dept_group.forEach(function(item,index){
               item.sID=index+1
             });
-
             dept_Date.forEach(function(item,index){
               if(item.dept_id==0){
                 groupArr.push(item);
@@ -420,7 +406,9 @@ export default {
                  }
                });
             });
-            $this.groupArr=$this.groupArr.concat(groupArr,dept_group);
+            var groupArrw=[];            
+            groupArrw=groupArrw.concat(groupArr,dept_group);
+            $this.groupArr=groupArrw;
             $this.tableData = $this.groupArr;
             console.log($this.tableData,"11");
             $this.isLoading.close();
@@ -461,7 +449,6 @@ export default {
         searchData.starttime = "";
         searchData.endtime = "";
       }
-      searchData.dept_id = $this.searchData.dept_id?$this.searchData.dept_id:'';
       return searchData;
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -474,7 +461,7 @@ export default {
               $this.menuButtonPermit.push(item.action_route);
             });
             if($this.menuButtonPermit.includes('Works_workcount')){
-              $this.getDepartData();
+              $this.initPage();
             }else{
               $this.$message({
                 showClose: true,
@@ -499,31 +486,6 @@ export default {
             message: response.info,
             type: 'error'
           });
-        }
-      });
-    },
-    // 获取部门数据
-    getDepartData(){
-      var $this = this;
-      $this.$store.dispatch('works/departListAction', null).then(response=>{
-        if(response){
-          if(response.status){
-            var departList = [];
-            response.data.forEach(function(item,index){
-              var itemData = {};
-              itemData.label= item.name;
-              itemData.value = item.id;
-              departList.push(itemData);
-            });
-            $this.departList = departList;
-            $this.initPage();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
         }
       });
     },

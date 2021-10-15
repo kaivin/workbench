@@ -182,7 +182,7 @@
                                       style="width: 100%"
                                       :style="'min-height:'+minHeight+'px;'"
                                       row-key="id"
-                                      v-else
+                                      v-if="currentStatus=='receive'"
                                       >
                                       <el-table-column
                                           prop="username"
@@ -207,7 +207,280 @@
                                           label="标签"
                                           min-width="160"
                                           >
+                                          <template slot-scope="scope">
+                                              <div class="table-tag">
+                                              <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="(item,index) in scope.row.tagList" v-bind:key="index">{{item.tag}}</el-tag>
+                                              </div>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="starttime"
+                                          sortable
+                                          label="开始时间"
+                                          min-width="110"
+                                          >
+                                          <template slot-scope="scope">
+                                              <p class="timenewline">{{scope.row.starttimeDate}}<span>{{scope.row.starttimeTime}}</span></p>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="endtime"
+                                          sortable
+                                          label="截止时间"
+                                          min-width="110"
+                                          >
+                                          <template slot-scope="scope">
+                                              <p class="timenewline">{{scope.row.endtimeDate}}<span>{{scope.row.endtimeTime}}</span></p>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="status"
+                                          label="工单状态"
+                                          width="90"
+                                          >
+                                          <template slot-scope="scope">
+                                            <div class="table-tag">
+                                              <span class="color1" v-if="!scope.row.startdotime&&(currentStatus == 'person'||currentStatus == 'alloted')">待进行</span>  
+                                              <span v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus==3">
+                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
+                                                    <el-button>已完成(<span class="color6">已逾期</span>)</el-button>
+                                                  </el-tooltip>
+                                              </span>   
+                                              <span class="color6" v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus!=3">已逾期</span>
+                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'receive'">待接单</span>
+                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'allot'">待分配</span>
+                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==0&&scope.row.startdotime">进行中</span>
+                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==1">待审核</span>
+                                              <span v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==2">
+                                                  <el-tooltip class="item color3" effect="dark" :content="scope.row.rejectinfo" placement="right">
+                                                    <el-button>已驳回</el-button>
+                                                  </el-tooltip>
+                                              </span>
+                                              <span class="color4" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus==0">待评价</span>
+                                              <span v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus!=0">
+                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
+                                                    <el-button>已完成</el-button>
+                                                  </el-tooltip>
+                                              </span>
+                                            </div>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="orgscore"
+                                          label="总积分"
+                                          width="80"
+                                          >
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="receivescore"
+                                          label="已认领积分"
+                                          width="100"
+                                          >
+                                          <template slot-scope="scope">
+                                              <span>{{currentStatus=='receive'?scope.row.receivescore:scope.row.score}}</span>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="ownScore"
+                                          label="认领积分"
+                                          width="90">
                                           <template #default="scope">
+                                              <div class="table-input">
+                                                  <el-input size="small" v-model="scope.row.ownScore"></el-input>
+                                              </div>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          v-if="menuButtonPermit.includes('Worksaccpet_confirmwork')&&(currentStatus=='receive'||currentStatus=='allot'||currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')"
+                                          :width="operationsWidth"
+                                          align="center"
+                                          fixed="right"
+                                          prop="operations"
+                                          label="操作">
+                                          <template slot-scope="scope">
+                                            <div class="table-button">
+                                                <el-button size="mini" @click="receiveTableRow(scope.row,scope.$index)" v-if="currentStatus=='receive'&&menuButtonPermit.includes('Worksaccpet_confirmwork')">认领工单</el-button>
+                                            </div>
+                                          </template>
+                                      </el-table-column>
+                                  </el-table>
+                                  <el-table
+                                      ref="simpleTable"
+                                      key="c"
+                                      :data="tableData"
+                                      tooltip-effect="dark"
+                                      stripe
+                                      class="SiteTable"
+                                      style="width: 100%"
+                                      :style="'min-height:'+minHeight+'px;'"
+                                      row-key="id"
+                                      v-if="currentStatus=='allot'"
+                                      >
+                                      <el-table-column
+                                          prop="username"
+                                          align="center"
+                                          label="发布人"
+                                          width="100">
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="title"
+                                          label="工单标题"
+                                          min-width="200"
+                                          >
+                                          <template slot-scope="scope">
+                                            <div class="order-title" v-on:click="jumpArticle(scope.row.id)">
+                                              <span>{{scope.row.title}}</span>
+                                            </div>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="tags"
+                                          align="left"
+                                          label="标签"
+                                          min-width="160"
+                                          >
+                                          <template slot-scope="scope">
+                                              <div class="table-tag">
+                                              <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="(item,index) in scope.row.tagList" v-bind:key="index">{{item.tag}}</el-tag>
+                                              </div>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="starttime"
+                                          sortable
+                                          label="开始时间"
+                                          min-width="110"
+                                          >
+                                          <template slot-scope="scope">
+                                              <p class="timenewline">{{scope.row.starttimeDate}}<span>{{scope.row.starttimeTime}}</span></p>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="endtime"
+                                          sortable
+                                          label="截止时间"
+                                          min-width="110"
+                                          >
+                                          <template slot-scope="scope">
+                                              <p class="timenewline">{{scope.row.endtimeDate}}<span>{{scope.row.endtimeTime}}</span></p>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="status"
+                                          label="工单状态"
+                                          width="90"
+                                          >
+                                          <template slot-scope="scope">
+                                            <div class="table-tag">
+                                              <span class="color1" v-if="!scope.row.startdotime&&(currentStatus == 'person'||currentStatus == 'alloted')">待进行</span>  
+                                              <span v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus==3">
+                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
+                                                    <el-button>已完成(<span class="color6">已逾期</span>)</el-button>
+                                                  </el-tooltip>
+                                              </span>   
+                                              <span class="color6" v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus!=3">已逾期</span>
+                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'receive'">待接单</span>
+                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'allot'">待分配</span>
+                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==0&&scope.row.startdotime">进行中</span>
+                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==1">待审核</span>
+                                              <span v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==2">
+                                                  <el-tooltip class="item color3" effect="dark" :content="scope.row.rejectinfo" placement="right">
+                                                    <el-button>已驳回</el-button>
+                                                  </el-tooltip>
+                                              </span>
+                                              <span class="color4" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus==0">待评价</span>
+                                              <span v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus!=0">
+                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
+                                                    <el-button>已完成</el-button>
+                                                  </el-tooltip>
+                                              </span>
+                                            </div>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="orgscore"
+                                          label="总积分"
+                                          width="80"
+                                          >
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="receivescore"
+                                          label="已认领积分"
+                                          width="100"
+                                          >
+                                          <template slot-scope="scope">
+                                              <span>{{currentStatus=='receive'?scope.row.receivescore:scope.row.score}}</span>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="ownScore"
+                                          label="负责人"
+                                          width="120">
+                                          <template slot-scope="scope">
+                                              <div class="table-input">
+                                                  <el-select v-model="scope.row.dealuserid" size="small" :disabled="currentStatus!='allot'" v-if="currentStatus=='allot'" clearable placeholder="负责人">
+                                                      <el-option
+                                                          v-for="item in userList"
+                                                          :key="item.value"
+                                                          :label="item.label"
+                                                          :value="item.value">
+                                                      </el-option>
+                                                  </el-select>
+                                                  <span v-if="currentStatus!='allot'">{{scope.row.dealusername}}</span>
+                                              </div>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          v-if="(menuButtonPermit.includes('Worksaccpet_confirmdeal')||menuButtonPermit.includes('Worksaccpet_backwork'))&&(currentStatus=='receive'||currentStatus=='allot'||currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')"
+                                          :width="operationsWidth"
+                                          align="center"
+                                          fixed="right"
+                                          prop="operations"
+                                          label="操作">
+                                          <template slot-scope="scope">
+                                            <div class="table-button">
+                                                <el-button size="mini" @click="cancelTableRow(scope.row,scope.$index)" v-if="currentStatus!='receive'&&(scope.row.workstatus!=1&&scope.row.workstatus!=3)&&menuButtonPermit.includes('Worksaccpet_backwork')">工单退回</el-button>
+                                                <el-button size="mini" @click="confirmAllotTableRow(scope.row,scope.$index)" v-if="currentStatus=='allot'&&menuButtonPermit.includes('Worksaccpet_confirmdeal')">确认分配</el-button>
+                                            </div>
+                                          </template>
+                                      </el-table-column>
+                                  </el-table>
+                                  <el-table
+                                      ref="simpleTable"
+                                      key="d"
+                                      :data="tableData"
+                                      tooltip-effect="dark"
+                                      stripe
+                                      class="SiteTable"
+                                      style="width: 100%"
+                                      :style="'min-height:'+minHeight+'px;'"
+                                      row-key="id"
+                                      v-if="currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing'||currentStatus=='done'"
+                                      >
+                                      <el-table-column
+                                          prop="username"
+                                          align="center"
+                                          label="发布人"
+                                          width="100">
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="title"
+                                          label="工单标题"
+                                          min-width="200"
+                                          >
+                                          <template slot-scope="scope">
+                                            <div class="order-title" v-on:click="jumpArticle(scope.row.id)">
+                                              <span>{{scope.row.title}}</span>
+                                            </div>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="tags"
+                                          align="left"
+                                          label="标签"
+                                          min-width="160"
+                                          >
+                                          <template slot-scope="scope">
                                               <div class="table-tag">
                                               <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="(item,index) in scope.row.tagList" v-bind:key="index">{{item.tag}}</el-tag>
                                               </div>
@@ -261,7 +534,7 @@
                                           label="工单状态"
                                           width="90"
                                           >
-                                          <template #default="scope">
+                                          <template slot-scope="scope">
                                             <div class="table-tag">
                                               <span class="color1" v-if="!scope.row.startdotime&&(currentStatus == 'person'||currentStatus == 'alloted')">待进行</span>  
                                               <span v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus==3">
@@ -304,18 +577,6 @@
                                           </template>
                                       </el-table-column>
                                       <el-table-column
-                                          v-if="currentStatus=='receive'"
-                                          prop="ownScore"
-                                          label="认领积分"
-                                          width="90">
-                                          <template slot-scope="scope">
-                                              <div class="table-input">
-                                                  <el-input size="small" v-model="scope.row.ownScore"></el-input>
-                                              </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          v-if="currentStatus!='receive'"
                                           prop="ownScore"
                                           label="负责人"
                                           width="120">
@@ -334,20 +595,16 @@
                                           </template>
                                       </el-table-column>
                                       <el-table-column
-                                          v-if="(menuButtonPermit.includes('Worksaccpet_confirmwork')||menuButtonPermit.includes('Worksaccpet_confirmdeal')||menuButtonPermit.includes('Worksaccpet_backwork')||menuButtonPermit.includes('Worksaccpet_confirmfinish')||menuButtonPermit.includes('Worksaccpet_workcancel'))&&(currentStatus=='receive'||currentStatus=='allot'||currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')"
+                                          v-if="(menuButtonPermit.includes('Worksaccpet_confirmstart')||menuButtonPermit.includes('Worksaccpet_backwork')||menuButtonPermit.includes('Worksaccpet_confirmfinish')||menuButtonPermit.includes('Worksaccpet_workcancel'))&&(currentStatus=='receive'||currentStatus=='allot'||currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')"
                                           :width="operationsWidth"
                                           align="center"
                                           fixed="right"
                                           prop="operations"
                                           label="操作">
-                                          <template #default="scope">
+                                          <template slot-scope="scope">
                                             <div class="table-button">
-                                                <el-button size="mini" @click="receiveTableRow(scope.row,scope.$index)" v-if="currentStatus=='receive'&&menuButtonPermit.includes('Worksaccpet_confirmwork')">认领工单</el-button>
-
                                                 <el-button size="mini" @click="confirmstartRow(scope.row,scope.$index)" v-if="currentStatus=='person'&&(scope.row.startdotime==''||scope.row.startdotime==null)&&menuButtonPermit.includes('Worksaccpet_confirmstart')">开始工单</el-button>
-
                                                 <el-button size="mini" @click="cancelTableRow(scope.row,scope.$index)" v-if="currentStatus!='receive'&&(scope.row.workstatus!=1&&scope.row.workstatus!=3)&&menuButtonPermit.includes('Worksaccpet_backwork')">工单退回</el-button>
-                                                <el-button size="mini" @click="confirmAllotTableRow(scope.row,scope.$index)" v-if="currentStatus=='allot'&&menuButtonPermit.includes('Worksaccpet_confirmdeal')">确认分配</el-button>
                                                 <el-button size="mini" @click="confirmDoneTableRow(scope.row,scope.$index)" v-if="(currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')&&scope.row.workstatus!=1&&scope.row.workstatus!=3&&(scope.row.status==2||scope.row.status==5)&&menuButtonPermit.includes('Worksaccpet_confirmfinish')">提交审核</el-button>
                                                 <el-button size="mini" @click="undoTableRow(scope.row,scope.$index)" v-if="(currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')&&(scope.row.workstatus!=1&&scope.row.workstatus!=3)&&menuButtonPermit.includes('Worksaccpet_workcancel')">撤销分配</el-button>
                                             </div>
