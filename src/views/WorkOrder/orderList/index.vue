@@ -1106,7 +1106,6 @@ export default {
                 $this.groupScore=response.group;
               }
             }
-            console.log(response,'response');
             $this.tableData = tableData;
             $this.isLoading.close();
             setTimeout(()=>{
@@ -1220,7 +1219,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
-          console.log(res,'res')
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);

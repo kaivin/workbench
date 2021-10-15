@@ -410,7 +410,6 @@ export default {
             groupArrw=groupArrw.concat(groupArr,dept_group);
             $this.groupArr=groupArrw;
             $this.tableData = $this.groupArr;
-            console.log($this.tableData,"11");
             $this.isLoading.close();
             setTimeout(()=>{
               $this.isSearchResult=false;

@@ -560,7 +560,6 @@ export default {
         document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
         $this.$store.dispatch('works/workOrderListAction', searchData).then(response=>{
           if(response){
-            console.log(response,'00');
             if(response.status){
               response.data.forEach(function(item,index){
                 item.tagList = [];

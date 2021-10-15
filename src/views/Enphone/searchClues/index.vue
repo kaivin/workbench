@@ -289,6 +289,7 @@
                                         <template slot-scope="scope">
                                           <div class="table-text">
                                             <p>{{scope.row.id}}</p>
+                                            <p>{{scope.row.phonenumber}}</p>
                                           </div>
                                         </template>
                                       </el-table-column>

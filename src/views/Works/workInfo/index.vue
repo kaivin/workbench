@@ -336,7 +336,6 @@ export default {
       $this.$store.dispatch('works/workOrderEditInitInfoAction', {id:$this.currentID}).then(response=>{
           if(response){
             if(response.status){
-              console.log(response,'response');
               if(response.data.accpertusername!=''&&response.data.accpertusername.indexOf('|')!=-1){
                 response.data.accpertusername = response.data.accpertusername.replace("|","、");
               }
