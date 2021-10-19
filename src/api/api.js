@@ -8,6 +8,14 @@ export function getMenuPermit(data) {
     data
   });
 }
+//用户头像上传
+export function setUserHeadimg(data) {
+  return request({
+    url: "/hxindex/User/headimg",
+    method: "POST",
+    data
+  });
+}
 // 根据用户id获取用户详细信息
 export function getUserInfo(data) {
   return request({

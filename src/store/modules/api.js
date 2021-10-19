@@ -1,6 +1,7 @@
 ﻿import { 
   getMenuPermit,
   getUserInfo,
+  setUserHeadimg,
   getUser,
   getWorkName,
   getPostionName,
@@ -16,7 +17,8 @@
   getAddsay,
   clearCache,
 } from '@/api/api'
-
+//import { reject, resolve } from 'core-js/fn/promise';
+import Cookies from 'js-cookie';
 const state = {
     isArticleSearch: false,
     isArticleAdd: false,
@@ -248,6 +250,22 @@ const actions = {
               reject(error)
           })
       })
+    },
+    //用户头像上传
+    setUserHeadimgAction({rootState},data){
+      return new Promise((resolve,reject)=>{
+        setUserHeadimg(data).then(response=>{
+          if(response.status){
+            rootState.login.userInfo.headimg = data.headimg;
+            Cookies.set('userInfo', JSON.stringify(rootState.login.userInfo));
+          }
+          resolve(response);
+          
+        }).catch(error=>{
+          reject(error)
+        })
+      })
+      
     },
     // 根据用户id获取用户详细信息
     userInfoAction({ commit, state },data) {

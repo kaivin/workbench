@@ -67,7 +67,8 @@
           <el-dropdown class="user-button" @command="handleCommand">
             <div class="el-dropdown-link">
               <span class="user-icon">
-                <svg-icon icon-class="user1" class-name="disabled" />
+                <img v-if="userInfo.headimg" :src="userInfo.headimg" alt="">
+                <svg-icon v-else icon-class="user1" class-name="disabled" />
               </span>
               <span class="user-name">您好：{{userInfo.name}}</span>
             </div>

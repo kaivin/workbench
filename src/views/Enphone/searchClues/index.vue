@@ -114,6 +114,22 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
+                                            <el-select v-model="searchData.messagetype" clearable placeholder="留言类型" :class="searchData.messagetype!=''?'el-xzstate':''" style="width:100px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                                <el-option
+                                                    v-for="item in msgtypeList"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                            <el-select v-model="searchData.ennature" clearable placeholder="性质" :class="searchData.ennature!=''?'el-xzstate':''" style="width:270px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                                <el-option
+                                                    v-for="item in ennatureList"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                </el-option>
+                                            </el-select>
                                             <el-select v-model="searchData.level_id" clearable placeholder="首次级别" :class="searchData.level_id!=''?'el-xzstate':''" style="width:90px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in levelList"
@@ -733,6 +749,8 @@ export default {
             page:1,
             limit:20,
             messageid:"",
+            messagetype:'',//留言类型
+            ennature:'',//性质id
             custormname:"",
             custormemail:"",
             custormphone:"",
@@ -799,6 +817,12 @@ export default {
             {label:"移动设备",value:"移动设备"},
             {label:"未知设备",value:"未知设备"},
         ],
+        msgtypeList:[
+            {label:"留言板",value:"留言板"},
+            {label:"商务通",value:"商务通"},
+            {label:"其他",value:"其他"},
+        ],
+        ennatureList:[],//性质列表
         groupurlproductList:[
             {label:"按URL",value:1,isOn:false},
             {label:"按产品",value:2,isOn:false},
@@ -1229,6 +1253,16 @@ export default {
                   sourceList.push(itemData);
               });
               $this.sourceList = sourceList;
+              //性质下拉列表
+              var ennatureList = [];
+              response.ennature.forEach(function(item,index){
+                  var itemData = {};
+                  itemData.label = item.name;
+                  itemData.value = item.id;
+                  ennatureList.push(itemData);
+              });
+              $this.ennatureList = ennatureList;
+
               var cateList = [];
               response.producttype.forEach(function(item,index){
                   var itemData = {};
@@ -1392,6 +1426,8 @@ export default {
         resultData.sort = $this.searchData.sort;
         resultData.groupurlproduct = $this.searchData.groupurlproduct;        
         resultData.phoneid = $this.searchData.phoneid;
+        resultData.messagetype = $this.searchData.messagetype;//留言类型
+        resultData.ennature = $this.searchData.ennature;//性质id
         return resultData;
     },
     // 时间搜索
@@ -1655,6 +1691,8 @@ export default {
              items.isOn=false;
           });      
         });
+        $this.searchData.messagetype="";
+        $this.searchData.ennature="";
         $this.searchData.timeing="";
         $this.searchData.device="";
         $this.searchData.mode="";

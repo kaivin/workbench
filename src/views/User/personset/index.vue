@@ -5,6 +5,21 @@
             <th colspan="2">基本信息</th>
         </tr>
         <tr>
+            <td style="min-width: 100px;width: 100px;"><span>头像：</span></td>
+            <td>
+              <el-upload
+              class="avatar-uploader"
+              :action="actionUrl"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
+              >
+              <img v-if="userData.headimg" :src="userData.headimg" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+            </td>
+        </tr>
+        <tr>
             <td style="min-width: 100px;width: 100px;"><span>姓名：</span></td>
             <td>{{userData.name}}</td>
         </tr>
@@ -171,6 +186,8 @@ export default {
   name: 'userPersonset',
   data() {
     return {
+        
+        actionUrl:process.env.VUE_APP_BASE_API + '/hxindex/Api/uping',//上传地址
         menuButtonPermit:[],
         userData:{},
         formLabelWidth:"110px",
@@ -220,6 +237,31 @@ export default {
     $this.initData();
   },
   methods:{
+    //头像上传
+     handleAvatarSuccess(res, file) {
+       var $this = this;
+        if(res.status){
+          $this.userData.headimg = res.info;
+          $this.$store.dispatch('api/setUserHeadimgAction', {id:$this.userInfo.id,headimg:res.info}).then(res=>{
+            if(res.status){
+              this.$message.success('头像上传成功');
+              
+            }
+          })
+        }
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
+    },
     // 获取用户初始化数据
     initData(){
         var $this = this;
@@ -839,5 +881,33 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+.avatar-uploader{
+  .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 40px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+  }
+  .avatar {
+    width: 80px;
+    height: 80px;
+    display: block;
+    border-radius: 40px;
+  }
+}
+
 </style>
