@@ -49,6 +49,16 @@
                             </el-select>
                           </div>
                           <div class="item-search">
+                            <el-select v-model="searchData.is_outip" size="small" filterable clearable placeholder="请选择访问网络" class="select-panel">
+                                <el-option
+                                    v-for="item in outipList"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                          </div>
+                          <div class="item-search">
                             <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                             <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                           </div>
@@ -140,7 +150,18 @@ export default {
           limit:50,
           action:"",
           date:"",
+          is_outip:'',//1|2(办公网络访问|外网访问)
       },
+      outipList:[
+        {
+          label:'办公网络访问',
+          value:'1'
+        },
+        {
+          label:'外网访问',
+          value:'2'
+        },
+      ],
       pageSizeList:[50, 100, 150, 200],
       totalDataNum:0,
       actionList:[],
@@ -337,6 +358,7 @@ export default {
         $this.searchData.limit=50;
         $this.searchData.action='';
         $this.searchData.date='';
+        $this.searchData.is_outip='';
         $this.searchResult();
     },
     // 初始化数据
@@ -352,6 +374,7 @@ export default {
       formData.page = $this.searchData.page;
       formData.limit = $this.searchData.limit;
       formData.uname = $this.searchData.uname;
+      formData.is_outip = $this.searchData.is_outip;
       var action = "";
       $this.actionList.forEach(function(item,index){
           if(item.value==$this.searchData.action){
