@@ -946,6 +946,7 @@ export default {
     },
     // 分配业务员发生变化时
     salesmanChange(e){
+      var $this = this;
       $this.salesuserid = e;
       $this.salesuserDefault="";
     },
