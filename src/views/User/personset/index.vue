@@ -7,17 +7,20 @@
         <tr>
             <td style="min-width: 100px;width: 100px;"><span>头像：</span></td>
             <td>
-              <el-upload
-              class="avatar-uploader"
-              :action="actionUrl"
-              :disabled="!menuButtonPermit.includes('User_headimg')"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-              >
-              <img v-if="userData.headimg" :src="userData.headimg" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+              <template v-if="menuButtonPermit.includes('User_headimg')">
+                <el-upload
+                class="avatar-uploader"
+                :action="actionUrl"
+                :disabled="!menuButtonPermit.includes('User_headimg')"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+                >
+                <img v-if="userData.headimg" :src="userData.headimg" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+            </template>
+            <svg-icon v-else icon-class="user1" class-name="disabled" />
             </td>
         </tr>
         <tr>
