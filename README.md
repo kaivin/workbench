@@ -1,24 +1,22 @@
 # workbench
 
-## Project setup
+## 安装项目开发依赖
 ```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
+yarn
 ```
 
-### Compiles and minifies for production
+### 运行项目
 ```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
+yarn start
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 构建生产环境代码
+```
+yarn build:prod
+```
+
+### 构建本地测试环境代码
+```
+yarn build:stage
+```
+

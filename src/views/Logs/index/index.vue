@@ -504,6 +504,7 @@ export default {
       $this.searchData.limit = 50;
       $this.searchData.action = "";
       $this.searchData.date = "";
+      $this.searchData.is_outip = "";
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
