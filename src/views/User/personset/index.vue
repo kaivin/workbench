@@ -10,6 +10,7 @@
               <el-upload
               class="avatar-uploader"
               :action="actionUrl"
+              :disabled="!menuButtonPermit.includes('User_headimg')"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
