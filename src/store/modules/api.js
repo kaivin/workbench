@@ -251,6 +251,7 @@ const actions = {
           })
       })
     },
+    
     //用户头像上传
     setUserHeadimgAction({rootState},data){
       return new Promise((resolve,reject)=>{
