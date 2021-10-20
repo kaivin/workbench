@@ -111,10 +111,15 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column
-                                    prop="dealusername"
                                     label="负责人(进度)"
                                     width="140"
                                     >
+                                    <template v-if="scope.row.dealusername.indexOf('|')" slot-scope="scope">
+                                      <div v-for="item in scope.row.dealusername.split('|')" :key="item.id">{{item}}</div>
+                                    </template>
+                                    <template v-else>
+                                       <div>{{scope.row.dealusername}}</div> 
+                                    </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="tags"
