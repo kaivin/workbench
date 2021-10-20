@@ -10,7 +10,8 @@
               <template v-if="menuButtonPermit.includes('User_headimg')">
                 <el-upload
                 class="avatar-uploader"
-                :action="actionUrl"
+                action=""
+                :http-request="httpRequest"
                 :disabled="!menuButtonPermit.includes('User_headimg')"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
@@ -241,21 +242,32 @@ export default {
     $this.initData();
   },
   methods:{
+   
     //头像上传
-     handleAvatarSuccess(res, file) {
-       var $this = this;
+    httpRequest(parm){
+      var $this=this;
+      var formData = new FormData();
+      formData.append('file',parm.file);
+      $this.$store.dispatch('api/fileUploadAction', formData).then(res=>{
         if(res.status){
           $this.userData.headimg = res.info;
-          $this.$store.dispatch('api/setUserHeadimgAction', {id:$this.userInfo.id,headimg:res.info}).then(res=>{
-            if(res.status){
+          $this.$store.dispatch('api/setUserHeadimgAction', {id:$this.userInfo.id,headimg:res.info}).then(res2=>{
+            if(res2.status){
               this.$message.success('头像上传成功');
               
             }
           })
-        }
+        }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      })
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
+      const isJPG = file.type === 'image/jpeg'||'image/png';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
