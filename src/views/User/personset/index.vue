@@ -14,7 +14,7 @@
                 :http-request="httpRequest"
                 :disabled="!menuButtonPermit.includes('User_headimg')"
                 :show-file-list="false"
-                :on-success="handleAvatarSuccess"
+                
                 :before-upload="beforeAvatarUpload"
                 >
                 <img v-if="userData.headimg" :src="userData.headimg" class="avatar">
