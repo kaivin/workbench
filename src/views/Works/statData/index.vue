@@ -80,20 +80,20 @@
                                     width="136"
                                     ></el-table-column>
                                 <el-table-column
-                                    prop="monthusescore"
                                     align="left"
                                     label="部门本月已用积分"
-                                    width="136"
-                                    ></el-table-column>
-                                <el-table-column
-                                    align="left"
-                                    label="部门本月剩余积分"
                                     width="136"
                                     >
                                     <template slot-scope="scope">
                                       <span>{{scope.row.monthscore && scope.row.monthscore - scope.row.monthusescore}}</span>
                                     </template>
                                 </el-table-column>
+                                <el-table-column
+                                    prop="monthusescore"
+                                    align="left"
+                                    label="部门本月剩余积分"
+                                    width="136"
+                                    ></el-table-column>
                                 <el-table-column
                                     prop="waitcount"
                                     label="待接单工单数"
