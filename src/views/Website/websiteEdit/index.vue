@@ -2,9 +2,9 @@
   <div class="page-root scroll-panel" ref="boxPane">
     <p class="breadcrumb" ref="breadcrumbPane">
       <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
-      <template v-for="item in breadcrumbList">
+      <template v-for="(item,index) in breadcrumbList">
         <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
-        <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+        <span class="breadcrumb-link" v-bind:key="index" v-else><b>-</b><span>{{item.title}}</span></span>
       </template>
       <span class="breadcrumb-link"><b>-</b><span>网站信息</span></span>
     </p>
@@ -12,7 +12,7 @@
         <div class="card-content WebsiteOne" ref="cardContent">
           <ul class="WebsiteOneTable clearfix">
               <li v-if="writePermit.includes('domain')||readPermit.includes('domain')">
-                  <div class="AddEditPostItem flex-wrap clearfix">
+                  <div class="AddEditPostItem flex-box flex-row clearfix">
                       <label>主域名：</label>
                       <el-input
                         v-model="formData.domain"
@@ -22,7 +22,7 @@
                         clearable>
                       </el-input>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix">
+                  <div class="AddEditPostItem flex-box flex-row clearfix">
                       <label>网站ID：</label>
                       <el-input
                         v-model="formData.id"
@@ -33,7 +33,7 @@
                   </div>
               </li>
               <li>
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneTool">
+                  <div class="AddEditPostItem flex-box flex-row clearfix WebsiteOneTool">
                       <label>查询工具：</label>
                       <div class="item-wrap flex-content">
                         <a :href="isHttps?'https://www.ipip.net/ip/https://www.'+formData.domain+'/.html':'https://www.ipip.net/ip/http://www.'+formData.domain+'/.html'" target="_blank" class="link">IP查询</a>
@@ -53,42 +53,42 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('domain_header')||readPermit.includes('domain_header')">
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneSite">
+                  <div class="AddEditPostItem flex-box flex-row clearfix WebsiteOneSite">
                       <label>网站：</label>
                       <div class="item-wrap flex-content table-icon">
                           <span class="icon-title" title="https模式" v-if="isHttps"><i class="svg-i"><svg-icon icon-class="websiteHttps" class-name="disabled" /></i>ssl证书</span>
                           <template v-for="(item,index) in websiteList">
                             <span class="icon-title" v-on:click="hrefBlank(item)" :title="item" v-bind:key="index" v-if="item.indexOf('://www.')!=-1"><i class="svg-i"><svg-icon icon-class="websitePc" class-name="disabled" /></i>{{item}}</span>
-                            <span class="icon-title" v-on:click="hrefBlank(item)" :title="item" v-bind:key="index" v-else-if="item.indexOf('://m.')!=-1"><i class="svg-i"><svg-icon icon-class="websiteMobile" class-name="disabled" /></i>{{item}}</span>
-                            <span class="icon-title" v-on:click="hrefBlank(item)" :title="item" v-bind:key="index" v-else><i class="svg-i"><svg-icon icon-class="websiteMap" class-name="disabled" /></i>{{item}}</span>
+                            <span class="icon-title" v-on:click="hrefBlank(item)" :title="item" v-else-if="item.indexOf('://m.')!=-1"><i class="svg-i"><svg-icon icon-class="websiteMobile" class-name="disabled" /></i>{{item}}</span>
+                            <span class="icon-title" v-on:click="hrefBlank(item)" :title="item" v-else><i class="svg-i"><svg-icon icon-class="websiteMap" class-name="disabled" /></i>{{item}}</span>
                           </template>
                       </div>
                   </div>
               </li>
               <li>
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneStatus">
+                  <div class="AddEditPostItem flex-box flex-row clearfix WebsiteOneStatus">
                     <label>状态：</label>
-                    <div class="item-column flex-content">
+                    <div class="item-column flex-content flex-box">
                       <template v-if="formData.is_online">
                         <div class="table-icon" v-if="formData.speedcheckstatus==1">
-                          <i class="svg-i online" v-if="openstatus==0" title="正常"><svg-icon icon-class="runnormal" class-name="disabled" /></i>
+                          <i class="svg-i online" v-if="openstatus==0" title="正常"><svg-icon icon-class="online" class-name="disabled" /></i>
                           <i class="svg-i timeout" v-else-if="openstatus==1" title="超时"><svg-icon icon-class="timeout" class-name="disabled" /></i>
                           <i class="svg-i abnormal" v-else title="异常"><svg-icon icon-class="abnormal" class-name="disabled" /></i>
                         </div>
                         <div class="table-tag" v-else><el-tag type="info">未检测</el-tag></div>
-                        <div class="table-tag" v-if="formData.speedcheckstatus==1">
+                        <div class="table-tag" v-if="formData.speedcheckstatus==1&&formData.speed!=''">
                           <template v-if="formData.isCn">
-                            <el-tag v-if="scope.row.speed<1" type="success">{{formData.speed}}s</el-tag>
-                            <el-tag v-else-if="scope.row.speed>=1&&scope.row.speed<2" type="warning">{{formData.speed}}s</el-tag>
+                            <el-tag v-if="formData.speed<1" type="success">{{formData.speed}}s</el-tag>
+                            <el-tag v-else-if="formData.speed>=1&&formData.speed<2" type="warning">{{formData.speed}}s</el-tag>
                             <el-tag v-else type="danger">{{formData.speed}}s</el-tag>
                           </template>
                           <template v-else>
-                            <el-tag v-if="scope.row.speed<2" type="success">{{formData.speed}}s</el-tag>
-                            <el-tag v-else-if="scope.row.speed>=2&&scope.row.speed<4" type="warning">{{formData.speed}}s</el-tag>
+                            <el-tag v-if="formData.speed<2" type="success">0{{formData.speed}}s</el-tag>
+                            <el-tag v-else-if="formData.speed>=2&&formData.speed<4" type="warning">{{formData.speed}}s</el-tag>
                             <el-tag v-else type="danger">{{formData.speed}}s</el-tag>
                           </template>
                         </div>
-                        <div class="item-wrap flex-box" v-if="formData.speedcheckstatus==1">
+                        <div class="item-wrap flex-content flex-box" v-if="formData.speedcheckstatus==1">
                           <span class="text">{{formData.speedcheck}}</span>
                         </div>
                       </template>
@@ -97,7 +97,7 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('domain_outtime')||readPermit.includes('domain_outtime')||writePermit.includes('server_outtime')||readPermit.includes('server_outtime')">
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneDomain" v-if="writePermit.includes('domain_outtime')||readPermit.includes('domain_outtime')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix WebsiteOneDomain" v-if="writePermit.includes('domain_outtime')||readPermit.includes('domain_outtime')">
                       <label>域名到期：</label>
                       <el-date-picker
                         v-model="formData.domain_outtime"
@@ -110,7 +110,7 @@
                       </el-date-picker>
                       <a :href="'http://tool.chinaz.com/DomainDel/?wd=www.'+formData.domain" target="_blank" class="link">到期查询</a>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('server_outtime')||readPermit.includes('server_outtime')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('server_outtime')||readPermit.includes('server_outtime')">
                       <label>主机到期：</label>
                       <el-date-picker
                         v-model="formData.server_outtime"
@@ -124,7 +124,7 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('ip')||readPermit.includes('ip')">
-                  <div class="AddEditPostItem flex-wrap clearfix">
+                  <div class="AddEditPostItem flex-box flex-row clearfix">
                       <label>IP：</label>
                       <el-input
                         v-model="formData.ip"
@@ -134,7 +134,7 @@
                         clearable>
                       </el-input>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneIp">
+                  <div class="AddEditPostItem flex-box flex-row clearfix WebsiteOneIp">
                     <div class="item-wrap">
                         <a :href="'https://www.ipip.net/ip/'+formData.ip+'.html'" target="_blank" class="link">IP查询</a>
                         <a :href="'http://ping.chinaz.com/'+formData.ip" target="_blank" class="link">PING国内检测</a>
@@ -144,7 +144,7 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('ftpuser')||readPermit.includes('ftpuser')||writePermit.includes('ftppassword')||readPermit.includes('ftppassword')">
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('ftpuser')||readPermit.includes('ftpuser')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('ftpuser')||readPermit.includes('ftpuser')">
                       <label>FTP帐号：</label>
                         <el-input
                           v-model="formData.ftpuser"
@@ -154,7 +154,7 @@
                           clearable>
                         </el-input>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('ftppassword')||readPermit.includes('ftppassword')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('ftppassword')||readPermit.includes('ftppassword')">
                       <label>FTP密码：</label>
                         <el-input
                           v-model="formData.ftppassword"
@@ -166,7 +166,7 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('iisftpuser')||readPermit.includes('iisftpuser')||writePermit.includes('iisftppwd')||readPermit.includes('iisftppwd')||writePermit.includes('logspath')||readPermit.includes('logspath')">
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('iisftpuser')||readPermit.includes('iisftpuser')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('iisftpuser')||readPermit.includes('iisftpuser')">
                       <label>IIS FTP帐号：</label>
                       <el-input
                         v-model="formData.iisftpuser"
@@ -176,7 +176,7 @@
                         clearable>
                       </el-input>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('iisftppwd')||readPermit.includes('iisftppwd')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('iisftppwd')||readPermit.includes('iisftppwd')">
                       <label>IIS FTP密码：</label>
                         <el-input
                           v-model="formData.iisftppwd"
@@ -186,7 +186,7 @@
                           clearable>
                         </el-input>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOnePath" v-if="writePermit.includes('logspath')||readPermit.includes('logspath')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix WebsiteOnePath" v-if="writePermit.includes('logspath')||readPermit.includes('logspath')">
                       <label>Path：</label>
                         <el-input
                           v-model="formData.logspath"
@@ -199,7 +199,7 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('ftpremarks')||readPermit.includes('ftpremarks')">
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneFtpBak">
+                  <div class="AddEditPostItem flex-box flex-row clearfix WebsiteOneFtpBak">
                       <label>FTP备注：</label>
                       <el-input
                         type="textarea"
@@ -214,7 +214,7 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('websiteurl')||readPermit.includes('websiteurl')||writePermit.includes('websiteuser')||readPermit.includes('websiteuser')||writePermit.includes('websitepassword')||readPermit.includes('websitepassword')">
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneWebsiteurl" v-if="writePermit.includes('websiteurl')||readPermit.includes('websiteurl')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix WebsiteOneWebsiteurl" v-if="writePermit.includes('websiteurl')||readPermit.includes('websiteurl')">
                       <label>后台地址：</label>
                       <el-input
                         v-model="formData.websiteurl"
@@ -225,7 +225,7 @@
                       </el-input>
                       <a :href="formData.websiteurl" target="_blank" class="link">跳转</a>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('websiteuser')||readPermit.includes('websiteuser')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('websiteuser')||readPermit.includes('websiteuser')">
                       <label>后台帐号：</label>
                         <el-input
                           v-model="formData.websiteuser"
@@ -235,7 +235,7 @@
                           clearable>
                         </el-input>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('websitepassword')||readPermit.includes('websitepassword')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('websitepassword')||readPermit.includes('websitepassword')">
                       <label>后台密码：</label>
                         <el-input
                           v-model="formData.websitepassword"
@@ -247,7 +247,7 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('websiteremarks')||readPermit.includes('websiteremarks')">
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneAdminBak">
+                  <div class="AddEditPostItem flex-box flex-row clearfix WebsiteOneAdminBak">
                       <label>后台备注：</label>
                       <el-input
                         type="textarea"
@@ -262,7 +262,7 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('brand')||readPermit.includes('brand')||writePermit.includes('language')||readPermit.includes('language')||writePermit.includes('website_departid')||readPermit.includes('website_departid')">
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('brand')||readPermit.includes('brand')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('brand')||readPermit.includes('brand')">
                       <label>品牌：</label>
                       <el-select 
                         v-model="formData.brand" 
@@ -279,7 +279,7 @@
                         </el-option>
                       </el-select>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('language')||readPermit.includes('language')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('language')||readPermit.includes('language')">
                       <label>语言：</label>
                         <el-select 
                           v-model="formData.language" 
@@ -296,7 +296,7 @@
                           </el-option>
                         </el-select>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_departid')||readPermit.includes('website_departid')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('website_departid')||readPermit.includes('website_departid')">
                       <label>部门：</label>
                         <el-select 
                           v-model="formData.website_departid" 
@@ -315,7 +315,7 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('website_designuser')||readPermit.includes('website_designuser')||writePermit.includes('website_beforeuser')||readPermit.includes('website_beforeuser')||writePermit.includes('website_backuser')||readPermit.includes('website_backuser')">
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_designuser')||readPermit.includes('website_designuser')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('website_designuser')||readPermit.includes('website_designuser')">
                       <label>设计：</label>
                         <el-select 
                           v-model="formData.website_designuser" 
@@ -334,7 +334,7 @@
                           </el-option>
                         </el-select>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_beforeuser')||readPermit.includes('website_beforeuser')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('website_beforeuser')||readPermit.includes('website_beforeuser')">
                       <label>前端：</label>
                         <el-select 
                           v-model="formData.website_beforeuser" 
@@ -353,7 +353,7 @@
                           </el-option>
                         </el-select>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_backuser')||readPermit.includes('website_backuser')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('website_backuser')||readPermit.includes('website_backuser')">
                       <label>程序：</label>
                         <el-select 
                           v-model="formData.website_backuser" 
@@ -374,7 +374,7 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('website_serveruser')||readPermit.includes('website_serveruser')||writePermit.includes('website_pushuser')||readPermit.includes('website_pushuser')||writePermit.includes('website_headuser')||readPermit.includes('website_headuser')">
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_serveruser')||readPermit.includes('website_serveruser')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('website_serveruser')||readPermit.includes('website_serveruser')">
                       <label>服务器：</label>
                         <el-select 
                           v-model="formData.website_serveruser" 
@@ -393,7 +393,7 @@
                           </el-option>
                         </el-select>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_pushuser')||readPermit.includes('website_pushuser')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('website_pushuser')||readPermit.includes('website_pushuser')">
                       <label>推广：</label>
                         <el-select 
                           v-model="formData.website_pushuser" 
@@ -412,7 +412,7 @@
                           </el-option>
                         </el-select>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('website_headuser')||readPermit.includes('website_headuser')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('website_headuser')||readPermit.includes('website_headuser')">
                       <label>站长：</label>
                         <el-select 
                           v-model="formData.website_headuser" 
@@ -433,7 +433,7 @@
                   </div>
               </li>
               <li v-if="writePermit.includes('domain_attr')||readPermit.includes('domain_attr')">
-                  <div class="AddEditPostItem flex-wrap clearfix">
+                  <div class="AddEditPostItem flex-box flex-row clearfix">
                       <label>网站标签：</label>
                       <el-input
                         v-model="formData.domain_attr"
@@ -444,14 +444,14 @@
                         clearable>
                       </el-input>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneTag">
+                  <div class="AddEditPostItem flex-box flex-row clearfix WebsiteOneTag">
                     <div class="item-wrap">
                       <el-button class="item-tag" type="primary" v-for="(item,index) in attrTagList" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="mini" v-on:click="clickAttrTag(item.name)">{{item.name}}</el-button>
                     </div>
                   </div>
               </li>
               <li v-if="writePermit.includes('domain_header')||readPermit.includes('domain_header')">
-                  <div class="AddEditPostItem flex-wrap clearfix">
+                  <div class="AddEditPostItem flex-box flex-row clearfix">
                       <label>主机头：</label>
                       <el-input
                         v-model="formData.domain_header"
@@ -462,14 +462,14 @@
                         clearable>
                       </el-input>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneTag">
+                  <div class="AddEditPostItem flex-box flex-row clearfix WebsiteOneTag">
                       <div class="item-wrap">
                         <el-button class="item-tag" type="primary" v-for="(item,index) in hostTagList" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="mini" v-on:click="clickHostTag(item.name)">{{item.name}}</el-button>
                       </div>
                   </div>
               </li>
               <li>
-                  <div class="AddEditPostItem flex-wrap clearfix WebsiteOneBak">
+                  <div class="AddEditPostItem flex-box flex-row clearfix WebsiteOneBak">
                       <label>
                         <el-popover
                           placement="left"
@@ -506,11 +506,11 @@
                   </div>
               </li>
               <li class="WebsiteOneFoot">
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('is_online')||readPermit.includes('is_online')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('is_online')||readPermit.includes('is_online')">
                       <label>上线：</label>
                       <el-checkbox v-model="formData.is_online" :disabled="!writePermit.includes('is_online')" label="网站已上线" border size="small"></el-checkbox>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix" v-if="writePermit.includes('sort')||readPermit.includes('sort')">
+                  <div class="AddEditPostItem flex-box flex-row clearfix" v-if="writePermit.includes('sort')||readPermit.includes('sort')">
                       <label>排序：</label>
                         <el-input
                           v-model="formData.sort"
@@ -519,7 +519,7 @@
                           size="small">
                         </el-input>
                   </div>
-                  <div class="AddEditPostItem flex-wrap clearfix">
+                  <div class="AddEditPostItem flex-box flex-row clearfix">
                       <label>更新时间：</label>
                       <span>{{formData.updatetime}}</span>
                   </div>
@@ -831,7 +831,7 @@ export default {
       $this.formData.openstatus = data.openstatus;
       $this.formData.serverstatus = data.serverstatus;
       $this.formData.speedcheckstatus = data.speedcheckstatus;
-      if(data.languagename=="中文"){
+      if(data.language==1){
         $this.formData.isCn = true;
       }else{
         $this.formData.isCn = false;

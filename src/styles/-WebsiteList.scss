@@ -199,6 +199,34 @@
                             }
                         }
                     }
+                    .table-tag{
+                        margin-right: 10px;
+                    }
+                    .item-wrap{
+                        .text{
+                            font-size: 13px;
+                            line-height: 32px;
+                            color: #808080;
+                        }
+                    }
+                    .table-icon{
+                        margin-right: 10px;
+                        .svg-i{
+                            height:32px;
+                            line-height:32px;
+                            font-size: 16px;
+                            color: #808080;
+                            &.online{
+                                color: #49c969;
+                            }
+                            &.timeout{
+                                color: #999999;
+                            }
+                            &.abnormal{
+                                color: red;
+                            }
+                        }
+                    }
                 }             
                 &.WebsiteOneIp{
                     width:66.6667%;

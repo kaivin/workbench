@@ -5,9 +5,9 @@
         <div class="true-height" ref="scrollPane">
           <p class="breadcrumb" ref="breadcrumbPane">
             <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
-            <template v-for="item in breadcrumbList">
+            <template v-for="(item,index) in breadcrumbList">
               <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
-              <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
+              <span class="breadcrumb-link" v-bind:key="index" v-else><b>-</b><span>{{item.title}}</span></span>
             </template>
           </p>
           <el-card class="box-card scroll-card WebsiteList-card" shadow="hover">
@@ -19,9 +19,7 @@
                       <div class="txt-font"><span>行业：</span></div>
                       <div class="flex-content">
                           <div class="tag-panel">
-                              <template v-for="(item,index) in brandList">
-                                  <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickBrand(item.id)">{{item.brandname}}</el-button>
-                              </template>
+                            <el-button type="primary" v-for="(item,index) in brandList" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickBrand(item.id)">{{item.brandname}}</el-button>
                           </div>
                       </div>
                     </div>
@@ -29,9 +27,7 @@
                       <div class="txt-font"><span>语言：</span></div>
                       <div class="flex-content">
                           <div class="tag-panel">
-                              <template v-for="item in languageList">
-                                  <el-button type="primary" v-bind:key="item.id" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickLanguage(item.id)">{{item.languagename}}</el-button>
-                              </template>
+                            <el-button type="primary" v-for="item in languageList" v-bind:key="item.id" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickLanguage(item.id)">{{item.languagename}}</el-button>
                           </div>
                       </div>
                     </div>
@@ -39,9 +35,7 @@
                       <div class="txt-font"><span>排序：</span></div>
                       <div class="flex-content">
                           <div class="tag-panel">
-                              <template v-for="(item,index) in sort">
-                                  <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickSort(item.key)">{{item.name}}</el-button>
-                              </template>
+                            <el-button type="primary" v-for="(item,index) in sort" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickSort(item.key)">{{item.name}}</el-button>
                           </div>
                       </div>
                     </div>
@@ -50,9 +44,7 @@
                     <div class="txt-font"><span>部门：</span></div>
                       <div class="flex-content">
                           <div class="tag-panel">
-                              <template v-for="(item,index) in departList">
-                                  <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickDepart(item.id)">{{item.name}}</el-button>
-                              </template>
+                            <el-button type="primary" v-for="(item,index) in departList" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickDepart(item.id)">{{item.name}}</el-button>
                           </div>
                       </div>
                   </div>
@@ -60,9 +52,7 @@
                     <div class="txt-font"><span>模式：</span></div>
                       <div class="flex-content">
                           <div class="tag-panel">
-                              <template v-for="(item,index) in websiteStatus">
-                                  <el-button :type="item.type" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickStatus(item.cate,item.key)">{{item.name}}</el-button>
-                              </template>
+                            <el-button v-for="(item,index) in websiteStatus" :type="item.type" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickStatus(item.cate,item.key)">{{item.name}}</el-button>
                           </div>
                       </div>
                   </div>
@@ -70,9 +60,7 @@
                       <div class="txt-font"><span>标签：</span></div>
                       <div class="flex-content">
                           <div class="tag-panel">
-                              <template v-for="(item,index) in attrTagList">
-                                  <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickAttrTag(item.name,item.id)">{{item.name}}</el-button>
-                              </template>
+                            <el-button type="primary" v-for="(item,index) in attrTagList" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickAttrTag(item.name,item.id)">{{item.name}}</el-button>
                           </div>
                       </div>
                   </div>
@@ -81,9 +69,7 @@
                        <div class="txt-font"><span>主机头：</span></div>
                         <div class="flex-content">
                             <div class="tag-panel">
-                                <template v-for="(item,index) in hostTagList">
-                                    <el-button type="primary" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickHostTag(item.name,item.id)">{{item.name}}</el-button>
-                                </template>
+                              <el-button type="primary" v-for="(item,index) in hostTagList" v-bind:key="index" v-bind:class="item.isOn?'':'is-plain'" size="small" v-on:click="clickHostTag(item.name,item.id)">{{item.name}}</el-button>
                             </div>
                         </div>
                     </div>
@@ -224,9 +210,9 @@
                             <i class="svg-i" title="http" v-if="!scope.row.isHttps"><svg-icon icon-class="websiteHttp" class-name="disabled" /></i>
                             <template v-for="(item,index) in scope.row.hostList">
                               <i class="svg-i" title="https" v-bind:key="index" v-if="item=='https'"><svg-icon icon-class="websiteHttps" class-name="disabled" /></i>
-                              <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='www'"><svg-icon icon-class="websitePc" class-name="disabled" /></i>
-                              <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else-if="item=='m'"><svg-icon icon-class="websiteMobile" class-name="disabled" /></i>
-                              <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-bind:key="index" v-else><svg-icon icon-class="websiteMap" class-name="disabled" /></i>
+                              <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-else-if="item=='www'"><svg-icon icon-class="websitePc" class-name="disabled" /></i>
+                              <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-else-if="item=='m'"><svg-icon icon-class="websiteMobile" class-name="disabled" /></i>
+                              <i class="svg-i link" v-on:click="hrefBlank(scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain)" :title="scope.row.isHttps?'https://'+item+'.'+scope.row.domain:'http://'+item+'.'+scope.row.domain" v-else><svg-icon icon-class="websiteMap" class-name="disabled" /></i>
                             </template>
                           </div>
                         </template>
