@@ -7,6 +7,8 @@ import '@kangc/v-md-editor/lib/style/base-editor.css';
 import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
 import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
 import Prism from 'prismjs';
+//pickerRangeOptions
+import {pickerRangeOptions} from "@/utils";
 // codemirror 编辑器的相关资源
 import Codemirrors from 'codemirror';
 // mode
@@ -156,7 +158,9 @@ Vue.use(VueMarkdownEditor);
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
 })
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+
+Vue.prototype.$pickerRangeOptions=pickerRangeOptions;
 
 new Vue({
   router,

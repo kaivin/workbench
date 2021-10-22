@@ -245,7 +245,7 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 export default {
   name: 'Works_worklist',
   data() {
@@ -292,64 +292,7 @@ export default {
       pageSizeList:[20,50,100,200,500],
       pagerCount:5,
       totalDataNum:0,
-      pickerRangeOptions: {
-        shortcuts: [{
-          text: '最近一旬',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 9);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近三个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-            text: '上月',
-            onClick(picker) {
-              var date = new Date();
-              var year = date.getFullYear().toString();
-              var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
-              var prevMonth=month-1;
-              if(prevMonth==0){
-                 year=year-1;
-                 prevMonth=12;
-              }
-              var prevEnd=new Date(year,prevMonth,0).getDate();  //计算上月的天数
-              var prevEndDay =year + '-' + prevMonth + '-' + prevEnd;
-              const end = prevEndDay  //最后一天
-              const start = year + '-' + prevMonth + '-01'    //上月第一天
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '本月',
-            onClick(picker) {
-              var date = new Date();
-              var year = date.getFullYear().toString();
-              //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
-              var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
-              //获取天，判断是否小于10，如果是在字符串前面拼接'0'
-              var day = date.getDate() < 10 ? '0'+date.getDate().toString():date.getDate().toString();
-              //字符串拼接，开始时间，结束时间
-              const end = year + '-' + month + '-' + day;  //当天
-              const start = year + '-' + month + '-01';    //当月第一天
-              picker.$emit('pick', [start, end]);
-            }
-          }]
-      },
+      pickerRangeOptions: this.$pickerRangeOptions,
       scrollPosition:{
         width:0,
         left:0,
@@ -423,6 +366,7 @@ export default {
       },
   },
   created(){
+    
     var $this = this;
     $this.getBreadcrumbList();
     $this.initData();
