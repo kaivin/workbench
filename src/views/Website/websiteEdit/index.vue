@@ -71,8 +71,8 @@
                     <div class="item-column flex-content flex-box">
                       <template v-if="formData.is_online">
                         <div class="table-icon" v-if="formData.speedcheckstatus==1">
-                          <i class="svg-i online" v-if="openstatus==0" title="正常"><svg-icon icon-class="online" class-name="disabled" /></i>
-                          <i class="svg-i timeout" v-else-if="openstatus==1" title="超时"><svg-icon icon-class="timeout" class-name="disabled" /></i>
+                          <i class="svg-i online" v-if="formData.openstatus==0" title="正常"><svg-icon icon-class="online" class-name="disabled" /></i>
+                          <i class="svg-i timeout" v-else-if="formData.openstatus==1" title="超时"><svg-icon icon-class="timeout" class-name="disabled" /></i>
                           <i class="svg-i abnormal" v-else title="异常"><svg-icon icon-class="abnormal" class-name="disabled" /></i>
                         </div>
                         <div class="table-tag" v-else><el-tag type="info">未检测</el-tag></div>
@@ -83,7 +83,7 @@
                             <el-tag v-else type="danger">{{formData.speed}}s</el-tag>
                           </template>
                           <template v-else>
-                            <el-tag v-if="formData.speed<2" type="success">0{{formData.speed}}s</el-tag>
+                            <el-tag v-if="formData.speed<2" type="success">{{formData.speed}}s</el-tag>
                             <el-tag v-else-if="formData.speed>=2&&formData.speed<4" type="warning">{{formData.speed}}s</el-tag>
                             <el-tag v-else type="danger">{{formData.speed}}s</el-tag>
                           </template>
@@ -574,14 +574,13 @@ export default {
         sort:"",
         updatetime:"",
         speedcheck:"",
-        openstatus:"",
+        openstatus:0,
         speed:"",
         speedcheckstatus:0,
         isCn:true,
         serverstatus:0,
       },
       websiteInfo:null,
-      openstatus:0,
       websiteList:[],
       isHttps:false,
       languageSelectList:[],
@@ -997,7 +996,7 @@ export default {
       $this.formData.updatetime="";
       $this.formData.speedcheck="";
       $this.formData.speed="";
-      $this.formData.openstatus="";
+      $this.formData.openstatus=0;
       $this.formData.speedcheckstatus=0;
       $this.formData.isCn=true;
       $this.formData.serverstatus=0;

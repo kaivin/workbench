@@ -98,7 +98,7 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.productid" clearable placeholder="产品" :class="searchData.productid!=''?'el-xzstate':''" style="width:130px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.productid" clearable placeholder="产品" :class="searchData.productid!=''?'el-xzstate':''" style="width:100px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in productList"
                                                     :key="item.value"
@@ -122,7 +122,7 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.ennature" clearable placeholder="性质" :class="searchData.ennature!=''?'el-xzstate':''" style="width:270px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.ennature" clearable placeholder="性质" :class="searchData.ennature!=''?'el-xzstate':''" style="width:160px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in ennatureList"
                                                     :key="item.value"
@@ -138,7 +138,7 @@
                                                     :value="item.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-select v-model="searchData.erroring" clearable placeholder="异常" :class="searchData.erroring!=''?'el-xzstate':''" style="width:160px;margin-right:10px;margin-bottom:10px;" size="mini">
+                                            <el-select v-model="searchData.erroring" clearable placeholder="异常" :class="searchData.erroring!=''?'el-xzstate':''" style="width:120px;margin-right:10px;margin-bottom:10px;" size="mini">
                                                 <el-option
                                                     v-for="item in errorList"
                                                     :key="item.value"
