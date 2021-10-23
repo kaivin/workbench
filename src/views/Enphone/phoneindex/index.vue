@@ -815,6 +815,7 @@ export default {
     return {
       phoneID:null,
       depart_id:0,
+      isPageBtn:false,
       dept_Data:[],
       breadcrumbList:[],
       currentPhone:'',
@@ -1523,7 +1524,11 @@ export default {
     initSearchData(){
       var $this = this;
       var searchData = {};
-      searchData.page = $this.searchData.page;
+      searchData.page = $this.isPageBtn?$this.searchData.page:1;
+      if(!this.isPageBtn){
+        $this.searchData.page = 1
+      }
+      $this.isPageBtn = false;
       searchData.limit = $this.searchData.limit;
       if($this.phoneID){
         searchData.phoneid = $this.phoneID;
@@ -1829,6 +1834,7 @@ export default {
     // 当前页改变事件
     handleCurrentChange(val) {
       this.searchData.page = val;
+      this.isPageBtn = true;
       this.leftPhoto();
     },
     // 修改询盘

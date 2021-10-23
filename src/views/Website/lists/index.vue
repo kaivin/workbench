@@ -393,6 +393,7 @@ export default {
       operationsWidth:"",
       menuButtonPermit:[],
       tableData:[],
+      isPageBtn:false,
       page:1,
       limit:100,
       pagerCount:5,
@@ -548,6 +549,7 @@ export default {
     // 重置搜索条件
     resetData(){
       var $this = this;
+      this.page = 1;
       $this.formData.ip="";
       $this.formData.brand=null;
       $this.formData.language=null;
@@ -739,7 +741,11 @@ export default {
       var $this = this;
       $this.minHeight = "auto";
       var formData = {};
-      formData.page = $this.page;
+      formData.page = this.isPageBtn?$this.page:1;
+      if(!this.isPageBtn){
+        this.page = 1
+      };
+      this.isPageBtn = false;
       formData.limit = $this.limit;
       if($this.formData.order){
         formData.order = $this.formData.order;
@@ -1272,6 +1278,7 @@ export default {
     // 当前页改变事件
     handleCurrentChange(val) {
       this.page = val;
+      this.isPageBtn = true;
       this.loadingFun();
       this.initData();
     },

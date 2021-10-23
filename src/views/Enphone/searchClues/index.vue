@@ -1363,10 +1363,10 @@ export default {
       }
     },
     // 组装搜索需要的条件数据
-    getSearchResultData(){
+    getSearchResultData(pageInit){
         var $this = this;
         var resultData = {};
-        resultData.page = $this.searchData.page;
+        resultData.page = pageInit;
         resultData.limit = $this.searchData.limit;
         resultData.messageid = $this.searchData.messageid;
         resultData.ftword_id = $this.searchData.ftword_id;
@@ -1410,12 +1410,13 @@ export default {
       $this.enCluesSearchData();
     },
     // 搜索确认
-    enCluesSearchData(){
+    enCluesSearchData(e,pageInit=1){
         var $this = this;
       if(!$this.isDisabled){
         $this.isDisabled=true;
         $this.searchData.phoneid= $this.deptOneId;
-        var resultData = $this.getSearchResultData();
+        
+        var resultData = $this.getSearchResultData(pageInit);
         $this.loadingFun();
         document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
         $this.$store.dispatch('enphone/getCurrentCluesSearchListAction', resultData).then(response=>{
@@ -1793,7 +1794,7 @@ export default {
     // 当前页改变事件
     handleCurrentChange(val) {
       this.searchData.page = val;
-      this.enCluesSearchData();
+      this.enCluesSearchData({},val);
     },
     // 询盘级别修改记录
     handleCustormeditlogClick(Rid){

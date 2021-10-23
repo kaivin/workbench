@@ -449,6 +449,7 @@ export default {
       minHeight:"auto",
       breadcrumbList:[],
       phoneID:null,
+      isPageBtn:false,
       currentPhone:'',
       writepermit:false,
       menuButtonPermit:[],
@@ -946,7 +947,11 @@ export default {
     initSearchData(){
       var $this = this;
       var searchData = {};
-      searchData.page = $this.searchData.page;
+      searchData.page = $this.isPageBtn?$this.searchData.page:1;
+      if(!this.isPageBtn){
+        $this.searchData.page = 1
+      }
+      $this.isPageBtn = false;
       searchData.limit = $this.searchData.limit;
       searchData.phoneid = $this.phoneID;
       if($this.searchData.mode&&$this.searchData.mode!=''){
@@ -1256,6 +1261,7 @@ export default {
     // 当前页改变事件
     handleCurrentChange(val) {
       this.searchData.page = val;
+      this.isPageBtn = true;
       this.initPage();
     },
     // 修改询盘

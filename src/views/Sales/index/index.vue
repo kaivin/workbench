@@ -383,6 +383,7 @@ export default {
   data() {
     return {
       breadcrumbList:[],
+      isPageBtn:false,
       breadcrumbName:'个人所有询盘',
       currentStatus:"personcount",
       status:1,
@@ -874,7 +875,11 @@ export default {
     initSearchData(){
       var $this = this;
       var searchData = {};
-      searchData.page = $this.searchData.page;
+      searchData.page = $this.isPageBtn?$this.searchData.page:1;
+      if(!$this.isPageBtn){
+        $this.searchData.page = 1
+      };
+      $this.isPageBtn = false;
       searchData.limit = $this.searchData.limit;
       if($this.searchData.timetype&&$this.searchData.timetype!=''){
         searchData.timetype = $this.searchData.timetype;
@@ -1208,6 +1213,7 @@ export default {
     // 当前页改变事件
     handleCurrentChange(val) {
       this.searchData.page = val;
+      this.isPageBtn = true;
       this.initCluesList();
     },
     // 反馈点击事件

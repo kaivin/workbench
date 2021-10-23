@@ -677,6 +677,7 @@ export default {
         tableData:[],
         statData:[],
         groupScore:[],
+        isPageBtn:false,
         page:1,
         limit:50,
         pageSizeList:[50, 100, 150, 200],
@@ -945,7 +946,11 @@ export default {
         pathUrl = "worksaccpet/statWorkOrderDataAction";
       }
       if($this.currentStatus==="alloted"||$this.currentStatus==="person"||$this.currentStatus==="doing"||$this.currentStatus==="done"){
-        searchData.page = $this.page;
+        searchData.page = $this.isPageBtn?$this.page:1;
+        if(!$this.isPageBtn){
+          $this.page = 1
+        }
+        $this.isPageBtn = false;
         searchData.limit = $this.limit;
         searchData.timetype = $this.searchData.timetype;
         if($this.searchData.date&&$this.searchData.date.length>0){
@@ -1317,6 +1322,7 @@ export default {
     // 当前页改变事件
     handleCurrentChange(val) {
       this.page = val;
+      this.isPageBtn = true;
       this.getCurrentStatusData();
     },
     // 跳转到详情
