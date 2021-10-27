@@ -147,3 +147,11 @@ export function workOrderconfirmstart(data) {
     data,
   });
 }
+//修改已分配工单积分（未完成的可以修改）
+export function workOrderEditscore(data) {
+  return request({
+    url: "/hxindex/Worksaccpet/editscore",
+    method: "POST",
+    data,
+  });
+}

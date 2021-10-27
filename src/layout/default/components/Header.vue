@@ -12,7 +12,7 @@
                 <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span><span class="search-font">搜索</span></el-button>
               </el-input>
             </div>
-            <div class="header-button" v-if="isArticleAdd||isWebsiteAdd||isWebserverAdd||isCnPhoneAdd||isEnPhoneAdd||isEnCateAdd||isEnProductAdd||isCnCateAdd||isCnProductAdd||isWebsiteAttrAdd||isInformationAdd||isTagAdd||isUserAdd||isDepartAdd||isRoleAdd||isMenuAdd||isPermitAdd||isPromotedAccountAdd||isPromotedChannelAdd||isCnProcessAdd||isCnMoneyAdd||isCnCluesAdd||isEnCluesAdd||isWebsiteLogAdd||isWebMsgIpAdd||iscompareListAdd||isEncompareListAdd||isCntargetlistAdd||isEntargetlistAdd||isWorkOrderTagAdd||isWorkOrderAdd||isDepartScoreAdd||isResourceTypeAdd||isResourceAdd">
+            <div class="header-button" v-if="isArticleAdd||isWebsiteAdd||isWebserverAdd||isCnPhoneAdd||isEnPhoneAdd||isEnCateAdd||isEnProductAdd||isCnCateAdd||isCnProductAdd||isWebsiteAttrAdd||isInformationAdd||isTagAdd||isUserAdd||isDepartAdd||isRoleAdd||isMenuAdd||isPermitAdd||isPromotedAccountAdd||isPromotedChannelAdd||isCnProcessAdd||isCnMoneyAdd||isCnCluesAdd||isEnCluesAdd||isWebsiteLogAdd||isWebMsgIpAdd||iscompareListAdd||isEncompareListAdd||isCntargetlistAdd||isEntargetlistAdd||isWorkOrderTagAdd||isWorkOrderAdd||isDepartScoreAdd||isResourceTypeAdd||isResourceAdd||isCnScoreAdd||isEnScoreAdd">
               <div class="item-button" v-if="isArticleAdd" v-on:click="articleAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">发布文章</span></div>
               <div class="item-button" v-if="isWebsiteAdd" v-on:click="websiteAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加网站</span></div>
               <div class="item-button" v-if="isWebserverAdd" v-on:click="webserverAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加服务器</span></div>
@@ -50,10 +50,15 @@
               <div class="item-button" v-if="isDepartScoreAdd" v-on:click="DepartScoreAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">部门月度积分添加</span></div>
               <div class="item-button" v-if="isResourceTypeAdd" v-on:click="resourceTypeAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加资源类型</span></div>
               <div class="item-button" v-if="isResourceAdd" v-on:click="resourceAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加资源</span></div>
+              <div class="item-button" v-if="isCnScoreAdd" v-on:click="cnScoreAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">中文个人成交添加</span></div>
+              <div class="item-button" v-if="isEnScoreAdd" v-on:click="enScoreAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">英文个人成交添加</span></div>
             </div>
         </div>
         <div class="header-right">
-          <span class="cache-icon" v-on:click="clearCache" title="清除数据缓存">
+          <span class="cache-icon" v-if="isHomeCache" v-on:click="clearHomeCache" title="清除首页数据缓存">
+            <svg-icon icon-class="clearCache" class-name="disabled" />
+          </span>
+          <span class="cache-icon" v-if="isNohomeCache" v-on:click="clearCache" title="清除数据缓存">
             <svg-icon icon-class="clearCache" class-name="disabled" />
           </span>
           <span class="feedback-icon" v-on:click="openDialog" title="意见反馈">
@@ -100,6 +105,7 @@
 import logo from "@/assets/logo.png";
 import logoTitle from "@/assets/logo_font.png";
 import { mapGetters } from 'vuex';
+import Cookies from 'js-cookie'
 import Hamburger from '@/components/Hamburger';
 export default {
     data(){
@@ -156,6 +162,10 @@ export default {
         'isDepartScoreAdd',
         'isResourceTypeAdd',
         'isResourceAdd',
+        'isCnScoreAdd',
+        'isEnScoreAdd',
+        'isHomeCache',
+        'isNohomeCache',
       ]),
     },
   watch: {
@@ -198,6 +208,35 @@ export default {
               }
             }
           });
+        },
+        // 清除首页数据
+        clearHomeCache(){
+            var $this = this;
+            var userlanguage = Cookies.get('language');      
+            userlanguage = JSON.parse(userlanguage);
+            var cacheForm={}
+            if(userlanguage.language=='Module_cnStat'){
+              cacheForm.cachename='chinaindex'
+            }else{
+              cacheForm.cachename='enindex'
+            }
+            $this.$store.dispatch('api/clearHomeCacheAction', cacheForm).then(response=>{
+              if(response){
+                if(response.status){
+                  $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'success'
+                  });
+                }else{
+                  $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'error'
+                  });
+                }
+              }
+            });
         },
         // 打开意见反馈弹窗
         openDialog(){
@@ -420,6 +459,14 @@ export default {
         // 资源添加
         resourceAdd(){
           this.$store.dispatch('app/addResource')
+        },
+        // 中文个人成交添加
+        cnScoreAdd(){
+          this.$store.dispatch('app/addCnScore')
+        },
+        // 英文个人成交添加
+        enScoreAdd(){
+          this.$store.dispatch('app/addEnScore')
         },
     }
 }

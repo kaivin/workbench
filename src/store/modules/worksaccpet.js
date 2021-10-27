@@ -18,6 +18,7 @@
     workOrderComment,
     workOrderpercenter,
     workOrderconfirmstart,
+    workOrderEditscore,
 } from '@/api/worksaccpet'
 
 const state = {}
@@ -212,7 +213,17 @@ const actions = {
                 reject(error)
             })
         })
-    },    
+    }, 
+    //修改已分配工单积分（未完成的可以修改）
+    workOrderEditscoreAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            workOrderEditscore(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
 }
 
 export default {

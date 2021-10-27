@@ -11,12 +11,26 @@
                     </template>
                   </p>
                   <el-card class="box-card" shadow="hover">
-                    <div slot="header"> 
+                    <div slot="header">      
                       <div class="card-header SaleCard" ref="headerPane">
                           <div class="search-wrap Compart-search-wrap" ref="searchPane">          
-                              <div class="item-search" style="width:200px;">                              
-                                    <el-date-picker v-model="searchData.time" format="yyyy 年 MM 月" value-format="yyyy-MM" type="month" size="small" placeholder="选择月"></el-date-picker>
-                              </div>
+                              <div class="item-search" style="width:300px;">
+                                    <el-date-picker
+                                        v-model="time"
+                                        type="monthrange"
+                                        size="small"
+                                        range-separator="至"
+                                        start-placeholder="开始月份"
+                                        end-placeholder="结束月份"
+                                        format="yyyy 年 MM 月"
+                                        value-format="yyyy-MM"
+                                        clearable
+                                        >
+                                    </el-date-picker>
+                              </div>                              
+                                <div class="item-search">
+                                    <el-autocomplete v-model="searchName" :fetch-suggestions="querySearch" style="float:left; width:150px;" size="small" placeholder="请输入内容" clearable></el-autocomplete>
+                                </div>
                               <div class="item-search">
                                 <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                                 <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
@@ -26,13 +40,13 @@
                     </div>
                     <div class="card-content" ref="tableContent">
                       <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
-                        <div class="table-mask"></div>
+                          <div class="table-mask"></div>
                           <el-table
                               ref="simpleTable"
                               :data="tableData"
                               tooltip-effect="dark"
                               stripe
-                              class="SiteTable"
+                              class="SiteTable EntableColor"
                               style="width: 100%"
                               :style="'min-height:'+tableHeight+'px;'"
                               row-key="id"
@@ -45,42 +59,32 @@
                               >
                               </el-table-column>
                               <el-table-column
-                              prop="deptName"
-                              label="部门"
+                              prop="groupname"
+                              label="小组"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="username"
+                              label="组员"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="mtime"
-                              label="时间"
+                              label="成交时间"
                               >
                               </el-table-column>
                               <el-table-column
-                              prop="level"
-                              label="等级"
+                              prop="number"
+                              label="积分"
                               >
                               </el-table-column>
                               <el-table-column
-                              prop="snumber"
-                              label="A的数量"
+                              prop="anumber"
+                              label="成交数量"
                               >
                               </el-table-column>
                               <el-table-column
-                              prop="passnumber"
-                              label="合格线"
-                              >
-                              </el-table-column>
-                              <el-table-column
-                              prop="mediumnumber"
-                              label="中等线"
-                              >
-                              </el-table-column>
-                              <el-table-column
-                              prop="goodnumber"
-                              label="优秀线"
-                              >
-                              </el-table-column>
-                              <el-table-column
-                                v-if="(menuButtonPermit.indexOf('Encompare_edit')||menuButtonPermit.indexOf('Encompare_delete'))"
+                                v-if="(menuButtonPermit.indexOf('Chinauserscore_userscoreedit')||menuButtonPermit.indexOf('Chinauserscore_userscoredelete'))"
                                 :width="operationsWidth"
                                 align="center"
                                 fixed="right"
@@ -88,8 +92,8 @@
                                 label="操作">
                                 <template #default="scope">
                                   <div class="table-button">
-                                    <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Encompare_edit')">编辑</el-button>
-                                    <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Encompare_delete')" type="info" plain>删除</el-button>
+                                    <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinauserscore_userscoreedit')">编辑</el-button>
+                                    <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinauserscore_userscoredelete')" type="info" plain>删除</el-button>
                                   </div>
                                 </template>
                               </el-table-column>
@@ -116,77 +120,47 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Encompare_add')||menuButtonPermit.includes('Encompare_edit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="680px">
-      <el-form :model="dialogForm">
-        <div class="item-form Compart-time-width">
-            <el-form-item label="添加时间：" :label-width="formLabelWidth">
-                 <el-date-picker v-model="dialogForm.mtime" style="widht:100%" format="yyyy 年 MM 月" value-format="yyyy-MM" type="month" size="small" placeholder="选择月"></el-date-picker>
-            </el-form-item>
-        </div>
-        <div class="item-form-group">
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Chinauserscore_userscoreadd')||menuButtonPermit.includes('Chinauserscore_userscoreedit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="400px">
+        <el-form :model="dialogForm">
+          <div class="item-form Compart-time-width">
+              <el-form-item label="添加时间：" :label-width="formLabelWidth">
+                  <el-date-picker v-model="dialogForm.mtime" style="widht:100%" format="yyyy 年 MM 月" value-format="yyyy-MM" type="month" size="small" placeholder="选择月"></el-date-picker>
+              </el-form-item>
+          </div>
             <div class="item-form">
-                <el-form-item label="部门：" :label-width="formLabelWidth">
-                    <el-select v-model="dialogForm.dept_id" clearable placeholder="请选择部门">
-                        <el-option
-                            v-for="item in deptList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
+                <el-form-item label="组员：" :label-width="formLabelWidth">
+                    <el-autocomplete v-model="dialogFormuserName" :fetch-suggestions="querySearch" clearable></el-autocomplete>
                 </el-form-item>
             </div>
             <div class="item-form">
-                <el-form-item label="合格线：" :label-width="formLabelWidth">
-                    <el-input v-model="dialogForm.passnumber"></el-input>
-                </el-form-item>
-            </div>
-        </div>
-        <div class="item-form-group">
-            <div class="item-form">
-                <el-form-item label="等级：" :label-width="formLabelWidth">
-                    <el-select v-model="dialogForm.level" clearable placeholder="请选择等级">
-                        <el-option
-                            v-for="item in levelList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
+                <el-form-item label="小组名字：" :label-width="formLabelWidth">
+                    <el-input v-model="dialogForm.groupname"></el-input>
                 </el-form-item>
             </div>
             <div class="item-form">
-                <el-form-item label="中等线：" :label-width="formLabelWidth">
-                    <el-input v-model="dialogForm.mediumnumber"></el-input>
+                <el-form-item label="积分：" :label-width="formLabelWidth">
+                    <el-input v-model="dialogForm.number"></el-input>
                 </el-form-item>
             </div>
-        </div>
-        <div class="item-form-group">
             <div class="item-form">
                 <el-form-item label="A的数量：" :label-width="formLabelWidth">
-                    <el-input v-model="dialogForm.snumber"></el-input>
+                    <el-input v-model="dialogForm.anumber"></el-input>
                 </el-form-item>
             </div>
-            <div class="item-form">
-                <el-form-item label="优秀线：" :label-width="formLabelWidth">
-                    <el-input v-model="dialogForm.goodnumber"></el-input>
-                </el-form-item>
-            </div>
-        </div>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Encompare_lists',
+  name: 'Chinauserscore_userscore',
   data() {
     return {
       breadcrumbList:[],
@@ -194,34 +168,31 @@ export default {
       operationsWidth:"",
       tableData:[],
       tableHeight:200,
-      pagerCount:5,
       dialogFormVisible:false,
       dialogText:"",
       formLabelWidth:"110px",
+      dialogFormuserName:'',
       dialogForm:{
-        id:0,
-        dept_id:"",
+        id:'',
+        userid:"",
+        groupname:"",
         mtime:"",
-        level:"",
-        snumber:"",
-        passnumber:"",
-        mediumnumber:"",
-        goodnumber:"",
+        number:"",
+        anumber:"",
       },
-      pageSizeList:[15],
+      pageSizeList:[15,30,60,120],
       totalDataNum:0,
+      time:'',
+      searchName:'',
       searchData:{
         page:1,
-        limit:20,
-        time:"",
+        limit:15,
+        userid:"",
+        starttime:"",
+        endtime:"",
       },
-      deptList:[],
-      levelList:[
-        {label:'不及格',value:'不及格'},
-        {label:'合格',value:'合格'},
-        {label:'中等',value:'中等'},
-        {label:'优秀',value:'优秀'},
-      ],
+      restaurants: [],
+      userList:[],
       scrollPosition:{
         width:0,
         left:0,
@@ -253,7 +224,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'addEncompareList',
+      'addCnScore',
       'sidebar',
       'menuData'
     ]),
@@ -261,7 +232,7 @@ export default {
       return this.sidebar.opened;
     },
     isAdd() {
-      return this.addEncompareList
+      return this.addCnScore
     }
   },
   mounted(){
@@ -390,8 +361,8 @@ export default {
       var $this = this;
       $this.tableHeight = 0;      
       var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-30;
       $this.getBrowserType();
         setTimeout(function() {
@@ -413,42 +384,64 @@ export default {
       var $this = this;
       $this.loadingFun();
       $this.getUserMenuButtonPermit();
+    },    
+    querySearch(queryString, cb) {
+        var $this = this;
+        var restaurants = $this.restaurants;
+        var results = queryString ? restaurants.filter($this.createFilter(queryString)) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+    },
+    createFilter(queryString) {
+        return (restaurant) => {
+            return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
     },
     // 搜索点击事件
     searchResult(){
       var $this = this;
       if(!$this.isSearchResult){  
-        $this.isSearchResult=true; 
+        $this.isSearchResult=true;      
         $this.loadingFun();
         $this.searchData.page = 1;
-        $this.dealData();
+        $this.userListData();
       }
     },
     // 重置表单
     resetData(){
         var $this = this;
         $this.searchData.page=1;
-        $this.searchData.limit=20;
-        $this.searchData.time='';
+        $this.searchData.limit=15;
+        $this.searchName='',
+        $this.searchData.starttime='';
+        $this.searchData.endtime='';
         $this.searchResult();
     },
-    // 初始化部门数据
-    dealData(){
+    // 获取用户
+    userListData(){
       var $this = this;
-      $this.$store.dispatch('Encompare/EndeparDealListChooseAction', null).then(response=>{
+      $this.$store.dispatch('Chinauserscore/CnscoreListAction', null).then(response=>{
         if(response){
           if(response.status){
+            console.log(response,'userList');
             if(response.data.length>0){
-                var deptList = [];
+                var userList = [];
                 response.data.forEach(function(item,index){
                   var itemData = {};
                   itemData.value = item.id;
                   itemData.label = item.name;
-                  deptList.push(itemData);
+                  userList.push(itemData);
                 });
-                $this.deptList = deptList;
+                $this.userList = userList;
+                var restaurants = [];
+                response.data.forEach(function(item,index){
+                  var itemData = {};
+                  itemData.value = item.name;
+                  restaurants.push(itemData);
+                });
+                $this.restaurants=restaurants;
             }else{
-              $this.deptList=[]
+              $this.userList=[]
             }
             $this.initPage();
           }else{
@@ -480,8 +473,23 @@ export default {
       var formData = {};
       formData.page = $this.searchData.page;
       formData.limit = $this.searchData.limit;
-      if($this.searchData.time&&$this.searchData.time!=''){
-        formData.time = $this.searchData.time;
+      if($this.time&&$this.time.length>0){
+         formData.starttime = $this.time[0];
+         formData.endtime = $this.time[1];
+      }else{
+         formData.starttime = "";
+         formData.endtime = "";
+      }
+      if($this.searchName&&$this.searchName!=''){
+        if($this.userList&&$this.userList.length>0){
+            $this.userList.forEach(function(item,index){               
+               if(item.label==$this.searchName){
+                   formData.userid=item.value;
+               }
+            });
+        }
+      }else{
+          formData.userid='';
       }
       return formData;
     },
@@ -490,20 +498,12 @@ export default {
       var $this = this;
       var formData = $this.restearch();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('Encompare/EndeparDealListAction', formData).then(response=>{
+      $this.$store.dispatch('Chinauserscore/CnscoreSearchAction', formData).then(response=>{
         if(response){
-          console.log(response,'response');
           if(response.status){
+            console.log(response,'response');
             if(response.data.length>0){
-                response.data.forEach(function(item){
-                   $this.deptList.forEach(function(items){
-                     if(item.dept_id==items.value){
-                       item.deptName=items.label
-                     }
-                   });
-                });              
                 $this.tableData = response.data;
-                $this.totalDataNum = response.allcount;
             }else{
               $this.tableData = [];
             }
@@ -545,19 +545,20 @@ export default {
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
           if(res.data.length>0){
+            console.log(res,'权限');
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
-            if($this.menuButtonPermit.includes('Encompare_lists')){
+            if($this.menuButtonPermit.includes('Chinauserscore_userscore')){
               var operationsWidth = 22;
-              if($this.menuButtonPermit.includes('Encompare_edit')){
+              if($this.menuButtonPermit.includes('Chinauserscore_userscoreedit')){
                 operationsWidth+=66;
               }
-              if($this.menuButtonPermit.includes('Encompare_delete')){
+              if($this.menuButtonPermit.includes('Chinauserscore_userscoredelete')){
                 operationsWidth+=66;
               }
               $this.operationsWidth = "" + operationsWidth;
-              $this.dealData();
+              $this.userListData();
             }else{
               $this.$message({
                 showClose: true,
@@ -589,7 +590,7 @@ export default {
     handleClose(){
       var $this = this;
       $this.dialogFormVisible = false;
-      $this.$store.dispatch('app/closeEncompareList');
+      $this.$store.dispatch('app/closeCnScore');
     },
     // 添加表格行数据
     addTableRow(row,index){
@@ -605,13 +606,12 @@ export default {
       $this.dialogText = "编辑部门成交";
       $this.resetFormData();
       $this.dialogForm.id = row.id;
-      $this.dialogForm.dept_id = row.dept_id;
+      $this.dialogForm.userid = row.userid;
+      $this.dialogForm.groupname = row.groupname;
       $this.dialogForm.mtime = row.mtime;
-      $this.dialogForm.level = row.level;
-      $this.dialogForm.snumber = row.snumber;
-      $this.dialogForm.passnumber = row.passnumber;
-      $this.dialogForm.mediumnumber = row.mediumnumber;
-      $this.dialogForm.goodnumber = row.goodnumber;
+      $this.dialogForm.number = row.number;
+      $this.dialogForm.anumber = row.anumber;
+      $this.dialogFormuserName = row.username;
     },
     // 保存添加/编辑数据
     saveData(){
@@ -625,18 +625,26 @@ export default {
         if($this.dialogForm.id&&$this.dialogForm.id!=0){
             formData.id = $this.dialogForm.id;
         }
-        formData.dept_id = $this.dialogForm.dept_id;
+        if($this.dialogFormuserName&&$this.dialogFormuserName!=''){
+            if($this.userList&&$this.userList.length>0){
+                $this.userList.forEach(function(item,index){               
+                    if(item.label==$this.dialogFormuserName){
+                        formData.userid=item.value;
+                    }
+                });
+            }
+        }else{
+            formData.userid='';
+        }
+        formData.groupname = $this.dialogForm.groupname;
         formData.mtime = $this.dialogForm.mtime;
-        formData.level = $this.dialogForm.level;
-        formData.snumber = $this.dialogForm.snumber;
-        formData.passnumber = $this.dialogForm.passnumber;
-        formData.mediumnumber = $this.dialogForm.mediumnumber;
-        formData.goodnumber = $this.dialogForm.goodnumber;
+        formData.number = $this.dialogForm.number;
+        formData.anumber = $this.dialogForm.anumber;        
         var pathUrl = "";
         if($this.dialogText=="编辑部门成交"){
-          pathUrl = "Encompare/EndeparDealEditAction";
+          pathUrl = "Chinauserscore/CnscoreEditAction";
         }else{
-          pathUrl = "Encompare/EndeparDealListAddAction";
+          pathUrl = "Chinauserscore/CnscoreAddAction";
         }
         $this.$store.dispatch(pathUrl, formData).then(response=>{
             if(response.status){
@@ -664,13 +672,12 @@ export default {
     resetFormData(){
       var $this = this;
       $this.dialogForm.id = 0;
-      $this.dialogForm.dept_id = "";
+      $this.dialogForm.userid = "";
+      $this.dialogForm.groupname = "";
       $this.dialogForm.mtime = "";
-      $this.dialogForm.level = "";
-      $this.dialogForm.snumber = "";
-      $this.dialogForm.passnumber = "";
-      $this.dialogForm.mediumnumber = "";
-      $this.dialogForm.goodnumber = "";
+      $this.dialogForm.number = "";
+      $this.dialogForm.anumber = "";      
+      $this.dialogFormuserName = "";
     },
     // 验证是否为空
     validationForm(){
@@ -683,10 +690,10 @@ export default {
         });
         return false;
       }
-      if($this.dialogForm.dept_id == ""){
+      if($this.dialogForm.groupname == ""){
         $this.$message({
             showClose: true,
-            message: '错误：部门不能为空！',
+            message: '错误：小组不能为空！',
             type: 'error'
         });
         return false;
@@ -701,7 +708,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('Encompare/EndeparDealDelAction', {id:row.id}).then(response=>{
+          $this.$store.dispatch('Chinauserscore/CnscoreDelAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

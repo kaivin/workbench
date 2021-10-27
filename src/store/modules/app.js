@@ -35,6 +35,8 @@ const state = {
   addDepartScore:false,
   addResourceType:false,
   addResource:false,
+  addCnScore:false,
+  addEnScore:false,
 }
 
 const mutations = {
@@ -224,6 +226,18 @@ const mutations = {
   CLOSE_RESOURCE: (state) => {
     state.addResource = false
   },
+  ADD_CNSCORE: (state) => {
+    state.addCnScore = true
+  },
+  CLOSE_CNSCORE: (state) => {
+    state.addCnScore = false
+  },
+  ADD_ENSCORE: (state) => {
+    state.addEnScore = true
+  },
+  CLOSE_ENSCORE: (state) => {
+    state.addEnScore = false
+  },
 }
 
 const actions = {
@@ -411,6 +425,18 @@ const actions = {
   },
   closeResource({ commit }) {
     commit('CLOSE_RESOURCE')
+  },
+  addCnScore({ commit }) {
+    commit('ADD_CNSCORE')
+  },
+  closeCnScore({ commit }) {
+    commit('CLOSE_CNSCORE')
+  },
+  addEnScore({ commit }) {
+    commit('ADD_ENSCORE')
+  },
+  closeEnScore({ commit }) {
+    commit('CLOSE_ENSCORE')
   },
 }
 

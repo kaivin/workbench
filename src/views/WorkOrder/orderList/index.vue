@@ -277,7 +277,7 @@
                                           width="100"
                                           >
                                           <template slot-scope="scope">
-                                              <span>{{currentStatus=='receive'?scope.row.receivescore:scope.row.score}}</span>
+                                              <span>{{scope.row.receivescore}}</span>
                                           </template>
                                       </el-table-column>
                                       <el-table-column
@@ -418,7 +418,7 @@
                                           width="120">
                                           <template slot-scope="scope">
                                               <div class="table-input">
-                                                  <el-select v-model="scope.row.dealuserid" size="small" :disabled="currentStatus!='allot'" v-if="currentStatus=='allot'" clearable placeholder="负责人">
+                                                  <el-select v-model="scope.row.dealuserid" size="small" :disabled="currentStatus!='allot'" v-if="currentStatus=='allot'" clearable multiple collapse-tags placeholder="负责人">
                                                       <el-option
                                                           v-for="item in userList"
                                                           :key="item.value"
@@ -573,7 +573,8 @@
                                           width="100"
                                           >
                                           <template slot-scope="scope">
-                                              <span>{{currentStatus=='receive'?scope.row.receivescore:scope.row.score}}</span>
+                                              <p v-if="currentStatus=='alloted'"><el-input size="small" v-model="scope.row.score" @change="changeScore(scope.row,scope.$index)"></el-input></p>
+                                              <span v-else>{{scope.row.score}}</span>
                                           </template>
                                       </el-table-column>
                                       <el-table-column
@@ -1452,9 +1453,34 @@ export default {
           return false;
       }
       var resultData = {};
-      resultData.ids = [row.id];
+      resultData.ids = row.id;
       resultData.dealuserid = row.dealuserid;
       $this.$store.dispatch('worksaccpet/confirmWorkOrderAction', resultData).then(response=>{
+          if(response){
+              if(response.status){
+                  $this.$message({
+                      showClose: true,
+                      message: response.info,
+                      type: 'success'
+                  });
+                  $this.initPage();
+              }else{
+                  $this.$message({
+                      showClose: true,
+                      message: response.info,
+                      type: 'error'
+                  });
+              }
+          }
+      });
+    },
+    // 修改已分配工单积分
+    changeScore(row,index){
+      var $this = this;
+      var resultData = {};
+      resultData.id = row.id;
+      resultData.score = row.score;
+      $this.$store.dispatch('worksaccpet/workOrderEditscoreAction', resultData).then(response=>{
           if(response){
               if(response.status){
                   $this.$message({

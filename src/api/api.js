@@ -133,3 +133,43 @@ export function clearCache(data) {
     data
   });
 }
+//首页中文成交统计接口
+export function departScore(data) {
+  return request({
+    url: "hxindex/Api/chinadepartscore",
+    method: "POST",
+    data
+  });
+}
+//首页英文成交统计接口
+export function endepartScore(data) {
+  return request({
+    url: "/hxindex/Api/endepartscore",
+    method: "POST",
+    data
+  });
+}
+//清除首页数据
+export function clearHomeCache(data) {
+  return request({
+    url: "/hxindex/Api/delteindexcache",
+    method: "POST",
+    data
+  });
+}
+//首页英文询盘日目标接口
+export function getEndaytarget(data) {
+  return request({
+    url: "/hxindex/Api/endaytarget",
+    method: "POST",
+    data
+  });
+}
+//首页中文询盘日目标接口
+export function getChinadaytarget(data) {
+  return request({
+    url: "/hxindex/Api/chinadaytarget",
+    method: "POST",
+    data
+  });
+}

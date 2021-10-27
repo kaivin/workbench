@@ -2379,7 +2379,7 @@ export default {
           });
           userView.polygon()
             .position('longitude*latitude')
-            .color('trend', '#BAE7FF-#1890FF-#0050B3')
+            .color('trend', '#0050B3-#1890FF-#BAE7FF')
             .tooltip('name*value')
             .style({
               fillOpacity: 0.85

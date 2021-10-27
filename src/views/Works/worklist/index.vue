@@ -113,6 +113,7 @@
                                 <el-table-column
                                     label="负责人(进度)"
                                     width="140"
+                                    class-name="celldealusername"
                                     >
                                     <template v-if="scope.row.dealusername.indexOf('|')" slot-scope="scope">
                                       <div v-for="item in scope.row.dealusername.split('|')" :key="item.id">{{item}}</div>
@@ -220,9 +221,22 @@
       <el-backtop target=".scroll-panel"></el-backtop>
       <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Works_addevaluation')" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
         <el-form :model="dialogForm">
-          <div class="item-form">
-              <el-form-item :label="dialogText=='添加评价'?'评价内容：':'驳回内容：'" :label-width="formLabelWidth">
+          <div class="item-form" v-if="dialogText=='打赏积分'">
+              <el-form-item label="额外打赏积分：" :label-width="formLabelWidth">
+                <el-input v-model="otherscoreForm.otherscore"></el-input>
+              </el-form-item>
+          </div>
+          <div class="item-form" v-if="dialogText=='驳回原因'">
+              <el-form-item label="驳回内容：" :label-width="formLabelWidth">
                 <el-input type="textarea" v-model="dialogForm.commentinfo" :autosize="{ minRows: 2, maxRows: 4}" ref="commentinfo"></el-input>
+              </el-form-item>
+          </div>
+          <div class="item-form" v-if="dialogText=='添加评价'">
+              <el-form-item label="评价内容：" :label-width="formLabelWidth">
+                <el-input type="textarea" v-model="dialogForm.commentinfo" :autosize="{ minRows: 2, maxRows: 4}" ref="commentinfo"></el-input>
+              </el-form-item>
+              <el-form-item label="额外打赏积分：" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.otherscore" style="width:50px"></el-input>
               </el-form-item>
           </div>
           <div class="item-form" v-if="dialogText=='添加评价'">
@@ -264,10 +278,16 @@ export default {
         id:0,
         rejectinfo:"",
       },
+      otherscoreForm:{
+        id:0,
+        otherscore:"",
+      },
       dialogForm:{
         id:0,
         commentinfo:"",
+        otherscore:"",
         commentstatus:1,
+        
       },
       tagList:[],
       userList:[],
@@ -511,6 +531,7 @@ export default {
         $this.$store.dispatch('works/workOrderListAction', searchData).then(response=>{
           if(response){
             if(response.status){
+              console.log(response,'response');
               response.data.forEach(function(item,index){
                 item.tagList = [];
                 if(item.tags&&item.tags != ""){
@@ -541,6 +562,14 @@ export default {
                 }
               });
               $this.groupScore=response.departscore;
+              if(response.data&&response.data.length>0){
+                var tableDataArr=[];
+                response.data.forEach(function(item,index){
+                  if(item.dealusername.indexOf('|')){
+                      item.dealusername=item.dealusername.replace("|","\n");
+                  }
+                });
+              }
               $this.tableData = response.data;
               $this.totalDataNum = response.allcount;
               var infoData = {};
@@ -691,38 +720,19 @@ export default {
       var $this = this;
       $this.noconfirmForm.id = 0;
       $this.noconfirmForm.rejectinfo = "";
-      $this.dialogForm.commentinfo = "";
     },
     // 确认表格行
     confirmTableRow(row,index){
       var $this = this;
-      $this.$confirm('是否确认该工单已完成?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-      }).then(() => {
-          $this.$store.dispatch('works/workOrderConfirmAction', {id:row.id}).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.initPage();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-            }
-          });
-      }).catch(() => {
-          $this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-      });
+      $this.otherscoreFormData();
+      $this.dialogFormVisible = true;
+      $this.dialogText = "打赏积分";
+      $this.otherscoreForm.id = row.id;
+    },
+    otherscoreFormData(){
+      var $this = this;
+      $this.otherscoreForm.id = 0;
+      $this.otherscoreForm.otherscore = "";
     },
     // 撤销表格行
     cancelTableRow(row,index){
@@ -861,6 +871,7 @@ export default {
       $this.dialogForm.id = 0;
       $this.dialogForm.commentinfo = "";
       $this.dialogForm.commentstatus = 1;
+      $this.dialogForm.otherscore = "";
     },
     // 关闭弹窗
     handleClose(){
@@ -880,6 +891,10 @@ export default {
           pathUrl = "works/workOrderRejectedAction";
           $this.noconfirmForm.rejectinfo = $this.dialogForm.commentinfo;
           pathformData=$this.noconfirmForm;
+      }
+      if($this.dialogText == "打赏积分"){
+          pathUrl = "works/workOrderConfirmAction";
+          pathformData=$this.otherscoreForm;
       }
       $this.$store.dispatch(pathUrl, pathformData).then(response=>{
         if(response){

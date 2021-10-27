@@ -21,103 +21,287 @@
             </div>
         </div>
         <div class="item-row stat-row">
-          <div class="btn-panel" v-if="permitModules.includes('Module_cnStat')&&permitModules.includes('Module_enStat')">
-            <span class="btn-span" v-bind:class="item.isOn?'active':''" v-for="(item,index) in languageList" v-bind:key="index" v-on:click="cnEnStatChange(item.label)">{{item.name}}统计</span>
+          <div class="rowBtn">
+              <p class="btn-panel" v-if="permitModules.includes('Module_cnStat')&&permitModules.includes('Module_enStat')">
+                <span class="btn-span" v-bind:class="item.isOn?'active':''" v-for="(item,index) in languageList" v-bind:key="index" v-on:click="cnEnStatChange(item.label)">{{item.name}}统计</span>
+              </p>
+              <div class="rowBtnFr">
+                    <el-checkbox-group class="checkbox-panel" v-model="currentCluesData.departID" @change="handleDepart" size="small">
+                      <el-checkbox :label="item.value" :disabled="item.disabled" v-for="(item,index) in currentCluesData.DeparData" v-bind:key="index">{{item.label}}</el-checkbox>
+                    </el-checkbox-group>
+              </div>
+          </div>          
+          <div class="flex-box flex-wrap rowOne" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
+               <div class="rowOneOne flex-content">                    
+                    <div class="rowOneOneTit flex-wrap">
+                        <h3>{{language=='Module_cnStat'?'中文':'英文'}}各部门日目标</h3>
+                        <div class="item-search flex-content">                        
+                          <el-date-picker
+                            v-model="DaytargetTime"
+                            size="mini"
+                            type="date"
+                            @change="DaytargetHandler"
+                            placeholder="选择日期"
+                            format="yyyy 年 MM 月 dd 日"
+                            value-format="yyyy-MM-dd"
+                            style="width:180px"
+                            >
+                          </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="rowOneOneItem clearfix flex-wrap">
+                         <div class="rowOneOneItemFl">
+                              <div id="radialBarChart" class="chart-canvas"></div>
+                         </div>
+                         <dl class="rowOneOneItemFr flex-content">
+                             <dt>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}统计</dt>
+                             <dd>历史单日最高<span>({{targetScore.historymaxnumber.xundate}})</span><strong class="color01">{{targetScore.historymaxnumber.maxnumber}}</strong></dd>
+                             <dd>本月单日最高<span>({{targetScore.daymaxnumber.xundate}})</span><strong class="color02">{{targetScore.daymaxnumber.maxnumber}}</strong></dd>
+                             <dd v-if="targetScore.isDistanceTarget">距目标线差距<strong>{{targetScore.DistanceTarget}}</strong></dd>
+                             <dd v-else>超出目标线<strong>{{targetScore.DistanceTarget}}</strong></dd>
+                         </dl>
+                    </div>
+               </div>
+               <div class="rowOneTwoThree flex-wrap flex-content">
+                  <div class="rowOneTwo flex-content">
+                        <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}日询盘</h3>
+                        <ul class="rowOneTwoItem">
+                            <li class="flex-box">
+                                <i class="svg-i"><svg-icon icon-class="homePic" /></i>
+                                <p class="flex-content">
+                                    今日询盘                          
+                                    <strong>{{currentCluesData.alltodaynumber}}</strong>
+                                    <span><i :style="'width:'+ currentCluesData.alltodaynumberPercent +'%'"></i></span>
+                                </p>
+                            </li>
+                            <li class="flex-box">
+                                <i class="svg-i"><svg-icon icon-class="homeTime" /></i>
+                                <p class="flex-content">
+                                    昨日询盘                                
+                                    <strong>{{currentCluesData.alllastdaynumber}}</strong>
+                                    <span><i :style="'width:'+ currentCluesData.alllastdaynumberPercent +'%'"></i></span>
+                                </p>
+                            </li>     
+                        </ul>
+                  </div>
+                  <div class="rowOneThree">
+                        <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}月询盘</h3>
+                        <div class="rowOneThreeTop">
+                            <span>本月询盘</span>
+                            <strong>{{currentCluesData.allmonthnumber}}</strong>
+                            <p :class="currentCluesData.monthGrowth>0?'rising':'falling'">环比上月同期<span v-if="currentCluesData.monthGrowth>0">上升</span><span v-else>下降</span>{{currentCluesData.monthGrowthTxt}}</p>
+                        </div>
+                        <div class="rowOneThreeBom">
+                            <div id="rowOneThreeArea" class="chart-canvas"></div>
+                        </div>
+                  </div>
+               </div>
           </div>
-          <div class="flex-box flex-wrap tarFlex" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
-            <div class="target-chart">
-              <h3>{{language=='Module_cnStat'?'中文':'英文'}}各部门日目标</h3>
-              <div class="target-chartItem">
-                   <div id="radialBarChart" class="chart-canvas"></div>
-                    <ul class="deptData">
-                        <li v-for="(item,index) in currentCluesData.targetData" :key='index' @click="handleDepart(item)">
-                            <span>{{item.name}}</span>
-                            <em>{{item.targetNum[0]}}</em>
-                            <strong>{{item.dayNum[0]}}</strong>
+          <div class="flex-box flex-wrap rowTwo">
+               <div class="rowTwoTwo flex-content">
+                    <div class="map-Top-chartTit flex-wrap">
+                        <h3>{{language=='Module_cnStat'?'中文':'英文'}}成交统计</h3>
+                        <div class="item-search flex-content">                        
+                          <el-date-picker
+                            v-model="ScoreTime"
+                            size="mini"
+                            type="month"
+                            @change="monthChangeHandler"
+                            placeholder="选择月"
+                            format="yyyy 年 MM 月"
+                            value-format="yyyy-MM"
+                            style="width:140px"
+                            >
+                          </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="rowTwoTwoItem">
+                         <div class="rowTwoTwoItemTop flex-wrap">
+                              <p class="rowTwoTwoItemTop01 flex-content">
+                                 <span v-if="language=='Module_cnStat'">成交积分</span><span v-else>成交数量</span><span>合格线</span><span>中等线</span><span>优秀线</span>
+                              </p>
+                              <p class="rowTwoTwoItemTop02">百万成交</p>
+                         </div>
+                         <ul class="rowTwoTwoItemBom">
+                             <li class="flex-wrap" v-for="(item,index) in currentCluesData.departScoreData" :key="index">
+                                <p class="rowTwoTwoItemFlName">{{item.departname}}</p>
+                                <p class="rowTwoTwoItemFlBox flex-content">
+                                   <span v-if="language=='Module_cnStat'" class="departnamescore" :style="'width:'+item.score/ScoreData.MaxValue*100+'%'"></span>
+                                   <span v-else class="departnamescore" :style="'width:'+item.snumber/ScoreData.MaxValue*100+'%'"></span>
+                                   <span class="goodnumber" :style="'width:'+item.goodnumber/ScoreData.MaxValue*100+'%'"></span>
+                                   <span class="mediumnumber" :style="'width:'+item.mediumnumber/ScoreData.MaxValue*100+'%'"></span>
+                                   <span class="passnumber" :style="'width:'+item.passnumber/ScoreData.MaxValue*100+'%'"></span>
+                                </p>
+                                <p class="rowTwoTwoItemFlNum"  v-if="language=='Module_cnStat'" :class="item.a_number==0?'':'NumClass'">
+                                   <span v-if="item.a_number==0">——</span>
+                                   <span v-else>{{item.a_number}}</span>
+                                </p>
+                                <p class="rowTwoTwoItemFlNum" v-else :class="item.snumber==0?'':'NumClass'">
+                                   <span v-if="item.snumber==0">——</span>
+                                   <span v-else>{{item.snumber}}</span>
+                                </p>
+                             </li>
+                         </ul>
+                         <dl class="rowTwoTwoItemDl" :class="language=='Module_cnStat'?'':'enItemDl'">
+                              <dt>
+                                  <p class="rowTwoTwoItemDlTit">{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}成交数量</p>
+                                  <p class="rowTwoTwoItemDlNum">{{ScoreData.addallsnumber}}<span v-if="ScoreData.allsnumber!=ScoreData.addallsnumber">(占总成交{{ScoreData.allsnumberPercen}})</span></p>
+                              </dt>
+                              <dt v-if="language=='Module_cnStat'">
+                                  <p class="rowTwoTwoItemDlTit">{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}成交积分</p>
+                                  <p class="rowTwoTwoItemDlNum">{{ScoreData.addallscore}}<span v-if="ScoreData.allscore!=ScoreData.addallscore">(占总成交{{ScoreData.allscorePercen}})</span></p>
+                              </dt>
+                         </dl>
+                    </div>
+               </div>
+               <div class="rowTwoOne" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
+                    <div class="map-Top-chartTit flex-wrap">
+                        <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}热门{{language=='Module_cnStat'?'地区':'国家'}}TOP10</h3>
+                        <div class="item-search flex-content">
+                          <el-date-picker
+                            v-model="mapDate"
+                            size="mini"
+                            type="daterange"
+                            class="date-range"
+                            align="right"
+                            style="width:220px;"
+                            value-format = "yyyy-MM-dd"
+                            unlink-panels
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            @change="dateRangeChangeHandler"
+                            :picker-options="pickerRangeOptions">
+                          </el-date-picker> 
+                        </div>
+                    </div>
+                    <div class="rowTwoOneItem flex-wrap" :class="language=='Module_cnStat'?'mapCNpad':'mapENpad'">
+                        <div class="map-chart flex-content">
+                          <div v-if="language=='Module_cnStat'" id="regionMapChart" class="chart-canvas"></div>
+                          <div v-else id="worldRegionMapChart" class="chart-canvas"></div>
+                        </div>
+                        <div class="top-ten">
+                             <h3>热门地区TOP10</h3>
+                             <div id="topTen" class="chart-canva"></div>
+                        </div>
+                    </div>
+               </div>
+          </div>
+          <div class="flex-box flex-wrap rowFour" v-if="(currentCluesData.userscoreNum&&currentCluesData.userscoreNum.length>0)||(currentCluesData.yearuserscoreNum&&currentCluesData.yearuserscoreNum.length>0)">
+               <div class="rowFourOne" v-if="currentCluesData.userscoreNum&&currentCluesData.userscoreNum.length>0">
+                    <h3>月成交Top5</h3>
+                    <ul class="rowFourOneUl">
+                        <li class="flex-box flex-wrap" v-for="(item,index) in currentCluesData.userscoreNum" :key='index'>
+                             <p class="rowFourOneUlNum"><span>{{index+1}}</span></p>
+                             <p class="rowFourOneUlPic" v-if="item.headimg"><img v-bind:src="item.headimg" alt=""></p>
+                             <p class="rowFourOneUlPic" v-else><img src="../../../assets/clinchIcon01.png" alt=""></p>
+                             <div class="rowFourOneUlBox flex-content">
+                                  <p class="infoData">
+                                    {{item.username}}
+                                    <span class="group">{{item.groupname}}</span>
+                                    <span class="groupNum">{{item.number}}<i v-if="item.Growth!=0" :class="item.growthClass?'rising':'falling'">{{item.Growth}}</i></span>
+                                  </p>
+                                  <p class="percen"><span :style="'width:'+item.percen+'%'"></span></p>
+                             </div>
                         </li>
                     </ul>
-              </div>
-            </div>
-            <div class="clues-chart flex-content">
-              <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}询盘统计</h3>
-              <div class="clues-chartItem flex-wrap">
-                  <div class="item-liquid-chart">
-                    <div id="cluesLiquidChart1" class="chart-canvas"></div>
-                  </div>
-                  <div class="item-liquid-chart">
-                    <div id="cluesLiquidChart2" class="chart-canvas"></div>
-                  </div>
-                  <div class="item-liquid-chart">
-                    <div id="cluesLiquidChart3" class="chart-canvas"></div>
-                  </div>
-              </div>
-            </div>
+               </div>
+               <div class="rowFourTwo flex-content" v-if="currentCluesData.yearuserscoreNum&&currentCluesData.yearuserscoreNum.length>0">
+                    <h3>年度成交Top5</h3>
+                    <ul class="rowFourTwoUl">
+                        <li class="flex-box flex-wrap" v-for="(item,index) in currentCluesData.yearuserscoreNum" :key='index'>
+                             <div class="rowFourTwoUlNum">
+                                <p v-if="item.headimg"><img v-bind:src="item.headimg" alt=""></p>
+                                <p v-else><img src="../../../assets/clinchIcon01.png" alt=""></p>
+                                <span>TOP{{index+1}}</span>
+                             </div>
+                             <p class="rowFourTwoUlName">
+                                {{item.username}}
+                                <span>{{item.groupname}}</span>
+                             </p>
+                             <div class="rowFourTwoUlPercen flex-content">
+                                  <p class="percenTop">成交积分<span>{{item.number}}</span></p>
+                                  <p class="percenBom"><span></span></p>
+                             </div>
+                             <div class="rowFourTwoUlScore" v-if="item.anumber>0">
+                                  <p class="ScoreTop"><span>{{item.anumber}}</span></p>
+                                  <p class="ScoreBom">百万成交</p>
+                             </div>
+                             <div class="rowFourTwoUlScore" v-else>
+                                  <p class="ScoreLine">——</p>
+                             </div>
+                             <div class="rowFourTwoUlarea">
+                                <div :id="`yearuserChart${index}`" class="chart-canva"></div>
+                             </div>
+                        </li>
+                    </ul>
+               </div>
           </div>
-          <div class="flex-box flex-wrap mapFlex" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
-              <div class="map-Top-chart flex-content">
-                  <div class="map-Top-chartTit flex-wrap">
-                      <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}热门{{language=='Module_cnStat'?'地区':'国家'}}TOP10</h3>
-                      <div class="item-search flex-content">
-                        <el-date-picker
-                          v-model="mapDate"
-                          size="mini"
-                          type="daterange"
-                          class="date-range"
-                          align="right"
-                          style="width:220px;"
-                          value-format = "yyyy-MM-dd"
-                          unlink-panels
-                          range-separator="至"
-                          start-placeholder="开始日期"
-                          end-placeholder="结束日期"
-                          @change="dateRangeChangeHandler"
-                          :picker-options="pickerRangeOptions">
-                        </el-date-picker> 
-                      </div>
-                  </div>
-                  <div class="map-Top-chartItem flex-wrap" :class="language=='Module_cnStat'?'mapCNpad':'mapENpad'">
-                      <div class="map-chart flex-content">
-                        <div id="regionMapChart" class="chart-canvas"></div>
-                      </div>
-                      <div class="top-ten">
-                        <div id="topTen" class="chart-canva"></div>
-                      </div>
-                  </div>
-              </div>
-              <div class="Clinch-chart">
-                <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文总':'英文总'}}成交统计<span>({{thisMonth}})</span></h3>
-                <div class="table-chart flex-wrap" v-if="currentCluesData.targetData">
-                  <div class="item-tr" v-if="language=='Module_cnStat'">
-                    <div class="item-td">{{currentCluesData.scoreData.score}}</div>
-                    <div class="item-td">成交积分</div>
-                  </div>
-                  <div class="item-tr" v-if="language=='Module_enStat'">
-                    <div class="item-td">{{currentCluesData.scoreData.allxuncount}}</div>
-                    <div class="item-td">询盘数量</div>
-                  </div>
-                  <div class="item-tr">
-                    <div class="item-td">{{currentCluesData.scoreData.snumber}}</div>
-                    <div class="item-td">{{language=='Module_cnStat'?'成交数量':'A+数量'}}</div>
-                  </div>
-                  <div class="item-tr" v-if="language=='Module_cnStat'">
-                    <div class="item-td">{{currentCluesData.scoreData.a_number}}</div>
-                    <div class="item-td">A数量</div>
-                  </div>
-                </div>
-              </div>
-          </div>
-          <div class="flex-box flex-column" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
+          <div class="flex-box flex-column trend-chart" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
             <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}近30天询盘趋势</h3>
-            <div id="cluesChart" class="chart-canvas flex-content trend-chart"></div>
+            <div id="cluesChart" class="chart-canvas flex-content"></div>
           </div>
-          <div class="salesman" v-if="permitModules.includes('Module_salesman')">
-              <h3>业务员数据统计</h3>
-              <div class="num-list flex-wrap">
-                <p><span>消息提醒</span><strong>{{salesmanData.warningcount}}</strong></p>
-                <p><span>询盘总数</span><strong>{{salesmanData.personcount}}</strong></p>
-                <p><span>待处理询盘总数</span><strong>{{salesmanData.waitdealcount}}</strong></p>
-                <p><span>月底前需反馈询盘总数</span><strong>{{salesmanData.monthsaycount}}</strong></p>
-              </div>
+          <div class="rowThree">
+               <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}小组成绩</h3>
+               <div class="rowThreeOne flex-wrap">
+                    <div class="rowThreeOne01" v-if="currentCluesData.zugroupdayArr.length>0&&currentCluesData.zugroupdayArr">
+                        <div id="zugroupdayChart" class="chart-canvas"></div>
+                    </div>
+                    <div class="rowThreeOne02" v-if="currentCluesData.monthtongArr.length>0&&currentCluesData.monthtongArr">
+                        <div id="zugroupmonthChart" class="chart-canvas"></div>
+                    </div>
+                    <div class="rowThreeOne03 flex-content"  v-if="currentCluesData.zusuercountArr.length>0&&currentCluesData.zusuercountArr">
+                         <p class="rowThreeOne03Tit">组员成绩<span>注：与上月同期对比</span></p>
+                         <div class="rowThreeThreeItem">                              
+                            <el-table
+                                ref="simpleTable"
+                                :data="currentCluesData.zusuercountArr"
+                                tooltip-effect="dark"
+                                stripe
+                                class="rowThreeTable"
+                                style="width: 100%"
+                                height="300"
+                                >
+                                <el-table-column
+                                prop="groupname"
+                                label="组别"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                prop="username"
+                                label="姓名"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                prop="todaynumber"
+                                sortable
+                                label="今天个数"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                prop="lastdaynumber"
+                                sortable
+                                label="昨天个数"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                prop="monthnumber"
+                                sortable
+                                label="本月个数"
+                                >
+                                  <template slot-scope="scope">
+                                    <div class="rowThreeGrowth">
+                                      <p>
+                                          <i>{{scope.row.lastmonthnumber}}</i>
+                                          <span :class="scope.row.Class">{{scope.row.Growth}}</span>
+                                      </p>
+                                    </div>
+                                  </template>
+                                </el-table-column>
+                            </el-table>
+                         </div>
+                    </div>
+               </div>
           </div>
         </div>
       </div>
@@ -127,10 +311,11 @@
 <script>
 import { worldCountry } from '@/utils/worldCountry';
 import { mapGetters } from 'vuex';
+import Cookies from 'js-cookie'
 import DataSet from '@antv/data-set';
 import { Chart } from '@antv/g2';
 import * as G2 from '@antv/g2';
-import { Bullet,RadialBar,Liquid,Area, measureTextWidth,Pie } from '@antv/g2plot';
+import { Bullet,RadialBar,Liquid,Line,Area,measureTextWidth,Pie,Bar,Column } from '@antv/g2plot';
 export default {
   name: 'Home',
   data() {
@@ -138,40 +323,53 @@ export default {
       menuButtonPermit:[],
       permitModules:[],
       thisMonth:'',
+      ScoreTime:'',
+      DaytargetTime:'',
+      DaytargetTodayTime:'',
+      targetScore:{
+        daymaxnumber:[],
+        historymaxnumber:[],
+        DistanceTarget:0,
+        isDistanceTarget:false,
+      },
       currentCluesData:{
         departName:"中文",
-        departID:null,
-        scoreData:null,
-        targetData:null,
+        departID:[],
         chartData:[],
         avgChartNum:0,
         targetNum:0,
-        cluesNum:{
-          today:0,
-          todayPercent:0,
-          totalToday:0,
-          yesterday:0,
-          yesterdayPercent:0,
-          totalYesterday:0,
-          month:0,
-          monthPercent:0,
-          totalMonth:0,
-        },
-        cluesRegionData:[],
-        topTenRegionData:[],
+        alltodaynumber:0,
+        alltodaynumberPercent:0,
+        alllastdaynumber:0,
+        alllastdaynumberPercent:0,
+        allmonthnumber:0,
+        monthGrowth:0,
+        monthGrowthTxt:0,
+        DeparData:null,
+        groupcountArr:[],//部门数据
+        targetData:null,
+        targetDataLine:null,
+        departScoreData:null,
+        userscoreNum:null,//月成交TOP5
+        yearuserscoreNum:null,//年度成交Top5
+        zugoupmonthArr:null,//年询盘
+        zugroupdayArr:[],//日询盘
+        monthtongArr:[],//月询盘
+        zusuercountArr:[],//组员成绩
+        checkedDeparData:[],
+        cluesRegionData:[],//地图
+        topTenRegionData:[],//前10
       },
-      totalNum:{
-        cn:{
-          today:0,
-          yesterday:0,
-          month:0,
-        },
-        en:{
-          today:0,
-          yesterday:0,
-          month:0,
-        },
+      ScoreData:{
+        allscore:'',
+        allsnumber:'',
+        addallscore:'',
+        addallsnumber:'',
+        allscorePercen:'',
+        allsnumberPercen:'',
+        MaxValue:'',
       },
+      mapDate:[],
       salesmanData:{},
       newsList:[],
       pickerRangeOptions: this.$pickerRangeOptions,
@@ -208,13 +406,17 @@ export default {
         {name:"英文",label:"Module_enStat",isOn:false},
       ],
       language:null,
-      areaTrendPlot:null,
-      regionMapChart:null,
-      liquidPlot1:null,
-      liquidPlot2:null,
-      liquidPlot3:null,
-      pieSourcePlot:null,
-      radialBarPlot:null,
+
+      radialBarPlot:null,//中文地区目标
+      worldRegionMapChart:null,//世界地图
+      regionMapChart:null,//中国地图
+      pieSourcePlot:null,//热门地区TOP10
+      monthtongArea:null,//月询盘数据图
+      areaTrendPlot:null,//30天询盘
+      zugroupdayColumn:null,//日询盘
+      zugoupmonthColumn:null,//月询盘
+      useryearChart:null,
+
       loading:false,
       clickID:'',
     }
@@ -223,11 +425,6 @@ export default {
     ...mapGetters([
       'userInfo',
     ]),
-  },
-  beforeCreate(){
-    // if(this.$router.currentRoute.query.status){
-    //   window.location.reload();
-    // }
   },
   created() {
     var $this = this;
@@ -295,6 +492,10 @@ export default {
             $this.language = null;
           }
         }
+        var userlanguage={};
+        userlanguage.language=$this.language;
+        userlanguage = JSON.stringify(userlanguage);
+        Cookies.set('language', userlanguage);
       }else{
         $this.language = null;
       }
@@ -302,9 +503,6 @@ export default {
         $this.cnEnActiveChange();
         $this.getNearMonth();
         $this.statDataApi();
-      }
-      if($this.permitModules.includes('Module_salesman')){
-        $this.getSalesmanStatData();
       }
     },
     // 获取当前登录用户首页拥有阅读权限的模块
@@ -353,72 +551,638 @@ export default {
         }
       });
     },
+    //清除数据
+    clearData(){
+      var $this = this;
+      $this.currentCluesData.alltodaynumber='';
+      $this.currentCluesData.alltodaynumberPercent='';
+      $this.currentCluesData.alllastdaynumber='';
+      $this.currentCluesData.alllastdaynumberPercent='';
+      $this.currentCluesData.allmonthnumber='';
+      $this.currentCluesData.monthGrowth='';
+      $this.currentCluesData.monthGrowthTxt='';
+      $this.currentCluesData.monthtongArr=[];
+      $this.currentCluesData.chartData=[];
+      $this.currentCluesData.avgChartNum=[];
+      $this.currentCluesData.targetNum=[];
+      $this.currentCluesData.zugroupdayArr=[];
+      $this.currentCluesData.zugoupmonthArr=[];
+      $this.currentCluesData.zugoupmonthArr=[];
+    },
+    // 中文部门日目标
+    cnDaytarget(){
+      var $this = this;
+      var resultData = {};
+      if($this.DaytargetTime&&$this.DaytargetTime!=''){
+        resultData.time=$this.DaytargetTime;
+      }else{
+        resultData.time='';
+      }
+      $this.targetScore.DistanceTarget='';
+      $this.$store.dispatch("api/getChinadaytargetAction", resultData).then((response) => {
+        if (response) {
+          console.log(response,'中文部门日目标');
+          if (response.status) {
+              // 获取部门数据
+              if(response.readart&&response.readart.length>0){
+                var DeparData=[];
+                response.readart.forEach(function(item,index){
+                    var itemDate={};
+                    itemDate.value=item.id;
+                    itemDate.label=item.name;
+                    itemDate.disabled=false;
+                    DeparData.push(itemDate);
+                });
+                $this.currentCluesData.DeparData=DeparData;
+              }
+              if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){
+                  if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
+                      if($this.DaytargetTime&&$this.DaytargetTime!=''){
+                      }else{
+                        $this.DaytargetTime=$this.DaytargetTodayTime;
+                      }
+                      $this.groupcountArr=response.groupcount;
+                      //距目标线差距
+                      if(response.groupcount.length>0){
+                        var maxTarget=0;
+                        response.groupcount.forEach(function(item,index){
+                            var gap=0;
+                            if(item.searchdaynumber){
+                              gap=item.daytargetnumber-item.searchdaynumber;
+                              maxTarget=maxTarget+gap;
+                            }else{
+                              gap=item.daytargetnumber-item.daynumber;
+                              maxTarget=maxTarget+gap;
+                            }
+                        })
+                        if(maxTarget>=0){
+                          $this.targetScore.isDistanceTarget=true;
+                        }else{
+                          $this.targetScore.isDistanceTarget=false;
+                        }
+                        $this.targetScore.DistanceTarget=Math.abs(maxTarget);
+                      }
+                      var departTargetNum = [];
+                      var targetDataLine = [];
+                      $this.currentCluesData.targetData=[];
+                      response.groupcount.forEach(function(item,index){
+                        var itemData = {};
+                        var itemDataLine = {};
+                        var itemDatahisLine = {};
+                        itemData.id = item.id;
+                        itemData.name = item.departname;
+                        if(item.searchdaynumber&&item.searchdaynumber>=0){
+                            itemData.dayNum = [item.searchdaynumber,item.daynumber];
+                        }else{
+                            itemData.dayNum = [item.daynumber];
+                        }
+                        itemData.targetNum = [item.daytargetnumber];
+                        itemDataLine.name = item.departname;
+                        itemDataLine.count = item.historymaxnumber;
+                        itemDatahisLine.name = item.departname;
+                        itemDatahisLine.count = item.monthmaxnumber;
+                        departTargetNum.push(itemData);
+                        targetDataLine.push(itemDataLine,itemDatahisLine);
+                      });
+                      $this.currentCluesData.targetDataLine = targetDataLine;
+                      $this.currentCluesData.targetData = departTargetNum.reverse();
+                      if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
+                        $this.radialBarPlot.chart.destroy();
+                      }
+                      $this.drawDepartTarget();// 部门日目标进度图
+                  }
+              }else{
+                  if($this.DaytargetTime&&$this.DaytargetTime!=''){
+                  }else{
+                    $this.DaytargetTime=$this.DaytargetTodayTime;
+                  }
+                  $this.groupcountArr=response.groupcount;
+                  //距目标线差距
+                  if(response.groupcount.length>0){
+                    var maxTarget=0;
+                    response.groupcount.forEach(function(item,index){
+                        var gap=0;
+                        if(item.searchdaynumber){
+                          gap=item.daytargetnumber-item.searchdaynumber;
+                          maxTarget=maxTarget+gap;
+                        }else{
+                          gap=item.daytargetnumber-item.daynumber;
+                          maxTarget=maxTarget+gap;
+                        }
+                    })
+                    if(maxTarget>=0){
+                      $this.targetScore.isDistanceTarget=true;
+                    }else{
+                      $this.targetScore.isDistanceTarget=false;
+                    }
+                    $this.targetScore.DistanceTarget=Math.abs(maxTarget);
+                  }
+                  var departTargetNum = [];
+                  var targetDataLine = [];
+                  $this.currentCluesData.targetData=[];
+                  response.groupcount.forEach(function(item,index){
+                    var itemData = {};
+                    var itemDataLine = {};
+                    var itemDatahisLine = {};
+                    itemData.id = item.id;
+                    itemData.name = item.departname;
+                    if(item.searchdaynumber&&item.searchdaynumber>=0){
+                        itemData.dayNum = [item.searchdaynumber,item.daynumber];
+                    }else{
+                        itemData.dayNum = [item.daynumber];
+                    }
+                    itemData.targetNum = [item.daytargetnumber];
+                    itemDataLine.name = item.departname;
+                    itemDataLine.count = item.historymaxnumber;
+                    itemDatahisLine.name = item.departname;
+                    itemDatahisLine.count = item.monthmaxnumber;
+                    departTargetNum.push(itemData);
+                    targetDataLine.push(itemDataLine,itemDatahisLine);
+                  });
+                  $this.currentCluesData.targetDataLine = targetDataLine;
+                  $this.currentCluesData.targetData = departTargetNum.reverse();                  
+                  if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
+                    $this.radialBarPlot.chart.destroy();
+                  }
+                  $this.drawDepartTarget();// 部门日目标进度图
+              }
+              $this.getCnCluesStatData();
+          } else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+          }
+        }
+      });
+    },
+    // 英文部门日目标
+    enDaytarget(){
+      var $this = this;      
+      var resultData = {};
+      if($this.DaytargetTime&&$this.DaytargetTime!=''){
+        resultData.time=$this.DaytargetTime;
+      }else{
+        resultData.time='';
+      }
+      $this.targetScore.DistanceTarget='';
+      $this.$store.dispatch("api/getEndaytargetAction", resultData).then((response) => {
+        if (response) {
+          console.log(response,'首页英文询盘日目标接口');
+          if (response.status) {
+              // 获取部门数据
+              if(response.readart&&response.readart.length>0){
+                var DeparData=[];
+                response.readart.forEach(function(item,index){
+                    var itemDate={};
+                    itemDate.value=item.id;
+                    itemDate.label=item.name;
+                    itemDate.disabled=false;
+                    DeparData.push(itemDate);
+                });
+                $this.currentCluesData.DeparData=DeparData;
+              }              
+              if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){
+                  if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
+                      if($this.DaytargetTime&&$this.DaytargetTime!=''){
+                      }else{
+                        $this.DaytargetTime=$this.DaytargetTodayTime;
+                      }
+                      $this.groupcountArr=response.groupcount;
+                      //距目标线差距
+                      if(response.groupcount.length>0){
+                        var maxTarget=0;
+                        response.groupcount.forEach(function(item,index){
+                            var gap=0;
+                            gap=item.daytargetnumber-item.daynumber;
+                            maxTarget=maxTarget+gap;
+                        })
+                        if(maxTarget>=0){
+                          $this.targetScore.isDistanceTarget=true;
+                        }else{
+                          $this.targetScore.isDistanceTarget=false;
+                        }
+                        $this.targetScore.DistanceTarget=Math.abs(maxTarget);
+                      }
+                      // 部门日目标进度图
+                      var departTargetNum = [];
+                      var targetDataLine = [];
+                      $this.currentCluesData.targetData=[];
+                      response.groupcount.forEach(function(item,index){
+                        var itemData = {};
+                        var itemDataLine = {};
+                        var itemDatahisLine = {};
+                        itemData.id = item.id;
+                        itemData.name = item.departname;
+                        if(item.searchdaynumber&&item.searchdaynumber>=0){
+                            itemData.dayNum = [item.searchdaynumber,item.daynumber];
+                        }else{
+                            itemData.dayNum = [item.daynumber];
+                        }
+                        itemData.targetNum = [item.daytargetnumber];
+                        itemDataLine.name = item.departname;
+                        itemDataLine.count = item.historymaxnumber;
+                        itemDatahisLine.name = item.departname;
+                        itemDatahisLine.count = item.monthmaxnumber;
+                        departTargetNum.push(itemData);
+                        targetDataLine.push(itemDataLine,itemDatahisLine);
+                      });
+                      $this.currentCluesData.targetDataLine = targetDataLine;
+                      $this.currentCluesData.targetData = departTargetNum.reverse();                     
+                      if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
+                        $this.radialBarPlot.chart.destroy();
+                      }  
+                      $this.drawDepartTarget();// 部门日目标进度图
+
+                  }else{
+                }
+              }else{
+                  if($this.DaytargetTime&&$this.DaytargetTime!=''){
+                  }else{
+                    $this.DaytargetTime=$this.DaytargetTodayTime;
+                  }
+                  $this.groupcountArr=response.groupcount;
+                  //距目标线差距
+                  if(response.groupcount.length>0){
+                    var maxTarget=0;
+                    response.groupcount.forEach(function(item,index){
+                        var gap=0;
+                        gap=item.daytargetnumber-item.daynumber;
+                        maxTarget=maxTarget+gap;
+                    })
+                    if(maxTarget>=0){
+                      $this.targetScore.isDistanceTarget=true;
+                    }else{
+                      $this.targetScore.isDistanceTarget=false;
+                    }
+                    $this.targetScore.DistanceTarget=Math.abs(maxTarget);
+                  }
+                  // 部门日目标进度图
+                  var departTargetNum = [];
+                  var targetDataLine = [];
+                  $this.currentCluesData.targetData=[];
+                  response.groupcount.forEach(function(item,index){
+                    var itemData = {};
+                    var itemDataLine = {};
+                    var itemDatahisLine = {};
+                    itemData.id = item.id;
+                    itemData.name = item.departname;
+                    if(item.searchdaynumber&&item.searchdaynumber>=0){
+                        itemData.dayNum = [item.searchdaynumber,item.daynumber];
+                    }else{
+                        itemData.dayNum = [item.daynumber];
+                    }
+                    itemData.targetNum = [item.daytargetnumber];
+                    itemDataLine.name = item.departname;
+                    itemDataLine.count = item.historymaxnumber;
+                    itemDatahisLine.name = item.departname;
+                    itemDatahisLine.count = item.monthmaxnumber;
+                    departTargetNum.push(itemData);
+                    targetDataLine.push(itemDataLine,itemDatahisLine);
+                  });
+                  $this.currentCluesData.targetDataLine = targetDataLine;
+                  $this.currentCluesData.targetData = departTargetNum.reverse();                     
+                  if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
+                    $this.radialBarPlot.chart.destroy();
+                  }   
+                  $this.drawDepartTarget();// 部门日目标进度图
+              }
+              $this.getEnCluesStatData();
+          }else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+          }
+        }
+      });
+    },
     // 获取中文统计数据
     getCnCluesStatData(){
       var $this = this;
       var resultData = {};
-      if($this.currentCluesData.departID){
+      if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){
         resultData.dept_id = $this.currentCluesData.departID;
       }else{
-        resultData = null;
+        resultData.dept_id = [];
       }
       if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
-        $this.areaTrendPlot.destroy();
+        $this.areaTrendPlot.chart.destroy();
       }
+      if($this.monthtongArea&&!$this.monthtongArea.chart.destroyed){
+        $this.monthtongArea.chart.destroy();
+      }
+      if($this.zugroupdayColumn&&!$this.zugroupdayColumn.chart.destroyed){
+        $this.zugroupdayColumn.chart.destroy();
+      }
+      if($this.zugoupmonthColumn&&!$this.zugoupmonthColumn.chart.destroyed){
+        $this.zugoupmonthColumn.chart.destroy();
+      }
+      $this.clearData();
       $this.$store.dispatch("api/cnCluesStatDataAction", resultData).then((response) => {
         if (response) {
+          console.log(response,'/hxindex/Api/chinacount');
           if (response.status) {
+            // 获取部门数据
+            if(response.readart&&response.readart.length>0){
+              var DeparData=[];
+              response.readart.forEach(function(item,index){
+                  var itemDate={};
+                  itemDate.value=item.id;
+                  itemDate.label=item.name;
+                  itemDate.disabled=false;
+                  DeparData.push(itemDate);
+              });
+              $this.currentCluesData.DeparData=DeparData;
+            }
+            // 日目标统计
+            $this.targetScore.daymaxnumber= response.daymaxnumber[0];
+            $this.targetScore.historymaxnumber = response.historymaxnumber[0];
+            // 日询盘
+            $this.currentCluesData.alltodaynumber = response.alltodaynumber;
+            $this.currentCluesData.alltodaynumberPercent=response.alltodaynumber/response.daytargetnumber*100;
+            $this.currentCluesData.alllastdaynumber = response.alllastdaynumber;
+            $this.currentCluesData.alllastdaynumberPercent=response.alllastdaynumber/response.daytargetnumber*100;
+            // 月询盘
+            $this.currentCluesData.allmonthnumber = response.allmonthnumber;
+            $this.currentCluesData.monthGrowth=response.allmonthnumber-response.lastallnumber;
+            $this.currentCluesData.monthGrowthTxt=Math.abs(response.allmonthnumber-response.lastallnumber);
+            // 月询盘面积图数据
+            if(response.monthtong&&response.monthtong.length>0){
+              response.monthtong.forEach(function(item,index){
+                 item.date=item.date.split('-')[1]
+              });
+              $this.currentCluesData.monthtongArr=response.monthtong;//月询盘数据
+            }
+            $this.monthtongChart();
+            // 中文成交统计数据
+            $this.getCnDepartScore();
+            // 近30天询盘统计
+            var tongArr=[];
             response.tong.forEach(function(item,index){
               item.date = item.date+"\n"+item.week.replace("星期","周");
+              var tolItem={};
+              tolItem.date=item.date;
+              tolItem.xunnumber=item.xunnumber;
+              tolItem.title='总询盘';
+              if(item.searchxunnumber){
+                var searchItem={};
+                searchItem.date=item.date;
+                searchItem.xunnumber=item.searchxunnumber;
+                searchItem.title='搜索询盘';
+                tongArr.push(searchItem,tolItem);
+              }else{
+                tongArr.push(tolItem);
+              }
             });
-            $this.currentCluesData.chartData = response.tong;
+            $this.currentCluesData.chartData = tongArr;
             $this.currentCluesData.avgChartNum = response.tongavgnumber;
             $this.currentCluesData.targetNum = response.daytargetnumber;
             $this.drawAreaTrendChart();
-            $this.currentCluesData.scoreData = response.deptscore;
-            console.log($this.currentCluesData.departID,"当前中文部门ID");
-            if(!$this.currentCluesData.departID){
-              $this.currentCluesData.targetData=[];
-              var departTargetNum = [];
-              response.groupcount.forEach(function(item,index){
-                var itemData = {};
-                itemData.id = item.id;
-                itemData.name = item.departname;
-                itemData.targetNum = [item.daytargetnumber];
-                itemData.dayNum = [item.daynumber];
-                departTargetNum.push(itemData);
-              });
-              $this.currentCluesData.targetData = departTargetNum;
-              $this.drawDepartTarget();
-              $this.totalNum.en.today = response.entodaynumber;
-              $this.totalNum.en.yesterday = response.enlastdaynumber;
-              $this.totalNum.en.month = response.enmonthnumber;
-              $this.totalNum.cn.today = response.alltodaynumber;
-              $this.totalNum.cn.yesterday = response.alllastdaynumber;
-              $this.totalNum.cn.month = response.allmonthnumber;
-              $this.currentCluesData.cluesNum.today = response.alltodaynumber;
-              $this.currentCluesData.cluesNum.yesterday = response.alllastdaynumber;
-              $this.currentCluesData.cluesNum.month = response.allmonthnumber;
-              $this.currentCluesData.cluesNum.totalToday = response.alltodaynumber+response.entodaynumber;
-              $this.currentCluesData.cluesNum.totalYesterday = response.alllastdaynumber+response.enlastdaynumber;
-              $this.currentCluesData.cluesNum.totalMonth = response.allmonthnumber+response.enmonthnumber;
+            // 小组日成绩
+            if(response.zugroupday!=''&&response.zugroupday!=null){
+              if(response.zugroupday.length>0&&response.zugroupday){
+                  var zugroupdayArr=[];
+                  response.zugroupday.forEach(function(item,index){
+                    var lastdayitemData = {};
+                    var todayitemData = {};
+                    lastdayitemData.name=item.name;
+                    lastdayitemData.title='昨日数量';
+                    lastdayitemData.number=item.lastdaynumber;
+                    
+                    todayitemData.name=item.name;
+                    todayitemData.title='当日数量';
+                    todayitemData.number=item.todaynumber;
+                    zugroupdayArr.push(lastdayitemData,todayitemData);
+                  });
+                  $this.currentCluesData.zugroupdayArr = zugroupdayArr;
+                  $this.$nextTick(()=>{
+                    $this.zugroupdayChart();// 日询盘
+                  });
+              }else{
+                $this.currentCluesData.zugroupdayArr=[];
+              }
             }else{
-              $this.currentCluesData.cluesNum.today = response.alltodaynumber;
-              $this.currentCluesData.cluesNum.yesterday = response.alllastdaynumber;
-              $this.currentCluesData.cluesNum.month = response.allmonthnumber;
-              $this.currentCluesData.cluesNum.totalToday = $this.totalNum.cn.today;
-              $this.currentCluesData.cluesNum.totalYesterday = $this.totalNum.cn.yesterday;
-              $this.currentCluesData.cluesNum.totalMonth = $this.totalNum.cn.month;
+                  $this.currentCluesData.zugroupdayArr=[];
             }
-            var todayPercent = parseFloat(($this.currentCluesData.cluesNum.today/$this.currentCluesData.cluesNum.totalToday).toFixed(2));
-            var yesterdayPercent = parseFloat(($this.currentCluesData.cluesNum.yesterday/$this.currentCluesData.cluesNum.totalYesterday).toFixed(2));
-            var monthPercent = parseFloat(($this.currentCluesData.cluesNum.month/$this.currentCluesData.cluesNum.totalMonth).toFixed(2));
-            $this.currentCluesData.cluesNum.todayPercent = Number.isNaN(todayPercent)?0:todayPercent;
-            $this.currentCluesData.cluesNum.yesterdayPercent = Number.isNaN(yesterdayPercent)?0:yesterdayPercent;
-            $this.currentCluesData.cluesNum.monthPercent = Number.isNaN(monthPercent)?0:monthPercent;
-            $this.drawCluesLiquidChart1();
-            $this.drawCluesLiquidChart2();
-            $this.drawCluesLiquidChart3();
+            // 小组月成绩
+            if(response.zugoupmonth!=''&&response.zugoupmonth!=null){
+                if(response.zugoupmonth.length>0&&response.zugoupmonth){
+                    var zugoupmonthArr=[];
+                    response.zugoupmonth.forEach(function(item,index){
+                      var lastdayitemData = {};
+                      var todayitemData = {};
+                      lastdayitemData.name=item.name;
+                      lastdayitemData.title='上月同期';
+                      lastdayitemData.number=item.lastmonthnumber;
+                      
+                      todayitemData.name=item.name;
+                      todayitemData.title='本月同期';
+                      todayitemData.number=item.monthnumber;
+                      zugoupmonthArr.push(lastdayitemData,todayitemData);
+                    });
+                    $this.currentCluesData.zugoupmonthArr = zugoupmonthArr;
+                  $this.$nextTick(()=>{
+                    $this.zugroupmonthChart();// 月询盘
+                  });
+                }else{
+                  $this.currentCluesData.zugoupmonthArr=[];
+                }
+            }else{
+                  $this.currentCluesData.zugoupmonthArr=[];
+            }
+            // 组员成交数
+            if(response.zusuercount!=''&&response.zusuercount!=null){
+                if(response.zusuercount.length>0&&response.zusuercount){
+                    var zusuercountArr=[];
+                    response.zusuercount.forEach(function(item,index){
+                      if(item.length>0&&item){
+                          item.forEach(function(items,indexs){
+                                var itemData = {};
+                                itemData.groupname=items.groupname;
+                                itemData.lastdaynumber=items.lastdaynumber;
+                                itemData.lastmonthnumber=items.lastmonthnumber;
+                                itemData.monthnumber=items.monthnumber;
+                                itemData.todaynumber=items.todaynumber;
+                                itemData.username=items.username;
+                                if(items.monthnumber-items.lastmonthnumber>0){
+                                  itemData.Class='rising'
+                                }
+                                if(items.monthnumber-items.lastmonthnumber<0){
+                                  itemData.Class='falling'
+                                }
+                                if(items.monthnumber-items.lastmonthnumber==0){
+                                  itemData.Class='equality'
+                                }
+                                itemData.Growth=Math.abs(items.monthnumber-items.lastmonthnumber);
+                                if(itemData.Growth==0){
+                                  itemData.Growth='-'
+                                }
+                                zusuercountArr.push(itemData);
+                          });
+                      }
+                    });
+                    $this.currentCluesData.zusuercountArr = zusuercountArr;
+                }else{
+                  $this.currentCluesData.zusuercountArr=[];
+                }
+            }else{
+                  $this.currentCluesData.zusuercountArr=[];
+            }
+            if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){ 
+                if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
+                    if(response.userscore.length>0&&response.userscore){
+                      var userscoreNum=[];
+                      response.userscore.forEach(function(item,index){
+                        var itemData = {};
+                        itemData.id = item.id;
+                        itemData.username = item.username;
+                        itemData.groupname = item.groupname;
+                        itemData.headimg = item.headimg;
+                        itemData.number = item.number;
+                        if(item.lastnumber){
+                          itemData.Growth = Math.abs(item.number-item.lastnumber.number);
+                          if(item.number-item.lastnumber.number>0){
+                            itemData.growthClass=true;
+                          }
+                          if(item.number-item.lastnumber.number<0){
+                            itemData.growthClass=false;
+                          }
+                        }else{
+                          itemData.Growth = item.number;
+                          itemData.growthClass=true;
+                        }
+                        userscoreNum.push(itemData);
+                      });
+                      userscoreNum.sort(function(a, b) {
+                          var value1 = a.number;
+                          var value2 = b.number;
+                          return value2 - value1;
+                      });
+                      userscoreNum.forEach(function(item,index){
+                        item.percen = item.number/userscoreNum[0].number*100;
+                      });
+                      $this.currentCluesData.userscoreNum = userscoreNum;
+
+                    }else{
+                      $this.currentCluesData.userscoreNum=[];
+                    }
+                    if(response.yearuserscore.length>0&&response.yearuserscore){
+                      var yearuserscoreNum=[];
+                      response.yearuserscore.forEach(function(item,index){
+                        var itemData = {};
+                        itemData.id = item.id;
+                        itemData.username = item.username;
+                        itemData.groupname = item.groupname;
+                        itemData.number = item.number;
+                        itemData.anumber = item.anumber;
+                        itemData.son = item.son;
+                        itemData.headimg = item.headimg;
+                        yearuserscoreNum.push(itemData);
+                      });
+                      yearuserscoreNum.sort(function(a, b) {
+                          var value1 = a.number;
+                          var value2 = b.number;
+                          return value2 - value1;
+                      });
+                      $this.currentCluesData.yearuserscoreNum = yearuserscoreNum;
+                    }else{
+                      $this.currentCluesData.yearuserscoreNum=[];
+                    }
+                    $this.$nextTick(() => {
+                        $this.yearuserChart();
+                    })
+                }else{                  
+                  //距目标线差距
+                  var maxTarget=0;
+                  $this.currentCluesData.departID.forEach(function(item,index){
+                    $this.groupcountArr.forEach(function(items,indexs){
+                        if(item==items.id){
+                          var gap=0;
+                          if(items.searchdaynumber){
+                            gap=items.daytargetnumber-items.searchdaynumber;
+                            maxTarget=maxTarget+gap;
+                          }else{
+                            gap=items.daytargetnumber-items.daynumber;
+                            maxTarget=maxTarget+gap;
+                          }
+                        }
+                    })
+                  });
+                  if(maxTarget>=0){
+                    $this.targetScore.isDistanceTarget=true;
+                  }else{
+                    $this.targetScore.isDistanceTarget=false;
+                  }
+                  $this.targetScore.DistanceTarget=Math.abs(maxTarget);
+                }
+            }else{
+                if(response.userscore.length>0&&response.userscore){
+                  var userscoreNum=[];
+                  response.userscore.forEach(function(item,index){
+                    var itemData = {};
+                    itemData.id = item.id;
+                    itemData.username = item.username;
+                    itemData.groupname = item.groupname;
+                    itemData.headimg = item.headimg;
+                    itemData.number = item.number;
+                    if(item.lastnumber){
+                      itemData.Growth = Math.abs(item.number-item.lastnumber.number);
+                      if(item.number-item.lastnumber.number>0){
+                        itemData.growthClass=true;
+                      }
+                      if(item.number-item.lastnumber.number<0){
+                        itemData.growthClass=false;
+                      }
+                    }else{
+                      itemData.Growth = item.number;
+                      itemData.growthClass=true;
+                    }
+                    userscoreNum.push(itemData);
+                  });
+                  userscoreNum.sort(function(a, b) {
+                      var value1 = a.number;
+                      var value2 = b.number;
+                      return value2 - value1;
+                  });
+                  userscoreNum.forEach(function(item,index){
+                    item.percen = item.number/userscoreNum[0].number*100;
+                  });
+                  $this.currentCluesData.userscoreNum = userscoreNum;
+                }else{
+                  $this.currentCluesData.userscoreNum=[];
+                }
+                if(response.yearuserscore.length>0&&response.yearuserscore){
+                  var yearuserscoreNum=[];
+                  response.yearuserscore.forEach(function(item,index){
+                    var itemData = {};
+                    itemData.id = item.id;
+                    itemData.username = item.username;
+                    itemData.groupname = item.groupname;
+                    itemData.number = item.number;
+                    itemData.anumber = item.anumber;
+                    itemData.children = item.son;
+                    itemData.headimg = item.headimg;
+                    yearuserscoreNum.push(itemData);
+                  });
+                  yearuserscoreNum.sort(function(a, b) {
+                      var value1 = a.number;
+                      var value2 = b.number;
+                      return value2 - value1;
+                  });
+                  $this.currentCluesData.yearuserscoreNum = yearuserscoreNum;
+                }else{
+                  $this.currentCluesData.yearuserscoreNum=[];
+                }
+                $this.$nextTick(() => {
+                    $this.yearuserChart();
+                })
+            }
+            $this.currentCluesData.DeparData.forEach(function(item,index){
+              item.disabled=false;
+            });
           } else {
             $this.$message({
               showClose: true,
@@ -433,68 +1197,307 @@ export default {
     getEnCluesStatData(){
       var $this = this;
       var resultData = {};
-      if($this.currentCluesData.departID){
+      if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){
         resultData.dept_id = $this.currentCluesData.departID;
       }else{
-        resultData = null;
+        resultData.dept_id = [];
       }
       if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
-        $this.areaTrendPlot.destroy();
+        $this.areaTrendPlot.chart.destroy();
       }
+      if($this.zugroupdayColumn&&!$this.zugroupdayColumn.chart.destroyed){
+        $this.zugroupdayColumn.chart.destroy();
+      }
+      if($this.monthtongArea&&!$this.monthtongArea.chart.destroyed){
+        $this.monthtongArea.chart.destroy();
+      }
+      if($this.zugoupmonthColumn&&!$this.zugoupmonthColumn.chart.destroyed){
+        $this.zugoupmonthColumn.chart.destroy();
+      }
+      $this.clearData();
       $this.$store.dispatch("api/enCluesStatDataAction", resultData).then((response) => {
         if (response) {
+          console.log(response,'/hxindex/Api/encount');
           if (response.status) {
+            // 日目标统计
+            $this.targetScore.daymaxnumber= response.daymaxnumber[0];
+            $this.targetScore.historymaxnumber = response.historymaxnumber[0];
+            // 日询盘
+            var MaxValue='';
+            var MaxArr=[response.alltodaynumber,response.daytargetnumber,response.alllastdaynumber];
+            MaxArr.forEach(function(item,index){
+               if(MaxValue<item){
+                 MaxValue=item;
+               }
+            });
+            $this.currentCluesData.alltodaynumber = response.alltodaynumber;
+            $this.currentCluesData.alltodaynumberPercent=response.alltodaynumber/MaxValue*100;
+            $this.currentCluesData.alllastdaynumber = response.alllastdaynumber;
+            $this.currentCluesData.alllastdaynumberPercent=response.alllastdaynumber/MaxValue*100;
+            // 月询盘
+            $this.currentCluesData.allmonthnumber = response.allmonthnumber;
+            $this.currentCluesData.monthGrowth=response.allmonthnumber-response.lastallnumber;
+            $this.currentCluesData.monthGrowthTxt=Math.abs(response.allmonthnumber-response.lastallnumber);
+            // 月询盘面积图数据
+            if(response.monthtong&&response.monthtong.length>0){
+              response.monthtong.forEach(function(item,index){
+                 item.date=item.date.split('-')[1]
+              });
+              $this.currentCluesData.monthtongArr=response.monthtong;//月询盘数据
+            }
+            $this.monthtongChart();
+            // 英文成交统计数据
+            $this.getEnDepartScore();
+            // 近30天询盘统计
+            var tongArr=[];
             response.tong.forEach(function(item,index){
               item.date = item.date+"\n"+item.week.replace("星期","周");
+              var tolItem={};
+              tolItem.date=item.date;
+              tolItem.xunnumber=item.xunnumber;
+              tolItem.title='询盘';
+              tongArr.push(tolItem);
             });
-            $this.currentCluesData.chartData = response.tong;
+            $this.currentCluesData.chartData = tongArr;
             $this.currentCluesData.avgChartNum = response.tongavgnumber;
             $this.currentCluesData.targetNum = response.daytargetnumber;
             $this.drawAreaTrendChart();
-            $this.currentCluesData.scoreData = response.deptscore;
-            console.log($this.currentCluesData.departID,"当前英文部门ID");
-            if(!$this.currentCluesData.departID){
-             $this.currentCluesData.targetData=[];
-              var departTargetNum = [];
-              response.groupcount.forEach(function(item,index){
-                var itemData = {};
-                itemData.id = item.id;
-                itemData.name = item.departname;
-                itemData.targetNum = [item.daytargetnumber];
-                itemData.dayNum = [item.daynumber];
-                departTargetNum.push(itemData);
-              });
-              $this.currentCluesData.targetData = departTargetNum;
-              $this.drawDepartTarget();
-              $this.totalNum.en.today = response.alltodaynumber;
-              $this.totalNum.en.yesterday = response.alllastdaynumber;
-              $this.totalNum.en.month = response.allmonthnumber;
-              $this.totalNum.cn.today = response.chinatodaynumber;
-              $this.totalNum.cn.yesterday = response.chinalastdaynumber;
-              $this.totalNum.cn.month = response.chinamonthnumber;
-              $this.currentCluesData.cluesNum.today = response.alltodaynumber;
-              $this.currentCluesData.cluesNum.yesterday = response.alllastdaynumber;
-              $this.currentCluesData.cluesNum.month = response.allmonthnumber;
-              $this.currentCluesData.cluesNum.totalToday = response.alltodaynumber+response.chinatodaynumber;
-              $this.currentCluesData.cluesNum.totalYesterday = response.alllastdaynumber+response.chinalastdaynumber;
-              $this.currentCluesData.cluesNum.totalMonth = response.allmonthnumber+response.chinamonthnumber;
+            // 小组日成绩
+            if(response.zusuercount!=''&&response.zusuercount!=null){
+              if(response.zugroupday.length>0&&response.zugroupday){
+                  var zugroupdayArr=[];
+                  response.zugroupday.forEach(function(item,index){
+                    var lastdayitemData = {};
+                    var todayitemData = {};
+                    lastdayitemData.name=item.name.replace("-","\n").replace("-","\n");
+                    lastdayitemData.title='昨日数量';
+                    lastdayitemData.number=item.lastdaynumber;
+                    
+                    todayitemData.name=item.name.replace("-","\n").replace("-","\n");
+                    todayitemData.title='当日数量';
+                    todayitemData.number=item.todaynumber;
+                    zugroupdayArr.push(lastdayitemData,todayitemData);
+                  });
+                  $this.currentCluesData.zugroupdayArr = zugroupdayArr;
+                  $this.$nextTick(()=>{
+                    $this.zugroupdayChart();// 日询盘
+                  });
+              }else{
+                $this.currentCluesData.zugroupdayArr=[];
+              }   
             }else{
-              $this.currentCluesData.cluesNum.today = response.alltodaynumber;
-              $this.currentCluesData.cluesNum.yesterday = response.alllastdaynumber;
-              $this.currentCluesData.cluesNum.month = response.allmonthnumber;
-              $this.currentCluesData.cluesNum.totalToday = $this.totalNum.en.today;
-              $this.currentCluesData.cluesNum.totalYesterday = $this.totalNum.en.yesterday;
-              $this.currentCluesData.cluesNum.totalMonth = $this.totalNum.en.month;
+              $this.currentCluesData.zugroupdayArr=[];
+            }         
+            // 小组月成绩
+            if(response.zusuercount!=''&&response.zusuercount!=null){
+              if(response.zugoupmonth.length>0&&response.zugoupmonth){
+                  var zugoupmonthArr=[];
+                  response.zugoupmonth.forEach(function(item,index){
+                    var lastdayitemData = {};
+                    var todayitemData = {};
+                    lastdayitemData.name=item.name.replace("-","\n").replace("-","\n");
+                    lastdayitemData.title='上月同期';
+                    lastdayitemData.number=item.lastmonthnumber;
+                    
+                    todayitemData.name=item.name.replace("-","\n").replace("-","\n");
+                    todayitemData.title='本月同期';
+                    todayitemData.number=item.monthnumber;
+                    zugoupmonthArr.push(lastdayitemData,todayitemData);
+                  });
+                  $this.currentCluesData.zugoupmonthArr = zugoupmonthArr;
+                  $this.$nextTick(()=>{
+                    $this.zugroupmonthChart();// 月询盘
+                  });
+              }else{
+                $this.currentCluesData.zugoupmonthArr=[];
+              }
+            }else{
+              $this.currentCluesData.zugoupmonthArr=[];
             }
-            var todayPercent = parseFloat(($this.currentCluesData.cluesNum.today/$this.currentCluesData.cluesNum.totalToday).toFixed(2));
-            var yesterdayPercent = parseFloat(($this.currentCluesData.cluesNum.yesterday/$this.currentCluesData.cluesNum.totalYesterday).toFixed(2));
-            var monthPercent = parseFloat(($this.currentCluesData.cluesNum.month/$this.currentCluesData.cluesNum.totalMonth).toFixed(2));
-            $this.currentCluesData.cluesNum.todayPercent = Number.isNaN(todayPercent)?0:todayPercent;
-            $this.currentCluesData.cluesNum.yesterdayPercent = Number.isNaN(yesterdayPercent)?0:yesterdayPercent;
-            $this.currentCluesData.cluesNum.monthPercent = Number.isNaN(monthPercent)?0:monthPercent;
-            $this.drawCluesLiquidChart1();
-            $this.drawCluesLiquidChart2();
-            $this.drawCluesLiquidChart3();
+            // 组员成交数
+            if(response.zusuercount!=''&&response.zusuercount!=null){
+              if(response.zusuercount.length>0&&response.zusuercount){
+                  var zusuercountArr=[];
+                  response.zusuercount.forEach(function(item,index){
+                    if(item.length>0&&item){
+                        item.forEach(function(items,indexs){
+                              var itemData = {};
+                              itemData.groupname=items.groupname;
+                              itemData.lastdaynumber=items.lastdaynumber;
+                              itemData.lastmonthnumber=items.lastmonthnumber;
+                              itemData.monthnumber=items.monthnumber;
+                              itemData.todaynumber=items.todaynumber;
+                              itemData.username=items.username;
+                              if(items.monthnumber-items.lastmonthnumber>0){
+                                itemData.Class='rising'
+                              }
+                              if(items.monthnumber-items.lastmonthnumber<0){
+                                itemData.Class='falling'
+                              }
+                              if(items.monthnumber-items.lastmonthnumber==0){
+                                itemData.Class='equality'
+                              }
+                              itemData.Growth=Math.abs(items.monthnumber-items.lastmonthnumber);
+                              if(itemData.Growth==0){
+                                itemData.Growth='-'
+                              }
+                              zusuercountArr.push(itemData);
+                        });
+                    }
+                  });
+                  $this.currentCluesData.zusuercountArr = zusuercountArr;
+              }else{
+                $this.currentCluesData.zusuercountArr=[];
+              }
+            }else{
+              $this.currentCluesData.zusuercountArr=[];
+            }
+            if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){ 
+                if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
+                    if(response.userscore.length>0&&response.userscore){
+                      var userscoreNum=[];
+                      response.userscore.forEach(function(item,index){
+                        var itemData = {};
+                        itemData.id = item.id;
+                        itemData.username = item.username;
+                        itemData.groupname = item.groupname;
+                        itemData.headimg = item.headimg;
+                        itemData.number = item.number;                        
+                        if(item.lastnumber){
+                          itemData.Growth = Math.abs(item.number-item.lastnumber.number);
+                          if(item.number-item.lastnumber.number>0){
+                            itemData.growthClass=true;
+                          }
+                          if(item.number-item.lastnumber.number<0){
+                            itemData.growthClass=false;
+                          }
+                        }else{
+                          itemData.Growth = item.number;
+                          itemData.growthClass=true;
+                        }
+                        userscoreNum.push(itemData);
+                      });
+                      userscoreNum.sort(function(a, b) {
+                          var value1 = a.number;
+                          var value2 = b.number;
+                          return value2 - value1;
+                      });
+                      userscoreNum.forEach(function(item,index){
+                        item.percen = item.number/userscoreNum[0].number*100;
+                      });
+                      $this.currentCluesData.userscoreNum = userscoreNum;
+                    }else{
+                      $this.currentCluesData.userscoreNum=[];
+                    }
+                    if(response.yearuserscore.length>0&&response.yearuserscore){
+                      var yearuserscoreNum=[];
+                      response.yearuserscore.forEach(function(item,index){
+                        var itemData = {};
+                        itemData.id = item.id;
+                        itemData.username = item.username;
+                        itemData.groupname = item.groupname;
+                        itemData.number = item.number;
+                        itemData.anumber = item.anumber;
+                        itemData.son = item.son;
+                        itemData.headimg = item.headimg;
+                        yearuserscoreNum.push(itemData);
+                      });
+                      yearuserscoreNum.sort(function(a, b) {
+                          var value1 = a.number;
+                          var value2 = b.number;
+                          return value2 - value1;
+                      });
+                      $this.currentCluesData.yearuserscoreNum = yearuserscoreNum;
+                    }else{
+                      $this.currentCluesData.yearuserscoreNum=[];
+                    }
+                    $this.$nextTick(() => {
+                        $this.yearuserChart();
+                    })
+                }else{                  
+                  //距目标线差距
+                  var maxTarget=0;
+                  $this.currentCluesData.departID.forEach(function(item,index){
+                    $this.groupcountArr.forEach(function(items,indexs){                        
+                        if(item==items.id){
+                          var gap=0;
+                          gap=items.daytargetnumber-items.daynumber;
+                          maxTarget=maxTarget+gap;
+                        }
+                    })
+                  });
+                  if(maxTarget>=0){
+                    $this.targetScore.isDistanceTarget=true;
+                  }else{
+                    $this.targetScore.isDistanceTarget=false;
+                  }
+                  $this.targetScore.DistanceTarget=Math.abs(maxTarget);
+                }
+            }else{
+                if(response.userscore.length>0&&response.userscore){
+                  var userscoreNum=[];
+                  response.userscore.forEach(function(item,index){
+                    var itemData = {};
+                    itemData.id = item.id;
+                    itemData.username = item.username;
+                    itemData.groupname = item.groupname;
+                    itemData.headimg = item.headimg;
+                    itemData.number = item.number;                    
+                    if(item.lastnumber){
+                      itemData.Growth = Math.abs(item.number-item.lastnumber.number);
+                      if(item.number-item.lastnumber.number>0){
+                        itemData.growthClass=true;
+                      }
+                      if(item.number-item.lastnumber.number<0){
+                        itemData.growthClass=false;
+                      }
+                    }else{
+                      itemData.Growth = item.number;
+                      itemData.growthClass=true;
+                    }
+                    userscoreNum.push(itemData);
+                  });
+                  userscoreNum.sort(function(a, b) {
+                      var value1 = a.number;
+                      var value2 = b.number;
+                      return value2 - value1;
+                  });
+                  userscoreNum.forEach(function(item,index){
+                    item.percen = item.number/userscoreNum[0].number*100;
+                  });
+                  $this.currentCluesData.userscoreNum = userscoreNum;
+                }else{
+                  $this.currentCluesData.userscoreNum=[];
+                }
+                if(response.yearuserscore.length>0&&response.yearuserscore){
+                  var yearuserscoreNum=[];
+                  response.yearuserscore.forEach(function(item,index){
+                    var itemData = {};
+                    itemData.id = item.id;
+                    itemData.username = item.username;
+                    itemData.groupname = item.groupname;
+                    itemData.number = item.number;
+                    itemData.anumber = item.anumber;
+                    itemData.children = item.son;
+                    itemData.headimg = item.headimg;
+                    yearuserscoreNum.push(itemData);
+                  });
+                  yearuserscoreNum.sort(function(a, b) {
+                      var value1 = a.number;
+                      var value2 = b.number;
+                      return value2 - value1;
+                  });
+                  $this.currentCluesData.yearuserscoreNum = yearuserscoreNum;
+                }else{
+                  $this.currentCluesData.yearuserscoreNum=[];
+                }
+                $this.$nextTick(() => {
+                    $this.yearuserChart();
+                })
+            }
+            $this.currentCluesData.DeparData.forEach(function(item,index){
+              item.disabled=false;
+            });
           } else {
             $this.$message({
               showClose: true,
@@ -504,6 +1507,64 @@ export default {
           }
         }
       });
+    },
+    // 获取地区目标询盘数据
+    drawDepartTarget(){
+      var $this = this;
+      if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
+        $this.radialBarPlot.changeData($this.currentCluesData.targetData);
+      }else{
+        var resultData =$this.currentCluesData.targetData;
+        const radialBarPlot = new Bullet('radialBarChart', {
+          data:resultData,
+          measureField: 'dayNum',
+          rangeField: 'targetNum',
+          targetField: 'targetNum',
+          xField: 'name',
+          height:230,
+          color: {
+            range: '#ffe0b0',
+            measure: ['#5B8FF9', '#61DDAA'],
+            target: '#ffe0b0',
+          },
+          xAxis: {
+            line: null,
+          },
+          yAxis: {
+            grid: {
+              line: {
+                style: {
+                  stroke: '#cccccc',
+                  lineWidth: 1,
+                  lineDash: [3, 2],
+                  strokeOpacity: 0.7,
+                  shadowColor: null,
+                  shadowBlur: 0,
+                  shadowOffsetX:0,
+                  shadowOffsetY:0,
+                  cursor: 'pointer'
+                }
+              }
+            }
+          },
+          layout: 'vertical',
+          label: {
+            measure: {
+              position: 'middle',
+              style: {
+                fill: '#333',
+              },
+            },
+          }, 
+          tooltip: {
+            formatter:(datum) => {
+                return { name:'询盘',value:datum.dayNum };
+            }
+          },
+        });
+        $this.radialBarPlot = radialBarPlot;
+        radialBarPlot.render();
+      }
     },
     // 获取中文地区统计数据
     getCnCluesRegionStatData(){
@@ -516,16 +1577,23 @@ export default {
         resultData.starttime = "";
         resultData.endtime = "";
       }
-      if($this.currentCluesData.departID){
+      if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){
         resultData.dept_id = $this.currentCluesData.departID;
       }else{
-        resultData.dept_id = "";
+        resultData.dept_id = [];
+      }
+      if($this.worldRegionMapChart&&!$this.worldRegionMapChart.destroyed){
+        $this.worldRegionMapChart.destroy();
       }
       if($this.regionMapChart&&!$this.regionMapChart.destroyed){
         $this.regionMapChart.destroy();
       }
+      if($this.pieSourcePlot&&!$this.pieSourcePlot.chart.destroyed){
+        $this.pieSourcePlot.chart.destroy();
+      }
       $this.$store.dispatch("api/cnCluesRegionStatDataAction", resultData).then((response) => {
         if (response) {
+          console.log(response,'中文地图')
           if (response.status) {
             $this.currentCluesData.cluesRegionData = response.data;
             var topTenRegionData = [];
@@ -533,6 +1601,11 @@ export default {
               if(index<10){
                 topTenRegionData.push(item);
               }
+            });            
+            topTenRegionData.sort(function(a, b) {
+                var value1 = a.number;
+                var value2 = b.number;
+                return value2 - value1;
             });
             $this.currentCluesData.topTenRegionData = topTenRegionData;
             $this.drawCnCluesRegionChart();
@@ -546,162 +1619,7 @@ export default {
           }
         }
       });
-    },
-    // 获取英文地区统计数据
-    getEnCluesRegionStatData(){
-      var $this = this;
-      var resultData = {};
-      if($this.mapDate&&$this.mapDate.length>0){
-        resultData.starttime = $this.mapDate[0];
-        resultData.endtime = $this.mapDate[1];
-      }else{
-        resultData.starttime = "";
-        resultData.endtime = "";
-      }
-      if($this.currentCluesData.departID){
-        resultData.dept_id = $this.currentCluesData.departID;
-      }else{
-        resultData.dept_id = "";
-      }
-      if($this.regionMapChart&&!$this.regionMapChart.destroyed){
-        $this.regionMapChart.destroy();
-      }
-      $this.$store.dispatch("api/enCluesRegionStatDataAction", resultData).then((response) => {
-        if (response) {
-          if (response.status) {
-            $this.currentCluesData.cluesRegionData = worldCountry(response.data);
-            $this.currentCluesData.cluesRegionData.sort($this.sortNumber);
-            var topTenRegionData = [];
-            $this.currentCluesData.cluesRegionData.forEach(function(item,index){
-              if(index<10){
-                topTenRegionData.push(item);
-              }
-            });
-            $this.currentCluesData.topTenRegionData = topTenRegionData;
-            $this.drawEnCluesRegionChart();
-            $this.drawTopTen();
-          } else {
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: "error",
-            });
-          }
-        }
-      });
-    },
-    // 根据地区的询盘数量做降序排序
-    sortNumber(a,b){
-      return b.number - a.number;
-    },
-    // 近30天询盘统计趋势图
-    drawAreaTrendChart(){
-      var $this = this;
-      if($this.currentCluesData.chartData.length>0){
-        const areaTrendPlot = new Area('cluesChart', {
-          data:$this.currentCluesData.chartData,    
-          xField: 'date',
-          yField: 'xunnumber',
-          appendPadding:[15,15,15,15],
-          height: 370,
-          smooth:true,
-          areaStyle: () => {
-            return {
-              fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
-            };
-          },
-          yAxis:{
-            grid:{
-              line:null
-            }
-          },
-          xAxis: {
-            tickCount:15,
-            label: {
-              // 数值格式化为千分位
-              formatter: (v) => {
-                var date = v.split("-")[1]+"-"+v.split("-")[2];
-                return date
-              },
-              style:{
-                lineHeight:16
-              }
-            },
-            grid:{
-              line:{
-                style:{
-                  stroke: 'black',
-                  lineWidth:1,
-                  lineDash:[6,3],
-                  strokeOpacity:0.1,
-                  shadowBlur:0
-                }
-              }
-            },
-          },
-          legend: {
-            position: 'right-top'
-          },
-          tooltip: {
-            formatter: (datum) => {
-              return { name: "询盘个数", value: datum.xunnumber };
-            },
-            title:(e)=>{
-              return e.replace(/\n/g," ")
-            }
-          },
-          annotations: [
-            // 平均值
-            {
-              type: 'line',
-              start: ['min', $this.currentCluesData.avgChartNum],
-              end: ['max', $this.currentCluesData.avgChartNum],
-              top:true,
-              offsetY: 0,
-              offsetX: 0,
-              style: {
-                stroke: '#f16b6b',
-                lineDash: [6, 4],
-                lineWidth: 1,
-              },
-            },
-            // 平均值
-            {
-              type: 'html',
-              position:['max',$this.currentCluesData.avgChartNum],
-              top:true,
-              html:"<span class='chart-font avg'><span class='txt-font'>"+$this.currentCluesData.avgChartNum+"</span><i></i></span>",
-              alignX:"left",
-              alignY:"bottom",
-            },
-            // 目标线
-            {
-              type: 'line',
-              start: ['min', $this.currentCluesData.targetNum],
-              end: ['max', $this.currentCluesData.targetNum],
-              top:true,
-              offsetY: 0,
-              offsetX: 0,
-              style: {
-                stroke: '#6aa343',
-                lineWidth: 1,
-              },
-            },
-            // 目标线
-            {
-              type: 'html',
-              position:['max',$this.currentCluesData.targetNum],
-              top:true,
-              html:"<span class='chart-font target'><span class='txt-font'>"+$this.currentCluesData.targetNum+"</span><i></i></span>",
-              alignX:"left",
-              alignY:"bottom",
-            },
-          ],
-        });
-        $this.areaTrendPlot = areaTrendPlot;
-        areaTrendPlot.render();
-      }
-    },
+    },    
     // 中文地区询盘地图
     drawCnCluesRegionChart(){
       var $this = this;
@@ -711,8 +1629,8 @@ export default {
         .then(GeoJSON => {
           const regionMapChart = new G2.Chart({
             container: 'regionMapChart',
-            width: 720,
-            height:450,
+            width:600,
+            height:380,
           });
           regionMapChart.scale({
             latitude: { sync: true },
@@ -820,24 +1738,681 @@ export default {
         });
       }
     },
+    // 热门地区TOP10
+    drawTopTen(){
+      var $this = this;
+      if($this.currentCluesData.topTenRegionData.length>0){
+        if($this.pieSourcePlot&&!$this.pieSourcePlot.chart.destroyed){
+          $this.pieSourcePlot.changeData($this.currentCluesData.topTenRegionData);
+        }else{
+          const pieSourcePlot = new Bar('topTen', {
+            data:$this.currentCluesData.topTenRegionData,
+            xField: 'number',
+            yField: 'name',
+            seriesField: 'name',
+            barWidthRatio: 0.4,
+            height:340,
+            legend: false,
+            xAxis:false,
+            color:['#cbebfc','#bae7ff','#92d1ff','#69bcff','#41a6ff','#1890ff','#1280ec','#0c70d9','#0660c6','#0050b3'],
+            label: {
+              style: {
+                fill: '#999999',
+                opacity: 1,
+                fontSize: 12
+              },
+              position: 'right',
+              offset:10,
+            },
+            meta: {
+              name: {
+                alias: '地区',
+              },
+              number: {
+                alias: '数量',
+              },
+            },
+          });
+          $this.pieSourcePlot = pieSourcePlot;
+          pieSourcePlot.render();
+        }
+      }
+    },
+    // 月询盘数据图
+    monthtongChart(){
+      var $this = this;
+      if($this.currentCluesData.monthtongArr.length>0){
+          if($this.monthtongArea&&!$this.monthtongArea.chart.destroyed){
+            $this.monthtongArea.changeData($this.currentCluesData.monthtongArr);
+          }else{
+            const monthtongArea = new Area('rowOneThreeArea', {
+              data:$this.currentCluesData.monthtongArr,
+              xField: 'date',
+              yField: 'xunnumber',
+              height:100,
+              xAxis: {
+                type: 'time',
+                mask: 'MM',
+                range: [0, 1],
+                tickCount: 6,
+              },
+              yAxis:false,
+              tooltip: {
+                formatter:(datum) => {
+                    return { name:datum.date+'月总询盘',value:datum.xunnumber };
+                }
+              },
+              areaStyle: () => {
+                return {
+                  fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
+                };
+              },
+            });
+            $this.monthtongArea = monthtongArea;
+            monthtongArea.render();
+          }
+      }
+    },
+    // 近30天询盘统计趋势图
+    drawAreaTrendChart(){
+      var $this = this;
+      if($this.currentCluesData.chartData.length>0){
+          if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
+            $this.areaTrendPlot.changeData($this.currentCluesData.chartData);
+          }else{
+            const areaTrendPlot = new Area('cluesChart', {
+              data:$this.currentCluesData.chartData,    
+              xField: 'date',
+              yField: 'xunnumber',
+              seriesField: 'title',
+              color: ['#6b9afa', '#316afa'],
+              areaStyle: () => {
+                return {
+                  fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
+                };
+              },
+              appendPadding:[15,15,15,15],
+              height: 370,
+              smooth:false,
+              yAxis: {
+                label: {
+                  // 数值格式化为千分位
+                  formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+                },
+              },
+              // label
+              label: {
+                layout: [{ type: 'hide-overlap' }], // 隐藏重叠label
+                style: {
+                  textAlign: 'right',
+                },
+                formatter: (item) => item.xunnumber,
+              },
+              // 自定义 legend
+              legend: {
+                custom: true,
+                position: 'bottom',
+                items: [
+                  {
+                    value: '搜索询盘',
+                    name: '搜索询盘',
+                    marker: { symbol: 'square', style: { fill: '#5B8FF9', r: 5 } },
+                  },
+                  {
+                    value: '总询盘',
+                    name: '总询盘',
+                    marker: { symbol: 'square', style: { fill: '#3D76DD', r: 5 } },
+                  },
+                  {
+                    value: '平均值',
+                    name: '平均值',
+                    marker: { symbol: 'line', style: { stroke: '#f16b6b', r: 5 } },
+                  },
+                  {
+                    value: '目标值',
+                    name: '目标值',
+                    marker: { symbol: 'line', style: { stroke: '#6aa343', r: 5 } },
+                  },
+                ],
+              },
+              point: {
+                shape: ({ title }) => {
+                  return title === 'circle';
+                },
+                style: ({ date }) => {
+                  return {
+                    r: Number(date) % 4 ? 0 : 3, // 4 个数据示一个点标记
+                  };
+                },
+              },
+              tooltip: {
+                formatter: (datum) => {
+                  return { name: datum.title, value: datum.xunnumber };
+                },
+                title:(e)=>{
+                  return e.replace(/\n/g," ")
+                }
+              },
+              annotations: [
+                // 平均值
+                {
+                  type: 'line',
+                  start: ['min', $this.currentCluesData.avgChartNum],
+                  end: ['max', $this.currentCluesData.avgChartNum],
+                  top:true,
+                  offsetY: 0,
+                  offsetX: 0,
+                  style: {
+                    stroke: '#f16b6b',
+                    lineDash: [6, 4],
+                    lineWidth: 1,
+                  },
+                },
+                // 平均值
+                {
+                  type: 'html',
+                  position:['max',$this.currentCluesData.avgChartNum],
+                  top:true,
+                  html:"<span class='chart-font avg'><span class='txt-font'>"+$this.currentCluesData.avgChartNum+"</span><i></i></span>",
+                  alignX:"left",
+                  alignY:"bottom",
+                },
+                // 目标线
+                {
+                  type: 'line',
+                  start: ['min', $this.currentCluesData.targetNum],
+                  end: ['max', $this.currentCluesData.targetNum],
+                  top:true,
+                  offsetY: 0,
+                  offsetX: 0,
+                  style: {
+                    stroke: '#6aa343',
+                    lineWidth: 1,
+                  },
+                },
+                // 目标线
+                {
+                  type: 'html',
+                  position:['max',$this.currentCluesData.targetNum],
+                  top:true,
+                  html:"<span class='chart-font target'><span class='txt-font'>"+$this.currentCluesData.targetNum+"</span><i></i></span>",
+                  alignX:"left",
+                  alignY:"bottom",
+                },
+              ],
+            });
+            $this.areaTrendPlot = areaTrendPlot;
+            areaTrendPlot.render();
+          }
+      }
+    },
+    // 日询盘
+    zugroupdayChart(){
+      var $this = this;
+      if($this.currentCluesData.zugroupdayArr.length>0){
+          if($this.zugroupdayColumn&&!$this.zugroupdayColumn.chart.destroyed){
+            $this.zugroupdayColumn.changeData($this.currentCluesData.zugroupdayArr);
+          }else{
+            const zugroupdayColumn = new Column('zugroupdayChart', {
+              data:$this.currentCluesData.zugroupdayArr,
+              isGroup: true,
+              xField: 'name',
+              yField: 'number',
+              seriesField: 'title',
+              width: 500,
+              height: 300,
+              color: ['#669aff', '#9dd5ff'],
+              marginRatio: 0,
+              label: {
+                position: 'top',
+                layout: [
+                  { type: 'interval-hide-overlap' },
+                  { type: 'adjust-color' },
+                ],
+              },
+            });
+            $this.zugroupdayColumn = zugroupdayColumn;
+            zugroupdayColumn.render();
+          }
+      }
+    },
+    // 月询盘
+    zugroupmonthChart(){
+      var $this = this;
+      if($this.currentCluesData.zugoupmonthArr.length>0){
+          if($this.zugoupmonthColumn&&!$this.zugoupmonthColumn.chart.destroyed){
+            $this.zugoupmonthColumn.changeData($this.currentCluesData.zugoupmonthArr);
+          }else{
+            const zugoupmonthColumn = new Column('zugroupmonthChart', {
+              data:$this.currentCluesData.zugoupmonthArr,
+              isGroup: true,
+              xField: 'name',
+              yField: 'number',
+              seriesField: 'title',
+              width: 500,
+              height: 300,
+              /** 设置颜色 */
+              color: ['#fcb030', '#f7c572'],
+              /** 设置间距 */
+              marginRatio: 0,
+              label: {
+                // 可手动配置 label 数据标签位置
+                position: 'top', // 'top', 'middle', 'bottom'
+                offset: 4,
+                // 可配置附加的布局方法
+                layout: [
+                  // 数据标签防遮挡
+                  { type: 'interval-hide-overlap' },
+                  // 数据标签文颜色自动调整
+                  { type: 'adjust-color' },
+                ],
+              },
+            });
+            $this.zugoupmonthColumn = zugoupmonthColumn;
+            zugoupmonthColumn.render();
+          }
+      }
+    },
+    // 首页中文成交统计数据
+    getCnDepartScore(){
+      var $this = this;
+      $this.currentCluesData.departScoreData=[];
+      var resultData = {};
+      if($this.ScoreTime&&$this.ScoreTime!=''){
+        resultData.month=$this.ScoreTime;
+      }else{
+        resultData.month='';
+      }
+      $this.$store.dispatch("api/departScoreAction", resultData).then((response) => {
+          console.log(response,'首页中文成交统计接口')
+          if (response.status) {
+              $this.ScoreTime=response.month;
+              if(response.departscore&&response.departscore.length>0){
+                 var departscoreArr=[];
+                 response.departscore.forEach(function(item,index){
+                    var itemDate={};
+                    itemDate.departname=item.departname;
+                    if(item.passnumber==null||item.passnumber==0||item.passnumber==''){
+                      itemDate.passnumber=0;
+                    }else{
+                      itemDate.passnumber=item.passnumber;
+                    }
+                    if(item.mediumnumber==null||item.mediumnumber==0||item.mediumnumber==''){
+                      itemDate.mediumnumber=0;
+                    }else{
+                      itemDate.mediumnumber=item.mediumnumber;
+                    }
+                    if(item.goodnumber==null||item.goodnumber==0||item.goodnumber==''){
+                      itemDate.goodnumber=0;
+                    }else{
+                      itemDate.goodnumber=item.goodnumber;
+                    }
+                    if(item.a_number==null||item.a_number==0||item.a_number==''){
+                      itemDate.a_number=0;
+                    }else{
+                      itemDate.a_number=item.a_number;
+                    }
+                    if(item.snumber==null||item.snumber==0||item.snumber==''){
+                      itemDate.snumber=0;
+                    }else{
+                      itemDate.snumber=item.snumber;
+                    }
+                    if(item.score==null||item.score==0||item.score==''){
+                      itemDate.score=0;
+                    }else{
+                      itemDate.score=item.score;
+                    }
+                    departscoreArr.push(itemDate);
+                 });     
+                 departscoreArr.sort(function(a, b) {
+                      var value1 = a.score;
+                      var value2 = b.score;
+                      return value2 - value1;
+                 });
+                 $this.currentCluesData.departScoreData = departscoreArr;
+              }else{
+                  $this.yearuserChart=null;
+                  if($this.yearuserChart&&!$this.yearuserChart.chart.destroyed){
+                    $this.yearuserChart.chart.destroy();
+                  }
+              }
+              var scoreArr=[];
+              var goodnumberArr=[];
+              var Maxscore='';
+              var Maxgoodnumber='';
+              if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){
+                if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
+                  if(response.departscore&&response.departscore.length>0){
+                    response.departscore.forEach(function(item){
+                        scoreArr.push(item.score);
+                        goodnumberArr.push(item.goodnumber);
+                    });
+                    scoreArr.forEach(function(item){
+                      if(item>Maxscore){
+                        Maxscore=item;
+                      }
+                    });
+                    goodnumberArr.forEach(function(item){
+                      if(item>Maxgoodnumber){
+                        Maxgoodnumber=item;
+                      }
+                    });
+                    if(Maxscore>Maxgoodnumber){
+                      $this.ScoreData.MaxValue=Maxscore*1.1;
+                    }else{
+                      $this.ScoreData.MaxValue=Maxgoodnumber*1.1;
+                    }
+                  }
+                  $this.ScoreData.allscore=response.allscore;
+                  $this.ScoreData.allsnumber=response.allsnumber;
+                  $this.ScoreData.addallscore=response.allscore;
+                  $this.ScoreData.addallsnumber=response.allsnumber;
+                }else{
+                   if(response.departscore&&response.departscore.length>0){
+                     var tolScore=0;
+                     var tolNumber=0;
+                     $this.currentCluesData.departID.forEach(function(item,index){
+                       response.departscore.forEach(function(items,indexs){
+                           if(item==items.id){
+                              if(items.score==null||items.score==0||items.score==''){
+                                items.score=0;
+                              }
+                              if(items.snumber==null||items.snumber==0||items.snumber==''){
+                                items.snumber=0;
+                              }
+                              tolScore=tolScore+parseFloat(items.score);
+                              tolNumber=tolNumber+parseFloat(items.snumber);
+                           }
+                       });
+                     });
+                      $this.ScoreData.allscore=response.allscore;
+                      $this.ScoreData.allsnumber=response.allsnumber;
+                      $this.ScoreData.addallscore=parseFloat(tolScore).toFixed(2);
+                      $this.ScoreData.addallsnumber=parseFloat(tolNumber).toFixed(2);
+                      $this.ScoreData.allsnumberPercen=(parseFloat(tolNumber)/response.allsnumber*100).toFixed(2)+'%';
+                      $this.ScoreData.allscorePercen=(parseFloat(tolScore)/response.allscore*100).toFixed(2)+'%';
+                   }
+                }
+              }else{
+                  if(response.departscore&&response.departscore.length>0){
+                    response.departscore.forEach(function(item){
+                        scoreArr.push(item.score);
+                        goodnumberArr.push(item.goodnumber);
+                    });
+                    scoreArr.forEach(function(item){
+                      if(item>Maxscore){
+                        Maxscore=item;
+                      }
+                    });
+                    goodnumberArr.forEach(function(item){
+                      if(item>Maxgoodnumber){
+                        Maxgoodnumber=item;
+                      }
+                    });
+                    if(Maxscore>Maxgoodnumber){
+                      $this.ScoreData.MaxValue=Maxscore*1.1;
+                    }else{
+                      $this.ScoreData.MaxValue=Maxgoodnumber*1.1;
+                    }
+                  }
+                  $this.ScoreData.allscore=response.allscore;
+                  $this.ScoreData.allsnumber=response.allsnumber;
+                  $this.ScoreData.addallscore=response.allscore;
+                  $this.ScoreData.addallsnumber=response.allsnumber;
+              }
+          } else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+          }
+      });
+    },
+    // 首页英文成交统计数据
+    getEnDepartScore(){
+      var $this = this;
+      $this.currentCluesData.departScoreData=[];
+      var resultData = {};
+      if($this.ScoreTime&&$this.ScoreTime!=''){
+        resultData.month=$this.ScoreTime;
+      }else{
+        resultData.month='';
+      }
+      $this.$store.dispatch("api/endepartScoreAction", resultData).then((response) => {
+          console.log(response,'首页英文成交统计接口')
+          if (response.status) {
+              $this.ScoreTime=response.month;
+              if(response.departscore&&response.departscore.length>0){
+                 var departscoreArr=[];
+                 response.departscore.forEach(function(item,index){
+                    var itemDate={};
+                    itemDate.departname=item.departname;
+                    if(item.passnumber==null||item.passnumber==0||item.passnumber==''){
+                      itemDate.passnumber=0;
+                    }else{
+                      itemDate.passnumber=item.passnumber;
+                    }
+                    if(item.mediumnumber==null||item.mediumnumber==0||item.mediumnumber==''){
+                      itemDate.mediumnumber=0;
+                    }else{
+                      itemDate.mediumnumber=item.mediumnumber;
+                    }
+                    if(item.goodnumber==null||item.goodnumber==0||item.goodnumber==''){
+                      itemDate.goodnumber=0;
+                    }else{
+                      itemDate.goodnumber=item.goodnumber;
+                    }
+                    if(item.snumber==null||item.snumber==0||item.snumber==''){
+                      itemDate.snumber=0;
+                    }else{
+                      itemDate.snumber=item.snumber;
+                    }
+                    departscoreArr.push(itemDate);
+                 });    
+                 departscoreArr.sort(function(a, b) {
+                      var value1 = a.snumber;
+                      var value2 = b.snumber;
+                      return value2 - value1;
+                 });               
+                 $this.currentCluesData.departScoreData = departscoreArr;
+              }else{
+                  $this.yearuserChart=null;
+                  if($this.yearuserChart&&!$this.yearuserChart.chart.destroyed){
+                    $this.yearuserChart.chart.destroy();
+                  }
+              }
+              var snumberArr=[];
+              var goodnumberArr=[];
+              var Maxscore='';
+              var Maxgoodnumber='';
+              if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){
+                if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
+                  if(response.departscore&&response.departscore.length>0){
+                    response.departscore.forEach(function(item){
+                        if(item.snumber==null||item.snumber==0||item.snumber==''){
+                          item.snumber=0;
+                        }
+                        if(item.goodnumber==null||item.goodnumber==0||item.goodnumber==''){
+                          item.goodnumber=0;
+                        }
+                        snumberArr.push(item.snumber);
+                        goodnumberArr.push(item.goodnumber);
+                    });
+                    snumberArr.forEach(function(item){
+                      if(item>Maxscore){
+                        Maxscore=item;
+                      }
+                    });
+                    goodnumberArr.forEach(function(item){
+                      if(item>Maxgoodnumber){
+                        Maxgoodnumber=item;
+                      }
+                    });
+                    if(Maxscore>Maxgoodnumber){
+                      $this.ScoreData.MaxValue=Maxscore*1.1;
+                    }else{
+                      $this.ScoreData.MaxValue=Maxgoodnumber*1.1;
+                    }
+                  }
+                  $this.ScoreData.allsnumber=response.allsnumber;
+                  $this.ScoreData.addallsnumber=response.allsnumber;
+                  $this.ScoreData.allsnumberPercen='';
+                }else{
+                   if(response.departscore&&response.departscore.length>0){
+                     var tolNumber=0;
+                     $this.currentCluesData.departID.forEach(function(item,index){
+                       response.departscore.forEach(function(items,indexs){
+                           if(item==items.id){
+                              if(items.snumber==null||items.snumber==0||items.snumber==''){
+                                items.snumber=0;
+                              }
+                              tolNumber=tolNumber+parseFloat(items.snumber);
+                           }
+                       });
+                     });
+                     $this.ScoreData.allsnumber=response.allsnumber;
+                     $this.ScoreData.addallsnumber=parseFloat(tolNumber).toFixed(2);
+                     $this.ScoreData.allsnumberPercen=(parseFloat(tolNumber)/response.allsnumber*100).toFixed(2)+'%';
+                   }
+                }
+              }else{
+                  if(response.departscore&&response.departscore.length>0){
+                    response.departscore.forEach(function(item){
+                        if(item.snumber==null||item.snumber==0||item.snumber==''){
+                          item.snumber=0;
+                        }
+                        if(item.goodnumber==null||item.goodnumber==0||item.goodnumber==''){
+                          item.goodnumber=0;
+                        }
+                        snumberArr.push(item.snumber);
+                        goodnumberArr.push(item.goodnumber);
+                    });
+                    snumberArr.forEach(function(item){
+                      if(item>Maxscore){
+                        Maxscore=item;
+                      }
+                    });
+                    goodnumberArr.forEach(function(item){
+                      if(item>Maxgoodnumber){
+                        Maxgoodnumber=item;
+                      }
+                    });
+                    if(Maxscore>Maxgoodnumber){
+                      $this.ScoreData.MaxValue=Maxscore*1.1;
+                    }else{
+                      $this.ScoreData.MaxValue=Maxgoodnumber*1.1;
+                    }
+                  }
+                  $this.ScoreData.allsnumber=response.allsnumber;
+                  $this.ScoreData.addallsnumber=response.allsnumber;
+                  $this.ScoreData.allsnumberPercen='';
+              }
+          } else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+          }
+      });
+    },
+    // 成交统计月份选择
+    monthChangeHandler(){
+      var $this = this;
+      if($this.language=="Module_cnStat"){
+        $this.getCnDepartScore();
+      }else{
+        $this.getEnDepartScore();
+      }      
+    },
+    // 成交统计月份选择
+    DaytargetHandler(){
+      var $this = this;
+      $this.groupcountArr=[];
+      if($this.language=="Module_cnStat"){
+        $this.cnDaytarget();
+      }else{
+        $this.enDaytarget();
+      }      
+    },
+    // 获取英文地区统计数据
+    getEnCluesRegionStatData(){
+      var $this = this;
+      var resultData = {};
+      if($this.mapDate&&$this.mapDate.length>0){
+        resultData.starttime = $this.mapDate[0];
+        resultData.endtime = $this.mapDate[1];
+      }else{
+        resultData.starttime = "";
+        resultData.endtime = "";
+      }
+      if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){
+        resultData.dept_id = $this.currentCluesData.departID;
+      }else{
+        resultData.dept_id = [];
+      }
+      if($this.worldRegionMapChart&&!$this.worldRegionMapChart.destroyed){
+        $this.worldRegionMapChart.destroy();
+      }
+      if($this.regionMapChart&&!$this.regionMapChart.destroyed){
+        $this.regionMapChart.destroy();
+      }
+      if($this.pieSourcePlot&&!$this.pieSourcePlot.chart.destroyed){
+        $this.pieSourcePlot.chart.destroy();
+      }
+      $this.$store.dispatch("api/enCluesRegionStatDataAction", resultData).then((response) => {
+        if (response) {
+          console.log(response,'英文地图')
+          if (response.status) {
+            $this.currentCluesData.cluesRegionData = worldCountry(response.data);
+            $this.currentCluesData.cluesRegionData.sort($this.sortNumber);
+            var topTenRegionData = [];
+            $this.currentCluesData.cluesRegionData.forEach(function(item,index){
+              if(index<10){
+                topTenRegionData.push(item);
+              }
+            });           
+            topTenRegionData.sort(function(a, b) {
+                var value1 = a.number;
+                var value2 = b.number;
+                return value2 - value1;
+            });
+            $this.currentCluesData.topTenRegionData = topTenRegionData;
+            $this.drawEnCluesRegionChart();
+            $this.drawTopTen();
+          } else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+          }
+        }
+      });
+    },
+    // 根据地区的询盘数量做降序排序
+    sortNumber(a,b){
+      return b.number - a.number;
+    },
     // 英文地区询盘地图
     drawEnCluesRegionChart(){
       var $this = this;
       fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/world.geo.json')
       .then(res => res.json())
       .then(mapData => {
-        const regionMapChart = new G2.Chart({
-          container: 'regionMapChart',
+        const worldRegionMapChart = new G2.Chart({
+          container: 'worldRegionMapChart',
           width: 800,
           height: 350,
         });
-        regionMapChart.tooltip({
+        worldRegionMapChart.tooltip({
           showTitle: false,
           showMarkers: false,
           shared: true,
         });
         // 同步度量
-        regionMapChart.scale({
+        worldRegionMapChart.scale({
           longitude: {
             sync: true
           },
@@ -845,14 +2420,14 @@ export default {
             sync: true
           }
         });
-        regionMapChart.axis(false);
-        regionMapChart.legend('trend', {
+        worldRegionMapChart.axis(false);
+        worldRegionMapChart.legend('trend', {
           position: 'left',
         });
         // 绘制世界地图背景
         var ds = new DataSet();
         const worldMap = ds.createView('back').source(mapData, {type: 'GeoJSON'});
-        const worldMapView = regionMapChart.createView();
+        const worldMapView = worldRegionMapChart.createView();
         worldMapView.data(worldMap.rows);
         worldMapView.tooltip(false);
         worldMapView.polygon()
@@ -900,7 +2475,7 @@ export default {
             return obj;
           }
         });
-        const userView = regionMapChart.createView();
+        const userView = worldRegionMapChart.createView();
         userView.data(userDv.rows);
         userView.scale({
           number: {
@@ -925,8 +2500,8 @@ export default {
             }
           });
         userView.interaction('element-active');
-        $this.regionMapChart = regionMapChart;
-        regionMapChart.render();
+        $this.worldRegionMapChart = worldRegionMapChart;
+        worldRegionMapChart.render();
       });
     },
     // 中文地区日期选择改变事件
@@ -949,232 +2524,7 @@ export default {
         var today = date.getFullYear()+"-"+(date.getMonth()+1>9?date.getMonth()+1:'0'+(date.getMonth()+1))+"-"+(date.getDate()+1>9?date.getDate():'0'+(date.getDate()));
         $this.mapDate = [monthDay,today];
         $this.thisMonth=date.getFullYear()+"-"+(date.getMonth()+1>9?date.getMonth()+1:'0'+(date.getMonth()+1));
-    },
-    // 今天、昨天、本月询盘水波图
-    drawCluesLiquidChart1(){
-      var $this = this;
-      if($this.liquidPlot1&&!$this.liquidPlot1.chart.destroyed){
-        $this.liquidPlot1.changeData($this.currentCluesData.cluesNum.todayPercent);
-      }else{
-        const liquidPlot1 = new Liquid('cluesLiquidChart1', {
-          percent: $this.currentCluesData.cluesNum.todayPercent,
-          height:200,
-          width:200,
-          outline: {
-            border: 3,
-            distance: 5,
-          },
-          wave: {
-            length: 128,
-          },
-          statistic: {
-            content: {
-              formatter: () => '今日总询盘',
-              style: ({ percent }) => ({
-                fontSize: 16,
-                lineHeight: 2,
-                fill: percent > 0.85 ? 'white' : 'rgba(26,26,26,1)',
-              }),
-            },
-            title: {
-              style: ({ percent }) => ({
-                fontSize: 48,
-                lineHeight: 1,
-                fill: percent > 0.85 ? 'white' : 'rgba(26,26,26,1)',
-              }),
-              customHtml: (container, view, { percent }) => {
-                const { width, height } = container.getBoundingClientRect();
-                const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
-                const text = `${$this.currentCluesData.cluesNum.today}`;
-                const textWidth = measureTextWidth(text, { fontSize: 48 });
-                const scale = Math.min(d / textWidth, 1);
-                return `<div style="width:${d}px;display:flex;align-items:center;justify-content:center;font-size:${scale}em;line-height:${
-                  scale <= 1 ? 1 : 'inherit'
-                }">${text}</div>`;
-              },
-            },
-          },
-          liquidStyle: ({ percent }) => {
-            return {
-              fill: percent > 0.45 ? '#62daab' : '#74ecbd',
-              stroke: percent > 0.45 ? '#62daab' : '#74ecbd',
-            };
-          },
-          color: () => '#62daab',
-        });
-        $this.liquidPlot1 = liquidPlot1;
-        liquidPlot1.render();
-      }
-    },
-    // 今天、昨天、本月询盘水波图
-    drawCluesLiquidChart2(){
-      var $this = this;
-      if($this.liquidPlot2&&!$this.liquidPlot2.chart.destroyed){
-        $this.liquidPlot2.changeData($this.currentCluesData.cluesNum.yesterdayPercent);
-      }else{
-        const liquidPlot2 = new Liquid('cluesLiquidChart2', {
-          percent: $this.currentCluesData.cluesNum.yesterdayPercent,
-          height:200,
-          width:200,
-          outline: {
-            border: 3,
-            distance: 5,
-          },
-          wave: {
-            length: 128,
-          },
-          statistic: {
-            content: {
-              formatter: () => '昨日总询盘',
-              style: ({ percent }) => ({
-                fontSize: 16,
-                lineHeight: 2,
-                fill: percent > 0.85 ? 'white' : 'rgba(26,26,26,1)',
-              }),
-            },
-            title: {
-              style: ({ percent }) => ({
-                fontSize: 48,
-                lineHeight: 1,
-                fill: percent > 0.85 ? 'white' : 'rgba(26,26,26,1)',
-              }),
-              customHtml: (container, view, { percent }) => {
-                const { width, height } = container.getBoundingClientRect();
-                const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
-                const text = `${$this.currentCluesData.cluesNum.yesterday}`;
-                const textWidth = measureTextWidth(text, { fontSize: 48 });
-                const scale = Math.min(d / textWidth, 1);
-                return `<div style="width:${d}px;display:flex;align-items:center;justify-content:center;font-size:${scale}em;line-height:${
-                  scale <= 1 ? 1 : 'inherit'
-                }">${text}</div>`;
-              },
-            },
-          },
-          liquidStyle: ({ percent }) => {
-            return {
-              fill: percent > 0.45 ? '#f7b05b' : '#fec47c',
-              stroke: percent > 0.45 ? '#f7b05b' : '#fec47c',
-            };
-          },
-          color: () => '#f7b05b',
-        });
-        $this.liquidPlot2 = liquidPlot2;
-        liquidPlot2.render();
-      }
-    },
-    // 今天、昨天、本月询盘水波图
-    drawCluesLiquidChart3(){
-      var $this = this;
-      if($this.liquidPlot3&&!$this.liquidPlot3.chart.destroyed){
-        $this.liquidPlot3.changeData($this.currentCluesData.cluesNum.monthPercent);
-      }else{
-        const liquidPlot3 = new Liquid('cluesLiquidChart3', {
-          percent: $this.currentCluesData.cluesNum.monthPercent,
-          height:200,
-          width:200,
-          outline: {
-            border: 3,
-            distance: 5,
-          },
-          wave: {
-            length: 128,
-          },
-          statistic: {
-            content: {
-              formatter: () => '本月总询盘',
-              style: ({ percent }) => ({
-                fontSize: 16,
-                lineHeight: 2,
-                fill: percent > 0.85 ? 'white' : 'rgba(26,26,26,1)',
-              }),
-            },
-            title: {
-              style: ({ percent }) => ({
-                fontSize: 48,
-                lineHeight: 1,
-                fill: percent > 0.85 ? 'white' : 'rgba(26,26,26,1)',
-              }),
-              customHtml: (container, view, { percent }) => {
-                const { width, height } = container.getBoundingClientRect();
-                const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
-                const text = `${$this.currentCluesData.cluesNum.month}`;
-                const textWidth = measureTextWidth(text, { fontSize: 48 });
-                const scale = Math.min(d / textWidth, 1);
-                return `<div style="width:${d}px;display:flex;align-items:center;justify-content:center;font-size:${scale}em;line-height:${
-                  scale <= 1 ? 1 : 'inherit'
-                }">${text}</div>`;
-              },
-            },
-          },
-          liquidStyle: ({ percent }) => {
-            return {
-              fill: percent > 0.45 ? '#ee876d' : '#fe9d84',
-              stroke: percent > 0.45 ? '#ee876d' : '#fe9d84',
-            };
-          },
-          color: () => '#ee876d',
-        });
-        $this.liquidPlot3 = liquidPlot3;
-        liquidPlot3.render();
-      }
-    },
-    // top10环形图
-    drawTopTen(){
-      var $this = this;
-      if($this.currentCluesData.topTenRegionData.length>0){
-        if($this.pieSourcePlot&&!$this.pieSourcePlot.chart.destroyed){
-          $this.pieSourcePlot.changeData($this.currentCluesData.topTenRegionData);
-        }else{
-          const pieSourcePlot = new Pie('topTen', {
-            data:$this.currentCluesData.topTenRegionData,
-            angleField: 'number',
-            colorField: 'name',
-            appendPadding:[15,15,15,15],
-            radius: 1,
-            innerRadius: 0.64,
-            label: {
-              type: 'inner',
-              offset: '-50%',
-              style: {
-                textAlign: 'center',
-              },
-              autoRotate: false,
-              formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
-            },
-            legend:{
-              position:'bottom',
-              flipPage:false,
-            },
-            statistic: {
-              title: {
-                offsetY: -4,
-                customHtml: (topTen, view, datum) => {
-                  const { width, height } = topTen.getBoundingClientRect();
-                  const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
-                  const text = datum ? datum.name : '总计';
-                  return $this.renderStatistic(d, text, { fontSize: 28 });
-                },
-              },
-              content: {
-                offsetY: 4,
-                style: {
-                  fontSize: '32px',
-                },
-                customHtml: (topTen, view, datum, data) => {
-                  const { width } = topTen.getBoundingClientRect();
-
-                  const text = datum ? `${datum.number}` : `${data.reduce((r, d) => r + d.number, 0)}`;
-                  return $this.renderStatistic(width, text, { fontSize: 32 });
-                },
-              },
-            },
-            // 添加 中心统计文本 交互
-            interactions: [{ type: 'element-selected' },  { type: 'pie-statistic-active' }],
-          });
-          $this.pieSourcePlot = pieSourcePlot;
-          pieSourcePlot.render();
-        }
-      }
+        $this.DaytargetTodayTime=today;
     },
     renderStatistic(containerWidth, text, style) {
       const { width: textWidth, height: textHeight } = measureTextWidth(text, style);
@@ -1187,85 +2537,84 @@ export default {
       const textStyleStr = `width:${containerWidth}px;`;
       return `<div style="${textStyleStr};font-size:${scale}em;line-height:${scale < 1 ? 1 : 'inherit'};">${text}</div>`;
     },
-    // 部门日目标环形进度图
-    drawDepartTarget(){
+    // 中文年度成交Top5
+    yearuserChart(){
       var $this = this;
-      if($this.currentCluesData.targetData.length>0){
-          var tagData = [];
-          $this.currentCluesData.targetData.forEach(function(item){
-               tagData.push(item);
+      if($this.useryearChart&&!$this.useryearChart.chart.destroyed){
+        $this.currentCluesData.yearuserscoreNum.forEach(function(item,index){
+            $this.useryearChart.changeData(item.children);
+        })
+      }else{
+        $this.currentCluesData.yearuserscoreNum.forEach(function(item,index){
+          const yearuserChart = new Area(`yearuserChart${index}`, {
+            data:item.children, 
+            xField: 'mtime',
+            yField: 'anumber',
+            padding:0,
+            appendPadding:0,
+            limitInPlot:false,
+            xAxis:false,
+            yAxis:false,
+            line:false,
+            height:44,
+            tooltip: {
+              formatter: (datum) => {
+                return { name:'年度月询盘', value: datum.anumber };
+              },
+            },
+            areaStyle: () => {
+              return {
+                fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
+              };
+            },
           });
-          var resultData = tagData.reverse();
-          if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
-            $this.radialBarPlot.changeData(resultData);
-          }else{
-            const radialBarPlot = new Bullet('radialBarChart', {
-              data:resultData,
-              measureField: 'dayNum',
-              rangeField: 'targetNum',
-              targetField: 'targetNum',
-              xField: 'name',
-              height:230,
-              color: {
-                range: '#ffe0b0',
-                measure: '#5B8FF9',
-                target: '#ffe0b0',
-              },
-              xAxis: {
-                line: null,
-              },
-              yAxis: {
-                grid: {
-                  line: {
-                    style: {
-                      stroke: '#cccccc',
-                      lineWidth: 1,
-                      lineDash: [3, 2],
-                      strokeOpacity: 0.7,
-                      shadowColor: null,
-                      shadowBlur: 0,
-                      shadowOffsetX:0,
-                      shadowOffsetY:0,
-                      cursor: 'pointer'
-                    }
-                  }
-                }
-              },
-              layout: 'vertical',
-              label: {
-                measure: {
-                  position: 'middle',
-                  style: {
-                    fill: '#333',
-                  },
-                },
-              }, 
-            });           
-            $this.radialBarPlot = radialBarPlot;
-            radialBarPlot.render();
-          }
+          $this.useryearChart=yearuserChart;
+          yearuserChart.render();
+        });
       }
     },
     //点击部门
-    handleDepart(Dep){
+    handleDepart(){
       var $this = this;
       if(!$this.loading){
         $this.loading = true;
         setTimeout(() => {
           $this.loading = false;
         }, 600);
-        if($this.clickID!=Dep.id){
-          $this.clickID=Dep.id;
-          $this.currentCluesData.departID = Dep.id;
-          $this.currentCluesData.departName = Dep.name;
-          if($this.regionMapChart&&!$this.regionMapChart.destroyed){
-            $this.regionMapChart.destroy();
-          }
-          if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
-            $this.areaTrendPlot.destroy();
-          }
-          $this.statDataApi();
+        var departID=$this.currentCluesData.departID;
+        var departName='';
+        $this.currentCluesData.DeparData.forEach(function(item,index){
+          item.disabled=true;
+        });
+        if(departID&&departID.length>0){
+            if(departID.length==$this.currentCluesData.DeparData.length){
+              departName='中文'
+            }else{
+              if(departID.length==1){
+                departID.forEach(function(item,index){
+                  $this.currentCluesData.DeparData.forEach(function(items,indexs){
+                    if(item==items.value){
+                        departName=departName+items.label;
+                    }
+                  });
+                });
+              }else{
+                departID=departID.sort(function(a,b){return a-b})
+                departID.forEach(function(item,index){
+                  $this.currentCluesData.DeparData.forEach(function(items,indexs){
+                    if(item==items.value){
+                        departName=departName+items.label.slice(2,3);
+                    }
+                  });
+                });
+                departName='电商('+departName.split('').join('、')+')部';
+              }
+            }
+        }else{
+            departName='中文'
         }
+        $this.currentCluesData.departName = departName;
+        $this.statDataApi();
       }
     },
     // 中英文选中状态切换
@@ -1290,33 +2639,19 @@ export default {
         if($this.language!=language){
           $this.language = language;
           $this.cnEnActiveChange();
-          $this.currentCluesData.departID = null;
-          if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
-            $this.radialBarPlot.destroy();
-          }
-          if($this.liquidPlot1&&!$this.liquidPlot1.chart.destroyed){
-            $this.liquidPlot1.destroy();
-          }
-          if($this.liquidPlot2&&!$this.liquidPlot2.chart.destroyed){
-            $this.liquidPlot2.destroy();
-          }
-          if($this.liquidPlot3&&!$this.liquidPlot3.chart.destroyed){
-            $this.liquidPlot3.destroy();
-          }
-          if($this.pieSourcePlot&&!$this.pieSourcePlot.chart.destroyed){
-            $this.pieSourcePlot.destroy();
-          }
-          if($this.regionMapChart&&!$this.regionMapChart.destroyed){
-            $this.regionMapChart.destroy();
-          }
-          if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
-            $this.areaTrendPlot.destroy();
-          }
+          $this.currentCluesData.departID = [];    
           if($this.language=="Module_cnStat"){
             $this.currentCluesData.departName = "中文";
           }else{
             $this.currentCluesData.departName = "英文";
           }
+          $this.currentCluesData.DeparData=[];
+
+          var userlanguage = Cookies.get('language');      
+          userlanguage = JSON.parse(userlanguage);
+          userlanguage.language=$this.language;
+          userlanguage = JSON.stringify(userlanguage);
+          Cookies.set('language', userlanguage);
           $this.statDataApi();
         }
       }
@@ -1326,28 +2661,11 @@ export default {
       var $this = this;
       if($this.language=="Module_cnStat"){
         $this.getCnCluesRegionStatData();
-        $this.getCnCluesStatData();
+        $this.cnDaytarget();
       }else{
         $this.getEnCluesRegionStatData();
-        $this.getEnCluesStatData();
+        $this.enDaytarget();
       }
-    },
-    // 获取业务员统计数据
-    getSalesmanStatData(){
-      var $this = this;
-      $this.$store.dispatch("api/salesmanStatDataAction", null).then((response) => {
-        if (response) {
-          if (response.status) {
-            $this.salesmanData = response;
-          } else {
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: "error",
-            });
-          }
-        }
-      });
     },
   }
 }

@@ -16,6 +16,11 @@
   enCluesRegionStatData,
   getAddsay,
   clearCache,
+  departScore,
+  endepartScore,
+  clearHomeCache,
+  getEndaytarget,
+  getChinadaytarget,
 } from '@/api/api'
 //import { reject, resolve } from 'core-js/fn/promise';
 import Cookies from 'js-cookie';
@@ -55,6 +60,10 @@ const state = {
     isDepartScoreAdd:false,
     isResourceTypeAdd:false,
     isResourceAdd:false,
+    isCnScoreAdd:false,
+    isEnScoreAdd:false,
+    isHomeCache:false,
+    isNohomeCache:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -236,6 +245,26 @@ const mutations = {
       state.isResourceAdd = true;
     }else{
       state.isResourceAdd = false;
+    }
+    if(permitData.includes("Chinauserscore_userscoreadd")&&data.page==""){
+      state.isCnScoreAdd = true;
+    }else{
+      state.isCnScoreAdd = false;
+    }
+    if(permitData.includes("Enuserscore_userscoreadd")&&data.page==""){
+      state.isEnScoreAdd = true;
+    }else{
+      state.isEnScoreAdd = false;
+    }
+    if(permitData.includes("Home_index")&&data.page==""){
+      state.isHomeCache = true;
+    }else{
+      state.isHomeCache = false;
+    }
+    if(!permitData.includes("Home_index")&&data.page==""){
+      state.isNohomeCache = true;
+    }else{
+      state.isNohomeCache = false;
     }
   },
 }
@@ -423,6 +452,56 @@ const actions = {
     clearCacheAction({ commit, state },data) {
       return new Promise((resolve, reject) => {
         clearCache(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文成交统计接口
+    departScoreAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        departScore(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文成交统计接口
+    endepartScoreAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        endepartScore(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 清除首页数据
+    clearHomeCacheAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        clearHomeCache(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文询盘日目标接口
+    getEndaytargetAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getEndaytarget(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文询盘日目标接口
+    getChinadaytargetAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getChinadaytarget(data).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)

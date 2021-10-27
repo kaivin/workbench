@@ -75,6 +75,21 @@
                               >
                               </el-table-column>
                               <el-table-column
+                              prop="passnumber"
+                              label="合格线"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="mediumnumber"
+                              label="中等线"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="goodnumber"
+                              label="优秀线"
+                              >
+                              </el-table-column>
+                              <el-table-column
                                 v-if="(menuButtonPermit.indexOf('Compare_edit')||menuButtonPermit.indexOf('Compare_delete'))"
                                 :width="operationsWidth"
                                 align="center"
@@ -111,51 +126,74 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Compare_add')||menuButtonPermit.includes('Compare_edit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="440px">
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Compare_add')||menuButtonPermit.includes('Compare_edit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="680px">
         <el-form :model="dialogForm">
           <div class="item-form Compart-time-width">
               <el-form-item label="添加时间：" :label-width="formLabelWidth">
                   <el-date-picker v-model="dialogForm.mtime" style="widht:100%" format="yyyy 年 MM 月" value-format="yyyy-MM" type="month" size="small" placeholder="选择月"></el-date-picker>
               </el-form-item>
           </div>
-          <div class="item-form Compart-time-width">
-              <el-form-item label="部门：" :label-width="formLabelWidth">
-                  <el-select v-model="dialogForm.dept_id" clearable placeholder="请选择部门">
-                      <el-option
-                          v-for="item in deptList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                      </el-option>
-                  </el-select>
-              </el-form-item>
+          <div class="item-form-group">
+              <div class="item-form Compart-time-width">
+                  <el-form-item label="部门：" :label-width="formLabelWidth">
+                      <el-select v-model="dialogForm.dept_id" clearable placeholder="请选择部门">
+                          <el-option
+                              v-for="item in deptList"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                          </el-option>
+                      </el-select>
+                  </el-form-item>
+              </div>
+              <div class="item-form">
+                  <el-form-item label="等级：" :label-width="formLabelWidth">
+                      <el-select v-model="dialogForm.level" clearable placeholder="请选择等级">
+                          <el-option
+                              v-for="item in levelList"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                          </el-option>
+                      </el-select>
+                  </el-form-item>
+              </div>
           </div>
-          <div class="item-form">
-              <el-form-item label="等级：" :label-width="formLabelWidth">
-                  <el-select v-model="dialogForm.level" clearable placeholder="请选择等级">
-                      <el-option
-                          v-for="item in levelList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                      </el-option>
-                  </el-select>
-              </el-form-item>
+          <div class="item-form-group">
+              <div class="item-form">
+                  <el-form-item label="成交数量：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.snumber"></el-input>
+                  </el-form-item>
+              </div>
+              <div class="item-form">
+                  <el-form-item label="合格线：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.passnumber"></el-input>
+                  </el-form-item>
+              </div>
           </div>
-          <div class="item-form">
-              <el-form-item label="成交数量：" :label-width="formLabelWidth">
-                  <el-input v-model="dialogForm.snumber"></el-input>
-              </el-form-item>
+          <div class="item-form-group">
+              <div class="item-form">
+                  <el-form-item label="积分数：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.score"></el-input>
+                  </el-form-item>
+              </div>
+              <div class="item-form">
+                  <el-form-item label="中等线：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.mediumnumber"></el-input>
+                  </el-form-item>
+              </div>
           </div>
-          <div class="item-form">
-              <el-form-item label="积分数：" :label-width="formLabelWidth">
-                  <el-input v-model="dialogForm.score"></el-input>
-              </el-form-item>
-          </div>
-          <div class="item-form">
-              <el-form-item label="A的数量：" :label-width="formLabelWidth">
-                  <el-input v-model="dialogForm.a_number"></el-input>
-              </el-form-item>
+          <div class="item-form-group">
+              <div class="item-form">
+                  <el-form-item label="A的数量：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.a_number"></el-input>
+                  </el-form-item>
+              </div>
+              <div class="item-form">
+                  <el-form-item label="优秀线：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.goodnumber"></el-input>
+                  </el-form-item>
+              </div>
           </div>
         </el-form>
         <template #footer>
@@ -188,6 +226,9 @@ export default {
         level:"",
         snumber:"",
         score:"",
+        passnumber:"",
+        mediumnumber:"",
+        goodnumber:"",
         a_number:"",
       },
       pageSizeList:[15,30,60,120],
@@ -591,6 +632,9 @@ export default {
       $this.dialogForm.level = row.level;
       $this.dialogForm.snumber = row.snumber;
       $this.dialogForm.score = row.score;
+      $this.dialogForm.passnumber = row.passnumber;
+      $this.dialogForm.mediumnumber = row.mediumnumber;
+      $this.dialogForm.goodnumber = row.goodnumber;
       $this.dialogForm.a_number = row.a_number;
     },
     // 保存添加/编辑数据
@@ -610,6 +654,9 @@ export default {
         formData.level = $this.dialogForm.level;
         formData.snumber = $this.dialogForm.snumber;
         formData.score = $this.dialogForm.score;
+        formData.passnumber = $this.dialogForm.passnumber;
+        formData.mediumnumber = $this.dialogForm.mediumnumber;
+        formData.goodnumber = $this.dialogForm.goodnumber;
         formData.a_number = $this.dialogForm.a_number;
         var pathUrl = "";
         if($this.dialogText=="编辑部门成交"){
@@ -648,6 +695,9 @@ export default {
       $this.dialogForm.level = "";
       $this.dialogForm.snumber = "";
       $this.dialogForm.score = "";
+      $this.dialogForm.passnumber = "";
+      $this.dialogForm.mediumnumber = "";
+      $this.dialogForm.goodnumber = "";
       $this.dialogForm.a_number = "";
     },
     // 验证是否为空
@@ -674,7 +724,7 @@ export default {
     // 删除表格行
     deleteTableRow(row,index){
       var $this = this;
-      $this.$confirm('是否确认删除该产品?', '提示', {
+      $this.$confirm('是否确认删除该数据?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

@@ -69,6 +69,14 @@
     addResourceType:state => state.app.addResourceType,
     isResourceAdd: state => state.api.isResourceAdd,
     addResource:state => state.app.addResource,
+    isCnScoreAdd: state => state.api.isCnScoreAdd,
+    addCnScore:state => state.app.addCnScore,
+    isEnScoreAdd: state => state.api.isEnScoreAdd,
+    addEnScore:state => state.app.addEnScore,
+    isHomeCache: state => state.api.isHomeCache,
+    isNohomeCache: state => state.api.isNohomeCache,
+    
+    
 }
 export default getters
   
