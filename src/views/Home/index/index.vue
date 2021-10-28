@@ -52,6 +52,13 @@
                     <div class="rowOneOneItem clearfix flex-wrap">
                          <div class="rowOneOneItemFl">
                               <div id="radialBarChart" class="chart-canvas"></div>
+                              <div class="legendFly">
+                                <span class="legendItem1">目标询盘</span>
+                                <span class="legendItem2">询盘数量</span>
+                                <span class="legendItem3">优秀询盘数量</span>
+                                <span class="legendItem4">历史最高</span>
+                                <span class="legendItem5">本月最高</span>
+                              </div>
                          </div>
                          <dl class="rowOneOneItemFr flex-content">
                              <dt>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}统计</dt>
@@ -315,11 +322,12 @@ import Cookies from 'js-cookie'
 import DataSet from '@antv/data-set';
 import { Chart } from '@antv/g2';
 import * as G2 from '@antv/g2';
-import { Bullet,RadialBar,Liquid,Line,Area,measureTextWidth,Pie,Bar,Column } from '@antv/g2plot';
+import { Bullet,RadialBar,Liquid,Line,Area,measureTextWidth,Pie,Bar,Column,Mix} from '@antv/g2plot';
 export default {
   name: 'Home',
   data() {
     return {
+      depDayTarget:[],//部门日目标
       menuButtonPermit:[],
       permitModules:[],
       thisMonth:'',
@@ -581,8 +589,10 @@ export default {
       $this.targetScore.DistanceTarget='';
       $this.$store.dispatch("api/getChinadaytargetAction", resultData).then((response) => {
         if (response) {
-          console.log(response,'中文部门日目标');
+          //console.log(response,'中文部门日目标');
           if (response.status) {
+              //部门日目标
+              $this.depDayTarget = response.groupcount;
               // 获取部门数据
               if(response.readart&&response.readart.length>0){
                 var DeparData=[];
@@ -729,8 +739,10 @@ export default {
       $this.targetScore.DistanceTarget='';
       $this.$store.dispatch("api/getEndaytargetAction", resultData).then((response) => {
         if (response) {
-          console.log(response,'首页英文询盘日目标接口');
+          //console.log(response,'首页英文询盘日目标接口');
           if (response.status) {
+              //部门日目标
+              $this.depDayTarget = response.groupcount;
               // 获取部门数据
               if(response.readart&&response.readart.length>0){
                 var DeparData=[];
@@ -883,7 +895,7 @@ export default {
       $this.clearData();
       $this.$store.dispatch("api/cnCluesStatDataAction", resultData).then((response) => {
         if (response) {
-          console.log(response,'/hxindex/Api/chinacount');
+          //console.log(response,'/hxindex/Api/chinacount');
           if (response.status) {
             // 获取部门数据
             if(response.readart&&response.readart.length>0){
@@ -1217,7 +1229,7 @@ export default {
       $this.clearData();
       $this.$store.dispatch("api/enCluesStatDataAction", resultData).then((response) => {
         if (response) {
-          console.log(response,'/hxindex/Api/encount');
+          //console.log(response,'/hxindex/Api/encount');
           if (response.status) {
             // 日目标统计
             $this.targetScore.daymaxnumber= response.daymaxnumber[0];
@@ -1512,56 +1524,286 @@ export default {
     drawDepartTarget(){
       var $this = this;
       if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
-        $this.radialBarPlot.changeData($this.currentCluesData.targetData);
+        $this.radialBarPlot.changeData($this.depDayTarget);
       }else{
-        var resultData =$this.currentCluesData.targetData;
-        const radialBarPlot = new Bullet('radialBarChart', {
-          data:resultData,
-          measureField: 'dayNum',
-          rangeField: 'targetNum',
-          targetField: 'targetNum',
-          xField: 'name',
-          height:230,
-          color: {
-            range: '#ffe0b0',
-            measure: ['#5B8FF9', '#61DDAA'],
-            target: '#ffe0b0',
-          },
-          xAxis: {
-            line: null,
-          },
-          yAxis: {
-            grid: {
-              line: {
-                style: {
-                  stroke: '#cccccc',
-                  lineWidth: 1,
-                  lineDash: [3, 2],
-                  strokeOpacity: 0.7,
-                  shadowColor: null,
-                  shadowBlur: 0,
-                  shadowOffsetX:0,
-                  shadowOffsetY:0,
-                  cursor: 'pointer'
+        var resultData =$this.depDayTarget;
+        let maxnum = 100;
+        let barMaxnum = 40;
+        for(let i = 0;i<resultData.length;i++){
+          for(let key in resultData[i]){
+            if(key != 'id' && typeof(resultData[i][key]) == 'number' && resultData[i][key]>maxnum){
+              maxnum = resultData[i][key]
+            }
+            if(key != 'id' && key != 'historymaxnumber' && key != 'monthmaxnumber' && typeof(resultData[i][key]) == 'number' && resultData[i][key]>barMaxnum){
+              barMaxnum = resultData[i][key]
+            }
+          }
+        }
+        for(let i = 0;i<resultData.length;i++){
+          if(resultData[i].searchdaynumber){
+            resultData[i].values = [resultData[i].searchdaynumber,resultData[i].searchdaynumber + resultData[i].daynumber]
+          }else{
+            resultData[i].values = [0,resultData[i].daynumber]
+          }
+        }
+        const radialBarPlot = new Mix('radialBarChart', {
+          appendPadding: 8,
+          syncViewPadding: true,
+          
+          tooltip: { 
+            shared: true ,
+            customItems: (originalItems) => {
+                for(let i=0;i<originalItems.length;i++){
+                  if(originalItems[i].name == 'values'){
+                    originalItems[i].name = '询盘数量';
+                    originalItems[i].value = originalItems[i].value.split('-')[1];
+                  }
                 }
-              }
-            }
-          },
-          layout: 'vertical',
-          label: {
-            measure: {
-              position: 'middle',
-              style: {
-                fill: '#333',
-              },
+                return originalItems;
             },
-          }, 
-          tooltip: {
-            formatter:(datum) => {
-                return { name:'询盘',value:datum.dayNum };
-            }
           },
+          legend:{
+            position: 'bottom',
+            items:[
+              {
+                name:"目标询盘",
+                value:"目标询盘",
+                marker: { symbol: 'square', style: { fill: '#5B8FF9', r: 5 } },
+              },
+              {
+                name:"目标询盘",
+                value:"目标询盘",
+                marker: { symbol: 'square', style: { fill: '#5B8FF9', r: 5 } },
+              }
+            ]
+          },
+          height:230,
+          plots:[
+            {//目标柱状图
+               type: 'column',
+                options: {
+                    data: resultData,
+                    xField: 'departname',
+                    yField: 'daytargetnumber',
+                    xAxis: {
+                      line: null,
+                    },
+                    yAxis: {
+                      grid: {
+                        line: {
+                          style: {
+                            stroke: '#cccccc',
+                            lineWidth: 1,
+                            lineDash: [3, 2],
+                            strokeOpacity: 0.7,
+                            shadowColor: null,
+                            shadowBlur: 0,
+                            shadowOffsetX:0,
+                            shadowOffsetY:0,
+                            cursor: 'pointer'
+                          }
+                        }
+                      },
+                      max: barMaxnum + 10,
+                    },
+                    columnStyle:{
+                      fill:'#e7f1ff',
+                    },
+                    color:'#e7f1ff',
+                    columnWidthRatio:0.5,
+                    meta: {
+                        daytargetnumber: {
+                            alias: '目标询盘',
+                        },
+                    },
+                },
+            },
+            {//搜索柱状图
+               type: 'column',
+                options: {
+                    data: resultData,
+                    xField: 'departname',
+                    yField: 'searchdaynumber',
+                    xAxis: {
+                      line: null,
+                    },
+                    yAxis: {
+                      grid: {
+                        line: {
+                          style: {
+                            stroke: '#cccccc',
+                            lineWidth: 1,
+                            lineDash: [3, 2],
+                            strokeOpacity: 0.7,
+                            shadowColor: null,
+                            shadowBlur: 0,
+                            shadowOffsetX:0,
+                            shadowOffsetY:0,
+                            cursor: 'pointer'
+                          }
+                        }
+                      },
+                     max: barMaxnum + 10,
+                    },
+                    columnStyle:{
+                      fill:'#2e88ff',
+                    },
+                    columnWidthRatio:0.4,
+                    meta: {
+                        searchdaynumber: {
+                            alias: '搜索询盘',
+                        },
+                    },
+                    label:{
+                      style: {
+                        fill: '#FFFFFF',
+                      },
+                      position: 'middle', 
+                      content:(item)=>{
+                        if(item.searchdaynumber>0){
+                          return item.searchdaynumber
+                        }
+                      }
+                    }
+                },
+            },
+            {//非搜索区间柱状图
+                type: 'column',
+                options: {
+                    data: resultData,
+                    isRange: true,
+                    xField: 'departname',
+                    yField: 'values',
+                    xAxis: {
+                      line: null,
+                    },
+                    yAxis: {
+                      grid: {
+                        line: {
+                          style: {
+                            stroke: '#cccccc',
+                            lineWidth: 1,
+                            lineDash: [3, 2],
+                            strokeOpacity: 0.7,
+                            shadowColor: null,
+                            shadowBlur: 0,
+                            shadowOffsetX:0,
+                            shadowOffsetY:0,
+                            cursor: 'pointer'
+                          }
+                        }
+                      },
+                      max: barMaxnum + 10,
+                    },
+                    color:'#59cab6',
+                    columnStyle:(item)=>{
+                      for(let i = 0;i<resultData.length;i++){
+                        if(resultData[i].departname == item.departname){
+                          if(resultData[i].daynumber>=resultData[i].daytargetnumber){
+                            return {
+                              fill:'#f38080'
+                            }
+                          }else{
+                            return {
+                              fill:'#59cab6'
+                            }
+                          }
+                        }
+                      }
+                    },
+                    columnWidthRatio:0.4,
+                    label:{
+                      style: {
+                        fill: '#FFFFFF',
+                      },
+                      position: 'middle', 
+                      content:(item)=>{
+                        if(item.daynumber>0){
+                          return item.daynumber
+                        }
+                      }
+                    }
+                },
+            },
+            {//历史最高折线图
+               type: 'line',
+                options: {
+                    data: resultData,
+                    xField: 'departname',
+                    yField: 'historymaxnumber',
+                    xAxis: {
+                      line: null,
+                    },
+                    yAxis: {
+                      grid: {
+                        line: {
+                          style: {
+                            stroke: '#cccccc',
+                            lineWidth: 1,
+                            lineDash: [3, 2],
+                            strokeOpacity: 0.7,
+                            shadowColor: null,
+                            shadowBlur: 0,
+                            shadowOffsetX:0,
+                            shadowOffsetY:0,
+                            cursor: 'pointer'
+                          }
+                        }
+                      },
+                      position: 'right',
+                      max: maxnum + 20,
+                    },
+                    color:'#f38080',
+                    meta: {
+                        historymaxnumber: {
+                            alias: '历史最高',
+                        },
+                    },
+                    label: {
+                      position: 'top',
+                    },
+                    
+                },
+            },
+            {//本月最高折线图
+               type: 'line',
+                options: {
+                    data: resultData,
+                    xField: 'departname',
+                    yField: 'monthmaxnumber',
+                    xAxis: {
+                      line: null,
+                    },
+                    yAxis: {
+                      grid: {
+                        line: {
+                          style: {
+                            stroke: '#cccccc',
+                            lineWidth: 1,
+                            lineDash: [3, 2],
+                            strokeOpacity: 0.7,
+                            shadowColor: null,
+                            shadowBlur: 0,
+                            shadowOffsetX:0,
+                            shadowOffsetY:0,
+                            cursor: 'pointer'
+                          }
+                        }
+                      },
+                      position: 'right',
+                      max: maxnum + 20,
+                    },
+                    color:'#fcb030',
+                    meta: {
+                        monthmaxnumber: {
+                            alias: '本月最高',
+                        },
+                    },
+                },
+            },
+          ]
         });
+        
         $this.radialBarPlot = radialBarPlot;
         radialBarPlot.render();
       }
@@ -1593,7 +1835,7 @@ export default {
       }
       $this.$store.dispatch("api/cnCluesRegionStatDataAction", resultData).then((response) => {
         if (response) {
-          console.log(response,'中文地图')
+          //console.log(response,'中文地图')
           if (response.status) {
             $this.currentCluesData.cluesRegionData = response.data;
             var topTenRegionData = [];
@@ -2024,7 +2266,7 @@ export default {
         resultData.month='';
       }
       $this.$store.dispatch("api/departScoreAction", resultData).then((response) => {
-          console.log(response,'首页中文成交统计接口')
+          //console.log(response,'首页中文成交统计接口')
           if (response.status) {
               $this.ScoreTime=response.month;
               if(response.departscore&&response.departscore.length>0){
@@ -2180,7 +2422,7 @@ export default {
         resultData.month='';
       }
       $this.$store.dispatch("api/endepartScoreAction", resultData).then((response) => {
-          console.log(response,'首页英文成交统计接口')
+          //console.log(response,'首页英文成交统计接口')
           if (response.status) {
               $this.ScoreTime=response.month;
               if(response.departscore&&response.departscore.length>0){
@@ -2363,7 +2605,7 @@ export default {
       }
       $this.$store.dispatch("api/enCluesRegionStatDataAction", resultData).then((response) => {
         if (response) {
-          console.log(response,'英文地图')
+          //console.log(response,'英文地图')
           if (response.status) {
             $this.currentCluesData.cluesRegionData = worldCountry(response.data);
             $this.currentCluesData.cluesRegionData.sort($this.sortNumber);
