@@ -326,6 +326,7 @@
                                   </el-select>
                                   <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
                                   <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()" style="margin:5px 10px 5px 0px;float:left;">重置</el-button>
+                                   <el-button type="info" plain size="small" style="margin:5px 10px 5px 0px;float:left;" v-on:click="clearCache">清除缓存</el-button>
                                 </div>
                                 <div class="clues-info flex-wrap">
                                     <div class="clues-infoFl flex-content">
@@ -1116,6 +1117,41 @@ export default {
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
+    // 清除缓存
+    clearCache(){
+      var $this = this;
+      
+      var type = null;
+      if(this.$route.query.phoneID){
+        type = this.$route.query.phoneID
+      }
+      if(this.$route.query.key == 'all'){
+        type = 'lookall'
+      }
+      if(this.$route.query.key == 'unAllot'){
+        type = 'unAllot'
+      }
+      
+      $this.$store.dispatch('api/clearCacheAction', {cachename:type}).then(response=>{
+        if(response){
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.searchResult();
+            
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
     // 获取面包屑路径
     getBreadcrumbList(){
       var $this = this;
