@@ -60,6 +60,16 @@
                               >
                               </el-table-column>
                               <el-table-column
+                              prop="number"
+                              label="成交数量"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="score"
+                              label="积分数"
+                              >
+                              </el-table-column>
+                              <el-table-column
                               prop="snumber"
                               label="A的数量"
                               >
@@ -77,6 +87,26 @@
                               <el-table-column
                               prop="goodnumber"
                               label="优秀线"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="allmoney"
+                              label="总成本"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="personmoney"
+                              label="人力成本"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="paymoney"
+                              label="付费成本"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="personnumber"
+                              label="推广人数"
                               >
                               </el-table-column>
                               <el-table-column
@@ -137,13 +167,6 @@
                 </el-form-item>
             </div>
             <div class="item-form">
-                <el-form-item label="合格线：" :label-width="formLabelWidth">
-                    <el-input v-model="dialogForm.passnumber"></el-input>
-                </el-form-item>
-            </div>
-        </div>
-        <div class="item-form-group">
-            <div class="item-form">
                 <el-form-item label="等级：" :label-width="formLabelWidth">
                     <el-select v-model="dialogForm.level" clearable placeholder="请选择等级">
                         <el-option
@@ -155,11 +178,30 @@
                     </el-select>
                 </el-form-item>
             </div>
-            <div class="item-form">
-                <el-form-item label="中等线：" :label-width="formLabelWidth">
-                    <el-input v-model="dialogForm.mediumnumber"></el-input>
-                </el-form-item>
-            </div>
+        </div>
+        <div class="item-form-group">
+              <div class="item-form">
+                  <el-form-item label="成交数量：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.number"></el-input>
+                  </el-form-item>
+              </div>
+              <div class="item-form">
+                  <el-form-item label="合格线：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.passnumber"></el-input>
+                  </el-form-item>
+              </div>
+        </div>
+        <div class="item-form-group">
+              <div class="item-form">
+                  <el-form-item label="积分数：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.score"></el-input>
+                  </el-form-item>
+              </div>
+              <div class="item-form">
+                  <el-form-item label="中等线：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.mediumnumber"></el-input>
+                  </el-form-item>
+              </div>
         </div>
         <div class="item-form-group">
             <div class="item-form">
@@ -173,6 +215,30 @@
                 </el-form-item>
             </div>
         </div>
+          <div class="item-form-group">
+              <div class="item-form">
+                  <el-form-item label="总成本：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.allmoney"></el-input>
+                  </el-form-item>
+              </div>
+              <div class="item-form">
+                  <el-form-item label="人力成本：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.personmoney"></el-input>
+                  </el-form-item>
+              </div>
+          </div>
+          <div class="item-form-group">
+              <div class="item-form">
+                  <el-form-item label="付费成本：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.paymoney"></el-input>
+                  </el-form-item>
+              </div>
+              <div class="item-form">
+                  <el-form-item label="推广人数：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.personnumber"></el-input>
+                  </el-form-item>
+              </div>
+          </div>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -202,11 +268,17 @@ export default {
         id:0,
         dept_id:"",
         mtime:"",
-        level:"",
         snumber:"",
+        score:"",
+        level:"",
         passnumber:"",
         mediumnumber:"",
         goodnumber:"",
+        number:"",
+        allmoney:"",
+        personmoney:"",
+        paymoney:"",
+        personnumber:"",
       },
       pageSizeList:[15],
       totalDataNum:0,
@@ -492,7 +564,6 @@ export default {
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('Encompare/EndeparDealListAction', formData).then(response=>{
         if(response){
-          console.log(response,'response');
           if(response.status){
             if(response.data.length>0){
                 response.data.forEach(function(item){
@@ -607,11 +678,17 @@ export default {
       $this.dialogForm.id = row.id;
       $this.dialogForm.dept_id = row.dept_id;
       $this.dialogForm.mtime = row.mtime;
-      $this.dialogForm.level = row.level;
       $this.dialogForm.snumber = row.snumber;
+      $this.dialogForm.score = row.score;
+      $this.dialogForm.level = row.level;
       $this.dialogForm.passnumber = row.passnumber;
       $this.dialogForm.mediumnumber = row.mediumnumber;
       $this.dialogForm.goodnumber = row.goodnumber;
+      $this.dialogForm.number = row.number;
+      $this.dialogForm.allmoney = row.allmoney;
+      $this.dialogForm.personmoney = row.personmoney;
+      $this.dialogForm.paymoney = row.paymoney;
+      $this.dialogForm.personnumber = row.personnumber;
     },
     // 保存添加/编辑数据
     saveData(){
@@ -627,11 +704,17 @@ export default {
         }
         formData.dept_id = $this.dialogForm.dept_id;
         formData.mtime = $this.dialogForm.mtime;
-        formData.level = $this.dialogForm.level;
         formData.snumber = $this.dialogForm.snumber;
+        formData.score = $this.dialogForm.score;
+        formData.level = $this.dialogForm.level;
         formData.passnumber = $this.dialogForm.passnumber;
         formData.mediumnumber = $this.dialogForm.mediumnumber;
         formData.goodnumber = $this.dialogForm.goodnumber;
+        formData.number = $this.dialogForm.number;
+        formData.allmoney = $this.dialogForm.allmoney;
+        formData.personmoney = $this.dialogForm.personmoney;
+        formData.paymoney = $this.dialogForm.paymoney;
+        formData.personnumber = $this.dialogForm.personnumber;
         var pathUrl = "";
         if($this.dialogText=="编辑部门成交"){
           pathUrl = "Encompare/EndeparDealEditAction";
@@ -666,11 +749,17 @@ export default {
       $this.dialogForm.id = 0;
       $this.dialogForm.dept_id = "";
       $this.dialogForm.mtime = "";
-      $this.dialogForm.level = "";
       $this.dialogForm.snumber = "";
+      $this.dialogForm.score = "";
+      $this.dialogForm.level = "";
       $this.dialogForm.passnumber = "";
       $this.dialogForm.mediumnumber = "";
       $this.dialogForm.goodnumber = "";
+      $this.dialogForm.number = "";
+      $this.dialogForm.allmoney = "";
+      $this.dialogForm.personmoney = "";
+      $this.dialogForm.paymoney = "";
+      $this.dialogForm.personnumber = "";
     },
     // 验证是否为空
     validationForm(){

@@ -104,6 +104,26 @@
                   </div>
                </div>
           </div>
+          <div class="flex-box flex-column trend-chart" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
+            <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}近30天询盘趋势</h3>
+            <div id="cluesChart" class="chart-canvas flex-content"></div>
+          </div>
+          <div class="flex-box flex-wrap rowFive">
+               <div class="rowFiveFl flex-content">
+                    <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}年度询盘对比</h3>
+                    <div id="yeartongChart" class="chart-canvas"></div>
+               </div>
+               <div class="rowFiveFr">
+                    <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}年度同期询盘对比</h3>
+                    <div class="rowFiveFrBox flex-box flex-wrap">
+                         <div id="registerChart" class="chart-canvas flex-content"></div>
+                         <ul class="rowFiveFrBoxFl">
+                             <li><span>同比增长量</span><strong :class="currentCluesData.registerGrowth>0?'':'falling'"><i>{{currentCluesData.registerGrowth>0?'↑':'↓'}}</i>{{Math.abs(currentCluesData.registerGrowth)}}</strong></li>
+                             <li><span>同比增长率</span><strong :class="currentCluesData.registerGrowth>0?'':'falling'"><i>{{currentCluesData.registerGrowth>0?'↑':'↓'}}</i>{{currentCluesData.registerRate}}</strong></li>
+                         </ul>
+                    </div>
+               </div>
+          </div>
           <div class="flex-box flex-wrap rowTwo">
                <div class="rowTwoTwo flex-content">
                     <div class="map-Top-chartTit flex-wrap">
@@ -125,7 +145,7 @@
                     <div class="rowTwoTwoItem">
                          <div class="rowTwoTwoItemTop flex-wrap">
                               <p class="rowTwoTwoItemTop01 flex-content">
-                                 <span v-if="language=='Module_cnStat'">成交积分</span><span v-else>成交数量</span><span>合格线</span><span>中等线</span><span>优秀线</span>
+                                 <span>成交积分</span><span>合格线</span><span>中等线</span><span>优秀线</span>
                               </p>
                               <p class="rowTwoTwoItemTop02">百万成交</p>
                          </div>
@@ -139,22 +159,18 @@
                                    <span class="mediumnumber" :style="'width:'+item.mediumnumber/ScoreData.MaxValue*100+'%'"></span>
                                    <span class="passnumber" :style="'width:'+item.passnumber/ScoreData.MaxValue*100+'%'"></span>
                                 </p>
-                                <p class="rowTwoTwoItemFlNum"  v-if="language=='Module_cnStat'" :class="item.a_number==0?'':'NumClass'">
+                                <p class="rowTwoTwoItemFlNum" :class="item.a_number==0?'':'NumClass'">
                                    <span v-if="item.a_number==0">——</span>
                                    <span v-else>{{item.a_number}}</span>
                                 </p>
-                                <p class="rowTwoTwoItemFlNum" v-else :class="item.snumber==0?'':'NumClass'">
-                                   <span v-if="item.snumber==0">——</span>
-                                   <span v-else>{{item.snumber}}</span>
-                                </p>
                              </li>
                          </ul>
-                         <dl class="rowTwoTwoItemDl" :class="language=='Module_cnStat'?'':'enItemDl'">
+                         <dl class="rowTwoTwoItemDl">
                               <dt>
                                   <p class="rowTwoTwoItemDlTit">{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}成交数量</p>
                                   <p class="rowTwoTwoItemDlNum">{{ScoreData.addallsnumber}}<span v-if="ScoreData.allsnumber!=ScoreData.addallsnumber">(占总成交{{ScoreData.allsnumberPercen}})</span></p>
                               </dt>
-                              <dt v-if="language=='Module_cnStat'">
+                              <dt>
                                   <p class="rowTwoTwoItemDlTit">{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}成交积分</p>
                                   <p class="rowTwoTwoItemDlNum">{{ScoreData.addallscore}}<span v-if="ScoreData.allscore!=ScoreData.addallscore">(占总成交{{ScoreData.allscorePercen}})</span></p>
                               </dt>
@@ -193,60 +209,6 @@
                         </div>
                     </div>
                </div>
-          </div>
-          <div class="flex-box flex-wrap rowFour" v-if="(currentCluesData.userscoreNum&&currentCluesData.userscoreNum.length>0)||(currentCluesData.yearuserscoreNum&&currentCluesData.yearuserscoreNum.length>0)">
-               <div class="rowFourOne" v-if="currentCluesData.userscoreNum&&currentCluesData.userscoreNum.length>0">
-                    <h3>月成交Top5</h3>
-                    <ul class="rowFourOneUl">
-                        <li class="flex-box flex-wrap" v-for="(item,index) in currentCluesData.userscoreNum" :key='index'>
-                             <p class="rowFourOneUlNum"><span>{{index+1}}</span></p>
-                             <p class="rowFourOneUlPic" v-if="item.headimg"><img v-bind:src="item.headimg" alt=""></p>
-                             <p class="rowFourOneUlPic" v-else><img src="../../../assets/clinchIcon01.png" alt=""></p>
-                             <div class="rowFourOneUlBox flex-content">
-                                  <p class="infoData">
-                                    {{item.username}}
-                                    <span class="group">{{item.groupname}}</span>
-                                    <span class="groupNum">{{item.number}}<i v-if="item.Growth!=0" :class="item.growthClass?'rising':'falling'">{{item.Growth}}</i></span>
-                                  </p>
-                                  <p class="percen"><span :style="'width:'+item.percen+'%'"></span></p>
-                             </div>
-                        </li>
-                    </ul>
-               </div>
-               <div class="rowFourTwo flex-content" v-if="currentCluesData.yearuserscoreNum&&currentCluesData.yearuserscoreNum.length>0">
-                    <h3>年度成交Top5</h3>
-                    <ul class="rowFourTwoUl">
-                        <li class="flex-box flex-wrap" v-for="(item,index) in currentCluesData.yearuserscoreNum" :key='index'>
-                             <div class="rowFourTwoUlNum">
-                                <p v-if="item.headimg"><img v-bind:src="item.headimg" alt=""></p>
-                                <p v-else><img src="../../../assets/clinchIcon01.png" alt=""></p>
-                                <span>TOP{{index+1}}</span>
-                             </div>
-                             <p class="rowFourTwoUlName">
-                                {{item.username}}
-                                <span>{{item.groupname}}</span>
-                             </p>
-                             <div class="rowFourTwoUlPercen flex-content">
-                                  <p class="percenTop">成交积分<span>{{item.number}}</span></p>
-                                  <p class="percenBom"><span></span></p>
-                             </div>
-                             <div class="rowFourTwoUlScore" v-if="item.anumber>0">
-                                  <p class="ScoreTop"><span>{{item.anumber}}</span></p>
-                                  <p class="ScoreBom">百万成交</p>
-                             </div>
-                             <div class="rowFourTwoUlScore" v-else>
-                                  <p class="ScoreLine">——</p>
-                             </div>
-                             <div class="rowFourTwoUlarea">
-                                <div :id="`yearuserChart${index}`" class="chart-canva"></div>
-                             </div>
-                        </li>
-                    </ul>
-               </div>
-          </div>
-          <div class="flex-box flex-column trend-chart" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
-            <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}近30天询盘趋势</h3>
-            <div id="cluesChart" class="chart-canvas flex-content"></div>
           </div>
           <div class="rowThree">
                <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}小组成绩</h3>
@@ -310,6 +272,163 @@
                     </div>
                </div>
           </div>
+          <div class="rowSever">
+               <div class="rowSeverFl">
+                    <h3>{{language=='Module_cnStat'?'中文':'英文'}}年度成交积分</h3>
+                    <p class="unit">(单位：分)</p>
+                    <p class="totalNum">
+                       <span>{{language=='Module_cnStat'?'中文':'英文'}}总成交积分</span><strong>{{currentCluesData.totalNumscore}}</strong>
+                    </p>
+                    <div id="yeardepartscoreChart" class="chart-canvas"></div>
+               </div>
+               <div class="rowSeverFr">
+                  <div class="rowSeverFrOne">
+                        <div class="rowSeverFrOnetit">
+                          <h3>部门成本</h3>
+                          <span>数据更新于2021年10月25日 12时  | 每月更新</span>
+                        </div>
+                        <div class="rowSeverFrOneBox">
+                            <el-table
+                              :data="currentCluesData.departmentCost"
+                              border
+                              show-summary
+                              class="rowThreeTable"
+                              style="width: 100%">
+                              <el-table-column
+                                prop="departname"
+                                label="部门"
+                                width="140">
+                              </el-table-column>
+                              <el-table-column
+                                prop="score"
+                                label="成交分"
+                                width="140">
+                              </el-table-column>
+                              <el-table-column
+                                prop="allmoney"
+                                label="总成本(万元)"
+                                width="140">
+                              </el-table-column>
+                              <el-table-column
+                                prop="avgallmoney"
+                                sortable
+                                label="每分成本(元)"
+                                width="140">
+                              </el-table-column>
+                              <el-table-column
+                                prop="moneyscore"
+                                sortable
+                                label="1万元成交分"
+                                width="140">
+                              </el-table-column>
+                              <el-table-column
+                                prop="personmoney"
+                                sortable
+                                label="人力成本"
+                                width="140">
+                              </el-table-column>
+                              <el-table-column
+                                prop="paymoney"
+                                sortable
+                                label="付费成本"
+                                width="140">
+                              </el-table-column>
+                              <el-table-column
+                                prop="personnumber"
+                                sortable
+                                label="总人数"
+                                width="140">
+                              </el-table-column>
+                            </el-table>
+                        </div>
+                  </div>
+                  <div class="rowSeverFrTwo">
+                        <h3>部门成本均价排行</h3>
+                        <p class="unit">(单位：分)</p>
+                        <div id="costAverageChart" class="chart-canvas"></div>
+                  </div>
+               </div>
+          </div>
+          <div class="flex-box flex-wrap rowSix">
+               <div class="rowSixFl flex-content">
+                    <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}年度成交积分对比</h3>
+                    <div id="yearscoretongChart" class="chart-canvas"></div>
+               </div>
+               <div class="rowSixFr">
+                    <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}年度同期成交对比</h3>
+                    <div class="rowSixFrBox">
+                         <ul class="rowSixFrTop">
+                             <li v-for="(item,index) in currentCluesData.sametimeArr" :key="index" :style="'width:'+item.percen">
+                                <p class="time">{{item.year}}</p>
+                                <p class="contrast flex-box flex-wrap">
+                                    <span class="percen" :style="'width:'+item.percen"><i :style="'width:'+item.percen"></i></span>
+                                    <span class="number flex-content">{{item.value}}</span>
+                                </p>
+                             </li>
+                         </ul>
+                         <ul class="rowSixFrBom">
+                             <li>                             
+                                <i class="svg-i"><svg-icon icon-class="home_num" /></i>
+                                <p><span>同比增长量</span><strong :class="currentCluesData.sametimeGrowth>0?'':'falling'">{{Math.abs(currentCluesData.sametimeGrowth)}}<i>{{currentCluesData.sametimeGrowth>0?'↑':'↓'}}</i></strong></p>
+                             </li>
+                             <li>                             
+                                <i class="svg-i"><svg-icon icon-class="home_rate" /></i>
+                                <p><span>同比增长率</span><strong :class="currentCluesData.sametimeGrowth>0?'':'falling'">{{currentCluesData.sametimeRate}}<i>{{currentCluesData.sametimeGrowth>0?'↑':'↓'}}</i></strong></p>
+                             </li>
+                         </ul>
+                    </div>
+               </div>
+          </div>
+          <div class="flex-box flex-wrap rowFour" v-if="(currentCluesData.userscoreNum&&currentCluesData.userscoreNum.length>0)||(currentCluesData.yearuserscoreNum&&currentCluesData.yearuserscoreNum.length>0)">
+               <div class="rowFourOne" v-if="currentCluesData.userscoreNum&&currentCluesData.userscoreNum.length>0">
+                    <h3>月成交Top5</h3>
+                    <ul class="rowFourOneUl">
+                        <li class="flex-box flex-wrap" v-for="(item,index) in currentCluesData.userscoreNum" :key='index'>
+                             <p class="rowFourOneUlNum"><span>{{index+1}}</span></p>
+                             <p class="rowFourOneUlPic" v-if="item.headimg"><img v-bind:src="item.headimg" alt=""></p>
+                             <p class="rowFourOneUlPic" v-else><img src="../../../assets/clinchIcon01.png" alt=""></p>
+                             <div class="rowFourOneUlBox flex-content">
+                                  <p class="infoData">
+                                    {{item.username}}
+                                    <span class="group">{{item.groupname}}</span>
+                                    <span class="groupNum">{{item.number}}<i v-if="item.Growth!=0" :class="item.growthClass?'rising':'falling'">{{item.Growth}}</i></span>
+                                  </p>
+                                  <p class="percen"><span :style="'width:'+item.percen+'%'"></span></p>
+                             </div>
+                        </li>
+                    </ul>
+               </div>
+               <div class="rowFourTwo flex-content" v-if="currentCluesData.yearuserscoreNum&&currentCluesData.yearuserscoreNum.length>0">
+                    <h3>年度成交Top5</h3>
+                    <ul class="rowFourTwoUl">
+                        <li class="flex-box flex-wrap" v-for="(item,index) in currentCluesData.yearuserscoreNum" :key='index'>
+                             <div class="rowFourTwoUlNum">
+                                <p v-if="item.headimg"><img v-bind:src="item.headimg" alt=""></p>
+                                <p v-else><img src="../../../assets/clinchIcon01.png" alt=""></p>
+                                <span>TOP{{index+1}}</span>
+                             </div>
+                             <p class="rowFourTwoUlName">
+                                {{item.username}}
+                                <span>{{item.groupname}}</span>
+                             </p>
+                             <div class="rowFourTwoUlPercen flex-content">
+                                  <p class="percenTop">成交积分<span>{{item.number}}</span></p>
+                                  <p class="percenBom"><span></span></p>
+                             </div>
+                             <div class="rowFourTwoUlScore" v-if="item.anumber>0">
+                                  <p class="ScoreTop"><span>{{item.anumber}}</span></p>
+                                  <p class="ScoreBom">百万成交</p>
+                             </div>
+                             <div class="rowFourTwoUlScore" v-else>
+                                  <p class="ScoreLine">——</p>
+                             </div>
+                             <div class="rowFourTwoUlarea">
+                                <div :id="`yearuserChart${index}`" class="chart-canva"></div>
+                             </div>
+                        </li>
+                    </ul>
+               </div>
+          </div>
         </div>
       </div>
     </el-card>
@@ -321,8 +440,8 @@ import { mapGetters } from 'vuex';
 import Cookies from 'js-cookie'
 import DataSet from '@antv/data-set';
 import { Chart } from '@antv/g2';
-import * as G2 from '@antv/g2';
-import { Bullet,RadialBar,Liquid,Line,Area,measureTextWidth,Pie,Bar,Column,Mix} from '@antv/g2plot';
+import { isObject, deepMix } from '@antv/util';
+import { Bullet,RadialBar,Liquid,Line,Area,measureTextWidth,Pie,Bar,Column,Mix,P,G2} from '@antv/g2plot';
 export default {
   name: 'Home',
   data() {
@@ -334,6 +453,7 @@ export default {
       ScoreTime:'',
       DaytargetTime:'',
       DaytargetTodayTime:'',
+      TodayMonth:'',//默认本月
       targetScore:{
         daymaxnumber:[],
         historymaxnumber:[],
@@ -367,6 +487,18 @@ export default {
         checkedDeparData:[],
         cluesRegionData:[],//地图
         topTenRegionData:[],//前10
+        yeartongArr:[],//年度询盘对比
+        registerArr:[],//年度同期询盘对比
+        registerGrowth:'',//同比增长量
+        registerRate:'',//同比增长率
+        yearscoretongArr:[],//年度成交积分对比
+        sametimeArr:[],//年度同期成交积分对比
+        sametimeGrowth:'',//同比增长量
+        sametimeRate:'',//同比增长率
+        yeardepartscoreArr:[],//中文年度成交积分
+        totalNumscore:'',//总成交积分
+        departmentCost:[],//部门成本
+        costAverage:[],//成本均价排行
       },
       ScoreData:{
         allscore:'',
@@ -381,33 +513,6 @@ export default {
       salesmanData:{},
       newsList:[],
       pickerRangeOptions: this.$pickerRangeOptions,
-      // pickerRangeOptions: {
-      //   shortcuts: [{
-      //     text: '最近一周',
-      //     onClick(picker) {
-      //       const end = new Date();
-      //       const start = new Date();
-      //       start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
-      //       picker.$emit('pick', [start, end]);
-      //     }
-      //   }, {
-      //     text: '最近一个月',
-      //     onClick(picker) {
-      //       const end = new Date();
-      //       const start = new Date();
-      //       start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-      //       picker.$emit('pick', [start, end]);
-      //     }
-      //   }, {
-      //     text: '最近三个月',
-      //     onClick(picker) {
-      //       const end = new Date();
-      //       const start = new Date();
-      //       start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-      //       picker.$emit('pick', [start, end]);
-      //     }
-      //   }]
-      // },
       mapDate:[],
       languageList:[
         {name:"中文",label:"Module_cnStat",isOn:false},
@@ -424,6 +529,11 @@ export default {
       zugroupdayColumn:null,//日询盘
       zugoupmonthColumn:null,//月询盘
       useryearChart:null,
+      yeartongData:null,//年度询盘对比
+      registerData:null,//年度同期询盘对比
+      yearscoretongData:null,//年度成交积分对比
+      yeardepartscoreData:null,//中文年度成交积分
+      costAverageData:null,//成本均价排行
 
       loading:false,
       clickID:'',
@@ -594,9 +704,9 @@ export default {
               //部门日目标
               $this.depDayTarget = response.groupcount;
               // 获取部门数据
-              if(response.readart&&response.readart.length>0){
+              if(response.readdepart&&response.readdepart.length>0){
                 var DeparData=[];
-                response.readart.forEach(function(item,index){
+                response.readdepart.forEach(function(item,index){
                     var itemDate={};
                     itemDate.value=item.id;
                     itemDate.label=item.name;
@@ -710,7 +820,7 @@ export default {
                     targetDataLine.push(itemDataLine,itemDatahisLine);
                   });
                   $this.currentCluesData.targetDataLine = targetDataLine;
-                  $this.currentCluesData.targetData = departTargetNum.reverse();                  
+                  $this.currentCluesData.targetData = departTargetNum.reverse();
                   if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
                     $this.radialBarPlot.chart.destroy();
                   }
@@ -729,7 +839,7 @@ export default {
     },
     // 英文部门日目标
     enDaytarget(){
-      var $this = this;      
+      var $this = this;
       var resultData = {};
       if($this.DaytargetTime&&$this.DaytargetTime!=''){
         resultData.time=$this.DaytargetTime;
@@ -744,9 +854,9 @@ export default {
               //部门日目标
               $this.depDayTarget = response.groupcount;
               // 获取部门数据
-              if(response.readart&&response.readart.length>0){
+              if(response.readdepart&&response.readdepart.length>0){
                 var DeparData=[];
-                response.readart.forEach(function(item,index){
+                response.readdepart.forEach(function(item,index){
                     var itemDate={};
                     itemDate.value=item.id;
                     itemDate.label=item.name;
@@ -801,7 +911,7 @@ export default {
                         targetDataLine.push(itemDataLine,itemDatahisLine);
                       });
                       $this.currentCluesData.targetDataLine = targetDataLine;
-                      $this.currentCluesData.targetData = departTargetNum.reverse();                     
+                      $this.currentCluesData.targetData = departTargetNum.reverse();
                       if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
                         $this.radialBarPlot.chart.destroy();
                       }  
@@ -854,7 +964,7 @@ export default {
                     targetDataLine.push(itemDataLine,itemDatahisLine);
                   });
                   $this.currentCluesData.targetDataLine = targetDataLine;
-                  $this.currentCluesData.targetData = departTargetNum.reverse();                     
+                  $this.currentCluesData.targetData = departTargetNum.reverse();
                   if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
                     $this.radialBarPlot.chart.destroy();
                   }   
@@ -892,43 +1002,39 @@ export default {
       if($this.zugoupmonthColumn&&!$this.zugoupmonthColumn.chart.destroyed){
         $this.zugoupmonthColumn.chart.destroy();
       }
+      if($this.yeartongData&&!$this.yeartongData.chart.destroyed){
+        $this.yeartongData.chart.destroy();
+      }
+      if($this.registerData&&!$this.registerData.chart.destroyed){
+        $this.registerData.chart.destroy();
+      }
+      if($this.yearscoretongData&&!$this.yearscoretongData.chart.destroyed){
+        $this.yearscoretongData.chart.destroy();
+      }
       $this.clearData();
       $this.$store.dispatch("api/cnCluesStatDataAction", resultData).then((response) => {
         if (response) {
           //console.log(response,'/hxindex/Api/chinacount');
           if (response.status) {
-            // 获取部门数据
-            if(response.readart&&response.readart.length>0){
-              var DeparData=[];
-              response.readart.forEach(function(item,index){
-                  var itemDate={};
-                  itemDate.value=item.id;
-                  itemDate.label=item.name;
-                  itemDate.disabled=false;
-                  DeparData.push(itemDate);
-              });
-              $this.currentCluesData.DeparData=DeparData;
-            }
             // 日目标统计
             $this.targetScore.daymaxnumber= response.daymaxnumber[0];
             $this.targetScore.historymaxnumber = response.historymaxnumber[0];
             // 日询盘
+            var MaxValue='';
+            var MaxArr=[response.alltodaynumber,response.daytargetnumber,response.alllastdaynumber];
+            MaxArr.forEach(function(item,index){
+               if(MaxValue<item){
+                 MaxValue=item;
+               }
+            });
             $this.currentCluesData.alltodaynumber = response.alltodaynumber;
-            $this.currentCluesData.alltodaynumberPercent=response.alltodaynumber/response.daytargetnumber*100;
+            $this.currentCluesData.alltodaynumberPercent=response.alltodaynumber/MaxValue*100;
             $this.currentCluesData.alllastdaynumber = response.alllastdaynumber;
-            $this.currentCluesData.alllastdaynumberPercent=response.alllastdaynumber/response.daytargetnumber*100;
+            $this.currentCluesData.alllastdaynumberPercent=response.alllastdaynumber/MaxValue*100;
             // 月询盘
             $this.currentCluesData.allmonthnumber = response.allmonthnumber;
             $this.currentCluesData.monthGrowth=response.allmonthnumber-response.lastallnumber;
             $this.currentCluesData.monthGrowthTxt=Math.abs(response.allmonthnumber-response.lastallnumber);
-            // 月询盘面积图数据
-            if(response.monthtong&&response.monthtong.length>0){
-              response.monthtong.forEach(function(item,index){
-                 item.date=item.date.split('-')[1]
-              });
-              $this.currentCluesData.monthtongArr=response.monthtong;//月询盘数据
-            }
-            $this.monthtongChart();
             // 中文成交统计数据
             $this.getCnDepartScore();
             // 近30天询盘统计
@@ -953,6 +1059,66 @@ export default {
             $this.currentCluesData.avgChartNum = response.tongavgnumber;
             $this.currentCluesData.targetNum = response.daytargetnumber;
             $this.drawAreaTrendChart();
+            // 年度询盘对比
+            if(response.yeartong&&response.yeartong.length>0){
+              // 月询盘面积图数据
+              var monthtongArr=[];
+              if(response.yeartong.length>=6){
+                var monthtongList=[]
+                monthtongList=response.yeartong.slice(-6);
+                monthtongList.forEach(function(item,index){
+                  var monthtongObj={};
+                  monthtongObj.date=item.date.split('-')[1];
+                  monthtongObj.xunnumber=item.xunnumber;
+                  monthtongArr.push(monthtongObj);
+                });
+                $this.currentCluesData.monthtongArr=monthtongArr;
+                $this.monthtongChart();
+              }else{
+                response.yeartong.forEach(function(item,index){
+                  var monthtongObj={};
+                  monthtongObj.date=item.date.split('-')[1];
+                  monthtongObj.xunnumber=item.xunnumber;
+                  monthtongArr.push(monthtongObj);
+                });
+                $this.currentCluesData.monthtongArr=monthtongArr;
+                $this.monthtongChart();
+              }
+              // 年度询盘对比
+              var yeartongArr=[];
+              var registerArr=[];
+              var registerGrowth='';
+              var registerRate='';
+              response.yeartong.forEach(function(item,index){
+                  var yeartongObj={};
+                  var lastyeartongObj={};
+                  var registerObj={};
+                  var lastregisterObj={};
+                  yeartongObj.month=item.date.split('-')[1]+'月';
+                  yeartongObj.value=item.xunnumber;
+                  yeartongObj.year=item.date.split('-')[0];
+                  lastyeartongObj.month=item.lastdate.split('-')[1]+'月';
+                  lastyeartongObj.value=item.lastxunnumber;
+                  lastyeartongObj.year=item.lastdate.split('-')[0];
+                  //当月询盘对比
+                  if($this.TodayMonth==item.date.split('-')[1]){
+                    registerObj.year=item.date.split('-')[0];
+                    registerObj.value=item.xunnumber;
+                    lastregisterObj.year=item.lastdate.split('-')[0];
+                    lastregisterObj.value=item.lastxunnumber;
+                    registerArr.push(registerObj,lastregisterObj);
+                    registerGrowth=item.xunnumber-item.lastxunnumber;
+                    registerRate=(item.xunnumber/item.lastxunnumber*100).toFixed(2)+'%';
+                  }
+                  yeartongArr.push(yeartongObj,lastyeartongObj);
+              });
+              $this.currentCluesData.yeartongArr=yeartongArr;
+              $this.currentCluesData.registerArr=registerArr;
+              $this.currentCluesData.registerGrowth=registerGrowth;
+              $this.currentCluesData.registerRate=registerRate;
+              $this.yeartongChart();
+              $this.registerChart();
+            };
             // 小组日成绩
             if(response.zugroupday!=''&&response.zugroupday!=null){
               if(response.zugroupday.length>0&&response.zugroupday){
@@ -1042,6 +1208,75 @@ export default {
                 }
             }else{
                   $this.currentCluesData.zusuercountArr=[];
+            }
+            // 年度成交积分对比
+            if(response.yearscoretong&&response.yearscoretong.length>0){
+              var yearscoretongArr=[];
+              var sametimeArr=[];
+              var sametimeGrowth='';
+              var sametimeRate='';
+              response.yearscoretong.forEach(function(item,index){
+                  var yeartongObj={};
+                  var lastyeartongObj={};
+                  var registerObj={};
+                  var lastregisterObj={};
+                  yeartongObj.month=item.date.split('-')[1]+'月';
+                  if ($this.isFloat(Number(item.score))) {
+                     yeartongObj.value=Number(item.score).toFixed(2);
+                  } else {
+                     yeartongObj.value=item.score;
+                  }
+                  yeartongObj.year=item.date.split('-')[0];
+                  lastyeartongObj.month=item.lastdate.split('-')[1]+'月';
+                  if ($this.isFloat(Number(item.lastscore))) {
+                     lastyeartongObj.value=Number(item.lastscore).toFixed(2);
+                  } else {
+                     lastyeartongObj.value=item.lastscore;
+                  }
+                  lastyeartongObj.year=item.lastdate.split('-')[0];
+                  //当月询盘对比
+                  if($this.TodayMonth==item.date.split('-')[1]){
+                    registerObj.year=item.date.split('-')[0];
+                    if ($this.isFloat(Number(item.score))) {
+                        registerObj.value=Number(item.score).toFixed(2);
+                    } else {
+                        registerObj.value=Number(item.score);
+                    }
+                    lastregisterObj.year=item.lastdate.split('-')[0];
+                    if ($this.isFloat(Number(item.lastscore))) {
+                        lastregisterObj.value=Number(item.lastscore).toFixed(2);
+                    } else {
+                        lastregisterObj.value=Number(item.lastscore);
+                    }
+                    var MaxValue='';
+                    if(Number(item.score)>=Number(item.lastscore)){
+                      MaxValue=Number(item.score);
+                    }else{
+                      MaxValue=Number(item.lastscore);
+                    }
+                    if(MaxValue==0){
+                      lastregisterObj.percen='0%';
+                      registerObj.percen='0%';
+                    }else{
+                        lastregisterObj.percen=(Number(item.lastscore)/MaxValue*100).toFixed(2)+'%';
+                        registerObj.percen=(Number(item.score)/MaxValue*100).toFixed(2)+'%';
+                    }
+                    sametimeArr.push(registerObj,lastregisterObj);
+                    
+                    sametimeGrowth=Number(item.score)-Number(item.lastscore);
+                    if(Number(item.lastscore)==0){
+                      sametimeRate=Number(item.score).toFixed(2)+'%';
+                    }else{
+                      sametimeRate=(Number(item.score)/Number(item.lastscore)*100).toFixed(2)+'%';
+                    }
+                  }
+                  yearscoretongArr.push(yeartongObj,lastyeartongObj);
+              });
+              $this.currentCluesData.yearscoretongArr=yearscoretongArr;
+              $this.currentCluesData.sametimeArr=sametimeArr;
+              $this.currentCluesData.sametimeGrowth=sametimeGrowth;
+              $this.currentCluesData.sametimeRate=sametimeRate;
+              $this.yearscoretongChart();
             }
             if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){ 
                 if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
@@ -1226,6 +1461,15 @@ export default {
       if($this.zugoupmonthColumn&&!$this.zugoupmonthColumn.chart.destroyed){
         $this.zugoupmonthColumn.chart.destroy();
       }
+      if($this.yeartongData&&!$this.yeartongData.chart.destroyed){
+        $this.yeartongData.chart.destroy();
+      }
+      if($this.registerData&&!$this.registerData.chart.destroyed){
+        $this.registerData.chart.destroy();
+      }
+      if($this.yearscoretongData&&!$this.yearscoretongData.chart.destroyed){
+        $this.yearscoretongData.chart.destroy();
+      }
       $this.clearData();
       $this.$store.dispatch("api/enCluesStatDataAction", resultData).then((response) => {
         if (response) {
@@ -1250,16 +1494,8 @@ export default {
             $this.currentCluesData.allmonthnumber = response.allmonthnumber;
             $this.currentCluesData.monthGrowth=response.allmonthnumber-response.lastallnumber;
             $this.currentCluesData.monthGrowthTxt=Math.abs(response.allmonthnumber-response.lastallnumber);
-            // 月询盘面积图数据
-            if(response.monthtong&&response.monthtong.length>0){
-              response.monthtong.forEach(function(item,index){
-                 item.date=item.date.split('-')[1]
-              });
-              $this.currentCluesData.monthtongArr=response.monthtong;//月询盘数据
-            }
-            $this.monthtongChart();
             // 英文成交统计数据
-            $this.getEnDepartScore();
+            $this.getCnDepartScore();
             // 近30天询盘统计
             var tongArr=[];
             response.tong.forEach(function(item,index){
@@ -1274,6 +1510,66 @@ export default {
             $this.currentCluesData.avgChartNum = response.tongavgnumber;
             $this.currentCluesData.targetNum = response.daytargetnumber;
             $this.drawAreaTrendChart();
+            // 年度询盘对比
+            if(response.yeartong&&response.yeartong.length>0){
+              // 月询盘面积图数据
+              var monthtongArr=[];
+              if(response.yeartong.length>=6){
+                var monthtongList=[]
+                monthtongList=response.yeartong.slice(-6);
+                monthtongList.forEach(function(item,index){
+                  var monthtongObj={};
+                  monthtongObj.date=item.date.split('-')[1];
+                  monthtongObj.xunnumber=item.xunnumber;
+                  monthtongArr.push(monthtongObj);
+                });
+                $this.currentCluesData.monthtongArr=monthtongArr;
+                $this.monthtongChart();
+              }else{
+                response.yeartong.forEach(function(item,index){
+                  var monthtongObj={};
+                  monthtongObj.date=item.date.split('-')[1];
+                  monthtongObj.xunnumber=item.xunnumber;
+                  monthtongArr.push(monthtongObj);
+                });
+                $this.currentCluesData.monthtongArr=monthtongArr;
+                $this.monthtongChart();
+              }
+              // 年度询盘对比
+              var yeartongArr=[];
+              var registerArr=[];
+              var registerGrowth='';
+              var registerRate='';
+              response.yeartong.forEach(function(item,index){
+                  var yeartongObj={};
+                  var lastyeartongObj={};
+                  var registerObj={};
+                  var lastregisterObj={};
+                  yeartongObj.month=item.date.split('-')[1]+'月';
+                  yeartongObj.value=item.xunnumber;
+                  yeartongObj.year=item.date.split('-')[0];
+                  lastyeartongObj.month=item.lastdate.split('-')[1]+'月';
+                  lastyeartongObj.value=item.lastxunnumber;
+                  lastyeartongObj.year=item.lastdate.split('-')[0];
+                  //当月询盘对比
+                  if($this.TodayMonth==item.date.split('-')[1]){
+                    registerObj.year=item.date.split('-')[0];
+                    registerObj.value=item.xunnumber;
+                    lastregisterObj.year=item.lastdate.split('-')[0];
+                    lastregisterObj.value=item.lastxunnumber;
+                    registerArr.push(registerObj,lastregisterObj);
+                    registerGrowth=item.xunnumber-item.lastxunnumber;
+                    registerRate=(item.xunnumber/item.lastxunnumber*100).toFixed(2)+'%';
+                  }
+                  yeartongArr.push(yeartongObj,lastyeartongObj);
+              });
+              $this.currentCluesData.yeartongArr=yeartongArr;
+              $this.currentCluesData.registerArr=registerArr;
+              $this.currentCluesData.registerGrowth=registerGrowth;
+              $this.currentCluesData.registerRate=registerRate;
+              $this.yeartongChart();
+              $this.registerChart();
+            };
             // 小组日成绩
             if(response.zusuercount!=''&&response.zusuercount!=null){
               if(response.zugroupday.length>0&&response.zugroupday){
@@ -1298,8 +1594,8 @@ export default {
                 $this.currentCluesData.zugroupdayArr=[];
               }   
             }else{
-              $this.currentCluesData.zugroupdayArr=[];
-            }         
+                  $this.currentCluesData.zugroupdayArr=[];
+            }      
             // 小组月成绩
             if(response.zusuercount!=''&&response.zusuercount!=null){
               if(response.zugoupmonth.length>0&&response.zugoupmonth){
@@ -1364,6 +1660,75 @@ export default {
             }else{
               $this.currentCluesData.zusuercountArr=[];
             }
+            // 年度成交积分对比
+            if(response.yearscoretong&&response.yearscoretong.length>0){
+              var yearscoretongArr=[];
+              var sametimeArr=[];
+              var sametimeGrowth='';
+              var sametimeRate='';
+              response.yearscoretong.forEach(function(item,index){
+                  var yeartongObj={};
+                  var lastyeartongObj={};
+                  var registerObj={};
+                  var lastregisterObj={};
+                  yeartongObj.month=item.date.split('-')[1]+'月';
+                  if ($this.isFloat(Number(item.score))) {
+                     yeartongObj.value=Number(item.score).toFixed(2);
+                  } else {
+                     yeartongObj.value=item.score;
+                  }
+                  yeartongObj.year=item.date.split('-')[0];
+                  lastyeartongObj.month=item.lastdate.split('-')[1]+'月';
+                  if ($this.isFloat(Number(item.lastscore))) {
+                     lastyeartongObj.value=Number(item.lastscore).toFixed(2);
+                  } else {
+                     lastyeartongObj.value=item.lastscore;
+                  }
+                  lastyeartongObj.year=item.lastdate.split('-')[0];
+                  //当月询盘对比
+                  if($this.TodayMonth==item.date.split('-')[1]){
+                    registerObj.year=item.date.split('-')[0];
+                    if ($this.isFloat(Number(item.score))) {
+                        registerObj.value=Number(item.score).toFixed(2);
+                    } else {
+                        registerObj.value=Number(item.score);
+                    }
+                    lastregisterObj.year=item.lastdate.split('-')[0];
+                    if ($this.isFloat(Number(item.lastscore))) {
+                        lastregisterObj.value=Number(item.lastscore).toFixed(2);
+                    } else {
+                        lastregisterObj.value=Number(item.lastscore);
+                    }
+                    var MaxValue='';
+                    if(Number(item.score)>=Number(item.lastscore)){
+                      MaxValue=Number(item.score);
+                    }else{
+                      MaxValue=Number(item.lastscore);
+                    }
+                    if(MaxValue==0){
+                      lastregisterObj.percen='0%';
+                      registerObj.percen='0%';
+                    }else{
+                        lastregisterObj.percen=(Number(item.lastscore)/MaxValue*100).toFixed(2)+'%';
+                        registerObj.percen=(Number(item.score)/MaxValue*100).toFixed(2)+'%';
+                    }
+                    sametimeArr.push(registerObj,lastregisterObj);
+                    
+                    sametimeGrowth=Number(item.score)-Number(item.lastscore);
+                    if(Number(item.lastscore)==0){
+                      sametimeRate=Number(item.score).toFixed(2)+'%';
+                    }else{
+                      sametimeRate=(Number(item.score)/Number(item.lastscore)*100).toFixed(2)+'%';
+                    }
+                  }
+                  yearscoretongArr.push(yeartongObj,lastyeartongObj);
+              });
+              $this.currentCluesData.yearscoretongArr=yearscoretongArr;
+              $this.currentCluesData.sametimeArr=sametimeArr;
+              $this.currentCluesData.sametimeGrowth=sametimeGrowth;
+              $this.currentCluesData.sametimeRate=sametimeRate;
+              $this.yearscoretongChart();
+            }
             if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){ 
                 if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
                     if(response.userscore.length>0&&response.userscore){
@@ -1374,7 +1739,7 @@ export default {
                         itemData.username = item.username;
                         itemData.groupname = item.groupname;
                         itemData.headimg = item.headimg;
-                        itemData.number = item.number;                        
+                        itemData.number = item.number;
                         if(item.lastnumber){
                           itemData.Growth = Math.abs(item.number-item.lastnumber.number);
                           if(item.number-item.lastnumber.number>0){
@@ -1454,7 +1819,7 @@ export default {
                     itemData.username = item.username;
                     itemData.groupname = item.groupname;
                     itemData.headimg = item.headimg;
-                    itemData.number = item.number;                    
+                    itemData.number = item.number;
                     if(item.lastnumber){
                       itemData.Growth = Math.abs(item.number-item.lastnumber.number);
                       if(item.number-item.lastnumber.number>0){
@@ -1843,7 +2208,7 @@ export default {
               if(index<10){
                 topTenRegionData.push(item);
               }
-            });            
+            });
             topTenRegionData.sort(function(a, b) {
                 var value1 = a.number;
                 var value2 = b.number;
@@ -2188,6 +2553,373 @@ export default {
           }
       }
     },
+    //判断浮点数
+    isFloat(num){
+      if (!isNaN(num) && num % 1 !== 0) {        
+        return true;
+      } else {       
+        return false;
+      } 
+    },
+    // 成本均价排行
+    costAverageChart(){
+      var $this = this;
+      if($this.costAverageData&&!$this.costAverageData.chart.destroyed){
+        $this.costAverageData.changeData($this.currentCluesData.costAverage);
+      }else{
+        const costAverageData = new Column('costAverageChart', {
+          data:$this.currentCluesData.costAverage,
+          xField: 'departname',
+          yField: 'avgallmoney',
+          height:347,
+          color: '#81a8f1',
+          label: {
+            position: 'top', 
+            // 配置样式
+            style: {
+              fill: '#333333',
+              fontSize:13
+            },
+          },
+          xAxis: {
+            label: {
+              autoHide: true,
+              autoRotate: false,
+            },
+          },
+          meta: {
+            avgallmoney: {
+              alias: '成本均价',
+            },
+          },
+          statistic: null,
+          annotations: [
+            {
+              type: 'image',
+              src: 'https://gw.alipayobjects.com/mdn/rms_2274c3/afts/img/A*ELYbTIVCgPoAAAAAAAAAAABkARQnAQ',
+              /** 位置 */
+              position: ['50%', '50%'],
+              /** 图形样式属性 */
+              style: {
+                width: 50,
+                height: 50,
+              },
+              /** x 方向的偏移量 */
+              offsetX: -25,
+              /** y 方向的偏移量 */
+              offsetY: 40,
+            },
+          ],
+        });
+
+        $this.costAverageData = costAverageData;
+        costAverageData.render();
+      }
+    },
+    // 中文年度成交积分
+    yeardepartscoreChart(){
+      var $this = this;
+      if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
+        $this.yeardepartscoreData.changeData($this.currentCluesData.yeardepartscoreArr);
+      }else{        
+        const yeardepartscoreData = new Pie('yeardepartscoreChart', {
+          appendPadding: 10,
+          data:$this.currentCluesData.yeardepartscoreArr,
+          angleField: 'score',
+          colorField: 'departname',
+          height:355,
+          radius:0.7,
+          innerRadius: 0.6,
+          meta: {
+            score: {
+              formatter: (v) => `${v}`,
+            },
+          },
+          label: {
+            type: 'inner',
+            offset: '-50%',
+            autoRotate: false,
+            style: { textAlign: 'center' },
+            formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+          },
+          legend: {
+            position: 'left',  
+            itemName: {
+              formatter(text, item, index) {
+                if (
+                  $this.currentCluesData.yeardepartscoreArr &&
+                  $this.currentCluesData.yeardepartscoreArr[index] &&
+                  $this.currentCluesData.yeardepartscoreArr[index].score &&
+                  $this.currentCluesData.yeardepartscoreArr[index].departname
+                ) {
+                  return (
+                    text +
+                    '：' +
+                    $this.currentCluesData.yeardepartscoreArr[index].score.toFixed(2)
+                  )
+                }
+                return
+              }
+            }
+          },
+          statistic: {
+            title: false,
+            content: {
+              style: {
+                fontSize:'14',
+                whiteSpace: 'pre-wrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              },
+              content: '部门\n成交占比',
+            },
+          },
+          // 添加 中心统计文本 交互
+          interactions: [
+            { type: 'element-selected' },
+            { type: 'element-active' },
+          ],
+        });
+        $this.yeardepartscoreData = yeardepartscoreData;
+        yeardepartscoreData.render();
+      }
+    },
+    // 年度同期询盘对比
+    registerChart(){
+      var $this = this;
+      if($this.registerData&&!$this.registerData.chart.destroyed){
+        $this.registerData.changeData($this.currentCluesData.registerArr);
+      }else{
+        // 自定义图形
+        G2.registerShape('interval', 'registerData', {
+          draw(info, container) {
+            const { points, style, defaultStyle = {} } = info;
+            let path = [
+              ['M', points[0].x, points[0].y],
+              ['L', (points[1].x + points[2].x) / 2, points[1].y],
+              ['L', points[3].x, points[3].y],
+              ['Z'],
+            ];
+            path = this.parsePath(path);
+            return container.addShape('path', {
+              attrs: {
+                path,
+                ...defaultStyle,
+                ...style,
+              },
+            });
+          },
+        });
+        // 1. 定义配置
+        const defaultOptions = {
+          columnWidthRatio: 1.2,
+        };
+        // 2. adaptor 实现
+        function adaptor(params) {
+          const { chart, options } = params;
+          const { data, xField, yField, columnWidthRatio, columnStyle, theme } = options;
+          // 数据
+          chart.data($this.currentCluesData.registerArr);
+          // 几何图形
+          const i = chart
+            .interval()
+            .position(`${xField}*${yField}`)
+            .shape('registerData')
+            .style(`${xField}*${yField}`, (x, y) => {
+              return typeof columnStyle === 'function' ? columnStyle({ [xField]: x, [yField]: y }) : columnStyle;
+            });
+
+          // 设置重叠比率
+          chart.theme(
+            deepMix({}, isObject(theme) ? theme : G2.getTheme(theme), {
+              columnWidthRatio: columnWidthRatio,
+            })
+          );
+          const gap = (1 / data.length / 2) * columnWidthRatio;// 左右预留
+          chart.axis('value', false);
+          chart.scale({
+            year: {
+              range: [gap, 1 - gap],
+            },
+          });
+          return params;
+        }
+        // 3. G2Plot 上使用
+        const registerData = new P('registerChart',{
+            data:$this.currentCluesData.registerArr,
+            appendPadding: 16,
+            xField: 'year',
+            yField: 'value',
+            xAxis:false,
+            yAxis:false,
+            columnStyle: {
+              fillOpacity: 0.3,
+            },
+          },
+          adaptor,
+          defaultOptions
+        );// 引入上述的封装，或者降上述代码发包
+        $this.registerData = registerData;
+        registerData.render();
+      }
+    },
+    // 年度成交积分对比
+    yearscoretongChart(){
+      var $this = this;
+      if($this.currentCluesData.yearscoretongArr.length>0){
+          if($this.yearscoretongData&&!$this.yearscoretongData.chart.destroyed){
+            $this.yearscoretongData.changeData($this.currentCluesData.yearscoretongArr);
+          }else{
+            const yearscoretongData = new Line('yearscoretongChart', {
+              data:$this.currentCluesData.yearscoretongArr,
+              xField: 'month',
+              yField: 'value',
+              seriesField: 'year',
+              yAxis: {
+                label: {
+                  // 数值格式化为千分位
+                  formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+                },
+              },
+              seriesField: 'year',
+              color: ({ year }) => {
+                return year === '2020' ? '#fbd266' : '#6392ec';
+              },
+              lineStyle: ({ year }) => {
+                if (year === '2020') {
+                  return {
+                    lineDash: [4, 4],
+                    opacity: 1,
+                  };
+                }
+                return {
+                  opacity: 0.5,
+                };
+              },
+            });
+            $this.yearscoretongData = yearscoretongData;
+            yearscoretongData.render();
+            var hoverData = [];
+            yearscoretongData.on('tooltip:change', ev => {
+              hoverData=ev.data.items;
+            })
+            yearscoretongData.on('plot:click', ev => {
+              var clickData = [];
+              var sametimeGrowth='';
+              var sametimeRate='';
+              hoverData.forEach(function(item,index){
+                  var registerObj={};
+                  registerObj.year=item.data.year;
+                  if ($this.isFloat(Number(item.data.value))) {
+                      registerObj.value=Number(item.data.value).toFixed(2);
+                  } else {
+                      registerObj.value=Number(item.data.value);
+                  }
+                  clickData.push(registerObj);
+              });
+              var valOne=Number(clickData[0].value);
+              var valTwo=Number(clickData[1].value);
+              if(clickData[0].year>clickData[1].year){
+                  sametimeGrowth=valOne-valTwo;
+                  if(valTwo==0){
+                    sametimeRate=valOne.toFixed(2)+'%';
+                  }else{
+                    sametimeRate=(valOne/valTwo*100).toFixed(2)+'%';
+                  }
+              }else{
+                  sametimeGrowth=valTwo-valOne;
+                  if(valOne==0){
+                    sametimeRate=(valTwo).toFixed(2)+'%';
+                  }else{
+                    sametimeRate=(valTwo/valOne*100).toFixed(2)+'%';
+                  }
+              }
+              var MaxValue='';
+              if(valOne>=valTwo){
+                MaxValue=valOne;
+              }else{
+                MaxValue=valTwo;
+              }
+              clickData.forEach(function(item){
+                  if(MaxValue==0){
+                    item.percen='0%';
+                  }else{
+                    item.percen=(item.value/MaxValue*100).toFixed(2)+'%';
+                  }
+              });              
+              $this.currentCluesData.sametimeArr = clickData;
+              $this.currentCluesData.sametimeGrowth=sametimeGrowth;
+              $this.currentCluesData.sametimeRate=sametimeRate;
+              $this.registerChart();
+            });
+          }
+      }
+    },
+    // 年度询盘对比
+    yeartongChart(){
+      var $this = this;
+      if($this.currentCluesData.yeartongArr.length>0){
+          if($this.yeartongData&&!$this.yeartongData.chart.destroyed){
+            $this.yeartongData.changeData($this.currentCluesData.yeartongArr);
+          }else{
+            const yeartongData = new Line('yeartongChart', {
+              data:$this.currentCluesData.yeartongArr,
+              xField: 'month',
+              yField: 'value',
+              seriesField: 'year',
+              yAxis: {
+                label: {
+                  // 数值格式化为千分位
+                  formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+                },
+              },
+              seriesField: 'year',
+              color: ({ year }) => {
+                return year === '2020' ? '#fbd266' : '#6392ec';
+              },
+              lineStyle: ({ year }) => {
+                if (year === '2020') {
+                  return {
+                    lineDash: [4, 4],
+                    opacity: 1,
+                  };
+                }
+                return {
+                  opacity: 0.5,
+                };
+              },
+            });
+            $this.yeartongData = yeartongData;
+            yeartongData.render();
+            var hoverData = [];
+            yeartongData.on('tooltip:change', ev => {
+              hoverData=ev.data.items;
+            })
+            yeartongData.on('plot:click', ev => {
+              var clickData = [];
+              var registerGrowth='';
+              var registerRate='';
+              hoverData.forEach(function(item,index){
+                  var registerObj={};
+                  registerObj.year=item.data.year;
+                  registerObj.value=item.data.value;
+                  clickData.push(registerObj);
+              });
+              if(clickData[0].year>clickData[1].year){
+                  registerGrowth=clickData[0].value-clickData[1].value;
+                  registerRate=(clickData[0].value/clickData[1].value*100).toFixed(2)+'%';
+              }else{
+                  registerGrowth=clickData[1].value-clickData[0].value;
+                  registerRate=(clickData[1].value/clickData[0].value*100).toFixed(2)+'%';
+              }
+              $this.currentCluesData.registerArr = clickData;
+              $this.currentCluesData.registerGrowth=registerGrowth;
+              $this.currentCluesData.registerRate=registerRate;
+              $this.registerChart();
+            });
+          }
+      }
+    },
     // 日询盘
     zugroupdayChart(){
       var $this = this;
@@ -2265,6 +2997,12 @@ export default {
       }else{
         resultData.month='';
       }
+      var resUrl='';
+      if($this.language=="Module_cnStat"){
+        resUrl='api/departScoreAction';
+      }else{
+        resUrl='api/endepartScoreAction';
+      }  
       $this.$store.dispatch("api/departScoreAction", resultData).then((response) => {
           //console.log(response,'首页中文成交统计接口')
           if (response.status) {
@@ -2305,7 +3043,7 @@ export default {
                       itemDate.score=item.score;
                     }
                     departscoreArr.push(itemDate);
-                 });     
+                 });
                  departscoreArr.sort(function(a, b) {
                       var value1 = a.score;
                       var value2 = b.score;
@@ -2349,6 +3087,48 @@ export default {
                   $this.ScoreData.allsnumber=response.allsnumber;
                   $this.ScoreData.addallscore=response.allscore;
                   $this.ScoreData.addallsnumber=response.allsnumber;
+                  if(response.yeardepartscore&&response.yeardepartscore.length>0){
+                      var yeardepartscoreArr=[];
+                      var departmentCost=[];
+                      var costAverage=[];
+                      var totalNumscore='';
+                      response.yeardepartscore.forEach(function(item,index){
+                          var departscoreObj={};
+                          var departmentCostObj={};
+                          var costAverageObj={};
+                          departscoreObj.score=item.score;
+                          departscoreObj.departname=item.departname.replace('电商','');
+                          departscoreObj.percenter=item.percenter;
+                          totalNumscore=Number(totalNumscore)+Number(item.score);
+                          yeardepartscoreArr.push(departscoreObj);
+                          //部门成本
+                          departmentCostObj.departname=item.departname.replace('电商','');
+                          departmentCostObj.score=parseFloat(item.score).toFixed(2);
+                          departmentCostObj.allmoney=item.allmoney;
+                          departmentCostObj.avgallmoney=item.avgallmoney;
+                          departmentCostObj.moneyscore=item.moneyscore;
+                          departmentCostObj.personmoney=item.personmoney;
+                          departmentCostObj.paymoney=item.paymoney;
+                          departmentCostObj.personnumber=item.personnumber;
+
+                          departmentCost.push(departmentCostObj);
+
+                          costAverageObj.departname=item.departname.replace('电商','');
+                          costAverageObj.avgallmoney=item.avgallmoney;
+                          costAverage.push(costAverageObj);
+                      });
+                      console.log(yeardepartscoreArr,'yeardepartscoreArr');
+                      $this.currentCluesData.yeardepartscoreArr=yeardepartscoreArr;
+                      $this.currentCluesData.totalNumscore=totalNumscore.toFixed(2);
+                      $this.yeardepartscoreChart();
+                      //部门成本
+                      console.log(costAverage,'costAverage');
+                      $this.currentCluesData.costAverage=costAverage;
+                      //部门成本均价排行
+                      console.log(departmentCost,'departmentCost');
+                      $this.currentCluesData.departmentCost=departmentCost;
+                      $this.costAverageChart();
+                  }
                 }else{
                    if(response.departscore&&response.departscore.length>0){
                      var tolScore=0;
@@ -2401,6 +3181,45 @@ export default {
                   $this.ScoreData.allsnumber=response.allsnumber;
                   $this.ScoreData.addallscore=response.allscore;
                   $this.ScoreData.addallsnumber=response.allsnumber;
+                  if(response.yeardepartscore&&response.yeardepartscore.length>0){
+                      var yeardepartscoreArr=[];
+                      var departmentCost=[];
+                      var costAverage=[];
+                      var totalNumscore='';
+                      response.yeardepartscore.forEach(function(item,index){
+                          var departscoreObj={};
+                          var departmentCostObj={};
+                          var costAverageObj={};
+                          departscoreObj.score=item.score;
+                          departscoreObj.departname=item.departname.replace('电商','');
+                          departscoreObj.percenter=item.percenter;
+                          totalNumscore=Number(totalNumscore)+Number(item.score);
+                          yeardepartscoreArr.push(departscoreObj);
+                          //部门成本
+                          departmentCostObj.departname=item.departname.replace('电商','');
+                          departmentCostObj.score=parseFloat(item.score).toFixed(2);
+                          departmentCostObj.allmoney=item.allmoney;
+                          departmentCostObj.avgallmoney=item.avgallmoney;
+                          departmentCostObj.moneyscore=item.moneyscore;
+                          departmentCostObj.personmoney=item.personmoney;
+                          departmentCostObj.paymoney=item.paymoney;
+                          departmentCostObj.personnumber=item.personnumber;
+
+                          departmentCost.push(departmentCostObj);
+
+                          costAverageObj.departname=item.departname.replace('电商','');
+                          costAverageObj.avgallmoney=item.avgallmoney;
+                          costAverage.push(costAverageObj);
+                      });
+                      $this.currentCluesData.yeardepartscoreArr=yeardepartscoreArr;
+                      $this.currentCluesData.totalNumscore=totalNumscore.toFixed(2);
+                      $this.yeardepartscoreChart();
+                      //部门成本
+                      $this.currentCluesData.costAverage=costAverage;
+                      //部门成本均价排行
+                      $this.currentCluesData.departmentCost=departmentCost;
+                      $this.costAverageChart();
+                  }
               }
           } else {
             $this.$message({
@@ -2496,61 +3315,52 @@ export default {
                     }else{
                       $this.ScoreData.MaxValue=Maxgoodnumber*1.1;
                     }
+                  }                 
+                  if(response.yeardepartscore&&response.yeardepartscore.length>0){
+                      var yeardepartscoreArr=[];
+                      var departmentCost=[];
+                      var costAverage=[];
+                      var totalNumscore='';
+                      response.yeardepartscore.forEach(function(item,index){
+                          var departscoreObj={};
+                          var departmentCostObj={};
+                          var costAverageObj={};
+                          departscoreObj.score=item.score;
+                          departscoreObj.departname=item.departname.replace('电商','');
+                          departscoreObj.percenter=item.percenter;
+                          totalNumscore=Number(totalNumscore)+Number(item.score);
+                          yeardepartscoreArr.push(departscoreObj);
+                          //部门成本
+                          departmentCostObj.departname=item.departname.replace('电商','');
+                          departmentCostObj.score=parseFloat(item.score).toFixed(2);
+                          departmentCostObj.allmoney=item.allmoney;
+                          departmentCostObj.avgallmoney=item.avgallmoney;
+                          departmentCostObj.moneyscore=item.moneyscore;
+                          departmentCostObj.personmoney=item.personmoney;
+                          departmentCostObj.paymoney=item.paymoney;
+                          departmentCostObj.personnumber=item.personnumber;
+
+                          departmentCost.push(departmentCostObj);
+
+                          costAverageObj.departname=item.departname.replace('电商','');
+                          costAverageObj.avgallmoney=item.avgallmoney;
+                          costAverage.push(costAverageObj);
+                      });
+                      console.log(yeardepartscoreArr,'yeardepartscoreArr');
+                      $this.currentCluesData.yeardepartscoreArr=yeardepartscoreArr;
+                      $this.currentCluesData.totalNumscore=totalNumscore.toFixed(2);
+                      $this.yeardepartscoreChart();
+                      //部门成本
+                      console.log(costAverage,'costAverage');
+                      $this.currentCluesData.costAverage=costAverage;
+                      //部门成本均价排行
+                      console.log(departmentCost,'departmentCost');
+                      $this.currentCluesData.departmentCost=departmentCost;
+                      $this.costAverageChart();
                   }
-                  $this.ScoreData.allsnumber=response.allsnumber;
-                  $this.ScoreData.addallsnumber=response.allsnumber;
-                  $this.ScoreData.allsnumberPercen='';
-                }else{
-                   if(response.departscore&&response.departscore.length>0){
-                     var tolNumber=0;
-                     $this.currentCluesData.departID.forEach(function(item,index){
-                       response.departscore.forEach(function(items,indexs){
-                           if(item==items.id){
-                              if(items.snumber==null||items.snumber==0||items.snumber==''){
-                                items.snumber=0;
-                              }
-                              tolNumber=tolNumber+parseFloat(items.snumber);
-                           }
-                       });
-                     });
-                     $this.ScoreData.allsnumber=response.allsnumber;
-                     $this.ScoreData.addallsnumber=parseFloat(tolNumber).toFixed(2);
-                     $this.ScoreData.allsnumberPercen=(parseFloat(tolNumber)/response.allsnumber*100).toFixed(2)+'%';
-                   }
                 }
-              }else{
-                  if(response.departscore&&response.departscore.length>0){
-                    response.departscore.forEach(function(item){
-                        if(item.snumber==null||item.snumber==0||item.snumber==''){
-                          item.snumber=0;
-                        }
-                        if(item.goodnumber==null||item.goodnumber==0||item.goodnumber==''){
-                          item.goodnumber=0;
-                        }
-                        snumberArr.push(item.snumber);
-                        goodnumberArr.push(item.goodnumber);
-                    });
-                    snumberArr.forEach(function(item){
-                      if(item>Maxscore){
-                        Maxscore=item;
-                      }
-                    });
-                    goodnumberArr.forEach(function(item){
-                      if(item>Maxgoodnumber){
-                        Maxgoodnumber=item;
-                      }
-                    });
-                    if(Maxscore>Maxgoodnumber){
-                      $this.ScoreData.MaxValue=Maxscore*1.1;
-                    }else{
-                      $this.ScoreData.MaxValue=Maxgoodnumber*1.1;
-                    }
-                  }
-                  $this.ScoreData.allsnumber=response.allsnumber;
-                  $this.ScoreData.addallsnumber=response.allsnumber;
-                  $this.ScoreData.allsnumberPercen='';
               }
-          } else {
+          }else{
             $this.$message({
               showClose: true,
               message: response.info,
@@ -2562,11 +3372,7 @@ export default {
     // 成交统计月份选择
     monthChangeHandler(){
       var $this = this;
-      if($this.language=="Module_cnStat"){
-        $this.getCnDepartScore();
-      }else{
-        $this.getEnDepartScore();
-      }      
+      $this.getCnDepartScore();
     },
     // 成交统计月份选择
     DaytargetHandler(){
@@ -2614,7 +3420,7 @@ export default {
               if(index<10){
                 topTenRegionData.push(item);
               }
-            });           
+            });
             topTenRegionData.sort(function(a, b) {
                 var value1 = a.number;
                 var value2 = b.number;
@@ -2767,6 +3573,7 @@ export default {
         $this.mapDate = [monthDay,today];
         $this.thisMonth=date.getFullYear()+"-"+(date.getMonth()+1>9?date.getMonth()+1:'0'+(date.getMonth()+1));
         $this.DaytargetTodayTime=today;
+        $this.TodayMonth=date.getMonth()+1>9?date.getMonth()+1:'0'+(date.getMonth()+1);
     },
     renderStatistic(containerWidth, text, style) {
       const { width: textWidth, height: textHeight } = measureTextWidth(text, style);
@@ -2881,7 +3688,7 @@ export default {
         if($this.language!=language){
           $this.language = language;
           $this.cnEnActiveChange();
-          $this.currentCluesData.departID = [];    
+          $this.currentCluesData.departID = [];
           if($this.language=="Module_cnStat"){
             $this.currentCluesData.departName = "中文";
           }else{
@@ -2889,7 +3696,7 @@ export default {
           }
           $this.currentCluesData.DeparData=[];
 
-          var userlanguage = Cookies.get('language');      
+          var userlanguage = Cookies.get('language');
           userlanguage = JSON.parse(userlanguage);
           userlanguage.language=$this.language;
           userlanguage = JSON.stringify(userlanguage);

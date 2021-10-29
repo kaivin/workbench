@@ -90,6 +90,26 @@
                               >
                               </el-table-column>
                               <el-table-column
+                              prop="allmoney"
+                              label="总成本"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="personmoney"
+                              label="人力成本"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="paymoney"
+                              label="付费成本"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="personnumber"
+                              label="推广人数"
+                              >
+                              </el-table-column>
+                              <el-table-column
                                 v-if="(menuButtonPermit.indexOf('Compare_edit')||menuButtonPermit.indexOf('Compare_delete'))"
                                 :width="operationsWidth"
                                 align="center"
@@ -195,6 +215,30 @@
                   </el-form-item>
               </div>
           </div>
+          <div class="item-form-group">
+              <div class="item-form">
+                  <el-form-item label="总成本：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.allmoney"></el-input>
+                  </el-form-item>
+              </div>
+              <div class="item-form">
+                  <el-form-item label="人力成本：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.personmoney"></el-input>
+                  </el-form-item>
+              </div>
+          </div>
+          <div class="item-form-group">
+              <div class="item-form">
+                  <el-form-item label="付费成本：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.paymoney"></el-input>
+                  </el-form-item>
+              </div>
+              <div class="item-form">
+                  <el-form-item label="推广人数：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.personnumber"></el-input>
+                  </el-form-item>
+              </div>
+          </div>
         </el-form>
         <template #footer>
           <span class="dialog-footer">
@@ -223,13 +267,17 @@ export default {
         id:0,
         dept_id:"",
         mtime:"",
-        level:"",
         snumber:"",
         score:"",
+        level:"",
         passnumber:"",
         mediumnumber:"",
         goodnumber:"",
         a_number:"",
+        allmoney:"",
+        personmoney:"",
+        paymoney:"",
+        personnumber:"",
       },
       pageSizeList:[15,30,60,120],
       totalDataNum:0,
@@ -636,6 +684,10 @@ export default {
       $this.dialogForm.mediumnumber = row.mediumnumber;
       $this.dialogForm.goodnumber = row.goodnumber;
       $this.dialogForm.a_number = row.a_number;
+      $this.dialogForm.allmoney = row.allmoney;
+      $this.dialogForm.personmoney = row.personmoney;
+      $this.dialogForm.paymoney = row.paymoney;
+      $this.dialogForm.personnumber = row.personnumber;
     },
     // 保存添加/编辑数据
     saveData(){
@@ -658,6 +710,10 @@ export default {
         formData.mediumnumber = $this.dialogForm.mediumnumber;
         formData.goodnumber = $this.dialogForm.goodnumber;
         formData.a_number = $this.dialogForm.a_number;
+        formData.allmoney = $this.dialogForm.allmoney;
+        formData.personmoney = $this.dialogForm.personmoney;
+        formData.paymoney = $this.dialogForm.paymoney;
+        formData.personnumber = $this.dialogForm.personnumber;
         var pathUrl = "";
         if($this.dialogText=="编辑部门成交"){
           pathUrl = "Compare/deparDealEditAction";
@@ -699,6 +755,10 @@ export default {
       $this.dialogForm.mediumnumber = "";
       $this.dialogForm.goodnumber = "";
       $this.dialogForm.a_number = "";
+      $this.dialogForm.allmoney = "";
+      $this.dialogForm.personmoney = "";
+      $this.dialogForm.paymoney = "";
+      $this.dialogForm.personnumber = "";
     },
     // 验证是否为空
     validationForm(){
