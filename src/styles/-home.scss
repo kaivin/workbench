@@ -1,4 +1,5 @@
 ﻿.home-index{
+    font-family:'PingFangSC Regular';
     .box-card {overflow:initial;}
     .box-card .el-card__body .card-content{overflow:initial;}
     .el-table__expand-icon,.el-table__placeholder{
@@ -80,13 +81,12 @@
         h3{
             font-size:16px;
             color:#1a1a1a;
-            margin-top:10px;
             margin-bottom:12px;
             line-height:30px;
             height:30px;
+            font-family: 'PingFangSC Semibold';
         }
         .itemRowTit{
-            padding-top: 10px;
             padding-bottom: 12px;
             h3{                    
                 float: left;
@@ -104,12 +104,13 @@
     }
     .item-row+.item-row{
         &.stat-row{
+            .rowBtn{padding-bottom: 15px;}
             .btn-panel{
                 margin-top:-32px;
                 .btn-span{
-                    padding-top:20px;
-                    padding-bottom:0px;
-                    border-radius:0 0 8px 8px;
+                    padding-top: 19px;
+                    padding-bottom: 3px;
+                    border-radius: 0 0 8px 8px;
                 }
                 &+.flex-box{
                     h3{
@@ -121,21 +122,23 @@
     }
     .rowBtn{
         padding-top:15px;
-        padding-bottom:20px;
+        padding-bottom:30px;
         .btn-panel{
             float:left;
             text-align:left;
             .btn-span{
-                padding:3px 26px 3px 26px;
-                font-size:13px;
-                border:0;
-                border-radius:8px 8px 8px 8px;
-                line-height:30px;
-                color:#fff;
-                background:#aed1ff;
-                margin-right:20px;
-                display:inline-block;
-                cursor:pointer;
+                padding: 3px 26px 3px 26px;
+                font-size: 13px;
+                border: 0;
+                border-radius: 8px 8px 8px 8px;
+                line-height: 37px;
+                color: #fff;
+                background: #aed1ff;
+                margin-right: 20px;
+                display: inline-block;
+                cursor: pointer;
+                font-size: 16px;
+                font-family: 'PingFangSC Semibold';
                 &.active{
                     background-color:#2e88ff;
                     box-shadow:0px 8px 10px rgba(6,100,224,0.4) !important;
@@ -165,10 +168,9 @@
         .rowOneOne{
             background:#fff;
             border-radius:8px;
-            padding:20px 30px;
+            padding: 16px 30px 25px 30px;
             .rowOneOneTit{
-              margin-top:10px;
-              margin-bottom:10px;
+              margin-bottom:17px;
               h3{
                   margin-top:0px!important;
                   margin-bottom:0px!important;
@@ -184,7 +186,7 @@
             .rowOneOneItem{
                 position:relative;
                 .rowOneOneItemFl{
-                    width:500px;
+                    width:560px;
                     height:244px;
                     position:relative;
                     .legendFly{
@@ -266,6 +268,7 @@
                         color:#1a1a1a;
                         line-height:30px;
                         font-weight:bold;
+                        font-family:'PingFangSC Regular';
                         &+dd{
                             border-top:0px;
                         }
@@ -279,6 +282,7 @@
                         color:#666666;
                         line-height:30px;
                         padding:12px 0px;
+                        font-family:'PingFangSC Regular';
                         span{
                             font-size:12px;
                             color:#ccc;
@@ -289,6 +293,7 @@
                             font-size:22px;
                             color:#313131;
                             font-weight:normal;
+                            font-family:'PingFangSC Semibold';
                             &.color01{
                               color:#f16565;
                             }
@@ -306,7 +311,7 @@
         .rowOneTwo{
             background:#fff;
             border-radius:8px;
-            padding:20px 30px;
+            padding:16px 30px;
             margin-left:20px;
             max-width:440px;
             .rowOneTwoItem{
@@ -324,7 +329,7 @@
                         display:block;
                         text-align:center;
                         line-height:50px;
-                        font-size:24px;
+                        font-size:34px;
                         color:#f38080;
                         margin-right:20px;
                     }
@@ -358,6 +363,7 @@
                         }
                     }
                     &+li{
+                        padding-top:40px;
                         .svg-i{
                             background:#fff2d2;
                             color:#f7c572;
@@ -377,10 +383,11 @@
         .rowOneThree{
             background:#fff;
             border-radius:8px;
-            padding:20px 30px;
+            padding:16px 30px;
             width:440px;
             margin-left:20px;
             .rowOneThreeTop{
+                padding-top:22px;
                 padding-bottom:70px;
                 &>span{
                     clear:both;
@@ -398,6 +405,7 @@
                     font-weight:normal;
                     padding-top:10px;
                     padding-bottom:5px;
+                    font-family:'PingFangSC Semibold';
                 }
                 p{
                     clear:both;
@@ -434,7 +442,7 @@
         .rowTwoOne{
             background:#fff;
             border-radius:8px;
-            padding:20px 30px;
+            padding:16px 30px;
             margin-left:20px;
             min-width:1008px;
             .map-Top-chartTit{
@@ -483,7 +491,7 @@
                     width:328px;
                     background:#f3f8fe;
                     border-radius:8px;
-                    padding:20px 30px;
+                    padding:16px 30px;
                     margin-left:20px;
                 }
             }
@@ -491,7 +499,7 @@
         .rowTwoTwo{
             background:#fff;
             border-radius:8px;
-            padding:20px 30px;
+            padding:16px 30px 28px 30px;
             .map-Top-chartTit{
               margin-top:10px;
               margin-bottom:10px;
@@ -516,6 +524,7 @@
                         color:#999999;
                         text-align:center;
                         line-height:12px;
+                        font-family:'PingFangSC Regular';
                         span{
                             padding-left:13px;
                             padding-right:13px;
@@ -645,6 +654,7 @@
                             color:#333333;
                             line-height:1;
                             padding-bottom:10px;
+                            font-family:'PingFangSC Regular';
                         }
                         .rowTwoTwoItemDlNum{
                             clear:both;
@@ -652,11 +662,13 @@
                             font-size:34px;
                             color:#ff4245;
                             line-height:1;
+                            font-family:'PingFangSC Medium';
                             span{
                                 display:inline-block;
                                 font-size:14px;
                                 color:#ff8e90;
                                 padding-left:5px;
+                                font-family:'PingFangSC Regular';
                             }
                         }
                     }
@@ -673,18 +685,23 @@
             clear:both;
             width:100%;
             .rowThreeOne01{
-                width:500px;
+                float: left;
+                width:30%;
                 height:300px;
                 border-radius:8px;
             }
             .rowThreeOne02{
-                width:500px;
+                float: left;
+                width:30%;
                 height:300px;
                 border-radius:8px;
-                margin-left:70px;
+                margin-left:2%;
             }
             .rowThreeOne03{
-                margin-left:70px;
+                float: left;
+                width:36%;
+                max-width:622px;
+                margin-left:2%;
                 .rowThreeOne03Tit{
                     clear:both;
                     display:block;
@@ -698,7 +715,7 @@
                         float:right;
                         color:#aaaaaa;
                     }
-                }                
+                }            
                 .el-table.rowThreeTable{
                     display:flex;
                     flex-direction:column;
@@ -759,11 +776,10 @@
         background:#fff;
         border-radius:8px;
         position:relative;
-        padding:20px 20px 5px 15px;
+        padding:20px 20px 20px 15px;
         margin-bottom:20px;
         h3{
-            padding-bottom:15px;
-            padding:0px 0px 15px 30px;
+            padding-left:15px;
         }
     }
     .rowFour{
@@ -1241,22 +1257,30 @@
         padding:20px 30px 30px 30px;
         margin-bottom:20px;
         .rowFiveFl{
+            float: left;
+            width: 70%;
            .chart-canvas{
              height: 281px;
            }
         }
         .rowFiveFr{
-            width:465px;
-            margin-left: 40px;
+            float: right;
+            width: 27%;
+            margin-left: 2%;
             h3{padding-left:35px;}
             .rowFiveFrBox{
                 padding-left:30px;
                 border-left:1px dashed #c9c9c9;
                 height: 281px;
+                .chart-canvas{
+                    float: left;
+                    width: 56%;
+                    height: 290px;
+                }
                 .rowFiveFrBoxFl{
-                    width:170px;
-                    margin-left:20px;
-                    padding-top:17px;
+                    float: right;
+                    width: 40%;
+                    padding-top: 17px;
                     li{
                         clear: both;
                         display: block;
@@ -1269,16 +1293,27 @@
                             clear: both;
                             display: block;
                             font-size:14px;
-                            color:#666;
+                            color:#999;
                             line-height: 1;
                             padding-bottom:10px;
+                            font-family:'PingFangSC Regular';
                         }
                         strong{
                             clear: both;
                             display: block;
                             color:#ff4246;
                             line-height: 1;
-                            i{font-style: normal; display: inline-block; margin-right:5px;}
+                            font-family:'PingFangSC Semibold';
+                            font-size: 28px;
+                            font-weight: normal;
+                            i{
+                                font-style: normal;
+                                display: inline-block;
+                                margin-left: 5px;
+                                font-size: 14px;
+                                vertical-align: middle;
+                                font-weight: bold;
+                            }
                             &.falling{
                                 color:#59cab6;
                             }
@@ -1347,9 +1382,10 @@
                     }
                 }
                 .rowSixFrBom{
-                    padding-top:27px;
+                    padding-top:12px;
                     li{
                         float: left;
+                        margin-top:15px;
                         &>i{
                             float: left;
                             width: 40px;
@@ -1378,6 +1414,7 @@
                                 color:#ff4246;
                                 line-height: 1;
                                 font-size:28px;
+                                font-weight:normal;
                                 i{
                                     font-style: normal;
                                     display: inline-block;
@@ -1571,6 +1608,7 @@
                     display:block;
                     padding-top:40px;
                     margin-left:0px;
+                    .el-table .el-table__cell{text-align: center; color:#4c4c4c;font-family:'PingFangSC Regular';}
                 } 
             }
         }
