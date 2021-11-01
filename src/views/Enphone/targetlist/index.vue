@@ -60,7 +60,7 @@
                               >
                               </el-table-column>
                               <el-table-column
-                                v-if="(menuButtonPermit.indexOf('Enphone_targetlistedit')||menuButtonPermit.indexOf('Enphone_targetlistdelete'))"
+                                v-if="(menuButtonPermit.indexOf('Enphone_entargetedit')||menuButtonPermit.indexOf('Enphone_entargetdelete'))"
                                 :width="operationsWidth"
                                 align="center"
                                 fixed="right"
@@ -68,8 +68,8 @@
                                 label="操作">
                                 <template #default="scope">
                                   <div class="table-button">
-                                    <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_targetlistedit')">编辑</el-button>
-                                    <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_targetlistdelete')" type="info" plain>删除</el-button>
+                                    <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_entargetedit')">编辑</el-button>
+                                    <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_entargetdelete')" type="info" plain>删除</el-button>
                                   </div>
                                 </template>
                               </el-table-column>
@@ -96,7 +96,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Enphone_targetlistadd')||menuButtonPermit.includes('Enphone_targetlistedit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="440px">
+      <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Enphone_entargetadd')||menuButtonPermit.includes('Enphone_entargetedit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="440px">
         <el-form :model="dialogForm">
           <div class="item-form Compart-time-width">
               <el-form-item label="添加时间：" :label-width="formLabelWidth">
@@ -485,10 +485,10 @@ export default {
             });
             if($this.menuButtonPermit.includes('Enphone_targetlist')){
               var operationsWidth = 22;
-              if($this.menuButtonPermit.includes('Enphone_targetlistedit')){
+              if($this.menuButtonPermit.includes('Enphone_entargetedit')){
                 operationsWidth+=66;
               }
-              if($this.menuButtonPermit.includes('Enphone_targetlistdelete')){
+              if($this.menuButtonPermit.includes('Enphone_entargetdelete')){
                 operationsWidth+=66;
               }
               $this.operationsWidth = "" + operationsWidth;

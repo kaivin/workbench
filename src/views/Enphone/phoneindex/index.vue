@@ -2013,7 +2013,6 @@ export default {
               message: response.info,
               type: 'success'
             });
-            $this.isPageBtn = true;
             $this.initCluesList();
           }else{
             $this.$message({
