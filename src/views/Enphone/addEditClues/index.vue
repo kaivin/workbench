@@ -230,13 +230,16 @@
                                   <dl style="width:160px;">
                                     <dt>来自国家：</dt>
                                     <dd>
-                                      <el-input
-                                          placeholder="号码归属地"
-                                          size="small"
-                                          v-model="formData.country"
-                                          @change="countryClick"
-                                          clearable>
-                                      </el-input>
+                                      <el-autocomplete
+                                        size="small"
+                                        clearable
+                                        @change="countryClick"
+                                        v-model="formData.country"
+                                        :fetch-suggestions="countryQuerySearch"
+                                        placeholder="号码归属地"
+                                        :trigger-on-focus="false"
+                                        @select="countryHandleSelect"
+                                      ></el-autocomplete>
                                     </dd>
                                   </dl>
                                   <dl style="width:160px;">
@@ -1640,8 +1643,11 @@ export default {
       formCountry.name=$this.formData.country;
       $this.$store.dispatch("enphone/getcontientAction", formCountry).then(response=>{
           if(response.status){
-            $this.formData.continent=response.data.contient;
-            $this.formData.timediff=response.data.timecha;
+            if(response.data){
+              $this.formData.continent=response.data.contient;
+              $this.formData.timediff=response.data.timecha;
+            }
+            
           }else{
             $this.$message({
               showClose: true,
@@ -1738,6 +1744,37 @@ export default {
     // 特别说明下拉框选择改变事件
     otherRemarkHandleSelect(e){
       console.log(e);
+    },
+    //来自国家下拉框
+    countryQuerySearch(queryString,cb){
+      var $this = this;
+      var resultData = {};
+      var returnData = [];
+      resultData.keywork = queryString;
+      resultData.status = 8;
+      $this.$store.dispatch("enphone/countryListAction", resultData).then(response=>{
+          if(response.status){
+            if(response.data.length>0){
+              response.data.forEach(function(item){
+                var itemData = {};
+                itemData.value = item.name;
+                returnData.push(itemData);
+              });
+            }
+            cb(returnData);
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    //来自国家下拉选择
+    countryHandleSelect(val){
+      this.formData.country = val.value;
+      this.countryClick()
     },
     // 提醒下拉框
     noticeQuerySearch(queryString,cb){
