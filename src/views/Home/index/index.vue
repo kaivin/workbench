@@ -143,7 +143,7 @@
                                 stripe
                                 class="rowThreeTable rowTableOne"
                                 style="width: 100%"
-                                height="275"
+                                height="270"
                                 >
                                 <el-table-column
                                 prop="groupname"
@@ -2789,6 +2789,18 @@ export default {
               xField: 'month',
               yField: 'value',
               seriesField: 'year',
+              xAxis: {
+                title:{
+                  text:"(单位：个)",
+                  autoRotate:false,
+                  position:'start',
+                  offset:-247,
+                  style:{
+                    fill: '#999999',
+                    fontsize:'12',
+                  }
+                }
+              },
               yAxis: {
                 grid: {
                   line: {
@@ -2805,6 +2817,9 @@ export default {
                     }
                   }
                 },
+              },
+              legend: {
+                offsetX:102,
               },
               seriesField: 'year',
               color: ({ year }) => {
@@ -2902,6 +2917,18 @@ export default {
               xField: 'month',
               yField: 'value',
               seriesField: 'year',
+              xAxis: {
+                title:{
+                  text:"(单位：个)",
+                  autoRotate:false,
+                  position:'start',
+                  offset:-247,
+                  style:{
+                    fill: '#999999',
+                    fontsize:'12',
+                  }
+                }
+              },
               yAxis: {
                 tickCount:4,
                 grid: {
@@ -2919,6 +2946,9 @@ export default {
                     }
                   }
                 },
+              },
+              legend: {
+                offsetX:102,
               },
               seriesField: 'year',
               color: ({ year }) => {
