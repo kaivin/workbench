@@ -143,7 +143,7 @@
                                 stripe
                                 class="rowThreeTable rowTableOne"
                                 style="width: 100%"
-                                height="300"
+                                height="275"
                                 >
                                 <el-table-column
                                 prop="groupname"

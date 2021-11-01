@@ -684,7 +684,7 @@
     .rowThree{
         background:#fff;
         border-radius:8px;
-        padding:20px 30px 30px 30px;
+        padding:20px 30px 40px 30px;
         margin-bottom:20px;
         .rowThreeOne{
             clear:both;
@@ -747,26 +747,35 @@
                         i{
                             display:inline-block;
                             font-style:normal;
-                            width:30px;
                             text-align:center;
                         }
                         span{
                             display:inline-block;
-                            text-align:left;
+                            text-align: left;
+                            width: 35px;
+                            margin-left: 10px;
                             &.rising{
                                 color:#f04c4c;
                                 &:before{
                                     content:'↑';
-                                    display:inline-block;
-                                    margin-right:3px;
+                                    display: inline-block;
+                                    margin-right: 3px;
+                                    vertical-align: middle;
+                                    line-height: 11px;
+                                    transform: scale(0.8);
+                                    font-size: 12px;
                                 }
                             }
                             &.falling{
                                 color:#6cca42;
                                 &:before{
                                     content:'↓';
-                                    display:inline-block;
-                                    margin-right:3px;
+                                    display: inline-block;
+                                    margin-right: 3px;
+                                    vertical-align: middle;
+                                    line-height: 11px;
+                                    transform: scale(0.8);
+                                    font-size: 12px;
                                 }
                             }
                             &.equality{
@@ -872,21 +881,23 @@
                                         color:#f04c4c;
                                         &:before{
                                             content:'↑';
-                                            display:inline-block;
-                                            margin-right:3px;
-                                            vertical-align:text-top;
+                                            display: inline-block;
+                                            margin-right: 3px;
+                                            vertical-align: middle;
                                             line-height: 11px;
+                                            transform: scale(0.8);
                                         }
                                     }
                                     &.falling{
                                         background-color:#e8f9f6;
                                         color:#59cab6;
                                         &:before{
-                                            content:'↓';
-                                            display:inline-block;
-                                            margin-right:3px;
-                                            vertical-align:text-top;
+                                            content: '↓';
+                                            display: inline-block;
+                                            margin-right: 3px;
+                                            vertical-align: middle;
                                             line-height: 11px;
+                                            transform: scale(0.8);
                                         }
                                     }
                                 }
@@ -1425,8 +1436,12 @@
                                     font-style: normal;
                                     display: inline-block;
                                     margin-left: 5px;
-                                    font-size: 14px;
-                                    vertical-align: middle;}
+                                    font-size: 12px;
+                                    vertical-align: middle;
+                                    margin-right: 3px;
+                                    transform: scale(0.8);
+                                    font-weight: bold;
+                                }
                                 &.falling{
                                     color:#59cab6;
                                 }
