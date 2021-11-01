@@ -178,7 +178,8 @@
               }
               .item-search{
                 .el-input__inner{
-                    background-color:#f6f7fa;
+                    background-color: #ffffff;
+                    border: 1px solid #e1e3ea;
                     .el-range-input{background:none;}
                 }
               }
@@ -460,7 +461,8 @@
               }
               .item-search{
                 .el-input__inner{
-                    background-color:#f6f7fa;
+                    background-color: #ffffff;
+                    border: 1px solid #e1e3ea;
                     .el-range-input{background:none;}
                 }
               }
@@ -515,7 +517,8 @@
               }
               .item-search{
                 .el-input__inner{
-                    background-color:#f6f7fa;
+                    background-color: #ffffff;
+                    border: 1px solid #e1e3ea;
                     .el-range-input{background:none;}
                 }
               }
@@ -806,9 +809,11 @@
             border-radius:8px;
             padding:20px 30px 30px 30px;
             .rowFourOneUl{
+                padding-top:20px;
                 li{
                     clear:both;
-                    margin-top:30px;
+                    margin-bottom:30px;
+                    &:last-child{margin-bottom:0px;}
                     .rowFourOneUlNum{
                        width:30px;
                        position:relative;
@@ -858,6 +863,7 @@
                             color:#1a1a1a;
                             line-height:20px;
                             padding-top:7px;
+                            font-family:'PingFangSC Regular';
                             .group{
                                 font-size:12px;
                                 color:#aaaaaa;
@@ -907,14 +913,14 @@
                             clear:both;
                             background:#fff;
                             width:100%;
-                            height:10px;
+                            height:16px;
                             line-height:1;
                             margin-top:13px;
                             span{
                                 clear:both;
                                 display:inline-block;
-                                height:10px;
-                                border-radius:5px;
+                                height:16px;
+                                border-radius:8px;
                                 background:-webkit-linear-gradient(left,#e4ebea, #c0c5c5);
                                 background:-o-linear-gradient(right,#e4ebea, #c0c5c5);
                                 background:-moz-linear-gradient(right,#e4ebea, #c0c5c5);
@@ -1014,10 +1020,13 @@
            margin-left:20px;
            .rowFourTwoUl{
                li{
-                    clear:both;
-                    margin-top:15px;
-                    position:relative;
-                    z-index:2;
+                    clear: both;
+                    margin-top: 0px;
+                    position: relative;
+                    z-index: 2;
+                    padding-top: 10px;
+                    margin-bottom:17px;
+                    &:last-child{margin-bottom:0px;}
                     &:after{
                         content:'';
                         position:absolute;
@@ -1105,6 +1114,19 @@
                             clear:both;
                             width:100%;
                             height:100%;
+                            position: relative;
+                            border-radius: 0px 15px 15px 0px;
+                            overflow: hidden;
+                            &:before {
+                                content: '';
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: calc(100% + 8px);
+                                height: 100%;
+                                background: repeating-linear-gradient(45deg, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.02) 80%);
+                                background-size: 8px 8px;
+                            }
                             span{
                                 clear:both;
                                 display:block;
@@ -1289,10 +1311,75 @@
                 padding-left:30px;
                 border-left:1px dashed #c9c9c9;
                 height: 281px;
+                position: relative;
                 .chart-canvas{
                     float: left;
                     width: 56%;
                     height: 290px;
+                }
+                .rowFiveFrBoxFr{
+                    position: absolute;
+                    left: 45px;
+                    bottom: 0px;
+                    width: 218px;
+                    height: 290px;
+                    li{
+                        width: 132px;
+                        position: absolute;
+                        height: 270px;
+                        left: 86px;
+                        top: 0px;
+                        &:first-child{
+                            left:0px;
+                        }
+                        p{
+                            border-top: 0px;
+                            border-bottom: 244px solid #e7f1ff;
+                            border-left: 66px solid transparent;
+                            border-right: 66px solid transparent;
+                            position: absolute;
+                            bottom: 0px;
+                            left: 0px;
+                            .rowFiveNumBom{
+                                position: absolute;
+                                top: -14px;
+                                font-size: 12px;
+                                color: #666;
+                                text-align: center;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                line-height: 1;
+                                transition: all 0.5s;
+                            }
+                        }
+                        .rowFiveNumTop{
+                            position: absolute;
+                            bottom: -20px;
+                            font-size: 12px;
+                            color: #aaa;
+                            text-align: center;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            line-height: 1;
+                            transition: all 0.5s;
+                        }
+                        &.rowFiveOne{
+                            p{
+                                border-bottom: 244px solid rgba(153,184,245 ,0.7);
+                            }
+                            .rowFiveNumBom{
+                                color: #99b8f5;
+                            }
+                        }
+                        &.rowFiveTwo{
+                            p{
+                                border-bottom: 244px solid rgba(255,209,112,0.7);
+                            }
+                            .rowFiveNumBom{
+                                color: #ffd170;
+                            }
+                        }
+                    }
                 }
                 .rowFiveFrBoxFl{
                     float: right;
@@ -1466,7 +1553,7 @@
             box-sizing: border-box;
             -webkit-box-sizing: border-box;
             h3{}
-            .unit{font-size:12px; color:#666666; line-height:1;}
+            .unit{font-size:12px; color:#9ca0a8; line-height:1;}
             .totalNum{
                 position: absolute;
                 left: 60px;
@@ -1489,6 +1576,7 @@
                     color:#1a1a1a;
                     line-height:1;
                     padding-bottom:15px;
+                    font-family:'PingFangSC Semibold';
                 }
                 strong{
                     clear: both;
@@ -1497,6 +1585,7 @@
                     color: #1a1a1a;
                     line-height: 1;
                     font-weight: normal;
+                    font-family:'PingFangSC Semibold';
                 }
             }
         }
@@ -1513,6 +1602,11 @@
                 width: 57.3%;
                 .rowSeverFrOneBox{
                     .el-table .el-table__cell{text-align: center;}
+                    .el-table__footer-wrapper tbody td.el-table__cell{
+                        background: #fff;
+                        font-weight: bold;
+                        color: #131313;
+                    }
                     .el-table.rowThreeTable{
                         display:flex;
                         flex-direction:column;

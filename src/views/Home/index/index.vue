@@ -116,7 +116,14 @@
                <div class="rowFiveFr">
                     <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}年度同期询盘对比</h3>
                     <div class="rowFiveFrBox">
-                         <div id="registerChart" class="chart-canvas"></div>
+                         <ul class="rowFiveFrBoxFr">
+                             <li v-for="(item,index) in currentCluesData.registerArr" :key='index' :class="item.isOn?'rowFiveOne':'rowFiveTwo'">
+                                 <p :style="'border-bottom-width:'+item.isHeight+'px'">
+                                  <span class="rowFiveNumBom">{{item.value}}</span>
+                                 </p>
+                                  <span class="rowFiveNumTop">{{item.year}}</span>
+                             </li>
+                         </ul>
                          <ul class="rowFiveFrBoxFl">
                              <li><span>同比增长量</span><strong :class="currentCluesData.registerGrowth>0?'':'falling'">{{Math.abs(currentCluesData.registerGrowth)}}<i>{{currentCluesData.registerGrowth>0?'↑':'↓'}}</i></strong></li>
                              <li><span>同比增长率</span><strong :class="currentCluesData.registerGrowth>0?'':'falling'">{{currentCluesData.registerRate}}<i>{{currentCluesData.registerGrowth>0?'↑':'↓'}}</i></strong></li>
@@ -297,7 +304,6 @@
                         <div class="rowSeverFrOneBox">
                             <el-table
                               :data="currentCluesData.departmentCost"
-                              border
                               show-summary
                               class="rowThreeTable"
                               style="width: 100%">
@@ -1040,10 +1046,14 @@ export default {
               var registerRate='';
               var registerObj={
                 year:'',
+                isOn:false,
+                isHeight:0,
                 value:0,
               };        
               var lastregisterObj={
                 year:'',
+                isOn:false,
+                isHeight:0,
                 value:0,
               };
               response.yeartong.forEach(function(item,index){
@@ -1060,21 +1070,29 @@ export default {
                   registerObj.value=registerObj.value+item.xunnumber;
                   registerObj.year=item.date.split('-')[0];
                   lastregisterObj.value=lastregisterObj.value+item.lastxunnumber;
-                  lastregisterObj.year=item.lastdate.split('-')[0];               
+                  lastregisterObj.year=item.lastdate.split('-')[0];   
               });
-              registerArr.push(registerObj,lastregisterObj); 
-
               $this.currentCluesData.yeartongArr=yeartongArr;
+              if(registerObj.year>lastregisterObj.year){
+                registerObj.isOn=true;
+              }else{
+                lastregisterObj.isOn=true;
+              }
+              var MaxVal='';
+              if(registerObj.value>lastregisterObj.value){
+                MaxVal=registerObj.value;
+              }else{
+                MaxVal=lastregisterObj.value;
+              }
+              registerObj.isHeight=registerObj.value/MaxVal*244;
+              lastregisterObj.isHeight=lastregisterObj.value/MaxVal*244;
+              registerArr.push(registerObj,lastregisterObj); 
               $this.currentCluesData.registerArr=registerArr;
-
               registerGrowth=registerObj.value-lastregisterObj.value;
-
               registerRate=Math.abs(((registerObj.value-lastregisterObj.value)/lastregisterObj.value*100).toFixed(2))+'%';
-
               $this.currentCluesData.registerGrowth=registerGrowth;
               $this.currentCluesData.registerRate=registerRate;
               $this.yeartongChart();
-              $this.registerChart();
             };
             // 小组日成绩
             if(response.zugroupday!=''&&response.zugroupday!=null){
@@ -1553,7 +1571,6 @@ export default {
               $this.currentCluesData.registerGrowth=registerGrowth;
               $this.currentCluesData.registerRate=registerRate;
               $this.yeartongChart();
-              $this.registerChart();
             };
             // 小组日成绩
             if(response.zusuercount!=''&&response.zusuercount!=null){
@@ -2648,7 +2665,7 @@ export default {
           height:358,
           radius:0.7,
           innerRadius: 0.6,
-          appendPadding: 10,
+          appendPadding:0,
           meta: {
             score: {
               formatter: (v) => `${v}`,
@@ -2662,7 +2679,10 @@ export default {
             formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
           },
           legend: {
-            position: 'left',  
+            position: 'left',
+            itemHeight:20,  
+            offsetY:36,
+            offsetX:25,
             itemName: {
               formatter(text, item, index) {
                 if (data) {
@@ -2696,85 +2716,6 @@ export default {
         });
         $this.yeardepartscoreData = yeardepartscoreData;
         yeardepartscoreData.render();
-      }
-    },
-    // 年度同期询盘对比
-    registerChart(){
-      var $this = this;
-      if($this.registerData&&!$this.registerData.chart.destroyed){
-        $this.registerData.changeData($this.currentCluesData.registerArr);
-      }else{
-        // 自定义图形
-        G2.registerShape('interval', 'registerData', {
-          draw(info, container) {
-            const { points, style, defaultStyle = {} } = info;
-            let path = [
-              ['M', points[0].x, points[0].y],
-              ['L', (points[1].x + points[2].x) / 2, points[1].y],
-              ['L', points[3].x, points[3].y],
-              ['Z'],
-            ];
-            path = this.parsePath(path);
-            return container.addShape('path', {
-              attrs: {
-                path,
-                ...defaultStyle,
-                ...style,
-              },
-            });
-          },
-        });
-        // 1. 定义配置
-        const defaultOptions = {
-          columnWidthRatio: 1.2,
-        };
-        // 2. adaptor 实现
-        function adaptor(params) {
-          const { chart, options } = params;
-          const { data, xField, yField, columnWidthRatio, columnStyle, theme } = options;
-          // 数据
-          chart.data($this.currentCluesData.registerArr);
-          // 几何图形
-          const i = chart
-            .interval()
-            .position(`${xField}*${yField}`)
-            .shape('registerData')
-            .style(`${xField}*${yField}`, (x, y) => {
-              return typeof columnStyle === 'function' ? columnStyle({ [xField]: x, [yField]: y }) : columnStyle;
-            });
-
-          // 设置重叠比率
-          chart.theme(
-            deepMix({}, isObject(theme) ? theme : G2.getTheme(theme), {
-              columnWidthRatio: columnWidthRatio,
-            })
-          );
-          const gap = (1 / data.length / 2) * columnWidthRatio;// 左右预留
-          chart.axis('value', false);
-          chart.scale({
-            year: {
-              range: [gap, 1 - gap],
-            },
-          });
-          return params;
-        }
-        // 3. G2Plot 上使用
-        const registerData = new P('registerChart',{
-            data:$this.currentCluesData.registerArr,
-            appendPadding: 16,
-            xField: 'year',
-            yField: 'value',
-            xAxis:false,
-            yAxis:false,
-            columnStyle: {
-              fillOpacity: 0.3,
-            },
-          },
-          adaptor,
-          defaultOptions
-        );
-        $this.registerData = registerData;
-        registerData.render();
       }
     },
     // 年度成交积分对比
@@ -2900,7 +2841,6 @@ export default {
               }
               $this.currentCluesData.sametimeGrowth=sametimeGrowth;
               $this.currentCluesData.sametimeRate=sametimeRate;
-              $this.registerChart();
             });
           }
       }
@@ -2975,14 +2915,19 @@ export default {
             yeartongData.on('plot:click', ev => {
               console.log(hoverData,'hoverData');
               var mouth=hoverData[0].data.month.replace('月','');
+
               var registerArr=[];
               var registerObj={
                 year:hoverData[0].data.year,
                 value:0,
+                isOn:false,
+                isHeight:0,
               };        
               var lastregisterObj={
                 year:hoverData[1].data.year,
                 value:0,
+                isOn:false,
+                isHeight:0,
               };
               $this.currentCluesData.yeartongArr.forEach(function(item,index){
                   if(item.month.replace('月','')<mouth||item.month.replace('月','')==mouth){
@@ -2994,6 +2939,19 @@ export default {
                     } 
                   }
               });
+              if(registerObj.year>lastregisterObj.year){
+                registerObj.isOn=true;
+              }else{
+                lastregisterObj.isOn=true;
+              }
+              var MaxVal='';
+              if(registerObj.value>lastregisterObj.value){
+                MaxVal=registerObj.value;
+              }else{
+                MaxVal=lastregisterObj.value;
+              }
+              registerObj.isHeight=registerObj.value/MaxVal*244;
+              lastregisterObj.isHeight=lastregisterObj.value/MaxVal*244;
               registerArr.push(registerObj,lastregisterObj);
               $this.currentCluesData.registerArr = registerArr;
               var registerGrowth='';
@@ -3007,7 +2965,6 @@ export default {
               }
               $this.currentCluesData.registerGrowth=registerGrowth;
               $this.currentCluesData.registerRate=registerRate;
-              $this.registerChart();
             });
           }
       }
@@ -3029,6 +2986,7 @@ export default {
               height: 300,
               color: ['#669aff', '#9dd5ff'],
               marginRatio: 0,
+              maxColumnWidth:25,
               yAxis: {
                 grid: {
                   line: {
@@ -3078,6 +3036,7 @@ export default {
               color: ['#fcb030', '#f7c572'],
               /** 设置间距 */
               marginRatio: 0,
+              maxColumnWidth:25,
               yAxis: {
                 grid: {
                   line: {
