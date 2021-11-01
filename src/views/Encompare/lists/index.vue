@@ -91,17 +91,17 @@
                               </el-table-column>
                               <el-table-column
                               prop="allmoney"
-                              label="总成本"
+                              label="总成本(万元)"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="personmoney"
-                              label="人力成本"
+                              label="人力成本(万元)"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="paymoney"
-                              label="付费成本"
+                              label="付费成本(万元)"
                               >
                               </el-table-column>
                               <el-table-column
@@ -217,19 +217,19 @@
         </div>
           <div class="item-form-group">
               <div class="item-form">
-                  <el-form-item label="总成本：" :label-width="formLabelWidth">
+                  <el-form-item label="总成本(万元)：" :label-width="formLabelWidth">
                       <el-input v-model="dialogForm.allmoney"></el-input>
                   </el-form-item>
               </div>
               <div class="item-form">
-                  <el-form-item label="人力成本：" :label-width="formLabelWidth">
+                  <el-form-item label="人力成本(万元)：" :label-width="formLabelWidth">
                       <el-input v-model="dialogForm.personmoney"></el-input>
                   </el-form-item>
               </div>
           </div>
           <div class="item-form-group">
               <div class="item-form">
-                  <el-form-item label="付费成本：" :label-width="formLabelWidth">
+                  <el-form-item label="付费成本(万元)：" :label-width="formLabelWidth">
                       <el-input v-model="dialogForm.paymoney"></el-input>
                   </el-form-item>
               </div>

@@ -85,6 +85,22 @@
             line-height:30px;
             height:30px;
         }
+        .itemRowTit{
+            padding-top: 10px;
+            padding-bottom: 12px;
+            h3{                    
+                float: left;
+                margin-top: 0px;
+                margin-bottom: 0px;
+                padding: 0px;
+            }
+            span{
+                float: right;
+                color: #c1c1c1;
+                font-size: 12px;
+                line-height: 30px;
+            }
+        }
     }
     .item-row+.item-row{
         &.stat-row{
@@ -1285,7 +1301,7 @@
         .rowSixFr{
             width:465px;
             margin-left: 40px;
-            h3{padding-left:35px;}
+            .itemRowTit{padding-left:35px;}
             .rowSixFrBox{
                 border-left:1px dashed #c9c9c9;
                 height: 281px;
@@ -1437,19 +1453,6 @@
             .rowSeverFrOne{
                 float: left;
                 width: 57.3%;
-                .rowSeverFrOnetit{
-                    padding-top: 10px;
-                    padding-bottom: 12px;
-                    h3{float: left;
-                        margin-top: 0px;
-                        margin-bottom: 0px;
-                        padding: 0px;}
-                    span{
-                        float: right;
-                        color: #c1c1c1;
-                        font-size: 12px;
-                        line-height: 30px;}
-                }
                 .rowSeverFrOneBox{
                     .el-table.rowThreeTable{
                         display:flex;

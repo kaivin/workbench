@@ -124,92 +124,6 @@
                     </div>
                </div>
           </div>
-          <div class="flex-box flex-wrap rowTwo">
-               <div class="rowTwoTwo flex-content">
-                    <div class="map-Top-chartTit flex-wrap">
-                        <h3>{{language=='Module_cnStat'?'中文':'英文'}}成交统计</h3>
-                        <div class="item-search flex-content">                        
-                          <el-date-picker
-                            v-model="ScoreTime"
-                            size="mini"
-                            type="month"
-                            @change="monthChangeHandler"
-                            placeholder="选择月"
-                            format="yyyy 年 MM 月"
-                            value-format="yyyy-MM"
-                            style="width:140px"
-                            >
-                          </el-date-picker>
-                        </div>
-                    </div>
-                    <div class="rowTwoTwoItem">
-                         <div class="rowTwoTwoItemTop flex-wrap">
-                              <p class="rowTwoTwoItemTop01 flex-content">
-                                 <span>成交积分</span><span>合格线</span><span>中等线</span><span>优秀线</span>
-                              </p>
-                              <p class="rowTwoTwoItemTop02">百万成交</p>
-                         </div>
-                         <ul class="rowTwoTwoItemBom">
-                             <li class="flex-wrap" v-for="(item,index) in currentCluesData.departScoreData" :key="index">
-                                <p class="rowTwoTwoItemFlName">{{item.departname}}</p>
-                                <p class="rowTwoTwoItemFlBox flex-content">
-                                   <span v-if="language=='Module_cnStat'" class="departnamescore" :style="'width:'+item.score/ScoreData.MaxValue*100+'%'"></span>
-                                   <span v-else class="departnamescore" :style="'width:'+item.snumber/ScoreData.MaxValue*100+'%'"></span>
-                                   <span class="goodnumber" :style="'width:'+item.goodnumber/ScoreData.MaxValue*100+'%'"></span>
-                                   <span class="mediumnumber" :style="'width:'+item.mediumnumber/ScoreData.MaxValue*100+'%'"></span>
-                                   <span class="passnumber" :style="'width:'+item.passnumber/ScoreData.MaxValue*100+'%'"></span>
-                                </p>
-                                <p class="rowTwoTwoItemFlNum" :class="item.a_number==0?'':'NumClass'">
-                                   <span v-if="item.a_number==0">——</span>
-                                   <span v-else>{{item.a_number}}</span>
-                                </p>
-                             </li>
-                         </ul>
-                         <dl class="rowTwoTwoItemDl">
-                              <dt>
-                                  <p class="rowTwoTwoItemDlTit">{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}成交数量</p>
-                                  <p class="rowTwoTwoItemDlNum">{{ScoreData.addallsnumber}}<span v-if="ScoreData.allsnumber!=ScoreData.addallsnumber">(占总成交{{ScoreData.allsnumberPercen}})</span></p>
-                              </dt>
-                              <dt>
-                                  <p class="rowTwoTwoItemDlTit">{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}成交积分</p>
-                                  <p class="rowTwoTwoItemDlNum">{{ScoreData.addallscore}}<span v-if="ScoreData.allscore!=ScoreData.addallscore">(占总成交{{ScoreData.allscorePercen}})</span></p>
-                              </dt>
-                         </dl>
-                    </div>
-               </div>
-               <div class="rowTwoOne" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
-                    <div class="map-Top-chartTit flex-wrap">
-                        <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}热门{{language=='Module_cnStat'?'地区':'国家'}}TOP10</h3>
-                        <div class="item-search flex-content">
-                          <el-date-picker
-                            v-model="mapDate"
-                            size="mini"
-                            type="daterange"
-                            class="date-range"
-                            align="right"
-                            style="width:220px;"
-                            value-format = "yyyy-MM-dd"
-                            unlink-panels
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            @change="dateRangeChangeHandler"
-                            :picker-options="pickerRangeOptions">
-                          </el-date-picker> 
-                        </div>
-                    </div>
-                    <div class="rowTwoOneItem flex-wrap" :class="language=='Module_cnStat'?'mapCNpad':'mapENpad'">
-                        <div class="map-chart flex-content">
-                          <div v-if="language=='Module_cnStat'" id="regionMapChart" class="chart-canvas"></div>
-                          <div v-else id="worldRegionMapChart" class="chart-canvas"></div>
-                        </div>
-                        <div class="top-ten">
-                             <h3>热门地区TOP10</h3>
-                             <div id="topTen" class="chart-canva"></div>
-                        </div>
-                    </div>
-               </div>
-          </div>
           <div class="rowThree">
                <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}小组成绩</h3>
                <div class="rowThreeOne flex-wrap">
@@ -272,6 +186,91 @@
                     </div>
                </div>
           </div>
+          <div class="flex-box flex-wrap rowTwo">
+               <div class="rowTwoTwo flex-content">
+                    <div class="map-Top-chartTit flex-wrap">
+                        <h3>{{language=='Module_cnStat'?'中文':'英文'}}成交统计</h3>
+                        <div class="item-search flex-content">                        
+                          <el-date-picker
+                            v-model="ScoreTime"
+                            size="mini"
+                            type="month"
+                            @change="monthChangeHandler"
+                            placeholder="选择月"
+                            format="yyyy 年 MM 月"
+                            value-format="yyyy-MM"
+                            style="width:140px"
+                            >
+                          </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="rowTwoTwoItem">
+                         <div class="rowTwoTwoItemTop flex-wrap">
+                              <p class="rowTwoTwoItemTop01 flex-content">
+                                 <span>成交积分</span><span>合格线</span><span>中等线</span><span>优秀线</span>
+                              </p>
+                              <p class="rowTwoTwoItemTop02">百万成交</p>
+                         </div>
+                         <ul class="rowTwoTwoItemBom">
+                             <li class="flex-wrap" v-for="(item,index) in currentCluesData.departScoreData" :key="index">
+                                <p class="rowTwoTwoItemFlName">{{item.departname}}</p>
+                                <p class="rowTwoTwoItemFlBox flex-content">
+                                   <span v-if="language=='Module_cnStat'" class="departnamescore" :style="'width:'+item.score/ScoreData.MaxValue*100+'%'"></span>
+                                   <span v-else class="departnamescore" :style="'width:'+item.snumber/ScoreData.MaxValue*100+'%'"></span>
+                                   <span class="goodnumber" :style="'width:'+item.goodnumber/ScoreData.MaxValue*100+'%'"></span>
+                                   <span class="mediumnumber" :style="'width:'+item.mediumnumber/ScoreData.MaxValue*100+'%'"></span>
+                                   <span class="passnumber" :style="'width:'+item.passnumber/ScoreData.MaxValue*100+'%'"></span>
+                                </p>
+                                <p class="rowTwoTwoItemFlNum NumClass">
+                                   <span>{{item.a_number}}</span>
+                                </p>
+                             </li>
+                         </ul>
+                         <dl class="rowTwoTwoItemDl">
+                              <dt>
+                                  <p class="rowTwoTwoItemDlTit">{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}成交数量</p>
+                                  <p class="rowTwoTwoItemDlNum">{{ScoreData.addallsnumber}}<span v-if="ScoreData.allsnumber!=ScoreData.addallsnumber">(占总成交{{ScoreData.allsnumberPercen}})</span></p>
+                              </dt>
+                              <dt>
+                                  <p class="rowTwoTwoItemDlTit">{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}成交积分</p>
+                                  <p class="rowTwoTwoItemDlNum">{{ScoreData.addallscore}}<span v-if="ScoreData.allscore!=ScoreData.addallscore">(占总成交{{ScoreData.allscorePercen}})</span></p>
+                              </dt>
+                         </dl>
+                    </div>
+               </div>
+               <div class="rowTwoOne" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
+                    <div class="map-Top-chartTit flex-wrap">
+                        <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}热门{{language=='Module_cnStat'?'地区':'国家'}}TOP10</h3>
+                        <div class="item-search flex-content">
+                          <el-date-picker
+                            v-model="mapDate"
+                            size="mini"
+                            type="daterange"
+                            class="date-range"
+                            align="right"
+                            style="width:220px;"
+                            value-format = "yyyy-MM-dd"
+                            unlink-panels
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            @change="dateRangeChangeHandler"
+                            :picker-options="pickerRangeOptions">
+                          </el-date-picker> 
+                        </div>
+                    </div>
+                    <div class="rowTwoOneItem flex-wrap" :class="language=='Module_cnStat'?'mapCNpad':'mapENpad'">
+                        <div class="map-chart flex-content">
+                          <div v-if="language=='Module_cnStat'" id="regionMapChart" class="chart-canvas"></div>
+                          <div v-else id="worldRegionMapChart" class="chart-canvas"></div>
+                        </div>
+                        <div class="top-ten">
+                             <h3>热门地区TOP10</h3>
+                             <div id="topTen" class="chart-canva"></div>
+                        </div>
+                    </div>
+               </div>
+          </div>
           <div class="rowSever">
                <div class="rowSeverFl">
                     <h3>{{language=='Module_cnStat'?'中文':'英文'}}年度成交积分</h3>
@@ -283,7 +282,7 @@
                </div>
                <div class="rowSeverFr">
                   <div class="rowSeverFrOne">
-                        <div class="rowSeverFrOnetit">
+                        <div class="itemRowTit">
                           <h3>部门成本</h3>
                           <span>数据更新于2021年10月25日 12时  | 每月更新</span>
                         </div>
@@ -324,13 +323,13 @@
                               <el-table-column
                                 prop="personmoney"
                                 sortable
-                                label="人力成本"
+                                label="人力成本(万元)"
                                 width="140">
                               </el-table-column>
                               <el-table-column
                                 prop="paymoney"
                                 sortable
-                                label="付费成本"
+                                label="付费成本(万元)"
                                 width="140">
                               </el-table-column>
                               <el-table-column
@@ -355,7 +354,10 @@
                     <div id="yearscoretongChart" class="chart-canvas"></div>
                </div>
                <div class="rowSixFr">
-                    <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}年度同期成交对比</h3>
+                    <div class="itemRowTit">
+                         <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}年度同期成交对比</h3>
+                         <span>(单位：分)</span>
+                    </div>
                     <div class="rowSixFrBox">
                          <ul class="rowSixFrTop">
                              <li v-for="(item,index) in currentCluesData.sametimeArr" :key="index" :style="'width:'+item.percen">
@@ -381,7 +383,10 @@
           </div>
           <div class="flex-box flex-wrap rowFour" v-if="(currentCluesData.userscoreNum&&currentCluesData.userscoreNum.length>0)||(currentCluesData.yearuserscoreNum&&currentCluesData.yearuserscoreNum.length>0)">
                <div class="rowFourOne" v-if="currentCluesData.userscoreNum&&currentCluesData.userscoreNum.length>0">
-                    <h3>月成交Top5</h3>
+                    <div class="itemRowTit">
+                         <h3>月成交Top5</h3>
+                         <span>(单位：分)</span>
+                    </div>
                     <ul class="rowFourOneUl">
                         <li class="flex-box flex-wrap" v-for="(item,index) in currentCluesData.userscoreNum" :key='index'>
                              <p class="rowFourOneUlNum"><span>{{index+1}}</span></p>
@@ -398,8 +403,11 @@
                         </li>
                     </ul>
                </div>
-               <div class="rowFourTwo flex-content" v-if="currentCluesData.yearuserscoreNum&&currentCluesData.yearuserscoreNum.length>0">
-                    <h3>年度成交Top5</h3>
+               <div class="rowFourTwo flex-content" v-if="currentCluesData.yearuserscoreNum&&currentCluesData.yearuserscoreNum.length>0">                    
+                    <div class="itemRowTit">
+                         <h3>年度成交Top5</h3>
+                         <span>(单位：分)</span>
+                    </div>
                     <ul class="rowFourTwoUl">
                         <li class="flex-box flex-wrap" v-for="(item,index) in currentCluesData.yearuserscoreNum" :key='index'>
                              <div class="rowFourTwoUlNum">
@@ -699,7 +707,7 @@ export default {
       $this.targetScore.DistanceTarget='';
       $this.$store.dispatch("api/getChinadaytargetAction", resultData).then((response) => {
         if (response) {
-          //console.log(response,'中文部门日目标');
+          console.log(response,'中文部门日目标');
           if (response.status) {
               //部门日目标
               $this.depDayTarget = response.groupcount;
@@ -757,10 +765,13 @@ export default {
                             itemData.dayNum = [item.daynumber];
                         }
                         itemData.targetNum = [item.daytargetnumber];
+
                         itemDataLine.name = item.departname;
                         itemDataLine.count = item.historymaxnumber;
+
                         itemDatahisLine.name = item.departname;
                         itemDatahisLine.count = item.monthmaxnumber;
+
                         departTargetNum.push(itemData);
                         targetDataLine.push(itemDataLine,itemDatahisLine);
                       });
@@ -826,7 +837,6 @@ export default {
                   }
                   $this.drawDepartTarget();// 部门日目标进度图
               }
-              $this.getCnCluesStatData();
           } else {
             $this.$message({
               showClose: true,
@@ -970,7 +980,6 @@ export default {
                   }   
                   $this.drawDepartTarget();// 部门日目标进度图
               }
-              $this.getEnCluesStatData();
           }else {
             $this.$message({
               showClose: true,
@@ -1014,7 +1023,7 @@ export default {
       $this.clearData();
       $this.$store.dispatch("api/cnCluesStatDataAction", resultData).then((response) => {
         if (response) {
-          //console.log(response,'/hxindex/Api/chinacount');
+          console.log(response,'/hxindex/Api/chinacount');
           if (response.status) {
             // 日目标统计
             $this.targetScore.daymaxnumber= response.daymaxnumber[0];
@@ -1089,31 +1098,35 @@ export default {
               var registerArr=[];
               var registerGrowth='';
               var registerRate='';
+              var registerObj={
+                year:'',
+                value:0,
+              };        
+              var lastregisterObj={
+                year:'',
+                value:0,
+              };
               response.yeartong.forEach(function(item,index){
                   var yeartongObj={};
                   var lastyeartongObj={};
-                  var registerObj={};
-                  var lastregisterObj={};
                   yeartongObj.month=item.date.split('-')[1]+'月';
                   yeartongObj.value=item.xunnumber;
                   yeartongObj.year=item.date.split('-')[0];
                   lastyeartongObj.month=item.lastdate.split('-')[1]+'月';
                   lastyeartongObj.value=item.lastxunnumber;
                   lastyeartongObj.year=item.lastdate.split('-')[0];
-                  //当月询盘对比
-                  if($this.TodayMonth==item.date.split('-')[1]){
-                    registerObj.year=item.date.split('-')[0];
-                    registerObj.value=item.xunnumber;
-                    lastregisterObj.year=item.lastdate.split('-')[0];
-                    lastregisterObj.value=item.lastxunnumber;
-                    registerArr.push(registerObj,lastregisterObj);
-                    registerGrowth=item.xunnumber-item.lastxunnumber;
-                    registerRate=(item.xunnumber/item.lastxunnumber*100).toFixed(2)+'%';
-                  }
                   yeartongArr.push(yeartongObj,lastyeartongObj);
+                  //年度同期询盘对比
+                  registerObj.value=registerObj.value+item.xunnumber;
+                  registerObj.year=item.date.split('-')[0];
+                  lastregisterObj.value=lastregisterObj.value+item.lastxunnumber;
+                  lastregisterObj.year=item.lastdate.split('-')[0];               
               });
+              registerArr.push(registerObj,lastregisterObj); 
               $this.currentCluesData.yeartongArr=yeartongArr;
               $this.currentCluesData.registerArr=registerArr;
+              registerGrowth=registerObj.value-lastregisterObj.value;
+              registerRate=(registerObj.value/lastregisterObj.value*100).toFixed(2)+'%';
               $this.currentCluesData.registerGrowth=registerGrowth;
               $this.currentCluesData.registerRate=registerRate;
               $this.yeartongChart();
@@ -1215,11 +1228,17 @@ export default {
               var sametimeArr=[];
               var sametimeGrowth='';
               var sametimeRate='';
+              var registerObj={
+                year:'',
+                value:0,
+              };        
+              var lastregisterObj={
+                year:'',
+                value:0,
+              };
               response.yearscoretong.forEach(function(item,index){
                   var yeartongObj={};
                   var lastyeartongObj={};
-                  var registerObj={};
-                  var lastregisterObj={};
                   yeartongObj.month=item.date.split('-')[1]+'月';
                   if ($this.isFloat(Number(item.score))) {
                      yeartongObj.value=Number(item.score).toFixed(2);
@@ -1234,46 +1253,44 @@ export default {
                      lastyeartongObj.value=item.lastscore;
                   }
                   lastyeartongObj.year=item.lastdate.split('-')[0];
-                  //当月询盘对比
-                  if($this.TodayMonth==item.date.split('-')[1]){
-                    registerObj.year=item.date.split('-')[0];
-                    if ($this.isFloat(Number(item.score))) {
-                        registerObj.value=Number(item.score).toFixed(2);
-                    } else {
-                        registerObj.value=Number(item.score);
-                    }
-                    lastregisterObj.year=item.lastdate.split('-')[0];
-                    if ($this.isFloat(Number(item.lastscore))) {
-                        lastregisterObj.value=Number(item.lastscore).toFixed(2);
-                    } else {
-                        lastregisterObj.value=Number(item.lastscore);
-                    }
-                    var MaxValue='';
-                    if(Number(item.score)>=Number(item.lastscore)){
-                      MaxValue=Number(item.score);
-                    }else{
-                      MaxValue=Number(item.lastscore);
-                    }
-                    if(MaxValue==0){
-                      lastregisterObj.percen='0%';
-                      registerObj.percen='0%';
-                    }else{
-                        lastregisterObj.percen=(Number(item.lastscore)/MaxValue*100).toFixed(2)+'%';
-                        registerObj.percen=(Number(item.score)/MaxValue*100).toFixed(2)+'%';
-                    }
-                    sametimeArr.push(registerObj,lastregisterObj);
-                    
-                    sametimeGrowth=Number(item.score)-Number(item.lastscore);
-                    if(Number(item.lastscore)==0){
-                      sametimeRate=Number(item.score).toFixed(2)+'%';
-                    }else{
-                      sametimeRate=(Number(item.score)/Number(item.lastscore)*100).toFixed(2)+'%';
-                    }
-                  }
                   yearscoretongArr.push(yeartongObj,lastyeartongObj);
+                  //年度同期成交对比
+                  registerObj.year=item.date.split('-')[0];
+                  if ($this.isFloat(Number(item.score))) {
+                      registerObj.value=registerObj.value+Number(item.score).toFixed(2);
+                  } else {
+                      registerObj.value=registerObj.value+Number(item.score);
+                  }
+                  lastregisterObj.year=item.lastdate.split('-')[0];
+                  if ($this.isFloat(Number(item.lastscore))) {
+                      lastregisterObj.value=lastregisterObj.value+Number(item.lastscore).toFixed(2);
+                  } else {
+                      lastregisterObj.value=lastregisterObj.value+Number(item.lastscore);
+                  }
               });
               $this.currentCluesData.yearscoretongArr=yearscoretongArr;
+              sametimeArr.push(registerObj,lastregisterObj);
               $this.currentCluesData.sametimeArr=sametimeArr;
+              var MaxValue='';
+              if(Number(registerObj.value)>=Number(lastregisterObj.value)){
+                MaxValue=Number(registerObj.value);
+              }else{
+                MaxValue=Number(lastregisterObj.value);
+              }
+              if(MaxValue==0){
+                lastregisterObj.percen='0%';
+                registerObj.percen='0%';
+              }else{
+                  lastregisterObj.percen=(Number(lastregisterObj.value)/MaxValue*100).toFixed(2)+'%';
+                  registerObj.percen=(Number(registerObj.value)/MaxValue*100).toFixed(2)+'%';
+              }
+              sametimeGrowth=Number(registerObj.value)-Number(lastregisterObj.value);
+              if(Number(lastregisterObj.value)==0){
+                sametimeRate=Number(registerObj.value).toFixed(2)+'%';
+              }else{
+                sametimeRate=(Number(registerObj.value)/Number(lastregisterObj.value)*100).toFixed(2)+'%';
+              }
+
               $this.currentCluesData.sametimeGrowth=sametimeGrowth;
               $this.currentCluesData.sametimeRate=sametimeRate;
               $this.yearscoretongChart();
@@ -1540,31 +1557,35 @@ export default {
               var registerArr=[];
               var registerGrowth='';
               var registerRate='';
+              var registerObj={
+                year:'',
+                value:0,
+              };        
+              var lastregisterObj={
+                year:'',
+                value:0,
+              };
               response.yeartong.forEach(function(item,index){
                   var yeartongObj={};
                   var lastyeartongObj={};
-                  var registerObj={};
-                  var lastregisterObj={};
                   yeartongObj.month=item.date.split('-')[1]+'月';
                   yeartongObj.value=item.xunnumber;
                   yeartongObj.year=item.date.split('-')[0];
                   lastyeartongObj.month=item.lastdate.split('-')[1]+'月';
                   lastyeartongObj.value=item.lastxunnumber;
                   lastyeartongObj.year=item.lastdate.split('-')[0];
-                  //当月询盘对比
-                  if($this.TodayMonth==item.date.split('-')[1]){
-                    registerObj.year=item.date.split('-')[0];
-                    registerObj.value=item.xunnumber;
-                    lastregisterObj.year=item.lastdate.split('-')[0];
-                    lastregisterObj.value=item.lastxunnumber;
-                    registerArr.push(registerObj,lastregisterObj);
-                    registerGrowth=item.xunnumber-item.lastxunnumber;
-                    registerRate=(item.xunnumber/item.lastxunnumber*100).toFixed(2)+'%';
-                  }
                   yeartongArr.push(yeartongObj,lastyeartongObj);
+                  //年度同期询盘对比
+                  registerObj.value=registerObj.value+item.xunnumber;
+                  registerObj.year=item.date.split('-')[0];
+                  lastregisterObj.value=lastregisterObj.value+item.lastxunnumber;
+                  lastregisterObj.year=item.lastdate.split('-')[0];               
               });
+              registerArr.push(registerObj,lastregisterObj); 
               $this.currentCluesData.yeartongArr=yeartongArr;
               $this.currentCluesData.registerArr=registerArr;
+              registerGrowth=registerObj.value-lastregisterObj.value;
+              registerRate=(registerObj.value/lastregisterObj.value*100).toFixed(2)+'%';
               $this.currentCluesData.registerGrowth=registerGrowth;
               $this.currentCluesData.registerRate=registerRate;
               $this.yeartongChart();
@@ -1666,11 +1687,17 @@ export default {
               var sametimeArr=[];
               var sametimeGrowth='';
               var sametimeRate='';
+              var registerObj={
+                year:'',
+                value:0,
+              };        
+              var lastregisterObj={
+                year:'',
+                value:0,
+              };
               response.yearscoretong.forEach(function(item,index){
                   var yeartongObj={};
                   var lastyeartongObj={};
-                  var registerObj={};
-                  var lastregisterObj={};
                   yeartongObj.month=item.date.split('-')[1]+'月';
                   if ($this.isFloat(Number(item.score))) {
                      yeartongObj.value=Number(item.score).toFixed(2);
@@ -1685,46 +1712,44 @@ export default {
                      lastyeartongObj.value=item.lastscore;
                   }
                   lastyeartongObj.year=item.lastdate.split('-')[0];
-                  //当月询盘对比
-                  if($this.TodayMonth==item.date.split('-')[1]){
-                    registerObj.year=item.date.split('-')[0];
-                    if ($this.isFloat(Number(item.score))) {
-                        registerObj.value=Number(item.score).toFixed(2);
-                    } else {
-                        registerObj.value=Number(item.score);
-                    }
-                    lastregisterObj.year=item.lastdate.split('-')[0];
-                    if ($this.isFloat(Number(item.lastscore))) {
-                        lastregisterObj.value=Number(item.lastscore).toFixed(2);
-                    } else {
-                        lastregisterObj.value=Number(item.lastscore);
-                    }
-                    var MaxValue='';
-                    if(Number(item.score)>=Number(item.lastscore)){
-                      MaxValue=Number(item.score);
-                    }else{
-                      MaxValue=Number(item.lastscore);
-                    }
-                    if(MaxValue==0){
-                      lastregisterObj.percen='0%';
-                      registerObj.percen='0%';
-                    }else{
-                        lastregisterObj.percen=(Number(item.lastscore)/MaxValue*100).toFixed(2)+'%';
-                        registerObj.percen=(Number(item.score)/MaxValue*100).toFixed(2)+'%';
-                    }
-                    sametimeArr.push(registerObj,lastregisterObj);
-                    
-                    sametimeGrowth=Number(item.score)-Number(item.lastscore);
-                    if(Number(item.lastscore)==0){
-                      sametimeRate=Number(item.score).toFixed(2)+'%';
-                    }else{
-                      sametimeRate=(Number(item.score)/Number(item.lastscore)*100).toFixed(2)+'%';
-                    }
-                  }
                   yearscoretongArr.push(yeartongObj,lastyeartongObj);
+                  //年度同期成交对比
+                  registerObj.year=item.date.split('-')[0];
+                  if ($this.isFloat(Number(item.score))) {
+                      registerObj.value=registerObj.value+Number(item.score).toFixed(2);
+                  } else {
+                      registerObj.value=registerObj.value+Number(item.score);
+                  }
+                  lastregisterObj.year=item.lastdate.split('-')[0];
+                  if ($this.isFloat(Number(item.lastscore))) {
+                      lastregisterObj.value=lastregisterObj.value+Number(item.lastscore).toFixed(2);
+                  } else {
+                      lastregisterObj.value=lastregisterObj.value+Number(item.lastscore);
+                  }
               });
               $this.currentCluesData.yearscoretongArr=yearscoretongArr;
+              sametimeArr.push(registerObj,lastregisterObj);
               $this.currentCluesData.sametimeArr=sametimeArr;
+              var MaxValue='';
+              if(Number(registerObj.value)>=Number(lastregisterObj.value)){
+                MaxValue=Number(registerObj.value);
+              }else{
+                MaxValue=Number(lastregisterObj.value);
+              }
+              if(MaxValue==0){
+                lastregisterObj.percen='0%';
+                registerObj.percen='0%';
+              }else{
+                  lastregisterObj.percen=(Number(lastregisterObj.value)/MaxValue*100).toFixed(2)+'%';
+                  registerObj.percen=(Number(registerObj.value)/MaxValue*100).toFixed(2)+'%';
+              }
+              sametimeGrowth=Number(registerObj.value)-Number(lastregisterObj.value);
+              if(Number(lastregisterObj.value)==0){
+                sametimeRate=Number(registerObj.value).toFixed(2)+'%';
+              }else{
+                sametimeRate=(Number(registerObj.value)/Number(lastregisterObj.value)*100).toFixed(2)+'%';
+              }
+
               $this.currentCluesData.sametimeGrowth=sametimeGrowth;
               $this.currentCluesData.sametimeRate=sametimeRate;
               $this.yearscoretongChart();
@@ -1913,8 +1938,7 @@ export default {
         }
         const radialBarPlot = new Mix('radialBarChart', {
           appendPadding: 8,
-          syncViewPadding: true,
-          
+          syncViewPadding: true,          
           tooltip: { 
             shared: true ,
             customItems: (originalItems) => {
@@ -1960,7 +1984,7 @@ export default {
                             stroke: '#cccccc',
                             lineWidth: 1,
                             lineDash: [3, 2],
-                            strokeOpacity: 0.7,
+                            strokeOpacity: 0.1,
                             shadowColor: null,
                             shadowBlur: 0,
                             shadowOffsetX:0,
@@ -1999,7 +2023,7 @@ export default {
                             stroke: '#cccccc',
                             lineWidth: 1,
                             lineDash: [3, 2],
-                            strokeOpacity: 0.7,
+                            strokeOpacity: 0.1,
                             shadowColor: null,
                             shadowBlur: 0,
                             shadowOffsetX:0,
@@ -2049,7 +2073,7 @@ export default {
                             stroke: '#cccccc',
                             lineWidth: 1,
                             lineDash: [3, 2],
-                            strokeOpacity: 0.7,
+                            strokeOpacity: 0.1,
                             shadowColor: null,
                             shadowBlur: 0,
                             shadowOffsetX:0,
@@ -2096,28 +2120,8 @@ export default {
                     data: resultData,
                     xField: 'departname',
                     yField: 'historymaxnumber',
-                    xAxis: {
-                      line: null,
-                    },
-                    yAxis: {
-                      grid: {
-                        line: {
-                          style: {
-                            stroke: '#cccccc',
-                            lineWidth: 1,
-                            lineDash: [3, 2],
-                            strokeOpacity: 0.7,
-                            shadowColor: null,
-                            shadowBlur: 0,
-                            shadowOffsetX:0,
-                            shadowOffsetY:0,
-                            cursor: 'pointer'
-                          }
-                        }
-                      },
-                      position: 'right',
-                      max: maxnum + 20,
-                    },
+                    xAxis:false,
+                    yAxis:false,
                     color:'#f38080',
                     meta: {
                         historymaxnumber: {
@@ -2136,28 +2140,8 @@ export default {
                     data: resultData,
                     xField: 'departname',
                     yField: 'monthmaxnumber',
-                    xAxis: {
-                      line: null,
-                    },
-                    yAxis: {
-                      grid: {
-                        line: {
-                          style: {
-                            stroke: '#cccccc',
-                            lineWidth: 1,
-                            lineDash: [3, 2],
-                            strokeOpacity: 0.7,
-                            shadowColor: null,
-                            shadowBlur: 0,
-                            shadowOffsetX:0,
-                            shadowOffsetY:0,
-                            cursor: 'pointer'
-                          }
-                        }
-                      },
-                      position: 'right',
-                      max: maxnum + 20,
-                    },
+                    xAxis:false,
+                    yAxis:false,
                     color:'#fcb030',
                     meta: {
                         monthmaxnumber: {
@@ -2331,6 +2315,7 @@ export default {
           userView.polygon()
             .position('longitude*latitude')
             .color('trend', '#0050B3-#1890FF-#BAE7FF')
+            //.color('trend', ['#c9311c', '#f85f23', '#f0a861', '#a7c67e', '#c2e8b7'])
             .tooltip('name*number')
             .style({
               fillOpacity: 0.85
@@ -2441,10 +2426,27 @@ export default {
               appendPadding:[15,15,15,15],
               height: 370,
               smooth:false,
+              //yAxis: {
+              //  label: {
+              //    // 数值格式化为千分位
+              //    formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+              //  },
+              //},
               yAxis: {
-                label: {
-                  // 数值格式化为千分位
-                  formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+                grid: {
+                  line: {
+                    style: {
+                      stroke: '#cccccc',
+                      lineWidth: 1,
+                      lineDash: [3, 2],
+                      strokeOpacity: 0.5,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX:0,
+                      shadowOffsetY:0,
+                      cursor: 'pointer'
+                    }
+                  }
                 },
               },
               // label
@@ -2621,10 +2623,11 @@ export default {
       var $this = this;
       if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
         $this.yeardepartscoreData.changeData($this.currentCluesData.yeardepartscoreArr);
-      }else{        
+      }else{     
+        var data=$this.currentCluesData.yeardepartscoreArr;
         const yeardepartscoreData = new Pie('yeardepartscoreChart', {
           appendPadding: 10,
-          data:$this.currentCluesData.yeardepartscoreArr,
+          data,
           angleField: 'score',
           colorField: 'departname',
           height:355,
@@ -2647,15 +2650,15 @@ export default {
             itemName: {
               formatter(text, item, index) {
                 if (
-                  $this.currentCluesData.yeardepartscoreArr &&
-                  $this.currentCluesData.yeardepartscoreArr[index] &&
-                  $this.currentCluesData.yeardepartscoreArr[index].score &&
-                  $this.currentCluesData.yeardepartscoreArr[index].departname
+                  data &&
+                  data[index] &&
+                  data[index].score &&
+                  data[index].departname
                 ) {
                   return (
                     text +
                     '：' +
-                    $this.currentCluesData.yeardepartscoreArr[index].score.toFixed(2)
+                    data[index].score.toFixed(2)
                   )
                 }
                 return
@@ -2775,10 +2778,27 @@ export default {
               xField: 'month',
               yField: 'value',
               seriesField: 'year',
+              //yAxis: {
+              //  label: {
+              //    // 数值格式化为千分位
+              //    formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+              //  },
+              //},
               yAxis: {
-                label: {
-                  // 数值格式化为千分位
-                  formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+                grid: {
+                  line: {
+                    style: {
+                      stroke: '#cccccc',
+                      lineWidth: 1,
+                      lineDash: [3, 2],
+                      strokeOpacity: 0.5,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX:0,
+                      shadowOffsetY:0,
+                      cursor: 'pointer'
+                    }
+                  }
                 },
               },
               seriesField: 'year',
@@ -2804,50 +2824,60 @@ export default {
               hoverData=ev.data.items;
             })
             yearscoretongData.on('plot:click', ev => {
-              var clickData = [];
+              console.log(hoverData,'hoverData');
+              var mouth=hoverData[0].data.month.replace('月','');
+              var sametimeArr=[];
+              var registerObj={
+                year:hoverData[0].data.year,
+                value:0,
+              };        
+              var lastregisterObj={
+                year:hoverData[1].data.year,
+                value:0,
+              };
               var sametimeGrowth='';
               var sametimeRate='';
-              hoverData.forEach(function(item,index){
-                  var registerObj={};
-                  registerObj.year=item.data.year;
-                  if ($this.isFloat(Number(item.data.value))) {
-                      registerObj.value=Number(item.data.value).toFixed(2);
-                  } else {
-                      registerObj.value=Number(item.data.value);
+              $this.currentCluesData.yearscoretongArr.forEach(function(item,index){
+                  if(item.month.replace('月','')<mouth||item.month.replace('月','')==mouth){
+                    //年度同期询盘对比
+                    if(registerObj.year==item.year){
+                       registerObj.value=registerObj.value+Number(item.value);
+                    }else{
+                      lastregisterObj.value=lastregisterObj.value+Number(item.value);
+                    } 
                   }
-                  clickData.push(registerObj);
-              });
-              var valOne=Number(clickData[0].value);
-              var valTwo=Number(clickData[1].value);
-              if(clickData[0].year>clickData[1].year){
-                  sametimeGrowth=valOne-valTwo;
-                  if(valTwo==0){
-                    sametimeRate=valOne.toFixed(2)+'%';
-                  }else{
-                    sametimeRate=(valOne/valTwo*100).toFixed(2)+'%';
-                  }
-              }else{
-                  sametimeGrowth=valTwo-valOne;
-                  if(valOne==0){
-                    sametimeRate=(valTwo).toFixed(2)+'%';
-                  }else{
-                    sametimeRate=(valTwo/valOne*100).toFixed(2)+'%';
-                  }
-              }
+              });                            
               var MaxValue='';
-              if(valOne>=valTwo){
-                MaxValue=valOne;
+              if(Number(registerObj.value)>=Number(lastregisterObj.value)){
+                MaxValue=Number(registerObj.value);
               }else{
-                MaxValue=valTwo;
+                MaxValue=Number(lastregisterObj.value);
               }
-              clickData.forEach(function(item){
-                  if(MaxValue==0){
-                    item.percen='0%';
+              if(MaxValue==0){
+                lastregisterObj.percen='0%';
+                registerObj.percen='0%';
+              }else{
+                  lastregisterObj.percen=(Number(lastregisterObj.value)/MaxValue*100).toFixed(2)+'%';
+                  registerObj.percen=(Number(registerObj.value)/MaxValue*100).toFixed(2)+'%';
+              }
+              sametimeArr.push(registerObj,lastregisterObj);
+              $this.currentCluesData.sametimeArr = sametimeArr;
+
+              if(registerObj.year>lastregisterObj.year){
+                  sametimeGrowth=registerObj.value-lastregisterObj.value;
+                  if(lastregisterObj.value==0){
+                    sametimeRate=registerObj.value.toFixed(2)+'%';
                   }else{
-                    item.percen=(item.value/MaxValue*100).toFixed(2)+'%';
+                    sametimeRate=(registerObj.value/lastregisterObj.value*100).toFixed(2)+'%';
                   }
-              });              
-              $this.currentCluesData.sametimeArr = clickData;
+              }else{
+                  sametimeGrowth=lastregisterObj.value-registerObj.value;
+                  if(registerObj.value==0){
+                    sametimeRate=(lastregisterObj.value).toFixed(2)+'%';
+                  }else{
+                    sametimeRate=(lastregisterObj.value/registerObj.value*100).toFixed(2)+'%';
+                  }
+              }
               $this.currentCluesData.sametimeGrowth=sametimeGrowth;
               $this.currentCluesData.sametimeRate=sametimeRate;
               $this.registerChart();
@@ -2867,10 +2897,27 @@ export default {
               xField: 'month',
               yField: 'value',
               seriesField: 'year',
+              //yAxis: {
+              //  label: {
+              //    // 数值格式化为千分位
+              //    formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+              //  },
+              //},
               yAxis: {
-                label: {
-                  // 数值格式化为千分位
-                  formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+                grid: {
+                  line: {
+                    style: {
+                      stroke: '#cccccc',
+                      lineWidth: 1,
+                      lineDash: [3, 2],
+                      strokeOpacity: 0.5,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX:0,
+                      shadowOffsetY:0,
+                      cursor: 'pointer'
+                    }
+                  }
                 },
               },
               seriesField: 'year',
@@ -2896,23 +2943,38 @@ export default {
               hoverData=ev.data.items;
             })
             yeartongData.on('plot:click', ev => {
-              var clickData = [];
+              console.log(hoverData,'hoverData');
+              var mouth=hoverData[0].data.month.replace('月','');
+              var registerArr=[];
+              var registerObj={
+                year:hoverData[0].data.year,
+                value:0,
+              };        
+              var lastregisterObj={
+                year:hoverData[1].data.year,
+                value:0,
+              };
+              $this.currentCluesData.yeartongArr.forEach(function(item,index){
+                  if(item.month.replace('月','')<mouth||item.month.replace('月','')==mouth){
+                    //年度同期询盘对比
+                    if(registerObj.year==item.year){
+                       registerObj.value=registerObj.value+item.value;
+                    }else{
+                      lastregisterObj.value=lastregisterObj.value+item.value;
+                    } 
+                  }
+              });
+              registerArr.push(registerObj,lastregisterObj);
+              $this.currentCluesData.registerArr = registerArr;
               var registerGrowth='';
               var registerRate='';
-              hoverData.forEach(function(item,index){
-                  var registerObj={};
-                  registerObj.year=item.data.year;
-                  registerObj.value=item.data.value;
-                  clickData.push(registerObj);
-              });
-              if(clickData[0].year>clickData[1].year){
-                  registerGrowth=clickData[0].value-clickData[1].value;
-                  registerRate=(clickData[0].value/clickData[1].value*100).toFixed(2)+'%';
+              if(registerObj.year>=lastregisterObj.year){
+                registerGrowth=registerObj.value-lastregisterObj.value;
+                registerRate=(registerObj.value/lastregisterObj.value*100).toFixed(2)+'%';
               }else{
-                  registerGrowth=clickData[1].value-clickData[0].value;
-                  registerRate=(clickData[1].value/clickData[0].value*100).toFixed(2)+'%';
+                registerGrowth=lastregisterObj.value-registerObj.value;
+                registerRate=(lastregisterObj.value/registerObj.value*100).toFixed(2)+'%';
               }
-              $this.currentCluesData.registerArr = clickData;
               $this.currentCluesData.registerGrowth=registerGrowth;
               $this.currentCluesData.registerRate=registerRate;
               $this.registerChart();
@@ -2937,6 +2999,23 @@ export default {
               height: 300,
               color: ['#669aff', '#9dd5ff'],
               marginRatio: 0,
+              yAxis: {
+                grid: {
+                  line: {
+                    style: {
+                      stroke: '#cccccc',
+                      lineWidth: 1,
+                      lineDash: [3, 2],
+                      strokeOpacity: 0.5,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX:0,
+                      shadowOffsetY:0,
+                      cursor: 'pointer'
+                    }
+                  }
+                },
+              },
               label: {
                 position: 'top',
                 layout: [
@@ -2969,6 +3048,23 @@ export default {
               color: ['#fcb030', '#f7c572'],
               /** 设置间距 */
               marginRatio: 0,
+              yAxis: {
+                grid: {
+                  line: {
+                    style: {
+                      stroke: '#cccccc',
+                      lineWidth: 1,
+                      lineDash: [3, 2],
+                      strokeOpacity: 0.5,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX:0,
+                      shadowOffsetY:0,
+                      cursor: 'pointer'
+                    }
+                  }
+                },
+              },
               label: {
                 // 可手动配置 label 数据标签位置
                 position: 'top', // 'top', 'middle', 'bottom'
@@ -3003,7 +3099,7 @@ export default {
       }else{
         resUrl='api/endepartScoreAction';
       }  
-      $this.$store.dispatch("api/departScoreAction", resultData).then((response) => {
+      $this.$store.dispatch(resUrl, resultData).then((response) => {
           //console.log(response,'首页中文成交统计接口')
           if (response.status) {
               $this.ScoreTime=response.month;
@@ -3087,7 +3183,10 @@ export default {
                   $this.ScoreData.allsnumber=response.allsnumber;
                   $this.ScoreData.addallscore=response.allscore;
                   $this.ScoreData.addallsnumber=response.allsnumber;
-                  if(response.yeardepartscore&&response.yeardepartscore.length>0){
+                  if(response.yeardepartscore&&response.yeardepartscore.length>0){                    
+                      if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
+                        $this.yeardepartscoreData.chart.destroy();
+                      }
                       var yeardepartscoreArr=[];
                       var departmentCost=[];
                       var costAverage=[];
@@ -3117,15 +3216,17 @@ export default {
                           costAverageObj.avgallmoney=item.avgallmoney;
                           costAverage.push(costAverageObj);
                       });
-                      console.log(yeardepartscoreArr,'yeardepartscoreArr');
                       $this.currentCluesData.yeardepartscoreArr=yeardepartscoreArr;
                       $this.currentCluesData.totalNumscore=totalNumscore.toFixed(2);
                       $this.yeardepartscoreChart();
                       //部门成本
-                      console.log(costAverage,'costAverage');
+                      costAverage.sort(function(a, b) {
+                            var value1 = a.avgallmoney;
+                            var value2 = b.avgallmoney;
+                            return value1 - value2;
+                      });
                       $this.currentCluesData.costAverage=costAverage;
                       //部门成本均价排行
-                      console.log(departmentCost,'departmentCost');
                       $this.currentCluesData.departmentCost=departmentCost;
                       $this.costAverageChart();
                   }
@@ -3181,7 +3282,12 @@ export default {
                   $this.ScoreData.allsnumber=response.allsnumber;
                   $this.ScoreData.addallscore=response.allscore;
                   $this.ScoreData.addallsnumber=response.allsnumber;
-                  if(response.yeardepartscore&&response.yeardepartscore.length>0){
+                  if(response.yeardepartscore&&response.yeardepartscore.length>0){                 
+                      if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
+                        $this.yeardepartscoreData.chart.destroy();
+                        $this.currentCluesData.yeardepartscoreArr=[];
+                        $this.yeardepartscoreData=null;
+                      }
                       var yeardepartscoreArr=[];
                       var departmentCost=[];
                       var costAverage=[];
@@ -3215,6 +3321,11 @@ export default {
                       $this.currentCluesData.totalNumscore=totalNumscore.toFixed(2);
                       $this.yeardepartscoreChart();
                       //部门成本
+                      costAverage.sort(function(a, b) {
+                            var value1 = a.avgallmoney;
+                            var value2 = b.avgallmoney;
+                            return value1 - value2;
+                      });
                       $this.currentCluesData.costAverage=costAverage;
                       //部门成本均价排行
                       $this.currentCluesData.departmentCost=departmentCost;
@@ -3222,145 +3333,6 @@ export default {
                   }
               }
           } else {
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: "error",
-            });
-          }
-      });
-    },
-    // 首页英文成交统计数据
-    getEnDepartScore(){
-      var $this = this;
-      $this.currentCluesData.departScoreData=[];
-      var resultData = {};
-      if($this.ScoreTime&&$this.ScoreTime!=''){
-        resultData.month=$this.ScoreTime;
-      }else{
-        resultData.month='';
-      }
-      $this.$store.dispatch("api/endepartScoreAction", resultData).then((response) => {
-          //console.log(response,'首页英文成交统计接口')
-          if (response.status) {
-              $this.ScoreTime=response.month;
-              if(response.departscore&&response.departscore.length>0){
-                 var departscoreArr=[];
-                 response.departscore.forEach(function(item,index){
-                    var itemDate={};
-                    itemDate.departname=item.departname;
-                    if(item.passnumber==null||item.passnumber==0||item.passnumber==''){
-                      itemDate.passnumber=0;
-                    }else{
-                      itemDate.passnumber=item.passnumber;
-                    }
-                    if(item.mediumnumber==null||item.mediumnumber==0||item.mediumnumber==''){
-                      itemDate.mediumnumber=0;
-                    }else{
-                      itemDate.mediumnumber=item.mediumnumber;
-                    }
-                    if(item.goodnumber==null||item.goodnumber==0||item.goodnumber==''){
-                      itemDate.goodnumber=0;
-                    }else{
-                      itemDate.goodnumber=item.goodnumber;
-                    }
-                    if(item.snumber==null||item.snumber==0||item.snumber==''){
-                      itemDate.snumber=0;
-                    }else{
-                      itemDate.snumber=item.snumber;
-                    }
-                    departscoreArr.push(itemDate);
-                 });    
-                 departscoreArr.sort(function(a, b) {
-                      var value1 = a.snumber;
-                      var value2 = b.snumber;
-                      return value2 - value1;
-                 });               
-                 $this.currentCluesData.departScoreData = departscoreArr;
-              }else{
-                  $this.yearuserChart=null;
-                  if($this.yearuserChart&&!$this.yearuserChart.chart.destroyed){
-                    $this.yearuserChart.chart.destroy();
-                  }
-              }
-              var snumberArr=[];
-              var goodnumberArr=[];
-              var Maxscore='';
-              var Maxgoodnumber='';
-              if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){
-                if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
-                  if(response.departscore&&response.departscore.length>0){
-                    response.departscore.forEach(function(item){
-                        if(item.snumber==null||item.snumber==0||item.snumber==''){
-                          item.snumber=0;
-                        }
-                        if(item.goodnumber==null||item.goodnumber==0||item.goodnumber==''){
-                          item.goodnumber=0;
-                        }
-                        snumberArr.push(item.snumber);
-                        goodnumberArr.push(item.goodnumber);
-                    });
-                    snumberArr.forEach(function(item){
-                      if(item>Maxscore){
-                        Maxscore=item;
-                      }
-                    });
-                    goodnumberArr.forEach(function(item){
-                      if(item>Maxgoodnumber){
-                        Maxgoodnumber=item;
-                      }
-                    });
-                    if(Maxscore>Maxgoodnumber){
-                      $this.ScoreData.MaxValue=Maxscore*1.1;
-                    }else{
-                      $this.ScoreData.MaxValue=Maxgoodnumber*1.1;
-                    }
-                  }                 
-                  if(response.yeardepartscore&&response.yeardepartscore.length>0){
-                      var yeardepartscoreArr=[];
-                      var departmentCost=[];
-                      var costAverage=[];
-                      var totalNumscore='';
-                      response.yeardepartscore.forEach(function(item,index){
-                          var departscoreObj={};
-                          var departmentCostObj={};
-                          var costAverageObj={};
-                          departscoreObj.score=item.score;
-                          departscoreObj.departname=item.departname.replace('电商','');
-                          departscoreObj.percenter=item.percenter;
-                          totalNumscore=Number(totalNumscore)+Number(item.score);
-                          yeardepartscoreArr.push(departscoreObj);
-                          //部门成本
-                          departmentCostObj.departname=item.departname.replace('电商','');
-                          departmentCostObj.score=parseFloat(item.score).toFixed(2);
-                          departmentCostObj.allmoney=item.allmoney;
-                          departmentCostObj.avgallmoney=item.avgallmoney;
-                          departmentCostObj.moneyscore=item.moneyscore;
-                          departmentCostObj.personmoney=item.personmoney;
-                          departmentCostObj.paymoney=item.paymoney;
-                          departmentCostObj.personnumber=item.personnumber;
-
-                          departmentCost.push(departmentCostObj);
-
-                          costAverageObj.departname=item.departname.replace('电商','');
-                          costAverageObj.avgallmoney=item.avgallmoney;
-                          costAverage.push(costAverageObj);
-                      });
-                      console.log(yeardepartscoreArr,'yeardepartscoreArr');
-                      $this.currentCluesData.yeardepartscoreArr=yeardepartscoreArr;
-                      $this.currentCluesData.totalNumscore=totalNumscore.toFixed(2);
-                      $this.yeardepartscoreChart();
-                      //部门成本
-                      console.log(costAverage,'costAverage');
-                      $this.currentCluesData.costAverage=costAverage;
-                      //部门成本均价排行
-                      console.log(departmentCost,'departmentCost');
-                      $this.currentCluesData.departmentCost=departmentCost;
-                      $this.costAverageChart();
-                  }
-                }
-              }
-          }else{
             $this.$message({
               showClose: true,
               message: response.info,
@@ -3711,9 +3683,11 @@ export default {
       if($this.language=="Module_cnStat"){
         $this.getCnCluesRegionStatData();
         $this.cnDaytarget();
+        $this.getCnCluesStatData();
       }else{
         $this.getEnCluesRegionStatData();
         $this.enDaytarget();
+        $this.getEnCluesStatData();
       }
     },
   }
