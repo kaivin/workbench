@@ -186,22 +186,26 @@
             .rowOneOneItem{
                 position:relative;
                 .rowOneOneItemFl{
-                    width:560px;
-                    height:244px;
-                    position:relative;
+                    width: 64%;
+                    height: 230px;
+                    position: relative;
+                    float: left;
                     .legendFly{
                         position: absolute;
-                        bottom: -6px;
+                        bottom: -22px;
                         width: 100%;
                         text-align: center;
+                        left: 50%;
+                        transform: translateX(-24%);
                         span{
                             display: inline-block;
                             margin-right: 20px;
                             font-size: 12px;
                             line-height: 14px;
-                            color: #666;
-                            padding-left: 20px;
+                            color: #999;
+                            padding-left: 28px;
                             position: relative;
+                            font-family:'PingFangSC Regular';
                         }
                         .legendItem1:before{
                             content: "";
@@ -256,11 +260,12 @@
                     }
                 }
                 .rowOneOneItemFr{
-                    background:#f3f8fe;
-                    padding:20px 20px 0px 20px;
-                    border-radius:8px;
-                    margin-left:20px;
-                    min-width:240px;
+                    background: #f3f8fe;
+                    padding: 15px 20px 0px 20px;
+                    border-radius: 8px;
+                    min-width: 240px;
+                    float: right;
+                    width: 34%;
                     dt{
                         clear:both;
                         display:block;
@@ -388,7 +393,7 @@
             margin-left:20px;
             .rowOneThreeTop{
                 padding-top:22px;
-                padding-bottom:70px;
+                padding-bottom:55px;
                 &>span{
                     clear:both;
                     display:block;
@@ -702,6 +707,7 @@
                 width:36%;
                 max-width:622px;
                 margin-left:2%;
+                .el-table .el-table__cell{text-align: center; color:#4c4c4c;font-family:'PingFangSC Regular';}
                 .rowThreeOne03Tit{
                     clear:both;
                     display:block;
@@ -1491,6 +1497,7 @@
                 float: left;
                 width: 57.3%;
                 .rowSeverFrOneBox{
+                    .el-table .el-table__cell{text-align: center;}
                     .el-table.rowThreeTable{
                         display:flex;
                         flex-direction:column;

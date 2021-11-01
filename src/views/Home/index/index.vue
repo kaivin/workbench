@@ -49,7 +49,7 @@
                           </el-date-picker>
                         </div>
                     </div>
-                    <div class="rowOneOneItem clearfix flex-wrap">
+                    <div class="rowOneOneItem clearfix">
                          <div class="rowOneOneItemFl">
                               <div id="radialBarChart" class="chart-canvas"></div>
                               <div class="legendFly">
@@ -60,7 +60,7 @@
                                 <span class="legendItem5">本月最高</span>
                               </div>
                          </div>
-                         <dl class="rowOneOneItemFr flex-content">
+                         <dl class="rowOneOneItemFr">
                              <dt>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}统计</dt>
                              <dd>历史单日最高<span>({{targetScore.historymaxnumber.xundate}})</span><strong class="color01">{{targetScore.historymaxnumber.maxnumber}}</strong></dd>
                              <dd>本月单日最高<span>({{targetScore.daymaxnumber.xundate}})</span><strong class="color02">{{targetScore.daymaxnumber.maxnumber}}</strong></dd>
@@ -1929,7 +1929,7 @@ export default {
               }
             ]
           },
-          height:230,
+          height:215,
           plots:[
             {//目标柱状图
                type: 'column',
@@ -2645,7 +2645,7 @@ export default {
           data,
           angleField: 'score',
           colorField: 'departname',
-          height:366,
+          height:358,
           radius:0.7,
           innerRadius: 0.6,
           appendPadding: 10,
@@ -3186,6 +3186,9 @@ export default {
                   if(response.yeardepartscore&&response.yeardepartscore.length>0){                    
                       if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
                         $this.yeardepartscoreData.chart.destroy();
+                      }                      
+                      if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
+                        $this.yeardepartscoreData.chart.destroy();
                       }
                       var yeardepartscoreArr=[];
                       var departmentCost=[];
@@ -3283,6 +3286,9 @@ export default {
                   $this.ScoreData.addallscore=response.allscore;
                   $this.ScoreData.addallsnumber=response.allsnumber;
                   if(response.yeardepartscore&&response.yeardepartscore.length>0){                 
+                      if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
+                        $this.yeardepartscoreData.chart.destroy();
+                      }
                       if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
                         $this.yeardepartscoreData.chart.destroy();
                       }
