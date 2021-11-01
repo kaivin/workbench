@@ -2315,8 +2315,7 @@ export default {
           });
           userView.polygon()
             .position('longitude*latitude')
-            .color('trend', '#0050B3-#1890FF-#BAE7FF')
-            //.color('trend', ['#c9311c', '#f85f23', '#f0a861', '#a7c67e', '#c2e8b7'])
+            .color('trend', ['#c9311c', '#f85f23', '#f0a861', '#a7c67e', '#c2e8b7', '#d4686c', '#de7d82', '#e89196', '#f1a2a8', '#f9b1b8', '#febbc3', 'fbdee2'])
             .tooltip('name*number')
             .style({
               fillOpacity: 0.85
@@ -3509,7 +3508,8 @@ export default {
         });
         userView.polygon()
           .position('longitude*latitude')
-          .color('trend', '#0050B3-#1890FF-#BAE7FF')
+          //.color('trend', '#0050B3-#1890FF-#BAE7FF')          
+          .color('trend', ['#c9311c', '#f85f23', '#f0a861', '#a7c67e', '#c2e8b7', '#d4686c', '#de7d82', '#e89196', '#f1a2a8', '#f9b1b8', '#febbc3', 'fbdee2'])
           .tooltip('name*country*number')
           .style({
             fillOpacity: 0.85
