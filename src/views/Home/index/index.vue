@@ -2118,6 +2118,15 @@ export default {
                       position: 'right',
                       max: maxnum + 20,
                     },
+                    point: {
+                      size: 4,
+                      shape: 'custom-point',
+                      style: {
+                        fill: 'white',
+                        stroke: '#f38080',
+                        lineWidth: 2,
+                      },
+                    },
                     color:'#f38080',
                     meta: {
                         historymaxnumber: {
