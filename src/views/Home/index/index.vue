@@ -108,69 +108,77 @@
             <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}近30天询盘趋势</h3>
             <div id="cluesChart" class="chart-canvas flex-content"></div>
           </div>
-          <div class="flex-box flex-wrap rowFive">
-               <div class="rowFiveFl flex-content">
+          <div class="rowFive">
+               <div class="rowFiveFl">
                     <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}年度询盘对比</h3>
                     <div id="yeartongChart" class="chart-canvas"></div>
                </div>
                <div class="rowFiveFr">
                     <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}年度同期询盘对比</h3>
-                    <div class="rowFiveFrBox flex-box flex-wrap">
-                         <div id="registerChart" class="chart-canvas flex-content"></div>
+                    <div class="rowFiveFrBox">
+                         <div id="registerChart" class="chart-canvas"></div>
                          <ul class="rowFiveFrBoxFl">
-                             <li><span>同比增长量</span><strong :class="currentCluesData.registerGrowth>0?'':'falling'"><i>{{currentCluesData.registerGrowth>0?'↑':'↓'}}</i>{{Math.abs(currentCluesData.registerGrowth)}}</strong></li>
-                             <li><span>同比增长率</span><strong :class="currentCluesData.registerGrowth>0?'':'falling'"><i>{{currentCluesData.registerGrowth>0?'↑':'↓'}}</i>{{currentCluesData.registerRate}}</strong></li>
+                             <li><span>同比增长量</span><strong :class="currentCluesData.registerGrowth>0?'':'falling'">{{Math.abs(currentCluesData.registerGrowth)}}<i>{{currentCluesData.registerGrowth>0?'↑':'↓'}}</i></strong></li>
+                             <li><span>同比增长率</span><strong :class="currentCluesData.registerGrowth>0?'':'falling'">{{currentCluesData.registerRate}}<i>{{currentCluesData.registerGrowth>0?'↑':'↓'}}</i></strong></li>
                          </ul>
                     </div>
                </div>
           </div>
           <div class="rowThree">
                <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}小组成绩</h3>
-               <div class="rowThreeOne flex-wrap">
+               <div class="rowThreeOne">
                     <div class="rowThreeOne01" v-if="currentCluesData.zugroupdayArr.length>0&&currentCluesData.zugroupdayArr">
                         <div id="zugroupdayChart" class="chart-canvas"></div>
                     </div>
                     <div class="rowThreeOne02" v-if="currentCluesData.monthtongArr.length>0&&currentCluesData.monthtongArr">
                         <div id="zugroupmonthChart" class="chart-canvas"></div>
                     </div>
-                    <div class="rowThreeOne03 flex-content"  v-if="currentCluesData.zusuercountArr.length>0&&currentCluesData.zusuercountArr">
+                    <div class="rowThreeOne03"  v-if="currentCluesData.zusuercountArr.length>0&&currentCluesData.zusuercountArr">
                          <p class="rowThreeOne03Tit">组员成绩<span>注：与上月同期对比</span></p>
-                         <div class="rowThreeThreeItem">                              
+                         <div class="rowThreeThreeItem">                             
                             <el-table
                                 ref="simpleTable"
                                 :data="currentCluesData.zusuercountArr"
                                 tooltip-effect="dark"
                                 stripe
-                                class="rowThreeTable"
+                                class="rowThreeTable rowTableOne"
                                 style="width: 100%"
                                 height="300"
                                 >
                                 <el-table-column
                                 prop="groupname"
                                 label="组别"
+                                aglin="center"
                                 >
+                                  <template slot-scope="scope">
+                                    <span style="color:#aaaaaa;">{{scope.row.groupname}}</span>
+                                  </template>
                                 </el-table-column>
                                 <el-table-column
                                 prop="username"
                                 label="姓名"
+                                aglin="center"
                                 >
                                 </el-table-column>
                                 <el-table-column
                                 prop="todaynumber"
                                 sortable
                                 label="今天个数"
+                                aglin="center"
                                 >
                                 </el-table-column>
                                 <el-table-column
                                 prop="lastdaynumber"
                                 sortable
                                 label="昨天个数"
+                                aglin="center"
                                 >
                                 </el-table-column>
                                 <el-table-column
                                 prop="monthnumber"
                                 sortable
                                 label="本月个数"
+                                aglin="center"
                                 >
                                   <template slot-scope="scope">
                                     <div class="rowThreeGrowth">
@@ -296,17 +304,17 @@
                               <el-table-column
                                 prop="departname"
                                 label="部门"
-                                width="140">
+                                width="80">
                               </el-table-column>
                               <el-table-column
                                 prop="score"
                                 label="成交分"
-                                width="140">
+                                width="80">
                               </el-table-column>
                               <el-table-column
                                 prop="allmoney"
                                 label="总成本(万元)"
-                                width="140">
+                                width="120">
                               </el-table-column>
                               <el-table-column
                                 prop="avgallmoney"
@@ -336,7 +344,7 @@
                                 prop="personnumber"
                                 sortable
                                 label="总人数"
-                                width="140">
+                                width="100">
                               </el-table-column>
                             </el-table>
                         </div>
@@ -709,8 +717,6 @@ export default {
         if (response) {
           console.log(response,'中文部门日目标');
           if (response.status) {
-              //部门日目标
-              $this.depDayTarget = response.groupcount;
               // 获取部门数据
               if(response.readdepart&&response.readdepart.length>0){
                 var DeparData=[];
@@ -723,120 +729,81 @@ export default {
                 });
                 $this.currentCluesData.DeparData=DeparData;
               }
-              if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){
-                  if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
-                      if($this.DaytargetTime&&$this.DaytargetTime!=''){
-                      }else{
-                        $this.DaytargetTime=$this.DaytargetTodayTime;
-                      }
-                      $this.groupcountArr=response.groupcount;
-                      //距目标线差距
-                      if(response.groupcount.length>0){
-                        var maxTarget=0;
-                        response.groupcount.forEach(function(item,index){
-                            var gap=0;
-                            if(item.searchdaynumber){
-                              gap=item.daytargetnumber-item.searchdaynumber;
-                              maxTarget=maxTarget+gap;
-                            }else{
-                              gap=item.daytargetnumber-item.daynumber;
-                              maxTarget=maxTarget+gap;
-                            }
-                        })
-                        if(maxTarget>=0){
-                          $this.targetScore.isDistanceTarget=true;
-                        }else{
-                          $this.targetScore.isDistanceTarget=false;
-                        }
-                        $this.targetScore.DistanceTarget=Math.abs(maxTarget);
-                      }
-                      var departTargetNum = [];
-                      var targetDataLine = [];
-                      $this.currentCluesData.targetData=[];
-                      response.groupcount.forEach(function(item,index){
-                        var itemData = {};
-                        var itemDataLine = {};
-                        var itemDatahisLine = {};
-                        itemData.id = item.id;
-                        itemData.name = item.departname;
-                        if(item.searchdaynumber&&item.searchdaynumber>=0){
-                            itemData.dayNum = [item.searchdaynumber,item.daynumber];
-                        }else{
-                            itemData.dayNum = [item.daynumber];
-                        }
-                        itemData.targetNum = [item.daytargetnumber];
-
-                        itemDataLine.name = item.departname;
-                        itemDataLine.count = item.historymaxnumber;
-
-                        itemDatahisLine.name = item.departname;
-                        itemDatahisLine.count = item.monthmaxnumber;
-
-                        departTargetNum.push(itemData);
-                        targetDataLine.push(itemDataLine,itemDatahisLine);
-                      });
-                      $this.currentCluesData.targetDataLine = targetDataLine;
-                      $this.currentCluesData.targetData = departTargetNum.reverse();
-                      if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
-                        $this.radialBarPlot.chart.destroy();
-                      }
-                      $this.drawDepartTarget();// 部门日目标进度图
-                  }
+              if($this.DaytargetTime&&$this.DaytargetTime!=''){
               }else{
-                  if($this.DaytargetTime&&$this.DaytargetTime!=''){
+                $this.DaytargetTime=$this.DaytargetTodayTime;
+              }                  
+              if(response.groupcount&&response.groupcount.length>0){
+                var groupcountArr=[];
+                response.groupcount.forEach(function(item){
+                  var groupcountObj={};
+                  groupcountObj.daynumber=item.daynumber;
+                  groupcountObj.daytargetnumber=item.daytargetnumber;
+                  groupcountObj.departname=item.departname;
+                  groupcountObj.historymaxnumber=item.historymaxnumber;
+                  groupcountObj.id=item.id;
+                  if(item.searchdaynumber&&item.searchdaynumber!=null){
+                      groupcountObj.searchdaynumber=item.searchdaynumber;
+                  }
+                  if(item.monthmaxnumber==null){
+                      groupcountObj.monthmaxnumber=0;
                   }else{
-                    $this.DaytargetTime=$this.DaytargetTodayTime;
+                      groupcountObj.monthmaxnumber=item.monthmaxnumber;
                   }
-                  $this.groupcountArr=response.groupcount;
-                  //距目标线差距
-                  if(response.groupcount.length>0){
-                    var maxTarget=0;
-                    response.groupcount.forEach(function(item,index){
-                        var gap=0;
-                        if(item.searchdaynumber){
-                          gap=item.daytargetnumber-item.searchdaynumber;
-                          maxTarget=maxTarget+gap;
-                        }else{
-                          gap=item.daytargetnumber-item.daynumber;
-                          maxTarget=maxTarget+gap;
-                        }
-                    })
-                    if(maxTarget>=0){
-                      $this.targetScore.isDistanceTarget=true;
-                    }else{
-                      $this.targetScore.isDistanceTarget=false;
-                    }
-                    $this.targetScore.DistanceTarget=Math.abs(maxTarget);
-                  }
-                  var departTargetNum = [];
-                  var targetDataLine = [];
-                  $this.currentCluesData.targetData=[];
-                  response.groupcount.forEach(function(item,index){
-                    var itemData = {};
-                    var itemDataLine = {};
-                    var itemDatahisLine = {};
-                    itemData.id = item.id;
-                    itemData.name = item.departname;
-                    if(item.searchdaynumber&&item.searchdaynumber>=0){
-                        itemData.dayNum = [item.searchdaynumber,item.daynumber];
-                    }else{
-                        itemData.dayNum = [item.daynumber];
-                    }
-                    itemData.targetNum = [item.daytargetnumber];
-                    itemDataLine.name = item.departname;
-                    itemDataLine.count = item.historymaxnumber;
-                    itemDatahisLine.name = item.departname;
-                    itemDatahisLine.count = item.monthmaxnumber;
-                    departTargetNum.push(itemData);
-                    targetDataLine.push(itemDataLine,itemDatahisLine);
-                  });
-                  $this.currentCluesData.targetDataLine = targetDataLine;
-                  $this.currentCluesData.targetData = departTargetNum.reverse();
-                  if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
-                    $this.radialBarPlot.chart.destroy();
-                  }
-                  $this.drawDepartTarget();// 部门日目标进度图
+                  groupcountArr.push(groupcountObj);
+                })
+                $this.groupcountArr=groupcountArr;
+                $this.depDayTarget = groupcountArr;
               }
+              //距目标线差距
+              if(response.groupcount.length>0){
+                var maxTarget=0;
+                response.groupcount.forEach(function(item,index){
+                    var gap=0;
+                    if(item.searchdaynumber){
+                      gap=item.daytargetnumber-item.searchdaynumber;
+                      maxTarget=maxTarget+gap;
+                    }else{
+                      gap=item.daytargetnumber-item.daynumber;
+                      maxTarget=maxTarget+gap;
+                    }
+                })
+                if(maxTarget>=0){
+                  $this.targetScore.isDistanceTarget=true;
+                }else{
+                  $this.targetScore.isDistanceTarget=false;
+                }
+                $this.targetScore.DistanceTarget=Math.abs(maxTarget);
+              }
+              // 部门日目标进度图
+              var departTargetNum = [];
+              var targetDataLine = [];
+              $this.currentCluesData.targetData=[];
+              response.groupcount.forEach(function(item,index){
+                var itemData = {};
+                var itemDataLine = {};
+                var itemDatahisLine = {};
+                itemData.id = item.id;
+                itemData.name = item.departname;
+                if(item.searchdaynumber&&item.searchdaynumber>=0){
+                    itemData.dayNum = [item.searchdaynumber,item.daynumber];
+                }else{
+                    itemData.dayNum = [item.daynumber];
+                }
+                itemData.targetNum = [item.daytargetnumber];
+                itemDataLine.name = item.departname;
+                itemDataLine.count = item.historymaxnumber;
+                itemDatahisLine.name = item.departname;
+                itemDatahisLine.count = item.monthmaxnumber;
+                departTargetNum.push(itemData);
+                targetDataLine.push(itemDataLine,itemDatahisLine);
+              });
+              $this.currentCluesData.targetDataLine = targetDataLine;
+              $this.currentCluesData.targetData = departTargetNum.reverse();
+              if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
+                $this.radialBarPlot.chart.destroy();
+              }
+              $this.drawDepartTarget();// 部门日目标进度图
           } else {
             $this.$message({
               showClose: true,
@@ -859,10 +826,9 @@ export default {
       $this.targetScore.DistanceTarget='';
       $this.$store.dispatch("api/getEndaytargetAction", resultData).then((response) => {
         if (response) {
-          //console.log(response,'首页英文询盘日目标接口');
+          console.log(response,'首页英文询盘日目标接口');
           if (response.status) {
               //部门日目标
-              $this.depDayTarget = response.groupcount;
               // 获取部门数据
               if(response.readdepart&&response.readdepart.length>0){
                 var DeparData=[];
@@ -874,112 +840,74 @@ export default {
                     DeparData.push(itemDate);
                 });
                 $this.currentCluesData.DeparData=DeparData;
-              }              
-              if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){
-                  if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
-                      if($this.DaytargetTime&&$this.DaytargetTime!=''){
-                      }else{
-                        $this.DaytargetTime=$this.DaytargetTodayTime;
-                      }
-                      $this.groupcountArr=response.groupcount;
-                      //距目标线差距
-                      if(response.groupcount.length>0){
-                        var maxTarget=0;
-                        response.groupcount.forEach(function(item,index){
-                            var gap=0;
-                            gap=item.daytargetnumber-item.daynumber;
-                            maxTarget=maxTarget+gap;
-                        })
-                        if(maxTarget>=0){
-                          $this.targetScore.isDistanceTarget=true;
-                        }else{
-                          $this.targetScore.isDistanceTarget=false;
-                        }
-                        $this.targetScore.DistanceTarget=Math.abs(maxTarget);
-                      }
-                      // 部门日目标进度图
-                      var departTargetNum = [];
-                      var targetDataLine = [];
-                      $this.currentCluesData.targetData=[];
-                      response.groupcount.forEach(function(item,index){
-                        var itemData = {};
-                        var itemDataLine = {};
-                        var itemDatahisLine = {};
-                        itemData.id = item.id;
-                        itemData.name = item.departname;
-                        if(item.searchdaynumber&&item.searchdaynumber>=0){
-                            itemData.dayNum = [item.searchdaynumber,item.daynumber];
-                        }else{
-                            itemData.dayNum = [item.daynumber];
-                        }
-                        itemData.targetNum = [item.daytargetnumber];
-                        itemDataLine.name = item.departname;
-                        itemDataLine.count = item.historymaxnumber;
-                        itemDatahisLine.name = item.departname;
-                        itemDatahisLine.count = item.monthmaxnumber;
-                        departTargetNum.push(itemData);
-                        targetDataLine.push(itemDataLine,itemDatahisLine);
-                      });
-                      $this.currentCluesData.targetDataLine = targetDataLine;
-                      $this.currentCluesData.targetData = departTargetNum.reverse();
-                      if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
-                        $this.radialBarPlot.chart.destroy();
-                      }  
-                      $this.drawDepartTarget();// 部门日目标进度图
-
-                  }else{
-                }
+              } 
+              if($this.DaytargetTime&&$this.DaytargetTime!=''){
               }else{
-                  if($this.DaytargetTime&&$this.DaytargetTime!=''){
-                  }else{
-                    $this.DaytargetTime=$this.DaytargetTodayTime;
-                  }
-                  $this.groupcountArr=response.groupcount;
-                  //距目标线差距
-                  if(response.groupcount.length>0){
-                    var maxTarget=0;
-                    response.groupcount.forEach(function(item,index){
-                        var gap=0;
-                        gap=item.daytargetnumber-item.daynumber;
-                        maxTarget=maxTarget+gap;
-                    })
-                    if(maxTarget>=0){
-                      $this.targetScore.isDistanceTarget=true;
-                    }else{
-                      $this.targetScore.isDistanceTarget=false;
-                    }
-                    $this.targetScore.DistanceTarget=Math.abs(maxTarget);
-                  }
-                  // 部门日目标进度图
-                  var departTargetNum = [];
-                  var targetDataLine = [];
-                  $this.currentCluesData.targetData=[];
-                  response.groupcount.forEach(function(item,index){
-                    var itemData = {};
-                    var itemDataLine = {};
-                    var itemDatahisLine = {};
-                    itemData.id = item.id;
-                    itemData.name = item.departname;
-                    if(item.searchdaynumber&&item.searchdaynumber>=0){
-                        itemData.dayNum = [item.searchdaynumber,item.daynumber];
-                    }else{
-                        itemData.dayNum = [item.daynumber];
-                    }
-                    itemData.targetNum = [item.daytargetnumber];
-                    itemDataLine.name = item.departname;
-                    itemDataLine.count = item.historymaxnumber;
-                    itemDatahisLine.name = item.departname;
-                    itemDatahisLine.count = item.monthmaxnumber;
-                    departTargetNum.push(itemData);
-                    targetDataLine.push(itemDataLine,itemDatahisLine);
-                  });
-                  $this.currentCluesData.targetDataLine = targetDataLine;
-                  $this.currentCluesData.targetData = departTargetNum.reverse();
-                  if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
-                    $this.radialBarPlot.chart.destroy();
-                  }   
-                  $this.drawDepartTarget();// 部门日目标进度图
+                $this.DaytargetTime=$this.DaytargetTodayTime;
               }
+              if(response.groupcount&&response.groupcount.length>0){
+                var groupcountArr=[];
+                response.groupcount.forEach(function(item){
+                  var groupcountObj={};
+                  groupcountObj.daynumber=item.daynumber;
+                  groupcountObj.daytargetnumber=item.daytargetnumber;
+                  groupcountObj.departname=item.departname;
+                  groupcountObj.historymaxnumber=item.historymaxnumber;
+                  groupcountObj.id=item.id;
+                  if(item.monthmaxnumber==null){
+                      groupcountObj.monthmaxnumber=0;
+                  }else{
+                      groupcountObj.monthmaxnumber=item.monthmaxnumber;
+                  }
+                  groupcountArr.push(groupcountObj);
+                })
+                $this.groupcountArr=groupcountArr;  
+                $this.depDayTarget = groupcountArr;                  
+              }
+              //距目标线差距
+              if(response.groupcount.length>0){
+                var maxTarget=0;
+                response.groupcount.forEach(function(item,index){
+                    var gap=0;
+                    gap=item.daytargetnumber-item.daynumber;
+                    maxTarget=maxTarget+gap;
+                })
+                if(maxTarget>=0){
+                  $this.targetScore.isDistanceTarget=true;
+                }else{
+                  $this.targetScore.isDistanceTarget=false;
+                }
+                $this.targetScore.DistanceTarget=Math.abs(maxTarget);
+              }
+              // 部门日目标进度图
+              var departTargetNum = [];
+              var targetDataLine = [];
+              $this.currentCluesData.targetData=[];
+              response.groupcount.forEach(function(item,index){
+                var itemData = {};
+                var itemDataLine = {};
+                var itemDatahisLine = {};
+                itemData.id = item.id;
+                itemData.name = item.departname;
+                if(item.searchdaynumber&&item.searchdaynumber>=0){
+                    itemData.dayNum = [item.searchdaynumber,item.daynumber];
+                }else{
+                    itemData.dayNum = [item.daynumber];
+                }
+                itemData.targetNum = [item.daytargetnumber];
+                itemDataLine.name = item.departname;
+                itemDataLine.count = item.historymaxnumber;
+                itemDatahisLine.name = item.departname;
+                itemDatahisLine.count = item.monthmaxnumber;
+                departTargetNum.push(itemData);
+                targetDataLine.push(itemDataLine,itemDatahisLine);
+              });
+              $this.currentCluesData.targetDataLine = targetDataLine;
+              $this.currentCluesData.targetData = departTargetNum.reverse();
+              if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
+                $this.radialBarPlot.chart.destroy();
+              }   
+              $this.drawDepartTarget();// 部门日目标进度图
           }else {
             $this.$message({
               showClose: true,
@@ -1025,6 +953,18 @@ export default {
         if (response) {
           console.log(response,'/hxindex/Api/chinacount');
           if (response.status) {
+            // 获取部门数据
+            if(response.readart&&response.readart.length>0){
+              var DeparData=[];
+              response.readart.forEach(function(item,index){
+                  var itemDate={};
+                  itemDate.value=item.id;
+                  itemDate.label=item.name;
+                  itemDate.disabled=false;
+                  DeparData.push(itemDate);
+              });
+              $this.currentCluesData.DeparData=DeparData;
+            }
             // 日目标统计
             $this.targetScore.daymaxnumber= response.daymaxnumber[0];
             $this.targetScore.historymaxnumber = response.historymaxnumber[0];
@@ -1123,10 +1063,14 @@ export default {
                   lastregisterObj.year=item.lastdate.split('-')[0];               
               });
               registerArr.push(registerObj,lastregisterObj); 
+
               $this.currentCluesData.yeartongArr=yeartongArr;
               $this.currentCluesData.registerArr=registerArr;
+
               registerGrowth=registerObj.value-lastregisterObj.value;
-              registerRate=(registerObj.value/lastregisterObj.value*100).toFixed(2)+'%';
+
+              registerRate=Math.abs(((registerObj.value-lastregisterObj.value)/lastregisterObj.value*100).toFixed(2))+'%';
+
               $this.currentCluesData.registerGrowth=registerGrowth;
               $this.currentCluesData.registerRate=registerRate;
               $this.yeartongChart();
@@ -1222,6 +1166,9 @@ export default {
             }else{
                   $this.currentCluesData.zusuercountArr=[];
             }
+            $this.$nextTick(()=>{
+               $this.handleTableWidth();
+            });
             // 年度成交积分对比
             if(response.yearscoretong&&response.yearscoretong.length>0){
               var yearscoretongArr=[];
@@ -1257,16 +1204,17 @@ export default {
                   //年度同期成交对比
                   registerObj.year=item.date.split('-')[0];
                   if ($this.isFloat(Number(item.score))) {
-                      registerObj.value=registerObj.value+Number(item.score).toFixed(2);
+                      registerObj.value=(Number(registerObj.value)+Number(item.score)).toFixed(2);
                   } else {
-                      registerObj.value=registerObj.value+Number(item.score);
+                      registerObj.value=Number(registerObj.value)+Number(item.score);
                   }
                   lastregisterObj.year=item.lastdate.split('-')[0];
                   if ($this.isFloat(Number(item.lastscore))) {
-                      lastregisterObj.value=lastregisterObj.value+Number(item.lastscore).toFixed(2);
+                      lastregisterObj.value=(Number(lastregisterObj.value)+Number(item.lastscore)).toFixed(2);
                   } else {
-                      lastregisterObj.value=lastregisterObj.value+Number(item.lastscore);
+                      lastregisterObj.value=Number(lastregisterObj.value)+Number(item.lastscore);
                   }
+
               });
               $this.currentCluesData.yearscoretongArr=yearscoretongArr;
               sametimeArr.push(registerObj,lastregisterObj);
@@ -1288,7 +1236,7 @@ export default {
               if(Number(lastregisterObj.value)==0){
                 sametimeRate=Number(registerObj.value).toFixed(2)+'%';
               }else{
-                sametimeRate=(Number(registerObj.value)/Number(lastregisterObj.value)*100).toFixed(2)+'%';
+                sametimeRate=Math.abs((Number(registerObj.value)-Number(lastregisterObj.value))/Number(lastregisterObj.value)*100).toFixed(2)+'%';
               }
 
               $this.currentCluesData.sametimeGrowth=sametimeGrowth;
@@ -1492,6 +1440,18 @@ export default {
         if (response) {
           //console.log(response,'/hxindex/Api/encount');
           if (response.status) {
+            // 获取部门数据
+            if(response.readart&&response.readart.length>0){
+              var DeparData=[];
+              response.readart.forEach(function(item,index){
+                  var itemDate={};
+                  itemDate.value=item.id;
+                  itemDate.label=item.name;
+                  itemDate.disabled=false;
+                  DeparData.push(itemDate);
+              });
+              $this.currentCluesData.DeparData=DeparData;
+            }
             // 日目标统计
             $this.targetScore.daymaxnumber= response.daymaxnumber[0];
             $this.targetScore.historymaxnumber = response.historymaxnumber[0];
@@ -1582,10 +1542,14 @@ export default {
                   lastregisterObj.year=item.lastdate.split('-')[0];               
               });
               registerArr.push(registerObj,lastregisterObj); 
+
               $this.currentCluesData.yeartongArr=yeartongArr;
               $this.currentCluesData.registerArr=registerArr;
+
               registerGrowth=registerObj.value-lastregisterObj.value;
-              registerRate=(registerObj.value/lastregisterObj.value*100).toFixed(2)+'%';
+
+              registerRate=Math.abs(((registerObj.value-lastregisterObj.value)/lastregisterObj.value*100).toFixed(2))+'%';
+
               $this.currentCluesData.registerGrowth=registerGrowth;
               $this.currentCluesData.registerRate=registerRate;
               $this.yeartongChart();
@@ -1681,6 +1645,9 @@ export default {
             }else{
               $this.currentCluesData.zusuercountArr=[];
             }
+            $this.$nextTick(()=>{
+               $this.handleTableWidth();
+            });
             // 年度成交积分对比
             if(response.yearscoretong&&response.yearscoretong.length>0){
               var yearscoretongArr=[];
@@ -1747,7 +1714,7 @@ export default {
               if(Number(lastregisterObj.value)==0){
                 sametimeRate=Number(registerObj.value).toFixed(2)+'%';
               }else{
-                sametimeRate=(Number(registerObj.value)/Number(lastregisterObj.value)*100).toFixed(2)+'%';
+                sametimeRate=Math.abs((Number(registerObj.value)-Number(lastregisterObj.value))/Number(lastregisterObj.value)*100).toFixed(2)+'%';
               }
 
               $this.currentCluesData.sametimeGrowth=sametimeGrowth;
@@ -1870,7 +1837,7 @@ export default {
                   $this.currentCluesData.userscoreNum = userscoreNum;
                 }else{
                   $this.currentCluesData.userscoreNum=[];
-                }
+                }                
                 if(response.yearuserscore.length>0&&response.yearuserscore){
                   var yearuserscoreNum=[];
                   response.yearuserscore.forEach(function(item,index){
@@ -1917,21 +1884,17 @@ export default {
         $this.radialBarPlot.changeData($this.depDayTarget);
       }else{
         var resultData =$this.depDayTarget;
-        let maxnum = 100;
-        let barMaxnum = 40;
-        for(let i = 0;i<resultData.length;i++){
-          for(let key in resultData[i]){
+        var maxnum = 0;
+        for(var i = 0;i<resultData.length;i++){
+          for(var key in resultData[i]){
             if(key != 'id' && typeof(resultData[i][key]) == 'number' && resultData[i][key]>maxnum){
               maxnum = resultData[i][key]
             }
-            if(key != 'id' && key != 'historymaxnumber' && key != 'monthmaxnumber' && typeof(resultData[i][key]) == 'number' && resultData[i][key]>barMaxnum){
-              barMaxnum = resultData[i][key]
-            }
           }
         }
-        for(let i = 0;i<resultData.length;i++){
+        for(var i = 0;i<resultData.length;i++){
           if(resultData[i].searchdaynumber){
-            resultData[i].values = [resultData[i].searchdaynumber,resultData[i].searchdaynumber + resultData[i].daynumber]
+            resultData[i].values = [resultData[i].searchdaynumber,resultData[i].daynumber]
           }else{
             resultData[i].values = [0,resultData[i].daynumber]
           }
@@ -1974,8 +1937,17 @@ export default {
                     data: resultData,
                     xField: 'departname',
                     yField: 'daytargetnumber',
+                    minColumnWidth:20,
+                    maxColumnWidth:25,
                     xAxis: {
-                      line: null,
+                      label: {
+                        autoHide: true,
+                        autoRotate: false,
+                        style: {
+                          fill: '#666666',
+                          opacity: 0.6,
+                        },
+                      },
                     },
                     yAxis: {
                       grid: {
@@ -1984,16 +1956,15 @@ export default {
                             stroke: '#cccccc',
                             lineWidth: 1,
                             lineDash: [3, 2],
-                            strokeOpacity: 0.1,
+                            strokeOpacity: 0.3,
                             shadowColor: null,
                             shadowBlur: 0,
                             shadowOffsetX:0,
                             shadowOffsetY:0,
-                            cursor: 'pointer'
                           }
                         }
                       },
-                      max: barMaxnum + 10,
+                      max: maxnum + 10,
                     },
                     columnStyle:{
                       fill:'#e7f1ff',
@@ -2013,9 +1984,7 @@ export default {
                     data: resultData,
                     xField: 'departname',
                     yField: 'searchdaynumber',
-                    xAxis: {
-                      line: null,
-                    },
+                    xAxis:false,
                     yAxis: {
                       grid: {
                         line: {
@@ -2023,17 +1992,18 @@ export default {
                             stroke: '#cccccc',
                             lineWidth: 1,
                             lineDash: [3, 2],
-                            strokeOpacity: 0.1,
+                            strokeOpacity: 0,
                             shadowColor: null,
                             shadowBlur: 0,
                             shadowOffsetX:0,
                             shadowOffsetY:0,
-                            cursor: 'pointer'
                           }
                         }
                       },
-                     max: barMaxnum + 10,
+                      max: maxnum + 10,
                     },
+                    minColumnWidth:20,
+                    maxColumnWidth:25,
                     columnStyle:{
                       fill:'#2e88ff',
                     },
@@ -2063,9 +2033,7 @@ export default {
                     isRange: true,
                     xField: 'departname',
                     yField: 'values',
-                    xAxis: {
-                      line: null,
-                    },
+                    xAxis:false,
                     yAxis: {
                       grid: {
                         line: {
@@ -2073,17 +2041,18 @@ export default {
                             stroke: '#cccccc',
                             lineWidth: 1,
                             lineDash: [3, 2],
-                            strokeOpacity: 0.1,
+                            strokeOpacity: 0,
                             shadowColor: null,
                             shadowBlur: 0,
                             shadowOffsetX:0,
                             shadowOffsetY:0,
-                            cursor: 'pointer'
                           }
                         }
                       },
-                      max: barMaxnum + 10,
+                      max: maxnum + 10,
                     },
+                    minColumnWidth:20,
+                    maxColumnWidth:25,
                     color:'#59cab6',
                     columnStyle:(item)=>{
                       for(let i = 0;i<resultData.length;i++){
@@ -2121,7 +2090,23 @@ export default {
                     xField: 'departname',
                     yField: 'historymaxnumber',
                     xAxis:false,
-                    yAxis:false,
+                    yAxis: {
+                      grid: {
+                        line: {
+                          style: {
+                            stroke: '#cccccc',
+                            lineWidth: 1,
+                            lineDash: [3, 2],
+                            strokeOpacity: 0,
+                            shadowColor: null,
+                            shadowBlur: 0,
+                            shadowOffsetX:0,
+                            shadowOffsetY:0,
+                          }
+                        }
+                      },
+                      max: maxnum + 10,
+                    },
                     color:'#f38080',
                     meta: {
                         historymaxnumber: {
@@ -2141,7 +2126,23 @@ export default {
                     xField: 'departname',
                     yField: 'monthmaxnumber',
                     xAxis:false,
-                    yAxis:false,
+                    yAxis: {
+                      grid: {
+                        line: {
+                          style: {
+                            stroke: '#cccccc',
+                            lineWidth: 1,
+                            lineDash: [3, 2],
+                            strokeOpacity: 0,
+                            shadowColor: null,
+                            shadowBlur: 0,
+                            shadowOffsetX:0,
+                            shadowOffsetY:0,
+                          }
+                        }
+                      },
+                      max: maxnum + 10,
+                    },
                     color:'#fcb030',
                     meta: {
                         monthmaxnumber: {
@@ -2383,10 +2384,10 @@ export default {
               yField: 'xunnumber',
               height:100,
               xAxis: {
-                type: 'time',
+                //type: 'date',
                 mask: 'MM',
                 range: [0, 1],
-                tickCount: 6,
+                //tickCount: 6,
               },
               yAxis:false,
               tooltip: {
@@ -2426,12 +2427,6 @@ export default {
               appendPadding:[15,15,15,15],
               height: 370,
               smooth:false,
-              //yAxis: {
-              //  label: {
-              //    // 数值格式化为千分位
-              //    formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
-              //  },
-              //},
               yAxis: {
                 grid: {
                   line: {
@@ -2454,6 +2449,8 @@ export default {
                 layout: [{ type: 'hide-overlap' }], // 隐藏重叠label
                 style: {
                   textAlign: 'right',
+                  color:'#9e9e9e',
+                  fontsize:12,
                 },
                 formatter: (item) => item.xunnumber,
               },
@@ -2589,12 +2586,32 @@ export default {
               autoRotate: false,
             },
           },
+          yAxis: {
+            tickCount:4,
+            grid: {
+              line: {
+                style: {
+                  stroke: '#cccccc',
+                  lineWidth: 1,
+                  lineDash: [3, 2],
+                  strokeOpacity: 0.5,
+                  shadowColor: null,
+                  shadowBlur: 0,
+                  shadowOffsetX:0,
+                  shadowOffsetY:0,
+                  cursor: 'pointer'
+                }
+              }
+            },
+          },
           meta: {
             avgallmoney: {
               alias: '成本均价',
             },
           },
           statistic: null,
+          minColumnWidth:20,
+          maxColumnWidth:25,
           annotations: [
             {
               type: 'image',
@@ -2626,13 +2643,13 @@ export default {
       }else{     
         var data=$this.currentCluesData.yeardepartscoreArr;
         const yeardepartscoreData = new Pie('yeardepartscoreChart', {
-          appendPadding: 10,
           data,
           angleField: 'score',
           colorField: 'departname',
-          height:355,
+          height:366,
           radius:0.7,
           innerRadius: 0.6,
+          appendPadding: 10,
           meta: {
             score: {
               formatter: (v) => `${v}`,
@@ -2649,12 +2666,7 @@ export default {
             position: 'left',  
             itemName: {
               formatter(text, item, index) {
-                if (
-                  data &&
-                  data[index] &&
-                  data[index].score &&
-                  data[index].departname
-                ) {
+                if (data) {
                   return (
                     text +
                     '：' +
@@ -2761,7 +2773,7 @@ export default {
           },
           adaptor,
           defaultOptions
-        );// 引入上述的封装，或者降上述代码发包
+        );
         $this.registerData = registerData;
         registerData.render();
       }
@@ -2778,12 +2790,6 @@ export default {
               xField: 'month',
               yField: 'value',
               seriesField: 'year',
-              //yAxis: {
-              //  label: {
-              //    // 数值格式化为千分位
-              //    formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
-              //  },
-              //},
               yAxis: {
                 grid: {
                   line: {
@@ -2868,14 +2874,14 @@ export default {
                   if(lastregisterObj.value==0){
                     sametimeRate=registerObj.value.toFixed(2)+'%';
                   }else{
-                    sametimeRate=(registerObj.value/lastregisterObj.value*100).toFixed(2)+'%';
+                    sametimeRate=(Math.abs(registerObj.value-lastregisterObj.value)/lastregisterObj.value*100).toFixed(2)+'%';
                   }
               }else{
                   sametimeGrowth=lastregisterObj.value-registerObj.value;
                   if(registerObj.value==0){
                     sametimeRate=(lastregisterObj.value).toFixed(2)+'%';
                   }else{
-                    sametimeRate=(lastregisterObj.value/registerObj.value*100).toFixed(2)+'%';
+                    sametimeRate=(Math.abs(lastregisterObj.value-registerObj.value)/registerObj.value*100).toFixed(2)+'%';
                   }
               }
               $this.currentCluesData.sametimeGrowth=sametimeGrowth;
@@ -2897,13 +2903,8 @@ export default {
               xField: 'month',
               yField: 'value',
               seriesField: 'year',
-              //yAxis: {
-              //  label: {
-              //    // 数值格式化为千分位
-              //    formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
-              //  },
-              //},
               yAxis: {
+                tickCount:4,
                 grid: {
                   line: {
                     style: {
@@ -2970,10 +2971,10 @@ export default {
               var registerRate='';
               if(registerObj.year>=lastregisterObj.year){
                 registerGrowth=registerObj.value-lastregisterObj.value;
-                registerRate=(registerObj.value/lastregisterObj.value*100).toFixed(2)+'%';
+                registerRate=Math.abs(((registerObj.value-lastregisterObj.value)/lastregisterObj.value*100).toFixed(2))+'%';
               }else{
                 registerGrowth=lastregisterObj.value-registerObj.value;
-                registerRate=(lastregisterObj.value/registerObj.value*100).toFixed(2)+'%';
+                registerRate=Math.abs(((lastregisterObj.value-registerObj.value)/registerObj.value*100).toFixed(2))+'%';
               }
               $this.currentCluesData.registerGrowth=registerGrowth;
               $this.currentCluesData.registerRate=registerRate;
@@ -3285,8 +3286,6 @@ export default {
                   if(response.yeardepartscore&&response.yeardepartscore.length>0){                 
                       if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
                         $this.yeardepartscoreData.chart.destroy();
-                        $this.currentCluesData.yeardepartscoreArr=[];
-                        $this.yeardepartscoreData=null;
                       }
                       var yeardepartscoreArr=[];
                       var departmentCost=[];
@@ -3550,7 +3549,6 @@ export default {
     renderStatistic(containerWidth, text, style) {
       const { width: textWidth, height: textHeight } = measureTextWidth(text, style);
       const R = containerWidth / 2;
-      // r^2 = (w / 2)^2 + (h - offsetY)^2
       var scale = 1;
       if (containerWidth < textWidth) {
         scale = Math.min(Math.sqrt(Math.abs(Math.pow(R, 2) / (Math.pow(textWidth / 2, 2) + Math.pow(textHeight, 2)))), 1);
@@ -3635,7 +3633,13 @@ export default {
             departName='中文'
         }
         $this.currentCluesData.departName = departName;
-        $this.statDataApi();
+        if($this.language=="Module_cnStat"){
+          $this.getCnCluesRegionStatData();
+          $this.getCnCluesStatData();
+        }else{
+          $this.getEnCluesRegionStatData();
+          $this.getEnCluesStatData();
+        }
       }
     },
     // 中英文选中状态切换
@@ -3661,6 +3665,7 @@ export default {
           $this.language = language;
           $this.cnEnActiveChange();
           $this.currentCluesData.departID = [];
+          $this.ScoreTime='';
           if($this.language=="Module_cnStat"){
             $this.currentCluesData.departName = "中文";
           }else{
@@ -3689,6 +3694,13 @@ export default {
         $this.enDaytarget();
         $this.getEnCluesStatData();
       }
+    },
+    // 切换清空table宽度
+    handleTableWidth(event){
+      var $this = this;
+      var tableStyle2 = "width:100%";
+      document.querySelector(".rowTableOne .el-table__header-wrapper .el-table__header").style=tableStyle2;
+      document.querySelector(".rowTableOne .el-table__body-wrapper .el-table__body").style=tableStyle2;
     },
   }
 }
