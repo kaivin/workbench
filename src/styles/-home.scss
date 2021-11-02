@@ -525,7 +525,7 @@
                 }
                 &.mapCNpad{
                     .map-chart{
-                        padding-top:30px;
+                        padding-top:0;
                     }
                 }
                 &.mapENpad{
@@ -538,8 +538,11 @@
                     width:328px;
                     background:#f3f8fe;
                     border-radius:8px;
-                    padding:16px 30px;
+                    padding:16px 20px 16px 0;
                     margin-left:20px;
+                    h3{
+                        padding-left: 30px;
+                    }
                 }
             }
         }

@@ -2290,7 +2290,7 @@ export default {
           const regionMapChart = new G2.Chart({
             container: 'regionMapChart',
             width:600,
-            height:380,
+            height:410,
           });
           regionMapChart.scale({
             latitude: { sync: true },
@@ -2312,7 +2312,7 @@ export default {
           });
           regionMapChart.axis(false);
           regionMapChart.legend('trend', {
-            position: 'left',
+            position: 'bottom-left',
           });
           // 绘制中国地图背景
           var ds = new DataSet();
@@ -2413,6 +2413,7 @@ export default {
             barWidthRatio: 0.4,
             height:340,
             legend: false,
+            appendPadding:[0, 30, 0, 30],
             xAxis:false,
             color:['#cbebfc','#bae7ff','#92d1ff','#69bcff','#41a6ff','#1890ff','#1280ec','#0c70d9','#0660c6','#0050b3'],
             label: {
@@ -2870,7 +2871,7 @@ export default {
                 style:(res)=> {
                   var obj = {
                     opacity: 0.5,
-                    stroke: '#6392ec',
+                    stroke: '#78bccf',
                     fill: '#fff',
                   }
                   if(res.year == ""+maxYear){
@@ -2884,7 +2885,7 @@ export default {
                 },
               },
               color: ({ year }) => {
-                return year === ""+minYear ? '#fbd266' : '#6392ec';
+                return year === ""+minYear ? '#fbd266' : '#78bccf';
               },
               lineStyle: ({ year }) => {
                 if (year === ""+minYear) {
@@ -3610,7 +3611,7 @@ export default {
         });
         worldRegionMapChart.axis(false);
         worldRegionMapChart.legend('trend', {
-          position: 'left',
+          position: 'bottom-left',
         });
         // 绘制世界地图背景
         var ds = new DataSet();
