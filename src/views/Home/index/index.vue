@@ -44,7 +44,7 @@
                             placeholder="选择日期"
                             format="yyyy 年 MM 月 dd 日"
                             value-format="yyyy-MM-dd"
-                            style="width:150px"
+                            style="width:180px"
                             >
                           </el-date-picker>
                         </div>
@@ -1023,7 +1023,7 @@ export default {
                 monthtongList=response.yeartong.slice(-6);
                 monthtongList.forEach(function(item,index){
                   var monthtongObj={};
-                  monthtongObj.date=item.date.split('-')[1];
+                  monthtongObj.date=item.date.split('-')[1]+'月';
                   monthtongObj.xunnumber=item.xunnumber;
                   monthtongArr.push(monthtongObj);
                 });
@@ -2442,29 +2442,44 @@ export default {
               xField: 'date',
               yField: 'xunnumber',
               height:100,
-              padding:[10,5,0,5],
+              padding:[20,25,18,15],
               xAxis: {
-                //type: 'date',
-                top:true,
-                mask: 'MM',
                 range: [0, 1],
-                //tickCount: 6,
-                //line:null,
-                tickLine:null,
-                label:{
-                  offsetY:-30,
-                  style: {
-                    fill: '#5B8FF9',
-                    fontWeight:'bold',
-                    
-                  },
-                 
+                tickCount: 6,
+                title:{
+                  style:{
+                    fill: '#719ef6',
+                    fontsize:'12',
+                  }
                 }
               },
               yAxis:false,
+              label: {
+                layout: [{ type: 'hide-overlap' }], // 隐藏重叠label
+                style: {
+                  textAlign: 'center',
+                  color:'#9e9e9e',
+                  fontsize:12,
+                },
+                formatter: (item) => {
+                  return item.xunnumber
+                },
+              },
+              point: {
+                size:3,
+                shape: 'circle',
+                style: (res) => {
+                  var obj = {
+                    opacity: 0.5,
+                    stroke: '#6392ec',
+                    fill: '#fff',
+                  }
+                  return obj;
+                },
+              },
               tooltip: {
                 formatter:(datum) => {
-                    return { name:datum.date+'月总询盘',value:datum.xunnumber };
+                    return { name:datum.date+'总询盘',value:datum.xunnumber };
                 }
               },
               areaStyle: () => {
@@ -2862,7 +2877,6 @@ export default {
               legend: {
                 offsetX:102,
               },
-              seriesField: 'year',
               // label
               label: {
                 style: {
@@ -3044,7 +3058,6 @@ export default {
               legend: {
                 offsetX:102,
               },
-              seriesField: 'year',
               // label
               label: {
                 style: {
@@ -3172,7 +3185,7 @@ export default {
               seriesField: 'title',
               width: 500,
               height: 300,
-              padding:[35,0,0,0],
+              padding:[35,0,18,25],
               color: ['#669aff', '#9dd5ff'],
               marginRatio: 0,
               maxColumnWidth:25,
@@ -3221,7 +3234,7 @@ export default {
               seriesField: 'title',
               width: 500,
               height: 300,
-              padding:[35,0,0,0],
+              padding:[35,0,18,25],
               /** 设置颜色 */
               color: ['#fcb030', '#f7c572'],
               /** 设置间距 */

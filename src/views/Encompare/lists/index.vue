@@ -110,7 +110,7 @@
                               >
                               </el-table-column>
                               <el-table-column
-                                v-if="(menuButtonPermit.indexOf('Encompare_edit')||menuButtonPermit.indexOf('Encompare_delete'))"
+                                v-if="(menuButtonPermit.indexOf('Encompare_targetedit')||menuButtonPermit.indexOf('Encompare_targetdelete'))"
                                 :width="operationsWidth"
                                 align="center"
                                 fixed="right"
@@ -118,8 +118,8 @@
                                 label="操作">
                                 <template #default="scope">
                                   <div class="table-button">
-                                    <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Encompare_edit')">编辑</el-button>
-                                    <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Encompare_delete')" type="info" plain>删除</el-button>
+                                    <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Encompare_targetedit')">编辑</el-button>
+                                    <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Encompare_targetdelete')" type="info" plain>删除</el-button>
                                   </div>
                                 </template>
                               </el-table-column>
@@ -146,7 +146,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Encompare_add')||menuButtonPermit.includes('Encompare_edit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="680px">
+    <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Encompare_targetadd')||menuButtonPermit.includes('Encompare_targetedit'))" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="680px">
       <el-form :model="dialogForm">
         <div class="item-form Compart-time-width">
             <el-form-item label="添加时间：" :label-width="formLabelWidth">
@@ -621,10 +621,10 @@ export default {
             });
             if($this.menuButtonPermit.includes('Encompare_lists')){
               var operationsWidth = 22;
-              if($this.menuButtonPermit.includes('Encompare_edit')){
+              if($this.menuButtonPermit.includes('Encompare_targetedit')){
                 operationsWidth+=66;
               }
-              if($this.menuButtonPermit.includes('Encompare_delete')){
+              if($this.menuButtonPermit.includes('Encompare_targetdelete')){
                 operationsWidth+=66;
               }
               $this.operationsWidth = "" + operationsWidth;
