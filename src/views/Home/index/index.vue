@@ -2466,7 +2466,7 @@ export default {
                 },
               },
               point: {
-                size:3,
+                size:4,
                 shape: 'circle',
                 style: (res) => {
                   var obj = {
@@ -2580,7 +2580,7 @@ export default {
                 },
               },
               point: {
-                size:5,
+                size:4,
                 shape: 'circle',
                 style: (res) => {
                   var obj = {
@@ -2896,7 +2896,7 @@ export default {
                     return 'circle';
                   }
                 },
-                size: 5,
+                size: 4,
                 style:(res)=> {
                   var obj = {
                     opacity: 0.5,
@@ -3077,7 +3077,7 @@ export default {
                     return 'circle';
                   }
                 },
-                size: 5,
+                size: 4,
                 style:(res)=> {
                   var obj = {
                     opacity: 0.5,
