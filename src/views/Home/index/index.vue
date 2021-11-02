@@ -1929,6 +1929,7 @@ export default {
     // 获取地区目标询盘数据
     drawDepartTarget(){
       var $this = this;
+      console.log($this.depDayTarget);
       if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
         $this.radialBarPlot.changeData($this.depDayTarget);
       }else{
@@ -2048,21 +2049,21 @@ export default {
                     },
                     color:'#59cab6',
                     columnStyle: (res) =>{
-                      resultData.forEach(function(item,index){
-                        if(item.departname == res.departname){
-                          if(res.searchdaynumber){
-                            if(res.searchdaynumber>=item.daytargetnumber){
-                              return {
-                                fill:'#f38080'
-                              }
-                            }else{
-                              return {
-                                fill:'#59cab6'
+                      console.log(res,"搜索数据");
+                      var obj = {};
+                      obj.fill = "#59cab6";
+                      if(res.departname=="电商一部"&&$this.currentCluesData.departName == "中文"){
+                        if(res.searchdaynumber){
+                          resultData.forEach(function(item,index){
+                            if(item.departname == res.departname){
+                              if(res.searchdaynumber>=item.daytargetnumber){
+                                obj.fill = '#f38080';
                               }
                             }
-                          }
+                          });
                         }
-                      });
+                      }
+                      return obj;
                     },
                     columnWidthRatio:0.4,
                     meta: {
