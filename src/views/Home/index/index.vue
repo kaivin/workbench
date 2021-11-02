@@ -1003,26 +1003,14 @@ export default {
               tolItem.date=item.date;
               tolItem.xunnumber=item.xunnumber;
               tolItem.title='询盘';
-              if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){ 
-                  if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
-                    $this.isDepart1=false;
-                    tongArr.push(tolItem);
-                  }else{
-                    if(item.searchxunnumber){
-                      var searchItem={};
-                      $this.isDepart1=true;
-                      searchItem.date=item.date;
-                      searchItem.xunnumber=item.searchxunnumber;
-                      searchItem.title='搜索询盘';
-                      tongArr.push(searchItem,tolItem);
-                    }else{
-                      $this.isDepart1=false;
-                      tongArr.push(tolItem);
-                    }
-                  }
+              if($this.isDepart1){
+                  var searchItem={};                      
+                  searchItem.date=item.date;
+                  searchItem.xunnumber=item.searchxunnumber;
+                  searchItem.title='搜索询盘';
+                  tongArr.push(searchItem,tolItem);
               }else{
-                    $this.isDepart1=false;
-                    tongArr.push(tolItem);
+                  tongArr.push(tolItem);
               }
             });
             $this.currentCluesData.chartData = tongArr;
@@ -2399,10 +2387,10 @@ export default {
           });
           userView.polygon()
             .position('longitude*latitude')
-            .color('trend', ['#ab2716', '#f64d26', '#f9682f', '#fe8c40', '#fbb045', '#f1c969', '#f6e196', '#d6341d'])
+            .color('trend', ['#ab2716','#d6341d', '#f64d26', '#f9682f', '#fe8c40', '#fbb045', '#f1c969', '#f6e196'])
             .tooltip('name*number')
             .style({
-              fillOpacity: 0.85
+              fillOpacity: 1
             }).animate({
               leave: {
                 animation: 'fade-out'
@@ -3718,10 +3706,10 @@ export default {
         userView.polygon()
           .position('longitude*latitude')
           //.color('trend', '#0050B3-#1890FF-#BAE7FF')          
-          .color('trend', ['#ab2716', '#f64d26', '#f9682f', '#fe8c40', '#fbb045', '#f1c969', '#f6e196', '#d6341d'])
+          .color('trend', ['#ab2716','#d6341d', '#f64d26', '#f9682f', '#fe8c40', '#fbb045', '#f1c969', '#f6e196'])
           .tooltip('name*country*number')
           .style({
-            fillOpacity: 0.85
+            fillOpacity: 1
           }).animate({
             leave: {
               animation: 'fade-out'
@@ -3811,11 +3799,16 @@ export default {
         }, 600);
         var departID=$this.currentCluesData.departID;
         var departName='';
+        var DeparId='';
         $this.currentCluesData.DeparData.forEach(function(item,index){
           item.disabled=true;
+          if(item.label=='电商一部'){
+             DeparId=item.value;
+          }
         });
         if(departID&&departID.length>0){
             if(departID.length==$this.currentCluesData.DeparData.length){
+              $this.isDepart1=false;
               departName='中文'
             }else{
               if(departID.length==1){
@@ -3825,8 +3818,14 @@ export default {
                         departName=departName+items.label;
                     }
                   });
+                  if(item==DeparId){
+                    $this.isDepart1=true;
+                  }else{
+                    $this.isDepart1=false;
+                  }
                 });
               }else{
+                $this.isDepart1=false;
                 departID=departID.sort(function(a,b){return a-b})
                 departID.forEach(function(item,index){
                   $this.currentCluesData.DeparData.forEach(function(items,indexs){
@@ -3839,6 +3838,7 @@ export default {
               }
             }
         }else{
+            $this.isDepart1=false;
             departName='中文'
         }
         $this.currentCluesData.departName = departName;
