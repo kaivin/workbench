@@ -2573,6 +2573,8 @@ export default {
                   if($this.isDepart1){
                     if(item.title=="搜索询盘"){
                       return item.xunnumber
+                    }else{
+                      return null
                     }
                   }else{
                     return item.xunnumber
@@ -2595,6 +2597,7 @@ export default {
                       obj.opacity = 0;
                       obj.lineWidth= 0;
                       obj.fill= '';
+                      obj.r = 0
                     }else{
                       obj.opacity = 1;
                     }
