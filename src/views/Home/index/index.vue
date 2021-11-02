@@ -357,7 +357,7 @@
                   </div>
                   <div class="rowSeverFrTwo">
                         <h3>部门成本均价排行</h3>
-                        <p class="unit">(单位：分)</p>
+                        <p class="unit">(单位：元)</p>
                         <div id="costAverageChart" class="chart-canvas"></div>
                   </div>
                </div>
@@ -1062,6 +1062,7 @@ export default {
                   yeartongObj.month=item.date.split('-')[1]+'月';
                   yeartongObj.value=item.xunnumber;
                   yeartongObj.year=item.date.split('-')[0];
+                  yeartongObj.date=item.date+'月';
                   lastyeartongObj.month=item.lastdate.split('-')[1]+'月';
                   lastyeartongObj.value=item.lastxunnumber;
                   lastyeartongObj.year=item.lastdate.split('-')[0];
@@ -1931,21 +1932,6 @@ export default {
                 return originalItems;
             },
           },
-          legend:{
-            position: 'bottom',
-            items:[
-              {
-                name:"目标询盘",
-                value:"目标询盘",
-                marker: { symbol: 'square', style: { fill: '#5B8FF9', r: 5 } },
-              },
-              {
-                name:"目标询盘",
-                value:"目标询盘",
-                marker: { symbol: 'square', style: { fill: '#5B8FF9', r: 5 } },
-              }
-            ]
-          },
           height:215,
           plots:[
             {//目标柱状图
@@ -1954,8 +1940,9 @@ export default {
                     data: resultData,
                     xField: 'departname',
                     yField: 'daytargetnumber',
-                    minColumnWidth:20,
-                    maxColumnWidth:25,
+                    minColumnWidth:36,
+                    maxColumnWidth:36,
+                    interactions: [{ type: 'active-region', enable: false }],
                     xAxis: {
                       label: {
                         autoHide: true,
@@ -2002,6 +1989,9 @@ export default {
                     xField: 'departname',
                     yField: 'searchdaynumber',
                     xAxis:false,
+                    minColumnWidth:26,
+                    maxColumnWidth:26,
+                    interactions: [{ type: 'active-region', enable: false }],
                     yAxis: {
                       grid: {
                         line: {
@@ -2019,10 +2009,23 @@ export default {
                       },
                       max: maxnum + 10,
                     },
-                    minColumnWidth:20,
-                    maxColumnWidth:25,
-                    columnStyle:{
-                      fill:'#2e88ff',
+                    color:'#59cab6',
+                    columnStyle: (res) =>{
+                      resultData.forEach(function(item,index){
+                        if(item.departname == res.departname){
+                          if(res.searchdaynumber){
+                            if(res.searchdaynumber>=item.daytargetnumber){
+                              return {
+                                fill:'#f38080'
+                              }
+                            }else{
+                              return {
+                                fill:'#59cab6'
+                              }
+                            }
+                          }
+                        }
+                      });
                     },
                     columnWidthRatio:0.4,
                     meta: {
@@ -2050,6 +2053,9 @@ export default {
                     isRange: true,
                     xField: 'departname',
                     yField: 'values',
+                    minColumnWidth:26,
+                    maxColumnWidth:26,
+                    interactions: [{ type: 'active-region', enable: false }],
                     xAxis:false,
                     yAxis: {
                       grid: {
@@ -2068,19 +2074,30 @@ export default {
                       },
                       max: maxnum + 10,
                     },
-                    minColumnWidth:20,
-                    maxColumnWidth:25,
-                    color:'#59cab6',
+                    color:(item)=>{
+                      console.log(item,"询盘")
+                      if(item.departname=="电商一部"&&$this.currentCluesData.departName == "中文"){
+                        return '#59cab6'
+                      }else{
+                        return '#5B8FF9'
+                      }
+                    },
                     columnStyle:(item)=>{
-                      for(let i = 0;i<resultData.length;i++){
-                        if(resultData[i].departname == item.departname){
-                          if(resultData[i].daynumber>=resultData[i].daytargetnumber){
-                            return {
-                              fill:'#f38080'
-                            }
-                          }else{
-                            return {
-                              fill:'#59cab6'
+                      if(item.departname=="电商一部"&&$this.currentCluesData.departName == "中文"){
+                        return {
+                          fill:'#5B8FF9'
+                        }
+                      }else{
+                        for(let i = 0;i<resultData.length;i++){
+                          if(resultData[i].departname == item.departname){
+                            if(resultData[i].daynumber>=resultData[i].daytargetnumber){
+                              return {
+                                fill:'#f38080'
+                              }
+                            }else{
+                              return {
+                                fill:'#59cab6'
+                              }
                             }
                           }
                         }
@@ -2133,6 +2150,14 @@ export default {
                     label: {
                       position: 'top',
                     },
+                    point:{
+                      shape:'circle',
+                      style:{
+                        opacity: 1,
+                        stroke: '#f38080',
+                        fill: '#fff',
+                      },
+                    }
                     
                 },
             },
@@ -2460,16 +2485,6 @@ export default {
                   }
                 },
               },
-              // label
-              label: {
-                layout: [{ type: 'hide-overlap' }], // 隐藏重叠label
-                style: {
-                  textAlign: 'right',
-                  color:'#9e9e9e',
-                  fontsize:12,
-                },
-                formatter: (item) => item.xunnumber,
-              },
               // 自定义 legend
               legend: {
                 custom: true,
@@ -2497,14 +2512,37 @@ export default {
                   },
                 ],
               },
+              // label
+              label: {
+                layout: [{ type: 'hide-overlap' }], // 隐藏重叠label
+                style: {
+                  textAlign: 'center',
+                  color:'#9e9e9e',
+                  fontsize:12,
+                },
+                formatter: (item) => {
+                  if(item.title=="搜索询盘"){
+                    return item.xunnumber
+                  }
+                },
+              },
               point: {
+                size:(res)=>{
+                  if(res.title=="搜索询盘"){
+                    return 5
+                  }else{
+                    return 0
+                  }
+                },
                 shape: ({ title }) => {
                   return title === 'circle';
                 },
-                style: ({ date }) => {
-                  return {
-                    r: Number(date) % 4 ? 0 : 3, // 4 个数据示一个点标记
-                  };
+                style: (res) => {
+                  if(res.title=="搜索询盘"){
+                    return {
+                      r: Number(res.date) % 4 ? 0 : 3, // 4 个数据示一个点标记
+                    };
+                  }
                 },
               },
               tooltip: {
@@ -2665,7 +2703,8 @@ export default {
           height:358,
           radius:0.7,
           innerRadius: 0.6,
-          appendPadding:0,
+          appendPadding: 0,
+          color:["#f38080","#ffd29e","#6bddc9","#81a7f1","#b4c4ee","#78D3F8","#9661BC","#F6903D","#008685","#F08BB4"],
           meta: {
             score: {
               formatter: (v) => `${v}`,
@@ -2722,6 +2761,25 @@ export default {
     yearscoretongChart(){
       var $this = this;
       if($this.currentCluesData.yearscoretongArr.length>0){
+        var yearArr = [];
+        var maxYear = 0;
+        var minYear = 0;
+        $this.currentCluesData.yearscoretongArr.forEach(function(item,index){
+          if(!yearArr.includes(parseInt(item.year))){
+            yearArr.push(parseInt(item.year));
+          }
+        });
+        if(yearArr.length==2){
+          if(yearArr[0]>yearArr[1]){
+            maxYear = yearArr[0];
+            minYear = yearArr[1];
+          }else if(yearArr[0]<yearArr[1]){
+            maxYear = yearArr[1];
+            minYear = yearArr[0];
+          }else{
+            maxYear = minYear = yearArr[0]
+          }
+        }
           if($this.yearscoretongData&&!$this.yearscoretongData.chart.destroyed){
             $this.yearscoretongData.changeData($this.currentCluesData.yearscoretongArr);
           }else{
@@ -2763,11 +2821,47 @@ export default {
                 offsetX:102,
               },
               seriesField: 'year',
+              // label
+              label: {
+                style: {
+                  textAlign: 'center',
+                  color:'#9e9e9e',
+                  fontsize:12,
+                },
+                formatter: (item) => {
+                  if(item.year==""+maxYear){
+                    return item.value
+                  }
+                },
+              },
+              point: {
+                shape: (res) =>{
+                  if(res.year == ""+maxYear){
+                    return 'circle';
+                  }
+                },
+                size: 5,
+                style:(res)=> {
+                  var obj = {
+                    opacity: 0.5,
+                    stroke: '#6392ec',
+                    fill: '#fff',
+                  }
+                  if(res.year == ""+maxYear){
+                    obj.opacity = 0.5;
+                  }else{
+                    obj.opacity = 0;
+                    obj.lineWidth= 0;
+                    obj.fill= '';
+                  }
+                  return obj;
+                },
+              },
               color: ({ year }) => {
-                return year === '2020' ? '#fbd266' : '#6392ec';
+                return year === ""+minYear ? '#fbd266' : '#6392ec';
               },
               lineStyle: ({ year }) => {
-                if (year === '2020') {
+                if (year === ""+minYear) {
                   return {
                     lineDash: [4, 4],
                     opacity: 1,
@@ -2849,6 +2943,25 @@ export default {
     yeartongChart(){
       var $this = this;
       if($this.currentCluesData.yeartongArr.length>0){
+        var yearArr = [];
+        var maxYear = 0;
+        var minYear = 0;
+        $this.currentCluesData.yeartongArr.forEach(function(item,index){
+          if(!yearArr.includes(parseInt(item.year))){
+            yearArr.push(parseInt(item.year));
+          }
+        });
+        if(yearArr.length==2){
+          if(yearArr[0]>yearArr[1]){
+            maxYear = yearArr[0];
+            minYear = yearArr[1];
+          }else if(yearArr[0]<yearArr[1]){
+            maxYear = yearArr[1];
+            minYear = yearArr[0];
+          }else{
+            maxYear = minYear = yearArr[0]
+          }
+        }
           if($this.yeartongData&&!$this.yeartongData.chart.destroyed){
             $this.yeartongData.changeData($this.currentCluesData.yeartongArr);
           }else{
@@ -2891,11 +3004,47 @@ export default {
                 offsetX:102,
               },
               seriesField: 'year',
+              // label
+              label: {
+                style: {
+                  textAlign: 'center',
+                  color:'#9e9e9e',
+                  fontsize:12,
+                },
+                formatter: (item) => {
+                  if(item.year==""+maxYear){
+                    return item.value
+                  }
+                },
+              },
+              point: {
+                shape: (res) =>{
+                  if(res.year == ""+maxYear){
+                    return 'circle';
+                  }
+                },
+                size: 5,
+                style:(res)=> {
+                  var obj = {
+                    opacity: 0.5,
+                    stroke: '#6392ec',
+                    fill: '#fff',
+                  }
+                  if(res.year == ""+maxYear){
+                    obj.opacity = 0.5;
+                  }else{
+                    obj.opacity = 0;
+                    obj.lineWidth= 0;
+                    obj.fill= '';
+                  }
+                  return obj;
+                },
+              },
               color: ({ year }) => {
-                return year === '2020' ? '#fbd266' : '#6392ec';
+                return year === ""+minYear ? '#fbd266' : '#6392ec';
               },
               lineStyle: ({ year }) => {
-                if (year === '2020') {
+                if (year === ""+minYear) {
                   return {
                     lineDash: [4, 4],
                     opacity: 1,

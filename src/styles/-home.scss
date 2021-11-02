@@ -1,5 +1,8 @@
 ﻿.home-index{
-    font-family:'PingFangSC Regular';
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
     .box-card {overflow:initial;}
     .box-card .el-card__body .card-content{overflow:initial;}
     .el-table__expand-icon,.el-table__placeholder{
@@ -30,7 +33,7 @@
             }
         }
         .item-news{
-            height: 33px;
+            height: 32px;
             width: 100%;
             position: relative;
             cursor: pointer;
@@ -39,19 +42,23 @@
                 padding-left: 5px;
             }
             .txt-font{
-                height: 33px;
+                height: 32px;
                 @extend %ellipsis-basic;
                 color: #1a1a1a;
                 font-size: 13px;
-                line-height: 33px;
+                line-height: 32px;
+                span{
+                    vertical-align: top;
+                }
                 .txt-icon{
                     display: inline-block;
                     width: 16px;
                     height: 16px;
-                    line-height: 13px;
+                    line-height: 15px;
                     font-size: 12px;
                     text-align: center;
                     border-radius: 1px;
+                    margin-top: 8px;
                     b{
                         display: block;
                         font-weight: normal;
@@ -71,8 +78,8 @@
                 font-size: 13px;
                 color: #999999;
                 padding: 0 15px;
-                height: 33px;
-                line-height: 33px;
+                height: 32px;
+                line-height: 32px;
             }
         }
     }
@@ -111,6 +118,7 @@
                     padding-top: 19px;
                     padding-bottom: 3px;
                     border-radius: 0 0 8px 8px;
+                    font-weight: bold;
                 }
                 &+.flex-box{
                     h3{
@@ -127,18 +135,19 @@
             float:left;
             text-align:left;
             .btn-span{
-                padding: 3px 26px 3px 26px;
-                font-size: 13px;
+                padding: 3px 0 3px 0;
+                width: 104px;
                 border: 0;
                 border-radius: 8px 8px 8px 8px;
                 line-height: 37px;
                 color: #fff;
                 background: #aed1ff;
-                margin-right: 20px;
+                margin-right: 40px;
                 display: inline-block;
+                text-align: center;
                 cursor: pointer;
                 font-size: 16px;
-                font-family: 'PingFangSC Semibold';
+                font-weight: bold;
                 &.active{
                     background-color:#2e88ff;
                     box-shadow:0px 8px 10px rgba(6,100,224,0.4) !important;
@@ -150,12 +159,43 @@
             .checkbox-panel{
                 border:1px solid #dadfee;
                 border-radius:21px;
+                padding-right: 10px;
                 .el-checkbox{
                     float:left;
                     line-height:24px;
                     margin:0px;
                     padding:8px 15px 8px 20px;
                     border-left:1px solid #dadfee;
+                    .el-checkbox__input{
+                        width: 10px;
+                        height: 10px;
+                        vertical-align: top;
+                        margin-top: 7px;
+                        .el-checkbox__inner{
+                            width:10px;
+                            height: 10px;
+                            border: 1px solid #9ec8ff;
+                            vertical-align: top;
+                        }
+                        &.is-checked{
+                            .el-checkbox__inner{
+                                background-color: #fff;
+                                &:after{
+                                    border:none;
+                                    transform: rotate(0);
+                                    width:4px;
+                                    height: 4px;
+                                    background-color: #9ec8ff;
+                                    left: 2px;
+                                    top: 2px;
+                                }
+                            }
+                        }
+                    }
+                    .el-checkbox__label{
+                        padding-left: 6px;
+                        color: #1a1a1a;
+                    }
                     &:first-child{
                         border-left:0;
                     }
