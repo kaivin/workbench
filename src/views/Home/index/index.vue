@@ -1912,7 +1912,7 @@ export default {
         }
         for(var i = 0;i<resultData.length;i++){
           if(resultData[i].searchdaynumber){
-            resultData[i].values = [resultData[i].searchdaynumber,resultData[i].daynumber]
+            resultData[i].values = [resultData[i].searchdaynumber,resultData[i].searchdaynumber + resultData[i].daynumber]
           }else{
             resultData[i].values = [0,resultData[i].daynumber]
           }
@@ -1924,12 +1924,17 @@ export default {
             shared: true ,
             customItems: (originalItems) => {
                 for(let i=0;i<originalItems.length;i++){
-                  if(originalItems[i].name == 'values'){
-                    originalItems[i].name = '询盘数量';
-                    originalItems[i].value = originalItems[i].value.split('-')[1];
+                  if(originalItems[i].name == originalItems[i].title){
+                    if(originalItems[i].name == "电商一部"){
+                      originalItems[i].name = '非搜索询盘';
+                      originalItems[i].value = parseInt(originalItems[i].value.split('-')[1]) - parseInt(originalItems[i].value.split('-')[0]);
+                    }else{
+                      originalItems[i].name = '询盘数量';
+                      originalItems[i].value = parseInt(originalItems[i].value.split('-')[1]) - parseInt(originalItems[i].value.split('-')[0]);
+                    }
                   }
                 }
-                return originalItems;
+                 return originalItems;
             },
           },
           height:215,
@@ -2075,11 +2080,10 @@ export default {
                       max: maxnum + 10,
                     },
                     color:(item)=>{
-                      console.log(item,"询盘")
                       if(item.departname=="电商一部"&&$this.currentCluesData.departName == "中文"){
-                        return '#59cab6'
-                      }else{
                         return '#5B8FF9'
+                      }else{
+                        return '#59cab6'
                       }
                     },
                     columnStyle:(item)=>{
@@ -2426,9 +2430,21 @@ export default {
               height:100,
               xAxis: {
                 //type: 'date',
+                top:true,
                 mask: 'MM',
                 range: [0, 1],
                 //tickCount: 6,
+                //line:null,
+                tickLine:null,
+                label:{
+                  offsetY:-30,
+                  style: {
+                    fill: '#5B8FF9',
+                    fontWeight:'bold',
+                    
+                  },
+                 
+                }
               },
               yAxis:false,
               tooltip: {
