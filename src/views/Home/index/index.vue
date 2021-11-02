@@ -722,7 +722,6 @@ export default {
       $this.targetScore.DistanceTarget='';
       $this.$store.dispatch("api/getChinadaytargetAction", resultData).then((response) => {
         if (response) {
-          console.log(response,'中文部门日目标');
           if (response.status) {
               // 获取部门数据
               if(response.readdepart&&response.readdepart.length>0){
@@ -833,7 +832,6 @@ export default {
       $this.targetScore.DistanceTarget='';
       $this.$store.dispatch("api/getEndaytargetAction", resultData).then((response) => {
         if (response) {
-          console.log(response,'首页英文询盘日目标接口');
           if (response.status) {
               //部门日目标
               // 获取部门数据
@@ -958,7 +956,6 @@ export default {
       $this.clearData();
       $this.$store.dispatch("api/cnCluesStatDataAction", resultData).then((response) => {
         if (response) {
-          console.log(response,'/hxindex/Api/chinacount');
           if (response.status) {
             // 获取部门数据
             if(response.readart&&response.readart.length>0){
@@ -1188,9 +1185,6 @@ export default {
             }else{
                   $this.currentCluesData.zusuercountArr=[];
             }
-            $this.$nextTick(()=>{
-               $this.handleTableWidth();
-            });
             // 年度成交积分对比
             if(response.yearscoretong&&response.yearscoretong.length>0){
               var yearscoretongArr=[];
@@ -1460,7 +1454,6 @@ export default {
       $this.clearData();
       $this.$store.dispatch("api/enCluesStatDataAction", resultData).then((response) => {
         if (response) {
-          //console.log(response,'/hxindex/Api/encount');
           if (response.status) {
             // 获取部门数据
             if(response.readart&&response.readart.length>0){
@@ -1682,9 +1675,6 @@ export default {
             }else{
               $this.currentCluesData.zusuercountArr=[];
             }
-            $this.$nextTick(()=>{
-               $this.handleTableWidth();
-            });
             // 年度成交积分对比
             if(response.yearscoretong&&response.yearscoretong.length>0){
               var yearscoretongArr=[];
@@ -1917,7 +1907,6 @@ export default {
     // 获取地区目标询盘数据
     drawDepartTarget(){
       var $this = this;
-      console.log($this.depDayTarget);
       if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
         $this.radialBarPlot.changeData($this.depDayTarget);
       }else{
@@ -2037,7 +2026,6 @@ export default {
                     },
                     color:'#59cab6',
                     columnStyle: (res) =>{
-                      console.log(res,"搜索数据");
                       var obj = {};
                       obj.fill = "#59cab6";
                       if(res.departname=="电商一部"&&$this.currentCluesData.departName == "中文"){
@@ -2257,7 +2245,6 @@ export default {
       }
       $this.$store.dispatch("api/cnCluesRegionStatDataAction", resultData).then((response) => {
         if (response) {
-          //console.log(response,'中文地图')
           if (response.status) {
             $this.currentCluesData.cluesRegionData = response.data;
             var topTenRegionData = [];
@@ -2581,7 +2568,6 @@ export default {
                 size:5,
                 shape: 'circle',
                 style: (res) => {
-                  console.log(res,"style");   
                   var obj = {
                     opacity: 0.5,
                     stroke: '#6392ec',
@@ -2935,7 +2921,6 @@ export default {
               hoverData=ev.data.items;
             })
             yearscoretongData.on('plot:click', ev => {
-              console.log(hoverData,'hoverData');
               var mouth=hoverData[0].data.month.replace('月','');
               var sametimeArr=[];
               var registerObj={
@@ -3118,9 +3103,7 @@ export default {
               hoverData=ev.data.items;
             })
             yeartongData.on('plot:click', ev => {
-              console.log(hoverData,'hoverData');
               var mouth=hoverData[0].data.month.replace('月','');
-
               var registerArr=[];
               var registerObj={
                 year:hoverData[0].data.year,
@@ -3296,7 +3279,6 @@ export default {
         resUrl='api/endepartScoreAction';
       }  
       $this.$store.dispatch(resUrl, resultData).then((response) => {
-          //console.log(response,'首页中文成交统计接口')
           if (response.status) {
               $this.ScoreTime=response.month;
               if(response.departscore&&response.departscore.length>0){
@@ -3578,7 +3560,6 @@ export default {
       }
       $this.$store.dispatch("api/enCluesRegionStatDataAction", resultData).then((response) => {
         if (response) {
-          //console.log(response,'英文地图')
           if (response.status) {
             $this.currentCluesData.cluesRegionData = worldCountry(response.data);
             $this.currentCluesData.cluesRegionData.sort($this.sortNumber);
@@ -3849,6 +3830,9 @@ export default {
           $this.getEnCluesRegionStatData();
           $this.getEnCluesStatData();
         }
+        $this.$nextTick(()=>{
+            $this.handleTableWidth();
+        });
       }
     },
     // 中英文选中状态切换
@@ -3905,7 +3889,7 @@ export default {
       }
     },
     // 切换清空table宽度
-    handleTableWidth(event){
+    handleTableWidth(){
       var $this = this;
       var tableStyle2 = "width:100%";
       document.querySelector(".rowTableOne .el-table__header-wrapper .el-table__header").style=tableStyle2;
