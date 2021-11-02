@@ -44,7 +44,7 @@
                             placeholder="选择日期"
                             format="yyyy 年 MM 月 dd 日"
                             value-format="yyyy-MM-dd"
-                            style="width:180px"
+                            style="width:150px"
                             >
                           </el-date-picker>
                         </div>
@@ -559,6 +559,7 @@ export default {
 
       loading:false,
       clickID:'',
+      isDepart1:false,
     }
   },
   computed: {
@@ -1001,22 +1002,26 @@ export default {
               var tolItem={};
               tolItem.date=item.date;
               tolItem.xunnumber=item.xunnumber;
-              tolItem.title='询盘';              
+              tolItem.title='询盘';
               if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){ 
                   if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
+                    $this.isDepart1=false;
                     tongArr.push(tolItem);
                   }else{
                     if(item.searchxunnumber){
                       var searchItem={};
+                      $this.isDepart1=true;
                       searchItem.date=item.date;
                       searchItem.xunnumber=item.searchxunnumber;
                       searchItem.title='搜索询盘';
                       tongArr.push(searchItem,tolItem);
                     }else{
+                      $this.isDepart1=false;
                       tongArr.push(tolItem);
                     }
                   }
               }else{
+                    $this.isDepart1=false;
                     tongArr.push(tolItem);
               }
             });
@@ -2300,7 +2305,7 @@ export default {
           const regionMapChart = new G2.Chart({
             container: 'regionMapChart',
             width:600,
-            height:410,
+            height:450,
           });
           regionMapChart.scale({
             latitude: { sync: true },
@@ -2393,7 +2398,7 @@ export default {
           });
           userView.polygon()
             .position('longitude*latitude')
-            .color('trend', ['#c9311c', '#f85f23', '#f0a861', '#a7c67e', '#c2e8b7', '#d4686c', '#de7d82', '#e89196', '#f1a2a8', '#f9b1b8', '#febbc3', 'fbdee2'])
+            .color('trend', ['#ab2716', '#f64d26', '#f9682f', '#fe8c40', '#fbb045', '#f1c969', '#f6e196', '#d6341d'])
             .tooltip('name*number')
             .style({
               fillOpacity: 0.85
@@ -2461,6 +2466,7 @@ export default {
               xField: 'date',
               yField: 'xunnumber',
               height:100,
+              padding:[10,5,0,5],
               xAxis: {
                 //type: 'date',
                 top:true,
@@ -2517,6 +2523,9 @@ export default {
               appendPadding:[15,15,15,15],
               height: 370,
               smooth:false,
+              xAxis: {
+                tickCount:10,
+              },
               yAxis: {
                 grid: {
                   line: {
@@ -2570,28 +2579,37 @@ export default {
                   fontsize:12,
                 },
                 formatter: (item) => {
-                  if(item.title=="搜索询盘"){
+                  if($this.isDepart1){
+                    if(item.title=="搜索询盘"){
+                      return item.xunnumber
+                    }
+                  }else{
                     return item.xunnumber
                   }
                 },
               },
               point: {
-                size:(res)=>{
-                  if(res.title=="搜索询盘"){
-                    return 5
-                  }else{
-                    return 0
-                  }
-                },
-                shape: ({ title }) => {
-                  return title === 'circle';
-                },
+                size:5,
+                shape: 'circle',
                 style: (res) => {
-                  if(res.title=="搜索询盘"){
-                    return {
-                      r: Number(res.date) % 4 ? 0 : 3, // 4 个数据示一个点标记
-                    };
+                  console.log(res,"style");   
+                  var obj = {
+                    opacity: 0.5,
+                    stroke: '#6392ec',
+                    fill: '#fff',
                   }
+                  if(res.title=="搜索询盘"){
+                    obj.opacity = 1;
+                  }else{
+                    if($this.isDepart1){
+                      obj.opacity = 0;
+                      obj.lineWidth= 0;
+                      obj.fill= '';
+                    }else{
+                      obj.opacity = 1;
+                    }
+                  }
+                  return obj;
                 },
               },
               tooltip: {
@@ -2839,7 +2857,7 @@ export default {
               seriesField: 'year',
               xAxis: {
                 title:{
-                  text:"(单位：个)",
+                  text:"(单位：分)",
                   autoRotate:false,
                   position:'start',
                   offset:-247,
@@ -3182,6 +3200,7 @@ export default {
               seriesField: 'title',
               width: 500,
               height: 300,
+              padding:[35,0,0,0],
               color: ['#669aff', '#9dd5ff'],
               marginRatio: 0,
               maxColumnWidth:25,
@@ -3230,6 +3249,7 @@ export default {
               seriesField: 'title',
               width: 500,
               height: 300,
+              padding:[35,0,0,0],
               /** 设置颜色 */
               color: ['#fcb030', '#f7c572'],
               /** 设置间距 */
@@ -3326,11 +3346,6 @@ export default {
                       itemDate.score=item.score;
                     }
                     departscoreArr.push(itemDate);
-                 });
-                 departscoreArr.sort(function(a, b) {
-                      var value1 = a.score;
-                      var value2 = b.score;
-                      return value2 - value1;
                  });
                  $this.currentCluesData.departScoreData = departscoreArr;
               }else{
@@ -3702,7 +3717,7 @@ export default {
         userView.polygon()
           .position('longitude*latitude')
           //.color('trend', '#0050B3-#1890FF-#BAE7FF')          
-          .color('trend', ['#c9311c', '#f85f23', '#f0a861', '#a7c67e', '#c2e8b7', '#d4686c', '#de7d82', '#e89196', '#f1a2a8', '#f9b1b8', '#febbc3', 'fbdee2'])
+          .color('trend', ['#ab2716', '#f64d26', '#f9682f', '#fe8c40', '#fbb045', '#f1c969', '#f6e196', '#d6341d'])
           .tooltip('name*country*number')
           .style({
             fillOpacity: 0.85
