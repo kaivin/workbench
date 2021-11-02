@@ -538,7 +538,7 @@
                 }
                 &.mapCNpad{
                     .map-chart{
-                        padding-top:30px;
+                        padding-top:0;
                     }
                 }
                 &.mapENpad{
@@ -551,8 +551,11 @@
                     width:328px;
                     background:#f3f8fe;
                     border-radius:8px;
-                    padding:16px 30px;
+                    padding:16px 20px 16px 0;
                     margin-left:20px;
+                    h3{
+                        padding-left: 30px;
+                    }
                 }
             }
         }
@@ -1486,13 +1489,16 @@
         padding:20px 30px 30px 30px;
         margin-bottom:20px;
         .rowSixFl{
+            float: left;
+            width: 60%;
            .chart-canvas{
              height: 281px;
            }
         }
         .rowSixFr{
-            width:465px;
-            margin-left: 40px;
+            float: right;
+            width: 37%;
+            margin-left: 2%;
             .itemRowTit{padding-left:35px;}
             .rowSixFrBox{
                 border-left:1px dashed #c9c9c9;
@@ -1701,16 +1707,12 @@
 @media (max-width:1600px){
     .home-index{
         .rowOne{
+            padding-bottom: 50px;
             &.flex-wrap{
                 display:block;
                 .rowOneOne{
                     width:100%;
                     margin-bottom:20px;
-                    .rowOneOneItem{
-                        .rowOneOneItemFr{
-                            margin-left:50px;
-                        }
-                    }
                 }
                 .rowOneTwoThree{
                     max-width:100%;
@@ -1780,6 +1782,14 @@
                     .el-table .el-table__cell{text-align: center; color:#4c4c4c;font-family:'PingFangSC Regular';}
                 } 
             }
+        }
+        .rowFive{
+            .rowFiveFl{width:60%;}
+            .rowFiveFr{width:37%;}
+        }
+        .rowSix{
+            .rowSixFl{width:60%;}
+            .rowSixFr{width:37%;}
         }
     }
 }

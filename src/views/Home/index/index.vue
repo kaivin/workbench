@@ -362,8 +362,8 @@
                   </div>
                </div>
           </div>
-          <div class="flex-box flex-wrap rowSix">
-               <div class="rowSixFl flex-content">
+          <div class="rowSix">
+               <div class="rowSixFl">
                     <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}年度成交积分对比</h3>
                     <div id="yearscoretongChart" class="chart-canvas"></div>
                </div>
@@ -995,19 +995,29 @@ export default {
             // 近30天询盘统计
             var tongArr=[];
             response.tong.forEach(function(item,index){
-              item.date = item.date+"\n"+item.week.replace("星期","周");
+              var itemDate=[];
+              itemDate=item.date.split('-');
+              item.date = itemDate[1]+'-'+itemDate[2]+"\n"+item.week.replace("星期","周");
               var tolItem={};
               tolItem.date=item.date;
               tolItem.xunnumber=item.xunnumber;
-              tolItem.title='总询盘';
-              if(item.searchxunnumber){
-                var searchItem={};
-                searchItem.date=item.date;
-                searchItem.xunnumber=item.searchxunnumber;
-                searchItem.title='搜索询盘';
-                tongArr.push(searchItem,tolItem);
+              tolItem.title='询盘';              
+              if($this.currentCluesData.departID&&$this.currentCluesData.departID.length>0){ 
+                  if($this.currentCluesData.departID.length==$this.currentCluesData.DeparData.length){
+                    tongArr.push(tolItem);
+                  }else{
+                    if(item.searchxunnumber){
+                      var searchItem={};
+                      searchItem.date=item.date;
+                      searchItem.xunnumber=item.searchxunnumber;
+                      searchItem.title='搜索询盘';
+                      tongArr.push(searchItem,tolItem);
+                    }else{
+                      tongArr.push(tolItem);
+                    }
+                  }
               }else{
-                tongArr.push(tolItem);
+                    tongArr.push(tolItem);
               }
             });
             $this.currentCluesData.chartData = tongArr;
@@ -1495,7 +1505,9 @@ export default {
             // 近30天询盘统计
             var tongArr=[];
             response.tong.forEach(function(item,index){
-              item.date = item.date+"\n"+item.week.replace("星期","周");
+              var itemDate=[];
+              itemDate=item.date.split('-');
+              item.date = itemDate[1]+'-'+itemDate[2]+"\n"+item.week.replace("星期","周");
               var tolItem={};
               tolItem.date=item.date;
               tolItem.xunnumber=item.xunnumber;
@@ -1538,10 +1550,14 @@ export default {
               var registerRate='';
               var registerObj={
                 year:'',
+                isOn:false,
+                isHeight:0,
                 value:0,
               };        
               var lastregisterObj={
                 year:'',
+                isOn:false,
+                isHeight:0,
                 value:0,
               };
               response.yeartong.forEach(function(item,index){
@@ -1550,6 +1566,7 @@ export default {
                   yeartongObj.month=item.date.split('-')[1]+'月';
                   yeartongObj.value=item.xunnumber;
                   yeartongObj.year=item.date.split('-')[0];
+                  yeartongObj.date=item.date+'月';
                   lastyeartongObj.month=item.lastdate.split('-')[1]+'月';
                   lastyeartongObj.value=item.lastxunnumber;
                   lastyeartongObj.year=item.lastdate.split('-')[0];
@@ -1558,17 +1575,26 @@ export default {
                   registerObj.value=registerObj.value+item.xunnumber;
                   registerObj.year=item.date.split('-')[0];
                   lastregisterObj.value=lastregisterObj.value+item.lastxunnumber;
-                  lastregisterObj.year=item.lastdate.split('-')[0];               
+                  lastregisterObj.year=item.lastdate.split('-')[0];   
               });
-              registerArr.push(registerObj,lastregisterObj); 
-
               $this.currentCluesData.yeartongArr=yeartongArr;
+              if(registerObj.year>lastregisterObj.year){
+                registerObj.isOn=true;
+              }else{
+                lastregisterObj.isOn=true;
+              }
+              var MaxVal='';
+              if(registerObj.value>lastregisterObj.value){
+                MaxVal=registerObj.value;
+              }else{
+                MaxVal=lastregisterObj.value;
+              }
+              registerObj.isHeight=registerObj.value/MaxVal*244;
+              lastregisterObj.isHeight=lastregisterObj.value/MaxVal*244;
+              registerArr.push(registerObj,lastregisterObj); 
               $this.currentCluesData.registerArr=registerArr;
-
               registerGrowth=registerObj.value-lastregisterObj.value;
-
               registerRate=Math.abs(((registerObj.value-lastregisterObj.value)/lastregisterObj.value*100).toFixed(2))+'%';
-
               $this.currentCluesData.registerGrowth=registerGrowth;
               $this.currentCluesData.registerRate=registerRate;
               $this.yeartongChart();
@@ -2268,7 +2294,7 @@ export default {
           const regionMapChart = new G2.Chart({
             container: 'regionMapChart',
             width:600,
-            height:380,
+            height:410,
           });
           regionMapChart.scale({
             latitude: { sync: true },
@@ -2290,7 +2316,7 @@ export default {
           });
           regionMapChart.axis(false);
           regionMapChart.legend('trend', {
-            position: 'left',
+            position: 'bottom-left',
           });
           // 绘制中国地图背景
           var ds = new DataSet();
@@ -2391,6 +2417,7 @@ export default {
             barWidthRatio: 0.4,
             height:340,
             legend: false,
+            appendPadding:[0, 30, 0, 30],
             xAxis:false,
             color:['#cbebfc','#bae7ff','#92d1ff','#69bcff','#41a6ff','#1890ff','#1280ec','#0c70d9','#0660c6','#0050b3'],
             label: {
@@ -2860,7 +2887,7 @@ export default {
                 style:(res)=> {
                   var obj = {
                     opacity: 0.5,
-                    stroke: '#6392ec',
+                    stroke: '#78bccf',
                     fill: '#fff',
                   }
                   if(res.year == ""+maxYear){
@@ -2874,7 +2901,7 @@ export default {
                 },
               },
               color: ({ year }) => {
-                return year === ""+minYear ? '#fbd266' : '#6392ec';
+                return year === ""+minYear ? '#fbd266' : '#78bccf';
               },
               lineStyle: ({ year }) => {
                 if (year === ""+minYear) {
@@ -3600,7 +3627,7 @@ export default {
         });
         worldRegionMapChart.axis(false);
         worldRegionMapChart.legend('trend', {
-          position: 'left',
+          position: 'bottom-left',
         });
         // 绘制世界地图背景
         var ds = new DataSet();
