@@ -1938,7 +1938,7 @@ export default {
         }
         for(var i = 0;i<resultData.length;i++){
           if(resultData[i].searchdaynumber){
-            resultData[i].values = [resultData[i].searchdaynumber,resultData[i].searchdaynumber + resultData[i].daynumber]
+            resultData[i].values = [resultData[i].searchdaynumber,resultData[i].daynumber]
           }else{
             resultData[i].values = [0,resultData[i].daynumber]
           }
@@ -1960,7 +1960,7 @@ export default {
                     }
                   }
                 }
-                
+
                  return originalItems;
             },
           },
@@ -2141,9 +2141,14 @@ export default {
                       },
                       position: 'middle', 
                       content:(item)=>{
-                        if(item.daynumber>0){
-                          return item.daynumber
+                        if(item.departname == '电商一部'){
+                          return item.searchdaynumber?parseInt(item.daynumber) - parseInt(item.searchdaynumber):parseInt(item.daynumber)
+                        }else{
+                          if(item.daynumber>0){
+                            return item.daynumber
+                          }
                         }
+                        
                       }
                     }
                 },
