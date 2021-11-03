@@ -254,44 +254,44 @@
                         .legendItem1:before{
                             content: "";
                             display: block;
-                            width: 14px;
-                            height: 14px;
+                            width: 10px;
+                            height: 10px;
                             background: #e7f1ff;
                             position: absolute;
                             left: 0;
-                            top: 0;
+                            top: 2px;
                         }
                         .legendItem2:before{
                             content: "";
                             display: block;
-                            width: 14px;
-                            height: 14px;
+                            width: 10px;
+                            height: 10px;
                             background: #59cab6;
                             position: absolute;
                             left: 0;
-                            top: 0;
+                            top: 2px;
                         }
                         .legendItem3:before{
                             content: "";
                             display: block;
-                            width: 14px;
-                            height: 14px;
+                            width: 10px;
+                            height: 10px;
                             background: #f38080;
                             position: absolute;
                             left: 0;
-                            top: 0;
+                            top: 2px;
                         }
                         .legendItem4:before{
                             content: "";
                             display: block;
-                            width: 14px;
-                            height: 14px;
+                            width: 10px;
+                            height: 10px;
                             background: #fff;
                             box-sizing: border-box;
                             border: 1px solid #f38080;
                             position: absolute;
                             left: 0;
-                            top: 0;
+                            top: 2px;
                         }
                         
                         .legendItem5:before{
@@ -1898,11 +1898,8 @@
                             }
                         }
                     }
-                    .rowTwoTwoItemTop02{
-                        width:80px;
-                        font-size:14px;
+                    .rowEightFlItemTop02{
                         color:#faa642;
-                        text-align:center;
                     }
                 }
                 .rowEightFlItemBom{
@@ -1931,6 +1928,24 @@
                             }
                             .departnamescore{
                                 background:#81a7f1;
+                                i{
+                                    position: absolute;
+                                    font-size: 12px;
+                                    height: 18px;
+                                    line-height: 18px;
+                                    top: 0;
+                                    font-style: normal;
+                                }
+                                .tip-left{
+                                    color: #fff;
+                                    right: 10px;
+
+                                }
+                                .tip-right{
+                                    color: #555555;
+                                    left: 100%;
+                                    padding-left: 10px;
+                                }
                             }
                             .goodnumber{
                                 border-right:2px dotted #ff3333;
@@ -2016,23 +2031,39 @@
             position: relative;
             box-sizing: border-box;
             -webkit-box-sizing: border-box;
-            .unit{font-size:12px; color:#9ca0a8; line-height:1;}
+            .unit{font-size:12px; color:#c1c1c1; line-height:30px;float: right;}
             .totalNum{
                 position: absolute;
-                left: 30px;
+                left: 60px;
                 top: 110px;
-                padding: 10px 24px;
-                background:#ed7272;
-                border-radius: 8px;
-                box-shadow: 0px 6px 32px 0px rgba(224, 75, 75, 0.39);
+                padding-left: 20px;
+                &:before{
+                    content:'';
+                    position:absolute;
+                    left:0px;
+                    top:0px;
+                    bottom:0px;
+                    background:#ed7272;
+                    border-radius:3px;
+                    width:6px;
+                }
                 span{
+                    clear: both;
+                    display: block;
                     font-size:14px;
-                    color:#fff;
+                    color:#1a1a1a;
+                    line-height:1;
+                    padding-bottom:15px;
+                    font-family:'PingFangSC Semibold';
                 }
                 strong{
-                    font-size:28px;
-                    color:#fff;
+                    clear: both;
+                    display: block;
+                    font-size: 28px;
+                    color: #1a1a1a;
+                    line-height: 1;
                     font-weight: normal;
+                    font-family:'PingFangSC Semibold';
                 }
             }
         }

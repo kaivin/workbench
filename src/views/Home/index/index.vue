@@ -295,14 +295,17 @@
                          <ul class="rowEightFlItemBom">
                              <li class="flex-wrap" v-for="(item,index) in currentCluesData.departScoreData" :key="index">
                                 <p class="rowEightFlItemFlName">{{item.departname}}</p>
-                                <el-tooltip placement="top" effect="light">
+                                <el-tooltip placement="top" effect="light" :visible-arrow="false">
                                   <div slot="content">
                                     <div class="tipnumber">合格线：{{item.passnumber}}</div>
                                     <div class="tipnumber">中等线：{{item.mediumnumber}}</div>
                                     <div class="tipnumber">优秀线：{{item.goodnumber}}</div>
                                   </div>
                                   <p class="rowEightFlItemFlBox flex-content">
-                                    <span v-if="language=='Module_cnStat'" class="departnamescore" :style="'width:'+item.score/ScoreData.MaxValue*100+'%'"></span>
+                                    <span v-if="language=='Module_cnStat'" class="departnamescore" :style="'width:'+item.score/ScoreData.MaxValue*100+'%'">
+                                    <i class="tip-left" v-if="item.score/ScoreData.MaxValue*100>10">{{item.score}}</i>
+                                    <i class="tip-right" v-else>{{item.score}}</i>
+                                    </span>
                                     <span v-else class="departnamescore" :style="'width:'+item.snumber/ScoreData.MaxValue*100+'%'"></span>
                                     <span class="goodnumber" :style="'width:'+item.goodnumber/ScoreData.MaxValue*100+'%'"></span>
                                     <span class="mediumnumber" :style="'width:'+item.mediumnumber/ScoreData.MaxValue*100+'%'"></span>
@@ -328,11 +331,14 @@
                     </div>
                </div>
                <div class="rowEightFr">
-                    <h3>
+                 <div class="clearfix">
+                   <h3 style="float:left">
                       {{language=='Module_cnStat'?'中文':'英文'}}年度成交积分
-                      <span>数据更新于2021年10月25日 12时  | 每月更新</span>
+                      <span style="color:#c1c1c1;font-size:12px">数据更新于{{updatemtime[0]}}年{{updatemtime[1]}}月{{updatemtime[2]}}日 {{updatemtime[3]}}时  | 每月更新</span>
                     </h3>
                     <p class="unit">(单位：分)</p>
+                </div>
+                    
                     <p class="totalNum">
                        <span>{{language=='Module_cnStat'?'中文':'英文'}}总成交积分：</span><strong>{{currentCluesData.totalNumscore}}</strong>
                     </p>
@@ -916,6 +922,7 @@ export default {
                   groupcountObj.daytargetnumber=item.daytargetnumber;
                   groupcountObj.departname=item.departname;
                   groupcountObj.historymaxnumber=item.historymaxnumber;
+                  groupcountObj.searchdaynumber=item.searchdaynumber?item.searchdaynumber:'';
                   groupcountObj.id=item.id;
                   if(item.monthmaxnumber==null){
                       groupcountObj.monthmaxnumber=0;
@@ -2066,8 +2073,10 @@ export default {
     drawDepartTarget(){
       var $this = this;
       if($this.radialBarPlot&&!$this.radialBarPlot.chart.destroyed){
+        
         $this.radialBarPlot.changeData($this.depDayTarget);
       }else{
+        
         var resultData =$this.depDayTarget;
         var maxnum = 0;
         for(var i = 0;i<resultData.length;i++){
@@ -2084,6 +2093,7 @@ export default {
             resultData[i].values = [0,resultData[i].daynumber]
           }
         }
+        
         const radialBarPlot = new Mix('radialBarChart', {
           appendPadding: 8,
           syncViewPadding: true,          
@@ -2113,8 +2123,8 @@ export default {
                     data: resultData,
                     xField: 'departname',
                     yField: 'historymaxnumber',
-                    minColumnWidth:36,
-                    maxColumnWidth:36,
+                    minColumnWidth:30,
+                    maxColumnWidth:30,
                     interactions: [{ type: 'active-region', enable: false }],
                     xAxis: {
                       label: {
@@ -2176,8 +2186,8 @@ export default {
                     data: resultData,
                     xField: 'departname',
                     yField: 'daytargetnumber',
-                    minColumnWidth:36,
-                    maxColumnWidth:36,
+                    minColumnWidth:30,
+                    maxColumnWidth:30,
                     interactions: [{ type: 'active-region', enable: false }],
                     xAxis: {
                       label: {
@@ -2228,8 +2238,8 @@ export default {
                     xField: 'departname',
                     yField: 'searchdaynumber',
                     xAxis:false,
-                    minColumnWidth:26,
-                    maxColumnWidth:26,
+                    minColumnWidth:20,
+                    maxColumnWidth:20,
                     interactions: [{ type: 'active-region', enable: false }],
                     yAxis: {
                       grid: {
@@ -2252,7 +2262,7 @@ export default {
                     columnStyle: (res) =>{
                       var obj = {};
                       obj.fill = "#59cab6";
-                      if(res.departname=="电商一部"&&$this.currentCluesData.departName == "中文"){
+                      if(res.departname=="电商一部"){
                         if(res.searchdaynumber){
                           resultData.forEach(function(item,index){
                             if(item.departname == res.departname){
@@ -2291,8 +2301,8 @@ export default {
                     isRange: true,
                     xField: 'departname',
                     yField: 'values',
-                    minColumnWidth:26,
-                    maxColumnWidth:26,
+                    minColumnWidth:20,
+                    maxColumnWidth:20,
                     interactions: [{ type: 'active-region', enable: false }],
                     xAxis:false,
                     yAxis: {
@@ -2313,14 +2323,14 @@ export default {
                       max: maxnum + 10,
                     },
                     color:(item)=>{
-                      if(item.departname=="电商一部"&&$this.currentCluesData.departName == "中文"){
+                      if(item.departname=="电商一部"){
                         return '#f7c572'
                       }else{
                         return '#59cab6'
                       }
                     },
                     columnStyle:(item)=>{
-                      if(item.departname=="电商一部"&&$this.currentCluesData.departName == "中文"){
+                      if(item.departname=="电商一部"){
                         return {
                           fill:'#f7c572'
                         }
@@ -2663,29 +2673,29 @@ export default {
                 }
               },
               yAxis:false,
-              label: {
-                layout: [{ type: 'hide-overlap' }], // 隐藏重叠label
-                style: {
-                  textAlign: 'center',
-                  color:'#9e9e9e',
-                  fontsize:12,
-                },
-                formatter: (item) => {
-                  return item.xunnumber
-                },
-              },
-              point: {
-                size:4,
-                shape: 'circle',
-                style: (res) => {
-                  var obj = {
-                    opacity: 0.5,
-                    stroke: '#6392ec',
-                    fill: '#fff',
-                  }
-                  return obj;
-                },
-              },
+              // label: {
+              //   layout: [{ type: 'hide-overlap' }], // 隐藏重叠label
+              //   style: {
+              //     textAlign: 'center',
+              //     color:'#9e9e9e',
+              //     fontsize:12,
+              //   },
+              //   formatter: (item) => {
+              //     return item.xunnumber
+              //   },
+              // },
+              // point: {
+              //   size:4,
+              //   shape: 'circle',
+              //   style: (res) => {
+              //     var obj = {
+              //       opacity: 0.5,
+              //       stroke: '#6392ec',
+              //       fill: '#fff',
+              //     }
+              //     return obj;
+              //   },
+              // },
               tooltip: {
                 //fields:['date','xunnumber', 'xunchange'],
                 customContent: (title, data) => {
@@ -2712,7 +2722,7 @@ export default {
               },
               areaStyle: () => {
                 return {
-                  fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
+                  fill: '#1890ff',
                 };
               },
             });
@@ -3001,7 +3011,7 @@ export default {
             position: 'left',
             itemHeight:20,  
             offsetY:36,
-            //offsetX:25,
+            offsetX:25,
             itemName: {
               formatter(text, item, index) {
                 if (data) {
