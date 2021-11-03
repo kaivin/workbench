@@ -507,6 +507,7 @@ export default {
             }else{
               $this.tableData = [];
             }
+            $this.totalDataNum = response.allcount;
             $this.isLoading.close();
             setTimeout(()=>{
               $this.isSearchResult=false;

@@ -365,7 +365,7 @@ export default {
       var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-30;
       $this.getBrowserType();
-        setTimeout(function() {
+      setTimeout(function() {
           $this.setScrollDom();
       }, 400);
     },
@@ -423,7 +423,6 @@ export default {
       $this.$store.dispatch('Chinauserscore/CnscoreListAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,'userList');
             if(response.data.length>0){
                 var userList = [];
                 response.data.forEach(function(item,index){
@@ -442,7 +441,7 @@ export default {
                 $this.restaurants=restaurants;
             }else{
               $this.userList=[]
-            }
+            }            
             $this.initPage();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -507,6 +506,7 @@ export default {
             }else{
               $this.tableData = [];
             }
+            $this.totalDataNum = response.allcount;
             $this.isLoading.close();
             setTimeout(()=>{
               $this.isSearchResult=false;

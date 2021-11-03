@@ -105,8 +105,8 @@
                </div>
           </div>
           <div class="flex-box flex-column trend-chart" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
-            <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}近30天询盘趋势</h3>
-            <div id="cluesChart" class="chart-canvas flex-content"></div>
+              <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}近30天询盘趋势</h3>
+              <div id="cluesChart" class="chart-canvas flex-content"></div>
           </div>
           <div class="rowFive">
                <div class="rowFiveFl">
@@ -132,127 +132,20 @@
                </div>
           </div>
           <div class="rowThree">
-               <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}小组成绩</h3>
-               <div class="rowThreeOne">
-                    <div class="rowThreeOne01" v-if="currentCluesData.zugroupdayArr.length>0&&currentCluesData.zugroupdayArr">
-                        <div id="zugroupdayChart" class="chart-canvas"></div>
-                    </div>
-                    <div class="rowThreeOne02" v-if="currentCluesData.monthtongArr.length>0&&currentCluesData.monthtongArr">
+               <div class="rowThreeOne" v-if="currentCluesData.monthtongArr.length>0&&currentCluesData.monthtongArr">
+                   <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}小组月询盘成绩</h3>
+                   <div class="rowThreeBox">
                         <div id="zugroupmonthChart" class="chart-canvas"></div>
-                    </div>
-                    <div class="rowThreeOne03"  v-if="currentCluesData.zusuercountArr.length>0&&currentCluesData.zusuercountArr">
-                         <p class="rowThreeOne03Tit">组员成绩<span>注：与上月同期对比</span></p>
-                         <div class="rowThreeThreeItem">                             
-                            <el-table
-                                ref="simpleTable"
-                                :data="currentCluesData.zusuercountArr"
-                                tooltip-effect="dark"
-                                stripe
-                                class="rowThreeTable rowTableOne"
-                                style="width: 100%"
-                                height="270"
-                                >
-                                <el-table-column
-                                prop="groupname"
-                                label="组别"
-                                aglin="center"
-                                >
-                                  <template slot-scope="scope">
-                                    <span style="color:#aaaaaa;">{{scope.row.groupname}}</span>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                prop="username"
-                                label="姓名"
-                                aglin="center"
-                                >
-                                </el-table-column>
-                                <el-table-column
-                                prop="todaynumber"
-                                sortable
-                                label="今天个数"
-                                aglin="center"
-                                >
-                                </el-table-column>
-                                <el-table-column
-                                prop="lastdaynumber"
-                                sortable
-                                label="昨天个数"
-                                aglin="center"
-                                >
-                                </el-table-column>
-                                <el-table-column
-                                prop="monthnumber"
-                                sortable
-                                label="本月个数"
-                                aglin="center"
-                                >
-                                  <template slot-scope="scope">
-                                    <div class="rowThreeGrowth">
-                                      <p>
-                                          <i>{{scope.row.lastmonthnumber}}</i>
-                                          <span :class="scope.row.Class">{{scope.row.Growth}}</span>
-                                      </p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                            </el-table>
-                         </div>
+                   </div>
+               </div>
+               <div class="rowThreeTwo" v-if="currentCluesData.zugroupdayArr.length>0&&currentCluesData.zugroupdayArr">
+                   <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}小组日询盘成绩</h3>
+                    <div class="rowThreeBox">
+                        <div id="zugroupdayChart" class="chart-canvas"></div>
                     </div>
                </div>
           </div>
-          <div class="flex-box flex-wrap rowTwo">
-               <div class="rowTwoTwo flex-content">
-                    <div class="map-Top-chartTit flex-wrap">
-                        <h3>{{language=='Module_cnStat'?'中文':'英文'}}成交统计</h3>
-                        <div class="item-search flex-content">                        
-                          <el-date-picker
-                            v-model="ScoreTime"
-                            size="mini"
-                            type="month"
-                            @change="monthChangeHandler"
-                            placeholder="选择月"
-                            format="yyyy 年 MM 月"
-                            value-format="yyyy-MM"
-                            style="width:140px"
-                            >
-                          </el-date-picker>
-                        </div>
-                    </div>
-                    <div class="rowTwoTwoItem">
-                         <div class="rowTwoTwoItemTop flex-wrap">
-                              <p class="rowTwoTwoItemTop01 flex-content">
-                                 <span>成交积分</span><span>合格线</span><span>中等线</span><span>优秀线</span>
-                              </p>
-                              <p class="rowTwoTwoItemTop02">百万成交</p>
-                         </div>
-                         <ul class="rowTwoTwoItemBom">
-                             <li class="flex-wrap" v-for="(item,index) in currentCluesData.departScoreData" :key="index">
-                                <p class="rowTwoTwoItemFlName">{{item.departname}}</p>
-                                <p class="rowTwoTwoItemFlBox flex-content">
-                                   <span v-if="language=='Module_cnStat'" class="departnamescore" :style="'width:'+item.score/ScoreData.MaxValue*100+'%'"></span>
-                                   <span v-else class="departnamescore" :style="'width:'+item.snumber/ScoreData.MaxValue*100+'%'"></span>
-                                   <span class="goodnumber" :style="'width:'+item.goodnumber/ScoreData.MaxValue*100+'%'"></span>
-                                   <span class="mediumnumber" :style="'width:'+item.mediumnumber/ScoreData.MaxValue*100+'%'"></span>
-                                   <span class="passnumber" :style="'width:'+item.passnumber/ScoreData.MaxValue*100+'%'"></span>
-                                </p>
-                                <p class="rowTwoTwoItemFlNum NumClass">
-                                   <span>{{item.a_number}}</span>
-                                </p>
-                             </li>
-                         </ul>
-                         <dl class="rowTwoTwoItemDl">
-                              <dt>
-                                  <p class="rowTwoTwoItemDlTit">{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}成交数量</p>
-                                  <p class="rowTwoTwoItemDlNum">{{ScoreData.addallsnumber}}<span v-if="ScoreData.allsnumber!=ScoreData.addallsnumber">(占总成交{{ScoreData.allsnumberPercen}})</span></p>
-                              </dt>
-                              <dt>
-                                  <p class="rowTwoTwoItemDlTit">{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}成交积分</p>
-                                  <p class="rowTwoTwoItemDlNum">{{ScoreData.addallscore}}<span v-if="ScoreData.allscore!=ScoreData.addallscore">(占总成交{{ScoreData.allscorePercen}})</span></p>
-                              </dt>
-                         </dl>
-                    </div>
-               </div>
+          <div class="rowTwo">
                <div class="rowTwoOne" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
                     <div class="map-Top-chartTit flex-wrap">
                         <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}热门{{language=='Module_cnStat'?'地区':'国家'}}TOP10</h3>
@@ -285,9 +178,119 @@
                         </div>
                     </div>
                </div>
+               <div class="rowTwoTwo" v-if="currentCluesData.zusuercountArr.length>0&&currentCluesData.zusuercountArr">
+                    <p class="rowTwoTwoTit">组员成绩<span>注：与上月同期对比</span></p>
+                    <div class="rowTwoTwoItem">                             
+                      <el-table
+                          ref="simpleTable"
+                          :data="currentCluesData.zusuercountArr"
+                          tooltip-effect="dark"
+                          stripe
+                          class="rowTwoTwoTable rowTableOne"
+                          style="width: 100%"
+                          height="270"
+                          >
+                          <el-table-column
+                          prop="groupname"
+                          label="组别"
+                          aglin="center"
+                          >
+                            <template slot-scope="scope">
+                              <span style="color:#aaaaaa;">{{scope.row.groupname}}</span>
+                            </template>
+                          </el-table-column>
+                          <el-table-column
+                          prop="username"
+                          label="姓名"
+                          aglin="center"
+                          >
+                          </el-table-column>
+                          <el-table-column
+                          prop="todaynumber"
+                          sortable
+                          label="今天个数"
+                          aglin="center"
+                          >
+                          </el-table-column>
+                          <el-table-column
+                          prop="lastdaynumber"
+                          sortable
+                          label="昨天个数"
+                          aglin="center"
+                          >
+                          </el-table-column>
+                          <el-table-column
+                          prop="monthnumber"
+                          sortable
+                          label="本月个数"
+                          aglin="center"
+                          >
+                            <template slot-scope="scope">
+                              <div class="rowThreeGrowth">
+                                <p>
+                                    <i>{{scope.row.lastmonthnumber}}</i>
+                                    <span :class="scope.row.Class">{{scope.row.Growth}}</span>
+                                </p>
+                              </div>
+                            </template>
+                          </el-table-column>
+                      </el-table>
+                    </div>
+               </div>
           </div>
-          <div class="rowSever">
-               <div class="rowSeverFl">
+          <div class="rowEight">
+               <div class="rowEightFl">
+                    <div class="map-Top-chartTit flex-wrap">
+                        <h3>{{language=='Module_cnStat'?'中文':'英文'}}成交统计</h3>
+                        <div class="item-search flex-content">                        
+                          <el-date-picker
+                            v-model="ScoreTime"
+                            size="mini"
+                            type="month"
+                            @change="monthChangeHandler"
+                            placeholder="选择月"
+                            format="yyyy 年 MM 月"
+                            value-format="yyyy-MM"
+                            style="width:140px"
+                            >
+                          </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="rowEightFlItem">
+                         <div class="rowEightFlItemTop flex-wrap">
+                              <p class="rowEightFlItemTop01 flex-content">
+                                 <span>成交积分</span><span>合格线</span><span>中等线</span><span>优秀线</span>
+                              </p>
+                              <p class="rowEightFlItemTop02">百万成交</p>
+                         </div>
+                         <ul class="rowEightFlItemBom">
+                             <li class="flex-wrap" v-for="(item,index) in currentCluesData.departScoreData" :key="index">
+                                <p class="rowEightFlItemFlName">{{item.departname}}</p>
+                                <p class="rowEightFlItemFlBox flex-content">
+                                   <span v-if="language=='Module_cnStat'" class="departnamescore" :style="'width:'+item.score/ScoreData.MaxValue*100+'%'"></span>
+                                   <span v-else class="departnamescore" :style="'width:'+item.snumber/ScoreData.MaxValue*100+'%'"></span>
+                                   <span class="goodnumber" :style="'width:'+item.goodnumber/ScoreData.MaxValue*100+'%'"></span>
+                                   <span class="mediumnumber" :style="'width:'+item.mediumnumber/ScoreData.MaxValue*100+'%'"></span>
+                                   <span class="passnumber" :style="'width:'+item.passnumber/ScoreData.MaxValue*100+'%'"></span>
+                                </p>
+                                <p class="rowEightFlItemFlNum NumClass">
+                                   <span>{{item.a_number}}</span>
+                                </p>
+                             </li>
+                         </ul>
+                         <dl class="rowEightFlItemDl">
+                              <dt>
+                                  <p class="rowEightFlItemDlTit">{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}成交数量</p>
+                                  <p class="rowEightFlItemDlNum">{{ScoreData.addallsnumber}}<span v-if="ScoreData.allsnumber!=ScoreData.addallsnumber">(占总成交{{ScoreData.allsnumberPercen}})</span></p>
+                              </dt>
+                              <dt>
+                                  <p class="rowEightFlItemDlTit">{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}成交积分</p>
+                                  <p class="rowEightFlItemDlNum">{{ScoreData.addallscore}}<span v-if="ScoreData.allscore!=ScoreData.addallscore">(占总成交{{ScoreData.allscorePercen}})</span></p>
+                              </dt>
+                         </dl>
+                    </div>
+               </div>
+               <div class="rowEightFr">
                     <h3>{{language=='Module_cnStat'?'中文':'英文'}}年度成交积分</h3>
                     <p class="unit">(单位：分)</p>
                     <p class="totalNum">
@@ -295,77 +298,77 @@
                     </p>
                     <div id="yeardepartscoreChart" class="chart-canvas"></div>
                </div>
-               <div class="rowSeverFr">
-                  <div class="rowSeverFrOne">
-                        <div class="itemRowTit">
-                          <h3>部门成本</h3>
-                          <span>数据更新于2021年10月25日 12时  | 每月更新</span>
-                        </div>
-                        <div class="rowSeverFrOneBox">
-                            <el-table
-                              :data="currentCluesData.departmentCost"
-                              show-summary
-                              class="rowThreeTable"
-                              style="width: 100%">
-                              <el-table-column
-                                prop="departname"
-                                label="部门"
-                                width="80">
-                              </el-table-column>
-                              <el-table-column
-                                prop="score"
-                                label="成交分"
-                                width="80">
-                              </el-table-column>
-                              <el-table-column
-                                prop="allmoney"
-                                label="总成本(万元)"
-                                width="120">
-                              </el-table-column>
-                              <el-table-column
-                                prop="avgallmoney"
-                                sortable
-                                label="每分成本(元)"
-                                width="140">
-                              </el-table-column>
-                              <el-table-column
-                                prop="moneyscore"
-                                sortable
-                                label="1万元成交分"
-                                width="140">
-                              </el-table-column>
-                              <el-table-column
-                                prop="personmoney"
-                                sortable
-                                label="人力成本(万元)"
-                                width="140">
-                              </el-table-column>
-                              <el-table-column
-                                prop="paymoney"
-                                sortable
-                                label="付费成本(万元)"
-                                width="140">
-                              </el-table-column>
-                              <el-table-column
-                                prop="personnumber"
-                                sortable
-                                label="总人数"
-                                width="100">
-                              </el-table-column>
-                            </el-table>
-                        </div>
-                  </div>
-                  <div class="rowSeverFrTwo">
-                        <h3>部门成本均价排行</h3>
-                        <p class="unit">(单位：元)</p>
-                        <div id="costAverageChart" class="chart-canvas"></div>
-                  </div>
-               </div>
+          </div>
+          <div class="rowSever">
+              <div class="rowSeverFl">
+                    <div class="itemRowTit">
+                      <h3>部门成本</h3>
+                      <span>数据更新于2021年10月25日 12时  | 每月更新</span>
+                    </div>
+                    <div class="rowSeverFlItem">
+                        <el-table
+                          :data="currentCluesData.departmentCost"
+                          show-summary
+                          class="rowThreeTable"
+                          style="width: 100%">
+                          <el-table-column
+                            prop="departname"
+                            label="部门"
+                            width="50">
+                          </el-table-column>
+                          <el-table-column
+                            prop="score"
+                            label="成交分"
+                            width="70">
+                          </el-table-column>
+                          <el-table-column
+                            prop="allmoney"
+                            label="总成本(万元)"
+                            min-width="60">
+                          </el-table-column>
+                          <el-table-column
+                            prop="avgallmoney"
+                            sortable
+                            label="每分成本(元)"
+                            min-width="70">
+                          </el-table-column>
+                          <el-table-column
+                            prop="moneyscore"
+                            sortable
+                            label="1万元成交分"
+                            min-width="70">
+                          </el-table-column>
+                          <el-table-column
+                            prop="personmoney"
+                            sortable
+                            label="人力成本(万元)"
+                            min-width="70">
+                          </el-table-column>
+                          <el-table-column
+                            prop="paymoney"
+                            sortable
+                            label="付费成本(万元)"
+                            min-width="80">
+                          </el-table-column>
+                          <el-table-column
+                            prop="personnumber"
+                            sortable
+                            label="总人数"
+                            width="70">
+                          </el-table-column>
+                        </el-table>
+                    </div>
+              </div>
+              <div class="rowSeverFr">
+                    <h3>部门成本均价排行</h3>
+                    <p class="unit">(单位：元)</p>
+                    <div id="costAverageChart" class="chart-canvas"></div>
+              </div>
           </div>
           <div class="rowSix">
                <div class="rowSixFl">
                     <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}年度成交积分对比</h3>
-                    <div id="yearscoretongChart" class="chart-canvas"></div>
+                    <div id="yearscoretongChart01" class="chart-canvas"></div>
                </div>
                <div class="rowSixFr">
                     <div class="itemRowTit">
@@ -1943,7 +1946,6 @@ export default {
                     }
                   }
                 }
-
                  return originalItems;
             },
           },
@@ -1960,11 +1962,14 @@ export default {
                     interactions: [{ type: 'active-region', enable: false }],
                     xAxis: {
                       label: {
+                        offset:11,
                         autoHide: true,
                         autoRotate: false,
                         style: {
-                          fill: '#666666',
-                          opacity: 0.6,
+                          fill: '#a1a1a1',
+                          opacity: 1,
+                          fontSize: 12,
+                          lineHeight:18,
                         },
                       },
                     },
@@ -2374,7 +2379,7 @@ export default {
           });
           userView.polygon()
             .position('longitude*latitude')
-            .color('trend', ['#ab2716','#d6341d', '#f64d26', '#f9682f', '#fe8c40', '#fbb045', '#f1c969', '#f6e196'])
+            .color('trend', ['#ae1222','#df3041', '#f27042', '#f9ac6e', '#f1de5f', '#eae090', '#bae29d', '#89cecc', '#a3cfce', '#a2bfcd', '#b3b3b3'])
             .tooltip('name*number')
             .style({
               fillOpacity: 1
@@ -2406,7 +2411,7 @@ export default {
             legend: false,
             appendPadding:[0, 30, 0, 30],
             xAxis:false,
-            color:['#cbebfc','#bae7ff','#92d1ff','#69bcff','#41a6ff','#1890ff','#1280ec','#0c70d9','#0660c6','#0050b3'],
+            color:['#b3b3b3','#a2bfcd','#a3cfce','#bfd3dd','#b0d4d3','#bae29d','#f1e89d','#f9ac6e','#f27042','#df3041'],
             label: {
               style: {
                 fill: '#999999',
@@ -2442,16 +2447,19 @@ export default {
               xField: 'date',
               yField: 'xunnumber',
               height:100,
-              padding:[20,25,18,15],
+              padding:[20,25,22,15],
               xAxis: {
                 range: [0, 1],
                 tickCount: 6,
-                title:{
-                  style:{
-                    fill: '#719ef6',
-                    fontsize:'12',
-                  }
-                }
+                label: {
+                  offset:11,
+                  style: {
+                    fill: '#a1a1a1',
+                    opacity: 1,
+                    fontSize: 12,
+                    lineHeight:18,
+                  },
+                },
               },
               yAxis:false,
               label: {
@@ -2516,6 +2524,15 @@ export default {
               smooth:false,
               xAxis: {
                 tickCount:10,
+                label: {
+                  offset:10,
+                  style: {
+                    fill: '#666666',
+                    opacity: 0.6,
+                    fontSize: 12,
+                    lineHeight:16,
+                  },
+                },
               },
               yAxis: {
                 grid: {
@@ -2538,11 +2555,12 @@ export default {
               legend: {
                 custom: true,
                 position: 'bottom',
+                itemHeight:24,
                 items: [
                   {
                     value: '搜索询盘',
                     name: '搜索询盘',
-                    marker: { symbol: 'square', style: { fill: '#5B8FF9', r: 5 } },
+                    marker: { symbol: 'square', style: { fill: '#5B8FF9', r: 5} },
                   },
                   {
                     value: '总询盘',
@@ -2552,14 +2570,23 @@ export default {
                   {
                     value: '平均值',
                     name: '平均值',
-                    marker: { symbol: 'line', style: { stroke: '#f16b6b', r: 5 } },
+                    marker: { symbol: 'hyphen', style: { stroke: '#f16b6b', r: 5 } },
                   },
                   {
                     value: '目标值',
                     name: '目标值',
-                    marker: { symbol: 'line', style: { stroke: '#6aa343', r: 5 } },
+                    marker: { symbol: 'hyphen', style: { stroke: '#6aa343', r: 5 } },
                   },
                 ],
+                label: {
+                  offset:10,
+                  style: {
+                    fill: '#666666',
+                    opacity: 0.6,
+                    fontSize: 26,
+                    lineHeight:16,
+                  },
+                },
               },
               // label
               label: {
@@ -2696,8 +2723,15 @@ export default {
           },
           xAxis: {
             label: {
+              offset:11,
               autoHide: true,
               autoRotate: false,
+              style: {
+                fill: '#a1a1a1',
+                opacity: 1,
+                fontSize: 12,
+                lineHeight:18,
+              },
             },
           },
           yAxis: {
@@ -2840,161 +2874,172 @@ export default {
             maxYear = minYear = yearArr[0]
           }
         }
-          if($this.yearscoretongData&&!$this.yearscoretongData.chart.destroyed){
-            $this.yearscoretongData.changeData($this.currentCluesData.yearscoretongArr);
-          }else{
-            const yearscoretongData = new Line('yearscoretongChart', {
-              data:$this.currentCluesData.yearscoretongArr,
-              xField: 'month',
-              yField: 'value',
-              seriesField: 'year',
-              xAxis: {
-                title:{
-                  text:"(单位：分)",
-                  autoRotate:false,
-                  position:'start',
-                  offset:-247,
-                  style:{
-                    fill: '#999999',
-                    fontsize:'12',
-                  }
-                }
-              },
-              yAxis: {
-                grid: {
-                  line: {
-                    style: {
-                      stroke: '#cccccc',
-                      lineWidth: 1,
-                      lineDash: [3, 2],
-                      strokeOpacity: 0.5,
-                      shadowColor: null,
-                      shadowBlur: 0,
-                      shadowOffsetX:0,
-                      shadowOffsetY:0,
-                      cursor: 'pointer'
-                    }
-                  }
-                },
-              },
-              legend: {
-                offsetX:102,
-              },
-              // label
+        if($this.yearscoretongData&&!$this.yearscoretongData.chart.destroyed){
+          $this.yearscoretongData.changeData($this.currentCluesData.yearscoretongArr);
+        }else{
+          const yearscoretongData = new Line('yearscoretongChart01', {
+            data:$this.currentCluesData.yearscoretongArr,
+            xField: 'month',
+            yField: 'value',
+            seriesField: 'year',
+            xAxis: {
               label: {
+                offset:11,
+                autoHide: true,
+                autoRotate: false,
                 style: {
-                  textAlign: 'center',
-                  color:'#9e9e9e',
-                  fontsize:12,
-                },
-                formatter: (item) => {
-                  if(item.year==""+maxYear){
-                    return item.value
-                  }
+                  fill: '#a1a1a1',
+                  opacity: 1,
+                  fontSize: 12,
+                  lineHeight:18,
                 },
               },
-              point: {
-                shape: (res) =>{
-                  if(res.year == ""+maxYear){
-                    return 'circle';
-                  }
-                },
-                size: 4,
-                style:(res)=> {
-                  var obj = {
-                    opacity: 0.5,
-                    stroke: '#78bccf',
-                    fill: '#fff',
-                  }
-                  if(res.year == ""+maxYear){
-                    obj.opacity = 0.5;
-                  }else{
-                    obj.opacity = 0;
-                    obj.lineWidth= 0;
-                    obj.fill= '';
-                  }
-                  return obj;
-                },
-              },
-              color: ({ year }) => {
-                return year === ""+minYear ? '#fbd266' : '#78bccf';
-              },
-              lineStyle: ({ year }) => {
-                if (year === ""+minYear) {
-                  return {
-                    lineDash: [4, 4],
-                    opacity: 1,
-                  };
+              title:{
+                text:"(单位：分)",
+                autoRotate:false,
+                position:'start',
+                offset:-247,
+                style:{
+                  fill: '#999999',
+                  fontsize:'12',
                 }
-                return {
-                  opacity: 0.5,
-                };
+              }
+            },
+            yAxis: {
+              grid: {
+                line: {
+                  style: {
+                    stroke: '#cccccc',
+                    lineWidth: 1,
+                    lineDash: [3, 2],
+                    strokeOpacity: 0.5,
+                    shadowColor: null,
+                    shadowBlur: 0,
+                    shadowOffsetX:0,
+                    shadowOffsetY:0,
+                    cursor: 'pointer'
+                  }
+                }
               },
-            });
-            $this.yearscoretongData = yearscoretongData;
-            yearscoretongData.render();
-            var hoverData = [];
-            yearscoretongData.on('tooltip:change', ev => {
-              hoverData=ev.data.items;
-            })
-            yearscoretongData.on('plot:click', ev => {
-              var mouth=hoverData[0].data.month.replace('月','');
-              var sametimeArr=[];
-              var registerObj={
-                year:hoverData[0].data.year,
-                value:0,
-              };        
-              var lastregisterObj={
-                year:hoverData[1].data.year,
-                value:0,
+            },
+            legend: {
+              offsetX:102,
+            },
+            // label
+            label: {
+              style: {
+                textAlign: 'center',
+                color:'#9e9e9e',
+                fontsize:12,
+              },
+              formatter: (item) => {
+                if(item.year==""+maxYear){
+                  return item.value
+                }
+              },
+            },
+            point: {
+              shape: (res) =>{
+                if(res.year == ""+maxYear){
+                  return 'circle';
+                }
+              },
+              size: 4,
+              style:(res)=> {
+                var obj = {
+                  opacity: 0.5,
+                  stroke: '#78bccf',
+                  fill: '#fff',
+                }
+                if(res.year == ""+maxYear){
+                  obj.opacity = 0.5;
+                }else{
+                  obj.opacity = 0;
+                  obj.lineWidth= 0;
+                  obj.fill= '';
+                }
+                return obj;
+              },
+            },
+            color: ({ year }) => {
+              return year === ""+minYear ? '#fbd266' : '#78bccf';
+            },
+            lineStyle: ({ year }) => {
+              if (year === ""+minYear) {
+                return {
+                  lineDash: [4, 4],
+                  opacity: 1,
+                };
+              }
+              return {
+                opacity: 0.5,
               };
-              var sametimeGrowth='';
-              var sametimeRate='';
-              $this.currentCluesData.yearscoretongArr.forEach(function(item,index){
-                  if(item.month.replace('月','')<mouth||item.month.replace('月','')==mouth){
-                    //年度同期询盘对比
-                    if(registerObj.year==item.year){
-                       registerObj.value=registerObj.value+Number(item.value);
-                    }else{
-                      lastregisterObj.value=lastregisterObj.value+Number(item.value);
-                    } 
-                  }
-              });                            
-              var MaxValue='';
-              if(Number(registerObj.value)>=Number(lastregisterObj.value)){
-                MaxValue=Number(registerObj.value);
-              }else{
-                MaxValue=Number(lastregisterObj.value);
-              }
-              if(MaxValue==0){
-                lastregisterObj.percen='0%';
-                registerObj.percen='0%';
-              }else{
-                  lastregisterObj.percen=(Number(lastregisterObj.value)/MaxValue*100).toFixed(2)+'%';
-                  registerObj.percen=(Number(registerObj.value)/MaxValue*100).toFixed(2)+'%';
-              }
-              sametimeArr.push(registerObj,lastregisterObj);
-              $this.currentCluesData.sametimeArr = sametimeArr;
+            },
+          });
+          $this.yearscoretongData = yearscoretongData;
+          yearscoretongData.render();
+          var hoverData = [];
+          yearscoretongData.on('tooltip:change', ev => {
+            hoverData=ev.data.items;
+          })
+          yearscoretongData.on('plot:click', ev => {
+            var mouth=hoverData[0].data.month.replace('月','');
+            var sametimeArr=[];
+            var registerObj={
+              year:hoverData[0].data.year,
+              value:0,
+            };        
+            var lastregisterObj={
+              year:hoverData[1].data.year,
+              value:0,
+            };
+            var sametimeGrowth='';
+            var sametimeRate='';
+            $this.currentCluesData.yearscoretongArr.forEach(function(item,index){
+                if(item.month.replace('月','')<mouth||item.month.replace('月','')==mouth){
+                  //年度同期询盘对比
+                  if(registerObj.year==item.year){
+                      registerObj.value=registerObj.value+Number(item.value);
+                  }else{
+                    lastregisterObj.value=lastregisterObj.value+Number(item.value);
+                  } 
+                }
+            });                            
+            var MaxValue='';
+            if(Number(registerObj.value)>=Number(lastregisterObj.value)){
+              MaxValue=Number(registerObj.value);
+            }else{
+              MaxValue=Number(lastregisterObj.value);
+            }
+            if(MaxValue==0){
+              lastregisterObj.percen='0%';
+              registerObj.percen='0%';
+            }else{
+                lastregisterObj.percen=(Number(lastregisterObj.value)/MaxValue*100).toFixed(2)+'%';
+                registerObj.percen=(Number(registerObj.value)/MaxValue*100).toFixed(2)+'%';
+            }
+            sametimeArr.push(registerObj,lastregisterObj);
+            $this.currentCluesData.sametimeArr = sametimeArr;
 
-              if(registerObj.year>lastregisterObj.year){
-                  sametimeGrowth=registerObj.value-lastregisterObj.value;
-                  if(lastregisterObj.value==0){
-                    sametimeRate=registerObj.value.toFixed(2)+'%';
-                  }else{
-                    sametimeRate=(Math.abs(registerObj.value-lastregisterObj.value)/lastregisterObj.value*100).toFixed(2)+'%';
-                  }
-              }else{
-                  sametimeGrowth=lastregisterObj.value-registerObj.value;
-                  if(registerObj.value==0){
-                    sametimeRate=(lastregisterObj.value).toFixed(2)+'%';
-                  }else{
-                    sametimeRate=(Math.abs(lastregisterObj.value-registerObj.value)/registerObj.value*100).toFixed(2)+'%';
-                  }
-              }
-              $this.currentCluesData.sametimeGrowth=sametimeGrowth;
-              $this.currentCluesData.sametimeRate=sametimeRate;
-            });
-          }
+            if(registerObj.year>lastregisterObj.year){
+                sametimeGrowth=registerObj.value-lastregisterObj.value;
+                if(lastregisterObj.value==0){
+                  sametimeRate=registerObj.value.toFixed(2)+'%';
+                }else{
+                  sametimeRate=(Math.abs(registerObj.value-lastregisterObj.value)/lastregisterObj.value*100).toFixed(2)+'%';
+                }
+            }else{
+                sametimeGrowth=lastregisterObj.value-registerObj.value;
+                if(registerObj.value==0){
+                  sametimeRate=(lastregisterObj.value).toFixed(2)+'%';
+                }else{
+                  sametimeRate=(Math.abs(lastregisterObj.value-registerObj.value)/registerObj.value*100).toFixed(2)+'%';
+                }
+            }
+            $this.currentCluesData.sametimeGrowth=sametimeGrowth;
+            $this.currentCluesData.sametimeRate=sametimeRate;
+          });
+        }
       }
     },
     // 年度询盘对比
@@ -3029,6 +3074,17 @@ export default {
               yField: 'value',
               seriesField: 'year',
               xAxis: {
+                label: {
+                  offset:11,
+                  autoHide: true,
+                  autoRotate: false,
+                  style: {
+                    fill: '#a1a1a1',
+                    opacity: 1,
+                    fontSize: 12,
+                    lineHeight:18,
+                  },
+                },
                 title:{
                   text:"(单位：个)",
                   autoRotate:false,
@@ -3188,10 +3244,22 @@ export default {
               seriesField: 'title',
               width: 500,
               height: 300,
-              padding:[35,0,18,25],
               color: ['#669aff', '#9dd5ff'],
               marginRatio: 0,
               maxColumnWidth:25,
+              xAxis: {
+                label: {
+                  offset:11,
+                  autoHide: true,
+                  autoRotate: false,
+                  style: {
+                    fill: '#a1a1a1',
+                    opacity: 1,
+                    fontSize: 12,
+                    lineHeight:18,
+                  },
+                },
+              },
               yAxis: {
                 grid: {
                   line: {
@@ -3237,12 +3305,25 @@ export default {
               seriesField: 'title',
               width: 500,
               height: 300,
-              padding:[35,0,18,25],
+              //padding:[35,0,30,25],
               /** 设置颜色 */
               color: ['#fcb030', '#f7c572'],
               /** 设置间距 */
               marginRatio: 0,
               maxColumnWidth:25,
+              xAxis: {
+                label: {
+                  offset:11,
+                  autoHide: true,
+                  autoRotate: false,
+                  style: {
+                    fill: '#a1a1a1',
+                    opacity: 1,
+                    fontSize: 12,
+                    lineHeight:18,
+                  },
+                },
+              },
               yAxis: {
                 grid: {
                   line: {
@@ -3703,7 +3784,7 @@ export default {
         userView.polygon()
           .position('longitude*latitude')
           //.color('trend', '#0050B3-#1890FF-#BAE7FF')          
-          .color('trend', ['#ab2716','#d6341d', '#f64d26', '#f9682f', '#fe8c40', '#fbb045', '#f1c969', '#f6e196'])
+          .color('trend', ['#ae1222','#df3041', '#f27042', '#f9ac6e', '#f1de5f', '#eae090', '#bae29d', '#89cecc', '#a3cfce', '#a2bfcd', '#b3b3b3'])
           .tooltip('name*country*number')
           .style({
             fillOpacity: 1
@@ -3762,7 +3843,7 @@ export default {
           const yearuserChart = new Area(`yearuserChart${index}`, {
             data:item.children, 
             xField: 'mtime',
-            yField: 'anumber',
+            yField: 'number',
             padding:0,
             appendPadding:0,
             limitInPlot:false,
