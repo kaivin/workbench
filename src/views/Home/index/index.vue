@@ -377,6 +377,9 @@
                             sortable
                             label="每分成本(元)"
                             min-width="70">
+                            <template slot-scope="scope">
+                              <span style="color:#ff4245;">{{scope.row.avgallmoney}}</span>
+                            </template>
                           </el-table-column>
                           <el-table-column
                             prop="moneyscore"
@@ -2630,29 +2633,29 @@ export default {
                 }
               },
               yAxis:false,
-              // label: {
-              //   layout: [{ type: 'hide-overlap' }], // 隐藏重叠label
-              //   style: {
-              //     textAlign: 'center',
-              //     color:'#9e9e9e',
-              //     fontsize:12,
-              //   },
-              //   formatter: (item) => {
-              //     return item.xunnumber
-              //   },
-              // },
-              // point: {
-              //   size:4,
-              //   shape: 'circle',
-              //   style: (res) => {
-              //     var obj = {
-              //       opacity: 0.5,
-              //       stroke: '#6392ec',
-              //       fill: '#fff',
-              //     }
-              //     return obj;
-              //   },
-              // },
+              label: {
+                layout: [{ type: 'hide-overlap' }], // 隐藏重叠label
+                style: {
+                  textAlign: 'center',
+                  color:'#9e9e9e',
+                  fontsize:12,
+                },
+                formatter: (item) => {
+                  return item.xunnumber
+                },
+              },
+               point: {
+                 size:4,
+                 shape: 'circle',
+                 style: (res) => {
+                   var obj = {
+                     opacity: 0.5,
+                     stroke: '#6392ec',
+                     fill: '#fff',
+                   }
+                   return obj;
+                 },
+               },
               tooltip: {
                 //fields:['date','xunnumber', 'xunchange'],
                 customContent: (title, data) => {
@@ -3374,8 +3377,17 @@ export default {
           if($this.zugroupdayColumn&&!$this.zugroupdayColumn.chart.destroyed){
             $this.zugroupdayColumn.changeData($this.currentCluesData.zugroupdayArr);
           }else{
+            var resultData =$this.currentCluesData.zugroupdayArr;
+            var maxnum = 0;
+            for(var i = 0;i<resultData.length;i++){
+              for(var key in resultData[i]){
+                if(key != 'id' && typeof(resultData[i][key]) == 'number' && resultData[i][key]>maxnum){
+                  maxnum = resultData[i][key]
+                }
+              }
+            }
             const zugroupdayColumn = new Column('zugroupdayChart', {
-              data:$this.currentCluesData.zugroupdayArr,
+              data:resultData,
               isGroup: true,
               xField: 'name',
               yField: 'number',
@@ -3415,6 +3427,7 @@ export default {
                     }
                   }
                 },
+                max: maxnum + 20,
               },
               label: {
                 position: 'top',
@@ -3436,8 +3449,17 @@ export default {
           if($this.zugoupmonthColumn&&!$this.zugoupmonthColumn.chart.destroyed){
             $this.zugoupmonthColumn.changeData($this.currentCluesData.zugoupmonthArr);
           }else{
+            var resultData =$this.currentCluesData.zugoupmonthArr;
+            var maxnum = 0;
+            for(var i = 0;i<resultData.length;i++){
+              for(var key in resultData[i]){
+                if(key != 'id' && typeof(resultData[i][key]) == 'number' && resultData[i][key]>maxnum){
+                  maxnum = resultData[i][key]
+                }
+              }
+            }
             const zugoupmonthColumn = new Column('zugroupmonthChart', {
-              data:$this.currentCluesData.zugoupmonthArr,
+              data:resultData,
               isGroup: true,
               xField: 'name',
               yField: 'number',
@@ -3480,6 +3502,7 @@ export default {
                     }
                   }
                 },
+                max: maxnum + 20,
               },
               label: {
                 // 可手动配置 label 数据标签位置

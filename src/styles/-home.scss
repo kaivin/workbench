@@ -1830,6 +1830,9 @@
             background:#fff;
             border-radius:8px;
             padding:20px 30px 28px 30px;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            height: 473px;
             .map-Top-chartTit{
               
               margin-bottom:10px;
@@ -2028,6 +2031,7 @@
             position: relative;
             box-sizing: border-box;
             -webkit-box-sizing: border-box;
+            height: 473px;
             .unit{font-size:12px; color:#c1c1c1; line-height:30px;float: right;}
             .totalNum{
                 position: absolute;
