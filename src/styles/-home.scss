@@ -581,12 +581,17 @@
                             padding:0px;
                             color:#4c4c4c;
                             font-size: 13px;
+                            &.is-disabled{cursor: auto!important;
+                            }
                             .el-checkbox__input{
                                 width: 10px;
                                 height: 10px;
                                 vertical-align: top;
                                 margin-top: 11px;
                                 float: left;
+                                &.is-disabled{cursor: auto!important;
+                                    .el-checkbox__inner{cursor: auto!important;}
+                                }
                                 .el-checkbox__inner{
                                     width:10px;
                                     height: 10px;
@@ -1771,8 +1776,8 @@
             .itemRowTit{
                 p{
                     float: left;
-                    font-size:13px;
-                    color:#666;
+                    color: #c1c1c1;
+                    font-size: 12px;
                     line-height:30px;
                     padding-left:10px;
                 }

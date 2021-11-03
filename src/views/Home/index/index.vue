@@ -1228,9 +1228,7 @@ export default {
                     var zusuercountGroupnameArr=[];//小组
                     var GroupID=[];
                     newStrArr.forEach(function(item,index){
-                       if(index==0){
-                         GroupID.push(item);
-                       }
+                        GroupID.push(item);
                         $this.currentCluesData.DeparData.forEach(function(items,indexs){
                             if(item==items.value){
                                 var GroupnameObj={};
@@ -1749,9 +1747,7 @@ export default {
                     var zusuercountGroupnameArr=[];//小组
                     var GroupID=[];
                     newStrArr.forEach(function(item,index){
-                       if(index==0){
-                         GroupID.push(item);
-                       }
+                        GroupID.push(item);
                         $this.currentCluesData.DeparData.forEach(function(items,indexs){
                             if(item==items.value){
                                 var GroupnameObj={};
@@ -3395,7 +3391,8 @@ export default {
               width: 500,
               height: 300,
               color: ['#669aff', '#9dd5ff'],
-              marginRatio: 0,
+              dodgePadding: 0,
+              maxColumnWidth:25,
               legend:false,
               xAxis: {
                 label: {
@@ -3469,7 +3466,7 @@ export default {
               /** 设置颜色 */
               color: ['#fcb030', '#f7c572'],
               /** 设置间距 */
-              marginRatio: 0,
+              dodgePadding: 0,
               legend:false,
               xAxis: {
                 label: {
@@ -4165,6 +4162,21 @@ export default {
       var $this = this;
       var GroupID=$this.zusuercount.GroupID;
       if(GroupID&&GroupID.length>0){
+          if(GroupID.length==1){
+            $this.zusuercount.zusuercountGroupnameArr.forEach(function(item,index){
+              GroupID.forEach(function(items){
+                if(items==item.value){
+                  item.disabled=true;
+                }else{
+                  item.disabled=false;
+                }
+              });
+            });
+          }else{
+              $this.zusuercount.zusuercountGroupnameArr.forEach(function(item,index){
+                  item.disabled=false;
+              });
+          }
           var zusuercountArr=[];//分组-组员成绩
           GroupID.forEach(function(item,index){
               $this.zusuercount.zusuercountAllArr.forEach(function(items,indexs){
