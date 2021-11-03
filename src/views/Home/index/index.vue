@@ -2576,7 +2576,7 @@ export default {
             .tooltip('name*number')
             .style({
               fillOpacity: 1,
-              stroke:"#fff",
+              stroke:"#fff"
             }).animate({
               leave: {
                 animation: 'fade-out'
@@ -3976,7 +3976,7 @@ export default {
           .tooltip('name*country*number')
           .style({
             fillOpacity: 1,
-            stroke:"#fff",
+            stroke:"#fff"
           }).animate({
             leave: {
               animation: 'fade-out'

@@ -449,7 +449,6 @@ export default {
       minHeight:"auto",
       breadcrumbList:[],
       phoneID:null,
-      isPageBtn:false,
       currentPhone:'',
       writepermit:false,
       menuButtonPermit:[],
@@ -752,6 +751,7 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
+      $this.searchData.page = 1;
       $this.loadingFun();
       $this.initCluesList();
     },
@@ -774,6 +774,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
+      $this.searchData.page=1;
       $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
@@ -918,11 +919,7 @@ export default {
     initSearchData(){
       var $this = this;
       var searchData = {};
-      searchData.page = $this.isPageBtn?$this.searchData.page:1;
-      if(!this.isPageBtn){
-        $this.searchData.page = 1
-      }
-      $this.isPageBtn = false;
+      searchData.page = $this.searchData.page;
       searchData.limit = $this.searchData.limit;
       searchData.phoneid = $this.phoneID;
       if($this.searchData.mode&&$this.searchData.mode!=''){
@@ -961,7 +958,7 @@ export default {
       if(!$this.isSearchResult){
         $this.isSearchResult=true;
         var searchData = $this.initSearchData();
-        document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
+        $this.loadingFun();
         $this.$store.dispatch('chinaphone/cluesCurrentPhoneDataAction', searchData).then(response=>{
           if(response){
             if(response.status){
@@ -1232,7 +1229,6 @@ export default {
     // 当前页改变事件
     handleCurrentChange(val) {
       this.searchData.page = val;
-      this.isPageBtn = true;
       this.initPage();
     },
     // 修改询盘
@@ -1379,7 +1375,6 @@ export default {
               message: response.info,
               type: 'success'
             });
-            $this.isPageBtn = true;
             $this.initCluesList();
           }else{
             $this.$message({

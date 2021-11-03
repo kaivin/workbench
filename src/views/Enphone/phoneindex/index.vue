@@ -816,7 +816,6 @@ export default {
     return {
       phoneID:null,
       depart_id:0,
-      isPageBtn:false,
       dept_Data:[],
       breadcrumbList:[],
       currentPhone:'',
@@ -1261,6 +1260,7 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
+      $this.searchData.page=1;
       $this.initCluesList();
     },
     // 重置表单
@@ -1393,6 +1393,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
+        $this.searchData.page=1;
       $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
@@ -1560,11 +1561,7 @@ export default {
     initSearchData(){
       var $this = this;
       var searchData = {};
-      searchData.page = $this.isPageBtn?$this.searchData.page:1;
-      if(!this.isPageBtn){
-        $this.searchData.page = 1
-      }
-      $this.isPageBtn = false;
+      searchData.page = $this.searchData.page;
       searchData.limit = $this.searchData.limit;
       if($this.phoneID){
         searchData.phoneid = $this.phoneID;
@@ -1664,11 +1661,10 @@ export default {
           }
         }
         $this.loadingFun();
-        document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
         $this.$store.dispatch(pathUrl, searchData).then(response=>{
           if(response){
             if(response.status){
-              var infoData = {};
+              var infoData = {};            
               infoData.totalCount=response.allcount;
               infoData.effectiveCount=response.effectivecount;
               infoData.invalidCount=response.noeffectivecount;
@@ -1870,7 +1866,6 @@ export default {
     // 当前页改变事件
     handleCurrentChange(val) {
       this.searchData.page = val;
-      this.isPageBtn = true;
       this.leftPhoto();
     },
     // 修改询盘
@@ -2013,7 +2008,6 @@ export default {
               message: response.info,
               type: 'success'
             });
-            $this.isPageBtn = true;
             $this.initCluesList();
           }else{
             $this.$message({

@@ -503,6 +503,7 @@ export default {
             console.log(response,'response');
             if(response.data.length>0){
                 $this.tableData = response.data;
+                $this.totalDataNum = response.allcount;
             }else{
               $this.tableData = [];
             }
