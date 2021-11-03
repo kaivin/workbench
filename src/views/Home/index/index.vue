@@ -3396,7 +3396,6 @@ export default {
               height: 300,
               color: ['#669aff', '#9dd5ff'],
               marginRatio: 0,
-              maxColumnWidth:25,
               legend:false,
               xAxis: {
                 label: {
@@ -3471,7 +3470,6 @@ export default {
               color: ['#fcb030', '#f7c572'],
               /** 设置间距 */
               marginRatio: 0,
-              maxColumnWidth:25,
               legend:false,
               xAxis: {
                 label: {
