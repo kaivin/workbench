@@ -90,6 +90,12 @@
             margin-bottom:12px;
             line-height:30px;
             height:30px;
+            span{
+                font-size: 14px;
+                color: #666;
+                margin-left: 15px;
+                font-weight: normal;
+            }
         }
         .itemRowTit{
             padding-bottom: 12px;
@@ -278,41 +284,32 @@
                         .legendItem4:before{
                             content: "";
                             display: block;
-                            width: 20px;
-                            height: 2px;
-                            background: #f38080;
-                            position: absolute;
-                            left: 0;
-                            top: 6px;
-                        }
-                        .legendItem4:after{
-                            content: "";
-                            display: block;
-                            width: 8px;
-                            height: 8px;
+                            width: 14px;
+                            height: 14px;
                             background: #fff;
                             box-sizing: border-box;
-                            border: 2px solid #f38080;
+                            border: 1px solid #f38080;
                             position: absolute;
-                            left: 6px;
-                            top: 3px;
-                            border-radius: 50%;
+                            left: 0;
+                            top: 0;
                         }
+                        
                         .legendItem5:before{
                             content: "";
                             display: block;
-                            width: 20px;
-                            height: 2px;
+                            width: 10px;
+                            height: 10px;
                             background: #fcb030;
+                            border-radius: 50%;
                             position: absolute;
-                            left: 0;
-                            top: 6px;
+                            left: 2px;
+                            top: 2px;
                         }
                     }
                 }
                 .rowOneOneItemFr{
                     background: #f3f8fe;
-                    padding: 15px 20px 0px 20px;
+                    padding: 15px 20px 15px 20px;
                     border-radius: 8px;
                     min-width: 240px;
                     float: right;
@@ -324,6 +321,7 @@
                         color:#1a1a1a;
                         line-height:30px;
                         font-weight:bold;
+                        margin-bottom: 10px;
                         &+dd{
                             border-top:0px;
                         }
@@ -336,7 +334,7 @@
                         font-size:14px;
                         color:#666666;
                         line-height:30px;
-                        padding:12px 0px;
+                        padding:15px 0px;
                         span{
                             font-size:12px;
                             color:#ccc;
@@ -498,7 +496,7 @@
             border-radius:8px;
             padding:16px 30px;
             .map-Top-chartTit{
-              margin-top:10px;
+              margin-top: 10px;
               margin-bottom:10px;
               h3{
                   margin-top:0px!important;
@@ -1493,9 +1491,9 @@
             width:calc(50% - 10px);
             background:#fff;
             border-radius:8px;
-            padding:16px 30px 28px 30px;
+            padding:20px 30px 28px 30px;
             .map-Top-chartTit{
-              margin-top:10px;
+              
               margin-bottom:10px;
               h3{
                   margin-top:0px!important;
@@ -1568,7 +1566,7 @@
                 }
                 .rowEightFlItemBom{
                     li{
-                        margin-top:28px;
+                        margin-top:20px;
                         &:first-child{
                             margin-top:0px;
                         }
@@ -1579,15 +1577,16 @@
                             width:65px;
                             text-align:left;
                         }
+                        
                         .rowEightFlItemFlBox{
-                            height:28px;
+                            height:26px;
                             background:#f3f8ff;
                             position:relative;
                             span{
                                 position:absolute;
                                 left:0px;
                                 top:4px;
-                                height:20px;
+                                height:18px;
                             }
                             .departnamescore{
                                 background:#81a7f1;
@@ -1629,9 +1628,9 @@
                     display:block;
                     overflow:hidden;
                     border:1px solid #d2d8e1;
-                    padding:20px;
+                    padding: 18px 20px;
                     border-radius:4px;
-                    margin-top:35px;
+                    margin-top:25px;
                     dt{
                         float:left;
                         width:50%;
@@ -1679,33 +1678,19 @@
             .unit{font-size:12px; color:#9ca0a8; line-height:1;}
             .totalNum{
                 position: absolute;
-                left: 60px;
+                left: 30px;
                 top: 110px;
-                padding-left: 20px;
-                &:before{
-                    content:'';
-                    position:absolute;
-                    left:0px;
-                    top:0px;
-                    bottom:0px;
-                    background:#ed7272;
-                    border-radius:3px;
-                    width:6px;
-                }
+                padding: 10px 24px;
+                background:#ed7272;
+                border-radius: 8px;
+                box-shadow: 0px 6px 32px 0px rgba(224, 75, 75, 0.39);
                 span{
-                    clear: both;
-                    display: block;
                     font-size:14px;
-                    color:#1a1a1a;
-                    line-height:1;
-                    padding-bottom:15px;
+                    color:#fff;
                 }
                 strong{
-                    clear: both;
-                    display: block;
-                    font-size: 28px;
-                    color: #1a1a1a;
-                    line-height: 1;
+                    font-size:28px;
+                    color:#fff;
                     font-weight: normal;
                 }
             }
@@ -1844,6 +1829,9 @@
             
         }
     }
+}
+.tipnumber{
+    padding: 3px 0;
 }
 @media (max-width:1200px){
     .home-index{

@@ -55,7 +55,7 @@
                               <div class="legendFly">
                                 <span class="legendItem1">目标询盘</span>
                                 <span class="legendItem2">询盘数量</span>
-                                <span class="legendItem3">优秀询盘数量</span>
+                                <span class="legendItem3">达成目标</span>
                                 <span class="legendItem4">历史最高</span>
                                 <span class="legendItem5">本月最高</span>
                               </div>
@@ -64,8 +64,8 @@
                              <dt>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}统计</dt>
                              <dd>历史单日最高<span>({{targetScore.historymaxnumber.xundate}})</span><strong class="color01">{{targetScore.historymaxnumber.maxnumber}}</strong></dd>
                              <dd>本月单日最高<span>({{targetScore.daymaxnumber.xundate}})</span><strong class="color02">{{targetScore.daymaxnumber.maxnumber}}</strong></dd>
-                             <dd v-if="targetScore.isDistanceTarget">距目标线差距<strong>{{targetScore.DistanceTarget}}</strong></dd>
-                             <dd v-else>超出目标线<strong>{{targetScore.DistanceTarget}}</strong></dd>
+                             <!-- <dd v-if="targetScore.isDistanceTarget">距目标线差距<strong>{{targetScore.DistanceTarget}}</strong></dd>
+                             <dd v-else>超出目标线<strong>{{targetScore.DistanceTarget}}</strong></dd> -->
                          </dl>
                     </div>
                </div>
@@ -266,16 +266,24 @@
                          <ul class="rowEightFlItemBom">
                              <li class="flex-wrap" v-for="(item,index) in currentCluesData.departScoreData" :key="index">
                                 <p class="rowEightFlItemFlName">{{item.departname}}</p>
-                                <p class="rowEightFlItemFlBox flex-content">
-                                   <span v-if="language=='Module_cnStat'" class="departnamescore" :style="'width:'+item.score/ScoreData.MaxValue*100+'%'"></span>
-                                   <span v-else class="departnamescore" :style="'width:'+item.snumber/ScoreData.MaxValue*100+'%'"></span>
-                                   <span class="goodnumber" :style="'width:'+item.goodnumber/ScoreData.MaxValue*100+'%'"></span>
-                                   <span class="mediumnumber" :style="'width:'+item.mediumnumber/ScoreData.MaxValue*100+'%'"></span>
-                                   <span class="passnumber" :style="'width:'+item.passnumber/ScoreData.MaxValue*100+'%'"></span>
-                                </p>
+                                <el-tooltip placement="top" effect="light">
+                                  <div slot="content">
+                                    <div class="tipnumber">合格线：{{item.passnumber}}</div>
+                                    <div class="tipnumber">中等线：{{item.mediumnumber}}</div>
+                                    <div class="tipnumber">优秀线：{{item.goodnumber}}</div>
+                                  </div>
+                                  <p class="rowEightFlItemFlBox flex-content">
+                                    <span v-if="language=='Module_cnStat'" class="departnamescore" :style="'width:'+item.score/ScoreData.MaxValue*100+'%'"></span>
+                                    <span v-else class="departnamescore" :style="'width:'+item.snumber/ScoreData.MaxValue*100+'%'"></span>
+                                    <span class="goodnumber" :style="'width:'+item.goodnumber/ScoreData.MaxValue*100+'%'"></span>
+                                    <span class="mediumnumber" :style="'width:'+item.mediumnumber/ScoreData.MaxValue*100+'%'"></span>
+                                    <span class="passnumber" :style="'width:'+item.passnumber/ScoreData.MaxValue*100+'%'"></span>
+                                  </p>
+                                </el-tooltip>
                                 <p class="rowEightFlItemFlNum NumClass">
-                                   <span>{{item.a_number}}</span>
+                                   <span v-if="item.a_number>0">{{item.a_number}}</span>
                                 </p>
+
                              </li>
                          </ul>
                          <dl class="rowEightFlItemDl">
@@ -291,10 +299,13 @@
                     </div>
                </div>
                <div class="rowEightFr">
-                    <h3>{{language=='Module_cnStat'?'中文':'英文'}}年度成交积分</h3>
+                    <h3>
+                      {{language=='Module_cnStat'?'中文':'英文'}}年度成交积分
+                      <span>数据更新于2021年10月25日 12时  | 每月更新</span>
+                    </h3>
                     <p class="unit">(单位：分)</p>
                     <p class="totalNum">
-                       <span>{{language=='Module_cnStat'?'中文':'英文'}}总成交积分</span><strong>{{currentCluesData.totalNumscore}}</strong>
+                       <span>{{language=='Module_cnStat'?'中文':'英文'}}总成交积分：</span><strong>{{currentCluesData.totalNumscore}}</strong>
                     </p>
                     <div id="yeardepartscoreChart" class="chart-canvas"></div>
                </div>
@@ -1917,8 +1928,9 @@ export default {
           appendPadding: 8,
           syncViewPadding: true,          
           tooltip: { 
-            shared: true ,
+            shared: true,
             customItems: (originalItems) => {
+                //console.log(originalItems)
                 for(let i=0;i<originalItems.length;i++){
                   if(originalItems[i].name == originalItems[i].title){
                     if(originalItems[i].name == "电商一部"){
@@ -1935,6 +1947,69 @@ export default {
           },
           height:215,
           plots:[
+            {//历史最高折线图
+               type: 'column',
+                options: {
+                    data: resultData,
+                    xField: 'departname',
+                    yField: 'historymaxnumber',
+                    minColumnWidth:36,
+                    maxColumnWidth:36,
+                    interactions: [{ type: 'active-region', enable: false }],
+                    xAxis: {
+                      label: {
+                        offset:11,
+                        autoHide: true,
+                        autoRotate: false,
+                        style: {
+                          fill: '#a1a1a1',
+                          opacity: 1,
+                          fontSize: 12,
+                          lineHeight:18,
+                        },
+                      },
+                    },
+                    yAxis: {
+                      grid: {
+                        line: {
+                          style: {
+                            stroke: '#cccccc',
+                            lineWidth: 1,
+                            lineDash: [3, 2],
+                            strokeOpacity: 0.3,
+                            shadowColor: null,
+                            shadowBlur: 0,
+                            shadowOffsetX:0,
+                            shadowOffsetY:0,
+                          }
+                        }
+                      },
+                      max: maxnum + 10,
+                    },
+                    columnStyle:{
+                      fill:'#fff',
+                      stroke: '#fbaaaa',
+                      lineWidth: 1,
+                      fillOpacity:0.5,
+                    },
+                    color:'#f38080',
+                    columnWidthRatio:0.5,
+                    meta: {
+                        historymaxnumber: {
+                            alias: '历史最高',
+                        },
+                    },
+                    label:{
+                      style: {
+                        fill: '#ff0606',
+                      },
+                      position: 'top', 
+                      
+                    }
+                    
+                },
+            },
+            
             {//目标柱状图
                type: 'column',
                 options: {
@@ -2042,7 +2117,7 @@ export default {
                       },
                       position: 'middle', 
                       content:(item)=>{
-                        if(item.searchdaynumber>0){
+                        if(item.searchdaynumber){
                           return item.searchdaynumber
                         }
                       }
@@ -2079,7 +2154,7 @@ export default {
                     },
                     color:(item)=>{
                       if(item.departname=="电商一部"&&$this.currentCluesData.departName == "中文"){
-                        return '#5B8FF9'
+                        return '#f7c572'
                       }else{
                         return '#59cab6'
                       }
@@ -2087,7 +2162,7 @@ export default {
                     columnStyle:(item)=>{
                       if(item.departname=="电商一部"&&$this.currentCluesData.departName == "中文"){
                         return {
-                          fill:'#5B8FF9'
+                          fill:'#f7c572'
                         }
                       }else{
                         for(let i = 0;i<resultData.length;i++){
@@ -2112,60 +2187,11 @@ export default {
                       },
                       position: 'middle', 
                       content:(item)=>{
-                        if(item.departname == '电商一部'){
-                          return item.searchdaynumber?parseInt(item.daynumber) - parseInt(item.searchdaynumber):parseInt(item.daynumber)
-                        }else{
                           if(item.daynumber>0){
-                            return item.daynumber
+                            return item.searchdaynumber?parseInt(item.daynumber) - parseInt(item.searchdaynumber):parseInt(item.daynumber)
                           }
-                        }
-                        
                       }
                     }
-                },
-            },
-            {//历史最高折线图
-               type: 'line',
-                options: {
-                    data: resultData,
-                    xField: 'departname',
-                    yField: 'historymaxnumber',
-                    xAxis:false,
-                    yAxis: {
-                      grid: {
-                        line: {
-                          style: {
-                            stroke: '#cccccc',
-                            lineWidth: 1,
-                            lineDash: [3, 2],
-                            strokeOpacity: 0,
-                            shadowColor: null,
-                            shadowBlur: 0,
-                            shadowOffsetX:0,
-                            shadowOffsetY:0,
-                          }
-                        }
-                      },
-                      max: maxnum + 10,
-                    },
-                    color:'#f38080',
-                    meta: {
-                        historymaxnumber: {
-                            alias: '历史最高',
-                        },
-                    },
-                    label: {
-                      position: 'top',
-                    },
-                    point:{
-                      shape:'circle',
-                      style:{
-                        opacity: 1,
-                        stroke: '#f38080',
-                        fill: '#fff',
-                      },
-                    }
-                    
                 },
             },
             {//本月最高折线图
@@ -2192,12 +2218,35 @@ export default {
                       },
                       max: maxnum + 10,
                     },
+                    
                     color:'#fcb030',
                     meta: {
                         monthmaxnumber: {
                             alias: '本月最高',
                         },
                     },
+                    lineStyle:{
+                      fill:'#fcb030',
+                      fillOpacity:0,
+                      lineOpacity:0,
+                      opacity:0
+                    },
+                    point: {
+                      size: 4,
+                      shape: 'circle',
+                      style: {
+                        fill: '#fcb030',
+                        stroke: '#fcb030',
+                        
+                      },
+                    },
+                    label:{
+                      style: {
+                        fill: '#fcb030',
+                      },
+                      position: 'top', 
+                      
+                    }
                 },
             },
           ]
@@ -2822,10 +2871,12 @@ export default {
             formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
           },
           legend: {
+            
+            maxRow: 3,
             position: 'left',
             itemHeight:20,  
             offsetY:36,
-            offsetX:25,
+            //offsetX:25,
             itemName: {
               formatter(text, item, index) {
                 if (data) {
