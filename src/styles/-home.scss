@@ -892,15 +892,27 @@
                     }
                 }
                 &.legendItem4{
-                    padding-left:43px;
+                    padding-left: 47px;
                     &:before{
                         content: "";
                         display: block;
-                        width:16px;
+                        width: 22px;
                         height: 2px;
                         background: #ff0000;
                         position: absolute;
-                        left:15px;
+                        left: 15px;
+                        top: 6px;
+                    }
+                    &:after{
+                        content: "";
+                        display: block;
+                        width: 12px;
+                        height: 2px;
+                        background: none;
+                        border-left: 3px solid #fff;
+                        border-right: 3px solid #fff;
+                        position: absolute;
+                        left: 19px;
                         top: 6px;
                     }
                 }
@@ -1208,52 +1220,49 @@
                     }
                     .rowFourTwoUlPercen{
                         position:relative;
-                        padding-right:80px;
                         height:30px;
                         margin-top:25px;
-                        .percenTop{
-                            position:absolute;
-                            left:15px;
-                            top:0px;
-                            right:95px;
-                            bottom:0px;
-                            line-height:30px;
-                            color:#fff;
-                            font-size:12px;
-                            z-index:3;
-                            span{
-                                float:right;
-                                font-size:16px;
-                            }
-                        }
                         .percenBom{
                             clear:both;
                             width:100%;
                             height:100%;
                             position: relative;
-                            border-radius: 0px 15px 15px 0px;
-                            overflow: hidden;
-                            &:before {
-                                content: '';
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                width: calc(100% + 8px);
-                                height: 100%;
-                                background: repeating-linear-gradient(45deg, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.02) 80%);
-                                background-size: 8px 8px;
-                            }
-                            span{
+                            .rowFourline{
                                 clear:both;
-                                display:block;
-                                height:100%;
                                 width:100%;
-                                border-radius:0px 15px 15px 0px;
-                                background:-webkit-linear-gradient(left,#c2d5fb, #96b7f5);
-                                background:-o-linear-gradient(right,#c2d5fb, #96b7f5);
-                                background:-moz-linear-gradient(right,#c2d5fb, #96b7f5);
-                                background:linear-gradient(to right,#c2d5fb, #96b7f5);
-                                vertical-align:top;
+                                height:100%;
+                                position: relative;
+                                border-radius: 0px 15px 15px 0px;
+                                overflow: hidden;
+                                &:before {
+                                    content: '';
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    width: calc(100% + 8px);
+                                    height: 100%;
+                                    background: repeating-linear-gradient(45deg, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.02) 80%);
+                                    background-size: 8px 8px;
+                                }
+                                i{
+                                    clear:both;
+                                    display:block;
+                                    height:100%;
+                                    width:100%;
+                                    border-radius:0px 15px 15px 0px;
+                                    background:-webkit-linear-gradient(left,#c2d5fb, #96b7f5);
+                                    background:-o-linear-gradient(right,#c2d5fb, #96b7f5);
+                                    background:-moz-linear-gradient(right,#c2d5fb, #96b7f5);
+                                    background:linear-gradient(to right,#c2d5fb, #96b7f5);
+                                    vertical-align:top;
+                                }
+
+                            }
+                            .rowFourtext{
+                                color: #313131;
+                                padding-left: 10px;
+                                font-size: 16px;
+                                line-height:30px;
                             }
                         }
                     }
@@ -1262,40 +1271,33 @@
                         margin-right:30px;
                         width:70px;
                         padding-top:18px;
-                        .ScoreTop{
-                            clear:both;
-                            display:block;
-                            color:#fbab4a;
-                            font-size:16px;
-                            span{
-                                width:32px;
-                                height:26px;
-                                display:inline-block;
-                                background-image:url('../assets/clinchIcon06.png');
-                                background-size:32px 26px;
-                                background-position:center center;
-                                background-repeat:no-repeat;
-                                padding-left:40px;
-                                line-height:26px;
+                        p{
+                            .ScoreTop{
+                                clear:both;
+                                display:block;
+                                color:#fbab4a;
+                                font-size:16px;
+                                text-align: center;
+                                span{
+                                    height:26px;
+                                    display:inline-block;
+                                    background-image:url('../assets/clinchIcon06.png');
+                                    background-size: 32px 26px;
+                                    background-position: left center;
+                                    background-repeat: no-repeat;
+                                    padding-left: 37px;
+                                    line-height: 26px;
+                                }
                             }
-                        }
-                        .ScoreBom{
-                            clear:both;
-                            display:block;
-                            text-align:center;
-                            font-size:12px;
-                            color:#999999;
-                            line-height:1;
-                            padding-top:5px;
-                        }
-                        .ScoreLine{
-                            clear:both;
-                            display:block;
-                            text-align:center;
-                            font-size:12px;
-                            color:#999999;
-                            line-height:1;
-                            padding-top:5px;
+                            .ScoreBom{
+                                clear:both;
+                                display:block;
+                                text-align:center;
+                                font-size:12px;
+                                color:#999999;
+                                line-height:1;
+                                padding-top:5px;
+                            }
                         }
                     }
                     .rowFourTwoUlarea{
@@ -1322,16 +1324,14 @@
                             }
                         }
                         .rowFourTwoUlPercen{
-                            padding-right:0px;
-                            .percenTop{
-                                right:15px;
-                            }
                             .percenBom{
-                                span{
-                                    background:-webkit-linear-gradient(left,#ff8d8d, #e74c4c);
-                                    background:-o-linear-gradient(right,#ff8d8d, #e74c4c);
-                                    background:-moz-linear-gradient(right,#ff8d8d, #e74c4c);
-                                    background:linear-gradient(to right,#ff8d8d, #e74c4c);
+                                .rowFourline{
+                                    i{
+                                        background:-webkit-linear-gradient(left,#ff8d8d, #e74c4c);
+                                        background:-o-linear-gradient(right,#ff8d8d, #e74c4c);
+                                        background:-moz-linear-gradient(right,#ff8d8d, #e74c4c);
+                                        background:linear-gradient(to right,#ff8d8d, #e74c4c);
+                                    }
                                 }
                             }
                         }
@@ -1355,16 +1355,14 @@
                             }
                         }
                         .rowFourTwoUlPercen{
-                            padding-right:20px;
-                            .percenTop{
-                                right:35px;
-                            }
                             .percenBom{
-                                span{
-                                    background:-webkit-linear-gradient(left,#ffbe73, #ff8f0d);
-                                    background:-o-linear-gradient(right,#ffbe73, #ff8f0d);
-                                    background:-moz-linear-gradient(right,#ffbe73, #ff8f0d);
-                                    background:linear-gradient(to right,#ffbe73, #ff8f0d);
+                                .rowFourline{
+                                    i{
+                                        background:-webkit-linear-gradient(left,#ffbe73, #ff8f0d);
+                                        background:-o-linear-gradient(right,#ffbe73, #ff8f0d);
+                                        background:-moz-linear-gradient(right,#ffbe73, #ff8f0d);
+                                        background:linear-gradient(to right,#ffbe73, #ff8f0d);
+                                    }
                                 }
                             }
                         }
@@ -1388,16 +1386,14 @@
                             }
                         }
                         .rowFourTwoUlPercen{
-                            padding-right:40px;
-                            .percenTop{
-                                right:55px;
-                            }
                             .percenBom{
-                                span{
-                                    background:-webkit-linear-gradient(left,#fcd367, #fcb82a);
-                                    background:-o-linear-gradient(right,#fcd367, #fcb82a);
-                                    background:-moz-linear-gradient(right,#fcd367, #fcb82a);
-                                    background:linear-gradient(to right,#fcd367, #fcb82a);
+                                .rowFourline{
+                                    i{
+                                        background:-webkit-linear-gradient(left,#fcd367, #fcb82a);
+                                        background:-o-linear-gradient(right,#fcd367, #fcb82a);
+                                        background:-moz-linear-gradient(right,#fcd367, #fcb82a);
+                                        background:linear-gradient(to right,#fcd367, #fcb82a);
+                                    }
                                 }
                             }
                         }
@@ -1509,7 +1505,7 @@
                         box-shadow:0px 0px 10px rgba(0,0,0,0.1);
                         border-radius:8px;
                         background:#fff;
-                        padding: 20px 30px;
+                        padding: 20px 20px;
                         span{
                             clear: both;
                             display: block;
@@ -1782,6 +1778,7 @@
                 }
             }
             .rowSeverFlItem{
+                .el-table{color:#999;}
                 .el-table th.el-table__cell > .cell{padding-left:5px;padding-right:5px;}
                 .el-table .el-table__cell{text-align: center;}
                 .el-table__footer-wrapper tbody td.el-table__cell{
@@ -1798,7 +1795,7 @@
                     th.is-leaf{
                         background:#f4f6f9;
                         font-size:14px;
-                        color:#555;
+                        color:#666;
                         font-weight:normal;
                         border-bottom:0px;
                         border-right:0px;

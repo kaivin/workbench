@@ -349,8 +349,7 @@
               <div class="rowSeverFl">
                     <div class="itemRowTit">
                       <h3>部门成本</h3>
-                      <p>({{updatescoremonth}}数据)</p>
-                      <span>数据更新于{{updatemtime[0]}}年{{updatemtime[1]}}月{{updatemtime[2]}}日 {{updatemtime[3]}}时  | 每月更新</span>
+                      <p>数据更新于{{updatemtime[0]}}年{{updatemtime[1]}}月{{updatemtime[2]}}日 {{updatemtime[3]}}时  | 每月更新</p>
                     </div>
                     <div class="rowSeverFlItem">
                         <el-table
@@ -361,12 +360,12 @@
                           <el-table-column
                             prop="departname"
                             label="部门"
-                            width="50">
+                            min-width="70">
                           </el-table-column>
                           <el-table-column
                             prop="score"
                             label="成交分"
-                            width="70">
+                            min-width="70">
                           </el-table-column>
                           <el-table-column
                             prop="allmoney"
@@ -401,7 +400,7 @@
                             prop="personnumber"
                             sortable
                             label="总人数"
-                            width="90">
+                            min-width="70">
                           </el-table-column>
                         </el-table>
                     </div>
@@ -489,12 +488,16 @@
                                 <span>{{item.groupname}}</span>
                              </p>
                              <div class="rowFourTwoUlPercen flex-content">
-                                  <p class="percenTop">成交积分<span>{{item.number}}</span></p>
-                                  <p class="percenBom"><span></span></p>
+                                  <p class="percenBom flex-wrap" :style="'width:'+item.Percen">
+                                     <span class="rowFourline"><i></i></span>
+                                     <span class="rowFourtext flex-content">{{item.number}}</span>
+                                  </p>
                              </div>
-                             <div class="rowFourTwoUlScore" v-if="item.anumber>0">
-                                  <p class="ScoreTop"><span>{{item.anumber}}</span></p>
-                                  <p class="ScoreBom">百万成交</p>
+                             <div class="rowFourTwoUlScore">
+                                  <p v-if="item.anumber>0">
+                                      <span class="ScoreTop"><span>{{item.anumber}}</span></span>
+                                      <span class="ScoreBom">百万成交</span>
+                                  </p>
                              </div>
                              <div class="rowFourTwoUlarea">
                                 <div :id="`yearuserChart${index}`" class="chart-canva"></div>
@@ -529,7 +532,6 @@ export default {
       DaytargetTodayTime:'',
       TodayMonth:'',//默认本月
       updatemtime:[],
-      updatescoremonth:'',
       targetScore:{
         daymaxnumber:[],
         historymaxnumber:[],
@@ -1221,7 +1223,11 @@ export default {
                     });
                     $this.zusuercount.zusuercountAllArr=zusuercountAllArr;
                     var zusuercountGroupnameArr=[];//小组
+                    var GroupID=[];
                     newStrArr.forEach(function(item,index){
+                       if(index==0){
+                         GroupID.push(item);
+                       }
                         $this.currentCluesData.DeparData.forEach(function(items,indexs){
                             if(item==items.value){
                                 var GroupnameObj={};
@@ -1232,66 +1238,9 @@ export default {
                             }
                         });
                     });
-                    $this.zusuercount.zusuercountGroupnameArr = zusuercountGroupnameArr;
-                    if($this.zusuercount.GroupID&&$this.zusuercount.GroupID.length>0){                       
-                    var zusuercountArr=[];//分组-组员成绩
-                    $this.zusuercount.GroupID.forEach(function(item,index){
-                        zusuercountAllArr.forEach(function(items,indexs){
-                            if(item==items.dept_id){
-                                var itemData = {};
-                                itemData.dept_id=items.dept_id;
-                                itemData.groupname=items.groupname;
-                                itemData.lastdaynumber=items.lastdaynumber;
-                                itemData.lastmonthnumber=items.lastmonthnumber;
-                                itemData.monthnumber=items.monthnumber;
-                                itemData.todaynumber=items.todaynumber;
-                                itemData.username=items.username;
-                                if(items.monthnumber-items.lastmonthnumber>0){
-                                  itemData.Class='rising'
-                                }
-                                if(items.monthnumber-items.lastmonthnumber<0){
-                                  itemData.Class='falling'
-                                }
-                                if(items.monthnumber-items.lastmonthnumber==0){
-                                  itemData.Class='equality'
-                                }
-                                itemData.Growth=Math.abs(items.monthnumber-items.lastmonthnumber);
-                                if(itemData.Growth==0){
-                                  itemData.Growth='-'
-                                }
-                                zusuercountArr.push(itemData);
-                            }
-                        });
-                    });
-                    $this.zusuercount.zusuercountArr = zusuercountArr;
-                    }else{
-                      var zusuercountArr=[];//分组-组员成绩
-                      zusuercountAllArr.forEach(function(item,index){
-                        var itemData = {};
-                        itemData.dept_id=item.dept_id;
-                        itemData.groupname=item.groupname;
-                        itemData.lastdaynumber=item.lastdaynumber;
-                        itemData.lastmonthnumber=item.lastmonthnumber;
-                        itemData.monthnumber=item.monthnumber;
-                        itemData.todaynumber=item.todaynumber;
-                        itemData.username=item.username;
-                        if(item.monthnumber-item.lastmonthnumber>0){
-                          itemData.Class='rising'
-                        }
-                        if(item.monthnumber-item.lastmonthnumber<0){
-                          itemData.Class='falling'
-                        }
-                        if(item.monthnumber-item.lastmonthnumber==0){
-                          itemData.Class='equality'
-                        }
-                        itemData.Growth=Math.abs(item.monthnumber-item.lastmonthnumber);
-                        if(itemData.Growth==0){
-                          itemData.Growth='-'
-                        }
-                        zusuercountArr.push(itemData);
-                      })
-                      $this.zusuercount.zusuercountArr = zusuercountArr;
-                    }
+                    $this.zusuercount.GroupID = GroupID;      
+                    $this.zusuercount.zusuercountGroupnameArr = zusuercountGroupnameArr; 
+                    $this.groupClick();
                 }else{
                   $this.currentCluesData.zusuercountArr=[];
                 }
@@ -1412,6 +1361,7 @@ export default {
                     }else{
                       $this.currentCluesData.userscoreNum=[];
                     }
+                    //年度成交Top5
                     if(response.yearuserscore.length>0&&response.yearuserscore){
                       var yearuserscoreNum=[];
                       response.yearuserscore.forEach(function(item,index){
@@ -1421,7 +1371,7 @@ export default {
                         itemData.groupname = item.groupname;
                         itemData.number = item.number;
                         itemData.anumber = item.anumber;
-                        itemData.son = item.son;
+                        itemData.children = item.son;
                         itemData.headimg = item.headimg;
                         yearuserscoreNum.push(itemData);
                       });
@@ -1430,6 +1380,18 @@ export default {
                           var value2 = b.number;
                           return value2 - value1;
                       });
+                      var Maxnumber=0;
+                      var yearusernewArr=[];
+                      yearuserscoreNum.forEach(function(item,index){
+                        if(index==0){
+                          Maxnumber=item.number;
+                        }
+                        if(Maxnumber!=0){
+                            item.Percen=(item.number/Maxnumber*100).toFixed(2)+'%';
+                        }else{
+                            item.Percen='0%'
+                        }
+                      });              
                       $this.currentCluesData.yearuserscoreNum = yearuserscoreNum;
                     }else{
                       $this.currentCluesData.yearuserscoreNum=[];
@@ -1497,6 +1459,7 @@ export default {
                 }else{
                   $this.currentCluesData.userscoreNum=[];
                 }
+                //年度成交Top5
                 if(response.yearuserscore.length>0&&response.yearuserscore){
                   var yearuserscoreNum=[];
                   response.yearuserscore.forEach(function(item,index){
@@ -1515,6 +1478,18 @@ export default {
                       var value2 = b.number;
                       return value2 - value1;
                   });
+                  var Maxnumber=0;
+                  var yearusernewArr=[];
+                  yearuserscoreNum.forEach(function(item,index){
+                     if(index==0){
+                       Maxnumber=item.number;
+                     }
+                     if(Maxnumber!=0){
+                        item.Percen=(item.number/Maxnumber*100).toFixed(2)+'%';
+                     }else{
+                        item.Percen='0%'
+                     }
+                  });              
                   $this.currentCluesData.yearuserscoreNum = yearuserscoreNum;
                 }else{
                   $this.currentCluesData.yearuserscoreNum=[];
@@ -1613,7 +1588,15 @@ export default {
               tolItem.date=item.date;
               tolItem.xunnumber=item.xunnumber;
               tolItem.title='询盘';
-              tongArr.push(tolItem);
+              if($this.isDepart1){
+                  var searchItem={};                      
+                  searchItem.date=item.date;
+                  searchItem.xunnumber=item.searchxunnumber;
+                  searchItem.title='搜索询盘';
+                  tongArr.push(searchItem,tolItem);
+              }else{
+                  tongArr.push(tolItem);
+              }
             });
             $this.currentCluesData.chartData = tongArr;
             $this.currentCluesData.avgChartNum = response.tongavgnumber;
@@ -1761,7 +1744,11 @@ export default {
                     });
                     $this.zusuercount.zusuercountAllArr=zusuercountAllArr;
                     var zusuercountGroupnameArr=[];//小组
+                    var GroupID=[];
                     newStrArr.forEach(function(item,index){
+                       if(index==0){
+                         GroupID.push(item);
+                       }
                         $this.currentCluesData.DeparData.forEach(function(items,indexs){
                             if(item==items.value){
                                 var GroupnameObj={};
@@ -1772,66 +1759,9 @@ export default {
                             }
                         });
                     });
-                    $this.zusuercount.zusuercountGroupnameArr = zusuercountGroupnameArr;
-                    if($this.zusuercount.GroupID&&$this.zusuercount.GroupID.length>0){                       
-                    var zusuercountArr=[];//分组-组员成绩
-                    $this.zusuercount.GroupID.forEach(function(item,index){
-                        zusuercountAllArr.forEach(function(items,indexs){
-                            if(item==items.dept_id){
-                                var itemData = {};
-                                itemData.dept_id=items.dept_id;
-                                itemData.groupname=items.groupname;
-                                itemData.lastdaynumber=items.lastdaynumber;
-                                itemData.lastmonthnumber=items.lastmonthnumber;
-                                itemData.monthnumber=items.monthnumber;
-                                itemData.todaynumber=items.todaynumber;
-                                itemData.username=items.username;
-                                if(items.monthnumber-items.lastmonthnumber>0){
-                                  itemData.Class='rising'
-                                }
-                                if(items.monthnumber-items.lastmonthnumber<0){
-                                  itemData.Class='falling'
-                                }
-                                if(items.monthnumber-items.lastmonthnumber==0){
-                                  itemData.Class='equality'
-                                }
-                                itemData.Growth=Math.abs(items.monthnumber-items.lastmonthnumber);
-                                if(itemData.Growth==0){
-                                  itemData.Growth='-'
-                                }
-                                zusuercountArr.push(itemData);
-                            }
-                        });
-                    });
-                    $this.zusuercount.zusuercountArr = zusuercountArr;
-                    }else{
-                      var zusuercountArr=[];//分组-组员成绩
-                      zusuercountAllArr.forEach(function(item,index){
-                        var itemData = {};
-                        itemData.dept_id=item.dept_id;
-                        itemData.groupname=item.groupname;
-                        itemData.lastdaynumber=item.lastdaynumber;
-                        itemData.lastmonthnumber=item.lastmonthnumber;
-                        itemData.monthnumber=item.monthnumber;
-                        itemData.todaynumber=item.todaynumber;
-                        itemData.username=item.username;
-                        if(item.monthnumber-item.lastmonthnumber>0){
-                          itemData.Class='rising'
-                        }
-                        if(item.monthnumber-item.lastmonthnumber<0){
-                          itemData.Class='falling'
-                        }
-                        if(item.monthnumber-item.lastmonthnumber==0){
-                          itemData.Class='equality'
-                        }
-                        itemData.Growth=Math.abs(item.monthnumber-item.lastmonthnumber);
-                        if(itemData.Growth==0){
-                          itemData.Growth='-'
-                        }
-                        zusuercountArr.push(itemData);
-                      })
-                      $this.zusuercount.zusuercountArr = zusuercountArr;
-                    }
+                    $this.zusuercount.GroupID = GroupID;      
+                    $this.zusuercount.zusuercountGroupnameArr = zusuercountGroupnameArr; 
+                    $this.groupClick();
                 }else{
                   $this.currentCluesData.zusuercountArr=[];
                 }
@@ -1950,6 +1880,8 @@ export default {
                     //}else{
                     //  $this.currentCluesData.userscoreNum=[];
                     //}
+     
+                    ////年度成交Top5
                     //if(response.yearuserscore.length>0&&response.yearuserscore){
                     //  var yearuserscoreNum=[];
                     //  response.yearuserscore.forEach(function(item,index){
@@ -1959,7 +1891,7 @@ export default {
                     //    itemData.groupname = item.groupname;
                     //    itemData.number = item.number;
                     //    itemData.anumber = item.anumber;
-                    //    itemData.son = item.son;
+                    //    itemData.children = item.son;
                     //    itemData.headimg = item.headimg;
                     //    yearuserscoreNum.push(itemData);
                     //  });
@@ -1968,6 +1900,18 @@ export default {
                     //      var value2 = b.number;
                     //      return value2 - value1;
                     //  });
+                    //  var Maxnumber=0;
+                    //  var yearusernewArr=[];
+                    //  yearuserscoreNum.forEach(function(item,index){
+                    //     if(index==0){
+                    //       Maxnumber=item.number;
+                    //     }
+                    //     if(Maxnumber!=0){
+                    //        item.Percen=(item.number/Maxnumber*100).toFixed(2)+'%';
+                    //     }else{
+                    //        item.Percen='0%'
+                    //     }
+                    //  });              
                     //  $this.currentCluesData.yearuserscoreNum = yearuserscoreNum;
                     //}else{
                     //  $this.currentCluesData.yearuserscoreNum=[];
@@ -2030,6 +1974,7 @@ export default {
                 //}else{
                 //  $this.currentCluesData.userscoreNum=[];
                 //}                
+                ////年度成交Top5
                 //if(response.yearuserscore.length>0&&response.yearuserscore){
                 //  var yearuserscoreNum=[];
                 //  response.yearuserscore.forEach(function(item,index){
@@ -2048,6 +1993,18 @@ export default {
                 //      var value2 = b.number;
                 //      return value2 - value1;
                 //  });
+                //  var Maxnumber=0;
+                //  var yearusernewArr=[];
+                //  yearuserscoreNum.forEach(function(item,index){
+                //     if(index==0){
+                //       Maxnumber=item.number;
+                //     }
+                //     if(Maxnumber!=0){
+                //        item.Percen=(item.number/Maxnumber*100).toFixed(2)+'%';
+                //     }else{
+                //        item.Percen='0%'
+                //     }
+                //  });              
                 //  $this.currentCluesData.yearuserscoreNum = yearuserscoreNum;
                 //}else{
                 //  $this.currentCluesData.yearuserscoreNum=[];
@@ -2722,7 +2679,8 @@ export default {
               },
               areaStyle: () => {
                 return {
-                  fill: '#1890ff',
+                  fill: '#e4edfd',
+                  fillOpacity:1,
                 };
               },
             });
@@ -3640,8 +3598,7 @@ export default {
                       var resMtimeOne=response.mtime.split(' ');
                       updatemtime=resMtimeOne[0].split('-');
                       updatemtime.push(resMtimeOne[1]);
-                      $this.updatemtime=updatemtime;
-                      $this.updatescoremonth=response.scoremonth;                      
+                      $this.updatemtime=updatemtime;                
                       if(response.yeardepartscore&&response.yeardepartscore.length>0){                 
                           if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
                             $this.yeardepartscoreData.chart.destroy();
@@ -3751,7 +3708,6 @@ export default {
                       updatemtime=resMtimeOne[0].split('-');
                       updatemtime.push(resMtimeOne[1]);
                       $this.updatemtime=updatemtime;
-                      $this.updatescoremonth=response.scoremonth; 
                       if(response.yeardepartscore&&response.yeardepartscore.length>0){                 
                           if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
                             $this.yeardepartscoreData.chart.destroy();
@@ -4053,7 +4009,7 @@ export default {
               height:44,
               tooltip: {
                 formatter: (datum) => {
-                  return { name:'年度月询盘', value: datum.anumber };
+                  return { name:'年度月成交分', value: datum.anumber };
                 },
               },
               areaStyle: () => {

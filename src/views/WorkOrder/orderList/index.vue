@@ -88,7 +88,8 @@
                                 <div class="clues-info flex-wrap" v-if="currentStatus=='alloted'||currentStatus=='stat'">
                                     <div class="clues-infoFl flex-content">
                                           <p>
-                                            <span v-for="(item,index) in groupScore" :key='index'><strong>{{item.name}}</strong> 本月接收总分<strong  class="color1">{{item.monthaccpetscore}}</strong>，本月获得总分<strong  class="color2">{{item.monthfinishscore}}</strong></span>
+                                            <span v-for="(item,index) in groupScore" :key='index'><strong>{{item.name}}</strong> 本月接收总分<strong  class="color1">{{item.monthaccpetscore}}</strong>，本月获得总分<strong  class="color2">{{item.monthfinishscore}}</strong>，上月获得总分<strong  class="color2">{{item.lastmonthaccpetscore}}</strong>，上月获得总分<strong  class="color2">{{item.lastmonthfinishscore}}</strong>
+                                            </span>
                                           </p>
                                     </div>
                                 </div>
