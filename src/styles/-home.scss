@@ -1818,6 +1818,33 @@
         }
     }
 }
+.tooltip_fly{
+   padding: 10px 0;
+    .tip_item{
+        padding: 6px 5px;
+    }
+    .tip_name{
+        word-spacing:8px;
+    }
+    .rising{
+        color:#f04c4c;
+        &:before{
+            content:'↑ ';
+            display:inline-block;
+            margin-left:8px;
+            
+        }
+    }
+    .falling{
+        color:#59cab6;
+        &:before{
+            content:'↓ ';
+            display:inline-block;
+            margin-left:8px;
+            
+        }
+    }
+}
 @media (max-width:1200px){
     .home-index{
         .news-list{

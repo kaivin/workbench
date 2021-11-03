@@ -1021,27 +1021,19 @@ export default {
             if(response.yeartong&&response.yeartong.length>0){
               // 月询盘面积图数据
               var monthtongArr=[];
-              if(response.yeartong.length>=6){
-                var monthtongList=[]
-                monthtongList=response.yeartong.slice(-6);
-                monthtongList.forEach(function(item,index){
-                  var monthtongObj={};
-                  monthtongObj.date=item.date.split('-')[1]+'月';
-                  monthtongObj.xunnumber=item.xunnumber;
-                  monthtongArr.push(monthtongObj);
-                });
-                $this.currentCluesData.monthtongArr=monthtongArr;
-                $this.monthtongChart();
-              }else{
-                response.yeartong.forEach(function(item,index){
-                  var monthtongObj={};
-                  monthtongObj.date=item.date.split('-')[1];
-                  monthtongObj.xunnumber=item.xunnumber;
-                  monthtongArr.push(monthtongObj);
-                });
-                $this.currentCluesData.monthtongArr=monthtongArr;
-                $this.monthtongChart();
-              }
+              
+              var monthtongList=[]
+              monthtongList=response.monthtong;
+              monthtongList.forEach(function(item,index){
+                var monthtongObj={};
+                monthtongObj.date=item.date.split('-')[1]+'月';
+                monthtongObj.xunnumber=item.xunnumber;
+                monthtongObj.xunchange= item.tongxunnumber?item.tongxunnumber:item.xunnumber;
+                monthtongArr.push(monthtongObj);
+              });
+              $this.currentCluesData.monthtongArr=monthtongArr;
+              $this.monthtongChart();
+              
               // 年度询盘对比
               var yeartongArr=[];
               var registerArr=[];
@@ -1511,27 +1503,19 @@ export default {
             if(response.yeartong&&response.yeartong.length>0){
               // 月询盘面积图数据
               var monthtongArr=[];
-              if(response.yeartong.length>=6){
-                var monthtongList=[]
-                monthtongList=response.yeartong.slice(-6);
-                monthtongList.forEach(function(item,index){
-                  var monthtongObj={};
-                  monthtongObj.date=item.date.split('-')[1];
-                  monthtongObj.xunnumber=item.xunnumber;
-                  monthtongArr.push(monthtongObj);
-                });
-                $this.currentCluesData.monthtongArr=monthtongArr;
-                $this.monthtongChart();
-              }else{
-                response.yeartong.forEach(function(item,index){
-                  var monthtongObj={};
-                  monthtongObj.date=item.date.split('-')[1];
-                  monthtongObj.xunnumber=item.xunnumber;
-                  monthtongArr.push(monthtongObj);
-                });
-                $this.currentCluesData.monthtongArr=monthtongArr;
-                $this.monthtongChart();
-              }
+             
+              var monthtongList=[]
+                monthtongList=response.monthtong;
+              monthtongList.forEach(function(item,index){
+                var monthtongObj={};
+                monthtongObj.date=item.date.split('-')[1];
+                monthtongObj.xunnumber=item.xunnumber;
+                monthtongObj.xunchange= item.tongxunnumber?item.tongxunnumber:item.xunnumber;
+                monthtongArr.push(monthtongObj);
+              });
+              $this.currentCluesData.monthtongArr=monthtongArr;
+              $this.monthtongChart();
+              
               // 年度询盘对比
               var yeartongArr=[];
               var registerArr=[];
@@ -2442,6 +2426,7 @@ export default {
           if($this.monthtongArea&&!$this.monthtongArea.chart.destroyed){
             $this.monthtongArea.changeData($this.currentCluesData.monthtongArr);
           }else{
+            console.log($this.currentCluesData.monthtongArr)
             const monthtongArea = new Area('rowOneThreeArea', {
               data:$this.currentCluesData.monthtongArr,
               xField: 'date',
@@ -2451,15 +2436,21 @@ export default {
               xAxis: {
                 range: [0, 1],
                 tickCount: 6,
-                label: {
-                  offset:11,
-                  style: {
-                    fill: '#a1a1a1',
-                    opacity: 1,
-                    fontSize: 12,
-                    lineHeight:18,
-                  },
+                title:{
+                  style:{
+                    fill: '#719ef6',
+                    fontsize:'12',
+                  }
                 },
+                tickLine:null,
+                label:{
+                  offsetY:-30,
+                  style: {
+                    fill: '#5B8FF9',
+                    
+                    fontsize:'12',
+                  },
+                }
               },
               yAxis:false,
               label: {
@@ -2486,8 +2477,27 @@ export default {
                 },
               },
               tooltip: {
-                formatter:(datum) => {
-                    return { name:datum.date+'总询盘',value:datum.xunnumber };
+                //fields:['date','xunnumber', 'xunchange'],
+                customContent: (title, data) => {
+                  if(data.length>0){
+                    if(data[0].data.xunnumber - data[0].data.xunchange>=0){
+                       return `<div class='tooltip_fly'>
+                      <div class='tip_item'><span class='tip_name'>${title}同期 ：</span><span class='tip_value'>${data[0].data.xunchange}</span><span class="rising">${data[0].data.xunnumber - data[0].data.xunchange}</span></div>
+                      <div class='tip_item'><span class='tip_name'>${title}总询盘：</span><span class='tip_value'>${data[0].data.xunnumber}</span></div>
+                      
+                      </div>`;
+                    }else{
+                      return `<div class='tooltip_fly'>
+                      <div class='tip_item'><span class='tip_name'>${title}同期：</span><span class='tip_value'>${data[0].data.xunchange}</span><span class="falling">${data[0].data.xunnumber - data[0].data.xunchange}</div>
+                      <div class='tip_item'><span class='tip_name'>${title}总询盘：</span><span class='tip_value'>${data[0].data.xunnumber}</span></div>
+                      
+                      </div>`;
+                    }
+                   
+                  }else{
+                    return ''
+                  }
+                  
                 }
               },
               areaStyle: () => {
