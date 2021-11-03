@@ -3423,7 +3423,7 @@ export default {
                     }
                   }
                 },
-                max: maxnum + 20,
+                max: maxnum + 10,
               },
               label: {
                 position: 'top',
@@ -3497,7 +3497,7 @@ export default {
                     }
                   }
                 },
-                max: maxnum + 20,
+                max: maxnum + 10,
               },
               label: {
                 // 可手动配置 label 数据标签位置
