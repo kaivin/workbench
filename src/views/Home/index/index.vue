@@ -52,14 +52,6 @@
                     <div class="rowOneOneItem clearfix">
                          <div class="rowOneOneItemFl">
                               <div id="radialBarChart" class="chart-canvas"></div>
-                              <div class="legendFly">
-                                <span class="legendItem1">目标询盘</span>
-                                <span class="legendItem2">询盘数量</span>
-                                <span class="legendItem6">非搜索询盘</span>
-                                <span class="legendItem3">达成目标</span>
-                                <span class="legendItem4">历史最高</span>
-                                <span class="legendItem5">本月最高</span>
-                              </div>
                          </div>
                          <dl class="rowOneOneItemFr">
                              <dt>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}统计</dt>
@@ -68,6 +60,14 @@
                              <!-- <dd v-if="targetScore.isDistanceTarget">距目标线差距<strong>{{targetScore.DistanceTarget}}</strong></dd>
                              <dd v-else>超出目标线<strong>{{targetScore.DistanceTarget}}</strong></dd> -->
                          </dl>
+                          <div class="legendFly">
+                            <span class="legendItem1">目标询盘</span>
+                            <span class="legendItem2">询盘数量</span>
+                            <span class="legendItem6">非搜索询盘</span>
+                            <span class="legendItem3">达成目标</span>
+                            <span class="legendItem4">历史最高</span>
+                            <span class="legendItem5">本月最高</span>
+                          </div>
                     </div>
                </div>
                <div class="rowOneTwoThree flex-wrap flex-content">
@@ -178,62 +178,63 @@
                         </div>
                         <span>注：与上月同期对比</span>
                     </div>
-                    <div class="rowTwoTwoItem">      
-                      <el-table
-                          ref="simpleTable"
-                          :data="zusuercount.zusuercountArr"
-                          tooltip-effect="dark"
-                          stripe
-                          class="rowTwoTwoTable rowTableOne"
-                          :row-class-name="tableRowClassName"
-                          style="width: 100%"
-                          >
-                          <el-table-column
-                          prop="groupname"
-                          label="组别"
-                          aglin="center"
-                          >
-                            <template slot-scope="scope">
-                              <span style="color:#aaaaaa;">{{scope.row.groupname}}</span>
-                            </template>
-                          </el-table-column>
-                          <el-table-column
-                          prop="username"
-                          label="姓名"
-                          aglin="center"
-                          >
-                          </el-table-column>
-                          <el-table-column
-                          prop="todaynumber"
-                          sortable
-                          label="今天个数"
-                          aglin="center"
-                          >
-                          </el-table-column>
-                          <el-table-column
-                          prop="lastdaynumber"
-                          sortable
-                          label="昨天个数"
-                          aglin="center"
-                          >
-                          </el-table-column>
-                          <el-table-column
-                          prop="monthnumber"
-                          sortable
-                          label="本月个数"
-                          aglin="center"
-                          >
-                            <template slot-scope="scope">
-                              <div class="rowThreeGrowth">
-                                <p>
-                                    <i>{{scope.row.monthnumber}}</i>
-                                    <span :class="scope.row.Class">{{scope.row.Growth}}</span>
-                                </p>
-                              </div>
-                            </template>
-                          </el-table-column>
-                      </el-table>
-                      <p class="rowTwoTwoItemBtn" v-if="tableBtnVisible" v-on:click="tableBtn"><span>{{tableBtnTxt}}</span></p>
+                    <div class="rowTwoTwoItem"> 
+                        <div class="rowTwoTwoItemBox" :style="'height:'+tableHidden.tableHeight">
+                          <el-table
+                              ref="simpleTable"
+                              :data="zusuercount.zusuercountArr"
+                              tooltip-effect="dark"
+                              stripe
+                              class="rowTwoTwoTable rowTableOne"
+                              style="width: 100%"
+                              >
+                              <el-table-column
+                              prop="groupname"
+                              label="组别"
+                              aglin="center"
+                              >
+                                <template slot-scope="scope">
+                                  <span style="color:#aaaaaa;">{{scope.row.groupname}}</span>
+                                </template>
+                              </el-table-column>
+                              <el-table-column
+                              prop="username"
+                              label="姓名"
+                              aglin="center"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="todaynumber"
+                              sortable
+                              label="今天个数"
+                              aglin="center"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="lastdaynumber"
+                              sortable
+                              label="昨天个数"
+                              aglin="center"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="monthnumber"
+                              sortable
+                              label="本月个数"
+                              aglin="center"
+                              >
+                                <template slot-scope="scope">
+                                  <div class="rowThreeGrowth">
+                                    <p>
+                                        <i>{{scope.row.monthnumber}}</i>
+                                        <span :class="scope.row.Class">{{scope.row.Growth}}</span>
+                                    </p>
+                                  </div>
+                                </template>
+                              </el-table-column>
+                          </el-table>
+                        </div>     
+                      <p class="rowTwoTwoItemBtn" v-if="tableHidden.tableBtnVisible" v-on:click="tableBtn"><span>{{tableHidden.tableBtnTxt}}</span></p>
                     </div>
                </div>
                <div class="rowTwoOne" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
@@ -261,9 +262,6 @@
                         <div class="map-chart">
                           <div v-if="language=='Module_cnStat'" id="regionMapChart" class="chart-canvas"></div>
                           <div v-else id="worldRegionMapChart" class="chart-canvas"></div>
-                          <p class="maplegend">
-                             <span v-for="(item,index) in mapch" :key="index"><i :style="'background:'+item.mapchColor"></i>{{item.mapchText}}</span>
-                          </p>
                         </div>
                         <div class="top-ten">
                              <h3>热门地区TOP10</h3>
@@ -472,9 +470,11 @@
                                   <p class="infoData">
                                     {{item.username}}
                                     <span class="group">{{item.groupname}}</span>
-                                    <span class="groupNum">{{item.number}}<i v-if="item.Growth!=0" :class="item.growthClass?'rising':'falling'">{{item.Growth}}</i></span>
                                   </p>
-                                  <p class="percen"><span :style="'width:'+item.percen+'%'"></span></p>
+                                  <p class="percen flex-wrap">
+                                     <span class="percenFl" :style="'width:'+item.percen+'%'"></span>
+                                     <span class="percenFr flex-content">{{item.number}}<i v-if="item.Growth!=0" :class="item.growthClass?'rising':'falling'">{{item.Growth}}</i></span>
+                                  </p>
                              </div>
                         </li>
                     </ul>
@@ -542,10 +542,12 @@ export default {
       TodayMonth:'',//默认本月
       updatemtime:[],
       updateScoremonth:'',
-      tableBtnVisible:true,
-      tableBtnBool:true,
-      tableBtnTxt:'点击展开',
-      mapch:[],
+      tableHidden:{
+        tableHeight:0,
+        tableBtnVisible:true,
+        tableBtnBool:true,
+        tableBtnTxt:'点击展开',
+      },
       targetScore:{
         daymaxnumber:[],
         historymaxnumber:[],
@@ -2455,65 +2457,28 @@ export default {
       var defaulColor=['#ae1222','#df3041', '#f27042', '#f9ac6e', '#f1de5f', '#eae090', '#bae29d', '#89cecc', '#a3cfce', '#a2bfcd', '#b3b3b3'];
       var trendArr=[];
       var maxNum='';
-      var mapch=[];
       $this.currentCluesData.cluesRegionData.forEach(function(item,index){
           if(maxNum<item.number){
             maxNum=item.number;
           }
       });
-      if(maxNum>numList[0]){
-        trendArr=defaulColor;
-        defaulText.forEach(function(item,index){
-          defaulColor.forEach(function(items,indexs){
-              var mapchoBj={
-                mapchColor:'',
-                mapchText:'',
-              }
-              if(index==indexs){
-                mapchoBj.mapchColor=items;
-                mapchoBj.mapchText=item;
-                mapch.push(mapchoBj);
-              }
-          });
-        });
-      }
-      if(maxNum<=numList[numList.length-1]){
-        trendArr=['#b3b3b3'];
-        var mapchoBj={
-          mapchColor:'#b3b3b3',
-          mapchText:'大于800',
-        }
-        mapch.push(mapchoBj);
-      }
       for(var i=0;i<numList.length;i++){
         if(maxNum>=numList[i+1]&&maxNum<numList[i]){
            defaulColor.forEach(function(item,index){
                if(index>i){
                  trendArr.push(item);
                }
-               defaulText.forEach(function(items,indexs){ 
-                  if(index>i&&indexs==index){
-                    var mapchoBj={
-                      mapchColor:'',
-                      mapchText:'',
-                    }
-                    mapchoBj.mapchColor=item;
-                    mapchoBj.mapchText=items;
-                    mapch.push(mapchoBj);
-                  }
-               });
            });
         }
       };
-      $this.mapch=mapch;
       if($this.currentCluesData.cluesRegionData.length>0){   
         fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
         .then(res => res.json())
         .then(GeoJSON => {
           const regionMapChart = new G2.Chart({
             container: 'regionMapChart',
-            width:540,
-            height:390,
+            width:580,
+            height:422,
             // 添加 element 选中和激活交互
             interactions: [{ type: 'element-single-selected' }, { type: 'element-active' }],
           });
@@ -2526,11 +2491,10 @@ export default {
             showMarkers: false,
             shared: true,
           });
-          regionMapChart.legend(false);
           regionMapChart.axis(false);
-          //regionMapChart.legend('trend', {
-          //  position: 'bottom-left',
-          //});
+          regionMapChart.legend('trend', {
+            position: 'bottom-left',
+          });
           // 绘制中国地图背景
           var ds = new DataSet();
           const geoDv = ds.createView('back').source(GeoJSON, {type: 'GeoJSON'});
@@ -3986,57 +3950,20 @@ export default {
       var defaulColor=['#ae1222','#df3041', '#f27042', '#f9ac6e', '#f1de5f', '#eae090', '#bae29d', '#89cecc', '#a3cfce', '#a2bfcd', '#b3b3b3'];
       var trendArr=[];
       var maxNum='';
-      var mapch=[];
       $this.currentCluesData.cluesRegionData.forEach(function(item,index){
           if(maxNum<item.number){
             maxNum=item.number;
           }
       });
-      if(maxNum>numList[0]){
-        trendArr=defaulColor;
-        defaulText.forEach(function(item,index){
-          defaulColor.forEach(function(items,indexs){
-              var mapchoBj={
-                mapchColor:'',
-                mapchText:'',
-              }
-              if(index==indexs){
-                mapchoBj.mapchColor=items;
-                mapchoBj.mapchText=item;
-                mapch.push(mapchoBj);
-              }
-          });
-        });
-      }
-      if(maxNum<=numList[numList.length-1]){
-        trendArr=['#b3b3b3'];
-        var mapchoBj={
-          mapchColor:'#b3b3b3',
-          mapchText:'大于800',
-        }
-        mapch.push(mapchoBj);
-      }
       for(var i=0;i<numList.length;i++){
         if(maxNum>=numList[i+1]&&maxNum<numList[i]){
            defaulColor.forEach(function(item,index){
                if(index>i){
                  trendArr.push(item);
                }
-               defaulText.forEach(function(items,indexs){ 
-                  if(index>i&&indexs==index){
-                    var mapchoBj={
-                      mapchColor:'',
-                      mapchText:'',
-                    }
-                    mapchoBj.mapchColor=item;
-                    mapchoBj.mapchText=items;
-                    mapch.push(mapchoBj);
-                  }
-               });
            });
         }
       };
-      $this.mapch=mapch;
       fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/world.geo.json')
       .then(res => res.json())
       .then(mapData => {
@@ -4060,10 +3987,9 @@ export default {
           }
         });
         worldRegionMapChart.axis(false);
-        worldRegionMapChart.legend(false);
-        //worldRegionMapChart.legend('trend', {
-        //  position: 'bottom-left',
-        //});
+        worldRegionMapChart.legend('trend', {
+          position: 'bottom-left',
+        });
         // 绘制世界地图背景
         var ds = new DataSet();
         const worldMap = ds.createView('back').source(mapData, {type: 'GeoJSON'});
@@ -4129,8 +4055,7 @@ export default {
           }
         });
         userView.polygon()
-          .position('longitude*latitude')
-          //.color('trend', '#0050B3-#1890FF-#BAE7FF')          
+          .position('longitude*latitude')         
           .color('trend', trendArr)
           .tooltip('name*country*number')
           .style({
@@ -4381,7 +4306,6 @@ export default {
                       if(items.monthnumber-items.lastmonthnumber==0){
                         itemData.Class='equality'
                       }
-                      itemData.sortGrowth=items.monthnumber-items.lastmonthnumber;
                       itemData.Growth=Math.abs(items.monthnumber-items.lastmonthnumber);
                       if(itemData.Growth==0){
                         itemData.Growth='-'
@@ -4391,14 +4315,16 @@ export default {
               });
           });
           zusuercountArr.sort(function(a, b) {
-                var value1 = a.sortGrowth;
-                var value2 = b.sortGrowth;
+                var value1 = a.monthnumber;
+                var value2 = b.monthnumber;
                 return value2 - value1;
           });
           if(zusuercountArr.length>7){
-             $this.tableBtnVisible=true;
+             $this.tableHidden.tableBtnVisible=true;
+             $this.tableHidden.tableHeight=357+'px';
           }else{
-             $this.tableBtnVisible=false;
+             $this.tableHidden.tableBtnVisible=false;
+             $this.tableHidden.tableHeight='auto';
           }
           $this.zusuercount.zusuercountArr = zusuercountArr;
       }else{
@@ -4421,7 +4347,6 @@ export default {
             if(item.monthnumber-item.lastmonthnumber==0){
               itemData.Class='equality'
             }
-            itemData.sortGrowth=items.monthnumber-items.lastmonthnumber;
             itemData.Growth=Math.abs(item.monthnumber-item.lastmonthnumber);
             if(itemData.Growth==0){
               itemData.Growth='-'
@@ -4429,14 +4354,16 @@ export default {
             zusuercountArr.push(itemData);
           })
           zusuercountArr.sort(function(a, b) {
-                var value1 = a.sortGrowth;
-                var value2 = b.sortGrowth;
+                var value1 = a.monthnumber;
+                var value2 = b.monthnumber;
                 return value2 - value1;
           });
           if(zusuercountArr.length>7){
-             $this.tableBtnVisible=true;
+             $this.tableHidden.tableBtnVisible=true;
+             $this.tableHidden.tableHeight=357+'px';
           }else{
-             $this.tableBtnVisible=false;
+             $this.tableHidden.tableBtnVisible=false;
+             $this.tableHidden.tableHeight='auto';
           }
           $this.zusuercount.zusuercountArr = zusuercountArr;
       }
@@ -4444,25 +4371,15 @@ export default {
     // 表格点击展开
     tableBtn(){
       var $this = this;
-      $this.tableBtnBool=!$this.tableBtnBool;
-      $this.tableRowClassName();
-    },
-    // 组员成绩添加样式
-    tableRowClassName({row,rowIndex}) {
-      var $this = this;
-      if($this.tableBtnBool){
-        if (rowIndex > 6) {
-          return 'hidden-row';
-        }
-        $this.tableBtnTxt='点击展开';
+      $this.tableHidden.tableBtnBool=!$this.tableHidden.tableBtnBool;
+      if($this.tableHidden.tableBtnBool){
+        $this.tableHidden.tableHeight=357+'px';
+        $this.tableHidden.tableBtnTxt='点击展开';
       }else{
-        if (rowIndex > 6) {
-          return 'show-row';
-        }
-        $this.tableBtnTxt='点击收起';
+        $this.tableHidden.tableHeight='auto';
+        $this.tableHidden.tableBtnTxt='点击收起';
       }
-      return '';
-    }
+    },
   }
 }
 </script>
