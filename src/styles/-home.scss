@@ -519,7 +519,7 @@
             background:#fff;
             border-radius:8px;
             padding:16px 30px;
-            height:508px;
+            height:500px;
             box-sizing: border-box;
             -webkit-box-sizing: border-box;
             .map-Top-chartTit{
@@ -555,6 +555,31 @@
                             height:100%;
                         }
                     }
+                    .maplegend{
+                        clear: both;
+                        display: block;
+                        overflow: hidden;
+                        text-align: center;
+                        line-height: 14px;
+                        padding-top:10px;
+                        span{
+                            display: inline-block;
+                            font-size: 12px;
+                            line-height: 14px;
+                            color: #9e9e9e;
+                            position: relative;
+                            margin: 0px 9px;
+                            padding-left: 12px;
+                            i{
+                                display: block;
+                                width:8px;
+                                height:8px;
+                                position: absolute;
+                                left:0px;
+                                top:3px;
+                            }
+                        }
+                    }
                 }
                 .top-ten{
                     float:right;
@@ -574,8 +599,8 @@
             width:calc(43.1458% - 10px);
             background:#fff;
             border-radius:8px;
-            padding:20px 30px 40px 30px;
-            height:508px;
+            padding: 20px 30px 30px 30px;
+            min-height: 500px;
             box-sizing: border-box;
             -webkit-box-sizing: border-box;
             .itemRowTit{
@@ -639,6 +664,19 @@
             }
             .rowTwoTwoItem{
                 padding-top:4px;
+                .rowTwoTwoItemBtn{
+                    clear: both;
+                    text-align: center;
+                    border: 1px solid #dfe6ec;
+                    border-top: 0px;
+                    line-height: 24px;
+                    padding: 10px;
+                    cursor: pointer;
+                    span{
+                        color: #4c4c4c;
+                        font-size:14px;
+                    }
+                }
             }
             .el-table .el-table__cell{text-align: center; color:#4c4c4c;}
             .el-table.rowTwoTwoTable{
@@ -647,6 +685,12 @@
                 border:1px solid #e5ecf2;
                 border-bottom:0px;
                 text-align:center;
+                .hidden-row {
+                    display:none;
+                }
+                .show-row {
+                    display:table-row;
+                }
                 th.is-leaf{
                     background:#f4f6f9;
                     font-size:14px;
@@ -674,28 +718,26 @@
                         text-align: left;
                         width: 35px;
                         margin-left: 10px;
+                        &:before{
+                            float: left;
+                            padding-top: 6px;
+                            display: inline-block;
+                            margin-right: 3px;
+                            vertical-align: middle;
+                            line-height: 11px;
+                            transform: scale(0.8);
+                            font-size: 12px;
+                        }
                         &.rising{
                             color:#f04c4c;
                             &:before{
                                 content:'↑';
-                                display: inline-block;
-                                margin-right: 3px;
-                                vertical-align: middle;
-                                line-height: 11px;
-                                transform: scale(0.8);
-                                font-size: 12px;
                             }
                         }
                         &.falling{
                             color:#6cca42;
                             &:before{
                                 content:'↓';
-                                display: inline-block;
-                                margin-right: 3px;
-                                vertical-align: middle;
-                                line-height: 11px;
-                                transform: scale(0.8);
-                                font-size: 12px;
                             }
                         }
                         &.equality{
@@ -752,13 +794,9 @@
                     line-height: 14px;
                     color: #9e9e9e;
                     position: relative;
-                    padding-right:15px;
-                    &.legendItem1{
-                        padding-left:27px;
-                        padding-right: 20px;
-                    }
+                    margin: 0px 15px;
                     &.legendItem2{
-                        padding-left:27px;
+                        padding-left:18px;
                         &:before{
                             content: "";
                             display: block;
@@ -766,12 +804,12 @@
                             height:8px;
                             background: #fcb030;
                             position: absolute;
-                            left:15px;
+                            left:0px;
                             top:3px;
                         }
                     }
                     &.legendItem3{
-                        padding-left:43px;
+                        padding-left:18px;
                         &:before{
                             content: "";
                             display: block;
@@ -779,7 +817,7 @@
                             height:8px;
                             background: #f7c572;
                             position: absolute;
-                            left:15px;
+                            left:0px;
                             top:3px;
                         }
                     }
@@ -805,13 +843,9 @@
                     line-height: 14px;
                     color: #9e9e9e;
                     position: relative;
-                    padding-right:15px;
-                    &.legendItem1{
-                        padding-left:27px;
-                        padding-right: 20px;
-                    }
+                    margin: 0px 15px;
                     &.legendItem2{
-                        padding-left:27px;
+                        padding-left:18px;
                         &:before{
                             content: "";
                             display: block;
@@ -819,12 +853,12 @@
                             height:8px;
                             background: #669aff;
                             position: absolute;
-                            left:15px;
+                            left:0px;
                             top:3px;
                         }
                     }
                     &.legendItem3{
-                        padding-left:43px;
+                        padding-left:18px;
                         &:before{
                             content: "";
                             display: block;
@@ -832,7 +866,7 @@
                             height:8px;
                             background: #9dd5ff;
                             position: absolute;
-                            left:15px;
+                            left:0px;
                             top:3px;
                         }
                     }
@@ -866,69 +900,57 @@
                 line-height: 14px;
                 color: #9e9e9e;
                 position: relative;
-                padding-right:15px;
+                margin: 0px 15px;
                 &.legendItem1{
-                    padding-left:27px;
+                    padding-left:18px;
                     &:before{
                         content: "";
                         display: block;
                         width: 8px;
-                        height:8px;
+                        height: 8px;
                         background: #8cb1fb;
                         position: absolute;
-                        left:15px;
-                        top:3px;
+                        left: 0px;
+                        top: 3px;
                     }
                 }
                 &.legendItem2{
-                    padding-left:27px;
+                    padding-left:18px;
                     &:before{
                         content: "";
                         display: block;
-                        width:8px;
-                        height:8px;
+                        width: 8px;
+                        height: 8px;
                         background: #4a98ff;
                         position: absolute;
-                        left:15px;
-                        top:3px;
+                        left: 0px;
+                        top: 3px;
                     }
                 }
                 &.legendItem3{
-                    padding-left:43px;
+                    padding-left: 26px;
                     &:before{
                         content: "";
                         display: block;
                         width:16px;
-                        height:2px;
-                        background: #6aa343;
+                        height:0px;
                         position: absolute;
-                        left:15px;
+                        left:0px;
                         top:6px;
+                        border-top: 2px solid #6aa343;
                     }
                 }
                 &.legendItem4{
-                    padding-left: 47px;
+                    padding-left:32px;
                     &:before{
                         content: "";
                         display: block;
-                        width: 22px;
-                        height: 2px;
-                        background: #ff0000;
+                        width:22px;
+                        height: 0px;
                         position: absolute;
-                        left: 15px;
+                        left: 0px;
                         top: 6px;
-                    }
-                    &:after{
-                        content: "";
-                        display: block;
-                        width: 12px;
-                        height: 2px;
-                        background: none;
-                        border-left: 3px solid #fff;
-                        border-right: 3px solid #fff;
-                        position: absolute;
-                        left: 19px;
-                        top: 6px;
+                        border-top: 2px dashed #ff0000;
                     }
                 }
             }
@@ -1565,35 +1587,31 @@
                 line-height: 14px;
                 color: #9e9e9e;
                 position: relative;
-                padding-right:15px;
-                &.legendItem1{
-                    font-size:12px;
-                    padding-left:20px;
-                }
+                margin: 0px 15px;
                 &.legendItem2{
-                    padding-left:43px;
+                    padding-left:26px;
                     &:before{
                         content: "";
                         display: block;
-                        width:16px;
-                        height:2px;
-                        background: #6392ec;
+                        width: 16px;
+                        height: 0px;
                         position: absolute;
-                        left:15px;
-                        top:6px;
+                        left: 0px;
+                        top: 6px;
+                        border-top: 2px solid #6392ec;
                     }
                 }
                 &.legendItem3{
-                    padding-left:43px;
+                    padding-left:32px;
                     &:before{
                         content: "";
                         display: block;
-                        width:16px;
-                        height:2px;
-                        background: #fbd266;
+                        width: 22px;
+                        height: 0px;
                         position: absolute;
-                        left:15px;
-                        top:6px;
+                        left: 0px;
+                        top: 6px;
+                        border-top:2px dashed #fbd266;
                     }
                 }
             }
@@ -1736,35 +1754,31 @@
                 line-height: 14px;
                 color: #9e9e9e;
                 position: relative;
-                padding-right:15px;
-                &.legendItem1{
-                    font-size:12px;
-                    padding-left:20px;
-                }
+                margin: 0px 15px;
                 &.legendItem2{
-                    padding-left:43px;
+                    padding-left:26px;
                     &:before{
                         content: "";
                         display: block;
                         width:16px;
-                        height:2px;
-                        background: #78bccf;
+                        height:0px;
                         position: absolute;
-                        left:15px;
+                        left:0px;
                         top:6px;
+                        border-top: 2px solid #78bccf;
                     }
                 }
                 &.legendItem3{
-                    padding-left:43px;
+                    padding-left:32px;
                     &:before{
                         content: "";
                         display: block;
-                        width:16px;
-                        height:2px;
-                        background: #fbd266;
+                        width:22px;
+                        height:0px;
                         position: absolute;
-                        left:15px;
+                        left:0px;
                         top:6px;
+                        border-top: 2px dashed #fbd266;
                     }
                 }
             }
@@ -1784,8 +1798,15 @@
             float: left;
             width:calc(69% - 10px);
             .itemRowTit{
-                p{
+                &>span{
                     float: left;
+                    color: #c1c1c1;
+                    font-size: 12px;
+                    line-height:30px;
+                    padding-left:10px;
+                }
+                p{
+                    float: right;
                     color: #c1c1c1;
                     font-size: 12px;
                     line-height:30px;

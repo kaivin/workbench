@@ -110,7 +110,7 @@
               <div id="cluesChart" class="chart-canvas flex-content"></div>              
               <div class="trendlegend">
                 <span class="legendItem1">总询盘</span>
-                <span class="legendItem2">搜索询盘</span>
+                <span v-if="isDepart1" class="legendItem2">搜索询盘</span>
                 <span class="legendItem3">平均值</span>
                 <span class="legendItem4">目标值</span>
               </div>
@@ -185,8 +185,8 @@
                           tooltip-effect="dark"
                           stripe
                           class="rowTwoTwoTable rowTableOne"
+                          :row-class-name="tableRowClassName"
                           style="width: 100%"
-                          max-height="422"
                           >
                           <el-table-column
                           prop="groupname"
@@ -226,13 +226,14 @@
                             <template slot-scope="scope">
                               <div class="rowThreeGrowth">
                                 <p>
-                                    <i>{{scope.row.lastmonthnumber}}</i>
+                                    <i>{{scope.row.monthnumber}}</i>
                                     <span :class="scope.row.Class">{{scope.row.Growth}}</span>
                                 </p>
                               </div>
                             </template>
                           </el-table-column>
                       </el-table>
+                      <p class="rowTwoTwoItemBtn" v-if="tableBtnVisible" v-on:click="tableBtn"><span>{{tableBtnTxt}}</span></p>
                     </div>
                </div>
                <div class="rowTwoOne" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
@@ -260,6 +261,9 @@
                         <div class="map-chart">
                           <div v-if="language=='Module_cnStat'" id="regionMapChart" class="chart-canvas"></div>
                           <div v-else id="worldRegionMapChart" class="chart-canvas"></div>
+                          <p class="maplegend">
+                             <span v-for="(item,index) in mapch" :key="index"><i :style="'background:'+item.mapchColor"></i>{{item.mapchText}}</span>
+                          </p>
                         </div>
                         <div class="top-ten">
                              <h3>热门地区TOP10</h3>
@@ -338,8 +342,7 @@
                       <span style="color:#c1c1c1;font-size:12px;margin-left:20px">({{updateScoremonth}}更新数据)</span>
                     </h3>
                     <p class="unit">(单位：分)</p>
-                </div>
-                    
+                </div>                    
                     <p class="totalNum">
                        <span>{{language=='Module_cnStat'?'中文':'英文'}}总成交积分：</span><strong>{{currentCluesData.totalNumscore}}</strong>
                     </p>
@@ -350,6 +353,7 @@
               <div class="rowSeverFl">
                     <div class="itemRowTit">
                       <h3>部门成本</h3>
+                      <span>({{updateScoremonth}}更新数据)</span>
                       <p>数据更新于{{updatemtime[0]}}年{{updatemtime[1]}}月{{updatemtime[2]}}日 {{updatemtime[3]}}时  | 每月更新</p>
                     </div>
                     <div class="rowSeverFlItem">
@@ -537,6 +541,11 @@ export default {
       DaytargetTodayTime:'',
       TodayMonth:'',//默认本月
       updatemtime:[],
+      updateScoremonth:'',
+      tableBtnVisible:true,
+      tableBtnBool:true,
+      tableBtnTxt:'点击展开',
+      mapch:[],
       targetScore:{
         daymaxnumber:[],
         historymaxnumber:[],
@@ -1086,11 +1095,9 @@ export default {
             $this.currentCluesData.avgChartNum = response.tongavgnumber;
             $this.currentCluesData.targetNum = response.daytargetnumber;
             $this.drawAreaTrendChart();
-            // 年度询盘对比
-            if(response.yeartong&&response.yeartong.length>0){
-              // 月询盘面积图数据
+            // 月询盘面积图数据
+            if(response.monthtong&&response.monthtong.length>0){
               var monthtongArr=[];
-              
               var monthtongList=[]
               monthtongList=response.monthtong;
               monthtongList.forEach(function(item,index){
@@ -1102,8 +1109,9 @@ export default {
               });
               $this.currentCluesData.monthtongArr=monthtongArr;
               $this.monthtongChart();
-              
-              // 年度询盘对比
+            }
+            // 年度询盘对比
+            if(response.yeartong&&response.yeartong.length>0){
               var yeartongArr=[];
               var registerArr=[];
               var registerGrowth='';
@@ -1269,14 +1277,14 @@ export default {
                   var lastyeartongObj={};
                   yeartongObj.month=item.date.split('-')[1]+'月';
                   if ($this.isFloat(Number(item.score))) {
-                     yeartongObj.value=Number(item.score).toFixed(2);
+                     yeartongObj.value=Number(Number(item.score).toFixed(2));
                   } else {
                      yeartongObj.value=item.score;
                   }
                   yeartongObj.year=item.date.split('-')[0];
                   lastyeartongObj.month=item.lastdate.split('-')[1]+'月';
                   if ($this.isFloat(Number(item.lastscore))) {
-                     lastyeartongObj.value=Number(item.lastscore).toFixed(2);
+                     lastyeartongObj.value=Number(Number(item.lastscore).toFixed(2));
                   } else {
                      lastyeartongObj.value=item.lastscore;
                   }
@@ -1285,13 +1293,13 @@ export default {
                   //年度同期成交对比
                   registerObj.year=item.date.split('-')[0];
                   if ($this.isFloat(Number(item.score))) {
-                      registerObj.value=(Number(registerObj.value)+Number(item.score)).toFixed(2);
+                      registerObj.value=Number((Number(registerObj.value)+Number(item.score)).toFixed(2));
                   } else {
                       registerObj.value=Number(registerObj.value)+Number(item.score);
                   }
                   lastregisterObj.year=item.lastdate.split('-')[0];
                   if ($this.isFloat(Number(item.lastscore))) {
-                      lastregisterObj.value=(Number(lastregisterObj.value)+Number(item.lastscore)).toFixed(2);
+                      lastregisterObj.value=Number((Number(lastregisterObj.value)+Number(item.lastscore)).toFixed(2));
                   } else {
                       lastregisterObj.value=Number(lastregisterObj.value)+Number(item.lastscore);
                   }
@@ -1320,7 +1328,7 @@ export default {
                 sametimeRate=Math.abs((Number(registerObj.value)-Number(lastregisterObj.value))/Number(lastregisterObj.value)*100).toFixed(2)+'%';
               }
               if($this.isFloat(sametimeGrowth)){
-                sametimeGrowth=sametimeGrowth.toFixed(2);
+                sametimeGrowth=Number(sametimeGrowth.toFixed(2));
               }
               $this.currentCluesData.sametimeGrowth=sametimeGrowth;
               $this.currentCluesData.sametimeRate=sametimeRate;
@@ -1605,24 +1613,23 @@ export default {
             $this.currentCluesData.avgChartNum = response.tongavgnumber;
             $this.currentCluesData.targetNum = response.daytargetnumber;
             $this.drawAreaTrendChart();
-            // 年度询盘对比
-            if(response.yeartong&&response.yeartong.length>0){
-              // 月询盘面积图数据
+            // 月询盘面积图数据
+            if(response.monthtong&&response.monthtong.length>0){
               var monthtongArr=[];
-             
               var monthtongList=[]
-                monthtongList=response.monthtong;
+              monthtongList=response.monthtong;
               monthtongList.forEach(function(item,index){
                 var monthtongObj={};
-                monthtongObj.date=item.date.split('-')[1];
+                monthtongObj.date=item.date.split('-')[1]+'月';
                 monthtongObj.xunnumber=item.xunnumber;
                 monthtongObj.xunchange= item.tongxunnumber?item.tongxunnumber:item.xunnumber;
                 monthtongArr.push(monthtongObj);
               });
               $this.currentCluesData.monthtongArr=monthtongArr;
               $this.monthtongChart();
-              
-              // 年度询盘对比
+            }
+            // 年度询盘对比
+            if(response.yeartong&&response.yeartong.length>0){
               var yeartongArr=[];
               var registerArr=[];
               var registerGrowth='';
@@ -1788,14 +1795,14 @@ export default {
             //      var lastyeartongObj={};
             //      yeartongObj.month=item.date.split('-')[1]+'月';
             //      if ($this.isFloat(Number(item.score))) {
-            //         yeartongObj.value=Number(item.score).toFixed(2);
+            //         yeartongObj.value=Number(Number(item.score).toFixed(2));
             //      } else {
             //         yeartongObj.value=item.score;
             //      }
             //      yeartongObj.year=item.date.split('-')[0];
             //      lastyeartongObj.month=item.lastdate.split('-')[1]+'月';
             //      if ($this.isFloat(Number(item.lastscore))) {
-            //         lastyeartongObj.value=Number(item.lastscore).toFixed(2);
+            //         lastyeartongObj.value=Number(Number(item.lastscore).toFixed(2));
             //      } else {
             //         lastyeartongObj.value=item.lastscore;
             //      }
@@ -1804,13 +1811,13 @@ export default {
             //      //年度同期成交对比
             //      registerObj.year=item.date.split('-')[0];
             //      if ($this.isFloat(Number(item.score))) {
-            //          registerObj.value=(Number(registerObj.value)+Number(item.score)).toFixed(2);
+            //          registerObj.value=Number((Number(registerObj.value)+Number(item.score)).toFixed(2));
             //      } else {
             //          registerObj.value=Number(registerObj.value)+Number(item.score);
             //      }
             //      lastregisterObj.year=item.lastdate.split('-')[0];
             //      if ($this.isFloat(Number(item.lastscore))) {
-            //          lastregisterObj.value=(Number(lastregisterObj.value)+Number(item.lastscore)).toFixed(2);
+            //          lastregisterObj.value=Number((Number(lastregisterObj.value)+Number(item.lastscore)).toFixed(2));
             //      } else {
             //          lastregisterObj.value=Number(lastregisterObj.value)+Number(item.lastscore);
             //      }
@@ -1838,7 +1845,7 @@ export default {
             //    sametimeRate=Math.abs((Number(registerObj.value)-Number(lastregisterObj.value))/Number(lastregisterObj.value)*100).toFixed(2)+'%';
             //  }
             //  if($this.isFloat(sametimeGrowth)){
-            //    sametimeGrowth=sametimeGrowth.toFixed(2);
+            //    sametimeGrowth=Number(sametimeGrowth.toFixed(2));
             //  }
             //  $this.currentCluesData.sametimeGrowth=sametimeGrowth;
             //  $this.currentCluesData.sametimeRate=sametimeRate;
@@ -2058,7 +2065,6 @@ export default {
           tooltip: { 
             shared: true,
             customItems: (originalItems) => {
-                //console.log(originalItems)
                 for(let i=0;i<originalItems.length;i++){
                   if(originalItems[i].name == originalItems[i].title){
                     if(originalItems[i].name == "电商一部"){
@@ -2363,7 +2369,7 @@ export default {
                       opacity:0
                     },
                     point: {
-                      size: 2.5,
+                      size: 3,
                       shape: 'circle',
                       style: {
                         fill: '#fcb030',
@@ -2444,14 +2450,72 @@ export default {
     // 中文地区询盘地图
     drawCnCluesRegionChart(){
       var $this = this;
+      var numList=[800,500,300,100,60,50,40,30,20,10];
+      var defaulText=['大于800', '500-800', '300-500', '100-300', '60-100', '50-60', '40-50', '30-40', '20-30', '10-20', '0-10'];
+      var defaulColor=['#ae1222','#df3041', '#f27042', '#f9ac6e', '#f1de5f', '#eae090', '#bae29d', '#89cecc', '#a3cfce', '#a2bfcd', '#b3b3b3'];
+      var trendArr=[];
+      var maxNum='';
+      var mapch=[];
+      $this.currentCluesData.cluesRegionData.forEach(function(item,index){
+          if(maxNum<item.number){
+            maxNum=item.number;
+          }
+      });
+      if(maxNum>numList[0]){
+        trendArr=defaulColor;
+        defaulText.forEach(function(item,index){
+          defaulColor.forEach(function(items,indexs){
+              var mapchoBj={
+                mapchColor:'',
+                mapchText:'',
+              }
+              if(index==indexs){
+                mapchoBj.mapchColor=items;
+                mapchoBj.mapchText=item;
+                mapch.push(mapchoBj);
+              }
+          });
+        });
+      }
+      if(maxNum<=numList[numList.length-1]){
+        trendArr=['#b3b3b3'];
+        var mapchoBj={
+          mapchColor:'#b3b3b3',
+          mapchText:'大于800',
+        }
+        mapch.push(mapchoBj);
+      }
+      for(var i=0;i<numList.length;i++){
+        if(maxNum>=numList[i+1]&&maxNum<numList[i]){
+           defaulColor.forEach(function(item,index){
+               if(index>i){
+                 trendArr.push(item);
+               }
+               defaulText.forEach(function(items,indexs){ 
+                  if(index>i&&indexs==index){
+                    var mapchoBj={
+                      mapchColor:'',
+                      mapchText:'',
+                    }
+                    mapchoBj.mapchColor=item;
+                    mapchoBj.mapchText=items;
+                    mapch.push(mapchoBj);
+                  }
+               });
+           });
+        }
+      };
+      $this.mapch=mapch;
       if($this.currentCluesData.cluesRegionData.length>0){   
         fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
         .then(res => res.json())
         .then(GeoJSON => {
           const regionMapChart = new G2.Chart({
             container: 'regionMapChart',
-            width:580,
-            height:422,
+            width:540,
+            height:390,
+            // 添加 element 选中和激活交互
+            interactions: [{ type: 'element-single-selected' }, { type: 'element-active' }],
           });
           regionMapChart.scale({
             latitude: { sync: true },
@@ -2462,19 +2526,11 @@ export default {
             showMarkers: false,
             shared: true,
           });
-          // 同步度量
-          regionMapChart.scale({
-            longitude: {
-              sync: true
-            },
-            latitude: {
-              sync: true
-            }
-          });
+          regionMapChart.legend(false);
           regionMapChart.axis(false);
-          regionMapChart.legend('trend', {
-            position: 'bottom-left',
-          });
+          //regionMapChart.legend('trend', {
+          //  position: 'bottom-left',
+          //});
           // 绘制中国地图背景
           var ds = new DataSet();
           const geoDv = ds.createView('back').source(GeoJSON, {type: 'GeoJSON'});
@@ -2498,7 +2554,6 @@ export default {
             userData.push(itemData);
           });
           const userDv = ds.createView().source(userData).transform({
-            // sizeByCount: true,
             geoDataView: geoDv,
             field: 'name',
             type: 'geo.region',
@@ -2544,11 +2599,19 @@ export default {
           });
           userView.polygon()
             .position('longitude*latitude')
-            .color('trend', ['#ae1222','#df3041', '#f27042', '#f9ac6e', '#f1de5f', '#eae090', '#bae29d', '#89cecc', '#a3cfce', '#a2bfcd', '#b3b3b3'])
+            .color('trend', trendArr)
             .tooltip('name*number')
             .style({
               fillOpacity: 1,
               stroke:"#fff"
+            }).state({
+              active: {
+                style: {
+                  lineWidth: 0,
+                  stroke:0,
+                  fillOpacity:0.8,
+                },
+              },
             }).animate({
               leave: {
                 animation: 'fade-out'
@@ -2567,6 +2630,28 @@ export default {
         if($this.pieSourcePlot&&!$this.pieSourcePlot.chart.destroyed){
           $this.pieSourcePlot.changeData($this.currentCluesData.topTenRegionData);
         }else{
+          var numList=[800,500,300,100,60,50,40,30,20,10];
+          var defaulColor=['#ae1222','#df3041', '#f27042', '#f9ac6e', '#f1de5f', '#eae090', '#bae29d', '#89cecc', '#a3cfce', '#a2bfcd', '#b3b3b3'];
+          var rel=$this.currentCluesData.topTenRegionData;
+          var topTenColor=[];
+          for(var i=0;i<rel.length;i++){
+            for(var j=0;j<numList.length;j++){
+               if(rel[i].number>=numList[j+1]&&rel[i].number<numList[j]){
+                  defaulColor.forEach(function(item,index){
+                      if(index-1==j){
+                        topTenColor.push(item);
+                      }
+                  });
+               }
+            };
+          };
+          if(rel[0]>numList[0]){
+            topTenColor.unshift('#ae1222');
+          }
+          if(rel[rel.length-1]<=numList[numList.length-1]){
+            topTenColor.push('#b3b3b3');
+          }
+          topTenColor=topTenColor.reverse();
           const pieSourcePlot = new Bar('topTen', {
             data:$this.currentCluesData.topTenRegionData,
             xField: 'number',
@@ -2577,7 +2662,8 @@ export default {
             legend: false,
             appendPadding:[0, 30, 0, 30],
             xAxis:false,
-            color:['#b3b3b3','#a2bfcd','#a3cfce','#bfd3dd','#b0d4d3','#bae29d','#f1e89d','#f9ac6e','#f27042','#df3041'],
+            //color:['#b3b3b3','#a2bfcd','#a3cfce','#bfd3dd','#b0d4d3','#bae29d','#f1e89d','#f9ac6e','#f27042','#df3041'],
+            color:topTenColor,
             label: {
               style: {
                 fill: '#999999',
@@ -2608,7 +2694,10 @@ export default {
           if($this.monthtongArea&&!$this.monthtongArea.chart.destroyed){
             $this.monthtongArea.changeData($this.currentCluesData.monthtongArr);
           }else{
-            console.log($this.currentCluesData.monthtongArr)
+            var laseXunchange='';
+            var monthtongLength=$this.currentCluesData.monthtongArr.length;
+            laseXunchange=$this.currentCluesData.monthtongArr[monthtongLength-1].xunchange;
+
             const monthtongArea = new Area('rowOneThreeArea', {
               data:$this.currentCluesData.monthtongArr,
               xField: 'date',
@@ -2646,36 +2735,36 @@ export default {
                   return item.xunnumber
                 },
               },
-               point: {
-                 size:4,
-                 shape: 'circle',
-                 style: (res) => {
-                   var obj = {
-                     opacity: 0.5,
-                     stroke: '#6392ec',
-                     fill: '#fff',
-                   }
-                   return obj;
-                 },
-               },
+              point: {
+                size:3,
+                shape: 'circle',
+                style: (res) => {
+                  var obj = {
+                    opacity: 0.5,
+                    stroke: '#6392ec',
+                    fill: '#fff',
+                  }
+                  return obj;
+                },
+              },
               tooltip: {
                 //fields:['date','xunnumber', 'xunchange'],
                 customContent: (title, data) => {
+                  console.log(data,'data');
                   if(data.length>0){
-                    if(data[0].data.xunnumber - data[0].data.xunchange>=0){
+                    if(laseXunchange - data[0].data.xunchange>=0){
                        return `<div class='tooltip_fly'>
-                      <div class='tip_item'><span class='tip_name'>${title}同期 ：</span><span class='tip_value'>${data[0].data.xunchange}</span><span class="rising">${data[0].data.xunnumber - data[0].data.xunchange}</span></div>
+                      <div class='tip_item'><span class='tip_name'>${title}同期 ：</span><span class='tip_value'>${data[0].data.xunchange}</span><span class="rising">${laseXunchange - data[0].data.xunchange}</span></div>
                       <div class='tip_item'><span class='tip_name'>${title}总询盘：</span><span class='tip_value'>${data[0].data.xunnumber}</span></div>
                       
                       </div>`;
                     }else{
                       return `<div class='tooltip_fly'>
-                      <div class='tip_item'><span class='tip_name'>${title}同期：</span><span class='tip_value'>${data[0].data.xunchange}</span><span class="falling">${data[0].data.xunnumber - data[0].data.xunchange}</div>
+                      <div class='tip_item'><span class='tip_name'>${title}同期：</span><span class='tip_value'>${data[0].data.xunchange}</span><span class="falling">${Math.abs(laseXunchange - data[0].data.xunchange)}</div>
                       <div class='tip_item'><span class='tip_name'>${title}总询盘：</span><span class='tip_value'>${data[0].data.xunnumber}</span></div>
                       
                       </div>`;
-                    }
-                   
+                    }                   
                   }else{
                     return ''
                   }
@@ -2766,7 +2855,7 @@ export default {
                 },
               },
               point: {
-                size:4,
+                size:3,
                 shape: 'circle',
                 style: (res) => {
                   var obj = {
@@ -3070,7 +3159,7 @@ export default {
               },
             },
             yAxis: {
-              
+              tickCount:4,
               grid: {
                 line: {
                   style: {
@@ -3107,7 +3196,7 @@ export default {
                   return 'circle';
                 }
               },
-              size: 4,
+              size: 3,
               style:(res)=> {
                 var obj = {
                   opacity: 0.5,
@@ -3169,10 +3258,10 @@ export default {
                 }
             });
             if ($this.isFloat(registerObj.value)) {
-                registerObj.value=registerObj.value.toFixed(2);
+                registerObj.value=Number(registerObj.value.toFixed(2));
             } 
             if ($this.isFloat(lastregisterObj.value)) {
-                lastregisterObj.value=lastregisterObj.value.toFixed(2);
+                lastregisterObj.value=Number(lastregisterObj.value.toFixed(2));
             }                          
             var MaxValue='';
             if(Number(registerObj.value)>=Number(lastregisterObj.value)){
@@ -3205,7 +3294,7 @@ export default {
                 }
             }
             if($this.isFloat(sametimeGrowth)){
-              sametimeGrowth=sametimeGrowth.toFixed(2);
+              sametimeGrowth=Number(sametimeGrowth.toFixed(2));
             }
             $this.currentCluesData.sametimeGrowth=sametimeGrowth;
             $this.currentCluesData.sametimeRate=sametimeRate;
@@ -3295,7 +3384,7 @@ export default {
                     return 'circle';
                   }
                 },
-                size: 4,
+                size: 3,
                 style:(res)=> {
                   var obj = {
                     opacity: 0.5,
@@ -3489,6 +3578,7 @@ export default {
               color: ['#fcb030', '#f7c572'],
               /** 设置间距 */
               dodgePadding: 0,
+              maxColumnWidth:25,
               legend:false,
               xAxis: {
                 label: {
@@ -3638,7 +3728,8 @@ export default {
                       var resMtimeOne=response.mtime.split(' ');
                       updatemtime=resMtimeOne[0].split('-');
                       updatemtime.push(resMtimeOne[1]);
-                      $this.updatemtime=updatemtime;                
+                      $this.updatemtime=updatemtime;
+                      $this.updateScoremonth=response.scoremonth;
                       if(response.yeardepartscore&&response.yeardepartscore.length>0){                 
                           if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
                             $this.yeardepartscoreData.chart.destroy();
@@ -3646,6 +3737,8 @@ export default {
                           if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
                             $this.yeardepartscoreData.chart.destroy();
                           }
+                          $this.currentCluesData.yeardepartscoreArr=[];
+                          $this.currentCluesData.totalNumscore='';
                           var yeardepartscoreArr=[];
                           var departmentCost=[];
                           var costAverage=[];
@@ -3661,7 +3754,7 @@ export default {
                               yeardepartscoreArr.push(departscoreObj);
                               //部门成本
                               departmentCostObj.departname=item.departname.replace('电商','');
-                              departmentCostObj.score=parseFloat(item.score).toFixed(2);
+                              departmentCostObj.score=Number(parseFloat(item.score).toFixed(2));
                               departmentCostObj.allmoney=item.allmoney;
                               departmentCostObj.avgallmoney=item.avgallmoney;
                               departmentCostObj.moneyscore=item.moneyscore;
@@ -3676,7 +3769,7 @@ export default {
                               costAverage.push(costAverageObj);
                           });
                           $this.currentCluesData.yeardepartscoreArr=yeardepartscoreArr;
-                          $this.currentCluesData.totalNumscore=totalNumscore.toFixed(2);
+                          $this.currentCluesData.totalNumscore=Number(totalNumscore.toFixed(2));
                           $this.yeardepartscoreChart();
                           //部门成本
                           costAverage.sort(function(a, b) {
@@ -3710,8 +3803,8 @@ export default {
                      });
                       $this.ScoreData.allscore=response.allscore;
                       $this.ScoreData.allsnumber=response.allsnumber;
-                      $this.ScoreData.addallscore=parseFloat(tolScore).toFixed(2);
-                      $this.ScoreData.addallsnumber=parseFloat(tolNumber).toFixed(2);
+                      $this.ScoreData.addallscore=Number(parseFloat(tolScore).toFixed(2));
+                      $this.ScoreData.addallsnumber=Number(parseFloat(tolNumber).toFixed(2));
                       $this.ScoreData.allsnumberPercen=(parseFloat(tolNumber)/response.allsnumber*100).toFixed(2)+'%';
                       $this.ScoreData.allscorePercen=(parseFloat(tolScore)/response.allscore*100).toFixed(2)+'%';
                    }
@@ -3748,6 +3841,7 @@ export default {
                       updatemtime=resMtimeOne[0].split('-');
                       updatemtime.push(resMtimeOne[1]);
                       $this.updatemtime=updatemtime;
+                      $this.updateScoremonth=response.scoremonth;
                       if(response.yeardepartscore&&response.yeardepartscore.length>0){                 
                           if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
                             $this.yeardepartscoreData.chart.destroy();
@@ -3755,6 +3849,8 @@ export default {
                           if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
                             $this.yeardepartscoreData.chart.destroy();
                           }
+                          $this.currentCluesData.yeardepartscoreArr=[];
+                          $this.currentCluesData.totalNumscore='';
                           var yeardepartscoreArr=[];
                           var departmentCost=[];
                           var costAverage=[];
@@ -3770,7 +3866,7 @@ export default {
                               yeardepartscoreArr.push(departscoreObj);
                               //部门成本
                               departmentCostObj.departname=item.departname.replace('电商','');
-                              departmentCostObj.score=parseFloat(item.score).toFixed(2);
+                              departmentCostObj.score=Number(parseFloat(item.score).toFixed(2));
                               departmentCostObj.allmoney=item.allmoney;
                               departmentCostObj.avgallmoney=item.avgallmoney;
                               departmentCostObj.moneyscore=item.moneyscore;
@@ -3785,7 +3881,7 @@ export default {
                               costAverage.push(costAverageObj);
                           });
                           $this.currentCluesData.yeardepartscoreArr=yeardepartscoreArr;
-                          $this.currentCluesData.totalNumscore=totalNumscore.toFixed(2);
+                          $this.currentCluesData.totalNumscore=Number(totalNumscore.toFixed(2));
                           $this.yeardepartscoreChart();
                           //部门成本
                           costAverage.sort(function(a, b) {
@@ -3885,6 +3981,62 @@ export default {
     // 英文地区询盘地图
     drawEnCluesRegionChart(){
       var $this = this;
+      var numList=[800,500,300,100,60,50,40,30,20,10];
+      var defaulText=['大于800', '500-800', '300-500', '100-300', '60-100', '50-60', '40-50', '30-40', '20-30', '10-20', '0-10'];
+      var defaulColor=['#ae1222','#df3041', '#f27042', '#f9ac6e', '#f1de5f', '#eae090', '#bae29d', '#89cecc', '#a3cfce', '#a2bfcd', '#b3b3b3'];
+      var trendArr=[];
+      var maxNum='';
+      var mapch=[];
+      $this.currentCluesData.cluesRegionData.forEach(function(item,index){
+          if(maxNum<item.number){
+            maxNum=item.number;
+          }
+      });
+      if(maxNum>numList[0]){
+        trendArr=defaulColor;
+        defaulText.forEach(function(item,index){
+          defaulColor.forEach(function(items,indexs){
+              var mapchoBj={
+                mapchColor:'',
+                mapchText:'',
+              }
+              if(index==indexs){
+                mapchoBj.mapchColor=items;
+                mapchoBj.mapchText=item;
+                mapch.push(mapchoBj);
+              }
+          });
+        });
+      }
+      if(maxNum<=numList[numList.length-1]){
+        trendArr=['#b3b3b3'];
+        var mapchoBj={
+          mapchColor:'#b3b3b3',
+          mapchText:'大于800',
+        }
+        mapch.push(mapchoBj);
+      }
+      for(var i=0;i<numList.length;i++){
+        if(maxNum>=numList[i+1]&&maxNum<numList[i]){
+           defaulColor.forEach(function(item,index){
+               if(index>i){
+                 trendArr.push(item);
+               }
+               defaulText.forEach(function(items,indexs){ 
+                  if(index>i&&indexs==index){
+                    var mapchoBj={
+                      mapchColor:'',
+                      mapchText:'',
+                    }
+                    mapchoBj.mapchColor=item;
+                    mapchoBj.mapchText=items;
+                    mapch.push(mapchoBj);
+                  }
+               });
+           });
+        }
+      };
+      $this.mapch=mapch;
       fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/world.geo.json')
       .then(res => res.json())
       .then(mapData => {
@@ -3908,9 +4060,10 @@ export default {
           }
         });
         worldRegionMapChart.axis(false);
-        worldRegionMapChart.legend('trend', {
-          position: 'bottom-left',
-        });
+        worldRegionMapChart.legend(false);
+        //worldRegionMapChart.legend('trend', {
+        //  position: 'bottom-left',
+        //});
         // 绘制世界地图背景
         var ds = new DataSet();
         const worldMap = ds.createView('back').source(mapData, {type: 'GeoJSON'});
@@ -3978,12 +4131,20 @@ export default {
         userView.polygon()
           .position('longitude*latitude')
           //.color('trend', '#0050B3-#1890FF-#BAE7FF')          
-          .color('trend', ['#ae1222','#df3041', '#f27042', '#f9ac6e', '#f1de5f', '#eae090', '#bae29d', '#89cecc', '#a3cfce', '#a2bfcd', '#b3b3b3'])
+          .color('trend', trendArr)
           .tooltip('name*country*number')
           .style({
             fillOpacity: 1,
             stroke:"#fff"
-          }).animate({
+          }).state({
+              active: {
+                style: {
+                  lineWidth: 0,
+                  stroke:0,
+                  fillOpacity:0.8,
+                },
+              },
+            }).animate({
             leave: {
               animation: 'fade-out'
             }
@@ -4220,6 +4381,7 @@ export default {
                       if(items.monthnumber-items.lastmonthnumber==0){
                         itemData.Class='equality'
                       }
+                      itemData.sortGrowth=items.monthnumber-items.lastmonthnumber;
                       itemData.Growth=Math.abs(items.monthnumber-items.lastmonthnumber);
                       if(itemData.Growth==0){
                         itemData.Growth='-'
@@ -4228,6 +4390,16 @@ export default {
                   }
               });
           });
+          zusuercountArr.sort(function(a, b) {
+                var value1 = a.sortGrowth;
+                var value2 = b.sortGrowth;
+                return value2 - value1;
+          });
+          if(zusuercountArr.length>7){
+             $this.tableBtnVisible=true;
+          }else{
+             $this.tableBtnVisible=false;
+          }
           $this.zusuercount.zusuercountArr = zusuercountArr;
       }else{
           var zusuercountArr=[];//分组-组员成绩
@@ -4249,15 +4421,48 @@ export default {
             if(item.monthnumber-item.lastmonthnumber==0){
               itemData.Class='equality'
             }
+            itemData.sortGrowth=items.monthnumber-items.lastmonthnumber;
             itemData.Growth=Math.abs(item.monthnumber-item.lastmonthnumber);
             if(itemData.Growth==0){
               itemData.Growth='-'
             }
             zusuercountArr.push(itemData);
           })
+          zusuercountArr.sort(function(a, b) {
+                var value1 = a.sortGrowth;
+                var value2 = b.sortGrowth;
+                return value2 - value1;
+          });
+          if(zusuercountArr.length>7){
+             $this.tableBtnVisible=true;
+          }else{
+             $this.tableBtnVisible=false;
+          }
           $this.zusuercount.zusuercountArr = zusuercountArr;
       }
     },
+    // 表格点击展开
+    tableBtn(){
+      var $this = this;
+      $this.tableBtnBool=!$this.tableBtnBool;
+      $this.tableRowClassName();
+    },
+    // 组员成绩添加样式
+    tableRowClassName({row,rowIndex}) {
+      var $this = this;
+      if($this.tableBtnBool){
+        if (rowIndex > 6) {
+          return 'hidden-row';
+        }
+        $this.tableBtnTxt='点击展开';
+      }else{
+        if (rowIndex > 6) {
+          return 'show-row';
+        }
+        $this.tableBtnTxt='点击收起';
+      }
+      return '';
+    }
   }
 }
 </script>
