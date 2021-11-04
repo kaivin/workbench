@@ -527,6 +527,7 @@ export default {
   name: 'Home',
   data() {
     return {
+      updateScoremonth:'',
       depDayTarget:[],//部门日目标
       menuButtonPermit:[],
       permitModules:[],
@@ -3046,11 +3047,15 @@ export default {
         if($this.yearscoretongData&&!$this.yearscoretongData.chart.destroyed){
           $this.yearscoretongData.changeData($this.currentCluesData.yearscoretongArr);
         }else{
+          $this.currentCluesData.yearscoretongArr.forEach((item,index)=>{
+            item.value = parseFloat(item.value)
+          })
           const yearscoretongData = new Line('yearscoretongChart01', {
             data:$this.currentCluesData.yearscoretongArr,
             xField: 'month',
             yField: 'value',
             seriesField: 'year',
+           
             xAxis: {
               label: {
                 offset:11,
@@ -3065,6 +3070,7 @@ export default {
               },
             },
             yAxis: {
+              
               grid: {
                 line: {
                   style: {
