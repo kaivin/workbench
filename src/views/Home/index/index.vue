@@ -613,7 +613,6 @@ export default {
       salesmanData:{},
       newsList:[],
       pickerRangeOptions: this.$pickerRangeOptions,
-      mapDate:[],
       languageList:[
         {name:"中文",label:"Module_cnStat",isOn:false},
         {name:"英文",label:"Module_enStat",isOn:false},
@@ -2456,25 +2455,36 @@ export default {
     // 中文地区询盘地图
     drawCnCluesRegionChart(){
       var $this = this;
-      var numList=[800,500,300,100,60,50,40,30,20,10];
-      var defaulText=['大于800', '500-800', '300-500', '100-300', '60-100', '50-60', '40-50', '30-40', '20-30', '10-20', '0-10'];
-      var defaulColor=['#ae1222','#df3041', '#f27042', '#f9ac6e', '#f1de5f', '#eae090', '#bae29d', '#89cecc', '#a3cfce', '#a2bfcd', '#b3b3b3'];
+      var numList=[800,600,400,200];
+      var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
       var trendArr=[];
       var maxNum='';
+      var minNum='';
       $this.currentCluesData.cluesRegionData.forEach(function(item,index){
           if(maxNum<item.number){
             maxNum=item.number;
           }
+          if(minNum>=item.number){
+            minNum=item.number;
+          }
       });
+      if(maxNum>numList[0]){
+        trendArr=defaulColor;
+      }
+      if(maxNum<=numList[numList.length-1]){
+        trendArr=['#b3b3b3'];
+      }
       for(var i=0;i<numList.length;i++){
         if(maxNum>=numList[i+1]&&maxNum<numList[i]){
-           defaulColor.forEach(function(item,index){
-               if(index>i){
-                 trendArr.push(item);
-               }
-           });
+          defaulColor.forEach(function(item,index){
+              if(index>i){
+                trendArr.push(item);
+              }
+          });
         }
       };
+      console.log(trendArr,'trendArr');
+      console.log($this.currentCluesData.cluesRegionData,'cluesRegionData');
       if($this.currentCluesData.cluesRegionData.length>0){   
         fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
         .then(res => res.json())
@@ -2529,26 +2539,14 @@ export default {
           }).transform({
             type: 'map',
             callback: obj => {
-              if(obj.number <10){
-                  obj.trend="0-10";
-              }else if(obj.number <20 && obj.number>=10){
-                  obj.trend="10-20";
-              }else if(obj.number <30 && obj.number>=20){
-                  obj.trend="20-30";
-              }else if(obj.number <40 && obj.number>=30){
-                  obj.trend="30-40";
-              }else if(obj.number <50 && obj.number>=40){
-                  obj.trend="40-50";
-              }else if(obj.number <60 && obj.number>=50){
-                  obj.trend="50-60";
-              }else if(obj.number <100 && obj.number>=60){
-                  obj.trend="60-100";
-              }else if(obj.number <300 && obj.number>=100){
-                  obj.trend="100-300";
-              }else if(obj.number <500 && obj.number>=300){
-                  obj.trend="300-500";
-              }else if(obj.number <800 && obj.number>=500){
-                  obj.trend="500-800";
+              if(obj.number <200){
+                  obj.trend="0-200";
+              }else if(obj.number <400 && obj.number>=200){
+                  obj.trend="200-400";
+              }else if(obj.number <600 && obj.number>=400){
+                  obj.trend="400-600";
+              }else if(obj.number <800 && obj.number>=600){
+                  obj.trend="600-800";
               }else{
                   obj.trend="大于800";
               }
@@ -2597,28 +2595,24 @@ export default {
       if($this.currentCluesData.topTenRegionData.length>0){
         if($this.pieSourcePlot&&!$this.pieSourcePlot.chart.destroyed){
           $this.pieSourcePlot.changeData($this.currentCluesData.topTenRegionData);
-        }else{
-          var numList=[800,500,300,100,60,50,40,30,20,10];
-          var defaulColor=['#ae1222','#df3041', '#f27042', '#f9ac6e', '#f1de5f', '#eae090', '#bae29d', '#89cecc', '#a3cfce', '#a2bfcd', '#b3b3b3'];
+        }else{ 
+          var numList=[];     
+          if($this.language=="Module_cnStat"){
+              numList=[800,600,400,200];
+          }else{
+              numList=[700,500,300,100];
+          }  
+          var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
           var rel=$this.currentCluesData.topTenRegionData;
           var topTenColor=[];
-          for(var i=0;i<rel.length;i++){
-            for(var j=0;j<numList.length;j++){
-               if(rel[i].number>=numList[j+1]&&rel[i].number<numList[j]){
-                  defaulColor.forEach(function(item,index){
-                      if(index-1==j){
-                        topTenColor.push(item);
-                      }
-                  });
-               }
-            };
-          };
-          if(rel[0]>numList[0]){
-            topTenColor.unshift('#ae1222');
-          }
-          if(rel[rel.length-1]<=numList[numList.length-1]){
-            topTenColor.push('#b3b3b3');
-          }
+          $this.currentCluesData.topTenRegionData.forEach(function(item,index){
+            for(var i=0;i<numList.length;i++){
+              if(item.number>numList[i]){
+                topTenColor.push(defaulColor[i]);
+                break;
+              }
+            }
+          });
           topTenColor=topTenColor.reverse();
           const pieSourcePlot = new Bar('topTen', {
             data:$this.currentCluesData.topTenRegionData,
@@ -3949,23 +3943,32 @@ export default {
     // 英文地区询盘地图
     drawEnCluesRegionChart(){
       var $this = this;
-      var numList=[800,500,300,100,60,50,40,30,20,10];
-      var defaulText=['大于800', '500-800', '300-500', '100-300', '60-100', '50-60', '40-50', '30-40', '20-30', '10-20', '0-10'];
-      var defaulColor=['#ae1222','#df3041', '#f27042', '#f9ac6e', '#f1de5f', '#eae090', '#bae29d', '#89cecc', '#a3cfce', '#a2bfcd', '#b3b3b3'];
+      var numList=[700,500,300,100];
+      var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
       var trendArr=[];
       var maxNum='';
+      var minNum='';
       $this.currentCluesData.cluesRegionData.forEach(function(item,index){
           if(maxNum<item.number){
             maxNum=item.number;
           }
+          if(minNum>=item.number){
+            minNum=item.number;
+          }
       });
+      if(maxNum>numList[0]){
+        trendArr=defaulColor;
+      }
+      if(maxNum<=numList[numList.length-1]){
+        trendArr=['#b3b3b3'];
+      }
       for(var i=0;i<numList.length;i++){
         if(maxNum>=numList[i+1]&&maxNum<numList[i]){
-           defaulColor.forEach(function(item,index){
-               if(index>i){
-                 trendArr.push(item);
-               }
-           });
+          defaulColor.forEach(function(item,index){
+              if(index>i){
+                trendArr.push(item);
+              }
+          });
         }
       };
       fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/world.geo.json')
@@ -4019,28 +4022,16 @@ export default {
         }).transform({
           type: 'map',
           callback: obj => {
-            if(obj.number <10){
-                obj.trend="0-10";
-            }else if(obj.number <20 && obj.number>=10){
-                obj.trend="10-20";
-            }else if(obj.number <30 && obj.number>=20){
-                obj.trend="20-30";
-            }else if(obj.number <40 && obj.number>=30){
-                obj.trend="30-40";
-            }else if(obj.number <50 && obj.number>=40){
-                obj.trend="40-50";
-            }else if(obj.number <60 && obj.number>=50){
-                obj.trend="50-60";
-            }else if(obj.number <100 && obj.number>=60){
-                obj.trend="60-100";
+            if(obj.number <100){
+                obj.trend="0-100";
             }else if(obj.number <300 && obj.number>=100){
                 obj.trend="100-300";
             }else if(obj.number <500 && obj.number>=300){
                 obj.trend="300-500";
-            }else if(obj.number <800 && obj.number>=500){
-                obj.trend="500-800";
+            }else if(obj.number <700 && obj.number>=500){
+                obj.trend="500-700";
             }else{
-                obj.trend="大于800";
+                obj.trend="大于700";
             }
             return obj;
           }
@@ -4099,7 +4090,21 @@ export default {
         const start = new Date();
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
         date.setTime(date.getTime());
-        var monthDay = start.getFullYear()+"-"+(start.getMonth()+1>9?start.getMonth()+1:'0'+(start.getMonth()+1))+"-"+(start.getDate()+1>9?start.getDate():'0'+(start.getDate()));
+
+        //var monthDay = start.getFullYear()+"-"+(start.getMonth()+1>9?start.getMonth()+1:'0'+(start.getMonth()+1))+"-"+(start.getDate()+1>9?start.getDate():'0'+(start.getDate()));
+        
+        var lastYear='';
+        var lastmonth='';
+        var lastday='';
+        if(start.getMonth()+1<=3){
+          var absM = Math.abs((start.getMonth()+1)-3);
+          lastYear = parseInt(start.getFullYear()) - Math.ceil(absM / 12 == 0 ? 1 : parseInt(absM) / 12);
+          lastmonth = (12 - (absM % 12))>9?(12 - (absM % 12)):'0'+(12 - (absM % 12));
+        }else{
+          lastYear=start.getFullYear();
+          lastmonth = start.getMonth()-1>9?start.getMonth()-1:'0'+(start.getMonth()-1);
+        }
+        var monthDay = lastYear+"-"+lastmonth+"-"+(start.getDate()+1>9?start.getDate():'0'+(start.getDate()));
         var today = date.getFullYear()+"-"+(date.getMonth()+1>9?date.getMonth()+1:'0'+(date.getMonth()+1))+"-"+(date.getDate()+1>9?date.getDate():'0'+(date.getDate()));
         $this.mapDate = [monthDay,today];
         $this.thisMonth=date.getFullYear()+"-"+(date.getMonth()+1>9?date.getMonth()+1:'0'+(date.getMonth()+1));
