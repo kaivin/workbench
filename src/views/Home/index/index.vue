@@ -791,6 +791,10 @@ export default {
       $this.zusuercount.zusuercountArr=[];
       $this.zusuercount.zusuercountGroupnameArr=[];
       $this.zusuercount.GroupID=[];
+      $this.tableHidden.tableHeight=0;
+      $this.tableHidden.tableBtnVisible=true;
+      $this.tableHidden.tableBtnBool=true;
+      $this.tableHidden.tableBtnTxt='点击展开';
     },
     // 中文部门日目标
     cnDaytarget(){
@@ -3694,10 +3698,10 @@ export default {
                       updatemtime.push(resMtimeOne[1]);
                       $this.updatemtime=updatemtime;
                       $this.updateScoremonth=response.scoremonth;
-                      if(response.yeardepartscore&&response.yeardepartscore.length>0){                 
-                          if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
-                            $this.yeardepartscoreData.chart.destroy();
-                          }
+                      if(response.yeardepartscore&&response.yeardepartscore.length>0){                   
+                          if($this.costAverageData&&!$this.costAverageData.chart.destroyed){
+                            $this.costAverageData.chart.destroy();
+                          } 
                           if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
                             $this.yeardepartscoreData.chart.destroy();
                           }
@@ -3806,10 +3810,10 @@ export default {
                       updatemtime.push(resMtimeOne[1]);
                       $this.updatemtime=updatemtime;
                       $this.updateScoremonth=response.scoremonth;
-                      if(response.yeardepartscore&&response.yeardepartscore.length>0){                 
-                          if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
-                            $this.yeardepartscoreData.chart.destroy();
-                          }
+                      if(response.yeardepartscore&&response.yeardepartscore.length>0){    
+                          if($this.costAverageData&&!$this.costAverageData.chart.destroyed){
+                            $this.costAverageData.chart.destroy();
+                          } 
                           if($this.yeardepartscoreData&&!$this.yeardepartscoreData.chart.destroyed){
                             $this.yeardepartscoreData.chart.destroy();
                           }
