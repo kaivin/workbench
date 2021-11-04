@@ -882,6 +882,7 @@ export default {
       }else{
         formData.salesuserid = $this.salesuserid;
       }
+      formData.production = $this.formData.production;
       formData.ftword_id = $this.formData.ftword_id;
       formData.custormneedinfo = $this.formData.custormneedinfo;
       formData.otherremark = $this.formData.otherremark;

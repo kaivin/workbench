@@ -238,72 +238,82 @@
                     .legendFly{
                         position: absolute;
                         bottom: -22px;
-                        width:520px;
+                        width:596px;
                         text-align: center;
                         left: 50%;
-                        margin-left:-90px;
+                        margin-left:-298px;
                         span{
                             display: inline-block;
-                            margin-right: 20px;
+                            margin-right: 10px;
                             font-size: 12px;
                             line-height: 14px;
                             color: #999;
-                            padding-left: 28px;
+                            padding-left: 27px;
                             position: relative;
                         }
                         .legendItem1:before{
                             content: "";
                             display: block;
-                            width: 10px;
-                            height: 10px;
+                            width: 8px;
+                            height: 8px;
                             background: #e7f1ff;
                             position: absolute;
-                            left: 0;
-                            top: 2px;
+                            left: 15px;
+                            top: 3px;
                         }
                         .legendItem2:before{
                             content: "";
                             display: block;
-                            width: 10px;
-                            height: 10px;
+                            width: 8px;
+                            height: 8px;
                             background: #59cab6;
                             position: absolute;
-                            left: 0;
-                            top: 2px;
+                            left: 15px;
+                            top: 3px;
+                        }
+                        .legendItem6:before{
+                            content: "";
+                            display: block;
+                            width: 8px;
+                            height: 8px;
+                            background: #f7c572;
+                            position: absolute;
+                            left: 15px;
+                            top: 3px;
                         }
                         .legendItem3:before{
                             content: "";
                             display: block;
-                            width: 10px;
-                            height: 10px;
+                            width: 8px;
+                            height: 8px;
                             background: #f38080;
                             position: absolute;
-                            left: 0;
-                            top: 2px;
+                            left: 15px;
+                            top: 3px;
                         }
                         .legendItem4:before{
                             content: "";
                             display: block;
-                            width: 10px;
-                            height: 10px;
+                            width: 8px;
+                            height: 8px;
                             background: #fff;
                             box-sizing: border-box;
                             border: 1px solid #f38080;
                             position: absolute;
-                            left: 0;
-                            top: 2px;
+                            left: 15px;
+                            top: 3px;
                         }
                         
                         .legendItem5:before{
                             content: "";
                             display: block;
-                            width: 10px;
-                            height: 10px;
+                            width: 8px;
+                            height: 8px;
                             background: #fcb030;
                             border-radius: 50%;
                             position: absolute;
-                            left: 2px;
-                            top: 2px;
+                            left: 15px;
+                            top: 3px;
                         }
                     }
                 }

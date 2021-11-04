@@ -55,6 +55,7 @@
                               <div class="legendFly">
                                 <span class="legendItem1">目标询盘</span>
                                 <span class="legendItem2">询盘数量</span>
+                                <span class="legendItem6">非搜索询盘</span>
                                 <span class="legendItem3">达成目标</span>
                                 <span class="legendItem4">历史最高</span>
                                 <span class="legendItem5">本月最高</span>
@@ -303,8 +304,7 @@
                                   </div>
                                   <p class="rowEightFlItemFlBox flex-content">
                                     <span v-if="language=='Module_cnStat'" class="departnamescore" :style="'width:'+item.score/ScoreData.MaxValue*100+'%'">
-                                    <i class="tip-left" v-if="item.score/ScoreData.MaxValue*100>10">{{item.score}}</i>
-                                    <i class="tip-right" v-else>{{item.score}}</i>
+                                    <i class="tip-right">{{item.score}}</i>
                                     </span>
                                     <span v-else class="departnamescore" :style="'width:'+item.snumber/ScoreData.MaxValue*100+'%'"></span>
                                     <span class="goodnumber" :style="'width:'+item.goodnumber/ScoreData.MaxValue*100+'%'"></span>
@@ -335,6 +335,7 @@
                    <h3 style="float:left">
                       {{language=='Module_cnStat'?'中文':'英文'}}年度成交积分
                       <span style="color:#c1c1c1;font-size:12px">数据更新于{{updatemtime[0]}}年{{updatemtime[1]}}月{{updatemtime[2]}}日 {{updatemtime[3]}}时  | 每月更新</span>
+                      <span style="color:#c1c1c1;font-size:12px;margin-left:20px">({{updateScoremonth}}更新数据)</span>
                     </h3>
                     <p class="unit">(单位：分)</p>
                 </div>
@@ -521,7 +522,7 @@ import Cookies from 'js-cookie'
 import DataSet from '@antv/data-set';
 import { Chart } from '@antv/g2';
 import { isObject, deepMix } from '@antv/util';
-import { Bullet,RadialBar,Liquid,Line,Area,measureTextWidth,Pie,Bar,Column,Mix,P,G2} from '@antv/g2plot';
+import { Bullet,RadialBar,Liquid,Line,Area,measureTextWidth,Pie,Bar,Column,Mix,P,G2,Rose} from '@antv/g2plot';
 export default {
   name: 'Home',
   data() {
@@ -2114,9 +2115,10 @@ export default {
                     },
                     columnStyle:{
                       fill:'#fff',
-                      stroke: '#fbaaaa',
+                      stroke: '#fee4e4',
                       lineWidth: 1,
                       fillOpacity:0.5,
+                      
                     },
                     color:'#f38080',
                     columnWidthRatio:0.5,
@@ -2128,7 +2130,9 @@ export default {
                     label:{
                       style: {
                         fill: '#ff0606',
+                        fontWeight:600
                       },
+                      offsetY:6,
                       position: 'top', 
                       
                     }
@@ -2358,7 +2362,7 @@ export default {
                       opacity:0
                     },
                     point: {
-                      size: 4,
+                      size: 2.5,
                       shape: 'circle',
                       style: {
                         fill: '#fcb030',
@@ -2369,6 +2373,7 @@ export default {
                     label:{
                       style: {
                         fill: '#fcb030',
+                        fontWeight:600
                       },
                       position: 'top', 
                       
@@ -2955,6 +2960,14 @@ export default {
               formatter: (v) => `${v}`,
             },
           },
+          state: {
+            active: {
+              style: {
+                lineWidth: 0,
+                fillOpacity: 0.8,
+              },
+            },
+          },
           label: {
             type: 'inner',
             offset: '-50%',
@@ -2990,6 +3003,9 @@ export default {
                 whiteSpace: 'pre-wrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
+                lineHeight:1.4,
+                fontWeight:500,
+                color:"#999"
               },
               content: '部门\n成交占比',
             },

@@ -269,7 +269,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters ,mapMutations} from 'vuex';
 export default {
   name: 'Webmsg_msgindex',
   data() {
@@ -401,6 +401,7 @@ export default {
   },
   created(){
     var $this = this;
+    this.SYNC_PLATMSG(-1);
     $this.getBreadcrumbList();
     $this.initData();
   },
@@ -408,6 +409,9 @@ export default {
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
+    ...mapMutations({
+      SYNC_PLATMSG:"webmsg/SYNC_PLATMSG"
+    }),
     // 获取面包屑路径
     getBreadcrumbList(){
       var $this = this;
@@ -846,6 +850,7 @@ export default {
     // 页面自跳转
     jumpLink(status){
         var $this = this;
+        this.SYNC_PLATMSG(-1);
         $this.resetSearchData();
         $this.$router.push({path:'/Webmsg/msgindex',query:{Status:status}});
     },
