@@ -2464,16 +2464,12 @@ export default {
     drawCnCluesRegionChart(){
       var $this = this;
       var maxNum='';
-      var minNum='';
       var minAverage='';
       $this.minAverage='';
       $this.sumColor=[];
       $this.currentCluesData.cluesRegionData.forEach(function(item,index){
           if(maxNum<item.number){
             maxNum=item.number;
-          }
-          if(minNum>=item.number){
-            minNum=item.number;
           }
       });
       var average=parseInt(maxNum/4);
@@ -3996,8 +3992,8 @@ export default {
       var $this = this;
       var maxNum='';
       var minAverage='';
-      $this.sumColor=[];
       $this.minAverage='';
+      $this.sumColor=[];
       $this.currentCluesData.cluesRegionData.forEach(function(item,index){
           if(maxNum<item.number){
             maxNum=item.number;
