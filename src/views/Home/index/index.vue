@@ -2483,8 +2483,7 @@ export default {
           });
         }
       };
-      console.log(trendArr,'trendArr');
-      console.log($this.currentCluesData.cluesRegionData,'cluesRegionData');
+      
       if($this.currentCluesData.cluesRegionData.length>0){   
         fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
         .then(res => res.json())
@@ -2712,7 +2711,7 @@ export default {
               tooltip: {
                 //fields:['date','xunnumber', 'xunchange'],
                 customContent: (title, data) => {
-                  console.log(data,'data');
+                  
                   if(data.length>0){
                     if(laseXunchange - data[0].data.xunchange>=0){
                        return `<div class='tooltip_fly'>
@@ -2752,12 +2751,14 @@ export default {
           if($this.areaTrendPlot&&!$this.areaTrendPlot.chart.destroyed){
             $this.areaTrendPlot.changeData($this.currentCluesData.chartData);
           }else{
+            
             const areaTrendPlot = new Area('cluesChart', {
               data:$this.currentCluesData.chartData,    
               xField: 'date',
               yField: 'xunnumber',
               seriesField: 'title',
               color: ['#6b9afa', '#316afa'],
+              isStack:false,
               areaStyle: () => {
                 return {
                   fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
@@ -2923,6 +2924,7 @@ export default {
           color: '#81a8f1',
           label: {
             position: 'top', 
+            offset:4,
             // 配置样式
             style: {
               fill: '#333333',
@@ -3527,6 +3529,7 @@ export default {
                 }
               }
             }
+            
             const zugoupmonthColumn = new Column('zugroupmonthChart', {
               data:resultData,
               isGroup: true,
@@ -3996,6 +3999,7 @@ export default {
         worldRegionMapChart.axis(false);
         worldRegionMapChart.legend('trend', {
           position: 'bottom-left',
+          itemHeight:20,
         });
         // 绘制世界地图背景
         var ds = new DataSet();
@@ -4135,7 +4139,7 @@ export default {
               data:item.children, 
               xField: 'mtime',
               yField: 'number',
-              padding:0,
+              padding:5,
               appendPadding:0,
               limitInPlot:false,
               xAxis:false,
@@ -4144,7 +4148,7 @@ export default {
               height:44,
               tooltip: {
                 formatter: (datum) => {
-                  return { name:'年度月成交分', value: datum.anumber };
+                  return { name:'年度月成交分', value: datum.number };
                 },
               },
               areaStyle: () => {
@@ -4241,6 +4245,7 @@ export default {
           $this.loading = false;
         }, 600);
         if($this.language!=language){
+          $this.isDepart1 = false;
           $this.language = language;
           $this.cnEnActiveChange();
           $this.currentCluesData.departID = [];
