@@ -2152,8 +2152,7 @@ export default {
                     }
                     
                 },
-            },
-            
+            },            
             {//目标柱状图
                type: 'column',
                 options: {
@@ -2484,6 +2483,32 @@ export default {
       }
       var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
       $this.minAverage=minAverage;
+      //筛选颜色
+      //var resArr=$this.currentCluesData.cluesRegionData;
+      //var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1];  
+      //var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
+      //var sumColor=[];
+      //var maxOne=0;
+      //var maxTwo=0;
+      //var maxThree=0;
+      //for(var j=0;j<numList.length;j++){
+      //  for(var i=0;i<rel.length;i++){
+      //      if(rel[i].number>numList[0]&&maxOne==0){
+      //        maxOne+=1;
+      //        sumColor.push(defaulColor[j]);
+      //        break;
+      //      }
+      //      if(rel[i].number>=numList[j+1]&&rel[i].number<numList[j]){
+      //        sumColor.push(defaulColor[j]);
+      //        break;
+      //      }
+      //      if(rel[i].number<numList[numList.length-1]&&maxThree==0){
+      //        maxThree+=1;
+      //        sumColor.push(defaulColor[j]);
+      //        break;
+      //      }
+      //  }
+      //}
       if($this.currentCluesData.cluesRegionData.length>0){   
         fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
         .then(res => res.json())
