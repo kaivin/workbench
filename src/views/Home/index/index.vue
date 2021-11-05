@@ -2212,8 +2212,8 @@ export default {
                     xField: 'departname',
                     yField: 'searchdaynumber',
                     xAxis:false,
-                    minColumnWidth:20,
-                    maxColumnWidth:20,
+                    minColumnWidth:25,
+                    maxColumnWidth:25,
                     interactions: [{ type: 'active-region', enable: false }],
                     yAxis: {
                       grid: {
@@ -2275,8 +2275,8 @@ export default {
                     isRange: true,
                     xField: 'departname',
                     yField: 'values',
-                    minColumnWidth:20,
-                    maxColumnWidth:20,
+                    minColumnWidth:25,
+                    maxColumnWidth:25,
                     interactions: [{ type: 'active-region', enable: false }],
                     xAxis:false,
                     yAxis: {

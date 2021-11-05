@@ -245,6 +245,7 @@
                 .el-input__inner{
                     background-color: #ffffff;
                     border: 1px solid #e1e3ea;
+                    border-radius:0px;
                     .el-range-input{background:none;}
                 }
               }
@@ -569,6 +570,7 @@
                 .el-input__inner{
                     background-color: #ffffff;
                     border: 1px solid #e1e3ea;
+                    border-radius:0px;
                     .el-range-input{background:none;}
                 }
               }
@@ -644,6 +646,7 @@
                                     height: 10px;
                                     border: 1px solid #9ec8ff;
                                     vertical-align: top;
+                                    border-radius:0px;
                                 }
                                 &.is-checked{
                                     .el-checkbox__inner{
@@ -1730,7 +1733,6 @@
                             width: 40px;
                             height: 40px;
                             background: #ffe2cc;
-                            border-radius: 4px;
                             margin-right:20px;
                             text-align: center;
                             line-height: 40px;
@@ -1912,6 +1914,7 @@
                 .el-input__inner{
                     background-color: #ffffff;
                     border: 1px solid #e1e3ea;
+                    border-radius: 0px;
                     .el-range-input{background:none;}
                 }
               }
