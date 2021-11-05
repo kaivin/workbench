@@ -132,7 +132,7 @@
                                             <p><strong class="EnColor05">域名：</strong><span class="txt-span">{{scope.row.webdomain}}</span></p>
                                             <p><strong class="EnColor05">网站ID：</strong><span class="txt-span">{{scope.row.website_id}}</span></p>
                                             <p><strong class="EnColor05">IP：</strong><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" class="txt-link">{{scope.row.ip}}</a><span v-if="scope.row.ip&&scope.row.ip!=''&&scope.row.ipcount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.ip)">({{scope.row.ipcount}})</span></p>
-                                            <p><strong class="EnColor05">URL：</strong><a :href="scope.row.refer" target="_blank" class="txt-link">打开</a></p>
+                                            <p><strong class="EnColor05">URL：</strong><a :href="scope.row.refer" target="_blank" class="txt-link" :title="scope.row.refer">打开</a></p>
                                             <p><strong class="EnColor05">标识：</strong><span class="txt-span">{{scope.row.site_feedback}}</span></p>
                                             <p><strong class="EnColor05">渠道：</strong><span class="txt-span">{{scope.row.from_way}}</span></p>
                                           </div>
@@ -247,7 +247,7 @@
                                 <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
                             </div>
                         </div>
-                        <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
+                        <div v-if="totalDataNum>20" class="pagination-panel" ref="pagePane">
                             <el-pagination
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
@@ -284,8 +284,8 @@ export default {
         minHeight:"auto",
         tableData:[],
         page:1,
-        limit:50,
-        pageSizeList:[50, 100, 150, 200],
+        limit:20,
+        pageSizeList:[20, 30, 40, 50],
         totalDataNum:0,
         brandList:[],
         languageList:[],
@@ -1183,7 +1183,7 @@ export default {
         $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+60+15;
       }
       // 视窗宽高改变时需要设置默认滚动条的位置
-      if($this.totalDataNum>50){
+      if($this.totalDataNum>20){
         var scrTop = $this.$refs.scrollDom.scrollTop;
         if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
           $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
@@ -1223,7 +1223,7 @@ export default {
             document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
           }
         }
-        if($this.totalDataNum>50){
+        if($this.totalDataNum>20){
           if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
             $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
           }

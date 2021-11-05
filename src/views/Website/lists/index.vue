@@ -318,7 +318,7 @@
                           <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
                   </div>
             </div>
-            <div v-if="totalDataNum>100" class="pagination-panel" ref="pagePane">
+            <div v-if="totalDataNum>50" class="pagination-panel" ref="pagePane">
               <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
@@ -395,9 +395,9 @@ export default {
       tableData:[],
       isPageBtn:false,
       page:1,
-      limit:100,
+      limit:50,
       pagerCount:5,
-      pageSizeList:[100, 200, 500, 1000],
+      pageSizeList:[50, 100],
       totalDataNum:0,
       languageSelectList:[],
       brandSelectList:[],
@@ -1454,7 +1454,7 @@ export default {
         $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+60+15;
       }
       // 视窗宽高改变时需要设置默认滚动条的位置
-      if($this.totalDataNum>100){
+      if($this.totalDataNum>50){
         var scrTop = $this.$refs.scrollDom.scrollTop;
         if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
           $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
@@ -1496,7 +1496,7 @@ export default {
             document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
           }
         }
-        if($this.totalDataNum>100){
+        if($this.totalDataNum>50){
           if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
             $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
           }else{

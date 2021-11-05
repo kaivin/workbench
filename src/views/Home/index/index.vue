@@ -237,7 +237,7 @@
                       <p class="rowTwoTwoItemBtn" v-if="tableHidden.tableBtnVisible" v-on:click="tableBtn"><span>{{tableHidden.tableBtnTxt}}</span></p>
                     </div>
                </div>
-               <div class="rowTwoOne" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
+               <div class="rowTwoOne" :class="zusuercount.zusuercountArr.length>0?'':'TongBing'" v-if="permitModules.includes('Module_cnStat')||permitModules.includes('Module_enStat')">
                     <div class="map-Top-chartTit flex-wrap">
                         <h3>{{currentCluesData.departID?currentCluesData.departName:language=='Module_cnStat'?'中文':'英文'}}热门{{language=='Module_cnStat'?'地区':'国家'}}TOP10</h3>
                         <div class="item-search flex-content">
@@ -270,8 +270,9 @@
                     </div>
                </div>
           </div>
-          <div class="rowEight">
-               <div class="rowEightFl">
+          <p class="divider"><span>成交数据</span></p>
+          <div class="rowEight flex-wrap">
+               <div class="rowEightFl flex-content">
                     <div class="map-Top-chartTit flex-wrap">
                         <h3>{{language=='Module_cnStat'?'中文':'英文'}}成交统计</h3>
                         <div class="item-search flex-content">                        
@@ -332,12 +333,12 @@
                          </dl>
                     </div>
                </div>
-               <div class="rowEightFr">
+               <div class="rowEightFr" v-if="language=='Module_cnStat'">
                  <div class="clearfix">
                    <h3 style="float:left">
                       {{language=='Module_cnStat'?'中文':'英文'}}年度成交积分
                       <span style="color:#c1c1c1;font-size:12px">数据更新于{{updatemtime[0]}}年{{updatemtime[1]}}月{{updatemtime[2]}}日 {{updatemtime[3]}}时  | 每月更新</span>
-                      <span style="color:#c1c1c1;font-size:12px;margin-left:20px">({{updateScoremonth}}更新数据)</span>
+                      <span style="color:#c1c1c1;font-size:12px;margin-left:20px">(展示为{{updateScoremonth}}之间的数据)</span>
                     </h3>
                     <p class="unit">(单位：分)</p>
                 </div>                    
@@ -351,7 +352,7 @@
               <div class="rowSeverFl">
                     <div class="itemRowTit">
                       <h3>部门成本</h3>
-                      <span>({{updateScoremonth}}更新数据)</span>
+                      <span>(展示为{{updateScoremonth}}之间的数据)</span>
                       <p>数据更新于{{updatemtime[0]}}年{{updatemtime[1]}}月{{updatemtime[2]}}日 {{updatemtime[3]}}时  | 每月更新</p>
                     </div>
                     <div class="rowSeverFlItem">
@@ -472,8 +473,8 @@
                                     <span class="group">{{item.groupname}}</span>
                                   </p>
                                   <p class="percen flex-wrap">
-                                     <span class="percenFl" :style="'width:'+item.percen+'%'"></span>
-                                     <span class="percenFr flex-content">{{item.number}}<i v-if="item.Growth!=0" :class="item.growthClass?'rising':'falling'">{{item.Growth}}</i></span>
+                                     <span class="percenFl flex-content"><i :style="'width:'+item.percen+'%'"></i></span>
+                                     <span class="percenFr">{{item.number}}<i v-if="item.Growth!=0" :class="item.growthClass?'rising':'falling'">{{item.Growth}}</i></span>
                                   </p>
                              </div>
                         </li>
@@ -542,6 +543,7 @@ export default {
       TodayMonth:'',//默认本月
       updatemtime:[],
       updateScoremonth:'',
+      minAverage:0,
       tableHidden:{
         tableHeight:0,
         tableBtnVisible:true,
@@ -577,7 +579,7 @@ export default {
         zugoupmonthArr:null,//年询盘
         zugroupdayArr:[],//日询盘
         monthtongArr:[],//月询盘
-        zusuercountArr:[],//组员成绩
+        //zusuercountArr:[],//组员成绩
         checkedDeparData:[],
         cluesRegionData:[],//地图
         topTenRegionData:[],//前10
@@ -1258,10 +1260,10 @@ export default {
                     $this.zusuercount.zusuercountGroupnameArr = zusuercountGroupnameArr; 
                     $this.groupClick();
                 }else{
-                  $this.currentCluesData.zusuercountArr=[];
+                  $this.zusuercount.zusuercountArr=[];
                 }
             }else{
-                  $this.currentCluesData.zusuercountArr=[];
+                  $this.zusuercount.zusuercountArr=[];
             }
             // 年度成交积分对比
             if(response.yearscoretong&&response.yearscoretong.length>0){
@@ -1370,7 +1372,7 @@ export default {
                           return value2 - value1;
                       });
                       userscoreNum.forEach(function(item,index){
-                        item.percen = item.number/userscoreNum[0].number*100;
+                        item.percen = item.number/userscoreNum[0].number*100*0.9;
                       });
                       $this.currentCluesData.userscoreNum = userscoreNum;
 
@@ -1469,7 +1471,7 @@ export default {
                       return value2 - value1;
                   });
                   userscoreNum.forEach(function(item,index){
-                    item.percen = item.number/userscoreNum[0].number*100;
+                    item.percen = item.number/userscoreNum[0].number*100*0.9;
                   });
                   $this.currentCluesData.userscoreNum = userscoreNum;
                 }else{
@@ -1776,10 +1778,10 @@ export default {
                     $this.zusuercount.zusuercountGroupnameArr = zusuercountGroupnameArr; 
                     $this.groupClick();
                 }else{
-                  $this.currentCluesData.zusuercountArr=[];
+                  $this.zusuercount.zusuercountArr=[];
                 }
             }else{
-                  $this.currentCluesData.zusuercountArr=[];
+                  $this.zusuercount.zusuercountArr=[];
             }
             // 年度成交积分对比
             //if(response.yearscoretong&&response.yearscoretong.length>0){
@@ -2455,11 +2457,10 @@ export default {
     // 中文地区询盘地图
     drawCnCluesRegionChart(){
       var $this = this;
-      var numList=[800,600,400,200];
-      var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
-      var trendArr=[];
       var maxNum='';
       var minNum='';
+      var minAverage='';
+      $this.minAverage='';
       $this.currentCluesData.cluesRegionData.forEach(function(item,index){
           if(maxNum<item.number){
             maxNum=item.number;
@@ -2468,22 +2469,21 @@ export default {
             minNum=item.number;
           }
       });
-      if(maxNum>numList[0]){
-        trendArr=defaulColor;
+      var average=parseInt(maxNum/4);
+      var averageStr=average.toString();
+      var numRes = [];
+      if(average > 0){
+          for(var i=0;i<averageStr.length;i++){
+              numRes.push(averageStr[i]);
+          }
       }
-      if(maxNum<=numList[numList.length-1]){
-        trendArr=['#b3b3b3'];
+      if(averageStr.length>=2){
+         minAverage=numRes[0]*Math.pow(10,(averageStr.length-1))
+      }else{
+         minAverage=numRes[0]
       }
-      for(var i=0;i<numList.length;i++){
-        if(maxNum>=numList[i+1]&&maxNum<numList[i]){
-          defaulColor.forEach(function(item,index){
-              if(index>i){
-                trendArr.push(item);
-              }
-          });
-        }
-      };
-      
+      var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
+      $this.minAverage=minAverage;
       if($this.currentCluesData.cluesRegionData.length>0){   
         fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
         .then(res => res.json())
@@ -2538,16 +2538,16 @@ export default {
           }).transform({
             type: 'map',
             callback: obj => {
-              if(obj.number <200){
-                  obj.trend="0-200";
-              }else if(obj.number <400 && obj.number>=200){
-                  obj.trend="200-400";
-              }else if(obj.number <600 && obj.number>=400){
-                  obj.trend="400-600";
-              }else if(obj.number <800 && obj.number>=600){
-                  obj.trend="600-800";
+              if(obj.number <minAverage){
+                  obj.trend=averArr[0];
+              }else if(obj.number <minAverage*2 && obj.number>=minAverage){
+                  obj.trend=averArr[1];
+              }else if(obj.number <minAverage*3 && obj.number>=minAverage*2){
+                  obj.trend=averArr[2];
+              }else if(obj.number <minAverage*4 && obj.number>=minAverage*3){
+                  obj.trend=averArr[3];
               }else{
-                  obj.trend="大于800";
+                  obj.trend=averArr[4];
               }
               return obj;
             }
@@ -2564,7 +2564,7 @@ export default {
           });
           userView.polygon()
             .position('longitude*latitude')
-            .color('trend', trendArr)
+            .color('trend', ['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'])
             .tooltip('name*number')
             .style({
               fillOpacity: 1,
@@ -2595,23 +2595,26 @@ export default {
         if($this.pieSourcePlot&&!$this.pieSourcePlot.chart.destroyed){
           $this.pieSourcePlot.changeData($this.currentCluesData.topTenRegionData);
         }else{ 
-          var numList=[];     
-          if($this.language=="Module_cnStat"){
-              numList=[800,600,400,200];
-          }else{
-              numList=[700,500,300,100];
-          }  
+          var numList=[$this.minAverage*4,$this.minAverage*3,$this.minAverage*2,Number($this.minAverage)];  
           var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
+          
           var rel=$this.currentCluesData.topTenRegionData;
           var topTenColor=[];
+          console.log($this.currentCluesData.topTenRegionData,'topTenRegionData');
           $this.currentCluesData.topTenRegionData.forEach(function(item,index){
             for(var i=0;i<numList.length;i++){
-              if(item.number>numList[i]){
+              if(item.number>=numList[i]){
+                console.log(item.number,'item.number');
                 topTenColor.push(defaulColor[i]);
                 break;
               }
             }
+            if(item.number<numList[numList.length-1]){
+              console.log(item.number,'item.number');
+              topTenColor.push(defaulColor[i]);
+            }
           });
+          console.log(topTenColor,'topTenColor');
           topTenColor=topTenColor.reverse();
           const pieSourcePlot = new Bar('topTen', {
             data:$this.currentCluesData.topTenRegionData,
@@ -2621,9 +2624,9 @@ export default {
             barWidthRatio: 0.4,
             height:340,
             legend: false,
-            appendPadding:[0, 30, 0, 30],
+            appendPadding:[0, 50, 0, 30],
             xAxis:false,
-            //color:['#b3b3b3','#a2bfcd','#a3cfce','#bfd3dd','#b0d4d3','#bae29d','#f1e89d','#f9ac6e','#f27042','#df3041'],
+            //color:['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'],
             color:topTenColor,
             label: {
               style: {
@@ -3688,13 +3691,13 @@ export default {
                   $this.ScoreData.allsnumber=response.allsnumber;
                   $this.ScoreData.addallscore=response.allscore;
                   $this.ScoreData.addallsnumber=response.allsnumber;
+                  var updatemtime=[];
+                  var resMtimeOne=response.mtime.split(' ');
+                  updatemtime=resMtimeOne[0].split('-');
+                  updatemtime.push(resMtimeOne[1]);
+                  $this.updatemtime=updatemtime;
+                  $this.updateScoremonth=response.scoremonth;
                   if($this.language=="Module_cnStat"){
-                      var updatemtime=[];
-                      var resMtimeOne=response.mtime.split(' ');
-                      updatemtime=resMtimeOne[0].split('-');
-                      updatemtime.push(resMtimeOne[1]);
-                      $this.updatemtime=updatemtime;
-                      $this.updateScoremonth=response.scoremonth;
                       if(response.yeardepartscore&&response.yeardepartscore.length>0){                   
                           if($this.costAverageData&&!$this.costAverageData.chart.destroyed){
                             $this.costAverageData.chart.destroy();
@@ -3800,13 +3803,13 @@ export default {
                   $this.ScoreData.allsnumber=response.allsnumber;
                   $this.ScoreData.addallscore=response.allscore;
                   $this.ScoreData.addallsnumber=response.allsnumber;
+                  var updatemtime=[];
+                  var resMtimeOne=response.mtime.split(' ');
+                  updatemtime=resMtimeOne[0].split('-');
+                  updatemtime.push(resMtimeOne[1]);
+                  $this.updatemtime=updatemtime;
+                  $this.updateScoremonth=response.scoremonth;
                   if($this.language=="Module_cnStat"){
-                      var updatemtime=[];
-                      var resMtimeOne=response.mtime.split(' ');
-                      updatemtime=resMtimeOne[0].split('-');
-                      updatemtime.push(resMtimeOne[1]);
-                      $this.updatemtime=updatemtime;
-                      $this.updateScoremonth=response.scoremonth;
                       if(response.yeardepartscore&&response.yeardepartscore.length>0){    
                           if($this.costAverageData&&!$this.costAverageData.chart.destroyed){
                             $this.costAverageData.chart.destroy();
@@ -3946,34 +3949,57 @@ export default {
     // 英文地区询盘地图
     drawEnCluesRegionChart(){
       var $this = this;
-      var numList=[700,500,300,100];
-      var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
-      var trendArr=[];
       var maxNum='';
-      var minNum='';
+      var minAverage='';
+      $this.minAverage='';
       $this.currentCluesData.cluesRegionData.forEach(function(item,index){
           if(maxNum<item.number){
             maxNum=item.number;
           }
-          if(minNum>=item.number){
-            minNum=item.number;
-          }
       });
-      if(maxNum>numList[0]){
-        trendArr=defaulColor;
+      var average=parseInt(maxNum/4);
+      var averageStr=average.toString();
+      var numRes = [];
+      if(average > 0){
+          for(var i=0;i<averageStr.length;i++){
+              numRes.push(averageStr[i]);
+          }
       }
-      if(maxNum<=numList[numList.length-1]){
-        trendArr=['#b3b3b3'];
+      if(averageStr.length>=2){
+         minAverage=numRes[0]*Math.pow(10,(averageStr.length-1))
+      }else{
+         minAverage=numRes[0]
       }
-      for(var i=0;i<numList.length;i++){
-        if(maxNum>=numList[i+1]&&maxNum<numList[i]){
-          defaulColor.forEach(function(item,index){
-              if(index>i){
-                trendArr.push(item);
-              }
-          });
-        }
-      };
+      var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
+      $this.minAverage=minAverage;
+      //var numList=[700,500,300,100];
+      //var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
+      //var trendArr=[];
+      //var maxNum='';
+      //var minNum='';
+      //$this.currentCluesData.cluesRegionData.forEach(function(item,index){
+      //    if(maxNum<item.number){
+      //      maxNum=item.number;
+      //    }
+      //    if(minNum>=item.number){
+      //      minNum=item.number;
+      //    }
+      //});
+      //if(maxNum>numList[0]){
+      //  trendArr=defaulColor;
+      //}
+      //if(maxNum<=numList[numList.length-1]){
+      //  trendArr=['#b3b3b3'];
+      //}
+      //for(var i=0;i<numList.length;i++){
+      //  if(maxNum>=numList[i+1]&&maxNum<numList[i]){
+      //    defaulColor.forEach(function(item,index){
+      //        if(index>i){
+      //          trendArr.push(item);
+      //        }
+      //    });
+      //  }
+      //};
       fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/world.geo.json')
       .then(res => res.json())
       .then(mapData => {
@@ -4026,16 +4052,16 @@ export default {
         }).transform({
           type: 'map',
           callback: obj => {
-            if(obj.number <100){
-                obj.trend="0-100";
-            }else if(obj.number <300 && obj.number>=100){
-                obj.trend="100-300";
-            }else if(obj.number <500 && obj.number>=300){
-                obj.trend="300-500";
-            }else if(obj.number <700 && obj.number>=500){
-                obj.trend="500-700";
+            if(obj.number <minAverage){
+                obj.trend=averArr[0];
+            }else if(obj.number <minAverage*2 && obj.number>=minAverage){
+                obj.trend=averArr[1];
+            }else if(obj.number <minAverage*3 && obj.number>=minAverage*2){
+                obj.trend=averArr[2];
+            }else if(obj.number <minAverage*4 && obj.number>=minAverage*3){
+                obj.trend=averArr[3];
             }else{
-                obj.trend="大于700";
+                obj.trend=averArr[4];
             }
             return obj;
           }
@@ -4055,7 +4081,7 @@ export default {
         });
         userView.polygon()
           .position('longitude*latitude')         
-          .color('trend', trendArr)
+          .color('trend', ['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'])
           .tooltip('name*country*number')
           .style({
             fillOpacity: 1,
@@ -4170,7 +4196,7 @@ export default {
         $this.loading = true;
         setTimeout(() => {
           $this.loading = false;
-        }, 600);
+        }, 1000);
         var departID=$this.currentCluesData.departID;
         var departName='';
         var DeparId='';
@@ -4183,7 +4209,11 @@ export default {
         if(departID&&departID.length>0){
             if(departID.length==$this.currentCluesData.DeparData.length){
               $this.isDepart1=false;
-              departName='中文'
+              if($this.language=="Module_cnStat"){
+                  departName='中文'
+              }else{
+                  departName='英文'
+              }
             }else{
               if(departID.length==1){
                 departID.forEach(function(item,index){
@@ -4213,7 +4243,11 @@ export default {
             }
         }else{
             $this.isDepart1=false;
-            departName='中文'
+            if($this.language=="Module_cnStat"){
+                departName='中文'
+            }else{
+                departName='英文'
+            }
         }
         $this.currentCluesData.departName = departName;
         if($this.language=="Module_cnStat"){
@@ -4243,7 +4277,7 @@ export default {
         $this.loading = true;
         setTimeout(() => {
           $this.loading = false;
-        }, 600);
+        }, 1000);
         if($this.language!=language){
           $this.isDepart1 = false;
           $this.language = language;

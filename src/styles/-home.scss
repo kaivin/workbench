@@ -9,7 +9,6 @@
     }
     .news-list{
         padding: 5px 20px 15px;
-        border-radius: 8px;
         overflow: hidden;
         background-color: #fff;
         .news-dl{
@@ -121,7 +120,6 @@
                 .btn-span{
                     padding-top: 19px;
                     padding-bottom: 3px;
-                    border-radius: 0 0 8px 8px;
                     font-weight: bold;
                 }
                 &+.flex-box{
@@ -130,6 +128,30 @@
                     }
                 }
             }
+        }
+    }
+    .divider{
+        clear: both;
+        display: block;
+        padding-top:25px;
+        padding-bottom:25px;
+        line-height:30px;
+        text-align: center;
+        span{
+            font-family:'PingFangSC Semibold';
+            font-size:16px;
+            color:#bfbfbf;
+            display: inline-block;
+            position: relative;
+            &:before,&:after{
+                content:'';
+                position: absolute;
+                top:50%;
+                border-top:2px dashed #bfbfbf;
+                width:148px;
+            }
+            &:before{left:-172px;}
+            &:after{right:-172px;}
         }
     }
     .rowBtn{
@@ -142,7 +164,6 @@
                 padding: 3px 0 3px 0;
                 width: 104px;
                 border: 0;
-                border-radius: 8px 8px 8px 8px;
                 line-height: 37px;
                 color: #fff;
                 background: #aed1ff;
@@ -162,7 +183,6 @@
             float:right;
             .checkbox-panel{
                 border:1px solid #dadfee;
-                border-radius:21px;
                 padding-right: 10px;
                 .el-checkbox{
                     float:left;
@@ -180,6 +200,7 @@
                             height: 10px;
                             border: 1px solid #9ec8ff;
                             vertical-align: top;
+                            border-radius:0px;
                         }
                         &.is-checked{
                             .el-checkbox__inner{
@@ -211,7 +232,7 @@
         padding-bottom:20px;
         .rowOneOne{
             background:#fff;
-            border-radius:8px;
+            
             padding: 16px 30px 25px 30px;
             .rowOneOneTit{
               margin-bottom:17px;
@@ -337,7 +358,6 @@
                 .rowOneOneItemFr{
                     background: #f3f8fe;
                     padding: 15px 20px 15px 20px;
-                    border-radius: 8px;
                     min-width: 240px;
                     float: right;
                     width: 34%;
@@ -388,7 +408,7 @@
         }
         .rowOneTwo{
             background:#fff;
-            border-radius:8px;
+            
             padding:16px 30px;
             margin-left:20px;
             max-width:440px;
@@ -403,7 +423,6 @@
                         width:50px;
                         height:50px;
                         background:#f7e1e1;
-                        border-radius:8px;
                         display:block;
                         text-align:center;
                         line-height:50px;
@@ -474,7 +493,7 @@
         }
         .rowOneThree{
             background:#fff;
-            border-radius:8px;
+            
             padding:16px 30px;
             width:440px;
             margin-left:20px;
@@ -529,12 +548,11 @@
         }
     }
     .rowTwo{
-        padding-bottom:20px;
         .rowTwoOne{
             float: right;
             width:calc(56.8542% - 10px);
             background:#fff;
-            border-radius:8px;
+            
             padding:16px 30px;
             height:500px;
             box-sizing: border-box;
@@ -577,7 +595,6 @@
                     float:right;
                     width: 34%;
                     background:#f3f8fe;
-                    border-radius:8px;
                     padding:16px 20px 16px 0;
                     margin-left:20px;
                     h3{
@@ -585,12 +602,15 @@
                     }
                 }
             }
+            &.TongBing{
+                width:100%;
+            }
         }        
         .rowTwoTwo{
             float: left;
             width:calc(43.1458% - 10px);
             background:#fff;
-            border-radius:8px;
+            
             padding: 20px 30px 30px 30px;
             min-height: 500px;
             box-sizing: border-box;
@@ -771,12 +791,12 @@
         }      
     }
     .rowThree{
-        margin-bottom:20px;
+        padding-bottom:20px;
         .rowThreeOne{
             float: left;
             width:calc(50% - 10px);
             background:#fff;
-            border-radius:8px;
+            
             padding:20px 30px 30px 30px;
             .rowThreeOnelegend{
                 clear: both;
@@ -825,7 +845,7 @@
             float:right;
             width:calc(50% - 10px);
             background:#fff;
-            border-radius:8px;
+            
             padding:20px 30px 30px 30px;
             .rowThreeTwolegend{
                 clear: both;
@@ -879,7 +899,7 @@
     }
     .trend-chart{
         background:#fff;
-        border-radius:8px;
+        
         position:relative;
         padding:20px 20px 20px 15px;
         margin-bottom:20px;
@@ -905,7 +925,7 @@
                         display: block;
                         width: 8px;
                         height: 8px;
-                        background: #8cb1fb;
+                        background: #4a98ff;
                         position: absolute;
                         left: 0px;
                         top: 3px;
@@ -918,7 +938,7 @@
                         display: block;
                         width: 8px;
                         height: 8px;
-                        background: #4a98ff;
+                        background: #8cb1fb;
                         position: absolute;
                         left: 0px;
                         top: 3px;
@@ -959,7 +979,7 @@
         .rowFourOne{
             width:36.7213%;
             background:#fff;
-            border-radius:8px;
+            
             padding:20px 30px 30px 30px;
             .rowFourOneUl{
                 padding-top:20px;
@@ -1038,15 +1058,24 @@
                             margin-top:13px;
                             .percenFl{
                                 clear:both;
-                                display:inline-block;
-                                height:16px;
-                                border-radius:8px;
-                                width:100%;
-                                background:-webkit-linear-gradient(left,#e4ebea, #c0c5c5);
-                                background:-o-linear-gradient(right,#e4ebea, #c0c5c5);
-                                background:-moz-linear-gradient(right,#e4ebea, #c0c5c5);
-                                background:linear-gradient(to right,#e4ebea, #c0c5c5);
-                                vertical-align:top;
+                                height: 16px;
+                                border-radius: 8px;
+                                background: #f0f1f2;
+                                vertical-align: top;
+                                position: relative;
+                                overflow: hidden;
+                                i{
+                                    clear: both;
+                                    border-radius: 8px;
+                                    background:-webkit-linear-gradient(left,#e4ebea, #c0c5c5);
+                                    background:-o-linear-gradient(right,#e4ebea, #c0c5c5);
+                                    background:-moz-linear-gradient(right,#e4ebea, #c0c5c5);
+                                    background:linear-gradient(to right,#e4ebea, #c0c5c5);
+                                    position: absolute;
+                                    left: 0px;
+                                    top: 0px;
+                                    bottom: 0px;
+                                }
                             }
                             .percenFr{
                                 font-size:18px;
@@ -1054,6 +1083,7 @@
                                 line-height:16px;
                                 padding-left: 10px;
                                 white-space: nowrap;
+                                width: 100px;
                                 i{
                                     display:inline-block;
                                     border-radius:3px;
@@ -1109,10 +1139,12 @@
                             }
                             .percen{
                                 .percenFl{
-                                    background:-webkit-linear-gradient(left,#fdc236, #fb9a0c);
-                                    background:-o-linear-gradient(right,#fdc236, #fb9a0c);
-                                    background:-moz-linear-gradient(right,#fdc236, #fb9a0c);
-                                    background:linear-gradient(to right,#fdc236, #fb9a0c);
+                                    i{
+                                        background:-webkit-linear-gradient(left,#fdc236, #fb9a0c);
+                                        background:-o-linear-gradient(right,#fdc236, #fb9a0c);
+                                        background:-moz-linear-gradient(right,#fdc236, #fb9a0c);
+                                        background:linear-gradient(to right,#fdc236, #fb9a0c);
+                                    }
                                 }
                             }
                         }
@@ -1136,10 +1168,12 @@
                             }
                             .percen{
                                 .percenFl{
-                                    background:-webkit-linear-gradient(left,#cfd8da, #a1c2cb);
-                                    background:-o-linear-gradient(right,#cfd8da, #a1c2cb);
-                                    background:-moz-linear-gradient(right,#cfd8da, #a1c2cb);
-                                    background:linear-gradient(to right,#cfd8da, #a1c2cb);
+                                    i{
+                                        background:-webkit-linear-gradient(left,#cfd8da, #a1c2cb);
+                                        background:-o-linear-gradient(right,#cfd8da, #a1c2cb);
+                                        background:-moz-linear-gradient(right,#cfd8da, #a1c2cb);
+                                        background:linear-gradient(to right,#cfd8da, #a1c2cb);
+                                    }
                                 }
                             }
                         }
@@ -1163,10 +1197,12 @@
                             }
                             .percen{
                                 .percenFl{
-                                    background:-webkit-linear-gradient(left,#e3c997, #d1b685);
-                                    background:-o-linear-gradient(right,#e3c997, #d1b685);
-                                    background:-moz-linear-gradient(right,#e3c997, #d1b685);
-                                    background:linear-gradient(to right,#e3c997, #d1b685);
+                                    i{
+                                        background:-webkit-linear-gradient(left,#e3c997, #d1b685);
+                                        background:-o-linear-gradient(right,#e3c997, #d1b685);
+                                        background:-moz-linear-gradient(right,#e3c997, #d1b685);
+                                        background:linear-gradient(to right,#e3c997, #d1b685);
+                                    }
                                 }
                             }
                         }
@@ -1176,7 +1212,7 @@
         }
         .rowFourTwo{
            background:#fff;
-           border-radius:8px;
+           
            padding:20px 30px 30px 30px;
            margin-left:20px;
            .rowFourTwoUl{
@@ -1438,7 +1474,7 @@
     }
     .rowFive{
         background:#fff;
-        border-radius:8px;
+        
         padding:20px 30px 30px 30px;
         margin-bottom:20px;
         .rowFiveFl{
@@ -1537,7 +1573,7 @@
                         display: block;
                         margin-bottom:40px;
                         box-shadow:0px 0px 10px rgba(0,0,0,0.1);
-                        border-radius:8px;
+                        
                         background:#fff;
                         padding: 20px 20px;
                         span{
@@ -1619,7 +1655,7 @@
         display: block;
         overflow: hidden;
         background:#fff;
-        border-radius:8px;
+        
         padding:20px 30px 30px 30px;
         margin-bottom:20px;
         .rowSixFl{
@@ -1786,7 +1822,7 @@
         display: block;
         overflow: hidden;
         background:#fff;
-        border-radius:8px;
+        
         padding:20px 30px 30px 30px;
         box-sizing: border-box;
         -webkit-box-sizing: border-box;
@@ -1858,10 +1894,8 @@
     .rowEight{
         padding-bottom:20px;
         .rowEightFl{
-            float: left;
-            width:calc(50% - 10px);
             background:#fff;
-            border-radius:8px;
+            
             padding:20px 30px 28px 30px;
             box-sizing: border-box;
             -webkit-box-sizing: border-box;
@@ -2058,13 +2092,14 @@
             float:right;
             width:calc(50% - 10px);
             background:#fff;
-            border-radius:8px;
+            
             padding:20px 30px 40px 30px;
             display: block;
             position: relative;
             box-sizing: border-box;
             -webkit-box-sizing: border-box;
             height: 473px;
+            margin-left: 20px;
             .unit{font-size:12px; color:#c1c1c1; line-height:30px;float: right;}
             .totalNum{
                 position: absolute;
