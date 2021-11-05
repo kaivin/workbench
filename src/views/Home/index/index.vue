@@ -544,6 +544,7 @@ export default {
       updatemtime:[],
       updateScoremonth:'',
       minAverage:0,
+      sumColor:[],
       tableHidden:{
         tableHeight:0,
         tableBtnVisible:true,
@@ -2428,7 +2429,13 @@ export default {
       $this.$store.dispatch("api/cnCluesRegionStatDataAction", resultData).then((response) => {
         if (response) {
           if (response.status) {
-            $this.currentCluesData.cluesRegionData = response.data;
+            var cluesRegionData = response.data;            
+            cluesRegionData.sort(function(a, b) {
+                var value1 = a.number;
+                var value2 = b.number;
+                return value2 - value1;
+            });
+            $this.currentCluesData.cluesRegionData = cluesRegionData;
             var topTenRegionData = [];
             response.data.forEach(function(item,index){
               if(index<10){
@@ -2460,6 +2467,7 @@ export default {
       var minNum='';
       var minAverage='';
       $this.minAverage='';
+      $this.sumColor=[];
       $this.currentCluesData.cluesRegionData.forEach(function(item,index){
           if(maxNum<item.number){
             maxNum=item.number;
@@ -2484,31 +2492,33 @@ export default {
       var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
       $this.minAverage=minAverage;
       //筛选颜色
-      //var resArr=$this.currentCluesData.cluesRegionData;
-      //var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1];  
-      //var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
-      //var sumColor=[];
-      //var maxOne=0;
-      //var maxTwo=0;
-      //var maxThree=0;
-      //for(var j=0;j<numList.length;j++){
-      //  for(var i=0;i<rel.length;i++){
-      //      if(rel[i].number>numList[0]&&maxOne==0){
-      //        maxOne+=1;
-      //        sumColor.push(defaulColor[j]);
-      //        break;
-      //      }
-      //      if(rel[i].number>=numList[j+1]&&rel[i].number<numList[j]){
-      //        sumColor.push(defaulColor[j]);
-      //        break;
-      //      }
-      //      if(rel[i].number<numList[numList.length-1]&&maxThree==0){
-      //        maxThree+=1;
-      //        sumColor.push(defaulColor[j]);
-      //        break;
-      //      }
-      //  }
-      //}
+      var resArr=$this.currentCluesData.cluesRegionData;
+      var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1];  
+      var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
+      var sumColor=[];
+      for(var j=0;j<numList.length;j++){
+        for(var i=0;i<resArr.length;i++){
+            if(numList[j+1]&&numList[j]){
+              if(resArr[i].number>numList[0]&&j==0){
+                if(sumColor.indexOf(defaulColor[j])==-1){
+                  sumColor.push(defaulColor[j]);
+                }
+              }
+              if(resArr[i].number>numList[j+1]&&resArr[i].number<=numList[j]){
+                if(sumColor.indexOf(defaulColor[j+1])==-1){
+                  sumColor.push(defaulColor[j+1]);
+                }
+              }
+            }
+            if(resArr[i].number<=numList[numList.length-1]&&j==(numList.length-1)){
+              if(sumColor.indexOf(defaulColor[defaulColor.length-1])==-1){
+                 sumColor.push(defaulColor[defaulColor.length-1]);
+              }
+            }
+        }
+      }
+      console.log(sumColor,'sumColor');
+      $this.sumColor=sumColor;
       if($this.currentCluesData.cluesRegionData.length>0){   
         fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
         .then(res => res.json())
@@ -2563,18 +2573,18 @@ export default {
           }).transform({
             type: 'map',
             callback: obj => {
-              if(obj.number <minAverage){
-                  obj.trend=averArr[0];
-              }else if(obj.number <minAverage*2 && obj.number>=minAverage){
-                  obj.trend=averArr[1];
-              }else if(obj.number <minAverage*3 && obj.number>=minAverage*2){
-                  obj.trend=averArr[2];
-              }else if(obj.number <minAverage*4 && obj.number>=minAverage*3){
-                  obj.trend=averArr[3];
-              }else{
-                  obj.trend=averArr[4];
-              }
-              return obj;
+                if(obj.number <minAverage){
+                    obj.trend=averArr[0];
+                }else if(obj.number <=minAverage*2 && obj.number>minAverage){
+                    obj.trend=averArr[1];
+                }else if(obj.number <=minAverage*3 && obj.number>minAverage*2){
+                    obj.trend=averArr[2];
+                }else if(obj.number <=minAverage*4 && obj.number>minAverage*3){
+                    obj.trend=averArr[3];
+                }else{
+                    obj.trend=averArr[4];
+                }
+                return obj;
             }
           });
           const userView = regionMapChart.createView();
@@ -2588,8 +2598,8 @@ export default {
             }
           });
           userView.polygon()
-            .position('longitude*latitude')
-            .color('trend', ['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'])
+            .position('longitude*latitude')     
+            .color('trend', $this.sumColor)
             .tooltip('name*number')
             .style({
               fillOpacity: 1,
@@ -2621,25 +2631,35 @@ export default {
           $this.pieSourcePlot.changeData($this.currentCluesData.topTenRegionData);
         }else{ 
           var numList=[$this.minAverage*4,$this.minAverage*3,$this.minAverage*2,Number($this.minAverage)];  
-          var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
-          
+          var defaulColor=$this.sumColor;          
           var rel=$this.currentCluesData.topTenRegionData;
           var topTenColor=[];
           console.log($this.currentCluesData.topTenRegionData,'topTenRegionData');
           $this.currentCluesData.topTenRegionData.forEach(function(item,index){
-            for(var i=0;i<numList.length;i++){
-              if(item.number>=numList[i]){
-                console.log(item.number,'item.number');
-                topTenColor.push(defaulColor[i]);
-                break;
+            if(defaulColor.length>=5){
+              for(var i=0;i<numList.length;i++){
+                if(item.number>=numList[i]){
+                  topTenColor.push(defaulColor[i]);
+                  break;
+                }
+                if(item.number<numList[numList.length-1]){
+                  topTenColor.push(defaulColor[numList.length-1]);
+                  break;
+                }
+              }
+            }else{
+              for(var i=0;i<numList.length;i++){
+                if(item.number>numList[i+1]){
+                  topTenColor.push(defaulColor[i]);
+                  break;
+                }
+                if(item.number<numList[numList.length-1]){
+                  topTenColor.push(defaulColor[numList.length-1]);
+                  break;
+                }
               }
             }
-            if(item.number<numList[numList.length-1]){
-              console.log(item.number,'item.number');
-              topTenColor.push(defaulColor[i]);
-            }
           });
-          console.log(topTenColor,'topTenColor');
           topTenColor=topTenColor.reverse();
           const pieSourcePlot = new Bar('topTen', {
             data:$this.currentCluesData.topTenRegionData,
@@ -3976,6 +3996,7 @@ export default {
       var $this = this;
       var maxNum='';
       var minAverage='';
+      $this.sumColor=[];
       $this.minAverage='';
       $this.currentCluesData.cluesRegionData.forEach(function(item,index){
           if(maxNum<item.number){
@@ -3997,34 +4018,34 @@ export default {
       }
       var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
       $this.minAverage=minAverage;
-      //var numList=[700,500,300,100];
-      //var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
-      //var trendArr=[];
-      //var maxNum='';
-      //var minNum='';
-      //$this.currentCluesData.cluesRegionData.forEach(function(item,index){
-      //    if(maxNum<item.number){
-      //      maxNum=item.number;
-      //    }
-      //    if(minNum>=item.number){
-      //      minNum=item.number;
-      //    }
-      //});
-      //if(maxNum>numList[0]){
-      //  trendArr=defaulColor;
-      //}
-      //if(maxNum<=numList[numList.length-1]){
-      //  trendArr=['#b3b3b3'];
-      //}
-      //for(var i=0;i<numList.length;i++){
-      //  if(maxNum>=numList[i+1]&&maxNum<numList[i]){
-      //    defaulColor.forEach(function(item,index){
-      //        if(index>i){
-      //          trendArr.push(item);
-      //        }
-      //    });
-      //  }
-      //};
+      //筛选颜色
+      var resArr=$this.currentCluesData.cluesRegionData;
+      var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1];  
+      var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
+      var sumColor=[];
+      for(var j=0;j<numList.length;j++){
+        for(var i=0;i<resArr.length;i++){
+            if(numList[j+1]&&numList[j]){
+              if(resArr[i].number>numList[0]&&j==0){
+                if(sumColor.indexOf(defaulColor[j])==-1){
+                  sumColor.push(defaulColor[j]);
+                }
+              }
+              if(resArr[i].number>numList[j+1]&&resArr[i].number<=numList[j]){
+                if(sumColor.indexOf(defaulColor[j+1])==-1){
+                  sumColor.push(defaulColor[j+1]);
+                }
+              }
+            }
+            if(resArr[i].number<=numList[numList.length-1]&&j==(numList.length-1)){
+              if(sumColor.indexOf(defaulColor[defaulColor.length-1])==-1){
+                 sumColor.push(defaulColor[defaulColor.length-1]);
+              }
+            }
+        }
+      }
+      console.log(sumColor,'sumColor');
+      $this.sumColor=sumColor;
       fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/world.geo.json')
       .then(res => res.json())
       .then(mapData => {
@@ -4079,11 +4100,11 @@ export default {
           callback: obj => {
             if(obj.number <minAverage){
                 obj.trend=averArr[0];
-            }else if(obj.number <minAverage*2 && obj.number>=minAverage){
+            }else if(obj.number <=minAverage*2 && obj.number>minAverage){
                 obj.trend=averArr[1];
-            }else if(obj.number <minAverage*3 && obj.number>=minAverage*2){
+            }else if(obj.number <=minAverage*3 && obj.number>minAverage*2){
                 obj.trend=averArr[2];
-            }else if(obj.number <minAverage*4 && obj.number>=minAverage*3){
+            }else if(obj.number <=minAverage*4 && obj.number>minAverage*3){
                 obj.trend=averArr[3];
             }else{
                 obj.trend=averArr[4];
@@ -4106,7 +4127,7 @@ export default {
         });
         userView.polygon()
           .position('longitude*latitude')         
-          .color('trend', ['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'])
+          .color('trend', $this.sumColor)
           .tooltip('name*country*number')
           .style({
             fillOpacity: 1,
