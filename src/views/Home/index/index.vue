@@ -2472,25 +2472,32 @@ export default {
             maxNum=item.number;
           }
       });
-      var average=parseInt(maxNum/4);
-      var averageStr=average.toString();
-      var numRes = [];
-      if(average > 0){
-          for(var i=0;i<averageStr.length;i++){
-              numRes.push(averageStr[i]);
-          }
-      }
-      if(averageStr.length>=2){
-         minAverage=numRes[0]*Math.pow(10,(averageStr.length-1))
+      if(maxNum>0){
+        var average=parseInt(maxNum/4);
+        var averageStr=average.toString();
+        var numRes = [];
+        if(average > 0){
+            for(var i=0;i<averageStr.length;i++){
+                numRes.push(averageStr[i]);
+            }
+        }
+        if(averageStr.length>=2){
+          minAverage=numRes[0]*Math.pow(10,(averageStr.length-1))
+        }else{
+          minAverage=numRes[0]
+        }
+        var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
+        var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
+        var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1]; 
       }else{
-         minAverage=numRes[0]
+        minAverage=10;
+        var averArr=['0-'+minAverage];
+        var defaulColor=['#b3b3b3'];
+        var numList=[minAverage*1]; 
       }
-      var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
       $this.minAverage=minAverage;
       //筛选颜色
-      var resArr=$this.currentCluesData.cluesRegionData;
-      var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1];  
-      var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
+      var resArr=$this.currentCluesData.cluesRegionData; 
       var sumColor=[];
       for(var j=0;j<numList.length;j++){
         for(var i=0;i<resArr.length;i++){
@@ -3999,25 +4006,32 @@ export default {
             maxNum=item.number;
           }
       });
-      var average=parseInt(maxNum/4);
-      var averageStr=average.toString();
-      var numRes = [];
-      if(average > 0){
-          for(var i=0;i<averageStr.length;i++){
-              numRes.push(averageStr[i]);
-          }
-      }
-      if(averageStr.length>=2){
-         minAverage=numRes[0]*Math.pow(10,(averageStr.length-1))
+      if(maxNum>0){
+        var average=parseInt(maxNum/4);
+        var averageStr=average.toString();
+        var numRes = [];
+        if(average > 0){
+            for(var i=0;i<averageStr.length;i++){
+                numRes.push(averageStr[i]);
+            }
+        }
+        if(averageStr.length>=2){
+          minAverage=numRes[0]*Math.pow(10,(averageStr.length-1))
+        }else{
+          minAverage=numRes[0]
+        }
+        var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
+        var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
+        var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1]; 
       }else{
-         minAverage=numRes[0]
+        minAverage=10;
+        var averArr=['0-'+minAverage];
+        var defaulColor=['#b3b3b3'];
+        var numList=[minAverage*1]; 
       }
-      var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
       $this.minAverage=minAverage;
       //筛选颜色
       var resArr=$this.currentCluesData.cluesRegionData;
-      var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1];  
-      var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
       var sumColor=[];
       for(var j=0;j<numList.length;j++){
         for(var i=0;i<resArr.length;i++){
