@@ -543,7 +543,7 @@ export default {
       TodayMonth:'',//默认本月
       updatemtime:[],
       updateScoremonth:'',
-      minAverage:0,
+      numList:[],
       sumColor:[],
       tableHidden:{
         tableHeight:0,
@@ -2465,7 +2465,7 @@ export default {
       var $this = this;
       var maxNum='';
       var minAverage='';
-      $this.minAverage='';
+      $this.numList='';
       $this.sumColor=[];
       $this.currentCluesData.cluesRegionData.forEach(function(item,index){
           if(maxNum<item.number){
@@ -2495,7 +2495,7 @@ export default {
         var defaulColor=['#b3b3b3'];
         var numList=[minAverage*1]; 
       }
-      $this.minAverage=minAverage;
+      $this.numList=numList;
       //筛选颜色
       var resArr=$this.currentCluesData.cluesRegionData; 
       var sumColor=[];
@@ -2633,7 +2633,7 @@ export default {
         if($this.pieSourcePlot&&!$this.pieSourcePlot.chart.destroyed){
           $this.pieSourcePlot.changeData($this.currentCluesData.topTenRegionData);
         }else{ 
-          var numList=[$this.minAverage*4,$this.minAverage*3,$this.minAverage*2,Number($this.minAverage)];  
+          var numList=$this.numList;  
           var defaulColor=$this.sumColor;          
           var rel=$this.currentCluesData.topTenRegionData;
           var topTenColor=[];
@@ -2656,7 +2656,7 @@ export default {
                   topTenColor.push(defaulColor[i]);
                   break;
                 }
-                if(item.number<numList[numList.length-1]){
+                if(item.number<=numList[numList.length-1]){
                   topTenColor.push(defaulColor[numList.length-1]);
                   break;
                 }
@@ -3999,7 +3999,7 @@ export default {
       var $this = this;
       var maxNum='';
       var minAverage='';
-      $this.minAverage='';
+      $this.numList='';
       $this.sumColor=[];
       $this.currentCluesData.cluesRegionData.forEach(function(item,index){
           if(maxNum<item.number){
@@ -4029,7 +4029,7 @@ export default {
         var defaulColor=['#b3b3b3'];
         var numList=[minAverage*1]; 
       }
-      $this.minAverage=minAverage;
+      $this.numList=numList;
       //筛选颜色
       var resArr=$this.currentCluesData.cluesRegionData;
       var sumColor=[];
