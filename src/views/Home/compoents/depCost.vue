@@ -120,7 +120,8 @@ export default {
             data:$this.currentCluesData.costAverage,
             xField: 'departname',
             yField: 'avgallmoney',
-            padding:'auto',
+           
+            appendPadding: [15, 0, 0, 0],
             height:347,
             color: '#81a8f1',
             label: {
