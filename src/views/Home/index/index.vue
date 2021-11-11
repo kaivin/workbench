@@ -83,7 +83,6 @@
           </div>
           
           <el-row :gutter="20" id="module-view">
-             <draggable v-model="moduleAry"   forceFallback="true"  animation="1000" @end="onEnd">
                <template v-for="moduleitem in moduleList">
                 <el-col 
                 v-if="moduleitem.isShow"
@@ -116,9 +115,7 @@
                   ></component>
                 </el-col>
                </template>
-               
-            </draggable>
-            
+             <!-- <draggable v-model="moduleAry"   forceFallback="true"  animation="1000" @end="onEnd"></draggable> -->
           </el-row>
         </div>
       </div>
@@ -255,7 +252,6 @@ export default {
         { name: "英文", label: "Module_enStat", isOn: false },
       ],
       language: null,
-
       radialBarPlot: null, //中文地区目标
       worldRegionMapChart: null, //世界地图
       regionMapChart: null, //中国地图
@@ -270,7 +266,6 @@ export default {
       yearscoretongData: null, //年度成交积分对比
       yeardepartscoreData: null, //中文年度成交积分
       costAverageData: null, //成本均价排行
-
       loading: false,
       clickID: "",
       isDepart1: false,
@@ -580,7 +575,6 @@ export default {
         $this.statDataApi();
       }
     },
-
     // 跳转到文章详情
     jumpArticle(row) {
       var $this = this;
@@ -1069,7 +1063,6 @@ export default {
                     lastdayitemData.name = item.name;
                     lastdayitemData.title = "昨日数量";
                     lastdayitemData.number = item.lastdaynumber;
-
                     todayitemData.name = item.name;
                     todayitemData.title = "当日数量";
                     todayitemData.number = item.todaynumber;
@@ -1095,7 +1088,6 @@ export default {
                     lastdayitemData.name = item.name;
                     lastdayitemData.title = "上月同期";
                     lastdayitemData.number = item.lastmonthnumber;
-
                     todayitemData.name = item.name;
                     todayitemData.title = "本月同期";
                     todayitemData.number = item.monthnumber;
@@ -1671,7 +1663,6 @@ export default {
                       .replace("-", "\n");
                     lastdayitemData.title = "昨日数量";
                     lastdayitemData.number = item.lastdaynumber;
-
                     todayitemData.name = item.name
                       .replace("-", "\n")
                       .replace("-", "\n");
@@ -1701,7 +1692,6 @@ export default {
                       .replace("-", "\n");
                     lastdayitemData.title = "上月同期";
                     lastdayitemData.number = item.lastmonthnumber;
-
                     todayitemData.name = item.name
                       .replace("-", "\n")
                       .replace("-", "\n");
@@ -2028,7 +2018,6 @@ export default {
           }
         });
     },
-
     // 获取中文地区统计数据
     getCnCluesRegionStatData() {
       var $this = this;
@@ -2049,7 +2038,6 @@ export default {
         resultData.dept_id = [];
       }
       console.log(this.$refs)
-
       $this.$refs["hotAreaDeom"][0].clearChat();
       $this.$store
         .dispatch("api/cnCluesRegionStatDataAction", resultData)
@@ -2075,7 +2063,6 @@ export default {
                 return value2 - value1;
               });
               $this.currentCluesData.topTenRegionData = topTenRegionData;
-
               $this.$refs["hotAreaDeom"][0].drawCnCluesRegionChart();
               $this.$refs["hotAreaDeom"][0].drawTopTen();
               // $this.drawCnCluesRegionChart();
@@ -2090,7 +2077,6 @@ export default {
           }
         });
     },
-
     //判断浮点数
     isFloat(num) {
       if (!isNaN(num) && num % 1 !== 0) {
@@ -2099,7 +2085,6 @@ export default {
         return false;
       }
     },
-
     // 首页中文成交统计数据
     getCnDepartScore() {
       var $this = this;
@@ -2275,9 +2260,7 @@ export default {
                     departmentCostObj.personmoney = item.personmoney;
                     departmentCostObj.paymoney = item.paymoney;
                     departmentCostObj.personnumber = item.personnumber;
-
                     departmentCost.push(departmentCostObj);
-
                     costAverageObj.departname = item.departname.replace(
                       "电商",
                       ""
@@ -2428,9 +2411,7 @@ export default {
                   departmentCostObj.personmoney = item.personmoney;
                   departmentCostObj.paymoney = item.paymoney;
                   departmentCostObj.personnumber = item.personnumber;
-
                   departmentCost.push(departmentCostObj);
-
                   costAverageObj.departname = item.departname.replace(
                     "电商",
                     ""
@@ -2501,7 +2482,6 @@ export default {
       } else {
         resultData.dept_id = [];
       }
-
       $this.$refs["hotAreaDeom"][0].clearChat();
       $this.$store
         .dispatch("api/enCluesRegionStatDataAction", resultData)
@@ -2545,7 +2525,6 @@ export default {
     sortNumber(a, b) {
       return b.number - a.number;
     },
-
     // 中文地区日期选择改变事件
     dateRangeChangeHandler(val) {
       var $this = this;
@@ -2563,9 +2542,7 @@ export default {
       const start = new Date();
       start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
       date.setTime(date.getTime());
-
       //var monthDay = start.getFullYear()+"-"+(start.getMonth()+1>9?start.getMonth()+1:'0'+(start.getMonth()+1))+"-"+(start.getDate()+1>9?start.getDate():'0'+(start.getDate()));
-
       var lastYear = "";
       var lastmonth = "";
       var lastday = "";
@@ -2633,7 +2610,6 @@ export default {
         scale < 1 ? 1 : "inherit"
       };">${text}</div>`;
     },
-
     //点击部门
     handleDepart() {
       var $this = this;
@@ -2743,7 +2719,6 @@ export default {
             $this.currentCluesData.departName = "英文";
           }
           $this.currentCluesData.DeparData = [];
-
           var userlanguage = Cookies.get("language");
           userlanguage = JSON.parse(userlanguage);
           userlanguage.language = $this.language;

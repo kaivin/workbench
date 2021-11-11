@@ -236,6 +236,7 @@
                                           <div class="table-button">
                                               <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Webmsg_edit')&&currentStatus!=='SNS_1'&&currentStatus!=='SNS_2'">修改</el-button>
                                               <el-button size="mini" @click="promotePendingEdit(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Webmsg_haswaitdealsub')&&(currentStatus==='Untreated'||currentStatus==='Pending')">推广待处理</el-button>
+                                              <el-button size="mini" @click="revokeEdit(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Webmsg_haswaitdealback')&&(currentStatus==='SNS_1')">撤回</el-button>
                                               <el-button size="mini" @click="promoteProcessedEdit(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Webmsg_hasdealsub')&&currentStatus==='SNS_1'">推广已处理</el-button>
                                               <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Webmsg_delete')&&(currentStatus==='Untreated'||currentStatus==='Pending')" type="info" plain>删除</el-button>
                                           </div>
@@ -1072,6 +1073,29 @@ export default {
       var $this = this;
       $this.loadingFun();
       $this.$store.dispatch('webmsg/webMsgPromotePendingAction', {id:row.id}).then(response=>{
+        if(response){
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.initPage();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    // 撤回推广待处理
+    revokeEdit(row,index){
+      var $this = this;
+      $this.loadingFun();
+      $this.$store.dispatch('webmsg/webMsgRevokeAction', {id:row.id}).then(response=>{
         if(response){
           if(response.status){
             $this.$message({

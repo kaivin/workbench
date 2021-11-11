@@ -13,8 +13,8 @@
     <div class="trendlegend">
       <span class="legendItem1">总询盘</span>
       <span v-if="isDepart1" class="legendItem2">搜索询盘</span>
-      <span class="legendItem3">平均值</span>
-      <span class="legendItem4">目标值</span>
+      <span class="legendItem3">目标值</span>
+      <span class="legendItem4">平均值</span>
     </div>
   </div>
 </template>

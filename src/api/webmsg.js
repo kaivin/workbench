@@ -63,6 +63,14 @@ export function webMsgPromotePendingList(data) {
     data
   });
 }
+// 留言系统推广待处理撤回
+export function webMsgRevoke(data) {
+  return request({
+    url: "/hxindex/Webmsg/haswaitdealback",
+    method: "POST",
+    data
+  });
+}
 // 留言系统推广已处理留言信息数据
 export function webMsgPromoteProcessedList(data) {
   return request({

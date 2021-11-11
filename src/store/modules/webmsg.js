@@ -30,6 +30,7 @@ import {
   webMsgWhiteIpAdd,
   webMsgWhiteIpEdit,
   webMsgWhiteIpDelete,
+  webMsgRevoke,
  } from '@/api/webmsg'
 
 const state = {
@@ -248,6 +249,16 @@ const actions = {
   webMsgPromotePendingAction({ commit, state },data) {
     return new Promise((resolve, reject) => {
       webMsgPromotePending(data).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        })
+    })
+  },
+  // 推广待处理撤回
+  webMsgRevokeAction({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+      webMsgRevoke(data).then(response => {
             resolve(response)
         }).catch(error => {
             reject(error)
