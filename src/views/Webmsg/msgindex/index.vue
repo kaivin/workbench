@@ -12,7 +12,7 @@
                     <li v-if="menuButtonPermit.includes('Webmsg_testmsg')" v-bind:class="currentStatus === 'Test'?'active':''" v-on:click="jumpLink('Test')"><span>测试数据</span><b>({{defaultData.testNum}})</b></li>
                     <li v-if="menuButtonPermit.includes('Webmsg_pushwaitdeal')" v-bind:class="currentStatus === 'SNS_1'?'active':''" v-on:click="jumpLink('SNS_1')" style="margin-top:32px;"><span>推广待处理</span><b>({{defaultData.sns1Num}})</b></li>
                     <li v-if="menuButtonPermit.includes('Webmsg_pushhasdeal')" v-bind:class="currentStatus === 'SNS_2'?'active':''" v-on:click="jumpLink('SNS_2')"><span>推广已处理</span><b>({{defaultData.sns2Num}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Webmsg_filetermsg')" v-bind:class="currentStatus === 'Filter'?'active':''" v-on:click="jumpLink('Filter')" style="margin-cctop:32px;"><span>已过滤垃圾信息</span><b>({{defaultData.filterNum}})</b></li>
+                    <li v-if="menuButtonPermit.includes('Webmsg_filetermsg')" v-bind:class="currentStatus === 'Filter'?'active':''" v-on:click="jumpLink('Filter')" style="margin-top:32px;"><span>已过滤垃圾信息</span><b>({{defaultData.filterNum}})</b></li>
                     <li v-if="menuButtonPermit.includes('Webmsg_deletemsg')" v-bind:class="currentStatus === 'Recycle'?'active':''" v-on:click="jumpLink('Recycle')" style="margin-top:32px;"><span>回收站</span><b>({{defaultData.recycleNum}})</b></li>
                 </ul>
                 <div class="tips">
