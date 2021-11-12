@@ -63,14 +63,14 @@
                                     prop="depart"
                                     align="left"
                                     label="部门"
-                                    width="160"
+                                    width="100"
                                     ></el-table-column>
 
                                 <el-table-column
                                     prop="departgroup"
                                     align="left"
                                     label="小组"
-                                    width="240"
+                                    width="160"
                                     >
                                 </el-table-column>
                                  <el-table-column
@@ -97,37 +97,37 @@
                                 <el-table-column
                                     prop="waitcount"
                                     label="待接单工单数"
-                                    min-width="150"
+                                    min-width="120"
                                     >
                                 </el-table-column>
                                 <el-table-column
                                     prop="timeingcount"
                                     label="进行中工单数"
-                                    min-width="150"
+                                    min-width="120"
                                     >
                                 </el-table-column>
                                 <el-table-column
                                     prop="waitcheck"
                                     label="待审核工单数"
-                                    min-width="150"
+                                    min-width="120"
                                     >
                                 </el-table-column>
                                 <el-table-column
                                     prop="finishcount"
                                     label="已完成工单数"
-                                    min-width="150"
+                                    min-width="120"
                                     >
                                 </el-table-column>
                                 <el-table-column
                                     prop="outimecount"
                                     label="已逾期工单数"
-                                    min-width="150"
+                                    min-width="120"
                                     >
                                 </el-table-column>
                                 <el-table-column
                                     prop="allcount"
                                     label="总工单数"
-                                    min-width="150"
+                                    min-width="120"
                                     >
                                 </el-table-column>
                                 <el-table-column

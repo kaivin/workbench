@@ -198,7 +198,7 @@ export default {
       getSummaries(param) {
         const { columns, data } = param;
         const sums = [];
-        console.log(param)
+       
         columns.forEach((column, index) => {
           if (index === 0) {
             sums[index] = '合计';
