@@ -870,12 +870,11 @@ export default {
             $this.defaultData.personNum=response.mypublishcount;
             $this.defaultData.focusonNum=response.myfocuscount;
             $this.statusList[1].departNum=response.waitcount;
-            $this.statusList[2].departNum=response.hasfinishcount;
+            $this.statusList[2].departNum=response.workincount;
             $this.statusList[3].departNum=response.hasouttimecount;
-            $this.statusList[4].departNum=response.rejectedcount;              
-            $this.statusList[5].departNum=response.waitcheckcount;
+            $this.statusList[4].departNum=response.rejectedcount; 
+            $this.statusList[5].departNum=response.hasfinishcount;                         
             $this.statusList[8].departNum=response.hasouttimecount;
-
             var infoData = {};
             infoData.totalCount = response.allcount;
             infoData.doingCount = response.workincount;

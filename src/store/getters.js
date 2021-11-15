@@ -75,8 +75,6 @@
     addEnScore:state => state.app.addEnScore,
     isHomeCache: state => state.api.isHomeCache,
     isNohomeCache: state => state.api.isNohomeCache,
-    
-    
 }
 export default getters
   

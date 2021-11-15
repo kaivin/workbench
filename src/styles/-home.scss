@@ -2084,7 +2084,81 @@
     }
   
 }
-
+.homeLeft{
+    width: 180px;
+    border-right:1px solid #efefef;
+    border-left:1px solid #efefef;
+    background:#fafafa;
+    .el-scrollbar {
+        height: 100%;
+        .el-scrollbar__wrap{
+            overflow-x: hidden;
+        }
+        .el-scrollbar__bar{
+            display: none;
+        }
+    }
+    .homeLeftMenu{
+        width: 100%;
+        overflow: hidden;
+        padding:20px;
+        .homeSubmenu{
+            clear: both;
+            display: block;
+            padding-bottom:10px;
+            .homeLeftTit{
+                clear: both;
+                display: block;
+                text-align: left;
+                padding-bottom:9px;
+                line-height:24px;
+                font-size:13px;
+                span{
+                    float: left;
+                    display: inline-block;
+                    font-size:13px;
+                    color:#666666;
+                }
+                i{
+                    float: right;
+                    font-size: 14px;
+                    right: 15px;
+                    color: #666;
+                    font-weight: bold;
+                    margin-top: 5px;
+                }
+            }
+            ul{
+                li{
+                    clear: both;
+                    display: block;
+                    padding-top:9px;
+                    padding-bottom:9px;
+                    line-height:20px;
+                    padding-left:15px;
+                    span{
+                        clear: both;
+                        display: inline-block;
+                        font-size:13px;
+                        color:#666666;
+                        cursor: pointer;
+                        &:hover{
+                            color:#2e88ff;
+                        }
+                        &.router-link-active{
+                            color:#2e88ff;
+                        }
+                    }
+                    &.active{
+                        span{
+                            color:#2e88ff;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 @media (max-width:1600px){
     .home-index{
         
