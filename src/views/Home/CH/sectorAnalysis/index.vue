@@ -5,7 +5,7 @@
                 <home-left />
             </el-scrollbar>
         </div>
-        <div class="homeMain">CH-部门分析
+        <div class="homeMain flex-content">CH-部门分析
         </div>
     </div>
 </template>

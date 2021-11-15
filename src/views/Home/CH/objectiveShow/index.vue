@@ -6,7 +6,7 @@
                 <home-left />
             </el-scrollbar>
         </div>
-        <div class="homeMain">CH-目标展示
+        <div class="homeMain flex-content">CH-目标展示
         </div>
     </div>
 </template>
