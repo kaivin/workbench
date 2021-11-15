@@ -178,3 +178,36 @@ export function addCommentInfo(data) {
     data,
   });
 }
+// 我的任务
+export function getmypublish(data) {
+  return request({
+    url: "/hxindex/Works/mypublish",
+    method: "POST",
+    data,
+  });
+}
+// 添加关注工单
+export function getworkAddfocus(data) {
+  return request({
+    url: "/hxindex/Works/workfocus",
+    method: "POST",
+    data,
+  });
+}
+
+// 取消关注工单
+export function getCancelworkfocus(data) {
+  return request({
+    url: "/hxindex/Works/workfocuscancel",
+    method: "POST",
+    data,
+  });
+}
+// 我的关注工单
+export function getmyfocus(data) {
+  return request({
+    url: "/hxindex/Works/myfocus",
+    method: "POST",
+    data,
+  });
+}

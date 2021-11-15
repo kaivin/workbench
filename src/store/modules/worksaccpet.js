@@ -19,6 +19,11 @@
     workOrderpercenter,
     workOrderconfirmstart,
     workOrderEditscore,
+    getpublishdepart,
+    allaccpetwork,
+    getworkAddfocus,
+    getCancelworkfocus,
+    getmyfocuswork,
 } from '@/api/worksaccpet'
 
 const state = {}
@@ -84,7 +89,7 @@ const actions = {
             })
         })
     },
-    // 已完成工单数据
+    // 已完成工单数据-
     doneWorkOrderDataAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             doneWorkOrderData(data).then(response => {
@@ -218,6 +223,56 @@ const actions = {
     workOrderEditscoreAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             workOrderEditscore(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //有发布权限的部门列表
+    getpublishdepartAction({ commit, state }) {
+        return new Promise((resolve, reject) => {
+            getpublishdepart().then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //全部任务(所有已接受的工单列表)
+    allaccpetworkAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            allaccpetwork(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //添加关注工单
+    getworkAddfocusAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getworkAddfocus(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //取消关注工单
+    getCancelworkfocusAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getCancelworkfocus(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //我的关注工单
+    getmyfocusworkAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getmyfocuswork(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

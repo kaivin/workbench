@@ -40,7 +40,9 @@ export default {
       }else if(path === "/Sales/index"){
         this.$router.push({path,query:{Status:'personcount'}});
       }else if(path === "/WorkOrder/orderList"){
-        this.$router.push({path,query:{Status:'person'}});
+        this.$router.push({path,query:{Status:'alltasks'}});
+      }else if(path === "/Works/worklist"){
+        this.$router.push({path,query:{Status:'alltasks'}});
       }else{
         this.$router.push(path);
       }

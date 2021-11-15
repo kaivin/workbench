@@ -32,9 +32,9 @@
                                 <template slot-scope="scope">
                                   <el-tag
                                     class="tag-font"
-                                    :style="{background:scope.row.namecolor,borderColor:scope.row.namecolor,color:'#ffffff'}"
+                                    :style="{background:'none',borderColor:'none',color:scope.row.namecolor}"
                                     v-if="scope.row.namecolor"
-                                    disable-transitions>{{scope.row.name}}</el-tag>
+                                    disable-transitions><i v-if="scope.row.clBool" class="svg-i"><svg-icon icon-class="workOrder_bell" /></i>{{scope.row.name}}<i class='workBg' :style="{background:scope.row.namecolor,borderColor:scope.row.namecolor}"></i></el-tag>
                                     <span v-else>{{scope.row.name}}</span>
                                 </template>
                               </el-table-column>
@@ -343,6 +343,13 @@ export default {
         if(response){
           if(response.status){
             if(response.data.length>0){
+              response.data.forEach(function(item,index){
+                  if(item.name=='紧急'||item.name=='加急'){
+                    item.clBool=true;
+                  }else{
+                    item.clBool=false;
+                  }
+              });
               $this.tableData = response.data;
             }else{
               $this.tableData = [];

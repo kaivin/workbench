@@ -12,7 +12,7 @@ export function receiveWorkOrderData() {
       url: "/hxindex/Worksaccpet/waitwork",
       method: "POST",
     });
-  }
+}
   // 待分配工单数据
 export function allotWorkOrderData() {
     return request({
@@ -151,6 +151,45 @@ export function workOrderconfirmstart(data) {
 export function workOrderEditscore(data) {
   return request({
     url: "/hxindex/Worksaccpet/editscore",
+    method: "POST",
+    data,
+  });
+}
+//有发布权限的部门列表
+export function getpublishdepart() {
+  return request({
+    url: "/hxindex/Worksaccpet/getpublishdepart",
+    method: "POST",
+  });
+}
+// 全部任务(所有已接受的工单列表)
+export function allaccpetwork(data) {
+  return request({
+    url: "/hxindex/Worksaccpet/allaccpetwork",
+    method: "POST",
+    data,
+  });
+}
+// 添加关注工单
+export function getworkAddfocus(data) {
+  return request({
+    url: "/hxindex/Worksaccpet/workfocus",
+    method: "POST",
+    data,
+  });
+}
+// 取消关注工单
+export function getCancelworkfocus(data) {
+  return request({
+    url: "/hxindex/Worksaccpet/workfocuscancel",
+    method: "POST",
+    data,
+  });
+}
+// 我的关注工单
+export function getmyfocuswork(data) {
+  return request({
+    url: "/hxindex/Worksaccpet/myfocuswork",
     method: "POST",
     data,
   });

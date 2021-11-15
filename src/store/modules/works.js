@@ -22,6 +22,10 @@
     commentInfoList,
     deleteCurrentComment,
     addCommentInfo,
+    getworkAddfocus,
+    getCancelworkfocus,
+    getmyfocus,
+    getmypublish,
 } from '@/api/works'
 
 const state = {}
@@ -259,6 +263,46 @@ const actions = {
             })
         })
     },
+    //添加关注工单
+    getworkAddfocusAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getworkAddfocus(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //取消关注工单
+    getCancelworkfocusAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getCancelworkfocus(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //我的关注工单
+    getmyfocusAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getmyfocus(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //我的任务
+    getmypublishAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getmypublish(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
 }
 
 export default {

@@ -1,18 +1,5 @@
 ﻿<template>
     <div class="page-root flex-box no-padding work-order-index" ref="boxPane">
-        <div class="sub-router">
-            <el-scrollbar wrap-class="scrollbar-wrapper">
-                <ul class="sub-router-list">
-                    <li v-if="menuButtonPermit.includes('Worksaccpet_waitwork')" v-bind:class="currentStatus === 'receive'?'active':''" v-on:click="jumpLink('receive')"><span>待接收</span><b>({{defaultData.receiveNum}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Worksaccpet_waitdealwork')" v-bind:class="currentStatus === 'allot'?'active':''" v-on:click="jumpLink('allot')"><span>待分配</span><b>({{defaultData.allotNum}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Worksaccpet_allwork')" v-bind:class="currentStatus === 'alloted'?'active':''" v-on:click="jumpLink('alloted')"><span>所有已分配</span><b>({{defaultData.allotedNum}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Worksaccpet_personwork')" v-bind:class="currentStatus === 'person'?'active':''" v-on:click="jumpLink('person')" style="margin-top:32px;"><span>个人已分配</span><b>({{defaultData.personNum}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Worksaccpet_makeingwork')" v-bind:class="currentStatus === 'doing'?'active':''" v-on:click="jumpLink('doing')"><span>进行中</span><b>({{defaultData.doingNum}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Worksaccpet_hasfinish')" v-bind:class="currentStatus === 'done'?'active':''" v-on:click="jumpLink('done')"><span>已完成</span><b>({{defaultData.doneNum}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Worksaccpet_workcount')" v-bind:class="currentStatus === 'stat'?'active':''" v-on:click="jumpLink('stat')" style="margin-top:32px;"><span>数据统计</span></li>
-                </ul>
-            </el-scrollbar>
-        </div>
         <div class="flex-content relative">
             <div class="abs-panel" ref="mainPane">
                 <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
@@ -20,75 +7,100 @@
                     <p class="breadcrumb" ref="breadcrumbPane">
                       <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
                       <template v-for="item in breadcrumbList">
-                        <router-link class="breadcrumb-link" :to="item.router+'?Status=person'" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+                        <router-link class="breadcrumb-link" :to="item.router+'?Status=alltasks'" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
                         <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
                       </template>
                         <span class="breadcrumb-link"><b>-</b>{{breadcrumbName}}</span>
                     </p>
                     <el-card class="box-card scroll-card" shadow="hover">
-                        <div slot="header" v-if="currentStatus=='person'||currentStatus=='alloted'||currentStatus=='doing'||currentStatus=='done'||currentStatus=='stat'">
+                        <div slot="header">
                             <div class="card-header" ref="headerPane">
-                                <div class="search-wrap" style="padding-bottom:10px;">
-                                    <div class="item-search" style="width:150px;" v-if="currentStatus!='stat'">
-                                        <el-select v-model="searchData.timetype" size="small" clearable placeholder="请选择时间类型" 
-                                        :class="searchData.timetype!=''?'el-xzstate':''">
-                                            <el-option
-                                                v-for="item in timeTypeList"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                    </div>
-                                    <div class="item-search" style="width: 240px;">
-                                      <el-date-picker
-                                          v-model="searchData.date"
-                                          class="date-range"
-                                          type="daterange"
-                                          align="right"
-                                          value-format = "yyyy-MM-dd"
-                                          unlink-panels
-                                          range-separator="至"
-                                          start-placeholder="开始日期"
-                                          end-placeholder="结束日期"
-                                          size="small"
-                                          :picker-options="pickerRangeOptions"
-                                          :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
-                                      </el-date-picker>
-                                    </div>
-                                    <div class="item-search" style="width: 110px;" v-if="currentStatus === 'alloted'">
-                                      <el-select v-model="searchData.workstatus" size="small" clearable placeholder="工单状态" 
-                                      :class="searchData.workstatus!=''?'el-xzstate':''">
-                                          <el-option
-                                              v-for="item in statusList"
-                                              :key="item.value"
-                                              :label="item.label"
-                                              :value="item.value">
-                                          </el-option>
-                                      </el-select>
-                                    </div>
-                                    <div class="item-search" style="width: 120px;" v-if="currentStatus === 'alloted'">
-                                      <el-select v-model="searchData.dealuserid" size="small" filterable clearable placeholder="负责人"
-                                      :class="searchData.dealuserid!=''?'el-xzstate':''">
-                                          <el-option
-                                              v-for="item in userList"
-                                              :key="item.value"
-                                              :label="item.label"
-                                              :value="item.value">
-                                          </el-option>
-                                      </el-select>
-                                    </div>
-                                    <div class="item-search">
-                                        <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
-                                    </div>
-                                    <div class="item-search">
-                                      <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+                                <dl class="search-orderOne">
+                                    <dd v-if="menuButtonPermit.includes('Worksaccpet_allaccpetwork')" v-on:click="jumpLink('alltasks')" v-bind:class="currentStatus === 'alltasks'?'active':''"><span>全部任务<b>[{{defaultData.accpetcountNum}}]</b></span></dd>
+                                    <dd v-if="menuButtonPermit.includes('Worksaccpet_personwork')" v-on:click="jumpLink('person')" v-bind:class="currentStatus === 'person'?'active':''"><span>我的任务<b>[{{defaultData.personNum}}]</b></span></dd>
+                                    <dd v-if="menuButtonPermit.includes('Worksaccpet_myfocuswork')" v-on:click="jumpLink('focuson')" v-bind:class="currentStatus === 'focuson'?'active':''"><span>我的关注<b>[{{defaultData.focusonNum}}]</b></span></dd>                                  
+                                    <dd v-if="menuButtonPermit.includes('Worksaccpet_waitwork')" v-on:click="jumpLink('receive')" v-bind:class="currentStatus === 'receive'?'active':''"><span>待接收<b>({{defaultData.receiveNum}})</b></span></dd>
+                                    <dt class="search-orderOneFr" v-if="menuButtonPermit.includes('Worksaccpet_workcount')" v-bind:class="currentStatus === 'stat'?'active':''" v-on:click="jumpLink('stat')">
+                                    <i class="svg-i"><svg-icon icon-class="workOrder_data" /></i>
+                                    <span>数据统计</span>
+                                    </dt>
+                                </dl>
+                                <div class="search-orderTwo flex-wrap" v-if="currentStatus=='alltasks'||currentStatus=='focuson'||currentStatus=='person'">
+                                     <span>工单状态</span>
+                                     <ul class="flex-content">
+                                        <li v-on:click="hanldeworkstatus(item.id)" :class="item.departBool?'active':''" v-if="item.orderStatusBool" v-for="(item,index) in workstatusArr" :key="index"><span>{{item.name}}<b v-if='item.name!="全部"'>[{{item.departNum}}]</b></span></li>
+                                     </ul>
+                                </div>
+                                <div class="search-orderTwo flex-wrap" v-if="currentStatus=='alltasks'||currentStatus=='focuson'||currentStatus=='person'">
+                                     <span>部门分类</span>
+                                     <ul class="flex-content">
+                                        <li v-on:click="hanldeshdepart(item.id)" :class="item.departBool?'active':''" v-for="(item,index) in shdepart" :key="index"><span>{{item.name}}</span></li>
+                                     </ul>
+                                </div>
+                                <div class="search-orderThree flex-wrap" v-if="currentStatus=='alltasks'||currentStatus=='focuson'||currentStatus=='person'||currentStatus=='stat'">
+                                    <ul class="search-orderThree-Tag" v-if="currentStatus!='stat'">
+                                        <li v-for="item in tagList" :key="item.value" :style="{color:item.namecolor}" v-on:click="hanldetag(item.value)" :class="item.departBool?'active':''">
+                                            <i v-if="item.clBool" class="svg-i"><svg-icon icon-class="workOrder_bell" /></i>
+                                            {{item.label}}
+                                            <i class="workBg" :style="{background:item.namecolor,borderColor:item.namecolor}"></i>
+                                        </li>
+                                    </ul>
+                                    <div class="search-wrap flex-content">
+                                        <div class="item-search" style="width:150px;"  v-if="currentStatus!='stat'">
+                                            <el-select @change="hanldeCustom()" v-model="searchtagListCustom" size="small" clearable placeholder="自定义标签">
+                                                <el-option
+                                                    v-for="item in tagListCustom"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                        <div class="item-search" style="width:150px;" v-if="currentStatus!='stat'">
+                                            <el-select @change="hanldetimeType()" v-model="searchData.timetype" size="small" clearable placeholder="请选择时间类型">
+                                                <el-option
+                                                    v-for="item in timeTypeList"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                        <div class="item-search" style="width: 240px;">
+                                          <el-date-picker
+                                              v-model="searchData.date"
+                                              class="date-range"
+                                              type="daterange"
+                                              align="right"
+                                              value-format = "yyyy-MM-dd"
+                                              unlink-panels
+                                              range-separator="至"
+                                              start-placeholder="开始日期"
+                                              end-placeholder="结束日期"
+                                               @change="hanldetime()"
+                                              size="small"
+                                              :picker-options="pickerRangeOptions">
+                                          </el-date-picker>
+                                        </div>
+                                        <div class="item-search" style="width: 120px;" v-if="currentStatus=='alltasks'&&currentId!=7">
+                                          <el-select @change="hanldedealuser()" v-model="searchData.dealuserid" size="small" filterable clearable placeholder="负责人"
+                                          :class="searchData.dealuserid!=''?'el-xzstate':''">
+                                              <el-option
+                                                  v-for="item in userList"
+                                                  :key="item.value"
+                                                  :label="item.label"
+                                                  :value="item.value">
+                                              </el-option>
+                                          </el-select>
+                                        </div>
+                                        <div class="item-search"><span class="resetBtn" v-on:click="resetData()">全部重置</span></div>
                                     </div>
                                 </div>
-                                <div class="clues-info flex-wrap" v-if="currentStatus=='alloted'||currentStatus=='stat'">
+                                <div class="clues-info flex-wrap" v-if="currentStatus=='alltasks'||currentStatus=='stat'">
                                     <div class="clues-infoFl flex-content">
                                           <p>
-                                            <span v-for="(item,index) in groupScore" :key='index'><strong>{{item.name}}</strong> 本月接收总分<strong  class="color1">{{item.monthaccpetscore}}</strong>，本月获得总分<strong  class="color2">{{item.monthfinishscore}}</strong>，上月获得总分<strong  class="color2">{{item.lastmonthaccpetscore}}</strong>，上月获得总分<strong  class="color2">{{item.lastmonthfinishscore}}</strong>
+                                            <span v-for="(item,index) in groupScore" :key='index'>
+                                            <strong>{{item.name}}</strong>本月接收总分<strong  class="color1">{{item.monthaccpetscore}}</strong>，本月获得总分<strong  class="color2">{{item.monthfinishscore}}</strong>，上月接收总分<strong  class="color1">{{item.lastmonthaccpetscore}}</strong>，上月获得总分<strong  class="color2">{{item.lastmonthfinishscore}}</strong>
                                             </span>
                                           </p>
                                     </div>
@@ -189,16 +201,20 @@
                                           prop="username"
                                           align="center"
                                           label="发布人"
+                                          v-if="labelColumn[0].istrue"
                                           width="100">
                                       </el-table-column>
                                       <el-table-column
                                           prop="title"
                                           label="工单标题"
                                           min-width="200"
+                                          v-if="labelColumn[1].istrue"
                                           >
                                           <template slot-scope="scope">
-                                            <div class="order-title" v-on:click="jumpArticle(scope.row.id)">
-                                              <span>{{scope.row.title}}</span>
+                                            <div class="order-title">
+                                              <span v-on:click="jumpArticle(scope.row.id)">{{scope.row.title}}</span>
+                                              <i v-if="scope.row.focus==1&&menuButtonPermit.includes('Worksaccpet_workfocuscancel')" v-on:click="handleCancelFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></i>
+                                              <i v-if="scope.row.focus==0&&menuButtonPermit.includes('Worksaccpet_workfocus')" v-on:click="handleAddFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></i>
                                             </div>
                                           </template>
                                       </el-table-column>
@@ -207,10 +223,11 @@
                                           align="left"
                                           label="标签"
                                           min-width="160"
-                                          >
+                                          v-if="labelColumn[2].istrue"
+                                          >                                          
                                           <template slot-scope="scope">
                                               <div class="table-tag">
-                                              <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="(item,index) in scope.row.tagList" v-bind:key="index">{{item.tag}}</el-tag>
+                                              <el-tag v-for="(item,index) in scope.row.tagList" :style="{background:'none',borderColor:'none',color:item.color}" size="small" v-bind:key="index"><i v-if="item.clBool" class="svg-i"><svg-icon icon-class="workOrder_bell" /></i>{{item.tag}}<i class="workBg" :style="{background:item.color,borderColor:item.color}"></i></el-tag>
                                               </div>
                                           </template>
                                       </el-table-column>
@@ -219,6 +236,7 @@
                                           sortable
                                           label="开始时间"
                                           min-width="110"
+                                          v-if="labelColumn[5].istrue"
                                           >
                                           <template slot-scope="scope">
                                               <p class="timenewline">{{scope.row.starttimeDate}}<span>{{scope.row.starttimeTime}}</span></p>
@@ -229,6 +247,7 @@
                                           sortable
                                           label="截止时间"
                                           min-width="110"
+                                          v-if="labelColumn[6].istrue"
                                           >
                                           <template slot-scope="scope">
                                               <p class="timenewline">{{scope.row.endtimeDate}}<span>{{scope.row.endtimeTime}}</span></p>
@@ -238,31 +257,17 @@
                                           prop="status"
                                           label="工单状态"
                                           width="90"
+                                          v-if="labelColumn[7].istrue"
                                           >
                                           <template slot-scope="scope">
-                                            <div class="table-tag">
-                                              <span class="color1" v-if="!scope.row.startdotime&&(currentStatus == 'person'||currentStatus == 'alloted')">待进行</span>  
+                                            <div class="table-tag starts">
                                               <span v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus==3">
                                                   <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
-                                                    <el-button>已完成(<span class="color6">已逾期</span>)</el-button>
+                                                    <el-button><i class="svg-i"><svg-icon icon-class="work_done" /></i>已完成(<span class="color6"><i class="svg-i"><svg-icon icon-class="work_overdue" /></i>已逾期</span>)</el-button>
                                                   </el-tooltip>
                                               </span>   
-                                              <span class="color6" v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus!=3">已逾期</span>
-                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'receive'">待接单</span>
-                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'allot'">待分配</span>
-                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==0&&scope.row.startdotime">进行中</span>
-                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==1">待审核</span>
-                                              <span v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==2">
-                                                  <el-tooltip class="item color3" effect="dark" :content="scope.row.rejectinfo" placement="right">
-                                                    <el-button>已驳回</el-button>
-                                                  </el-tooltip>
-                                              </span>
-                                              <span class="color4" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus==0">待评价</span>
-                                              <span v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus!=0">
-                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
-                                                    <el-button>已完成</el-button>
-                                                  </el-tooltip>
-                                              </span>
+                                              <span class="color6" v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus!=3"><i class="svg-i"><svg-icon icon-class="work_overdue" /></i>已逾期</span>
+                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'receive'"><i class="svg-i"><svg-icon icon-class="work_accept" /></i>待接单</span>
                                             </div>
                                           </template>
                                       </el-table-column>
@@ -270,12 +275,14 @@
                                           prop="orgscore"
                                           label="总积分"
                                           width="80"
+                                          v-if="labelColumn[8].istrue"
                                           >
                                       </el-table-column>
                                       <el-table-column
                                           prop="receivescore"
                                           label="已认领积分"
                                           width="100"
+                                          v-if="labelColumn[9].istrue"
                                           >
                                           <template slot-scope="scope">
                                               <span>{{scope.row.receivescore}}</span>
@@ -284,15 +291,16 @@
                                       <el-table-column
                                           prop="ownScore"
                                           label="认领积分"
+                                          v-if="labelColumn[10].istrue"
                                           width="90">
-                                          <template #default="scope">
+                                          <template slot-scope="scope">
                                               <div class="table-input">
                                                   <el-input size="small" v-model="scope.row.ownScore"></el-input>
                                               </div>
                                           </template>
-                                      </el-table-column>
+                                      </el-table-column> 
                                       <el-table-column
-                                          v-if="menuButtonPermit.includes('Worksaccpet_confirmwork')&&(currentStatus=='receive'||currentStatus=='allot'||currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')"
+                                          v-if="menuButtonPermit.includes('Worksaccpet_confirmwork')&&currentStatus=='receive'"
                                           :width="operationsWidth"
                                           align="center"
                                           fixed="right"
@@ -304,33 +312,37 @@
                                             </div>
                                           </template>
                                       </el-table-column>
-                                  </el-table>
+                                  </el-table>                                  
                                   <el-table
                                       ref="simpleTable"
-                                      key="c"
+                                      :key="certinfoKey"
                                       :data="tableData"
                                       tooltip-effect="dark"
                                       stripe
                                       class="SiteTable"
                                       style="width: 100%"
                                       :style="'min-height:'+minHeight+'px;'"
-                                      row-key="id"
-                                      v-if="currentStatus=='allot'"
+                                      v-if="currentStatus=='alltasks'||currentStatus=='person'||currentStatus=='focuson'"
+                                      @filter-change="filterHandler"
                                       >
                                       <el-table-column
                                           prop="username"
                                           align="center"
                                           label="发布人"
+                                          v-if="labelColumn[0].istrue"
                                           width="100">
                                       </el-table-column>
                                       <el-table-column
                                           prop="title"
                                           label="工单标题"
                                           min-width="200"
+                                          v-if="labelColumn[1].istrue"
                                           >
                                           <template slot-scope="scope">
-                                            <div class="order-title" v-on:click="jumpArticle(scope.row.id)">
-                                              <span>{{scope.row.title}}</span>
+                                            <div class="order-title">
+                                              <span v-on:click="jumpArticle(scope.row.id)">{{scope.row.title}}</span>
+                                              <i v-if="(currentStatus=='focuson'||scope.row.focus==1)&&menuButtonPermit.includes('Worksaccpet_workfocuscancel')" v-on:click="handleCancelFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></i>
+                                              <i v-if="scope.row.focus==0&&menuButtonPermit.includes('Worksaccpet_workfocus')" v-on:click="handleAddFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></i>
                                             </div>
                                           </template>
                                       </el-table-column>
@@ -339,164 +351,23 @@
                                           align="left"
                                           label="标签"
                                           min-width="160"
+                                          v-if="labelColumn[2].istrue"
                                           >
                                           <template slot-scope="scope">
                                               <div class="table-tag">
-                                              <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="(item,index) in scope.row.tagList" v-bind:key="index">{{item.tag}}</el-tag>
-                                              </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="starttime"
-                                          sortable
-                                          label="开始时间"
-                                          min-width="110"
-                                          >
-                                          <template slot-scope="scope">
-                                              <p class="timenewline">{{scope.row.starttimeDate}}<span>{{scope.row.starttimeTime}}</span></p>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="endtime"
-                                          sortable
-                                          label="截止时间"
-                                          min-width="110"
-                                          >
-                                          <template slot-scope="scope">
-                                              <p class="timenewline">{{scope.row.endtimeDate}}<span>{{scope.row.endtimeTime}}</span></p>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="status"
-                                          label="工单状态"
-                                          width="90"
-                                          >
-                                          <template slot-scope="scope">
-                                            <div class="table-tag">
-                                              <span class="color1" v-if="!scope.row.startdotime&&(currentStatus == 'person'||currentStatus == 'alloted')">待进行</span>  
-                                              <span v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus==3">
-                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
-                                                    <el-button>已完成(<span class="color6">已逾期</span>)</el-button>
-                                                  </el-tooltip>
-                                              </span>   
-                                              <span class="color6" v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus!=3">已逾期</span>
-                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'receive'">待接单</span>
-                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'allot'">待分配</span>
-                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==0&&scope.row.startdotime">进行中</span>
-                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==1">待审核</span>
-                                              <span v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==2">
-                                                  <el-tooltip class="item color3" effect="dark" :content="scope.row.rejectinfo" placement="right">
-                                                    <el-button>已驳回</el-button>
-                                                  </el-tooltip>
-                                              </span>
-                                              <span class="color4" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus==0">待评价</span>
-                                              <span v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus!=0">
-                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
-                                                    <el-button>已完成</el-button>
-                                                  </el-tooltip>
-                                              </span>
-                                            </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="orgscore"
-                                          label="总积分"
-                                          width="80"
-                                          >
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="receivescore"
-                                          label="已认领积分"
-                                          width="100"
-                                          >
-                                          <template slot-scope="scope">
-                                              <span>{{currentStatus=='receive'?scope.row.receivescore:scope.row.score}}</span>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="ownScore"
-                                          label="负责人"
-                                          width="120">
-                                          <template slot-scope="scope">
-                                              <div class="table-input">
-                                                  <el-select v-model="scope.row.dealuserid" size="small" :disabled="currentStatus!='allot'" v-if="currentStatus=='allot'" clearable multiple collapse-tags placeholder="负责人">
-                                                      <el-option
-                                                          v-for="item in userList"
-                                                          :key="item.value"
-                                                          :label="item.label"
-                                                          :value="item.value">
-                                                      </el-option>
-                                                  </el-select>
-                                                  <span v-if="currentStatus!='allot'">{{scope.row.dealusername}}</span>
-                                              </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          v-if="(menuButtonPermit.includes('Worksaccpet_confirmdeal')||menuButtonPermit.includes('Worksaccpet_backwork'))&&(currentStatus=='receive'||currentStatus=='allot'||currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')"
-                                          :width="operationsWidth"
-                                          align="center"
-                                          fixed="right"
-                                          prop="operations"
-                                          label="操作">
-                                          <template slot-scope="scope">
-                                            <div class="table-button">
-                                                <el-button size="mini" @click="cancelTableRow(scope.row,scope.$index)" v-if="currentStatus!='receive'&&(scope.row.workstatus!=1&&scope.row.workstatus!=3)&&menuButtonPermit.includes('Worksaccpet_backwork')">工单退回</el-button>
-                                                <el-button size="mini" @click="confirmAllotTableRow(scope.row,scope.$index)" v-if="currentStatus=='allot'&&menuButtonPermit.includes('Worksaccpet_confirmdeal')">确认分配</el-button>
-                                            </div>
-                                          </template>
-                                      </el-table-column>
-                                  </el-table>
-                                  <el-table
-                                      ref="simpleTable"
-                                      key="d"
-                                      :data="tableData"
-                                      tooltip-effect="dark"
-                                      stripe
-                                      class="SiteTable"
-                                      style="width: 100%"
-                                      :style="'min-height:'+minHeight+'px;'"
-                                      row-key="id"
-                                      v-if="currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing'||currentStatus=='done'"
-                                      >
-                                      <el-table-column
-                                          prop="username"
-                                          align="center"
-                                          label="发布人"
-                                          width="100">
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="title"
-                                          label="工单标题"
-                                          min-width="200"
-                                          >
-                                          <template slot-scope="scope">
-                                            <div class="order-title" v-on:click="jumpArticle(scope.row.id)">
-                                              <span>{{scope.row.title}}</span>
-                                            </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="tags"
-                                          align="left"
-                                          label="标签"
-                                          min-width="160"
-                                          >
-                                          <template slot-scope="scope">
-                                              <div class="table-tag">
-                                              <el-tag :style="{background:item.color,borderColor:item.color,color:'#ffffff'}" size="small" v-for="(item,index) in scope.row.tagList" v-bind:key="index">{{item.tag}}</el-tag>
+                                              <el-tag v-for="(item,index) in scope.row.tagList" :style="{background:'none',borderColor:'none',color:item.color}" size="small" v-bind:key="index"><i v-if="item.clBool" class="svg-i"><svg-icon icon-class="workOrder_bell" /></i>{{item.tag}}<i class="workBg" :style="{background:item.color,borderColor:item.color}"></i></el-tag>
                                               </div>
                                           </template>
                                       </el-table-column>
                                       <el-table-column
                                           prop="percenter"
                                           label="进度"
-                                          width="90"
-                                          v-if="currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing'"
-                                          >
+                                          width="180"
+                                          v-if="(currentId==6||currentId==5)&&labelColumn[3].istrue">
                                           <template slot-scope="scope">
                                               <div class="table-input">
-                                                  <el-input size="small" v-if="currentStatus=='person'" @change="changePercenter(scope.row.id,scope.row.percenter)" v-model="scope.row.percenter"></el-input>
-                                                  <span v-else>{{scope.row.percenter}}%</span>
+                                                  <el-input v-if="currentStatus=='person'&&currentId==5" size="small" @change="changePercenter(scope.row.id,scope.row.percenter)" v-model="scope.row.percenter"></el-input>
+                                                  <p v-else><span><i :style="'width:'+scope.row.percenter+'%'"></i></span>{{scope.row.percenter}}%</p>
                                               </div>
                                           </template>
                                       </el-table-column>
@@ -505,6 +376,7 @@
                                           sortable
                                           label="开工时间"
                                           min-width="110"
+                                          v-if="labelColumn[4].istrue"
                                           >
                                           <template slot-scope="scope">
                                               <p class="timenewline">{{scope.row.startdotimeDate}}<span>{{scope.row.startdotimeTime}}</span></p>
@@ -515,6 +387,7 @@
                                           sortable
                                           label="开始时间"
                                           min-width="110"
+                                          v-if="labelColumn[5].istrue"
                                           >
                                           <template slot-scope="scope">
                                               <p class="timenewline">{{scope.row.starttimeDate}}<span>{{scope.row.starttimeTime}}</span></p>
@@ -525,6 +398,7 @@
                                           sortable
                                           label="截止时间"
                                           min-width="110"
+                                          v-if="labelColumn[6].istrue"
                                           >
                                           <template slot-scope="scope">
                                               <p class="timenewline">{{scope.row.endtimeDate}}<span>{{scope.row.endtimeTime}}</span></p>
@@ -534,29 +408,29 @@
                                           prop="status"
                                           label="工单状态"
                                           width="90"
+                                          v-if="labelColumn[7].istrue"
                                           >
                                           <template slot-scope="scope">
-                                            <div class="table-tag">
-                                              <span class="color1" v-if="!scope.row.startdotime&&(currentStatus == 'person'||currentStatus == 'alloted')">待进行</span>  
+                                            <div class="table-tag starts">
+                                              <span class="color1" v-if="!scope.row.startdotime&&(currentStatus == 'alltasks'||currentStatus == 'person'||currentStatus == 'focuson')&&currentId==6">待进行</span>  
                                               <span v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus==3">
                                                   <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
-                                                    <el-button>已完成(<span class="color6">已逾期</span>)</el-button>
+                                                    <el-button><i class="svg-i"><svg-icon icon-class="work_done" /></i>已完成(<span class="color6"><i class="svg-i"><svg-icon icon-class="work_overdue" /></i>已逾期</span>)</el-button>
                                                   </el-tooltip>
                                               </span>   
-                                              <span class="color6" v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus!=3">已逾期</span>
-                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'receive'">待接单</span>
-                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'allot'">待分配</span>
-                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==0&&scope.row.startdotime">进行中</span>
-                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==1">待审核</span>
-                                              <span v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==2">
+                                              <span class="color6" v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus!=3"><i class="svg-i"><svg-icon icon-class="work_overdue" /></i>已逾期</span>
+                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'alltasks'&&currentId==7"><i class="svg-i"><svg-icon icon-class="work_allot" /></i>待分配</span>                                              
+                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==0&&scope.row.startdotime"><i class="svg-i"><svg-icon icon-class="work_doing" /></i>进行中</span>
+                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==1"><i class="svg-i"><svg-icon icon-class="work_accept" /></i>待审核</span>
+                                              <span v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==2">
                                                   <el-tooltip class="item color3" effect="dark" :content="scope.row.rejectinfo" placement="right">
-                                                    <el-button>已驳回</el-button>
+                                                    <el-button><i class="svg-i"><svg-icon icon-class="work_reject" /></i>已驳回</el-button>
                                                   </el-tooltip>
                                               </span>
-                                              <span class="color4" v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus==0">待评价</span>
-                                              <span v-if="scope.row.worktimestatus!=2&&currentStatus!='allot'&&currentStatus!='receive'&&scope.row.workstatus==3&&scope.row.commentstatus!=0">
+                                              <span class="color4" v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==3&&scope.row.commentstatus==0"><i class="svg-i"><svg-icon icon-class="work_evaluate" /></i>待评价</span>
+                                              <span v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==3&&scope.row.commentstatus!=0">
                                                   <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
-                                                    <el-button>已完成</el-button>
+                                                    <el-button><i class="svg-i"><svg-icon icon-class="work_done" /></i>已完成</el-button>
                                                   </el-tooltip>
                                               </span>
                                             </div>
@@ -566,25 +440,28 @@
                                           prop="orgscore"
                                           label="总积分"
                                           width="80"
+                                          v-if="labelColumn[8].istrue"
                                           >
                                       </el-table-column>
                                       <el-table-column
                                           prop="receivescore"
                                           label="已认领积分"
                                           width="100"
+                                          v-if="labelColumn[9].istrue"
                                           >
                                           <template slot-scope="scope">
-                                              <p v-if="currentStatus=='alloted'"><el-input size="small" v-model="scope.row.score" @change="changeScore(scope.row,scope.$index)"></el-input></p>
+                                              <p v-if="currentStatus=='alltasks'&&currentId==6"><el-input size="small" v-model="scope.row.score" @change="changeScore(scope.row,scope.$index)"></el-input></p>
                                               <span v-else>{{scope.row.score}}</span>
                                           </template>
                                       </el-table-column>
                                       <el-table-column
                                           prop="ownScore"
                                           label="负责人"
+                                          v-if="labelColumn[11].istrue"
                                           width="120">
                                           <template slot-scope="scope">
                                               <div class="table-input">
-                                                  <el-select v-model="scope.row.dealuserid" size="small" :disabled="currentStatus!='allot'" v-if="currentStatus=='allot'" clearable placeholder="负责人">
+                                                  <el-select v-model="scope.row.dealuserid" size="small" v-if="(!scope.row.dealusername||scope.row.dealusername=='')&&currentId==7" clearable multiple collapse-tags placeholder="负责人">
                                                       <el-option
                                                           v-for="item in userList"
                                                           :key="item.value"
@@ -592,23 +469,27 @@
                                                           :value="item.value">
                                                       </el-option>
                                                   </el-select>
-                                                  <span v-if="currentStatus!='allot'">{{scope.row.dealusername}}</span>
+                                                  <span v-else>{{scope.row.dealusername}}</span>
                                               </div>
                                           </template>
                                       </el-table-column>
                                       <el-table-column
-                                          v-if="(menuButtonPermit.includes('Worksaccpet_confirmstart')||menuButtonPermit.includes('Worksaccpet_backwork')||menuButtonPermit.includes('Worksaccpet_confirmfinish')||menuButtonPermit.includes('Worksaccpet_workcancel'))&&(currentStatus=='receive'||currentStatus=='allot'||currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')"
+                                          v-if="menuButtonPermit.includes('Worksaccpet_backwork')||menuButtonPermit.includes('Worksaccpet_confirmdeal')||menuButtonPermit.includes('Worksaccpet_confirmstart')||menuButtonPermit.includes('Worksaccpet_confirmfinish')||menuButtonPermit.includes('Worksaccpet_workcancel')"
                                           :width="operationsWidth"
                                           align="center"
                                           fixed="right"
                                           prop="operations"
-                                          label="操作">
+                                          label-class-name="workIconleaf"
+                                          :filters="getfilterNameItem()"
+                                          column-key="filterTag"
+                                          label="操作">                               
                                           <template slot-scope="scope">
                                             <div class="table-button">
-                                                <el-button size="mini" @click="confirmstartRow(scope.row,scope.$index)" v-if="currentStatus=='person'&&(scope.row.startdotime==''||scope.row.startdotime==null)&&menuButtonPermit.includes('Worksaccpet_confirmstart')">开始工单</el-button>
                                                 <el-button size="mini" @click="cancelTableRow(scope.row,scope.$index)" v-if="currentStatus!='receive'&&(scope.row.workstatus!=1&&scope.row.workstatus!=3)&&menuButtonPermit.includes('Worksaccpet_backwork')">工单退回</el-button>
-                                                <el-button size="mini" @click="confirmDoneTableRow(scope.row,scope.$index)" v-if="(currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')&&scope.row.workstatus!=1&&scope.row.workstatus!=3&&(scope.row.status==2||scope.row.status==5)&&menuButtonPermit.includes('Worksaccpet_confirmfinish')">提交审核</el-button>
-                                                <el-button size="mini" @click="undoTableRow(scope.row,scope.$index)" v-if="(currentStatus=='alloted'||currentStatus=='person'||currentStatus=='doing')&&(scope.row.workstatus!=1&&scope.row.workstatus!=3)&&menuButtonPermit.includes('Worksaccpet_workcancel')">撤销分配</el-button>
+                                                <el-button size="mini" @click="confirmAllotTableRow(scope.row,scope.$index)" v-if="currentStatus=='alltasks'&&currentId==7&&menuButtonPermit.includes('Worksaccpet_confirmdeal')">确认分配</el-button>
+                                                <el-button size="mini" @click="confirmstartRow(scope.row,scope.$index)" v-if="currentId==6&&(scope.row.startdotime==''||scope.row.startdotime==null)&&menuButtonPermit.includes('Worksaccpet_confirmstart')">开始工单</el-button>
+                                                <el-button size="mini" @click="confirmDoneTableRow(scope.row,scope.$index)" v-if="currentId==5&&scope.row.workstatus!=1&&scope.row.workstatus!=3&&(scope.row.status==2||scope.row.status==5)&&menuButtonPermit.includes('Worksaccpet_confirmfinish')">提交审核</el-button>
+                                                <el-button size="mini" @click="undoTableRow(scope.row,scope.$index)" v-if="currentId==6&&scope.row.workstatus!=1&&scope.row.workstatus!=3&&menuButtonPermit.includes('Worksaccpet_workcancel')">撤销分配</el-button>
                                             </div>
                                           </template>
                                       </el-table-column>
@@ -622,9 +503,9 @@
                             <el-pagination
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
-                                :current-page="page"
+                                :current-page="searchData.page"
                                 :page-sizes="pageSizeList"
-                                :page-size="limit"
+                                :page-size="searchData.limit"
                                 :layout="'total, sizes, prev, pager, next, jumper'"
                                 :total="totalDataNum">
                             </el-pagination>
@@ -654,7 +535,6 @@
         </div>
     </div>
 </template>
-
 <script>
 import { mapGetters } from 'vuex';
 import { isNumber } from '@/utils/validate';
@@ -662,6 +542,7 @@ export default {
   name: 'WorkOrder_orderList',
   data() {
     return {
+        certinfoKey:true,//解决数据更新后表体不渲染问题
         dialogFormVisible:false,
         dialogText:"",
         formLabelWidth:"110px",
@@ -669,10 +550,41 @@ export default {
           id:0,
           status:"1",
         },
+        tagList:[],// 获取系统标签数据
+        tagListCustom:[],// 获取系统自定义标签数据
+        searchtagListCustom:'',
+        shdepart:[],
+        showHide:{
+        },
+        labelColumn:[
+          {id:0,name:"发布人",istrue:true},
+          {id:1,name:"工单标题",istrue:true},
+          {id:2,name:"标签",istrue:true},
+          {id:3,name:"进度",istrue:true},
+          {id:4,name:"开工时间",istrue:true},
+          {id:5,name:"开始时间",istrue:true},
+          {id:6,name:"截止时间",istrue:true},
+          {id:7,name:"工单状态",istrue:true},
+          {id:8,name:"总积分",istrue:true},
+          {id:9,name:"已认领积分",istrue:true},
+          {id:10,name:"认领积分",istrue:true},
+          {id:11,name:"负责人",istrue:true},
+        ],
+        currentId:0,
+        workstatusArr:[
+          {id:0,name:"全部",departBool:true,orderStatusBool:true},
+          {id:7,name:"待分配",departBool:false,orderStatusBool:true,departNum:0},
+          {id:6,name:"已分配",departBool:false,orderStatusBool:true,departNum:0},
+          {id:5,name:"进行中",departBool:false,orderStatusBool:true,departNum:0},
+          {id:3,name:"已完成",departBool:false,orderStatusBool:true,departNum:0},
+          {id:4,name:"已逾期",departBool:false,orderStatusBool:true,departNum:0},
+          {id:2,name:"已驳回",departBool:false,orderStatusBool:true,departNum:0},
+          {id:1,name:"待审核",departBool:false,orderStatusBool:true,departNum:0},
+        ],
         breadcrumbList:[],
-        breadcrumbName:'个人已分配',
+        breadcrumbName:'我的任务',
         operationsWidth:"",
-        currentStatus:"person",
+        currentStatus:"alltasks",
         status:1,
         menuButtonPermit:[],
         minHeight:"auto",
@@ -680,36 +592,25 @@ export default {
         statData:[],
         groupScore:[],
         isPageBtn:false,
-        page:1,
-        limit:50,
         pageSizeList:[50, 100, 150, 200],
         totalDataNum:0,
         userList:[],
         searchData:{
+            page:1,
+            limit:50,
             date:[],
             timetype:"",
-            dealuserid:'',
-            workstatus:'',
         },
         timeTypeList:[
           {label:"按完成时间",value:3},
           {label:"按接单时间",value:2},
           {label:"按分配时间",value:1},
         ],
-        statusList:[
-          {label:"进行中",value:5},
-          {label:"待审核",value:1},
-          {label:"已驳回",value:2},
-          {label:"已完成",value:3},
-          {label:"已逾期",value:4},
-        ],
         defaultData:{
+          accpetcountNum:0,
           receiveNum:0,
-          allotedNum:0,
-          allotNum:0,
           personNum:0,
-          doingNum:0,
-          doneNum:0,
+          focusonNum:0,
         },
         selectedData:[],
         permitStatus:[],
@@ -786,16 +687,16 @@ export default {
       this.setHeight();
     },
   },
+  created(){
+    var $this = this;
+    $this.getBreadcrumbList();
+    $this.initData();
+  },
   updated(){
     var $this = this;
     $this.$nextTick(() => {
       $this.$refs.simpleTable.doLayout();
     });
-  },
-  created(){
-    var $this = this;
-    $this.getBreadcrumbList();
-    $this.initData();
   },
   destroyed(){
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
@@ -808,7 +709,8 @@ export default {
         lock: true,
         text: 'Loading',
         spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
+        background: 'rgba(0, 0, 0, 0.7)',
+        zindex:999
       });
     },
     // 获取面包屑路径
@@ -911,258 +813,11 @@ export default {
         $this.getCurrentStatusData();
       }
     },
-    // 重置表单
-    resetData(){
-        var $this = this;
-        $this.searchData.date=[];
-        $this.searchData.timetype='';
-        $this.searchData.dealuserid='';
-        $this.searchData.workstatus='';
-        $this.searchResult();
-    },
     // 初始化数据
     initData(){
       var $this = this;
       $this.loadingFun();
       $this.getUserMenuButtonPermit();
-    },
-    // 获取当前状态分类的数据
-    getCurrentStatusData(){
-      var $this = this;
-      var searchData = {};
-      var pathUrl = "";
-      $this.groupScore=[];
-      if($this.currentStatus==="receive"){
-        pathUrl = "worksaccpet/receiveWorkOrderDataAction";
-      }else if($this.currentStatus==="allot"){
-        pathUrl = "worksaccpet/allotWorkOrderDataAction";
-      }else if($this.currentStatus==="alloted"){
-        pathUrl = "worksaccpet/allotedWorkOrderDataAction";
-      }else if($this.currentStatus==="person"){
-        pathUrl = "worksaccpet/personWorkOrderDataAction";
-      }else if($this.currentStatus==="doing"){
-        pathUrl = "worksaccpet/doingWorkOrderDataAction";
-      }else if($this.currentStatus==="done"){
-        pathUrl = "worksaccpet/doneWorkOrderDataAction";
-      }else{
-        pathUrl = "worksaccpet/statWorkOrderDataAction";
-      }
-      if($this.currentStatus==="alloted"||$this.currentStatus==="person"||$this.currentStatus==="doing"||$this.currentStatus==="done"){
-        searchData.page = $this.isPageBtn?$this.page:1;
-        if(!$this.isPageBtn){
-          $this.page = 1
-        }
-        $this.isPageBtn = false;
-        searchData.limit = $this.limit;
-        searchData.timetype = $this.searchData.timetype;
-        if($this.searchData.date&&$this.searchData.date.length>0){
-            searchData.starttime = $this.searchData.date[0];
-            searchData.endtime = $this.searchData.date[1];
-        }else{
-            searchData.starttime = "";
-            searchData.endtime = "";
-        }
-        if($this.currentStatus==="alloted"){
-          searchData.dealuserid = $this.searchData.dealuserid;
-          searchData.workstatus = $this.searchData.workstatus;
-        }
-      }else if($this.currentStatus==="stat"){
-        if($this.searchData.date&&$this.searchData.date.length>0){
-            searchData.starttime = $this.searchData.date[0];
-            searchData.endtime = $this.searchData.date[1];
-        }else{
-            searchData.starttime = "";
-            searchData.endtime = "";
-        }
-      }else{
-          searchData = null
-      }      
-      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch(pathUrl, searchData).then(response=>{
-        if(response){
-          if(response.status){
-            var tableData = response.data;
-            if($this.currentStatus==="stat"){
-                $this.groupScore=response.group;
-            }else{
-              tableData.forEach(function(item,index){
-                item.ownScore = "";
-                item.tagList = [];
-                if(item.tags&&item.tags != ""){
-                  if(item.tags.indexOf("|")!=-1){
-                    var tagArr = item.tags.split("|");
-                    tagArr.forEach(function(item1,index1){
-                      var itemData = {};
-                      if(item1.indexOf("-")!=-1){
-                        itemData.tag = item1.split("-")[0];
-                        itemData.color = item1.split("-")[1];
-                      }else{
-                        itemData.tag = item1;
-                        itemData.color = "#1b3f75";
-                      }
-                      item.tagList.push(itemData);
-                    });
-                  }else{
-                    var itemData = {};
-                    if(item.tags.indexOf("-")!=-1){
-                      itemData.tag = item.tags.split("-")[0];
-                      itemData.color = item.tags.split("-")[1];
-                    }else{
-                      itemData.tag = item.tags;
-                      itemData.color = "#1b3f75";
-                    }
-                    item.tagList.push(itemData);
-                  }
-                }
-                if($this.currentStatus == "allot"){
-                  if(item.dealuserid == 0){
-                    item.dealuserid = "";
-                  }
-                }
-                var startdotime=[];
-                var starttime=[];
-                var endtime=[];
-                if(item.startdotime){
-                  startdotime=item.startdotime.split(" ");
-                  item.startdotimeDate=startdotime[0];
-                  item.startdotimeTime=startdotime[1];
-                }else{
-                  item.startdotimeDate='';
-                  item.startdotimeTime='';
-                }
-                if(item.starttime){
-                  starttime=item.starttime.split(" ");
-                  item.starttimeDate=starttime[0];
-                  item.starttimeTime=starttime[1];
-                }else{
-                  item.starttimeDate='';
-                  item.starttimeTime='';
-                }
-                if(item.endtime){
-                  endtime=item.endtime.split(" ");
-                  item.endtimeDate=endtime[0];
-                  item.endtimeTime=endtime[1];
-                }else{
-                  item.endtimeDate='';
-                  item.endtimeTime='';
-                }
-              });
-              if($this.currentStatus==="alloted"||$this.currentStatus==="person"||$this.currentStatus==="doing"||$this.currentStatus==="done"){
-                  $this.totalDataNum = response.allcount;
-              }else{
-                  $this.totalDataNum = 0;
-              }
-              if($this.currentStatus==="alloted"){
-                $this.groupScore=response.group;
-              }
-            }
-            $this.tableData = tableData;
-            $this.isLoading.close();
-            setTimeout(()=>{
-              $this.isDisabled=false;
-            },1000);
-            $this.$nextTick(()=>{
-              $this.setHeight();
-            });
-          }else{
-            if(response.permitstatus&&response.permitstatus==2){
-              $this.$message({
-                showClose: true,
-                message: "未被分配该页面访问权限",
-                type: 'error',
-                duration:6000
-              });
-              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isDisabled=false;
-              },1000);
-            }
-          }
-        }else{
-          setTimeout(()=>{
-            $this.isDisabled=false;
-          },1000);
-        }
-      });
-    },
-    // 初始化页面信息
-    initPage(){
-      var $this = this;   
-      if($this.currentStatus=="receive"){
-        $this.breadcrumbName='待接收';
-      }
-      if($this.currentStatus=="allot"){
-        $this.breadcrumbName='待分配';
-      }
-      if($this.currentStatus=="alloted"){
-        $this.breadcrumbName='所有已分配';
-      }
-      if($this.currentStatus=="person"){
-        $this.breadcrumbName='个人已分配';
-      }
-      if($this.currentStatus=="doing"){
-        $this.breadcrumbName='进行中';
-      }
-      if($this.currentStatus=="done"){
-        $this.breadcrumbName='已完成';
-      }
-      if($this.currentStatus=="stat"){
-        $this.breadcrumbName='数据统计';
-      }
-      $this.$store.dispatch('worksaccpet/workOrderPublicDataAction', null).then(response=>{
-        if(response){
-          if(response.status){
-            $this.defaultData.receiveNum = response.waitcount;
-            $this.defaultData.allotNum = response.waitdealcount;
-            $this.defaultData.allotedNum = response.hasdealcount;
-            $this.defaultData.personNum = response.personcount;
-            $this.defaultData.doingNum = response.makeingcount;
-            $this.defaultData.doneNum = response.hasfinishcount;
-            if($this.currentStatus!="receive"&&$this.currentStatus!="stat"){
-              $this.getWorkOrderUser();
-            }else{
-              $this.getCurrentStatusData();
-            }
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-        }
-      });
-    },
-    //个人工单列表-负责人填写进度百分比（2021-10-13）
-    changePercenter(varID,varPercenter){
-      var $this = this;
-      var dateForm={};
-      dateForm.id=varID;
-      dateForm.percenter=varPercenter;
-      $this.$store.dispatch('worksaccpet/workOrderpercenterAction',dateForm).then(res=>{
-          if(res){
-              if(res.status){
-                  $this.$message({
-                      showClose: true,
-                      message: res.info,
-                      type: 'success'
-                  });
-                  $this.initPage();
-              }else{
-                  $this.$message({
-                      showClose: true,
-                      message: res.info,
-                      type: 'error'
-                  });
-              }
-          }
-      })
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
@@ -1172,23 +827,17 @@ export default {
           if(res.data.length>0){
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
-              if(item.action_route=="Worksaccpet_waitwork"){
-                $this.permitStatus.push("receive");
-              }
-              if(item.action_route=="Worksaccpet_waitdealwork"){
-                $this.permitStatus.push("allot");
-              }
-              if(item.action_route=="Worksaccpet_allwork"){
-                $this.permitStatus.push("alloted");
+              if(item.action_route=="Worksaccpet_allaccpetwork"){
+                $this.permitStatus.push("alltasks");
               }
               if(item.action_route=="Worksaccpet_personwork"){
                 $this.permitStatus.push("person");
               }
-              if(item.action_route=="Worksaccpet_makeingwork"){
-                $this.permitStatus.push("doing");
+              if(item.action_route=="Worksaccpet_myfocuswork"){
+                $this.permitStatus.push("focuson");
               }
-              if(item.action_route=="Worksaccpet_hasfinish"){
-                $this.permitStatus.push("done");
+              if(item.action_route=="Worksaccpet_waitwork"){
+                $this.permitStatus.push("receive");
               }
               if(item.action_route=="Worksaccpet_workcount"){
                 $this.permitStatus.push("stat");
@@ -1199,28 +848,37 @@ export default {
                 if($this.permitStatus.includes($this.$route.query.Status)){
                   $this.currentStatus = $this.$route.query.Status;
                   var operationsWidth = 22;
-                  if($this.currentStatus=="receive"){
+                  if($this.currentStatus=="alltasks"){
+                      if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
+                          operationsWidth+=90;
+                      }
+                      if($this.menuButtonPermit.includes('Worksaccpet_confirmdeal')){
+                          operationsWidth+=90;
+                      }
+                      if($this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
+                          operationsWidth+=90;
+                      }
+                      if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')){
+                          operationsWidth+=90;
+                      }
+                      if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
+                          operationsWidth+=90;
+                      }
+                  }else if($this.currentStatus=="focuson"||$this.currentStatus=="person"){
+                      if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
+                          operationsWidth+=90;
+                      }
+                      if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')){
+                          operationsWidth+=90;
+                      }
+                      if($this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
+                          operationsWidth+=90;
+                      }
+                      if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
+                          operationsWidth+=90;
+                      }
+                  }else if($this.currentStatus=="receive"){
                     if($this.menuButtonPermit.includes('Worksaccpet_confirmwork')){
-                        operationsWidth+=90;
-                    }
-                  }else if($this.currentStatus=="allot"){
-                    if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-                        operationsWidth+=90;
-                    }
-                    if($this.menuButtonPermit.includes('Worksaccpet_confirmdeal')){
-                        operationsWidth+=90;
-                    }
-                  }else if($this.currentStatus=="alloted"||$this.currentStatus=="person"||$this.currentStatus=="doing"){
-                    if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-                        operationsWidth+=90;
-                    }
-                    if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')){
-                        operationsWidth+=90;
-                    }
-                    if($this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
-                        operationsWidth+=90;
-                    }
-                    if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
                         operationsWidth+=90;
                     }
                   }
@@ -1264,6 +922,571 @@ export default {
           });
         }
       });
+    },
+    // 初始化页面信息——初始化工单状态
+    initPage(){
+      var $this = this;
+      if($this.currentStatus=="alltasks"){
+        $this.breadcrumbName='全部任务';
+      }
+      if($this.currentStatus=="person"){
+        $this.breadcrumbName='我的任务';
+      }
+      if($this.currentStatus=="receive"){
+        $this.breadcrumbName='待接收';
+      }
+      if($this.currentStatus=="focuson"){
+        $this.breadcrumbName='我的关注';
+      }
+      if($this.currentStatus=="stat"){
+        $this.breadcrumbName='数据统计';
+      }
+      $this.workstatusArr.forEach(function(item,index){
+        if(item.id!=0){
+          item.departNum=0;
+        }
+      });
+      $this.defaultData.accpetcountNum=0;
+      $this.defaultData.receiveNum=0;
+      $this.defaultData.personNum=0;
+      $this.defaultData.focusonNum=0;
+      $this.$store.dispatch('worksaccpet/workOrderPublicDataAction', null).then(response=>{
+        if(response){
+          if(response.status){
+            $this.defaultData.accpetcountNum = response.accpetcount;
+            $this.defaultData.receiveNum = response.waitcount;
+            $this.defaultData.personNum = response.personcount;
+            $this.defaultData.focusonNum = response.focuscount;
+            if($this.currentStatus=="alltasks"||$this.currentStatus=="person"||$this.currentStatus=="focuson"){                 
+                if($this.currentStatus=='focuson'||$this.currentStatus=='person'){
+                    $this.workstatusArr[1].orderStatusBool=false;
+                }
+                $this.workstatusArr[1].departNum=response.waitdealcount;
+                $this.workstatusArr[2].departNum=response.hasdealcount;
+                $this.workstatusArr[3].departNum=response.makeingcount;
+                $this.workstatusArr[4].departNum=response.hasfinishcount;
+                $this.workstatusArr[5].departNum=response.outtimecount;
+                $this.workstatusArr[6].departNum=response.rejectedcount;
+                $this.workstatusArr[7].departNum=response.waitcheckcount;
+                $this.getpublishdepart();
+            }
+            if($this.currentStatus!="receive"&&$this.currentStatus!="stat"){
+              $this.getWorkOrderUser();
+            }else{
+              $this.getCurrentStatusData();
+            }
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    // 获取当前状态分类的数据
+    getCurrentStatusData(){
+      var $this = this;
+      var searchData = {};
+      searchData = $this.initSearchData();
+      if($this.currentStatus==="alltasks"||$this.currentStatus==="person"||$this.currentStatus==="focuson"){
+        searchData.page = $this.isPageBtn?$this.searchData.page:1;
+        if(!$this.isPageBtn){
+          $this.searchData.page = 1
+        }
+        $this.isPageBtn = false;
+      }
+      var pathUrl = "";
+      if($this.currentStatus==="alltasks"){
+        pathUrl = "worksaccpet/allaccpetworkAction";
+      }else if($this.currentStatus==="person"){
+        pathUrl = "worksaccpet/personWorkOrderDataAction";
+      }else if($this.currentStatus==="focuson"){
+        pathUrl = "worksaccpet/getmyfocusworkAction";
+      }else if($this.currentStatus==="receive"){
+        pathUrl = "worksaccpet/receiveWorkOrderDataAction";
+      }else{
+        pathUrl = "worksaccpet/statWorkOrderDataAction";
+      }
+      $this.tableData=[];
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
+      $this.$store.dispatch(pathUrl, searchData).then(response=>{
+        if(response){
+          if(response.status){
+            var tableData = response.data;
+            if($this.currentStatus==="stat"){
+                $this.groupScore=response.group;
+            }else{
+              if(tableData.length>0){
+                tableData.forEach(function(item,index){
+                  item.ownScore = "";
+                  item.tagList = [];
+                  if(item.tags&&item.tags != ""){
+                    if(item.tags.indexOf("|")!=-1){
+                      var tagArr = item.tags.split("|");
+                      tagArr.forEach(function(item1,index1){
+                        var itemData = {};
+                        if(item1.indexOf("-")!=-1){
+                          itemData.tag = item1.split("-")[0];
+                          itemData.color = item1.split("-")[1];
+                          if(itemData.tag=='紧急'||itemData.tag=='加急'){
+                            itemData.clBool=true;
+                          }else{
+                            itemData.clBool=false;
+                          }
+                        }else{
+                          itemData.tag = item1;
+                          itemData.color = "#1b3f75";
+                          if(itemData.tag=='紧急'||itemData.tag=='加急'){
+                            itemData.clBool=true;
+                          }else{
+                            itemData.clBool=false;
+                          }
+                        }
+                        item.tagList.push(itemData);
+                      });
+                    }else{
+                      var itemData = {};
+                      if(item.tags.indexOf("-")!=-1){
+                        itemData.tag = item.tags.split("-")[0];
+                        itemData.color = item.tags.split("-")[1];
+                        if(itemData.tag=='紧急'||itemData.tag=='加急'){
+                          itemData.clBool=true;
+                        }else{
+                          itemData.clBool=false;
+                        }
+                      }else{
+                        itemData.tag = item.tags;
+                        itemData.color = "#1b3f75";
+                        if(itemData.tag=='紧急'||itemData.tag=='加急'){
+                          itemData.clBool=true;
+                        }else{
+                          itemData.clBool=false;
+                        }
+                      }
+                      item.tagList.push(itemData);
+                    }
+                  }
+                  var startdotime=[];
+                  var starttime=[];
+                  var endtime=[];
+                  if(item.startdotime&&item.startdotime!=null){
+                    startdotime=item.startdotime.split(" ");
+                    item.startdotimeDate=startdotime[0];
+                    item.startdotimeTime=startdotime[1];
+                  }else{
+                    item.startdotimeDate='';
+                    item.startdotimeTime='';
+                  }
+                  if(item.starttime&&item.starttime!=null){
+                    starttime=item.starttime.split(" ");
+                    item.starttimeDate=starttime[0];
+                    item.starttimeTime=starttime[1];
+                  }else{
+                    item.starttimeDate='';
+                    item.starttimeTime='';
+                  }
+                  if(item.endtime&&item.endtime!=null){
+                    endtime=item.endtime.split(" ");
+                    item.endtimeDate=endtime[0];
+                    item.endtimeTime=endtime[1];
+                  }else{
+                    item.endtimeDate='';
+                    item.endtimeTime='';
+                  }
+                });
+              }else{
+                tableData=[];
+              }
+              if($this.currentStatus==="alltasks"){
+                $this.totalDataNum = response.allcount;
+                $this.groupScore=response.group;
+              }
+            }
+            $this.tableData = tableData;
+            $this.certinfoKey=!$this.certinfoKey;
+            $this.$nextTick(() => {
+              $this.$refs.simpleTable.doLayout();
+            });
+            $this.isLoading.close();
+            setTimeout(()=>{
+              $this.isDisabled=false;
+            },1000);
+            $this.$nextTick(()=>{
+              $this.setHeight();
+            });
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
+          }
+        }else{
+          setTimeout(()=>{
+            $this.isDisabled=false;
+          },1000);
+        }
+      });
+    },
+    // 初始化部门列表
+    getpublishdepart(){
+      var $this = this;
+      $this.$store.dispatch('worksaccpet/getpublishdepartAction',null).then(res=>{
+          if(res){
+              if(res.status){
+                if(res.data.length>0){
+                  var shdepart=[];
+                  var shdepartObj={};
+                  res.data.forEach(function(item){
+                    item.departBool=false;
+                  });
+                  shdepart=res.data;
+                  shdepartObj.id=0;
+                  shdepartObj.name='全部';
+                  shdepartObj.departBool=true;
+                  shdepart.unshift(shdepartObj);
+                  $this.shdepart=shdepart;
+                }
+                $this.getTagData();
+              }else{
+                  $this.$message({
+                      showClose: true,
+                      message: res.info,
+                      type: 'error'
+                  });
+              }
+          }
+      })
+    },
+    // 初始化系统标签和自定义标签
+    getTagData(){
+      var $this = this;
+      $this.$store.dispatch('works/tagListAction', null).then(response=>{
+        if(response){
+          if(response.status){
+            var tagList = [];
+            var tagListCustom = [];
+            response.data.forEach(function(item,index){
+              var itemData = {};
+              var itemDataCustom = {};
+              if(item.id==0){
+                itemDataCustom.label= item.name;
+                itemDataCustom.value = item.name;
+                itemDataCustom.namecolor = item.namecolor;
+                tagListCustom.push(itemDataCustom);                
+              }else{
+                itemData.label= item.name;
+                itemData.value = item.id;
+                itemData.namecolor = item.namecolor;
+                itemData.departBool = false;
+                if(itemData.label=='紧急'||itemData.label=='加急'){
+                  itemData.clBool=true;
+                }else{
+                  itemData.clBool=false;
+                }
+                tagList.push(itemData);
+              }
+            });
+            $this.tagList = tagList;
+            $this.tagListCustom = tagListCustom;
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    // 初始化工单具体负责人数据
+    getWorkOrderUser(){
+      var $this = this;
+      $this.$store.dispatch('worksaccpet/workOrderUserListAction', null).then(response=>{
+        if(response){
+          if(response.status){
+            var userList = [];
+            response.data.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              userList.push(itemData);
+            });
+            $this.userList = userList;
+            $this.getCurrentStatusData();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    // 点击工单状态事件
+    hanldeworkstatus(Id){
+      var $this = this;
+      var workstatusId=Id;
+      $this.currentId=Id;
+      var operationsWidth = 22;
+      if($this.currentId==4){
+        if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
+            operationsWidth+=90;
+        }
+        $this.operationsWidth = "" + operationsWidth;
+      }
+      if($this.currentId==5){
+        if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
+            operationsWidth+=90;
+        }
+        if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')){
+            operationsWidth+=90;
+        }
+        $this.operationsWidth = "" + operationsWidth;
+      }
+      if($this.currentId==6){
+        if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
+            operationsWidth+=90;
+        }
+        if($this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
+            operationsWidth+=90;
+        }
+        if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
+            operationsWidth+=90;
+        }
+        $this.operationsWidth = "" + operationsWidth;
+      }
+      if($this.currentId==7){
+        if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
+            operationsWidth+=90;
+        }
+        if($this.menuButtonPermit.includes('Worksaccpet_confirmdeal')){
+            operationsWidth+=90;
+        }
+        $this.operationsWidth = "" + operationsWidth;
+      }
+      if($this.currentId==7){}
+      $this.workstatusArr.forEach(function(item,index){
+        if(workstatusId==item.id){
+          item.departBool=true;
+        }else{
+          item.departBool=false;
+        }
+      });
+      if(workstatusId!=0){
+        $this.searchData.workstatus=workstatusId;
+      }
+      $this.searchResult();
+    },
+    // 点击部门事件
+    hanldeshdepart(Id){
+      var $this = this;
+      var departId=Id;
+      $this.shdepart.forEach(function(item,index){
+        if(departId==item.id){
+          item.departBool=true;
+        }else{
+          item.departBool=false;
+        }
+      });
+      if(departId!=0){
+        $this.searchData.dept_id=departId;
+      }
+      $this.searchResult();
+    },
+    // 点击系统标签
+    hanldetag(Id){
+      var $this = this;
+      var tagId=Id;
+      $this.tagList.forEach(function(item,index){
+        if(tagId==item.value){
+          item.departBool=true;
+        }else{
+          item.departBool=false;
+        }
+      });
+      $this.searchData.tagsid=tagId;
+      $this.searchtagListCustom='';
+      $this.searchData.tags='';
+      $this.searchResult();
+    },
+    // 点击自定义标签系统标签
+    hanldeCustom(){
+      var $this = this;
+      $this.tagList.forEach(function(item,index){
+          item.departBool=false;
+      });
+      $this.searchData.tagsid='';
+      $this.searchData.tags=$this.searchtagListCustom;
+      $this.searchResult();
+    },
+    // 点击时间事件类型
+    hanldetimeType(){
+      var $this = this;
+      $this.searchResult();
+    },
+    // 点击时间事件选择
+    hanldetime(){
+      var $this = this;
+      $this.searchResult();
+    },
+    // 点击负责人
+    hanldedealuser(){
+      var $this = this;
+      $this.searchResult();
+    },
+    // 点击添加关注
+    handleAddFocus(FocusId){
+      var $this = this;
+      var searchData = {};
+      searchData.id=FocusId;
+      $this.$store.dispatch('worksaccpet/getworkAddfocusAction',searchData).then(res=>{
+          if(res){
+              if(res.status){
+                  $this.$message({
+                      showClose: true,
+                      message: res.info,
+                      type: 'success'
+                  });
+                  $this.searchResult();
+              }else{
+                  $this.$message({
+                      showClose: true,
+                      message: res.info,
+                      type: 'error'
+                  });
+              }
+          }
+      })
+    },
+    // 点击取消关注
+    handleCancelFocus(FocusId){
+      var $this = this;
+      var searchData = {};
+      searchData.id=FocusId;
+      $this.$store.dispatch('worksaccpet/getCancelworkfocusAction',searchData).then(res=>{
+          if(res){
+              if(res.status){
+                  $this.$message({
+                      showClose: true,
+                      message: res.info,
+                      type: 'success'
+                  });
+                  $this.searchResult();
+              }else{
+                  $this.$message({
+                      showClose: true,
+                      message: res.info,
+                      type: 'error'
+                  });
+              }
+          }
+      })
+    },
+    // 重置表单
+    resetData(){
+        var $this = this;
+        $this.searchData.page=1;
+        $this.searchData.limit=50;
+        $this.searchData.date=[];
+        $this.searchData.starttime='';
+        $this.searchData.endtime='';        
+        $this.workstatusArr.forEach(function(item,index){
+          if(item.id==0){
+            item.departBool=true;
+          }else{
+            item.departBool=false;
+          }
+        });
+        $this.searchData.workstatus='';
+        $this.shdepart.forEach(function(item,index){
+          if(item.id==0){
+            item.departBool=true;
+          }else{
+            item.departBool=false;
+          }
+        });
+        $this.searchData.dept_id='';
+        $this.tagList.forEach(function(item,index){
+          item.departBool=false;
+        });
+        $this.searchData.tagsid='';
+        $this.searchData.tags='';
+        $this.searchtagListCustom='';
+        $this.searchData.timetype='';
+        $this.searchData.dealuserid='';
+        $this.searchResult();
+    },
+    // 组装搜索接口所需数据
+    initSearchData(){
+      var $this = this;
+      var searchData = {};
+      searchData.page = $this.searchData.page;
+      searchData.limit = $this.searchData.limit;
+      if($this.searchData.timetype&&$this.searchData.timetype!=''){
+        searchData.timetype = $this.searchData.timetype;
+      }
+      if($this.searchData.date&&$this.searchData.date.length>0){
+        searchData.starttime = $this.searchData.date[0];
+        searchData.endtime = $this.searchData.date[1];
+      }
+      if($this.searchData.dealuserid&&$this.searchData.dealuserid!=''){
+        searchData.dealuserid = $this.searchData.dealuserid;
+      }
+      if($this.searchData.workstatus&&$this.searchData.workstatus!=''){
+        searchData.workstatus = $this.searchData.workstatus;
+      }
+      if($this.searchData.dept_id&&$this.searchData.dept_id!=''){
+        searchData.dept_id = $this.searchData.dept_id;
+      }
+      if($this.searchData.tags&&$this.searchData.tags!=''){
+        searchData.tags = $this.searchData.tags;
+      }
+      if($this.searchData.tagsid&&$this.searchData.tagsid!=''){
+        searchData.tagsid = $this.searchData.tagsid;
+      }
+      return searchData;
+    },
+    //个人工单列表-负责人填写进度百分比（2021-10-13）
+    changePercenter(varID,varPercenter){
+      var $this = this;
+      var dateForm={};
+      dateForm.id=varID;
+      dateForm.percenter=varPercenter;
+      $this.$store.dispatch('worksaccpet/workOrderpercenterAction',dateForm).then(res=>{
+          if(res){
+              if(res.status){
+                  $this.$message({
+                      showClose: true,
+                      message: res.info,
+                      type: 'success'
+                  });
+                  $this.initPage();
+              }else{
+                  $this.$message({
+                      showClose: true,
+                      message: res.info,
+                      type: 'error'
+                  });
+              }
+          }
+      })
     },
     // 关闭弹窗
     handleClose(){
@@ -1317,15 +1540,17 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      this.limit = val;
-      this.page = 1;
-      this.getCurrentStatusData();
+      var $this = this;
+      $this.searchData.limit = val;
+      $this.searchData.page = 1;
+      $this.getCurrentStatusData();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      this.page = val;
-      this.isPageBtn = true;
-      this.getCurrentStatusData();
+      var $this = this;
+      $this.searchData.page = val;
+      $this.isPageBtn = true;
+      $this.getCurrentStatusData();
     },
     // 跳转到详情
     jumpArticle(id){
@@ -1333,12 +1558,57 @@ export default {
       var routeUrl =  $this.$router.resolve({path:'/WorkOrder/workInfo',query:{ID:id,Status:$this.currentStatus}});
       window.open(routeUrl.href,'_blank');
     },
+    // 重置搜索条件
+    resetSearchData(){
+        var $this = this;
+        $this.searchData.page=1;
+        $this.searchData.limit=50;
+        $this.totalDataNum=0;
+        $this.searchData.date=[];
+        $this.searchData.starttime='';
+        $this.searchData.endtime='';
+        $this.workstatusArr.forEach(function(item,index){
+          if(item.id==0){
+            item.departBool=true;
+          }else{
+            item.departBool=false;
+          }
+        });
+        $this.searchData.workstatus='';
+        $this.shdepart.forEach(function(item,index){
+          if(item.id==0){
+            item.departBool=true;
+          }else{
+            item.departBool=false;
+            item.orderStatusBool=true;
+          }
+        });
+        $this.searchData.dept_id='';
+        $this.tagList.forEach(function(item,index){
+          item.departBool=false;
+        });
+        $this.searchData.tagsid='';
+        $this.searchData.tags='';
+        $this.searchtagListCustom='';
+        $this.searchData.timetype='';
+        $this.searchData.dealuserid='';
+    },
     // 页面自跳转
     jumpLink(status){
         var $this = this;
         $this.resetSearchData();
+        $this.workstatusArr.forEach(function(item,index){
+            if(status=='focuson'||status=='person'){
+                if(item.id==7){
+                  item.orderStatusBool=false;
+                }else{
+                  item.orderStatusBool=true;
+                }
+            }else{
+                item.orderStatusBool=true;
+            }
+        });
         if($this.currentStatus==status){
-          $this.tableData=[];
           $this.initPage();
         }else{
           $this.$router.push({path:'/WorkOrder/orderList',query:{Status:status}});
@@ -1535,39 +1805,6 @@ export default {
           });          
       });
     },
-    // 重置搜索条件
-    resetSearchData(){
-      var $this = this;
-      $this.searchData.date = [];
-      $this.searchData.timetype = "";
-      $this.page = 1;
-      $this.limit = 50;
-    },
-    // 获取工单具体负责人数据
-    getWorkOrderUser(){
-      var $this = this;
-      $this.$store.dispatch('worksaccpet/workOrderUserListAction', null).then(response=>{
-        if(response){
-          if(response.status){
-            var userList = [];
-            response.data.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.id;
-              userList.push(itemData);
-            });
-            $this.userList = userList;
-            $this.getCurrentStatusData();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-        }
-      });
-    },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){
       var $this = this;
@@ -1729,6 +1966,58 @@ export default {
       $this.scrollPosition.isMouseDown = false;
       $this.scrollPosition.startPageX = 0;
       $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
+    },
+    getfilterNameItem(){
+      var apiArr=[
+          {text: '发布人', value: '发布人'},
+          {text: '工单标题', value: '工单标题'},
+          {text: '标签', value: '标签'},
+          {text: '进度', value: '进度'},
+          {text: '开工时间', value: '开工时间'},
+          {text: '开始时间', value: '开始时间'},
+          {text: '截止时间', value: '截止时间'},
+          {text: '工单状态', value: '工单状态'},
+          {text: '总积分', value: '总积分'},
+          {text: '已认领积分', value: '已认领积分'},
+          {text: '负责人', value: '负责人'}
+      ]
+      return apiArr;
+    },
+    //
+    filterHandler(filterObj) {
+      var $this = this;
+      if(filterObj.filterTag.length>0){
+         var labelArr=$this.labelColumn;
+         var labelColumn=[];
+         var newArr=[];
+         filterObj.filterTag.forEach(function(item){
+            labelArr.forEach(function(items){
+               if(item==items.name){
+                 items.istrue=false;
+                 newArr.push(items);
+               }
+            });
+         });
+         newArr.forEach(function(item){
+            labelArr.forEach(function(items){
+               if(item.name==items.name){
+                 items.istrue=false;
+               }
+               labelColumn.push(items);
+            });
+         });
+         $this.labelColumn=labelColumn;
+         $this.$nextTick(() => {
+            $this.$refs.simpleTable.doLayout();
+         });
+      }else{
+         $this.labelColumn.forEach(function(item){
+           item.istrue=true;
+         });
+          $this.$nextTick(() => {
+            $this.$refs.simpleTable.doLayout();
+          });
+      }
     }
   }
 }

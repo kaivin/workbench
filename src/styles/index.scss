@@ -1321,6 +1321,58 @@
 /** 论坛标签管理 **/
 .tags-index{
   .tag-color{padding:0 13px;line-height:0;font-size:0; vertical-align:top;}
+  .tag-font{
+    position: relative;
+    background: none;
+    border: 0px;
+    overflow: hidden;
+    .svg-i{
+      float: left;
+      position: initial;
+      width: 14px;
+      opacity: 1;
+      margin-right: 3px;
+      padding-top: 1px;
+      svg{
+        font-size: 14px;
+      }
+    }
+    .workBg{
+      position: absolute;
+      left:0px;
+      top:0px;
+      width:100%;
+      height:100%;
+      display: block;
+      opacity: 0.15;
+    }
+  }
+}
+.el-tag{
+  position: relative;
+  background: none;
+  border: 0px;
+  overflow: hidden;
+  .svg-i{
+    float: left;
+    position: initial;
+    width: 14px;
+    opacity: 1;
+    margin-right: 3px;
+    padding-top: 1px;
+    svg{
+      font-size: 14px;
+    }
+  }
+  .workBg{
+    position: absolute;
+    left:0px;
+    top:0px;
+    width:100%;
+    height:100%;
+    display: block;
+    opacity: 0.15;
+  }
 }
 /** 图标弹窗样式 **/
 .icon-dialog{

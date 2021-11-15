@@ -6,7 +6,7 @@
                   <p class="breadcrumb" ref="breadcrumbPane">
                     <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
                     <template v-for="(item,index) in breadcrumbList">
-                      <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+                      <router-link class="breadcrumb-link" :to="item.router+'?Status=alltasks'" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
                       <span class="breadcrumb-link" v-bind:key="index" v-else><b>-</b><span>{{item.title}}</span></span>
                     </template>
                     <span class="breadcrumb-link"><b>-</b><span>数据统计</span></span>
@@ -14,7 +14,7 @@
                   <el-card class="box-card" shadow="hover">
                       <div slot="header">
                           <div class="card-header" ref="headerPane">
-                              <div class="search-wrap">
+                              <div class="searchwrapstatData">
                                   <div class="item-search" style="width: 240px;">
                                       <el-date-picker
                                           v-model="searchData.date"
