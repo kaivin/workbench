@@ -5,7 +5,7 @@
       </el-header>
       <el-container class="container-layout">
         <sidebar v-if="isSales" />
-        <homeleft />
+        <homeleft v-if="key.includes('/Home/')" />
         <el-main class="main-layout" v-if="isRefresh">
             <transition name="fade-transform" mode="out-in">
               <router-view :key="key"></router-view>

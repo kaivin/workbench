@@ -1,5 +1,5 @@
 ﻿<template>
-  <div v-if="this.$route.path.indexOf('/Home/index')>=0" class="page-root scroll-panel home-index" ref="boxPane">
+  <div class="page-root scroll-panel home-index" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
       <div class="card-content" ref="tableContent">
         <div class="item-row flex-box Module_bbs" v-if="newsList.length > 0">
@@ -121,7 +121,6 @@
       </div>
     </el-card>
   </div>
-  <router-view v-else></router-view>
 </template>
 <script>
 import { worldCountry } from "@/utils/worldCountry";
@@ -484,12 +483,9 @@ export default {
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit() {
       var $this = this;
-      $this.$store
-        .dispatch("api/getMenuButtonPermitAction", {
-          id: $this.$router.currentRoute.meta.id,
-        })
-        .then((res) => {
+      $this.$store.dispatch("api/getMenuButtonPermitAction", {id: $this.$router.currentRoute.meta.id}).then((res) => {
           if (res.status) {
+            console.log(res.data,'res');
             if (res.data.length > 0) {
               res.data.forEach(function (item, index) {
                 $this.menuButtonPermit.push(item.action_route);
@@ -536,7 +532,14 @@ export default {
           if (response) {
             if (response.status) {
               $this.permitModules = response.data;
-              $this.initPage();
+              console.log($this.permitModules,'Module_manager');
+              if($this.permitModules.includes('Module_manager')){
+                $this.initPage();
+              }else{
+                $this.$router.push({
+                  path: `/Home/CH/objectiveShow`,
+                });
+              }
             } else {
               $this.$message({
                 showClose: true,
