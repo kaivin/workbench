@@ -7,21 +7,14 @@ import '@kangc/v-md-editor/lib/style/base-editor.css';
 import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
 import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
 import Prism from 'prismjs';
-//pickerRangeOptions
-import {pickerRangeOptions} from "@/utils";
-// codemirror 编辑器的相关资源
-import Codemirrors from 'codemirror';
-// mode
-import 'codemirror/mode/markdown/markdown';
-// placeholder
-import 'codemirror/addon/display/placeholder';
-// active-line
-import 'codemirror/addon/selection/active-line';
-// scrollbar
-import 'codemirror/addon/scroll/simplescrollbars';
+import {pickerRangeOptions} from "@/utils"; //pickerRangeOptions
+import Codemirrors from 'codemirror'; // codemirror 编辑器的相关资源
+import 'codemirror/mode/markdown/markdown'; // mode
+import 'codemirror/addon/display/placeholder'; // placeholder
+import 'codemirror/addon/selection/active-line'; // active-line
+import 'codemirror/addon/scroll/simplescrollbars'; // scrollbar
 import 'codemirror/addon/scroll/simplescrollbars.css';
-// style
-import 'codemirror/lib/codemirror.css';
+import 'codemirror/lib/codemirror.css'; // style
 VueMarkdownEditor.Codemirrors = Codemirrors;
 VueMarkdownEditor.use(vuepressTheme, {
   Prism,

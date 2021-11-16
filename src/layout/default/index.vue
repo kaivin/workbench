@@ -5,6 +5,7 @@
       </el-header>
       <el-container class="container-layout">
         <sidebar v-if="isSales" />
+        <homeleft v-if="key.indexOf('/Home/')>=0" />
         <el-main class="main-layout" v-if="isRefresh">
             <transition name="fade-transform" mode="out-in">
               <router-view :key="key"></router-view>
@@ -15,13 +16,14 @@
 </template>
 
 <script>
-import { Sidebar, HeaderPane } from './components/index';
+import { Sidebar, HeaderPane, Homeleft } from './components/index';
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
 import Cookies from 'js-cookie'
 export default {
   name: 'Layout',
   components: {
+    Homeleft,
     Sidebar,
     HeaderPane,
   },

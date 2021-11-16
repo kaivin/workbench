@@ -1,24 +1,27 @@
-﻿
-<template>
-    <div class="page-root flex-box no-padding web-msg" ref="boxPane">
-        <div class="homeLeft">
-            <el-scrollbar wrap-class="scrollbar-wrapper">
-                <home-left />
-            </el-scrollbar>
+﻿<template>
+  <div class="page-root scroll-panel home-index" ref="boxPane">
+    <el-card class="box-card scroll-card" shadow="hover">
+        <div class="homeMain flex-content">CH-目标展示
         </div>
-        <div class="homeMain flex-content">EN-目标展示
-        </div>
-    </div>
+    </el-card>
+  </div>
 </template>
-
 <script>
-import HomeLeft from "../../compoents/HomeLeft";
 export default {
   name: "objectiveShow",
-  components: {
-    HomeLeft,
+  data() {
+    return {
+    };
+  },
+  created() {
+    var $this = this;
+    $this.initData();
   },
   methods: {
+    // 初始化数据
+    initData() {
+      var $this = this;
+    },
   }
 }
 </script>

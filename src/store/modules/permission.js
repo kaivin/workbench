@@ -138,8 +138,7 @@ function setRoutes(routers){
         name:'groupAnalysis',
         component: () => import("@/views/Home/EN/groupAnalysis/index.vue"),
         meta: {id:'Home-enGroup',title: '组员分析', icon: null, keepAlive:false},
-      },
-      {
+      },{
         path: "/Article/info",
         name:'articleInfo',
         component: () => import(/* webpackChunkName: "articleInfo" */ "@/views/Article/info/index.vue"),
@@ -274,7 +273,7 @@ function setRoutes(routers){
       {
         path: "/Demo/index",
         name:'Demo_index',
-        component: () => import("@/views/Demo/index/index.vue"),
+        component: () => import(/* webpackChunkName: "DemoIndex" */ "@/views/Demo/index/index.vue"),
         meta: {id:'demo_index-1000',title: '测试页面', icon: null, keepAlive:false},
       },
       {
