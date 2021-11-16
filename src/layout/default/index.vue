@@ -5,7 +5,7 @@
       </el-header>
       <el-container class="container-layout">
         <sidebar v-if="isSales" />
-        <homeleft v-if="key.indexOf('/Home/')>=0" />
+        <homeleft />
         <el-main class="main-layout" v-if="isRefresh">
             <transition name="fade-transform" mode="out-in">
               <router-view :key="key"></router-view>
@@ -55,6 +55,7 @@ export default {
       return this.$store.state.tagsView.cachedViews
     },
     key() {
+      console.log(this.$route.path,'路由');
       return this.$route.path
     }
   },

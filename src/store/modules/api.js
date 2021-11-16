@@ -21,16 +21,6 @@
   clearHomeCache,
   getEndaytarget,
   getChinadaytarget,
-  getChinacountnew,
-  getChinadepartscorenew,
-  getChinadepartscoreyear,
-  getChinadaytargetnew,
-  getChinadaytargetmonth,
-  getEncountnew,
-  getEndepartscorenew,
-  getEndepartscoreyear,
-  getEndaytargetnew,
-  getEndaytargetmonth,
 } from '@/api/api'
 //import { reject, resolve } from 'core-js/fn/promise';
 import Cookies from 'js-cookie';
@@ -512,106 +502,6 @@ const actions = {
     getChinadaytargetAction({ commit, state },data) {
       return new Promise((resolve, reject) => {
         getChinadaytarget(data).then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    //首页中文统计总览
-    getChinacountnewAction({ commit, state }) {
-      return new Promise((resolve, reject) => {
-        getChinacountnew().then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    //首页日目标展示-中文成交统计接口
-    getChinadepartscorenewAction({ commit, state },data) {
-      return new Promise((resolve, reject) => {
-        getChinadepartscorenew(data).then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    //首页中文成交统计年度完成情况接口
-    getChinadepartscoreyearAction({ commit, state },data) {
-      return new Promise((resolve, reject) => {
-        getChinadepartscoreyear(data).then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    //首页中文目标展示(中文日目标接口)
-    getChinadaytargetnewAction({ commit, state },data) {
-      return new Promise((resolve, reject) => {
-        getChinadaytargetnew(data).then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    //首页中文目标月度完成次数统计(中文日目标接口)
-    getChinadaytargetmonthAction({ commit, state },data) {
-      return new Promise((resolve, reject) => {
-        getChinadaytargetmonth(data).then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    //首页英文统计总览
-    getEncountnewAction({ commit, state }) {
-      return new Promise((resolve, reject) => {
-        getEncountnew().then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    //首页日目标展示-英文成交统计接口
-    getEndepartscorenewAction({ commit, state },data) {
-      return new Promise((resolve, reject) => {
-        getEndepartscorenew(data).then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    //首页英文成交统计年度完成情况接口
-    getEndepartscoreyearAction({ commit, state },data) {
-      return new Promise((resolve, reject) => {
-        getEndepartscoreyear(data).then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    //首页英文目标展示(英文日目标接口)
-    getEndaytargetnewAction({ commit, state },data) {
-      return new Promise((resolve, reject) => {
-        getEndaytargetnew(data).then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    //首页英文目标月度完成次数统计(英文日目标接口)
-    getEndaytargetmonthAction({ commit, state },data) {
-      return new Promise((resolve, reject) => {
-        getEndaytargetmonth(data).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)

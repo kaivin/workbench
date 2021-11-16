@@ -1,8 +1,7 @@
 ﻿<template>
   <div class="page-root scroll-panel home-index" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
-        <div class="homeMain flex-content">CH-目标展示
-        </div>
+        <div class="homeMain flex-content">CH-目标展示</div>
     </el-card>
   </div>
 </template>

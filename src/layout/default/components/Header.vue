@@ -42,11 +42,8 @@
               <div class="item-button" v-if="isEncompareListAdd" v-on:click="EncompareListAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加部门A</span></div>
               <div class="item-button" v-if="isCntargetlistAdd" v-on:click="CntargetlistAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加日目标</span></div>
               <div class="item-button" v-if="isEntargetlistAdd" v-on:click="EntargetlistAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加日目标</span></div>
-
-
               <div class="item-button" v-if="isWorkOrderTagAdd" v-on:click="workOrderTagAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加标签</span></div>
               <div class="item-button" v-if="isWorkOrderAdd" v-on:click="workOrderAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">工单发布</span></div>
-
               <div class="item-button" v-if="isDepartScoreAdd" v-on:click="DepartScoreAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">部门月度积分添加</span></div>
               <div class="item-button" v-if="isResourceTypeAdd" v-on:click="resourceTypeAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加资源类型</span></div>
               <div class="item-button" v-if="isResourceAdd" v-on:click="resourceAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加资源</span></div>
@@ -185,73 +182,42 @@ export default {
       }
     }
   },
-    methods:{
-        // 清除缓存
-        clearCache(){
-          var $this = this;
-          var type = "all";
-          $this.$store.dispatch('api/clearCacheAction', {cachename:type}).then(response=>{
-            if(response){
-              if(response.status){
-                $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'success'
-                });
-                $this.enCluesSearchData();
-              }else{
-                $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'error'
-                });
-              }
-            }
-          });
-        },
-        // 清除首页数据
-        clearHomeCache(){
-            var $this = this;
-            var userlanguage = Cookies.get('language');      
-            userlanguage = JSON.parse(userlanguage);
-            var cacheForm={}
-            if(userlanguage.language=='Module_cnStat'){
-              cacheForm.cachename='chinaindex'
+  methods:{
+      // 清除缓存
+      clearCache(){
+        var $this = this;
+        var type = "all";
+        $this.$store.dispatch('api/clearCacheAction', {cachename:type}).then(response=>{
+          if(response){
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.enCluesSearchData();
             }else{
-              cacheForm.cachename='enindex'
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
             }
-            $this.$store.dispatch('api/clearHomeCacheAction', cacheForm).then(response=>{
-              if(response){
-                if(response.status){
-                  $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'success'
-                  });
-                }else{
-                  $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'error'
-                  });
-                }
-              }
-            });
-        },
-        // 打开意见反馈弹窗
-        openDialog(){
+          }
+        });
+      },
+      // 清除首页数据
+      clearHomeCache(){
           var $this = this;
-          $this.dialogFormVisible = true;
-        },
-        // 关闭弹窗
-        handleClose(){
-          var $this = this;
-          $this.dialogFormVisible = false;
-        },
-        // 提交反馈
-        saveData(){
-          var $this = this;
-          $this.$store.dispatch('api/getAddsayAction', $this.dialogForm).then(response=>{
+          var userlanguage = Cookies.get('language');      
+          userlanguage = JSON.parse(userlanguage);
+          var cacheForm={}
+          if(userlanguage.language=='Module_cnStat'){
+            cacheForm.cachename='chinaindex'
+          }else{
+            cacheForm.cachename='enindex'
+          }
+          $this.$store.dispatch('api/clearHomeCacheAction', cacheForm).then(response=>{
             if(response){
               if(response.status){
                 $this.$message({
@@ -259,8 +225,6 @@ export default {
                   message: response.info,
                   type: 'success'
                 });
-                $this.dialogForm.content = "";
-                $this.handleClose();
               }else{
                 $this.$message({
                   showClose: true,
@@ -270,205 +234,238 @@ export default {
               }
             }
           });
-        },
-        // 退出登录
-        async logout() {
-            var $this = this;
-            await $this.$store.dispatch('login/logoutAction').then(response=>{
-              if(response.status){
-                $this.$router.push(`/login`)
-                //$this.$router.push(`/login?redirect=${$this.$route.fullPath}`)
-              }else{
-                $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'error'
-                });
-              }
-            });
-        },
-        // 侧边导航伸缩
-        //toggleSideBar() {
-        //    this.$store.dispatch('app/toggleSideBar')
-        //},
-        // 跳转到个人中心
-        linkTo(){
-          var $this = this;
-          $this.$router.push(`/User/personset`);
-        },
-        // 下拉菜单点击触发事件
-        handleCommand(e){
-          var $this = this;
-          if(e==="a"){
-            $this.linkTo();
-          }else{
-            $this.logout();
+      },
+      // 打开意见反馈弹窗
+      openDialog(){
+        var $this = this;
+        $this.dialogFormVisible = true;
+      },
+      // 关闭弹窗
+      handleClose(){
+        var $this = this;
+        $this.dialogFormVisible = false;
+      },
+      // 提交反馈
+      saveData(){
+        var $this = this;
+        $this.$store.dispatch('api/getAddsayAction', $this.dialogForm).then(response=>{
+          if(response){
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.dialogForm.content = "";
+              $this.handleClose();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
           }
-        },
-        // 搜索结果点击事件
-        searchResult(){
+        });
+      },
+      // 退出登录
+      async logout() {
           var $this = this;
-          if($this.searchWord!=""){
-            $this.$router.push({path:'/Article/index',query:{keyword:$this.searchWord}});
-          }else{
-            $this.$router.push({path:'/Article/index'});
-          }
-        },
-        // 发布贴吧文章
-        articleAdd(){
-          var $this = this;
-          var routeUrl =  $this.$router.resolve({path:'/Article/addEdit'});
-          window.open(routeUrl.href,'_blank');
-        },
-        // 添加网站
-        websiteAdd(){
-          this.$store.dispatch('app/addWebsite')
-        },
-        // 添加服务器
-        webserverAdd(){
-          var $this = this;
-          var routeUrl =  $this.$router.resolve({name:'webserverAddEdit'});
-          window.open(routeUrl.href,'_blank');
-        },
-        // 添加中文电话
-        cnPhoneAdd(){
-          this.$store.dispatch('app/addCnPhone')
-        },
-        // 添加英文电话
-        enPhoneAdd(){
-          this.$store.dispatch('app/addEnPhone')
-        },
-        // 添加英文产品分类
-        enCateAdd(){
-          this.$store.dispatch('app/addEnCate')
-        },
-        // 添加英文产品
-        enProductAdd(){
-          this.$store.dispatch('app/addEnProduct')
-        },
-        // 添加中文产品分类
-        cnCateAdd(){
-          this.$store.dispatch('app/addCnCate')
-        },
-        // 添加中文产品
-        cnProductAdd(){
-          this.$store.dispatch('app/addCnProduct')
-        },
-        // 添加中文产品
-        websiteAttrAdd(){
-          this.$store.dispatch('app/addWebsiteAttr')
-        },
-        // 添加论坛栏目
-        informationAdd(){
-          this.$store.dispatch('app/addInformation')
-        },
-        // 添加论坛标签
-        tagAdd(){
-          this.$store.dispatch('app/addTag')
-        },
-        // 添加用户
-        userAdd(){
-          this.$store.dispatch('app/addUser')
-        },
-        // 添加部门
-        departAdd(){
-          this.$store.dispatch('app/addDepart')
-        },
-        // 添加角色
-        roleAdd(){
-          this.$store.dispatch('app/addRole')
-        },
-        // 添加菜单
-        menuAdd(){
-          this.$store.dispatch('app/addMenu')
-        },
-        // 添加权限
-        permitAdd(){
-          this.$store.dispatch('app/addPermit')
-        },
-        // 添加推广账户
-        promotedAccountAdd(){
-          this.$store.dispatch('app/addPromotedAccount')
-        },
-        // 添加推广渠道
-        promotedChannelAdd(){
-          this.$store.dispatch('app/addPromotedChannel')
-        },
-        // 添加中文推广营销流程数据
-        cnProcessAdd(){
-          this.$store.dispatch('app/addCnProcess')
-        },
-        // 添加中文推广消费充值记录
-        cnMoneyAdd(){
-          this.$store.dispatch('app/addCnMoney')
-        },
-        // 添加中文询盘
-        cnCluesAdd(){
-          var $this = this;
-          var routeUrl =  $this.$router.resolve({path:'/Chinaphone/addEditClues'});
-          window.open(routeUrl.href,'_self');
-        },
-        // 添加英文询盘
-        enCluesAdd(){
-          var $this = this;
-          var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues'});
-          window.open(routeUrl.href,'_self');
-        },
-        // 添加网站日志
-        websiteLogAdd(){
-          this.$store.dispatch('app/addWebsiteLog')
-        },
-        // 添加网站日志
-        webMsgIpAdd(){
-          this.$store.dispatch('app/addWebMsgIp')
-        },
-        // 添加部门成交
-        compareListAdd(){
-          this.$store.dispatch('app/addCompareList')
-        },
-        // 添加部门A成交
-        EncompareListAdd(){
-          this.$store.dispatch('app/addEncompareList')
-        },
-        // 中文添加日目标
-        CntargetlistAdd(){
-          this.$store.dispatch('app/addCntargetlist')
-        },
-        // 英文添加日目标
-        EntargetlistAdd(){
-          this.$store.dispatch('app/addEntargetlist')
-        },
-        // 添加工单标签
-        workOrderTagAdd(){
-          this.$store.dispatch('app/addWorkOrderTag')
-        },
-        // 工单发布
-        workOrderAdd(){
-          var $this = this;
-          var routeUrl =  $this.$router.resolve({path:'/Works/addEdit'});
-          window.open(routeUrl.href,'_blank');
-        },
-        // 部门月度积分添加
-        DepartScoreAdd(){
-          this.$store.dispatch('app/addDepartScore')
-        },
-        // 资源类型添加
-        resourceTypeAdd(){
-          this.$store.dispatch('app/addResourceType')
-        },
-        // 资源添加
-        resourceAdd(){
-          this.$store.dispatch('app/addResource')
-        },
-        // 中文个人成交添加
-        cnScoreAdd(){
-          this.$store.dispatch('app/addCnScore')
-        },
-        // 英文个人成交添加
-        enScoreAdd(){
-          this.$store.dispatch('app/addEnScore')
-        },
-    }
+          await $this.$store.dispatch('login/logoutAction').then(response=>{
+            if(response.status){
+              $this.$router.push(`/login`)
+              //$this.$router.push(`/login?redirect=${$this.$route.fullPath}`)
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          });
+      },
+      // 侧边导航伸缩
+      //toggleSideBar() {
+      //    this.$store.dispatch('app/toggleSideBar')
+      //},
+      // 跳转到个人中心
+      linkTo(){
+        var $this = this;
+        $this.$router.push(`/User/personset`);
+      },
+      // 下拉菜单点击触发事件
+      handleCommand(e){
+        var $this = this;
+        if(e==="a"){
+          $this.linkTo();
+        }else{
+          $this.logout();
+        }
+      },
+      // 搜索结果点击事件
+      searchResult(){
+        var $this = this;
+        if($this.searchWord!=""){
+          $this.$router.push({path:'/Article/index',query:{keyword:$this.searchWord}});
+        }else{
+          $this.$router.push({path:'/Article/index'});
+        }
+      },
+      // 发布贴吧文章
+      articleAdd(){
+        var $this = this;
+        var routeUrl =  $this.$router.resolve({path:'/Article/addEdit'});
+        window.open(routeUrl.href,'_blank');
+      },
+      // 添加网站
+      websiteAdd(){
+        this.$store.dispatch('app/addWebsite')
+      },
+      // 添加服务器
+      webserverAdd(){
+        var $this = this;
+        var routeUrl =  $this.$router.resolve({name:'webserverAddEdit'});
+        window.open(routeUrl.href,'_blank');
+      },
+      // 添加中文电话
+      cnPhoneAdd(){
+        this.$store.dispatch('app/addCnPhone')
+      },
+      // 添加英文电话
+      enPhoneAdd(){
+        this.$store.dispatch('app/addEnPhone')
+      },
+      // 添加英文产品分类
+      enCateAdd(){
+        this.$store.dispatch('app/addEnCate')
+      },
+      // 添加英文产品
+      enProductAdd(){
+        this.$store.dispatch('app/addEnProduct')
+      },
+      // 添加中文产品分类
+      cnCateAdd(){
+        this.$store.dispatch('app/addCnCate')
+      },
+      // 添加中文产品
+      cnProductAdd(){
+        this.$store.dispatch('app/addCnProduct')
+      },
+      // 添加中文产品
+      websiteAttrAdd(){
+        this.$store.dispatch('app/addWebsiteAttr')
+      },
+      // 添加论坛栏目
+      informationAdd(){
+        this.$store.dispatch('app/addInformation')
+      },
+      // 添加论坛标签
+      tagAdd(){
+        this.$store.dispatch('app/addTag')
+      },
+      // 添加用户
+      userAdd(){
+        this.$store.dispatch('app/addUser')
+      },
+      // 添加部门
+      departAdd(){
+        this.$store.dispatch('app/addDepart')
+      },
+      // 添加角色
+      roleAdd(){
+        this.$store.dispatch('app/addRole')
+      },
+      // 添加菜单
+      menuAdd(){
+        this.$store.dispatch('app/addMenu')
+      },
+      // 添加权限
+      permitAdd(){
+        this.$store.dispatch('app/addPermit')
+      },
+      // 添加推广账户
+      promotedAccountAdd(){
+        this.$store.dispatch('app/addPromotedAccount')
+      },
+      // 添加推广渠道
+      promotedChannelAdd(){
+        this.$store.dispatch('app/addPromotedChannel')
+      },
+      // 添加中文推广营销流程数据
+      cnProcessAdd(){
+        this.$store.dispatch('app/addCnProcess')
+      },
+      // 添加中文推广消费充值记录
+      cnMoneyAdd(){
+        this.$store.dispatch('app/addCnMoney')
+      },
+      // 添加中文询盘
+      cnCluesAdd(){
+        var $this = this;
+        var routeUrl =  $this.$router.resolve({path:'/Chinaphone/addEditClues'});
+        window.open(routeUrl.href,'_self');
+      },
+      // 添加英文询盘
+      enCluesAdd(){
+        var $this = this;
+        var routeUrl =  $this.$router.resolve({path:'/Enphone/addEditClues'});
+        window.open(routeUrl.href,'_self');
+      },
+      // 添加网站日志
+      websiteLogAdd(){
+        this.$store.dispatch('app/addWebsiteLog')
+      },
+      // 添加网站日志
+      webMsgIpAdd(){
+        this.$store.dispatch('app/addWebMsgIp')
+      },
+      // 添加部门成交
+      compareListAdd(){
+        this.$store.dispatch('app/addCompareList')
+      },
+      // 添加部门A成交
+      EncompareListAdd(){
+        this.$store.dispatch('app/addEncompareList')
+      },
+      // 中文添加日目标
+      CntargetlistAdd(){
+        this.$store.dispatch('app/addCntargetlist')
+      },
+      // 英文添加日目标
+      EntargetlistAdd(){
+        this.$store.dispatch('app/addEntargetlist')
+      },
+      // 添加工单标签
+      workOrderTagAdd(){
+        this.$store.dispatch('app/addWorkOrderTag')
+      },
+      // 工单发布
+      workOrderAdd(){
+        var $this = this;
+        var routeUrl =  $this.$router.resolve({path:'/Works/addEdit'});
+        window.open(routeUrl.href,'_blank');
+      },
+      // 部门月度积分添加
+      DepartScoreAdd(){
+        this.$store.dispatch('app/addDepartScore')
+      },
+      // 资源类型添加
+      resourceTypeAdd(){
+        this.$store.dispatch('app/addResourceType')
+      },
+      // 资源添加
+      resourceAdd(){
+        this.$store.dispatch('app/addResource')
+      },
+      // 中文个人成交添加
+      cnScoreAdd(){
+        this.$store.dispatch('app/addCnScore')
+      },
+      // 英文个人成交添加
+      enScoreAdd(){
+        this.$store.dispatch('app/addEnScore')
+      },
+  }
 }
 </script>
 
