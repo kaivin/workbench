@@ -173,3 +173,81 @@ export function getChinadaytarget(data) {
     data
   });
 }
+//首页中文统计总览
+export function getChinacountnew() {
+  return request({
+    url: "/hxindex/Api/chinacountnew",
+    method: "POST",
+  });
+}
+//首页日目标展示-中文成交统计接口
+export function getChinadepartscorenew(data) {
+  return request({
+    url: "/hxindex/Api/chinadepartscorenew",
+    method: "POST",
+    data
+  });
+}
+//首页中文成交统计年度完成情况接口
+export function getChinadepartscoreyear(data) {
+  return request({
+    url: "/hxindex/Api/chinadepartscoreyear",
+    method: "POST",
+    data
+  });
+}
+//首页中文目标展示(中文日目标接口)
+export function getChinadaytargetnew(data) {
+  return request({
+    url: "/hxindex/Api/chinadaytargetnew",
+    method: "POST",
+    data
+  });
+}
+//首页中文目标月度完成次数统计(中文日目标接口)
+export function getChinadaytargetmonth(data) {
+  return request({
+    url: "/hxindex/Api/chinadaytargetmonth",
+    method: "POST",
+    data
+  });
+}
+//首页英文统计总览
+export function getEncountnew() {
+  return request({
+    url: "/hxindex/Api/encountnew",
+    method: "POST",
+  });
+}
+//首页日目标展示-英文成交统计接口
+export function getEndepartscorenew(data) {
+  return request({
+    url: "/hxindex/Api/endepartscorenew",
+    method: "POST",
+    data
+  });
+}
+//首页英文成交统计年度完成情况接口
+export function getEndepartscoreyear(data) {
+  return request({
+    url: "/hxindex/Api/endepartscoreyear",
+    method: "POST",
+    data
+  });
+}
+//首页英文目标展示(英文日目标接口)
+export function getEndaytargetnew(data) {
+  return request({
+    url: "/hxindex/Api/endaytargetnew",
+    method: "POST",
+    data
+  });
+}
+//首页英文目标月度完成次数统计(英文日目标接口)
+export function getEndaytargetmonth(data) {
+  return request({
+    url: "/hxindex/Api/endaytargetmonth",
+    method: "POST",
+    data
+  });
+}
