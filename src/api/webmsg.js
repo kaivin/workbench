@@ -247,3 +247,17 @@ export function webMsgWhiteIpDelete(data) {
     data
   });
 }
+// 删除超过7天的已过滤垃圾信息
+export function deleteHistoryFilterMsg() {
+  return request({
+    url: "/hxindex/Webmsg/deletefiltermsg",
+    method: "POST",
+  });
+}
+// 删除超过7天的回收站信息
+export function deleteHistoryRecycleMsg() {
+  return request({
+    url: "/hxindex/Webmsg/deleterecyclemsg",
+    method: "POST",
+  });
+}

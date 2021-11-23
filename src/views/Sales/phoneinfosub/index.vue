@@ -113,7 +113,7 @@
                                         <span>客户性质：</span>                          
                                       </dt>
                                       <dd class="flex-wrap">       
-                                          <el-radio-group style="margin-bottom:10px;" v-model="formData.ennature">
+                                          <el-radio-group style="margin-bottom:10px;" v-model="formData.ennature" :disabled="selectedDisabled">
                                             <el-radio v-for="item in ennatureList" :label="item.value" :key="item.value">{{item.label}}</el-radio>
                                           </el-radio-group>              
                                       </dd>
@@ -123,7 +123,7 @@
                                         <span>沟通后客户需求设备价格范围<i>（单位：人民币RMB）</i>：</span>                        
                                       </dt>
                                       <dd class="SaleFootFrTop">       
-                                          <el-radio-group style="margin-bottom:10px;" v-model="formData.enxunprice">
+                                          <el-radio-group style="margin-bottom:10px;" v-model="formData.enxunprice" :disabled="selectedDisabled">
                                             <el-radio v-for="item in enxunpriceList" :label="item.value" :key="item.value">{{item.label}}</el-radio>
                                           </el-radio-group>             
                                       </dd>
@@ -262,6 +262,7 @@ export default {
       feedback:'未反馈',
       isLoading:null,
       isDisabled:false,
+      selectedDisabled:true,
     }
   },
   computed: {
@@ -479,6 +480,7 @@ export default {
       $this.formData.givesaleswarn = $this.defaultInfo.givesaleswarn;
       $this.formData.saleswarnstatus = $this.defaultInfo.saleswarnstatus;
       $this.formData.salesremark = $this.defaultInfo.salesremark;
+      $this.compareDate();
       $this.isLoading.close();
       setTimeout(()=>{
         $this.isDisabled=false;
@@ -701,6 +703,30 @@ export default {
       var $this = this;
       $this.$router.push({path:'/Sales/phonecount'});
     },
+    // 设置反馈时间
+    setFeedbackDate(){
+      var t = new Date(this.formData.allottime)
+      var t_s = t.getTime();
+      t.setTime(t_s+1000*60*60*24*10)
+      var t_ss = t.getTime();
+      return t_ss;
+    },
+    // 获取现在时间
+    getNowDate(){
+      var t = new Date()
+      var t_s = t.getTime();
+      return t_s;
+    },
+    // 比较现在与反馈时间大小
+    compareDate(){
+      var isDisabled = false;
+      var feedBackDate = this.setFeedbackDate();
+      var nowDate = this.getNowDate();
+      if(feedBackDate>nowDate){
+        isDisabled = true;
+      }
+      this.selectedDisabled = isDisabled;
+    }
   }
 }
 </script>

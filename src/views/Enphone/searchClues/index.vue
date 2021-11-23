@@ -397,8 +397,9 @@
                                         >
                                         <template slot-scope="scope">
                                           <div class="table-text">
-                                            <p>{{scope.row.xunremark}}</p>
-                                            <p v-if="permitField.includes('custormremark')" class="EnColor07">{{scope.row.custormremark}}</p>
+                                            <p><span class="EnColor05" v-if="scope.row.xunremark&&scope.row.xunremark!=''">询盘：</span>{{scope.row.xunremark}}</p>
+                                            <p v-if="permitField.includes('custormremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.custormremark&&scope.row.custormremark!=''">客服：</span>{{scope.row.custormremark}}</p>
+                                            <p v-if="permitField.includes('salesremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.salesremark&&scope.row.salesremark!=''">业务员：</span>{{scope.row.salesremark}}</p>
                                           </div>
                                         </template>
                                       </el-table-column>

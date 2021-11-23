@@ -22,6 +22,15 @@
             line-height:0;
             font-size:0;
             cursor: pointer;
+            &.li-button{
+                text-align: center;
+                background-color: #f5f7fa;
+                border: 1px solid #e4e8ee;
+                span{
+                    color: #333;
+                    font-size: 12px;
+                }
+            }
             &.active,&:hover{
                 border: 1px solid #BDDEFF;
                 background-color: #F6FBFF;

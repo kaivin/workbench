@@ -31,6 +31,8 @@ import {
   webMsgWhiteIpEdit,
   webMsgWhiteIpDelete,
   webMsgRevoke,
+  deleteHistoryFilterMsg,
+  deleteHistoryRecycleMsg
  } from '@/api/webmsg'
 
 const state = {
@@ -358,6 +360,26 @@ const actions = {
   webMsgWhiteIpDeleteAction({ commit, state },data) {
     return new Promise((resolve, reject) => {
       webMsgWhiteIpDelete(data).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        })
+    })
+  },
+  // 删除超过7天的已过滤垃圾信息
+  deleteHistoryFilterMsgAction({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      deleteHistoryFilterMsg().then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        })
+    })
+  },
+  // 删除超过7天的回收站信息
+  deleteHistoryRecycleMsgAction({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      deleteHistoryRecycleMsg().then(response => {
             resolve(response)
         }).catch(error => {
             reject(error)

@@ -13,7 +13,9 @@
                     <li v-if="menuButtonPermit.includes('Webmsg_pushwaitdeal')" v-bind:class="currentStatus === 'SNS_1'?'active':''" v-on:click="jumpLink('SNS_1')" style="margin-top:32px;"><span>推广待处理</span><b>({{defaultData.sns1Num}})</b></li>
                     <li v-if="menuButtonPermit.includes('Webmsg_pushhasdeal')" v-bind:class="currentStatus === 'SNS_2'?'active':''" v-on:click="jumpLink('SNS_2')"><span>推广已处理</span><b>({{defaultData.sns2Num}})</b></li>
                     <li v-if="menuButtonPermit.includes('Webmsg_filetermsg')" v-bind:class="currentStatus === 'Filter'?'active':''" v-on:click="jumpLink('Filter')" style="margin-top:32px;"><span>已过滤垃圾信息</span><b>({{defaultData.filterNum}})</b></li>
+                    <li class="li-button" v-if="menuButtonPermit.includes('Webmsg_filetermsg')&&menuButtonPermit.includes('Webmsg_deletefiltermsg')&&defaultData.filterNum>0" v-on:click="deleteHistory('Filter')"><span>清除已过滤垃圾信息</span></li>
                     <li v-if="menuButtonPermit.includes('Webmsg_deletemsg')" v-bind:class="currentStatus === 'Recycle'?'active':''" v-on:click="jumpLink('Recycle')" style="margin-top:32px;"><span>回收站</span><b>({{defaultData.recycleNum}})</b></li>
+                    <li class="li-button" v-if="menuButtonPermit.includes('Webmsg_deletemsg')&&menuButtonPermit.includes('Webmsg_deleterecyclemsg')&&defaultData.recycleNum>0" v-on:click="deleteHistory('Recycle')"><span>清除回收站信息</span></li>
                 </ul>
                 <div class="tips">
                   <p>tips：显示45天内的数据</p>
@@ -1144,7 +1146,45 @@ export default {
       $this.searchData.language = "";
       $this.searchData.brand_id = "";
       $this.page = 1;
-      $this.limit = 50;
+      $this.limit = 20;
+    },
+    // 删除超过7天的过滤的垃圾信息/回收站信息
+    deleteHistory(type){
+      var $this = this;
+      var url = "";
+      var msgTxt = "";
+      if(type=="Filter"){
+        url="webmsg/deleteHistoryFilterMsgAction";
+        msgTxt = "该操作将删除已超过7天的已过滤垃圾信息，是否确定删除？";
+      }else{
+        url = "webmsg/deleteHistoryRecycleMsgAction";
+        msgTxt = "该操作将删除已超过7天的回收站信息，是否确定删除？"
+      }
+      $this.$confirm(msgTxt, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+      }).then(() => {
+        $this.loadingFun();
+        $this.$store.dispatch(url, null).then(response=>{
+          if(response){
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          }
+        });
+      });
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){
