@@ -77,6 +77,7 @@
                           <div class="item-search">
                             <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                             <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+                            <!-- <el-button type="info" class="resetBtn" size="small" v-on:click="dialogImportVisible=true">导入</el-button> -->
                           </div>
                         </div> 
                       </div>

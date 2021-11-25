@@ -3,7 +3,12 @@
     deparDealListChoose,
     deparDealListAdd,
     deparDealEdit,
-    deparDealDel
+    deparDealDel,
+    groupDealListChoose,
+    groupDealList,
+    groupDealListAdd,
+    groupDealEdit,
+    groupDealDel
 } from '@/api/Compare'
 
 
@@ -20,10 +25,30 @@ const actions = {
             })
         })
     },
+    // 小组成交——积分列表
+    groupDealListAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            groupDealList(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
     // 部门成交——选择部门
     deparDealListChooseAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             deparDealListChoose(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 获取小组
+    groupDealListChooseAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            groupDealListChoose(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -50,10 +75,39 @@ const actions = {
             })
         })
     },
+    // 小组成交——积分积分添加
+    groupDealListAddAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            groupDealListAdd(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 小组成交——积分列表修改
+    groupDealEditAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            groupDealEdit(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
     // 部门成交——积分列表删除
     deparDealDelAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             deparDealDel(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    groupDealDelAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            groupDealDel(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

@@ -1,11 +1,60 @@
 ﻿import { getUserList,userAdd,userEdit,userDelete,userShowHide,userResetPwd,userAllotedRole,userCanAllotRole,userAllotRole,userCanDepart,userNameEdit,pwdEdit,
   contactEdit,
   getBrandList,
-  changeUserLogin,} from '@/api/user'
+  changeUserLogin,userPersonother,getUserPersonother,userPersonotherAdd,userPersonotherEdit,userPersonotherExportlink} from '@/api/user'
 
 const state = {}
 const mutations = {}
 const actions = {
+  // 个人其他信息 导入
+  userPersonotherExportlinkAction({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+      userPersonotherExportlink(data).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // 个人其他信息 修改
+  userPersonotherEditAction({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+      userPersonotherEdit(data).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // 个人其他信息 添加
+  userPersonotherAddAction({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+      userPersonotherAdd(data).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // 个人其他信息列表
+  userPersonotherAction({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+      userPersonother(data).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getUserPersonotherAction({ commit, state }){
+    return new Promise((resolve, reject) => {
+      getUserPersonother().then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   // 获取用户列表数据
   userListAction({ commit, state },data) {
     return new Promise((resolve, reject) => {

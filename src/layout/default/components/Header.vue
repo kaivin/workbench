@@ -12,7 +12,7 @@
                 <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span><span class="search-font">搜索</span></el-button>
               </el-input>
             </div>
-            <div class="header-button" v-if="isArticleAdd||isWebsiteAdd||isWebserverAdd||isCnPhoneAdd||isEnPhoneAdd||isEnCateAdd||isEnProductAdd||isCnCateAdd||isCnProductAdd||isWebsiteAttrAdd||isInformationAdd||isTagAdd||isUserAdd||isDepartAdd||isRoleAdd||isMenuAdd||isPermitAdd||isPromotedAccountAdd||isPromotedChannelAdd||isCnProcessAdd||isCnMoneyAdd||isCnCluesAdd||isEnCluesAdd||isWebsiteLogAdd||isWebMsgIpAdd||iscompareListAdd||isEncompareListAdd||isCntargetlistAdd||isEntargetlistAdd||isWorkOrderTagAdd||isWorkOrderAdd||isDepartScoreAdd||isResourceTypeAdd||isResourceAdd||isCnScoreAdd||isEnScoreAdd">
+            <div class="header-button" v-if="isArticleAdd||isWebsiteAdd||isWebserverAdd||isCnPhoneAdd||isEnPhoneAdd||isEnCateAdd||isEnProductAdd||isCnCateAdd||isCnProductAdd||isWebsiteAttrAdd||isInformationAdd||isTagAdd||isUserAdd||isDepartAdd||isRoleAdd||isMenuAdd||isPermitAdd||isPromotedAccountAdd||isPromotedChannelAdd||isCnProcessAdd||isCnMoneyAdd||isCnCluesAdd||isEnCluesAdd||isWebsiteLogAdd||isWebMsgIpAdd||iscompareListAdd||isEncompareListAdd||isCntargetlistAdd||isEntargetlistAdd||isWorkOrderTagAdd||isWorkOrderAdd||isDepartScoreAdd||isResourceTypeAdd||isResourceAdd||isCnScoreAdd||isEnScoreAdd||iscompareGroupListAdd||isEncompareGroupListAdd">
               <div class="item-button" v-if="isArticleAdd" v-on:click="articleAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">发布文章</span></div>
               <div class="item-button" v-if="isWebsiteAdd" v-on:click="websiteAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加网站</span></div>
               <div class="item-button" v-if="isWebserverAdd" v-on:click="webserverAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加服务器</span></div>
@@ -39,7 +39,9 @@
               <div class="item-button" v-if="isWebsiteLogAdd" v-on:click="websiteLogAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加网站日志</span></div>
               <div class="item-button" v-if="isWebMsgIpAdd" v-on:click="webMsgIpAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加IP白名单</span></div>
               <div class="item-button" v-if="iscompareListAdd" v-on:click="compareListAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加部门成交</span></div>
+              <div class="item-button" v-if="iscompareGroupListAdd" v-on:click="compareGroupListAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加小组成交</span></div>
               <div class="item-button" v-if="isEncompareListAdd" v-on:click="EncompareListAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加部门A</span></div>
+              <div class="item-button" v-if="isEncompareGroupListAdd" v-on:click="EncompareGroupListAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加小组成交积分</span></div>
               <div class="item-button" v-if="isCntargetlistAdd" v-on:click="CntargetlistAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加日目标</span></div>
               <div class="item-button" v-if="isEntargetlistAdd" v-on:click="EntargetlistAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加日目标</span></div>
               <div class="item-button" v-if="isWorkOrderTagAdd" v-on:click="workOrderTagAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加标签</span></div>
@@ -49,6 +51,7 @@
               <div class="item-button" v-if="isResourceAdd" v-on:click="resourceAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加资源</span></div>
               <div class="item-button" v-if="isCnScoreAdd" v-on:click="cnScoreAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">中文个人成交添加</span></div>
               <div class="item-button" v-if="isEnScoreAdd" v-on:click="enScoreAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">英文个人成交添加</span></div>
+            
             </div>
         </div>
         <div class="header-right">
@@ -101,7 +104,7 @@
 <script>
 import logo from "@/assets/logo.png";
 import logoTitle from "@/assets/logo_font.png";
-import { mapGetters } from 'vuex';
+import { mapGetters ,mapActions} from 'vuex';
 import Cookies from 'js-cookie'
 import Hamburger from '@/components/Hamburger';
 export default {
@@ -151,7 +154,9 @@ export default {
         'customerTipsCount',
         'isWebMsgIpAdd',
         'iscompareListAdd',
+        'iscompareGroupListAdd',
         'isEncompareListAdd',
+        'isEncompareGroupListAdd',
         'isCntargetlistAdd',
         'isEntargetlistAdd',
         'isWorkOrderTagAdd',
@@ -163,6 +168,7 @@ export default {
         'isEnScoreAdd',
         'isHomeCache',
         'isNohomeCache',
+        'isCustormbuyFile',
       ]),
     },
   watch: {
@@ -176,6 +182,7 @@ export default {
       },
   },
   created(){
+    
     if(this.$route.path=="/Article/index"){
       if(this.$route.query.keyword){
         this.searchWord = this.$route.query.keyword;
@@ -183,6 +190,7 @@ export default {
     }
   },
   methods:{
+    
       // 清除缓存
       clearCache(){
         var $this = this;
@@ -423,9 +431,16 @@ export default {
       compareListAdd(){
         this.$store.dispatch('app/addCompareList')
       },
+      // 添加小组成交
+      compareGroupListAdd(){
+        this.$store.dispatch('app/addCompareGroupList')
+      },
       // 添加部门A成交
       EncompareListAdd(){
         this.$store.dispatch('app/addEncompareList')
+      },
+      EncompareGroupListAdd(){
+        this.$store.dispatch('app/addEncompareGroupList')
       },
       // 中文添加日目标
       CntargetlistAdd(){
@@ -468,6 +483,13 @@ export default {
   }
 }
 </script>
-
+<style lang="scss" scoped>
+.addfile{
+  label{
+    display: block;
+    cursor: pointer;
+  }
+}
+</style>
 
 

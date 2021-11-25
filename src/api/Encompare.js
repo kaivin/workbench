@@ -7,6 +7,14 @@ export function EndeparDealList(data) {
     data
   });
 }
+// 小组成交——积分列表
+export function EngroupDealList(data) {
+  return request({
+    url: "/hxindex/Encompare/grouplists",
+    method: "POST",
+    data
+  });
+}
 // 部门成交——选择部门
 export function EndeparDealListChoose(data) {
     return request({
@@ -15,6 +23,14 @@ export function EndeparDealListChoose(data) {
       data
     });
   }
+// 小组成交——选择部门
+export function EngroupDealListChoose(data) {
+  return request({
+    url: "/hxindex/Encompare/grouplist",
+    method: "POST",
+    data
+  });
+}
 // 部门成交——积分添加
 export function EndeparDealListAdd(data) {
     return request({
@@ -23,6 +39,14 @@ export function EndeparDealListAdd(data) {
       data
     });
   }
+// 小组成交——积分添加
+export function EngroupDealListAdd(data) {
+  return request({
+    url: "/hxindex/Encompare/grouptargetadd",
+    method: "POST",
+    data
+  });
+}
 // 部门成交——积分列表修改
 export function EndeparDealEdit(data) {
     return request({
@@ -31,6 +55,14 @@ export function EndeparDealEdit(data) {
       data
     });
   }
+// 小组成交——积分列表修改
+export function EngroupDealEdit(data) {
+  return request({
+    url: "/hxindex/Encompare/grouptargetedit",
+    method: "POST",
+    data
+  });
+}
 // 部门成交——积分列表删除
 export function EndeparDealDel(data) {
     return request({
@@ -39,3 +71,11 @@ export function EndeparDealDel(data) {
       data
     });
   }
+// 小组成交——积分列表删除
+export function EngroupDealDel(data) {
+  return request({
+    url: "/hxindex/Encompare/grouptargetdelete",
+    method: "POST",
+    data
+  });
+}

@@ -28,7 +28,9 @@ const state = {
   addWebMsgIp:false,
   addWebsiteLog:1,
   addCompareList:false,
+  addCompareGroupList:false,
   addEncompareList:false,
+  addEncompareGroupList:false,
   addCntargetlist:false,
   addEntargetlist:false,
   addWorkOrderTag:false,
@@ -184,11 +186,24 @@ const mutations = {
   CLOSE_COMPARELIST: (state) => {
     state.addCompareList = false
   },
+  ADD_COMPARELIST_GROUP: (state) => {
+    state.addCompareGroupList = true
+  },
+  CLOSE_COMPARELIST_GROUP: (state) => {
+    state.addCompareGroupList = false
+  },
+  
   ADD_ENCOMPARELIST: (state) => {
     state.addEncompareList = true
   },
   CLOSE_ENCOMPARELIST: (state) => {
     state.addEncompareList = false
+  },
+  ADD_ENCOMPARELIST_GROUP: (state) => {
+    state.addEncompareGroupList = true
+  },
+  CLOSE_ENCOMPARELIST_GROUP: (state) => {
+    state.addEncompareGroupList = false
   },
   ADD_CNTARGETLIST: (state) => {
     state.addCntargetlist = true
@@ -382,11 +397,23 @@ const actions = {
   closeCompareList({ commit }) {
     commit('CLOSE_COMPARELIST')
   },
+  addCompareGroupList({ commit }) {
+    commit('ADD_COMPARELIST_GROUP')
+  },
+  closeCompareGroupList({ commit }) {
+    commit('CLOSE_COMPARELIST_GROUP')
+  },
   addEncompareList({ commit }) {
     commit('ADD_ENCOMPARELIST')
   },
+  addEncompareGroupList({ commit }) {
+    commit('ADD_ENCOMPARELIST_GROUP')
+  },
   closeEncompareList({ commit }) {
     commit('CLOSE_ENCOMPARELIST')
+  }, 
+  closeEncompareGroupList({ commit }) {
+    commit('CLOSE_ENCOMPARELIST_GROUP')
   },  
   addCntargetlist({ commit }) {
     commit('ADD_CNTARGETLIST')

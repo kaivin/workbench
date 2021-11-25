@@ -528,6 +528,7 @@ export default {
           });
         // 可视化用户数据
         const userData = $this.currentCluesData.cluesRegionData;
+        
         const userDv = ds.createView().source(userData).transform({
           // sizeByCount: true,
           geoDataView: worldMap,

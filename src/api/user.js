@@ -117,3 +117,46 @@ export function changeUserLogin(data) {
     data,
   });
 }
+// 个人其他信息列表
+export function userPersonother(data) {
+  return request({
+    url: "/hxindex/User/personother",
+    method: "POST",
+    data,
+  });
+}
+// 个人其他信息列表 获取用户
+export function getUserPersonother() {
+  return request({
+    url: "/hxindex/User/getuser",
+    method: "POST",
+    
+  });
+}
+// 个人其他信息列表 添加
+export function userPersonotherAdd(data) {
+  return request({
+    url: "/hxindex/User/personotheradd",
+    method: "POST",
+    data
+  });
+}
+// 个人其他信息列表 修改
+export function userPersonotherEdit(data) {
+  return request({
+    url: "/hxindex/User/personotheredit",
+    method: "POST",
+    data
+  });
+}
+// 个人其他信息列表 导入
+export function userPersonotherExportlink(data) {
+  return request({
+    url: "/hxindex/User/exportlink",
+    method: "POST",
+    data,
+    headers:{
+      isFile:true,
+    }
+  });
+}

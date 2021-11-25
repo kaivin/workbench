@@ -62,7 +62,9 @@ const state = {
     isWebsiteLogAdd:false,
     isWebMsgIpAdd:false,
     iscompareListAdd:false,
+    iscompareGroupListAdd:false,
     isEncompareListAdd:false,
+    isEncompareGroupListAdd:false,
     isCntargetlistAdd:false,
     isEntargetlistAdd:false,
     isWorkOrderTagAdd:false,
@@ -74,6 +76,7 @@ const state = {
     isEnScoreAdd:false,
     isHomeCache:false,
     isNohomeCache:false,
+    isCustormbuyFile:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -81,6 +84,7 @@ const mutations = {
     data.data.forEach(function(item,index){
       permitData.push(item.action_route);
     });
+    console.log(data)
     if(permitData.includes("Article_search")&&data.page==""){
       state.isArticleSearch = true;
     }else{
@@ -216,10 +220,20 @@ const mutations = {
     }else{
       state.iscompareListAdd = false;
     }
+    if(permitData.includes("Compare_grouptargetadd")&&data.page==""){
+      state.iscompareGroupListAdd = true;
+    }else{
+      state.iscompareGroupListAdd = false;
+    }
     if(permitData.includes("Encompare_lists")&&data.page==""){
       state.isEncompareListAdd = true;
     }else{
       state.isEncompareListAdd = false;
+    }
+    if(permitData.includes("Encompare_grouptargetadd")&&data.page==""){
+      state.isEncompareGroupListAdd = true;
+    }else{
+      state.isEncompareGroupListAdd = false;
     }
     if(permitData.includes("Chinaphone_targetlist")&&data.page==""){
       state.isCntargetlistAdd = true;
@@ -276,6 +290,12 @@ const mutations = {
     }else{
       state.isNohomeCache = false;
     }
+    if(permitData.includes("Custormbuy_exportlink")&&data.page==""){
+      state.isCustormbuyFile = true;
+    }else{
+      state.isCustormbuyFile = false;
+    }
+    
   },
 }
 

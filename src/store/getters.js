@@ -53,9 +53,13 @@
     addWebMsgIp:state => state.app.addWebMsgIp,
     msgPage:state => state.webmsg.msgPage,
     iscompareListAdd: state => state.api.iscompareListAdd,
+    iscompareGroupListAdd: state => state.api.iscompareGroupListAdd,
     addCompareList: state => state.app.addCompareList,
+    addCompareGroupList:state=>state.app.addCompareGroupList,
     isEncompareListAdd: state => state.api.isEncompareListAdd,
+    isEncompareGroupListAdd:state=>state.api.isEncompareGroupListAdd,
     addEncompareList: state => state.app.addEncompareList,
+    addEncompareGroupList:state=>state.app.addEncompareGroupList,
     isCntargetlistAdd: state => state.api.isCntargetlistAdd,
     addCntargetlist: state => state.app.addCntargetlist,
     isEntargetlistAdd: state => state.api.isEntargetlistAdd,
@@ -75,6 +79,7 @@
     addEnScore:state => state.app.addEnScore,
     isHomeCache: state => state.api.isHomeCache,
     isNohomeCache: state => state.api.isNohomeCache,
+    isCustormbuyFile:state=>state.api.isCustormbuyFile,
 }
 export default getters
   

@@ -3,7 +3,13 @@
     EndeparDealListChoose,
     EndeparDealListAdd,
     EndeparDealEdit,
-    EndeparDealDel
+    EndeparDealDel,
+    EngroupDealList,
+    EngroupDealListChoose,
+    EngroupDealListAdd,
+    EngroupDealEdit,
+    EngroupDealDel
+
 } from '@/api/Encompare'
 
 
@@ -20,10 +26,30 @@ const actions = {
             })
         })
     },
+    // 小组成交——积分列表
+    EngroupDealListAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            EngroupDealList(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
     // 部门成交——选择部门
     EndeparDealListChooseAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             EndeparDealListChoose(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 小组成交——选择部门
+    EngroupDealListChooseAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            EngroupDealListChoose(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -40,6 +66,16 @@ const actions = {
             })
         })
     },
+    // 小组成交——积分积分添加
+    EngroupDealListAddAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            EngroupDealListAdd(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
     // 部门成交——积分列表修改
     EndeparDealEditAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
@@ -50,10 +86,30 @@ const actions = {
             })
         })
     },
+    // 小组成交——积分列表修改
+    EngroupDealEditAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            EngroupDealEdit(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
     // 部门成交——积分列表删除
     EndeparDealDelAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             EndeparDealDel(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 小组成交——积分列表删除
+    EngroupDealDelAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            EngroupDealDel(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
