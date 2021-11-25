@@ -32,7 +32,8 @@ import {
   webMsgWhiteIpDelete,
   webMsgRevoke,
   deleteHistoryFilterMsg,
-  deleteHistoryRecycleMsg
+  deleteHistoryRecycleMsg,
+  deleteCnApiMsg
  } from '@/api/webmsg'
 
 const state = {
@@ -380,6 +381,16 @@ const actions = {
   deleteHistoryRecycleMsgAction({ commit, state }) {
     return new Promise((resolve, reject) => {
       deleteHistoryRecycleMsg().then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        })
+    })
+  },
+  // 删除超过5天的中文API留言信息
+  deleteCnApiMsgAction({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      deleteCnApiMsg().then(response => {
             resolve(response)
         }).catch(error => {
             reject(error)

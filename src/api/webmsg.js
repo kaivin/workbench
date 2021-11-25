@@ -261,3 +261,10 @@ export function deleteHistoryRecycleMsg() {
     method: "POST",
   });
 }
+// 删除超过5天的中文API留言信息
+export function deleteCnApiMsg() {
+  return request({
+    url: "/hxindex/Webmsg/deleteapi",
+    method: "POST",
+  });
+}

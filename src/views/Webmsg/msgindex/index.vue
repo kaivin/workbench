@@ -16,6 +16,7 @@
                     <li class="li-button" v-if="menuButtonPermit.includes('Webmsg_filetermsg')&&menuButtonPermit.includes('Webmsg_deletefiltermsg')&&defaultData.filterNum>0" v-on:click="deleteHistory('Filter')"><span>清除已过滤垃圾信息</span></li>
                     <li v-if="menuButtonPermit.includes('Webmsg_deletemsg')" v-bind:class="currentStatus === 'Recycle'?'active':''" v-on:click="jumpLink('Recycle')" style="margin-top:32px;"><span>回收站</span><b>({{defaultData.recycleNum}})</b></li>
                     <li class="li-button" v-if="menuButtonPermit.includes('Webmsg_deletemsg')&&menuButtonPermit.includes('Webmsg_deleterecyclemsg')&&defaultData.recycleNum>0" v-on:click="deleteHistory('Recycle')"><span>清除回收站信息</span></li>
+                    <li class="li-button" v-if="menuButtonPermit.includes('Webmsg_deleteapi')" v-on:click="deleteHistory('api')" style="margin-top:32px;"><span>清除中文留言信息</span></li>
                 </ul>
                 <div class="tips">
                   <p>tips：显示45天内的数据</p>
@@ -1156,9 +1157,12 @@ export default {
       if(type=="Filter"){
         url="webmsg/deleteHistoryFilterMsgAction";
         msgTxt = "该操作将删除已超过7天的已过滤垃圾信息，是否确定删除？";
-      }else{
+      }else if(type=="Recycle"){
         url = "webmsg/deleteHistoryRecycleMsgAction";
         msgTxt = "该操作将删除已超过7天的回收站信息，是否确定删除？"
+      }else{
+        url = "webmsg/deleteCnApiMsgAction";
+        msgTxt = "该操作将删除已超过5天的中文API获取的留言信息，是否确定删除？"
       }
       $this.$confirm(msgTxt, '提示', {
             confirmButtonText: '确定',
