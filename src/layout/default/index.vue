@@ -37,7 +37,7 @@ export default {
   },
   metaInfo: {
     meta: [
-      { name: 'viewport', content: 'width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=yes' }
+      // { name: 'viewport', content: 'width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=yes' }
     ]
   },
   computed:{
@@ -55,7 +55,6 @@ export default {
       return this.$store.state.tagsView.cachedViews
     },
     key() {
-      console.log(this.$route.path,'路由');
       return this.$route.path
     }
   },

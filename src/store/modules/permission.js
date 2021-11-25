@@ -100,7 +100,7 @@ function setRoutes(routers){
       {
         path: "/Home/CH/teamMember",
         name:'cnTeamMember',
-        component: () => import("@/views/Home/CH/teamMember/index.vue"),
+        component: () => import(/* webpackChunkName: "cnTeamMember" */ "@/views/Home/CH/teamMember/index.vue"),
         meta: {id:'Home-chTeam',title: '小组分析', icon: null, keepAlive:false},
       },
       {

@@ -141,15 +141,17 @@
 import defaultChart from "./components/defaultChart.vue";
 import mapChart from "./components/mapChart.vue";
 import {randomString,sortByDesc} from "@/utils/index"
-import {MapInterval} from "@/utils/MapColor"
+import {MapInterval,TopTenColor} from "@/utils/MapColor"
 export default {
-  name: "teamMember",
+  name: "cnTeamMember",
   components: {
     defaultChart,
     mapChart,
   },
   data() {
     return {
+      minWidth:"",
+      cnRatio:0.75,
       groupList:[],
       contrastGroupList:[],
       selectedContrastGroupList:[],
@@ -221,10 +223,10 @@ export default {
         {label:"月",value:"month",isOn:false},
       ],
       contrastList:[
-        {label:"询盘个数分析",id:1,value:"inquiryCount",isOn:false,disabled:false},
-        {label:"询盘地区分析",id:4,value:"inquiryRegion",isOn:false,disabled:false},
-        {label:"成交积分分析",id:2,value:"dealIntegral",isOn:false,disabled:true},
-        {label:"成交地区分析",id:5,value:"dealRegion",isOn:false,disabled:true},
+        {label:"询盘个数趋势分析",id:1,value:"inquiryCount",isOn:false,disabled:false},
+        {label:"询盘个数地区分析",id:4,value:"inquiryRegion",isOn:false,disabled:false},
+        {label:"成交积分趋势分析",id:2,value:"dealIntegral",isOn:false,disabled:true},
+        {label:"成交积分地区分析",id:5,value:"dealRegion",isOn:false,disabled:true},
         {label:"产品分析",id:6,value:"product",isOn:false,disabled:true},
       ],
       channelType:"",
@@ -253,6 +255,32 @@ export default {
   created() {
     var $this = this;
     $this.initData();
+  },
+  watch:{
+    minWidth(val) {
+      if (!this.timer) {
+        this.minWidth = val
+        this.timer = true
+        const $this = this
+        setTimeout(function() {
+          $this.timer = false
+        }, 400)
+      }
+    },
+  },
+  mounted(){
+    const $this = this;
+    if($this.$refs.boxPane){  
+      $this.minWidth = $this.$refs.boxPane.offsetWidth; 
+      console.log($this.minWidth,"最小宽度");
+    }
+    window.onresize = () => {
+      return (() => {
+        if($this.$refs.boxPane){
+          $this.minWidth = $this.$refs.boxPane.offsetWidth; 
+        }
+      })()
+    }
   },
   methods: {
     // 默认展示数据
@@ -458,11 +486,11 @@ export default {
         });
         $this.contrastGroupList = contrastGroupList;
       }
-      $this.getGourpName();
+      $this.getGroupName();
       $this.getSearchData();
     },
     //组装小组选中名字
-    getGourpName(){
+    getGroupName(){
       var $this = this;
       var groupList = $this.groupList;
       var groupName = "";
@@ -547,6 +575,7 @@ export default {
         // 切换日期维度，分析项只在月时可选的，切换到日维度时，需禁用，且清除选中状态；切换到月维度时，则只需将所有禁用状态解除
         var contrastList = $this.contrastList;
         var selectedContrastType = [];
+        var selectedType = [];
         contrastList.forEach(function(item,index){
           if($this.selectedData.isMonth){
             item.disabled = false;
@@ -560,10 +589,12 @@ export default {
           }
           if(item.isOn){
             selectedContrastType.push(item.id);
+            selectedType.push(item.value);
           }
         });
         $this.selectedData.type = selectedContrastType;
         $this.contrastList = contrastList;
+        $this.selectedType = selectedType;
         $this.getSearchData();
       }
     },
@@ -654,6 +685,7 @@ export default {
       });
       $this.contrastGroupList = contrastGroupList;
       $this.selectedData.contrastGroupID = [];
+      $this.clearData();
     },
     // 对比小组删除点击事件
     deleteContrastGroup(id){
@@ -755,9 +787,8 @@ export default {
       var $this = this;
       $this.judgeChartStatus();
       var searchData = $this.searchDataInit();
+      $this.clearData();
       if(searchData.userid&&searchData.starttime&&searchData.endtime&&searchData.type){
-        $this.isDefaultPage = false;
-        $this.defaultChartData = [];
         $this.$store.dispatch('teamMember/cnGroupFilterAction', searchData).then(res=>{
           console.log(res,"筛选数据");
           $this.filterDataClump(res);
@@ -769,6 +800,11 @@ export default {
       var $this = this;
       var defaultChartData = $this.defaultChartDataClump(res);
       var mapChartData = $this.mapChartDataClump(res);
+      var productData = $this.productDataClump(res);
+      if(productData){
+        mapChartData[0].push(productData);
+      }
+      console.log(mapChartData,"最终组装数据");
       $this.defaultChartData = defaultChartData;
       $this.mapChart = mapChartData;
     },
@@ -1228,7 +1264,7 @@ export default {
       var inquiryMapData = null;
       // 询盘地图
       if($this.selectedType.includes("inquiryRegion")){
-        inquiryMapData = [];
+        inquiryMapData = {};
         // 时间对比
         if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
           var mapData = "";
@@ -1239,6 +1275,7 @@ export default {
             // 日维度
             mapData = res.selfprovincedaycompare;
           }
+          inquiryMapData.mapDataArr = [];
           var itemMapChart0 = {};
           var itemMapChart1 = {};
           var title = "";
@@ -1247,25 +1284,127 @@ export default {
               title = item.departName+"-"+item.groupName+"组";
             }
           });
+          var mapWidth = parseInt(($this.minWidth-38)/2*0.7)-60;
+          var mapHeight = parseInt(mapWidth*$this.cnRatio)+30;
           itemMapChart0.title = title+"("+$this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1]+")";
           itemMapChart0.mapData = mapData[0];
           itemMapChart0.randomStr = randomString(4);
+          itemMapChart0.width = "50%";
+          itemMapChart0.alias = "询盘个数";
+          itemMapChart0.mapWidth = mapWidth;
+          itemMapChart0.mapHeight = mapHeight;
           itemMapChart1.title = title+"("+$this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1]+")";
           itemMapChart1.mapData = mapData[1];
           itemMapChart1.randomStr = randomString(4);
-          inquiryMapData.push(itemMapChart0);
-          inquiryMapData.push(itemMapChart1);
+          itemMapChart1.width = "50%";
+          itemMapChart1.alias = "询盘个数";
+          itemMapChart1.mapWidth = mapWidth;
+          itemMapChart1.mapHeight = mapHeight;
+          var maxNumArr = [mapData[0][0].number,mapData[1][0].number];
+          maxNumArr.sort(function(a,b){return b-a});
+          var maxNum = maxNumArr[0];
+          itemMapChart0.colorData = MapInterval(maxNum);
+          itemMapChart1.colorData = MapInterval(maxNum);
+          itemMapChart0.topTitle = "热门地区TOP5";
+          itemMapChart0.topTenData = [];
+          itemMapChart0.mapData.forEach(function(item,index){
+            if(index<5){
+              itemMapChart0.topTenData.push(item);
+            }
+          });
+          itemMapChart0.topTenColor = TopTenColor(itemMapChart0.topTenData,itemMapChart0.colorData);
+          itemMapChart1.topTitle = "热门地区TOP5";
+          itemMapChart1.topTenData = [];
+          itemMapChart1.mapData.forEach(function(item,index){
+            if(index<5){
+              itemMapChart1.topTenData.push(item);
+            }
+          });
+          itemMapChart1.topTenColor = TopTenColor(itemMapChart1.topTenData,itemMapChart1.colorData);
+          inquiryMapData.title = "询盘地图展示 （地区询盘排行榜）";
+          inquiryMapData.unit = "(单位：个)";
+          inquiryMapData.isMap = true;
+          inquiryMapData.mapDataArr.push(itemMapChart0);
+          inquiryMapData.mapDataArr.push(itemMapChart1);
         }else{
           // 小组对比
           if($this.selectedData.contrastGroupID.length>0){
+            inquiryMapData = {};
+            var mapData = "";
             if($this.selectedData.isMonth){
               // 月维度
-              chartData = res.monthxuntrendcompare;
+              mapData = res.provincemonthcompare;
             }else{
               // 日维度
-              chartData = res.dayxuntrendcompare;
+              mapData = res.provincecompare;
             }
+            inquiryMapData.mapDataArr = [];
+            var maxNumArr = [];
+            mapData.forEach(function(item,index){
+              maxNumArr.push(item[0].number)
+            });
+            maxNumArr.sort(function(a,b){return b-a});
+            var maxNum = maxNumArr[0];
+            mapData.forEach(function(item,index){
+              var itemChart = {};
+              if(index == 0){
+                if($this.selectedData.groupID.length==1){
+                  itemChart.title=item[0].depart+"组";
+                }else{
+                  itemChart.title="已多选小组"
+                }
+              }else{
+                itemChart.title=item[0].depart+"组";
+              }
+              itemChart.randomStr = randomString(4);
+              itemChart.mapData = item;
+              itemChart.colorData = MapInterval(maxNum);
+              var itemWidth = "50%";
+              var mapWidth = 0;
+              var mapHeight = 0;
+              if(mapData.length==5){
+                itemWidth = "20%";
+                mapWidth = parseInt(($this.minWidth-38)/5)-60;
+              }else{
+                if(mapData.length>4){
+                  itemWidth = "25%";
+                  mapWidth = parseInt(($this.minWidth-38)/4)-60;
+                  // if(index<=3){
+                  //   itemWidth = "25%";
+                  //   mapWidth = parseInt(($this.minWidth-38)/4)-60;
+                  // }else{
+                  //   itemWidth = parseInt(1/(mapData.length-4)*100)+"%";
+                  //   mapWidth = parseInt(($this.minWidth-38)/(mapData.length-4))-60;
+                  // }
+                }else{
+                  itemWidth = parseInt(1/mapData.length*100)+"%";
+                  if(mapData.length==2){
+                    mapWidth = parseInt(($this.minWidth-38)/(mapData.length)*0.7)-60;
+                  }else{
+                    mapWidth = parseInt(($this.minWidth-38)/(mapData.length))-60;
+                  }
+                }
+              }
+              mapHeight = parseInt(mapWidth*$this.cnRatio)+30;
+              itemChart.width = itemWidth;
+              itemChart.mapWidth = mapWidth;
+              itemChart.mapHeight = mapHeight;
+              itemChart.alias = "询盘个数";
+              itemChart.topTitle = "热门地区TOP5";
+              itemChart.topTenData = [];
+              itemChart.mapData.forEach(function(item,index){
+                if(index<5){
+                  itemChart.topTenData.push(item);
+                }
+              });
+              itemChart.topTenColor = TopTenColor(itemChart.topTenData,itemChart.colorData);
+              inquiryMapData.mapDataArr.push(itemChart);
+            });
+            inquiryMapData.title = "询盘地图展示 （地区询盘排行榜）";
+            inquiryMapData.unit = "(单位：个)";
+            inquiryMapData.isMap = true;
           }else{
+            inquiryMapData = [];
             // 统计
             // 月维度
             var itemMapData = {};
@@ -1278,30 +1417,274 @@ export default {
               itemMapData.colorData = MapInterval(res.provincecountmapday[0].number);
             }
             itemMapData.randomStr = randomString(4);
+            itemMapData.alias = "询盘个数";
             itemMapData.title = "询盘地图展示 （地区询盘排行榜）";
             itemMapData.unit = "(单位：个)";
             itemMapData.isMap = true;
+            itemMapData.topTitle = "热门地区TOP10";
+            itemMapData.topTenData = [];
+            itemMapData.mapData.forEach(function(item,index){
+              if(index<10){
+                itemMapData.topTenData.push(item);
+              }
+            });
+            itemMapData.topTenColor = TopTenColor(itemMapData.topTenData,itemMapData.colorData);
+            var mapWidth = 0;
+            var mapHeight = 0;
+            mapWidth = parseInt(($this.minWidth-38)/2)-80-330;
+            mapHeight = parseInt(mapWidth*$this.cnRatio)+30;
+            itemMapData.mapWidth = mapWidth;
+            itemMapData.mapHeight = mapHeight;
             inquiryMapData.push(itemMapData);
           }
         }
       }
       // 成交积分地图
       var dealRegionMapData = null
-      if($this.selectedType.includes("dealRegion")){}
+      if($this.selectedType.includes("dealRegion")){
+        dealRegionMapData = {};
+        // 时间对比
+        if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
+          var mapData = res.selfprovincebuymonthcompare;
+          dealRegionMapData.mapDataArr = [];
+          var itemMapChart0 = {};
+          var itemMapChart1 = {};
+          var title = "";
+          $this.groupList.forEach(function(item){
+            if(item.isOn){
+              title = item.departName+"-"+item.groupName+"组";
+            }
+          });
+          var mapWidth = parseInt(($this.minWidth-38)/2*0.7)-60;
+          var mapHeight = parseInt(mapWidth*$this.cnRatio)+30;
+          itemMapChart0.title = title+"("+$this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1]+")";
+          itemMapChart0.mapData = mapData[0];
+          itemMapChart0.randomStr = randomString(4);
+          itemMapChart0.width = "50%";
+          itemMapChart0.alias = "成交积分";
+          itemMapChart0.mapWidth = mapWidth;
+          itemMapChart0.mapHeight = mapHeight;
+          itemMapChart1.title = title+"("+$this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1]+")";
+          itemMapChart1.mapData = mapData[1];
+          itemMapChart1.randomStr = randomString(4);
+          itemMapChart1.width = "50%";
+          itemMapChart1.alias = "成交积分";
+          itemMapChart1.mapWidth = mapWidth;
+          itemMapChart1.mapHeight = mapHeight;
+          var maxNumArr = [mapData[0][0].number,mapData[1][0].number];
+          maxNumArr.sort(function(a,b){return b-a});
+          var maxNum = maxNumArr[0];
+          itemMapChart0.colorData = MapInterval(maxNum);
+          itemMapChart1.colorData = MapInterval(maxNum);
+          itemMapChart0.topTitle = "热门地区TOP5";
+          itemMapChart0.topTenData = [];
+          itemMapChart0.mapData.forEach(function(item,index){
+            if(index<5){
+              itemMapChart0.topTenData.push(item);
+            }
+          });
+          itemMapChart0.topTenColor = TopTenColor(itemMapChart0.topTenData,itemMapChart0.colorData);
+          itemMapChart1.topTitle = "热门地区TOP5";
+          itemMapChart1.topTenData = [];
+          itemMapChart1.mapData.forEach(function(item,index){
+            if(index<5){
+              itemMapChart1.topTenData.push(item);
+            }
+          });
+          itemMapChart1.topTenColor = TopTenColor(itemMapChart1.topTenData,itemMapChart1.colorData);
+          dealRegionMapData.title = "成交积分地图展示 （地区成交积分排行榜）";
+          dealRegionMapData.unit = "(单位：分)";
+          dealRegionMapData.isMap = true;
+          dealRegionMapData.mapDataArr.push(itemMapChart0);
+          dealRegionMapData.mapDataArr.push(itemMapChart1);
+        }else{
+          // 小组对比
+          if($this.selectedData.contrastGroupID.length>0){
+            var mapData = res.provincebuymonthcompare;
+            dealRegionMapData.mapDataArr = [];
+            var maxNumArr = [];
+            mapData.forEach(function(item,index){
+              maxNumArr.push(item[0].number)
+            });
+            maxNumArr.sort(function(a,b){return b-a});
+            var maxNum = maxNumArr[0];
+            mapData.forEach(function(item,index){
+              var itemChart = {};
+              if(index == 0){
+                if($this.selectedData.groupID.length==1){
+                  itemChart.title=item[0].depart+"组";
+                }else{
+                  itemChart.title="已多选小组"
+                }
+              }else{
+                itemChart.title=item[0].depart+"组";
+              }
+              itemChart.randomStr = randomString(4);
+              itemChart.mapData = item;
+              itemChart.colorData = MapInterval(maxNum);
+              var itemWidth = "50%";
+              var mapWidth = 0;
+              var mapHeight = 0;
+              if(mapData.length==5){
+                itemWidth = "20%";
+                mapWidth = parseInt(($this.minWidth-38)/5)-60;
+              }else{
+                if(mapData.length>4){
+                  itemWidth = "25%";
+                  mapWidth = parseInt(($this.minWidth-38)/4)-60;
+                  // if(index<=3){
+                  //   itemWidth = "25%";
+                  //   mapWidth = parseInt(($this.minWidth-38)/4)-60;
+                  // }else{
+                  //   itemWidth = parseInt(1/(mapData.length-4)*100)+"%";
+                  //   mapWidth = parseInt(($this.minWidth-38)/(mapData.length-4))-60;
+                  // }
+                }else{
+                  itemWidth = parseInt(1/mapData.length*100)+"%";
+                  if(mapData.length==2){
+                    mapWidth = parseInt(($this.minWidth-38)/(mapData.length)*0.7)-60;
+                  }else{
+                    mapWidth = parseInt(($this.minWidth-38)/(mapData.length))-60;
+                  }
+                }
+              }
+              mapHeight = parseInt(mapWidth*$this.cnRatio)+30;
+              itemChart.width = itemWidth;
+              itemChart.mapWidth = mapWidth;
+              itemChart.mapHeight = mapHeight;
+              itemChart.alias = "成交积分";
+              itemChart.topTitle = "热门地区TOP5";
+              itemChart.topTenData = [];
+              itemChart.mapData.forEach(function(item,index){
+                if(index<5){
+                  itemChart.topTenData.push(item);
+                }
+              });
+              itemChart.topTenColor = TopTenColor(itemChart.topTenData,itemChart.colorData);
+              dealRegionMapData.mapDataArr.push(itemChart);
+            });
+            dealRegionMapData.title = "成交积分地图展示 （地区成交积分排行榜）";
+            dealRegionMapData.unit = "(单位：分)";
+            dealRegionMapData.isMap = true;
+          }else{
+            dealRegionMapData = [];
+            // 统计
+            var itemMapData = {};
+            itemMapData.mapData = res.provincebuymapmonth;
+            itemMapData.colorData = MapInterval(res.provincebuymapmonth[0].number);
+            itemMapData.randomStr = randomString(4);
+            itemMapData.title = "成交积分地图展示 （地区成交积分排行榜）";
+            itemMapData.unit = "(单位：分)";
+            itemMapData.alias = "成交积分";
+            itemMapData.topTitle = "热门地区TOP10";
+            itemMapData.topTenData = [];
+            itemMapData.mapData.forEach(function(item,index){
+              if(index<10){
+                itemMapData.topTenData.push(item);
+              }
+            });
+            itemMapData.topTenColor = TopTenColor(itemMapData.topTenData,itemMapData.colorData);
+            var mapWidth = 0;
+            var mapHeight = 0;
+            mapWidth = parseInt(($this.minWidth-38)/2)-80-330;
+            mapHeight = parseInt(mapWidth*$this.cnRatio)+30;
+            itemMapData.mapWidth = mapWidth;
+            itemMapData.mapHeight = mapHeight;
+            itemMapData.isMap = true;
+            dealRegionMapData.push(itemMapData);
+          }
+        }
+      }
       var mapChartData = [];
+      var itemChartArr = [];
       if(inquiryMapData){
-        mapChartData.push(inquiryMapData);
+        itemChartArr.push(inquiryMapData);
       }
       if(dealRegionMapData){
-        mapChartData.push(dealRegionMapData);
+        itemChartArr.push(dealRegionMapData);
       }
+      mapChartData.push(itemChartArr);
       return mapChartData;
     },
     // 组装产品分析数据
     productDataClump(res){
       var $this = this;
-      if($this.selectedType.includes("product")){}
+      var productData = null
+      if($this.selectedType.includes("product")){
+        productData = {};
+        // 时间对比
+        if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
+          var totalData = res.selefproductbuylistcompare;
+          productData.itemData = [];
+          totalData.forEach(function(item,index){
+            var itemProduct = $this.clumpProduct(item);
+            productData.itemData.push(itemProduct);
+          });
+          var title = "";
+          $this.groupList.forEach(function(item){
+            if(item.isOn){
+              title = item.departName+"-"+item.groupName+"组";
+            }
+          });
+          productData.itemData.forEach(function(item,index){
+            if(index==0){
+              item.title = title+"("+$this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1]+")";
+            }else{
+              item.title = title+"("+$this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1]+")";
+            }
+          })
+          productData.title = "产品分析";
+          productData.isMap = false;
+        }else{
+          productData = {};
+          // 小组对比
+          if($this.selectedData.contrastGroupID.length>0){
+            var totalData = res.productbuylistcompare;
+            productData.itemData = [];
+            totalData.forEach(function(item,index){
+              var itemProduct = $this.clumpProduct(item);
+              productData.itemData.push(itemProduct);
+            });
+            totalData.forEach(function(item,index){
+              if(index == 0){
+                if($this.selectedData.groupID.length==1){
+                  $this.groupList.forEach(function(item1){
+                    if(item1.isOn){
+                      productData.itemData[0].title = item1.departName+"-"+item1.groupName+"组";
+                    }
+                  });
+                }else{
+                  productData.itemData[0].title="已多选小组"
+                }
+              }else{
+                var selectContrastGroupList = [];
+                $this.contrastGroupList.forEach(function(item1){
+                  if(item1.isOn){
+                    selectContrastGroupList.push(item1);
+                  }
+                });
+                productData.itemData[index].title=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
+              }
+            });
+            productData.title = "产品分析";
+            productData.isMap = false;
+          }else{
+            // 统计
+            productData =  []
+            var itemData = $this.clumpProduct(res.productbuylist);
+            itemData.title = "产品分析";
+            itemData.isMap = false;
+            productData.push(itemData);
+          }
+        }
+      }
+      // var itemChartArr = [];
+      // if(productData){
+      //   itemChartArr.push(productData);
+      // }
+      return productData;
     },
+    // 判断当前展示情况
     judgeChartStatus(){
       var $this = this;
       var judgeData = {};
@@ -1322,9 +1705,6 @@ export default {
             if($this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
               if($this.selectedData.type.length>0){
                 judgeData.singleGroupDateCompare = true;
-              }else{
-                //无分析项被选中的情况下
-                $this.defaultChartData = [];
               }
             }else{
               // 基础小组选中1个，且基础时间有值，而对比时间无值
@@ -1332,23 +1712,14 @@ export default {
               if($this.selectedData.contrastGroupID.length>0){
                 if($this.selectedData.type.length>0){
                   judgeData.singleGroupTeamCompare = true;
-                }else{
-                  //无分析项被选中的情况下
-                  $this.defaultChartData = [];
                 }
               }else{
                 // 对比时间无值，对比小组也无值，此情况为单一小组统计
                 if($this.selectedData.type.length>0){
                   judgeData.singleGroupStatic = true;
-                }else{
-                  //无分析项被选中的情况下
-                  $this.defaultChartData = [];
                 }
               }
             }
-          }else{
-            // 基础小组选中1个，基础时间没有默认值的情况下，当前页数据清空
-            $this.defaultChartData = [];
           }
         }else{
           // 基础小组有多个被选中
@@ -1358,9 +1729,6 @@ export default {
             if($this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
               if($this.selectedData.type.length>0){
                 judgeData.pluralGroupDateCompare = true;
-              }else{
-                //无分析项被选中的情况下
-                $this.defaultChartData = [];
               }
             }else{
               // 基础小组选中多个，且基础时间有值，而对比时间无值
@@ -1376,30 +1744,108 @@ export default {
                       }
                     }
                   });
-                }else{
-                  //无分析项被选中的情况下
-                  $this.defaultChartData = [];
                 }
               }else{
                 // 对比时间无值，对比小组也无值，此情况为多基础小组统计
                 if($this.selectedData.type.length>0){
                   judgeData.pluralGroupStatic = true;
-                }else{
-                  //无分析项被选中的情况下
-                  $this.defaultChartData = [];
                 }
               }
             }
-          }else{
-            // 基础小组选中多个，基础时间没有默认值的情况下，当前页数据清空
-            $this.defaultChartData = [];
           }
         }
-      }else{
-        // 基础小组没有被选中的，当前页数据清空
-        $this.defaultChartData = [];
       }
       $this.judgeData = judgeData;
+    },
+    // 清空数据
+    clearData(){
+      var $this = this;
+      $this.isDefaultPage = false;
+      $this.defaultChartData = [];
+      $this.mapChart = [];
+    },
+    // 产品数据组装的封装函数
+    clumpProduct(dataArr){
+      var itemData = {};
+      itemData.tableData = [];
+      itemData.inquiryCount = [];
+      itemData.dealCount = [];
+      itemData.dealScore = [];
+      var inquiryCount = [];
+      var dealCount = [];
+      var dealScore = [];
+      dataArr.forEach(function(item,index){
+        var itemTable = {};
+        var itemInquiryCount = {};
+        var itemDealCount = {};
+        var itemDealScore = {};
+        itemTable.name = item.xunproduct;
+        itemTable.inquiryNumber = item.xunnumber;
+        itemTable.dealNumber = item.buynumber;
+        itemTable.dealScore = item.score;
+        itemData.tableData.push(itemTable);
+        itemInquiryCount.name = item.xunproduct;
+        itemInquiryCount.value = item.xunnumber;
+        inquiryCount.push(itemInquiryCount);
+        itemDealCount.name = item.xunproduct;
+        itemDealCount.value = item.buynumber;
+        dealCount.push(itemDealCount);
+        itemDealScore.name = item.xunproduct;
+        itemDealScore.value = item.score;
+        dealScore.push(itemDealScore);
+      });
+      inquiryCount.sort(sortByDesc("value"));
+      dealCount.sort(sortByDesc("value"));
+      dealScore.sort(sortByDesc("value"));
+      var itemInquiryObj = {};
+      itemInquiryObj.name = "其他";
+      itemInquiryObj.value = 0;
+      inquiryCount.forEach(function(item,index){
+        if(index<5){
+          itemData.inquiryCount.push(item);
+        }else{
+          if(item.name!="配件"){
+            itemInquiryObj.value += item.value;
+          }else{
+            itemData.inquiryCount.push(item);
+          }
+        }
+      });
+      itemData.inquiryCount.push(itemInquiryObj);
+      var itemDealObj = {};
+      itemDealObj.name = "其他";
+      itemDealObj.value = 0;
+      dealCount.forEach(function(item,index){
+        if(index<5){
+          itemData.dealCount.push(item);
+        }else{
+          if(item.name!="配件"){
+            itemDealObj.value += item.value;
+          }else{
+            itemData.dealCount.push(item);
+          }
+        }
+      });
+      itemData.dealCount.push(itemDealObj);
+      var itemScoreObj = {};
+      itemScoreObj.name = "其他";
+      itemScoreObj.value = 0;
+      dealScore.forEach(function(item,index){
+        if(index<5){
+          itemData.dealScore.push(item);
+        }else{
+          if(item.name!="配件"){
+            itemScoreObj.value += item.value;
+          }else{
+            itemData.dealScore.push(item);
+          }
+        }
+      });
+      itemData.dealScore.push(itemScoreObj);
+      itemData.randomStr1 = randomString(4);
+      itemData.randomStr2 = randomString(4);
+      itemData.randomStr3 = randomString(4);
+      return itemData;
     }
   }
 }

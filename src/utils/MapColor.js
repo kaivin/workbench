@@ -1,4 +1,5 @@
-﻿export function MapInterval(maxNum){
+﻿
+export function MapInterval(maxNum){
     var minAverage='';  
     var defaulColor = []   
     if(maxNum>0){
@@ -79,4 +80,23 @@ export function MapColor(resArr,obj){
         }
     }
     return sumColor;
+}
+
+export function TopTenColor(resArr,obj){ 
+    console.log(obj,"区间判断");  
+    var topTenColor=[];
+    resArr.forEach(function(item,index){
+        for(var i=0;i<obj.numList.length;i++){
+            if(item.number>=obj.numList[i]){
+                topTenColor.push(obj.defaulColor[i]);
+                break;
+            }
+            if(item.number<obj.numList[obj.numList.length-1]){
+                topTenColor.push(obj.defaulColor[obj.numList.length]);
+                break;
+            }
+        }
+    });
+    topTenColor.reverse();
+    return topTenColor;
 }

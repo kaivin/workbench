@@ -13,7 +13,7 @@
     position: relative;
     &.is-fold{
       .scrollbar-wrapper{
-        padding-top: 50px;
+        padding-top: 52px;
       }
     }
     .el-scrollbar {
@@ -31,11 +31,11 @@
       }
     }
     .fold-button{
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       position: absolute;
       right:0;
-      top: 10px;
+      top: 12px;
       z-index: 10;
       overflow: hidden;
       cursor: pointer;
@@ -43,24 +43,25 @@
       &.is-fold{
         transform: rotate(180deg);
         width: 60px;
+        top: 12px;
       }
       &:hover{
         .svg-i{
-          color:$menuActiveText;
+          color: #ff8000;
         }
       }
       .svg-i{
         display: block;
-        width: 32px;
-        height: 32px;
+        width: 42px;
+        height: 42px;
         font-size: 14px;
-        color: #485c76;
-        margin: 4px auto;
+        color: #4c516d;
+        margin: 0 auto;
         overflow: hidden;
         .svg-icon {
           display: block;
           height: 14px;
-          margin: 9px auto;
+          margin: 14px auto;
         }
       }
     }
@@ -68,21 +69,22 @@
       border: none;
       height: 100%;
       width: 100% !important;
+      padding-top: 10px;
       .item-link{
-        margin-top: 10px;
+        margin-top: 2px;
         display: block;
         transition: all .3s;
         .el-menu-item,.el-submenu__title{
-          height: 40px;
-          line-height: 40px;
+          height: 42px;
+          line-height: 42px;
           transition: all .3s;
-          padding-left: 20px!important;
-          color: #212121;
+          padding-left: 30px!important;
+          color: #4c516d;
           .svg-i{
             display: inline-block;
             width: 24px;
             height: 20px;
-            font-size: 20px;
+            font-size: 18px;
             vertical-align: -4px;
             .svg-icon {
               display: block;
@@ -98,7 +100,7 @@
             height: 1em;
           }
           i{
-            color: #212121;
+            color: #4c516d;
             transition: all .3s;
           }
           span{
@@ -106,17 +108,16 @@
             transition: all .3s;
             vertical-align: 1px;
             margin-left: 12px;
-            font-weight: 700;
           }
           &:hover,&:focus{
-            background: none;
-          }
-          &:hover{
-            color: #2e88ff;
+            background: #f2f3f5;
+            color: #4c516d;
           }
           &.is-active{
-            background: #d5e7ff;
-            color: #2e88ff;
+            background: #f2f3f5;
+            .svg-i{
+              color: #ff8000;
+            }
           }
         }
         .el-submenu__title{

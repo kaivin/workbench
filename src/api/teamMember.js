@@ -14,3 +14,18 @@ export function cnGroupFilter(data) {
     data
   });
 }
+// 英文小组默认展示统计
+export function enGroupDefault() {
+  return request({
+    url: "/hxindex/Api/engroupcountdefault",
+    method: "POST"
+  });
+}
+// 英文小组筛选展示统计
+export function enGroupFilter(data) {
+  return request({
+    url: "/hxindex/Api/engroupcount",
+    method: "POST",
+    data
+  });
+}

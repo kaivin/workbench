@@ -244,6 +244,9 @@ export default {
           const geoView = regionMapChart.createView();
           geoView.data(geoDv.rows);
           geoView.tooltip(false);
+          geoView.legend({
+            flipPage:false,
+          })
           geoView.polygon()
             .position('longitude*latitude')
             .color('grey')
@@ -269,7 +272,6 @@ export default {
           }).transform({
             type: 'map',
             callback: obj => {
-              
                 if(obj.number <=minAverage){
                     obj.trend=averArr[0];
                 }else if(obj.number <=minAverage*2 && obj.number>minAverage){
@@ -294,6 +296,9 @@ export default {
               alias:"地区"
             }
           });
+          userView.legend({
+            flipPage:false,
+          })
           console.log($this.sumColor)
           userView.polygon()
             .position('longitude*latitude')     

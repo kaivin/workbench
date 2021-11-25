@@ -1,4 +1,4 @@
-﻿import { cnGroupDefault,cnGroupFilter } from '@/api/teamMember'
+﻿import { cnGroupDefault,cnGroupFilter,enGroupDefault,enGroupFilter } from '@/api/teamMember'
 
 const state = {}
 const mutations = {}
@@ -17,6 +17,26 @@ const actions = {
     cnGroupFilterAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
           cnGroupFilter(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 英文小组默认展示统计
+    enGroupDefaultAction({ commit, state }) {
+        return new Promise((resolve, reject) => {
+          enGroupDefault().then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 英文小组筛选展示统计
+    enGroupFilterAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+          enGroupFilter(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

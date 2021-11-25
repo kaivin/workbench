@@ -274,7 +274,7 @@
           position: absolute;
           right:0;
           top: 40px;
-          z-index: 2;
+          z-index: 10;
           background-color: #fff;
           border: 1px solid #e2e2e2;
           min-width:200px;
@@ -627,7 +627,7 @@
                       strong{
                         height: 30px;
                         line-height: 30px;
-                        font-size: 22px;
+                        font-size: 20px;
                         &.up{
                           color: #f04c4c;
                         }
@@ -660,7 +660,7 @@
             background-color: #fff;
             padding: 30px;
             .column-header{
-              padding:0 0 15px;
+              padding:0 0 30px;
               .txt-header{
                 height: 28px;
                 strong{
@@ -714,6 +714,200 @@
             width: 100%;
           }
         }
+      }
+      .static-wrapper{
+        margin-top: -20px;
+        .item-column{
+          margin-top: 20px;
+          .item-table{
+            background-color: #fff;
+            padding: 30px;
+            .column-header{
+              padding: 0 0 30px;
+            }
+          }
+        }
+        .region-rank{
+          width: 300px;
+          height:340px;
+          margin-left: 30px;
+          background-color: #f3f8ff;
+          .txt-header{
+            padding: 20px 30px 15px;
+            strong{
+              display: inline-block;
+              height: 28px;
+              line-height:28px;
+              font-size: 16px;
+              color: #1a1a1a;
+            }
+            span{
+              display: inline-block;
+              height: 28px;
+              line-height: 28px;
+              font-size: 12px;
+              color: #a1a1a1;
+            }
+          }
+        }
+      }
+      .tab-product{
+        line-height:0;
+        font-size:0;
+        height: 28px;
+        float:right;
+        width: 220px;
+        text-align: center;
+        .item-tab{
+          display: inline-block;
+          height: 28px;
+          border: 1px solid #ecedf1;
+          line-height: 26px;
+          font-size: 12px;
+          color: #a1a1a1;
+          padding: 0 10px;
+          cursor: pointer;
+          position: relative;
+          &.active{
+            border: 1px solid $menuActiveText;
+            background-color: $menuActiveText;
+            color: #fff;
+            z-index: 1;
+          }
+        }
+        .item-tab+.item-tab{
+          margin-left: -1px;
+        }
+      }
+      .item-product{
+        .table-panel{
+          overflow: hidden;
+          transition: height,0.3s;
+          .home-table{
+            &.el-table.el-table--mini{
+              td.el-table__cell{
+                padding: 9px 0;
+              }
+            }
+            &.el-table td.el-table__cell{
+              border-bottom: 1px solid #eaedf3;
+              color: #999999;
+            }
+            &.el-table th.el-table__cell{
+              background-color: #f4f6f9;
+              font-size: 12px;
+              color: #666666;
+            }
+            &.el-table th.el-table__cell.is-leaf{
+              border-bottom: none;
+            }
+            &.el-table--mini .el-table__cell{
+              padding: 2px 0;
+            }
+          }
+        }
+        .fold-button{
+          width: 100%;
+          height: 30px;
+          text-align: center;
+          line-height: 30px;
+          font-size: 12px;
+          background-color: #f4f6f9;
+          color: #666666;
+          cursor: pointer;
+        }
+        .product-rank{
+          width: 220px;
+          margin-left: 30px;
+          .item-chart{
+            margin:0 -30px;
+            float:none;
+            padding:0;
+          }
+        }
+      }
+      .compare-wrapper{
+        padding: 0 10px;
+        .compare-wrap{
+          background-color: #fff;
+          .compare-header{
+            padding:30px 30px 30px;
+            .txt-header{
+              height: 28px;
+              strong{
+                display: inline-block;
+                height: 28px;
+                line-height:28px;
+                font-size: 16px;
+                color: #1a1a1a;
+              }
+              span{
+                display: inline-block;
+                height: 28px;
+                line-height: 28px;
+                font-size: 12px;
+                color: #a1a1a1;
+              }
+            }
+          }
+          .compare-body{
+            width: 100%;
+            .item-column{
+              width: 50%;
+              float:left;
+            }
+            .item-chart{
+              float:left;
+              padding: 0 30px 30px;
+              .chart-title{
+                width: 100%;
+                text-align: center;
+                height: 28px;
+                line-height: 28px;
+                margin-bottom: 30px;
+              }
+              .map-panel{
+                margin: 0 auto;
+              }
+              .region-rank{
+                margin: 0 auto;
+                .txt-header{
+                  padding: 20px 0;
+                  strong{
+                    display: inline-block;
+                    height: 28px;
+                    line-height:28px;
+                    font-size: 16px;
+                    color: #1a1a1a;
+                  }
+                  span{
+                    display: inline-block;
+                    height: 28px;
+                    line-height: 28px;
+                    font-size: 12px;
+                    color: #a1a1a1;
+                  }
+                }
+              }
+            }
+            .item-table{
+              width: 100%;
+              padding: 0 30px 30px;
+              .column-header{
+                margin-bottom: 15px;
+              }
+              .product-rank{
+                .item-chart{
+                  float:none;
+                  padding:0;
+                }
+              }
+            }
+          }
+        }
+      }
+      .compare-wrapper+.compare-wrapper{
+        margin-top: 20px;
       }
     }
   }

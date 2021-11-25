@@ -7,7 +7,7 @@ import { G2 } from '@antv/g2plot';
 import DataSet from '@antv/data-set';
 import {MapColor} from "@/utils/MapColor"
 export default {
-  name: "cnMapChart",
+  name: "wordMapChart",
   data:function() {
     return {
       parentData:{},
@@ -67,7 +67,7 @@ export default {
       var $this = this; 
       var colorData = MapColor($this.currentData,$this.parentData);
       if(!$this.regionMapChart){
-        fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
+        fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/world.geo.json')
         .then(res => res.json())
         .then(GeoJSON => {
           const regionMapChart = new G2.Chart({
@@ -91,13 +91,13 @@ export default {
             position: 'bottom-left',
             flipPage:false,
           });
-          // 绘制中国地图背景
+          // 绘制世界地图背景
           var ds = new DataSet();
-          const geoDv = ds.createView('back').source(GeoJSON, {type: 'GeoJSON'});
-          const geoView = regionMapChart.createView();
-          geoView.data(geoDv.rows);
-          geoView.tooltip(false);
-          geoView.polygon()
+          const worldMap = ds.createView('back').source(GeoJSON, {type: 'GeoJSON'});
+          const worldMapView = regionMapChart.createView();
+          worldMapView.data(worldMap.rows);
+          worldMapView.tooltip(false);
+          worldMapView.polygon()
             .position('longitude*latitude')
             .color('grey')
             .style({
@@ -106,17 +106,10 @@ export default {
               lineWidth: 1,
             });
           // 可视化用户数据
-          const userData = [];
-          $this.currentData.forEach(function(item,index){
-            var itemData = {};
-            itemData.name = item.name;
-            itemData.number = item.number;
-            userData.push(itemData);
-          });
-          
+          const userData = $this.currentData;
           const userDv = ds.createView().source(userData).transform({
-            geoDataView: geoDv,
-            field: 'name',
+            geoDataView: worldMap,
+            field: 'country',
             type: 'geo.region',
             as: ['longitude', 'latitude']
           }).transform({
@@ -144,24 +137,27 @@ export default {
               alias: $this.aliasData
             },
             name:{
-              alias:"地区"
+              alias:"国家"
+            },
+            country:{
+              alias:"英文名"
             }
           });
-          userView.polygon()
+          userView.polygon().state({
+            active: {
+              style: {
+                lineWidth: 0,
+                stroke:0,
+                fillOpacity:0.8,
+              },
+            },
+          })
             .position('longitude*latitude')     
             .color('trend', colorData)
-            .tooltip('name*number')
+            .tooltip('name*country*number')
             .style({
               fillOpacity: 1,
               stroke:"#fff"
-            }).state({
-              active: {
-                style: {
-                  lineWidth: 0,
-                  stroke:0,
-                  fillOpacity:0.8,
-                },
-              },
             }).animate({
               leave: {
                 animation: 'fade-out'

@@ -216,7 +216,7 @@ export default {
             values.forEach(val=>{
               anum+=val
             })
-            sums[index] = anum;
+            sums[index] = anum.toFixed(2);
           }
           
         });
