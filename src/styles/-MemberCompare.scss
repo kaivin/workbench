@@ -1,0 +1,774 @@
+@font-face{
+    font-family: 'numberfont'; 
+    src:url('../fonts/number.woff') format('woff'),
+        url('../fonts/number.ttf') format('truetype');
+    font-display: swap;
+}
+.memberTit{
+    h3{
+        display: inline-block;
+        vertical-align: top;
+        color: #1a1a1a;
+        font-size: 16px;
+        span{
+            color: #d62815;
+            font-size: 18px;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+    }
+    p{
+        display: inline-block;
+        vertical-align: top;
+        color: #a1a1a1;
+        font-size: 12px;
+        margin-top: 4px;
+        margin-left: 6px;
+    }
+}
+
+.memberInquiry{
+    padding: 50px 28px 28px;
+    background-color: #fff;
+    .inquiryRank{
+        padding: 4px 16px;
+        background-color: #fcfbf6;
+        margin-top: 40px;
+        position: relative;
+        .inul{
+            overflow: hidden;
+        }
+        li{
+            padding-top: 16px;
+            padding-bottom: 16px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            .rankNum{
+                width: 62px;
+                height: 52px;
+                color: #93adc7;
+                font-size: 20px;
+                text-align: center;
+                line-height: 52px;
+                font-family: "numberfont";
+                .numTop{
+                    width: 62px;
+                    height: 52px;
+                }
+                .numTop01{
+                    background: url(../assets/in1.gif) center center no-repeat;
+                    background-size: 53px 51px;
+                }
+                .numTop02{
+                    background: url(../assets/in2.gif) center center no-repeat;
+                    background-size: 53px 51px;
+                }
+                .numTop03{
+                    background: url(../assets/in3.gif) center center no-repeat;
+                    background-size: 53px 51px;
+                }
+            }
+            .userImg{
+                text-align: center;
+                width: 124px;
+                img{
+                    width: 50px;
+                    height: 50px;
+                    overflow: hidden;
+                    border-radius: 50%;
+                    box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
+                    border: solid 1px #fece6c;
+                }
+                
+            }
+            .userName{
+                color: #333333;
+                font-size: 14px;
+                flex: 1;
+            }
+            .userInquiry{
+                color: #666666;
+                font-size: 16px;
+                width: 75px;
+                .num01{
+                    background-image: linear-gradient(90deg,#f9c020 ,#f83801);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    color: transparent;
+                }
+                .num02{
+                    background-image: linear-gradient(90deg,#92acc7 ,#315c88);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    color: transparent;
+                }
+                .num03{
+                    background-image: linear-gradient(90deg,#ad6d2d ,#f5c166);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    color: transparent;
+                }
+            }
+        }
+        li+li{
+            border-top: 1px solid rgba(245, 243, 228, 0.8);
+        }
+    }
+    .inMore{
+        width: 60px;
+        height: 15px;
+        position: absolute;
+        cursor: pointer;
+        left: 50%;
+        margin-left: -30px;
+        bottom: -30px;
+        border-top: 15px solid #e9e6d1;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 15px solid transparent;
+        transition: all 0.3s ease;
+        &:before{
+            content: '';
+            display: block;
+            position: absolute;
+            left: 50%;
+            margin-left: -6px;
+            top: -10px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 7px solid #fff;
+            border-bottom: 7px solid transparent;
+            transition: all 0.3s ease;
+        }
+        &:hover{
+            border-top-color: #ad6d2d;
+        }
+    }
+    .rowRotate{
+        border-top-color: #ad6d2d;
+        &:before{
+            top: -18px;
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+    }
+    .inRankSome{
+        height: 856px;
+        overflow: hidden;
+    }
+}
+
+.memberDeal{
+    padding: 50px 28px 28px;
+    background-color: #fff;
+    .dealRank{
+        padding: 4px 16px;
+        background-color: #f5f9fa;
+        margin-top: 40px;
+        position: relative;
+        .deul{
+            overflow: hidden;
+        }
+        li{
+            padding-top: 16px;
+            padding-bottom: 16px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            .rankNum{
+                width: 62px;
+                height: 52px;
+                color: #93adc7;
+                font-size: 20px;
+                font-family: "numberfont";
+                text-align: center;
+                line-height: 52px;
+                .numTop{
+                    width: 62px;
+                    height: 52px;
+                    img{
+                        filter: drop-shadow(7px 7px 9px rgba(40,50,60,0.32))
+                    }
+                }
+            }
+            .userImg{
+                text-align: center;
+                width: 124px;
+                img{
+                    width: 50px;
+                    height: 50px;
+                    overflow: hidden;
+                    border-radius: 50%;
+                    box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
+                    border: solid 1px #fece6c;
+                }
+                
+            }
+            .userName{
+                color: #333333;
+                font-size: 14px;
+                flex: 1;
+            }
+            .userInquiry{
+                color: #666666;
+                font-size: 16px;
+                width: 75px;
+                .num01{
+                    background-image: linear-gradient(90deg,#f9c020 ,#f83801);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    color: transparent;
+                }
+                .num02{
+                    background-image: linear-gradient(90deg,#92acc7 ,#315c88);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    color: transparent;
+                }
+                .num03{
+                    background-image: linear-gradient(90deg,#ad6d2d ,#f5c166);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    color: transparent;
+                }
+            }
+        }
+        li+li{
+            border-top: 1px solid rgba(224, 239, 242, 0.8);
+        }
+    }
+    .deMore{
+        width: 60px;
+        height: 15px;
+        position: absolute;
+        cursor: pointer;
+        left: 50%;
+        margin-left: -30px;
+        bottom: -30px;
+        border-top: 15px solid #c5dbdf;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 15px solid transparent;
+        transition: all 0.3s ease;
+        &:before{
+            content: '';
+            display: block;
+            position: absolute;
+            left: 50%;
+            margin-left: -6px;
+            top: -10px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 7px solid #fff;
+            border-bottom: 7px solid transparent;
+        }
+        &:hover{
+            border-top-color: #315c88;
+        }
+    }
+    .rowRotate{
+        border-top-color: #315c88;
+        &:before{
+            top: -18px;
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+    }
+}
+
+.payMember{
+    padding: 50px 28px 28px;
+    background-color: #fff;
+    .yearRank{
+        margin-top: 40px;
+        text-align: center;
+        thead{
+            height: 38px;
+            background-color: #f6f7fa;
+            color: #999999;
+            font-size: 14px;
+            font-weight: normal;
+            tr,th{
+                background-color: #f6f7fa;
+                font-weight: normal;
+            }
+            th.el-table__cell.is-leaf{
+                border-bottom: none;
+                padding: 0;
+            }
+        }
+        .cell{
+            text-align: center;
+            line-height: normal;
+            .urank{
+                color: #93adc7;
+                font-size: 20px;
+                font-family: "numberfont";
+            }
+            .avatar{
+                width: 50px;
+                height: 50px;
+                border-radius: 6px;
+	            border: solid 2px #ffff74;
+            }
+            .uname{
+                font-size: 14px;
+                color: #333333;
+            }
+            .innum{
+                color: #485e7f;
+                font-size: 14px;
+            }
+            .dealnum{
+                color: #ff3535;
+                font-size: 14px;
+            }
+            .milnum{
+                color: #fd9200;
+                font-size: 14px;
+                &:before{
+                    content: '';
+                    display: inline-block;
+                    vertical-align: middle;
+                    width: 50px;
+                    height: 47px;
+                    background: url(../assets/mildeal.png) center center no-repeat;
+                    background-size: 100% auto;
+                    margin-top: 8px;
+                }
+            }
+        }
+        td.el-table__cell{
+            border-bottom: 1px solid #f6f7fa;
+            padding: 16px 0 10px;
+        }
+        .sort-caret.ascending{
+            border-bottom-color:#93adc7;
+            border-left-width: 4px;
+            border-right-width: 4px;
+        }
+        .sort-caret.descending{
+            border-top-color:#93adc7;
+            border-left-width: 4px;
+            border-right-width: 4px;
+        }
+        .ascending .sort-caret.ascending {
+            border-bottom-color:#315c88;
+        }
+        .descending .sort-caret.descending {
+            border-top-color:#315c88;
+        }
+    }
+}
+
+.millionDeal{
+    padding: 234px 25px 25px;
+    background-color: #fff;
+    position: relative;
+    &:before{
+        content: '';
+        display: block;
+        position: absolute;
+        width: 295px;
+        height: 345px;
+        background: url(../assets/milliondeal.png) center -50px no-repeat;
+        left: 50%;
+        margin-left: -172px;
+        top: 0;
+    }
+    .milRank{
+        .milul{
+            overflow: hidden;
+        }
+        li{
+            padding-top: 10px;
+            padding-bottom: 12px;
+            padding-left: 75px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            border-radius: 10px;
+            position: relative;
+            background-color: #f5eed4;
+            .rankNum{
+                width: 56px;
+                height: 100%;
+                left: 0;
+                top: 0;
+                position: absolute;
+                .rankstyle{
+                    width: 56px;
+                    height: 51px;
+                    position: absolute;
+                    left: 2px;
+                    top: -8px;
+                    background-size: 100% auto;
+                    background-position: left top;
+                    background-repeat: no-repeat;
+                }
+                .rank01{
+                    background-image: url(../assets/mil1.gif);
+                }
+                .rank02{
+                    background-image: url(../assets/mil2.gif);
+                }
+                .rank03{
+                    background-image: url(../assets/mil3.gif);
+                }
+                .numNormal{
+                    color: #93adc7;
+                    font-size: 20px;
+                    position: absolute;
+                    font-family: "numberfont";
+                    left: 0;
+                    right: 0;
+                    text-align: center;
+                    top: 50%;
+                    -webkit-transform: translateY(-50%);
+                    transform: translateY(-50%);
+                }
+            }
+            
+            .userImg{
+                position: relative;
+                z-index: 1;
+                font-size: 0;
+                // &:before{
+                //     content: '';
+                //     display: block;
+                //     position: absolute;
+                //     left: -2px;
+                //     top: -2px;
+                //     right: -2px;
+                //     bottom: -2px;
+                //     border-radius: 6px;
+                //     background-color: #ffff74;
+                //     background-image: linear-gradient(0deg, #ffff74 0%, #bd811b 100%);
+                //     z-index: -1;
+                //     box-shadow: 3px 4px 7px 0px rgba(133, 124, 89, 0.75);
+                // }
+                &:before{
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    left: -2px;
+                    top: -2px;
+                    right: -2px;
+                    bottom: -2px;
+                    background-image: url(../assets/light-border.png);
+                    background-position:  center center;
+                    background-size: 100% 100%;
+                    background-repeat: no-repeat;
+                }
+                img{
+                    width: 54px;
+                    height: 54px;
+                    overflow: hidden;
+                    border-radius: 6px;
+                    box-shadow: 3px 4px 7px 0px rgba(133, 124, 89, 0.75);
+                }
+                
+            }
+            .userName{
+                color: #333333;
+                font-size: 14px;
+                flex: 1;
+                margin-left: 30px;
+            }
+            .milNum{
+                color: #333333;
+                font-size: 16px;
+                width: 110px;
+                &:before{
+                    content: '';
+                    display: inline-block;
+                    vertical-align: middle;
+                    width: 50px;
+                    height: 47px;
+                    background: url(../assets/mildeal.png) center center no-repeat;
+                    background-size: 100% auto;
+                }
+            }
+        }
+        li+li{
+            margin-top: 34px;
+            background-color: #d9e7f2;
+        }
+        li+li+li{
+            background-color: #d0ebf1;
+        }
+        li+li+li+li{
+            background-color: #f2f8f9;
+        }
+    }
+    .milMore{
+        width: 60px;
+        height: 15px;
+        position: absolute;
+        cursor: pointer;
+        left: 50%;
+        margin-left: -30px;
+        bottom: -30px;
+        border-top: 15px solid #e2e3e8;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 15px solid transparent;
+        transition: all 0.3s ease;
+        &:before{
+            content: '';
+            display: block;
+            position: absolute;
+            left: 50%;
+            margin-left: -6px;
+            top: -10px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 7px solid #fff;
+            border-bottom: 7px solid transparent;
+        }
+        &:hover{
+            border-top-color: #57657a;
+        }
+    }
+    .rowRotate{
+        border-top-color: #57657a;
+        &:before{
+            top: -18px;
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+    }
+}
+
+.memberAward{
+    padding: 50px 28px 28px;
+    background-color: #fff;
+    .awardRank{
+        padding: 4px 16px;
+        background-color: #fcf8f8;
+        margin-top: 40px;
+        position: relative;
+        .inul{
+            overflow: hidden;
+        }
+        li{
+            padding-top: 16px;
+            padding-bottom: 16px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            .rankNum{
+                width: 62px;
+                height: 52px;
+                color: #93adc7;
+                font-size: 20px;
+                font-family: "numberfont";
+                text-align: center;
+                line-height: 52px;
+                .numTop{
+                    width: 62px;
+                    height: 52px;
+                }
+                .numTop01{
+                    background: url(../assets/in1.gif) center center no-repeat;
+                    background-size: 53px 51px;
+                }
+                .numTop02{
+                    background: url(../assets/in2.gif) center center no-repeat;
+                    background-size: 53px 51px;
+                }
+                .numTop03{
+                    background: url(../assets/in3.gif) center center no-repeat;
+                    background-size: 53px 51px;
+                }
+            }
+            .userImg{
+                text-align: center;
+                width: 124px;
+                img{
+                    width: 50px;
+                    height: 50px;
+                    overflow: hidden;
+                    border-radius: 50%;
+                    box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
+                    border: solid 1px #fece6c;
+                }
+                
+            }
+            .userName{
+                color: #333333;
+                font-size: 14px;
+                flex: 1;
+            }
+            .userAward{
+                color: #666666;
+                font-size: 16px;
+                width: 75px;
+                .num01{
+                    background-image: linear-gradient(90deg,#f9c020 ,#f83801);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    color: transparent;
+                }
+                .num02{
+                    background-image: linear-gradient(90deg,#92acc7 ,#315c88);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    color: transparent;
+                }
+                .num03{
+                    background-image: linear-gradient(90deg,#ad6d2d ,#f5c166);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    color: transparent;
+                }
+            }
+        }
+        li+li{
+            border-top: 1px solid rgba(245, 231, 231, 0.6);
+        }
+    }
+    .awardMore{
+        width: 60px;
+        height: 15px;
+        position: absolute;
+        cursor: pointer;
+        left: 50%;
+        margin-left: -30px;
+        bottom: -30px;
+        border-top: 15px solid #e5d0d0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 15px solid transparent;
+        transition: all 0.3s ease;
+        &:before{
+            content: '';
+            display: block;
+            position: absolute;
+            left: 50%;
+            margin-left: -6px;
+            top: -10px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 7px solid #fff;
+            border-bottom: 7px solid transparent;
+        }
+        &:hover{
+            border-top-color: #ad6d2d;
+        }
+    }
+    .rowRotate{
+        border-top-color: #ad6d2d;
+        &:before{
+            top: -18px;
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+    }
+}
+
+.dealRankMain{
+    &:after{
+        content: '';
+        display: block;
+        clear: both;
+    }
+    .dealRankLeft{
+        width: 70%;
+        float: left;
+        padding-right: 10px;
+        .dealRankTop{
+            &:after{
+                content: '';
+                display: block;
+                clear: both;
+            }
+        }
+        .memberInquiry{
+            width: calc(50% - 10px);
+            float: left;
+        }
+        .memberDeal{
+            width: calc(50% - 10px);
+            float: right;
+        }
+        .payMember{
+            margin-top: 20px;
+        }
+    }
+    .dealRankRight{
+        width: 30%;
+        float: right;
+        padding-left: 10px;
+        .memberAward{
+            margin-top: 20px;
+        }
+    }
+}
+
+@media screen and(max-width:1600px){
+    .dealRankMain{
+        .dealRankLeft{
+            width: 100%;
+            padding-right: 0;
+        }
+        .dealRankRight{
+            width: 100%;
+            margin-top: 20px;
+            padding-left: 0;
+            .millionDeal{
+                width: calc(50% - 10px);
+                float: left;
+            }
+            .memberAward{
+                margin-top: 0;
+                width: calc(50% - 10px);
+                float: right;
+            }
+            &:after{
+                content: '';
+                display: block;
+                clear: both;
+            }
+        }
+    }
+
+}
+
+@media screen and(max-width:1200px){
+    .dealRankMain{
+        .dealRankLeft{
+            .dealRankTop{
+                display: block;
+            }
+            .memberInquiry{
+                width: 100%;
+            }
+            .memberDeal{
+                margin-left: 0;
+                margin-top: 20px;
+                width: 100%;
+            }
+        }
+        .dealRankRight{
+            display: block;
+            .millionDeal{
+                width: 100%;
+            }
+            .memberAward{
+                width: 100%;
+                margin-left: 0;
+                margin-top: 20px;
+            }
+        }
+    } 
+}

@@ -1,0 +1,77 @@
+<template>
+  <div class="rowDayFinish">
+    <div class="rowTitle">
+      <div class="title-left">
+        <h3 class="tit-h3">各部门日询盘完成情况统计</h3>
+        <span class="tit-span">（单位：次）</span>
+        <span class="tit-span">注：与上月同期对比</span>
+      </div>
+      <div class="datePicker">
+        <el-date-picker
+          v-model="MonthChoose"
+          @change = "MonthChange"
+          type="month"
+          format="yyyy-MM"
+          :picker-options="disabledMonth"
+          placeholder="选择月份">
+        </el-date-picker>
+      </div>
+    </div>
+    <div class="rowMain">
+        <ul class="depDayCont">
+            <li v-for="(item,index) in DayFinish" :key="index">
+                <div class="depName">{{item.name}}</div>
+                <div class="depRes">
+                    <span class="resnum">{{item.finishnumber}}</span>
+                    <span class="resdet" :class="parseInt(item.finishnumber) > parseInt(item.lastfinishnumber) ? 
+                        'grow' : 'down'">同比<span v-if="parseInt(item.finishnumber) > parseInt(item.lastfinishnumber)">增长</span>
+                        <span v-else>下降</span>
+                    <i >{{parseInt(item.finishnumber) > parseInt(item.lastfinishnumber) ? parseInt(item.finishnumber) - parseInt(item.lastfinishnumber) : parseInt(item.lastfinishnumber) - parseInt(item.finishnumber)}}</i></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+  </div>
+</template>
+
+<script>
+import {parseTime}  from "@/utils";
+export default {
+    name: "DayFinish",
+    data() {
+        return {
+            MonthChoose: '',
+            disabledMonth:{
+                disabledDate(time){
+                    return time.getTime() > Date.now();
+                }
+            }
+        }
+    },
+    props:{
+        DayFinish: {
+            type: Array,
+            default: function () {
+                return [];
+            },
+        },
+    },
+    created(){
+        var $this = this;
+        this.MonthChoose = parseTime(new Date(),'{y}-{m}');
+    },
+    methods:{
+        MonthChange() {
+            var $this = this;
+            var res = $this.MonthChoose;
+            res = parseTime(res,'{y}-{m}');
+            $this.MonthChoose = res;
+            $this.$emit('MonthChange', res);
+        }
+    }
+}
+</script>
+
+<style>
+
+</style>

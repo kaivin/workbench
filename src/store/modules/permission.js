@@ -110,6 +110,12 @@ function setRoutes(routers){
         meta: {id:'Home-chGroup',title: '组员分析', icon: null, keepAlive:false},
       },
       {
+        path: "/Home/CH/groupAnalysis/singlePerson",
+        name:'groupAnalysis',
+        component: () => import("@/views/Home/CH/groupAnalysis/singlePerson.vue"),
+        meta: {id:'Home-chGroup',title: '组员分析', icon: null, keepAlive:false},
+      },
+      {
         path: "/Home/EN/objectiveShow",
         name:'enObjectiveShow',
         component: () => import("@/views/Home/EN/objectiveShow/index.vue"),
