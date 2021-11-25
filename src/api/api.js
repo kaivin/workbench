@@ -173,6 +173,36 @@ export function getChinadaytarget(data) {
     data
   });
 }
+//首页中文统计(部门分析默认页面接口)
+export function getChinadepartcountdefault() {
+  return request({
+    url: "/hxindex/Api/chinadepartcountdefault",
+    method: "POST",
+  });
+}
+//首页中文统计(部门分析) 
+export function getChinadepartcount(data) {
+  return request({
+    url: "/hxindex/Api/chinadepartcount",
+    method: "POST",
+    data
+  });
+}
+//首页英文统计(部门分析默认页面接口)
+export function getendepartcountdefault() {
+  return request({
+    url: "/hxindex/Api/endepartcountdefault",
+    method: "POST",
+  });
+}
+//首页英文统计(部门分析) 
+export function getendepartcount(data) {
+  return request({
+    url: "/hxindex/Api/endepartcount",
+    method: "POST",
+    data
+  });
+}
 //首页中文统计总览
 export function getChinacountnew() {
   return request({

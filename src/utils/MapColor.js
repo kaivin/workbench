@@ -1,5 +1,4 @@
-﻿
-export function MapInterval(maxNum){
+﻿export function MapInterval(maxNum){    
     var minAverage='';  
     var defaulColor = []   
     if(maxNum>0){
@@ -17,6 +16,7 @@ export function MapInterval(maxNum){
             }else{
                 minAverage=numRes[0]
             }
+            var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
             var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
             defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
             var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1]; 

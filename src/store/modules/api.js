@@ -21,6 +21,10 @@
   clearHomeCache,
   getEndaytarget,
   getChinadaytarget,
+  getChinadepartcountdefault,
+  getChinadepartcount,
+  getendepartcountdefault,
+  getendepartcount,
   getChinacountnew,
   getChinadepartscorenew,
   getChinadepartscoreyear,
@@ -528,10 +532,40 @@ const actions = {
         })
       })
     },
-    // 首页中文询盘日目标接口
-    getChinadaytargetAction({ commit, state },data) {
+    // 首页中文统计(部门分析默认页面接口)
+    getChinadepartcountdefaultAction({ commit, state },data) {
       return new Promise((resolve, reject) => {
-        getChinadaytarget(data).then(response => {
+        getChinadepartcountdefault(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计(部门分析) 
+    getChinadepartcountAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getChinadepartcount(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计(部门分析默认页面接口)
+    getendepartcountdefaultAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getendepartcountdefault(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计(部门分析) 
+    getendepartcountAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getendepartcount(data).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)

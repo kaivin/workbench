@@ -48,13 +48,7 @@
         </div>
         <div class="item-row stat-row">
           <div class="rowBtn">
-            <p
-              class="btn-panel"
-              v-if="
-                permitModules.includes('Module_cnStat') &&
-                permitModules.includes('Module_enStat')
-              "
-            >
+            <p class="btn-panel" v-if="permitModules.includes('Module_cnStat')&&permitModules.includes('Module_enStat')">
               <span
                 class="btn-span"
                 v-bind:class="item.isOn ? 'active' : ''"

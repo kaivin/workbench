@@ -56,6 +56,7 @@ export default {
   methods: {
     // 中文年度成交积分
     yeardepartscoreChart() {
+
       var $this = this;
       if (
         $this.yeardepartscoreData &&

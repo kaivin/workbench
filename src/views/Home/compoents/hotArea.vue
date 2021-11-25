@@ -101,7 +101,6 @@ export default {
     }
   },
   created(){
-      
   },
   methods:{
       // 中文地区日期选择改变事件
@@ -124,10 +123,8 @@ export default {
       }
     },
     // 中文地区询盘地图
-    drawCnCluesRegionChart(){
-      
-      var $this = this;
-      
+    drawCnCluesRegionChart(){      
+      var $this = this;      
       var maxNum='';
       var minAverage='';
       $this.numList='';
@@ -136,8 +133,7 @@ export default {
           if(maxNum<item.number){
             maxNum=item.number;
           }
-      });
-      
+      });      
       if(maxNum>0){
         if(maxNum>=4){
           var average=parseInt(maxNum/4);
@@ -212,8 +208,7 @@ export default {
             }
         }
       }
-      $this.sumColor=sumColor;
-      
+      $this.sumColor=sumColor;      
       if($this.currentCluesData.cluesRegionData.length>0){   
         fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
         .then(res => res.json())
@@ -336,8 +331,7 @@ export default {
           var numList=$this.numList;  
           var defaulColor=$this.sumColor;          
           var rel=$this.currentCluesData.topTenRegionData;
-          var topTenColor=[];
-          
+          var topTenColor=[];          
           $this.currentCluesData.topTenRegionData.forEach(function(item,index){
             if(defaulColor.length>=5){
               for(var i=0;i<numList.length;i++){
@@ -350,8 +344,7 @@ export default {
                   break;
                 }
               }
-            }else{
-              
+            }else{              
               for(var i=0;i<numList.length;i++){
                 if(item.number>numList[i]){
                   topTenColor.push(defaulColor[i]);
