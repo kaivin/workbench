@@ -38,23 +38,23 @@
                     <div class="allCircle"></div>
                     <div class="passCircle">
                         <div class="left">
-                            <div class="line" :style="passPercent < 50 ? 'transform:rotate(-225deg)' : 'transform:rotate('+ (225/50*(passPercent-50)-225) + 'deg)' "></div>
+                            <div class="line" :style="item.numberline/maxnumline*100 < 50 ? 'transform:rotate(-225deg)' : 'transform:rotate('+ (225/50*(item.numberline/maxnumline*100-50)-225) + 'deg)' "></div>
                         </div>
                         <div class="right">
-                            <div class="line" :style="passPercent < 50 ? 'transform:rotate('+ (225/50*passPercent-225) + 'deg)' : 'transform:rotate(-45deg)' " ></div>
+                            <div class="line" :style="item.numberline/maxnumline*100 < 50 ? 'transform:rotate('+ (225/50*item.numberline/maxnumline*100-225) + 'deg)' : 'transform:rotate(-45deg)' " ></div>
                         </div>
                     </div>
                     <div class="numCircle">
                         <div class="left">
-                            <div class="line" :style="nowPercent < 50 ? 'transform:rotate(-225deg)' : 'transform:rotate('+ (225/50*(nowPercent-50)-225) + 'deg)' "></div>
+                            <div class="line" :style="item.snumber/maxnumline*100 < 50 ? 'transform:rotate(-225deg)' : 'transform:rotate('+ (225/50*(item.snumber/maxnumline*100-50)-225) + 'deg)' "></div>
                         </div>
                         <div class="right">
-                            <div class="line" :style="nowPercent < 50 ? 'transform:rotate('+ (225/50*nowPercent-225) + 'deg)' : 'transform:rotate(-45deg)' " ></div>
+                            <div class="line" :style="item.snumber/maxnumline*100 < 50 ? 'transform:rotate('+ (225/50*(item.snumber/maxnumline*100)-225) + 'deg)' : 'transform:rotate(-45deg)' " ></div>
                         </div>
                     </div>
                     <div class="numShow">
-                        <span class="nowNum">120</span>
-                        <span class="aimNum">≥700</span>
+                        <span class="nowNum">{{item.snumber}}</span>
+                        <span class="aimNum">≥{{item.numberline}}</span>
                     </div>
                 </div>
                 <div class="delText">
@@ -103,8 +103,6 @@ export default {
                     return time.getTime() > Date.now();
                 }
             },
-            nowPercent: 30,
-            passPercent: 60,
         }
     },
     props:{
@@ -119,6 +117,12 @@ export default {
             default: function () {
                 return {};
             },
+        },
+        maxnumline:{
+            type: Number,
+            default: function(){
+                return 0
+            }
         }
     },
     created(){

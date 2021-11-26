@@ -27,10 +27,10 @@
                   </div>
                   <div class="userAward">
                       <span v-if="index<3" :class="'num0'+(index+1)"> 
-                        {{item.allmoney.toFixed(1)}}
+                        {{Math.floor(item.allmoney)}}元
                       </span>
                       <span v-else> 
-                        {{item.allmoney.toFixed(1)}}
+                        {{Math.floor(item.allmoney)}}元
                       </span>
                   </div>
               </li>

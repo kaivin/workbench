@@ -130,14 +130,16 @@ export default {
               });
             }
             if(values[i].name == "非搜索询盘"){
-              annotations.push({
-                type: 'text',
-                position: [k, values[i].number],
-                content: `${values[i].number}`,
-                style: { width: '24px', textAlign: 'center', fontSize: 12, fill: '#fff' },
-                offsetY: -10,
-                offsetX: -30
-              });
+              if(Dep1DayNum - values[i].number > 10){
+                annotations.push({
+                  type: 'text',
+                  position: [k, values[i].number],
+                  content: `${values[i].number}`,
+                  style: { width: '24px', textAlign: 'center', fontSize: 12, fill: '#fff' },
+                  offsetY: -10,
+                  offsetX: -30
+                });
+              }
             }
             if(values[i].name == "本月最高"){
               annotations.push({
@@ -162,65 +164,60 @@ export default {
         });
 
         if( $this.plot && !$this.plot.chart.destroyed){
-          console.log($this.plot)
-          $this.plot.options.plots[0].data = data;
-          $this.plot.options.plots[0].annotations = annotations;
-          $this.plot.render();
-        }else{
-            const plot = new Mix('dayTarget', {
-                tooltip: {
-                shared: true,
-                  customItems: (originalItems) => {
-                      for (let i = 0; i < originalItems.length; i++) {
-                          if(originalItems[i].title != "电商一部" && originalItems[i].name == "搜索询盘"){
-                            originalItems[i].name = "询盘数量"
-                          }else if(originalItems[i].title == "电商一部" && originalItems[i].name == "搜索询盘"){
-                            originalItems[i].name = "询盘数量"
-                            originalItems[i].value = Dep1DayNum;
-                          }
-                      }
-                      return originalItems;
-                  },
-                },
-                plots: [
-                  {
-                    type: 'column',
-                    options: {
-                      data,
-                      xField: 'departname',
-                      yField: 'number',
-                      isGroup: true,
-                      color: ['#89b2ff', '#fac554',  '#cde1ff','#fbd6cf'],
-                      minColumnWidth: 24,
-                      maxColumnWidth: 24,
-                      legend: false,
-                      dodgePadding: 6,
-                      isStack: true,
-                      seriesField: 'name',
-                      groupField: 'stack',
-                      yAxis: {
-                        grid: {
-                          line: {
-                            style: {
-                              stroke: '#e7e7e7',
-                              lineWidth: 1,
-                              lineDash: [3, 2],
-                            },
-                            
-                          },
-                        },
-                        tickCount: 4,
-                        tickInterval: 50,
-                      },
-                      annotations
-                    }
-                  }
-                ]
-            })
-
-            $this.plot = plot;
-            $this.plot.render();
+          $this.plot.destroy();
         }
+        const plot = new Mix('dayTarget', {
+            tooltip: {
+            shared: true,
+              customItems: (originalItems) => {
+                  for (let i = 0; i < originalItems.length; i++) {
+                      if(originalItems[i].title != "电商一部" && originalItems[i].name == "搜索询盘"){
+                        originalItems[i].name = "询盘数量"
+                      }else if(originalItems[i].title == "电商一部" && originalItems[i].name == "搜索询盘"){
+                        originalItems[i].name = "询盘数量"
+                        originalItems[i].value = Dep1DayNum;
+                      }
+                  }
+                  return originalItems;
+              },
+            },
+            plots: [
+              {
+                type: 'column',
+                options: {
+                  data,
+                  xField: 'departname',
+                  yField: 'number',
+                  isGroup: true,
+                  color: ['#89b2ff', '#fac554',  '#cde1ff','#fbd6cf'],
+                  minColumnWidth: 24,
+                  maxColumnWidth: 24,
+                  legend: false,
+                  dodgePadding: 6,
+                  isStack: true,
+                  seriesField: 'name',
+                  groupField: 'stack',
+                  yAxis: {
+                    grid: {
+                      line: {
+                        style: {
+                          stroke: '#e7e7e7',
+                          lineWidth: 1,
+                          lineDash: [3, 2],
+                        },
+                        
+                      },
+                    },
+                    tickCount: 4,
+                    tickInterval: 50,
+                  },
+                  annotations
+                }
+              }
+            ]
+        })
+        $this.plot = plot;
+        plot.render();
       }
     }
 }

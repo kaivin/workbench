@@ -1,8 +1,12 @@
 <template>
   <div class="memberDeal">
-      <div class="memberTit">
-          <h3>非付费成员-个人年度总<span>成交积分</span>排行榜</h3>
+      <div class="memberTit" v-if="lang =='ch'">
+          <h3>非付费成员-个人年度总<span >成交积分</span>排行榜</h3>
           <p>（单位：分）</p>
+      </div>
+      <div class="memberTit" v-else>
+          <h3>非付费成员-个人年度总<span>成交个数</span>排行榜</h3>
+          <p>（单位：个）</p>
       </div>
       <div class="dealRank">
           <ul class="deul" :style="'height:'+ dealScoreSet.boxHeight">
@@ -34,12 +38,22 @@
                       {{item.ownuser}}
                   </div>
                   <div class="userInquiry">
-                      <span v-if="index<3" :class="'num0'+(index+1)"> 
-                        {{item.score.toFixed(1)}}分
-                      </span>
-                      <span v-else> 
-                        {{item.score.toFixed(1)}}分
-                      </span>
+                    <div v-if="lang =='ch'">
+                        <div v-if="index<3" :class="'num0'+(index+1)"> 
+                          {{item.score.toFixed(1)}}分
+                        </div>
+                        <div v-else> 
+                          {{item.score.toFixed(1)}}分
+                        </div>
+                    </div>
+                    <div v-else>
+                        <div v-if="index<3" :class="'num0'+(index+1)"> 
+                          {{item.score}}个
+                        </div>
+                        <div v-else> 
+                          {{item.score}}个
+                        </div>
+                    </div>  
                   </div>
               </li>
           </ul>
@@ -70,6 +84,12 @@ export default {
       type: Object,
       default: function () {
         return {};
+      },
+    },
+    lang: {
+      type: String,
+      default: function () {
+        return "";
       },
     }
   },

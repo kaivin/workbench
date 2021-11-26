@@ -25,6 +25,7 @@
               :DealCount="DealCount" 
               @MonthChange="monthChange" 
               :lang="en"
+              :maxnumline="maxnumline"
             ></en-deal-count>
             <month-deal 
               :MonthFinish="MonthFinish"
@@ -58,6 +59,7 @@ export default {
         departScore:[],
         stepNum: 50
       },
+      maxnumline:0,
       DayTarget:[],
       Dep1DayNum:0,
       DayAim:[],
@@ -103,7 +105,6 @@ export default {
       $this.$store
         .dispatch("homeobject/postEnDayNum", data)
         .then((response) => {
-          console.log(response)
           if (response) {
             if (response.status) {
               var daymax = response.daymaxnumber[0].effectivenumber;
@@ -130,6 +131,7 @@ export default {
     dayChange(val){
       var $this = this;
       $this.getEnDepDayNum(val);
+      $this.getDepDayTarget(val);
     },
 
     //1.英文日询盘:进度展示
@@ -157,18 +159,22 @@ export default {
       $this.$store
         .dispatch("homeobject/postEnDealNum", data)
         .then((response) => {
-          console.log(response)
           if (response) {
             if (response.status) {
               var dscore  = response.departscore;
               $this.DealCount.departScore = dscore;
               var maxnum = 0;
+              var maxline = 0;
               for(var i=0;i<dscore.length;i++){
                 if(dscore[i].goodnumber > maxnum){
                   maxnum = dscore[i].goodnumber;
                 }
+                if(dscore[i].numberline > maxline){
+                  maxline = dscore[i].numberline
+                }
               }
               $this.getMaxNum(maxnum);
+              $this.maxnumline = maxline + 50;
             } else {
               $this.$message({
                 showClose: true,
@@ -278,14 +284,12 @@ export default {
 
     // 4.日目标完成情况
     getDayFinish(val){
-      console.log(val)
       var $this = this;
       var data = {};
       data.time = val;
       $this.$store
         .dispatch("homeobject/postEnDayFinish", data)
         .then((response) => {
-          console.log(response)
           if (response) {
             if (response.status) {
               $this.DayFinish = response.departmonthdarget;
@@ -308,7 +312,6 @@ export default {
       $this.$store
         .dispatch("homeobject/postEnDepFinish", data)
         .then((response) => {
-          console.log(response)
           if (response) {
             if (response.status) {
               $this.MonthFinish = response.departscoreyear;

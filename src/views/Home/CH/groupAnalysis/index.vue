@@ -8,16 +8,17 @@
                 :unpayInquiry="unpayInquiry"
                 :unpayInquirySet="unpayInquirySet"
                 @changeSet="changeSet"
-                @goPage="goPage"
               ></unpay-inquiry>
               <unpay-deal
                 :dealScore="dealScore"
                 :dealScoreSet="dealScoreSet"
                 @changeSet="changeSet"
+                :lang="ch"
               ></unpay-deal>
             </div>
             <pay-member
               :payMember="payMember"
+              :lang="ch"
             ></pay-member>
           </div>
           <div class="dealRankRight">
@@ -52,6 +53,7 @@ export default {
         boxHeight: '',
         isFold: false,
       },
+      ch:'ch',
       dealScore:[],
       dealScoreSet:{
         ifFold: false,//是否需要折叠
@@ -97,7 +99,6 @@ export default {
       $this.$store
         .dispatch("memberCompare/postInquiryRank")
         .then((response) => {
-          console.log(response)
           if (response) {
             if (response.status) {
               // 非付费询盘
@@ -170,12 +171,8 @@ export default {
         var value2 = b[property];
         return value2 - value1;
       }
-    },
-    goPage(){
-      var $this = this;
-      console.log($this.$router)
-      $this.$router.push("/Home/CH/groupAnalysis/singlePerson");
     }
+
   }
 }
 

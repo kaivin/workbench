@@ -27,10 +27,10 @@
                   </div>
                   <div class="userInquiry">
                       <span v-if="index<3" :class="'num0'+(index+1)"> 
-                        {{item.number}}
+                        {{item.number}}个
                       </span>
                       <span v-else> 
-                        {{item.number}}
+                        {{item.number}}个
                       </span>
                   </div>
               </li>
@@ -78,10 +78,6 @@ export default {
         
         $this.$emit("changeSet", $this.unpayInquirySet, isFold, boxHeight);
     },
-    goPage(){
-      var $this = this;
-      $this.$emit("goPage");
-    }
   }
 }
 </script>

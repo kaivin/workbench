@@ -100,7 +100,6 @@ export default {
       var $this = this;
       var data = {};
       data.time = val;
-      console.log(data);
       $this.$store
         .dispatch("homeobject/postDayNum", data)
         .then((response) => {
@@ -160,7 +159,6 @@ export default {
         .dispatch("homeobject/postDealNum", data)
         .then((response) => {
           if (response) {
-            console.log(response)
             if (response.status) {
               var dscore  = response.departscore;
               $this.DealCount.departScore = dscore;
@@ -203,7 +201,6 @@ export default {
       $this.$store
         .dispatch("homeobject/postDayTarget", data)
         .then((response) => {
-          console.log(response)
           if (response) {
             if (response.status) {
               var res = response.groupcount;
@@ -286,7 +283,6 @@ export default {
       $this.$store
         .dispatch("homeobject/postDayFinish", data)
         .then((response) => {
-          console.log(response)
           if (response) {
             if (response.status) {
               $this.DayFinish = response.departmonthdarget;
@@ -309,7 +305,6 @@ export default {
       $this.$store
         .dispatch("homeobject/postDepFinish", data)
         .then((response) => {
-          console.log(response)
           if (response) {
             if (response.status) {
               $this.MonthFinish = response.departscoreyear;

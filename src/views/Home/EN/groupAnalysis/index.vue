@@ -13,10 +13,12 @@
                 :dealScore="dealScore"
                 :dealScoreSet="dealScoreSet"
                 @changeSet="changeSet"
+                :lang="en"
               ></unpay-deal>
             </div>
             <pay-member
               :payMember="payMember"
+              :lang="en"
             ></pay-member>
           </div>
           <div class="dealRankRight">
@@ -51,6 +53,7 @@ export default {
         boxHeight: '',
         isFold: false,
       },
+      en:"en",
       dealScore:[],
       dealScoreSet:{
         ifFold: false,//是否需要折叠
@@ -96,7 +99,6 @@ export default {
       $this.$store
         .dispatch("memberCompare/postEnInquiryRank")
         .then((response) => {
-          console.log(response)
           if (response) {
             if (response.status) {
               // 非付费询盘

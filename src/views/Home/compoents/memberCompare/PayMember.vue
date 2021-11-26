@@ -47,10 +47,21 @@
                     <span class="innum">{{scope.row.number}}</span>
                 </template>
             </el-table-column>
+
             <el-table-column
+                v-if="lang=='ch'"
                 prop="score"
                 sortable
                 label="询盘积分">
+                <template slot-scope="scope">
+                    <span class="dealnum">{{scope.row.score}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                v-if="lang=='en'"
+                prop="score"
+                sortable
+                label="成交个数">
                 <template slot-scope="scope">
                     <span class="dealnum">{{scope.row.score}}</span>
                 </template>
@@ -85,6 +96,12 @@ export default {
         return [];
       },
     },
+    lang:{
+      type: String,
+      default: function () {
+        return "";
+      },
+    }
   },
   methods:{
 
