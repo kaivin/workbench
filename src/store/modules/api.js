@@ -532,6 +532,16 @@ const actions = {
         })
       })
     },
+    // 首页中文询盘日目标接口
+    getChinadaytargetAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getChinadaytarget(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     // 首页中文统计(部门分析默认页面接口)
     getChinadepartcountdefaultAction({ commit, state },data) {
       return new Promise((resolve, reject) => {

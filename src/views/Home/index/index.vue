@@ -649,9 +649,7 @@ export default {
         resultData.time = "";
       }
       $this.targetScore.DistanceTarget = "";
-      $this.$store
-        .dispatch("api/getChinadaytargetAction", resultData)
-        .then((response) => {
+      $this.$store.dispatch("api/getChinadaytargetAction", resultData).then((response) => {
           if (response) {
             if (response.status) {
               // 获取部门数据
