@@ -1,5 +1,5 @@
 ﻿<template>
-    <div :id="id"></div>
+    <div :id="id" class="chart-panel"></div>
 </template>
 <script>
 import { Area } from "@antv/g2plot";
@@ -28,22 +28,29 @@ methods: {
     TrendChart() {
       var $this = this;
       if ($this.newlist.dayxuntrend.length > 0) {
+          var colorDate=['#75adfa', '#59cab6', '#ff7e24', '#8a80b9', '#ff5a5a'];
+          var areaArr=[];
           const chartArr = new Area($this.id, {
             data: $this.newlist.dayxuntrend,
             xField: "date",
             yField: "value",
             seriesField: 'name',
-            color: ['#6b9afa', '#316afa'],
             isStack:false,
-            areaStyle: () => {
-              return {
-                fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
-              };
+            color: $this.newlist.dayxuntrend.length==1?colorDate[0]:colorDate,
+            appendPadding:[30,15,15,15],
+            yAxis:{
+              grid:{
+                line:{
+                  style:{
+                    stroke: 'black',
+                    lineWidth:1,
+                    lineDash:[6,3],
+                    strokeOpacity:0.1,
+                    shadowBlur:0
+                  }
+                }
+              },
             },
-            appendPadding:[15,15,15,15],
-            height: 370,
-            smooth:false,
-            legend:false,
             xAxis: {
               tickCount:10,
               label: {
@@ -56,51 +63,32 @@ methods: {
                 },
               },
             },
-            yAxis: {
-              grid: {
-                line: {
-                  style: {
-                    stroke: '#cccccc',
-                    lineWidth: 1,
-                    lineDash: [3, 2],
-                    strokeOpacity: 0.5,
-                    shadowColor: null,
-                    shadowBlur: 0,
-                    shadowOffsetX:0,
-                    shadowOffsetY:0,
-                    cursor: 'pointer'
+            legend:{
+              layout:'horizontal',
+              position:'top',
+              flipPage:false,
+              offsetX:60,
+              offsetY:0,
+              label:{
+                style:{
+                  textBaseline:"middle"
+                }
+              },
+            },
+            areaStyle: (data) => {
+              var itemColor = "";
+              $this.newlist.dayxuntrend.forEach(function(item){
+                if(item.name){
+                  if(item.name == data.name){
+                    itemColor = item.color;
                   }
+                }else{
+                  itemColor = item.color;
                 }
-              },
-            },
-            // label
-            label: {
-              layout: [{ type: 'hide-overlap' }], // 隐藏重叠label
-              style: {
-                textAlign: 'center',
-                color:'#9e9e9e',
-                fontsize:12,
-              },
-            },
-            point: {
-              size:3,
-              shape: 'circle',
-              style: (res) => {
-                var obj = {
-                  opacity: 0.5,
-                  stroke: '#6392ec',
-                  fill: '#fff',
-                }
-                return obj;
-              },
-            },
-            tooltip: {
-              formatter: (datum) => {
-                return { name: datum.name, value: datum.value };
-              },
-              title:(e)=>{
-                return e.replace(/\n/g," ")
-              }
+              });
+              return {
+                fill: 'l(270) 0:#ffffff 1:'+itemColor,
+              };
             },
           });
           $this.chartArr = chartArr;

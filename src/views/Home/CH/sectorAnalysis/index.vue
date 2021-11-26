@@ -126,6 +126,7 @@
                           <div class="defaultDataTop">
                               <div class="defaultDataDt">
                                   <strong>{{yeartongObj.allNum}}</strong>
+                                  <span v-if="(isDefaultPage||judgeData.singleGroupStatic)&&(!searchData.isDateCompare||searchData.comparedept_id.length==0)">环比上年同期<i :class="(yeartongObj.allNum-yeartongObj.lastallNum)>0?'rising':'fall'">{{Math.abs(yeartongObj.allNum-yeartongObj.lastallNum)}}</i></span>
                               </div>
                               <p>总询盘数量</p>
                           </div>
@@ -170,7 +171,7 @@
                           <h3>{{!isDefaultPage&&!searchData.isMonth?"日":"月"}}部门询盘趋势</h3>
                           <span class="unit">(单位：个)</span>
                       </div>
-                      <div class="SectorRowFrBox"><areaday-enquiriestrend :dayEnquiriesTrendArr="dayEnquiriesTrend" v-if="dayEnquiriesTrend.dayxuntrend" :key="chartTap" style="height:240px"></areaday-enquiriestrend></div>
+                      <div class="SectorRowFrBox"><areaday-enquiriestrend :dayEnquiriesTrendArr="dayEnquiriesTrend" v-if="dayEnquiriesTrend.dayxuntrend" :key="chartTap" style="height:320px"></areaday-enquiriestrend></div>
                 </div>
             </div>
             <div class="SectorRow flex-wrap" v-if="isDefaultPage||selectedType.includes('scoreDealCount')">
@@ -187,6 +188,7 @@
                           <div class="defaultDataTop">
                               <div class="defaultDataDt">
                                   <strong>{{yearscoretongObj.allNum}}</strong>
+                                  <span v-if="(isDefaultPage||judgeData.singleGroupStatic)&&(!searchData.isDateCompare||searchData.comparedept_id.length==0)">环比上年同期<i :class="(yearscoretongObj.allNum-yearscoretongObj.lastallNum)>0?'rising':'fall'">{{Math.abs(yearscoretongObj.allNum-yearscoretongObj.lastallNum)}}</i></span>
                               </div>
                               <p>总成交分</p>
                           </div>
@@ -231,7 +233,7 @@
                           <h3>月部门成交趋势</h3>
                           <span class="unit">(单位：个)</span>
                       </div>
-                      <div class="SectorRowFrBox"><areaday-enquiriestrend :dayEnquiriesTrendArr="yearscoretongArr" v-if="yearscoretongArr.dayxuntrend" :key="chartTap" style="height:240px"></areaday-enquiriestrend></div>
+                      <div class="SectorRowFrBox"><areaday-enquiriestrend :dayEnquiriesTrendArr="yearscoretongArr" v-if="yearscoretongArr.dayxuntrend" :key="chartTap" style="height:320px"></areaday-enquiriestrend></div>
                 </div>
             </div>
             <div class="SectorRow flex-wrap" v-if="isDefaultPage||selectedType.includes('moneyCostCount')">
@@ -248,6 +250,7 @@
                           <div class="defaultDataTop">
                               <div class="defaultDataDt">
                                   <strong>{{yearmonyetongObj.allNum}}</strong>
+                                  <span v-if="(isDefaultPage||judgeData.singleGroupStatic)&&(!searchData.isDateCompare||searchData.comparedept_id.length==0)">环比上年同期<i :class="(yearmonyetongObj.allNum-yearmonyetongObj.lastallNum)>0?'rising':'fall'">{{Math.abs(yearmonyetongObj.allNum-yearmonyetongObj.lastallNum)}}</i></span>
                               </div>
                               <p>总成本</p>
                           </div>
@@ -292,7 +295,7 @@
                           <h3>月部门成本趋势</h3>
                           <span class="unit">(单位：个)</span>
                       </div>
-                      <div class="SectorRowFrBox"><areaday-enquiriestrend :dayEnquiriesTrendArr="yearmonyetongArr" v-if="yearmonyetongArr.dayxuntrend" :key="chartTap" style="height:240px"></areaday-enquiriestrend></div>
+                      <div class="SectorRowFrBox"><areaday-enquiriestrend :dayEnquiriesTrendArr="yearmonyetongArr" v-if="yearmonyetongArr.dayxuntrend" :key="chartTap" style="height:320px"></areaday-enquiriestrend></div>
                 </div>
             </div>
             <div class="MapRow" v-if="(selectedType.includes('enquirieRegion')||selectedType.includes('scoreDealRegion'))&&searchData.dept_id.length>0">
@@ -1360,56 +1363,65 @@ export default {
       var dayEnquiriesTrend={}; 
       var dayEnquiriesArr=[]; 
       var newLable=[];
+      var colorDate=['#75adfa', '#59cab6', '#ff7e24', '#8a80b9', '#ff5a5a'];
       if(DateVal.dayxuntrend&&DateVal.dayxuntrend.length){
         DateVal.dayxuntrend.forEach(function(item,index){
-          if(item&&item!=null){
-              item.forEach(function(items,indexs){
-                var yeartongObj={
-                  name:'',
-                  value:'',
-                  date:'',
-                }
-                if(newLable.indexOf(items.depart)<0){
-                  newLable.push(items.depart);
-                }
-                var itemDate = [];
-                if(items.depart){
-                  if(items.depart.indexOf('/')>0){
-                    var departArr=[];
-                    items.depart=items.depart.replace(/\//g,"").replace(/电商/g,"").replace(/部/g,"")
-                    yeartongObj.name='电商'+items.depart.split("").join("、")+'部';
-                  }else{
-                    yeartongObj.name=items.depart;
+            if(item&&item!=null){
+                item.forEach(function(items,indexs){
+                  var yeartongObj={
+                    name:'',
+                    value:'',
+                    date:'',
+                    color:colorDate[index],
                   }
-                }else{
-                    yeartongObj.name=$this.groupName;
-                }
-                if(strDate=='询盘'){yeartongObj.value=items.xunnumber;}
-                if(strDate=='成交'){yeartongObj.value=items.score;}
-                if(strDate=='成本'){yeartongObj.value=items.money;}
-                if(items.time){
-                  yeartongObj.date=items.time;
-                }else{
-                  itemDate = items.date.split("-"); 
-                  if($this.isDefaultPage){
-                      yeartongObj.date=itemDate[1] + "月"; 
-                  }else{
-                    if($this.searchData.isMonth){
-                      yeartongObj.date=itemDate[1] + "月"; 
+                  if(newLable.indexOf(items.depart)<0){
+                    newLable.push(items.depart);
+                  }
+                  var itemDate = [];
+                  if(items.depart){
+                    if(items.depart.indexOf('/')>0){
+                      var departArr=[];
+                      items.depart=items.depart.replace(/\//g,"").replace(/电商/g,"").replace(/部/g,"")
+                      yeartongObj.name='电商'+items.depart.split("").join("、")+'部';
                     }else{
-                      yeartongObj.date=itemDate[1] + "-" + itemDate[2] + "\n" + items.week.replace("星期", "周"); 
-                    }  
-                  }        
-                }       
-                dayEnquiriesArr.push(yeartongObj);
-              });
-          }
+                      yeartongObj.name=items.depart;
+                    }
+                  }else{
+                      yeartongObj.name=$this.groupName;
+                  }
+                  if(strDate=='询盘'){yeartongObj.value=items.xunnumber;}
+                  if(strDate=='成交'){yeartongObj.value=items.score;}
+                  if(strDate=='成本'){yeartongObj.value=items.money;}
+                  if(items.time){
+                    yeartongObj.date=items.time;
+                  }else{
+                    itemDate = items.date.split("-"); 
+                    if($this.isDefaultPage){
+                        yeartongObj.date=itemDate[1] + "月"; 
+                    }else{
+                      if($this.searchData.isMonth){
+                        yeartongObj.date=itemDate[1] + "月"; 
+                      }else{
+                        yeartongObj.date=itemDate[1] + "-" + itemDate[2] + "\n" + items.week.replace("星期", "周"); 
+                      }  
+                    }        
+                  }       
+                  dayEnquiriesArr.push(yeartongObj);
+                });
+            }
         });  
+            
         dayEnquiriesTrend.dayxuntrend=dayEnquiriesArr;      
       }
-      if(strDate=='询盘'){$this.dayEnquiriesTrend=dayEnquiriesTrend;}
-      if(strDate=='成交'){$this.yearscoretongArr=dayEnquiriesTrend;}
-      if(strDate=='成本'){$this.yearmonyetongArr=dayEnquiriesTrend;}
+      if(strDate=='询盘'){
+        $this.dayEnquiriesTrend=dayEnquiriesTrend;
+      }
+      if(strDate=='成交'){
+        $this.yearscoretongArr=dayEnquiriesTrend;
+      }
+      if(strDate=='成本'){
+        $this.yearmonyetongArr=dayEnquiriesTrend;
+      }
       $this.chartTap=!$this.chartTap;
     },
     //获取默认占比排行数据

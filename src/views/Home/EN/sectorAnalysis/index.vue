@@ -126,6 +126,7 @@
                           <div class="defaultDataTop">
                               <div class="defaultDataDt">
                                   <strong>{{yeartongObj.allNum}}</strong>
+                                  <span v-if="(isDefaultPage||judgeData.singleGroupStatic)&&(!searchData.isDateCompare||searchData.comparedept_id.length==0)">环比上年同期<i :class="(yeartongObj.allNum-yeartongObj.lastallNum)>0?'rising':'fall'">{{Math.abs(yeartongObj.allNum-yeartongObj.lastallNum)}}</i></span>
                               </div>
                               <p>总询盘数量</p>
                           </div>
@@ -170,7 +171,7 @@
                           <h3>{{!isDefaultPage&&!searchData.isMonth?"日":"月"}}部门询盘趋势</h3>
                           <span class="unit">(单位：个)</span>
                       </div>
-                      <div class="SectorRowFrBox"><areaday-enquiriestrend :dayEnquiriesTrendArr="dayEnquiriesTrend" v-if="dayEnquiriesTrend.dayxuntrend" :key="chartTap" style="height:240px"></areaday-enquiriestrend></div>
+                      <div class="SectorRowFrBox"><areaday-enquiriestrend :dayEnquiriesTrendArr="dayEnquiriesTrend" v-if="dayEnquiriesTrend.dayxuntrend" :key="chartTap" style="height:320px"></areaday-enquiriestrend></div>
                 </div>
             </div>
             <div class="SectorRow flex-wrap" v-if="isDefaultPage||selectedType.includes('scoreDealCount')">
@@ -187,6 +188,7 @@
                           <div class="defaultDataTop">
                               <div class="defaultDataDt">
                                   <strong>{{yearscoretongObj.allNum}}</strong>
+                                  <span v-if="(isDefaultPage||judgeData.singleGroupStatic)&&(!searchData.isDateCompare||searchData.comparedept_id.length==0)">环比上年同期<i :class="(yearscoretongObj.allNum-yearscoretongObj.lastallNum)>0?'rising':'fall'">{{Math.abs(yearscoretongObj.allNum-yearscoretongObj.lastallNum)}}</i></span>
                               </div>
                               <p>总成交分</p>
                           </div>
@@ -232,7 +234,7 @@
                           <span class="unit">(单位：个)</span>
                       </div>
                       <div class="SectorRowFrBox">
-                      <areaday-enquiriestrend :dayEnquiriesTrendArr="yearscoretongArr" v-if="yearscoretongArr.dayxuntrend" :key="chartTap" style="height:240px"></areaday-enquiriestrend>                      
+                      <areaday-enquiriestrend :dayEnquiriesTrendArr="yearscoretongArr" v-if="yearscoretongArr.dayxuntrend" :key="chartTap" style="height:320px"></areaday-enquiriestrend>                      
                       </div>
                 </div>
             </div>
@@ -250,6 +252,7 @@
                           <div class="defaultDataTop">
                               <div class="defaultDataDt">
                                   <strong>{{yearmonyetongObj.allNum}}</strong>
+                                  <span v-if="(isDefaultPage||judgeData.singleGroupStatic)&&(!searchData.isDateCompare||searchData.comparedept_id.length==0)">环比上年同期<i :class="(yearmonyetongObj.allNum-yearmonyetongObj.lastallNum)>0?'rising':'fall'">{{Math.abs(yearmonyetongObj.allNum-yearmonyetongObj.lastallNum)}}</i></span>
                               </div>
                               <p>总成本</p>
                           </div>
@@ -295,7 +298,7 @@
                           <span class="unit">(单位：个)</span>
                       </div>
                       <div class="SectorRowFrBox">
-                      <areaday-enquiriestrend :dayEnquiriesTrendArr="yearmonyetongArr" v-if="yearmonyetongArr.dayxuntrend" :key="chartTap" style="height:240px"></areaday-enquiriestrend>
+                      <areaday-enquiriestrend :dayEnquiriesTrendArr="yearmonyetongArr" v-if="yearmonyetongArr.dayxuntrend" :key="chartTap" style="height:320px"></areaday-enquiriestrend>
                       </div>
                 </div>
             </div>
@@ -313,10 +316,11 @@
                           <div class="defaultDataTop">
                               <div class="defaultDataDt">
                                   <strong>{{yearscorenumbertongObj.allNum}}</strong>
+                                  <span v-if="(isDefaultPage||judgeData.singleGroupStatic)&&(!searchData.isDateCompare||searchData.comparedept_id.length==0)">环比上年同期<i :class="(yearscorenumbertongObj.allNum-yearscorenumbertongObj.lastallNum)>0?'rising':'fall'">{{Math.abs(yearscorenumbertongObj.allNum-yearscorenumbertongObj.lastallNum)}}</i></span>
                               </div>
                               <p>总成本</p>
                           </div>
-                          <dl class="defaultDataBom"  v-if="(isDefaultPage||judgeData.singleGroupStatic)&&(!searchData.isDateCompare||searchData.comparedept_id.length==0)">
+                          <dl class="defaultDataBom" v-if="(isDefaultPage||judgeData.singleGroupStatic)&&(!searchData.isDateCompare||searchData.comparedept_id.length==0)">
                             <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearscorenumbertongObj.avgNum}}</strong>月平均成本</p></dd>
                             <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearscorenumbertongObj.historyNum}}</strong>历史峰值</p></dd>
                           </dl>
@@ -358,7 +362,7 @@
                           <span class="unit">(单位：个)</span>
                       </div>
                       <div class="SectorRowFrBox">
-                      <areaday-enquiriestrend :dayEnquiriesTrendArr="yearscoreNumtongArr" v-if="yearscoreNumtongArr.dayxuntrend" :key="chartTap" style="height:240px"></areaday-enquiriestrend>
+                      <areaday-enquiriestrend :dayEnquiriesTrendArr="yearscoreNumtongArr" v-if="yearscoreNumtongArr.dayxuntrend" :key="chartTap" style="height:320px"></areaday-enquiriestrend>
                       </div>
                 </div>
             </div>
@@ -1552,6 +1556,7 @@ export default {
       var dayEnquiriesTrend={}; 
       var dayEnquiriesArr=[]; 
       var newLable=[];
+      var colorDate=['#75adfa', '#59cab6', '#ff7e24', '#8a80b9', '#ff5a5a'];
       if(DateVal.dayxuntrend&&DateVal.dayxuntrend.length){
         DateVal.dayxuntrend.forEach(function(item,index){
           if(item&&item!=null){
@@ -1560,6 +1565,7 @@ export default {
                   name:'',
                   value:'',
                   date:'',
+                  color:colorDate[index],
                 }
                 if(newLable.indexOf(items.depart)<0){
                   newLable.push(items.depart);

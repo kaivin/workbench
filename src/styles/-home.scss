@@ -2735,7 +2735,7 @@
                     clear: both;
                     display: block;
                     padding-bottom:40px;
-                    padding-top:52px;
+                    padding-top:52px;                    
                     .defaultDataDt{
                         clear: both;
                         display: block;
@@ -2749,6 +2749,42 @@
                             font-size: 34px;
                             line-height: 1;
                             font-weight: normal;
+                        }
+                        span{
+                            float: left;
+                            font-size:12px;
+                            color:#999999;
+                            line-height:1;
+                            text-align: left;
+                            padding-top: 3px;
+                            i{
+                                clear: both;
+                                display: block;
+                                margin-top: 3px;
+                                font-style: normal;
+                                &.rising{
+                                    color:#f63c3a;
+                                    &:before{
+                                        font-style: normal;
+                                        content: '↑';
+                                        margin-right: 5px;
+                                        vertical-align: text-top;
+                                        display: inline-block;
+                                        font-size: 12px;
+                                    }
+                                }
+                                &.fall{
+                                    color:#59cab6;
+                                    &:before{
+                                        font-style: normal;
+                                        content: '↓';
+                                        margin-right: 5px;
+                                        vertical-align: text-top;
+                                        display: inline-block;
+                                        font-size: 12px;
+                                    }
+                                }
+                            }
                         }
                     }
                     p{
@@ -2911,7 +2947,15 @@
             background:#fff;
             height: 370px;
             .SectorRowFrBox{
-                padding-top: 44px;
+                //padding-top: 44px;
+                position: relative;
+                .chart-panel{                    
+                    position: absolute;
+                    left: 0;
+                    top: -26px;
+                    bottom: 0;
+                    width: 100%;
+                }
             }
         }
     }
