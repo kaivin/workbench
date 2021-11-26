@@ -4,14 +4,14 @@
       <div class="title-view">
         <div class="title">{{language}}年度总成本</div>
         <div class="unit">（单位：万）</div>
-        <div class="more">更多分析 ></div>
+        <div class="more" @click="goPage">更多分析 ></div>
       </div>
       <div class="contrast-view">
         <div class="redtext">{{totalXpanYears}}</div>
         <div class="redright">
           <div class="conname">环比上年同期</div>
-          <div class="num up" v-if="isUp">{{isUpNum}}</div>
-          <div class="num down" v-else>{{isUpNum}}</div>
+          <div class="num up" v-if="isUp"><i class="svg-i"><svg-icon icon-class="data-up" /></i>{{isUpNum}}</div>
+          <div class="num down" v-else><i class="svg-i"><svg-icon icon-class="data-down" /></i>{{isUpNum}}</div>
         </div>
       </div>
       <div class="chart-top" id="CostYearsChartTop"></div>     
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { Column,Area} from '@antv/g2plot';
+import { Column,Area,Line} from '@antv/g2plot';
 
 export default {
     name:'demo',
@@ -80,6 +80,13 @@ export default {
       }
     },
     methods:{
+      goPage(){
+       if(this.language == '中文'){
+         this.$router.push('/Home/CH/sectorAnalysis')
+       }else{
+         this.$router.push('/Home/EN/sectorAnalysis')
+       }
+      },
       //chart top
       costAverageChart(val){
         
@@ -92,7 +99,7 @@ export default {
               $this.chartTop.changeData(chartTopData);
               return ;
           } 
-          const chartTop = new Area('CostYearsChartTop', {
+          const chartTop = new Line('CostYearsChartTop', {
             data:chartTopData,
             xField: 'date',
             yField: 'money',
@@ -117,11 +124,14 @@ export default {
               label:null
             },
             maxColumnWidth:16,
-            color:'#fceabe',
-            areaStyle: () => {
-              return {
-                fill: '#fceabe',
-              };
+            color:'#f7d996',
+            // areaStyle: () => {
+            //   return {
+            //     fill: '#f7d996',
+            //   };
+            // },
+            lineStyle:{
+              fill:'#f7d996',
             },
             meta: {
               money: {
@@ -263,6 +273,7 @@ export default {
       font-size: 12px;
       color: #a1a1a1;
       float: right;
+      cursor: pointer;
     }
   }
   .contrast-view{
@@ -286,32 +297,13 @@ export default {
       .num{
         font-size: 12px;
         line-height: 20px;
-        padding-left: 12px;
         position: relative;
       }
       .up{
         color: #f25e5e;
-        &:before{
-          content: '↑';
-          position: absolute;
-          left: 0;
-          font-size: 12px;
-          line-height: 12px;
-          top: 3px;
-          
-        }
       }
       .down{
         color: #2dbb4c;
-        &:before{
-          content: '↓';
-          position: absolute;
-          left: 0;
-          font-size: 12px;
-          line-height: 12px;
-          top: 3px;
-          
-        }
       }
     }
   }

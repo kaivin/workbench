@@ -43,11 +43,13 @@
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12" >
                <XpanTop
+               language="英文"
                :yearusertop5="yearusertop5"
                ></XpanTop>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12" >
                <ScoreTop
+               language="英文"
                :yearuserscoretop5="yearuserscoretop5"
                ></ScoreTop>
              </el-col>

@@ -4,7 +4,7 @@
       <div class="title-view">
         <div class="title">{{language=="中文"?'中文年度热门地区TOP5':'英文年度热门国家TOP5'}}</div>
         <div class="unit">{{type == 1?'（单位：分）':'（单位：个）'}}</div>
-        <div class="more">更多分析 ></div>
+        <div class="more" @click="goPage">更多分析 ></div>
         <div class="btn-group">
           <div @click="changeType(0)" class="btn-item" :class="type == 0?'active':''">询盘</div>
           <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">成交积分</div>
@@ -41,7 +41,7 @@ export default {
         mapDateData:'',
         numList:[],
         sumColor:[],
-        type:0,//0 询盘  1  成交
+        type:0,//0 询盘  1 成交积分  2 成交个数
         worldRegionMapChart:null,//世界地图
         regionMapChart:null,//中国地图
         pieSourcePlot:null,//热门地区TOP10
@@ -98,6 +98,13 @@ export default {
      
     },
     methods:{
+      goPage(){
+       if(this.language == '中文'){
+         this.$router.push('/Home/CH/sectorAnalysis?type=' + this.type)
+       }else{
+         this.$router.push('/Home/EN/sectorAnalysis?type=' + this.type)
+       }
+      },
       changeType(val){
         this.type = val;
       },
@@ -147,7 +154,8 @@ export default {
               minAverage=numRes[0]
             }
             var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
-            var defaulColor=['#3887e0','#a7bfe8','#dfecfa','#a2bfcd', '#b3b3b3'];
+            var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
+           
             var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1]; 
           }else{
             minAverage = 1;
@@ -463,6 +471,7 @@ export default {
           }
           var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
           var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
+          
           var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1]; 
           }else{
             minAverage = 1;
@@ -591,7 +600,7 @@ export default {
           userView.data(userDv.rows);
           userView.scale({
             number: {
-              alias: $this.type == 0?'数量':'积分'
+              alias: $this.type == 1?'积分':'数量'
             },
             name:{
               alias:"国家"
@@ -662,6 +671,7 @@ export default {
       font-size: 12px;
       color: #a1a1a1;
       float: right;
+      cursor: pointer;
     }
     .btn-group{
       float: right;

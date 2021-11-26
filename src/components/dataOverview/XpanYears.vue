@@ -4,14 +4,14 @@
       <div class="title-view">
         <div class="title">{{language}}年度总询盘</div>
         <div class="unit">（单位：个）</div>
-        <div class="more">更多分析 ></div>
+        <div class="more" @click="goPage">更多分析 ></div>
       </div>
       <div class="contrast-view">
         <div class="redtext">{{totalXpanYears}}</div>
         <div class="redright">
           <div class="conname">环比上年同期</div>
-          <div class="num up" v-if="isUp">{{isUpNum}}</div>
-          <div class="num down" v-else>{{isUpNum}}</div>
+          <div class="num up" v-if="isUp"><i class="svg-i"><svg-icon icon-class="data-up" /></i>{{isUpNum}}</div>
+          <div class="num down" v-else><i class="svg-i"><svg-icon icon-class="data-down" /></i>{{isUpNum}}</div>
         </div>
       </div>
       <div class="chart-top" id="XpanYearsChartTop"></div>     
@@ -80,6 +80,13 @@ export default {
       }
     },
     methods:{
+      goPage(){
+       if(this.language == '中文'){
+         this.$router.push('/Home/CH/sectorAnalysis')
+       }else{
+         this.$router.push('/Home/EN/sectorAnalysis')
+       }
+      },
       //chart top
       costAverageChart(val){
         
@@ -119,7 +126,7 @@ export default {
             },
             maxColumnWidth:16,
             columnStyle:{
-              fill:'#c9daf2',
+              fill:'#a6c0f5',
             },
             meta: {
               xunnumber: {
@@ -173,7 +180,7 @@ export default {
             angleField: 'yearcount',
             colorField: 'departname',
             radius: 1,
-            color:['#a9dfbf','#d9d9f3','#bcd8ea','#f5b7b1','#f4dfb8'],
+            color:['#5b79d6','#8ae45b','#f8c34e','#ee6666','#3abaf4'],
             label: {
               type: 'inner',
               offset: '-30%',
@@ -253,6 +260,7 @@ export default {
       font-size: 12px;
       color: #a1a1a1;
       float: right;
+      cursor: pointer;
     }
   }
   .contrast-view{
@@ -276,32 +284,15 @@ export default {
       .num{
         font-size: 12px;
         line-height: 20px;
-        padding-left: 12px;
         position: relative;
       }
       .up{
         color: #f25e5e;
-        &:before{
-          content: '↑';
-          position: absolute;
-          left: 0;
-          font-size: 12px;
-          line-height: 12px;
-          top: 3px;
-          
-        }
+        
       }
       .down{
         color: #2dbb4c;
-        &:before{
-          content: '↓';
-          position: absolute;
-          left: 0;
-          font-size: 12px;
-          line-height: 12px;
-          top: 3px;
-          
-        }
+        
       }
     }
   }

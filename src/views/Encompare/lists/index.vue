@@ -65,6 +65,11 @@
                               >
                               </el-table-column>
                               <el-table-column
+                              prop="numberline"
+                              label="个数合格线"
+                              >
+                              </el-table-column>
+                              <el-table-column
                               prop="score"
                               label="积分数"
                               >
@@ -239,6 +244,13 @@
                   </el-form-item>
               </div>
           </div>
+          <div class="item-form-group">
+              <div class="item-form">
+                  <el-form-item label="个数合格线：" :label-width="formLabelWidth">
+                      <el-input v-model="dialogForm.numberline"></el-input>
+                  </el-form-item>
+              </div>
+          </div>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -279,6 +291,7 @@ export default {
         personmoney:"",
         paymoney:"",
         personnumber:"",
+        numberline:'',
       },
       pageSizeList:[15],
       totalDataNum:0,
@@ -689,6 +702,7 @@ export default {
       $this.dialogForm.personmoney = row.personmoney;
       $this.dialogForm.paymoney = row.paymoney;
       $this.dialogForm.personnumber = row.personnumber;
+      $this.dialogForm.numberline =row.numberline;
     },
     // 保存添加/编辑数据
     saveData(){
@@ -715,6 +729,7 @@ export default {
         formData.personmoney = $this.dialogForm.personmoney;
         formData.paymoney = $this.dialogForm.paymoney;
         formData.personnumber = $this.dialogForm.personnumber;
+        formData.numberline = $this.dialogForm.numberline;
         var pathUrl = "";
         if($this.dialogText=="编辑部门成交"){
           pathUrl = "Encompare/EndeparDealEditAction";
@@ -760,6 +775,7 @@ export default {
       $this.dialogForm.personmoney = "";
       $this.dialogForm.paymoney = "";
       $this.dialogForm.personnumber = "";
+      $this.dialogForm.numberline = "";
     },
     // 验证是否为空
     validationForm(){

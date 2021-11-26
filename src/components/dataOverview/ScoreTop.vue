@@ -2,9 +2,9 @@
   <div class="hxpage">
     <div class="module-top">
       <div class="title-view">
-        <div class="title">个人年度成交积分 TOP5</div>
-        <div class="unit">（单位：分 <img src="../../assets/no_icon.jpg" alt="">：百万）</div>
-        <div class="more">更多分析 ></div>
+        <div class="title">个人年度成交{{language == '中文'?'积分':'个数'}} TOP5</div>
+        <div class="unit">（单位：{{language == '中文'?'分':'个'}} <img src="../../assets/no_icon.png" alt="">：百万）</div>
+        <div class="more" @click="goPage">更多分析 ></div>
       </div>
       <ul class="top-view" ref="topul">
         <li class="top-item" v-for="(item,index) in topdata" :key="index">
@@ -19,10 +19,10 @@
           </div>
           <div class="top-width">
             <div :class="'top-bar' + index" :style="'width:' + item.width"></div>
-            <span :style="'color:' + item.color">积分：{{item.number}}</span>
+            <span>{{item.number}}</span>
           </div>
           <div class="top-num" v-if="item.anumber>0">
-            <img src="../../assets/no_icon.jpg" alt="">
+            <img src="../../assets/no_icon.png" alt="">
             <span>x{{item.anumber}}</span>
           </div>
         </li>
@@ -44,6 +44,10 @@ export default {
       }
     },
     props:{
+      language:{
+        type:String,
+        default:"中文"
+      },
       yearuserscoretop5:{
         type:Array,
         default:function(){
@@ -61,11 +65,18 @@ export default {
     },
     mounted(){
       
-       window.onresize = () => {
-       this.setBarColor();
-      };
+    },
+    destroyed(){
+      
     },
     methods:{
+      goPage(){
+        if(this.language == '中文'){
+          this.$router.push('/Home/CH/groupAnalysis')
+        }else{
+          this.$router.push('/Home/EN/groupAnalysis')
+        }
+      },
       setTopData(val){
         let topdata = JSON.parse(JSON.stringify(val));
         topdata.sort(function(a, b){return a.number - b.number}).reverse(); 
@@ -77,7 +88,7 @@ export default {
           topdata[i].color = '#fff';
         }
         this.topdata = topdata;
-        this.setBarColor();
+        
       },
       setBarColor(){
         let topul = this.$refs["topul"].offsetWidth;
@@ -131,6 +142,7 @@ export default {
       font-size: 12px;
       color: #a1a1a1;
       float: right;
+      cursor: pointer;
     }
   }
   .contrast-view{
@@ -236,16 +248,16 @@ export default {
         padding-top: 9px;
         position: relative;
         margin-right: 20px;
+        display: flex;
         div{
           height: 16px;
           border-radius: 8px;
         }
         span{
           font-size: 12px;
-          position: absolute;
-          line-height: 34px;
-          top: 0;
-          left: 6px;
+          line-height: 16px;
+          color: #454545;
+          margin-left: 10px;
         }
         .top-bar0{
           background-image: linear-gradient( 0deg, rgb(255,161,70) 0%, rgb(248,119,79) 100%);
@@ -271,7 +283,7 @@ export default {
         }
         span{
           font-size: 12px;
-          color: #1b1b1b;
+          color: #dea21c;
           margin: auto 0;
         }
       }

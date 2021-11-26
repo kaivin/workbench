@@ -10,8 +10,8 @@
         <div class="redtext">{{totalXpanYears}}</div>
         <div class="redright">
           <div class="conname">环比上年同期</div>
-          <div class="num up" v-if="isUp">{{isUpNum}}</div>
-          <div class="num down" v-else>{{isUpNum}}</div>
+          <div class="num up" v-if="isUp"><i class="svg-i"><svg-icon icon-class="data-up" /></i>{{isUpNum}}</div>
+          <div class="num down" v-else><i class="svg-i"><svg-icon icon-class="data-down" /></i>{{isUpNum}}</div>
         </div>
       </div>
       <div class="chart-top" id="DealYearsChartTop"></div>     
@@ -122,10 +122,10 @@ export default {
               line:null,
               label:null
             },
-            color:'#c3ead3',
+            color:'#8bb2f2',
             maxColumnWidth:16,
             columnStyle:{
-              fill:'#c3ead3',
+              fill:'#8bb2f2',
             },
             meta: {
               a_number: {
@@ -324,32 +324,15 @@ export default {
       .num{
         font-size: 12px;
         line-height: 20px;
-        padding-left: 12px;
         position: relative;
       }
       .up{
         color: #f25e5e;
-        &:before{
-          content: '↑';
-          position: absolute;
-          left: 0;
-          font-size: 12px;
-          line-height: 12px;
-          top: 3px;
-          
-        }
+        
       }
       .down{
         color: #2dbb4c;
-        &:before{
-          content: '↓';
-          position: absolute;
-          left: 0;
-          font-size: 12px;
-          line-height: 12px;
-          top: 3px;
-          
-        }
+        
       }
     }
   }

@@ -14,8 +14,8 @@
         <div class="redtext">{{totalXpanYears}}</div>
         <div class="redright">
           <div class="conname">环比上年同期</div>
-          <div class="num up" v-if="isUp">{{isUpNum}}</div>
-          <div class="num down" v-else>{{isUpNum}}</div>
+          <div class="num up" v-if="isUp"><i class="svg-i"><svg-icon icon-class="data-up" /></i>{{isUpNum}}</div>
+          <div class="num down" v-else><i class="svg-i"><svg-icon icon-class="data-down" /></i>{{isUpNum}}</div>
         </div>
       </div>
       <div class="chart-top" id="ScoreYearsChartTop"></div>     
@@ -149,10 +149,12 @@ export default {
               line:null,
               label:null
             },
-            color:'#73b8e6',
+            color:'#5470c6',
+            
             areaStyle: () => {
               return {
-                fill: 'l(270) 0:#ffffff 0.5:#73b8e6 1:#73b8e6',
+                fill: 'l(270) 0:#ffffff 0.5:#7690de 1:#7690de',
+                lineWidth:1,
               };
             },
             point: {
@@ -160,7 +162,7 @@ export default {
               shape: 'circle',
               style: {
                 fill: 'white',
-                stroke: '#73b8e6',
+                stroke: '#5470c6',
                 lineWidth: 1,
               },
             },
@@ -227,7 +229,7 @@ export default {
             colorField: 'departname',
             radius: 1,
             innerRadius: 0.6,
-            color:['#a9dfbf','#d9d9f3','#bcd8ea','#f5b7b1','#f4dfb8'],
+            color:['#5b79d6','#8ae45b','#f8c34e','#ee6666','#3abaf4'],
             label: {
               type: 'inner',
               autoHide:true,
@@ -349,32 +351,15 @@ export default {
       .num{
         font-size: 12px;
         line-height: 20px;
-        padding-left: 12px;
         position: relative;
       }
       .up{
         color: #f25e5e;
-        &:before{
-          content: '↑';
-          position: absolute;
-          left: 0;
-          font-size: 12px;
-          line-height: 12px;
-          top: 3px;
-          
-        }
+        
       }
       .down{
         color: #2dbb4c;
-        &:before{
-          content: '↓';
-          position: absolute;
-          left: 0;
-          font-size: 12px;
-          line-height: 12px;
-          top: 3px;
-          
-        }
+        
       }
     }
   }

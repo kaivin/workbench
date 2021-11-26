@@ -4,7 +4,7 @@
       <div class="title-view">
         <div class="title">个人年度总询盘个数 TOP5</div>
         <div class="unit">（单位：个）</div>
-        <div class="more">更多分析 ></div>
+        <div class="more" @click="goPage">更多分析 ></div>
       </div>
       <ul class="top-view" ref="topul">
         <li class="top-item" v-for="(item,index) in topdata" :key="index">
@@ -40,10 +40,13 @@ export default {
       return {
         topdata:[],
         barWidth:212,
-
       }
     },
     props:{
+      language:{
+        type:String,
+        default:"中文"
+      },
       yearusertop5:{
         type:Array,
         default:function(){
@@ -61,11 +64,19 @@ export default {
     },
     mounted(){
       this.setBarWidth();
-      window.onresize = () => {
-       this.setBarWidth();
-      };
+      window.addEventListener('resize',this.setBarWidth)
+    },
+    destroyed(){
+      window.removeEventListener('resize',this.setBarWidth)
     },
     methods:{
+       goPage(){
+        if(this.language == '中文'){
+          this.$router.push('/Home/CH/groupAnalysis')
+        }else{
+          this.$router.push('/Home/EN/groupAnalysis')
+        }
+      },
       setTopData(val){
         let topdata = JSON.parse(JSON.stringify(val));
         let maxwidth = topdata[0].number;
@@ -112,6 +123,7 @@ export default {
       font-size: 12px;
       color: #a1a1a1;
       float: right;
+      cursor: pointer;
     }
   }
   .contrast-view{
@@ -246,15 +258,15 @@ export default {
           color: #3c3c3c;
         }
         .top-bar0{
-          background-color: rgb(228, 125, 115);
+          background-color: rgb(252, 84, 75);
           box-shadow: 0px 5px 10px 0px rgba(240, 156, 148, 0.51);
         }
         .top-bar1{
-          background-color: rgb(246, 185, 136);
+          background-color: rgb(255, 172, 92);
           box-shadow: 0px 5px 10px 0px rgba(247, 182, 119, 0.51);
         }
         .top-bar2{
-          background-color: rgb(248, 207, 179);
+          background-color: rgb(255, 218, 128);
           box-shadow: 0px 5px 10px 0px rgba(248, 207, 179, 0.51);
         }
         .top-bar3{

@@ -110,7 +110,7 @@
                         :current-page="searchData.page"
                         :page-sizes="pageSizeList"
                         :page-size="searchData.limit"
-                        :pager-count="pagerCount"
+                        
                         :layout="'total, sizes, prev, pager, next, jumper'"
                         :total="totalDataNum">
                       </el-pagination>
