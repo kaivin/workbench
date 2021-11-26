@@ -251,6 +251,10 @@ export default {
     // 占比图例
     drawPieChart(){
       var $this = this;
+      var colorArr = [];
+      $this.currentData.totalChart.forEach(function(item){
+        colorArr.push(item.color);
+      });
       if(!$this.piePlot){
         const piePlot = new Pie('pie-'+$this.currentData.randomStr, {
           appendPadding: 10,
@@ -260,6 +264,7 @@ export default {
           radius: 0.75,
           width: 390,
           height: 290,
+          color:colorArr,
           animation: {
             // 配置图表第一次加载时的入场动画
             appear: {
@@ -299,6 +304,7 @@ export default {
     // 面积趋势图例
     drawAreaChart(){
       var $this = this;
+      console.log($this.currentData,"面积数据")
       if(!$this.areaPlot&&$this.currentData){
         var isPluralLine = false;
         if($this.parentData.pluralGroupDateCompare||$this.parentData.pluralGroupTeamCompare||$this.parentData.singleGroupDateCompare||$this.parentData.singleGroupTeamCompare||$this.isDefault){
@@ -311,6 +317,7 @@ export default {
           yField: 'value',
           seriesField:isPluralLine?'name':'',
           isStack:false,
+          color:$this.currentData.colorArr.length==1?$this.currentData.colorArr[0]:$this.currentData.colorArr,
           yAxis:{
             grid:{
               line:{
@@ -360,8 +367,18 @@ export default {
             },
           },// 自定义状态样式
           areaStyle: (data) => {
+            var itemColor = "";
+            $this.currentData.mainData.forEach(function(item){
+              if(item.name){
+                if(item.name == data.name){
+                  itemColor = item.color;
+                }
+              }else{
+                itemColor = item.color;
+              }
+            });
             return {
-              fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
+              fill: 'l(270) 0:#ffffff 1:'+itemColor,
             };
           },
         });

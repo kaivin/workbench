@@ -5,7 +5,7 @@
         <div class="flex-content txt-header">
           <strong>{{currentData.name}}</strong><span>{{currentData.unit}}</span>
         </div>
-        <div class="item-change" v-if="tabList">
+        <div class="item-change" v-if="tabList&&currentData.totalChart.length>1">
           <div class="item-font" v-bind:class="item.isOn?'active':''" v-for="item in tabList" v-bind:key="item.value" v-on:click="tabChange(item)">{{item.label}}</div>
         </div>
       </div>
@@ -14,10 +14,10 @@
           <div class="total-num">
             <div class="txt-num">
             <strong>{{currentData.nowNumber}}</strong>
-            <span v-if="parentData.singleGroupStatic"><em>环比上年同期</em><b v-bind:class="currentData.status"><i class="svg-i"><svg-icon :icon-class="'data-'+currentData.status" /></i>{{currentData.nowLastNumber}}</b></span></div>
+            <span v-if="parentData.singleGroupStatic||(isDefault&&currentData.totalChart.length==1)"><em>环比上年同期</em><b v-bind:class="currentData.status"><i class="svg-i"><svg-icon :icon-class="'data-'+currentData.status" /></i>{{currentData.nowLastNumber}}</b></span></div>
             <div class="txt-font">{{currentData.totalTitle}}</div>
           </div>
-          <div class="other-num" v-if="parentData.singleGroupStatic">
+          <div class="other-num" v-if="parentData.singleGroupStatic||(isDefault&&currentData.totalChart.length==1)">
             <div class="item-num">
               <dl>
                 <dt>{{currentData.avgNumber}}</dt>
@@ -41,13 +41,13 @@
           </div>
         </template>
         <div class="item-tab date-panel" v-if="currentType=='date'&&(parentData.singleGroupDateCompare||parentData.pluralGroupDateCompare)">
-          <dl class="item-range" :style="'width:'+currentData.dateCompareData.baseWidth">
+          <dl class="item-range" :style="'width:'+currentData.dateCompareData.baseWidth=='0%'?'50%':currentData.dateCompareData.baseWidth">
             <dt class="flex-box"><span class="flex-content">{{currentData.dateCompareData.baseDate}}</span><strong>{{currentData.dateCompareData.baseValue}}</strong></dt>
-            <dd></dd>
+            <dd :style="'width:'+currentData.dateCompareData.baseWidth=='0%'?'1%':'100%'"></dd>
           </dl>
-          <dl class="item-range" :style="'width:'+currentData.dateCompareData.compareWidth">
+          <dl class="item-range" :style="'width:'+currentData.dateCompareData.compareWidth=='0%'?'50%':currentData.dateCompareData.compareWidth">
             <dt class="flex-box"><span class="flex-content">{{currentData.dateCompareData.compareDate}}</span><strong>{{currentData.dateCompareData.compareValue}}</strong></dt>
-            <dd></dd>
+            <dd :style="'width:'+currentData.dateCompareData.baseWidth=='0%'?'1%':'100%'"></dd>
           </dl>
           <div class="num-panel">
             <div class="item-num">
@@ -251,6 +251,10 @@ export default {
     // 占比图例
     drawPieChart(){
       var $this = this;
+      var colorArr = [];
+      $this.currentData.totalChart.forEach(function(item){
+        colorArr.push(item.color);
+      });
       if(!$this.piePlot){
         const piePlot = new Pie('pie-'+$this.currentData.randomStr, {
           appendPadding: 10,
@@ -260,6 +264,7 @@ export default {
           radius: 0.75,
           width: 390,
           height: 290,
+          color:colorArr,
           animation: {
             // 配置图表第一次加载时的入场动画
             appear: {
@@ -299,6 +304,7 @@ export default {
     // 面积趋势图例
     drawAreaChart(){
       var $this = this;
+      console.log($this.currentData,"面积数据")
       if(!$this.areaPlot&&$this.currentData){
         var isPluralLine = false;
         if($this.parentData.pluralGroupDateCompare||$this.parentData.pluralGroupTeamCompare||$this.parentData.singleGroupDateCompare||$this.parentData.singleGroupTeamCompare||$this.isDefault){
@@ -311,6 +317,7 @@ export default {
           yField: 'value',
           seriesField:isPluralLine?'name':'',
           isStack:false,
+          color:$this.currentData.colorArr.length==1?$this.currentData.colorArr[0]:$this.currentData.colorArr,
           yAxis:{
             grid:{
               line:{
@@ -360,8 +367,18 @@ export default {
             },
           },// 自定义状态样式
           areaStyle: (data) => {
+            var itemColor = "";
+            $this.currentData.mainData.forEach(function(item){
+              if(item.name){
+                if(item.name == data.name){
+                  itemColor = item.color;
+                }
+              }else{
+                itemColor = item.color;
+              }
+            });
             return {
-              fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
+              fill: 'l(270) 0:#ffffff 1:'+itemColor,
             };
           },
         });

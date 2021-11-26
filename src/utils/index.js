@@ -439,3 +439,21 @@ export function sortByDesc(i){
     return b[i] - a[i]
   }
 }
+// 确定图表颜色
+export function groupColor(groupArr){
+  var colorArr = ["#5f52a0","#ff5b5b","#59cab6","#679aff","#ff8628","#FF4500","#1AAF8B","#406C85","#F6BD16","#B40F0F","#2FB8FC","#4435FF","#FF5CA2","#BBE800","#FE8A26"]
+  groupArr.forEach(function(item,index){
+    item.forEach(function(item1,index1){
+      item1.color = colorArr[index]
+    })
+  });
+  return groupArr;
+}
+// 确定图表颜色
+export function singleArrColor(dataArr){
+  var colorArr = ["#5f52a0","#ff5b5b","#59cab6","#679aff","#ff8628","#FF4500","#1AAF8B","#406C85","#F6BD16","#B40F0F","#2FB8FC","#4435FF","#FF5CA2","#BBE800","#FE8A26"]
+  dataArr.forEach(function(item,index){
+    item.color = colorArr[index]
+  });
+  return dataArr;
+}
