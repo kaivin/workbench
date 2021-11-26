@@ -16,7 +16,8 @@
           ></day-target>
           <day-finish 
             :DayFinish="DayFinish" 
-            @MonthChange="getDayFinish"
+            @dayMonthChange="getDayFinish"
+            :lang="ch"
           ></day-finish>
         </el-col>
         <el-col :md="24" :lg="12" class="target_right">
@@ -99,14 +100,14 @@ export default {
       var $this = this;
       var data = {};
       data.time = val;
+      console.log(data);
       $this.$store
         .dispatch("homeobject/postDayNum", data)
         .then((response) => {
-          console.log(response)
           if (response) {
             if (response.status) {
-              var daymax = response.daymaxnumber[0].maxnumber;
-              var historymax = response.historymaxnumber[0].maxnumber;
+              var daymax = response.daymaxnumber[0].effectivenumber;
+              var historymax = response.historymaxnumber[0].effectivenumber;
               var todaynum = response.alltoday;
               var yeaterdaynum = response.alllastday;
               $this.DayScore.dayMaxNum = daymax;
@@ -129,6 +130,7 @@ export default {
     dayChange(val){
       var $this = this;
       $this.getDepDayNum(val);
+      $this.getDepDayTarget(val);
     },
 
     //1.中文日询盘:进度展示
@@ -153,6 +155,7 @@ export default {
       var $this = this;
       var data = {};
       data.time = val;
+      console.log(data)
       $this.$store
         .dispatch("homeobject/postDealNum", data)
         .then((response) => {
@@ -212,27 +215,32 @@ export default {
                 var monthmaxnumber = res[i].monthmaxnumber;
                 var daynumber = res[i].daynumber;
                 var daytargetnumber = res[i].daytargetnumber;
-                var searchdaynumber = 0;
-                var leftnumber = daynumber - searchdaynumber;
-
-                var sepArr1 = {
-                  departname: departname,
-                  name: "搜索询盘",
-                  number: daynumber,
-                  stack: 1
-                }
-                newArr.push(sepArr1);
 
                 if(res[i].hasOwnProperty('searchdaynumber')){
-                  searchdaynumber = res[i].searchdaynumber;
+                  var searchdaynumber = res[i].searchdaynumber;
+                  var sepArr1 = {
+                    departname: departname,
+                    name: "搜索询盘",
+                    number: searchdaynumber,
+                    stack: 1
+                  }
+                  newArr.push(sepArr1);
                   var sepArr2 = {
                     departname: departname,
                     name: "非搜索询盘",
-                    number: leftnumber,
+                    number: daynumber - searchdaynumber,
                     stack: 1
                   }
                   newArr.push(sepArr2);
                   $this.Dep1DayNum = res[i].daynumber;
+                }else{
+                  var sepArr1 = {
+                    departname: departname,
+                    name: "搜索询盘",
+                    number: daynumber,
+                    stack: 1
+                  }
+                  newArr.push(sepArr1);
                 }
                 var sepArr3 = {
                   departname: departname,
@@ -272,7 +280,6 @@ export default {
 
     // 4.日目标完成情况
     getDayFinish(val){
-      console.log(val)
       var $this = this;
       var data = {};
       data.time = val;

@@ -16,8 +16,11 @@
                           {{index+1}}
                       </div>
                   </div>
-                  <div class="userImg" @click="goPage">
-                      <img src="../../../../assets/clinchIcon01.png" alt="" />
+                  <div class="userImg">
+                    <div v-if="item.headimg">
+                      <img :src="item.headimg" :alt="item.name" />
+                    </div>
+                    <div v-else class="nopic"></div>  
                   </div>
                   <div class="userName">
                       {{item.name}}

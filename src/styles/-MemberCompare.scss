@@ -80,7 +80,17 @@
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
                 }
-                
+                .nopic{
+                    width: 50px;
+                    height: 50px;
+                    overflow: hidden;
+                    border-radius: 50%;
+                    box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
+                    border: solid 1px #fece6c;
+                    background: url(../assets/default_pic.jpg) center center no-repeat;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
             }
             .userName{
                 color: #333333;
@@ -205,7 +215,17 @@
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
                 }
-                
+                .nopic{
+                    width: 50px;
+                    height: 50px;
+                    overflow: hidden;
+                    border-radius: 50%;
+                    box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
+                    border: solid 1px #fece6c;
+                    background: url(../assets/default_pic.jpg) center center no-repeat;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
             }
             .userName{
                 color: #333333;
@@ -315,6 +335,15 @@
                 height: 50px;
                 border-radius: 6px;
 	            border: solid 2px #ffff74;
+            }
+            .nopic{
+                width: 50px;
+                height: 50px;
+                border-radius: 6px;
+	            border: solid 2px #ffff74;
+                background: url(../assets/default_pic.jpg) center center no-repeat;
+                margin-left: auto;
+                margin-right: auto;
             }
             .uname{
                 font-size: 14px;
@@ -472,7 +501,14 @@
                     border-radius: 6px;
                     box-shadow: 3px 4px 7px 0px rgba(133, 124, 89, 0.75);
                 }
-                
+                .nopic{
+                    width: 54px;
+                    height: 54px;
+                    overflow: hidden;
+                    border-radius: 6px;
+                    box-shadow: 3px 4px 7px 0px rgba(133, 124, 89, 0.75);
+                    background: url(../assets/default_pic.jpg) center center no-repeat;
+                }
             }
             .userName{
                 color: #333333;
@@ -600,7 +636,17 @@
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
                 }
-                
+                .nopic{
+                    width: 50px;
+                    height: 50px;
+                    overflow: hidden;
+                    border-radius: 50%;
+                    box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
+                    border: solid 1px #fece6c;
+                    background: url(../assets/default_pic.jpg) center center no-repeat;
+                    margin-left: auto;
+                    margin-right: auto;
+                }    
             }
             .userName{
                 color: #333333;
@@ -709,8 +755,8 @@
         width: 30%;
         float: right;
         padding-left: 10px;
-        .memberAward{
-            margin-top: 20px;
+        .millionDeal{
+            margin-bottom: 20px;
         }
     }
 }
@@ -728,11 +774,12 @@
             .millionDeal{
                 width: calc(50% - 10px);
                 float: left;
+                margin-right: 20px;
             }
             .memberAward{
                 margin-top: 0;
                 width: calc(50% - 10px);
-                float: right;
+                float: left;
             }
             &:after{
                 content: '';

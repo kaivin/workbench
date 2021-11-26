@@ -20,11 +20,14 @@
                 </template>
             </el-table-column>
             <el-table-column
-                prop="avatar"
+                prop="headimg"
                 label="头像"
                 min-width="100">
                 <template slot-scope="scope">
-                    <img :src="scope.row.avatar" alt="" class="avatar" />
+                    <div v-if="scope.row.headimg">
+                      <img :src="scope.row.headimg" :alt="scope.row.name" class="avatar" />
+                    </div>
+                    <div v-else class="nopic"></div>
                 </template>
             </el-table-column>
             <el-table-column
@@ -45,11 +48,11 @@
                 </template>
             </el-table-column>
             <el-table-column
-                prop="dealnum"
+                prop="score"
                 sortable
-                label="成交个数">
+                label="询盘积分">
                 <template slot-scope="scope">
-                    <span class="dealnum">{{scope.row.dealnum}}</span>
+                    <span class="dealnum">{{scope.row.score}}</span>
                 </template>
             </el-table-column>
             <el-table-column

@@ -1,32 +1,36 @@
 import request from "@/utils/request";
 // 中文日询盘
-export function getDayNum() {
+export function getDayNum(data) {
     return request({
       url: "/hxindex/Api/chinadaytargetnew",
-      method: "POST"
+      method: "POST",
+      data
     });
   }
 // 中文月成交积分统计
-export function getDealNumTarget() {
+export function getDealNumTarget(data) {
   return request({
-    url: "/hxindex/Api/chinadepartscore",
-    method: "POST"
+    url: "/hxindex/Api/chinadepartscorenew",
+    method: "POST",
+    data
   });
 }
 
 // 中文日目标
-export function getDayTarget() {
+export function getDayTarget(data) {
   return request({
-    url: "/hxindex/Api/chinadaytarget",
-    method: "POST"
+    url: "/hxindex/Api/chinadaytargetnew",
+    method: "POST",
+    data
   });
 }
 
 // 中文日目标完成情况
-export function getDayFinish() {
+export function getDayFinish(data) {
   return request({
     url: "/hxindex/Api/chinadaytargetmonth",
-    method: "POST"
+    method: "POST",
+    data
   });
 }
 // 部门月成交完成情况
@@ -38,33 +42,37 @@ export function getDepYearFinish() {
 }
 
 // 英文日询盘
-export function getEnDayNum() {
+export function getEnDayNum(data) {
   return request({
     url: "/hxindex/Api/endaytargetnew",
-    method: "POST"
+    method: "POST",
+    data
   });
 }
 // 英文月成交积分统计
-export function getEnDealNumTarget() {
+export function getEnDealNumTarget(data) {
 return request({
   url: "/hxindex/Api/endepartscorenew",
-  method: "POST"
+  method: "POST",
+  data
 });
 }
 
 // 英文日目标
-export function getEnDayTarget() {
+export function getEnDayTarget(data) {
 return request({
   url: "/hxindex/Api/endaytargetnew",
-  method: "POST"
+  method: "POST",
+  data
 });
 }
 
 // 英文日目标完成情况
-export function getEnDayFinish() {
+export function getEnDayFinish(data) {
   return request({
     url: "/hxindex/Api/endaytargetmonth",
-    method: "POST"
+    method: "POST",
+    data
   });
 }
 

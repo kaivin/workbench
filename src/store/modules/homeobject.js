@@ -15,9 +15,9 @@ const state = {}
 const mutations = {}
 const actions = {
     // 获取中文日询盘
-    postDayNum({ commit, state }) {
+    postDayNum({ commit, state },data) {
         return new Promise((resolve, reject) => {
-            getDayNum().then(response => {
+            getDayNum(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -25,9 +25,9 @@ const actions = {
         })
     },
     // 中文月成交积分统计
-    postDealNum({ commit, state }) {
+    postDealNum({ commit, state },data) {
         return new Promise((resolve, reject) => {
-            getDealNumTarget().then(response => {
+            getDealNumTarget(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -35,9 +35,9 @@ const actions = {
         })
     },
     // 中文日目标
-    postDayTarget({ commit, state }) {
+    postDayTarget({ commit, state },data) {
         return new Promise((resolve, reject) => {
-            getDayTarget().then(response => {
+            getDayTarget(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -45,9 +45,9 @@ const actions = {
         })
     },
     // 中文日目标完成情况
-    postDayFinish({ commit, state }) {
+    postDayFinish({ commit, state },data) {
         return new Promise((resolve, reject) => {
-            getDayFinish().then(response => {
+            getDayFinish(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -66,9 +66,9 @@ const actions = {
     },
 
     // 获取英文日询盘
-    postEnDayNum({ commit, state }) {
+    postEnDayNum({ commit, state },data) {
         return new Promise((resolve, reject) => {
-            getEnDayNum().then(response => {
+            getEnDayNum(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -76,9 +76,9 @@ const actions = {
         })
     },
     // 英文月成交积分统计
-    postEnDealNum({ commit, state }) {
+    postEnDealNum({ commit, state },data) {
         return new Promise((resolve, reject) => {
-            getEnDealNumTarget().then(response => {
+            getEnDealNumTarget(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -86,9 +86,9 @@ const actions = {
         })
     },
     // 英文日目标
-    postEnDayTarget({ commit, state }) {
+    postEnDayTarget({ commit, state },data) {
         return new Promise((resolve, reject) => {
-            getEnDayTarget().then(response => {
+            getEnDayTarget(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -96,9 +96,9 @@ const actions = {
         })
     },
     // 英文日目标完成情况
-    postEnDayFinish({ commit, state }) {
+    postEnDayFinish({ commit, state },data) {
         return new Promise((resolve, reject) => {
-            getEnDayFinish().then(response => {
+            getEnDayFinish(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

@@ -17,7 +17,10 @@
                       </div>
                   </div>
                   <div class="userImg">
-                      <img src="../../../../assets/clinchIcon01.png" alt="" />
+                    <div v-if="item.headimg">
+                      <img :src="item.headimg" :alt="item.name" />
+                    </div>
+                    <div v-else class="nopic"></div> 
                   </div>
                   <div class="userName">
                       {{item.name}}

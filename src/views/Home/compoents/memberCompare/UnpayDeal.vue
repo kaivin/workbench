@@ -25,7 +25,10 @@
                       </div>
                   </div>
                   <div class="userImg">
+                    <div v-if="item.headimg">
                       <img :src="item.headimg" :alt="item.ownuser" />
+                    </div>
+                    <div v-else class="nopic"></div>  
                   </div>
                   <div class="userName">
                       {{item.ownuser}}

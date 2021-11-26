@@ -9,7 +9,7 @@
       <div class="datePicker">
         <el-date-picker
           v-model="MonthChoose"
-          @change = "MonthChange"
+          @change = "DayMonthChange"
           type="month"
           format="yyyy-MM"
           :picker-options="disabledMonth"
@@ -18,14 +18,14 @@
       </div>
     </div>
     <div class="rowMain">
-        <ul class="depDayCont">
+        <ul class="depDayCont" :class="lang == 'en' ? 'endepDay' : '' ">
             <li v-for="(item,index) in DayFinish" :key="index">
                 <div class="depName">{{item.name}}</div>
                 <div class="depRes">
                     <span class="resnum">{{item.finishnumber}}</span>
-                    <span class="resdet" :class="parseInt(item.finishnumber) > parseInt(item.lastfinishnumber) ? 
-                        'grow' : 'down'">同比<span v-if="parseInt(item.finishnumber) > parseInt(item.lastfinishnumber)">增长</span>
-                        <span v-else>下降</span>
+                    <span class="resdet" :class="parseInt(item.finishnumber) < parseInt(item.lastfinishnumber) ? 
+                        'down' : 'grow'">同比<span v-if="parseInt(item.finishnumber) < parseInt(item.lastfinishnumber)">下降</span>
+                        <span v-else>增长</span>
                     <i >{{parseInt(item.finishnumber) > parseInt(item.lastfinishnumber) ? parseInt(item.finishnumber) - parseInt(item.lastfinishnumber) : parseInt(item.lastfinishnumber) - parseInt(item.finishnumber)}}</i></span>
                 </div>
             </li>
@@ -55,18 +55,24 @@ export default {
                 return [];
             },
         },
+        lang: {
+            type: String,
+            default: function(){
+                return "";
+            }
+        }
     },
     created(){
         var $this = this;
         this.MonthChoose = parseTime(new Date(),'{y}-{m}');
     },
     methods:{
-        MonthChange() {
+        DayMonthChange() {
             var $this = this;
             var res = $this.MonthChoose;
             res = parseTime(res,'{y}-{m}');
             $this.MonthChoose = res;
-            $this.$emit('MonthChange', res);
+            $this.$emit('dayMonthChange', res);
         }
     }
 }

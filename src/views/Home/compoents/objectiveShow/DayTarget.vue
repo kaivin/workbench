@@ -60,7 +60,6 @@ export default {
     watch:{
         DayTarget:{//深度监听，可监听到对象、数组的变化
             handler(val, oldVal){
-              
                 this.drawColumn(val)
             },
             deep:true //true 深度监听
@@ -74,8 +73,8 @@ export default {
         var data = $this.DayTarget;
         var aimArr = $this.DayAim;
         var Dep1DayNum = $this.Dep1DayNum;
-        const annotations = [];
-       
+        var annotations = [];
+
         each(aimArr, (value, k) => {
           var number = value.number;
           var snum = k - 0.30;
@@ -162,61 +161,66 @@ export default {
           }
         });
 
-        const plot = new Mix('dayTarget', {
-            tooltip: {
-            shared: true,
-              customItems: (originalItems) => {
-                  for (let i = 0; i < originalItems.length; i++) {
-                      if(originalItems[i].title != "电商一部" && originalItems[i].name == "搜索询盘"){
-                        originalItems[i].name = "询盘数量"
-                      }else if(originalItems[i].title == "电商一部" && originalItems[i].name == "搜索询盘"){
-                        originalItems[i].name = "询盘数量"
-                        originalItems[i].value = Dep1DayNum;
+        if( $this.plot && !$this.plot.chart.destroyed){
+          console.log($this.plot)
+          $this.plot.options.plots[0].data = data;
+          $this.plot.options.plots[0].annotations = annotations;
+          $this.plot.render();
+        }else{
+            const plot = new Mix('dayTarget', {
+                tooltip: {
+                shared: true,
+                  customItems: (originalItems) => {
+                      for (let i = 0; i < originalItems.length; i++) {
+                          if(originalItems[i].title != "电商一部" && originalItems[i].name == "搜索询盘"){
+                            originalItems[i].name = "询盘数量"
+                          }else if(originalItems[i].title == "电商一部" && originalItems[i].name == "搜索询盘"){
+                            originalItems[i].name = "询盘数量"
+                            originalItems[i].value = Dep1DayNum;
+                          }
                       }
-                  }
-                  return originalItems;
-              },
-            },
-        })
-
-        plot.update({
-          plots: [
-            {
-              type: 'column',
-              options: {
-                data,
-                xField: 'departname',
-                yField: 'number',
-                isGroup: true,
-                color: ['#89b2ff', '#fac554',  '#cde1ff','#fbd6cf'],
-                minColumnWidth: 24,
-                maxColumnWidth: 24,
-                legend: false,
-                dodgePadding: 6,
-                isStack: true,
-                seriesField: 'name',
-                groupField: 'stack',
-                yAxis: {
-                  grid: {
-                    line: {
-                      style: {
-                        stroke: '#e7e7e7',
-                        lineWidth: 1,
-                        lineDash: [3, 2],
-                      },
-                      
-                    },
+                      return originalItems;
                   },
-                  tickCount: 4,
-                  tickInterval: 50,
                 },
-                annotations
-              }
-            }
-          ]
-        })
+                plots: [
+                  {
+                    type: 'column',
+                    options: {
+                      data,
+                      xField: 'departname',
+                      yField: 'number',
+                      isGroup: true,
+                      color: ['#89b2ff', '#fac554',  '#cde1ff','#fbd6cf'],
+                      minColumnWidth: 24,
+                      maxColumnWidth: 24,
+                      legend: false,
+                      dodgePadding: 6,
+                      isStack: true,
+                      seriesField: 'name',
+                      groupField: 'stack',
+                      yAxis: {
+                        grid: {
+                          line: {
+                            style: {
+                              stroke: '#e7e7e7',
+                              lineWidth: 1,
+                              lineDash: [3, 2],
+                            },
+                            
+                          },
+                        },
+                        tickCount: 4,
+                        tickInterval: 50,
+                      },
+                      annotations
+                    }
+                  }
+                ]
+            })
 
-        plot.render();
+            $this.plot = plot;
+            $this.plot.render();
+        }
       }
     }
 }
