@@ -2500,6 +2500,8 @@
         padding:13px 30px;
         line-height:24px;
         margin-top: 20px;
+        position: relative;
+        z-index: 5;
         ul{
             float: left;
             li{
@@ -2729,10 +2731,9 @@
             margin-right:10px;
             .defaultData{
                 padding-bottom: 21px;
-                dt{
+                .defaultDataTop{
                     clear: both;
                     display: block;
-                    border-bottom:1px solid #f7f7f7;
                     padding-bottom:40px;
                     padding-top:52px;
                     .defaultDataDt{
@@ -2759,31 +2760,36 @@
                         text-align: left;
                     }
                 }
-                dd{
-                    float: left;
-                    width:50%;
-                    padding-top:40px;
-                    padding-bottom:28px;
-                    p{
-                        font-size:14px;
-                        color:#999999;
-                        line-height:1;
-                        text-align: left;
-                        strong{
-                            clear: both;
-                            display: block;
-                            font-size:24px;
-                            color:#2aade0;
+                .defaultDataBom{
+                    clear: both;
+                    display: block;
+                    border-top:1px solid #f7f7f7;
+                    dd{
+                        float: left;
+                        width:50%;
+                        padding-top:40px;
+                        padding-bottom:28px;
+                        p{
+                            font-size:14px;
+                            color:#999999;
                             line-height:1;
-                            font-weight: normal;
-                            padding-bottom:8px;
-                        }
-                    }
-                    &+dd{
-                        border-left:1px solid #f7f7f7;
-                        p{float:right;
+                            text-align: left;
                             strong{
-                                color:#6aa343;
+                                clear: both;
+                                display: block;
+                                font-size:24px;
+                                color:#2aade0;
+                                line-height:1;
+                                font-weight: normal;
+                                padding-bottom:8px;
+                            }
+                        }
+                        &+dd{
+                            border-left:1px solid #f7f7f7;
+                            p{float:right;
+                                strong{
+                                    color:#6aa343;
+                                }
                             }
                         }
                     }
@@ -3012,169 +3018,285 @@
             }
         }
     }
-        //&.Manydepart{
-        //    display: block;
-        //    .xunMapRow{
-        //        clear: both;
-        //        display: block;
-        //        width:100%;
-        //        &.moneyMapRow{margin-left:0px;}
-        //        .MapRowCon{
-        //            padding:20px;
-        //        }
-        //        .MapRowclass{
-        //            &.MapRowItem{
-        //                .DayMapRowFl{
-        //                    float: none;
-        //                    clear: both;
-        //                    width:100%;
-        //                }
-        //                .DayMapRowFr{
-        //                    float: none;
-        //                    clear: both;
-        //                    width:100%;
-        //                    background: #fff;
-        //                    margin-left:0px;
-        //                    padding: 16px 0px 0px 0;
-        //                    h4{text-align: center;}
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
     .SectorRowPro{
-        clear: both;
-        display: block;
+        float: left;
+        width: 50%;
         margin-top:20px;
         padding:30px;
         background:#fff;
-        ul{
-            li{
-                clear: both;
-                display: block;
-                margin-top:40px;
-                padding-bottom:20px;
-                .SectorRowProChat{
-                    float: right;
-                    width: 36%;
-                    margin-top: -54px;
-                    .SectorRowProChatTop{
+        .SectorRowTit{
+            clear: both;
+            display: block;
+            h3{
+                float: left;
+                font-size:16px;
+                color:#1a1a1a;
+                margin-right:12px;
+                line-height:26px;
+            }
+        }
+        .SectorRowProMain{
+            ul{
+                li{
+                    clear: both;
+                    display: block;
+                    .SectorRowTop{
                         clear: both;
                         display: block;
-                        dd{
+                        overflow: hidden;
+                        padding-bottom:30px;
+                        margin-top:-18px;
+                        h4{
                             float: left;
-                            border:1px solid #e1e3ea;
-                            font-size:13px;
-                            color:#9ea5af;
-                            cursor: pointer;
-                            background:#fff;
-                            line-height:24px;
-                            padding:0px 10px;
-                            margin-left: -1px;
-                            &.active,&:hover{
-                                color:#fff;
-                                background:#2e88ff;
-                                border:1px solid #2e88ff;
-                                position: relative;
-                                z-index: 2;
+                            font-weight: normal;
+                            font-size: 16px;
+                            padding-bottom: 40px;
+                            line-height: 1;
+                        }
+                        .SectorRowProChatTop{
+                            float: right;
+                            dd{
+                                float: left;
+                                border:1px solid #e1e3ea;
+                                font-size:13px;
+                                color:#9ea5af;
+                                cursor: pointer;
+                                background:#fff;
+                                line-height:24px;
+                                padding:0px 10px;
+                                margin-left: -1px;
+                                &.active,&:hover{
+                                    color:#fff;
+                                    background:#2e88ff;
+                                    border:1px solid #2e88ff;
+                                    position: relative;
+                                    z-index: 2;
+                                }
+                            }
+                        }
+                    }
+                    .SectorRowBom{
+                        .SectorRowProChat{
+                            width:220px;
+                            margin-left:25px;
+                        }
+                        .SectorRowProTable{
+                            .SectorRowProhidden{
+                                clear: both;
+                                overflow: hidden;
+                            }
+                            .SectorRowProBtn{
+                                clear: both;
+                                background: #f4f6f9;
+                                line-height:30px;
+                                padding:5px;
+                                text-align: center;
+                                font-size:14px;
+                                cursor: pointer;
+                                &:hover{
+                                    opacity: 0.8;
+                                }
+                            }
+                            .el-table .el-table__cell{text-align: center; color:#4c4c4c;}
+                            .el-table.SectorProTable{
+                                display:flex;
+                                flex-direction:column;
+                                border:0;
+                                border-bottom:0px;
+                                text-align:center;
+                                .hidden-row {
+                                    display:none;
+                                }
+                                .show-row {
+                                    display:table-row;
+                                }
+                                .SectorProTableName{clear: both;display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+                                th.is-leaf{
+                                    background:#f4f6f9;
+                                    font-size:14px;
+                                    color:#555;
+                                    font-weight:normal;
+                                    border-bottom:0px;
+                                    border-right:0px;
+                                    line-height:20px;
+                                    padding:13px 0;
+                                    border-bottom:0px;
+                                    font-weight: bold;
+                                }
+                                .el-table__cell{    padding: 13px 0;}
+                                th.gutter{background:#f4f6f9;}
+                                .el-table__body tr.el-table__row--striped td{background:#fff;}
                             }
                         }
                     }
                 }
-                .SectorRowProTable{
-                    float:left;
-                    width:60%;
-                    h4{
-                        font-weight: normal;
-                        font-size: 16px;
-                        padding-bottom: 40px;
-                        line-height: 1;
+            }                
+        }
+        &.half{
+            clear: both;
+            display: block;
+            float:none;
+            width:100%;
+            .SectorRowProMain{
+                ul{
+                    &:first-child{
+                        float: left;
+                        width:calc(50% - 10px);
                     }
-                    .SectorRowProhidden{
-                        clear: both;
-                        overflow: hidden;
+                    &:first-child+ul{
+                        float: right;
+                        width:calc(50% - 10px);
                     }
-                    .SectorRowProBtn{
-                        clear: both;
-                        background: #f4f6f9;
-                        line-height:30px;
-                        padding:5px;
-                        text-align: center;
-                        font-size:14px;
-                        cursor: pointer;
-                        &:hover{
-                            opacity: 0.8;
+                    li{
+                        margin-top:40px;
+                        .SectorRowTop{
+                            margin-top: 0px;
+                            h4{
+                                font-size:16px;
+                                padding-bottom:0px;
+                                line-height:26px;
+                                font-weight: bold;
+                            }
                         }
-                    }
-                    .el-table .el-table__cell{text-align: center; color:#4c4c4c;}
-                    .el-table.SectorProTable{
-                        display:flex;
-                        flex-direction:column;
-                        border:0;
-                        border-bottom:0px;
-                        text-align:center;
-                        .hidden-row {
-                            display:none;
-                        }
-                        .show-row {
-                            display:table-row;
-                        }
-                        .SectorProTableName{clear: both;display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-                        th.is-leaf{
-                            background:#f4f6f9;
-                            font-size:14px;
-                            color:#555;
-                            font-weight:normal;
-                            border-bottom:0px;
-                            border-right:0px;
-                            line-height:20px;
-                            padding:13px 0;
-                            border-bottom:0px;
-                            font-weight: bold;
-                        }
-                        .el-table__cell{    padding: 13px 0;}
-                        th.gutter{background:#f4f6f9;}
-                        .el-table__body tr.el-table__row--striped td{background:#fff;}
                     }
                 }
             }
-            &.half{
-                margin-left:-4%;
-                li{
-                    clear:none;
-                    float: left;
-                    width:46%;
-                    margin-left:4%;
-                    padding-right:270px;
-                    position: relative;
-                    .SectorRowProChat{
-                        position: absolute;
-                        right:0px;
-                        top:0px;
-                        margin-top: 0px;
-                        width:230px;
-                        .SectorRowProChatTop{
-                            margin-bottom:40px;
+        }
+    }
+    .MapRow{
+        margin-left:-10px;
+        margin-right:-10px;
+        .cnMapRow{
+            float: left;
+            width:50%;
+            padding:0px 10px;
+            margin-top:20px;
+            .cnMapRowItem{
+                padding:30px 30px 1px 30px;
+                background:#fff;
+                .SectorRowTit{
+                    clear: both;
+                    display: block;
+                    text-align: left;
+                    padding-bottom:30px;
+                    h3{
+                        float: left;
+                        font-size:16px;
+                        color:#1a1a1a;
+                        margin-right:12px;
+                        line-height:26px;
+                    }
+                    .unit{
+                        font-size: 12px;
+                        color: #999999;
+                        line-height: 1;
+                        float: left;
+                        padding-top: 7px;
+                    }
+                    .SectorRowTitBtn{
+                        float: right;
+                        width:87px;
+                        height:26px;
+                        border:1px solid #f0f0f0;
+                        box-sizing: border-box;
+                        i{
+                            float: left;
+                            width:42px;
+                            font-size:12px;
+                            line-height:24px;
+                            color:#c6c6c6;
+                            font-style: normal;
+                            text-align: center;
+                            cursor: pointer;
+                            &+i{
+                                margin-left:1px;
+                            }
+                            &:hover,&.active{
+                                background:#4193ff;
+                                color:#fff;
+                            }
                         }
                     }
-                    .SectorRowProTable{
+                }
+                .MapRowConbox{
+
+                }
+                .MapRowCon{
+                    float: left;
+                    padding-bottom:30px;
+                    &>h4{
                         clear: both;
                         display: block;
-                        float: none;
-                        width: 100%;
-                        &.tableShow{
-                            position: relative;
-                            z-index: 20;
-                            .SectorRowProhidden{
-                                position: absolute;
-                                width: 100%;
-                            }
-                            .SectorRowProBtn{
-                                position: absolute;
-                                left: 0px;
-                                width: 100%;
+                        text-align: center;
+                        padding-bottom:16px;
+                        font-size:14px;
+                    }
+                    .MapRowItem{
+                        .DayMapRowFl{
+                            float:left;
+                        }
+                        .DayMapRowFr{
+                            float:left;
+                            background: #f3f8fe;
+                            margin-left:30px;
+                            padding:16px 20px 16px 16px;
+                            h4{
+                                clear: both;
+                                display: block;
+                                font-size: 14px;
+                                color: #1a1a1a;
+                                line-height: 26px;
+                                padding:0px 0px 10px 0px;
                             }
                         }
+                    }
+                    &.MapRowclass{
+                        padding:0px 15px;
+                        .MapRowItem{
+                            .DayMapRowFl{
+                                float: none;
+                                clear: both;
+                                width:100%;
+                            }
+                            .DayMapRowFr{
+                                float: none;
+                                clear: both;
+                                width:100%;
+                                background: #fff;
+                                margin-left:0px;
+                                padding: 16px 0px 0px 0;
+                                h4{text-align: center;}
+                            }
+                        }
+                    }
+                }
+            }
+            &.cnMapRow100{
+                float: none;
+                clear: both;
+                display: block;
+                width:100%;
+                .cnMapRowItem{
+                    .MapRowCon{
+                        .MapRowItem{
+                            &.MapRowclass{
+                                padding:0px 15px;
+                                .DayMapRowFl{
+                                    float: none;
+                                    clear: both;
+                                    width:100%;
+                                }
+                                .DayMapRowFr{
+                                    float: none;
+                                    clear: both;
+                                    width:100%;
+                                    background: #fff;
+                                    margin-left:0px;
+                                    padding: 16px 0px 0px 0;
+                                    h4{text-align: left;}
+                                }
+                            }
+                        }                            
                     }
                 }
             }

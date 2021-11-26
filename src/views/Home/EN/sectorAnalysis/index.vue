@@ -18,7 +18,7 @@
                 </span>
                 <div class="contrastTimeDay">
                     <el-date-picker
-                      v-if="searchData.isMonth"
+                      v-if="!searchData.isMonth"
                       v-model="searchData.dateOne"
                       @change="searchResult"
                       type="daterange"
@@ -53,7 +53,7 @@
                 <div class="contrastBtn" v-bind:class="[searchData.comparedept_id.length>0?'is-disabled':'',searchData.isDateCompare?'active':'']" v-on:click="dateCompareChangeHandler"><i></i><span>对比</span></div>              
                 <div class="contrastTimeDay" v-if="searchData.isDateCompare">
                     <el-date-picker
-                      v-if="searchData.isMonth"
+                      v-if="!searchData.isMonth"
                       v-model="searchData.comparedateOne"
                       @change="searchResult"
                       type="daterange"
@@ -93,7 +93,7 @@
                 </div>
               </div>
            </div>
-           <div class="SectorheaderTip"><i class="svg-i"><svg-icon icon-class="tips" /></i>当前状态部门分析默认页，</div>
+           <div class="SectorheaderTip"><p><i class="svg-i"><svg-icon icon-class="tips" class-name="disabled" /></i>{{tipsInfo}}</p></div>
       </div>     
       <div class="CompareItem" v-if="!searchData.isDateCompare&&searchData.dept_id.length>0">
         <span class="SectorHeaderTit">对比项：</span>
@@ -122,16 +122,18 @@
                                 <i v-on:click="Enquiriesranking" v-bind:class="inBrandnum === 'ranking'?'active':''">排行</i>
                           </span>
                       </div>
-                      <dl class="defaultData" v-if="inBrandnum=='current'">
-                          <dt>
+                      <div class="defaultData" v-if="!judgeData.singleGroupDateCompare&&!judgeData.pluralGroupDateCompare&&inBrandnum=='current'">
+                          <div class="defaultDataTop">
                               <div class="defaultDataDt">
                                   <strong>{{yeartongObj.allNum}}</strong>
                               </div>
                               <p>总询盘数量</p>
-                          </dt>
-                          <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yeartongObj.avgNum}}</strong>月平均询盘个数</p></dd>
-                          <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yeartongObj.historyNum}}</strong>历史峰值</p></dd>
-                      </dl>
+                          </div>
+                          <dl class="defaultDataBom"  v-if="(isDefaultPage||judgeData.singleGroupStatic)&&(!searchData.isDateCompare||searchData.comparedept_id.length==0)">
+                            <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yeartongObj.avgNum}}</strong>月平均询盘个数</p></dd>
+                            <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yeartongObj.historyNum}}</strong>历史峰值</p></dd>
+                          </dl>
+                      </div>
                       <template v-if="isDefaultPage||judgeData.singleGroupTeamCompare||judgeData.pluralGroupStatic||(judgeData.pluralGroupTeamCompare&&!judgeData.pluralGroupTeamSameCompare)">
                           <div class="ManyDepartData" v-if="inBrandnum=='Accounted'">
                               <piechart-manydepar :ManyDepartData="yeartongAccounted" v-if="yeartongAccounted.length>0" :key="chartTap" style="height:240px"></piechart-manydepar>
@@ -165,14 +167,13 @@
                 </div>
                 <div class="SectorRowFr flex-content">
                       <div class="SectorRowTit">
-                          <h3>{{!searchData.isMonth?"月":"日"}}部门询盘趋势</h3>
+                          <h3>{{!isDefaultPage&&!searchData.isMonth?"日":"月"}}部门询盘趋势</h3>
                           <span class="unit">(单位：个)</span>
                       </div>
-                      <div class="SectorRowFrBox" v-if="!searchData.isMonth"><linedepart-chartenquiries :linechartyeartongArr="dayEnquiriesTrend" v-if="dayEnquiriesTrend.dayxuntrend" :key="chartTap" style="height:240px"></linedepart-chartenquiries></div>
-                      <div class="SectorRowFrBox" v-else><areaday-enquiriestrend :dayEnquiriesTrendArr="dayEnquiriesTrend" v-if="dayEnquiriesTrend.dayxuntrend" :key="chartTap" style="height:240px"></areaday-enquiriestrend></div>
+                      <div class="SectorRowFrBox"><areaday-enquiriestrend :dayEnquiriesTrendArr="dayEnquiriesTrend" v-if="dayEnquiriesTrend.dayxuntrend" :key="chartTap" style="height:240px"></areaday-enquiriestrend></div>
                 </div>
             </div>
-            <div class="SectorRow flex-wrap" v-if="isDefaultPage||selectedType.includes('scoreDealCount')&&!searchData.isMonth">
+            <div class="SectorRow flex-wrap" v-if="isDefaultPage||selectedType.includes('scoreDealCount')">
                 <div class="SectorRowFl" v-if="isDefaultPage||judgeData.singleGroupStatic||judgeData.singleGroupDateCompare||judgeData.singleGroupTeamCompare||judgeData.pluralGroupStatic||judgeData.pluralGroupDateCompare||(judgeData.pluralGroupTeamCompare&&!judgeData.pluralGroupTeamSameCompare)">
                       <div class="SectorRowTit">
                           <h3>部门成交总数</h3>
@@ -182,16 +183,18 @@
                                 <i v-on:click="Clinchranking" v-bind:class="inBrandnumScore === 'scoreRanking'?'active':''">排行</i>
                           </span>
                       </div>
-                      <dl class="defaultData" v-if="inBrandnumScore=='current'">
-                          <dt>
+                      <div class="defaultData" v-if="!judgeData.singleGroupDateCompare&&!judgeData.pluralGroupDateCompare&&inBrandnumScore=='current'">
+                          <div class="defaultDataTop">
                               <div class="defaultDataDt">
                                   <strong>{{yearscoretongObj.allNum}}</strong>
                               </div>
                               <p>总成交分</p>
-                          </dt>
-                          <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearscoretongObj.avgNum}}</strong>月平均成交分</p></dd>
-                          <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearscoretongObj.historyNum}}</strong>历史峰值</p></dd>
-                      </dl>
+                          </div>
+                          <dl class="defaultDataBom"  v-if="(isDefaultPage||judgeData.singleGroupStatic)&&(!searchData.isDateCompare||searchData.comparedept_id.length==0)">
+                            <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearscoretongObj.avgNum}}</strong>月平均成交分</p></dd>
+                            <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearscoretongObj.historyNum}}</strong>历史峰值</p></dd>
+                          </dl>
+                      </div>
                       <template v-if="isDefaultPage||judgeData.singleGroupTeamCompare||judgeData.pluralGroupStatic||(judgeData.pluralGroupTeamCompare&&!judgeData.pluralGroupTeamSameCompare)">
                         <div class="ManyDepartData" v-if="inBrandnumScore=='scoreAccounted'">
                             <piechart-manydepar :ManyDepartData="yeartongscoreAccounted" v-if="yeartongscoreAccounted.length>0" :key="chartTap" style="height:240px"></piechart-manydepar>
@@ -228,10 +231,12 @@
                           <h3>月部门成交趋势</h3>
                           <span class="unit">(单位：个)</span>
                       </div>
-                      <div class="SectorRowFrBox"><linedepart-chartenquiries :linechartyeartongArr="yearscoretongArr" v-if="yearscoretongArr.dayxuntrend" :key="chartTap" style="height:240px"></linedepart-chartenquiries></div>
+                      <div class="SectorRowFrBox">
+                      <areaday-enquiriestrend :dayEnquiriesTrendArr="yearscoretongArr" v-if="yearscoretongArr.dayxuntrend" :key="chartTap" style="height:240px"></areaday-enquiriestrend>                      
+                      </div>
                 </div>
             </div>
-            <div class="SectorRow flex-wrap" v-if="isDefaultPage||selectedType.includes('moneyCostCount')&&!searchData.isMonth">
+            <div class="SectorRow flex-wrap" v-if="isDefaultPage||selectedType.includes('moneyCostCount')">
                 <div class="SectorRowFl" v-if="isDefaultPage||judgeData.singleGroupStatic||judgeData.singleGroupDateCompare||judgeData.singleGroupTeamCompare||judgeData.pluralGroupStatic||judgeData.pluralGroupDateCompare||(judgeData.pluralGroupTeamCompare&&!judgeData.pluralGroupTeamSameCompare)">
                       <div class="SectorRowTit">
                           <h3>部门成本总数</h3>
@@ -241,16 +246,18 @@
                                 <i v-on:click="Costranking" v-bind:class="inBrandnumMonye === 'monyeRanking'?'active':''">排行</i>
                           </span>
                       </div>
-                      <dl class="defaultData" v-if="inBrandnumMonye=='current'">
-                          <dt>
+                      <div class="defaultData" v-if="!judgeData.singleGroupDateCompare&&!judgeData.pluralGroupDateCompare&&inBrandnumMonye=='current'">
+                          <div class="defaultDataTop">
                               <div class="defaultDataDt">
                                   <strong>{{yearmonyetongObj.allNum}}</strong>
                               </div>
                               <p>总成本</p>
-                          </dt>
-                          <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearmonyetongObj.avgNum}}</strong>月平均成本</p></dd>
-                          <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearmonyetongObj.historyNum}}</strong>历史峰值</p></dd>
-                      </dl>
+                          </div>
+                          <dl class="defaultDataBom"  v-if="(isDefaultPage||judgeData.singleGroupStatic)&&(!searchData.isDateCompare||searchData.comparedept_id.length==0)">
+                            <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearmonyetongObj.avgNum}}</strong>月平均成本</p></dd>
+                            <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearmonyetongObj.historyNum}}</strong>历史峰值</p></dd>
+                          </dl>
+                      </div>
                       <template v-if="isDefaultPage||judgeData.singleGroupTeamCompare||judgeData.pluralGroupStatic||(judgeData.pluralGroupTeamCompare&&!judgeData.pluralGroupTeamSameCompare)">
                           <div class="ManyDepartData" v-if="inBrandnumMonye=='monyeAccounted'">
                               <piechart-manydepar :ManyDepartData="yeartongmonyeAccounted" v-if="yeartongmonyeAccounted.length>0" :key="chartTap" style="height:240px"></piechart-manydepar>
@@ -287,11 +294,12 @@
                           <h3>月部门成本趋势</h3>
                           <span class="unit">(单位：个)</span>
                       </div>
-                      <div class="SectorRowFrBox"><linedepart-chartenquiries 
-                      :linechartyeartongArr="yearmonyetongArr" v-if="yearmonyetongArr.dayxuntrend" :key="chartTap" style="height:240px"></linedepart-chartenquiries></div>
+                      <div class="SectorRowFrBox">
+                      <areaday-enquiriestrend :dayEnquiriesTrendArr="yearmonyetongArr" v-if="yearmonyetongArr.dayxuntrend" :key="chartTap" style="height:240px"></areaday-enquiriestrend>
+                      </div>
                 </div>
             </div>
-            <div class="SectorRow flex-wrap" v-if="isDefaultPage||selectedType.includes('scoreCount')&&!searchData.isMonth">
+            <div class="SectorRow flex-wrap" v-if="isDefaultPage||selectedType.includes('scoreCount')">
                 <div class="SectorRowFl" v-if="isDefaultPage||judgeData.singleGroupStatic||judgeData.singleGroupDateCompare||judgeData.singleGroupTeamCompare||judgeData.pluralGroupStatic||judgeData.pluralGroupDateCompare||(judgeData.pluralGroupTeamCompare&&!judgeData.pluralGroupTeamSameCompare)">
                       <div class="SectorRowTit">
                           <h3>部门成交个数总数</h3>
@@ -301,16 +309,18 @@
                                 <i v-on:click="ScoreNumranking" v-bind:class="inBrandnumScoreNum === 'scoreNumRanking'?'active':''">排行</i>
                           </span>
                       </div>
-                      <dl class="defaultData" v-if="inBrandnumScoreNum=='current'">
-                          <dt>
+                      <div class="defaultData" v-if="!judgeData.singleGroupDateCompare&&!judgeData.pluralGroupDateCompare&&inBrandnumScoreNum=='current'">
+                          <div class="defaultDataTop">
                               <div class="defaultDataDt">
                                   <strong>{{yearscorenumbertongObj.allNum}}</strong>
                               </div>
                               <p>总成本</p>
-                          </dt>
-                          <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearscorenumbertongObj.avgNum}}</strong>月平均成本</p></dd>
-                          <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearscorenumbertongObj.historyNum}}</strong>历史峰值</p></dd>
-                      </dl>
+                          </div>
+                          <dl class="defaultDataBom"  v-if="(isDefaultPage||judgeData.singleGroupStatic)&&(!searchData.isDateCompare||searchData.comparedept_id.length==0)">
+                            <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearscorenumbertongObj.avgNum}}</strong>月平均成本</p></dd>
+                            <dd v-if="searchData.comparedept_id.length==0"><p><strong>{{yearscorenumbertongObj.historyNum}}</strong>历史峰值</p></dd>
+                          </dl>
+                      </div>
                       <template v-if="isDefaultPage||judgeData.singleGroupTeamCompare||judgeData.pluralGroupStatic||(judgeData.pluralGroupTeamCompare&&!judgeData.pluralGroupTeamSameCompare)">
                           <div class="ManyDepartData" v-if="inBrandnumScoreNum=='scoreNumAccounted'">
                               <piechart-manydepar :ManyDepartData="yeartongscoreNumAccounted" v-if="yeartongscoreNumAccounted.length>0" :key="chartTap" style="height:240px"></piechart-manydepar>
@@ -347,8 +357,9 @@
                           <h3>月部门成交个数趋势</h3>
                           <span class="unit">(单位：个)</span>
                       </div>
-                      <div class="SectorRowFrBox"><linedepart-chartenquiries 
-                      :linechartyeartongArr="yearscoreNumtongArr" v-if="yearscoreNumtongArr.dayxuntrend" :key="chartTap" style="height:240px"></linedepart-chartenquiries></div>
+                      <div class="SectorRowFrBox">
+                      <areaday-enquiriestrend :dayEnquiriesTrendArr="yearscoreNumtongArr" v-if="yearscoreNumtongArr.dayxuntrend" :key="chartTap" style="height:240px"></areaday-enquiriestrend>
+                      </div>
                 </div>
             </div>
             <div class="xunMapRow" v-if="selectedType.includes('enquirieRegion')&&searchData.dept_id.length>0">
@@ -386,46 +397,139 @@
                           <daymap-chart :mapanychart="item" v-if="item.MapNum>0" :key="chartTap" ></daymap-chart>
                       </div>
                   </div>
-            </div>
-            <div class="SectorRowPro flex-wrap" v-if="selectedType.includes('product')&&!searchData.isMonth">
-                <div class="SectorRowTit"><h3>产品询盘/成交分析（地区询盘排行榜）</h3></div>
-                <ul :class="searchData.comparedept_id.length==0?'':'half'">
-                    <li v-for="(item,index) in ProductAnaly" :key="index">
-                        <div class="SectorRowProTable" :class="item.tableHidden.tableBtnBool?'':'tableShow'">
-                            <h4 v-if="searchData.is_compare=='2'">{{item.name}}</h4>
-                            <div class="SectorRowProhidden" :style="'height:' + item.tableHidden.tableHeight">
-                                <el-table
-                                    ref="simpleTable"
-                                    :data="item.ProductArr"
-                                    tooltip-effect="dark"
-                                    stripe
-                                    class="SectorProTable"
-                                    style="width: 100%">
-                                    <el-table-column prop="name" label="设备名称" aglin="center" min-width="100px">
-                                        <template slot-scope="scope">
-                                        <p class="SectorProTableName">{{ scope.row.name }}</p>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column prop="xunnumber" label="询盘个数" aglin="center" min-width="100px"></el-table-column>
-                                    <el-table-column prop="buynumber" label="成交个数" aglin="center" min-width="100px"></el-table-column>
-                                    <el-table-column prop="score" label="成交积分" aglin="center" min-width="100px"></el-table-column>
-                                </el-table>
+            </div>            
+            <div class="SectorRowPro" :class="ProductAnaly.length>1?'half':''" v-if="selectedType.includes('product')&&searchData.isMonth"> 
+                <div class="SectorRowTit"><h3>产品分析</h3></div>               
+                <div class="SectorRowProMain" v-if="ProductAnaly.length==1">
+                     <ul>
+                        <li v-for="(item,index) in ProductAnaly" :key="index">
+                            <div class="SectorRowTop">
+                                <dl class="SectorRowProChatTop">
+                                    <dd :class="item.TabName === 'xunnumber'?'active':''" v-on:click="chartBtn(item.id,'xunnumber')">询盘个数</dd>
+                                    <dd :class="item.TabName === 'buynumber'?'active':''" v-on:click="chartBtn(item.id,'buynumber')">成交个数</dd>
+                                    <dd :class="item.TabName === 'score'?'active':''" v-on:click="chartBtn(item.id,'score')">成交积分</dd>
+                                </dl>
                             </div>
-                            <p class="SectorRowProBtn" :style="'top:'+ item.tableHidden.tableBtn"
-                                v-if="item.tableHidden.tableBtnVisible"
-                                v-on:click="ProductAnyBtnPlug(item.id)"
-                            ><span>{{ item.tableHidden.tableBtnTxt }}</span></p>
-                        </div>
-                        <div class="SectorRowProChat">
-                            <dl class="SectorRowProChatTop">
-                                <dd :class="item.TabName === 'xunnumber'?'active':''" v-on:click="chartBtn(item.id,'xunnumber')">询盘个数</dd>
-                                <dd :class="item.TabName === 'buynumber'?'active':''" v-on:click="chartBtn(item.id,'buynumber')">成交个数</dd>
-                                <dd :class="item.TabName === 'score'?'active':''" v-on:click="chartBtn(item.id,'score')">成交积分</dd>
-                            </dl>
-                            <product-anachart :visible='item.TabName' :ProductAnyDate="item.ProductTopTen" :TabNameAny='item.TabName' v-if="item.ProductTopTen" :key="chartTap"></product-anachart>
-                        </div>
-                    </li>
-                </ul>
+                            <div class="SectorRowBom flex-box">
+                              <div class="SectorRowProTable flex-content">
+                                  <div class="SectorRowProhidden" :style="'height:' + item.tableHidden.tableHeight">
+                                      <el-table
+                                          ref="simpleTable"
+                                          :data="item.ProductArr"
+                                          tooltip-effect="dark"
+                                          stripe
+                                          class="SectorProTable"
+                                          style="width: 100%">
+                                          <el-table-column prop="name" label="设备名称" aglin="center" min-width="100px">
+                                              <template slot-scope="scope">
+                                              <p class="SectorProTableName">{{ scope.row.name }}</p>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column prop="xunnumber" label="询盘个数" aglin="center" width="80px"></el-table-column>
+                                          <el-table-column prop="buynumber" label="成交个数" aglin="center" width="80px"></el-table-column>
+                                          <el-table-column prop="score" label="成交积分" aglin="center" width="80px"></el-table-column>
+                                      </el-table>
+                                  </div>
+                                  <p class="SectorRowProBtn"
+                                      v-if="item.tableHidden.tableBtnVisible"
+                                      v-on:click="ProductAnyBtnPlug(item.id)"
+                                  ><span>{{ item.tableHidden.tableBtnTxt }}</span></p>
+                              </div>
+                              <div class="SectorRowProChat">
+                                  <product-anachart :visible='item.TabName' :ProductAnyDate="item.ProductTopTen" :TabNameAny='item.TabName' v-if="item.ProductTopTen" :key="chartTap"></product-anachart>
+                              </div>
+                            </div>
+                        </li>
+                     </ul>
+                </div>
+                <div class="SectorRowProMain" v-else>  
+                     <ul>
+                        <li v-for="(item,index) in ProductAnaly" :key="index">
+                          <template v-if="(index+1)%2===1">
+                            <div class="SectorRowTop">
+                                <h4 v-if="ProductAnaly.length>1">{{item.name}}</h4>
+                                <dl class="SectorRowProChatTop">
+                                    <dd :class="item.TabName === 'xunnumber'?'active':''" v-on:click="chartBtn(item.id,'xunnumber')">询盘个数</dd>
+                                    <dd :class="item.TabName === 'buynumber'?'active':''" v-on:click="chartBtn(item.id,'buynumber')">成交个数</dd>
+                                    <dd :class="item.TabName === 'score'?'active':''" v-on:click="chartBtn(item.id,'score')">成交积分</dd>
+                                </dl>
+                            </div>
+                            <div class="SectorRowBom flex-box">
+                              <div class="SectorRowProTable flex-content">
+                                  <div class="SectorRowProhidden" :style="'height:' + item.tableHidden.tableHeight">
+                                      <el-table
+                                          ref="simpleTable"
+                                          :data="item.ProductArr"
+                                          tooltip-effect="dark"
+                                          stripe
+                                          class="SectorProTable"
+                                          style="width: 100%">
+                                          <el-table-column prop="name" label="设备名称" aglin="center" min-width="100px">
+                                              <template slot-scope="scope">
+                                              <p class="SectorProTableName">{{ scope.row.name }}</p>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column prop="xunnumber" label="询盘个数" aglin="center" width="80px"></el-table-column>
+                                          <el-table-column prop="buynumber" label="成交个数" aglin="center" width="80px"></el-table-column>
+                                          <el-table-column prop="score" label="成交积分" aglin="center" width="80px"></el-table-column>
+                                      </el-table>
+                                  </div>
+                                  <p class="SectorRowProBtn" :style="'top:'+ item.tableHidden.tableBtn"
+                                      v-if="item.tableHidden.tableBtnVisible"
+                                      v-on:click="ProductAnyBtnPlug(item.id)"
+                                  ><span>{{ item.tableHidden.tableBtnTxt }}</span></p>
+                              </div>
+                              <div class="SectorRowProChat">
+                                  <product-anachart :visible='item.TabName' :ProductAnyDate="item.ProductTopTen" :TabNameAny='item.TabName' v-if="item.ProductTopTen" :key="chartTap"></product-anachart>
+                              </div>
+                            </div>
+                          </template>
+                        </li>
+                     </ul>
+                     <ul>
+                        <li v-for="(item,index) in ProductAnaly" :key="index">
+                          <template v-if="(index+1)%2===0">
+                            <div class="SectorRowTop">
+                                <h4 v-if="ProductAnaly.length>1">{{item.name}}</h4>
+                                <dl class="SectorRowProChatTop">
+                                    <dd :class="item.TabName === 'xunnumber'?'active':''" v-on:click="chartBtn(item.id,'xunnumber')">询盘个数</dd>
+                                    <dd :class="item.TabName === 'buynumber'?'active':''" v-on:click="chartBtn(item.id,'buynumber')">成交个数</dd>
+                                    <dd :class="item.TabName === 'score'?'active':''" v-on:click="chartBtn(item.id,'score')">成交积分</dd>
+                                </dl>
+                            </div>
+                            <div class="SectorRowBom flex-box">
+                              <div class="SectorRowProTable flex-content">
+                                  <div class="SectorRowProhidden" :style="'height:' + item.tableHidden.tableHeight">
+                                      <el-table
+                                          ref="simpleTable"
+                                          :data="item.ProductArr"
+                                          tooltip-effect="dark"
+                                          stripe
+                                          class="SectorProTable"
+                                          style="width: 100%">
+                                          <el-table-column prop="name" label="设备名称" aglin="center" min-width="100px">
+                                              <template slot-scope="scope">
+                                              <p class="SectorProTableName">{{ scope.row.name }}</p>
+                                              </template>
+                                          </el-table-column>
+                                          <el-table-column prop="xunnumber" label="询盘个数" aglin="center" width="80px"></el-table-column>
+                                          <el-table-column prop="buynumber" label="成交个数" aglin="center" width="80px"></el-table-column>
+                                          <el-table-column prop="score" label="成交积分" aglin="center" width="80px"></el-table-column>
+                                      </el-table>
+                                  </div>
+                                  <p class="SectorRowProBtn" :style="'top:'+ item.tableHidden.tableBtn"
+                                      v-if="item.tableHidden.tableBtnVisible"
+                                      v-on:click="ProductAnyBtnPlug(item.id)"
+                                  ><span>{{ item.tableHidden.tableBtnTxt }}</span></p>
+                              </div>
+                              <div class="SectorRowProChat">
+                                  <product-anachart :visible='item.TabName' :ProductAnyDate="item.ProductTopTen" :TabNameAny='item.TabName' v-if="item.ProductTopTen" :key="chartTap"></product-anachart>
+                              </div>
+                            </div>
+                          </template>
+                        </li>
+                     </ul>
+                </div>
             </div>
       </div>
     <el-backtop target=".scroll-panel"></el-backtop>
@@ -440,7 +544,7 @@ import NocomparMap from "./components/NocomparMap";
 import DaymapChart from "./components/DaymapChart";
 import ChartContrast from "./components/ChartContrast";
 import ProductAnachart from "./components/ProductAnachart";
-import {MapInterval} from "@/utils/MapColor"
+import {MapInterval,TopTenColor} from "@/utils/MapColor"
 import { worldCountry } from "@/utils/worldCountry";
 export default {
   name: "sectorAnalysis",
@@ -457,8 +561,8 @@ export default {
       checkAlldepartArr:false,
       checkAlldisabled:false,
       dateDimension:[
-        {label:"日",value:"day",isOn:false},
-        {label:"月",value:"month",isOn:true},
+        {label:"日",value:"day",isOn:true},
+        {label:"月",value:"month",isOn:false},
       ],//时间数据    
       pickerDateRangeOptions: {
         shortcuts: [{
@@ -524,15 +628,16 @@ export default {
         }]
       },
       AnalysisItemArr:[
-        {id:1,label:'询盘趋势分析',value:"enquirieCount",isOn:false,disabled:false},
-        {id:2,label:'成交趋势分析',value:"scoreDealCount",isOn:false,disabled:false},
-        {id:3,label:'成本趋势分析',value:"moneyCostCount",isOn:false,disabled:false},
-        {id:4,label:'询盘地区分析',value:"enquirieRegion",isOn:false,disabled:false},
-        {id:5,label:'成交地区分析',value:"scoreDealRegion",isOn:false,disabled:false},
-        {id:6,label:'产品分析',value:"product",isOn:false,disabled:false},
-        {id:7,label:'成交个数地区地图分析',value:"scoreMapCount",isOn:false,disabled:false},
-        {id:8,label:'成交个数分析',value:"scoreCount",isOn:false,disabled:false},
+        {id:1,label:'询盘个数趋势分析',value:"enquirieCount",isOn:false,disabled:false},
+        {id:2,label:'成交积分趋势分析',value:"scoreDealCount",isOn:false,disabled:true},
+        {id:3,label:'成本趋势分析',value:"moneyCostCount",isOn:false,disabled:true},
+        {id:4,label:'询盘个数地区分析',value:"enquirieRegion",isOn:false,disabled:false},
+        {id:5,label:'成交积分地区分析',value:"scoreDealRegion",isOn:false,disabled:true},
+        {id:6,label:'产品分析',value:"product",isOn:false,disabled:true},
+        {id:7,label:'成交个数地区地图分析',value:"scoreMapCount",isOn:false,disabled:true},
+        {id:8,label:'成交个数分析',value:"scoreCount",isOn:false,disabled:true},
       ],
+      tipsInfo:"当前状态部门分析默认页。",
       dayEnquiriesTrend:{},     //各个部门询盘
       yeartongAccounted:[],     //各个部门询盘占比
       yeartongRanking:[],     //各个部门询盘排行 
@@ -598,9 +703,7 @@ export default {
         isDateCompare:false,
         dept_id:[],
         type:[],
-        is_compare:'1',
         comparedept_id:[],
-        is_timecopmare:"1"        
       },
       contrastGroupList:[],//对比小组数据
       oldContrastGroupID:'',
@@ -621,7 +724,6 @@ export default {
   },
   created() {
     var $this = this;
-    $this.searchData.dateOne = $this.getNearMonth();
     $this.AnalysisItemPlug();
     $this.initData();
   },
@@ -708,9 +810,9 @@ export default {
           if(item.value==obj.value){
             item.isOn = true;
             if(item.value=="month"){
-              $this.searchData.isMonth = false;
-            }else{
               $this.searchData.isMonth = true;
+            }else{
+              $this.searchData.isMonth = false;
             }
           }else{
             item.isOn = false;
@@ -720,10 +822,10 @@ export default {
         // 切换日期维度，对比时间清空，默认时间在有小组选中的情况下，需要给一个默认时间范围
         if($this.searchData.dept_id&&$this.searchData.dept_id.length>0){
           if($this.searchData.isMonth){
-            $this.searchData.dateOne = $this.getNearDay();
+            $this.searchData.dateOne = $this.getNearMonth();
             $this.searchData.comparedateOne = [];
           }else{
-            $this.searchData.dateOne = $this.getNearMonth();
+            $this.searchData.dateOne = $this.getNearDay();
             $this.searchData.comparedateOne = [];
           }
         }else{
@@ -735,14 +837,14 @@ export default {
         var selectedContrastType = [];
         AnalysisItemArr.forEach(function(item,index){
           if($this.searchData.isMonth){
-            if(item.value=="scoreDealCount"||item.value=="moneyCostCount"||item.value=="scoreDealRegion"||item.value=="product"){
+            item.disabled = false;
+          }else{
+            if(item.value=="scoreDealCount"||item.value=="moneyCostCount"||item.value=="scoreDealRegion"||item.value=="product"||item.value=="scoreMapCount"||item.value=="scoreCount"){
               item.isOn = false;
               item.disabled = true;
             }else{
               item.disabled = false;
             }
-          }else{
-            item.disabled = false;
           }
           if(item.isOn){
             selectedContrastType.push(item.id);
@@ -797,8 +899,17 @@ export default {
           if($this.searchData.comparedateOne&&$this.searchData.comparedateOne.length>0){
             $this.searchData.comparedateOne = [];
           }
+          $this.inBrandnum='current';
+          $this.inBrandnumScore='current';
+          $this.inBrandnumMonye='current';
+          $this.inBrandnumScoreNum='current';
+          $this.searchResult();
         }else{
           $this.searchData.isDateCompare = true;
+          $this.inBrandnum='contrast';
+          $this.inBrandnumScore='contrast';
+          $this.inBrandnumMonye='contrast';
+          $this.inBrandnumScoreNum='contrast';          
         }
       }
     },
@@ -905,7 +1016,25 @@ export default {
         searchData.comparedept_id = $this.searchData.comparedept_id;
       }
       searchData.is_compare = $this.searchData.comparedept_id.length>0?2:1;
-      searchData.is_timecopmare = $this.searchData.isDateCompare&&$this.searchData.comparedateOne&&$this.searchData.comparedateOne.length>0?2:1;
+      searchData.is_timecopmare = $this.searchData.isDateCompare&&$this.searchData.comparedateOne&&$this.searchData.comparedateOne.length>0?2:1;     
+      if($this.searchData.dept_id.length==0){
+        $this.tipsInfo = "请选择数据分析的部门";
+      }else{
+        if(!$this.searchData.dateOne||$this.searchData.dateOne.length==0){
+          $this.tipsInfo = "请选择数据分析的日期范围";
+        }else{
+          if($this.searchData.type.length==0){
+            $this.tipsInfo = "请选择数据分析的分析项";
+          }else{
+            if(searchData.is_timecopmare==2&&searchData.starttime&&searchData.endtime){
+              $this.tipsInfo = "当前小组分析页面，展示为："+searchData.starttime+" ~ " + searchData.endtime+" 与 "+searchData.comparestarttime+" ~ "+searchData.compareendtime+" 的日期对比数据信息。";
+            }
+            if(searchData.is_timecopmare==1&&searchData.starttime&&searchData.endtime){
+              $this.tipsInfo = "当前小组分析页面，展示为："+searchData.starttime+" ~ " + searchData.endtime+" 的数据信息。";
+            }
+          }
+        }
+      }
       return searchData;
     },
     // 初始化页面信息
@@ -924,7 +1053,7 @@ export default {
                   //自我对比
                   if($this.searchData.isDateCompare&&$this.searchData.comparedateOne&&$this.searchData.comparedateOne.length>0){ 
                   }else{            
-                      if(!$this.searchData.isMonth){
+                      if($this.searchData.isMonth){
                         //多部门月询盘对比
                         if($this.selectedType.includes("enquirieCount")||$this.selectedType.includes("enquirieRegion")){
                           var dayxuntrend=[];
@@ -1076,7 +1205,7 @@ export default {
               }else{
                   //单部门
                   if($this.searchData.isDateCompare&&$this.searchData.comparedateOne&&$this.searchData.comparedateOne.length>0){
-                      if(!$this.searchData.isMonth){
+                      if($this.searchData.isMonth){
                         //单部门日询盘自我对比
                         if($this.selectedType.includes("enquirieCount")||$this.selectedType.includes("enquirieRegion")){                          
                             var enquirieMap=[];
@@ -1158,12 +1287,23 @@ export default {
                         }
                         //单部门日产品分析
                         if($this.selectedType.includes("product")){
-                          if(response.selefproductbuylistcompare&&response.selefproductbuylistcompare.length>0){
+                          if(response.selefproductbuylistcompare&&response.selefproductbuylistcompare.length>0){                            
                             var ProductAny=[];
-                            var ProductAnyObj={};
-                            ProductAnyObj.dartName=$this.groupName;
-                            ProductAnyObj.ProductArr=response.selefproductbuylistcompare;
-                            ProductAny.push(ProductAnyObj);
+                            response.selefproductbuylistcompare.forEach(function(item,index){
+                              var ProductAnyObj={
+                                dartName:'',
+                                ProductArr:[],
+                              };                             
+                              if(index==0){
+                                ProductAnyObj.dartName=$this.groupName+'~'+$this.searchData.dateOne[0]+'~'+$this.searchData.dateOne[1];
+                                ProductAnyObj.ProductArr=item;
+                              }
+                              if(index==1){
+                                ProductAnyObj.dartName=$this.groupName+'~'+$this.searchData.comparedateOne[0]+'~'+$this.searchData.comparedateOne[1];
+                                ProductAnyObj.ProductArr=item;
+                              }
+                              ProductAny.push(ProductAnyObj);                            
+                            });
                             $this.ProductAnyPlug(ProductAny);
                           }
                         }
@@ -1195,7 +1335,7 @@ export default {
                         }
                       } 
                   }else{  
-                      if(!$this.searchData.isMonth){
+                      if($this.searchData.isMonth){
                         //单部门月询盘对比
                         if($this.selectedType.includes("enquirieCount")||$this.selectedType.includes("enquirieRegion")){
                           var dayxuntrend=[];
@@ -1265,16 +1405,93 @@ export default {
               $this.$message({
                 showClose: true,
                 message: response.info,
-                type: 'error'
-              });
+                type: 'error',
+                duration:6000
+            });
+            $this.$router.push({path:`/login?redirect=${$this.$route.currentRoute.fullPath}`});
           }
         }
       });
     },
+    //组装传递路由默认值
+    routeVal(){
+      var $this = this;
+      $this.searchData.dateOne=$this.getNearMonth();
+      $this.searchData.isMonth=true;
+      $this.searchData.isDateCompare=false;
+      $this.searchData.dept_id=[12];
+      $this.searchData.comparedept_id=[13,14,15,,16];
+      $this.departArr=[
+        {disabled: false,isOn: true,label: "电商一部",value: 12},
+        {disabled: false,isOn: false,label: "电商二部",value: 13},
+        {disabled: false,isOn: false,label: "电商三部",value: 14},
+        {disabled: false,isOn: false,label: "电商四部",value: 15},
+        {disabled: false,isOn: false,label: "电商五部",value: 16},
+      ];
+      $this.dateDimension=[
+        {label:"日",value:"day",isOn:false},
+        {label:"月",value:"month",isOn:true},
+      ];
+      var contrastGroupList=[];
+      $this.departArr.forEach(function(item,index){
+        var objItem={}
+        if(index==0){
+          objItem.disabled=true;
+          objItem.isOn=false;
+          objItem.label=item.label;
+          objItem.value=item.value;
+        }else{
+          objItem.disabled=false;
+          objItem.isOn=true;
+          objItem.label=item.label;
+          objItem.value=item.value;
+        }
+        contrastGroupList.push(objItem);
+      });
+      $this.contrastGroupList=contrastGroupList;
+      $this.oldContrastGroupID='13,14,15,16';
+      $this.selectedType=["enquirieRegion"];
+      $this.groupName='电商一部';
+    },
     // 初始化数据
     initData() {
       var $this = this;
-      $this.getReadart();
+      if($this.$route.query.type==0){
+        $this.routeVal();
+        $this.AnalysisItemArr.forEach(function(item,index){
+          item.disabled=false;
+          item.isOn=false;
+          if(index==3){
+            item.isOn=true;
+          }
+        });
+        $this.searchData.type=[4];
+        $this.searchResult();
+      }else if($this.$route.query.type==1){
+        $this.routeVal();
+        $this.AnalysisItemArr.forEach(function(item,index){
+          item.disabled=false;
+          item.isOn=false;
+          if(index==4){
+            item.isOn=true;
+          }
+        });
+        $this.searchData.type=[5];
+        $this.searchResult();
+      }else if($this.$route.query.type==2){
+        $this.routeVal();
+        $this.AnalysisItemArr.forEach(function(item,index){
+          item.disabled=false;
+          item.isOn=false;
+          if(index==6){
+            item.isOn=true;
+          }
+        });
+        $this.searchData.type=[7];
+        $this.searchResult();
+      }else{
+        $this.getReadart();
+      }
     },
     //首页中文统计总览
     getReadart(){
@@ -1321,8 +1538,10 @@ export default {
             $this.$message({
                 showClose: true,
                 message: response.info,
-                type: 'error'
+                type: 'error',
+                duration:6000
             });
+            $this.$router.push({path:`/login?redirect=${$this.$route.currentRoute.fullPath}`});
           }
         }
       });
@@ -1365,11 +1584,15 @@ export default {
                   yeartongObj.date=items.time;
                 }else{
                   itemDate = items.date.split("-"); 
-                  if(!$this.searchData.isMonth){
-                    yeartongObj.date=itemDate[1] + "月"; 
+                  if($this.isDefaultPage){
+                      yeartongObj.date=itemDate[1] + "月"; 
                   }else{
-                    yeartongObj.date=itemDate[1] + "-" + itemDate[2] + "\n" + items.week.replace("星期", "周"); 
-                  }          
+                    if($this.searchData.isMonth){
+                      yeartongObj.date=itemDate[1] + "月"; 
+                    }else{
+                      yeartongObj.date=itemDate[1] + "-" + itemDate[2] + "\n" + items.week.replace("星期", "周"); 
+                    }          
+                  }           
                 }       
                 dayEnquiriesArr.push(yeartongObj);
               });
@@ -1506,9 +1729,9 @@ export default {
       // 小组有被选中的，且默认时间是空的情况下，需要给默认时间一个默认时间范围
       if($this.searchData.dept_id&&$this.searchData.dept_id.length>0&&(!$this.searchData.dateOne||$this.searchData.dateOne.length==0)){
         if($this.searchData.isMonth){
-          $this.searchData.dateOne = $this.getNearMonth();
-        }else{
           $this.searchData.dateOne = $this.getNearDay();
+        }else{
+          $this.searchData.dateOne = $this.getNearMonth();
         }
       }
       // 小组选中超过1个或没有被选中的，则对比小组不需要有禁用状态
@@ -1558,9 +1781,9 @@ export default {
       // 小组有被选中的，且默认时间是空的情况下，需要给默认时间一个默认时间范围
       if($this.searchData.dept_id&&$this.searchData.dept_id.length>0&&(!$this.searchData.dateOne||$this.searchData.dateOne.length==0)){
         if($this.searchData.isMonth){
-          $this.searchData.dateOne = $this.getNearDay();
-        }else{
           $this.searchData.dateOne = $this.getNearMonth();
+        }else{
+          $this.searchData.dateOne = $this.getNearDay();
         }
       }
       // 初始第一次小组被选中（即此时只有一个小组被选中），且分析项没有被选中的情况下，需要默认选中询盘个数与询盘地区分析
@@ -1594,6 +1817,15 @@ export default {
           item.disabled = false;
         });
         $this.contrastGroupList = contrastGroupList;
+        if($this.searchData.dept_id.length==0){
+          var AnalysisItemArr = $this.AnalysisItemArr;
+          AnalysisItemArr.forEach(function(item){
+            item.isOn = false;
+          });
+          $this.selectedType = [];
+          $this.searchData.type = [];
+          $this.AnalysisItemArr = AnalysisItemArr;
+        }
       }
       $this.getGourpName();
       $this.searchResult();
@@ -1640,16 +1872,6 @@ export default {
     //分析项选择
     AnalysisItemPlug(){
       var $this = this;
-      if(!$this.searchData.isMonth){
-        $this.AnalysisItemArr.forEach(function(item,index){
-        });
-      }else{
-        $this.AnalysisItemArr.forEach(function(item,index){
-          if(item.value==1||item.value==4){
-          }else{
-          }
-        });
-      }
     },
     //判断浮点数
     isFloat(num) {
@@ -1980,7 +2202,7 @@ export default {
             percent:0
           }
           ObjItem.name=item.name;
-          ObjItem.value=item.value;
+          ObjItem.value=Number(item.value.toFixed(0));
           ObjItem.percent=item.value/maxNum*100+'%';
           yeartongAccounted.push(ObjItem);
         });
@@ -2032,9 +2254,15 @@ export default {
               }
             });
             worldDateVal.forEach(function(items,indexs){
+              if($this.searchData.comparedept_id.length>0){
                 if(indexs<5){
                     MapTopTen.push(items);
                 }
+              }else{
+                if(indexs<10){
+                    MapTopTen.push(items);
+                }
+              }
             });
         }
         ObjAnyItem.MapTopTen=MapTopTen;
@@ -2087,29 +2315,42 @@ export default {
         MaxValueScore=allDate;
       }else{
         MaxValueScore=lastallDate;
-      }     
-      if(!$this.searchData.isMonth){
-        var TimeCompareScore={
-          year:historyDate[0].yeartime.split('-')[0],
-          value:allDate,
-          percen:'0%'
-        };
-        var LastTimeCompareScore={
-          year:historyDate[0].yeartime.split('-')[0]-1,
-          value:lastallDate,
-          percen:'0%'
-        }; 
+      }
+      if($this.isDefaultPage){
+          var TimeCompareScore={
+            year:historyDate[0].yeartime.split('-')[0],
+            value:allDate,
+            percen:'0%'
+          };
+          var LastTimeCompareScore={
+            year:historyDate[0].yeartime.split('-')[0]-1,
+            value:lastallDate,
+            percen:'0%'
+          }; 
       }else{
-        var TimeCompareScore={
-          year:historyDate[0].xundate.split('-')[0],
-          value:allDate,
-          percen:'0%'
-        };
-        var LastTimeCompareScore={
-          year:historyDate[0].xundate.split('-')[0]-1,
-          value:lastallDate,
-          percen:'0%'
-        }; 
+        if($this.searchData.isMonth){
+          var TimeCompareScore={
+            year:historyDate[0].yeartime.split('-')[0],
+            value:allDate,
+            percen:'0%'
+          };
+          var LastTimeCompareScore={
+            year:historyDate[0].yeartime.split('-')[0]-1,
+            value:lastallDate,
+            percen:'0%'
+          }; 
+        }else{
+          var TimeCompareScore={
+            year:historyDate[0].xundate.split('-')[0],
+            value:allDate,
+            percen:'0%'
+          };
+          var LastTimeCompareScore={
+            year:historyDate[0].xundate.split('-')[0]-1,
+            value:lastallDate,
+            percen:'0%'
+          }; 
+        }
       }
       if(MaxValueScore==0){
         TimeCompareScore.percen='0%';
@@ -2333,16 +2574,16 @@ export default {
             xunnumber:0,
             buynumber:0,
           }
-          if(items.xunproduct&&items.xunproduct!=null&&items.xunproduct!=''){
+          if(items.xunproduct!=null&&items.xunproduct!=''){
             ObjItem.name=items.xunproduct;
           }          
-          if(items.score&&items.score!=null&&items.score!=''){
+          if(items.score!=null&&items.score!=''){
             ObjItem.score=items.score.toFixed(2);
           }
-          if(items.xunnumber&&items.xunnumber!=null&&items.xunnumber!=''){
+          if(items.xunnumber!=null&&items.xunnumber!=''){
             ObjItem.xunnumber=items.xunnumber;
           }
-          if(items.buynumber&&items.buynumber!=null&&items.buynumber!=''){
+          if(items.buynumber!=null&&items.buynumber!=''){
             ObjItem.buynumber=items.buynumber;
           }
           ObjAnyItem.ProductArr.push(ObjItem);
@@ -2395,11 +2636,9 @@ export default {
             item.tableHidden.tableBtnBool = !item.tableHidden.tableBtnBool;            
             if(item.tableHidden.tableBtnBool){
                 item.tableHidden.tableHeight=298+'px';
-                item.tableHidden.tableBtn='auto';
                 item.tableHidden.tableBtnTxt='点击展开';
             }else{
                 item.tableHidden.tableHeight=(item.ProductArr.length+1)*50+'px';
-                item.tableHidden.tableBtn=(item.ProductArr.length+1)*50+56+'px';
                 item.tableHidden.tableBtnTxt='点击收起';
             }
           }
@@ -2456,6 +2695,7 @@ export default {
       });
       $this.departArr = departArr;
       $this.searchData.dept_id = [];
+
       $this.oldContrastGroupID = "";
       $this.groupName = "";
       var contrastGroupList = $this.contrastGroupList;

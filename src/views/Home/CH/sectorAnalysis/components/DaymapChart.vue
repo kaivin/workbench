@@ -9,9 +9,9 @@
     </div>
 </template>
 <script>
-import {MapInterval} from '@/utils/MapColor';
 import {G2,Bar} from '@antv/g2plot';
 import DataSet from '@antv/data-set';
+import {MapColor,TopTenColor} from "@/utils/MapColor";
 export default {
   props: {
     searchcompare: {
@@ -37,6 +37,7 @@ export default {
       MapWidth:'',
       TopHeight:'',
       TopWidth:'',
+      parentData:{},
       numList:this.mapanychart.numList,
       averArr:this.mapanychart.averArr,
       sumColor:this.mapanychart.defaulColor,
@@ -60,6 +61,12 @@ export default {
         this.averArr=newVal.averArr;
         this.sumColor=newVal.defaulColor;
         this.minAverage=newVal.minAverage;
+        var parentData={};
+        parentData.averArr=newVal.averArr;
+        parentData.defaulColor=newVal.sumColor;
+        parentData.minAverage=newVal.minAverage;
+        parentData.numList=newVal.numList;
+        this.parentData=parentData;
         this.init();
       },
   },
@@ -68,7 +75,7 @@ export default {
     init(){
         var $this=this;
         if(($this.is_compare=='1'||$this.is_compare=='2')&&$this.MapNum<3){
-          $this.MapWidth = $this.$el.clientWidth*0.5;
+          $this.MapWidth = $this.$el.clientWidth*0.6;
           $this.MapHeight=$this.MapWidth*218/300;
           $this.TopWidth = $this.$el.clientWidth*0.3;
           $this.TopHeight = $this.$el.clientWidth*0.3*218/200;
@@ -77,16 +84,16 @@ export default {
           $this.MapHeight=$this.MapWidth*218/300;
           $this.TopWidth = $this.$el.clientWidth;
           if($this.MapNum==3){
-            $this.TopHeight = $this.$el.clientWidth*0.6;
+            $this.TopHeight = $this.$el.clientWidth*0.3;
           }
           if($this.MapNum==4){
-            $this.TopHeight = $this.$el.clientWidth*0.8;
+            $this.TopHeight = $this.$el.clientWidth*0.4;
           }
           if($this.MapNum==5){
-            $this.TopHeight = $this.$el.clientWidth*1;
+            $this.TopHeight = $this.$el.clientWidth*0.5;
           }
           if($this.MapNum==6){
-            $this.TopHeight = $this.$el.clientWidth*1.2;
+            $this.TopHeight = $this.$el.clientWidth*0.6;
           }
         }
         if ($this.regionMapChart &&!$this.regionMapChart.destroyed) {
@@ -95,12 +102,19 @@ export default {
         if ($this.pieSourcePlot &&!$this.pieSourcePlot.chart.destroyed) {
             $this.pieSourcePlot.chart.destroy();
         }
+        var parentData={};
+        parentData.averArr=$this.averArr;
+        parentData.defaulColor=$this.sumColor;
+        parentData.minAverage=$this.minAverage;
+        parentData.numList=$this.numList;
+        $this.parentData=parentData;
         $this.drawCnCluesRegionChart();
         $this.drawTopTen();
     },
     // 中文地区询盘地图
     drawCnCluesRegionChart(){     
       var $this = this;
+      var topColor = MapColor($this.MapArr,$this.parentData);
       if($this.MapArr.length>0){   
           fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
           .then(res => res.json())
@@ -123,7 +137,8 @@ export default {
           });
           regionMapChart.axis(false);
           regionMapChart.legend('trend', {
-              position: 'bottom-left',
+            position: 'bottom-left',
+            flipPage:false,
           });
           // 绘制中国地图背景
           var ds = new DataSet();
@@ -181,7 +196,7 @@ export default {
           });
           userView.polygon()
               .position('longitude*latitude')     
-              .color('trend', $this.sumColor)
+              .color('trend', topColor)
               .tooltip('name*number')
               .style({
               fillOpacity: 1,
@@ -208,37 +223,8 @@ export default {
     // 热门地区TOP10
     drawTopTen(){
       var $this = this;
+      var colorData = TopTenColor($this.MapTopTen,$this.parentData);
       if($this.MapTopTen&&$this.MapTopTen.length>0){
-          var numList=$this.numList;  
-          var defaulColor=$this.sumColor;          
-          var rel=$this.MapTopTen;
-          var topTenColor=[];          
-          $this.MapTopTen.forEach(function(items,index){
-              if(defaulColor.length>=5){
-                  for(var i=0;i<numList.length;i++){
-                  if(items.number>=numList[i]){
-                      topTenColor.push(defaulColor[i]);
-                      break;
-                  }
-                  if(items.number<numList[numList.length-1]){
-                      topTenColor.push(defaulColor[numList.length-1]);
-                      break;
-                  }
-                  }
-              }else{              
-                  for(var i=0;i<numList.length;i++){
-                  if(items.number>numList[i]){
-                      topTenColor.push(defaulColor[i]);
-                      break;
-                  }
-                  if(items.number<=numList[numList.length-1]){
-                      topTenColor.push(defaulColor[numList.length-1]);
-                      break;
-                  }
-                  }
-              }
-          });
-          topTenColor=topTenColor.reverse();
           const pieSourcePlot = new Bar('topTen'+$this.id, {
               data:$this.MapTopTen,
               xField: 'number',
@@ -250,7 +236,7 @@ export default {
               legend: false,
               appendPadding:[0, 50, 0, 0],
               xAxis:false,
-              color:topTenColor,
+              color:colorData,
               label: {
                   style: {
                   fill: '#999999',
