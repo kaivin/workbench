@@ -15,7 +15,8 @@ html,body,#app,#app > .el-container{
     height:100vh;
     overflow: hidden;
     background-color: #f6f7fa;
-    font-family:  -apple-system,BlinkMacSystemFont,Helvetica Neue,Tahoma,PingFang SC,Microsoft Yahei,Arial,Hiragino Sans GB,sans-serif;
+    // font-family:  -apple-system,BlinkMacSystemFont,Helvetica Neue,Tahoma,PingFang SC,Microsoft Yahei,Arial,Hiragino Sans GB,sans-serif;
+    font-family: DINPro Medium,-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -32,7 +33,7 @@ img {
 *,*:after,*:before{-webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; -webkit-touch-callout:none; outline:none;}
 button{outline:none; }
 input{ outline:none; }
-input,textarea{font-family:-apple-system,BlinkMacSystemFont,Helvetica Neue,Tahoma,PingFang SC,Microsoft Yahei,Arial,Hiragino Sans GB,sans-serif; }
+input,textarea{font-family: DINPro Medium,-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"; }
 textarea {resize :none; outline:none; }//去掉提交框右下角箭头
 ul,ol{
     list-style: none;

@@ -63,6 +63,7 @@
           <pie-chart
             :chart-data="currentData.inquiryCount"
             :id-data="currentData.randomStr1"
+            :color-data="currentData.inquiryCountColor"
             :font-data="'产品询盘\n个数占比'"
           ></pie-chart>
         </div>
@@ -70,6 +71,7 @@
           <pie-chart
             :chart-data="currentData.dealCount"
             :id-data="currentData.randomStr2"
+            :color-data="currentData.dealCountColor"
             :font-data="'产品成交\n个数占比'"
           ></pie-chart>
         </div>
@@ -77,6 +79,7 @@
           <pie-chart
             :chart-data="currentData.dealScore"
             :id-data="currentData.randomStr3"
+            :color-data="currentData.dealScoreColor"
             :font-data="'产品成交\n积分占比'"
           ></pie-chart>
         </div>
@@ -110,7 +113,6 @@ export default {
     },
   },
   mounted(){
-    console.log("执行表格数据")
   },
   methods:{
   },

@@ -69,7 +69,7 @@
                       :map-height="item1.mapHeight"
                     ></word-map-chart>
                   </div>
-                  <div class="region-rank" v-bind:style="{width:item1.mapWidth+'px'}">
+                  <div class="region-rank" v-bind:style="{width:item1.mapWidth+'px',height:'268px'}">
                     <div class="txt-header"><strong>{{item1.topTitle}}</strong></div>
                     <div class="bar-chart" v-if="item1.topTenData[0].number>0">
                       <top-region

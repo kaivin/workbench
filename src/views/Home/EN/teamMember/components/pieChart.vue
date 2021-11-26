@@ -15,6 +15,10 @@ export default {
       type: Array,
       default:[],
     },
+    colorData: {
+      type: Array,
+      default:[],
+    },
     idData:{
       type: String,
       default: "",
@@ -30,7 +34,6 @@ export default {
     },
   },
   mounted(){
-    console.log("执行画环图")
     this.drawPieChart();
   },
   methods:{
@@ -42,6 +45,7 @@ export default {
           data:$this.currentData,
           angleField: 'value',
           colorField: 'name',
+          color:$this.colorData,
           radius: 1,
           innerRadius: 0.64,
           width: 280,

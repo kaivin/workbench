@@ -357,7 +357,7 @@ export default {
           },
           legend:{
             layout:'horizontal',
-            position:'top',
+            position:'top-right',
             flipPage:false,
             offsetX:-30,
             label:{

@@ -441,6 +441,7 @@ export default {
                   message: response.info,
                   type: 'error'
                 });
+                $this.$router.push({path:`/login?redirect=${$this.$router.currentRoute.fullPath}`});
               }
             }
           }
@@ -805,8 +806,18 @@ export default {
       $this.clearData();
       if(searchData.userid&&searchData.starttime&&searchData.endtime&&searchData.type){
         $this.$store.dispatch('teamMember/cnGroupFilterAction', searchData).then(res=>{
-          console.log(res,"筛选数据");
-          $this.filterDataClump(res);
+         if(res.status){
+            console.log(res,"筛选数据")
+            $this.filterDataClump(res);
+          }else{
+            $this.$message({
+              showClose: true,
+              message: res.info,
+              type: 'error',
+              duration:6000
+            });
+            $this.$router.push({path:`/login?redirect=${$this.$router.currentRoute.fullPath}`});
+          }
         });
       }
     },
@@ -819,7 +830,6 @@ export default {
       if(productData){
         mapChartData[0].push(productData);
       }
-      console.log(mapChartData,"最终组装数据");
       $this.defaultChartData = defaultChartData;
       $this.mapChart = mapChartData;
     },
@@ -1659,6 +1669,9 @@ export default {
       itemData.inquiryCount = [];
       itemData.dealCount = [];
       itemData.dealScore = [];
+      itemData.inquiryCountColor = ['#fb7c6f','#ffcd6d','#72e4a1','#9c9cfe','#81cbfc',"#FF4500","#1AAF8B"];
+      itemData.dealCountColor = ['#416eff','#43ced7','#00a0e9','#0068b7','#41d0ff',"#406C85","#F6BD16"];
+      itemData.dealScoreColor = ['#ffc383','#f29b76','#ff783f','#f29c9f','#acd598',"#B40F0F","#2FB8FC"];
       var inquiryCount = [];
       var dealCount = [];
       var dealScore = [];
