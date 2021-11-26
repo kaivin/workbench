@@ -17,7 +17,7 @@
                       </div>
                   </div>
                   <div class="userImg">
-                    <div v-if="item.headimg">
+                    <div v-if="item.headimg" class="headImg">
                       <img :src="item.headimg" :alt="item.name" />
                     </div>
                     <div v-else class="nopic"></div> 

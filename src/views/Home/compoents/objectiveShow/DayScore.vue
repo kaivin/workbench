@@ -15,7 +15,7 @@
           :picker-options="disabledTime"
           placeholder="选择日期">
         </el-date-picker>
-        <span class="go-right" :class="nextOn ? 'on' : '' " @click="dayNext">后一天</span>
+        <span class="go-right" :class="nextOn ? 'on' : '' " @click="dayNext" :style="!nextOn ? 'cursor:not-allowed' : '' ">后一天</span>
       </div>
     </div>
 
@@ -29,7 +29,7 @@
               : ''
           "
         >
-          <i class="svg-i"><svg-icon icon-class="homePic" /></i>
+          <i class="svg-i"></i>
           <p class="flex-content">
             今日询盘
             <strong>{{ DayScore.allTodayNum }}</strong>
@@ -41,7 +41,7 @@
           </p>
         </li>
         <li class="flex-box">
-          <i class="svg-i"><svg-icon icon-class="homeTime" /></i>
+          <i class="svg-i"></i>
           <p class="flex-content">
             昨日询盘
             <strong>{{ DayScore.allYesterdayNum }}</strong>

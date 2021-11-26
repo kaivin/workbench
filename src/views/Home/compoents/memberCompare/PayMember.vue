@@ -24,7 +24,7 @@
                 label="头像"
                 min-width="100">
                 <template slot-scope="scope">
-                    <div v-if="scope.row.headimg">
+                    <div v-if="scope.row.headimg" class="headImg">
                       <img :src="scope.row.headimg" :alt="scope.row.name" class="avatar" />
                     </div>
                     <div v-else class="nopic"></div>

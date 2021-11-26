@@ -128,18 +128,17 @@ export default {
                 offsetY: -10,
                 offsetX: -30
               });
-            }
-            if(values[i].name == "非搜索询盘"){
               if(Dep1DayNum - values[i].number > 10){
                 annotations.push({
                   type: 'text',
                   position: [k, values[i].number],
                   content: `${values[i].number}`,
-                  style: { width: '24px', textAlign: 'center', fontSize: 12, fill: '#fff' },
+                  style: { textAlign: 'center', fontSize: 12, fill: '#fff' },
                   offsetY: -10,
                   offsetX: -30
                 });
               }
+              
             }
             if(values[i].name == "本月最高"){
               annotations.push({
@@ -170,15 +169,23 @@ export default {
             tooltip: {
             shared: true,
               customItems: (originalItems) => {
-                  for (let i = 0; i < originalItems.length; i++) {
-                      if(originalItems[i].title != "电商一部" && originalItems[i].name == "搜索询盘"){
-                        originalItems[i].name = "询盘数量"
-                      }else if(originalItems[i].title == "电商一部" && originalItems[i].name == "搜索询盘"){
-                        originalItems[i].name = "询盘数量"
-                        originalItems[i].value = Dep1DayNum;
-                      }
-                  }
-                  return originalItems;
+                var isdep1 = 0;
+                for (let i = 0; i < originalItems.length; i++) {
+                    if(originalItems[i].title != "电商一部" && originalItems[i].name == "搜索询盘"){
+                      originalItems[i].name = "询盘数量"
+                    }else if(originalItems[i].title == "电商一部"){
+                      isdep1 = 1
+                    }
+                }
+                if(isdep1 == 1){
+                  originalItems.unshift({
+                    title: "电商一部",
+                    name: "询盘数量",
+                    value: Dep1DayNum,
+                    color: "#89b2ff"
+                  })
+                }  
+                return originalItems;
               },
             },
             plots: [
@@ -189,7 +196,7 @@ export default {
                   xField: 'departname',
                   yField: 'number',
                   isGroup: true,
-                  color: ['#89b2ff', '#fac554',  '#cde1ff','#fbd6cf'],
+                  color: [ '#fac554', '#89b2ff', '#cde1ff','#fbd6cf'],
                   minColumnWidth: 24,
                   maxColumnWidth: 24,
                   legend: false,

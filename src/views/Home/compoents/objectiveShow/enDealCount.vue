@@ -7,7 +7,7 @@
       </div>
       <div class="datePicker">
         <el-date-picker
-          v-model="MonthChoose"
+          v-model="DealCount.month"
           @change = "MonthChange"
           type="month"
           format="yyyy-MM"
@@ -35,21 +35,36 @@
                     {{item.departname}}
                 </div>
                 <div class="delCircle">
-                    <div class="allCircle"></div>
-                    <div class="passCircle">
+                    <div class="passCircle" v-if="item.snumber < item.numberline">
                         <div class="left">
-                            <div class="line" :style="item.numberline/maxnumline*100 < 50 ? 'transform:rotate(-225deg)' : 'transform:rotate('+ (225/50*(item.numberline/maxnumline*100-50)-225) + 'deg)' "></div>
+                            <div class="line" style="transform:rotate(-45deg)"></div>
                         </div>
                         <div class="right">
-                            <div class="line" :style="item.numberline/maxnumline*100 < 50 ? 'transform:rotate('+ (225/50*item.numberline/maxnumline*100-225) + 'deg)' : 'transform:rotate(-45deg)' " ></div>
+                            <div class="line" style="transform:rotate(-45deg)"></div>
                         </div>
                     </div>
-                    <div class="numCircle">
+                    <div class="passCircle">
                         <div class="left">
-                            <div class="line" :style="item.snumber/maxnumline*100 < 50 ? 'transform:rotate(-225deg)' : 'transform:rotate('+ (225/50*(item.snumber/maxnumline*100-50)-225) + 'deg)' "></div>
+                            <div class="line" :style="item.numberline/item.snumber*100 < 50 ? 'transform:rotate(-225deg)' : 'transform:rotate('+ (225/50*(item.numberline/item.snumber*100-50)-270) + 'deg)' "></div>
                         </div>
                         <div class="right">
-                            <div class="line" :style="item.snumber/maxnumline*100 < 50 ? 'transform:rotate('+ (225/50*(item.snumber/maxnumline*100)-225) + 'deg)' : 'transform:rotate(-45deg)' " ></div>
+                            <div class="line" :style="item.numberline/item.snumber*100 < 50 ? 'transform:rotate('+ (225/50*item.numberline/item.snumber*100-225) + 'deg)' : 'transform:rotate(-45deg)' " ></div>
+                        </div>
+                    </div>
+                    <div class="numCircle" v-if="item.snumber < item.numberline">
+                        <div class="left">
+                            <div class="line" :style="item.snumber/item.numberline*100 < 50 ? 'transform:rotate(-225deg)' : 'transform:rotate('+ (225/50*(item.snumber/item.numberline*100-50)-225) + 'deg)' "></div>
+                        </div>
+                        <div class="right">
+                            <div class="line" :style="item.snumber/item.numberline*100 < 50 ? 'transform:rotate('+ (225/50*(item.snumber/item.numberline*100)-270) + 'deg)' : 'transform:rotate(-45deg)' " ></div>
+                        </div>
+                    </div>
+                    <div class="numCircle" v-else>
+                        <div class="left">
+                            <div class="line" style="transform:rotate(-45deg)" ></div>
+                        </div>
+                        <div class="right">
+                            <div class="line" style="transform:rotate(-45deg)" ></div>
                         </div>
                     </div>
                     <div class="numShow">
@@ -57,6 +72,7 @@
                         <span class="aimNum">≥{{item.numberline}}</span>
                     </div>
                 </div>
+
                 <div class="delText">
                     OR
                 </div>
@@ -97,7 +113,6 @@ export default {
     name: "enDealCount",
     data() {
         return {
-            MonthChoose: '',
             disabledMonth:{
                 disabledDate(time){
                     return time.getTime() > Date.now();
@@ -118,23 +133,16 @@ export default {
                 return {};
             },
         },
-        maxnumline:{
-            type: Number,
-            default: function(){
-                return 0
-            }
-        }
     },
     created(){
-        var $this = this;
-        this.MonthChoose = parseTime(new Date(),'{y}-{m}');
     },
     methods:{
         MonthChange() {
             var $this = this;
-            var res = $this.MonthChoose;
+            var res = $this.DealCount.month;
+            console.log(res)
             res = parseTime(res,'{y}-{m}');
-            $this.MonthChoose = res;
+            $this.DealCount.month = res;
             $this.$emit('MonthChange', res);
         }
     }

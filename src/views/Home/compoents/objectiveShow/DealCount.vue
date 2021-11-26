@@ -7,7 +7,7 @@
       </div>
       <div class="datePicker">
         <el-date-picker
-          v-model="MonthChoose"
+          v-model="DealCount.month"
           @change = "MonthChange"
           type="month"
           format="yyyy-MM"
@@ -46,17 +46,6 @@
                 </div>
             </li>
 
-            <li class="flex-wrap last_li">
-                <div class="departName"></div>
-                <div class="departLine departLine2 flex-content">
-                    <div class="step">0</div>
-                    <div class="step">{{DealCount.stepNum}}</div>
-                    <div class="step">{{DealCount.stepNum*2}}</div>
-                    <div class="step">{{DealCount.stepNum*3}}</div>
-                    <div class="step">{{DealCount.stepNum*4}}</div>
-                </div>
-                <div class="departScore"></div>
-            </li>
         </ul>
         <div class="departMean flex-content">
             <span>成交积分</span><span>合格线</span><span>中等线</span><span>优秀线</span>
@@ -71,7 +60,6 @@ export default {
     name: "DealCount",
     data() {
         return {
-            MonthChoose: '',
             disabledMonth:{
                 disabledDate(time){
                     return time.getTime() > Date.now();
@@ -94,15 +82,13 @@ export default {
         }
     },
     created(){
-        var $this = this;
-        this.MonthChoose = parseTime(new Date(),'{y}-{m}');
     },
     methods:{
         MonthChange() {
             var $this = this;
-            var res = $this.MonthChoose;
+            var res = $this.DealCount.month;
             res = parseTime(res,'{y}-{m}');
-            $this.MonthChoose = res;
+            $this.DealCount.month = res;
             $this.$emit('MonthChange', res);
         }
     }

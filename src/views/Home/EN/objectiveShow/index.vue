@@ -25,10 +25,10 @@
               :DealCount="DealCount" 
               @MonthChange="monthChange" 
               :lang="en"
-              :maxnumline="maxnumline"
             ></en-deal-count>
             <month-deal 
               :MonthFinish="MonthFinish"
+              :scoremonth="scoremonth"
             ></month-deal>
           </el-col>
         </el-row>
@@ -57,14 +57,15 @@ export default {
       DealCount: {
         maxAimNum: 200,
         departScore:[],
-        stepNum: 50
+        stepNum: 50,
+        month:''
       },
-      maxnumline:0,
       DayTarget:[],
       Dep1DayNum:0,
       DayAim:[],
       DayFinish:[],
       MonthFinish:[],
+      scoremonth:'',
       en:'en'
     };
   },
@@ -88,7 +89,7 @@ export default {
       $this.getEnDepDayNum(nowDay);
       // 获取英文月积分
       var nowMonth = parseTime(new Date(),'{y}-{m}');
-      $this.getMonthScore(nowMonth);
+      $this.getMonthScore();
       // 获取英文日目标
       $this.getDepDayTarget(nowDay);
       // 获取中文日目标完成情况
@@ -121,7 +122,9 @@ export default {
                 showClose: true,
                 message: response.info,
                 type: "error",
+                duration: 6000
               });
+              $this.$router.push({path: `/login?redirect=${$this.$router.currentRoute.fullPath}`})
             }
           }
       });
@@ -155,7 +158,9 @@ export default {
     getMonthScore(val){
       var $this = this;
       var data = {};
-      data.time = val;
+      if(val){
+        data.time = val;
+      }
       $this.$store
         .dispatch("homeobject/postEnDealNum", data)
         .then((response) => {
@@ -163,24 +168,22 @@ export default {
             if (response.status) {
               var dscore  = response.departscore;
               $this.DealCount.departScore = dscore;
+              $this.DealCount.month = response.month;
               var maxnum = 0;
-              var maxline = 0;
               for(var i=0;i<dscore.length;i++){
                 if(dscore[i].goodnumber > maxnum){
                   maxnum = dscore[i].goodnumber;
                 }
-                if(dscore[i].numberline > maxline){
-                  maxline = dscore[i].numberline
-                }
               }
               $this.getMaxNum(maxnum);
-              $this.maxnumline = maxline + 50;
             } else {
               $this.$message({
                 showClose: true,
                 message: response.info,
                 type: "error",
+                duration: 6000
               });
+              $this.$router.push({path: `/login?redirect=${$this.$router.currentRoute.fullPath}`})
             }
           }
       });
@@ -221,13 +224,7 @@ export default {
                 
                 if(res[i].hasOwnProperty('searchdaynumber')){
                   var searchdaynumber = res[i].searchdaynumber;
-                  var sepArr1 = {
-                    departname: departname,
-                    name: "搜索询盘",
-                    number: searchdaynumber,
-                    stack: 1
-                  }
-                  newArr.push(sepArr1);
+                  
                   var sepArr2 = {
                     departname: departname,
                     name: "非搜索询盘",
@@ -235,6 +232,15 @@ export default {
                     stack: 1
                   }
                   newArr.push(sepArr2);
+
+                  var sepArr1 = {
+                    departname: departname,
+                    name: "搜索询盘",
+                    number: searchdaynumber,
+                    stack: 1
+                  }
+                  newArr.push(sepArr1);
+
                   $this.Dep1DayNum = res[i].daynumber;
                 }else{
                   var sepArr1 = {
@@ -276,7 +282,9 @@ export default {
                 showClose: true,
                 message: response.info,
                 type: "error",
+                duration: 6000
               });
+              $this.$router.push({path: `/login?redirect=${$this.$router.currentRoute.fullPath}`})
             }
           }
       });
@@ -298,7 +306,9 @@ export default {
                 showClose: true,
                 message: response.info,
                 type: "error",
+                duration: 6000
               });
+              $this.$router.push({path: `/login?redirect=${$this.$router.currentRoute.fullPath}`})
             }
           }
       });
@@ -315,12 +325,15 @@ export default {
           if (response) {
             if (response.status) {
               $this.MonthFinish = response.departscoreyear;
+              $this.scoremonth = response.scoremonth;
             } else {
               $this.$message({
                 showClose: true,
                 message: response.info,
                 type: "error",
+                duration: 6000
               });
+              $this.$router.push({path: `/login?redirect=${$this.$router.currentRoute.fullPath}`})
             }
           }
       });

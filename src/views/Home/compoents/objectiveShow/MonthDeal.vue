@@ -4,7 +4,7 @@
       <div class="title-left">
         <h3 class="tit-h3">各部门月成交完成情况统计</h3>
         <span class="tit-span">（单位：次）</span>
-        <span class="tit-span">注：{{NowYear}}年1月<span v:if="isShow">至{{NowYear}}年{{NowMonth}}月</span></span>
+        <span class="tit-span">注：{{NowYear}}年{{scoremonth.split("-")[0]}}<span v:if="isShow">至{{NowYear}}年{{scoremonth.split("-")[1]}}</span></span>
       </div>
     </div>
     <div class="rowMain">
@@ -65,6 +65,12 @@ export default {
                 return [];
             },
         },
+        scoremonth: {
+            type: String,
+            default: function() {
+                return '';
+            }
+        }
     },
     created(){
         var $this = this;

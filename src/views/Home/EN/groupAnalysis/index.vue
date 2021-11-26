@@ -151,7 +151,9 @@ export default {
                 showClose: true,
                 message: response.info,
                 type: "error",
+                duration: 6000
               });
+              $this.$router.push({path: `/login?redirect=${$this.$router.currentRoute.fullPath}`})
             }
           }
       });

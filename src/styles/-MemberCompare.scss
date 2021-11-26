@@ -72,13 +72,19 @@
             .userImg{
                 text-align: center;
                 width: 124px;
-                img{
+                .headImg{
                     width: 50px;
                     height: 50px;
                     overflow: hidden;
                     border-radius: 50%;
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
+                    margin-left: auto;
+                    margin-right: auto;
+                    position: relative;
+                    img{
+                        width: 100%;
+                    }
                 }
                 .nopic{
                     width: 50px;
@@ -207,13 +213,19 @@
             .userImg{
                 text-align: center;
                 width: 124px;
-                img{
+                .headImg{
                     width: 50px;
                     height: 50px;
                     overflow: hidden;
                     border-radius: 50%;
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
+                    margin-left: auto;
+                    margin-right: auto;
+                    position: relative;
+                    img{
+                        width: 100%;
+                    }
                 }
                 .nopic{
                     width: 50px;
@@ -330,12 +342,20 @@
                 font-size: 20px;
                 font-family: "numberfont";
             }
-            .avatar{
+            .headImg{
                 width: 50px;
                 height: 50px;
                 border-radius: 6px;
 	            border: solid 2px #ffff74;
+                margin-left: auto;
+                margin-right: auto;
+                position: relative;
+                overflow: hidden;
+                img{
+                    width: 100%;
+                }
             }
+
             .nopic{
                 width: 50px;
                 height: 50px;
@@ -493,13 +513,18 @@
                     background-position:  center center;
                     background-size: 100% 100%;
                     background-repeat: no-repeat;
+                    z-index: 2;
                 }
-                img{
+                .headImg{
                     width: 54px;
                     height: 54px;
                     overflow: hidden;
                     border-radius: 6px;
                     box-shadow: 3px 4px 7px 0px rgba(133, 124, 89, 0.75);
+                    position: relative;
+                    img{
+                        width: 100%;
+                    }
                 }
                 .nopic{
                     width: 54px;
@@ -628,13 +653,19 @@
             .userImg{
                 text-align: center;
                 width: 124px;
-                img{
+                .headImg{
                     width: 50px;
                     height: 50px;
                     overflow: hidden;
                     border-radius: 50%;
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
+                    position: relative;
+                    margin-left: auto;
+                    margin-right: auto;
+                    img{
+                        width: 100%;
+                    }
                 }
                 .nopic{
                     width: 50px;
