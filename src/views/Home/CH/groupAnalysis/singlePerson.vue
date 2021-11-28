@@ -20,7 +20,7 @@ import PersonIntro from "../../compoents/memberDetail/PersonIntro"
 import YearChart from "../../compoents/memberDetail/YearChart"
 import ScoreNum from "../../compoents/memberDetail/ScoreNum"
 export default {
-  name: "singlePerson",
+  name: "cnSinglePerson",
   data() {
     return {
     };

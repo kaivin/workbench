@@ -111,7 +111,7 @@ function setRoutes(routers){
       },
       {
         path: "/Home/CH/groupAnalysis/singlePerson",
-        name:'groupAnalysis',
+        name:'cnSinglePerson',
         component: () => import("@/views/Home/CH/groupAnalysis/singlePerson.vue"),
         meta: {id:'Home-chGroup',title: '组员分析', icon: null, keepAlive:false},
       },

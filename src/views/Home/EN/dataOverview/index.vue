@@ -69,7 +69,7 @@ import XpanTop from "@/components/dataOverview/XpanTop.vue";
 import XpanYears from "@/components/dataOverview/XpanYears.vue";
 import {getEncountnew} from "@/api/dataOverview.js";
 export default {
-  name: "dataOverview",
+  name: "enDataOverview",
   data() {
     return {
       menuButtonPermit: [],//操作权限

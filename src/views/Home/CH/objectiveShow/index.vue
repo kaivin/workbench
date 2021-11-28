@@ -43,7 +43,7 @@ import DayTarget from "../../compoents/objectiveShow/DayTarget";
 import DayFinish from "../../compoents/objectiveShow/DayFinish";
 import MonthDeal from "../../compoents/objectiveShow/MonthDeal"
 export default {
-  name: "objectiveShow",
+  name: "cnObjectiveShow",
   data() {
     return {
       DayScore: {

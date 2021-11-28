@@ -29,7 +29,7 @@ import CompareMillion from "../../compoents/memberDetail/CompareMillion"
 import CompareAward from "../../compoents/memberDetail/CompareAward"
 
 export default {
-  name: "singlePerson",
+  name: "cnComparePerson",
   data() {
     return {
     };

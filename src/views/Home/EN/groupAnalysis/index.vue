@@ -44,7 +44,7 @@ import PayMember from "../../compoents/memberCompare/PayMember"
 import MillionDeal from "../../compoents/memberCompare/MillionDeal"
 import AwardRank from "../../compoents/memberCompare/AwardRank"
 export default {
-  name: "groupAnalysis",
+  name: "enGroupAnalysis",
   data() {
     return {
       unpayInquiry: [],

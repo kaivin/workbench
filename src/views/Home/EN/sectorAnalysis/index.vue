@@ -140,7 +140,7 @@ import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatD
 import {MapInterval,TopTenColor} from "@/utils/MapColor"
 import { worldCountry } from "@/utils/worldCountry";
 export default {
-  name: "sectorAnalysis",
+  name: "enSectorAnalysis",
   components: {
     defaultChart,
     mapChart,

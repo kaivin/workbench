@@ -67,7 +67,7 @@ import XpanTop from "@/components/dataOverview/XpanTop.vue";
 import XpanYears from "@/components/dataOverview/XpanYears.vue";
 import {getChinacountnew} from "@/api/dataOverview.js";
 export default {
-  name: "dataOverview",
+  name: "cnDataOverview",
   data() {
     return {
       menuButtonPermit: [],//操作权限
