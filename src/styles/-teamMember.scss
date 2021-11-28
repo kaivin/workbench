@@ -6,9 +6,14 @@
       .item-filter{
         &.group{
           .filter-content{
-            .item-list{
+            .item-list.group{
               .item-checkbox{
                 min-width: 180px;
+              }
+            }
+            .item-list.depart{
+              .item-checkbox{
+                margin-right: 24px;
               }
             }
           }
@@ -23,7 +28,7 @@
           }
         }
         &.date{
-          padding: 5px 0;
+          padding: 12px 0;
           .filter-content{
             .item-list{
               .item-checkbox{
@@ -65,20 +70,15 @@
                 display: inline-block;
                 border: 1px solid #e1e3ea;
                 cursor: pointer;
-                &:first-child{
-                  border-right:none;
-                }
+                position: relative;
                 &.active{
                   border: 1px solid $menuActiveText;
-                  background-color: $menuActiveText;
-                  color: #fff;
-                  &:first-child{
-                    border-right:none;
-                  }
+                  color: $menuActiveText;
+                  z-index: 1;
                 }
               }
               .item-font+.item-font{
-                border-left:none;
+                margin-left: -1px;
               }
             }
             .item-date{
@@ -86,7 +86,7 @@
               display: inline-block;
               vertical-align: top;
               .date-range{
-                width: 200px;
+                width: 220px;
                 border-radius:0;
                 position: relative;
                 padding: 3px 25px 3px 8px;
@@ -153,7 +153,7 @@
                 width: 11px;
                 height: 11px;
                 border: 1px solid #cbcbcb;
-                margin-right: 10px;
+                margin-right: 6px;
                 position: relative;
                 vertical-align: -1px;
                 &:hover{
@@ -219,6 +219,17 @@
           vertical-align: top;
           position: relative;
           margin: 3px 10px;
+          &:before{
+            content:'';
+            display: block;
+            width: 100%;
+            height: 100%;
+            background-color: #2259e5;
+            opacity: .1;
+            position: absolute;
+            left:0;
+            top:0;
+          }
           &:hover{
             .svg-i{
               display: block;
@@ -227,11 +238,13 @@
           span{
             display: block;
             height: 28px;
-            line-height: 28px;
-            background-color: $menuActiveText;
-            color: #fff;
+            line-height: 26px;
+            color: #2259e5;
+            border: 1px solid #2259e5;
             font-size: 12px;
             padding: 0 15px;
+            position: relative;
+            z-index: 1;
           }
           .svg-i{
             display: none;
@@ -245,14 +258,96 @@
             border-radius: 100%;
             text-align: center;
             vertical-align: middle;
-            font-size: 11px;
+            line-height: 12px;
+            font-size: 10px;
             color: #9a9a9a;
-            z-index: 1;
+            z-index: 2;
             cursor: pointer;
             font-weight: bold;
             .svg-icon{
-              vertical-align: -.1em;
+              vertical-align: 0;
             }
+          }
+        }
+        .item-contrast+.item-contrast{
+          &:before{
+            background-color: #3ebea7;
+          }
+          span{
+            color: #3ebea7;
+            border: 1px solid #3ebea7;
+          }
+        }
+        .item-contrast+.item-contrast+.item-contrast{
+          &:before{
+            background-color: #eca12d;
+          }
+          span{
+            color: #eca12d;
+            border: 1px solid #eca12d;
+          }
+        }
+        .item-contrast+.item-contrast+.item-contrast+.item-contrast{
+          &:before{
+            background-color: #ee4747;
+          }
+          span{
+            color: #ee4747;
+            border: 1px solid #ee4747;
+          }
+        }
+        .item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast{
+          &:before{
+            background-color: #73c0de;
+          }
+          span{
+            color: #73c0de;
+            border: 1px solid #73c0de;
+          }
+        }
+        .item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast{
+          &:before{
+            background-color: #91cb74;
+          }
+          span{
+            color: #91cb74;
+            border: 1px solid #91cb74;
+          }
+        }
+        .item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast{
+          &:before{
+            background-color: #ff8d61;
+          }
+          span{
+            color: #ff8d61;
+            border: 1px solid #ff8d61;
+          }
+        }
+        .item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast{
+          &:before{
+            background-color: #9a60b4;
+          }
+          span{
+            color: #9a60b4;
+            border: 1px solid #9a60b4;
+          }
+        }
+        .item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast{
+          &:before{
+            background-color: #e522db;
+          }
+          span{
+            color: #e522db;
+            border: 1px solid #e522db;
+          }
+        }
+        .item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast+.item-contrast{
+          &:before{
+            background-color: #e5d822;
+          }
+          span{
+            color: #e5d822;
+            border: 1px solid #e5d822;
           }
         }
       }
@@ -301,6 +396,14 @@
             border-left: 5px dashed transparent;
             border-right: 5px dashed transparent;
             z-index: 3;
+          }
+          &.depart{
+            min-width:100px;
+            .item-checkbox{
+              span{
+                vertical-align: inherit;
+              }
+            }
           }
         }
         .item-checkbox{
@@ -440,8 +543,7 @@
                 position: relative;
                 &.active{
                   border: 1px solid $menuActiveText;
-                  background-color: $menuActiveText;
-                  color: #fff;
+                  color: $menuActiveText;
                   z-index: 1;
                 }
               }
@@ -717,6 +819,9 @@
       }
       .static-wrapper{
         margin-top: -20px;
+        .bar-chart{
+          padding-left: 30px;
+        }
         .item-column{
           margin-top: 20px;
           .item-table{

@@ -21,14 +21,8 @@
 
     <div class="rowMain">
       <ul class="rowLineItem">
-        <li
-          class="flex-box"
-          :class="
-            DayScore.allTodayNum <= DayScore.allYesterdayNum
-              ? 'rowOneColor'
-              : ''
-          "
-        >
+        <li class="flex-box rowOneColor">
+        <!-- :class="DayScore.allTodayNum <= DayScore.allYesterdayNum? 'rowOneColor': ''" -->
           <i class="svg-i"></i>
           <p class="flex-content">
             今日询盘

@@ -335,11 +335,10 @@ export default {
     margin-bottom: 15px;
     .redtext{
       float: left;
-      font-size: 28px;
+      font-size: 26px;
       color: #eb3737;
       font-weight: bold;
       margin-right: 15px;
-      line-height: 40px;
     }
     .redright{
       float: left;

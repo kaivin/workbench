@@ -5,13 +5,13 @@
         <div class="item-filter flex-box group">
           <div class="filter-title"><span class="txt-title">小组选择：</span></div>
           <div class="filter-content flex-content">
-            <div class="item-list">
+            <div class="item-list group">
               <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-if="item.typeid==1" v-for="item in groupList" v-bind:key="item.userid" v-on:click="groupChangeHandler(item.userid)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b>[{{item.departName}}]</b></div>
             </div>
-            <div class="item-list">
+            <div class="item-list group">
               <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-if="item.typeid==2" v-for="item in groupList" v-bind:key="item.userid" v-on:click="groupChangeHandler(item.userid)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b>[{{item.departName}}]</b></div>
             </div>
-            <div class="item-list">
+            <div class="item-list group">
               <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-if="item.typeid==3||item.typeid==4" v-for="item in groupList" v-bind:key="item.userid" v-on:click="groupChangeHandler(item.userid)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b>[{{item.departName}}]</b></div>
             </div>
           </div>
@@ -27,10 +27,11 @@
                 <el-date-picker
                   v-if="!selectedData.isMonth"
                   v-model="selectedData.dateDefault"
+                  :disabled="!dateSelected"
                   @change="getSearchData"
                   type="daterange"
-                  format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd"
+                  format="yyyy/MM/dd"
+                  value-format="yyyy/MM/dd"
                   key="a"
                   size="mini"
                   class="date-range"
@@ -44,8 +45,8 @@
                   v-model="selectedData.dateDefault"
                   @change="getSearchData"
                   type="monthrange"
-                  format="yyyy-MM"
-                  value-format="yyyy-MM"
+                  format="yyyy/MM"
+                  value-format="yyyy/MM"
                   key="b"
                   size="mini"
                   class="date-range"
@@ -55,15 +56,15 @@
                   :picker-options="pickerMonthRangeOptions">
                 </el-date-picker>
               </div>
-              <div class="item-checkbox" v-bind:class="[selectedData.contrastGroupID.length>0?'is-disabled':'',selectedData.isDateCompare?'active':'']" v-on:click="dateCompareChangeHandler"><i></i><span>对比</span></div>
+              <div class="item-checkbox" v-bind:class="[selectedData.contrastGroupID.length>0||!dateSelected?'is-disabled':'',selectedData.isDateCompare?'active':'']" v-on:click="dateCompareChangeHandler"><i></i><span>对比</span></div>
               <div class="item-date" v-if="selectedData.isDateCompare">
                 <el-date-picker
                   v-if="!selectedData.isMonth"
                   v-model="selectedData.dateContrast"
                   @change="getSearchData"
                   type="daterange"
-                  format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd"
+                  format="yyyy/MM/dd"
+                  value-format="yyyy/MM/dd"
                   key="c"
                   size="mini"
                   class="date-range"
@@ -77,8 +78,8 @@
                   v-model="selectedData.dateContrast"
                   @change="getSearchData"
                   type="monthrange"
-                  format="yyyy-MM"
-                  value-format="yyyy-MM"
+                  format="yyyy/MM"
+                  value-format="yyyy/MM"
                   key="d"
                   size="mini"
                   class="date-range"
@@ -106,9 +107,9 @@
       <div class="title-font"><span class="txt-title">对比项：</span></div>
       <div class="contrast-content flex-content">
         <div class="item-list">
-          <div class="item-contrast" v-if="selectedData.groupID.length>0" v-on:click="deleteDefaultGroup"><span>{{groupName}}</span><i class="svg-i"><svg-icon icon-class="close" class-name="disabled" /></i></div>
+          <div class="item-contrast" v-if="selectedData.groupID.length>0"><span>{{groupName}}</span><i v-on:click="deleteDefaultGroup" class="svg-i"><svg-icon icon-class="close" class-name="disabled" /></i></div>
           <template v-if="selectedData.contrastGroupID.length>0">
-            <div class="item-contrast" v-if="item.isOn" v-for="item in contrastGroupList" v-bind:key="item.userid" v-on:click="deleteContrastGroup(item.userid)"><span>{{item.typename}} {{item.groupName}}组</span><i class="svg-i"><svg-icon icon-class="close" class-name="disabled" /></i></div>
+            <div class="item-contrast" v-bind:class="'color'+(index+1)" v-if="item.isOn" v-for="(item,index) in contrastGroupList" v-bind:key="item.userid"><span>{{item.typename}} {{item.groupName}}组</span><i v-on:click="deleteContrastGroup(item.userid)" class="svg-i"><svg-icon icon-class="close" class-name="disabled" /></i></div>
           </template>
           <div class="item-button">
             <div class="button-click" v-on:click="toggleContrast"><i class="svg-i"><svg-icon icon-class="s-add" class-name="disabled" /></i><span>添加对比</span></div>
@@ -132,15 +133,16 @@
         <map-chart
           :item-data="item" 
           :judge-data="judgeData"
+          :is-cn="true"
         ></map-chart>
       </template>
     </div>
   </div>
 </template>
 <script>
-import defaultChart from "./components/defaultChart.vue";
-import mapChart from "./components/mapChart.vue";
-import {randomString,sortByDesc,groupColor,singleArrColor} from "@/utils/index"
+import defaultChart from "@/views/Home/compoents/departTeam/defaultChart.vue";
+import mapChart from "@/views/Home/compoents/departTeam/mapChart.vue";
+import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate} from "@/utils/index"
 import {MapInterval,TopTenColor} from "@/utils/MapColor"
 export default {
   name: "cnTeamMember",
@@ -151,7 +153,7 @@ export default {
   data() {
     return {
       minWidth:"",
-      cnRatio:0.75,
+      mapRatio:0.75,
       groupList:[],
       contrastGroupList:[],
       selectedContrastGroupList:[],
@@ -172,13 +174,13 @@ export default {
               var year = date.getFullYear().toString();
               //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
               var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
-              var end = year + '-' + month + '-01';
+              var end = year + '/' + month + '/01';
               var start = '';
             
               if(month == '01'){
-                start = (parseInt(year) - 1) + '-12-01';
+                start = (parseInt(year) - 1) + '/12/01';
               }else{
-                start = parseInt(month) - 1>9 ? year + '-' + (parseInt(month) - 1)  + '-01':year + '-0' + (parseInt(month) - 1)  + '-01';
+                start = parseInt(month) - 1>9 ? year + '/' + (parseInt(month) - 1)  + '/01':year + '/0' + (parseInt(month) - 1)  + '/01';
               }
               picker.$emit('pick', [start, end]);
             }
@@ -190,11 +192,11 @@ export default {
             //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
             var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
             var end = '';
-            var start = year + '-' + month + '-01';
+            var start = year + '/' + month + '/01';
             if(month == '12'){
-              end = (parseInt(year) + 1) + '-01-01';
+              end = (parseInt(year) + 1) + '/01/01';
             }else{
-              end = parseInt(month) + 1>9 ? year + '-' + (parseInt(month) + 1)  + '-01':year + '-0' + (parseInt(month) + 1)  + '-01';
+              end = parseInt(month) + 1>9 ? year + '/' + (parseInt(month) + 1)  + '/01':year + '/0' + (parseInt(month) + 1)  + '/01';
             }
             picker.$emit('pick', [start, end]);
           }
@@ -219,18 +221,19 @@ export default {
         }]
       },
       dateDimension:[
-        {label:"日",value:"day",isOn:true},
+        {label:"日",value:"day",isOn:false},
         {label:"月",value:"month",isOn:false},
       ],
       contrastList:[
         {label:"询盘个数趋势分析",id:1,value:"inquiryCount",isOn:false,disabled:false},
-        {label:"询盘个数地区分析",id:4,value:"inquiryRegion",isOn:false,disabled:false},
+        {label:"询盘个数地区分析",id:4,value:"inquiryCountRegion",isOn:false,disabled:false},
         {label:"成交积分趋势分析",id:2,value:"dealScore",isOn:false,disabled:true},
-        {label:"成交积分地区分析",id:5,value:"dealRegion",isOn:false,disabled:true},
+        {label:"成交积分地区分析",id:5,value:"dealScoreRegion",isOn:false,disabled:true},
         {label:"产品分析",id:6,value:"product",isOn:false,disabled:true},
       ],
       channelType:"",
       groupName:"",
+      dateSelected:false,
       tipsInfo:"当前小组分析页面，展示为：近30天数据信息。",
       isContrastShow:false,
       selectedData:{
@@ -476,7 +479,7 @@ export default {
         var selectedContrastType = [];
         var selectedType = [];
         contrastList.forEach(function(item){
-          if(item.value=="inquiryCount"||item.value=="inquiryRegion"){
+          if(item.value=="inquiryCount"||item.value=="inquiryCountRegion"){
             item.isOn = true;
             selectedContrastType.push(item.id);
             selectedType.push(item.value);
@@ -501,6 +504,14 @@ export default {
           item.disabled = false;
         });
         $this.contrastGroupList = contrastGroupList;
+      }
+      if(!$this.dateSelected){
+        $this.dateDimension.forEach(function(item,index){
+          if(index==0){
+            item.isOn = true;
+            $this.dateSelected = true;
+          }
+        });
       }
       $this.getGroupName();
       $this.getSearchData();
@@ -565,6 +576,7 @@ export default {
         dateDimension.forEach(function(item){
           if(item.value==obj.value){
             item.isOn = true;
+            $this.dateSelected = true;
             if(item.value=="month"){
               $this.selectedData.isMonth = true;
             }else{
@@ -596,7 +608,7 @@ export default {
           if($this.selectedData.isMonth){
             item.disabled = false;
           }else{
-            if(item.value=="dealScore"||item.value=="dealRegion"||item.value=="product"){
+            if(item.value=="dealScore"||item.value=="dealScoreRegion"||item.value=="product"){
               item.isOn = false;
               item.disabled = true;
             }else{
@@ -618,7 +630,7 @@ export default {
     dateCompareChangeHandler(){
       var $this = this;
       // 只有在对比小组没有被选中的，此时日期对比才是非禁用状态，可点击的
-      if($this.selectedData.contrastGroupID.length==0){
+      if($this.selectedData.contrastGroupID.length==0&&$this.dateSelected){
         if($this.selectedData.isDateCompare){
           $this.selectedData.isDateCompare = false;
           if($this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
@@ -731,8 +743,8 @@ export default {
       var endMonth = end.getMonth() + 1;
       startMonth = startMonth<10?'0'+startMonth:startMonth;
       endMonth = endMonth<10?'0'+endMonth:endMonth;
-      var startDate = startYear+"-"+startMonth;
-      var endDate = endYear+"-"+endMonth;
+      var startDate = startYear+"/"+startMonth;
+      var endDate = endYear+"/"+endMonth;
       return [startDate,endDate];
     },
     // 最近30天时间周期
@@ -751,8 +763,8 @@ export default {
       startDay = startDay<10?'0'+startDay:startDay;
       endMonth = endMonth<10?'0'+endMonth:endMonth;
       endDay = endDay<10?'0'+endDay:endDay;
-      var startDate = startYear+"-"+startMonth+"-"+startDay;
-      var endDate = endYear+"-"+endMonth+"-"+endDay;
+      var startDate = startYear+"/"+startMonth+"/"+startDay;
+      var endDate = endYear+"/"+endMonth+"/"+endDay;
       return [startDate,endDate];
     },
     // 组装请求所需数据
@@ -760,12 +772,12 @@ export default {
       var $this = this;
       var searchData = {};
       if($this.selectedData.dateDefault&&$this.selectedData.dateDefault.length>0){
-        searchData.starttime = $this.selectedData.dateDefault[0];
-        searchData.endtime = $this.selectedData.dateDefault[1];
+        searchData.starttime = formatDate($this.selectedData.dateDefault[0],'/','-');
+        searchData.endtime = formatDate($this.selectedData.dateDefault[1],'/','-');
       }
       if($this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0&&$this.selectedData.isDateCompare){
-        searchData.comparestarttime = $this.selectedData.dateContrast[0];
-        searchData.compareendtime = $this.selectedData.dateContrast[1];
+        searchData.comparestarttime = formatDate($this.selectedData.dateContrast[0],'/','-');
+        searchData.compareendtime = formatDate($this.selectedData.dateContrast[1],'/','-');
       }
       if($this.selectedData.groupID.length>0){
         searchData.userid = $this.selectedData.groupID;
@@ -788,10 +800,10 @@ export default {
             $this.tipsInfo = "请选择数据分析的分析项";
           }else{
             if(searchData.is_timecopmare==2&&searchData.starttime&&searchData.endtime){
-              $this.tipsInfo = "当前小组分析页面，展示为："+searchData.starttime+" ~ " + searchData.endtime+" 与 "+searchData.comparestarttime+" ~ "+searchData.compareendtime+" 的日期对比数据信息。";
+              $this.tipsInfo = "当前小组分析页面，展示为："+$this.selectedData.dateDefault[0]+" ~ " + $this.selectedData.dateDefault[1]+" 与 "+$this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1]+" 的日期对比数据信息。";
             }
             if(searchData.is_timecopmare==1&&searchData.starttime&&searchData.endtime){
-              $this.tipsInfo = "当前小组分析页面，展示为："+searchData.starttime+" ~ " + searchData.endtime+" 的数据信息。";
+              $this.tipsInfo = "当前小组分析页面，展示为："+$this.selectedData.dateDefault[0]+" ~ " + $this.selectedData.dateDefault[1]+" 的数据信息。";
             }
           }
         }
@@ -859,13 +871,13 @@ export default {
           if($this.selectedData.groupID.length==1){
             $this.groupList.forEach(function(item){
               if(item.userid == $this.selectedData.groupID[0]){
-                inquiryData.chartTitle = item.departName+"-"+item.groupName+"组询盘时间对比趋势";
-                inquiryData.name = item.departName+"-"+item.groupName+"组总询盘";
+                inquiryData.chartTitle = item.departName+"-"+item.groupName+"组询盘日期对比趋势";
+                inquiryData.name = item.departName+"-"+item.groupName+"组询盘统计";
               }
             });
           }else{
-            inquiryData.chartTitle = "小组组合总询盘时间对比趋势";
-            inquiryData.name = "小组组合总询盘";
+            inquiryData.chartTitle = "小组组合询盘日期对比趋势";
+            inquiryData.name = "小组组合询盘统计";
           }
         }else{
           // 小组对比
@@ -917,85 +929,89 @@ export default {
                 inquiryData.mainData.push(itemChart);
               });
             });
-            if(!$this.judgeData.pluralGroupTeamSameCompare){
-              inquiryData.name = "小组总询盘";
-              var compareData = [];
-              if($this.selectedData.isMonth){
-                inquiryData.nowNumber = res.monthxunallnumbercompare
-                compareData = res.monthdepartpercentercompare
-              }else{
-                inquiryData.nowNumber = res.xunallnumbercompare;
-                compareData = res.departpercentercompare
-              }
-              inquiryData.totalChart = [];
-              compareData.forEach(function(item){
-                var itemChart = {};
-                if(item.departname.indexOf("组")!=-1){
-                  itemChart.name = item.departname;
-                }else{
-                  itemChart.name = item.departname+"组";
-                }
-                itemChart.value = item.xunnumber;
-                inquiryData.totalChart.push(itemChart);
-              });
-              inquiryData.totalChart = singleArrColor(inquiryData.totalChart);
-              inquiryData.totalChart.sort(sortByDesc("value"));
+            inquiryData.name = "小组询盘统计";
+            var compareData = [];
+            if($this.selectedData.isMonth){
+              inquiryData.nowNumber = res.monthxunallnumbercompare
+              compareData = res.monthdepartpercentercompare
+            }else{
+              inquiryData.nowNumber = res.xunallnumbercompare;
+              compareData = res.departpercentercompare
             }
+            inquiryData.totalChart = [];
+            compareData.forEach(function(item){
+              var itemChart = {};
+              if(item.departname.indexOf("组")!=-1){
+                itemChart.name = item.departname;
+              }else{
+                itemChart.name = item.departname+"组";
+              }
+              itemChart.value = item.xunnumber;
+              inquiryData.totalChart.push(itemChart);
+            });
+            inquiryData.totalChart = singleArrColor(inquiryData.totalChart);
+            inquiryData.totalChart.sort(sortByDesc("value"));
           }else{
             // 统计
             inquiryData.mainData = [];
             inquiryData.colorArr = [];
+            var tongData = []
             // 月维度
             if($this.selectedData.isMonth){
               inquiryData.nowNumber = res.monthxunallnumber;
-              var tongData = groupColor([res.monthxuntrend]);
-              inquiryData.colorArr.push(tongData[0][0].color);
-              tongData[0].forEach(function(item,index){
-                item.key = item.date;
-                item.value = item.xunnumber;
-                inquiryData.mainData.push(item);
-              });
+              tongData.push(res.monthxuntrend);
+              inquiryData.lastNumber = res.lastmonthxunallnumber;
+              inquiryData.nowLastNumber = Math.abs(res.monthxunallnumber - res.lastmonthxunallnumber);
+              inquiryData.status = res.monthxunallnumber - res.lastmonthxunallnumber>0?'up':res.monthxunallnumber - res.lastmonthxunallnumber<0?'down':'flat';
+              inquiryData.avgNumber = res.monthavgxun;
+              inquiryData.historyMaxNumber = res.historymaxnumbermonth[0].number;
+              inquiryData.historyMaxNumberDate = res.historymaxnumbermonth[0].yeartime;
               inquiryData.avgTitle = "月平均询盘个数";
               inquiryData.historyTitle = "月历史峰值";
             }else{
               inquiryData.nowNumber = res.xunallnumber;
+              tongData.push(res.dayxuntrend);
               // 日维度
-              var tongData = groupColor([res.dayxuntrend]);
-              inquiryData.colorArr.push(tongData[0][0].color);
-              tongData[0].forEach(function(item,index){
-                item.key = item.date+" "+item.week;
-                item.value = item.xunnumber;
-                inquiryData.mainData.push(item);
-              });
+              inquiryData.lastNumber = res.lastxunallnumber;
+              inquiryData.nowLastNumber = Math.abs(res.xunallnumber - res.lastxunallnumber);
+              inquiryData.status = res.xunallnumber - res.lastxunallnumber>0?'up':res.xunallnumber - res.lastxunallnumber<0?'down':'flat';
+              inquiryData.avgNumber = res.avgxunnumber;
+              inquiryData.historyMaxNumber = res.historymaxnumberday[0].number;
+              inquiryData.historyMaxNumberDate = res.historymaxnumberday[0].xundate;
               inquiryData.avgTitle = "日平均询盘个数";
               inquiryData.historyTitle = "日历史峰值";
             }
+            tongData = groupColor(tongData);
+            inquiryData.colorArr.push(tongData[0][0].color);
+            tongData[0].forEach(function(item,index){
+              if($this.selectedData.isMonth){
+                item.key = item.date;
+              }else{
+                item.key = item.date+" "+item.week;
+              }
+              item.value = item.xunnumber;
+              if($this.selectedData.groupID.length==1){
+                $this.groupList.forEach(function(item1){
+                  if(item1.userid == $this.selectedData.groupID[0]){
+                    item.name = item1.departName+"-"+item1.groupName+"组";
+                  }
+                });
+              }else{
+                item.name = "已多选小组"
+              }
+              inquiryData.mainData.push(item);
+            });
             // 只有一个小组被选中的情况
             if($this.selectedData.groupID.length==1){
               $this.groupList.forEach(function(item){
                 if(item.userid == $this.selectedData.groupID[0]){
                   inquiryData.chartTitle = item.departName+"-"+item.groupName+"组询盘趋势";
-                  inquiryData.name = item.departName+"-"+item.groupName+"组总询盘";
+                  inquiryData.name = item.departName+"-"+item.groupName+"组询盘统计";
                 }
               });
-              if($this.selectedData.isMonth){
-                inquiryData.lastNumber = res.lastmonthxunallnumber;
-                inquiryData.nowLastNumber = Math.abs(res.monthxunallnumber - res.lastmonthxunallnumber);
-                inquiryData.status = res.monthxunallnumber - res.lastmonthxunallnumber>0?'up':res.monthxunallnumber - res.lastmonthxunallnumber<0?'down':'flat';
-                inquiryData.avgNumber = res.monthavgxun;
-                inquiryData.historyMaxNumber = res.historymaxnumbermonth[0].number;
-                inquiryData.historyMaxNumberDate = res.historymaxnumbermonth[0].yeartime;
-              }else{
-                inquiryData.lastNumber = res.lastxunallnumber;
-                inquiryData.nowLastNumber = Math.abs(res.xunallnumber - res.lastxunallnumber);
-                inquiryData.status = res.xunallnumber - res.lastxunallnumber>0?'up':res.xunallnumber - res.lastxunallnumber<0?'down':'flat';
-                inquiryData.avgNumber = res.avgxunnumber;
-                inquiryData.historyMaxNumber = res.historymaxnumberday[0].number;
-                inquiryData.historyMaxNumberDate = res.historymaxnumberday[0].xundate;
-              }
             }else{// 多小组被选中
-              inquiryData.chartTitle = "小组组合总询盘趋势";
-              inquiryData.name = "小组组合总询盘";
+              inquiryData.chartTitle = "小组组合询盘趋势";
+              inquiryData.name = "小组组合询盘统计";
               inquiryData.totalChart = [];
               var compareData = [];
               if($this.selectedData.isMonth){
@@ -1036,13 +1052,13 @@ export default {
           if($this.selectedData.groupID.length==1){
             $this.groupList.forEach(function(item){
               if(item.userid == $this.selectedData.groupID[0]){
-                dealScoreData.chartTitle = item.departName+"-"+item.groupName+"组成交积分时间对比趋势";
-                dealScoreData.name = item.departName+"-"+item.groupName+"组总成交积分";
+                dealScoreData.chartTitle = item.departName+"-"+item.groupName+"组成交积分日期对比趋势";
+                dealScoreData.name = item.departName+"-"+item.groupName+"组成交积分统计";
               }
             });
           }else{
-            dealScoreData.chartTitle = "小组组合总成交积分时间对比趋势";
-            dealScoreData.name = "小组组合总成交积分";
+            dealScoreData.chartTitle = "小组组合成交积分日期对比趋势";
+            dealScoreData.name = "小组组合成交积分统计";
           }
         }else{
           // 小组对比
@@ -1075,58 +1091,66 @@ export default {
                   itemChart.name=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
                 }
                 itemChart.key = item1.date;
-                itemChart.value = item1.score;
+                itemChart.value = Math.floor(item1.score*100)/100;
                 itemChart.color = item[0].color;
                 dealScoreData.mainData.push(itemChart);
               });
             });
-            if(!$this.judgeData.pluralGroupTeamSameCompare){
-              dealScoreData.name = "小组总成交积分";
-              dealScoreData.nowNumber = res.monthscoreallnumbercompare
-              dealScoreData.totalChart = [];
-              res.monthdepartscorepercentercompare.forEach(function(item){
-                var itemChart = {};
-                if(item.departname.indexOf("组")!=-1){
-                  itemChart.name = item.departname;
-                }else{
-                  itemChart.name = item.departname+"组";
-                }
-                itemChart.value = item.score;
-                dealScoreData.totalChart.push(itemChart);
-              });
-              dealScoreData.totalChart = singleArrColor(dealScoreData.totalChart);
-              dealScoreData.totalChart.sort(sortByDesc("value"));
-            }
+            dealScoreData.name = "小组成交积分统计";
+            dealScoreData.nowNumber = Math.floor(res.monthscoreallnumbercompare*100)/100;
+            dealScoreData.totalChart = [];
+            res.monthdepartscorepercentercompare.forEach(function(item){
+              var itemChart = {};
+              if(item.departname.indexOf("组")!=-1){
+                itemChart.name = item.departname;
+              }else{
+                itemChart.name = item.departname+"组";
+              }
+              itemChart.value = Math.floor(item.score*100)/100;
+              dealScoreData.totalChart.push(itemChart);
+            });
+            dealScoreData.totalChart = singleArrColor(dealScoreData.totalChart);
+            dealScoreData.totalChart.sort(sortByDesc("value"));
           }else{
             // 统计
             dealScoreData.mainData = [];
-            dealScoreData.nowNumber = res.monthscoreallnumber;
+            dealScoreData.colorArr = [];
+            dealScoreData.nowNumber = Math.floor(res.monthscoreallnumber*100)/100;
             var tongData = groupColor([res.monthscoretrend]);
             dealScoreData.colorArr.push(tongData[0][0].color);
             tongData[0].forEach(function(item,index){
               item.key = item.date;
-              item.value = item.score;
+              item.value = Math.floor(item.score*100)/100;
+              if($this.selectedData.groupID.length==1){
+                $this.groupList.forEach(function(item1){
+                  if(item1.userid == $this.selectedData.groupID[0]){
+                    item.name = item1.departName+"-"+item1.groupName+"组";
+                  }
+                });
+              }else{
+                item.name = "已多选小组"
+              }
               dealScoreData.mainData.push(item);
             });
+            dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumber*100)/100;
+            dealScoreData.nowLastNumber = Math.abs(Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100);
+            dealScoreData.status = Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100>0?'up':Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100<0?'down':'flat';
+            dealScoreData.avgNumber = Math.floor(res.monthscoreavgxun*100)/100;
+            dealScoreData.historyMaxNumber = Math.floor(res.historymaxscoremonth[0].score*100)/100;
+            dealScoreData.historyMaxNumberDate = res.historymaxscoremonth[0].yeartime;
+            dealScoreData.avgTitle = "月平均成交积分";
+            dealScoreData.historyTitle = "月历史峰值";
             // 只有一个小组被选中的情况
             if($this.selectedData.groupID.length==1){
               $this.groupList.forEach(function(item){
                 if(item.userid == $this.selectedData.groupID[0]){
-                  dealScoreData.chartTitle = item.departName+"-"+item.groupName+"组总成交积分趋势";
-                  dealScoreData.name = item.departName+"-"+item.groupName+"组总成交积分";
+                  dealScoreData.chartTitle = item.departName+"-"+item.groupName+"组成交积分趋势";
+                  dealScoreData.name = item.departName+"-"+item.groupName+"组成交积分统计";
                 }
               });
-              dealScoreData.lastNumber = res.lastmonthscoreallnumber;
-              dealScoreData.nowLastNumber = Math.abs(res.monthscoreallnumber - res.lastmonthscoreallnumber);
-              dealScoreData.status = res.monthscoreallnumber - res.lastmonthscoreallnumber>0?'up':res.monthscoreallnumber - res.lastmonthscoreallnumber<0?'down':'flat';
-              dealScoreData.avgNumber = res.monthscoreavgxun;
-              dealScoreData.historyMaxNumber = res.historymaxscoremonth[0].score;
-              dealScoreData.historyMaxNumberDate = res.historymaxscoremonth[0].yeartime;
-              dealScoreData.avgTitle = "月平均成交积分";
-              dealScoreData.historyTitle = "月历史峰值";
             }else{// 多小组被选中
-              dealScoreData.chartTitle = "小组组合总成交积分趋势";
-              dealScoreData.name = "小组组合总成交积分";
+              dealScoreData.chartTitle = "小组组合成交积分趋势";
+              dealScoreData.name = "小组组合成交积分统计";
               dealScoreData.totalChart = [];
               res.monthdepartscorepercenter.forEach(function(item){
                 var itemChart = {};
@@ -1135,7 +1159,7 @@ export default {
                 }else{
                   itemChart.name = item.departname+"组";
                 }
-                itemChart.value = item.score;
+                itemChart.value = Math.floor(item.score*100)/100;
                 dealScoreData.totalChart.push(itemChart);
               });
               dealScoreData.totalChart = singleArrColor(dealScoreData.totalChart);
@@ -1161,7 +1185,7 @@ export default {
       var $this = this;
       var inquiryMapData = null;
       // 询盘地图
-      if($this.selectedType.includes("inquiryRegion")){
+      if($this.selectedType.includes("inquiryCountRegion")){
         inquiryMapData = {};
         // 时间对比
         if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
@@ -1177,21 +1201,25 @@ export default {
           var itemMapChart0 = {};
           var itemMapChart1 = {};
           var title = "";
-          $this.groupList.forEach(function(item){
-            if(item.isOn){
-              title = item.departName+"-"+item.groupName+"组";
-            }
-          });
+          if($this.selectedData.groupID.length==1){
+            $this.groupList.forEach(function(item){
+              if(item.isOn){
+                title = item.departName+"-"+item.groupName+"组";
+              }
+            });
+          }else{
+            title = "已多选小组";
+          }
           var mapWidth = parseInt(($this.minWidth-38)/2*0.7)-60;
-          var mapHeight = parseInt(mapWidth*$this.cnRatio)+30;
-          itemMapChart0.title = title+"("+$this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1]+")";
+          var mapHeight = parseInt(mapWidth*$this.mapRatio)+30;
+          itemMapChart0.title = title+"（"+$this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1]+"）";
           itemMapChart0.mapData = mapData[0];
           itemMapChart0.randomStr = randomString(4);
           itemMapChart0.width = "50%";
           itemMapChart0.alias = "询盘个数";
           itemMapChart0.mapWidth = mapWidth;
           itemMapChart0.mapHeight = mapHeight;
-          itemMapChart1.title = title+"("+$this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1]+")";
+          itemMapChart1.title = title+"（"+$this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1]+"）";
           itemMapChart1.mapData = mapData[1];
           itemMapChart1.randomStr = randomString(4);
           itemMapChart1.width = "50%";
@@ -1219,8 +1247,8 @@ export default {
             }
           });
           itemMapChart1.topTenColor = TopTenColor(itemMapChart1.topTenData,itemMapChart1.colorData);
-          inquiryMapData.title = "询盘地图展示 （地区询盘排行榜）";
-          inquiryMapData.unit = "(单位：个)";
+          inquiryMapData.title = "询盘地图展示 - 地区排行榜";
+          inquiryMapData.unit = "（单位：个）";
           inquiryMapData.isMap = true;
           inquiryMapData.mapDataArr.push(itemMapChart0);
           inquiryMapData.mapDataArr.push(itemMapChart1);
@@ -1247,12 +1275,22 @@ export default {
               var itemChart = {};
               if(index == 0){
                 if($this.selectedData.groupID.length==1){
-                  itemChart.title=item[0].depart+"组";
+                  $this.groupList.forEach(function(item1){
+                    if(item1.isOn){
+                      itemChart.title = item1.departName+"-"+item1.groupName+"组";
+                    }
+                  });
                 }else{
                   itemChart.title="已多选小组"
                 }
               }else{
-                itemChart.title=item[0].depart+"组";
+                var selectContrastGroupList = [];
+                $this.contrastGroupList.forEach(function(item1){
+                  if(item1.isOn){
+                    selectContrastGroupList.push(item1);
+                  }
+                });
+                itemChart.title=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
               }
               itemChart.randomStr = randomString(4);
               itemChart.mapData = item;
@@ -1283,7 +1321,7 @@ export default {
                   }
                 }
               }
-              mapHeight = parseInt(mapWidth*$this.cnRatio)+30;
+              mapHeight = parseInt(mapWidth*$this.mapRatio)+30;
               itemChart.width = itemWidth;
               itemChart.mapWidth = mapWidth;
               itemChart.mapHeight = mapHeight;
@@ -1298,8 +1336,8 @@ export default {
               itemChart.topTenColor = TopTenColor(itemChart.topTenData,itemChart.colorData);
               inquiryMapData.mapDataArr.push(itemChart);
             });
-            inquiryMapData.title = "询盘地图展示 （地区询盘排行榜）";
-            inquiryMapData.unit = "(单位：个)";
+            inquiryMapData.title = "询盘地图展示 - 地区排行榜";
+            inquiryMapData.unit = "（单位：个）";
             inquiryMapData.isMap = true;
           }else{
             inquiryMapData = [];
@@ -1316,8 +1354,8 @@ export default {
             }
             itemMapData.randomStr = randomString(4);
             itemMapData.alias = "询盘个数";
-            itemMapData.title = "询盘地图展示 （地区询盘排行榜）";
-            itemMapData.unit = "(单位：个)";
+            itemMapData.title = "询盘地图展示 - 地区排行榜";
+            itemMapData.unit = "（单位：个）";
             itemMapData.isMap = true;
             itemMapData.topTitle = "热门地区TOP10";
             itemMapData.topTenData = [];
@@ -1330,7 +1368,7 @@ export default {
             var mapWidth = 0;
             var mapHeight = 0;
             mapWidth = parseInt(($this.minWidth-38)/2)-80-330;
-            mapHeight = parseInt(mapWidth*$this.cnRatio)+30;
+            mapHeight = parseInt(mapWidth*$this.mapRatio)+30;
             itemMapData.mapWidth = mapWidth;
             itemMapData.mapHeight = mapHeight;
             inquiryMapData.push(itemMapData);
@@ -1339,7 +1377,7 @@ export default {
       }
       // 成交积分地图
       var dealRegionMapData = null
-      if($this.selectedType.includes("dealRegion")){
+      if($this.selectedType.includes("dealScoreRegion")){
         dealRegionMapData = {};
         // 时间对比
         if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
@@ -1348,21 +1386,25 @@ export default {
           var itemMapChart0 = {};
           var itemMapChart1 = {};
           var title = "";
-          $this.groupList.forEach(function(item){
-            if(item.isOn){
-              title = item.departName+"-"+item.groupName+"组";
-            }
-          });
+          if($this.selectedData.groupID.length==1){
+            $this.groupList.forEach(function(item){
+              if(item.isOn){
+                title = item.departName+"-"+item.groupName+"组";
+              }
+            });
+          }else{
+            title = "已多选小组";
+          }
           var mapWidth = parseInt(($this.minWidth-38)/2*0.7)-60;
-          var mapHeight = parseInt(mapWidth*$this.cnRatio)+30;
-          itemMapChart0.title = title+"("+$this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1]+")";
+          var mapHeight = parseInt(mapWidth*$this.mapRatio)+30;
+          itemMapChart0.title = title+"（"+$this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1]+"）";
           itemMapChart0.mapData = mapData[0];
           itemMapChart0.randomStr = randomString(4);
           itemMapChart0.width = "50%";
           itemMapChart0.alias = "成交积分";
           itemMapChart0.mapWidth = mapWidth;
           itemMapChart0.mapHeight = mapHeight;
-          itemMapChart1.title = title+"("+$this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1]+")";
+          itemMapChart1.title = title+"("+$this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1]+")";
           itemMapChart1.mapData = mapData[1];
           itemMapChart1.randomStr = randomString(4);
           itemMapChart1.width = "50%";
@@ -1390,8 +1432,8 @@ export default {
             }
           });
           itemMapChart1.topTenColor = TopTenColor(itemMapChart1.topTenData,itemMapChart1.colorData);
-          dealRegionMapData.title = "成交积分地图展示 （地区成交积分排行榜）";
-          dealRegionMapData.unit = "(单位：分)";
+          dealRegionMapData.title = "成交积分地图展示 - 地区排行榜";
+          dealRegionMapData.unit = "（单位：分）";
           dealRegionMapData.isMap = true;
           dealRegionMapData.mapDataArr.push(itemMapChart0);
           dealRegionMapData.mapDataArr.push(itemMapChart1);
@@ -1410,12 +1452,22 @@ export default {
               var itemChart = {};
               if(index == 0){
                 if($this.selectedData.groupID.length==1){
-                  itemChart.title=item[0].depart+"组";
+                  $this.groupList.forEach(function(item1){
+                    if(item1.isOn){
+                      itemChart.title = item1.departName+"-"+item1.groupName+"组";
+                    }
+                  });
                 }else{
                   itemChart.title="已多选小组"
                 }
               }else{
-                itemChart.title=item[0].depart+"组";
+                var selectContrastGroupList = [];
+                $this.contrastGroupList.forEach(function(item1){
+                  if(item1.isOn){
+                    selectContrastGroupList.push(item1);
+                  }
+                });
+                itemChart.title=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
               }
               itemChart.randomStr = randomString(4);
               itemChart.mapData = item;
@@ -1446,7 +1498,7 @@ export default {
                   }
                 }
               }
-              mapHeight = parseInt(mapWidth*$this.cnRatio)+30;
+              mapHeight = parseInt(mapWidth*$this.mapRatio)+30;
               itemChart.width = itemWidth;
               itemChart.mapWidth = mapWidth;
               itemChart.mapHeight = mapHeight;
@@ -1461,8 +1513,8 @@ export default {
               itemChart.topTenColor = TopTenColor(itemChart.topTenData,itemChart.colorData);
               dealRegionMapData.mapDataArr.push(itemChart);
             });
-            dealRegionMapData.title = "成交积分地图展示 （地区成交积分排行榜）";
-            dealRegionMapData.unit = "(单位：分)";
+            dealRegionMapData.title = "成交积分地图展示 - 地区排行榜";
+            dealRegionMapData.unit = "（单位：分）";
             dealRegionMapData.isMap = true;
           }else{
             dealRegionMapData = [];
@@ -1471,8 +1523,8 @@ export default {
             itemMapData.mapData = res.provincebuymapmonth;
             itemMapData.colorData = MapInterval(res.provincebuymapmonth[0].number);
             itemMapData.randomStr = randomString(4);
-            itemMapData.title = "成交积分地图展示 （地区成交积分排行榜）";
-            itemMapData.unit = "(单位：分)";
+            itemMapData.title = "成交积分地图展示 - 地区排行榜";
+            itemMapData.unit = "（单位：分）";
             itemMapData.alias = "成交积分";
             itemMapData.topTitle = "热门地区TOP10";
             itemMapData.topTenData = [];
@@ -1485,7 +1537,7 @@ export default {
             var mapWidth = 0;
             var mapHeight = 0;
             mapWidth = parseInt(($this.minWidth-38)/2)-80-330;
-            mapHeight = parseInt(mapWidth*$this.cnRatio)+30;
+            mapHeight = parseInt(mapWidth*$this.mapRatio)+30;
             itemMapData.mapWidth = mapWidth;
             itemMapData.mapHeight = mapHeight;
             itemMapData.isMap = true;
@@ -1519,16 +1571,20 @@ export default {
             productData.itemData.push(itemProduct);
           });
           var title = "";
-          $this.groupList.forEach(function(item){
-            if(item.isOn){
-              title = item.departName+"-"+item.groupName+"组";
-            }
-          });
+          if($this.selectedData.groupID.length==1){
+            $this.groupList.forEach(function(item){
+              if(item.isOn){
+                title = item.departName+"-"+item.groupName+"组";
+              }
+            });
+          }else{
+            title = "已多选小组";
+          }
           productData.itemData.forEach(function(item,index){
             if(index==0){
-              item.title = title+"("+$this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1]+")";
+              item.title = title+"（"+$this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1]+"）";
             }else{
-              item.title = title+"("+$this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1]+")";
+              item.title = title+"（"+$this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1]+"）";
             }
           })
           productData.title = "产品分析";
@@ -1752,7 +1808,7 @@ export default {
     dateCompare(dataArr,key){
       var $this = this;
       // 默认时间数据条数多于对比时间数据条数
-      var tongData = groupColor(dataArr);
+      var tongData = groupDateColor(dataArr);
       var backData = {};
       backData.mainData = [];
       backData.colorArr = [];
@@ -1765,17 +1821,29 @@ export default {
           var itemChart1 = {};
           if(tongData[1][i]){
             itemChart0.key = tongData[0][i].date+"&"+tongData[1][i].date;
-            itemChart0.name = $this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1];
+            itemChart0.name = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
             itemChart1.key = tongData[0][i].date+"&"+tongData[1][i].date;
-            itemChart1.value = tongData[1][i][key];
-            itemChart1.name = $this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1];
-            itemChart1.color = tongData[1][i].color;
+            itemChart1.name = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1];
+            if(key == "score"||key=="money"){
+              itemChart1.value = Math.floor(tongData[1][i][key]*100)/100;
+            }else{
+              itemChart1.value = tongData[1][i][key];
+            }
+            itemChart1.color = tongData[1][0].color;
           }else{
             itemChart0.key = tongData[0][i].date+"&";
-            itemChart0.name = $this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1];
+            itemChart0.name = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
+            itemChart1.key = tongData[0][i].date+"&";
+            itemChart1.name = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1];
+            itemChart1.value = null;
+            itemChart1.color = tongData[1][0].color;
           }
-          itemChart0.value = tongData[0][i][key];
-          itemChart0.color = tongData[0][i].color;
+          if(key == "score"||key=="money"){
+            itemChart0.value = Math.floor(tongData[0][i][key]*100)/100;
+          }else{
+            itemChart0.value = tongData[0][i][key];
+          }
+          itemChart0.color = tongData[0][0].color;
           backData.mainData.push(itemChart0);
           backData.mainData.push(itemChart1);
         }
@@ -1785,17 +1853,29 @@ export default {
           var itemChart1 = {};
           if(tongData[0][i]){
             itemChart1.key = tongData[0][i].date+"&"+tongData[1][i].date;
+            itemChart1.name = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1];
             itemChart0.key = tongData[0][i].date+"&"+tongData[1][i].date;
-            itemChart1.name = $this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1];
-            itemChart0.value = tongData[0][i][key];
-            itemChart0.color = tongData[0][i].color;
-            itemChart0.name = $this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1];
+            itemChart0.name = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
+            if(key == "score"||key=="money"){
+              itemChart0.value = Math.floor(tongData[0][i][key]*100)/100;
+            }else{
+              itemChart0.value = tongData[0][i][key];
+            }
+            itemChart0.color = tongData[0][0].color;
           }else{
-            itemChart1.key = "&"+tongData[0][i].date;
-            itemChart1.name = $this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1];
+            itemChart1.key = "&"+tongData[1][i].date;
+            itemChart1.name = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1];
+            itemChart0.key = "&"+tongData[1][i].date;
+            itemChart0.name = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
+            itemChart0.value = null;
+            itemChart0.color = tongData[0][0].color;
           }
-          itemChart1.value = tongData[1][i][key];
-          itemChart1.color = tongData[1][i].color;
+          if(key == "score"||key=="money"){
+            itemChart1.value = Math.floor(tongData[1][i][key]*100)/100;
+          }else{
+            itemChart1.value = tongData[1][i][key];
+          }
+          itemChart1.color = tongData[1][0].color;
           backData.mainData.push(itemChart0);
           backData.mainData.push(itemChart1);
         }
@@ -1812,9 +1892,13 @@ export default {
           }
         });
       });
+      if(key == "score"||key == "money"){
+        backData.dateCompareData.baseValue = Math.floor(backData.dateCompareData.baseValue*100)/100;
+        backData.dateCompareData.compareValue = Math.floor(backData.dateCompareData.compareValue*100)/100;
+      }
       // 时间对比数据
-      backData.dateCompareData.baseDate = $this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1];
-      backData.dateCompareData.compareDate = $this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1]
+      backData.dateCompareData.baseDate = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
+      backData.dateCompareData.compareDate = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1]
       if(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue>0){
         backData.dateCompareData.status = "up";
         backData.dateCompareData.baseWidth = "100%";

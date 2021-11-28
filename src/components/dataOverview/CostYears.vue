@@ -4,7 +4,7 @@
       <div class="title-view">
         <div class="title">{{language}}年度总成本</div>
         <div class="unit">（单位：万）</div>
-        <div class="more" @click="goPage">更多分析 ></div>
+        <div class="more" @click="goPage">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
       </div>
       <div class="contrast-view">
         <div class="redtext">{{totalXpanYears}}</div>
@@ -53,6 +53,12 @@ export default {
         default:function(){
           return []
         }
+      },
+      departList:{
+        type:Array,
+        default:function(){
+          return []
+        }
       }
     },
     watch:{
@@ -81,10 +87,28 @@ export default {
     },
     methods:{
       goPage(){
+        var newDate = new Date();
+        var newYear = newDate.getFullYear();
+        var startTime = newYear + "/01";
+        var endTime = newYear + "/12";
+        console.log(this.departList,"部门数据");
+        var baseDepart = "";
+        var contrastDepartArr = [];
+        this.departList.forEach(function(item,index){
+          if(index == 0){
+            baseDepart = item.id;
+          }else{
+            contrastDepartArr.push(item.id);
+          }
+        });
+        var contrastDepart = "";
+        if(contrastDepartArr.length>0){
+          contrastDepart = contrastDepartArr.join(",");
+        }
        if(this.language == '中文'){
-         this.$router.push('/Home/CH/sectorAnalysis')
+         this.$router.push({path:'/Home/CH/sectorAnalysis',query:{type:3,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
        }else{
-         this.$router.push('/Home/EN/sectorAnalysis')
+         this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:3,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
        }
       },
       //chart top
@@ -274,6 +298,13 @@ export default {
       color: #a1a1a1;
       float: right;
       cursor: pointer;
+      position: relative;
+      top: -1px;
+      .svg-i{
+        font-size: 10px;
+        color: #a1a1a1;
+        vertical-align: 1px;
+      }
     }
   }
   .contrast-view{
@@ -281,11 +312,10 @@ export default {
     margin-bottom: 15px;
     .redtext{
       float: left;
-      font-size: 28px;
+      font-size: 26px;
       color: #eb3737;
       font-weight: bold;
       margin-right: 15px;
-      line-height: 40px;
     }
     .redright{
       float: left;

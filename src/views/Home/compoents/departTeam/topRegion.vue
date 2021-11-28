@@ -56,7 +56,7 @@ export default {
         barWidthRatio: 0.4,
         height: $this.barHeight,
         legend: false,
-        appendPadding:[0, 50, 20, 30],
+        appendPadding:[0, 50, 20, 0],
         xAxis:false,
         yAxis:{
           line:null,
@@ -77,7 +77,7 @@ export default {
         },
         meta: {
           name: {
-            alias: '国家',
+            alias: '地区',
           },
           number: {
             alias: $this.aliasData,

@@ -4,7 +4,7 @@
       <div class="title-view">
         <div class="title">{{language=="中文"?'中文年度热门地区TOP5':'英文年度热门国家TOP5'}}</div>
         <div class="unit">{{type == 1?'（单位：分）':'（单位：个）'}}</div>
-        <div class="more" @click="goPage">更多分析 ></div>
+        <div class="more" @click="goPage">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
         <div class="btn-group">
           <div @click="changeType(0)" class="btn-item" :class="type == 0?'active':''">询盘</div>
           <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">成交积分</div>
@@ -672,6 +672,13 @@ export default {
       color: #a1a1a1;
       float: right;
       cursor: pointer;
+      position: relative;
+      top: -1px;
+      .svg-i{
+        font-size: 10px;
+        color: #a1a1a1;
+        vertical-align: 1px;
+      }
     }
     .btn-group{
       float: right;
@@ -700,11 +707,10 @@ export default {
     margin-bottom: 15px;
     .redtext{
       float: left;
-      font-size: 28px;
+      font-size: 26px;
       color: #eb3737;
       font-weight: bold;
       margin-right: 15px;
-      line-height: 40px;
     }
     .redright{
       float: left;

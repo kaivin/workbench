@@ -416,7 +416,7 @@ export const pickerRangeOptions = {
       ele.className = ele.className.replace(reg, ' ')
     }
   }
-
+// 随机数
 export function randomString(len) {
 　　len = len || 32;
 　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
@@ -439,9 +439,9 @@ export function sortByDesc(i){
     return b[i] - a[i]
   }
 }
-// 确定图表颜色
+// 部门、小组图表主题色添加
 export function groupColor(groupArr){
-  var colorArr = ["#5f52a0","#ff5b5b","#59cab6","#679aff","#ff8628","#FF4500","#1AAF8B","#406C85","#F6BD16","#B40F0F","#2FB8FC","#4435FF","#FF5CA2","#BBE800","#FE8A26"]
+  var colorArr = ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822"]
   groupArr.forEach(function(item,index){
     item.forEach(function(item1,index1){
       item1.color = colorArr[index]
@@ -449,11 +449,43 @@ export function groupColor(groupArr){
   });
   return groupArr;
 }
-// 确定图表颜色
+// 日期对比情况下的两个数组的图表主题色添加
+export function groupDateColor(groupArr){
+  var colorArr = ["#9bcdda","#fad9a3"]
+  groupArr.forEach(function(item,index){
+    item.forEach(function(item1,index1){
+      item1.color = colorArr[index]
+    })
+  });
+  return groupArr;
+}
+// 单一数组的图表主题色添加
 export function singleArrColor(dataArr){
-  var colorArr = ["#5f52a0","#ff5b5b","#59cab6","#679aff","#ff8628","#FF4500","#1AAF8B","#406C85","#F6BD16","#B40F0F","#2FB8FC","#4435FF","#FF5CA2","#BBE800","#FE8A26"]
+  var colorArr = ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822"]
   dataArr.forEach(function(item,index){
     item.color = colorArr[index]
   });
   return dataArr;
+}
+// 日期连接符转换方法
+export function formatDate(date,oldVal,newVal){
+  var dateStr = "";
+  var timeStr = "";
+  if(date.indexOf(" ")!=-1){
+    dateStr = date.split(" ")[0];
+    timeStr = date.split(" ")[1];
+  }else{
+    dateStr = date;
+  }
+  var dateArr = dateStr.split(oldVal);
+  var newDate = "";
+  if(dateArr.length==2){
+    newDate = dateArr[0]+newVal+dateArr[1];
+  }else{
+    newDate = dateArr[0]+newVal+dateArr[1]+newVal+dateArr[2];
+  }
+  if(timeStr!=''){
+    newDate = newDate + " " + timeStr;
+  }
+  return newDate;
 }

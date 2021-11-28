@@ -8,6 +8,7 @@
                language="中文"
                :yeartong="yeartong"
                :yearcount="yearcount"
+               :depart-list="departList"
                ></XpanYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12">
@@ -29,6 +30,7 @@
                language="中文"
                :yearsmoneytong="yearsmoneytong"
                :yeardeaprtscore="yeardeaprtscore"
+               :depart-list="departList"
                ></CostYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="12" :lg="24" >
@@ -36,6 +38,7 @@
                language="中文"
                :provincecountmap="provincecountmap"
                :provincescoretmap="provincescoretmap"
+               :depart-list="departList"
                ></HotArea>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12">
@@ -78,7 +81,8 @@ export default {
       yearusertop5:[],//个人年度总询盘个数 TOP5
       yearuserscoretop5:[],//年度积分top5
       provincecountmap:[],//询盘地图 
-      provincescoretmap:[]//成交地图
+      provincescoretmap:[],//成交地图
+      departList:[],
     };
   },
   components:{
@@ -96,6 +100,7 @@ export default {
   methods: {
     getPageData(){
       getChinacountnew().then(res=>{
+        console.log(res,"默认数据");
         if(res.status){
           this.yeartong = res.yeartong;
           this.yearcount = res.yearcount;
@@ -112,6 +117,7 @@ export default {
           this.yearuserscoretop5 = res.yearuserscoretop5;
           this.provincecountmap =  res.provincecountmap;
           this.provincescoretmap = res.provincescoretmap;
+          this.departList = res.readart;
         }
       })
     }

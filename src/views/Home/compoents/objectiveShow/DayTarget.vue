@@ -114,9 +114,9 @@ export default {
                 type: 'text',
                 position: [k, values[i].number],
                 content: `${values[i].number}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#89b2ff' },
+                style: { textAlign: 'center', fontSize: 12, fill: '#ebaa46' },
                 offsetY: -10,
-                offsetX: -30
+                offsetX: -27
               });
             }
             if(k=="电商一部" &&　values[i].name == "搜索询盘"){
@@ -124,9 +124,9 @@ export default {
                 type: 'text',
                 position: [k, Dep1DayNum],
                 content: `${Dep1DayNum}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#89b2ff' },
+                style: { textAlign: 'center', fontSize: 12, fill: '#ebaa46' },
                 offsetY: -10,
-                offsetX: -30
+                offsetX: -27
               });
               if(Dep1DayNum - values[i].number > 10){
                 annotations.push({
@@ -135,7 +135,7 @@ export default {
                   content: `${values[i].number}`,
                   style: { textAlign: 'center', fontSize: 12, fill: '#fff' },
                   offsetY: -10,
-                  offsetX: -30
+                  offsetX: -27
                 });
               }
               
@@ -145,7 +145,7 @@ export default {
                 type: 'text',
                 position: [k, values[i].number],
                 content: `${values[i].number}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#cde1ff' },
+                style: { textAlign: 'center', fontSize: 12, fill: '#225ae5' },
                 offsetY: -10,
               });
             }
@@ -154,9 +154,9 @@ export default {
                 type: 'text',
                 position: [k, values[i].number],
                 content: `${values[i].number}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#fbd6cf' },
+                style: { textAlign: 'center', fontSize: 12, fill: '#f47070' },
                 offsetY: -10,
-                offsetX: 30
+                offsetX: 27
               });
             }
           }
@@ -196,15 +196,21 @@ export default {
                   xField: 'departname',
                   yField: 'number',
                   isGroup: true,
-                  color: [ '#fac554', '#89b2ff', '#cde1ff','#fbd6cf'],
-                  minColumnWidth: 24,
-                  maxColumnWidth: 24,
+                  color: [ '#ebaa46', '#3ebea7', '#225ae5','#f47070'],
+                  minColumnWidth: 22,
+                  maxColumnWidth: 22,
                   legend: false,
                   dodgePadding: 6,
                   isStack: true,
                   seriesField: 'name',
                   groupField: 'stack',
                   yAxis: {
+                    label:{
+                      style:{
+                        fill:"#111111",
+                        opacity:1,
+                      }
+                    },
                     grid: {
                       line: {
                         style: {
@@ -232,6 +238,6 @@ export default {
 
 <style>
   #dayTarget{
-    height: 250px;
+    height: 200px;
   }
 </style>

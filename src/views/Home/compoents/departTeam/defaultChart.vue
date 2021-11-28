@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="item-row default-chart flex-box">
-    <div class="item-column flex-box flex-column" v-if="isDefault||parentData.singleGroupStatic||parentData.singleGroupDateCompare||parentData.singleGroupTeamCompare||parentData.pluralGroupStatic||parentData.pluralGroupDateCompare||(parentData.pluralGroupTeamCompare&&!parentData.pluralGroupTeamSameCompare)">
+    <div class="item-column flex-box flex-column">
       <div class="column-header flex-box">
         <div class="flex-content txt-header">
           <strong>{{currentData.name}}</strong><span>{{currentData.unit}}</span>
@@ -14,10 +14,10 @@
           <div class="total-num">
             <div class="txt-num">
             <strong>{{currentData.nowNumber}}</strong>
-            <span v-if="parentData.singleGroupStatic||(isDefault&&currentData.totalChart.length==1)"><em>环比上年同期</em><b v-bind:class="currentData.status"><i class="svg-i"><svg-icon :icon-class="'data-'+currentData.status" /></i>{{currentData.nowLastNumber}}</b></span></div>
+            <span><em>环比上年同期</em><b v-bind:class="currentData.status"><i class="svg-i"><svg-icon :icon-class="'data-'+currentData.status" /></i>{{currentData.nowLastNumber}}</b></span></div>
             <div class="txt-font">{{currentData.totalTitle}}</div>
           </div>
-          <div class="other-num" v-if="parentData.singleGroupStatic||(isDefault&&currentData.totalChart.length==1)">
+          <div class="other-num">
             <div class="item-num">
               <dl>
                 <dt>{{currentData.avgNumber}}</dt>
@@ -32,7 +32,7 @@
             </div>
           </div>
         </div>
-        <template v-if="isDefault||parentData.singleGroupTeamCompare||parentData.pluralGroupStatic||(parentData.pluralGroupTeamCompare&&!parentData.pluralGroupTeamSameCompare)">
+        <template v-if="parentData.singleGroupTeamCompare||parentData.pluralGroupStatic||parentData.pluralGroupTeamCompare||isDefault">
           <div class="item-tab pie-panel" v-show="currentType=='pie'">
             <div class="pie-chart" :id="'pie-'+currentData.randomStr"></div>
           </div>
@@ -41,20 +41,20 @@
           </div>
         </template>
         <div class="item-tab date-panel" v-if="currentType=='date'&&(parentData.singleGroupDateCompare||parentData.pluralGroupDateCompare)">
-          <dl class="item-range" :style="'width:'+currentData.dateCompareData.baseWidth=='0%'?'50%':currentData.dateCompareData.baseWidth">
+          <dl class="item-range" :style="{width:currentData.dateCompareData.baseWidth=='0%'?'50%':currentData.dateCompareData.baseWidth}">
             <dt class="flex-box"><span class="flex-content">{{currentData.dateCompareData.baseDate}}</span><strong>{{currentData.dateCompareData.baseValue}}</strong></dt>
-            <dd :style="'width:'+currentData.dateCompareData.baseWidth=='0%'?'1%':'100%'"></dd>
+            <dd :style="{width:currentData.dateCompareData.baseWidth=='0%'?'1%':'100%'}"></dd>
           </dl>
-          <dl class="item-range" :style="'width:'+currentData.dateCompareData.compareWidth=='0%'?'50%':currentData.dateCompareData.compareWidth">
+          <dl class="item-range" :style="{width:+currentData.dateCompareData.compareWidth=='0%'?'50%':currentData.dateCompareData.compareWidth}">
             <dt class="flex-box"><span class="flex-content">{{currentData.dateCompareData.compareDate}}</span><strong>{{currentData.dateCompareData.compareValue}}</strong></dt>
-            <dd :style="'width:'+currentData.dateCompareData.baseWidth=='0%'?'1%':'100%'"></dd>
+            <dd :style="{width:currentData.dateCompareData.compareWidth=='0%'?'1%':'100%'}"></dd>
           </dl>
           <div class="num-panel">
             <div class="item-num">
               <div class="num-font">
                 <span class="icon"><i class="svg-i"><svg-icon icon-class="home_num" /></i></span>
                 <span class="txt-font">
-                  <b>同比增长量</b>
+                  <b>增长量</b>
                   <strong :class="currentData.dateCompareData.status">{{currentData.dateCompareData.compareNumber}}<i class="svg-i"><svg-icon :icon-class="'data-'+currentData.dateCompareData.status" /></i></strong>
                 </span>
               </div>
@@ -63,7 +63,7 @@
               <div class="num-font">
                 <span class="icon"><i class="svg-i"><svg-icon icon-class="home_rate" /></i></span>
                 <span class="txt-font">
-                  <b>同比增长率</b>
+                  <b>增长率</b>
                   <strong :class="currentData.dateCompareData.status">{{currentData.dateCompareData.compareRate}}<i class="svg-i"><svg-icon :icon-class="'data-'+currentData.dateCompareData.status" /></i></strong>
                 </span>
               </div>
@@ -178,6 +178,16 @@ export default {
     // 排行图例
     drawColumnChart(){
       var $this = this;
+      var aliasName = "";
+      if($this.currentData.name.indexOf('询盘')!=-1){
+        aliasName = "询盘个数";
+      }
+      if($this.currentData.name.indexOf('成交')!=-1&&$this.currentData.name.indexOf('个数')!=-1){
+        aliasName = "成交个数";
+      }
+      if($this.currentData.name.indexOf('积分')!=-1){
+        aliasName = "积分";
+      }
       if(!$this.columnPlot){
         const columnPlot = new Column('column-'+$this.currentData.randomStr, {
           appendPadding: [20,30, 10],
@@ -240,7 +250,7 @@ export default {
               alias: '小组',
             },
             value: {
-              alias: '询盘个数',
+              alias: aliasName,
             },
           },
         });
@@ -255,6 +265,13 @@ export default {
       $this.currentData.totalChart.forEach(function(item){
         colorArr.push(item.color);
       });
+      var aliasName = "";
+      if($this.currentData.name.indexOf('询盘')!=-1||($this.currentData.name.indexOf('成交')!=-1&&$this.currentData.name.indexOf('个数')!=-1)){
+        aliasName = "个数";
+      }
+      if($this.currentData.name.indexOf('积分')!=-1){
+        aliasName = "积分";
+      }
       if(!$this.piePlot){
         const piePlot = new Pie('pie-'+$this.currentData.randomStr, {
           appendPadding: 10,
@@ -276,10 +293,10 @@ export default {
             type:'spider',
             labelHeight: 28,
             style:{
-              fill:'#bfbfbf',
+              fill:'#333',
             },
             content:(data)=>{
-              return '个数：'+data.value+'\n占比：'+ Math.floor(data.percent * 10000) / 100+"%";
+              return '占比：'+ Math.floor(data.percent * 10000) / 100+"%";//aliasName+'：'+data.value+'\n
             } ,
           },
           legend:{
@@ -305,17 +322,17 @@ export default {
     drawAreaChart(){
       var $this = this;
       console.log($this.currentData,"面积数据")
+      var isDate = false;
+      if($this.currentData.chartTitle.indexOf('日期')!=-1){
+        isDate = true;
+      }
       if(!$this.areaPlot&&$this.currentData){
-        var isPluralLine = false;
-        if($this.parentData.pluralGroupDateCompare||$this.parentData.pluralGroupTeamCompare||$this.parentData.singleGroupDateCompare||$this.parentData.singleGroupTeamCompare||$this.isDefault){
-          isPluralLine = true;
-        }
         const areaPlot = new Area('area-'+$this.currentData.randomStr, {
-          appendPadding: isPluralLine?[30,30,20]:[60,30,20],
+          appendPadding:[30,30,20],
           data:$this.currentData.mainData,
           xField: 'key',
           yField: 'value',
-          seriesField:isPluralLine?'name':'',
+          seriesField:'name',
           isStack:false,
           color:$this.currentData.colorArr.length==1?$this.currentData.colorArr[0]:$this.currentData.colorArr,
           yAxis:{
@@ -332,7 +349,7 @@ export default {
             },
           },
           xAxis: {
-            tickCount:15,
+            tickCount:isDate?8:15,
             label: {
               // 数值格式化为千分位
               formatter: (v) => {

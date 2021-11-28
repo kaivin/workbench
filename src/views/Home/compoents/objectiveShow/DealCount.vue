@@ -42,7 +42,7 @@
                     </div>
                 </el-tooltip>
                 <div class="departScore" :class="item.a_number > 0 ? 'goodScore' : '' ">
-                    <span>×{{item.a_number}}个</span>
+                    <span v-if="item.a_number > 0">×{{item.a_number}}个</span>
                 </div>
             </li>
 

@@ -47,7 +47,7 @@ export default {
           colorField: 'name',
           color:$this.colorData,
           radius: 1,
-          innerRadius: 0.64,
+          innerRadius: 0.55,
           width: 280,
           height: 340,
           legend:false,
@@ -58,7 +58,15 @@ export default {
               duration: 500,  // 动画执行时间
             },
           },
-          label: false,
+          label: {
+            type: 'inner',
+            offset: '-47%',
+            content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+            style: {
+              fontSize: 14,
+              textAlign: 'center',
+            },
+          },
           state:{
             active: {
               style: {

@@ -4,7 +4,7 @@
       <div class="title-view">
         <div class="title">个人年度总询盘个数 TOP5</div>
         <div class="unit">（单位：个）</div>
-        <div class="more" @click="goPage">更多分析 ></div>
+        <div class="more" @click="goPage">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
       </div>
       <ul class="top-view" ref="topul">
         <li class="top-item" v-for="(item,index) in topdata" :key="index">
@@ -124,6 +124,13 @@ export default {
       color: #a1a1a1;
       float: right;
       cursor: pointer;
+      position: relative;
+      top: -1px;
+      .svg-i{
+        font-size: 10px;
+        color: #a1a1a1;
+        vertical-align: 1px;
+      }
     }
   }
   .contrast-view{
@@ -131,11 +138,10 @@ export default {
     margin-bottom: 15px;
     .redtext{
       float: left;
-      font-size: 28px;
+      font-size: 26px;
       color: #eb3737;
       font-weight: bold;
       margin-right: 15px;
-      line-height: 40px;
     }
     .redright{
       float: left;
