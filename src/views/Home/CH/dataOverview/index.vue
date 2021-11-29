@@ -8,7 +8,7 @@
                language="中文"
                :yeartong="yeartong"
                :yearcount="yearcount"
-               :depart-list="departList"
+               :departList="departList"
                ></XpanYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12">
@@ -16,6 +16,7 @@
                language="中文"
                :yearscoretong="yearscoretong"
                :yeardeaprtscore="yeardeaprtscore"
+               :departList="departList"
                ></ScoreYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12">
@@ -23,6 +24,7 @@
                language="中文"
                :yearsanumbertong="yearsanumbertong"
                :yeardeaprtscore="yeardeaprtscore"
+               :departList="departList"
                ></DealYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12">
@@ -30,7 +32,7 @@
                language="中文"
                :yearsmoneytong="yearsmoneytong"
                :yeardeaprtscore="yeardeaprtscore"
-               :depart-list="departList"
+               :departList="departList"
                ></CostYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="12" :lg="24" >
@@ -38,7 +40,7 @@
                language="中文"
                :provincecountmap="provincecountmap"
                :provincescoretmap="provincescoretmap"
-               :depart-list="departList"
+               :departList="departList"
                ></HotArea>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12">

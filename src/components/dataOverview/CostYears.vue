@@ -28,7 +28,7 @@
 
 <script>
 import { Column,Area,Line} from '@antv/g2plot';
-
+import {parseTime} from "@/utils";
 export default {
     name:'demo',
     data(){
@@ -91,7 +91,7 @@ export default {
         var newYear = newDate.getFullYear();
         var startTime = newYear + "/01";
         var endTime = newYear + "/12";
-        console.log(this.departList,"部门数据");
+       
         var baseDepart = "";
         var contrastDepartArr = [];
         this.departList.forEach(function(item,index){
@@ -156,6 +156,7 @@ export default {
             // },
             lineStyle:{
               fill:'#f7d996',
+              cursor: 'pointer'
             },
             meta: {
               money: {
@@ -163,7 +164,30 @@ export default {
               },
             },
           });
-
+          /* chartTop.on('element:click', (args) => {
+            let data = args.data.data;
+            let month = data.date.slice(0,2);
+            let startTime = parseTime(new Date(),'{y}') + '/' +  month + '/01';
+            let endTime = parseTime(new Date(),'{y}') + '/' + month + '/' + $this.getMonthDays(parseTime(new Date(),'{y}'),month);
+            var baseDepart = "";
+            var contrastDepartArr = [];
+            $this.departList.forEach(function(item,index){
+              if(index == 0){
+                baseDepart = item.id;
+              }else{
+                contrastDepartArr.push(item.id);
+              }
+            });
+            var contrastDepart = "";
+            if(contrastDepartArr.length>0){
+              contrastDepart = contrastDepartArr.join(",");
+            }
+            if($this.language == '中文'){
+              $this.$router.push({path:'/Home/CH/sectorAnalysis',query:{type:3,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+            }else{
+              $this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:3,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+            }
+          }); */
           $this.chartTop = chartTop;
           chartTop.render();
         
@@ -182,6 +206,10 @@ export default {
           this.isUp = false;
           this.isUpNum = oldXpanYears - newXpanYears
         }
+      },
+      getMonthDays(year,month){
+        var thisDate = new Date(year,month,0); //当天数为0 js自动处理为上一月的最后一天
+        return thisDate.getDate();
       },
       setChartBottom(val){
           var $this = this;
@@ -255,6 +283,18 @@ export default {
             },
             columnStyle:{
               fill:'l(270) 0:#d4e3f9  1:#b9d1f6',
+              cursor: 'pointer'
+            }
+          });
+          chartBot.on('element:click', (args) => {
+            let baseDepart = args.data.data.id;
+            let contrastDepart = '';
+            let startTime = parseTime(new Date(),'{y}') + '/01';
+            let endTime = parseTime(new Date(),'{y}') + '/12' 
+            if($this.language == '中文'){
+              $this.$router.push({path:'/Home/CH/sectorAnalysis',query:{type:3,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+            }else{
+              $this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:3,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
             }
           });
           $this.chartBot = chartBot;

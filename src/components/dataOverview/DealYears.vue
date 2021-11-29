@@ -220,12 +220,22 @@ export default {
             }
           },
           tooltip:{
-            show:false,
+            show:true,
             trigger:'axis',
-            
+            backgroundColor:'#fff',
+            extraCssText: 'box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);',
+            formatter: function (params) {
+                  return `<div class="toolDiv">
+                    <div class="title">${params[0].name}</div>
+                    <div class="bar clearfix">
+                      <span class="icon"></span>
+                      <span class="name">数量：</span>
+                      <div class="num">${params[0].data}</div>
+                    </div>
+                  </div>`
+            },
             textStyle:{
               fontSize:12,
-              
             }
           },
           grid:{
@@ -273,7 +283,36 @@ export default {
     }
 }
 </script>
-
+<style lang="scss">
+.toolDiv{
+  .title{
+    font-size: 12px;
+    color: rgb(89, 89, 89);
+    margin-bottom: 8px;
+  }
+  .bar{
+    .icon{
+      float: left;
+      background: rgb(91, 143, 249);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: block;
+      margin-right: 8px;
+      margin-top: 5px;
+    }
+    .name{
+      color: rgb(89, 89, 89);
+      float: left;
+    }
+    .num{
+      float: right;
+      margin-left: 30px;
+      color: rgb(89, 89, 89);
+    }
+  }
+}
+</style>
 <style scoped lang="scss">
 .hxpage{
   background: #fff;

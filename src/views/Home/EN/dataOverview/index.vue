@@ -8,6 +8,7 @@
                language="英文"
                :yeartong="yeartong"
                :yearcount="yearcount"
+               :departList="departList"
                ></XpanYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12">
@@ -17,6 +18,7 @@
                :yeardeaprtscore="yeardeaprtscore"
                :yearscorenumbertong="yearscorenumbertong"
                :yearscorenumbercount="yearscorenumbercount"
+               :departList="departList"
                ></ScoreYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12">
@@ -24,6 +26,7 @@
                language="英文"
                :yearsanumbertong="yearsanumbertong"
                :yeardeaprtscore="yeardeaprtscore"
+               :departList="departList"
                ></DealYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12">
@@ -31,6 +34,7 @@
                language="英文"
                :yearsmoneytong="yearsmoneytong"
                :yeardeaprtscore="yeardeaprtscore"
+               :departList="departList"
                ></CostYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="12" :lg="24" >
@@ -39,6 +43,7 @@
                :provincecountmap="provincecountmap"
                :provincescoretmap="provincescoretmap"
                :provincescorenumbertmap="provincescorenumbertmap"
+               :departList="departList"
                ></HotArea>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12" >
@@ -87,6 +92,7 @@ export default {
       provincescorenumbertmap:[],//成交个数地图
       yearscorenumbertong:[],//英文年度成交个数
       yearscorenumbercount:[],//英文年度成交个数占比
+      departList:[],
     };
   },
   components:{
@@ -123,6 +129,7 @@ export default {
           this.provincescorenumbertmap = res. provincescorenumbertmap;
           this.yearscorenumbertong = res.yearscorenumbertong;
           this.yearscorenumbercount = res.yearscorenumbercount;
+          this.departList = res.readart;
         }
       })
     }
@@ -132,5 +139,6 @@ export default {
 <style lang="scss" scoped>
 .hxmodule-item{
   margin-bottom: 22px;
+  
 }
 </style>

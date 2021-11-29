@@ -34,6 +34,7 @@
 import { Bar,P,G2,} from '@antv/g2plot';
 import { worldCountry } from "@/utils/worldCountry";
 import DataSet from '@antv/data-set';
+import {parseTime} from "@/utils";
 export default {
     name:'demo',
     data(){
@@ -70,6 +71,12 @@ export default {
           return []
         } 
       },
+      departList:{
+        type:Array,
+        default:function(){
+          return []
+        }
+      }
 
     },
     watch:{
@@ -99,10 +106,38 @@ export default {
     },
     methods:{
       goPage(){
+        var newDate = new Date();
+        var newYear = newDate.getFullYear();
+        var startTime = newYear + "/01";
+        var endTime = newYear + "/12";
+        console.log(this.departList,"部门数据");
+        var baseDepart = "";
+        var contrastDepartArr = [];
+        this.departList.forEach(function(item,index){
+          if(index == 0){
+            baseDepart = item.id;
+          }else{
+            contrastDepartArr.push(item.id);
+          }
+        });
+        var contrastDepart = "";
+        if(contrastDepartArr.length>0){
+          contrastDepart = contrastDepartArr.join(",");
+        }
        if(this.language == '中文'){
-         this.$router.push('/Home/CH/sectorAnalysis?type=' + this.type)
+         if(this.type == 0){
+           this.$router.push({path:'/Home/CH/sectorAnalysis',query:{type:4,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+         }else if(this.type == 1){
+           this.$router.push({path:'/Home/CH/sectorAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+         }
        }else{
-         this.$router.push('/Home/EN/sectorAnalysis?type=' + this.type)
+         if(this.type == 0){
+           this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:4,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+         }else if(this.type == 1){
+           this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+         }else if(this.type == 2){
+           this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:7,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+         }
        }
       },
       changeType(val){
