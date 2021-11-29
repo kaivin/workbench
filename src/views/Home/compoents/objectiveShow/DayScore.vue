@@ -23,7 +23,7 @@
       <ul class="rowLineItem">
         <li class="flex-box rowOneColor">
         <!-- :class="DayScore.allTodayNum <= DayScore.allYesterdayNum? 'rowOneColor': ''" -->
-          <i class="svg-i"></i>
+          <i class="svg-i"><svg-icon icon-class="line2"></svg-icon></i>
           <p class="flex-content">
             今日询盘
             <strong>{{ DayScore.allTodayNum }}</strong>
@@ -35,7 +35,7 @@
           </p>
         </li>
         <li class="flex-box">
-          <i class="svg-i"></i>
+          <i class="svg-i"><svg-icon icon-class="line1"></svg-icon></i>
           <p class="flex-content">
             昨日询盘
             <strong>{{ DayScore.allYesterdayNum }}</strong>

@@ -149,19 +149,7 @@
                 .svg-i{
                     background:#d8f0ec;
                     position: relative;
-                    &:before{
-                        content: '';
-                        display: block;
-                        width: 25px;
-                        height: 20px;
-                        position: absolute;
-                        left: 50%;
-                        margin-left: -12px;
-                        top: 50%;
-                        margin-top: -10px;
-                        background: url(../assets/data_green.png) center center no-repeat;
-                        background-size: 100% auto;
-                    }
+                    color: #59cab6;
                 }
                 p{
                     span{
@@ -178,18 +166,9 @@
                 .svg-i{
                     background:#f4f7fd;
                     position: relative;
-                    &:before{
-                        content: '';
-                        display: block;
-                        width: 25px;
-                        height: 20px;
-                        position: absolute;
-                        left: 50%;
-                        margin-left: -12px;
-                        top: 50%;
-                        margin-top: -10px;
-                        background: url(../assets/data_yellow.png) center center no-repeat;
-                        background-size: 100% auto;
+                    color: #2259e5;
+                    .svg-icon{
+                        vertical-align: -0.08em;
                     }
                 }
                 p{

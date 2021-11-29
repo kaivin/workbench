@@ -489,3 +489,29 @@ export function formatDate(date,oldVal,newVal){
   }
   return newDate;
 }
+
+// 数字三位分隔
+export function numSeparate(val){
+  var newNum = "" + val;
+  var intNum = "";
+  var floatNum = "";
+  if(newNum.indexOf(".")!=-1){
+    intNum = newNum.split(".")[0];
+    floatNum = newNum.split(".")[1];
+  }else{
+    intNum = newNum;
+  }
+  intNum = intNum.split('').reverse().join('') // 翻转整数
+  let temp = '' // 临时变量
+  for (let i = 0; i < intNum.length; i++) {
+    temp += intNum[i]
+    if ((i + 1) % 3 === 0 && i !== intNum.length - 1) {
+      temp += ',' // 每隔3个数字拼接一个逗号
+    }
+  }
+  temp = temp.split('').reverse().join('') // 加完逗号之后翻转
+  if(floatNum!=''){
+    temp = temp + '.' + floatNum // 整数小数拼接
+  }
+  return temp // 返回
+}

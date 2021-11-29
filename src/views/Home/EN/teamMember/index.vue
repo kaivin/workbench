@@ -142,7 +142,7 @@
 <script>
 import defaultChart from "@/views/Home/compoents/departTeam/defaultChart.vue";
 import mapChart from "@/views/Home/compoents/departTeam/mapChart.vue";
-import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate} from "@/utils/index"
+import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate,numSeparate} from "@/utils/index"
 import {MapInterval,TopTenColor} from "@/utils/MapColor"
 import { worldCountry } from "@/utils/worldCountry";
 export default {
@@ -341,12 +341,12 @@ export default {
                 semData.avgTitle = "日平均询盘个数";
                 semData.historyTitle = "日历史峰值";
                 semData.unit = "（单位：个）";
-                semData.nowNumber = response.semallnumber;
+                semData.nowNumber = numSeparate(response.semallnumber);
                 semData.lastNumber = response.lastsemallnumber;
-                semData.nowLastNumber = Math.abs(response.semallnumber - response.lastsemallnumber);
+                semData.nowLastNumber = numSeparate(Math.abs(response.semallnumber - response.lastsemallnumber));
                 semData.status = response.semallnumber - response.lastsemallnumber>0?'up':response.semallnumber - response.lastsemallnumber<0?'down':'flat';
-                semData.avgNumber = response.semavgmonth;
-                semData.historyMaxNumber = response.semhistorymaxnumber[0].effectivenumber;
+                semData.avgNumber = numSeparate(response.semavgmonth);
+                semData.historyMaxNumber = numSeparate(response.semhistorymaxnumber[0].effectivenumber);
                 semData.historyMaxNumberDate = response.semhistorymaxnumber[0].xundate;
                 semData.mainData = [];
                 semData.totalChart = [];
@@ -385,12 +385,12 @@ export default {
                 seoData.avgTitle = "日平均询盘个数";
                 seoData.historyTitle = "日历史峰值";
                 seoData.unit = "（单位：个）";
-                seoData.nowNumber = response.seoallnumber;
+                seoData.nowNumber = numSeparate(response.seoallnumber);
                 seoData.lastNumber = response.lastseoallnumber;
-                seoData.nowLastNumber = Math.abs(response.seoallnumber - response.lastseoallnumber);
+                seoData.nowLastNumber = numSeparate(Math.abs(response.seoallnumber - response.lastseoallnumber));
                 seoData.status = response.seoallnumber - response.lastseoallnumber>0?'up':response.seoallnumber - response.lastseoallnumber<0?'down':'flat';
-                seoData.avgNumber = response.seoavgmonth;
-                seoData.historyMaxNumber = response.seohistorymaxnumber[0].effectivenumber;
+                seoData.avgNumber = numSeparate(response.seoavgmonth);
+                seoData.historyMaxNumber = numSeparate(response.seohistorymaxnumber[0].effectivenumber);
                 seoData.historyMaxNumberDate = response.seohistorymaxnumber[0].xundate;
                 seoData.mainData = [];
                 seoData.totalChart = [];
@@ -429,12 +429,12 @@ export default {
                 snsData.avgTitle = "日平均询盘个数";
                 snsData.historyTitle = "日历史峰值";
                 snsData.unit = "（单位：个）";
-                snsData.nowNumber = response.snsallnumber;
+                snsData.nowNumber = numSeparate(response.snsallnumber);
                 snsData.lastNumber = response.lastsnsallnumber;
-                snsData.nowLastNumber = Math.abs(response.snsallnumber - response.lastsnsallnumber);
+                snsData.nowLastNumber = numSeparate(Math.abs(response.snsallnumber - response.lastsnsallnumber));
                 snsData.status = response.snsallnumber - response.lastsnsallnumber>0?'up':response.snsallnumber - response.lastsnsallnumber<0?'down':'flat';
-                snsData.avgNumber = response.snsavgmonth;
-                snsData.historyMaxNumber = response.snshistorymaxnumber[0].effectivenumber;
+                snsData.avgNumber = numSeparate(response.snsavgmonth);
+                snsData.historyMaxNumber = numSeparate(response.snshistorymaxnumber[0].effectivenumber);
                 snsData.historyMaxNumberDate = response.snshistorymaxnumber[0].xundate;
                 snsData.mainData = [];
                 snsData.totalChart = [];
@@ -903,11 +903,11 @@ export default {
           var dateData = [];
           // 月维度
           if($this.selectedData.isMonth){
-            inquiryData.nowNumber = res.monthxunallnumber;
+            inquiryData.nowNumber = numSeparate(res.monthxunallnumber);
             dateData = res.selfmonthxuncompare;
           }else{
             // 日维度
-            inquiryData.nowNumber = res.xunallnumber;
+            inquiryData.nowNumber = numSeparate(res.xunallnumber);
             dateData = res.selfdayxuncompare;
           }
           var backData = $this.dateCompare(dateData,'xunnumber');
@@ -977,24 +977,24 @@ export default {
             inquiryData.name = "小组询盘统计";
             var compareData = [];
             if($this.selectedData.isMonth){
-              inquiryData.nowNumber = res.monthxunallnumbercompare;
+              inquiryData.nowNumber = numSeparate(res.monthxunallnumbercompare);
               compareData = res.monthdepartpercentercompare;
               inquiryData.lastNumber = res.lastmonthxunallnumbercompare;
-              inquiryData.nowLastNumber = Math.abs(res.monthxunallnumbercompare - res.lastmonthxunallnumbercompare);
+              inquiryData.nowLastNumber = numSeparate(Math.abs(res.monthxunallnumbercompare - res.lastmonthxunallnumbercompare));
               inquiryData.status = res.monthxunallnumbercompare - res.lastmonthxunallnumbercompare>0?'up':res.monthxunallnumbercompare - res.lastmonthxunallnumbercompare<0?'down':'flat';
-              inquiryData.avgNumber = parseInt(res.monthxunallnumbercompare/res.monthxuntrendcompare[0].length);
-              inquiryData.historyMaxNumber = res.historymaxnumbermonthcompare[0].number;
+              inquiryData.avgNumber = numSeparate(Math.floor(res.monthxunallnumbercompare/res.monthxuntrendcompare[0].length*100)/100);
+              inquiryData.historyMaxNumber = numSeparate(res.historymaxnumbermonthcompare[0].number);
               inquiryData.historyMaxNumberDate = res.historymaxnumbermonthcompare[0].yeartime;
               inquiryData.avgTitle = "月平均询盘个数";
               inquiryData.historyTitle = "月历史峰值";
             }else{
-              inquiryData.nowNumber = res.xunallnumbercompare;
+              inquiryData.nowNumber = numSeparate(res.xunallnumbercompare);
               compareData = res.departpercentercompare;
               inquiryData.lastNumber = res.lastxunallnumbercompare;
-              inquiryData.nowLastNumber = Math.abs(res.xunallnumbercompare - res.lastxunallnumbercompare);
+              inquiryData.nowLastNumber = numSeparate(Math.abs(res.xunallnumbercompare - res.lastxunallnumbercompare));
               inquiryData.status = res.xunallnumbercompare - res.lastxunallnumbercompare>0?'up':res.xunallnumbercompare - res.lastxunallnumbercompare<0?'down':'flat';
-              inquiryData.avgNumber = parseInt(res.xunallnumbercompare/res.dayxuntrendcompare[0].length);
-              inquiryData.historyMaxNumber = res.historymaxnumberdaycompare[0].number;
+              inquiryData.avgNumber = numSeparate(Math.floor(res.xunallnumbercompare/res.dayxuntrendcompare[0].length*100)/100);
+              inquiryData.historyMaxNumber = numSeparate(res.historymaxnumberdaycompare[0].number);
               inquiryData.historyMaxNumberDate = res.historymaxnumberdaycompare[0].xundate;
               inquiryData.avgTitle = "日平均询盘个数";
               inquiryData.historyTitle = "日历史峰值";
@@ -1019,25 +1019,25 @@ export default {
             var tongData = []
             // 月维度
             if($this.selectedData.isMonth){
-              inquiryData.nowNumber = res.monthxunallnumber;
+              inquiryData.nowNumber = numSeparate(res.monthxunallnumber);
               tongData.push(res.monthxuntrend);
               inquiryData.lastNumber = res.lastmonthxunallnumber;
-              inquiryData.nowLastNumber = Math.abs(res.monthxunallnumber - res.lastmonthxunallnumber);
+              inquiryData.nowLastNumber = numSeparate(Math.abs(res.monthxunallnumber - res.lastmonthxunallnumber));
               inquiryData.status = res.monthxunallnumber - res.lastmonthxunallnumber>0?'up':res.monthxunallnumber - res.lastmonthxunallnumber<0?'down':'flat';
-              inquiryData.avgNumber = res.monthavgxun;
-              inquiryData.historyMaxNumber = res.historymaxnumbermonth[0].number;
+              inquiryData.avgNumber = numSeparate(res.monthavgxun);
+              inquiryData.historyMaxNumber = numSeparate(res.historymaxnumbermonth[0].number);
               inquiryData.historyMaxNumberDate = res.historymaxnumbermonth[0].yeartime;
               inquiryData.avgTitle = "月平均询盘个数";
               inquiryData.historyTitle = "月历史峰值";
             }else{
-              inquiryData.nowNumber = res.xunallnumber;
+              inquiryData.nowNumber = numSeparate(res.xunallnumber);
               tongData.push(res.dayxuntrend);
               // 日维度
               inquiryData.lastNumber = res.lastxunallnumber;
-              inquiryData.nowLastNumber = Math.abs(res.xunallnumber - res.lastxunallnumber);
+              inquiryData.nowLastNumber = numSeparate(Math.abs(res.xunallnumber - res.lastxunallnumber));
               inquiryData.status = res.xunallnumber - res.lastxunallnumber>0?'up':res.xunallnumber - res.lastxunallnumber<0?'down':'flat';
-              inquiryData.avgNumber = res.avgxunnumber;
-              inquiryData.historyMaxNumber = res.historymaxnumberday[0].number;
+              inquiryData.avgNumber = numSeparate(res.avgxunnumber);
+              inquiryData.historyMaxNumber = numSeparate(res.historymaxnumberday[0].number);
               inquiryData.historyMaxNumberDate = res.historymaxnumberday[0].xundate;
               inquiryData.avgTitle = "日平均询盘个数";
               inquiryData.historyTitle = "日历史峰值";
@@ -1105,7 +1105,7 @@ export default {
         dealScoreData = {};
         // 时间对比
         if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
-          dealScoreData.nowNumber = res.monthscoreallnumber;
+          dealScoreData.nowNumber = numSeparate(res.monthscoreallnumber);
           var backData = $this.dateCompare(res.selfmonthscoretrend,'score');
           dealScoreData.mainData = backData.mainData;
           dealScoreData.dateCompareData = backData.dateCompareData;
@@ -1157,14 +1157,14 @@ export default {
               });
             });
             dealScoreData.name = "小组成交积分统计";
-            dealScoreData.nowNumber = Math.floor(res.monthscoreallnumbercompare*100)/100;
+            dealScoreData.nowNumber = numSeparate(Math.floor(res.monthscoreallnumbercompare*100)/100);
             dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumbercompare*100)/100;
-            dealScoreData.nowLastNumber = Math.abs(Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100);
+            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100));
             dealScoreData.status = Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100>0?'up':Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100<0?'down':'flat';
-            dealScoreData.avgNumber = Math.floor(res.monthscoreallnumbercompare/res.monthscoretrendcompare[0].length*100)/100;
-            dealScoreData.historyMaxNumber = Math.floor(res.historymaxscoremonthcompare[0].score*100)/100;
+            dealScoreData.avgNumber = numSeparate(Math.floor(res.monthscoreallnumbercompare/res.monthscoretrendcompare[0].length*100)/100);
+            dealScoreData.historyMaxNumber = numSeparate(Math.floor(res.historymaxscoremonthcompare[0].score*100)/100);
             dealScoreData.historyMaxNumberDate = res.historymaxscoremonthcompare[0].yeartime;
-            dealScoreData.avgTitle = "月平均成交积分";
+            dealScoreData.avgTitle = "月平均成交积分";z
             dealScoreData.historyTitle = "月历史峰值";
             dealScoreData.totalChart = [];
             res.monthdepartscorepercentercompare.forEach(function(item){
@@ -1183,7 +1183,7 @@ export default {
             // 统计
             dealScoreData.mainData = [];
             dealScoreData.colorArr = [];
-            dealScoreData.nowNumber = Math.floor(res.monthscoreallnumber*100)/100;
+            dealScoreData.nowNumber = numSeparate(Math.floor(res.monthscoreallnumber*100)/100);
             var tongData = groupColor([res.monthscoretrend]);
             dealScoreData.colorArr.push(tongData[0][0].color);
             tongData[0].forEach(function(item,index){
@@ -1201,10 +1201,10 @@ export default {
               dealScoreData.mainData.push(item);
             });
             dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumber*100)/100;
-            dealScoreData.nowLastNumber = Math.abs(Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100);
+            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100));
             dealScoreData.status = Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100>0?'up':Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100<0?'down':'flat';
-            dealScoreData.avgNumber = Math.floor(res.monthscoreavgxun*100)/100;
-            dealScoreData.historyMaxNumber = Math.floor(res.historymaxscoremonth[0].score*100)/100;
+            dealScoreData.avgNumber = numSeparate(Math.floor(res.monthscoreavgxun*100)/100);
+            dealScoreData.historyMaxNumber = numSeparate(Math.floor(res.historymaxscoremonth[0].score*100)/100);
             dealScoreData.historyMaxNumberDate = res.historymaxscoremonth[0].yeartime;
             dealScoreData.avgTitle = "月平均成交积分";
             dealScoreData.historyTitle = "月历史峰值";
@@ -1245,7 +1245,7 @@ export default {
         dealCountData = {};
         // 时间对比
         if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
-          dealCountData.nowNumber = res.monthscorenumber;
+          dealCountData.nowNumber = numSeparate(res.monthscorenumber);
           var backData = $this.dateCompare(res.selfmonthscorenumbertrend,'number');
           dealCountData.mainData = backData.mainData;
           dealCountData.dateCompareData = backData.dateCompareData;
@@ -1298,12 +1298,12 @@ export default {
               });
             });
             dealCountData.name = "小组成交个数统计";
-            dealCountData.nowNumber = res.monthscorenumbercompare;
+            dealCountData.nowNumber = numSeparate(res.monthscorenumbercompare);
             dealCountData.lastNumber = res.lastmonthscorenumbercompare;
-            dealCountData.nowLastNumber = Math.abs(res.monthscorenumbercompare - res.lastmonthscorenumbercompare);
+            dealCountData.nowLastNumber = numSeparate(Math.abs(res.monthscorenumbercompare - res.lastmonthscorenumbercompare));
             dealCountData.status = res.monthscorenumbercompare - res.lastmonthscorenumbercompare>0?'up':res.monthscorenumbercompare - res.lastmonthscorenumbercompare<0?'down':'flat';
-            dealCountData.avgNumber = Math.floor(res.monthscorenumbercompare/res.monthscorenumbertrendcompare[0].length*100)/100;
-            dealCountData.historyMaxNumber = res.historymaxscorenumbermonthcompare[0].number;
+            dealCountData.avgNumber = numSeparate(Math.floor(res.monthscorenumbercompare/res.monthscorenumbertrendcompare[0].length*100)/100);
+            dealCountData.historyMaxNumber = numSeparate(res.historymaxscorenumbermonthcompare[0].number);
             dealCountData.historyMaxNumberDate = res.historymaxscorenumbermonthcompare[0].yeartime;
             dealCountData.avgTitle = "月平均成交个数";
             dealCountData.historyTitle = "月历史峰值";
@@ -1324,7 +1324,7 @@ export default {
             // 统计
             dealCountData.mainData = [];
             dealCountData.colorArr = [];
-            dealCountData.nowNumber = res.monthscorenumber;
+            dealCountData.nowNumber = numSeparate(res.monthscorenumber);
             var tongData = groupColor([res.monthscorenumbertrend]);
             dealCountData.colorArr.push(tongData[0][0].color);
             tongData[0].forEach(function(item,index){
@@ -1342,10 +1342,10 @@ export default {
               dealCountData.mainData.push(item);
             });
             dealCountData.lastNumber = res.lastmonthscorenumber;
-            dealCountData.nowLastNumber = Math.abs(res.monthscorenumber - res.lastmonthscorenumber);
+            dealCountData.nowLastNumber = numSeparate(Math.abs(res.monthscorenumber - res.lastmonthscorenumber));
             dealCountData.status = res.monthscorenumber - res.lastmonthscorenumber>0?'up':res.monthscorenumber - res.lastmonthscorenumber<0?'down':'flat';
-            dealCountData.avgNumber = res.monthscorenumberavgxun;
-            dealCountData.historyMaxNumber = res.historymaxscorenumbermonth[0].number;
+            dealCountData.avgNumber = numSeparate(res.monthscorenumberavgxun);
+            dealCountData.historyMaxNumber = numSeparate(res.historymaxscorenumbermonth[0].number);
             dealCountData.historyMaxNumberDate = res.historymaxscorenumbermonth[0].yeartime;
             dealCountData.avgTitle = "月平均成交个数";
             dealCountData.historyTitle = "月历史峰值";
@@ -2327,8 +2327,10 @@ export default {
         backData.dateCompareData.baseWidth = "100%";
         backData.dateCompareData.compareWidth = "100%";
       }
-      backData.dateCompareData.compareNumber = Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue);
+      backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue));
       backData.dateCompareData.compareRate = backData.dateCompareData.compareValue==0?'0%':(backData.dateCompareData.compareNumber/backData.dateCompareData.compareValue*100).toFixed(2)+"%";
+      backData.dateCompareData.baseValue = numSeparate(backData.dateCompareData.baseValue);
+      backData.dateCompareData.compareValue = numSeparate(backData.dateCompareData.compareValue);
       return backData;
     },
   }
