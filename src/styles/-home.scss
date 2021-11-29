@@ -2191,9 +2191,27 @@
             border-left: 0px solid transparent;
             border-right: 6px solid #fff;
             margin-top: -6px;
+            transition: all 0.3s ease;
         }
         &:hover{
-            border-left-color:#1d212a;
+            border-left-color:#4c516d;
+            i{
+                transform: rotate(180deg);
+                left: -8px;
+            }
+        }
+    }
+    &.Shrink .homeLeftArrow{
+        i{
+            transform: rotate(180deg);
+            left: -8px;
+        }
+        &:hover{
+            border-left-color:#4c516d;
+            i{
+                transform: rotate(0deg);
+                left: -9px;
+            }
         }
     }
 }

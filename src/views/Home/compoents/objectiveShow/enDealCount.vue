@@ -35,7 +35,7 @@
                     {{item.departname}}
                 </div>
                 <div class="delCircle">
-                    <div class="passCircle" v-if="item.snumber < item.numberline">
+                    <div class="passCircle" v-if="item.snumber < item.numberline ">
                         <div class="left">
                             <div class="line" style="transform:rotate(-45deg)"></div>
                         </div>
@@ -43,20 +43,20 @@
                             <div class="line" style="transform:rotate(-45deg)"></div>
                         </div>
                     </div>
-                    <div class="passCircle">
+                    <div class="passCircle" v-else>
                         <div class="left">
-                            <div class="line" :style="item.numberline/item.snumber*100 < 50 ? 'transform:rotate(-225deg)' : 'transform:rotate('+ (225/50*(item.numberline/item.snumber*100-50)-270) + 'deg)' "></div>
+                            <div class="line" :style="item.numberline/item.snumber*100 < 50 ? 'transform:rotate(-225deg)' : 'transform:rotate('+ (-225 + 180*(item.numberline/item.snumber*100-50)/50) + 'deg)' "></div>
                         </div>
                         <div class="right">
-                            <div class="line" :style="item.numberline/item.snumber*100 < 50 ? 'transform:rotate('+ (225/50*item.numberline/item.snumber*100-225) + 'deg)' : 'transform:rotate(-45deg)' " ></div>
+                            <div class="line" :style="item.numberline/item.snumber*100 < 50 ? 'transform:rotate('+ (180*(item.numberline/item.snumber)*100/50 - 225) + 'deg)' :'transform:rotate(-45deg)' " ></div>
                         </div>
                     </div>
                     <div class="numCircle" v-if="item.snumber < item.numberline">
                         <div class="left">
-                            <div class="line" :style="item.snumber/item.numberline*100 < 50 ? 'transform:rotate(-225deg)' : 'transform:rotate('+ (225/50*(item.snumber/item.numberline*100-50)-225) + 'deg)' "></div>
+                            <div class="line" :style="item.snumber/item.numberline*100 < 50 ? 'transform:rotate(-225deg)' : 'transform:rotate('+ (180*(item.snumber/item.numberline*100-50)/50-225) + 'deg)' "></div>
                         </div>
                         <div class="right">
-                            <div class="line" :style="item.snumber/item.numberline*100 < 50 ? 'transform:rotate('+ (225/50*(item.snumber/item.numberline*100)-270) + 'deg)' : 'transform:rotate(-45deg)' " ></div>
+                            <div class="line" :style="item.snumber/item.numberline*100 < 50 ? 'transform:rotate('+ (180*(item.snumber/item.numberline)*100/50 - 225) + 'deg)' : 'transform:rotate(-45deg)' " ></div>
                         </div>
                     </div>
                     <div class="numCircle" v-else>

@@ -8,7 +8,48 @@
       </div>
     </div>
     <div class="rowMain">
-        <ul class="depMonthCont">
+        <el-table
+            :data="MonthFinish"
+            style="width: 100%"
+            border
+            class="depMonthCont"
+            >
+            <el-table-column
+                prop="name"
+                label="部门">
+            </el-table-column>
+            <el-table-column
+                prop="bad"
+                label="不合格">
+                <template slot-scope="scope">
+                    <span class="cet01">×{{scope.row.bad}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                prop="qualified"
+                label="合格">
+                <template slot-scope="scope">
+                    <span class="cet02">×{{scope.row.qualified}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                prop="medium"
+                label="中等">
+                <template slot-scope="scope">
+                    <span class="cet03">×{{scope.row.medium}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                prop="good"
+                label="优秀"
+                >
+                <template slot-scope="scope">
+                    <span class="cet04">×{{scope.row.good}}</span>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <!-- <ul class="depMonthCont">
             <li class="firstLine">
                 <div class="fItem">部门</div>
                 <div class="fItem">不合格</div>
@@ -43,7 +84,7 @@
                     </span>
                 </div>
             </li>
-        </ul>
+        </ul> -->
     </div>
   </div>
 </template>

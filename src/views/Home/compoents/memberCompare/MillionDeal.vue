@@ -22,7 +22,7 @@
                     {{item.ownuser}}
                 </div>
                 <div class="milNum">
-                    X{{item.number}}
+                    ×{{item.number}}
                 </div>
             </li>
         </ul>

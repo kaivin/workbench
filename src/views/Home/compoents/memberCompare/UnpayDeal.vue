@@ -13,13 +13,13 @@
               <li v-for="(item,index) in dealScore" :key="index">
                   <div class="rankNum">
                       <div class="numTop" v-if="index==0">
-                          <img src="../../../../assets/deal1.gif" alt="" />
+                          <img src="../../../../assets/deal1.png" alt="" />
                       </div>
                       <div class="numTop" v-if="index==1">
-                          <img src="../../../../assets/deal2.gif" alt="" />
+                          <img src="../../../../assets/deal2.png" alt="" />
                       </div>
                       <div class="numTop" v-if="index==2">
-                          <img src="../../../../assets/deal3.gif" alt="" />
+                          <img src="../../../../assets/deal3.png" alt="" />
                       </div>
                       <div class="numNormal" v-if="index>2 && index < 9">
                           0{{index+1}}

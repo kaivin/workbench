@@ -57,21 +57,21 @@
                     height: 52px;
                 }
                 .numTop01{
-                    background: url(../assets/in1.gif) center center no-repeat;
+                    background: url(../assets/in1.png) center center no-repeat;
                     background-size: 53px 51px;
                 }
                 .numTop02{
-                    background: url(../assets/in2.gif) center center no-repeat;
-                    background-size: 53px 51px;
+                    background: url(../assets/in2.png) center center no-repeat;
+                    background-size: 49px 51px;
                 }
                 .numTop03{
-                    background: url(../assets/in3.gif) center center no-repeat;
-                    background-size: 53px 51px;
+                    background: url(../assets/in3.png) center center no-repeat;
+                    background-size: 49px 51px;
                 }
             }
             .userImg{
-                text-align: center;
-                width: 124px;
+                width: 120px;
+                padding-left: 28px;
                 .headImg{
                     width: 50px;
                     height: 50px;
@@ -79,8 +79,6 @@
                     border-radius: 50%;
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
-                    margin-left: auto;
-                    margin-right: auto;
                     position: relative;
                     img{
                         width: 100%;
@@ -94,8 +92,6 @@
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
                     background: url(../assets/default_pic.jpg) center center no-repeat;
-                    margin-left: auto;
-                    margin-right: auto;
                 }
             }
             .userName{
@@ -106,7 +102,7 @@
             .userInquiry{
                 color: #666666;
                 font-size: 16px;
-                width: 75px;
+                width: 80px;
                 .num01{
                     background-image: linear-gradient(90deg,#f9c020 ,#f83801);
                     background-clip: text;
@@ -206,13 +202,14 @@
                     width: 62px;
                     height: 52px;
                     img{
-                        filter: drop-shadow(7px 7px 9px rgba(40,50,60,0.32))
+                        filter: drop-shadow(4px 6px 9px rgba(40,50,60,0.32));
+                        margin-top: 2px;
                     }
                 }
             }
             .userImg{
-                text-align: center;
-                width: 124px;
+                width: 112px;
+                padding-left: 25px;
                 .headImg{
                     width: 50px;
                     height: 50px;
@@ -220,8 +217,6 @@
                     border-radius: 50%;
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
-                    margin-left: auto;
-                    margin-right: auto;
                     position: relative;
                     img{
                         width: 100%;
@@ -235,8 +230,6 @@
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
                     background: url(../assets/default_pic.jpg) center center no-repeat;
-                    margin-left: auto;
-                    margin-right: auto;
                 }
             }
             .userName{
@@ -247,7 +240,7 @@
             .userInquiry{
                 color: #666666;
                 font-size: 16px;
-                width: 75px;
+                width: 80px;
                 .num01{
                     background-image: linear-gradient(90deg,#f9c020 ,#f83801);
                     background-clip: text;
@@ -270,6 +263,18 @@
         }
         li+li{
             border-top: 1px solid rgba(224, 239, 242, 0.8);
+            .rankNum{
+                .numTop{
+                    margin-top: 1px;
+                }
+            }
+        }
+        li+li+li{
+            .rankNum{
+                .numTop{
+                    margin-top: 0px;
+                }
+            }
         }
     }
     .deMore{
@@ -380,21 +385,26 @@
             .milnum{
                 color: #fd9200;
                 font-size: 14px;
+                padding-left: 50px;
+                display: inline-block;
+                line-height: 50px;
+                position: relative;
                 &:before{
                     content: '';
-                    display: inline-block;
-                    vertical-align: middle;
+                    display: block;
+                    position: absolute;
+                    left: 0;
+                    top: 8px;
                     width: 50px;
                     height: 47px;
                     background: url(../assets/mildeal.png) center center no-repeat;
                     background-size: 100% auto;
-                    margin-top: 8px;
                 }
             }
         }
         td.el-table__cell{
             border-bottom: 1px solid #f6f7fa;
-            padding: 16px 0 10px;
+            padding: 14px 0 12px;
         }
         .sort-caret.ascending{
             border-bottom-color:#93adc7;
@@ -487,20 +497,6 @@
                 position: relative;
                 z-index: 1;
                 font-size: 0;
-                // &:before{
-                //     content: '';
-                //     display: block;
-                //     position: absolute;
-                //     left: -2px;
-                //     top: -2px;
-                //     right: -2px;
-                //     bottom: -2px;
-                //     border-radius: 6px;
-                //     background-color: #ffff74;
-                //     background-image: linear-gradient(0deg, #ffff74 0%, #bd811b 100%);
-                //     z-index: -1;
-                //     box-shadow: 3px 4px 7px 0px rgba(133, 124, 89, 0.75);
-                // }
                 &:before{
                     content: '';
                     display: block;
@@ -545,14 +541,19 @@
                 color: #333333;
                 font-size: 16px;
                 width: 110px;
+                padding-left: 48px;
+                line-height: 54px;
+                position: relative;
                 &:before{
                     content: '';
-                    display: inline-block;
-                    vertical-align: middle;
+                    display: block;
                     width: 50px;
                     height: 47px;
                     background: url(../assets/mildeal.png) center center no-repeat;
                     background-size: 100% auto;
+                    position: absolute;
+                    left: 0;
+                    top: 12px;
                 }
             }
         }
@@ -638,20 +639,20 @@
                     height: 52px;
                 }
                 .numTop01{
-                    background: url(../assets/in1.gif) center center no-repeat;
+                    background: url(../assets/in1.png) center center no-repeat;
                     background-size: 53px 51px;
                 }
                 .numTop02{
-                    background: url(../assets/in2.gif) center center no-repeat;
-                    background-size: 53px 51px;
+                    background: url(../assets/in2.png) center center no-repeat;
+                    background-size: 49px 51px;
                 }
                 .numTop03{
-                    background: url(../assets/in3.gif) center center no-repeat;
-                    background-size: 53px 51px;
+                    background: url(../assets/in3.png) center center no-repeat;
+                    background-size: 49px 51px;
                 }
             }
             .userImg{
-                text-align: center;
+                padding-left: 28px;
                 width: 124px;
                 .headImg{
                     width: 50px;
@@ -661,8 +662,6 @@
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
                     position: relative;
-                    margin-left: auto;
-                    margin-right: auto;
                     img{
                         width: 100%;
                     }
@@ -675,8 +674,6 @@
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
                     background: url(../assets/default_pic.jpg) center center no-repeat;
-                    margin-left: auto;
-                    margin-right: auto;
                 }    
             }
             .userName{

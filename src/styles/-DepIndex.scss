@@ -28,7 +28,7 @@
             float: right;
 	        border: solid 1px #e1e3ea;
             .el-input{
-                width: 128px;
+                width: 118px;
                 height: 26px;
                 vertical-align: middle;
                 font-size: 12px;
@@ -241,20 +241,22 @@
         }
         .countMonth{
             padding-top: 20px;
-            padding-bottom: 36px;
+            padding-bottom: 32px;
             p span{
                 color: #feb946;
                 display: inline-block;
                 vertical-align: top;
+                line-height: 26px;
             }
         } 
         .countDay{
-            padding-top: 30px;
-            padding-bottom: 10px;
+            padding-top: 26px;
+            padding-bottom: 19px;
             p span{
                 color: #f16565;
                 display: inline-block;
                 vertical-align: top;
+                line-height: 26px;
             }
         }
     }
@@ -361,13 +363,13 @@
                         }
                     }
                     .standardLine{
-                        border-right:2px dotted #5fc63a;
+                        border-right:1px dashed #5fc63a;
                     }
                     .mediumLine{
-                        border-right:2px dotted #ffb525;
+                        border-right:1px dashed #ffb525;
                     }
                     .excellentLine{
-                        border-right:2px dotted #ff3333;
+                        border-right:1px dashed #ff3333;
                     }
                 }
                 .departLine2{
@@ -460,21 +462,21 @@
                     &:before{
                         width:0px;
                         height:10px;
-                        border-left:2px dotted #5fc63a;
+                        border-left: 1px dashed #5fc63a;
                     }
                 }
                 &:first-child+span+span{
                     &:before{
                         width:0px;
                         height:10px;
-                        border-left:2px dotted #ffb525;
+                        border-left: 1px dashed #ffb525;
                     }
                 }
                 &:first-child+span+span+span{
                     &:before{
                         width:0px;
                         height:10px;
-                        border-left:2px dotted #ff3333;
+                        border-left: 1px dashed #ff3333;
                     }
                 }
             }
@@ -597,7 +599,7 @@
 .rowDayFinish{
     border-top: 1px solid #eaeaea;
     background-color: #fff;
-    padding: 20px 30px 30px 30px;
+    padding: 22px 30px 30px 30px;
     .rowTitle{
         &:after{
             content: '';
@@ -678,9 +680,8 @@
               font-size: 16px;
             }
             .resdet{
-              margin-left: 11px;
+              margin-left: 5px;
               font-size: 13px;
-              padding-left: 11px;
               position: relative;
               color: #666;
               i{
@@ -688,21 +689,10 @@
                 margin-left: 2px;
                 font-style: normal;
               }
-              &:before{
-                  content: '';
-                  display: block;
-                  position: absolute;
-                  left: 0;
-                  top: 2px;
-                  width: 6px;
-                  height: 10px;
-                  background: url(../assets/increace.png) center center no-repeat;
-                  background-size: normal;
-              }
             }
             .down{
-                &:before{
-                    transform: rotate(180deg);
+                i{
+                    color: #2dbb4c;
                 }
             }
           }
@@ -747,40 +737,34 @@
         }
     }
     .depMonthCont{
-        border: solid 1px #e5ecf2;
         margin-top: 26px;
         &:after{
           content: '';
           display: block;
           clear: both;
         }
-        li{
-          text-align: center;
-          color: #111;
-          font-size: 14px;
-          &:after{
-              content: "";
-              display: block;
-              clear: both;
-          }
-          .fItem{
-              width: 20%;
-              float: left;
-              background-color: #f4f6f9;
-              line-height: 44px;
-          }
-          .fItem+.fItem{
-            border-left: 1px solid #f1f5f8;
-          }
-          .cItem{
-              width: 20%;
-              float: left;
-              padding-top: 18px;
-              padding-bottom: 14px;
-          }
-          .cItem+.cItem{
-              border-left: 1px solid #f1f5f8;
-              span{
+        thead{
+            height: 44px;
+            background-color: #f4f6f9;
+            color: #111;
+            font-size: 14px;
+            font-weight: normal;
+            tr,th{
+                background-color: #f6f7fa;
+                font-weight: normal;
+            }
+            th.el-table__cell.is-leaf{
+                border-bottom: none;
+                padding: 0;
+            }
+        }
+        .cell{
+            text-align: center;
+            line-height: normal;
+        }
+        td.el-table__cell{
+            padding: 16px 0 14px;
+            .cet01{
                 color: #2f9e32;
                 font-size: 16px;
                 padding-left: 22px;
@@ -788,31 +772,49 @@
                 background-position: left center;
                 background-repeat: no-repeat;
                 background-size: auto;
-              }
-          }
-          .cItem+.cItem+.cItem{
-              span{
+            }
+            .cet02{
                 color: #4d4d4d;
+                font-size: 16px;
+                padding-left: 22px;
+                background-position: left center;
+                background-repeat: no-repeat;
+                background-size: auto;
                 background-image: url(../assets/face02.png);
-              }
-          }
-          .cItem+.cItem+.cItem+.cItem{
-              span{
+            }
+            .cet03{
                 color: #ff7e00;
+                font-size: 16px;
+                padding-left: 22px;
+                background-position: left center;
+                background-repeat: no-repeat;
+                background-size: auto;
                 background-image: url(../assets/face03.png);
-              }
-          }
-          .cItem+.cItem+.cItem+.cItem+.cItem{
-              span{
+            }
+            .cet04{
                 color: #ff3434;
+                font-size: 16px;
+                padding-left: 22px;
+                background-position: left center;
+                background-repeat: no-repeat;
+                background-size: auto;
                 background-image: url(../assets/face04.png);
-              }
-          }
+            }
         }
-        li+li{
-          border-top: 1px solid #f0f4f7;
+        .el-table__row .el-table__cell:first-child{
+            color: #111;
         }
-      }
+    }
+    .el-table--group, .el-table--border{
+        border-top: 1px solid #e5ecf2;
+        border-left: 1px solid #e5ecf2;
+    }
+    .el-table--border .el-table__cell{
+        border-right: 1px solid #e5ecf2;
+    }
+    .el-table th.el-table__cell.is-leaf, .el-table td.el-table__cell{
+        border-bottom: 1px solid #e5ecf2;
+    }
 }
 
 .target_left{
@@ -968,21 +970,21 @@
                         &:before{
                             width:0px;
                             height:10px;
-                            border-left:2px dotted #5fc63a;
+                            border-left: 1px dashed #5fc63a;
                         }
                     }
                     &:first-child+span+span{
                         &:before{
                             width:0px;
                             height:10px;
-                            border-left:2px dotted #ffb525;
+                            border-left: 1px dashed #ffb525;
                         }
                     }
                     &:first-child+span+span+span{
                         &:before{
                             width:0px;
                             height:10px;
-                            border-left:2px dotted #ff3333;
+                            border-left: 1px dashed #ff3333;
                         }
                     }
                 }
@@ -1156,13 +1158,13 @@
                         }
                     }
                     .standardLine{
-                        border-right:2px dotted #5fc63a;
+                        border-right:1px dashed #5fc63a;
                     }
                     .mediumLine{
-                        border-right:2px dotted #ffb525;
+                        border-right:1px dashed #ffb525;
                     }
                     .excellentLine{
-                        border-right:2px dotted #ff3333;
+                        border-right:1px dashed #ff3333;
                     }
                 }
                 .departLine2{
@@ -1240,7 +1242,7 @@
         .target_right{
             width: 100%;
             padding-left: 0;
-            margin-top: 6px;
+            border-top: 1px solid #eaeaea;
         }
     }
 }

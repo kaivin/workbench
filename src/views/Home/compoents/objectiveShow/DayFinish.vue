@@ -24,8 +24,8 @@
                 <div class="depRes">
                     <span class="resnum">{{item.finishnumber}}</span>
                     <span class="resdet" :class="parseInt(item.finishnumber) < parseInt(item.lastfinishnumber) ? 
-                        'down' : 'grow'">同比<span v-if="parseInt(item.finishnumber) < parseInt(item.lastfinishnumber)">下降</span>
-                        <span v-else>增长</span>
+                        'down' : 'grow'"><span v-if="parseInt(item.finishnumber) < parseInt(item.lastfinishnumber)"><i class="svg-i"><svg-icon icon-class="data-down" /></i>同比下降</span>
+                        <span v-else><i class="svg-i"><svg-icon icon-class="data-up" /></i>同比增长</span>
                     <i >{{parseInt(item.finishnumber) > parseInt(item.lastfinishnumber) ? parseInt(item.finishnumber) - parseInt(item.lastfinishnumber) : parseInt(item.lastfinishnumber) - parseInt(item.finishnumber)}}</i></span>
                 </div>
             </li>
