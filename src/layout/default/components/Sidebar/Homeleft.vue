@@ -2,7 +2,7 @@
     <div class="homeLeft" :class="currentShrink?'':'Shrink'">
         <el-scrollbar v-if='currentShrink' wrap-class="scrollbar-wrapper">
             <ul class="homeLeftMenu">
-                <li class="homeSubmenu">
+                <li class="homeSubmenu" v-if="ModuleList.includes('Module_cnStat')">
                     <div class="homeLeftTit"><span>中文</span><i class='el-icon-arrow-down'></i></div>
                     <ul>
                         <li><router-link tag='span' to="/Home/CH/objectiveShow">目标展示</router-link></li>
@@ -12,7 +12,7 @@
                         <li><router-link tag='span' to="/Home/CH/groupAnalysis">个人榜单</router-link></li>
                     </ul>
                 </li>
-                <li class="homeSubmenu">
+                <li class="homeSubmenu" v-if="ModuleList.includes('Module_enStat')">
                     <div class="homeLeftTit"><span>英文</span><i class='el-icon-arrow-down'></i></div>
                     <ul>
                         <li><router-link tag='span' to="/Home/EN/objectiveShow">目标展示</router-link></li>
@@ -28,12 +28,18 @@
     </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 export default {
     name:"Homeleft",
     data(){
         return{
           currentShrink:true,
         }
+    },
+    computed: {
+        ...mapGetters([
+            'ModuleList',
+        ]),
     },
     methods: {
         handleShrink(){

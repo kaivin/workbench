@@ -65,7 +65,6 @@ service.interceptors.response.use(
    */
   response => {
     const res = response;
-    // console.log(res,"请求响应");
     // if the custom code is not 20000, it is judged as an error.
     if (res.status !== 200) {
       Message({
@@ -75,7 +74,7 @@ service.interceptors.response.use(
         });
         return Promise.reject(new Error(res.statusText || 'Error'));
     } else {
-      if(res.data.errorcode==="authtimeout"){
+      if(res.data.errorcode&&res.data.errorcode==="authtimeout"){
         Message({
           message: res.data.info,
           type: 'error',
@@ -83,7 +82,18 @@ service.interceptors.response.use(
         });
         routerDom.push(`/login?redirect=${routerDom.currentRoute.fullPath}`);
       }else{
-        return res.data;
+        if(res.data.otherloginstatus&&res.data.otherloginstatus === 2){
+          Message({
+            showClose: true,
+            message: "该账号已在其他设备登录，请重新登录",
+            type: 'error',
+            duration: 0
+          });
+          routerDom.push(`/login?redirect=${routerDom.currentRoute.fullPath}`);
+        }else{
+          return res.data;
+        }
+        
       }
       
     }

@@ -69,15 +69,29 @@ function filterRoutes(routers) {
   });
   return accessedRouters;
 }
-function setRoutes(routers){
+function setRoutes(routers,modules){
   var userInfo = JSON.parse(Cookies.get('userInfo'));
-  var ModuleList = Cookies.get('ModuleList');
-  const ModBool=ModuleList.includes("Module_manager");
+  var homeRedirect = "";
+  if(userInfo.issales==2){
+    homeRedirect = '/Sales/index';
+  }else{
+    if(modules.includes("Module_manager")){
+      homeRedirect = '/Home/index';
+    }else{
+      if(modules.includes("Module_cnStat")){
+        homeRedirect = '/Home/CH/objectiveShow';
+      }else{
+        if(modules.includes("Module_cnStat")){
+          homeRedirect = '/Home/EN/objectiveShow';
+        }
+      }
+    }
+  }
   const accessedRouters = filterRoutes(routers);  
   const parentRoute = [{
     path: '/',
     component: Layout,
-    redirect: userInfo.issales==2?'/Sales/index':ModBool?'/Home/CH/objectiveShow':'/Home/index',
+    redirect: homeRedirect,
     name:"Layout",
     meta: {},
     children: [
@@ -315,13 +329,13 @@ const mutations = {
 const actions = {
   generateRoutes({ commit }, routers) {
     return new Promise(resolve => {
-      var newData = dataToRoute(routers);
+      var newData = dataToRoute(routers.router);
       let accessedRoutes;
       var menuData = [];
       if (newData.length <= 0) {
         accessedRoutes = [];
       } else {
-        accessedRoutes = setRoutes(newData);
+        accessedRoutes = setRoutes(newData,routers.module);
         menuData = dataToTree(newData);
       }
       commit('SET_ROUTES', accessedRoutes);

@@ -75,13 +75,19 @@ router.beforeEach(async(to, from, next) => {
             await store.dispatch('api/getRouteAction').then(response=>{
               if(response.status){
                 if(response.data.length>0){
-                  store.dispatch('permission/generateRoutes', response.data).then(res=>{
-                    if(res.length>0){
-                      router.addRoutes(res);
-                      router.addRoutes([{path: '*',name:'error404',redirect:"/404",meta: {title: '404', icon: null,hidden:true,keepAlive:false }}]);
-                      next({ ...to, replace: true });
-                      NProgress.done();
-                    }
+                  store.dispatch('modulelist/getPermitModuleListAction',null).then(res1=>{
+                    var resData = res1.data;
+                    var permissionData = {};
+                    permissionData.module = resData;
+                    permissionData.router = response.data;
+                    store.dispatch('permission/generateRoutes', permissionData).then(res=>{
+                      if(res.length>0){
+                        router.addRoutes(res);
+                        router.addRoutes([{path: '*',name:'error404',redirect:"/404",meta: {title: '404', icon: null,hidden:true,keepAlive:false }}]);
+                        next({ ...to, replace: true });
+                        NProgress.done();
+                      }
+                    });
                   });
                 }
               }else{

@@ -526,14 +526,7 @@ export default {
           if (response) {
             if (response.status) {
               $this.permitModules = response.data;
-              console.log($this.permitModules,'Module_manager');
-              if($this.permitModules.includes('Module_manager')){
-                $this.$router.push({
-                  path: `/Home/CH/objectiveShow`,
-                });
-              }else{
-                $this.initPage();
-              }
+              $this.initPage();
               //if($this.permitModules.includes('Module_manager')){
               //  $this.initPage();
               //}else{

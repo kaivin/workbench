@@ -1,7 +1,7 @@
 <template>
     <div class="header-panel">
         <div class="logo">
-            <router-link class="logo-link" to="/">
+            <router-link class="logo-link" :to="homeRedirect">
                 <img class="logo-img" v-bind:src="logo" alt="">
                 <img class="logo-title" v-bind:src="logoFont" alt="">
             </router-link>
@@ -110,6 +110,7 @@ import Hamburger from '@/components/Hamburger';
 export default {
     data(){
         return{
+          homeRedirect:"/",
           logo: logo,
           logoFont:logoTitle,
           searchWord:"",
@@ -126,6 +127,7 @@ export default {
       ...mapGetters([
         'sidebar',
         'userInfo',
+        'ModuleList',
         'isArticleSearch',
         'isArticleAdd',
         'isWebsiteAdd',
@@ -182,7 +184,25 @@ export default {
       },
   },
   created(){
-    
+    console.log(this.ModuleList,"权限模块")
+    console.log(this.userInfo,"用户信息")
+    var homeRedirect = "";
+    if(this.userInfo.issales==2){
+      homeRedirect = '/Sales/index';
+    }else{
+      if(this.ModuleList.includes("Module_manager")){
+        homeRedirect = '/Home/index';
+      }else{
+        if(this.ModuleList.includes("Module_cnStat")){
+          homeRedirect = '/Home/CH/objectiveShow';
+        }else{
+          if(this.ModuleList.includes("Module_enStat")){
+            homeRedirect = '/Home/EN/objectiveShow';
+          }
+        }
+      }
+    }
+    this.homeRedirect = homeRedirect;
     if(this.$route.path=="/Article/index"){
       if(this.$route.query.keyword){
         this.searchWord = this.$route.query.keyword;
