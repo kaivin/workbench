@@ -2124,7 +2124,7 @@
                 span{
                     display: inline-block;
                     font-size:13px;
-                    color:#666666;
+                    color:#121212;
                     font-weight: bold;
                 }
                 i{
@@ -2196,10 +2196,6 @@
         }
         &:hover{
             border-left-color:#4c516d;
-            i{
-                transform: rotate(180deg);
-                left: -8px;
-            }
         }
     }
     &.Shrink .homeLeftArrow{
@@ -2209,10 +2205,6 @@
         }
         &:hover{
             border-left-color:#4c516d;
-            i{
-                transform: rotate(0deg);
-                left: -9px;
-            }
         }
     }
 }
