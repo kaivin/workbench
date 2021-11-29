@@ -128,13 +128,13 @@ export default {
          if(this.type == 0){
            this.$router.push({path:'/Home/CH/sectorAnalysis',query:{type:4,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
          }else if(this.type == 1){
-           this.$router.push({path:'/Home/CH/sectorAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+           this.$router.push({path:'/Home/CH/sectorAnalysis',query:{type:5,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
          }
        }else{
          if(this.type == 0){
            this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:4,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
          }else if(this.type == 1){
-           this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+           this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:5,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
          }else if(this.type == 2){
            this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:7,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
          }

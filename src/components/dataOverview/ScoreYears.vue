@@ -147,6 +147,7 @@ export default {
                   opacity: 1,
                   fontSize: 12,
                   lineHeight:18,
+                  cursor: 'pointer'
                 },
               },
             },
@@ -161,7 +162,7 @@ export default {
               return {
                 fill: 'l(270) 0:#ffffff 0.5:#7690de 1:#7690de',
                 lineWidth:1,
-                cursor: 'pointer'
+                
               };
             },
             point: {
@@ -183,10 +184,11 @@ export default {
             },
             
           });
-         /*  chartTop.on('element:click', (args) => {
-            console.log(args)
-            let data = args.data.data;
-            let month = data.date.slice(0,2);
+          
+           chartTop.on('axis-label:click', (args) => {
+            let data = args.gEvent.delegateObject.item.name;
+            
+            let month = data.slice(0,2);
             let startTime = parseTime(new Date(),'{y}') + '/' +  month + '/01';
             let endTime = parseTime(new Date(),'{y}') + '/' + month + '/' + $this.getMonthDays(parseTime(new Date(),'{y}'),month);
             var baseDepart = "";
@@ -207,7 +209,7 @@ export default {
             }else{
               $this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
             }
-          });*/
+          });
           $this.chartTop = chartTop;
           chartTop.render();
 
