@@ -34,7 +34,7 @@
 import { Bar,P,G2,} from '@antv/g2plot';
 import { worldCountry } from "@/utils/worldCountry";
 import DataSet from '@antv/data-set';
-import {parseTime} from "@/utils";
+import {MapInterval,MapColor,TopTenColor} from "@/utils/MapColor";
 export default {
     name:'demo',
     data(){
@@ -164,90 +164,13 @@ export default {
         if($this.regionMapChart&&!$this.regionMapChart.destroyed){
           $this.regionMapChart.destroy();
         }
-        $this.numList='';
-        $this.sumColor=[];
         mapCountData.forEach(function(item,index){
             if(maxNum<item.number){
               maxNum=item.number;
             }
         });
-        
-        if(maxNum>0){
-          if(maxNum>=4){
-            var average=parseInt(maxNum/4);
-            var averageStr=average.toString();
-            
-            var numRes = [];
-            if(average > 0){
-                for(var i=0;i<averageStr.length;i++){
-                    numRes.push(averageStr[i]);
-                }
-            }
-            if(averageStr.length>=2){
-              minAverage=numRes[0]*Math.pow(10,(averageStr.length-1))
-            }else{
-              minAverage=numRes[0]
-            }
-            var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
-            var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
-           
-            var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1]; 
-          }else{
-            minAverage = 1;
-            var averArr=[];
-            var numList=[]; 
-            for(let i = 0;i<maxNum/minAverage;i++){
-              averArr.push(minAverage*i + '-' + minAverage*(i+1))
-            }
-            for(let i = 0;i<maxNum/minAverage;i++){
-              numList.push(minAverage*i)
-            }
-            numList.sort(function(a, b){return b - a});
-            var defaulColor=[];
-            var colAry=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
-            for(let i = 0;i<maxNum/minAverage;i++){
-              if(i == maxNum/minAverage - 1){
-                defaulColor[i] = colAry[4]
-              }else{
-                defaulColor[i] = colAry[i]
-              }
-            }
-            
-          }
-        
-          
-        }else{
-          minAverage=10;
-          var averArr=['0-'+minAverage];
-          var defaulColor=['#b3b3b3'];
-          var numList=[minAverage*1]; 
-        }
-        $this.numList=numList;
-        //筛选颜色
-        var resArr=mapCountData; 
-        var sumColor=[];
-        for(var j=0;j<numList.length;j++){
-          for(var i=0;i<resArr.length;i++){
-              if(numList[j+1]&&numList[j]){
-                if(resArr[i].number>numList[0]&&j==0){
-                  if(sumColor.indexOf(defaulColor[j])==-1){
-                    sumColor.push(defaulColor[j]);
-                  }
-                }
-                if(resArr[i].number>numList[j+1]&&resArr[i].number<=numList[j]){
-                  if(sumColor.indexOf(defaulColor[j+1])==-1){
-                    sumColor.push(defaulColor[j+1]);
-                  }
-                }
-              }
-              if(resArr[i].number<=numList[numList.length-1]&&j==(numList.length-1)){
-                if(sumColor.indexOf(defaulColor[defaulColor.length-1])==-1){
-                  sumColor.push(defaulColor[defaulColor.length-1]);
-                }
-              }
-          }
-        }
-        $this.sumColor=sumColor;
+        let mapInterval = MapInterval(maxNum);
+        let mapColor = MapColor(mapCountData,mapInterval)
         
         if(mapCountData.length>0){   
           fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
@@ -272,6 +195,7 @@ export default {
             regionMapChart.axis(false);
             regionMapChart.legend('trend', {
               position: 'bottom-left',
+              flipPage:false,
             });
             // 绘制中国地图背景
             var ds = new DataSet();
@@ -304,17 +228,16 @@ export default {
             }).transform({
               type: 'map',
               callback: obj => {
-                
-                  if(obj.number <=minAverage){
-                      obj.trend=averArr[0];
-                  }else if(obj.number <=minAverage*2 && obj.number>minAverage){
-                      obj.trend=averArr[1];
-                  }else if(obj.number <=minAverage*3 && obj.number>minAverage*2){
-                      obj.trend=averArr[2];
-                  }else if(obj.number <=minAverage*4 && obj.number>minAverage*3){
-                      obj.trend=averArr[3];
+                  if(obj.number <=mapInterval.minAverage){
+                      obj.trend=mapInterval.averArr[0];
+                  }else if(obj.number <=mapInterval.minAverage*2 && obj.number>mapInterval.minAverage){
+                      obj.trend=mapInterval.averArr[1];
+                  }else if(obj.number <=mapInterval.minAverage*3 && obj.number>mapInterval.minAverage*2){
+                      obj.trend=mapInterval.averArr[2];
+                  }else if(obj.number <=mapInterval.minAverage*4 && obj.number>mapInterval.minAverage*3){
+                      obj.trend=mapInterval.averArr[3];
                   }else{
-                      obj.trend=averArr[4];
+                      obj.trend=mapInterval.averArr[4];
                   }
                   return obj;
               }
@@ -332,7 +255,7 @@ export default {
             
             userView.polygon()
               .position('longitude*latitude')     
-              .color('trend', $this.sumColor)
+              .color('trend', mapColor)
               .tooltip('name*number')
               .style({
                 fillOpacity: 1,
@@ -374,43 +297,14 @@ export default {
             return a.number-b.number
           }).reverse();
         }
-        
+        mapCountData = mapCountData.slice(0,5);
         if(mapCountData.length>0){
           if($this.pieSourcePlot&&!$this.pieSourcePlot.chart.destroyed){
             $this.pieSourcePlot.changeData(mapCountData);
-          }else{ 
-            var numList=$this.numList;  
-            var defaulColor=$this.sumColor;          
-            var rel=mapCountData;
-            var topTenColor=[];
-            
-            mapCountData.forEach(function(item,index){
-              if(defaulColor.length>=5){
-                for(var i=0;i<numList.length;i++){
-                  if(item.number>=numList[i]){
-                    topTenColor.push(defaulColor[i]);
-                    break;
-                  }
-                  if(item.number<numList[numList.length-1]){
-                    topTenColor.push(defaulColor[numList.length-1]);
-                    break;
-                  }
-                }
-              }else{
-                
-                for(var i=0;i<numList.length;i++){
-                  if(item.number>numList[i]){
-                    topTenColor.push(defaulColor[i]);
-                    break;
-                  }
-                  if(item.number<=numList[numList.length-1]){
-                    topTenColor.push(defaulColor[numList.length-1]);
-                    break;
-                  }
-                }
-              }
-            });
-            topTenColor=topTenColor.reverse();
+          }else{
+            let maxNum =  mapCountData[0].number;
+            let mapInterval = MapInterval(maxNum);
+            let topTenColor = TopTenColor(mapCountData,mapInterval);
             const pieSourcePlot = new Bar('topTen', {
               data:mapCountData,
               xField: 'number',
@@ -489,80 +383,8 @@ export default {
               maxNum=item.number;
             }
         });
-        if(maxNum>0){
-          if(maxNum>=4){
-          var average=parseInt(maxNum/4);
-          var averageStr=average.toString();
-          var numRes = [];
-          if(average > 0){
-              for(var i=0;i<averageStr.length;i++){
-                  numRes.push(averageStr[i]);
-              }
-          }
-          if(averageStr.length>=2){
-            minAverage=numRes[0]*Math.pow(10,(averageStr.length-1))
-          }else{
-            minAverage=numRes[0]
-          }
-          var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
-          var defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
-          
-          var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1]; 
-          }else{
-            minAverage = 1;
-            var averArr=[];
-            var numList=[]; 
-            for(let i = 0;i<maxNum/minAverage;i++){
-              averArr.push(minAverage*i + '-' + minAverage*(i+1))
-            }
-            for(let i = 0;i<maxNum/minAverage;i++){
-              numList.push(minAverage*i)
-            }
-            numList.sort(function(a, b){return b - a});
-            var defaulColor=[];
-            var colAry=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
-            for(let i = 0;i<maxNum/minAverage;i++){
-              if(i == maxNum/minAverage - 1){
-                defaulColor[i] = colAry[4]
-              }else{
-                defaulColor[i] = colAry[i]
-              }
-            }
-          }
-        }else{
-          minAverage=10;
-          var averArr=['0-'+minAverage];
-          var defaulColor=['#b3b3b3'];
-          var numList=[minAverage*1]; 
-        }
-        $this.numList=numList;
-       
-        //筛选颜色
-        var resArr=mapCountData;
-        var sumColor=[];
-        for(var j=0;j<numList.length;j++){
-          for(var i=0;i<resArr.length;i++){
-              if(numList[j+1]&&numList[j]){
-                if(resArr[i].number>numList[0]&&j==0){
-                  if(sumColor.indexOf(defaulColor[j])==-1){
-                    sumColor.push(defaulColor[j]);
-                  }
-                }
-                if(resArr[i].number>numList[j+1]&&resArr[i].number<=numList[j]){
-                  if(sumColor.indexOf(defaulColor[j+1])==-1){
-                    sumColor.push(defaulColor[j+1]);
-                  }
-                }
-              }
-              if(resArr[i].number<=numList[numList.length-1]&&j==(numList.length-1)){
-                if(sumColor.indexOf(defaulColor[defaulColor.length-1])==-1){
-                  sumColor.push(defaulColor[defaulColor.length-1]);
-                }
-              }
-          }
-        }
-        
-        $this.sumColor=sumColor;
+        let mapInterval = MapInterval(maxNum);
+        let mapColor = MapColor(mapCountData,mapInterval)
        
         fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/world.geo.json')
         .then(res => res.json())
@@ -590,6 +412,7 @@ export default {
           worldRegionMapChart.legend('trend', {
             position: 'bottom-left',
             itemHeight:20,
+            flipPage:false,
           });
           // 绘制世界地图背景
           var ds = new DataSet();
@@ -617,16 +440,16 @@ export default {
           }).transform({
             type: 'map',
             callback: obj => {
-              if(obj.number <=minAverage){
-                  obj.trend=averArr[0];
-              }else if(obj.number <=minAverage*2 && obj.number>minAverage){
-                  obj.trend=averArr[1];
-              }else if(obj.number <=minAverage*3 && obj.number>minAverage*2){
-                  obj.trend=averArr[2];
-              }else if(obj.number <=minAverage*4 && obj.number>minAverage*3){
-                  obj.trend=averArr[3];
+              if(obj.number <=mapInterval.minAverage){
+                  obj.trend=mapInterval.averArr[0];
+              }else if(obj.number <=mapInterval.minAverage*2 && obj.number>mapInterval.minAverage){
+                  obj.trend=mapInterval.averArr[1];
+              }else if(obj.number <=mapInterval.minAverage*3 && obj.number>mapInterval.minAverage*2){
+                  obj.trend=mapInterval.averArr[2];
+              }else if(obj.number <=mapInterval.minAverage*4 && obj.number>mapInterval.minAverage*3){
+                  obj.trend=mapInterval.averArr[3];
               }else{
-                  obj.trend=averArr[4];
+                  obj.trend=mapInterval.averArr[4];
               }
               return obj;
             }
@@ -646,7 +469,7 @@ export default {
           });
           userView.polygon()
             .position('longitude*latitude')         
-            .color('trend', $this.sumColor)
+            .color('trend', mapColor)
             .tooltip('name*country*number')
             .style({
               fillOpacity: 1,
