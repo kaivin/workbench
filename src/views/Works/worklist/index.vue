@@ -125,8 +125,8 @@
                                     <template slot-scope="scope">
                                         <div class="order-title">
                                             <span v-on:click="jumpArticle(scope.row.id)">{{scope.row.title}}</span>
-                                            <i v-if="(currentStatus=='focuson'||scope.row.focus==1)&&menuButtonPermit.includes('Works_workfocuscancel')" v-on:click="handleCancelFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></i>
-                                            <i v-if="scope.row.focus==0&&menuButtonPermit.includes('Works_workfocus')" v-on:click="handleAddFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></i>
+                                            <el-tooltip class="toolCancel" effect="dark" content="取消关注" placement="top" v-if="(currentStatus=='focuson'||scope.row.focus==1)&&menuButtonPermit.includes('Works_workfocuscancel')"><el-button v-on:click="handleCancelFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></el-button></el-tooltip>
+                                            <el-tooltip class="toolFocus" effect="dark" content="关注任务" placement="top" v-if="scope.row.focus==0&&menuButtonPermit.includes('Works_workfocus')"><el-button v-on:click="handleAddFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></el-button></el-tooltip>
                                         </div>
                                     </template>
                                 </el-table-column>

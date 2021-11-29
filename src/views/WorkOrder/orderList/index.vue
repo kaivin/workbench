@@ -213,8 +213,26 @@
                                           <template slot-scope="scope">
                                             <div class="order-title">
                                               <span v-on:click="jumpArticle(scope.row.id)">{{scope.row.title}}</span>
-                                              <i v-if="scope.row.focus==1&&menuButtonPermit.includes('Worksaccpet_workfocuscancel')" v-on:click="handleCancelFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></i>
-                                              <i v-if="scope.row.focus==0&&menuButtonPermit.includes('Worksaccpet_workfocus')" v-on:click="handleAddFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></i>
+                                              <el-tooltip class="toolCancel" effect="dark" content="取消关注" placement="top" v-if="(currentStatus=='focuson'||scope.row.focus==1)&&menuButtonPermit.includes('Worksaccpet_workfocuscancel')"><el-button v-on:click="handleCancelFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></el-button></el-tooltip>
+                                              <el-tooltip class="toolFocus" effect="dark" content="关注任务" placement="top" v-if="scope.row.focus==0&&menuButtonPermit.includes('Worksaccpet_workfocus')"><el-button v-on:click="handleAddFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></el-button></el-tooltip>
+                                            </div>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="status"
+                                          label="工单状态"
+                                          width="90"
+                                          v-if="labelColumn[7].istrue"
+                                          >
+                                          <template slot-scope="scope">
+                                            <div class="table-tag starts">
+                                              <span v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus==3">
+                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
+                                                    <el-button><i class="svg-i"><svg-icon icon-class="work_done" /></i>已完成(<span class="color6"><i class="svg-i"><svg-icon icon-class="work_overdue" /></i>已逾期</span>)</el-button>
+                                                  </el-tooltip>
+                                              </span>   
+                                              <span class="color6" v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus!=3"><i class="svg-i"><svg-icon icon-class="work_overdue" /></i>已逾期</span>
+                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'receive'"><i class="svg-i"><svg-icon icon-class="work_accept" /></i>待接单</span>
                                             </div>
                                           </template>
                                       </el-table-column>
@@ -251,24 +269,6 @@
                                           >
                                           <template slot-scope="scope">
                                               <p class="timenewline">{{scope.row.endtimeDate}}<span>{{scope.row.endtimeTime}}</span></p>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="status"
-                                          label="工单状态"
-                                          width="90"
-                                          v-if="labelColumn[7].istrue"
-                                          >
-                                          <template slot-scope="scope">
-                                            <div class="table-tag starts">
-                                              <span v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus==3">
-                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
-                                                    <el-button><i class="svg-i"><svg-icon icon-class="work_done" /></i>已完成(<span class="color6"><i class="svg-i"><svg-icon icon-class="work_overdue" /></i>已逾期</span>)</el-button>
-                                                  </el-tooltip>
-                                              </span>   
-                                              <span class="color6" v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus!=3"><i class="svg-i"><svg-icon icon-class="work_overdue" /></i>已逾期</span>
-                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'receive'"><i class="svg-i"><svg-icon icon-class="work_accept" /></i>待接单</span>
-                                            </div>
                                           </template>
                                       </el-table-column>
                                       <el-table-column
@@ -341,22 +341,41 @@
                                           <template slot-scope="scope">
                                             <div class="order-title">
                                               <span v-on:click="jumpArticle(scope.row.id)">{{scope.row.title}}</span>
-                                              <i v-if="(currentStatus=='focuson'||scope.row.focus==1)&&menuButtonPermit.includes('Worksaccpet_workfocuscancel')" v-on:click="handleCancelFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></i>
-                                              <i v-if="scope.row.focus==0&&menuButtonPermit.includes('Worksaccpet_workfocus')" v-on:click="handleAddFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></i>
+                                              <el-tooltip class="toolCancel" effect="dark" content="取消关注" placement="top" v-if="(currentStatus=='focuson'||scope.row.focus==1)&&menuButtonPermit.includes('Worksaccpet_workfocuscancel')"><el-button v-on:click="handleCancelFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></el-button></el-tooltip>
+                                              <el-tooltip class="toolFocus" effect="dark" content="关注任务" placement="top" v-if="scope.row.focus==0&&menuButtonPermit.includes('Worksaccpet_workfocus')"><el-button v-on:click="handleAddFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></el-button></el-tooltip>
                                             </div>
                                           </template>
                                       </el-table-column>
                                       <el-table-column
-                                          prop="tags"
-                                          align="left"
-                                          label="标签"
-                                          min-width="160"
-                                          v-if="labelColumn[2].istrue"
+                                          prop="status"
+                                          label="工单状态"
+                                          width="90"
+                                          v-if="labelColumn[7].istrue"
                                           >
                                           <template slot-scope="scope">
-                                              <div class="table-tag">
-                                              <el-tag v-for="(item,index) in scope.row.tagList" :style="{background:'none',borderColor:'none',color:item.color}" size="small" v-bind:key="index"><i v-if="item.clBool" class="svg-i"><svg-icon icon-class="workOrder_bell" /></i>{{item.tag}}<i class="workBg" :style="{background:item.color,borderColor:item.color}"></i></el-tag>
-                                              </div>
+                                            <div class="table-tag starts">
+                                              <span class="color1" v-if="!scope.row.startdotime&&(currentStatus == 'alltasks'||currentStatus == 'person'||currentStatus == 'focuson')&&currentId==6">待进行</span>  
+                                              <span v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus==3">
+                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
+                                                    <el-button><i class="svg-i"><svg-icon icon-class="work_done" /></i>已完成(<span class="color6"><i class="svg-i"><svg-icon icon-class="work_overdue" /></i>已逾期</span>)</el-button>
+                                                  </el-tooltip>
+                                              </span>   
+                                              <span class="color6" v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus!=3"><i class="svg-i"><svg-icon icon-class="work_overdue" /></i>已逾期</span>
+                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'alltasks'&&currentId==7"><i class="svg-i"><svg-icon icon-class="work_allot" /></i>待分配</span>                                              
+                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==0&&scope.row.startdotime"><i class="svg-i"><svg-icon icon-class="work_doing" /></i>进行中</span>
+                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==1"><i class="svg-i"><svg-icon icon-class="work_accept" /></i>待审核</span>
+                                              <span v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==2">
+                                                  <el-tooltip class="item color3" effect="dark" :content="scope.row.rejectinfo" placement="right">
+                                                    <el-button><i class="svg-i"><svg-icon icon-class="work_reject" /></i>已驳回</el-button>
+                                                  </el-tooltip>
+                                              </span>
+                                              <span class="color4" v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==3&&scope.row.commentstatus==0"><i class="svg-i"><svg-icon icon-class="work_evaluate" /></i>待评价</span>
+                                              <span v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==3&&scope.row.commentstatus!=0">
+                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
+                                                    <el-button><i class="svg-i"><svg-icon icon-class="work_done" /></i>已完成</el-button>
+                                                  </el-tooltip>
+                                              </span>
+                                            </div>
                                           </template>
                                       </el-table-column>
                                       <el-table-column
@@ -368,6 +387,45 @@
                                               <div class="table-input">
                                                   <el-input v-if="currentStatus=='person'&&currentId==5" size="small" @change="changePercenter(scope.row.id,scope.row.percenter)" v-model="scope.row.percenter"></el-input>
                                                   <p v-else><span><i :style="'width:'+scope.row.percenter+'%'"></i></span>{{scope.row.percenter}}%</p>
+                                              </div>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="ownScore"
+                                          label="负责人"
+                                          v-if="labelColumn[11].istrue"
+                                          width="120">
+                                          <template slot-scope="scope">
+                                              <div class="table-input">
+                                                  <el-select v-model="scope.row.dealuserid" size="small" v-if="(!scope.row.dealusername||scope.row.dealusername=='')&&currentId==7" clearable multiple collapse-tags placeholder="负责人">
+                                                      <el-option
+                                                          v-for="item in userList"
+                                                          :key="item.value"
+                                                          :label="item.label"
+                                                          :value="item.value">
+                                                      </el-option>
+                                                  </el-select>
+                                                  <span v-else>{{scope.row.dealusername}}</span>
+                                              </div>
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="orgscore"
+                                          label="总积分"
+                                          width="80"
+                                          v-if="labelColumn[8].istrue"
+                                          >
+                                      </el-table-column>
+                                      <el-table-column
+                                          prop="tags"
+                                          align="left"
+                                          label="标签"
+                                          min-width="160"
+                                          v-if="labelColumn[2].istrue"
+                                          >
+                                          <template slot-scope="scope">
+                                              <div class="table-tag">
+                                              <el-tag v-for="(item,index) in scope.row.tagList" :style="{background:'none',borderColor:'none',color:item.color}" size="small" v-bind:key="index"><i v-if="item.clBool" class="svg-i"><svg-icon icon-class="workOrder_bell" /></i>{{item.tag}}<i class="workBg" :style="{background:item.color,borderColor:item.color}"></i></el-tag>
                                               </div>
                                           </template>
                                       </el-table-column>
@@ -405,45 +463,6 @@
                                           </template>
                                       </el-table-column>
                                       <el-table-column
-                                          prop="status"
-                                          label="工单状态"
-                                          width="90"
-                                          v-if="labelColumn[7].istrue"
-                                          >
-                                          <template slot-scope="scope">
-                                            <div class="table-tag starts">
-                                              <span class="color1" v-if="!scope.row.startdotime&&(currentStatus == 'alltasks'||currentStatus == 'person'||currentStatus == 'focuson')&&currentId==6">待进行</span>  
-                                              <span v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus==3">
-                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
-                                                    <el-button><i class="svg-i"><svg-icon icon-class="work_done" /></i>已完成(<span class="color6"><i class="svg-i"><svg-icon icon-class="work_overdue" /></i>已逾期</span>)</el-button>
-                                                  </el-tooltip>
-                                              </span>   
-                                              <span class="color6" v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus!=3"><i class="svg-i"><svg-icon icon-class="work_overdue" /></i>已逾期</span>
-                                              <span class="color1" v-if="scope.row.worktimestatus!=2&&currentStatus == 'alltasks'&&currentId==7"><i class="svg-i"><svg-icon icon-class="work_allot" /></i>待分配</span>                                              
-                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==0&&scope.row.startdotime"><i class="svg-i"><svg-icon icon-class="work_doing" /></i>进行中</span>
-                                              <span class="color2" v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==1"><i class="svg-i"><svg-icon icon-class="work_accept" /></i>待审核</span>
-                                              <span v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==2">
-                                                  <el-tooltip class="item color3" effect="dark" :content="scope.row.rejectinfo" placement="right">
-                                                    <el-button><i class="svg-i"><svg-icon icon-class="work_reject" /></i>已驳回</el-button>
-                                                  </el-tooltip>
-                                              </span>
-                                              <span class="color4" v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==3&&scope.row.commentstatus==0"><i class="svg-i"><svg-icon icon-class="work_evaluate" /></i>待评价</span>
-                                              <span v-if="scope.row.worktimestatus!=2&&currentId!=7&&scope.row.workstatus==3&&scope.row.commentstatus!=0">
-                                                  <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
-                                                    <el-button><i class="svg-i"><svg-icon icon-class="work_done" /></i>已完成</el-button>
-                                                  </el-tooltip>
-                                              </span>
-                                            </div>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="orgscore"
-                                          label="总积分"
-                                          width="80"
-                                          v-if="labelColumn[8].istrue"
-                                          >
-                                      </el-table-column>
-                                      <el-table-column
                                           prop="receivescore"
                                           label="已认领积分"
                                           width="100"
@@ -452,25 +471,6 @@
                                           <template slot-scope="scope">
                                               <p v-if="currentStatus=='alltasks'&&currentId==6"><el-input size="small" v-model="scope.row.score" @change="changeScore(scope.row,scope.$index)"></el-input></p>
                                               <span v-else>{{scope.row.score}}</span>
-                                          </template>
-                                      </el-table-column>
-                                      <el-table-column
-                                          prop="ownScore"
-                                          label="负责人"
-                                          v-if="labelColumn[11].istrue"
-                                          width="120">
-                                          <template slot-scope="scope">
-                                              <div class="table-input">
-                                                  <el-select v-model="scope.row.dealuserid" size="small" v-if="(!scope.row.dealusername||scope.row.dealusername=='')&&currentId==7" clearable multiple collapse-tags placeholder="负责人">
-                                                      <el-option
-                                                          v-for="item in userList"
-                                                          :key="item.value"
-                                                          :label="item.label"
-                                                          :value="item.value">
-                                                      </el-option>
-                                                  </el-select>
-                                                  <span v-else>{{scope.row.dealusername}}</span>
-                                              </div>
                                           </template>
                                       </el-table-column>
                                       <el-table-column
@@ -485,11 +485,11 @@
                                           label="操作">                               
                                           <template slot-scope="scope">
                                             <div class="table-button">
-                                                <el-button size="mini" @click="cancelTableRow(scope.row,scope.$index)" v-if="currentStatus!='receive'&&(scope.row.workstatus!=1&&scope.row.workstatus!=3)&&menuButtonPermit.includes('Worksaccpet_backwork')">工单退回</el-button>
-                                                <el-button size="mini" @click="confirmAllotTableRow(scope.row,scope.$index)" v-if="currentStatus=='alltasks'&&currentId==7&&menuButtonPermit.includes('Worksaccpet_confirmdeal')">确认分配</el-button>
-                                                <el-button size="mini" @click="confirmstartRow(scope.row,scope.$index)" v-if="currentId==6&&(scope.row.startdotime==''||scope.row.startdotime==null)&&menuButtonPermit.includes('Worksaccpet_confirmstart')">开始工单</el-button>
-                                                <el-button size="mini" @click="confirmDoneTableRow(scope.row,scope.$index)" v-if="currentId==5&&scope.row.workstatus!=1&&scope.row.workstatus!=3&&(scope.row.status==2||scope.row.status==5)&&menuButtonPermit.includes('Worksaccpet_confirmfinish')">提交审核</el-button>
-                                                <el-button size="mini" @click="undoTableRow(scope.row,scope.$index)" v-if="currentId==6&&scope.row.workstatus!=1&&scope.row.workstatus!=3&&menuButtonPermit.includes('Worksaccpet_workcancel')">撤销分配</el-button>
+                                                <el-button size="mini" @click="confirmAllotTableRow(scope.row,scope.$index)" v-if="currentStatus=='alltasks'&&currentId==7&&menuButtonPermit.includes('Worksaccpet_confirmdeal')">分配</el-button>
+                                                <el-button size="mini" @click="confirmstartRow(scope.row,scope.$index)" v-if="currentId==6&&(scope.row.startdotime==''||scope.row.startdotime==null)&&menuButtonPermit.includes('Worksaccpet_confirmstart')">开始</el-button>
+                                                <el-button size="mini" @click="confirmDoneTableRow(scope.row,scope.$index)" v-if="currentId==5&&scope.row.workstatus!=1&&scope.row.workstatus!=3&&(scope.row.status==2||scope.row.status==5)&&menuButtonPermit.includes('Worksaccpet_confirmfinish')">审核</el-button>
+                                                <el-button size="mini" @click="cancelTableRow(scope.row,scope.$index)" v-if="currentStatus!='receive'&&(scope.row.workstatus!=1&&scope.row.workstatus!=3)&&menuButtonPermit.includes('Worksaccpet_backwork')">退回</el-button>
+                                                <el-button size="mini" @click="undoTableRow(scope.row,scope.$index)" v-if="currentId==6&&scope.row.workstatus!=1&&scope.row.workstatus!=3&&menuButtonPermit.includes('Worksaccpet_workcancel')">撤销</el-button>
                                             </div>
                                           </template>
                                       </el-table-column>
@@ -849,33 +849,34 @@ export default {
                   $this.currentStatus = $this.$route.query.Status;
                   var operationsWidth = 22;
                   if($this.currentStatus=="alltasks"){
-                      if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-                          operationsWidth+=90;
-                      }
-                      if($this.menuButtonPermit.includes('Worksaccpet_confirmdeal')){
-                          operationsWidth+=90;
-                      }
-                      if($this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
-                          operationsWidth+=90;
-                      }
-                      if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')){
-                          operationsWidth+=90;
-                      }
-                      if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
-                          operationsWidth+=90;
-                      }
+                      //if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
+                      //    operationsWidth+=56;
+                      //}
+                      //if($this.menuButtonPermit.includes('Worksaccpet_confirmdeal')){
+                      //    operationsWidth+=56;
+                      //}
+                      //if($this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
+                      //    operationsWidth+=56;
+                      //}
+                      //if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')){
+                      //    operationsWidth+=56;
+                      //}
+                      //if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
+                      //    operationsWidth+=56;
+                      //}
+                      operationsWidth+=168;
                   }else if($this.currentStatus=="focuson"||$this.currentStatus=="person"){
                       if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-                          operationsWidth+=90;
+                          operationsWidth+=56;
                       }
                       if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')){
-                          operationsWidth+=90;
+                          operationsWidth+=56;
                       }
                       if($this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
-                          operationsWidth+=90;
+                          operationsWidth+=56;
                       }
                       if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
-                          operationsWidth+=90;
+                          operationsWidth+=56;
                       }
                   }else if($this.currentStatus=="receive"){
                     if($this.menuButtonPermit.includes('Worksaccpet_confirmwork')){

@@ -528,12 +528,19 @@ export default {
               $this.permitModules = response.data;
               console.log($this.permitModules,'Module_manager');
               if($this.permitModules.includes('Module_manager')){
-                $this.initPage();
-              }else{
                 $this.$router.push({
                   path: `/Home/CH/objectiveShow`,
                 });
+              }else{
+                $this.initPage();
               }
+              //if($this.permitModules.includes('Module_manager')){
+              //  $this.initPage();
+              //}else{
+              //  $this.$router.push({
+              //    path: `/Home/CH/objectiveShow`,
+              //  });
+              //}
             } else {
               $this.$message({
                 showClose: true,

@@ -1,4 +1,4 @@
-﻿import Cookies from 'js-cookie'
+﻿import Cookies from 'js-cookie';
 function _import(file){
     return () => Promise.resolve(require(/* webpackChunkName: "[request]" */`@/views${file}/index.vue`).default);
   }
@@ -71,11 +71,13 @@ function filterRoutes(routers) {
 }
 function setRoutes(routers){
   var userInfo = JSON.parse(Cookies.get('userInfo'));
-  const accessedRouters = filterRoutes(routers);
+  var ModuleList = Cookies.get('ModuleList');
+  const ModBool=ModuleList.includes("Module_manager");
+  const accessedRouters = filterRoutes(routers);  
   const parentRoute = [{
     path: '/',
     component: Layout,
-    redirect: userInfo.issales==2?'/Sales/index':'/Home/index',
+    redirect: userInfo.issales==2?'/Sales/index':ModBool?'/Home/CH/objectiveShow':'/Home/index',
     name:"Layout",
     meta: {},
     children: [

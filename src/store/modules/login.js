@@ -26,9 +26,9 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ uname: uname.trim(), pwd: pwd }).then(response => {
         commit('SET_INFO', response.data);
-        commit('SET_SESSION', response.session_id)
-        setSessionID(response.session_id)
-        resolve(response)
+        commit('SET_SESSION', response.session_id);
+        setSessionID(response.session_id);
+        resolve(response);
       }).catch(error => {
         reject(error)
       })

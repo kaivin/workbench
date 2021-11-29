@@ -191,21 +191,34 @@
         margin-top:15px;
     }
     .order-title{
-        span{
+        &>span{
             cursor:pointer;
             transition:all .3s;
             &:hover{
-              color:#f9a500;
-              text-decoration: underline;
+                color:#f9a500;
+                text-decoration: underline;
             }
         }
-        i{
-            cursor:pointer;
-            display: inline-block;
-            margin-left:5px;
-            color:#f9a500;
-            svg{
-                font-size:14px;
+        button{
+            border: 0px;
+            padding: 0px;
+            background: none;
+            display:none;
+            span{
+                display:block;
+                cursor:pointer;
+                display: inline-block;
+                margin-left:5px;
+                color:#999;
+                svg{
+                    font-size:14px;
+                }
+            }
+            &.toolCancel{span{color: #f9a500;}}
+        }
+        &:hover{
+            button{
+                display:inline-block;
             }
         }
         &.time-out{
@@ -222,7 +235,7 @@
                 margin-left:5px;
             }
         }
-    }    
+    }  
     .searchwrapstatData{
       margin: 0 -5px;
       .item-search{

@@ -1,11 +1,22 @@
-﻿import { 
+﻿import Cookies from 'js-cookie';
+import { 
     homePageModuleList,
     homePageModuleAllotedRoleList,
     homePageModuleAllotRole,
     getPermitModuleList,
    } from '@/api/modulelist'
-const state = {}
-const mutations = {}
+const state = {
+    ModuleList:Cookies.get('ModuleList') ? JSON.parse(Cookies.get('ModuleList')) : "",
+}
+const mutations = {
+    SET_INFO: (state, data) => {
+      state.ModuleList = data;
+      var cookieData = JSON.stringify(data);
+      if(cookieData!=undefined){
+        Cookies.set('ModuleList', cookieData);
+      }
+    },
+}
   
 const actions = {
   // 首页模块列表
@@ -42,6 +53,17 @@ const actions = {
   getPermitModuleListAction({ commit, state }) {
     return new Promise((resolve, reject) => {
         getPermitModuleList().then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        })
+    })
+  },
+  // 缓存当前登录用户有权限的模块
+  getPermitModuleAction({ commit }) {
+    return new Promise((resolve, reject) => {
+        getPermitModuleList().then(response => {
+            commit('SET_INFO', response.data);
             resolve(response)
         }).catch(error => {
             reject(error)

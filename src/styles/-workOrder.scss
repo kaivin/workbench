@@ -177,7 +177,7 @@
         margin-top:15px;
     }
     .order-title{
-        span{
+        &>span{
             cursor:pointer;
             transition:all .3s;
             &:hover{
@@ -185,13 +185,26 @@
                 text-decoration: underline;
             }
         }
-        i{
-            cursor:pointer;
-            display: inline-block;
-            margin-left:5px;
-            color:#f9a500;
-            svg{
-                font-size:14px;
+        button{
+            border: 0px;
+            padding: 0px;
+            background: none;
+            display:none;
+            span{
+                display:block;
+                cursor:pointer;
+                display: inline-block;
+                margin-left:5px;
+                color:#999;
+                svg{
+                    font-size:14px;
+                }
+            }
+            &.toolCancel{span{color: #f9a500;}}
+        }
+        &:hover{
+            button{
+                display:inline-block;
             }
         }
         &.time-out{
@@ -323,8 +336,57 @@
                     top:0px;
                     height:100%;
                     background:#73d897;
+                    border-radius: 4px;
                 }
             }
+        }
+    }
+}
+.el-table-filter__checkbox-group{
+    .el-checkbox{
+        .el-checkbox__label{
+            font-size:12px;
+        }
+        .el-checkbox__input{
+            .el-checkbox__inner{
+                width:12px;
+                height:12px;
+                border-radius:0px;
+                &:after{left: 3px;top: 0px;}
+            }
+        }
+        &:hover{
+            .el-checkbox__label{
+                color:#2e88ff;
+            }
+            .el-checkbox__input{
+                .el-checkbox__inner{
+                    background:#f4f4f4;
+                    border:1px solid #2e88ff;
+                }
+            }
+        }
+        &.is-checked{
+            .el-checkbox__label{
+                color:#2e88ff;
+            }
+            .el-checkbox__input{
+                .el-checkbox__inner{
+                    background:#2e88ff;
+                    border:1px solid #2e88ff;
+                }
+            }
+            &:hover{
+                .el-checkbox__label{
+                    color:#2e88ff;
+                }
+                .el-checkbox__input{
+                    .el-checkbox__inner{
+                        background:#2e88ff;
+                        border:1px solid #2e88ff;
+                    }
+                }
+            } 
         }
     }
 }

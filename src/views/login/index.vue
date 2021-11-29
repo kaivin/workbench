@@ -173,6 +173,28 @@ export default {
       this.isLoading.close();
     },
     methods:{
+        getModuleList() {
+        var $this = this;
+        $this.$store
+            .dispatch("modulelist/getPermitModuleAction", null)
+            .then((response) => {
+            if (response) {
+                if (response.status) {
+                    $this.$message({
+                        showClose: true,
+                        message: response.info,
+                        type: 'success'
+                    });
+                } else {
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: "error",
+                });
+                }
+            }
+            });
+        },
         // 登录操作
         handleLogin(formName){
             var $this = this;
@@ -195,6 +217,7 @@ export default {
                             }else{
                                 $this.$router.push({ path: $this.redirect || '/' });
                             }
+                            $this.getModuleList();
                         }else if(response.loginnumber==2||response.status==4){
                             if(response.loginnumber){
                                 if(response.loginnumber==2){
