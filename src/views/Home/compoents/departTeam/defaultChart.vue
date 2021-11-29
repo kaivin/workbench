@@ -326,6 +326,36 @@ export default {
       if($this.currentData.chartTitle.indexOf('日期')!=-1){
         isDate = true;
       }
+      var label = null;
+      var point = null;
+      if($this.currentData.colorArr.length<=3){
+        label = {
+          layout: [{ type: "hide-overlap" }], // 隐藏重叠label
+          style: {
+            textAlign: "center",
+            color: "#9e9e9e",
+            fontsize: 12,
+          },
+        };
+        point = {
+          size: 3,
+          shape: "circle",
+          style: (res) => {
+            var itemColor = "";
+            $this.currentData.mainData.forEach(function(item){
+              if(item.name == res.name){
+                itemColor = item.color;
+              }
+            });
+            var obj = {
+              opacity: 0.5,
+              stroke: itemColor,
+              fill: "#fff",
+            };
+            return obj;
+          },
+        }
+      }
       if(!$this.areaPlot&&$this.currentData){
         const areaPlot = new Area('area-'+$this.currentData.randomStr, {
           appendPadding:[30,30,20],
@@ -398,9 +428,20 @@ export default {
               fill: 'l(270) 0:#ffffff 1:'+itemColor,
             };
           },
+          label: label,
+          point: point,
         });
         $this.areaPlot = areaPlot;
         areaPlot.render();
+        areaPlot.on('area:click', (...args) => {
+          console.log(...args);
+        });
+        areaPlot.on('label:click', (...args) => {
+          console.log(...args);
+        });
+        areaPlot.on('point:click', (...args) => {
+          console.log(...args);
+        });
       }
     },
   },

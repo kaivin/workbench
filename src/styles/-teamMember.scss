@@ -71,9 +71,15 @@
                 border: 1px solid #e1e3ea;
                 cursor: pointer;
                 position: relative;
-                &.active{
+                &:hover{
                   border: 1px solid $menuActiveText;
                   color: $menuActiveText;
+                  z-index: 1;
+                }
+                &.active{
+                  border: 1px solid $menuActiveText;
+                  background-color: $menuActiveText;
+                  color: #fff;
                   z-index: 1;
                 }
               }
@@ -110,6 +116,14 @@
               line-height:0;
               font-size:0;
               cursor: pointer;
+              &:hover{
+                i{
+                  border: 1px solid $menuActiveText;
+                }
+                span,b{
+                  color: $menuActiveText;
+                }
+              }
               &.is-disabled{
                 cursor: not-allowed;
                 &:hover{
@@ -156,9 +170,6 @@
                 margin-right: 6px;
                 position: relative;
                 vertical-align: -1px;
-                &:hover{
-                  border: 1px solid $menuActiveText;
-                }
               }
               span,b{
                 font-size: 13px;
@@ -373,7 +384,7 @@
           background-color: #fff;
           border: 1px solid #e2e2e2;
           min-width:200px;
-          padding: 3px 6px 0 6px;
+          padding: 3px 6px 15px 15px;
           &:before,&:after{
             content:'';
             display: block;
@@ -413,6 +424,14 @@
           line-height:0;
           font-size:0;
           cursor: pointer;
+          &:hover{
+            i{
+              border: 1px solid $menuActiveText;
+            }
+            span,b{
+              color: $menuActiveText;
+            }
+          }
           &.is-disabled{
             cursor: not-allowed;
             &:hover{
@@ -487,15 +506,16 @@
         }
       }
       .item-sure{
-        border-top: 1px solid #e2e2e2;
-        color: #7c7e80;
+        background-color: $menuActiveText;
+        width: 74px;
+        color: #fff;
         padding: 0 10px;
-        line-height: 36px;
-        height: 37px;
+        line-height: 32px;
+        height: 32px;
         cursor: pointer;
         font-size: 12px;
         text-align: center;
-        margin: 9px -6px 0;
+        margin: 9px 3px 0;
       }
     }
   }
@@ -541,9 +561,15 @@
                 padding: 0 10px;
                 cursor: pointer;
                 position: relative;
-                &.active{
+                &:hover{
                   border: 1px solid $menuActiveText;
                   color: $menuActiveText;
+                  z-index: 1;
+                }
+                &.active{
+                  border: 1px solid $menuActiveText;
+                  background-color: $menuActiveText;
+                  color: #fff;
                   z-index: 1;
                 }
               }
@@ -834,7 +860,7 @@
         }
         .region-rank{
           width: 300px;
-          height:340px;
+          min-height:340px;
           margin-left: 30px;
           background-color: #f3f8ff;
           .txt-header{

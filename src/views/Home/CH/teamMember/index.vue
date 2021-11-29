@@ -113,7 +113,7 @@
           </template>
           <div class="item-button">
             <div class="button-click" v-on:click="toggleContrast"><i class="svg-i"><svg-icon icon-class="s-add" class-name="disabled" /></i><span>添加对比</span></div>
-            <div class="group-contrast" v-show="isContrastShow">
+            <div class="group-contrast" v-show="isContrastShow" v-bind:style="{width:contrastWidth+'px'}">
               <div class="item-checkbox" v-bind:class="[item.disabled?'is-disabled':'',item.isOn?'active':'']" v-for="item in contrastGroupList" v-bind:key="item.userid" v-on:click="contrastGroupChangeHandler(item)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b>[{{item.departName}}]</b></div>
               <div class="item-sure" v-on:click="saveContrastGroup">确定</div>
             </div>
@@ -152,6 +152,7 @@ export default {
   },
   data() {
     return {
+      contrastWidth:200,
       minWidth:"",
       mapRatio:0.75,
       groupList:[],
@@ -667,6 +668,7 @@ export default {
     // 添加对比小组点击事件
     toggleContrast(){
       this.isContrastShow = true;
+      this.contrastWidth = 200;
     },
     // 对比小组点击事件
     contrastGroupChangeHandler(obj){
@@ -676,7 +678,15 @@ export default {
         var contrastGroupList = $this.contrastGroupList;
         contrastGroupList.forEach(function(item,index){
           if(item.userid == obj.userid){
-            item.isOn = !item.isOn;
+            if(item.isOn){
+              item.isOn = false;
+              if($this.contrastWidth>200){
+                $this.contrastWidth -= 130;
+              }
+            }else{
+              item.isOn = true;
+              $this.contrastWidth += 130;
+            }
           }
           if(item.isOn){
             selectedContrastGroupID.push(item.userid);
@@ -932,11 +942,27 @@ export default {
             inquiryData.name = "小组询盘统计";
             var compareData = [];
             if($this.selectedData.isMonth){
-              inquiryData.nowNumber = res.monthxunallnumbercompare
-              compareData = res.monthdepartpercentercompare
+              inquiryData.nowNumber = res.monthxunallnumbercompare;
+              compareData = res.monthdepartpercentercompare;
+              inquiryData.lastNumber = res.lastmonthxunallnumbercompare;
+              inquiryData.nowLastNumber = Math.abs(res.monthxunallnumbercompare - res.lastmonthxunallnumbercompare);
+              inquiryData.status = res.monthxunallnumbercompare - res.lastmonthxunallnumbercompare>0?'up':res.monthxunallnumbercompare - res.lastmonthxunallnumbercompare<0?'down':'flat';
+              inquiryData.avgNumber = parseInt(res.monthxunallnumbercompare/res.monthxuntrendcompare[0].length);
+              inquiryData.historyMaxNumber = res.historymaxnumbermonthcompare[0].number;
+              inquiryData.historyMaxNumberDate = res.historymaxnumbermonthcompare[0].yeartime;
+              inquiryData.avgTitle = "月平均询盘个数";
+              inquiryData.historyTitle = "月历史峰值";
             }else{
               inquiryData.nowNumber = res.xunallnumbercompare;
-              compareData = res.departpercentercompare
+              compareData = res.departpercentercompare;
+              inquiryData.lastNumber = res.lastxunallnumbercompare;
+              inquiryData.nowLastNumber = Math.abs(res.xunallnumbercompare - res.lastxunallnumbercompare);
+              inquiryData.status = res.xunallnumbercompare - res.lastxunallnumbercompare>0?'up':res.xunallnumbercompare - res.lastxunallnumbercompare<0?'down':'flat';
+              inquiryData.avgNumber = parseInt(res.xunallnumbercompare/res.dayxuntrendcompare[0].length);
+              inquiryData.historyMaxNumber = res.historymaxnumberdaycompare[0].number;
+              inquiryData.historyMaxNumberDate = res.historymaxnumberdaycompare[0].xundate;
+              inquiryData.avgTitle = "日平均询盘个数";
+              inquiryData.historyTitle = "日历史峰值";
             }
             inquiryData.totalChart = [];
             compareData.forEach(function(item){
@@ -1098,6 +1124,14 @@ export default {
             });
             dealScoreData.name = "小组成交积分统计";
             dealScoreData.nowNumber = Math.floor(res.monthscoreallnumbercompare*100)/100;
+            dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumbercompare*100)/100;
+            dealScoreData.nowLastNumber = Math.abs(Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100);
+            dealScoreData.status = Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100>0?'up':Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100<0?'down':'flat';
+            dealScoreData.avgNumber = Math.floor(res.monthscoreallnumbercompare/res.monthscoretrendcompare[0].length*100)/100;
+            dealScoreData.historyMaxNumber = Math.floor(res.historymaxscoremonthcompare[0].score*100)/100;
+            dealScoreData.historyMaxNumberDate = res.historymaxscoremonthcompare[0].yeartime;
+            dealScoreData.avgTitle = "月平均成交积分";
+            dealScoreData.historyTitle = "月历史峰值";
             dealScoreData.totalChart = [];
             res.monthdepartscorepercentercompare.forEach(function(item){
               var itemChart = {};

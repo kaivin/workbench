@@ -281,3 +281,17 @@ export function getEndaytargetmonth(data) {
     data
   });
 }
+// 获取中文部门
+export function getCnDepart() {
+  return request({
+    url: "/hxindex/Api/chinareaddepartlist",
+    method: "POST"
+  });
+}
+// 获取英文部门
+export function getEnDepart() {
+  return request({
+    url: "/hxindex/Api/enreaddepartlist",
+    method: "POST"
+  });
+}

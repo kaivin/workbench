@@ -29,6 +29,11 @@ img {
     max-width: 100%!important;
     height: auto;
     border:0; 
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor;
 }
 *,*:after,*:before{-webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; -webkit-touch-callout:none; outline:none;}
 button{outline:none; }

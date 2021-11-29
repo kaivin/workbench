@@ -2109,7 +2109,7 @@
     .homeLeftMenu{
         width: 100%;
         overflow: hidden;
-        padding:20px;
+        padding:20px 0;
         .homeSubmenu{
             clear: both;
             display: block;
@@ -2118,14 +2118,14 @@
                 clear: both;
                 display: block;
                 text-align: left;
-                padding-bottom:9px;
+                padding: 0 20px 9px;
                 line-height:24px;
                 font-size:13px;
                 span{
-                    float: left;
                     display: inline-block;
                     font-size:13px;
                     color:#666666;
+                    font-weight: bold;
                 }
                 i{
                     float: right;
@@ -2140,21 +2140,22 @@
                 li{
                     clear: both;
                     display: block;
-                    padding-top:9px;
-                    padding-bottom:9px;
-                    line-height:20px;
-                    padding-left:15px;
                     span{
                         clear: both;
-                        display: inline-block;
+                        display: block;
                         font-size:13px;
                         color:#666666;
                         cursor: pointer;
+                        padding-top:9px;
+                        padding-bottom:9px;
+                        line-height:20px;
+                        padding-left:35px;
                         &:hover{
                             color:#2e88ff;
                         }
                         &.router-link-active{
                             color:#2e88ff;
+                            background-color: #f0f0f0;
                         }
                     }
                     &.active{

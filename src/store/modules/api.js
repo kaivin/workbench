@@ -35,6 +35,8 @@
   getEndepartscoreyear,
   getEndaytargetnew,
   getEndaytargetmonth,
+  getCnDepart,
+  getEnDepart
 } from '@/api/api'
 //import { reject, resolve } from 'core-js/fn/promise';
 import Cookies from 'js-cookie';
@@ -676,6 +678,26 @@ const actions = {
     getEndaytargetmonthAction({ commit, state },data) {
       return new Promise((resolve, reject) => {
         getEndaytargetmonth(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 获取英文部门
+    getCnDepartAction({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getCnDepart().then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 获取英文部门
+    getEnDepartAction({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getEnDepart().then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)
