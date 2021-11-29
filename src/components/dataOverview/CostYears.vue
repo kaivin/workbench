@@ -218,6 +218,9 @@ export default {
           for(let i = 0;i<chartBotData.length;i++){
             chartBotData[i].departname=chartBotData[i].departname.slice(-2)
           }
+          chartBotData.forEach(item=>{
+            item.avgallmoney = parseFloat(item.avgallmoney.toFixed(1))
+          })
           chartBotData.sort(function(a, b){return a.avgallmoney - b.avgallmoney}); 
           if($this.chartBot&&!$this.chartBot.chart.destroyed){
               $this.chartBot.changeData(chartBotData);
