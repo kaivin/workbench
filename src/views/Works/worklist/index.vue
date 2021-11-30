@@ -608,24 +608,25 @@ export default {
                 if($this.permitStatus.includes($this.$route.query.Status)){
                     $this.currentStatus = $this.$route.query.Status;
                     var operationsWidth = 22;
-                    if($this.menuButtonPermit.includes('Works_workedit')){
-                      operationsWidth+=66;
-                    }
-                    if($this.menuButtonPermit.includes('Works_workcancel')){
-                      operationsWidth+=66;
-                    }
-                    if($this.menuButtonPermit.includes('Works_noconfirm')){
-                      operationsWidth+=66;
-                    }
-                    if($this.menuButtonPermit.includes('Works_workconfirm')){
-                      operationsWidth+=90;
-                    }
-                    if($this.menuButtonPermit.includes('Works_addevaluation')){
-                      operationsWidth+=66;
-                    }
-                    if($this.menuButtonPermit.includes('Works_workdelete')){
-                      operationsWidth+=66;
-                    }
+                    operationsWidth+=222;
+                    //if($this.menuButtonPermit.includes('Works_workedit')){
+                    //  operationsWidth+=66;
+                    //}
+                    //if($this.menuButtonPermit.includes('Works_workcancel')){
+                    //  operationsWidth+=66;
+                    //}
+                    //if($this.menuButtonPermit.includes('Works_noconfirm')){
+                    //  operationsWidth+=66;
+                    //}
+                    //if($this.menuButtonPermit.includes('Works_workconfirm')){
+                    //  operationsWidth+=90;
+                    //}
+                    //if($this.menuButtonPermit.includes('Works_addevaluation')){
+                    //  operationsWidth+=66;
+                    //}
+                    //if($this.menuButtonPermit.includes('Works_workdelete')){
+                    //  operationsWidth+=66;
+                    //}
                     $this.operationsWidth = "" + operationsWidth;
                     $this.getpublishdepart();
                 }else{
