@@ -131,7 +131,7 @@
                                 </el-table-column>
                                 <el-table-column
                                     label="负责人"
-                                    width="70"
+                                    width="90"
                                     class-name="celldealusername"
                                     v-if="labelColumn[2].isshow"
                                     >
@@ -142,7 +142,7 @@
                                 </el-table-column>
                                 <el-table-column
                                     label="进度"
-                                    width="130"
+                                    width="150"
                                     class-name="celldealusername"
                                     v-if="labelColumn[6].isshow"
                                     >
@@ -156,7 +156,7 @@
                                     prop="tags"
                                     align="left"
                                     label="标签"
-                                    min-width="160"
+                                    width="160"
                                     v-if="labelColumn[7].isshow"
                                     >
                                     <template slot-scope="scope">
@@ -168,6 +168,7 @@
                                 <el-table-column
                                     prop="score"
                                     label="积分"
+                                    align="center"
                                     width="60"
                                     v-if="labelColumn[4].isshow"
                                     >
@@ -176,6 +177,7 @@
                                     prop="commentnumber"
                                     label="评论"
                                     width="60"
+                                    align="center"
                                     v-if="labelColumn[8].isshow"
                                     >
                                 </el-table-column>
@@ -183,17 +185,23 @@
                                     prop="starttime"
                                     sortable
                                     label="开始时间"
-                                    width="160"
+                                    width="120"
                                     v-if="labelColumn[9].isshow"
                                     >
+                                      <template slot-scope="scope">
+                                          <p class="timenewline">{{scope.row.starttimeDate}}<span>{{scope.row.starttimeTime}}</span></p>
+                                      </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="endtime"
                                     label="截止时间"
                                     sortable
-                                    width="160"
+                                    width="120"
                                     v-if="labelColumn[3].isshow"
                                     >
+                                      <template slot-scope="scope">
+                                          <p class="timenewline">{{scope.row.endtimeDate}}<span>{{scope.row.endtimeTime}}</span></p>
+                                      </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="status"
@@ -874,6 +882,24 @@ export default {
                     }
                     dealusernameArr.push(obj);
                   }
+                }
+                var starttime=[];
+                var endtime=[];
+                if(item.starttime&&item.starttime!=null){
+                  starttime=item.starttime.split(" ");
+                  item.starttimeDate=starttime[0];
+                  item.starttimeTime=starttime[1];
+                }else{
+                  item.starttimeDate='';
+                  item.starttimeTime='';
+                }
+                if(item.endtime&&item.endtime!=null){
+                  endtime=item.endtime.split(" ");
+                  item.endtimeDate=endtime[0];
+                  item.endtimeTime=endtime[1];
+                }else{
+                  item.endtimeDate='';
+                  item.endtimeTime='';
                 }
                 item.dealuserArr=dealusernameArr;
               });

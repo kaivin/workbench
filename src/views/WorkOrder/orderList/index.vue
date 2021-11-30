@@ -237,7 +237,7 @@
                                           prop="tags"
                                           align="left"
                                           label="标签"
-                                          min-width="160"
+                                          width="160"
                                           >                                          
                                           <template slot-scope="scope">
                                               <div class="table-tag">
@@ -249,7 +249,7 @@
                                           prop="starttime"
                                           sortable
                                           label="开始时间"
-                                          min-width="110"
+                                          width="120"
                                           >
                                           <template slot-scope="scope">
                                               <p class="timenewline">{{scope.row.starttimeDate}}<span>{{scope.row.starttimeTime}}</span></p>
@@ -259,7 +259,7 @@
                                           prop="endtime"
                                           sortable
                                           label="截止时间"
-                                          min-width="110"
+                                          width="120"
                                           >
                                           <template slot-scope="scope">
                                               <p class="timenewline">{{scope.row.endtimeDate}}<span>{{scope.row.endtimeTime}}</span></p>
@@ -268,11 +268,13 @@
                                       <el-table-column
                                           prop="orgscore"
                                           label="总积分"
+                                          align="center"
                                           width="80"
                                           >
                                       </el-table-column>
                                       <el-table-column
                                           prop="receivescore"
+                                          align="center"
                                           label="已认领积分"
                                           width="100"
                                           >
@@ -283,6 +285,7 @@
                                       <el-table-column
                                           prop="ownScore"
                                           label="认领积分"
+                                          align="center"
                                           width="90">
                                           <template slot-scope="scope">
                                               <div class="table-input">
@@ -384,7 +387,7 @@
                                           prop="ownScore"
                                           label="负责人"
                                           v-if="labelColumn[6].isshow"
-                                          width="120">
+                                          width="100">
                                           <template slot-scope="scope">
                                               <div class="table-input">
                                                   <el-select v-model="scope.row.dealuserid" size="small" v-if="(!scope.row.dealusername||scope.row.dealusername=='')&&currentId==7" clearable multiple collapse-tags placeholder="负责人">
@@ -401,6 +404,7 @@
                                       </el-table-column>
                                       <el-table-column
                                           prop="orgscore"
+                                          align="center"
                                           label="总积分"
                                           width="80"
                                           v-if="labelColumn[5].isshow"
@@ -410,7 +414,7 @@
                                           prop="tags"
                                           align="left"
                                           label="标签"
-                                          min-width="160"
+                                          width="160"
                                           v-if="labelColumn[7].isshow"
                                           >
                                           <template slot-scope="scope">
@@ -423,7 +427,7 @@
                                           prop="startdotime"
                                           sortable
                                           label="开工时间"
-                                          min-width="110"
+                                          width="120"
                                           v-if="labelColumn[8].isshow"
                                           >
                                           <template slot-scope="scope">
@@ -434,7 +438,7 @@
                                           prop="starttime"
                                           sortable
                                           label="开始时间"
-                                          min-width="110"
+                                          width="120"
                                           v-if="labelColumn[9].isshow"
                                           >
                                           <template slot-scope="scope">
@@ -445,7 +449,7 @@
                                           prop="endtime"
                                           sortable
                                           label="截止时间"
-                                          min-width="110"
+                                          width="120"
                                           v-if="labelColumn[3].isshow"
                                           >
                                           <template slot-scope="scope">
@@ -454,6 +458,7 @@
                                       </el-table-column>
                                       <el-table-column
                                           prop="receivescore"
+                                          align="center"
                                           label="已认领积分"
                                           width="100"
                                           v-if="labelColumn[10].isshow"
