@@ -868,19 +868,19 @@ export default {
                       //if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
                       //    operationsWidth+=56;
                       //}
-                      operationsWidth+=168;
+                      operationsWidth+=220;
                   }else if($this.currentStatus=="focuson"||$this.currentStatus=="person"){
                       if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-                          operationsWidth+=56;
+                          operationsWidth+=66;
                       }
                       if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')){
-                          operationsWidth+=56;
+                          operationsWidth+=66;
                       }
                       if($this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
-                          operationsWidth+=56;
+                          operationsWidth+=66;
                       }
                       if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
-                          operationsWidth+=56;
+                          operationsWidth+=66;
                       }
                   }else if($this.currentStatus=="receive"){
                     if($this.menuButtonPermit.includes('Worksaccpet_confirmwork')){
@@ -1252,37 +1252,37 @@ export default {
       var operationsWidth = 22;
       if($this.currentId==4){
         if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-            operationsWidth+=56;
+            operationsWidth+=66;
         }
         $this.operationsWidth = "" + operationsWidth;
       }
       if($this.currentId==5){
         if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-            operationsWidth+=56;
+            operationsWidth+=66;
         }
         if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')){
-            operationsWidth+=56;
+            operationsWidth+=66;
         }
         $this.operationsWidth = "" + operationsWidth;
       }
       if($this.currentId==6){
         if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-            operationsWidth+=56;
+            operationsWidth+=66;
         }
         if($this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
-            operationsWidth+=56;
+            operationsWidth+=66;
         }
         if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
-            operationsWidth+=56;
+            operationsWidth+=66;
         }
         $this.operationsWidth = "" + operationsWidth;
       }
       if($this.currentId==7){
         if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-            operationsWidth+=56;
+            operationsWidth+=66;
         }
         if($this.menuButtonPermit.includes('Worksaccpet_confirmdeal')){
-            operationsWidth+=56;
+            operationsWidth+=66;
         }
         $this.operationsWidth = "" + operationsWidth;
       }
