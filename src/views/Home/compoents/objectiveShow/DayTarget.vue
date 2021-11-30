@@ -74,7 +74,6 @@ export default {
         var aimArr = $this.DayAim;
         var Dep1DayNum = $this.Dep1DayNum;
         var annotations = [];
-
         each(aimArr, (value, k) => {
           var number = value.number;
           var snum = k - 0.30;
