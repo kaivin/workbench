@@ -77,13 +77,14 @@
           </div>
           
           <el-row :gutter="20" id="module-view">
-               <template v-for="moduleitem in moduleList">
+               <template v-for="(moduleitem,moduleindex) in moduleList">
                 <el-col 
                 v-if="moduleitem.isShow"
                 :xl="moduleitem.xl"
                 :lg="moduleitem.lg"
                 :key="moduleitem.name"
                 class="module-item"
+                :class="moduleindex == moduleList.length-1||moduleindex == moduleList.length-2?'module-item-bom':''"
                 >
                   <component
                   :is="moduleitem.name"
@@ -341,13 +342,13 @@ export default {
           xl:12,
           ref:'yeardepartscoreChart',
         },
-        {
-          name:'depCost',
-          isShow:true,
-          lg:24,
-          xl:24,
-          ref:'costAverageChart',
-        },
+        // {
+        //   name:'depCost',
+        //   isShow:false,
+        //   lg:24,
+        //   xl:24,
+        //   ref:'costAverageChart',
+        // },
         {
           name:'yearContrast',
           isShow:true,
@@ -416,9 +417,9 @@ export default {
          if(item.name == 'dealYearNum'){
            item.isShow = this.language=='Module_cnStat';
          }
-         if(item.name == 'depCost'){
-           item.isShow = this.language=='Module_cnStat';
-         }
+        //  if(item.name == 'depCost'){
+        //    item.isShow = this.language=='Module_cnStat';
+        //  }
          if(item.name == 'yearContrast'){
            item.isShow = this.language=='Module_cnStat';
          }
