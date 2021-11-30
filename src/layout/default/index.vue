@@ -5,7 +5,7 @@
       </el-header>
       <el-container class="container-layout">
         <sidebar v-if="isSales" />
-        <homeleft v-if="ModuleList.includes('Module_newindex')" />
+        <homeleft v-if="ModuleList.includes('Module_newindex')&&key.indexOf('/Home')!=-1" />
         <el-main class="main-layout" v-if="isRefresh">
             <transition name="fade-transform" mode="out-in">
               <router-view :key="key"></router-view>

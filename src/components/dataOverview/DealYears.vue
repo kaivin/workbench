@@ -169,13 +169,13 @@ export default {
         var $this = this;
         let chartBotData = JSON.parse(JSON.stringify(val));
         chartBotData.forEach(item => {
-          item.departname = item.departname.slice(-2)
+          item.departname = item.departname.slice(-2);
         });
         let xAxisData = [];
         let seriesData = [];
         for(let i = 0;i<chartBotData.length;i++){
           xAxisData.push(chartBotData[i].departname);
-          seriesData.push(chartBotData[i].a_number)
+          seriesData.push(chartBotData[i].a_number);
         }
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('DealYearsChartBot'));
@@ -273,12 +273,12 @@ export default {
       },
       echartsSize(){
         if(this.myChart){
-          this.myChart.resize()
+          this.myChart.resize();
         }
       }
     },
     destroyed(){
-      window.removeEventListener('resize',this.echartsSize)
+      window.removeEventListener('resize',this.echartsSize);
       this.myChart.dispose();
     }
 }

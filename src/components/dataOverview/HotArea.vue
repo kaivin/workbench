@@ -282,6 +282,10 @@ export default {
       // 热门地区TOP10
       drawTopTen(){
         var $this = this;
+        
+        if($this.pieSourcePlot&&!$this.pieSourcePlot.destroyed){
+          $this.pieSourcePlot.destroy();
+        }
          let mapCountData = [];
         if(this.type == 0){
           mapCountData = $this.provincecountmap;
@@ -298,67 +302,63 @@ export default {
           }).reverse();
         }
         mapCountData = mapCountData.slice(0,5);
+        const maxNum =  mapCountData[0].number;
+        const mapInterval = MapInterval(maxNum);
+        const topTenColor = TopTenColor(mapCountData,mapInterval);
         if(mapCountData.length>0){
-          if($this.pieSourcePlot&&!$this.pieSourcePlot.chart.destroyed){
-            $this.pieSourcePlot.changeData(mapCountData);
-          }else{
-            let maxNum =  mapCountData[0].number;
-            let mapInterval = MapInterval(maxNum);
-            let topTenColor = TopTenColor(mapCountData,mapInterval);
-            const pieSourcePlot = new Bar('topTen', {
-              data:mapCountData,
-              xField: 'number',
-              yField: $this.language =='中文'?'name':'country',
-              seriesField: $this.language =='中文'?'name':'country',
-              barWidthRatio: 0.4,
-              height:240,
-              legend: false,
-              appendPadding:[0, 30, 0, 10],
-              xAxis:{
-                grid: {
-                  line: {
-                    style: {
-                      stroke: "#cccccc",
-                      lineWidth: 1,
-                      lineDash: [3, 2],
-                      strokeOpacity: 0.3,
-                      shadowColor: null,
-                      shadowBlur: 0,
-                      shadowOffsetX: 0,
-                      shadowOffsetY: 0,
-                    },
-                  },
-                },
-                line:null,
-              },
-              yAxis:{
-                line:null,
-                tickLine:null,
-                subTickLine:null
-              },
-              //color:['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'],
-              color:topTenColor,
-              label: {
+          const pieSourcePlot = new Bar('topTen', {
+          data:mapCountData,
+          xField: 'number',
+          yField: $this.language =='中文'?'name':'country',
+          seriesField: $this.language =='中文'?'name':'country',
+          barWidthRatio: 0.4,
+          height:240,
+          legend: false,
+          appendPadding:[0, 30, 0, 10],
+          xAxis:{
+            grid: {
+              line: {
                 style: {
-                  fill: '#999999',
-                  opacity: 1,
-                  fontSize: 12
-                },
-                position: 'right',
-                offset:10,
-              },
-              meta: {
-                name: {
-                  alias: '地区',
-                },
-                number: {
-                  alias: $this.type == 0?'数量':'积分'
+                  stroke: "#cccccc",
+                  lineWidth: 1,
+                  lineDash: [3, 2],
+                  strokeOpacity: 0.3,
+                  shadowColor: null,
+                  shadowBlur: 0,
+                  shadowOffsetX: 0,
+                  shadowOffsetY: 0,
                 },
               },
-            });
-            $this.pieSourcePlot = pieSourcePlot;
-            pieSourcePlot.render();
-          }
+            },
+            line:null,
+          },
+          yAxis:{
+            line:null,
+            tickLine:null,
+            subTickLine:null
+          },
+          //color:['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'],
+          color:topTenColor,
+          label: {
+            style: {
+              fill: '#999999',
+              opacity: 1,
+              fontSize: 12
+            },
+            position: 'right',
+            offset:10,
+          },
+          meta: {
+            name: {
+              alias: '地区',
+            },
+            number: {
+              alias: $this.type == 0?'数量':'积分'
+            },
+          },
+        });
+        $this.pieSourcePlot = pieSourcePlot;
+        pieSourcePlot.render();
         }
       },
       // 英文地区询盘地图

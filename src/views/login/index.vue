@@ -176,7 +176,7 @@ export default {
         getModuleList() {
         var $this = this;
         $this.$store
-            .dispatch("modulelist/getPermitModuleAction", null)
+            .dispatch("modulelist/getPermitModuleListAction", null)
             .then((response) => {
             if (response) {
                 if (response.status) {

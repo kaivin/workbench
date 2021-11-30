@@ -77,7 +77,6 @@ router.beforeEach(async(to, from, next) => {
                 if(response.data.length>0){
                   store.dispatch('modulelist/getPermitModuleListAction',null).then(res1=>{
                     var resData = res1.data;
-                    console.log(resData,"首页模块权限");
                     var permissionData = {};
                     permissionData.module = resData;
                     permissionData.router = response.data;

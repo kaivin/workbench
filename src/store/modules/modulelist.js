@@ -53,6 +53,7 @@ const actions = {
   getPermitModuleListAction({ commit, state }) {
     return new Promise((resolve, reject) => {
         getPermitModuleList().then(response => {
+            commit('SET_INFO', response.data);
             resolve(response)
         }).catch(error => {
             reject(error)

@@ -1159,18 +1159,35 @@ export default {
               $this.$store.dispatch('api/getRouteAction').then(res1=>{
                 if(res1.status){
                   if(res1.data.length>0){
-                    $this.$store.dispatch('permission/generateRoutes', res1.data).then(res2=>{
-                      if(res2.length>0){
-                        router.addRoutes(res2);
-                        router.addRoutes([{path: '*',name:'error404',redirect:"/404",meta: {title: '404', icon: null,hidden:true,keepAlive:false }}]);
-                        if(response.data.issales==2){
-                            var routeUrl =  $this.$router.resolve({path: '/Sales/index?Status=personcount' });
-                            window.open(routeUrl.href,'_self');
-                        }else{
-                          var routeUrl =  $this.$router.resolve({path: '/Home/index' });
+                    $this.$store.dispatch('modulelist/getPermitModuleListAction',null).then(res3=>{
+                      var resData = res3.data;
+                      var permissionData = {};
+                      permissionData.module = resData;
+                      permissionData.router = res1.data;
+                      $this.$store.dispatch('permission/generateRoutes', permissionData).then(res2=>{
+                        if(res2.length>0){
+                          router.addRoutes(res2);
+                          router.addRoutes([{path: '*',name:'error404',redirect:"/404",meta: {title: '404', icon: null,hidden:true,keepAlive:false }}]);
+                          var homeRedirect = "";
+                          if(response.data.issales==2){
+                            homeRedirect = '/Sales/index?Status=personcount';
+                          }else{
+                            if(res3.data.includes("Module_manager")){
+                              homeRedirect = '/Home/index';
+                            }else{
+                              if(res3.data.includes("Module_cnStat")){
+                                homeRedirect = '/Home/CH/objectiveShow';
+                              }else{
+                                if(res3.data.includes("Module_enStat")){
+                                  homeRedirect = '/Home/EN/objectiveShow';
+                                }
+                              }
+                            }
+                          }
+                          var routeUrl =  $this.$router.resolve({path: homeRedirect });
                           window.open(routeUrl.href,'_self');
                         }
-                      }
+                      });
                     });
                   }
                 }else{

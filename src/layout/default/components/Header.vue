@@ -184,8 +184,6 @@ export default {
       },
   },
   created(){
-    console.log(this.ModuleList,"权限模块")
-    console.log(this.userInfo,"用户信息")
     var homeRedirect = "";
     if(this.userInfo.issales==2){
       homeRedirect = '/Sales/index';
@@ -210,7 +208,6 @@ export default {
     }
   },
   methods:{
-    
       // 清除缓存
       clearCache(){
         var $this = this;
