@@ -104,7 +104,7 @@
 <script>
 import logo from "@/assets/logo.png";
 import logoTitle from "@/assets/logo_font.png";
-import { mapGetters ,mapActions} from 'vuex';
+import { mapGetters } from 'vuex';
 import Cookies from 'js-cookie'
 import Hamburger from '@/components/Hamburger';
 export default {

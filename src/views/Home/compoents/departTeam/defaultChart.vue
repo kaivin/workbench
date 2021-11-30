@@ -80,14 +80,15 @@
         </div>
       </div>
       <div class="flex-content chart-content">
-        <div class="chart-panel" :id="'area-'+currentData.randomStr"></div>
+        <div v-if="currentData.chartType=='area'" class="chart-panel" :id="'area-'+currentData.randomStr"></div>
+        <div v-else class="chart-panel" :id="'line-'+currentData.randomStr"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Pie,Column,Area } from '@antv/g2plot';
+import { Pie,Column,Area,Line } from '@antv/g2plot';
 export default {
   name: "defaultChart",
   data:function() {
@@ -132,7 +133,11 @@ export default {
     },
   },
   mounted(){
-    this.drawAreaChart();
+    if(this.currentData.chartType=='area'){
+      this.drawAreaChart();
+    }else{
+      this.drawLineChart();
+    }
   },
   methods:{
     // 选项卡切换事件
@@ -321,7 +326,6 @@ export default {
     // 面积趋势图例
     drawAreaChart(){
       var $this = this;
-      console.log($this.currentData,"面积数据")
       var isDate = false;
       if($this.currentData.chartTitle.indexOf('日期')!=-1){
         isDate = true;
@@ -403,6 +407,7 @@ export default {
             },
           },
           legend:{
+            marker:'line',
             layout:'horizontal',
             position:'top-right',
             flipPage:false,
@@ -412,7 +417,8 @@ export default {
                 textBaseline:"middle"
               }
             },
-          },// 自定义状态样式
+          },
+          // 自定义状态样式
           areaStyle: (data) => {
             var itemColor = "";
             $this.currentData.mainData.forEach(function(item){
@@ -433,15 +439,107 @@ export default {
         });
         $this.areaPlot = areaPlot;
         areaPlot.render();
-        areaPlot.on('area:click', (...args) => {
-          console.log(...args);
+      }
+    },
+    // 多折线趋势图例
+    drawLineChart(){
+      var $this = this;
+      var isDate = false;
+      if($this.currentData.chartTitle.indexOf('日期')!=-1){
+        isDate = true;
+      }
+      var label = null;
+      var point = null;
+      if($this.currentData.colorArr.length<=3){
+        label = {
+          layout: [{ type: "hide-overlap" }], // 隐藏重叠label
+          style: {
+            textAlign: "center",
+            color: "#9e9e9e",
+            fontsize: 12,
+          },
+        };
+        point = {
+          size: 3,
+          shape: "circle",
+          style: (res) => {
+            var itemColor = "";
+            $this.currentData.mainData.forEach(function(item){
+              if(item.name == res.name){
+                itemColor = item.color;
+              }
+            });
+            var obj = {
+              opacity: 0.5,
+              stroke: itemColor,
+              fill: "#fff",
+            };
+            return obj;
+          },
+        }
+      }
+      if(!$this.linePlot){
+        const linePlot = new Line('line-'+$this.currentData.randomStr, {
+          appendPadding:[30,30,20],
+          data:$this.currentData.mainData,
+          xField: 'key',
+          yField: 'value',
+          seriesField:'name',
+          color:$this.currentData.colorArr.length==1?$this.currentData.colorArr[0]:$this.currentData.colorArr,
+          yAxis:{
+            grid:{
+              line:{
+                style:{
+                  stroke: 'black',
+                  lineWidth:1,
+                  lineDash:[6,3],
+                  strokeOpacity:0.1,
+                  shadowBlur:0
+                }
+              }
+            },
+          },
+          xAxis: {
+            tickCount:isDate?8:15,
+            label: {
+              // 数值格式化为千分位
+              formatter: (v) => {
+                var item = "";
+                if(v.indexOf("&")!=-1){
+                  item = v.split("&")[0]+'\n'+v.split("&")[1];
+                }else{
+                  if(v.indexOf(" ")!=-1){
+                    var week = "周"+v.split(" ")[1].substr(2);
+                    var date = v.split(" ")[0];
+                    item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
+                  }else{
+                    item = v.split("-")[1]+"月";
+                  }
+                }
+                return item
+              },
+              style:{
+                lineHeight:18
+              }
+            },
+          },
+          legend:{
+            marker:'line',
+            layout:'horizontal',
+            position:'top-right',
+            flipPage:false,
+            offsetX:-30,
+            label:{
+              style:{
+                textBaseline:"middle"
+              }
+            },
+          },
+          label: label,
+          point: point,
         });
-        areaPlot.on('label:click', (...args) => {
-          console.log(...args);
-        });
-        areaPlot.on('point:click', (...args) => {
-          console.log(...args);
-        });
+        $this.linePlot = linePlot;
+        linePlot.render();
       }
     },
   },

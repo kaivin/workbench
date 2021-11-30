@@ -20,7 +20,6 @@
 
 <script>
 import Item from './Item';
-import Cookies from 'js-cookie';
 export default {
   name: 'SidebarItem',
   components: {Item},
@@ -36,12 +35,6 @@ export default {
   },
   methods: {
     jumpLink:function(path,index){
-      var ModuleList = Cookies.get('ModuleList');
-      const ModBool=ModuleList.includes("Module_manager");
-      if(ModBool&&path ==="/Home/index"){
-        path = "/Home/CH/objectiveShow";
-        this.$router.push(path);
-      }
       if(path === "/Webmsg/msgindex"){
         this.$router.push({path,query:{Status:'Untreated'}});
       }else if(path === "/Sales/index"){

@@ -451,7 +451,7 @@ export function groupColor(groupArr){
 }
 // 日期对比情况下的两个数组的图表主题色添加
 export function groupDateColor(groupArr){
-  var colorArr = ["#9bcdda","#fad9a3"]
+  var colorArr = ["#2259e5","#3ebea7"]
   groupArr.forEach(function(item,index){
     item.forEach(function(item1,index1){
       item1.color = colorArr[index]

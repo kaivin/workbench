@@ -189,8 +189,8 @@ export default {
             let data = args.gEvent.delegateObject.item.name;
             
             let month = data.slice(0,2);
-            let startTime = parseTime(new Date(),'{y}') + '/' +  month + '/01';
-            let endTime = parseTime(new Date(),'{y}') + '/' + month + '/' + $this.getMonthDays(parseTime(new Date(),'{y}'),month);
+            let startTime = parseTime(new Date(),'{y}') + '/' +  month;
+            let endTime = parseTime(new Date(),'{y}') + '/' + month;
             var baseDepart = "";
             var contrastDepartArr = [];
             $this.departList.forEach(function(item,index){
@@ -207,7 +207,11 @@ export default {
             if($this.language == '中文'){
               $this.$router.push({path:'/Home/CH/sectorAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
             }else{
-              $this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+              if(this.type == 0){
+                $this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+              }else{
+                $this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:8,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+              }
             }
           });
           $this.chartTop = chartTop;
@@ -326,7 +330,11 @@ export default {
             if($this.language == '中文'){
               $this.$router.push({path:'/Home/CH/sectorAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
             }else{
-              $this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+              if(this.type == 0){
+                $this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+              }else{
+                $this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:8,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+              }
             }
           });
           $this.chartBot = chartBot;
@@ -377,11 +385,22 @@ export default {
         font-size: 12px;
         box-sizing: border-box;
         cursor: pointer;
+        margin-left: -1px;
+        position: relative;
+        &:hover{
+          color: #2e88ff;
+          border: 1px solid #2e88ff;
+          z-index: 1;
+        }
       }
       .active{
-        border: 1px solid #6198f5;
-        background: #6198f5;
+        border: 1px solid #2e88ff;
+        background:#2e88ff;
         color: #fff;
+        z-index: 1;
+        &:hover{
+          color: #fff;
+        }
       }
     }
   }

@@ -43,6 +43,7 @@ import UnpayDeal from "../../compoents/memberCompare/UnpayDeal"
 import PayMember from "../../compoents/memberCompare/PayMember"
 import MillionDeal from "../../compoents/memberCompare/MillionDeal"
 import AwardRank from "../../compoents/memberCompare/AwardRank"
+import {numSeparate} from "@/utils/index"
 export default {
   name: "cnGroupAnalysis",
   data() {
@@ -103,6 +104,9 @@ export default {
             if (response.status) {
               // 非付费询盘
               $this.unpayInquiry = response.xunulist;
+              $this.unpayInquiry.forEach(function(item){
+                item.number = numSeparate(item.number);
+              });
               if(response.xunulist.length < 9){
                   $this.unpayInquirySet.ifFold = false;
                   $this.unpayInquirySet.boxHeight = "auto";
@@ -113,6 +117,9 @@ export default {
               }
               // 成交积分
               $this.dealScore = response.scorelist;
+              $this.dealScore.forEach(function(item){
+                item.score = numSeparate(Math.floor(item.score*100)/100);
+              });
               if(response.scorelist.length < 9){
                   $this.dealScoreSet.ifFold = false;
                   $this.dealScoreSet.boxHeight = "auto";
@@ -137,6 +144,9 @@ export default {
               var moneyarr = response.moneylist;
               moneyarr.sort($this.compare('allmoney'));
               $this.awardMoney = moneyarr;
+              $this.awardMoney.forEach(function(item){
+                item.allmoney = numSeparate(Math.floor(item.allmoney*100)/100);
+              });
               if(response.moneylist.length < 9){
                   $this.awardMoneySet.ifFold = false;
                   $this.awardMoneySet.boxHeight = "auto";

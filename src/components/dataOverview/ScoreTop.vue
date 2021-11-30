@@ -231,12 +231,12 @@ export default {
         display: flex;
         width: 34px;
         height: 34px;
+        border: 1px solid #fee170;
+        border-radius: 50%;
+        overflow: hidden;
         img{
           margin: auto;
-          border-radius: 50%;
-          width: 34px;
-          height: 34px;
-          border: 1px solid #fee170;
+          width: 100%;
           box-sizing: border-box;
         }
         

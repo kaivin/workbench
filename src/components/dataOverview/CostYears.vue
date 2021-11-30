@@ -166,10 +166,10 @@ export default {
             },
           });
           chartTop.on('axis-label:click', (args) => {
-            let data = args.data.data;
+            let data = args.gEvent.delegateObject.item.name;
             let month = data.slice(0,2);
-            let startTime = parseTime(new Date(),'{y}') + '/' +  month + '/01';
-            let endTime = parseTime(new Date(),'{y}') + '/' + month + '/' + $this.getMonthDays(parseTime(new Date(),'{y}'),month);
+            let startTime = parseTime(new Date(),'{y}') + '/' +  month;
+            let endTime = parseTime(new Date(),'{y}') + '/' + month;
             var baseDepart = "";
             var contrastDepartArr = [];
             $this.departList.forEach(function(item,index){
@@ -245,7 +245,7 @@ export default {
                 autoHide: true,
                 autoRotate: false,
                 style: {
-                  fill: '#bfbfbf',
+                  fill: '#333',
                   opacity: 1,
                   fontSize: 12,
                   lineHeight:18,
@@ -253,6 +253,14 @@ export default {
               },
             },
             yAxis: {
+              label: {
+                style: {
+                  fill: '#333',
+                  opacity: 1,
+                  fontSize: 12,
+                  lineHeight:18,
+                },
+              },
               grid: {
                 line: {
                   style: {

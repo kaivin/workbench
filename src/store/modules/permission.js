@@ -31,11 +31,36 @@ import Layout from '@/layout/default/index.vue';
  * @param routes asyncRoutes
  * @param roles
  */
-function dataToRoute(data){
+function dataToRoute(data,modules){
   var newData = [];
   data.forEach(function(item,index){
     var itemData = {};
-    itemData.path = item.url!==""?"/"+item.url:"";
+    if(item.url!==""){
+      if(item.url=="Home/index"){
+        var userInfo = JSON.parse(Cookies.get('userInfo'));
+        var homeRedirect = "";
+        if(userInfo.issales==2){
+          homeRedirect = '/Sales/index';
+        }else{
+          if(modules.includes("Module_manager")){
+            homeRedirect = '/Home/index';
+          }else{
+            if(modules.includes("Module_cnStat")){
+              homeRedirect = '/Home/CH/objectiveShow';
+            }else{
+              if(modules.includes("Module_enStat")){
+                homeRedirect = '/Home/EN/objectiveShow';
+              }
+            }
+          }
+        }
+        itemData.path = homeRedirect;
+      }else{
+        itemData.path = "/"+item.url;
+      }
+    }else{
+      itemData.path = "";
+    }
     itemData.component = item.url!==""?"/"+item.url:"";
     itemData.redirect = item.redirecturl&&item.redirecturl!==""?"/" + item.redirecturl:"";
     itemData.name = item.route;
@@ -81,7 +106,7 @@ function setRoutes(routers,modules){
       if(modules.includes("Module_cnStat")){
         homeRedirect = '/Home/CH/objectiveShow';
       }else{
-        if(modules.includes("Module_cnStat")){
+        if(modules.includes("Module_enStat")){
           homeRedirect = '/Home/EN/objectiveShow';
         }
       }
@@ -329,7 +354,7 @@ const mutations = {
 const actions = {
   generateRoutes({ commit }, routers) {
     return new Promise(resolve => {
-      var newData = dataToRoute(routers.router);
+      var newData = dataToRoute(routers.router,routers.module);
       let accessedRoutes;
       var menuData = [];
       if (newData.length <= 0) {

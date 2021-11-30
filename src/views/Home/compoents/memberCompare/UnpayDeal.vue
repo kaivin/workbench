@@ -40,10 +40,10 @@
                   <div class="userInquiry">
                     <div v-if="lang =='ch'">
                         <div v-if="index<3" :class="'num0'+(index+1)"> 
-                          {{item.score.toFixed(1)}}分
+                          {{item.score}}分
                         </div>
                         <div v-else> 
-                          {{item.score.toFixed(1)}}分
+                          {{item.score}}分
                         </div>
                     </div>
                     <div v-else>

@@ -1,8 +1,7 @@
 ﻿export function MapInterval(maxNum){    
     var minAverage='';  
     var defaulColor = []   
-    if(maxNum>0){
-        if(maxNum>=4){
+        if(maxNum>=20){
             var average=parseInt(maxNum/4);
             var averageStr=average.toString();
             var numRes = [];
@@ -18,35 +17,14 @@
             }
             var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
             var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
-            defaulColor=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
+            defaulColor=['#f66262','#fdb76a','#496bf2','#a4b8de','#e4e5ea'];
             var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1]; 
         }else{
-            minAverage = 1;
-            var averArr=[];
-            var numList=[]; 
-            for(let i = 0;i<maxNum/minAverage;i++){
-                averArr.push(minAverage*i + '-' + minAverage*(i+1))
-            }
-            for(let i = 0;i<maxNum/minAverage;i++){
-                numList.push(minAverage*i)
-            }
-            numList.sort(function(a, b){return b - a});
-            defaulColor=[];
-            var colAry=['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'];
-            for(let i = 0;i<maxNum/minAverage;i++){
-                if(i == maxNum/minAverage - 1){
-                defaulColor[i] = colAry[4]
-                }else{
-                defaulColor[i] = colAry[i]
-                }
-            }          
+            minAverage=20;
+            var averArr=['0-'+minAverage];
+            defaulColor=['#e4e5ea'];
+            var numList=[minAverage*1];          
         }
-    }else{
-        minAverage=10;
-        var averArr=['0-'+minAverage];
-        defaulColor=['#b3b3b3'];
-        var numList=[minAverage*1]; 
-    }
     var valDateObj={}
     valDateObj.minAverage=minAverage;         // 平均值
     valDateObj.numList=numList;               // 色块区间
@@ -83,7 +61,6 @@ export function MapColor(resArr,obj){
 }
 
 export function TopTenColor(resArr,obj){ 
-    console.log(obj,"区间判断");  
     var topTenColor=[];
     resArr.forEach(function(item,index){
         for(var i=0;i<obj.numList.length;i++){

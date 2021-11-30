@@ -5,7 +5,7 @@
       </el-header>
       <el-container class="container-layout">
         <sidebar v-if="isSales" />
-        <homeleft v-if="key.includes('/Home/')" />
+        <homeleft v-if="ModuleList.includes('Module_newindex')" />
         <el-main class="main-layout" v-if="isRefresh">
             <transition name="fade-transform" mode="out-in">
               <router-view :key="key"></router-view>
@@ -18,7 +18,7 @@
 <script>
 import { Sidebar, HeaderPane, Homeleft } from './components/index';
 import ResizeMixin from './mixin/ResizeHandler'
-import { mapState } from 'vuex'
+import { mapState,mapGetters } from 'vuex'
 import Cookies from 'js-cookie'
 export default {
   name: 'Layout',
@@ -41,6 +41,9 @@ export default {
     ]
   },
   computed:{
+    ...mapGetters([
+      'ModuleList',
+    ]),
     ...mapState({
       sidebar: state => state.app.sidebar,
     }),

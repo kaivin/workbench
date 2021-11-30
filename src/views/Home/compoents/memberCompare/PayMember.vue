@@ -2,7 +2,6 @@
   <div class="payMember">
       <div class="memberTit">
           <h3>付费成员-个人年度<span>总排行</span></h3>
-          <p>（单位：个）</p>
       </div>
         <el-table
             :data="payMember"
@@ -40,7 +39,7 @@
             </el-table-column>
             <el-table-column
                 prop="number"
-                label="询盘个数"
+                label="询盘（个）"
                 sortable
                 min-width="100">
                 <template slot-scope="scope">
@@ -52,7 +51,7 @@
                 v-if="lang=='ch'"
                 prop="score"
                 sortable
-                label="询盘积分">
+                label="积分（分）">
                 <template slot-scope="scope">
                     <span class="dealnum">{{scope.row.score}}</span>
                 </template>
@@ -61,7 +60,7 @@
                 v-if="lang=='en'"
                 prop="score"
                 sortable
-                label="成交个数">
+                label="成交（个）">
                 <template slot-scope="scope">
                     <span class="dealnum">{{scope.row.score}}</span>
                 </template>
@@ -69,7 +68,7 @@
             <el-table-column
                 prop="Anumber"
                 sortable
-                label="百万成交个数"
+                label="百万成交（个）"
                 >
                 <template slot-scope="scope">
                     <span class="milnum">×{{scope.row.Anumber}}</span>

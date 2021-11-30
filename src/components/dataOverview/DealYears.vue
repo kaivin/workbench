@@ -192,7 +192,7 @@ export default {
               show:false,
             },
             axisLabel:{
-              color:'#a6a6a6',
+              color:'#333',
             }
           },
           yAxis: {
@@ -204,7 +204,7 @@ export default {
               show:false,
             },
             axisLabel:{
-              color:'#a6a6a6',
+              color:'#333',
             },
             splitLine:{
               lineStyle:{
@@ -253,7 +253,7 @@ export default {
               label:{
                 show:true,
                 position:'top',
-                color:'#8b8b8b'
+                color:'#333'
               },
               itemStyle:{
                 color:'#79a4f7',

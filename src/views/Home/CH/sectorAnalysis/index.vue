@@ -279,7 +279,6 @@ export default {
     const $this = this;
     if($this.$refs.boxPane){  
       $this.minWidth = $this.$refs.boxPane.offsetWidth; 
-      console.log($this.minWidth,"最小宽度");
     }
     window.onresize = () => {
       return (() => {
@@ -414,6 +413,10 @@ export default {
                 inquiryData.unit = "（单位：个）";
                 dealScoreData.unit = "（单位：分）";
                 costData.unit = "（单位：万元）";
+
+                inquiryData.chartType = "area";
+                dealScoreData.chartType = "line";
+                costData.chartType = "area";
 
                 inquiryData.nowNumber = numSeparate(response.allxunnumber);
                 dealScoreData.nowNumber = numSeparate(response.scoreall);
@@ -624,7 +627,6 @@ export default {
         }
       })
       groupName = "电商"+fontArr.join("、")+"部";
-      console.log(groupName);
       $this.groupName = groupName;
     },
     // 日期维度点击事件
@@ -887,7 +889,6 @@ export default {
       if(searchData.dept_id&&searchData.starttime&&searchData.endtime&&searchData.type){
         $this.$store.dispatch('api/getChinadepartcountAction', searchData).then(res=>{
          if(res.status){
-            console.log(res,"筛选数据")
             $this.filterDataClump(res);
           }else{
             $this.$message({
@@ -920,6 +921,7 @@ export default {
       // 询盘趋势
       if($this.selectedType.includes("inquiryCount")){
         inquiryData = {};
+        inquiryData.chartType = "area";
         // 时间对比
         if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
           var dateData = [];
@@ -1083,7 +1085,6 @@ export default {
             });
             // 只有一个部门被选中的情况
             if($this.selectedData.groupID.length==1){
-              console.log($this.groupList)
               $this.groupList.forEach(function(item){
                 if(item.id == $this.selectedData.groupID[0]){
                   inquiryData.chartTitle = item.name+"询盘趋势";
@@ -1119,6 +1120,7 @@ export default {
       var dealScoreData = null;
       if($this.selectedType.includes("dealScore")){
         dealScoreData = {};
+        dealScoreData.chartType = "line";
         // 时间对比
         if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
           dealScoreData.nowNumber = numSeparate(res.monthscoreallnumber);
@@ -1252,6 +1254,7 @@ export default {
       var costCountData = null;
       if($this.selectedType.includes("costCount")){
         costCountData = {};
+        costCountData.chartType = "area";
         // 时间对比
         if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
           costCountData.nowNumber = numSeparate(Math.floor(res.monthmoneyallnumber*10)/10);

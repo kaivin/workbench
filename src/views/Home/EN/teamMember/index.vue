@@ -279,7 +279,6 @@ export default {
     const $this = this;
     if($this.$refs.boxPane){  
       $this.minWidth = $this.$refs.boxPane.offsetWidth; 
-      console.log($this.minWidth,"最小宽度");
     }
     window.onresize = () => {
       return (() => {
@@ -294,7 +293,6 @@ export default {
     initData() {
       var $this = this;
       $this.$store.dispatch('teamMember/enGroupDefaultAction', null).then(response=>{
-        console.log(response,"默认数据");
           if(response){
             if(response.status){
                 var groupList = response.group;
@@ -341,6 +339,7 @@ export default {
                 semData.avgTitle = "日平均询盘个数";
                 semData.historyTitle = "日历史峰值";
                 semData.unit = "（单位：个）";
+                semData.chartType = "area";
                 semData.nowNumber = numSeparate(response.semallnumber);
                 semData.lastNumber = response.lastsemallnumber;
                 semData.nowLastNumber = numSeparate(Math.abs(response.semallnumber - response.lastsemallnumber));
@@ -385,6 +384,7 @@ export default {
                 seoData.avgTitle = "日平均询盘个数";
                 seoData.historyTitle = "日历史峰值";
                 seoData.unit = "（单位：个）";
+                seoData.chartType = "area";
                 seoData.nowNumber = numSeparate(response.seoallnumber);
                 seoData.lastNumber = response.lastseoallnumber;
                 seoData.nowLastNumber = numSeparate(Math.abs(response.seoallnumber - response.lastseoallnumber));
@@ -429,6 +429,7 @@ export default {
                 snsData.avgTitle = "日平均询盘个数";
                 snsData.historyTitle = "日历史峰值";
                 snsData.unit = "（单位：个）";
+                snsData.chartType = "area";
                 snsData.nowNumber = numSeparate(response.snsallnumber);
                 snsData.lastNumber = response.lastsnsallnumber;
                 snsData.nowLastNumber = numSeparate(Math.abs(response.snsallnumber - response.lastsnsallnumber));
@@ -898,6 +899,7 @@ export default {
       // 询盘个数趋势
       if($this.selectedType.includes("inquiryCount")){
         inquiryData = {};
+        inquiryData.chartType = "area";
         // 时间对比
         if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
           var dateData = [];
@@ -1103,6 +1105,7 @@ export default {
       var dealScoreData = null;
       if($this.selectedType.includes("dealScore")){
         dealScoreData = {};
+        dealScoreData.chartType = "line";
         // 时间对比
         if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
           dealScoreData.nowNumber = numSeparate(res.monthscoreallnumber);
@@ -1243,6 +1246,7 @@ export default {
       // 成交个数趋势
       if($this.selectedType.includes("dealCount")){
         dealCountData = {};
+        dealCountData.chartType = "area";
         // 时间对比
         if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
           dealCountData.nowNumber = numSeparate(res.monthscorenumber);

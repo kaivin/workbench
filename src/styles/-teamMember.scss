@@ -679,9 +679,9 @@
               }
             }
             .date-panel{
-              padding: 20px 30px;
+              padding: 0 30px 20px;
               .item-range{
-                margin-top: 20px;
+                margin-top: 40px;
                 dt{
                   overflow: hidden;
                   span{
@@ -701,13 +701,13 @@
                   height: 16px;
                   margin: 4px 0;
                   border-radius: 16px;
-                  background-color: #9bcdda;
+                  background-color: #2259e5;
                   box-shadow: 0 0 5px rgba(155,205,218,.44);
                 }
               }
               .item-range+.item-range{
                 dd{
-                  background-color: #fad9a3;
+                  background-color: #3ebea7;
                   box-shadow: 0 0 5px rgba(250,217,163,.44);
                 }
               }

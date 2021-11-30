@@ -9,9 +9,9 @@
       <ul class="top-view" ref="topul">
         <li class="top-item" v-for="(item,index) in topdata" :key="index">
           <div class="top-img">
-            <img v-if="index <= 2" :src="item.headimg" :class="'topimg' + index" alt="">
-            <img v-if="index == 3" src="../../assets/top4.jpg" alt="">
-            <img v-if="index == 4" src="../../assets/top5.jpg" alt="">
+            <span v-if="index <= 2" :class="'topimg' + index"><img :src="item.headimg" alt=""></span>
+            <span v-if="index == 3"><img src="../../assets/top4.jpg" alt=""></span>
+            <span v-if="index == 4"><img src="../../assets/top5.jpg" alt=""></span>
           </div>
           <div class="top-name">
             <img :class="'topicon' + index" v-if="index == 0" src="../../assets/top1.jpg" alt="">
@@ -200,15 +200,18 @@ export default {
         display: flex;
         width: 42px;
         height: 42px;
-        
+        >span{
+          border-radius: 50%;
+          margin: auto;
+          overflow: hidden;
+        }
         img{
           margin: auto;
-          border-radius: 50%;
         }
         .topimg0{
           width: 42px;
           height: 42px;
-           box-sizing: border-box;
+          box-sizing: border-box;
           border: 1px solid #fff;
           box-shadow: 0px 5px 9px 0px rgba(185, 193, 204, 0.58);
         }

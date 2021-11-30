@@ -25,7 +25,7 @@
         <!-- :class="DayScore.allTodayNum <= DayScore.allYesterdayNum? 'rowOneColor': ''" -->
           <i class="svg-i"><svg-icon icon-class="line2"></svg-icon></i>
           <p class="flex-content">
-            今日询盘
+            当日询盘
             <strong>{{ DayScore.allTodayNum }}</strong>
             <span
               ><i
@@ -37,7 +37,7 @@
         <li class="flex-box">
           <i class="svg-i"><svg-icon icon-class="line1"></svg-icon></i>
           <p class="flex-content">
-            昨日询盘
+            前一日询盘
             <strong>{{ DayScore.allYesterdayNum }}</strong>
             <span
               ><i

@@ -178,7 +178,7 @@ export default {
           .then(GeoJSON => {
             const regionMapChart = new G2.Chart({
               container: 'regionMapChart',
-              width:340,
+              width:300,
               height:240,
               // 添加 element 选中和激活交互
               interactions: [{ type: 'element-single-selected' }, { type: 'element-active' }],
@@ -330,6 +330,11 @@ export default {
                   },
                 },
                 line:null,
+              },
+              yAxis:{
+                line:null,
+                tickLine:null,
+                subTickLine:null
               },
               //color:['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'],
               color:topTenColor,
@@ -552,11 +557,22 @@ export default {
         font-size: 12px;
         box-sizing: border-box;
         cursor: pointer;
+        margin-left: -1px;
+        position: relative;
+        &:hover{
+          color: #2e88ff;
+          border: 1px solid #2e88ff;
+          z-index: 1;
+        }
       }
       .active{
-        border: 1px solid #6198f5;
-        background: #6198f5;
+        border: 1px solid #2e88ff;
+        background:#2e88ff;
         color: #fff;
+        z-index: 1;
+        &:hover{
+          color: #fff;
+        }
       }
     }
   }
