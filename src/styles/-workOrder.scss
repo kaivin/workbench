@@ -314,12 +314,15 @@
         clear: both;
         display: block;
         position: relative;
+        padding-right: 39px;
         .temHeaderFl{
             clear: both;
         }
         .temHeaderFr{
-            float: right;
-            width: 55px;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            width: 45px;
             height: 55px;
             display: block;
             text-align: center;
@@ -350,73 +353,73 @@
                 height:auto;
                 border: solid 1px #e6ebf5;
                 box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-            }
+            }            
             .temHeaderfixTop{  
-                height: 280px;
-                overflow: auto;
-                overflow-x: hidden;
-                padding: 0px 10px;              
-                .temHeader-checkbox{
-                    display: block;
-                    height: 28px;
-                    margin:0px 3px;
-                    line-height:0;
-                    font-size:0;
-                    text-align: left;
-                    cursor: pointer;
-                    i{
-                        display: inline-block;
-                        width: 11px;
-                        height: 11px;
-                        border: 1px solid #e0e0e0;
-                        margin-right: 10px;
-                        position: relative;
-                        vertical-align: -1px;
-                        &:before {
-                            content: '';
-                            width: 7px;
-                            height: 4px;
-                            transform: rotate(-45deg);
-                            border-left: 1px solid #fff;
-                            border-bottom: 1px solid #fff;
-                            position: absolute;
-                            left: 1px;
-                            top: 1px;
-                        }
-                    }
-                    span{
-                        font-size: 13px;
-                        display: inline-block;
-                        height: 28px;
-                        line-height: 28px;
-                        color:#666666;
-                    }
-                    &.active{
-                        i{
-                            border: 1px solid #2e88ff!important;
-                            background:#2e88ff!important;
-                            &:before {
-                                border-left: 1px solid #fff!important;
-                                border-bottom: 1px solid #fff!important;
-                                display: block!important;
-                            }
-                        }
-                        span{
-                            color: #666666!important;
-                        }
-                    }
-                    &:hover{
-                        i{
-                            border: 1px solid #2e88ff;
-                            background:#f4f4f4;
-                            &:before {display: none;}
-                        }
-                        span{
-                            color:#2e88ff;
-                        }
-                    }
-                }
-            }
+              height: 280px;
+              overflow: auto;
+              overflow-x: hidden;
+              padding: 0px 10px;              
+              .temHeader-checkbox{
+                  display: block;
+                  height: 28px;
+                  margin:0px 3px;
+                  line-height:0;
+                  font-size:0;
+                  text-align: left;
+                  cursor: pointer;
+                  i{
+                      display: inline-block;
+                      width: 11px;
+                      height: 11px;
+                      border: 1px solid #e0e0e0;
+                      margin-right: 10px;
+                      position: relative;
+                      vertical-align: -1px;
+                      &:before {
+                          content: '';
+                          width: 7px;
+                          height: 4px;
+                          transform: rotate(-45deg);
+                          border-left: 1px solid #fff;
+                          border-bottom: 1px solid #fff;
+                          position: absolute;
+                          left: 1px;
+                          top: 1px;
+                      }
+                  }
+                  span{
+                      font-size: 13px;
+                      display: inline-block;
+                      height: 28px;
+                      line-height: 28px;
+                      color:#666666;
+                  }
+                  &.active{
+                      i{
+                          border: 1px solid #2e88ff!important;
+                          background:#2e88ff!important;
+                          &:before {
+                              border-left: 1px solid #fff!important;
+                              border-bottom: 1px solid #fff!important;
+                              display: block!important;
+                          }
+                      }
+                      span{
+                          color: #666666!important;
+                      }
+                  }
+                  &:hover{
+                      i{
+                          border: 1px solid #2e88ff;
+                          background:#f4f4f4;
+                          &:before {display: none;}
+                      }
+                      span{
+                          color:#2e88ff;
+                      }
+                  }
+              }
+          }
             .temHeaderBom{
                 border-top: 1px solid #e6ebf5;
                 padding: 8px;

@@ -361,12 +361,15 @@
         clear: both;
         display: block;
         position: relative;
+        padding-right: 39px;
         .temHeaderFl{
             clear: both;
         }
         .temHeaderFr{
-            float: right;
-            width: 55px;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            width: 45px;
             height: 55px;
             display: block;
             text-align: center;
