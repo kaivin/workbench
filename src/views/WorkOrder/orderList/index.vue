@@ -347,7 +347,7 @@
                                           >
                                           <template slot-scope="scope">
                                             <div class="table-tag starts">
-                                              <span class="color1" v-if="!scope.row.startdotime&&(currentStatus == 'alltasks'||currentStatus == 'person'||currentStatus == 'focuson')&&currentId==6">待进行</span>  
+                                              <span class="color1" v-if="(scope.row.startdotime==''||scope.row.startdotime==null)&&(currentStatus == 'alltasks'||currentStatus == 'person'||currentStatus == 'focuson')&&(currentId==5||currentId==0)">待进行</span>  
                                               <span v-if="(scope.row.timestatus==2||scope.row.worktimestatus==2)&&scope.row.workstatus==3">
                                                   <el-tooltip class="item color5" effect="dark" :content="scope.row.confirmchecktime" placement="right">
                                                     <el-button><i class="svg-i"><svg-icon icon-class="work_done" /></i>已完成(<span class="color6"><i class="svg-i"><svg-icon icon-class="work_overdue" /></i>已逾期</span>)</el-button>
@@ -490,11 +490,11 @@
                                           </template>                       
                                           <template slot-scope="scope">
                                             <div class="table-button">
-                                                <el-button size="mini" @click="confirmAllotTableRow(scope.row,scope.$index)" v-if="currentStatus=='alltasks'&&(currentId==0||currentId==7)&&menuButtonPermit.includes('Worksaccpet_confirmdeal')">分配</el-button>
-                                                <el-button size="mini" @click="confirmstartRow(scope.row,scope.$index)" v-if="currentId==5&&(scope.row.startdotime==''||scope.row.startdotime==null)&&menuButtonPermit.includes('Worksaccpet_confirmstart')">开始</el-button>
-                                                <el-button size="mini" @click="confirmDoneTableRow(scope.row,scope.$index)" v-if="currentId==5&&scope.row.workstatus!=1&&scope.row.workstatus!=3&&(scope.row.status==2||scope.row.status==5)&&(scope.row.startdotime||scope.row.startdotime!=null)&&menuButtonPermit.includes('Worksaccpet_confirmfinish')">审核</el-button>
+                                                <el-button size="mini" @click="confirmAllotTableRow(scope.row,scope.$index)" v-if="currentStatus=='alltasks'&&scope.row.worktimestatus!=2&&(scope.row.dealusername==''||scope.row.dealusername==null)&&menuButtonPermit.includes('Worksaccpet_confirmdeal')">分配</el-button>
+                                                <el-button size="mini" @click="confirmstartRow(scope.row,scope.$index)" v-if="(currentId==5||currentId==0)&&(scope.row.startdotime==''||scope.row.startdotime==null)&&(scope.row.dealusername!=''&&scope.row.dealusername)&&menuButtonPermit.includes('Worksaccpet_confirmstart')">开始</el-button>
+                                                <el-button size="mini" @click="confirmDoneTableRow(scope.row,scope.$index)" v-if="(currentId==5||currentId==0)&&scope.row.workstatus!=1&&scope.row.workstatus!=3&&(scope.row.status==2||scope.row.status==5)&&(scope.row.startdotime!=''&&scope.row.startdotime)&&menuButtonPermit.includes('Worksaccpet_confirmfinish')">审核</el-button>
                                                 <el-button size="mini" @click="cancelTableRow(scope.row,scope.$index)" v-if="currentStatus!='receive'&&scope.row.workstatus!=1&&scope.row.workstatus!=3&&menuButtonPermit.includes('Worksaccpet_backwork')">退回</el-button>
-                                                <el-button size="mini" @click="undoTableRow(scope.row,scope.$index)" v-if="(currentId==0||currentId==6)&&scope.row.workstatus!=1&&scope.row.workstatus!=3&&menuButtonPermit.includes('Worksaccpet_workcancel')">撤销</el-button>
+                                                <el-button size="mini" @click="undoTableRow(scope.row,scope.$index)" v-if="scope.row.workstatus!=1&&scope.row.workstatus!=3&&menuButtonPermit.includes('Worksaccpet_workcancel')">撤销</el-button>
                                             </div>
                                           </template>
                                       </el-table-column>
@@ -857,26 +857,8 @@ export default {
                 if($this.permitStatus.includes($this.$route.query.Status)){
                   $this.currentStatus = $this.$route.query.Status;
                   var operationsWidth = 22;
-                  if($this.currentStatus=="alltasks"){
-                      if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-                          operationsWidth+=66;
-                      }
-                      if($this.menuButtonPermit.includes('Worksaccpet_confirmdeal')){
-                          operationsWidth+=66;
-                      }
-                      if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
-                          operationsWidth+=66;
-                      }
-                  }else if($this.currentStatus=="focuson"||$this.currentStatus=="person"){
-                      if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-                          operationsWidth+=66;
-                      }
-                      if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')||$this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
-                          operationsWidth+=66;
-                      }
-                      if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
-                          operationsWidth+=66;
-                      }
+                  if($this.currentStatus=="alltasks"||$this.currentStatus=="focuson"||$this.currentStatus=="person"){
+                      operationsWidth+=198;
                   }else if($this.currentStatus=="receive"){
                     if($this.menuButtonPermit.includes('Worksaccpet_confirmwork')){
                         operationsWidth+=90;
@@ -1244,90 +1226,6 @@ export default {
     hanldeworkstatus(Id){
       var $this = this;
       var workstatusId=Id;
-      $this.currentId=Id;
-      var operationsWidth = 22;
-      if($this.currentId==0&&$this.currentStatus=="alltasks"){
-        if($this.menuButtonPermit.includes('Worksaccpet_workcancel')||$this.menuButtonPermit.includes('Worksaccpet_confirmfinish')||$this.menuButtonPermit.includes('Worksaccpet_confirmstart')||$this.menuButtonPermit.includes('Worksaccpet_confirmdeal')||$this.menuButtonPermit.includes('Worksaccpet_backwork')){
-          if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
-              operationsWidth+=66;
-          }
-          if($this.menuButtonPermit.includes('Worksaccpet_confirmdeal')){
-              operationsWidth+=66;
-          }
-          if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-              operationsWidth+=66;
-          }
-          $this.operationsWidth = "" + operationsWidth;
-        }else{
-          $this.operationsWidth = 120;
-        }
-      }
-      if($this.currentId==0&&($this.currentStatus=="focuson"||$this.currentStatus=="person")){
-        if($this.menuButtonPermit.includes('Worksaccpet_backwork')||$this.menuButtonPermit.includes('Worksaccpet_confirmfinish')||$this.menuButtonPermit.includes('Worksaccpet_confirmstart')||$this.menuButtonPermit.includes('Worksaccpet_workcancel')){
-          if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-              operationsWidth+=66;
-          }
-          if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')||$this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
-              operationsWidth+=66;
-          }
-          if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
-              operationsWidth+=66;
-          }
-          $this.operationsWidth = "" + operationsWidth;
-        }else{
-          $this.operationsWidth = 120;
-        }
-      }
-      if($this.currentId==4){
-        if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-          operationsWidth+=66;
-          $this.operationsWidth = "" + operationsWidth;
-        }else{
-          $this.operationsWidth = 120;
-        }
-      }
-      if($this.currentId==5){
-        if($this.menuButtonPermit.includes('Worksaccpet_backwork')||$this.menuButtonPermit.includes('Worksaccpet_confirmstart')||$this.menuButtonPermit.includes('Worksaccpet_confirmfinish')){
-            if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-                operationsWidth+=66;
-            }
-            if($this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
-                operationsWidth+=66;
-            }
-            if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')){
-                operationsWidth+=66;
-            }
-            $this.operationsWidth = "" + operationsWidth;
-        }else{
-          $this.operationsWidth = 120;
-        }
-      }
-      if($this.currentId==6){
-        if($this.menuButtonPermit.includes('Worksaccpet_backwork')||$this.menuButtonPermit.includes('Worksaccpet_workcancel')){
-          if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-              operationsWidth+=66;
-          }
-          if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
-              operationsWidth+=66;
-          }
-          $this.operationsWidth = "" + operationsWidth;
-        }else{
-          $this.operationsWidth = 120;
-        }
-      }
-      if($this.currentId==7){
-        if($this.menuButtonPermit.includes('Worksaccpet_backwork')||$this.menuButtonPermit.includes('Worksaccpet_confirmdeal')){
-          if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-              operationsWidth+=66;
-          }
-          if($this.menuButtonPermit.includes('Worksaccpet_confirmdeal')){
-              operationsWidth+=66;
-          }
-          $this.operationsWidth = "" + operationsWidth;
-        }else{
-          $this.operationsWidth = 120;
-        }
-      }
       $this.workstatusArr.forEach(function(item,index){
         if(workstatusId==item.id){
           item.departBool=true;
