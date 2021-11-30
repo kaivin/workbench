@@ -201,14 +201,12 @@
                                           prop="username"
                                           align="center"
                                           label="发布人"
-                                          v-if="labelColumn[0].istrue"
                                           width="100">
                                       </el-table-column>
                                       <el-table-column
                                           prop="title"
                                           label="工单标题"
                                           min-width="200"
-                                          v-if="labelColumn[1].istrue"
                                           >
                                           <template slot-scope="scope">
                                             <div class="order-title">
@@ -222,7 +220,6 @@
                                           prop="status"
                                           label="工单状态"
                                           width="90"
-                                          v-if="labelColumn[7].istrue"
                                           >
                                           <template slot-scope="scope">
                                             <div class="table-tag starts">
@@ -241,7 +238,6 @@
                                           align="left"
                                           label="标签"
                                           min-width="160"
-                                          v-if="labelColumn[2].istrue"
                                           >                                          
                                           <template slot-scope="scope">
                                               <div class="table-tag">
@@ -254,7 +250,6 @@
                                           sortable
                                           label="开始时间"
                                           min-width="110"
-                                          v-if="labelColumn[5].istrue"
                                           >
                                           <template slot-scope="scope">
                                               <p class="timenewline">{{scope.row.starttimeDate}}<span>{{scope.row.starttimeTime}}</span></p>
@@ -265,7 +260,6 @@
                                           sortable
                                           label="截止时间"
                                           min-width="110"
-                                          v-if="labelColumn[6].istrue"
                                           >
                                           <template slot-scope="scope">
                                               <p class="timenewline">{{scope.row.endtimeDate}}<span>{{scope.row.endtimeTime}}</span></p>
@@ -275,14 +269,12 @@
                                           prop="orgscore"
                                           label="总积分"
                                           width="80"
-                                          v-if="labelColumn[8].istrue"
                                           >
                                       </el-table-column>
                                       <el-table-column
                                           prop="receivescore"
                                           label="已认领积分"
                                           width="100"
-                                          v-if="labelColumn[9].istrue"
                                           >
                                           <template slot-scope="scope">
                                               <span>{{scope.row.receivescore}}</span>
@@ -291,7 +283,6 @@
                                       <el-table-column
                                           prop="ownScore"
                                           label="认领积分"
-                                          v-if="labelColumn[10].istrue"
                                           width="90">
                                           <template slot-scope="scope">
                                               <div class="table-input">
@@ -323,20 +314,19 @@
                                       style="width: 100%"
                                       :style="'min-height:'+minHeight+'px;'"
                                       v-if="currentStatus=='alltasks'||currentStatus=='person'||currentStatus=='focuson'"
-                                      @filter-change="filterHandler"
                                       >
                                       <el-table-column
                                           prop="username"
                                           align="center"
                                           label="发布人"
-                                          v-if="labelColumn[0].istrue"
+                                          v-if="labelColumn[0].isshow"
                                           width="100">
                                       </el-table-column>
                                       <el-table-column
                                           prop="title"
                                           label="工单标题"
                                           min-width="200"
-                                          v-if="labelColumn[1].istrue"
+                                          v-if="labelColumn[1].isshow"
                                           >
                                           <template slot-scope="scope">
                                             <div class="order-title">
@@ -350,7 +340,7 @@
                                           prop="status"
                                           label="工单状态"
                                           width="90"
-                                          v-if="labelColumn[7].istrue"
+                                          v-if="labelColumn[4].isshow"
                                           >
                                           <template slot-scope="scope">
                                             <div class="table-tag starts">
@@ -382,7 +372,7 @@
                                           prop="percenter"
                                           label="进度"
                                           width="180"
-                                          v-if="(currentId==6||currentId==5)&&labelColumn[3].istrue">
+                                          v-if="(currentId==6||currentId==5)&&labelColumn[2].isshow">
                                           <template slot-scope="scope">
                                               <div class="table-input">
                                                   <el-input v-if="currentStatus=='person'&&currentId==5" size="small" @change="changePercenter(scope.row.id,scope.row.percenter)" v-model="scope.row.percenter"></el-input>
@@ -393,7 +383,7 @@
                                       <el-table-column
                                           prop="ownScore"
                                           label="负责人"
-                                          v-if="labelColumn[11].istrue"
+                                          v-if="labelColumn[6].isshow"
                                           width="120">
                                           <template slot-scope="scope">
                                               <div class="table-input">
@@ -413,7 +403,7 @@
                                           prop="orgscore"
                                           label="总积分"
                                           width="80"
-                                          v-if="labelColumn[8].istrue"
+                                          v-if="labelColumn[5].isshow"
                                           >
                                       </el-table-column>
                                       <el-table-column
@@ -421,7 +411,7 @@
                                           align="left"
                                           label="标签"
                                           min-width="160"
-                                          v-if="labelColumn[2].istrue"
+                                          v-if="labelColumn[7].isshow"
                                           >
                                           <template slot-scope="scope">
                                               <div class="table-tag">
@@ -434,7 +424,7 @@
                                           sortable
                                           label="开工时间"
                                           min-width="110"
-                                          v-if="labelColumn[4].istrue"
+                                          v-if="labelColumn[8].isshow"
                                           >
                                           <template slot-scope="scope">
                                               <p class="timenewline">{{scope.row.startdotimeDate}}<span>{{scope.row.startdotimeTime}}</span></p>
@@ -445,7 +435,7 @@
                                           sortable
                                           label="开始时间"
                                           min-width="110"
-                                          v-if="labelColumn[5].istrue"
+                                          v-if="labelColumn[9].isshow"
                                           >
                                           <template slot-scope="scope">
                                               <p class="timenewline">{{scope.row.starttimeDate}}<span>{{scope.row.starttimeTime}}</span></p>
@@ -456,7 +446,7 @@
                                           sortable
                                           label="截止时间"
                                           min-width="110"
-                                          v-if="labelColumn[6].istrue"
+                                          v-if="labelColumn[3].isshow"
                                           >
                                           <template slot-scope="scope">
                                               <p class="timenewline">{{scope.row.endtimeDate}}<span>{{scope.row.endtimeTime}}</span></p>
@@ -466,7 +456,7 @@
                                           prop="receivescore"
                                           label="已认领积分"
                                           width="100"
-                                          v-if="labelColumn[9].istrue"
+                                          v-if="labelColumn[10].isshow"
                                           >
                                           <template slot-scope="scope">
                                               <p v-if="currentStatus=='alltasks'&&currentId==6"><el-input size="small" v-model="scope.row.score" @change="changeScore(scope.row,scope.$index)"></el-input></p>
@@ -480,9 +470,19 @@
                                           fixed="right"
                                           prop="operations"
                                           label-class-name="workIconleaf"
-                                          :filters="getfilterNameItem()"
-                                          column-key="filterTag"
-                                          label="操作">                               
+                                          label="操作">        
+                                          <template slot="header" slot-scope="scope">
+                                             <div class="temHeader">
+                                                  <span class="temHeaderFl">操作</span>
+                                                  <span class="temHeaderFr" @click="toggleBtn"></span>
+                                                  <div class="temHeaderfix" :class="screen.screenBtn?'active':''">
+                                                      <div class="temHeaderfixTop">
+                                                          <p @click="temHeaderhandle(item.id)" class="temHeader-checkbox"  v-bind:class="[item.istrue?'active':'',item.isDispaly?'is-disabled':'']" v-for="(item,index) in labelColumn" :key="index"><i></i><span>{{item.name}}</span></p>
+                                                      </div>
+                                                      <p class="temHeaderBom"><span @click="filterHandler" >筛选</span><span @click="resetHandler">重置</span></p>
+                                                  </div>
+                                             </div>
+                                          </template>                       
                                           <template slot-scope="scope">
                                             <div class="table-button">
                                                 <el-button size="mini" @click="confirmAllotTableRow(scope.row,scope.$index)" v-if="currentStatus=='alltasks'&&currentId==7&&menuButtonPermit.includes('Worksaccpet_confirmdeal')">分配</el-button>
@@ -556,19 +556,23 @@ export default {
         shdepart:[],
         showHide:{
         },
+        screen:{
+          screenBtn:false,
+          screenId:[],
+        },
         labelColumn:[
-          {id:0,name:"发布人",istrue:true},
-          {id:1,name:"工单标题",istrue:true},
-          {id:2,name:"标签",istrue:true},
-          {id:3,name:"进度",istrue:true},
-          {id:4,name:"开工时间",istrue:true},
-          {id:5,name:"开始时间",istrue:true},
-          {id:6,name:"截止时间",istrue:true},
-          {id:7,name:"工单状态",istrue:true},
-          {id:8,name:"总积分",istrue:true},
-          {id:9,name:"已认领积分",istrue:true},
-          {id:10,name:"认领积分",istrue:true},
-          {id:11,name:"负责人",istrue:true},
+          {id:0,name:"发布人",istrue:true,isshow:true,isDispaly:true},
+          {id:1,name:"工单标题",istrue:true,isshow:true,isDispaly:true},
+          {id:3,name:"进度",istrue:true,isshow:true,isDispaly:true},
+          {id:6,name:"截止时间",istrue:true,isshow:true,isDispaly:true},
+          {id:7,name:"工单状态",istrue:true,isshow:true,isDispaly:true},
+          {id:8,name:"总积分",istrue:true,isshow:true,isDispaly:true},
+          {id:11,name:"负责人",istrue:true,isshow:true,isDispaly:true},
+          {id:2,name:"标签",istrue:false,isshow:false,isDispaly:false},
+          {id:4,name:"开工时间",istrue:false,isshow:false,isDispaly:false},
+          {id:5,name:"开始时间",istrue:false,isshow:false,isDispaly:false},
+          {id:9,name:"已认领积分",istrue:false,isshow:false,isDispaly:false},
+          {id:10,name:"认领积分",istrue:false,isshow:false,isDispaly:false},
         ],
         currentId:0,
         workstatusArr:[
@@ -1248,41 +1252,40 @@ export default {
       var operationsWidth = 22;
       if($this.currentId==4){
         if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-            operationsWidth+=90;
+            operationsWidth+=56;
         }
         $this.operationsWidth = "" + operationsWidth;
       }
       if($this.currentId==5){
         if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-            operationsWidth+=90;
+            operationsWidth+=56;
         }
         if($this.menuButtonPermit.includes('Worksaccpet_confirmfinish')){
-            operationsWidth+=90;
+            operationsWidth+=56;
         }
         $this.operationsWidth = "" + operationsWidth;
       }
       if($this.currentId==6){
         if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-            operationsWidth+=90;
+            operationsWidth+=56;
         }
         if($this.menuButtonPermit.includes('Worksaccpet_confirmstart')){
-            operationsWidth+=90;
+            operationsWidth+=56;
         }
         if($this.menuButtonPermit.includes('Worksaccpet_workcancel')){
-            operationsWidth+=90;
+            operationsWidth+=56;
         }
         $this.operationsWidth = "" + operationsWidth;
       }
       if($this.currentId==7){
         if($this.menuButtonPermit.includes('Worksaccpet_backwork')){
-            operationsWidth+=90;
+            operationsWidth+=56;
         }
         if($this.menuButtonPermit.includes('Worksaccpet_confirmdeal')){
-            operationsWidth+=90;
+            operationsWidth+=56;
         }
         $this.operationsWidth = "" + operationsWidth;
       }
-      if($this.currentId==7){}
       $this.workstatusArr.forEach(function(item,index){
         if(workstatusId==item.id){
           item.departBool=true;
@@ -1968,57 +1971,52 @@ export default {
       $this.scrollPosition.startPageX = 0;
       $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
     },
-    getfilterNameItem(){
-      var apiArr=[
-          {text: '发布人', value: '发布人'},
-          {text: '工单标题', value: '工单标题'},
-          {text: '标签', value: '标签'},
-          {text: '进度', value: '进度'},
-          {text: '开工时间', value: '开工时间'},
-          {text: '开始时间', value: '开始时间'},
-          {text: '截止时间', value: '截止时间'},
-          {text: '工单状态', value: '工单状态'},
-          {text: '总积分', value: '总积分'},
-          {text: '已认领积分', value: '已认领积分'},
-          {text: '负责人', value: '负责人'}
-      ]
-      return apiArr;
+    toggleBtn(){
+      var $this = this;
+      $this.screen.screenBtn=!$this.screen.screenBtn;
+    },
+    temHeaderhandle(valData){
+      var $this = this;
+      var labelColumn=$this.labelColumn;
+      labelColumn.forEach(function(item,index){
+        if(item.id==valData){
+          if(!item.isDispaly){
+            item.istrue=!item.istrue;
+          }
+        }
+      });
+      $this.labelColumn=labelColumn;
     },
     //
-    filterHandler(filterObj) {
+    filterHandler() {
       var $this = this;
-      if(filterObj.filterTag.length>0){
-         var labelArr=$this.labelColumn;
-         var labelColumn=[];
-         var newArr=[];
-         filterObj.filterTag.forEach(function(item){
-            labelArr.forEach(function(items){
-               if(item==items.name){
-                 items.istrue=false;
-                 newArr.push(items);
-               }
-            });
-         });
-         newArr.forEach(function(item){
-            labelArr.forEach(function(items){
-               if(item.name==items.name){
-                 items.istrue=false;
-               }
-               labelColumn.push(items);
-            });
-         });
-         $this.labelColumn=labelColumn;
-         $this.$nextTick(() => {
-            $this.$refs.simpleTable.doLayout();
-         });
-      }else{
-         $this.labelColumn.forEach(function(item){
-           item.istrue=true;
-         });
-          $this.$nextTick(() => {
-            $this.$refs.simpleTable.doLayout();
-          });
-      }
+      var labelColumn=$this.labelColumn;
+      labelColumn.forEach(function(item,index){
+        if(item.istrue){
+            item.isshow=true;
+        }else{
+            item.isshow=false;
+        }
+      });
+      $this.labelColumn=labelColumn;
+      $this.screen.screenBtn=false;
+    },
+    resetHandler(){
+      var $this = this;
+      var labelColumn=$this.labelColumn;
+      labelColumn.forEach(function(item,index){
+        if(item.id==0||item.id==1){
+            item.istrue=true;
+            item.isshow=true;
+            item.isDispaly=true;
+        }else{
+            item.istrue=false;
+            item.isshow=false;
+            item.isDispaly=false;
+        }
+      });
+      $this.labelColumn=labelColumn;
+      $this.screen.screenBtn=false;
     }
   }
 }
