@@ -477,7 +477,7 @@
                                                   <span class="temHeaderFr" @click="toggleBtn"></span>
                                                   <div class="temHeaderfix" :class="screen.screenBtn?'active':''">
                                                       <div class="temHeaderfixTop">
-                                                          <p @click="temHeaderhandle(item.id)" class="temHeader-checkbox"  v-bind:class="[item.istrue?'active':'',item.isDispaly?'is-disabled':'']" v-for="(item,index) in labelColumn" :key="index"><i></i><span>{{item.name}}</span></p>
+                                                          <p @click="temHeaderhandle(item.id)" class="temHeader-checkbox"  v-bind:class="item.istrue?'active':''" v-for="(item,index) in labelColumn" :key="index"><i></i><span>{{item.name}}</span></p>
                                                       </div>
                                                       <p class="temHeaderBom"><span @click="filterHandler" >筛选</span><span @click="resetHandler">重置</span></p>
                                                   </div>
@@ -561,18 +561,18 @@ export default {
           screenId:[],
         },
         labelColumn:[
-          {id:0,name:"发布人",istrue:true,isshow:true,isDispaly:true},
-          {id:1,name:"工单标题",istrue:true,isshow:true,isDispaly:true},
-          {id:3,name:"进度",istrue:true,isshow:true,isDispaly:true},
-          {id:6,name:"截止时间",istrue:true,isshow:true,isDispaly:true},
-          {id:7,name:"工单状态",istrue:true,isshow:true,isDispaly:true},
-          {id:8,name:"总积分",istrue:true,isshow:true,isDispaly:true},
-          {id:11,name:"负责人",istrue:true,isshow:true,isDispaly:true},
-          {id:2,name:"标签",istrue:false,isshow:false,isDispaly:false},
-          {id:4,name:"开工时间",istrue:false,isshow:false,isDispaly:false},
-          {id:5,name:"开始时间",istrue:false,isshow:false,isDispaly:false},
-          {id:9,name:"已认领积分",istrue:false,isshow:false,isDispaly:false},
-          {id:10,name:"认领积分",istrue:false,isshow:false,isDispaly:false},
+          {id:0,name:"发布人",istrue:true,isshow:true},
+          {id:1,name:"工单标题",istrue:true,isshow:true},
+          {id:3,name:"进度",istrue:true,isshow:true},
+          {id:6,name:"截止时间",istrue:true,isshow:true},
+          {id:7,name:"工单状态",istrue:true,isshow:true},
+          {id:8,name:"总积分",istrue:true,isshow:true},
+          {id:11,name:"负责人",istrue:true,isshow:true},
+          {id:2,name:"标签",istrue:true,isshow:true},
+          {id:4,name:"开工时间",istrue:true,isshow:true},
+          {id:5,name:"开始时间",istrue:true,isshow:true},
+          {id:9,name:"已认领积分",istrue:true,isshow:true},
+          {id:10,name:"认领积分",istrue:true,isshow:true},
         ],
         currentId:0,
         workstatusArr:[
@@ -1295,6 +1295,8 @@ export default {
       });
       if(workstatusId!=0){
         $this.searchData.workstatus=workstatusId;
+      }else{
+        $this.searchData.workstatus='';
       }
       $this.searchResult();
     },
@@ -1980,9 +1982,7 @@ export default {
       var labelColumn=$this.labelColumn;
       labelColumn.forEach(function(item,index){
         if(item.id==valData){
-          if(!item.isDispaly){
-            item.istrue=!item.istrue;
-          }
+          item.istrue=!item.istrue;
         }
       });
       $this.labelColumn=labelColumn;
@@ -2005,15 +2005,8 @@ export default {
       var $this = this;
       var labelColumn=$this.labelColumn;
       labelColumn.forEach(function(item,index){
-        if(item.id==0||item.id==1||item.id==3||item.id==6||item.id==7||item.id==8||item.id==11){
-            item.istrue=true;
-            item.isshow=true;
-            item.isDispaly=true;
-        }else{
-            item.istrue=false;
-            item.isshow=false;
-            item.isDispaly=false;
-        }
+          item.istrue=true;
+          item.isshow=true;
       });
       $this.labelColumn=labelColumn;
       $this.screen.screenBtn=false;

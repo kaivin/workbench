@@ -53,12 +53,12 @@
         }
     }
     .search-orderTwo{
-        padding-top:10px;
+        padding-top:13px;
         &>span{
             font-size:13px;
             color:#999999;
             margin-top:5px;
-            line-height:25px;
+            line-height:28px;
         }
         ul{
             li{
@@ -66,7 +66,7 @@
                 background:#eff4f8;
                 margin-top:5px;
                 border-radius:4px;
-                line-height:25px;
+                line-height:28px;
                 padding:0px 20px;
                 font-size:13px;
                 color:#4c4c4c;
@@ -86,15 +86,14 @@
     }
     .search-orderThree{
         clear:both;
-        padding-top:15px;
+        padding-top:18px;
         .search-orderThree-Tag{
             li{
                 float:left;
                 margin-right:10px;
                 border-radius:2px;
-                line-height:24px;
+                line-height:28px;
                 padding:0px 5px;
-                background:#eff4f8;
                 font-size:13px;
                 color:#4c4c4c;
                 cursor: pointer;
@@ -146,15 +145,15 @@
                 float:left;
                 padding:0px 5px;
                 .el-input--small .el-input__inner {
-                    height:25px;
-                    line-height:23px;
+                    height:28px;
+                    line-height:26px;
                 }
                 .el-input--small .el-input__icon {
-                    line-height:25px;
+                  line-height:26px;
                 }
-                .el-range-editor--small.el-input__inner{height:25px;padding:3px 10px;}
-                .el-range-editor--small .el-range__icon{line-height:18px;}
-                .el-range-editor--small .el-range-separator {line-height:17px;}
+                .el-range-editor--small.el-input__inner{height:28px;padding:3px 10px;}
+                .el-range-editor--small .el-range__icon{line-height:21px;}
+                .el-range-editor--small .el-range-separator {line-height:20px;}
                 .resetBtn{
                     line-height:25px;
                     color:#2e88ff;
@@ -397,97 +396,73 @@
                 height:auto;
                 border: solid 1px #e6ebf5;
                 box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-            }
+            }            
             .temHeaderfixTop{  
-                height: 280px;
-                overflow: auto;
-                overflow-x: hidden;
-                padding: 0px 10px;              
-                .temHeader-checkbox{
-                    display: block;
-                    height: 28px;
-                    margin:0px 3px;
-                    line-height:0;
-                    font-size:0;
-                    text-align: left;
-                    cursor: pointer;
-                    i{
-                        display: inline-block;
-                        width: 11px;
-                        height: 11px;
-                        border: 1px solid #e0e0e0;
-                        margin-right: 10px;
-                        position: relative;
-                        vertical-align: -1px;
-                        &:before {
-                            content: '';
-                            width: 7px;
-                            height: 4px;
-                            transform: rotate(-45deg);
-                            border-left: 1px solid #fff;
-                            border-bottom: 1px solid #fff;
-                            position: absolute;
-                            left: 1px;
-                            top: 1px;
-                        }
-                    }
-                    span{
-                        font-size: 13px;
-                        display: inline-block;
-                        height: 28px;
-                        line-height: 28px;
-                        color:#666666;
-                    }
-                    &.active.is-disabled{
-                        cursor: not-allowed;
-                        &:hover{
-                            i{
-                                border: 1px solid #e0e0e0!important;
-                                background:#f5f5f5!important;
-                                &:before {
-                                    border-left: 1px solid #bfbfbf!important;
-                                    border-bottom: 1px solid #bfbfbf!important;
-                                    display: block;
-                                }
-                            }
-                        }
-                        i{
-                            border: 1px solid #e0e0e0!important;
-                            background:#f5f5f5!important;
-                            &:before {
-                                border-left: 1px solid #bfbfbf!important;
-                                border-bottom: 1px solid #bfbfbf!important;
-                            }
-                        }
-                        span{
-                            color: #bfbfbf!important;
-                        }
-                    }
-                    &.active{
-                        i{
-                            border: 1px solid #2e88ff;
-                            background:#2e88ff;
-                            &:before {
-                                border-left: 1px solid #fff;
-                                border-bottom: 1px solid #fff;
-                            }
-                        }
-                        span{
-                            color: #2e88ff;
-                        }
-                    }
-                    &:hover{
-                        i{
-                            border: 1px solid #2e88ff;
-                            background:#f4f4f4;
-                            &:before {display: none;}
-                        }
-                        span{
-                            color:#2e88ff;
-                        }
-                    }
-                }
-            }
+              height: 280px;
+              overflow: auto;
+              overflow-x: hidden;
+              padding: 0px 10px;              
+              .temHeader-checkbox{
+                  display: block;
+                  height: 28px;
+                  margin:0px 3px;
+                  line-height:0;
+                  font-size:0;
+                  text-align: left;
+                  cursor: pointer;
+                  i{
+                      display: inline-block;
+                      width: 11px;
+                      height: 11px;
+                      border: 1px solid #e0e0e0;
+                      margin-right: 10px;
+                      position: relative;
+                      vertical-align: -1px;
+                      &:before {
+                          content: '';
+                          width: 7px;
+                          height: 4px;
+                          transform: rotate(-45deg);
+                          border-left: 1px solid #fff;
+                          border-bottom: 1px solid #fff;
+                          position: absolute;
+                          left: 1px;
+                          top: 1px;
+                      }
+                  }
+                  span{
+                      font-size: 13px;
+                      display: inline-block;
+                      height: 28px;
+                      line-height: 28px;
+                      color:#666666;
+                  }
+                  &.active{
+                      i{
+                          border: 1px solid #2e88ff!important;
+                          background:#2e88ff!important;
+                          &:before {
+                              border-left: 1px solid #fff!important;
+                              border-bottom: 1px solid #fff!important;
+                              display: block!important;
+                          }
+                      }
+                      span{
+                          color: #666666!important;
+                      }
+                  }
+                  &:hover{
+                      i{
+                          border: 1px solid #2e88ff;
+                          background:#f4f4f4;
+                          &:before {display: none;}
+                      }
+                      span{
+                          color:#2e88ff;
+                      }
+                  }
+              }
+          }
             .temHeaderBom{
                 border-top: 1px solid #e6ebf5;
                 padding: 8px;
