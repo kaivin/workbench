@@ -342,13 +342,13 @@ export default {
           xl:12,
           ref:'yeardepartscoreChart',
         },
-        // {
-        //   name:'depCost',
-        //   isShow:false,
-        //   lg:24,
-        //   xl:24,
-        //   ref:'costAverageChart',
-        // },
+        {
+          name:'depCost',
+          isShow:false,
+          lg:24,
+          xl:24,
+          ref:'costAverageChart',
+        },
         {
           name:'yearContrast',
           isShow:true,
