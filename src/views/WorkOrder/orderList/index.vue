@@ -2005,7 +2005,7 @@ export default {
       var $this = this;
       var labelColumn=$this.labelColumn;
       labelColumn.forEach(function(item,index){
-        if(item.id==0||item.id==1){
+        if(item.id==0||item.id==1||item.id==3||item.id==6||item.id==7||item.id==8||item.id==11){
             item.istrue=true;
             item.isshow=true;
             item.isDispaly=true;

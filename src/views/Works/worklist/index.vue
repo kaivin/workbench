@@ -1512,7 +1512,7 @@ export default {
       var $this = this;
       var labelColumn=$this.labelColumn;
       labelColumn.forEach(function(item,index){
-        if(item.id==0||item.id==1){
+        if(item.id==0||item.id==1||item.id==2||item.id==7||item.id==4||item.id==8||item.id==9){
             item.istrue=true;
             item.isshow=true;
             item.isDispaly=true;
