@@ -362,6 +362,7 @@
         display: block;
         position: relative;
         padding-right: 39px;
+        z-index: 2;
         .temHeaderFl{
             clear: both;
         }
@@ -395,6 +396,7 @@
             transition:all 0.5s;
             height:0px;
             overflow: hidden;
+            width: 115px;
             &.active{
                 top:40px;
                 height:auto;
