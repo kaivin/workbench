@@ -1227,6 +1227,7 @@ export default {
       var $this = this;
       $this.currentId=Id;
       var workstatusId=Id;
+      $this.currentId=Id;
       $this.workstatusArr.forEach(function(item,index){
         if(workstatusId==item.id){
           item.departBool=true;

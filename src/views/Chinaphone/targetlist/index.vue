@@ -56,7 +56,12 @@
                               </el-table-column>
                               <el-table-column
                               prop="mnumber"
-                              label="目标数量"
+                              label="总目标数量"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="searchnumber"
+                              label="搜索目标数量"
                               >
                               </el-table-column>
                               <el-table-column
@@ -116,8 +121,13 @@
               </el-form-item>
           </div>
           <div class="item-form">
-              <el-form-item label="目标数量：" :label-width="formLabelWidth">
+              <el-form-item label="总目标数量：" :label-width="formLabelWidth">
                   <el-input v-model="dialogForm.mnumber"></el-input>
+              </el-form-item>
+          </div>
+          <div class="item-form">
+              <el-form-item label="搜索目标数量：" :label-width="formLabelWidth">
+                  <el-input v-model="dialogForm.searchnumber"></el-input>
               </el-form-item>
           </div>
         </el-form>
@@ -149,6 +159,7 @@ export default {
         group_id:"",
         mtime:"",
         mnumber:"",
+        searchnumber:"",
       },
       pageSizeList:[15],
       totalDataNum:0,
@@ -543,6 +554,7 @@ export default {
       $this.dialogForm.group_id = row.group_id;
       $this.dialogForm.mtime = row.mtime;
       $this.dialogForm.mnumber = row.mnumber;
+      $this.dialogForm.searchnumber = row.searchnumber;
     },
     // 保存添加/编辑数据
     saveData(){
@@ -559,6 +571,7 @@ export default {
         formData.group_id = $this.dialogForm.group_id;
         formData.mtime = $this.dialogForm.mtime;
         formData.mnumber = $this.dialogForm.mnumber;
+        formData.searchnumber = $this.dialogForm.searchnumber;
         var pathUrl = "";
         if($this.dialogText=="编辑日目标"){
           pathUrl = "chinaphone/CntargetlistEditAction";
@@ -594,6 +607,7 @@ export default {
       $this.dialogForm.group_id = "";
       $this.dialogForm.mtime = "";
       $this.dialogForm.mnumber = "";
+      $this.dialogForm.searchnumber = "";
     },
     // 验证是否为空
     validationForm(){

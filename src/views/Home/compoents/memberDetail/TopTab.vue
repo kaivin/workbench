@@ -1,16 +1,16 @@
 <template>
   <div class="personTopTab">
-      <div class="chooseDepart">
+      <div class="chooseDepart flex-box">
         <span class="choosetit">部门选择：</span>
-        <el-radio-group v-model="departName" @change="departChange" class="departItems">
-            <el-radio-button v-for="(item,index) in department" :label="item.name" :key="index"></el-radio-button>
-        </el-radio-group>  
+        <div class="departItems flex-content">
+          <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange()">{{item.name}}</span>
+        </div>
       </div>
       <div class="choosePerson">
-        <el-checkbox-group v-model="selectedPerson" @change="personChange" class="personItems">
-            <div class="decor"></div>
-            <el-checkbox v-for="(item,index) in choosePerson" :label="item.name" :key="index" ></el-checkbox>
-        </el-checkbox-group>
+          <div class="decor"></div>
+          <div class="departItems">
+              <p class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="(item,index) in choosePerson" v-bind:key="index"><i></i><span>{{item.name}}</span></p>
+          </div>
       </div>
   </div>
 </template>
