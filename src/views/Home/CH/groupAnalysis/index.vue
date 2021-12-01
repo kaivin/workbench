@@ -97,9 +97,7 @@ export default {
     // 获取中文询盘、成交等情况
     GetInquiryResult(){
       var $this = this;
-      $this.$store
-        .dispatch("memberCompare/postInquiryRank")
-        .then((response) => {
+      $this.$store.dispatch("memberCompare/postInquiryRank").then((response) => {
           if (response) {
             if (response.status) {
               // 非付费询盘

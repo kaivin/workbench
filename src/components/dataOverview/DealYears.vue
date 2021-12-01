@@ -28,7 +28,7 @@
 
 <script>
 import { Column,P, G2} from '@antv/g2plot';
-import echarts from 'echarts';
+import * as echarts from 'echarts';
 
 export default {
     name:'demo',

@@ -38,9 +38,9 @@
           }}</strong>
         </dd>
         <dd>
-          本月单日最高<span>({{ targetScore.daymaxnumber.xundate }})</span
+          本月单日最高<span v-if="targetScore.daymaxnumber.xundate">({{ targetScore.daymaxnumber.xundate }})</span
           ><strong class="color02">{{
-            targetScore.daymaxnumber.maxnumber
+            targetScore.daymaxnumber.maxnumber?targetScore.daymaxnumber.maxnumber:0
           }}</strong>
         </dd>
         <!-- <dd v-if="targetScore.isDistanceTarget">距目标线差距<strong>{{targetScore.DistanceTarget}}</strong></dd>

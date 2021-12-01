@@ -106,9 +106,13 @@ export default {
       $this.$store
         .dispatch("homeobject/postDayNum", data)
         .then((response) => {
+        console.log(response);
           if (response) {
             if (response.status) {
-              var daymax = response.daymaxnumber[0].effectivenumber;
+              var daymax = 0;
+              if(response.daymaxnumber.length>0){
+                daymax = response.daymaxnumber[0].effectivenumber;
+              }
               var historymax = response.historymaxnumber[0].effectivenumber;
               var todaynum = response.alltoday;
               var yeaterdaynum = response.alllastday;
