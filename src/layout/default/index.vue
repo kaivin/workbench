@@ -5,25 +5,24 @@
       </el-header>
       <el-container class="container-layout">
         <sidebar v-if="isSales" />
-        <homeleft v-if="ModuleList.includes('Module_newindex')&&key.indexOf('/Home')!=-1" />
         <el-main class="main-layout" v-if="isRefresh">
-            <transition name="fade-transform" mode="out-in">
+          <transition name="fade-transform" mode="out-in" v-if="key.indexOf('/stat/')==-1">
               <router-view :key="key"></router-view>
             </transition>
+            <router-view :key="key" v-else></router-view>
         </el-main>
       </el-container>
     </el-container>
 </template>
 
 <script>
-import { Sidebar, HeaderPane, Homeleft } from './components/index';
+import { Sidebar, HeaderPane } from './components/index';
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState,mapGetters } from 'vuex'
 import Cookies from 'js-cookie'
 export default {
   name: 'Layout',
   components: {
-    Homeleft,
     Sidebar,
     HeaderPane,
   },

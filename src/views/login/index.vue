@@ -215,9 +215,12 @@ export default {
                             if(userInfo.issales==2){
                                 $this.$router.push({ path: $this.redirect || '/Sales/index?Status=personcount' });
                             }else{
-                                $this.$router.push({ path: $this.redirect || '/' });
+                                if(userInfo.id==533||userInfo.id==1112){
+                                    $this.$router.push({ path: $this.redirect || '/stat/index' });
+                                }else{
+                                    $this.$router.push({ path: $this.redirect || '/' });
+                                }
                             }
-                            $this.getModuleList();
                         }else if(response.loginnumber==2||response.status==4){
                             if(response.loginnumber){
                                 if(response.loginnumber==2){

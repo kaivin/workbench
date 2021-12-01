@@ -90,7 +90,6 @@ const mutations = {
     data.data.forEach(function(item,index){
       permitData.push(item.action_route);
     });
-    console.log(data)
     if(permitData.includes("Article_search")&&data.page==""){
       state.isArticleSearch = true;
     }else{

@@ -75,12 +75,70 @@ router.beforeEach(async(to, from, next) => {
             await store.dispatch('api/getRouteAction').then(response=>{
               if(response.status){
                 if(response.data.length>0){
-                  store.dispatch('modulelist/getPermitModuleListAction',null).then(res1=>{
-                    var resData = res1.data;
-                    var permissionData = {};
-                    permissionData.module = resData;
-                    permissionData.router = response.data;
-                    store.dispatch('permission/generateRoutes', permissionData).then(res=>{
+                  var itemUrl = null;
+                  response.data.forEach(function(item){
+                    if(item.url=="stat/index"){
+                      itemUrl = item;
+                    }
+                  });
+                  var routerData = [];
+                  if(itemUrl){
+                    store.dispatch('api/getMenuButtonPermitAction',{id:itemUrl.id}).then(res1=>{
+                      if(res1.data.length>0){
+                        var permitRoute = res1.data[0].action_route;
+                        var redirectUrl = "";
+                        switch (permitRoute) {
+                          case 'Api_chinadaytargetnew':
+                              redirectUrl = "stat/cn/targetShow";
+                              break;
+                          case 'Api_chinacountnew':
+                              redirectUrl = "stat/cn/dataOverview";
+                              break;
+                          case 'Api_chinadepartcountdefault':
+                              redirectUrl = "stat/cn/departAnalysis";
+                              break;
+                          case 'Api_chinagroupcountdefault':
+                              redirectUrl = "stat/cn/groupAnalysis";
+                              break;
+                          case 'Api_chinapersoncountdefault':
+                              redirectUrl = "stat/cn/memberAnalysis";
+                              break;
+                          case 'Api_endaytargetnew':
+                              redirectUrl = "stat/en/targetShow";
+                              break;
+                          case 'Api_encountnew':
+                              redirectUrl = "stat/en/dataOverview";
+                              break;
+                          case 'Api_endepartcountdefault':
+                              redirectUrl = "stat/en/departAnalysis";
+                              break;
+                          case 'Api_engroupcountdefault':
+                              redirectUrl = "stat/en/groupAnalysis";
+                              break;
+                          case 'Api_enpersoncountdefault':
+                              redirectUrl = "stat/en/memberAnalysis";
+                        }
+                        response.data.forEach(function(item){
+                          if(item.url=="stat/index"){
+                            item.redirecturl = redirectUrl;
+                          }
+                        });
+                        routerData = response.data;
+                      }else{
+                        routerData = response.data;
+                      }
+                      store.dispatch('permission/generateRoutes', routerData).then(res=>{
+                        if(res.length>0){
+                          router.addRoutes(res);
+                          router.addRoutes([{path: '*',name:'error404',redirect:"/404",meta: {title: '404', icon: null,hidden:true,keepAlive:false }}]);
+                          next({ ...to, replace: true });
+                          NProgress.done();
+                        }
+                      });
+                    });
+                  }else{
+                    routerData = response.data;
+                    store.dispatch('permission/generateRoutes', routerData).then(res=>{
                       if(res.length>0){
                         router.addRoutes(res);
                         router.addRoutes([{path: '*',name:'error404',redirect:"/404",meta: {title: '404', icon: null,hidden:true,keepAlive:false }}]);
@@ -88,7 +146,7 @@ router.beforeEach(async(to, from, next) => {
                         NProgress.done();
                       }
                     });
-                  });
+                  }
                 }
               }else{
                 Element.Message({

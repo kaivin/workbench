@@ -65,7 +65,6 @@ export function TopTenColor(resArr,obj){
     resArr.forEach(function(item,index){
         for(var i=0;i<obj.numList.length;i++){
             if(item.number>obj.numList[i]){
-                console.log(obj.defaulColor[i]);
                 topTenColor.push(obj.defaulColor[i]);
                 break;
             }

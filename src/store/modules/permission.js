@@ -26,12 +26,80 @@ function convert(parents,children){
   });
 }
 import Layout from '@/layout/default/index.vue';
+const sonRoute = [
+  {
+    path: "/stat/cn/targetShow",
+    name:'cnTargetShow',
+    component: () => import("@/views/stat/cn/targetShow/index.vue"),
+    meta: {id:'cnTargetShow-118',title: '目标展示', icon: null, keepAlive:false},
+  },
+  {
+    path: "/stat/cn/dataOverview",
+    name:'cnDataOverview',
+    component: () => import("@/views/stat/cn/dataOverview/index.vue"),
+    meta: {id:'cnDataOverview-118',title: '数据总览', icon: null, keepAlive:false},
+  },
+  {
+    path: "/stat/cn/departAnalysis",
+    name:'cnDepartAnalysis',
+    component: () => import("@/views/stat/cn/departAnalysis/index.vue"),
+    meta: {id:'cnDepartAnalysis-118',title: '部门分析', icon: null, keepAlive:false},
+  },
+  {
+    path: "/stat/cn/groupAnalysis",
+    name:'cnGroupAnalysis',
+    component: () => import(/* webpackChunkName: "cnGroupAnalysis" */ "@/views/stat/cn/groupAnalysis/index.vue"),
+    meta: {id:'cnGroupAnalysis-118',title: '小组分析', icon: null, keepAlive:false},
+  },
+  {
+    path: "/stat/cn/memberAnalysis",
+    name:'cnMemberAnalysis',
+    component: () => import("@/views/stat/cn/memberAnalysis/index.vue"),
+    meta: {id:'cnMemberAnalysis-118',title: '组员分析', icon: null, keepAlive:false},
+  },
+  {
+    path: "/stat/cn/memberAnalysis/singlePerson",
+    name:'cnSinglePerson',
+    component: () => import("@/views/stat/cn/memberAnalysis/singlePerson.vue"),
+    meta: {id:'cnSinglePerson-118',title: '组员分析', icon: null, keepAlive:false},
+  },
+  {
+    path: "/stat/en/targetShow",
+    name:'enTargetShow',
+    component: () => import("@/views/stat/en/targetShow/index.vue"),
+    meta: {id:'enTargetShow-118',title: '目标展示', icon: null, keepAlive:false},
+  },
+  {
+    path: "/stat/en/dataOverview",
+    name:'enDataOverview',
+    component: () => import("@/views/stat/en/dataOverview/index.vue"),
+    meta: {id:'enDataOverview-118',title: '数据总览', icon: null, keepAlive:false},
+  },
+  {
+    path: "/stat/en/departAnalysis",
+    name:'enDepartAnalysis',
+    component: () => import("@/views/stat/en/departAnalysis/index.vue"),
+    meta: {id:'enDepartAnalysis-118',title: '部门分析', icon: null, keepAlive:false},
+  },
+  {
+    path: "/stat/en/groupAnalysis",
+    name:'enGroupAnalysis',
+    component: () => import("@/views/stat/en/groupAnalysis/index.vue"),
+    meta: {id:'enGroupAnalysis-118',title: '小组分析', icon: null, keepAlive:false},
+  },
+  {
+    path: "/stat/en/memberAnalysis",
+    name:'enMemberAnalysis',
+    component: () => import("@/views/stat/en/memberAnalysis/index.vue"),
+    meta: {id:'enMemberAnalysis-118',title: '组员分析', icon: null, keepAlive:false},
+  },
+];
 /**
  * Filter asynchronous routing tables by recursion
  * @param routes asyncRoutes
  * @param roles
  */
-function dataToRoute(data,modules){
+function dataToRoute(data){
   var newData = [];
   data.forEach(function(item,index){
     var itemData = {};
@@ -42,17 +110,7 @@ function dataToRoute(data,modules){
         if(userInfo.issales==2){
           homeRedirect = '/Sales/index';
         }else{
-          if(modules.includes("Module_manager")){
-            homeRedirect = '/Home/index';
-          }else{
-            if(modules.includes("Module_cnStat")){
-              homeRedirect = '/Home/CH/objectiveShow';
-            }else{
-              if(modules.includes("Module_enStat")){
-                homeRedirect = '/Home/EN/objectiveShow';
-              }
-            }
-          }
+          homeRedirect = '/Home/index';
         }
         itemData.path = homeRedirect;
       }else{
@@ -94,23 +152,13 @@ function filterRoutes(routers) {
   });
   return accessedRouters;
 }
-function setRoutes(routers,modules){
+function setRoutes(routers){
   var userInfo = JSON.parse(Cookies.get('userInfo'));
   var homeRedirect = "";
   if(userInfo.issales==2){
     homeRedirect = '/Sales/index';
   }else{
-    if(modules.includes("Module_manager")){
-      homeRedirect = '/Home/index';
-    }else{
-      if(modules.includes("Module_cnStat")){
-        homeRedirect = '/Home/CH/objectiveShow';
-      }else{
-        if(modules.includes("Module_enStat")){
-          homeRedirect = '/Home/EN/objectiveShow';
-        }
-      }
-    }
+    homeRedirect = '/Home/index';
   }
   const accessedRouters = filterRoutes(routers);  
   const parentRoute = [{
@@ -121,71 +169,6 @@ function setRoutes(routers,modules){
     meta: {},
     children: [
       {
-        path: "/Home/CH/objectiveShow",
-        name:'cnObjectiveShow',
-        component: () => import("@/views/Home/CH/objectiveShow/index.vue"),
-        meta: {id:'Home-chObjective',title: '目标展示', icon: null, keepAlive:false},
-      },
-      {
-        path: "/Home/CH/dataOverview",
-        name:'cnDataOverview',
-        component: () => import("@/views/Home/CH/dataOverview/index.vue"),
-        meta: {id:'Home-chOverview',title: '数据总览', icon: null, keepAlive:false},
-      },
-      {
-        path: "/Home/CH/sectorAnalysis",
-        name:'cnSectorAnalysis',
-        component: () => import("@/views/Home/CH/sectorAnalysis/index.vue"),
-        meta: {id:'Home-chSector',title: '部门分析', icon: null, keepAlive:false},
-      },
-      {
-        path: "/Home/CH/teamMember",
-        name:'cnTeamMember',
-        component: () => import(/* webpackChunkName: "cnTeamMember" */ "@/views/Home/CH/teamMember/index.vue"),
-        meta: {id:'Home-chTeam',title: '小组分析', icon: null, keepAlive:false},
-      },
-      {
-        path: "/Home/CH/groupAnalysis",
-        name:'cnGroupAnalysis',
-        component: () => import("@/views/Home/CH/groupAnalysis/index.vue"),
-        meta: {id:'Home-chGroup',title: '组员分析', icon: null, keepAlive:false},
-      },
-      {
-        path: "/Home/CH/groupAnalysis/singlePerson",
-        name:'cnSinglePerson',
-        component: () => import("@/views/Home/CH/groupAnalysis/singlePerson.vue"),
-        meta: {id:'Home-chsinglePerson',title: '组员分析', icon: null, keepAlive:false},
-      },
-      {
-        path: "/Home/EN/objectiveShow",
-        name:'enObjectiveShow',
-        component: () => import("@/views/Home/EN/objectiveShow/index.vue"),
-        meta: {id:'Home-enObjective',title: '目标展示', icon: null, keepAlive:false},
-      },
-      {
-        path: "/Home/EN/dataOverview",
-        name:'enDataOverview',
-        component: () => import("@/views/Home/EN/dataOverview/index.vue"),
-        meta: {id:'Home-enOverview',title: '数据总览', icon: null, keepAlive:false},
-      },
-      {
-        path: "/Home/EN/sectorAnalysis",
-        name:'enSectorAnalysis',
-        component: () => import("@/views/Home/EN/sectorAnalysis/index.vue"),
-        meta: {id:'Home-enSector',title: '部门分析', icon: null, keepAlive:false},
-      },
-      {
-        path: "/Home/EN/teamMember",
-        name:'enTeamMember',
-        component: () => import("@/views/Home/EN/teamMember/index.vue"),
-        meta: {id:'Home-enTeam',title: '小组分析', icon: null, keepAlive:false},
-      },
-      {
-        path: "/Home/EN/groupAnalysis",
-        name:'enGroupAnalysis',
-        component: () => import("@/views/Home/EN/groupAnalysis/index.vue"),
-        meta: {id:'Home-enGroup',title: '组员分析', icon: null, keepAlive:false},
-      },{
         path: "/Article/info",
         name:'articleInfo',
         component: () => import(/* webpackChunkName: "articleInfo" */ "@/views/Article/info/index.vue"),
@@ -332,6 +315,12 @@ function setRoutes(routers,modules){
     ]
   }]
   accessedRouters.forEach(function(item,index){
+    if(item.path=="/stat/index"){
+      item.children = [];
+      sonRoute.forEach(function(item1){
+        item.children.push(item1);
+      });
+    }
     parentRoute[0].children.push(item);
   });
   return parentRoute;
@@ -354,14 +343,14 @@ const mutations = {
 const actions = {
   generateRoutes({ commit }, routers) {
     return new Promise(resolve => {
-      var newData = dataToRoute(routers.router,routers.module);
+      var newData = dataToRoute(routers);
       let accessedRoutes;
       var menuData = [];
       if (newData.length <= 0) {
         accessedRoutes = [];
       } else {
-        accessedRoutes = setRoutes(newData,routers.module);
-        menuData = dataToTree(newData);
+        accessedRoutes = setRoutes(newData);
+        menuData = dataToTree(JSON.parse(JSON.stringify(newData)));
       }
       commit('SET_ROUTES', accessedRoutes);
       commit('SET_MENUS', menuData);
