@@ -14,8 +14,18 @@
                     <div slot="header"> 
                       <div class="card-header SaleCard" ref="headerPane">
                           <div class="search-wrap Compart-search-wrap" ref="searchPane">          
-                              <div class="item-search" style="width:200px;">                              
+                              <div class="item-search" style="width:140px;">                              
                                     <el-date-picker v-model="searchData.time" format="yyyy 年 MM 月" value-format="yyyy-MM" type="month" size="small" placeholder="选择月"></el-date-picker>
+                              </div>
+                              <div class="item-search" style="width:120px;">
+                                <el-select v-model="searchData.dept_id" size="small" clearable placeholder="请选择小组">
+                                  <el-option
+                                      v-for="item in deptList"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                  </el-option>
+                              </el-select>
                               </div>
                               <div class="item-search">
                                 <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
@@ -187,6 +197,7 @@ export default {
         page:1,
         limit:20,
         time:"",
+        dept_id:'',
       },
       deptList:[],
       levelList:[
@@ -394,7 +405,7 @@ export default {
         $this.isSearchResult=true; 
         $this.loadingFun();
         $this.searchData.page = 1;
-        $this.dealData();
+        $this.initPage();
       }
     },
     // 重置表单
@@ -403,6 +414,7 @@ export default {
         $this.searchData.page=1;
         $this.searchData.limit=20;
         $this.searchData.time='';
+        $this.searchData.dept_id='';
         $this.searchResult();
     },
     // 初始化部门数据
@@ -456,6 +468,7 @@ export default {
       if($this.searchData.time&&$this.searchData.time!=''){
         formData.time = $this.searchData.time;
       }
+      formData.dept_id = $this.searchData.dept_id;
       return formData;
     },
     // 初始化页面信息

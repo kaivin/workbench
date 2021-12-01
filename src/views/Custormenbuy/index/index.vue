@@ -14,8 +14,18 @@
                     <div slot="header">      
                       <div class="card-header SaleCard" ref="headerPane">
                           <div class="search-wrap Compart-search-wrap" ref="searchPane">          
-                              <div class="item-search" style="width:200px;">                              
+                              <div class="item-search" style="width:140px;">                              
                                     <el-date-picker v-model="searchData.time" format="yyyy 年 MM 月" value-format="yyyy-MM" type="month" size="small" placeholder="选择成交时间"></el-date-picker>
+                              </div>
+                              <div class="item-search" style="width:120px;">
+                                <el-select v-model="searchData.dept_id" size="small" clearable placeholder="请选择部门">
+                                  <el-option
+                                      v-for="item in deptList"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                  </el-option>
+                              </el-select>
                               </div>
                               <div class="item-search">
                                 <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
@@ -172,6 +182,7 @@ export default {
         page:1,
         limit:15,
         time:"",
+        dept_id:'',
       },
       deptList:[],
       levelList:[
@@ -410,6 +421,7 @@ export default {
         $this.searchData.page=1;
         $this.searchData.limit=15;
         $this.searchData.time='';
+        $this.searchData.dept_id='';
         $this.searchResult();
     },
     
@@ -422,7 +434,50 @@ export default {
       if($this.searchData.time&&$this.searchData.time!=''){
         formData.time = $this.searchData.time;
       }
+      formData.dept_id = $this.searchData.dept_id;
       return formData;
+    },
+    // 初始化部门数据
+    dealData(){
+      var $this = this;
+      $this.$store.dispatch('Encompare/EndeparDealListChooseAction', null).then(response=>{
+        if(response){
+          if(response.status){
+            if(response.data.length>0){
+                var deptList = [];
+                response.data.forEach(function(item,index){
+                  var itemData = {};
+                  itemData.value = item.id;
+                  itemData.label = item.name;
+                  deptList.push(itemData);
+                });
+                $this.deptList = deptList;
+            }else{
+              $this.deptList=[]
+            }
+            $this.initPage();
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSearchResult=false;
+              },1000);
+            }
+          }
+        }
+      });
     },
     // 初始化页面信息
     initPage(){
@@ -481,7 +536,7 @@ export default {
               $this.menuButtonPermit.push(item.action_route);
             });
             if($this.menuButtonPermit.includes('Custormenbuy_index')){
-              $this.initPage();
+              $this.dealData();
             }else{
               $this.$message({
                 showClose: true,

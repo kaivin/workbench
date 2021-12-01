@@ -1225,6 +1225,7 @@ export default {
     // 点击工单状态事件
     hanldeworkstatus(Id){
       var $this = this;
+      $this.currentId=Id;
       var workstatusId=Id;
       $this.workstatusArr.forEach(function(item,index){
         if(workstatusId==item.id){
