@@ -78,9 +78,40 @@ export default {
   },
   created() {
     var $this = this;
-    $this.initData();
+    $this.getUserMenuButtonPermit();
   },
   methods: {
+    // 获取当前登陆用户在该页面的操作权限
+    getUserMenuButtonPermit(){
+      var $this = this;
+      $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
+        if(res.data.length>0){
+          var permitData = [];
+          res.data.forEach(function(item,index){
+            permitData.push(item.action_route);
+          });
+          if(permitData.includes('Api_endaytargetnew')){
+            $this.initData()
+          }else{
+            $this.$message({
+              showClose: true,
+              message: "未被分配该页面的访问权限",
+              type: 'error',
+                duration:6000
+            });
+            $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+          }
+        }else{
+          $this.$message({
+            showClose: true,
+            message: "未被分配该页面的访问权限",
+            type: 'error',
+              duration:6000
+          });
+          $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+        }
+      });
+    },
     // 初始化数据
     initData() {
       var $this = this;

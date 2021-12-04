@@ -78,9 +78,40 @@ export default {
   },
   created() {
     var $this = this;
-    $this.initData();
+    $this.getUserMenuButtonPermit();
   },
   methods: {
+    // 获取当前登陆用户在该页面的操作权限
+    getUserMenuButtonPermit(){
+      var $this = this;
+      $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
+        if(res.data.length>0){
+          var permitData = [];
+          res.data.forEach(function(item,index){
+            permitData.push(item.action_route);
+          });
+          if(permitData.includes('Api_chinadaytargetnew')){
+            $this.initData()
+          }else{
+            $this.$message({
+              showClose: true,
+              message: "未被分配该页面的访问权限",
+              type: 'error',
+                duration:6000
+            });
+            $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+          }
+        }else{
+          $this.$message({
+            showClose: true,
+            message: "未被分配该页面的访问权限",
+            type: 'error',
+              duration:6000
+          });
+          $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+        }
+      });
+    },
     // 初始化数据
     initData() {
       var $this = this;
@@ -106,7 +137,6 @@ export default {
       $this.$store
         .dispatch("homeobject/postDayNum", data)
         .then((response) => {
-        console.log(response);
           if (response) {
             if (response.status) {
               var daymax = 0;
@@ -175,9 +205,16 @@ export default {
               $this.DealCount.month = response.month;
               var maxnum = 0;
               for(var i=0;i<dscore.length;i++){
-                if(dscore[i].goodnumber > maxnum){
-                  maxnum = dscore[i].goodnumber;
+                if(dscore[i].goodnumber>dscore[i].score){
+                  if(dscore[i].goodnumber > maxnum){
+                    maxnum = dscore[i].goodnumber;
+                  }
+                }else{
+                  if(dscore[i].score > maxnum){
+                    maxnum = dscore[i].score;
+                  }
                 }
+                
               }
               $this.getMaxNum(maxnum);
             } else {
@@ -195,8 +232,8 @@ export default {
     // 2.获取最大成交数额，比例尺数字设置
     getMaxNum(data){
       var $this = this;
-      var num = Math.floor(data/50);
-      var maxnum = (num+1)*50;
+      var num = Math.floor(data/100);
+      var maxnum = (num+1)*100;
       $this.DealCount.maxAimNum = maxnum;
       $this.DealCount.stepNum = maxnum/4;
     },

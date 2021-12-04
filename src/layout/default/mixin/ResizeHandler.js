@@ -18,10 +18,15 @@ export default {
     window.removeEventListener('resize', this.$_resizeHandler)
   },
   mounted() {
-    const isMobile = this.$_isMobile()
+    const isMobile = this.$_isMobile();
+    const isIMax = this.$_isIMax();
     if (isMobile) {
       store.dispatch('app/toggleDevice', 'mobile')
       store.dispatch('app/closeSideBar', { withoutAnimation: true })
+    }else{
+      if(isIMax){
+        store.dispatch('app/toggleDevice', 'iMax')
+      }
     }
   },
   methods: {
@@ -31,10 +36,15 @@ export default {
       const rect = body.getBoundingClientRect()
       return rect.width - 1 < WIDTH
     },
+    $_isIMax() {
+      const rect = body.getBoundingClientRect()
+      return rect.width - 1 > 1920
+    },
     $_resizeHandler() {
       if (!document.hidden) {
         const isMobile = this.$_isMobile()
-        store.dispatch('app/toggleDevice', isMobile ? 'mobile' : 'desktop')
+        const isIMax = this.$_isIMax();
+        store.dispatch('app/toggleDevice', isMobile ? 'mobile' : isIMax ? 'iMax': 'desktop')
 
         if (isMobile) {
           store.dispatch('app/closeSideBar', { withoutAnimation: true })

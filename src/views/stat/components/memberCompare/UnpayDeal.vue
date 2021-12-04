@@ -12,20 +12,14 @@
           <ul class="deul" :style="'height:'+ dealScoreSet.boxHeight">
               <li v-for="(item,index) in dealScore" :key="index">
                   <div class="rankNum">
-                      <div class="numTop" v-if="index==0">
-                          <img src="../../../../assets/deal1.png" alt="" />
+                      <div class="numTop" v-if="item.ranking<4">
+                          <img :src="require('@/assets/deal'+item.ranking+'.png')" alt="" />
                       </div>
-                      <div class="numTop" v-if="index==1">
-                          <img src="../../../../assets/deal2.png" alt="" />
+                      <div class="numNormal" v-if="item.ranking>3 && item.ranking < 9">
+                          0{{item.ranking}}
                       </div>
-                      <div class="numTop" v-if="index==2">
-                          <img src="../../../../assets/deal3.png" alt="" />
-                      </div>
-                      <div class="numNormal" v-if="index>2 && index < 9">
-                          0{{index+1}}
-                      </div>
-                      <div class="numNormal" v-if="index > 8">
-                          {{index+1}}
+                      <div class="numNormal" v-if="item.ranking > 9">
+                          {{item.ranking}}
                       </div>
                   </div>
                   <div class="userImg">
@@ -37,7 +31,7 @@
                   <div class="userName"><span @click="handleContrast(item.dept_id,item.uid)">{{item.ownuser}}</span></div>
                   <div class="userInquiry">
                     <div v-if="lang =='ch'">
-                        <div v-if="index<3" :class="'num0'+(index+1)"> 
+                        <div v-if="item.ranking<4" :class="'num0'+(item.ranking)"> 
                           {{item.score}}分
                         </div>
                         <div v-else> 
@@ -45,7 +39,7 @@
                         </div>
                     </div>
                     <div v-else>
-                        <div v-if="index<3" :class="'num0'+(index+1)"> 
+                        <div v-if="item.ranking<4" :class="'num0'+(item.ranking)"> 
                           {{item.score}}个
                         </div>
                         <div v-else> 

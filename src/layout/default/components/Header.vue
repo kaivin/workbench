@@ -188,17 +188,7 @@ export default {
     if(this.userInfo.issales==2){
       homeRedirect = '/Sales/index';
     }else{
-      if(this.ModuleList.includes("Module_manager")){
-        homeRedirect = '/Home/index';
-      }else{
-        if(this.ModuleList.includes("Module_cnStat")){
-          homeRedirect = '/Home/CH/objectiveShow';
-        }else{
-          if(this.ModuleList.includes("Module_enStat")){
-            homeRedirect = '/Home/EN/objectiveShow';
-          }
-        }
-      }
+      homeRedirect = '/Home/index';
     }
     this.homeRedirect = homeRedirect;
     if(this.$route.path=="/Article/index"){

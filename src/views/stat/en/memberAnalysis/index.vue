@@ -60,7 +60,7 @@ import UnpayDeal from "../../components/memberCompare/UnpayDeal"
 import PayMember from "../../components/memberCompare/PayMember"
 import MillionDeal from "../../components/memberCompare/MillionDeal"
 import AwardRank from "../../components/memberCompare/AwardRank"
-import {numSeparate} from "@/utils/index"
+import {numSeparate,rankingWithTotalItem} from "@/utils/index"
 export default {
   name: "enMemberAnalysis",
   data() {
@@ -108,7 +108,7 @@ export default {
   },
   created() {
     var $this = this;
-    $this.initData();
+    $this.getUserMenuButtonPermit();
   },
   methods: {
     //获取部门信息
@@ -201,6 +201,37 @@ export default {
         var routeUrl =  $this.$router.resolve({path: "/stat/en/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
         window.open(routeUrl.href,'_blank');
     },
+    // 获取当前登陆用户在该页面的操作权限
+    getUserMenuButtonPermit(){
+      var $this = this;
+      $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
+        if(res.data.length>0){
+          var permitData = [];
+          res.data.forEach(function(item,index){
+            permitData.push(item.action_route);
+          });
+          if(permitData.includes('Api_enpersoncountdefault')){
+            $this.initData()
+          }else{
+            $this.$message({
+              showClose: true,
+              message: "未被分配该页面的访问权限",
+              type: 'error',
+                duration:6000
+            });
+            $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+          }
+        }else{
+          $this.$message({
+            showClose: true,
+            message: "未被分配该页面的访问权限",
+            type: 'error',
+              duration:6000
+          });
+          $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+        }
+      });
+    },
     // 初始化数据
     initData() {
       var $this = this;
@@ -216,8 +247,9 @@ export default {
         .then((response) => {
           if (response) {
             if (response.status) {
+              console.log(response);
               // 非付费询盘
-              $this.unpayInquiry = response.xunulist;
+              $this.unpayInquiry = rankingWithTotalItem(response.xunulist,'number');
               $this.unpayInquiry.forEach(function(item){
                 item.number = numSeparate(item.number);
               });
@@ -230,7 +262,7 @@ export default {
                   $this.unpayInquirySet.isFold = false;
               }
               // 成交积分
-              $this.dealScore = response.scorelist;
+              $this.dealScore = rankingWithTotalItem(response.scorelist,'score');
               $this.dealScore.forEach(function(item){
                 item.score = numSeparate(Math.floor(item.score*100)/100);
               });
@@ -243,9 +275,9 @@ export default {
                   $this.dealScoreSet.isFold = false;
               }
               // 付费
-              $this.payMember = response.semulist;
+              $this.payMember = rankingWithTotalItem(response.semulist,'number');
               // 百万成交
-              $this.millionDeal = response.Alist;
+              $this.millionDeal = rankingWithTotalItem(response.Alist,'number');
               if(response.Alist.length < 3){
                   $this.millionDealSet.ifFold = false;
                   $this.millionDealSet.boxHeight = "auto";
@@ -257,10 +289,11 @@ export default {
               // 奖金排序
               var moneyarr = response.moneylist;
               moneyarr.sort($this.compare('allmoney'));
-              $this.awardMoney = moneyarr;
+              $this.awardMoney = rankingWithTotalItem(moneyarr,'allmoney');
               $this.awardMoney.forEach(function(item){
                 item.allmoney = numSeparate(Math.floor(item.allmoney*100)/100);
               });
+              console.log($this.awardMoney,"奖金排行榜");
               if(response.moneylist.length < 9){
                   $this.awardMoneySet.ifFold = false;
                   $this.awardMoneySet.boxHeight = "auto";

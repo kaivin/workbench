@@ -140,7 +140,6 @@ export default {
         MonthChange() {
             var $this = this;
             var res = $this.DealCount.month;
-            console.log(res)
             res = parseTime(res,'{y}-{m}');
             $this.DealCount.month = res;
             $this.$emit('MonthChange', res);

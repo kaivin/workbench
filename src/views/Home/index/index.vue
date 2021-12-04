@@ -4,9 +4,7 @@
       <div class="card-content" ref="tableContent">
         <div class="item-row flex-box Module_bbs" v-if="newsList.length > 0">
           <div
-            class="news-list flex-content"
-            v-if="permitModules.includes('Module_bbs')"
-          >
+            class="news-list flex-content" v-if="permitModules.includes('Module_bbs')">
             <dl
               class="news-dl flex-wrap"
               v-for="(item, index) in newsList"
@@ -110,7 +108,6 @@
                   ></component>
                 </el-col>
                </template>
-             <!-- <draggable v-model="moduleAry"   forceFallback="true"  animation="1000" @end="onEnd"></draggable> -->
           </el-row>
         </div>
       </div>
@@ -264,7 +261,7 @@ export default {
       loading: false,
       clickID: "",
       isDepart1: false,
-      moduleAry:localStorage.getItem("moduleList")?JSON.parse(localStorage.getItem("moduleList")):[
+      moduleAry:[
         {
           name:'depTarget',
           isShow:true,
@@ -399,27 +396,15 @@ export default {
          if(item.name == 'depTarget'){
            item.isShow = this.permitModules.includes('Module_cnStat') || this.permitModules.includes('Module_enStat')
          }
-        //  if(item.name == "groupMonthScore"){
-        //    item.isShow = this.currentCluesData.monthtongArr && this.currentCluesData.monthtongArr.length > 0
-        //  }
-        //  if(item.name == "groupDayScore"){
-        //    item.isShow = this.currentCluesData.zugroupdayArr && this.currentCluesData.zugroupdayArr.length > 0
-        //  }
-        //  if(item.name == "teamResult"){
-        //    item.isShow = this.zusuercount.zusuercountArr && this.zusuercount.zusuercountArr.length > 0
-        //  }
-        //  if(item.name == "hotArea"){
-        //    item.isShow = this.permitModules.includes('Module_cnStat') || this.permitModules.includes('Module_enStat')
-        //  }
          if(item.name == 'scoreDays'){
            item.isShow = this.permitModules.includes('Module_cnStat') || this.permitModules.includes('Module_enStat')
          }
          if(item.name == 'dealYearNum'){
            item.isShow = this.language=='Module_cnStat';
          }
-        //  if(item.name == 'depCost'){
-        //    item.isShow = this.language=='Module_cnStat';
-        //  }
+         if(item.name == 'depCost'){
+           item.isShow = false;//this.language=='Module_cnStat';
+         }
          if(item.name == 'yearContrast'){
            item.isShow = this.language=='Module_cnStat';
          }
@@ -466,10 +451,6 @@ export default {
     $this.initData();
   },
   methods: {
-    //拖拽结束
-    onEnd(){
-      localStorage.setItem("moduleList",JSON.stringify(this.moduleAry))
-    },
     // 初始化数据
     initData() {
       var $this = this;
@@ -480,7 +461,6 @@ export default {
       var $this = this;
       $this.$store.dispatch("api/getMenuButtonPermitAction", {id: $this.$router.currentRoute.meta.id}).then((res) => {
           if (res.status) {
-            console.log(res.data,'res');
             if (res.data.length > 0) {
               res.data.forEach(function (item, index) {
                 $this.menuButtonPermit.push(item.action_route);
@@ -2034,7 +2014,6 @@ export default {
       } else {
         resultData.dept_id = [];
       }
-      console.log(this.$refs)
       $this.$refs["hotAreaDeom"][0].clearChat();
       $this.$store
         .dispatch("api/cnCluesRegionStatDataAction", resultData)
@@ -2280,7 +2259,7 @@ export default {
                   $this.currentCluesData.costAverage = costAverage;
                   //部门成本均价排行
                   $this.currentCluesData.departmentCost = departmentCost;
-                  $this.$refs["costAverageChart"][0].costAverageChart();
+                  // $this.$refs["costAverageChart"][0].costAverageChart();
                 }
               }
             } else {
@@ -2430,7 +2409,7 @@ export default {
                 $this.currentCluesData.costAverage = costAverage;
                 //部门成本均价排行
                 $this.currentCluesData.departmentCost = departmentCost;
-                $this.$refs["costAverageChart"][0].costAverageChart();
+                // $this.$refs["costAverageChart"][0].costAverageChart();
               }
             }
           }

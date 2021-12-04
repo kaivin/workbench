@@ -34,7 +34,6 @@ export default {
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
       var $this = this;
-      console.log($this.$router.currentRoute.meta.id,"当前页面ID");
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.data.length>0){
           var cnMenuList = {};

@@ -333,10 +333,10 @@ export default {
           },
           yAxis:{
             line:null,
+            grid:null,
             tickLine:null,
             subTickLine:null
           },
-          //color:['#ae1222','#f27042','#f1de5f','#a2bfcd', '#b3b3b3'],
           color:topTenColor,
           label: {
             style: {

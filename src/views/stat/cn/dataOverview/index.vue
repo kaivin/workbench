@@ -1,4 +1,5 @@
-﻿<template>
+﻿
+<template><transition name="fade-transform" mode="out-in">
   <div class="page-root scroll-panel home-index" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
         <div class="homeMain flex-content">
@@ -56,9 +57,8 @@
            </el-row>
         </div>
     </el-card>
-  </div>
+  </div></transition>
 </template>
-
 <script>
 import CostYears from "../../components/dataOverview/CostYears.vue";
 import DealYears from "../../components/dataOverview/DealYears.vue";
@@ -97,9 +97,40 @@ export default {
     XpanYears,//年度询盘
   },
   created() {
-    this.getPageData()
+    this.getUserMenuButtonPermit()
   },
   methods: {
+    // 获取当前登陆用户在该页面的操作权限
+    getUserMenuButtonPermit(){
+      var $this = this;
+      $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
+        if(res.data.length>0){
+          var permitData = [];
+          res.data.forEach(function(item,index){
+            permitData.push(item.action_route);
+          });
+          if(permitData.includes('Api_chinacountnew')){
+            $this.getPageData()
+          }else{
+            $this.$message({
+              showClose: true,
+              message: "未被分配该页面的访问权限",
+              type: 'error',
+                duration:6000
+            });
+            $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+          }
+        }else{
+          $this.$message({
+            showClose: true,
+            message: "未被分配该页面的访问权限",
+            type: 'error',
+              duration:6000
+          });
+          $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+        }
+      });
+    },
     getPageData(){
       getChinacountnew().then(res=>{
         if(res.status){

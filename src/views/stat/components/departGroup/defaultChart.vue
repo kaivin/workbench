@@ -81,7 +81,8 @@
       </div>
       <div class="flex-content chart-content">
         <div v-if="currentData.chartType=='area'" class="chart-panel" :id="'area-'+currentData.randomStr"></div>
-        <div v-else class="chart-panel" :id="'line-'+currentData.randomStr"></div>
+        <div v-else-if="currentData.chartType=='line'" class="chart-panel" :id="'line-'+currentData.randomStr"></div>
+        <div v-else class="chart-panel" :id="'mulitColumn-'+currentData.randomStr"></div>
       </div>
     </div>
   </div>
@@ -135,8 +136,10 @@ export default {
   mounted(){
     if(this.currentData.chartType=='area'){
       this.drawAreaChart();
-    }else{
+    }else if(this.currentData.chartType=='line'){
       this.drawLineChart();
+    }else{
+      this.drawMulitColumnChart();
     }
   },
   methods:{
@@ -370,6 +373,7 @@ export default {
           isStack:false,
           color:$this.currentData.colorArr.length==1?$this.currentData.colorArr[0]:$this.currentData.colorArr,
           yAxis:{
+            tickCount:3,
             grid:{
               line:{
                 style:{
@@ -478,6 +482,35 @@ export default {
           },
         }
       }
+      var tooltip = null;
+      if($this.currentData.chartTitle.indexOf('百万')!=-1){
+        tooltip = {
+            customContent: (title,datum) => {
+              var newArr = [];
+              datum.forEach(function(item,index){
+                newArr.push(item.data);
+              });
+              var templateHtml = "";
+              if(isDate){
+                templateHtml = '<div class="tooltip-panel date"><div class="tooltip-title">'+title+'</div><div class="tooltip-body">';
+              }else{
+                templateHtml = '<div class="tooltip-panel"><div class="tooltip-title">'+title+'</div><div class="tooltip-body">';
+              }
+              newArr.forEach(function(item,index){
+                var itemHtml = '<div class="tooltip-dl"><div class="tooltip-dt"><div class="txt-name" style="color:'+item.color+'">'+item.name+'</div><div class="txt-value" style="color:'+item.color+'">'+item.value+'</div></div>';
+                item.user.forEach(function(item1){
+                  itemHtml += '<div class="tooltip-dd"><div class="txt-name">'+item1.username+'</div><div class="txt-value">'+item1.number+'</div></div>';
+                });
+                itemHtml+='</div>'
+                templateHtml += itemHtml
+              });
+              templateHtml += '</div></div>'
+              return templateHtml;
+            },
+          }
+      }else{
+        tooltip = {};
+      }
       if(!$this.linePlot){
         const linePlot = new Line('line-'+$this.currentData.randomStr, {
           appendPadding:[30,30,20],
@@ -487,6 +520,7 @@ export default {
           seriesField:'name',
           color:$this.currentData.colorArr.length==1?$this.currentData.colorArr[0]:$this.currentData.colorArr,
           yAxis:{
+            tickCount:3,
             grid:{
               line:{
                 style:{
@@ -537,9 +571,143 @@ export default {
           },
           label: label,
           point: point,
+          tooltip:tooltip,
         });
         $this.linePlot = linePlot;
         linePlot.render();
+      }
+    },
+    // 堆叠分组柱状图例
+    drawMulitColumnChart(){
+      var $this = this;
+      var isDate = false;
+      if($this.currentData.chartTitle.indexOf('日期')!=-1){
+        isDate = true;
+      }
+      if(!$this.mulitColumnPlot){
+        const mulitColumnPlot = new Column('mulitColumn-'+$this.currentData.randomStr, {
+          appendPadding:[30,30,20],
+          data:$this.currentData.mainData,
+          xField: 'key',
+          yField: 'value',
+          isGroup: true,
+          isStack: true,
+          seriesField: 'name',
+          groupField: 'depart',
+          color:$this.currentData.colorArr.length==1?$this.currentData.colorArr[0]:$this.currentData.colorArr,
+          label:{
+            style: {
+              fill: '#ffffff',
+              opacity: 1,
+              fontSize: 14
+            }
+          },
+          xAxis: {
+            label: {
+              // 数值格式化为千分位
+              formatter: (v) => {
+                var item = "";
+                if(v.indexOf("&")!=-1){
+                  item = v.split("&")[0]+'\n'+v.split("&")[1];
+                }else{
+                  if(v.indexOf(" ")!=-1){
+                    var week = "周"+v.split(" ")[1].substr(2);
+                    var date = v.split(" ")[0];
+                    item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
+                  }else{
+                    item = v.split("-")[1]+"月";
+                  }
+                }
+                return item
+              },
+              style:{
+                lineHeight:18
+              }
+            },
+          },
+          yAxis:{
+            grid:{
+              line:{
+                style:{
+                  stroke: 'black',
+                  lineWidth:1,
+                  lineDash:[6,3],
+                  strokeOpacity:0.1,
+                  shadowBlur:0
+                }
+              }
+            },
+          },
+          legend:{
+            marker:'line',
+            layout:'horizontal',
+            position:'top-right',
+            flipPage:false,
+            offsetX:-30,
+            label:{
+              style:{
+                textBaseline:"middle"
+              }
+            },
+          },
+          tooltip: {
+            customContent: (title,datum) => {
+              var newArr = [];
+              var departArr = [];
+              datum.forEach(function(item,index){
+                newArr.push(item.data);
+                if(!departArr.includes(item.data.depart)){
+                  departArr.push(item.data.depart)
+                }
+              });
+              var dataArr = [];
+              departArr.forEach(function(item){
+                var itemData = {};
+                itemData.title = item;
+                itemData.value = 0;
+                itemData.children = [];
+                newArr.forEach(function(item1){
+                  if(item1.depart == item){
+                    itemData.color = item1.departColor;
+                    itemData.value += item1.value;
+                    var itemChart = {};
+                    itemChart.name = item1.name;
+                    itemChart.value = item1.value;
+                    itemChart.color = item1.memberColor;
+                    itemData.children.push(itemChart);
+                  };
+                });
+                dataArr.push(itemData);
+              });
+              var templateHtml = "";
+              if(isDate){
+                templateHtml = '<div class="tooltip-panel date"><div class="tooltip-title">'+title+'</div><div class="tooltip-body">';
+              }else{
+                templateHtml = '<div class="tooltip-panel"><div class="tooltip-title">'+title+'</div><div class="tooltip-body">';
+              }
+              dataArr.forEach(function(item,index){
+                var itemHtml = '<div class="tooltip-dl"><div class="tooltip-dt"><div class="txt-name" style="color:'+item.color+'">'+item.title+'</div><div class="txt-value" style="color:'+item.color+'">'+item.value+'</div></div>';
+                item.children.forEach(function(item1){
+                  itemHtml += '<div class="tooltip-dd"><div class="txt-name"><i style="background:'+item1.color+'"></i>'+item1.name+'</div><div class="txt-value">'+item1.value+'</div></div>';
+                });
+                itemHtml+='</div>'
+                templateHtml += itemHtml
+              });
+              templateHtml += '</div></div>'
+              return templateHtml;
+            },
+          },// 自定义状态样式
+          state: {
+            active: {
+              style: {
+                lineWidth: 0,
+                fillOpacity: 0.65,
+              },
+            },
+          },
+        });
+        $this.mulitColumnPlot = mulitColumnPlot;
+        mulitColumnPlot.render();
       }
     },
   },

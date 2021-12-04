@@ -29,6 +29,7 @@
 <script>
 import { Column,P, G2} from '@antv/g2plot';
 import * as echarts from 'echarts';
+import {parseTime} from "@/utils";
 
 export default {
     name:'demo',
@@ -52,6 +53,12 @@ export default {
         }
       },
       yeardeaprtscore:{
+        type:Array,
+        default:function(){
+          return []
+        }
+      },
+      departList:{
         type:Array,
         default:function(){
           return []
@@ -126,6 +133,7 @@ export default {
             maxColumnWidth:16,
             columnStyle:{
               fill:'#8bb2f2',
+              cursor: 'pointer'
             },
             meta: {
               a_number: {
@@ -141,10 +149,31 @@ export default {
                 },
               },
             }
-            
-            
           });
-
+          chartTop.on('element:click', (args) => {
+            let data = args.data.data;
+            let month = data.date.slice(0,2);
+            let startTime = parseTime(new Date(),'{y}') + '/' +  month;
+            let endTime = parseTime(new Date(),'{y}') + '/' + month;
+            var baseDepart = "";
+            var contrastDepartArr = [];
+            $this.departList.forEach(function(item,index){
+              if(index == 0){
+                baseDepart = item.id;
+              }else{
+                contrastDepartArr.push(item.id);
+              }
+            });
+            var contrastDepart = "";
+            if(contrastDepartArr.length>0){
+              contrastDepart = contrastDepartArr.join(",");
+            }
+            if($this.language == '中文'){
+              $this.$router.push({path:'/stat/cn/departAnalysis',query:{type:9,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+            }else{
+              $this.$router.push({path:'/stat/en/departAnalysis',query:{type:9,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+            }
+          });
           $this.chartTop = chartTop;
           chartTop.render();
         
@@ -174,7 +203,7 @@ export default {
         let seriesData = [];
         for(let i = 0;i<chartBotData.length;i++){
           xAxisData.push(chartBotData[i].departname);
-          seriesData.push(chartBotData[i].a_number);
+          seriesData.push(chartBotData[i].a_number==0?'':chartBotData[i].a_number);
         }
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('DealYearsChartBot'));
@@ -245,10 +274,10 @@ export default {
           },
           series: [
             {
-              data: seriesData,
+              name: 'hill',
               type: 'pictorialBar',
+              barCategoryGap: '-20%',
               symbol: 'triangle',
-              symbolSize:['140%', '100%'],
               label:{
                 show:true,
                 position:'top',
@@ -259,7 +288,13 @@ export default {
                 opacity:0.2,
                
               },
-              
+              emphasis: {
+                itemStyle: {
+                  opacity: 1
+                }
+              },
+              data: seriesData,
+              z: 10
             },
             
           ]
@@ -268,7 +303,18 @@ export default {
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
         this.echartsResize = this.myChart.resize();
-        
+        myChart.on('click', function (params) {
+            // 在用户点击后控制台打印数据的名称
+            let baseDepart = $this.departList[params.dataIndex].id;
+            let contrastDepart = '';
+            let startTime = parseTime(new Date(),'{y}') + '/01';
+            let endTime = parseTime(new Date(),'{y}') + '/12' 
+            if($this.language == '中文'){
+              $this.$router.push({path:'/stat/cn/departAnalysis',query:{type:9,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+            }else{
+              $this.$router.push({path:'/stat/en/departAnalysis',query:{type:9,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+            }
+        });
       },
       echartsSize(){
         if(this.myChart){
@@ -278,7 +324,9 @@ export default {
     },
     destroyed(){
       window.removeEventListener('resize',this.echartsSize);
-      this.myChart.dispose();
+      if(this.myChart){
+        this.myChart.dispose();
+      }
     }
 }
 </script>

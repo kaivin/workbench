@@ -133,6 +133,7 @@
                                         <template slot-scope="scope">
                                           <div class="msg-text">
                                             <p><strong class="EnColor05">域名：</strong><span class="txt-span">{{scope.row.webdomain}}</span></p>
+                                            <p><strong class="EnColor05">类型：</strong><span class="txt-span" style="color:red">{{scope.row.domainattr}}</span></p>
                                             <p><strong class="EnColor05">网站ID：</strong><span class="txt-span">{{scope.row.website_id}}</span></p>
                                             <p><strong class="EnColor05">IP：</strong><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" class="txt-link">{{scope.row.ip}}</a><span v-if="scope.row.ip&&scope.row.ip!=''&&scope.row.ipcount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.ip)">({{scope.row.ipcount}})</span></p>
                                             <p><strong class="EnColor05">URL：</strong><a :href="scope.row.refer" target="_blank" class="txt-link" :title="scope.row.refer">打开</a></p>

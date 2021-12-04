@@ -8,12 +8,12 @@
           <ul class="inul"  :style="'height:'+ unpayInquirySet.boxHeight" >
               <li v-for="(item,index) in unpayInquiry" :key="index">
                   <div class="rankNum">
-                      <div class="numTop" v-if="index<3" :class="'numTop0'+(index+1)"></div>
-                      <div class="numNormal" v-if="index>2 && index < 9">
-                          0{{index+1}}
+                      <div class="numTop" v-if="item.ranking<4" :class="'numTop0'+(item.ranking)"></div>
+                      <div class="numNormal" v-if="item.ranking>3 && item.ranking < 9">
+                          0{{item.ranking}}
                       </div>
-                      <div class="numNormal" v-if="index > 8">
-                          {{index+1}}
+                      <div class="numNormal" v-if="item.ranking > 9">
+                          {{item.ranking}}
                       </div>
                   </div>
                   <div class="userImg">
@@ -24,7 +24,7 @@
                   </div>
                   <div class="userName"><span @click="handleContrast(item.dept_id,item.id)">{{item.name}}</span></div>
                   <div class="userInquiry">
-                      <span v-if="index<3" :class="'num0'+(index+1)"> 
+                      <span v-if="item.ranking<4" :class="'num0'+(item.ranking)"> 
                         {{item.number}}个
                       </span>
                       <span v-else> 

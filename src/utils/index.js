@@ -467,6 +467,30 @@ export function singleArrColor(dataArr){
   });
   return dataArr;
 }
+// 单一数组的图表主题色添加
+export function singleNewArrColor(dataArr){
+  var colorArr = ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822"]
+  var newData = [];
+  dataArr.forEach(function(item,index){
+    var itemData = {};
+    itemData.color = colorArr[index];
+    itemData.data = item;
+    newData.push(itemData);
+  });
+  return newData;
+}
+// 组员的图表主题色添加
+export function memberArrColor(dataArr){
+  var colorArr = ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822"]
+  var newData = [];
+  dataArr.forEach(function(item,index){
+    var itemData = {};
+    itemData.name = item;
+    itemData.memberColor = colorArr[index];
+    newData.push(itemData);
+  });
+  return newData;
+}
 // 日期连接符转换方法
 export function formatDate(date,oldVal,newVal){
   var dateStr = "";
@@ -514,4 +538,59 @@ export function numSeparate(val){
     temp = temp + '.' + floatNum // 整数小数拼接
   }
   return temp // 返回
+}
+
+// 排名中，数值相同排名并列，按总数据量排名
+export function rankingWithTotalItem(dataArr,key){
+  let preValue = 0; // 预定义数值
+  let ranking = 0; // 排名
+  let same = 0; // 是否相同
+  dataArr.forEach((item,index)=>{
+      if(item[key]==preValue){
+          item.ranking = ranking;
+          same++;
+      }else{
+          ranking = ranking + same;
+          ranking++;
+          preValue = item[key];
+          same=0;
+          item.ranking = ranking;
+      }
+  })
+  return dataArr;
+}
+
+
+// 排名中，数值相同排名并列，按升序排名
+export function rankingWithAsc(dataArr,key){
+  let preValue = 0; // 预定义数值
+  let ranking = 0; // 排名
+  dataArr.forEach((item,index)=>{
+      if(item[key]==preValue){
+          item.ranking = ranking;
+      }else{
+          ranking++;
+          preValue = item[key];
+          item.ranking = ranking;
+      }
+  });
+  return dataArr;
+}
+
+// 图标数据按日期进行排序
+
+export function sortByDate(dataArr,key){
+  return dataArr.sort(function(a,b){
+    return Date.parse(a[key].replace(/-/g,'/'))-Date.parse(b[key].replace(/-/g,'/'));
+  })
+}
+// 比较两个时间的大小
+export function compareDate(date1,date2){
+    var oDate1 = new Date(date1);
+    var oDate2 = new Date(date2);
+    if(oDate1.getTime() > oDate2.getTime()){
+        return true; //第一个大
+    } else {
+        return false; //第二个大
+    }
 }

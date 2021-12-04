@@ -4,12 +4,12 @@
         <ul class="milul" :style="'height:'+ millionDealSet.boxHeight">
             <li v-for="(item,index) in millionDeal" :key="index">
                 <div class="rankNum" >
-                    <div v-if="index<3" class="rankstyle" :class="'rank0'+(index+1)"></div>
-                    <div class="numNormal" v-if="index>2 && index < 9">
-                          0{{index+1}}
+                    <div v-if="item.ranking<4" class="rankstyle" :class="'rank0'+(item.ranking)"></div>
+                    <div class="numNormal" v-if="item.ranking>3 && item.ranking < 10">
+                          0{{item.ranking}}
                       </div>
-                      <div class="numNormal" v-if="index > 8">
-                          {{index+1}}
+                      <div class="numNormal" v-if="item.ranking > 9">
+                          {{item.ranking}}
                       </div>
                 </div>
                 <div class="userImg">

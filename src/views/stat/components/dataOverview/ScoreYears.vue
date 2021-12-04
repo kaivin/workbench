@@ -327,12 +327,12 @@ export default {
             let startTime = parseTime(new Date(),'{y}') + '/01';
             let endTime = parseTime(new Date(),'{y}') + '/12' 
             if($this.language == '中文'){
-              $this.$router.push({path:'/Home/CH/sectorAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+              $this.$router.push({path:'/stat/cn/departAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
             }else{
               if(this.type == 0){
-                $this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+                $this.$router.push({path:'/stat/en/departAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
               }else{
-                $this.$router.push({path:'/Home/EN/sectorAnalysis',query:{type:8,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+                $this.$router.push({path:'/stat/en/departAnalysis',query:{type:8,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
               }
             }
           });

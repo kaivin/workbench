@@ -42,6 +42,7 @@ export default {
   computed:{
     ...mapGetters([
       'ModuleList',
+      'device'
     ]),
     ...mapState({
       sidebar: state => state.app.sidebar,
@@ -51,6 +52,7 @@ export default {
         hideSidebar: !this.sidebar.opened,
         openSidebar: this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
+        iMax:this.device=='iMax'
       }
     },
     cachedViews() {

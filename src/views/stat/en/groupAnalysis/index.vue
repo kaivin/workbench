@@ -3,7 +3,7 @@
     <div class="filter-panel">
       <div class="filter-list">
         <div class="item-filter flex-box group">
-          <div class="filter-title"><span class="txt-title">小组选择：</span></div>
+          <div class="filter-title"><span class="txt-title">小组：</span></div>
           <div class="filter-content flex-content">
             <div class="item-list group">
               <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-if="item.dept_id==12" v-for="item in groupList" v-bind:key="item.userid" v-on:click="groupChangeHandler(item.userid)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b>[{{item.departName}}]</b></div>
@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="item-filter flex-box date">
-          <div class="filter-title"><span class="txt-title">时间选择：</span></div>
+          <div class="filter-title"><span class="txt-title">日期：</span></div>
           <div class="filter-content flex-content">
             <div class="item-list">
               <div class="item-change">
@@ -56,7 +56,7 @@
                   :picker-options="pickerMonthRangeOptions">
                 </el-date-picker>
               </div>
-              <div class="item-checkbox" v-bind:class="[selectedData.contrastGroupID.length>0||!dateSelected?'is-disabled':'',selectedData.isDateCompare?'active':'']" v-on:click="dateCompareChangeHandler"><i></i><span>对比</span></div>
+              <div class="item-checkbox" v-bind:class="[selectedData.contrastGroupID.length>0||!dateSelected?'is-disabled':'',selectedData.isDateCompare?'active':'']" v-on:click="dateCompareChangeHandler"><i></i><span>日期对比</span></div>
               <div class="item-date" v-if="selectedData.isDateCompare">
                 <el-date-picker
                   v-if="!selectedData.isMonth"
@@ -97,6 +97,7 @@
           <div class="filter-content flex-content">
             <div class="item-list">
               <div class="item-checkbox" v-for="item in contrastList" v-bind:class="[item.isOn?'active':'', item.disabled?'is-disabled':'']" v-bind:key="item.value" v-on:click="analysisItemChangeHandler(item)"><i></i><span>{{item.label}}</span></div>
+              <div class="item-reset" v-if="isFilter"><span v-on:click="resetData">全部重置</span></div>
             </div>
           </div>
         </div>
@@ -158,7 +159,6 @@ export default {
       mapRatio:0.45,
       groupList:[],
       contrastGroupList:[],
-      selectedContrastGroupList:[],
       pickerDateRangeOptions: {
         shortcuts: [{
           text: '最近一个月',
@@ -227,18 +227,20 @@ export default {
         {label:"月",value:"month",isOn:false},
       ],
       contrastList:[
-        {label:"询盘个数趋势分析",id:1,value:"inquiryCount",isOn:false,disabled:false},
-        {label:"询盘个数国家分析",id:4,value:"inquiryCountRegion",isOn:false,disabled:false},
-        {label:"成交积分趋势分析",id:2,value:"dealScore",isOn:false,disabled:true},
-        {label:"成交积分国家分析",id:5,value:"dealScoreRegion",isOn:false,disabled:true},
-        {label:"成交个数趋势分析",id:8,value:"dealCount",isOn:false,disabled:true},
-        {label:"成交个数国家分析",id:7,value:"dealCountRegion",isOn:false,disabled:true},
+        {label:"询盘趋势",id:1,value:"inquiryCount",isOn:false,disabled:false},
+        {label:"询盘国家",id:4,value:"inquiryCountRegion",isOn:false,disabled:false},
+        {label:"成交积分趋势",id:2,value:"dealScore",isOn:false,disabled:true},
+        {label:"成交积分国家",id:5,value:"dealScoreRegion",isOn:false,disabled:true},
+        {label:"成交个数趋势",id:8,value:"dealCount",isOn:false,disabled:true},
+        {label:"成交个数国家",id:7,value:"dealCountRegion",isOn:false,disabled:true},
         {label:"产品分析",id:6,value:"product",isOn:false,disabled:true},
       ],
       channelType:"",
       groupName:"",
       dateSelected:false,
+      isFilter:false,
       tipsInfo:"当前小组分析页面，展示为：近30天数据信息。",
+      tipsItem:"",
       isContrastShow:false,
       selectedData:{
         dateDefault:[],
@@ -254,14 +256,12 @@ export default {
       isDefaultPage:true,
       judgeData:{},
       defaultChartData:[],
-      staticChart:[],
       mapChart:[],
-      productChart:[],
     };
   },
   created() {
     var $this = this;
-    $this.initData();
+    $this.getUserMenuButtonPermit();
   },
   watch:{
     minWidth(val) {
@@ -289,6 +289,37 @@ export default {
     }
   },
   methods: {
+    // 获取当前登陆用户在该页面的操作权限
+    getUserMenuButtonPermit(){
+      var $this = this;
+      $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
+        if(res.data.length>0){
+          var permitData = [];
+          res.data.forEach(function(item,index){
+            permitData.push(item.action_route);
+          });
+          if(permitData.includes('Api_engroupcountdefault')){
+            $this.initData()
+          }else{
+            $this.$message({
+              showClose: true,
+              message: "未被分配该页面的访问权限",
+              type: 'error',
+                duration:6000
+            });
+            $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+          }
+        }else{
+          $this.$message({
+            showClose: true,
+            message: "未被分配该页面的访问权限",
+            type: 'error',
+              duration:6000
+          });
+          $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+        }
+      });
+    },
     // 默认展示数据
     initData() {
       var $this = this;
@@ -504,6 +535,15 @@ export default {
       });
       $this.groupList = groupList;
       $this.selectedData.groupID = selectedGroupID;
+      // 日期维度未选择的情况下，小组选中后，需要默认将日维度选中
+      if(!$this.dateSelected){
+        $this.dateDimension.forEach(function(item,index){
+          if(index==0){
+            item.isOn = true;
+            $this.dateSelected = true;
+          }
+        });
+      }
       // 小组有被选中的，且默认时间是空的情况下，需要给默认时间一个默认时间范围
       if($this.selectedData.groupID.length>0&&(!$this.selectedData.dateDefault||$this.selectedData.dateDefault.length==0)){
         if($this.selectedData.isMonth){
@@ -518,10 +558,17 @@ export default {
         var selectedContrastType = [];
         var selectedType = [];
         contrastList.forEach(function(item){
-          if(item.value=="inquiryCount"||item.value=="inquiryCountRegion"){
+          if($this.selectedData.isMonth){
             item.isOn = true;
+            item.disabled = false;
             selectedContrastType.push(item.id);
             selectedType.push(item.value);
+          }else{
+            if(item.value=="inquiryCount"||item.value=="inquiryCountRegion"){
+              item.isOn = true;
+              selectedContrastType.push(item.id);
+              selectedType.push(item.value);
+            }
           }
         });
         $this.selectedType = selectedType;
@@ -543,14 +590,6 @@ export default {
           item.disabled = false;
         });
         $this.contrastGroupList = contrastGroupList;
-      }
-      if(!$this.dateSelected){
-        $this.dateDimension.forEach(function(item,index){
-          if(index==0){
-            item.isOn = true;
-            $this.dateSelected = true;
-          }
-        });
       }
       $this.getGroupName();
       $this.getSearchData();
@@ -627,31 +666,28 @@ export default {
         });
         $this.dateDimension = dateDimension;
         // 切换日期维度，对比时间清空，默认时间在有小组选中的情况下，需要给一个默认时间范围
-        if($this.selectedData.groupID.length>0){
-          if($this.selectedData.isMonth){
-            $this.selectedData.dateDefault = $this.getNearMonth();
-            $this.selectedData.dateContrast = [];
-          }else{
-            $this.selectedData.dateDefault = $this.getNearDay();
-            $this.selectedData.dateContrast = [];
-          }
+        if($this.selectedData.isMonth){
+          $this.selectedData.dateDefault = $this.getNearMonth();
+          $this.selectedData.dateContrast = [];
         }else{
-          $this.selectedData.dateDefault = [];
+          $this.selectedData.dateDefault = $this.getNearDay();
           $this.selectedData.dateContrast = [];
         }
-        // 切换日期维度，分析项只在月时可选的，切换到日维度时，需禁用，且清除选中状态；切换到月维度时，则只需将所有禁用状态解除
+        // 切换日期维度，分析项只在月时可选的，切换到日维度时，需禁用，且清除选中状态；切换到月维度时，则需解除禁用并全部选中
         var contrastList = $this.contrastList;
         var selectedContrastType = [];
         var selectedType = [];
         contrastList.forEach(function(item,index){
           if($this.selectedData.isMonth){
             item.disabled = false;
+            item.isOn = true;
           }else{
             if(item.value=="dealScore"||item.value=="dealScoreRegion"||item.value=="dealCount"||item.value=="dealCountRegion"||item.value=="product"){
               item.isOn = false;
               item.disabled = true;
             }else{
               item.disabled = false;
+              item.isOn = true;
             }
           }
           if(item.isOn){
@@ -780,6 +816,46 @@ export default {
       $this.selectedData.contrastGroupID = selectedContrastGroupID;
       $this.getSearchData();
     },
+    // 重置数据
+    resetData(){
+      var $this = this;
+      if($this.$route.query.type){
+        $this.$router.push({path:'/stat/en/groupAnalysis'});
+      }else{
+        $this.channelType = "";
+        $this.groupName = "";
+        $this.dateSelected = false;
+        $this.isFilter = false,
+        $this.tipsInfo="当前小组分析页面，展示为：近30天数据信息。";
+        $this.tipsItem="";
+        $this.isContrastShow=false;
+        $this.selectedData.dateDefault = [];
+        $this.selectedData.dateContrast = [];
+        $this.selectedData.groupID = [];
+        $this.selectedData.contrastGroupID = [];
+        $this.selectedData.isMonth = false;
+        $this.selectedData.isDateCompare = false;
+        $this.selectedData.type = [];
+        $this.selectedType = [];
+        $this.oldContrastGroupID = "";
+        $this.isDefaultPage = true;
+        $this.judgeData = {};
+        $this.defaultChartData = [];
+        $this.mapChart = [];
+        $this.dateDimension.forEach(function(item){
+          item.isOn = false;
+        });
+        $this.contrastList.forEach(function(item){
+          item.isOn = false;
+          if(item.value=="inquiryCount"||item.value=="inquiryCountRegion"){
+            item.disabled = false;
+          }else{
+            item.disabled = true;
+          }
+        });
+        $this.initData();
+      }
+    },
     // 最近六个月时间周期
     getNearMonth(){
       const end = new Date();
@@ -847,26 +923,38 @@ export default {
           if($this.selectedData.type.length==0){
             $this.tipsInfo = "请选择数据分析的分析项";
           }else{
+            $this.dateInfoTips();
             if(searchData.is_timecopmare==2&&searchData.starttime&&searchData.endtime){
-              $this.tipsInfo = "当前小组分析页面，展示为："+$this.selectedData.dateDefault[0]+" ~ " + $this.selectedData.dateDefault[1]+" 与 "+$this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1]+" 的日期对比数据信息。";
+              $this.tipsInfo = "当前小组分析页面，展示为："+$this.selectedData.dateDefault[0]+" ~ " + $this.selectedData.dateDefault[1]+" 与 "+$this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1]+" 的日期对比数据信息。"+$this.tipsItem;
             }
             if(searchData.is_timecopmare==1&&searchData.starttime&&searchData.endtime){
-              $this.tipsInfo = "当前小组分析页面，展示为："+$this.selectedData.dateDefault[0]+" ~ " + $this.selectedData.dateDefault[1]+" 的数据信息。";
+              $this.tipsInfo = "当前小组分析页面，展示为："+$this.selectedData.dateDefault[0]+" ~ " + $this.selectedData.dateDefault[1]+" 的数据信息。"+$this.tipsItem;
             }
           }
         }
       }
       return searchData;
     },
+    // 判断日期维度，跳转参数，添加补充说明信息
+    dateInfoTips(){
+      var $this = this;
+      var itemArr = [];
+      $this.contrastList.forEach(function(item){
+        if(item.isOn){
+          itemArr.push(item.label);
+        }
+      });
+      $this.tipsItem = "（展示项："+itemArr.join("、")+"）";
+    },
     // 获取筛选条件下的数据
     getSearchData(){
       var $this = this;
+      $this.isFilter = true;
       $this.judgeChartStatus();
       var searchData = $this.searchDataInit();
       $this.clearData();
       if(searchData.userid&&searchData.starttime&&searchData.endtime&&searchData.type){
         $this.$store.dispatch('teamMember/enGroupFilterAction', searchData).then(res=>{
-          console.log(res,"筛选数据");
           if(res.status){
             $this.filterDataClump(res);
           }else{
@@ -941,6 +1029,7 @@ export default {
               // 日维度
               chartData = res.dayxuntrendcompare;
             }
+            inquiryData.colorArr = [];
             var tongData = groupColor(chartData);
             tongData.forEach(function(item,index){
               inquiryData.colorArr.push(item[0].color);
@@ -1168,7 +1257,7 @@ export default {
             dealScoreData.avgNumber = numSeparate(Math.floor(res.monthscoreallnumbercompare/res.monthscoretrendcompare[0].length*100)/100);
             dealScoreData.historyMaxNumber = numSeparate(Math.floor(res.historymaxscoremonthcompare[0].score*100)/100);
             dealScoreData.historyMaxNumberDate = res.historymaxscoremonthcompare[0].yeartime;
-            dealScoreData.avgTitle = "月平均成交积分";z
+            dealScoreData.avgTitle = "月平均成交积分";
             dealScoreData.historyTitle = "月历史峰值";
             dealScoreData.totalChart = [];
             res.monthdepartscorepercentercompare.forEach(function(item){
@@ -1320,7 +1409,7 @@ export default {
               }else{
                 itemChart.name = item.departname+"组";
               }
-              itemChart.value = item.number;
+              itemChart.value = item.score;
               dealCountData.totalChart.push(itemChart);
             });
             dealCountData.totalChart = singleArrColor(dealCountData.totalChart);
