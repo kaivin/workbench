@@ -1,35 +1,31 @@
 <template>
   <div class="memberInquiry">
       <div class="memberTit">
-          <h3>非付费成员-个人年度总<span>询盘个数</span>排行榜</h3>
-          <p>（单位：个）</p>
+          <h3>询盘个数榜单</h3>
+          <p><span>非付费成员年度排行</span>(单位：个)</p>
       </div>
       <div class="inquiryRank">
           <ul class="inul"  :style="'height:'+ unpayInquirySet.boxHeight" >
               <li v-for="(item,index) in unpayInquiry" :key="index">
                   <div class="rankNum">
                       <div class="numTop" v-if="item.ranking<4" :class="'numTop0'+(item.ranking)"></div>
-                      <div class="numNormal" v-if="item.ranking>3 && item.ranking < 9">
+                      <div class="numTop" v-if="item.ranking>3 && item.ranking <= 9">
                           0{{item.ranking}}
                       </div>
-                      <div class="numNormal" v-if="item.ranking > 9">
+                      <div class="numTop" v-if="item.ranking > 9">
                           {{item.ranking}}
                       </div>
                   </div>
                   <div class="userImg">
-                    <div v-if="item.headimg" class="headImg" @click="handleContrast(item.dept_id,item.id)">
-                      <img :src="item.headimg" :alt="item.name" />
+                    <div v-if="item.headimg" class="headImg" :class="item.ranking<4?'headImgBorder':''" @click="handleContrast(item.dept_id,item.id)">
+                      <span><img :src="item.headimg" :alt="item.name" /></span>
                     </div>
-                    <div v-else class="nopic"></div>  
+                    <div v-else class="nopic" :class="item.ranking<4?'headImgBorder':''"><span></span></div>  
                   </div>
                   <div class="userName"><span @click="handleContrast(item.dept_id,item.id)">{{item.name}}</span></div>
-                  <div class="userInquiry">
-                      <span v-if="item.ranking<4" :class="'num0'+(item.ranking)"> 
-                        {{item.number}}个
-                      </span>
-                      <span v-else> 
-                        {{item.number}}个
-                      </span>
+                  <div class="userInquiry flex-content">
+                      <span v-if="item.ranking<4" :class="'num0'+(item.ranking)">{{item.number}}个</span>
+                      <span v-else>{{item.number}}个</span>
                   </div>
               </li>
           </ul>
@@ -77,7 +73,7 @@ export default {
         if(isFold){
           boxHeight = "auto";
         }else{
-          boxHeight = '770px'
+          boxHeight = '630px'
         }
         
         $this.$emit("changeSet", $this.unpayInquirySet, isFold, boxHeight);

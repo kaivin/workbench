@@ -5,108 +5,168 @@
     font-display: swap;
 }
 .memberTit{
+    padding:19px 30px 0px 30px;
+    position: relative;
+    &:after{
+        position: absolute;
+        right:0px;
+        top:0px;
+        bottom:0px;
+        width:120px;
+    }
     h3{
-        display: inline-block;
+        clear: both;
+        display: block;
         vertical-align: top;
         color: #1a1a1a;
         font-size: 16px;
-        span{
-            color: #d62815;
-            font-size: 18px;
-            margin-left: 5px;
-            margin-right: 5px;
-        }
+        padding-bottom:12px;
+        line-height:1;
     }
     p{
-        display: inline-block;
+        clear: both;
+        display: block;
         vertical-align: top;
-        color: #a1a1a1;
-        font-size: 12px;
-        margin-top: 4px;
-        margin-left: 6px;
+        color:#a1a1a1;
+        font-size: 13px;
+        line-height:1;
+        span{
+            display: inline-block;
+            color: #1a1a1a;
+            margin-right:10px;
+        }
     }
 }
-
 .memberInquiry{
-    padding: 50px 28px 28px;
     background-color: #fff;
+    border:1px solid #f0f0f0;
+    .memberTit{
+        height:80px; 
+        background: -moz-linear-gradient(right,#f9fbff 0%, #edf4ff 100%);
+        background: -webkit-linear-gradient(right,#f9fbff 0%,#edf4ff 100%);
+        background: -o-linear-gradient(right,#f9fbff 0%,#edf4ff 100%);
+        background: -ms-linear-gradient(right,#f9fbff 0%,#edf4ff 100%);
+        background: linear-gradient(to left,#f9fbff 0%,#edf4ff 100%);
+        &:after{
+            background: url(../assets/personal_bg01.png) no-repeat top right;
+            background-size:100%;
+        }
+        h3{color:#0749f3;}
+    }
     .inquiryRank{
-        padding: 4px 16px;
-        background-color: #fcfbf6;
-        margin-top: 40px;
         position: relative;
         .inul{
             overflow: hidden;
         }
         li{
-            padding-top: 16px;
-            padding-bottom: 16px;
+            padding:12px 35px 12px 12px;
             display: flex;
             flex-direction: row;
             align-items: center;
+            border-top: 1px solid rgba(245, 243, 228, 0.8);
             .rankNum{
-                width: 62px;
-                height: 52px;
-                color: #93adc7;
-                font-size: 20px;
-                text-align: center;
-                line-height: 52px;
-                font-family: "numberfont";
+                width: 50px;
+                height: 38px;
+                position: relative;
                 .numTop{
-                    width: 62px;
-                    height: 52px;
-                }
-                .numTop01{
-                    background: url(../assets/in1.png) center center no-repeat;
-                    background-size: 53px 51px;
-                }
-                .numTop02{
-                    background: url(../assets/in2.png) center center no-repeat;
-                    background-size: 49px 51px;
-                }
-                .numTop03{
-                    background: url(../assets/in3.png) center center no-repeat;
-                    background-size: 49px 51px;
+                    width: 50px;
+                    height: 38px;
+                    color: #888888;
+                    font-size:13px;
+                    text-align: center;
+                    line-height:38px;
+                    &.numTop01{
+                        position: absolute;
+                        left:0px;
+                        top:0px;
+                        height: 47px;
+                        background: url(../assets/personal_InquiryIcon01.png) center center no-repeat;
+                        background-size: 50px 47px;
+                    }
+                    &.numTop02{
+                        position: absolute;
+                        left:0px;
+                        top:0px;
+                        height: 47px;
+                        background: url(../assets/personal_InquiryIcon02.png) center center no-repeat;
+                        background-size: 50px 47px;
+                    }
+                    &.numTop03{
+                        position: absolute;
+                        left:0px;
+                        top:0px;
+                        height: 47px;
+                        background: url(../assets/personal_InquiryIcon03.png) center center no-repeat;
+                        background-size: 50px 47px;
+                    }
                 }
             }
             .userImg{
-                width: 120px;
-                padding-left: 28px;
+                width: 100px;
+                padding-left: 38px;
                 .headImg{
-                    width: 50px;
-                    height: 50px;
+                    width: 38px;
+                    height: 38px;
                     overflow: hidden;
                     border-radius: 50%;
-                    box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
-                    border: solid 1px #fece6c;
                     position: relative;
                     cursor: pointer;
-                    img{
-                        width: 100%;
+                    span{
+                        clear: both;
+                        display: block;
+                        overflow: hidden;
+                        width:100%;
+                        height:100%;
+                        border-radius: 50%;
+                        img{
+                            width: 100%;
+                        }
+                    }
+                    &.headImgBorder{
+                        background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: linear-gradient(to bottom,#fbbf44 0%,#e85524 100%);
+                        padding: 1px;
                     }
                 }
                 .nopic{
-                    width: 50px;
-                    height: 50px;
+                    width: 38px;
+                    height: 38px;
                     overflow: hidden;
                     border-radius: 50%;
-                    box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
-                    border: solid 1px #fece6c;
-                    background: url(../assets/default_pic.jpg) center center no-repeat;
+                    &.headImgBorder{
+                        background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: linear-gradient(to bottom,#fbbf44 0%,#e85524 100%);
+                        padding: 1px;
+                    }
+                    span{
+                        clear: both;
+                        display: block;
+                        overflow: hidden;
+                        width:100%;
+                        height:100%;
+                        border-radius: 50%;
+                        background: url(../assets/default_pic.jpg) center center no-repeat;
+                        background-size:100%;
+                    }
                 }
             }
             .userName{
-                color: #333333;
-                font-size: 14px;
-                flex: 1;
+                color: #111111;
+                font-size: 13px;
                 span{
                     cursor: pointer;
                 }
             }
             .userInquiry{
-                color: #666666;
-                font-size: 16px;
-                width: 80px;
+                color: #333333;
+                font-size: 13px;
+                text-align: right;
                 .num01{
                     background-image: linear-gradient(90deg,#f9c020 ,#f83801);
                     background-clip: text;
@@ -127,22 +187,19 @@
                 }
             }
         }
-        li+li{
-            border-top: 1px solid rgba(245, 243, 228, 0.8);
-        }
     }
     .inMore{
         width: 60px;
-        height: 15px;
+        height:0px;
         position: absolute;
         cursor: pointer;
         left: 50%;
         margin-left: -30px;
-        bottom: -30px;
-        border-top: 15px solid #e9e6d1;
+        bottom: -15px;
+        border-top: 15px solid #e2e3e8;
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
-        border-bottom: 15px solid transparent;
+        border-bottom:0px;
         transition: all 0.3s ease;
         &:before{
             content: '';
@@ -153,20 +210,20 @@
             top: -10px;
             width: 0;
             height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 7px solid #fff;
-            border-bottom: 7px solid transparent;
+            border-left:5px solid transparent;
+            border-right:5px solid transparent;
+            border-top:5px solid #fff;
+            border-bottom:0px;
             transition: all 0.3s ease;
         }
         &:hover{
-            border-top-color: #ad6d2d;
+            border-top-color:#0749f3;
         }
     }
     .rowRotate{
         border-top-color: #ad6d2d;
         &:before{
-            top: -18px;
+            top: -11px;
             -webkit-transform: rotate(180deg);
             transform: rotate(180deg);
         }
@@ -176,79 +233,124 @@
         overflow: hidden;
     }
 }
-
 .memberDeal{
-    padding: 50px 28px 28px;
     background-color: #fff;
+    border:1px solid #f0f0f0;
+    .memberTit{
+        height:80px; 
+        background: -moz-linear-gradient(right,#f5fef8 0%, #e6fdee 100%);
+        background: -webkit-linear-gradient(right,#f5fef8 0%,#e6fdee 100%);
+        background: -o-linear-gradient(right,#f5fef8 0%,#e6fdee 100%);
+        background: -ms-linear-gradient(right,#f5fef8 0%,#e6fdee 100%);
+        background: linear-gradient(to left,#f5fef8 0%,#e6fdee 100%);
+        &:after{
+            background: url(../assets/personal_bg02.png) no-repeat top right;
+            background-size:100%;
+        }
+        h3{color:#09a742;}
+    }
     .dealRank{
-        padding: 4px 16px;
-        background-color: #f5f9fa;
-        margin-top: 40px;
         position: relative;
         .deul{
             overflow: hidden;
         }
         li{
-            padding-top: 16px;
-            padding-bottom: 16px;
+            padding:12px 35px 12px 24px;
             display: flex;
             flex-direction: row;
             align-items: center;
+            border-top: 1px solid rgba(245, 243, 228, 0.8);
             .rankNum{
-                width: 62px;
-                height: 52px;
-                color: #93adc7;
-                font-size: 20px;
-                font-family: "numberfont";
-                text-align: center;
-                line-height: 52px;
+                width: 27px;
+                height: 32px;
+                position: relative;
                 .numTop{
-                    width: 62px;
-                    height: 52px;
-                    img{
-                        filter: drop-shadow(4px 6px 9px rgba(40,50,60,0.32));
-                        margin-top: 2px;
+                    width: 27px;
+                    height: 32px;
+                    color: #888888;
+                    font-size:13px;
+                    text-align: center;
+                    line-height:32px;
+                    &.numTop01{
+                        background: url(../assets/personal_ScoreIcon01.png) center center no-repeat;
+                        background-size:27px 32px;
+                    }
+                    &.numTop02{
+                        background: url(../assets/personal_ScoreIcon02.png) center center no-repeat;
+                        background-size: 27px 32px;
+                    }
+                    &.numTop03{
+                        background: url(../assets/personal_ScoreIcon03.png) center center no-repeat;
+                        background-size: 27px 32px;
                     }
                 }
             }
             .userImg{
-                width: 112px;
-                padding-left: 25px;
+                width: 100px;
+                padding-left: 38px;
                 .headImg{
-                    width: 50px;
-                    height: 50px;
+                    width: 38px;
+                    height: 38px;
                     overflow: hidden;
                     border-radius: 50%;
-                    box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
-                    border: solid 1px #fece6c;
                     position: relative;
                     cursor: pointer;
-                    img{
-                        width: 100%;
+                    span{
+                        clear: both;
+                        display: block;
+                        overflow: hidden;
+                        width:100%;
+                        height:100%;
+                        border-radius: 50%;
+                        img{
+                            width: 100%;
+                        }
+                    }
+                    &.headImgBorder{
+                        background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: linear-gradient(to bottom,#fbbf44 0%,#e85524 100%);
+                        padding: 1px;
                     }
                 }
                 .nopic{
-                    width: 50px;
-                    height: 50px;
+                    width: 38px;
+                    height: 38px;
                     overflow: hidden;
                     border-radius: 50%;
-                    box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
-                    border: solid 1px #fece6c;
-                    background: url(../assets/default_pic.jpg) center center no-repeat;
+                    &.headImgBorder{
+                        background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: linear-gradient(to bottom,#fbbf44 0%,#e85524 100%);
+                        padding: 1px;
+                    }
+                    span{
+                        clear: both;
+                        display: block;
+                        overflow: hidden;
+                        width:100%;
+                        height:100%;
+                        border-radius: 50%;
+                        background: url(../assets/default_pic.jpg) center center no-repeat;
+                        background-size:100%;
+                    }
                 }
             }
             .userName{
-                color: #333333;
-                font-size: 14px;
-                flex: 1;
+                color: #111111;
+                font-size: 13px;
                 span{
                     cursor: pointer;
                 }
             }
             .userInquiry{
-                color: #666666;
-                font-size: 16px;
-                width: 80px;
+                color: #333333;
+                font-size: 13px;
+                text-align: right;
                 .num01{
                     background-image: linear-gradient(90deg,#f9c020 ,#f83801);
                     background-clip: text;
@@ -269,34 +371,19 @@
                 }
             }
         }
-        li+li{
-            border-top: 1px solid rgba(224, 239, 242, 0.8);
-            .rankNum{
-                .numTop{
-                    margin-top: 1px;
-                }
-            }
-        }
-        li+li+li{
-            .rankNum{
-                .numTop{
-                    margin-top: 0px;
-                }
-            }
-        }
     }
     .deMore{
         width: 60px;
-        height: 15px;
+        height:0px;
         position: absolute;
         cursor: pointer;
         left: 50%;
         margin-left: -30px;
-        bottom: -30px;
-        border-top: 15px solid #c5dbdf;
+        bottom: -15px;
+        border-top: 15px solid #e2e3e8;
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
-        border-bottom: 15px solid transparent;
+        border-bottom:0px;
         transition: all 0.3s ease;
         &:before{
             content: '';
@@ -307,43 +394,262 @@
             top: -10px;
             width: 0;
             height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 7px solid #fff;
-            border-bottom: 7px solid transparent;
+            border-left:5px solid transparent;
+            border-right:5px solid transparent;
+            border-top:5px solid #fff;
+            border-bottom:0px;
         }
         &:hover{
-            border-top-color: #315c88;
+            border-top-color:#09a742;
         }
     }
     .rowRotate{
         border-top-color: #315c88;
         &:before{
-            top: -18px;
+            top: -11px;
             -webkit-transform: rotate(180deg);
             transform: rotate(180deg);
         }
     }
 }
-
-.payMember{
-    padding: 50px 28px 28px;
+.millionDeal{
     background-color: #fff;
+    border:1px solid #f0f0f0;
+    .memberTit{
+        height:80px; 
+        background: -moz-linear-gradient(right,#fefbf4 0%, #fff9e9 100%);
+        background: -webkit-linear-gradient(right,#fefbf4 0%,#fff9e9 100%);
+        background: -o-linear-gradient(right,#fefbf4 0%,#fff9e9 100%);
+        background: -ms-linear-gradient(right,#fefbf4 0%,#fff9e9 100%);
+        background: linear-gradient(to left,#fefbf4 0%,#fff9e9 100%);
+        &:after{
+            background: url(../assets/personal_bg03.png) no-repeat top right;
+            background-size:100%;
+        }
+        h3{color:#efb407;}
+    }
+    .milRank{
+        position: relative;
+        .milul{
+            overflow: hidden;
+        }
+        li{
+            padding:12px 35px 12px 26px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            border-top: 1px solid rgba(245, 243, 228, 0.8);
+            .rankNum{
+                width:26px;
+                height:38px;
+                position: relative;
+                .rankstyle{
+                    width: 26px;
+                    height: 38px;
+                    color: #888888;
+                    font-size:13px;
+                    text-align: center;
+                    line-height:38px;
+                    &.rank01{
+                        position: absolute;
+                        left:0px;
+                        top:0px;
+                        height: 45px;
+                        background: url(../assets/personal_MoneryIcon01.png) center center no-repeat;
+                        background-size: 26px 45px;
+                    }
+                    &.rank02{
+                        position: absolute;
+                        left:0px;
+                        top:0px;
+                        height: 45px;
+                        background: url(../assets/personal_MoneryIcon02.png) center center no-repeat;
+                        background-size: 26px 45px;
+                    }
+                    &.rank03{
+                        position: absolute;
+                        left:0px;
+                        top:0px;
+                        height: 45px;
+                        background: url(../assets/personal_MoneryIcon03.png) center center no-repeat;
+                        background-size: 26px 45px;
+                    }
+                }
+                .numNormal{
+                    width: 26px;
+                    height: 38px;
+                    color: #888888;
+                    font-size:13px;
+                    text-align: center;
+                    line-height:38px;
+                }
+            }
+            .userImg{
+                width:96px;
+                padding-left:35px;
+                .headImg{
+                    width: 38px;
+                    height: 38px;
+                    overflow: hidden;
+                    border-radius: 50%;
+                    position: relative;
+                    cursor: pointer;
+                    span{
+                        clear: both;
+                        display: block;
+                        overflow: hidden;
+                        width:100%;
+                        height:100%;
+                        border-radius: 50%;
+                        img{
+                            width: 100%;
+                        }
+                    }
+                    &.headImgBorder{
+                        background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: linear-gradient(to bottom,#fbbf44 0%,#e85524 100%);
+                        padding: 1px;
+                    }
+                }
+                .nopic{
+                    width: 38px;
+                    height: 38px;
+                    overflow: hidden;
+                    border-radius: 50%;
+                    &.headImgBorder{
+                        background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: linear-gradient(to bottom,#fbbf44 0%,#e85524 100%);
+                        padding: 1px;
+                    }
+                    span{
+                        clear: both;
+                        display: block;
+                        overflow: hidden;
+                        width:100%;
+                        height:100%;
+                        border-radius: 50%;
+                        background: url(../assets/default_pic.jpg) center center no-repeat;
+                        background-size:100%;
+                    }
+                }
+            }
+            .userName{
+                color: #111111;
+                font-size: 13px;
+                span{
+                    cursor: pointer;
+                }
+            }
+            .milNum{
+                text-align: right;
+                p{
+                    color: #333333;
+                    font-size: 13px;
+                    padding-left: 30px;
+                    line-height: 38px;
+                    position: relative;
+                    display: inline-block;
+                    &:before{
+                        content: '';
+                        display: block;
+                        width:30px;
+                        height:28px;
+                        background: url(../assets/mildeal.png) center center no-repeat;
+                        background-size: 100% auto;
+                        position: absolute;
+                        left: 0;
+                        top: 9px;
+                    }
+                }
+            }
+        }
+    }
+    .milMore{
+        width: 60px;
+        height:0px;
+        position: absolute;
+        cursor: pointer;
+        left: 50%;
+        margin-left: -30px;
+        bottom: -15px;
+        border-top: 15px solid #e2e3e8;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom:0px;
+        transition: all 0.3s ease;
+        &:before{
+            content: '';
+            display: block;
+            position: absolute;
+            left: 50%;
+            margin-left: -6px;
+            top: -10px;
+            width: 0;
+            height: 0;
+            border-left:5px solid transparent;
+            border-right:5px solid transparent;
+            border-top:5px solid #fff;
+            border-bottom:0px;
+        }
+        &:hover{
+            border-top-color:#efb407;
+        }
+    }
+    .rowRotate{
+        border-top-color: #57657a;
+        &:before{
+            top: -11px;
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+    }
+}
+.payMemberTit{
+    h3{
+        display:block;
+        vertical-align: top;
+        color: #1a1a1a;
+        font-size: 16px;
+        padding:10px 30px;
+        line-height:36px;
+        background: -moz-linear-gradient(right,#fffdfa 0%, #fff9e8 100%);
+        background: -webkit-linear-gradient(right,#fffdfa 0%,#fff9e8 100%);
+        background: -o-linear-gradient(right,#fffdfa 0%,#fff9e8 100%);
+        background: -ms-linear-gradient(right,#fffdfa 0%,#fff9e8 100%);
+        background: linear-gradient(to left,#fffdfa 0%,#fff9e8 100%);
+        span{
+            color: #d62815;
+            font-size: 18px;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+    }
+}
+.payMember{
+    background-color: #fff;
+    border:1px solid #f0f0f0;
+    border-bottom: 0px;
     .yearRank{
-        margin-top: 40px;
         text-align: center;
         thead{
-            height: 38px;
-            background-color: #f6f7fa;
-            color: #999999;
-            font-size: 14px;
+            height:48px;
+            color: #1a1a1a;
+            font-size: 13px;
             font-weight: normal;
             tr,th{
-                background-color: #f6f7fa;
+                background-color: #fffcf5;
                 font-weight: normal;
+                color:#1a1a1a;
             }
             th.el-table__cell.is-leaf{
-                border-bottom: none;
+                border-top: 1px solid #f0f0f0;
+                border-bottom:0px solid #f0f0f0;
                 padding: 0;
             }
         }
@@ -351,15 +657,38 @@
             text-align: center;
             line-height: normal;
             .urank{
-                color: #93adc7;
-                font-size: 20px;
-                font-family: "numberfont";
+                color: #888888;
+                font-size: 13px;
+                width: 18px;
+                height: 18px;
+                border-radius: 2px;
+                background: #dcdcdc;
+                display:inline-block;
+                &.urank01{
+                    background: -moz-linear-gradient(135deg,#f9bc1f 0%, #f9511b 100%);
+                    background: -webkit-linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
+                    background: -o-linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
+                    background: -ms-linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
+                    background: linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
+                    color:#fff;
+                }
+                &.urank02{
+                    background:#a7c2ca;
+                    color:#fff;
+                }
+                &.urank03{
+                    background: -moz-linear-gradient(top,#e5ca99 0%, #d0b583 100%);
+                    background: -webkit-linear-gradient(top,#e5ca99 0%,#d0b583 100%);
+                    background: -o-linear-gradient(top,#e5ca99 0%,#d0b583 100%);
+                    background: -ms-linear-gradient(top,#e5ca99 0%,#d0b583 100%);
+                    background: linear-gradient(to bottom,#e5ca99 0%,#d0b583 100%);
+                    color:#fff;
+                }
             }
             .headImg{
-                width: 50px;
-                height: 50px;
-                border-radius: 6px;
-	            border: solid 2px #ffff74;
+                width: 36px;
+                height: 36px;
+                border-radius: 4px;
                 margin-left: auto;
                 margin-right: auto;
                 position: relative;
@@ -368,35 +697,56 @@
                 img{
                     width: 100%;
                 }
+                &.headImgBorder{
+                    background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                    background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                    background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                    background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                    background: linear-gradient(to left,#fbbf44 0%,#e85524 100%);
+                    padding: 1px;
+                    img{
+                        border-radius:50%;
+                    }
+                }
             }
             .nopic{
-                width: 50px;
-                height: 50px;
-                border-radius: 6px;
-	            border: solid 2px #ffff74;
+                width: 36px;
+                height: 36px;
+                border-radius: 4px;
                 background: url(../assets/default_pic.jpg) center center no-repeat;
                 margin-left: auto;
                 margin-right: auto;
+                &.headImgBorder{
+                    background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                    background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                    background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                    background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                    background: linear-gradient(to left,#fbbf44 0%,#e85524 100%);
+                    padding: 1px;
+                    img{
+                        border-radius:50%;
+                    }
+                }
             }
             .uname{
-                font-size: 14px;
-                color: #333333;
+                font-size: 13px;
+                color: #111111;
                 cursor: pointer;
             }
             .innum{
-                color: #485e7f;
-                font-size: 14px;
+                color: #333333;
+                font-size: 13px;
             }
             .dealnum{
-                color: #ff3535;
-                font-size: 14px;
+                color: #333333;
+                font-size: 13px;
             }
             .milnum{
-                color: #fd9200;
-                font-size: 14px;
-                padding-left: 50px;
+                color: #333333;
+                font-size: 13px;
+                padding-left:30px;
                 display: inline-block;
-                line-height: 50px;
+                line-height:38px;
                 position: relative;
                 &:before{
                     content: '';
@@ -404,16 +754,17 @@
                     position: absolute;
                     left: 0;
                     top: 8px;
-                    width: 50px;
-                    height: 47px;
+                    width:30px;
+                    height:28px;
                     background: url(../assets/mildeal.png) center center no-repeat;
                     background-size: 100% auto;
                 }
             }
         }
         td.el-table__cell{
-            border-bottom: 1px solid #f6f7fa;
-            padding: 14px 0 12px;
+            border-top: 1px solid #f0f0f0;
+            border-bottom:0px solid #f0f0f0;
+            padding:12px 0px;
         }
         .sort-caret.ascending{
             border-bottom-color:#93adc7;
@@ -433,247 +784,68 @@
         }
     }
 }
-
-.millionDeal{
-    padding: 234px 25px 25px;
-    background-color: #fff;
-    position: relative;
-    &:before{
-        content: '';
-        display: block;
-        position: absolute;
-        width: 295px;
-        height: 345px;
-        background: url(../assets/milliondeal.png) center -50px no-repeat;
-        left: 50%;
-        margin-left: -148px;
-        top: 0;
-    }
-    .milRank{
-        .milul{
-            overflow: hidden;
-        }
-        li{
-            padding-top: 10px;
-            padding-bottom: 12px;
-            padding-left: 75px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            border-radius: 10px;
-            position: relative;
-            background-color: #f5eed4;
-            .rankNum{
-                width: 56px;
-                height: 100%;
-                left: 0;
-                top: 0;
-                position: absolute;
-                .rankstyle{
-                    width: 56px;
-                    height: 51px;
-                    position: absolute;
-                    left: 2px;
-                    top: -8px;
-                    background-size: 100% auto;
-                    background-position: left top;
-                    background-repeat: no-repeat;
-                }
-                .rank01{
-                    background-image: url(../assets/mil1.gif);
-                }
-                .rank02{
-                    background-image: url(../assets/mil2.gif);
-                }
-                .rank03{
-                    background-image: url(../assets/mil3.gif);
-                }
-                .numNormal{
-                    color: #93adc7;
-                    font-size: 20px;
-                    position: absolute;
-                    font-family: "numberfont";
-                    left: 0;
-                    right: 0;
-                    text-align: center;
-                    top: 50%;
-                    -webkit-transform: translateY(-50%);
-                    transform: translateY(-50%);
-                }
-            }
-            
-            .userImg{
-                position: relative;
-                z-index: 1;
-                font-size: 0;
-                &:before{
-                    content: '';
-                    display: block;
-                    position: absolute;
-                    left: -2px;
-                    top: -2px;
-                    right: -2px;
-                    bottom: -2px;
-                    background-image: url(../assets/light-border.png);
-                    background-position:  center center;
-                    background-size: 100% 100%;
-                    background-repeat: no-repeat;
-                    z-index: 2;
-                }
-                .headImg{
-                    width: 54px;
-                    height: 54px;
-                    overflow: hidden;
-                    border-radius: 6px;
-                    box-shadow: 3px 4px 7px 0px rgba(133, 124, 89, 0.75);
-                    position: relative;
-                    cursor: pointer;
-                    img{
-                        width: 100%;
-                    }
-                }
-                .nopic{
-                    width: 54px;
-                    height: 54px;
-                    overflow: hidden;
-                    border-radius: 6px;
-                    box-shadow: 3px 4px 7px 0px rgba(133, 124, 89, 0.75);
-                    background: url(../assets/default_pic.jpg) center center no-repeat;
-                }
-            }
-            .userName{
-                color: #333333;
-                font-size: 14px;
-                flex: 1;
-                margin-left: 30px;
-                span{
-                    cursor: pointer;
-                }
-            }
-            .milNum{
-                color: #333333;
-                font-size: 16px;
-                width: 110px;
-                padding-left: 48px;
-                line-height: 54px;
-                position: relative;
-                &:before{
-                    content: '';
-                    display: block;
-                    width: 50px;
-                    height: 47px;
-                    background: url(../assets/mildeal.png) center center no-repeat;
-                    background-size: 100% auto;
-                    position: absolute;
-                    left: 0;
-                    top: 12px;
-                }
-            }
-        }
-        li+li{
-            margin-top: 34px;
-            background-color: #d9e7f2;
-        }
-        li+li+li{
-            background-color: #d0ebf1;
-        }
-        li+li+li+li{
-            background-color: #f2f8f9;
-        }
-    }
-    .milMore{
-        width: 60px;
-        height: 15px;
-        position: absolute;
-        cursor: pointer;
-        left: 50%;
-        margin-left: -30px;
-        bottom: -30px;
-        border-top: 15px solid #e2e3e8;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-bottom: 15px solid transparent;
-        transition: all 0.3s ease;
-        &:before{
-            content: '';
-            display: block;
-            position: absolute;
-            left: 50%;
-            margin-left: -6px;
-            top: -10px;
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 7px solid #fff;
-            border-bottom: 7px solid transparent;
-        }
-        &:hover{
-            border-top-color: #57657a;
-        }
-    }
-    .rowRotate{
-        border-top-color: #57657a;
-        &:before{
-            top: -18px;
-            -webkit-transform: rotate(180deg);
-            transform: rotate(180deg);
-        }
-    }
-}
-
 .memberAward{
-    padding: 50px 28px 28px;
     background-color: #fff;
+    border:1px solid #f0f0f0;
+    .memberTit{
+        height:80px; 
+        background: -moz-linear-gradient(right,#fffbfa 0%, #ffeeee 100%);
+        background: -webkit-linear-gradient(right,#fffbfa 0%,#ffeeee 100%);
+        background: -o-linear-gradient(right,#fffbfa 0%,#ffeeee 100%);
+        background: -ms-linear-gradient(right,#fffbfa 0%,#ffeeee 100%);
+        background: linear-gradient(to left,#fffbfa 0%,#ffeeee 100%);
+        &:after{
+            background: url(../assets/personal_bg04.png) no-repeat top right;
+            background-size:100%;
+        }
+        h3{color:#d62815;}
+    }
     .awardRank{
-        padding: 4px 16px;
-        background-color: #fcf8f8;
-        margin-top: 40px;
         position: relative;
         .inul{
             overflow: hidden;
         }
         li{
-            padding-top: 16px;
-            padding-bottom: 16px;
+            padding: 13px 20px;
             display: flex;
             flex-direction: row;
             align-items: center;
+            border-top: 1px solid rgba(245, 231, 231, 0.6);
             .rankNum{
-                width: 62px;
-                height: 52px;
-                color: #93adc7;
-                font-size: 20px;
-                font-family: "numberfont";
+                width:30px;
+                height:36px;
+                color: #888888;
+                font-size:13px;
                 text-align: center;
-                line-height: 52px;
+                line-height:36px;
                 .numTop{
-                    width: 62px;
-                    height: 52px;
+                    width:30px;
+                    height:25px;
                 }
                 .numTop01{
-                    background: url(../assets/in1.png) center center no-repeat;
-                    background-size: 53px 51px;
+                    background: url(../assets/personal_AwardIcon01.png) center center no-repeat;
+                    background-size:20px 25px;
+                    margin-top: 5px;
                 }
                 .numTop02{
-                    background: url(../assets/in2.png) center center no-repeat;
-                    background-size: 49px 51px;
+                    background: url(../assets/personal_AwardIcon02.png) center center no-repeat;
+                    background-size:20px 25px;
+                    margin-top: 5px;
                 }
                 .numTop03{
-                    background: url(../assets/in3.png) center center no-repeat;
-                    background-size: 49px 51px;
+                    background: url(../assets/personal_AwardIcon03.png) center center no-repeat;
+                    background-size:20px 25px;
+                    margin-top: 5px;
                 }
             }
             .userImg{
-                padding-left: 28px;
-                width: 124px;
+                padding-left:38px;
+                width:95px;
                 .headImg{
-                    width: 50px;
-                    height: 50px;
+                    width: 36px;
+                    height: 36px;
                     overflow: hidden;
-                    border-radius: 50%;
-                    box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
-                    border: solid 1px #fece6c;
+                    border-radius: 4px;
                     position: relative;
                     cursor: pointer;
                     img{
@@ -681,27 +853,26 @@
                     }
                 }
                 .nopic{
-                    width: 50px;
-                    height: 50px;
+                    width: 36px;
+                    height: 36px;
                     overflow: hidden;
-                    border-radius: 50%;
-                    box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
-                    border: solid 1px #fece6c;
+                    border-radius: 4px;
+                    position: relative;
+                    cursor: pointer;
                     background: url(../assets/default_pic.jpg) center center no-repeat;
                 }    
             }
             .userName{
-                color: #333333;
-                font-size: 14px;
-                flex: 1;
+                color: #111111;
+                font-size: 13px;
                 span{
                     cursor: pointer;
                 }
             }
             .userAward{
-                color: #666666;
-                font-size: 16px;
-                width: 75px;
+                color: #333333;
+                font-size: 13px;
+                text-align: right;
                 .num01{
                     background-image: linear-gradient(90deg,#f9c020 ,#f83801);
                     background-clip: text;
@@ -722,22 +893,19 @@
                 }
             }
         }
-        li+li{
-            border-top: 1px solid rgba(245, 231, 231, 0.6);
-        }
     }
     .awardMore{
         width: 60px;
-        height: 15px;
+        height:0px;
         position: absolute;
         cursor: pointer;
         left: 50%;
         margin-left: -30px;
-        bottom: -30px;
-        border-top: 15px solid #e5d0d0;
+        bottom: -15px;
+        border-top: 15px solid #e2e3e8;
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
-        border-bottom: 15px solid transparent;
+        border-bottom:0px;
         transition: all 0.3s ease;
         &:before{
             content: '';
@@ -748,25 +916,24 @@
             top: -10px;
             width: 0;
             height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 7px solid #fff;
-            border-bottom: 7px solid transparent;
+            border-left:5px solid transparent;
+            border-right:5px solid transparent;
+            border-top:5px solid #fff;
+            border-bottom:0px;
         }
         &:hover{
-            border-top-color: #ad6d2d;
+            border-top-color:#d62815;
         }
     }
     .rowRotate{
         border-top-color: #ad6d2d;
         &:before{
-            top: -18px;
+            top: -11px;
             -webkit-transform: rotate(180deg);
             transform: rotate(180deg);
         }
     }
 }
-
 .dealRankMain{
     &:after{
         content: '';
@@ -774,38 +941,42 @@
         clear: both;
     }
     .dealRankLeft{
-        width: 70%;
         float: left;
+        width:75.5%;
         padding-right: 10px;
+        .memberInquiry{
+            float: left;
+            margin-left:20px;
+            width:calc(33.3333% - 20px);
+        }
+        .memberDeal{
+            float: left;
+            margin-left:20px;
+            width:calc(33.3333% - 20px);
+        }
+        .millionDeal{
+            float: left;
+            margin-left:20px;
+            width:calc(33.3333% - 20px);
+        }
         .dealRankTop{
+            margin-left:-20px;
             &:after{
                 content: '';
                 display: block;
                 clear: both;
             }
         }
-        .memberInquiry{
-            width: calc(50% - 10px);
-            float: left;
-        }
-        .memberDeal{
-            width: calc(50% - 10px);
-            float: right;
-        }
         .payMember{
-            margin-top: 20px;
+            margin-top:37px;
         }
     }
     .dealRankRight{
-        width: 30%;
         float: right;
+        width:24.5%;
         padding-left: 10px;
-        .millionDeal{
-            margin-bottom: 20px;
-        }
     }
 }
-
 @media screen and(max-width:1600px){
     .dealRankMain{
         .dealRankLeft{
@@ -816,15 +987,25 @@
             width: 100%;
             margin-top: 20px;
             padding-left: 0;
-            .millionDeal{
-                width: calc(50% - 10px);
-                float: left;
-                margin-right: 20px;
-            }
             .memberAward{
-                margin-top: 0;
-                width: calc(50% - 10px);
-                float: left;
+                width:100%;
+                .awardRank{
+                    .inul{
+                        padding-right: 20px;
+                        height: auto!important;
+                        li{
+                            float: left;
+                            padding: 13px 0px;
+                            margin-left: 20px;
+                            width: calc(33.3333% - 20px);
+                            .userImg{
+                                padding-left: 15px;
+                                width: 75px;
+                            }
+                        }
+                    }
+                }
+                .awardMore{display:none!important;}
             }
             &:after{
                 content: '';
@@ -833,34 +1014,4 @@
             }
         }
     }
-
-}
-
-@media screen and(max-width:1200px){
-    .dealRankMain{
-        .dealRankLeft{
-            .dealRankTop{
-                display: block;
-            }
-            .memberInquiry{
-                width: 100%;
-            }
-            .memberDeal{
-                margin-left: 0;
-                margin-top: 20px;
-                width: 100%;
-            }
-        }
-        .dealRankRight{
-            display: block;
-            .millionDeal{
-                width: 100%;
-            }
-            .memberAward{
-                width: 100%;
-                margin-left: 0;
-                margin-top: 20px;
-            }
-        }
-    } 
 }

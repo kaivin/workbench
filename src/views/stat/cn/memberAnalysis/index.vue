@@ -1,57 +1,55 @@
 ﻿<template>
-  <div class="page-root scroll-panel home-index" ref="boxPane">
-    <el-card class="box-card scroll-card" shadow="hover">
-        <div class="personTopTab">
-            <div class="chooseDepart flex-box">
-                  <span class="choosetit">部门选择：</span>
-                  <div class="departItems flex-content">
-                  <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
-                  </div>
-            </div>
-            <div class="choosePerson">
-                  <div class="decor"></div>
-                  <div class="departItems">
-                      <p class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="(item,index) in choosePerson" :key="index" v-on:click="PersonChange(searchData.dept_id,item.id)"><i></i><span>{{item.name}}</span></p>
-                  </div>
-            </div>
-        </div>
-        <div class="homeMain flex-content dealRankMain">
-          <div class="dealRankLeft">
-            <div class="dealRankTop">
-              <unpay-inquiry 
-                :unpayInquiry="unpayInquiry"
-                :unpayInquirySet="unpayInquirySet"
-                :lang="ch"
-                @changeSet="changeSet"
-              ></unpay-inquiry>
-              <unpay-deal
-                :dealScore="dealScore"
-                :dealScoreSet="dealScoreSet"
-                @changeSet="changeSet"
-                :lang="ch"
-              ></unpay-deal>
-            </div>
-            <pay-member
-              :payMember="payMember"
-              :lang="ch"
-            ></pay-member>
+  <div class="page-root scroll-panel" ref="boxPane">
+      <div class="personTopTab">
+          <div class="chooseDepart flex-box">
+                <span class="choosetit">部门选择：</span>
+                <div class="departItems flex-content">
+                <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
+                </div>
           </div>
-          <div class="dealRankRight">
+          <div class="choosePerson">
+                <div class="decor"></div>
+                <div class="departItems">
+                    <p class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="(item,index) in choosePerson" :key="index" v-on:click="PersonChange(searchData.dept_id,item.id)"><i></i><span>{{item.name}}</span></p>
+                </div>
+          </div>
+      </div>
+      <div class="flex-content dealRankMain">
+        <div class="dealRankLeft">
+          <div class="dealRankTop">
+            <unpay-inquiry 
+              :unpayInquiry="unpayInquiry"
+              :unpayInquirySet="unpayInquirySet"
+              :lang="ch"
+              @changeSet="changeSet"
+            ></unpay-inquiry>
+            <unpay-deal
+              :dealScore="dealScore"
+              :dealScoreSet="dealScoreSet"
+              @changeSet="changeSet"
+              :lang="ch"
+            ></unpay-deal>
             <million-deal
               :millionDeal="millionDeal"
               :millionDealSet="millionDealSet"
               :lang="ch"
               @changeSet="changeSet"
             ></million-deal>
-            <award-rank
-              :awardMoney="awardMoney"
-              :awardMoneySet="awardMoneySet"
-              :lang="ch"
-              @changeSet="changeSet"
-            ></award-rank>
           </div>
+          <pay-member
+            :payMember="payMember"
+            :lang="ch"
+          ></pay-member>
         </div>
-    </el-card>
+        <div class="dealRankRight">
+          <award-rank
+            :awardMoney="awardMoney"
+            :awardMoneySet="awardMoneySet"
+            :lang="ch"
+            @changeSet="changeSet"
+          ></award-rank>
+        </div>
+      </div>
   </div>
 </template>
 <script>
@@ -254,7 +252,7 @@ export default {
                   $this.unpayInquirySet.boxHeight = "auto";
               }else{
                   $this.unpayInquirySet.ifFold = true;
-                  $this.unpayInquirySet.boxHeight = "770px";
+                  $this.unpayInquirySet.boxHeight = "630px";
                   $this.unpayInquirySet.isFold = false;
               }
               // 成交积分
@@ -267,20 +265,20 @@ export default {
                   $this.dealScoreSet.boxHeight = "auto";
               }else{
                   $this.dealScoreSet.ifFold = true;
-                  $this.dealScoreSet.boxHeight = "770px";
+                  $this.dealScoreSet.boxHeight = "630px";
                   $this.dealScoreSet.isFold = false;
               }
               // 付费
               $this.payMember = rankingWithTotalItem(response.semulist,'number');
               // 百万成交
               $this.millionDeal = rankingWithTotalItem(response.Alist,'number');
-              console.log($this.millionDeal);
+              console.log($this.millionDeal,'$this.millionDeal');
               if(response.Alist.length < 3){
                   $this.millionDealSet.ifFold = false;
                   $this.millionDealSet.boxHeight = "auto";
               }else{
                   $this.millionDealSet.ifFold = true;
-                  $this.millionDealSet.boxHeight = "296px";
+                  $this.millionDealSet.boxHeight = "630px";
                   $this.millionDealSet.isFold = false;
               }
               // 奖金排序
@@ -295,7 +293,7 @@ export default {
                   $this.awardMoneySet.boxHeight = "auto";
               }else{
                   $this.awardMoneySet.ifFold = true;
-                  $this.awardMoneySet.boxHeight = "770px";
+                  $this.awardMoneySet.boxHeight = "1133px";
                   $this.awardMoneySet.isFold = false;
               }
 

@@ -1,12 +1,12 @@
 <template>
   <div class="memberAward">
       <div class="memberTit">
-          <h3>个人年度总<span>奖金额</span>排行榜</h3>
-          <p>（单位：元）</p>
+          <h3>奖金排行榜</h3>
+          <p>(单位：元)</p>
       </div>
       <div class="awardRank">
           <ul class="inul" :style="'height:'+ awardMoneySet.boxHeight">
-              <li v-for="(item,index) in awardMoney" :key="index">
+              <li class="flex-box" v-for="(item,index) in awardMoney" :key="index">
                   <div class="rankNum">
                       <div class="numTop" v-if="item.ranking<4" :class="'numTop0'+(item.ranking)"></div>
                       <div class="numNormal" v-if="item.ranking>3 && item.ranking < 10">
@@ -25,8 +25,8 @@
                   <div class="userName">
                     <span @click="handleContrast(item.dept_id,item.uid)">{{item.name}} </span> 
                   </div>
-                  <div class="userAward">
-                      <span v-if="item.ranking<3" :class="'num0'+(item.ranking)"> 
+                  <div class="userAward flex-content">
+                      <span v-if="item.ranking<=3" :class="'num0'+(item.ranking)"> 
                         {{item.allmoney}}元
                       </span>
                       <span v-else> 
@@ -78,7 +78,7 @@ export default {
         if(isFold){
           boxHeight = "auto";
         }else{
-          boxHeight = '770px'
+          boxHeight = '1133px'
         }
         
         $this.$emit("changeSet", $this.awardMoneySet, isFold, boxHeight);

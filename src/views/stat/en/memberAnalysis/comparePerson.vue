@@ -23,7 +23,7 @@
                   <h4>{{item.name}}</h4>
                   <p>{{item.depart}}</p>
               </div>
-              <div class="delIt" v-on:click="handlePerson(parseInt(item.id))"></div>
+              <span class="delIt" v-on:click="handlePerson(parseInt(item.id))"><svg-icon icon-class="error" /></span>
           </div>
           <div class="compareWhoItem nouser" v-for="item in 4-comapreuser.length">
               <div class="user_img">
@@ -83,6 +83,7 @@ export default {
     initData() {
       var $this = this;
       if($this.searchData.id&&$this.searchData.id!=''){
+        $this.loadingFun();
         $this.getCnDepartList();
         $this.getPersoncountCompare();
       }else{

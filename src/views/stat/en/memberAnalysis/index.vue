@@ -1,6 +1,5 @@
 ﻿<template>
   <div class="page-root scroll-panel home-index" ref="boxPane">
-    <el-card class="box-card scroll-card" shadow="hover">
         <div class="personTopTab">
             <div class="chooseDepart flex-box">
                   <span class="choosetit">部门选择：</span>
@@ -30,6 +29,12 @@
                 @changeSet="changeSet"
                 :lang="en"
               ></unpay-deal>
+              <million-deal
+                :millionDeal="millionDeal"
+                :millionDealSet="millionDealSet"
+                :lang="en"
+                @changeSet="changeSet"
+              ></million-deal>
             </div>
             <pay-member
               :payMember="payMember"
@@ -37,12 +42,6 @@
             ></pay-member>
           </div>
           <div class="dealRankRight">
-            <million-deal
-              :millionDeal="millionDeal"
-              :millionDealSet="millionDealSet"
-              :lang="en"
-              @changeSet="changeSet"
-            ></million-deal>
             <award-rank
               :awardMoney="awardMoney"
               :awardMoneySet="awardMoneySet"
@@ -51,7 +50,6 @@
             ></award-rank>
           </div>
         </div>
-    </el-card>
   </div>
 </template>
 <script>
@@ -258,7 +256,7 @@ export default {
                   $this.unpayInquirySet.boxHeight = "auto";
               }else{
                   $this.unpayInquirySet.ifFold = true;
-                  $this.unpayInquirySet.boxHeight = "770px";
+                  $this.unpayInquirySet.boxHeight = "630px";
                   $this.unpayInquirySet.isFold = false;
               }
               // 成交积分
@@ -271,7 +269,7 @@ export default {
                   $this.dealScoreSet.boxHeight = "auto";
               }else{
                   $this.dealScoreSet.ifFold = true;
-                  $this.dealScoreSet.boxHeight = "770px";
+                  $this.dealScoreSet.boxHeight = "630px";
                   $this.dealScoreSet.isFold = false;
               }
               // 付费
@@ -283,7 +281,7 @@ export default {
                   $this.millionDealSet.boxHeight = "auto";
               }else{
                   $this.millionDealSet.ifFold = true;
-                  $this.millionDealSet.boxHeight = "296px";
+                  $this.millionDealSet.boxHeight = "630px";
                   $this.millionDealSet.isFold = false;
               }
               // 奖金排序
@@ -299,7 +297,7 @@ export default {
                   $this.awardMoneySet.boxHeight = "auto";
               }else{
                   $this.awardMoneySet.ifFold = true;
-                  $this.awardMoneySet.boxHeight = "770px";
+                  $this.awardMoneySet.boxHeight = "1133px";
                   $this.awardMoneySet.isFold = false;
               }
 

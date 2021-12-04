@@ -700,9 +700,11 @@
             height: 18px;
             right: 10px;
             top: 10px;
-            background: url(../assets/del_icon.png) center center no-repeat;
-            background-size: 8px auto;
+            color:#bbbbbb;
             cursor: pointer;
+            &:hover{
+                color:#2f88ff;
+            }
         }
         &:after{
             content: '';

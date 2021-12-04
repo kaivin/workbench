@@ -107,7 +107,7 @@ export default {
                 seriesField:'name',
                 isStack:false,
                 color:$this.currentData.ChartData.length==1?$this.currentData.ChartColor[0]:$this.currentData.ChartColor,
-                appendPadding:[15,15,15,15],
+                appendPadding:[15,15,0,15],
                 yAxis:{
                     grid:{
                         line:{
@@ -185,7 +185,7 @@ export default {
       var $this = this;
       if($this.currentData.ChartData&&$this.currentData.ChartData.length>0){
         const Plot = new Line('Chart'+$this.currentData.chartClass, {
-          appendPadding:[30,30,20],
+          appendPadding:[30,30,0,30],
           data:$this.currentData.ChartData,
           xField: 'date',
           yField: 'number',
@@ -258,7 +258,7 @@ export default {
             xField: 'date',
             yField: 'number',
             seriesField: 'name',
-            appendPadding: [20,30, 10],
+            appendPadding: [20,30,0,30],
             color:$this.currentData.ChartColor,
             dodgePadding: 0,
             maxColumnWidth:25,

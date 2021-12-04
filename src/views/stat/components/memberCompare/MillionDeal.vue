@@ -1,11 +1,15 @@
 <template>
   <div class="millionDeal" v-if="millionDeal.length > 0">
+      <div class="memberTit">
+          <h3>百万成交榜单</h3>
+          <p>(单位：个)</p>
+      </div>
     <div class="milRank">
         <ul class="milul" :style="'height:'+ millionDealSet.boxHeight">
             <li v-for="(item,index) in millionDeal" :key="index">
                 <div class="rankNum" >
                     <div v-if="item.ranking<4" class="rankstyle" :class="'rank0'+(item.ranking)"></div>
-                    <div class="numNormal" v-if="item.ranking>3 && item.ranking < 10">
+                    <div class="numNormal" v-if="item.ranking>3 && item.ranking <= 9">
                           0{{item.ranking}}
                       </div>
                       <div class="numNormal" v-if="item.ranking > 9">
@@ -13,16 +17,16 @@
                       </div>
                 </div>
                 <div class="userImg">
-                    <div v-if="item.headimg" class="headImg" @click="handleContrast(item.dept_id,item.uid)">
-                      <img :src="item.headimg" :alt="item.ownuser" />
+                    <div v-if="item.headimg" class="headImg" :class="item.ranking<4?'headImgBorder':''" @click="handleContrast(item.dept_id,item.uid)">
+                      <span><img :src="item.headimg" :alt="item.ownuser" /></span>
                     </div>
-                    <div v-else class="nopic"></div>  
+                    <div v-else class="nopic" :class="item.ranking<4?'headImgBorder':''"><span></span></div>  
                 </div>
                 <div class="userName">                
                     <span @click="handleContrast(item.dept_id,item.uid)">{{item.ownuser}}</span>                    
                 </div>
-                <div class="milNum">
-                    ×{{item.number}}
+                <div class="milNum flex-content">
+                     <p>×{{item.number}}</p>
                 </div>
             </li>
         </ul>
@@ -70,7 +74,7 @@ export default {
         if(isFold){
           boxHeight = "auto";
         }else{
-          boxHeight = '296px'
+          boxHeight = '630px'
         }
         
         $this.$emit("changeSet", $this.millionDealSet, isFold, boxHeight);

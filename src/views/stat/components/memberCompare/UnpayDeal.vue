@@ -1,51 +1,47 @@
 <template>
   <div class="memberDeal">
       <div class="memberTit" v-if="lang =='ch'">
-          <h3>非付费成员-个人年度总<span >成交积分</span>排行榜</h3>
-          <p>（单位：分）</p>
+          <h3>成交积分榜单</h3>
+          <p><span>非付费成员年度排行</span>(单位：分)</p>
       </div>
       <div class="memberTit" v-else>
-          <h3>非付费成员-个人年度总<span>成交个数</span>排行榜</h3>
-          <p>（单位：个）</p>
+          <h3>成交个数榜单</h3>
+          <p><span>非付费成员年度排行</span>(单位：个)</p>
       </div>
       <div class="dealRank">
           <ul class="deul" :style="'height:'+ dealScoreSet.boxHeight">
               <li v-for="(item,index) in dealScore" :key="index">
                   <div class="rankNum">
-                      <div class="numTop" v-if="item.ranking<4">
-                          <img :src="require('@/assets/deal'+item.ranking+'.png')" alt="" />
-                      </div>
-                      <div class="numNormal" v-if="item.ranking>3 && item.ranking < 9">
+                      <div class="numTop" v-if="item.ranking<4" :class="'numTop0'+(item.ranking)"></div>
+                      <div class="numTop" v-if="item.ranking>3 && item.ranking <= 9">
                           0{{item.ranking}}
                       </div>
-                      <div class="numNormal" v-if="item.ranking > 9">
+                      <div class="numTop" v-if="item.ranking > 9">
                           {{item.ranking}}
                       </div>
                   </div>
                   <div class="userImg">
-                    <div v-if="item.headimg" class="headImg" @click="handleContrast(item.dept_id,item.uid)">
-                      <img :src="item.headimg" :alt="item.ownuser" />
+                    <div v-if="item.headimg" class="headImg" :class="item.ranking<4?'headImgBorder':''" @click="handleContrast(item.dept_id,item.uid)">
+                      <span><img :src="item.headimg" :alt="item.ownuser" /></span>
                     </div>
-                    <div v-else class="nopic"></div>  
+                    <div v-else class="nopic" :class="item.ranking<4?'headImgBorder':''"><span></span></div>  
                   </div>
                   <div class="userName"><span @click="handleContrast(item.dept_id,item.uid)">{{item.ownuser}}</span></div>
-                  <div class="userInquiry">
-                    <div v-if="lang =='ch'">
-                        <div v-if="item.ranking<4" :class="'num0'+(item.ranking)"> 
-                          {{item.score}}分
-                        </div>
-                        <div v-else> 
-                          {{item.score}}分
-                        </div>
-                    </div>
-                    <div v-else>
-                        <div v-if="item.ranking<4" :class="'num0'+(item.ranking)"> 
-                          {{item.score}}个
-                        </div>
-                        <div v-else> 
-                          {{item.score}}个
-                        </div>
-                    </div>  
+                  <div class="userInquiry flex-content" v-if="lang =='ch'">
+                      <span v-if="item.ranking<4" :class="'num0'+(item.ranking)"> 
+                        {{item.score}}分
+                      </span>
+                      <span v-else> 
+                        {{item.score}}分
+                      </span>  
+                  </div>
+                  <div class="userInquiry flex-content" v-else>
+                      <span v-if="item.ranking<4" :class="'num0'+(item.ranking)"> 
+                        {{item.score}}个
+                      </span>
+                      <span v-else> 
+                        {{item.score}}个
+                      </span>
                   </div>
               </li>
           </ul>
@@ -93,7 +89,7 @@ export default {
         if(isFold){
           boxHeight = "auto";
         }else{
-          boxHeight = '770px'
+          boxHeight = '630px'
         }
         
         $this.$emit("changeSet", $this.dealScoreSet, isFold, boxHeight);

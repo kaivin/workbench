@@ -231,8 +231,8 @@ export default {
     // 初始化数据
     initData() {
       var $this = this;
-      $this.loadingFun();
       if($this.searchData.id&&$this.searchData.id!=''){
+        $this.loadingFun();
         $this.getCnDepartList();
         $this.getCnPersoncountinfo();
       }else{
@@ -330,6 +330,7 @@ export default {
         $this.maxPersonCount.maxscore='';
         $this.maxPersonCount.maxanum='';
         $this.maxPersonCount.maxmoney='';
+        $this.currentTab='enquirie';
         $this.personCount=[];
         $this.ChartTab=[];
         $this.currentMix=[];
@@ -498,6 +499,8 @@ export default {
                     currentMix.push(currentMixItem);  
                 }
                 $this.MixData=MixData;
+                // 组合图表
+                $this.getYearInquiryChart();
                 $this.currentMix=currentMix;
                 //组员基本信息
                 $this.userBasicInfo.comtime=res.userinfo.comtime;
@@ -508,8 +511,6 @@ export default {
                 $this.userBasicInfo.postionname=res.userinfo.postionname;
                 $this.userBasicInfo.headimg=res.userinfo.headimg;
                 $this.ChartTab=ChartTab;
-                // 组合图表
-                $this.getYearInquiryChart();
                 // 个人成绩统计
                 if(res.personcount&&res.personcount.length>0){
                   var personCount=[];
@@ -653,6 +654,7 @@ export default {
                     data: nowyear,
                     xField: 'time',
                     yField: 'number',
+                    appendPadding:[15,0,0,0],
                     minColumnWidth: 22,
                     maxColumnWidth: 22,
                     yAxis: {
@@ -765,14 +767,7 @@ export default {
                             }
                         }
                     },
-                    xAxis: {
-                        label:{
-                            style:{
-                                fontSize: 12,
-                                fill: "#b3b3b3"
-                            }
-                        }
-                    }
+                    xAxis:false,
                 }
             }
         ],

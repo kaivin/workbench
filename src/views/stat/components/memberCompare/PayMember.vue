@@ -1,6 +1,6 @@
 <template>
   <div class="payMember">
-      <div class="memberTit">
+      <div class="payMemberTit">
           <h3>付费成员-个人年度<span>总排行</span></h3>
       </div>
         <el-table
@@ -11,16 +11,17 @@
             >
             <el-table-column
                 type="index"
-                label="名次"
+                label="排行"
                 width="100">
                 <template slot-scope="scope">
-                    <span class="urank" v-if="scope.$index<9">0{{scope.$index+1}}</span>
-                     <span class="urank" v-else>{{scope.$index+1}}</span>
+                    <span class="urank" :class="'urank0'+(scope.$index+1)" v-if="scope.$index<4">{{scope.$index+1}}</span>
+                    <span class="urank" v-if="scope.$index>3 && scope.$index<=9">{{scope.$index+1}}</span>
+                    <span class="urank" v-if="scope.$index > 9">{{scope.$index+1}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                 prop="headimg"
-                label="头像"
+                label="组员"
                 min-width="100">
                 <template slot-scope="scope">
                     <div v-if="scope.row.headimg" class="headImg" @click="handleContrast(scope.row.dept_id,scope.row.id)">
@@ -39,7 +40,7 @@
             </el-table-column>
             <el-table-column
                 prop="number"
-                label="询盘（个）"
+                label="询盘个数"
                 sortable
                 min-width="100">
                 <template slot-scope="scope">
@@ -51,7 +52,7 @@
                 v-if="lang=='ch'"
                 prop="score"
                 sortable
-                label="积分（分）">
+                label="成交积分">
                 <template slot-scope="scope">
                     <span class="dealnum">{{scope.row.score}}</span>
                 </template>
@@ -60,7 +61,7 @@
                 v-if="lang=='en'"
                 prop="score"
                 sortable
-                label="成交（个）">
+                label="成交个数">
                 <template slot-scope="scope">
                     <span class="dealnum">{{scope.row.score}}</span>
                 </template>
@@ -68,7 +69,7 @@
             <el-table-column
                 prop="Anumber"
                 sortable
-                label="百万成交（个）"
+                label="百万成交"
                 >
                 <template slot-scope="scope">
                     <span class="milnum">×{{scope.row.Anumber}}</span>
