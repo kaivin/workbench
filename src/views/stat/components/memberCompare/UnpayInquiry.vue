@@ -17,14 +17,12 @@
                       </div>
                   </div>
                   <div class="userImg">
-                    <div v-if="item.headimg" class="headImg">
+                    <div v-if="item.headimg" class="headImg" @click="handleContrast(item.dept_id,item.id)">
                       <img :src="item.headimg" :alt="item.name" />
                     </div>
                     <div v-else class="nopic"></div>  
                   </div>
-                  <div class="userName">
-                      {{item.name}}
-                  </div>
+                  <div class="userName"><span @click="handleContrast(item.dept_id,item.id)">{{item.name}}</span></div>
                   <div class="userInquiry">
                       <span v-if="index<3" :class="'num0'+(index+1)"> 
                         {{item.number}}个
@@ -57,6 +55,12 @@ export default {
         return [];
       },
     },
+    lang:{
+      type: String,
+      default: function () {
+        return "";
+      },
+    },
     //折叠情况
     unpayInquirySet: {
       type: Object,
@@ -77,6 +81,16 @@ export default {
         }
         
         $this.$emit("changeSet", $this.unpayInquirySet, isFold, boxHeight);
+    },
+    // 跳转到个人详情
+    handleContrast(deptId,itemId){
+      var $this=this;
+      if($this.lang=='ch'){
+        var routeUrl =  $this.$router.resolve({path: "/stat/cn/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
+      }else{
+        var routeUrl =  $this.$router.resolve({path: "/stat/en/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
+      }
+      window.open(routeUrl.href,'_blank');
     },
   }
 }

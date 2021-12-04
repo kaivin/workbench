@@ -48,7 +48,7 @@ const sonRoute = [
   {
     path: "/stat/cn/groupAnalysis",
     name:'cnGroupAnalysis',
-    component: () => import(/* webpackChunkName: "cnGroupAnalysis" */ "@/views/stat/cn/groupAnalysis/index.vue"),
+    component: () => import("@/views/stat/cn/groupAnalysis/index.vue"),
     meta: {id:'cnGroupAnalysis-118',title: '小组分析', icon: null, keepAlive:false},
   },
   {
@@ -61,7 +61,13 @@ const sonRoute = [
     path: "/stat/cn/memberAnalysis/singlePerson",
     name:'cnSinglePerson',
     component: () => import("@/views/stat/cn/memberAnalysis/singlePerson.vue"),
-    meta: {id:'cnSinglePerson-118',title: '组员分析', icon: null, keepAlive:false},
+    meta: {id:'cnSinglePerson-118',title: '组员详情', icon: null, keepAlive:false},
+  },
+  {
+    path: "/stat/cn/memberAnalysis/comparePerson",
+    name:'cnPersonContrast',
+    component: () => import("@/views/stat/cn/memberAnalysis/comparePerson.vue"),
+    meta: {id:'cnPersonContrast-118',title: '组员对比', icon: null, keepAlive:false},
   },
   {
     path: "/stat/en/targetShow",
@@ -92,6 +98,18 @@ const sonRoute = [
     name:'enMemberAnalysis',
     component: () => import("@/views/stat/en/memberAnalysis/index.vue"),
     meta: {id:'enMemberAnalysis-118',title: '组员分析', icon: null, keepAlive:false},
+  },
+  {
+    path: "/stat/en/memberAnalysis/singlePerson",
+    name:'enSinglePerson',
+    component: () => import("@/views/stat/en/memberAnalysis/singlePerson.vue"),
+    meta: {id:'enSinglePerson-118',title: '组员详情', icon: null, keepAlive:false},
+  },
+  {
+    path: "/stat/en/memberAnalysis/comparePerson",
+    name:'enPersonContrast',
+    component: () => import("@/views/stat/en/memberAnalysis/comparePerson.vue"),
+    meta: {id:'enPersonContrast-118',title: '组员对比', icon: null, keepAlive:false},
   },
 ];
 /**

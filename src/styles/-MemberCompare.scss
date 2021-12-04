@@ -80,6 +80,7 @@
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
                     position: relative;
+                    cursor: pointer;
                     img{
                         width: 100%;
                     }
@@ -98,6 +99,9 @@
                 color: #333333;
                 font-size: 14px;
                 flex: 1;
+                span{
+                    cursor: pointer;
+                }
             }
             .userInquiry{
                 color: #666666;
@@ -218,6 +222,7 @@
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
                     position: relative;
+                    cursor: pointer;
                     img{
                         width: 100%;
                     }
@@ -236,6 +241,9 @@
                 color: #333333;
                 font-size: 14px;
                 flex: 1;
+                span{
+                    cursor: pointer;
+                }
             }
             .userInquiry{
                 color: #666666;
@@ -356,11 +364,11 @@
                 margin-right: auto;
                 position: relative;
                 overflow: hidden;
+                cursor: pointer;
                 img{
                     width: 100%;
                 }
             }
-
             .nopic{
                 width: 50px;
                 height: 50px;
@@ -373,6 +381,7 @@
             .uname{
                 font-size: 14px;
                 color: #333333;
+                cursor: pointer;
             }
             .innum{
                 color: #485e7f;
@@ -518,6 +527,7 @@
                     border-radius: 6px;
                     box-shadow: 3px 4px 7px 0px rgba(133, 124, 89, 0.75);
                     position: relative;
+                    cursor: pointer;
                     img{
                         width: 100%;
                     }
@@ -536,6 +546,9 @@
                 font-size: 14px;
                 flex: 1;
                 margin-left: 30px;
+                span{
+                    cursor: pointer;
+                }
             }
             .milNum{
                 color: #333333;
@@ -662,6 +675,7 @@
                     box-shadow: 0px 9px 18px 0px rgba(185, 193, 204, 0.7);
                     border: solid 1px #fece6c;
                     position: relative;
+                    cursor: pointer;
                     img{
                         width: 100%;
                     }
@@ -680,6 +694,9 @@
                 color: #333333;
                 font-size: 14px;
                 flex: 1;
+                span{
+                    cursor: pointer;
+                }
             }
             .userAward{
                 color: #666666;

@@ -1,12 +1,27 @@
 ﻿<template>
   <div class="page-root scroll-panel home-index" ref="boxPane">
     <el-card class="box-card scroll-card" shadow="hover">
+        <div class="personTopTab">
+            <div class="chooseDepart flex-box">
+                  <span class="choosetit">部门选择：</span>
+                  <div class="departItems flex-content">
+                  <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
+                  </div>
+            </div>
+            <div class="choosePerson">
+                  <div class="decor"></div>
+                  <div class="departItems">
+                      <p class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="(item,index) in choosePerson" :key="index" v-on:click="PersonChange(searchData.dept_id,item.id)"><i></i><span>{{item.name}}</span></p>
+                  </div>
+            </div>
+        </div>
         <div class="homeMain flex-content dealRankMain">
           <div class="dealRankLeft">
             <div class="dealRankTop">
               <unpay-inquiry 
                 :unpayInquiry="unpayInquiry"
                 :unpayInquirySet="unpayInquirySet"
+                :lang="en"
                 @changeSet="changeSet"
               ></unpay-inquiry>
               <unpay-deal
@@ -25,11 +40,13 @@
             <million-deal
               :millionDeal="millionDeal"
               :millionDealSet="millionDealSet"
+              :lang="en"
               @changeSet="changeSet"
             ></million-deal>
             <award-rank
               :awardMoney="awardMoney"
               :awardMoneySet="awardMoneySet"
+              :lang="en"
               @changeSet="changeSet"
             ></award-rank>
           </div>
@@ -48,6 +65,8 @@ export default {
   name: "enMemberAnalysis",
   data() {
     return {
+      department:[],//部门列表
+      choosePerson:[], //组员列表  
       unpayInquiry: [],
       unpayInquirySet:{
         ifFold: false,//是否需要折叠
@@ -73,7 +92,11 @@ export default {
         ifFold: false,//是否需要折叠
         boxHeight: '',
         isFold: false,
-      }
+      },
+      searchData:{
+          dept_id:'',
+          id:'',
+      },
     };
   },
   components:{
@@ -88,9 +111,100 @@ export default {
     $this.initData();
   },
   methods: {
+    //获取部门信息
+    getCnDepartList(){
+      var $this = this;
+      $this.$store.dispatch("api/getEnDepartAction").then((res) => {
+          if (res) {
+            if (res.status) {
+                if(res.data&&res.data.length>0){
+                    var department=[];
+                    res.data.forEach(function(item,index){
+                        var objItem={};
+                        objItem.name=item.name;
+                        objItem.id=item.id;
+                        if(index==0){
+                          objItem.isOn=true;
+                          $this.searchData.dept_id=item.id;
+                        }else{
+                          objItem.isOn=false;
+                        }
+                        department.push(objItem);
+                    });
+                    $this.department=department;
+                }
+                $this.getCnPersonlist();
+            } else {
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: "error",
+                duration: 6000
+              });
+            }
+          }
+      });
+    },
+    //获取部门下组员信息
+    getCnPersonlist(){
+      var $this = this;
+      var searchData={};
+      searchData.dept_id=$this.searchData.dept_id;
+      $this.$store.dispatch("api/getEnPersonlistAction",searchData).then((res) => {
+          if (res) {
+            if (res.status) {
+                if(res.ulist&&res.ulist.length>0){
+                    var choosePerson=[];
+                    res.ulist.forEach(function(item,index){
+                        var objItem={};
+                        objItem.name=item.name;
+                        objItem.id=item.id;
+                        objItem.isOn=false;
+                        choosePerson.push(objItem);
+                    });
+                    $this.choosePerson=choosePerson;
+                }
+            } else {
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: "error",
+                duration: 6000
+              });
+            }
+          }
+      });
+    },
+    // 点击部门获取部门ID
+    departChange(valData){
+        var $this=this;
+        $this.searchData.dept_id=valData;
+        $this.department.forEach(function(item,index){
+            item.isOn=false;
+            if(item.id==valData){
+              item.isOn=true;
+            }
+        });
+        $this.getCnPersonlist();
+    },
+    // 点击组员获取组员ID
+    PersonChange(deptId,itemId){
+        var $this=this;
+        $this.choosePerson.forEach(function(item,index){
+            item.isOn=false;
+            if(item.id==itemId){
+              item.isOn=true;
+              $this.searchData.id=item.id;
+            }
+        });
+        // 跳转个人详情
+        var routeUrl =  $this.$router.resolve({path: "/stat/en/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
+        window.open(routeUrl.href,'_blank');
+    },
     // 初始化数据
     initData() {
       var $this = this;
+      $this.getCnDepartList();
       $this.GetInquiryResult();
     },
 

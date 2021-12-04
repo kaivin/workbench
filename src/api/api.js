@@ -288,10 +288,66 @@ export function getCnDepart() {
     method: "POST"
   });
 }
+// 获取中文部门下的组员​
+export function getCnPersonlist(data) {
+  return request({
+    url: "/hxindex/Api/chinapersonlist",
+    method: "POST",
+    data
+  });
+}
+// 首页中文统计(组员分析详情页)
+export function getCnPersoncountinfo(data) {
+  return request({
+    url: "/hxindex/Api/chinapersoncountinfo",
+    method: "POST",
+    data
+  });
+}
+// 首页中文统计(组员分析对比) 
+export function getCnPersoncountCompare(data) {
+  return request({
+    url: "/hxindex/Api/chinapersoncountcompare",
+    method: "POST",
+    data
+  });
+}
+// 组员个人历史成就
+export function getPersonHistory(data) {
+  return request({
+    url: "/hxindex/Api/personhistory",
+    method: "POST",
+    data
+  });
+}
 // 获取英文部门
 export function getEnDepart() {
   return request({
     url: "/hxindex/Api/enreaddepartlist",
     method: "POST"
+  });
+}
+// 获取英文部门下的组员​
+export function getEnPersonlist(data) {
+  return request({
+    url: "/hxindex/Api/enpersonlist",
+    method: "POST",
+    data
+  });
+}
+// 首页英文统计(组员分析详情页)
+export function getEnPersoncountinfo(data) {
+  return request({
+    url: "/hxindex/Api/enpersoncountinfo",
+    method: "POST",
+    data
+  });
+}
+// 首页英文统计(组员分析对比) 
+export function getEnPersoncountCompare(data) {
+  return request({
+    url: "/hxindex/Api/enpersoncountcompare",
+    method: "POST",
+    data
   });
 }

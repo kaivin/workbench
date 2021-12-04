@@ -36,7 +36,14 @@
   getEndaytargetnew,
   getEndaytargetmonth,
   getCnDepart,
-  getEnDepart
+  getEnDepart,
+  getCnPersonlist,
+  getCnPersoncountinfo,
+  getCnPersoncountCompare,
+  getPersonHistory,
+  getEnPersonlist,
+  getEnPersoncountinfo,
+  getEnPersoncountCompare,
 } from '@/api/api'
 //import { reject, resolve } from 'core-js/fn/promise';
 import Cookies from 'js-cookie';
@@ -683,10 +690,50 @@ const actions = {
         })
       })
     },
-    // 获取英文部门
-    getCnDepartAction({ commit, state }) {
+    // 获取中文部门
+    getCnDepartAction({ commit, state },data) {
       return new Promise((resolve, reject) => {
         getCnDepart().then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 获取中文部门下的组员
+    getCnPersonlistAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getCnPersonlist(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计(组员分析详情页)
+    getCnPersoncountinfoAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getCnPersoncountinfo(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计(组员分析对比) 
+    getCnPersoncountCompareAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getCnPersoncountCompare(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 组员个人历史成就
+    getPersonHistoryAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getPersonHistory(data).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -697,6 +744,36 @@ const actions = {
     getEnDepartAction({ commit, state }) {
       return new Promise((resolve, reject) => {
         getEnDepart().then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 获取英文部门下的组员​
+    getEnPersonlistAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getEnPersonlist(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文统计(组员分析详情页)
+    getEnPersoncountinfoAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getEnPersoncountinfo(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文统计(组员分析对比) 
+    getEnPersoncountCompareAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getEnPersoncountCompare(data).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)

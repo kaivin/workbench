@@ -29,14 +29,12 @@
                       </div>
                   </div>
                   <div class="userImg">
-                    <div v-if="item.headimg" class="headImg">
+                    <div v-if="item.headimg" class="headImg" @click="handleContrast(item.dept_id,item.uid)">
                       <img :src="item.headimg" :alt="item.ownuser" />
                     </div>
                     <div v-else class="nopic"></div>  
                   </div>
-                  <div class="userName">
-                      {{item.ownuser}}
-                  </div>
+                  <div class="userName"><span @click="handleContrast(item.dept_id,item.uid)">{{item.ownuser}}</span></div>
                   <div class="userInquiry">
                     <div v-if="lang =='ch'">
                         <div v-if="index<3" :class="'num0'+(index+1)"> 
@@ -86,7 +84,7 @@ export default {
         return {};
       },
     },
-    lang: {
+    lang:{
       type: String,
       default: function () {
         return "";
@@ -105,6 +103,16 @@ export default {
         }
         
         $this.$emit("changeSet", $this.dealScoreSet, isFold, boxHeight);
+    },
+    // 跳转到个人详情
+    handleContrast(deptId,itemId){
+      var $this=this;
+      if($this.lang=='ch'){
+        var routeUrl =  $this.$router.resolve({path: "/stat/cn/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
+      }else{
+        var routeUrl =  $this.$router.resolve({path: "/stat/en/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
+      }
+      window.open(routeUrl.href,'_blank');
     },
   }
 }

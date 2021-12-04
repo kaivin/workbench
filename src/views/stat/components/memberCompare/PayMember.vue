@@ -23,7 +23,7 @@
                 label="头像"
                 min-width="100">
                 <template slot-scope="scope">
-                    <div v-if="scope.row.headimg" class="headImg">
+                    <div v-if="scope.row.headimg" class="headImg" @click="handleContrast(scope.row.dept_id,scope.row.id)">
                       <img :src="scope.row.headimg" :alt="scope.row.name" class="avatar" />
                     </div>
                     <div v-else class="nopic"></div>
@@ -34,7 +34,7 @@
                 label="姓名"
                 min-width="100">
                 <template slot-scope="scope">
-                    <span class="uname">{{scope.row.name}}</span>
+                    <span class="uname" @click="handleContrast(scope.row.dept_id,scope.row.id)">{{scope.row.name}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -103,7 +103,16 @@ export default {
     }
   },
   methods:{
-
+    // 跳转到个人详情
+    handleContrast(deptId,itemId){
+      var $this=this;
+      if($this.lang=='ch'){
+        var routeUrl =  $this.$router.resolve({path: "/stat/cn/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
+      }else{
+        var routeUrl =  $this.$router.resolve({path: "/stat/en/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
+      }
+      window.open(routeUrl.href,'_blank');
+    },
   }
 }
 </script>
