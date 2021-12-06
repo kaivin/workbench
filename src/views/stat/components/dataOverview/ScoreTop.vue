@@ -7,7 +7,7 @@
         <div class="more" @click="goPage">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
       </div>
       <ul class="top-view" ref="topul">
-        <li class="top-item" v-for="(item,index) in topdata" :key="index">
+        <li class="top-item" v-for="(item,index) in topdata" :key="index" @click="handleContrast(item.dept_id,language == '中文'?item.userid:item.uid)">
           <div class="top-icon">
             <img :src="require('@/assets/no'+(index+1)+'.jpg')" alt="">
           </div>
@@ -99,6 +99,16 @@ export default {
             this.topdata[i].color = '#454545'
           }
         }
+      },
+      // 跳转到个人详情
+      handleContrast(deptId,itemId){
+        var $this=this;
+        if($this.language == '中文'){
+          var routeUrl =  $this.$router.resolve({path: "/stat/cn/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
+        }else{
+          var routeUrl =  $this.$router.resolve({path: "/stat/en/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
+        }
+        window.open(routeUrl.href,'_blank');
       }
       
     }
@@ -111,7 +121,6 @@ export default {
   min-height: 306px;
   .module-top{
     padding: 15px 22px 0;
-    
   }
   .title-view{
     height: 24px;
@@ -217,6 +226,7 @@ export default {
     .top-item{
       display: flex;
       margin-bottom: 15px;
+      cursor: pointer;
       .top-icon{
         display: flex;
         width: 34px;

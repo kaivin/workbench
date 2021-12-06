@@ -211,9 +211,9 @@ export default {
                     }
                     totalnum=totalnum+items.anumber;
                   });
-                  objItem.totalnum=totalnum;
-                  objItem.avgnum=(totalnum/item.length).toFixed(2)*1;
-                  objItem.historynum=max;
+                  objItem.totalnum=numSeparate(totalnum);
+                  objItem.avgnum=numSeparate((totalnum/item.length).toFixed(2)*1);
+                  objItem.historynum=numSeparate(max);
                   objItem.color=ChartColor[index];
                   leftChartData.push(objItem);
                 });
@@ -245,9 +245,9 @@ export default {
                 res.leftyearmoneycompare.forEach(function(item,index){        
                     var objItem={};        
                     objItem.name=item.name;
-                    objItem.totalnum=item.money.toFixed(2)*1;
-                    objItem.avgnum=item.avgmoney;
-                    objItem.historynum=item.maxmonthmoney;
+                    objItem.totalnum=numSeparate(item.money.toFixed(2)*1);
+                    objItem.avgnum=numSeparate(item.avgmoney);
+                    objItem.historynum=numSeparate(item.maxmonthmoney);
                     objItem.color=ChartColor[index];
                     leftChartData.push(objItem);
                 });

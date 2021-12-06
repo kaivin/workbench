@@ -67,8 +67,8 @@
                   <div class="yearChartTab">
                       <div class="yearTabItem" :class="item.isOn?'active':''" v-for="(item,index) in ChartTab" :key='index' @click="handleTab(item.tap)">
                             <p class="yearTabTitle">{{item.name}}<span>{{item.unit}}</span></p>
-                            <div class="yearNum">{{item.totalNum}}</div>
-                            <div class="numCompare">环比上年同期<span class="numsep" :class="item.totalNum-item.lasttotalNum>0?'':'numdec'">{{Math.abs(item.totalNum-item.lasttotalNum)}}</span>
+                            <div class="yearNum">{{item.numSeptotalNum}}</div>
+                            <div class="numCompare">环比上年同期<span class="numsep" :class="item.totalNum-item.lasttotalNum>0?'':'numdec'">{{item.sequential}}</span>
                             </div>
                       </div>
                   </div>
@@ -211,8 +211,8 @@ export default {
     $this.initData();
   },
   mounted(){
-      const $this = this;
-      window.addEventListener('scroll',this.handleScroll,true);
+    const $this = this;
+    window.addEventListener('scroll',this.handleScroll,true);
   },
   destroyed(){
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
@@ -387,8 +387,11 @@ export default {
                         currentMixItem.lastYear.push(lastYearObj);
                     });
                     var ChartTabObj={};
-                    ChartTabObj.totalNum=numSeparate(totalNum.toFixed(2)*1);
-                    ChartTabObj.lasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
+                    ChartTabObj.totalNum=totalNum.toFixed(2)*1;
+                    ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1;                    
+                    ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
+                    ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
+                    ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum));
                     ChartTabObj.name='年度总询盘个数';
                     ChartTabObj.unit='（单位：个）';
                     ChartTabObj.tap='enquirie'; 
@@ -421,8 +424,11 @@ export default {
                         currentMixItem.lastYear.push(lastYearObj);
                     });
                     var ChartTabObj={};
-                    ChartTabObj.totalNum=numSeparate(totalNum.toFixed(2)*1);
-                    ChartTabObj.lasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
+                    ChartTabObj.totalNum=totalNum.toFixed(2)*1;
+                    ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1; 
+                    ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
+                    ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
+                    ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum));
                     ChartTabObj.name='年度总成交积分';
                     ChartTabObj.unit='（单位：分）';
                     ChartTabObj.tap='clinchScore'; 
@@ -455,8 +461,11 @@ export default {
                         currentMixItem.lastYear.push(lastYearObj);
                     });
                     var ChartTabObj={};
-                    ChartTabObj.totalNum=numSeparate(totalNum.toFixed(2)*1);
-                    ChartTabObj.lasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
+                    ChartTabObj.totalNum=totalNum.toFixed(2)*1;
+                    ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1; 
+                    ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
+                    ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
+                    ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum));
                     ChartTabObj.name='年度100万成交个数';
                     ChartTabObj.unit='（单位：个）';
                     ChartTabObj.tap='clinchNum';  
@@ -489,8 +498,11 @@ export default {
                         currentMixItem.lastYear.push(lastYearObj);
                     });
                     var ChartTabObj={};
-                    ChartTabObj.totalNum=numSeparate(totalNum.toFixed(2)*1);
-                    ChartTabObj.lasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
+                    ChartTabObj.totalNum=totalNum.toFixed(2)*1;
+                    ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1; 
+                    ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
+                    ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
+                    ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum));
                     ChartTabObj.name='年度总奖金';
                     ChartTabObj.unit='（单位：元）';
                     ChartTabObj.tap='money';
@@ -678,25 +690,25 @@ export default {
                     xAxis: {
                         tickCount:15,
                         label: {
-                        // 数值格式化为千分位
-                        formatter: (v) => {
-                            var item = "";
-                            if(v.indexOf("&")!=-1){
-                            item = v.split("&")[0]+'\n'+v.split("&")[1];
-                            }else{
-                            if(v.indexOf(" ")!=-1){
-                                var week = "周"+v.split(" ")[1].substr(2);
-                                var date = v.split(" ")[0];
-                                item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
-                            }else{
-                                item = v.split("-")[1]+"月";
+                            // 数值格式化为千分位
+                            formatter: (v) => {
+                                var item = "";
+                                if(v.indexOf("&")!=-1){
+                                    item = v.split("&")[0]+'\n'+v.split("&")[1];
+                                }else{
+                                    if(v.indexOf(" ")!=-1){
+                                        var week = "周"+v.split(" ")[1].substr(2);
+                                        var date = v.split(" ")[0];
+                                        item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
+                                    }else{
+                                        item = v.split("-")[1]+"月";
+                                    }
+                                }
+                                return item
+                            },
+                            style:{
+                                lineHeight:18
                             }
-                            }
-                            return item
-                        },
-                        style:{
-                            lineHeight:18
-                        }
                         },
                     },
                     meta: {
@@ -709,9 +721,7 @@ export default {
                             alias: '今年询盘',
                         },
                     },
-                    label: {
-                        position: 'top',
-                    },
+                    label:false,
                     annotations: [
                         {
                             type: 'line',
@@ -745,15 +755,6 @@ export default {
                         color: "#f3be1c",
                         size:2
                     },
-                    point:{
-                        size: 4,
-                        shape: "circle",
-                        style: {
-                            fill: '#fff',
-                            stroke: '#f3be1c',
-                            lineWidth:  1,
-                        },
-                    },
                     meta: {
                         time: {
                             formatter:(item)=>{
@@ -764,6 +765,7 @@ export default {
                             alias: '去年询盘',
                         },
                     },
+                    label:false,
                     yAxis: {
                         grid: {
                             line: {
@@ -813,14 +815,32 @@ export default {
                       var objItem={};
                       objItem.addtime=item.addtime;
                       objItem.content=item.content;
-                      objItem.tap='成交TOP1';
-                      objItem.icon='icon01';
-                      if(item.content.indexOf("突破")>=0){
+                      if(item.content.indexOf("排名第一")>=0){
+                          objItem.tap='询盘TOP1';
+                          objItem.icon='icon01';
+                      }
+                      if(item.content.indexOf("销售冠军")>=0){
+                          objItem.tap='销售冠军';
+                          objItem.icon='icon01';
+                      }
+                      if(item.content.indexOf("成交单")>=0){
+                          objItem.tap='成交TOP1';
+                          objItem.icon='icon01';
+                      }
+                      if(item.content.indexOf("部门奖金")>=0){
+                          objItem.tap='奖金TOP1';
+                          objItem.icon='icon01';
+                      }
+                      if(item.content.indexOf("最高询盘")>=0){
                           objItem.tap='询盘突破峰值';
                           objItem.icon='icon02';
                       }
                       if(item.content.indexOf("历史新高")>=0){
-                          objItem.tap='询盘突破峰值';
+                          objItem.tap='成交分突破峰值';
+                          objItem.icon='icon02';
+                      }
+                      if(item.content.indexOf("最高奖金")>=0){
+                          objItem.tap='奖金突破峰值';
                           objItem.icon='icon02';
                       }
                       historyDate.push(objItem);
