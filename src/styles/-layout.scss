@@ -1,12 +1,12 @@
 ﻿.header-layout{
     height: auto!important;
     position: relative;
-    background: #374158;
+    background: #323232;
     padding:0!important;
     .header-panel{
         width:100%;
         position: relative;
-        height: 60px;
+        height: 50px;
         display: flex;
         -webkit-box-align: center;
         align-items: center;
@@ -26,8 +26,8 @@
                 cursor: pointer;
                 .svg-i{
                     display: inline-block;
-                    height: 32px;
-                    line-height: 32px;
+                    height: 30px;
+                    line-height: 30px;
                     font-size: 16px;
                     color: #d8d8d8;
                 }
@@ -45,48 +45,55 @@
             }
             .feedback-icon{
                 display: inline-block;
-                width: 32px;
-                height: 32px;
-                font-size: 32px;
+                width: 30px;
+                height: 30px;
+                font-size: 30px;
                 text-align: center;
-                line-height: 32px;
+                line-height: 30px;
                 vertical-align: middle;
                 color: #d8d8d8;
                 margin-right: 16px;
                 cursor: pointer;
+                .svg-icon{
+                    vertical-align: top;
+                }
             }
             .cache-icon{
                 display: inline-block;
-                width: 32px;
-                height: 32px;
+                width: 30px;
+                height: 30px;
                 font-size: 24px;
                 text-align: center;
-                line-height: 32px;
+                line-height: 30px;
                 vertical-align: middle;
                 color: #d8d8d8;
                 margin-right: 16px;
                 cursor: pointer;
+                .svg-icon{
+                    margin: 3px;
+                    vertical-align: top;
+                }
             }
             .user-icon{
                 display: inline-block;
-                width: 32px;
-                height: 32px;
+                width: 30px;
+                height: 30px;
                 font-size: 16px;
                 text-align: center;
-                line-height: 32px;
+                line-height: 30px;
                 border-radius: 100%;
                 background: #63666c;
                 vertical-align: middle;
                 color: #d8d8d8;
                 img{
-                    width: 32px;
-                    height: 32px;
+                    width: 30px;
+                    height: 30px;
                     border-radius: 50%;
                 }
             }
             .user-name{
                 display: inline-block;
-                line-height: 32px;
+                line-height: 30px;
                 color: #fff;
                 font-size: 14px;
                 font-weight: 500;
@@ -97,7 +104,7 @@
         .header-center{
             flex: 1;
             height: 100%;
-            padding: 14px 20px;
+            padding: 11px 20px;
             .header-search{
                 width: 300px;
                 float:left;
@@ -109,22 +116,25 @@
                     display: block;
                     position: absolute;
                     left: -20px;
-                    top: -14px;
-                    bottom: -14px;
+                    top: 5px;
+                    bottom: 5px;
                     width: 1px;
-                    background: linear-gradient(#374158 15%,#feffff 50%,#374158 85%);
+                    background: #8e8e8e;
                 }
                 .article-search{
                     width: 100%;
                     .el-input__inner{
-                        background: #343840;
-                        border: 1px solid #343840;
+                        background: #323232;
+                        border: 1px solid #4e4e4e;
                         color: #fff;
                         font-size: 14px;
+                        border-radius:0;
+                        border-right:none;
                     }
                     .el-input-group__append{
-                        background-color: #32588c;
-                        border: 1px solid #32588c;
+                        background-color: $menuActiveText;
+                        border: 1px solid $menuActiveText;
+                        border-radius:0;
                         color: #fff;
                         font-size:0;
                         line-height:0;
@@ -171,15 +181,14 @@
                     display: block;
                     position: absolute;
                     right: -20px;
-                    top: -14px;
-                    bottom: -14px;
+                    top: 5px;
+                    bottom: 5px;
                     width: 1px;
-                    background: linear-gradient(#374158 15%,#feffff 50%,#374158 85%);
+                    background: #8e8e8e;
                 }
                 .item-button{
                     display: inline-block;
-                    height: 32px;
-                    border-radius: 4px;
+                    height: 28px;
                     background: #f9a500;
                     text-align: center;
                     line-height:0;
@@ -187,22 +196,21 @@
                     padding: 0 12px;
                     margin-left: 10px;
                     cursor: pointer;
-                    box-shadow: 0 5px 20px rgba(247,142,66,.57);
                     transition: all .3s;
                     &:hover{
                         box-shadow: 0 0 0 rgba(247,142,66,.57);
                     }
                     .button-icon{
                         display: inline-block;
-                        height: 32px;
+                        height: 28px;
                         font-size: 14px;
-                        line-height: 32px;
+                        line-height: 28px;
                         vertical-align: top;
                         color: #ffffff;
                     }
                     .button-font{
                         display: inline-block;
-                        line-height: 32px;
+                        line-height: 28px;
                         color: #fff;
                         font-size: 14px;
                         margin-left: 10px;
@@ -218,7 +226,7 @@
             .logo-link {
                 display: block;
                 height: 100%;
-                padding: 14px 28px;
+                padding: 13px 18px;
                 font-size:0;
                 line-height:0;
                 position: relative;
@@ -226,12 +234,11 @@
                     float:left;
                 }
                 .logo-img {
-                    height: 32px;
+                    height: 24px;
                 }
                 .logo-title {
-                    height: 22px;
+                    height: 24px;
                     margin-left: 10px;
-                    margin-top: 5px;
                 }
             }
         }
