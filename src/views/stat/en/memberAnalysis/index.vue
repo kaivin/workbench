@@ -245,7 +245,6 @@ export default {
         .then((response) => {
           if (response) {
             if (response.status) {
-              console.log(response);
               // 非付费询盘
               $this.unpayInquiry = rankingWithTotalItem(response.xunulist,'number');
               $this.unpayInquiry.forEach(function(item){
@@ -294,7 +293,6 @@ export default {
               $this.awardMoney.forEach(function(item){
                 item.allmoney = numSeparate(Math.floor(item.allmoney*100)/100);
               });
-              console.log($this.awardMoney,"奖金排行榜");
               if(response.moneylist.length < 9){
                   $this.awardMoneySet.ifFold = false;
                   $this.awardMoneySet.boxHeight = "auto";

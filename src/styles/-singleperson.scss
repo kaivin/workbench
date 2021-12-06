@@ -1,4 +1,3 @@
-.personAnalysis{}
 .personTopTab{
     background-color: #fff;
     padding: 20px 30px;
@@ -238,6 +237,14 @@
                     top: 0%;
                     object-fit: cover;
                     transition: all 0.5s;
+                }                
+                &.nopic{
+                    clear: both;
+                    display: block;
+                    overflow: hidden;
+                    border-radius: 50%;
+                    background: url(../assets/default_pic.jpg) center center no-repeat;
+                    background-size:100%;
                 }
             }
         }
@@ -962,6 +969,27 @@
             border-radius: 50%;
             margin-right: 15px;
             overflow: hidden;
+            span{
+                width:100%;
+                height:100%;
+                border-radius: 50%;
+                overflow: hidden;
+                position: relative;
+                display: block;
+                margin: 0 auto;
+                img{
+                    position: absolute;
+                    left: 0px;
+                    width: 100%;
+                    top: 0%;
+                    object-fit: cover;
+                    transition: all 0.5s;
+                }                
+                &.nopic{
+                    background: url(../assets/default_pic.jpg) center center no-repeat;
+                    background-size:100%;
+                }
+            }
         }
         .user_name{
             h4{
@@ -1068,11 +1096,11 @@
 @media screen and (max-width:1440px){
     .middleBox .personalCard{
         width: 100%;
+        margin-bottom: 20px;
         &.fixed{
             position: relative;
             left: auto;
             top: 0px!important;
-            margin-bottom: 20px;
         }
         .personMsg{
             width: 30%;

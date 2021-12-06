@@ -18,8 +18,9 @@
           <div class="personalCard" :class="scrBool?'fixed':''" :style='"top:"+scrHeight'>
               <div class="personMsg">
                   <div class="personAvatar">
-                       <span><img :src="userBasicInfo.headimg" alt="" /></span>
-                  </div>
+                       <span v-if="userBasicInfo.headimg"><img :src="userBasicInfo.headimg" alt="" /></span>
+                       <span v-else class="nopic"></span>
+                  </div> 
                   <h3 class="personName">{{userBasicInfo.name}}</h3>
                   <p class="workTime">在河南红星机器有限公司工作了{{userBasicInfo.comday}}天</p>
                   <div class="rate_num">
@@ -145,7 +146,8 @@
       <el-dialog custom-class="history-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="750px">
             <div class="historyWho">
                 <div class="user_img">
-                    <img :src="userBasicInfo.headimg" alt="" />
+                    <span v-if="userBasicInfo.headimg"><img :src="userBasicInfo.headimg" alt="" /></span>
+                    <span v-else class="nopic"></span>
                 </div>
                 <div class="user_name">
                     <h4>{{userBasicInfo.name}}</h4>
@@ -391,7 +393,7 @@ export default {
                     ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1;                    
                     ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
                     ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
-                    ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum));
+                    ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
                     ChartTabObj.name='年度总询盘个数';
                     ChartTabObj.unit='（单位：个）';
                     ChartTabObj.tap='enquirie'; 
@@ -428,7 +430,7 @@ export default {
                     ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1; 
                     ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
                     ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
-                    ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum));
+                    ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
                     ChartTabObj.name='年度总成交积分';
                     ChartTabObj.unit='（单位：分）';
                     ChartTabObj.tap='clinchScore'; 
@@ -465,7 +467,7 @@ export default {
                     ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1; 
                     ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
                     ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
-                    ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum));
+                    ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
                     ChartTabObj.name='年度100万成交个数';
                     ChartTabObj.unit='（单位：个）';
                     ChartTabObj.tap='clinchNum';  
@@ -502,7 +504,7 @@ export default {
                     ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1; 
                     ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
                     ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
-                    ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum));
+                    ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
                     ChartTabObj.name='年度总奖金';
                     ChartTabObj.unit='（单位：元）';
                     ChartTabObj.tap='money';
@@ -520,7 +522,11 @@ export default {
                 $this.userBasicInfo.comday=res.userinfo.comday;
                 $this.userBasicInfo.manangename=res.userinfo.manangename;
                 $this.userBasicInfo.name=res.userinfo.name;
-                $this.userBasicInfo.postionname=res.userinfo.postionname;
+                if(res.userinfo.postionname&&res.userinfo.postionname!=''&&res.userinfo.postionname!=null){
+                    $this.userBasicInfo.postionname=res.userinfo.postionname;
+                }else{
+                    $this.userBasicInfo.postionname='普通';
+                }
                 $this.userBasicInfo.headimg=res.userinfo.headimg;
                 $this.ChartTab=ChartTab;
                 // 个人成绩统计

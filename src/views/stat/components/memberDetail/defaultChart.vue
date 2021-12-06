@@ -109,13 +109,14 @@ export default {
                 color:$this.currentData.ChartData.length==1?$this.currentData.ChartColor[0]:$this.currentData.ChartColor,
                 appendPadding:[15,15,0,15],
                 yAxis:{
+                    tickCount:6,
                     grid:{
                         line:{
                           style:{
                               stroke: 'black',
                               lineWidth:1,
                               lineDash:[6,3],
-                              strokeOpacity:0.1,
+                              strokeOpacity:0.05,
                               shadowBlur:0
                           }
                         }
@@ -192,13 +193,14 @@ export default {
           seriesField:'name',
           color:$this.currentData.ChartData.length==1?$this.currentData.ChartColor[0]:$this.currentData.ChartColor,
           yAxis:{
+            tickCount:6,
             grid:{
               line:{
                 style:{
                   stroke: 'black',
                   lineWidth:1,
                   lineDash:[6,3],
-                  strokeOpacity:0.1,
+                  strokeOpacity:0.05,
                   shadowBlur:0
                 }
               }
@@ -302,13 +304,14 @@ export default {
                 },
             },
             yAxis: {
+                tickCount:6,
                 grid: {
                     line: {
                         style: {
                             stroke: '#cccccc',
                             lineWidth: 1,
                             lineDash: [3, 2],
-                            strokeOpacity: 0.5,
+                            strokeOpacity: 0.3,
                             shadowColor: null,
                             shadowBlur: 0,
                             shadowOffsetX:0,
@@ -327,5 +330,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

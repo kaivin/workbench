@@ -275,7 +275,6 @@ export default {
               });
               // 百万成交
               $this.millionDeal = rankingWithTotalItem(response.Alist,'number');
-              console.log($this.millionDeal,'$this.millionDeal');
               if(response.Alist.length < 3){
                   $this.millionDealSet.ifFold = false;
                   $this.millionDealSet.boxHeight = "auto";
