@@ -6,7 +6,7 @@
       </div>
       <div class="awardRank">
           <ul class="inul" :style="'height:'+ awardMoneySet.boxHeight">
-              <li class="flex-box" v-for="(item,index) in awardMoney" :key="index">
+              <li class="flex-box" v-for="(item,index) in awardMoney" :key="index" @click="handleContrast(item.dept_id,item.uid)">
                   <div class="rankNum">
                       <div class="numTop" v-if="item.ranking<4" :class="'numTop0'+(item.ranking)"></div>
                       <div class="numNormal" v-if="item.ranking>3 && item.ranking < 10">
@@ -17,13 +17,13 @@
                       </div>
                   </div>
                   <div class="userImg">
-                    <div v-if="item.headimg" class="headImg" @click="handleContrast(item.dept_id,item.uid)">
-                      <img :src="item.headimg" :alt="item.name" />
+                    <div v-if="item.headimg" class="headImg">
+                      <span><img :src="item.headimg" :alt="item.name" /></span>
                     </div>
                     <div v-else class="nopic"></div> 
                   </div>
                   <div class="userName">
-                    <span @click="handleContrast(item.dept_id,item.uid)">{{item.name}} </span> 
+                    <span>{{item.name}} </span> 
                   </div>
                   <div class="userAward flex-content">
                       <span v-if="item.ranking<=3" :class="'num0'+(item.ranking)"> 

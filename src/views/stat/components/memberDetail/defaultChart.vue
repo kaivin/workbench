@@ -280,25 +280,25 @@ export default {
             xAxis: {
                 tickCount:15,
                 label: {
-                // 数值格式化为千分位
-                formatter: (v) => {
-                    var item = "";
-                    if(v.indexOf("&")!=-1){
-                    item = v.split("&")[0]+'\n'+v.split("&")[1];
-                    }else{
-                    if(v.indexOf(" ")!=-1){
-                        var week = "周"+v.split(" ")[1].substr(2);
-                        var date = v.split(" ")[0];
-                        item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
-                    }else{
-                        item = v.split("-")[1]+"月";
+                    // 数值格式化为千分位
+                    formatter: (v) => {
+                        var item = "";
+                        if(v.indexOf("&")!=-1){
+                        item = v.split("&")[0]+'\n'+v.split("&")[1];
+                        }else{
+                        if(v.indexOf(" ")!=-1){
+                            var week = "周"+v.split(" ")[1].substr(2);
+                            var date = v.split(" ")[0];
+                            item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
+                        }else{
+                            item = v.split("-")[1]+"月";
+                        }
+                        }
+                        return item
+                    },
+                    style:{
+                        lineHeight:18
                     }
-                    }
-                    return item
-                },
-                style:{
-                    lineHeight:18
-                }
                 },
             },
             yAxis: {

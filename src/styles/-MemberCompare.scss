@@ -64,6 +64,7 @@
             flex-direction: row;
             align-items: center;
             border-top: 1px solid rgba(245, 243, 228, 0.8);
+            cursor: pointer;
             .rankNum{
                 width: 50px;
                 height: 38px;
@@ -110,16 +111,25 @@
                     overflow: hidden;
                     border-radius: 50%;
                     position: relative;
-                    cursor: pointer;
                     span{
                         clear: both;
                         display: block;
                         overflow: hidden;
-                        width:100%;
-                        height:100%;
+                        width: 100%;
+                        height: 100%;
                         border-radius: 50%;
+                        position: relative;
+                        margin: 0 auto;
                         img{
                             width: 100%;
+                            position: absolute;
+                            left: 0px;
+                            width: 100%;
+                            top: 0%;
+                            height: 100% !important;
+                            -o-object-fit: cover;
+                            object-fit: cover;
+                            transition: all 0.5s;
                         }
                     }
                     &.headImgBorder{
@@ -159,9 +169,6 @@
             .userName{
                 color: #111111;
                 font-size: 13px;
-                span{
-                    cursor: pointer;
-                }
             }
             .userInquiry{
                 color: #333333;
@@ -260,6 +267,7 @@
             flex-direction: row;
             align-items: center;
             border-top: 1px solid rgba(245, 243, 228, 0.8);
+            cursor: pointer;
             .rankNum{
                 width: 27px;
                 height: 32px;
@@ -294,16 +302,25 @@
                     overflow: hidden;
                     border-radius: 50%;
                     position: relative;
-                    cursor: pointer;
                     span{
                         clear: both;
                         display: block;
                         overflow: hidden;
-                        width:100%;
-                        height:100%;
+                        width: 100%;
+                        height: 100%;
                         border-radius: 50%;
+                        position: relative;
+                        margin: 0 auto;
                         img{
                             width: 100%;
+                            position: absolute;
+                            left: 0px;
+                            width: 100%;
+                            top: 0%;
+                            height: 100% !important;
+                            -o-object-fit: cover;
+                            object-fit: cover;
+                            transition: all 0.5s;
                         }
                     }
                     &.headImgBorder{
@@ -343,9 +360,6 @@
             .userName{
                 color: #111111;
                 font-size: 13px;
-                span{
-                    cursor: pointer;
-                }
             }
             .userInquiry{
                 color: #333333;
@@ -439,6 +453,7 @@
             flex-direction: row;
             align-items: center;
             border-top: 1px solid rgba(245, 243, 228, 0.8);
+            cursor: pointer;
             .rankNum{
                 width:26px;
                 height:38px;
@@ -493,16 +508,25 @@
                     overflow: hidden;
                     border-radius: 50%;
                     position: relative;
-                    cursor: pointer;
                     span{
                         clear: both;
                         display: block;
                         overflow: hidden;
-                        width:100%;
-                        height:100%;
+                        width: 100%;
+                        height: 100%;
                         border-radius: 50%;
+                        position: relative;
+                        margin: 0 auto;
                         img{
                             width: 100%;
+                            position: absolute;
+                            left: 0px;
+                            width: 100%;
+                            top: 0%;
+                            height: 100% !important;
+                            -o-object-fit: cover;
+                            object-fit: cover;
+                            transition: all 0.5s;
                         }
                     }
                     &.headImgBorder{
@@ -542,9 +566,6 @@
             .userName{
                 color: #111111;
                 font-size: 13px;
-                span{
-                    cursor: pointer;
-                }
             }
             .milNum{
                 text-align: right;
@@ -811,6 +832,7 @@
             flex-direction: row;
             align-items: center;
             border-top: 1px solid rgba(245, 231, 231, 0.6);
+            cursor: pointer;
             .rankNum{
                 width:30px;
                 height:36px;
@@ -845,11 +867,27 @@
                     width: 36px;
                     height: 36px;
                     overflow: hidden;
-                    border-radius: 4px;
                     position: relative;
-                    cursor: pointer;
-                    img{
+                    span{
+                        clear: both;
+                        display: block;
+                        overflow: hidden;
                         width: 100%;
+                        height: 100%;
+                        border-radius: 4px;
+                        position: relative;
+                        margin: 0 auto;
+                        img{
+                            width: 100%;
+                            position: absolute;
+                            left: 0px;
+                            width: 100%;
+                            top: 0%;
+                            height: 100% !important;
+                            -o-object-fit: cover;
+                            object-fit: cover;
+                            transition: all 0.5s;
+                        }
                     }
                 }
                 .nopic{
@@ -865,9 +903,6 @@
             .userName{
                 color: #111111;
                 font-size: 13px;
-                span{
-                    cursor: pointer;
-                }
             }
             .userAward{
                 color: #333333;

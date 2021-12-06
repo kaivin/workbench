@@ -37,6 +37,7 @@
 </template>
 <script>
 import defaultChart from "../../components/memberDetail/defaultChart.vue";
+import {numSeparate} from "@/utils/index";
 export default {
   name: "cnComparePerson",
   data() {
@@ -136,9 +137,9 @@ export default {
                 res.leftyearcountcompare.forEach(function(item,index){        
                     var objItem={};        
                     objItem.name=item.name;
-                    objItem.totalnum=item.xunnumber;
-                    objItem.avgnum=item.avgnumber;
-                    objItem.historynum=item.maxmonthnumber;
+                    objItem.totalnum=numSeparate(item.xunnumber);
+                    objItem.avgnum=numSeparate(item.avgnumber);
+                    objItem.historynum=numSeparate(item.maxmonthnumber);
                     objItem.color=ChartColor[index];
                     leftChartData.push(objItem);
                 });
@@ -170,9 +171,9 @@ export default {
                 res.leftyearscorecompare.forEach(function(item,index){        
                     var objItem={};        
                     objItem.name=item.name;
-                    objItem.totalnum=item.score;
-                    objItem.avgnum=item.avgscore;
-                    objItem.historynum=item.maxmonthscore;
+                    objItem.totalnum=numSeparate(item.score);
+                    objItem.avgnum=numSeparate(item.avgscore);
+                    objItem.historynum=numSeparate(item.maxmonthscore);
                     objItem.color=ChartColor[index];
                     leftChartData.push(objItem);
                 });

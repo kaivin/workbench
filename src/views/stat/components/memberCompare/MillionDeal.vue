@@ -6,7 +6,7 @@
       </div>
     <div class="milRank">
         <ul class="milul" :style="'height:'+ millionDealSet.boxHeight">
-            <li v-for="(item,index) in millionDeal" :key="index">
+            <li v-for="(item,index) in millionDeal" :key="index" @click="handleContrast(item.dept_id,item.uid)">
                 <div class="rankNum" >
                     <div v-if="item.ranking<4" class="rankstyle" :class="'rank0'+(item.ranking)"></div>
                     <div class="numNormal" v-if="item.ranking>3 && item.ranking <= 9">
@@ -17,13 +17,13 @@
                       </div>
                 </div>
                 <div class="userImg">
-                    <div v-if="item.headimg" class="headImg" :class="item.ranking<4?'headImgBorder':''" @click="handleContrast(item.dept_id,item.uid)">
+                    <div v-if="item.headimg" class="headImg" :class="item.ranking<4?'headImgBorder':''">
                       <span><img :src="item.headimg" :alt="item.ownuser" /></span>
                     </div>
                     <div v-else class="nopic" :class="item.ranking<4?'headImgBorder':''"><span></span></div>  
                 </div>
                 <div class="userName">                
-                    <span @click="handleContrast(item.dept_id,item.uid)">{{item.ownuser}}</span>                    
+                    <span>{{item.ownuser}}</span>                    
                 </div>
                 <div class="milNum flex-content">
                      <p>×{{item.number}}</p>

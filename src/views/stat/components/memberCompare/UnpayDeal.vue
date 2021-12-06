@@ -10,7 +10,7 @@
       </div>
       <div class="dealRank">
           <ul class="deul" :style="'height:'+ dealScoreSet.boxHeight">
-              <li v-for="(item,index) in dealScore" :key="index">
+              <li v-for="(item,index) in dealScore" :key="index" @click="handleContrast(item.dept_id,item.uid)">
                   <div class="rankNum">
                       <div class="numTop" v-if="item.ranking<4" :class="'numTop0'+(item.ranking)"></div>
                       <div class="numTop" v-if="item.ranking>3 && item.ranking <= 9">
@@ -21,12 +21,12 @@
                       </div>
                   </div>
                   <div class="userImg">
-                    <div v-if="item.headimg" class="headImg" :class="item.ranking<4?'headImgBorder':''" @click="handleContrast(item.dept_id,item.uid)">
+                    <div v-if="item.headimg" class="headImg" :class="item.ranking<4?'headImgBorder':''">
                       <span><img :src="item.headimg" :alt="item.ownuser" /></span>
                     </div>
                     <div v-else class="nopic" :class="item.ranking<4?'headImgBorder':''"><span></span></div>  
                   </div>
-                  <div class="userName"><span @click="handleContrast(item.dept_id,item.uid)">{{item.ownuser}}</span></div>
+                  <div class="userName"><span>{{item.ownuser}}</span></div>
                   <div class="userInquiry flex-content" v-if="lang =='ch'">
                       <span v-if="item.ranking<4" :class="'num0'+(item.ranking)"> 
                         {{item.score}}分

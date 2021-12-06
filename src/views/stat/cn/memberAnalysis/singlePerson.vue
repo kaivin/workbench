@@ -18,7 +18,7 @@
           <div class="personalCard" :class="scrBool?'fixed':''" :style='"top:"+scrHeight'>
               <div class="personMsg">
                   <div class="personAvatar">
-                      <img :src="userBasicInfo.headimg" alt="" />
+                       <span><img :src="userBasicInfo.headimg" alt="" /></span>
                   </div>
                   <h3 class="personName">{{userBasicInfo.name}}</h3>
                   <p class="workTime">在河南红星机器有限公司工作了{{userBasicInfo.comday}}天</p>
@@ -114,7 +114,7 @@
                                 prop="money"
                                 label="个人奖金">
                                 <template slot-scope="scope">
-                                    {{scope.row.money.toFixed(1)}}
+                                    {{scope.row.money}}
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -165,6 +165,7 @@
 </template>
 <script>
 import { Mix } from '@antv/g2plot';
+import {numSeparate} from "@/utils/index"
 export default {
   name: "cnSinglePerson",
   data() {
@@ -211,7 +212,6 @@ export default {
   },
   mounted(){
       const $this = this;
-      // 监听竖向滚动条滚动事件
       window.addEventListener('scroll',this.handleScroll,true);
   },
   destroyed(){
@@ -371,7 +371,7 @@ export default {
                         var nowYearObj={};
                         var lastYearObj={};
                         if(item.date==userTimeMonth){
-                            $this.userBasicInfo.userMonthcount=item.xunnumber;
+                            $this.userBasicInfo.userMonthcount=numSeparate(item.xunnumber);
                         }
                         totalNum=totalNum+item.xunnumber;
                         lasttotalNum=lasttotalNum+item.lastxunnumber;
@@ -387,8 +387,8 @@ export default {
                         currentMixItem.lastYear.push(lastYearObj);
                     });
                     var ChartTabObj={};
-                    ChartTabObj.totalNum=totalNum.toFixed(2)*1;
-                    ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1;
+                    ChartTabObj.totalNum=numSeparate(totalNum.toFixed(2)*1);
+                    ChartTabObj.lasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
                     ChartTabObj.name='年度总询盘个数';
                     ChartTabObj.unit='（单位：个）';
                     ChartTabObj.tap='enquirie'; 
@@ -409,7 +409,7 @@ export default {
                         var nowYearObj={};
                         var lastYearObj={};
                         if(item.date==userTimeMonth){
-                            $this.userBasicInfo.userMonthscore=item.score;
+                            $this.userBasicInfo.userMonthscore=numSeparate(item.score);
                         }
                         totalNum=totalNum+item.score;
                         lasttotalNum=lasttotalNum+item.lastscore;
@@ -421,8 +421,8 @@ export default {
                         currentMixItem.lastYear.push(lastYearObj);
                     });
                     var ChartTabObj={};
-                    ChartTabObj.totalNum=totalNum.toFixed(2)*1;
-                    ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1;
+                    ChartTabObj.totalNum=numSeparate(totalNum.toFixed(2)*1);
+                    ChartTabObj.lasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
                     ChartTabObj.name='年度总成交积分';
                     ChartTabObj.unit='（单位：分）';
                     ChartTabObj.tap='clinchScore'; 
@@ -443,7 +443,7 @@ export default {
                         var nowYearObj={};
                         var lastYearObj={};
                         if(item.date==userTimeMonth){
-                            $this.userBasicInfo.userMonthanumber=item.anumber;
+                            $this.userBasicInfo.userMonthanumber=numSeparate(item.anumber);
                         }
                         totalNum=totalNum+item.anumber;
                         lasttotalNum=lasttotalNum+item.lastanumber;
@@ -455,8 +455,8 @@ export default {
                         currentMixItem.lastYear.push(lastYearObj);
                     });
                     var ChartTabObj={};
-                    ChartTabObj.totalNum=totalNum.toFixed(2)*1;
-                    ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1;
+                    ChartTabObj.totalNum=numSeparate(totalNum.toFixed(2)*1);
+                    ChartTabObj.lasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
                     ChartTabObj.name='年度100万成交个数';
                     ChartTabObj.unit='（单位：个）';
                     ChartTabObj.tap='clinchNum';  
@@ -477,7 +477,7 @@ export default {
                         var nowYearObj={};
                         var lastYearObj={};
                         if(item.date==userTimeMonth){
-                            $this.userBasicInfo.userMonthmoney=item.money;
+                            $this.userBasicInfo.userMonthmoney=numSeparate(item.money);
                         }
                         totalNum=totalNum+item.money;
                         lasttotalNum=lasttotalNum+item.lastmoney;
@@ -489,8 +489,8 @@ export default {
                         currentMixItem.lastYear.push(lastYearObj);
                     });
                     var ChartTabObj={};
-                    ChartTabObj.totalNum=totalNum.toFixed(2)*1;
-                    ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1;
+                    ChartTabObj.totalNum=numSeparate(totalNum.toFixed(2)*1);
+                    ChartTabObj.lasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
                     ChartTabObj.name='年度总奖金';
                     ChartTabObj.unit='（单位：元）';
                     ChartTabObj.tap='money';
@@ -522,10 +522,10 @@ export default {
                       var objItem={};
                       item.date=item.date.split('-')[1]+'月';
                       objItem.date=item.date;
-                      objItem.xunnumber=item.xunnumber;
-                      objItem.score=item.score;
+                      objItem.xunnumber=numSeparate(item.xunnumber);
+                      objItem.score=numSeparate(item.score);
                       objItem.anumber=item.anumber;
-                      objItem.money=item.money;
+                      objItem.money=numSeparate(item.money);
                       personCount.push(objItem);
                       if(maxxun<item.xunnumber){
                         maxxun=item.xunnumber
@@ -540,10 +540,10 @@ export default {
                         maxmoney=item.money
                       }
                   });
-                  $this.maxPersonCount.maxxun=maxxun;
-                  $this.maxPersonCount.maxscore=maxscore;
+                  $this.maxPersonCount.maxxun=numSeparate(maxxun);
+                  $this.maxPersonCount.maxscore=numSeparate(maxscore);
                   $this.maxPersonCount.maxanum=maxanum;
-                  $this.maxPersonCount.maxmoney=maxmoney;
+                  $this.maxPersonCount.maxmoney=numSeparate(maxmoney);
                   $this.personCount=personCount;
                 }
                 $this.isLoading.close();
@@ -676,12 +676,28 @@ export default {
                         }
                     },
                     xAxis: {
-                        label:{
-                            style:{
-                                fontSize: 12,
-                                fill: "#b3b3b3"
+                        tickCount:15,
+                        label: {
+                        // 数值格式化为千分位
+                        formatter: (v) => {
+                            var item = "";
+                            if(v.indexOf("&")!=-1){
+                            item = v.split("&")[0]+'\n'+v.split("&")[1];
+                            }else{
+                            if(v.indexOf(" ")!=-1){
+                                var week = "周"+v.split(" ")[1].substr(2);
+                                var date = v.split(" ")[0];
+                                item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
+                            }else{
+                                item = v.split("-")[1]+"月";
                             }
+                            }
+                            return item
+                        },
+                        style:{
+                            lineHeight:18
                         }
+                        },
                     },
                     meta: {
                         time: {

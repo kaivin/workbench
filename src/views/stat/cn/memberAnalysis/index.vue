@@ -270,6 +270,9 @@ export default {
               }
               // 付费
               $this.payMember = rankingWithTotalItem(response.semulist,'number');
+              $this.payMember.forEach(function(item){
+                item.number = numSeparate(item.number);
+              });
               // 百万成交
               $this.millionDeal = rankingWithTotalItem(response.Alist,'number');
               console.log($this.millionDeal,'$this.millionDeal');

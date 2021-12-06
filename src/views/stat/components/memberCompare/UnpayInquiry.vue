@@ -6,7 +6,7 @@
       </div>
       <div class="inquiryRank">
           <ul class="inul"  :style="'height:'+ unpayInquirySet.boxHeight" >
-              <li v-for="(item,index) in unpayInquiry" :key="index">
+              <li v-for="(item,index) in unpayInquiry" :key="index" @click="handleContrast(item.dept_id,item.id)">
                   <div class="rankNum">
                       <div class="numTop" v-if="item.ranking<4" :class="'numTop0'+(item.ranking)"></div>
                       <div class="numTop" v-if="item.ranking>3 && item.ranking <= 9">
@@ -17,12 +17,12 @@
                       </div>
                   </div>
                   <div class="userImg">
-                    <div v-if="item.headimg" class="headImg" :class="item.ranking<4?'headImgBorder':''" @click="handleContrast(item.dept_id,item.id)">
+                    <div v-if="item.headimg" class="headImg" :class="item.ranking<4?'headImgBorder':''">
                       <span><img :src="item.headimg" :alt="item.name" /></span>
                     </div>
                     <div v-else class="nopic" :class="item.ranking<4?'headImgBorder':''"><span></span></div>  
                   </div>
-                  <div class="userName"><span @click="handleContrast(item.dept_id,item.id)">{{item.name}}</span></div>
+                  <div class="userName"><span>{{item.name}}</span></div>
                   <div class="userInquiry flex-content">
                       <span v-if="item.ranking<4" :class="'num0'+(item.ranking)">{{item.number}}个</span>
                       <span v-else>{{item.number}}个</span>
