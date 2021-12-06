@@ -806,6 +806,8 @@
 .memberAward{
     background-color: #fff;
     border:1px solid #f0f0f0;
+    position: relative;
+    margin-bottom: 15px;
     .memberTit{
         height:80px; 
         background: -moz-linear-gradient(right,#fffbfa 0%, #ffeeee 100%);
@@ -820,7 +822,6 @@
         h3{color:#d62815;}
     }
     .awardRank{
-        position: relative;
         .inul{
             overflow: hidden;
         }

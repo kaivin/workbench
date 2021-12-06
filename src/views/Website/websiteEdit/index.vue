@@ -188,14 +188,15 @@
                   </div>
                   <div class="AddEditPostItem flex-box flex-row clearfix WebsiteOnePath" v-if="writePermit.includes('logspath')||readPermit.includes('logspath')">
                       <label>Path：</label>
-                        <el-input
-                          v-model="formData.logspath"
-                          :disabled="!writePermit.includes('logspath')"
-                          size="small"
-                          class="EditPostInput flex-content"
-                          clearable>
-                        </el-input>
-                        <a :href="isHttps?'http://172.16.10.90:8528/iis.aspx?ip='+formData.ip+'&user='+formData.iisftpuser+'&pwd='+formData.iisftppwd+'&path='+formData.logspath+'&web=https://www.'+formData.domain:'http://172.16.10.90:8528/iis.aspx?ip='+formData.ip+'&user='+formData.iisftpuser+'&pwd='+formData.iisftppwd+'&path='+formData.logspath+'&web=http://www.'+formData.domain" target="_blank" class="link">IIS 分析</a>
+                      <el-input
+                        v-model="formData.logspath"
+                        :disabled="!writePermit.includes('logspath')"
+                        size="small"
+                        class="EditPostInput flex-content"
+                        clearable>
+                      </el-input>
+                      <a :href="isHttps?'http://172.16.10.90:8528/iis.aspx?ip='+formData.ip+'&user='+formData.iisftpuser+'&pwd='+formData.iisftppwd+'&path='+formData.logspath+'&web=https://www.'+formData.domain:'http://172.16.10.90:8528/iis.aspx?ip='+formData.ip+'&user='+formData.iisftpuser+'&pwd='+formData.iisftppwd+'&path='+formData.logspath+'&web=http://www.'+formData.domain" target="_blank" class="link">IIS 分析</a>
+                      <!--<span @click="handleIIS" class="link">IIS 分析</span>-->
                   </div>
               </li>
               <li v-if="writePermit.includes('ftpremarks')||readPermit.includes('ftpremarks')">
@@ -1191,6 +1192,27 @@ export default {
         var routeUrl =  $this.$router.resolve({path:'/Webserver/lists',query:{IP:$this.formData.ip}});
         window.open(routeUrl.href,'_blank');
       }
+    },
+    // IIS分析
+    handleIIS(){
+      var $this=this;
+      var iisForm={};
+      iisForm.ip=$this.formData.ip;
+      iisForm.ftpuser=$this.formData.iisftpuser;
+      iisForm.ftppwd=$this.formData.iisftppwd;
+      iisForm.path=$this.formData.logspath;
+      iisForm.weburl='http://www.'+$this.formData.domain;
+      $this.$store.dispatch('Weblog/getloglistAction',iisForm).then(res=>{
+        if(res.status){
+
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
     },
   }
 }
