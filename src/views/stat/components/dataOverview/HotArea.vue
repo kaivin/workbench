@@ -529,9 +529,9 @@ export default {
           $this.mapHeight = 210;
 
           if($this.language == '中文'){
-              $this.drawCnCluesRegionChart();
+              $this.regionMapChart.changeSize($this.mapWidth,$this.mapHeight);
           }else{
-              $this.drawEnCluesRegionChart();
+              $this.worldRegionMapChart.changeSize($this.mapWidth,$this.mapHeight);
           }
 
         }else if(allWidth < 450 && allWidth > 400){
@@ -539,9 +539,9 @@ export default {
           $this.mapHeight = 240;
 
           if($this.language == '中文'){
-              $this.drawCnCluesRegionChart();
+              $this.regionMapChart.changeSize($this.mapWidth,$this.mapHeight);
           }else{
-              $this.drawEnCluesRegionChart();
+              $this.worldRegionMapChart.changeSize($this.mapWidth,$this.mapHeight);
           }
 
         }
