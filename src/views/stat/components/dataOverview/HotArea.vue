@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="rowTwoOneItem">
-        <div class="map-chart">
+        <div class="map-chart" ref="cmap" v-resize="redraw">
           <div
             v-if="language == '中文'"
             id="regionMapChart"
@@ -46,6 +46,8 @@ export default {
         worldRegionMapChart:null,//世界地图
         regionMapChart:null,//中国地图
         pieSourcePlot:null,//热门地区TOP10
+        mapWidth: 400,
+        mapHeight: 240,
       }
     },
     props:{
@@ -103,6 +105,25 @@ export default {
     },
     mounted(){
      
+    },
+    directives: {  // 使用局部注册指令的方式
+      resize: { // 指令的名称
+        bind(el, binding) { // el为绑定的元素，binding为绑定给指令的对象
+          let width = '', height = '';
+          function isReize() {
+            const style = document.defaultView.getComputedStyle(el);
+            if (width !== style.width || height !== style.height) {
+              binding.value();  // 关键
+            }
+            width = style.width;
+            height = style.height;
+          }
+          el.__vueSetInterval__ = setInterval(isReize, 300);
+        },
+        unbind(el) {
+          clearInterval(el.__vueSetInterval__);
+        }
+      }
     },
     methods:{
       goPage(){
@@ -177,8 +198,8 @@ export default {
           .then(GeoJSON => {
             const regionMapChart = new G2.Chart({
               container: 'regionMapChart',
-              width:300,
-              height:240,
+              width: $this.mapWidth,
+              height: $this.mapHeight,
               // 添加 element 选中和激活交互
               interactions: [{ type: 'element-single-selected' }, { type: 'element-active' }],
             });
@@ -193,7 +214,7 @@ export default {
             });
             regionMapChart.axis(false);
             regionMapChart.legend('trend', {
-              position: 'bottom-left',
+              position: 'right-bottom',
               flipPage:false,
             });
             // 绘制中国地图背景
@@ -315,7 +336,7 @@ export default {
           yField: $this.language =='中文'?'name':'country',
           seriesField: $this.language =='中文'?'name':'country',
           barWidthRatio: 0.4,
-          height:240,
+          height: 240,
           legend: false,
           appendPadding:[0, 30, 0, 10],
           xAxis:{
@@ -399,8 +420,8 @@ export default {
         .then(mapData => {
           const worldRegionMapChart = new G2.Chart({
             container: 'worldRegionMapChart',
-            width: 400,
-            height: 240,
+            width: $this.mapWidth,
+            height: $this.mapHeight,
           });
           worldRegionMapChart.tooltip({
             showTitle: false,
@@ -500,6 +521,31 @@ export default {
           worldRegionMapChart.render();
         });
       },
+      redraw(){
+        var $this = this;
+        var allWidth = this.$refs["cmap"].offsetWidth;
+        if(allWidth < 400){
+          $this.mapWidth = 360;
+          $this.mapHeight = 210;
+
+          if($this.language == '中文'){
+              $this.drawCnCluesRegionChart();
+          }else{
+              $this.drawEnCluesRegionChart();
+          }
+
+        }else if(allWidth < 450 && allWidth > 400){
+          $this.mapWidth = 400;
+          $this.mapHeight = 240;
+
+          if($this.language == '中文'){
+              $this.drawCnCluesRegionChart();
+          }else{
+              $this.drawEnCluesRegionChart();
+          }
+
+        }
+      }
     }
 }
 </script>
@@ -636,16 +682,21 @@ export default {
   }
   .map-chart{
     float: left;
-    width: 40%;
+    width: 50%;
     .chart-canvas{
-      height: 240px;
+      height: 242px;
+      line-height: 242px;
+      div{
+        display: inline-block;
+        vertical-align: middle;
+      }
     }
   }
   .top-ten{
     float: right;
-    width: 50%;
+    width: 48%;
     .chart-canva{
-      height: 240px;
+      height: 242px;
     }
   }
   

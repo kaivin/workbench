@@ -6,7 +6,7 @@
         <div class="unit">（单位：个）</div>
         <div class="more" @click="goPage">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
       </div>
-      <ul class="top-view" ref="topul">
+      <ul class="top-view" ref="topul" v-resize="setBarWidth">
         <li class="top-item" v-for="(item,index) in topdata" :key="index" @click="handleContrast(item.dept_id,item.id)">
           <div class="top-img">
             <span v-if="index <= 2" :class="'topimg' + index"><img :src="item.headimg" alt=""></span>
@@ -60,7 +60,26 @@ export default {
     },
     mounted(){
       this.setBarWidth();
-      window.addEventListener('resize',this.setBarWidth)
+      window.addEventListener('resize',this.setBarWidth);
+    },
+    directives: {  // 使用局部注册指令的方式
+      resize: { // 指令的名称
+        bind(el, binding) { // el为绑定的元素，binding为绑定给指令的对象
+          let width = '', height = '';
+          function isReize() {
+            const style = document.defaultView.getComputedStyle(el);
+            if (width !== style.width || height !== style.height) {
+              binding.value();  // 关键
+            }
+            width = style.width;
+            height = style.height;
+          }
+          el.__vueSetInterval__ = setInterval(isReize, 300);
+        },
+        unbind(el) {
+          clearInterval(el.__vueSetInterval__);
+        }
+      }
     },
     destroyed(){
       window.removeEventListener('resize',this.setBarWidth)
