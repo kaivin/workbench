@@ -319,6 +319,12 @@ function setRoutes(routers){
         meta: {id:'workInfo-95',title: '工单详情', icon: null, keepAlive:false},
       },
       {
+        path: "/Weblog/lists",
+        name:'WeblogLists',
+        component: () => import("@/views/Weblog/lists/index.vue"),
+        meta: {id:'Webloglists-95',title: '工单详情', icon: null, keepAlive:false},
+      },
+      {
         path: "/Demo/index",
         name:'Demo_index',
         component: () => import(/* webpackChunkName: "DemoIndex" */ "@/views/Demo/index/index.vue"),

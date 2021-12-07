@@ -343,4 +343,108 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped lang="scss">
+.hxpage{
+  background: #fff;
+  .module-top{
+    padding: 15px 30px;
+    border-bottom: 2px solid #f6f7fa;
+  }
+  .title-view{
+    height: 24px;
+    line-height: 24px;
+    margin-bottom: 10px;
+    .title{
+      font-size: 14px;
+      color: #1a1a1a;
+      float: left;
+      margin-right: 4px;
+      font-weight: bold;
+    }
+    .unit{
+      font-size: 12px;
+      color: #a1a1a1;
+      float: left;
+    }
+    .more{
+      font-size: 12px;
+      color: #a1a1a1;
+      float: right;
+    }
+    .btn-group{
+      float: right;
+      display: flex;
+      .btn-item{
+        padding: 0 10px;
+        height: 24px;
+        text-align: center;
+        line-height: 22px;
+        border: 1px solid #e1e3ea;
+        color: #9ea5af;
+        font-size: 12px;
+        box-sizing: border-box;
+        cursor: pointer;
+        margin-left: -1px;
+        position: relative;
+        &:hover{
+          color: #2e88ff;
+          border: 1px solid #2e88ff;
+          z-index: 1;
+        }
+      }
+      .active{
+        border: 1px solid #2e88ff;
+        background:#2e88ff;
+        color: #fff;
+        z-index: 1;
+        &:hover{
+          color: #fff;
+        }
+      }
+    }
+  }
+  .contrast-view{
+    height: 40px;
+    margin-bottom: 15px;
+    .redtext{
+      float: left;
+      font-size: 26px;
+      color: #eb3737;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+    .redright{
+      float: left;
+      .conname{
+        font-size: 12px;
+        line-height: 20px;
+        color: #999999;
+      }
+      .num{
+        font-size: 12px;
+        line-height: 20px;
+        position: relative;
+      }
+      .up{
+        color: #f25e5e;
+        
+      }
+      .down{
+        color: #2dbb4c;
+        
+      }
+    }
+  }
+  .chart-top{
+    height: 68px;
+  }
+  .module-bottom{
+    padding: 20px 30px;
+  }
+  .chart-bottom{
+    height: 260px;
+    margin-top: 35px;
+  }
+  
+}
+</style>

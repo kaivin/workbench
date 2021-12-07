@@ -135,8 +135,6 @@
       <el-backtop target=".scroll-panel"></el-backtop>
   </div>
 </template>
-
-
 <script>
 import { mapGetters } from 'vuex'
 export default {

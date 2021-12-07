@@ -115,4 +115,197 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped lang="scss">
+.hxpage{
+  background: #fff;
+  min-height: 306px;
+  .module-top{
+    padding: 15px 22px 0;
+  }
+  .title-view{
+    height: 24px;
+    line-height: 24px;
+    margin-bottom: 20px;
+    .title{
+      font-size: 14px;
+      color: #1a1a1a;
+      float: left;
+      margin-right: 0;
+      font-weight: bold;
+    }
+    .unit{
+      font-size: 12px;
+      color: #a1a1a1;
+      float: left;
+      line-height: 24px;
+      height: 24px;
+      img{
+        width: 18px;
+        position: relative;
+        top: 4px;
+        vertical-align: top;
+        display: inline-block;
+        margin-left: 5px;
+      }
+    }
+    .more{
+      font-size: 12px;
+      color: #a1a1a1;
+      float: right;
+      cursor: pointer;
+      position: relative;
+      top: -1px;
+      .svg-i{
+        font-size: 10px;
+        color: #a1a1a1;
+        vertical-align: 1px;
+      }
+    }
+  }
+  .contrast-view{
+    height: 40px;
+    margin-bottom: 15px;
+    .redtext{
+      float: left;
+      font-size: 26px;
+      color: #eb3737;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+    .redright{
+      float: left;
+      .conname{
+        font-size: 12px;
+        line-height: 20px;
+        color: #999999;
+      }
+      .num{
+        font-size: 12px;
+        line-height: 20px;
+        padding-left: 12px;
+        position: relative;
+      }
+      .up{
+        color: #f25e5e;
+        &:before{
+          content: '↑';
+          position: absolute;
+          left: 0;
+          font-size: 12px;
+          line-height: 12px;
+          top: 3px;
+          
+        }
+      }
+      .down{
+        color: #2dbb4c;
+        &:before{
+          content: '↓';
+          position: absolute;
+          left: 0;
+          font-size: 12px;
+          line-height: 12px;
+          top: 3px;
+          
+        }
+      }
+    }
+  }
+
+  .chart-top{
+    height: 68px;
+  }
+  .module-bottom{
+    padding: 20px 30px;
+  }
+  .chart-bottom{
+    height: 260px;
+    margin-top: 35px;
+  }
+  .top-view{
+    .top-item{
+      display: flex;
+      margin-bottom: 15px;
+      cursor: pointer;
+      .top-icon{
+        display: flex;
+        width: 34px;
+        height: 34px;
+        margin-right: 10px;
+        img{
+          margin: auto 0 auto 0;
+        }
+      }
+      .top-img{
+        display: flex;
+        width: 34px;
+        height: 34px;
+        border: 1px solid #fee170;
+        border-radius: 50%;
+        overflow: hidden;
+        img{
+          margin: auto;
+          width: 100%;
+          box-sizing: border-box;
+        }
+        
+      }
+      .top-name{
+        width: 66px;
+        height: 34px;
+        line-height: 34px;
+        font-size: 12px;
+        color: #1b1b1b;
+        text-align: center;
+      }
+      .top-width{
+        width: calc(100% - 200px);
+        height: 34px;
+        box-sizing: border-box;
+        padding-top: 9px;
+        position: relative;
+        margin-right: 20px;
+        display: flex;
+        div{
+          height: 16px;
+          border-radius: 8px;
+        }
+        span{
+          font-size: 12px;
+          line-height: 16px;
+          color: #454545;
+          margin-left: 10px;
+        }
+        .top-bar0{
+          background-image: linear-gradient( 0deg, rgb(255,161,70) 0%, rgb(248,119,79) 100%);
+        }
+        .top-bar1{
+          background-image: linear-gradient( 0deg, rgb(251,178,118) 0%, rgb(238,148,76) 97%);
+        }
+        .top-bar2{
+          background-image: linear-gradient( 0deg, rgb(228,185,80) 0%, rgb(244,172,95) 100%);
+        }
+        .top-bar3{
+          background: #e0e4e8;
+        }
+        .top-bar4{
+          background: #e0e4e8;
+        }
+      }
+      .top-num{
+        display: flex;
+        img{
+          margin: auto 3px auto 0;
+          width: 22px;
+        }
+        span{
+          font-size: 12px;
+          color: #dea21c;
+          margin: auto 0;
+        }
+      }
+    }
+  }
+  
+}
+</style>

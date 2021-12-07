@@ -195,8 +195,8 @@
                         class="EditPostInput flex-content"
                         clearable>
                       </el-input>
-                      <a :href="isHttps?'http://172.16.10.90:8528/iis.aspx?ip='+formData.ip+'&user='+formData.iisftpuser+'&pwd='+formData.iisftppwd+'&path='+formData.logspath+'&web=https://www.'+formData.domain:'http://172.16.10.90:8528/iis.aspx?ip='+formData.ip+'&user='+formData.iisftpuser+'&pwd='+formData.iisftppwd+'&path='+formData.logspath+'&web=http://www.'+formData.domain" target="_blank" class="link">IIS 分析</a>
-                      <!--<span @click="handleIIS" class="link">IIS 分析</span>-->
+                      <!--<a :href="isHttps?'http://172.16.10.90:8528/iis.aspx?ip='+formData.ip+'&user='+formData.iisftpuser+'&pwd='+formData.iisftppwd+'&path='+formData.logspath+'&web=https://www.'+formData.domain:'http://172.16.10.90:8528/iis.aspx?ip='+formData.ip+'&user='+formData.iisftpuser+'&pwd='+formData.iisftppwd+'&path='+formData.logspath+'&web=http://www.'+formData.domain" target="_blank" class="link">IIS 分析</a>-->
+                      <span @click="handleIIS" class="link">IIS 分析</span>
                   </div>
               </li>
               <li v-if="writePermit.includes('ftpremarks')||readPermit.includes('ftpremarks')">
@@ -1204,7 +1204,8 @@ export default {
       iisForm.weburl='http://www.'+$this.formData.domain;
       $this.$store.dispatch('Weblog/getloglistAction',iisForm).then(res=>{
         if(res.status){
-
+          var routeUrl =  $this.$router.resolve({path: "/Weblog/lists",query: {webip:$this.formData.ip,webuser:$this.formData.iisftpuser,webpwd:$this.formData.iisftppwd,path:$this.formData.logspath,weburl:$this.formData.domain}});
+          window.open(routeUrl.href,'_blank');
         }else{
           $this.$message({
             showClose: true,
