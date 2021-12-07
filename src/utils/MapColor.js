@@ -17,12 +17,12 @@
             }
             var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
             var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
-            defaulColor=['#f66262','#fdb76a','#496bf2','#a4b8de','#e4e5ea'];
+            defaulColor=['#ae1222','#f27042','#f94439','#496bf3','#e3e3e9'];
             var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1]; 
         }else{
             minAverage=10;
             var averArr=['0-'+minAverage];
-            defaulColor=['#e4e5ea'];
+            defaulColor=['#e3e3e9'];
             var numList=[minAverage*1];          
         }
     var valDateObj={}

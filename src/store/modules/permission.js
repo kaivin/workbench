@@ -319,10 +319,16 @@ function setRoutes(routers){
         meta: {id:'workInfo-95',title: '工单详情', icon: null, keepAlive:false},
       },
       {
-        path: "/Weblog/lists",
+        path: "/Weblog/logList",
         name:'WeblogLists',
-        component: () => import("@/views/Weblog/lists/index.vue"),
-        meta: {id:'Webloglists-95',title: '工单详情', icon: null, keepAlive:false},
+        component: () => import("@/views/Weblog/logList/index.vue"),
+        meta: {id:'Webloglists-95',title: '日志列表', icon: null, keepAlive:false},
+      },
+      {
+        path: "/Weblog/logInfo",
+        name:'WeblogInfo',
+        component: () => import("@/views/Weblog/logInfo/index.vue"),
+        meta: {id:'WeblogInfo-95',title: '日志详情', icon: null, keepAlive:false},
       },
       {
         path: "/Demo/index",

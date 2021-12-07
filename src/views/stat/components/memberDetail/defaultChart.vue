@@ -34,7 +34,7 @@
                           <template slot-scope="scope">
                               <p class="totalnum">
                                   <i class="awardicon"></i>
-                                  <span>X{{scope.row.totalnum}}</span>
+                                  <span>x{{scope.row.totalnum}}</span>
                               </p>
                           </template>
                     </el-table-column>
@@ -109,7 +109,7 @@ export default {
                 color:$this.currentData.ChartData.length==1?$this.currentData.ChartColor[0]:$this.currentData.ChartColor,
                 appendPadding:[15,15,0,15],
                 yAxis:{
-                    tickCount:6,
+                    tickCount:3,
                     grid:{
                         line:{
                           style:{
@@ -193,7 +193,7 @@ export default {
           seriesField:'name',
           color:$this.currentData.ChartData.length==1?$this.currentData.ChartColor[0]:$this.currentData.ChartColor,
           yAxis:{
-            tickCount:6,
+            tickCount:5,
             grid:{
               line:{
                 style:{
@@ -304,7 +304,7 @@ export default {
                 },
             },
             yAxis: {
-                tickCount:6,
+                tickCount:5,
                 grid: {
                     line: {
                         style: {

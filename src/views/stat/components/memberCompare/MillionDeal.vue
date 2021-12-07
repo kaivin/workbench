@@ -23,7 +23,7 @@
                     <div v-else class="nopic" :class="item.ranking<4?'headImgBorder':''"><span></span></div>  
                 </div>
                 <div class="userName">                
-                    <span>{{item.ownuser}}</span>                    
+                    <span>{{item.ownuser}}-{{item.deptName}}</span>                    
                 </div>
                 <div class="milNum flex-content">
                      <p>×{{item.number}}</p>

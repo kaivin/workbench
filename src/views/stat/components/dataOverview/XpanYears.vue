@@ -22,7 +22,6 @@
       </div>
       <div class="chart-bottom" id="XpanYearsChartBot"></div>
     </div>
-
   </div>
 </template>
 
@@ -91,7 +90,6 @@ export default {
         var newYear = newDate.getFullYear();
         var startTime = newYear + "/01";
         var endTime = newYear + "/12";
-       
         var baseDepart = "";
         var contrastDepartArr = [];
         this.departList.forEach(function(item,index){
@@ -151,8 +149,10 @@ export default {
             },
             maxColumnWidth:16,
             columnStyle:{
-              fill:'#a6c0f5',
-              cursor: 'pointer'
+              fill:'#b0c9ff',
+              cursor: 'pointer',
+              fillOpacity:1,
+              opacity:1,
             },
             meta: {
               xunnumber: {
@@ -233,7 +233,7 @@ export default {
             angleField: 'yearcount',
             colorField: 'departname',
             radius: 1,
-            color:['#5b79d6','#8ae45b','#f8c34e','#ee6666','#3abaf4'],
+            color:['#1760ff','#3fcaff','#ffc857','#fe3a33','#8ae45b'],
             label: {
               type: 'inner',
               offset: '-30%',

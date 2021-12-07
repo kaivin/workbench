@@ -274,16 +274,13 @@ export default {
             color: #3c3c3c;
           }
           .top-bar0{
-            background-color: rgb(252, 84, 75);
-            box-shadow: 0px 5px 10px 0px rgba(240, 156, 148, 0.51);
+            background-color:#fc544b;
           }
           .top-bar1{
-            background-color: rgb(255, 172, 92);
-            box-shadow: 0px 5px 10px 0px rgba(247, 182, 119, 0.51);
+            background-color:#ff8317;
           }
           .top-bar2{
-            background-color: rgb(255, 218, 128);
-            box-shadow: 0px 5px 10px 0px rgba(248, 207, 179, 0.51);
+            background-color:#fac322;
           }
           .top-bar3{
             background: #d1dbe4;

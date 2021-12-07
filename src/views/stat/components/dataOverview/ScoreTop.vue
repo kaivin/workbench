@@ -277,19 +277,19 @@ export default {
           margin-left: 10px;
         }
         .top-bar0{
-          background-image: linear-gradient( 0deg, rgb(255,161,70) 0%, rgb(248,119,79) 100%);
+          background-image: linear-gradient( 0deg,#fc544b 0%,rgba(252,84,75,0.8) 100%);
         }
         .top-bar1{
-          background-image: linear-gradient( 0deg, rgb(251,178,118) 0%, rgb(238,148,76) 97%);
+          background-image: linear-gradient( 0deg,#ff8317 0%,rgba(255,131,23,0.8) 100%);
         }
         .top-bar2{
-          background-image: linear-gradient( 0deg, rgb(228,185,80) 0%, rgb(244,172,95) 100%);
+          background-image: linear-gradient( 0deg,#fac322 0%,rgba(250,195,34,0.8) 100%);
         }
         .top-bar3{
-          background: #e0e4e8;
+          background: #d1dbe4;
         }
         .top-bar4{
-          background: #e0e4e8;
+          background: #d1dbe4;
         }
       }
       .top-num{

@@ -25,29 +25,36 @@
                     background-color:  #2f88ff;
                     color: #fff;
                 }
+                &.active{
+                    position: relative;
+                    &:after{
+                        content:'';
+                        position: absolute;
+                        width: 12px;
+                        height: 12px;
+                        border-left: 1px solid #f3f3f3;
+                        border-top: 1px solid #f3f3f3;
+                        background: #f6f7f8;
+                        transform: rotate(55deg) skew(20deg);
+                        left: 35px;
+                        top:37px;
+                    }
+                }
             }
         }
         
     }
     .choosePerson{
-            margin-top: 16px;
-            margin-left: 75px;
-            padding-top:5px;
-            padding-bottom:5px;
-            padding-left: 12px;
-            max-width: 1400px;
-            border: solid 1px #f3f3f3;
-            position: relative;
-            .decor{
-                position: absolute;
-                width: 12px;
-                height: 12px;
-                border-left: 1px solid #f3f3f3;
-                border-top: 1px solid #f3f3f3;
-                background: #fff;
-                transform: rotate(55deg) skew(20deg);
-                left: 35px;
-                top: -7px;
+            &.active{
+                margin-top: 16px;
+                margin-left: 75px;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                padding-left: 12px;
+                max-width: 1400px;
+                border: solid 1px #f0f0f0;
+                position: relative;
+                background: #f6f7f8;
             }
             .departItems{
                 .item-checkbox{
@@ -97,19 +104,9 @@
             padding-bottom:5px;
             padding-left: 12px;
             max-width: 1400px;
-            border: solid 1px #f3f3f3;
+            border: solid 1px #f0f0f0;
             position: relative;
-            .decor{
-                position: absolute;
-                width: 12px;
-                height: 12px;
-                border-left: 1px solid #f3f3f3;
-                border-top: 1px solid #f3f3f3;
-                background: #fff;
-                transform: rotate(55deg) skew(20deg);
-                left: 35px;
-                top: -7px;
-            }
+            background: #f6f7f8;
             .departItems{
                 .item-checkbox{
                     float: left;
@@ -609,9 +606,8 @@
         }
         .el-table .el-table__cell{
             padding: 20px 0;
-            color: #999999;
+            color: #333;
             font-size: 14px;
-            color: #999;
         }
         .el-table--border::after{
             display: none;
@@ -701,13 +697,19 @@
             width: 52px;
             height: 52px;
             border-radius: 50%;
-            border: solid 2px #8fb2f3;
+            border-width:2px;
+            border-style: solid;
             margin-right: 16px;
             overflow: hidden;
         }
+        &:first-child{.user_img{border-color:#8fb2f3;}}
+        &:first-child+.compareWhoItem{.user_img{border-color:#ffc544;}}
+        &:first-child+.compareWhoItem+.compareWhoItem{.user_img{border-color:#77e5b3;}}
+        &:first-child+.compareWhoItem+.compareWhoItem+.compareWhoItem{.user_img{border-color:#fa9472;}}
         &.nouser{
             .user_img{
-            border: dashed 2px #e6e6e6;
+                border-color:#e6e6e6!important;
+                border-style: dashed;
             }
         }
         .user_name{

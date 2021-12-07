@@ -7,8 +7,7 @@
                 <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
                 </div>
           </div>
-          <div class="choosePerson">
-                <div class="decor"></div>
+          <div class="choosePerson" :class="searchData.dept_id?'active':''">
                 <div class="departItems">
                     <p class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="(item,index) in choosePerson" :key="index" v-on:click="PersonChange(searchData.dept_id,item.id)"><i></i><span>{{item.name}}</span></p>
                 </div>
@@ -121,12 +120,7 @@ export default {
                         var objItem={};
                         objItem.name=item.name;
                         objItem.id=item.id;
-                        if(index==0){
-                          objItem.isOn=true;
-                          $this.searchData.dept_id=item.id;
-                        }else{
-                          objItem.isOn=false;
-                        }
+                        objItem.isOn=false;
                         department.push(objItem);
                     });
                     $this.department=department;
@@ -236,6 +230,19 @@ export default {
       $this.getCnDepartList();
       $this.GetInquiryResult();
     },
+    // 返回部门数据
+    getDeap(varDate){
+      var $this = this;
+      var deptName='';
+      if($this.department&&$this.department.length>0){
+        $this.department.forEach(function(item,index){
+          if(varDate==item.id){
+             deptName=item.name
+          }
+        });
+      }
+      return deptName;
+    },
     // 获取中文询盘、成交等情况
     GetInquiryResult(){
       var $this = this;
@@ -246,6 +253,7 @@ export default {
               $this.unpayInquiry = rankingWithTotalItem(response.xunulist,'number');
               $this.unpayInquiry.forEach(function(item){
                 item.number = numSeparate(item.number);
+                item.deptName=$this.getDeap(item.dept_id);
               });
               if(response.xunulist.length < 9){
                   $this.unpayInquirySet.ifFold = false;
@@ -259,6 +267,7 @@ export default {
               $this.dealScore = rankingWithTotalItem(response.scorelist,'score');
               $this.dealScore.forEach(function(item){
                 item.score = numSeparate(Math.floor(item.score*100)/100);
+                item.deptName=$this.getDeap(item.dept_id);
               });
               if(response.scorelist.length < 9){
                   $this.dealScoreSet.ifFold = false;
@@ -272,9 +281,13 @@ export default {
               $this.payMember = rankingWithTotalItem(response.semulist,'number');
               $this.payMember.forEach(function(item){
                 item.number = numSeparate(item.number);
+                item.deptName=$this.getDeap(item.dept_id);
               });
               // 百万成交
               $this.millionDeal = rankingWithTotalItem(response.Alist,'number');
+              $this.millionDeal.forEach(function(item){
+                item.deptName=$this.getDeap(item.dept_id);
+              });
               if(response.Alist.length < 3){
                   $this.millionDealSet.ifFold = false;
                   $this.millionDealSet.boxHeight = "auto";
@@ -289,6 +302,7 @@ export default {
               $this.awardMoney = rankingWithTotalItem(moneyarr,'allmoney');
               $this.awardMoney.forEach(function(item){
                 item.allmoney = numSeparate(Math.floor(item.allmoney*100)/100);
+                item.deptName=$this.getDeap(item.dept_id);
               });
               if(response.moneylist.length < 9){
                   $this.awardMoneySet.ifFold = false;

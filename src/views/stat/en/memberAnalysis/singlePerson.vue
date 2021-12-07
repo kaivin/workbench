@@ -7,8 +7,7 @@
                 <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
                 </div>
            </div>
-           <div class="choosePerson">
-                <div class="decor"></div>
+           <div class="choosePerson" :class="searchData.dept_id?'active':''">
                 <div class="departItems">
                     <p class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="(item,index) in choosePerson" :key="index" v-on:click="PersonChange(item.id)"><i></i><span>{{item.name}}</span></p>
                 </div>
@@ -525,7 +524,7 @@ export default {
                 if(res.userinfo.postionname&&res.userinfo.postionname!=''&&res.userinfo.postionname!=null){
                     $this.userBasicInfo.postionname=res.userinfo.postionname;
                 }else{
-                    $this.userBasicInfo.postionname='无数据';
+                    $this.userBasicInfo.postionname='组员';
                 }
                 $this.userBasicInfo.headimg=res.userinfo.headimg;
                 $this.ChartTab=ChartTab;
@@ -649,6 +648,33 @@ export default {
         var $this = this;
         var nowyear = $this.MixData.nowYear;
         var lastyear = $this.MixData.lastYear;
+        //平均值
+        if(nowyear&&nowyear.length>0){
+            var tolNum=0;
+            nowyear.forEach(function(item,index){
+                tolNum=tolNum+item.number;
+            });
+            var avg=(tolNum/nowyear.length).toFixed(2)*1;
+        }
+        //别名设置
+        var aliasName='';
+        var lastaliasName='';
+        if($this.currentTab=='enquirie'){
+            aliasName='今年询盘';
+            lastaliasName='去年询盘';
+        }
+        if($this.currentTab=='clinchScore'){
+            aliasName='今年成交积分';
+            lastaliasName='去年成交积分';
+        }
+        if($this.currentTab=='clinchNum'){
+            aliasName='今年100万成交个数';
+            lastaliasName='去年100万成交个数';
+        }
+        if($this.currentTab=='money'){
+            aliasName='今年总奖金';
+            lastaliasName='去年总奖金';
+        }
         //计算y轴显示的最大数值
         var maxnum = 0;
         for(var i=0;i<nowyear.length;i++){
@@ -725,7 +751,7 @@ export default {
                             }
                         },
                         number: {
-                            alias: '今年询盘',
+                            alias:aliasName,
                         },
                     },
                     label: {
@@ -733,19 +759,29 @@ export default {
                     },
                     annotations: [
                         {
-                            type: 'line',
-                            start: ['min', 'median'],
-                            end: ['max', 'median'],
+                            type: "line",
+                            start: ["min",avg],
+                            end: ["max",avg],
+                            top: true,
+                            offsetY: 0,
+                            offsetX: 0,
                             style: {
-                                stroke: '#5fce45',
-                                lineWidth: 2,
-                                lineDash: [8, 4]
+                                stroke: "#5fce45",
+                                lineDash: [8, 4],
+                                lineWidth:1,
                             },
                         },
-                    ],
-                    columnStyle: {
-                        fill: 'l(270) 0:#b9cff4 0.5:#a0bff4 1:#82adf2'
-                    },
+                        // 平均值
+                        {
+                            type: "html",
+                            position: ["max", avg],
+                            top: true,
+                            html:"<span class='chart-font target'><span class='txt-font'>" + avg + "</span><i></i></span>",
+                            alignX: "left",
+                            alignY: "bottom",
+                        },
+                    ],                    
+                    columncolor:'#9bbaff',
                 },
             },
             {
@@ -780,7 +816,7 @@ export default {
                             }
                         },
                         number: {
-                            alias: '去年询盘',
+                            alias:lastaliasName,
                         },
                     },
                     yAxis: {
@@ -833,7 +869,7 @@ export default {
                       objItem.addtime=item.addtime;
                       objItem.content=item.content;
                       if(item.content.indexOf("排名第一")>=0){
-                          objItem.tap='询盘TOP1';
+                          objItem.tap='询盘Top1';
                           objItem.icon='icon01';
                       }
                       if(item.content.indexOf("销售冠军")>=0){
@@ -841,11 +877,11 @@ export default {
                           objItem.icon='icon01';
                       }
                       if(item.content.indexOf("成交单")>=0){
-                          objItem.tap='成交TOP1';
+                          objItem.tap='成交Top1';
                           objItem.icon='icon01';
                       }
                       if(item.content.indexOf("部门奖金")>=0){
-                          objItem.tap='奖金TOP1';
+                          objItem.tap='奖金Top1';
                           objItem.icon='icon01';
                       }
                       if(item.content.indexOf("最高询盘")>=0){

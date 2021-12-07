@@ -8,7 +8,6 @@
                 </div>
            </div>
            <div class="multiSelect">
-                <div class="decor"></div>
                 <div class="departItems">
                     <p class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="(item,index) in choosePerson" :key="index" v-on:click="PersonChange(item.id)"><i></i><span>{{item.name}}</span></p>
                 </div>

@@ -149,14 +149,14 @@ export default {
               label:null
             },
             maxColumnWidth:16,
-            color:'#f7d996',
+            color:'#ffc857',
             // areaStyle: () => {
             //   return {
             //     fill: '#f7d996',
             //   };
             // },
             lineStyle:{
-              fill:'#f7d996',
+              fill:'#ffc857',
               
             },
             meta: {
@@ -231,7 +231,7 @@ export default {
             data:chartBotData,
             xField: 'departname',
             yField: 'avgallmoney',
-            maxColumnWidth:16,
+            maxColumnWidth:19,
             xAxis: {
               grid:null,
               line:{
@@ -264,7 +264,7 @@ export default {
               grid: {
                 line: {
                   style: {
-                    stroke: "#cccccc",
+                    stroke: "#ebebeb",
                     lineWidth: 1,
                     lineDash: [3, 2],
                     strokeOpacity: 0.3,
@@ -294,7 +294,7 @@ export default {
               fields: ['avgallmoney'],
             },
             columnStyle:{
-              fill:'l(270) 0:#d4e3f9  1:#b9d1f6',
+              fill:'l(270) 0:#9bbaff  1:#2f70ff',
               cursor: 'pointer'
             }
           });

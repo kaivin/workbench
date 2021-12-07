@@ -132,8 +132,10 @@ export default {
             color:'#8bb2f2',
             maxColumnWidth:16,
             columnStyle:{
-              fill:'#8bb2f2',
-              cursor: 'pointer'
+              fill:'#b0c9ff',
+              cursor: 'pointer',
+              fillOpacity:1,
+              opacity:1,
             },
             meta: {
               a_number: {
@@ -234,6 +236,20 @@ export default {
             axisLabel:{
               color:'#333',
             },
+            grid: {
+              line: {
+                style: {
+                  stroke: "#ebebeb",
+                  lineWidth: 1,
+                  lineDash: [3, 2],
+                  strokeOpacity: 0.3,
+                  shadowColor: null,
+                  shadowBlur: 0,
+                  shadowOffsetX: 0,
+                  shadowOffsetY: 0,
+                },
+              },
+            },
             splitLine:{
               lineStyle:{
                 type:'dotted',
@@ -284,7 +300,7 @@ export default {
                 color:'#333'
               },
               itemStyle:{
-                color:'#79a4f7',
+                color:'#869eff',
                 opacity:0.2,
                
               },
@@ -295,8 +311,7 @@ export default {
               },
               data: seriesData,
               z: 10
-            },
-            
+            },            
           ]
         };
         this.myChart = myChart;

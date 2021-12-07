@@ -157,3 +157,128 @@
         }
     }
 }
+.weblog{
+    .box-card .el-card__header{
+        padding:0px;
+        background:none;
+    }
+    .search-wrap{
+        padding:15px;
+        background:#fff;
+        .item-search{
+            float:left;
+            padding: 10px 10px 10px 0;
+        }
+        .date-picker{
+            vertical-align: top;
+        }
+        .input-panel{
+            width: 190px;
+        }
+        .select-panel{
+            width: 150px;
+        }
+    }
+    .search-weblog{
+        padding:5px 15px 15px 15px;
+        background: #fff;
+        margin-left: -15px;
+        li{
+            float: left;
+            width: calc(33.3333% - 15px);
+            margin-top: 10px;
+            margin-left: 15px;
+            border:1px solid #e6ebf5;
+            border-radius:4px;
+            padding: 5px 10px;
+            font-size: 13px;
+            line-height: 20px;
+            cursor: pointer;
+            &.active,&:hover{
+                background:#0970ff;
+                border: 1px solid #0970ff;
+                span{
+                    color:#fff;
+                }
+            }
+        }
+    }
+    .msg-table{
+        .msg-text{
+            p{
+                display: block;
+                padding: 3px 0;
+                line-height:0;
+                font-size:0;
+                strong{
+                    display: inline-block;
+                    color: #666;
+                    font-weight: bold;
+                    font-size: 12px;
+                    vertical-align: top;
+                    line-height: 1.6;
+                }
+                &.star-p{
+                    strong{
+                        line-height: 20px;
+                    }
+                }
+                .svg-i{
+                    color: #fc5457;
+                    display: inline-block;
+                    width: 20px;
+                    height: 20px;
+                }
+                .txt-span{
+                    display: inline-block;
+                    color: #666;
+                    font-size: 12px;
+                    line-height:1.6;
+                    vertical-align: top;
+                }
+                .txt-link{
+                    display: inline-block;
+                    color: $menuActiveText;
+                    font-size: 12px;
+                    line-height: 1.6;
+                    vertical-align: top;
+                    cursor: pointer;
+                    &.num-span{
+                        margin-left: 5px;
+                    }
+                    &:hover{
+                        text-decoration: underline;
+                    }
+                }
+            }
+            .txt-api{
+                strong,span{
+                    color: #FF3300;
+                }
+            }
+            &.input-msg{
+                p{
+                    .txt-strong,.txt-span{
+                        line-height: 28px;
+                    }
+                    .checkbox-inline{
+                        margin-right:10px;
+                    }
+                }
+            }
+            &.textarea-msg{
+                p{
+                    .txt-strong{
+                        display: block;
+                        margin-bottom: 4px;
+                    }
+                }
+            }
+        }
+        .table-button{
+            .el-button{
+                margin: 4px 0;
+            }
+        }
+    }
+}

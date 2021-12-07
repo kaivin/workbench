@@ -1202,18 +1202,9 @@ export default {
       iisForm.ftppwd=$this.formData.iisftppwd;
       iisForm.path=$this.formData.logspath;
       iisForm.weburl='http://www.'+$this.formData.domain;
-      $this.$store.dispatch('Weblog/getloglistAction',iisForm).then(res=>{
-        if(res.status){
-          var routeUrl =  $this.$router.resolve({path: "/Weblog/lists",query: {webip:$this.formData.ip,webuser:$this.formData.iisftpuser,webpwd:$this.formData.iisftppwd,path:$this.formData.logspath,weburl:$this.formData.domain}});
-          window.open(routeUrl.href,'_blank');
-        }else{
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: 'error'
-          });
-        }
-      });
+      
+      var routeUrl =  $this.$router.resolve({path: "/Weblog/logList",query: {ip:$this.formData.ip,ftpuser:$this.formData.iisftpuser,ftppwd:$this.formData.iisftppwd,path:$this.formData.logspath,weburl:$this.formData.domain}});
+      window.open(routeUrl.href,'_blank');
     },
   }
 }

@@ -156,11 +156,11 @@ export default {
               line:null,
               label:null
             },
-            color:'#5470c6',
+            color:'#2569ff',
             
             areaStyle: () => {
               return {
-                fill: 'l(270) 0:#ffffff 0.5:#7690de 1:#7690de',
+                fill: 'l(270) 0:#ffffff 0.5:#2569ff 1:#2569ff',
                 lineWidth:1,
                 
               };
@@ -271,7 +271,7 @@ export default {
             colorField: 'departname',
             radius: 1,
             innerRadius: 0.6,
-            color:['#5b79d6','#8ae45b','#f8c34e','#ee6666','#3abaf4'],
+            color:['#1760ff','#3fcaff','#ffc857','#fe3a33','#8ae45b'],
             label: {
               type: 'inner',
               autoHide:true,
