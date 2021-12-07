@@ -138,7 +138,7 @@ export default {
                     var objItem={};        
                     objItem.name=item.name;
                     objItem.totalnum=numSeparate(item.xunnumber);
-                    objItem.avgnum=numSeparate(item.avgnumber);
+                    objItem.avgnum=numSeparate(item.avgnumber.toFixed(2)*1);
                     objItem.historynum=numSeparate(item.maxmonthnumber);
                     objItem.color=ChartColor[index];
                     leftChartData.push(objItem);
@@ -171,8 +171,8 @@ export default {
                 res.leftyearscorecompare.forEach(function(item,index){        
                     var objItem={};        
                     objItem.name=item.name;
-                    objItem.totalnum=numSeparate(item.score);
-                    objItem.avgnum=numSeparate(item.avgscore);
+                    objItem.totalnum=numSeparate(item.score.toFixed(2)*1);
+                    objItem.avgnum=numSeparate(item.avgscore.toFixed(2)*1);
                     objItem.historynum=numSeparate(item.maxmonthscore);
                     objItem.color=ChartColor[index];
                     leftChartData.push(objItem);
@@ -248,7 +248,7 @@ export default {
                     var objItem={};        
                     objItem.name=item.name;
                     objItem.totalnum=numSeparate(item.money.toFixed(2)*1);
-                    objItem.avgnum=numSeparate(item.avgmoney);
+                    objItem.avgnum=numSeparate(item.avgmoney.toFixed(2)*1);
                     objItem.historynum=numSeparate(item.maxmonthmoney);
                     objItem.color=ChartColor[index];
                     leftChartData.push(objItem);
