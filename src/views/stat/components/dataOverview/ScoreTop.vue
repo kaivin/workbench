@@ -268,7 +268,6 @@ export default {
         display: flex;
         div{
           height: 16px;
-          border-radius: 8px;
         }
         span{
           font-size: 12px;

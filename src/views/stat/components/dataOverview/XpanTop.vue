@@ -285,7 +285,6 @@ export default {
           div{
             height: 12px;
             margin: auto 0;
-            border-radius: 6px;
           }
           span{
             font-size: 12px;
