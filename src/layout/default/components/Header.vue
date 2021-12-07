@@ -7,11 +7,6 @@
             </router-link>
         </div>
         <div class="header-center">
-            <div class="header-search" v-if="isArticleSearch">
-              <el-input placeholder="请输入内容" v-model="searchWord" @keypress.native.enter="searchResult" size="small" class="article-search">
-                <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span><span class="search-font">搜索</span></el-button>
-              </el-input>
-            </div>
             <div class="header-button" v-if="isArticleAdd||isWebsiteAdd||isWebserverAdd||isCnPhoneAdd||isEnPhoneAdd||isEnCateAdd||isEnProductAdd||isCnCateAdd||isCnProductAdd||isWebsiteAttrAdd||isInformationAdd||isTagAdd||isUserAdd||isDepartAdd||isRoleAdd||isMenuAdd||isPermitAdd||isPromotedAccountAdd||isPromotedChannelAdd||isCnProcessAdd||isCnMoneyAdd||isCnCluesAdd||isEnCluesAdd||isWebsiteLogAdd||isWebMsgIpAdd||iscompareListAdd||isEncompareListAdd||isCntargetlistAdd||isEntargetlistAdd||isWorkOrderTagAdd||isWorkOrderAdd||isDepartScoreAdd||isResourceTypeAdd||isResourceAdd||isCnScoreAdd||isEnScoreAdd||iscompareGroupListAdd||isEncompareGroupListAdd">
               <div class="item-button" v-if="isArticleAdd" v-on:click="articleAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">发布文章</span></div>
               <div class="item-button" v-if="isWebsiteAdd" v-on:click="websiteAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加网站</span></div>
@@ -52,6 +47,11 @@
               <div class="item-button" v-if="isCnScoreAdd" v-on:click="cnScoreAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">中文个人成交添加</span></div>
               <div class="item-button" v-if="isEnScoreAdd" v-on:click="enScoreAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">英文个人成交添加</span></div>
             
+            </div>
+            <div class="header-search" v-if="isArticleSearch">
+              <el-input placeholder="请输入内容" v-model="searchWord" @keypress.native.enter="searchResult" size="small" class="article-search">
+                <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
+              </el-input>
             </div>
         </div>
         <div class="header-right">

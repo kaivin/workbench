@@ -105,34 +105,25 @@
             height: 100%;
             padding: 11px 20px;
             .header-search{
-                width: 300px;
-                float:left;
+                width: 230px;
+                float:right;
                 line-height:0;
                 font-size:0;
                 position: relative;
-                &:after{
-                    content:'';
-                    display: block;
-                    position: absolute;
-                    left: -20px;
-                    top: 5px;
-                    bottom: 5px;
-                    width: 1px;
-                    background: #8e8e8e;
-                }
+                margin-right: 10px;
                 .article-search{
                     width: 100%;
                     .el-input__inner{
-                        background: #323232;
-                        border: 1px solid #4e4e4e;
-                        color: #fff;
+                        background: #fff;
+                        border: 1px solid #0048ff;
+                        color: #1b1b1b;
                         font-size: 14px;
                         border-radius:0;
                         border-right:none;
                     }
                     .el-input-group__append{
-                        background-color: $menuActiveText;
-                        border: 1px solid $menuActiveText;
+                        background-color: #0048ff;
+                        border: 1px solid #0048ff;
                         border-radius:0;
                         color: #fff;
                         font-size:0;

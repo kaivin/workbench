@@ -140,7 +140,6 @@
       }
       .el-submenu{
         .el-menu{
-          padding-left: 10px!important;
           margin-top: 4px;
           .item-link{
             width: 50%;
@@ -149,38 +148,22 @@
             .el-menu-item{
               padding: 0!important;
               min-width: 0!important;
-              height: 28px;
-              line-height: 28px;
+              height: 32px;
+              line-height: 32px;
               font-size: 12px;
-              margin: 4px 0;
-              &:hover{
-                background: none!important;
-                span{
-                  background: #18387f;
-                }
-              }
-              &.is-active{
-                background: none!important;
-                &:before{
-                  display: none;
-                }
-                span{
-                  background: #18387f;
-                }
-              }
+              margin: 2px 0;
               span{
                 display: inline-block;
                 font-size: 12px;
-                padding: 0 10px;
-                height: 28px;
-                line-height: 28px;
+                padding: 0 10px 0 20px;
+                height: 32px;
+                line-height: 32px;
               }
             }
           }
           .item-link.has-children{
             width: 100%;
             float:none;
-            margin-left: -10px;
             margin-bottom: 8px;
             .el-submenu{
               .el-submenu__title{
