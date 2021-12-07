@@ -1168,7 +1168,7 @@ export default {
                           homeRedirect = '/Sales/index?Status=personcount';
                         }else{
                           if(response.data.id==533||response.data.id==1112){
-                              homeRedirect = '/stat/index';
+                              homeRedirect = '/stat/cn/targetShow';
                           }else{
                               homeRedirect = '/Home/index' ;
                           }

@@ -2,10 +2,10 @@
     <div class="login-container flex-wrap">
         <div class="loginFr flex-content">
             <div class="loginFrTop">
-                <p class="logo"><img class="logo-title" v-bind:src="logoFont" alt=""></p>
+                <p class="logo"><img class="logo-title" v-bind:src="logo" alt=""></p>
             </div>
             <div class="loginFrMid flex-content">
-                <p class="loginFrMidIcon"><img class="logo-Icon" v-bind:src="logoIcon" alt=""></p>
+                <p class="loginFrMidIcon"><img class="logo-Icon" v-bind:src="loginImg" alt=""></p>
                 <div class="loginFrMidMain">
                     <h2>欢迎登录</h2>
                     <el-form v-bind:model="loginForm" v-bind:rules="rules" ref="loginForm" class="login-form">                
@@ -88,8 +88,8 @@
 <script>
 import { validEmail,isEmpty } from '@/utils/validate';
 import Cookies from 'js-cookie'
-import logoIcon from "@/assets/images/loginImg.png";
-import logoTitle from "@/assets/top_font.png";
+import loginImg from "@/assets/images/loginImg.png";
+import logo from "@/assets/logo.png";
 const defaultSettings = require('@/settings.js');
 export default {
     name:'Login',
@@ -110,8 +110,8 @@ export default {
         };
         return{
             websiteName:defaultSettings.title,
-            logoIcon:logoIcon,
-            logoFont:logoTitle,
+            loginImg:loginImg,
+            logo:logo,
             loginForm:{
                 username:'',
                 password:''
@@ -216,7 +216,7 @@ export default {
                                 $this.$router.push({ path: $this.redirect || '/Sales/index?Status=personcount' });
                             }else{
                                 if(userInfo.id==533||userInfo.id==1112){
-                                    $this.$router.push({ path: $this.redirect || '/stat/index' });
+                                    $this.$router.push({ path: $this.redirect || '/stat/cn/targetShow' });
                                 }else{
                                     $this.$router.push({ path: $this.redirect || '/' });
                                 }

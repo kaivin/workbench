@@ -6,10 +6,9 @@
       <el-container class="container-layout">
         <sidebar v-if="isSales" />
         <el-main class="main-layout" v-if="isRefresh">
-          <transition name="fade-transform" mode="out-in" v-if="key.indexOf('/stat/')==-1">
+          <transition name="fade-transform" mode="out-in">
               <router-view :key="key"></router-view>
             </transition>
-            <router-view :key="key" v-else></router-view>
         </el-main>
       </el-container>
     </el-container>

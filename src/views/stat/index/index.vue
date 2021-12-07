@@ -15,7 +15,6 @@
 
 <script>
 import sidebar  from '../components/sidebar.vue';
-import { mapGetters } from 'vuex'
 export default {
   name: 'statIndex',
   data() {

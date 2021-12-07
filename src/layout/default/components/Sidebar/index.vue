@@ -2,12 +2,13 @@
     <el-aside class="sidebar-container" :class="sidebar.opened?'':'is-fold'">
       <div class="abs-panel">
         <el-scrollbar wrap-class="scrollbar-wrapper">
-           <el-tooltip class="item" effect="dark" :content="sidebar.opened?'收起':'展开'" placement="right">
-              <hamburger id="hamburger-container" v-bind:is-fold="!sidebar.opened" class="hamburger-container" v-on:toggleClick="toggleSideBar" />
-            </el-tooltip>
+          <el-tooltip class="item" effect="dark" :content="sidebar.opened?'收起':'展开'" placement="right">
+            <hamburger id="hamburger-container" v-bind:is-fold="!sidebar.opened" class="hamburger-container" v-on:toggleClick="toggleSideBar" />
+          </el-tooltip>
           <el-menu
               :default-active="activeMenu"
               :collapse="isCollapse"
+              :default-openeds="openedSubMenu"
               :unique-opened="false"
               :collapse-transition="false"
               mode="vertical"
@@ -23,7 +24,6 @@
 import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
 import Hamburger from '@/components/Hamburger';
-import variables from '@/styles/-variables.scss';
 export default {
   components: { 
         Hamburger,
@@ -31,6 +31,7 @@ export default {
   },
   data(){
     return{
+      openedSubMenu:[],
     }
   },
   computed:{
@@ -43,22 +44,39 @@ export default {
         return route.meta.index;
         // return route.path;
       },
-      variables() {
-        return variables
-      },
       isCollapse() {
         return !this.sidebar.opened
       }
   },
   watch:{
   },
+  mounted(){
+    var $this = this;
+    $this.openedSubMenu = [];
+    $this.findHasChildrenMenu($this.menuData);
+  },
   created() {
   },
   methods:{
     // 侧边导航伸缩
     toggleSideBar() {
-        this.$store.dispatch('app/toggleSideBar')
+      var $this = this;
+      $this.$store.dispatch('app/toggleSideBar').then(()=>{
+        if($this.sidebar.opened){
+          $this.openedSubMenu = [];
+          $this.findHasChildrenMenu($this.menuData);
+        }
+      });
     },
+    // 递归寻找有子导航的菜单，将其path存入数据
+    findHasChildrenMenu(dataArr){
+      var $this = this;
+      dataArr.forEach(function(item){
+        if(item.children.length>0){
+          $this.openedSubMenu.push(item.meta.index);
+        }
+      });
+    }
   }
 }
 </script>

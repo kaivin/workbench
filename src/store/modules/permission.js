@@ -13,7 +13,7 @@ function dataToTree(data){
   return parents;
 }
 function convert(parents,children){
-  parents.forEach(function (item) {
+  parents.forEach(function (item,idx) {
     item.children = [];
     children.forEach(function (current, index) {
         if (current.meta.uid === item.meta.id) {
@@ -26,92 +26,7 @@ function convert(parents,children){
   });
 }
 import Layout from '@/layout/default/index.vue';
-const sonRoute = [
-  {
-    path: "/stat/cn/targetShow",
-    name:'cnTargetShow',
-    component: () => import("@/views/stat/cn/targetShow/index.vue"),
-    meta: {id:'cnTargetShow-118',title: '目标展示', icon: null, keepAlive:false},
-  },
-  {
-    path: "/stat/cn/dataOverview",
-    name:'cnDataOverview',
-    component: () => import("@/views/stat/cn/dataOverview/index.vue"),
-    meta: {id:'cnDataOverview-118',title: '数据总览', icon: null, keepAlive:false},
-  },
-  {
-    path: "/stat/cn/departAnalysis",
-    name:'cnDepartAnalysis',
-    component: () => import("@/views/stat/cn/departAnalysis/index.vue"),
-    meta: {id:'cnDepartAnalysis-118',title: '部门分析', icon: null, keepAlive:false},
-  },
-  {
-    path: "/stat/cn/groupAnalysis",
-    name:'cnGroupAnalysis',
-    component: () => import("@/views/stat/cn/groupAnalysis/index.vue"),
-    meta: {id:'cnGroupAnalysis-118',title: '小组分析', icon: null, keepAlive:false},
-  },
-  {
-    path: "/stat/cn/memberAnalysis",
-    name:'cnMemberAnalysis',
-    component: () => import("@/views/stat/cn/memberAnalysis/index.vue"),
-    meta: {id:'cnMemberAnalysis-118',title: '组员分析', icon: null, keepAlive:false},
-  },
-  {
-    path: "/stat/cn/memberAnalysis/singlePerson",
-    name:'cnSinglePerson',
-    component: () => import("@/views/stat/cn/memberAnalysis/singlePerson.vue"),
-    meta: {id:'cnSinglePerson-118',title: '组员详情', icon: null, keepAlive:false},
-  },
-  {
-    path: "/stat/cn/memberAnalysis/comparePerson",
-    name:'cnPersonContrast',
-    component: () => import("@/views/stat/cn/memberAnalysis/comparePerson.vue"),
-    meta: {id:'cnPersonContrast-118',title: '组员对比', icon: null, keepAlive:false},
-  },
-  {
-    path: "/stat/en/targetShow",
-    name:'enTargetShow',
-    component: () => import("@/views/stat/en/targetShow/index.vue"),
-    meta: {id:'enTargetShow-118',title: '目标展示', icon: null, keepAlive:false},
-  },
-  {
-    path: "/stat/en/dataOverview",
-    name:'enDataOverview',
-    component: () => import("@/views/stat/en/dataOverview/index.vue"),
-    meta: {id:'enDataOverview-118',title: '数据总览', icon: null, keepAlive:false},
-  },
-  {
-    path: "/stat/en/departAnalysis",
-    name:'enDepartAnalysis',
-    component: () => import("@/views/stat/en/departAnalysis/index.vue"),
-    meta: {id:'enDepartAnalysis-118',title: '部门分析', icon: null, keepAlive:false},
-  },
-  {
-    path: "/stat/en/groupAnalysis",
-    name:'enGroupAnalysis',
-    component: () => import("@/views/stat/en/groupAnalysis/index.vue"),
-    meta: {id:'enGroupAnalysis-118',title: '小组分析', icon: null, keepAlive:false},
-  },
-  {
-    path: "/stat/en/memberAnalysis",
-    name:'enMemberAnalysis',
-    component: () => import("@/views/stat/en/memberAnalysis/index.vue"),
-    meta: {id:'enMemberAnalysis-118',title: '组员分析', icon: null, keepAlive:false},
-  },
-  {
-    path: "/stat/en/memberAnalysis/singlePerson",
-    name:'enSinglePerson',
-    component: () => import("@/views/stat/en/memberAnalysis/singlePerson.vue"),
-    meta: {id:'enSinglePerson-118',title: '组员详情', icon: null, keepAlive:false},
-  },
-  {
-    path: "/stat/en/memberAnalysis/comparePerson",
-    name:'enPersonContrast',
-    component: () => import("@/views/stat/en/memberAnalysis/comparePerson.vue"),
-    meta: {id:'enPersonContrast-118',title: '组员对比', icon: null, keepAlive:false},
-  },
-];
+
 /**
  * Filter asynchronous routing tables by recursion
  * @param routes asyncRoutes
@@ -176,7 +91,11 @@ function setRoutes(routers){
   if(userInfo.issales==2){
     homeRedirect = '/Sales/index';
   }else{
-    homeRedirect = '/Home/index';
+    if(userInfo.id==533||userInfo.id==1112){
+      homeRedirect = '/stat/cn/targetShow';
+    }else{
+      homeRedirect = '/Home/index';
+    }
   }
   const accessedRouters = filterRoutes(routers);  
   const parentRoute = [{
@@ -186,6 +105,30 @@ function setRoutes(routers){
     name:"Layout",
     meta: {},
     children: [
+      {
+        path: "/stat/cn/memberAnalysis/singlePerson",
+        name:'cnSinglePerson',
+        component: () => import("@/views/stat/cn/memberAnalysis/singlePerson.vue"),
+        meta: {id:'cnSinglePerson-126',title: '组员详情', icon: null, keepAlive:false},
+      },
+      {
+        path: "/stat/cn/memberAnalysis/comparePerson",
+        name:'cnPersonContrast',
+        component: () => import("@/views/stat/cn/memberAnalysis/comparePerson.vue"),
+        meta: {id:'cnPersonContrast-126',title: '组员对比', icon: null, keepAlive:false},
+      },
+      {
+        path: "/stat/en/memberAnalysis/singlePerson",
+        name:'enSinglePerson',
+        component: () => import("@/views/stat/en/memberAnalysis/singlePerson.vue"),
+        meta: {id:'enSinglePerson-131',title: '组员详情', icon: null, keepAlive:false},
+      },
+      {
+        path: "/stat/en/memberAnalysis/comparePerson",
+        name:'enPersonContrast',
+        component: () => import("@/views/stat/en/memberAnalysis/comparePerson.vue"),
+        meta: {id:'enPersonContrast-131',title: '组员对比', icon: null, keepAlive:false},
+      },
       {
         path: "/Article/info",
         name:'articleInfo',
@@ -345,12 +288,6 @@ function setRoutes(routers){
     ]
   }]
   accessedRouters.forEach(function(item,index){
-    if(item.path=="/stat/index"){
-      item.children = [];
-      sonRoute.forEach(function(item1){
-        item.children.push(item1);
-      });
-    }
     parentRoute[0].children.push(item);
   });
   return parentRoute;

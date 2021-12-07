@@ -3,12 +3,12 @@
         <div class="logo">
             <router-link class="logo-link" :to="homeRedirect">
                 <img class="logo-img" v-bind:src="logo" alt="">
-                <img class="logo-title" v-bind:src="logoFont" alt="">
+                <span class="logo-title">分析系统</span>
             </router-link>
         </div>
         <div class="header-center">
             <div class="header-search" v-if="isArticleSearch">
-              <el-input placeholder="请输入内容" v-model="searchWord" @keypress.native.enter="searchResult" size="mini" class="article-search">
+              <el-input placeholder="请输入内容" v-model="searchWord" @keypress.native.enter="searchResult" size="small" class="article-search">
                 <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span><span class="search-font">搜索</span></el-button>
               </el-input>
             </div>
@@ -83,7 +83,7 @@
             </el-dropdown-menu>
           </el-dropdown>
         </div>
-        <el-dialog title="意见反馈" custom-class="add-edit-dialog feedback" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+        <el-dialog title="意见反馈" custom-class="add-edit-dialog feedback" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px" append-to-body>
           <el-form :model="dialogForm">
             <div class="item-form">
                 <el-input type="textarea" v-model="dialogForm.content" :autosize="{ minRows: 4, maxRows: 8}" placeholder="请尽可能的描述清楚具体页面出现的具体问题" ref="content"></el-input>
@@ -103,7 +103,6 @@
 </template>
 <script>
 import logo from "@/assets/logo.png";
-import logoTitle from "@/assets/logo_font.png";
 import { mapGetters } from 'vuex';
 import Cookies from 'js-cookie'
 import Hamburger from '@/components/Hamburger';
@@ -112,7 +111,6 @@ export default {
         return{
           homeRedirect:"/",
           logo: logo,
-          logoFont:logoTitle,
           searchWord:"",
           dialogFormVisible:false,
           dialogForm:{
@@ -188,7 +186,11 @@ export default {
     if(this.userInfo.issales==2){
       homeRedirect = '/Sales/index';
     }else{
-      homeRedirect = '/Home/index';
+      if(this.userInfo.id==533||this.userInfo.id==1112){
+        homeRedirect = '/stat/cn/targetShow';
+      }else{
+        homeRedirect = '/Home/index';
+      }
     }
     this.homeRedirect = homeRedirect;
     if(this.$route.path=="/Article/index"){

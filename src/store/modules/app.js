@@ -1,7 +1,7 @@
 ﻿import Cookies from 'js-cookie'
 const state = {
   sidebar: {
-    opened: false,
+    opened: Cookies.get('opened') ? JSON.parse(Cookies.get('opened')) : true,
     withoutAnimation: false
   },
   device: 'desktop',
@@ -44,10 +44,12 @@ const state = {
 const mutations = {
   TOGGLE_SIDEBAR: state => {
     state.sidebar.opened = !state.sidebar.opened
+    Cookies.set('opened', state.sidebar.opened)
     state.sidebar.withoutAnimation = false
   },
   CLOSE_SIDEBAR: (state, withoutAnimation) => {
     state.sidebar.opened = false
+    Cookies.set('opened', state.sidebar.opened)
     state.sidebar.withoutAnimation = withoutAnimation
   },
   TOGGLE_DEVICE: (state, device) => {

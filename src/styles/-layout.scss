@@ -1,12 +1,14 @@
 ﻿.header-layout{
     height: auto!important;
     position: relative;
-    background: #323232;
+    background: #ffffff;
     padding:0!important;
+    box-shadow: 0 0 7px rgba(203,203,203,.21);
+    z-index: 1112;
     .header-panel{
         width:100%;
         position: relative;
-        height: 50px;
+        height: 54px;
         display: flex;
         -webkit-box-align: center;
         align-items: center;
@@ -47,14 +49,15 @@
                 display: inline-block;
                 width: 30px;
                 height: 30px;
-                font-size: 30px;
+                font-size: 26px;
                 text-align: center;
                 line-height: 30px;
                 vertical-align: middle;
-                color: #d8d8d8;
-                margin-right: 16px;
+                color: #292929;
+                margin-right: 20px;
                 cursor: pointer;
                 .svg-icon{
+                    margin: 4px 2px 0;
                     vertical-align: top;
                 }
             }
@@ -62,15 +65,15 @@
                 display: inline-block;
                 width: 30px;
                 height: 30px;
-                font-size: 24px;
+                font-size: 20px;
                 text-align: center;
                 line-height: 30px;
                 vertical-align: middle;
-                color: #d8d8d8;
-                margin-right: 16px;
+                color: #292929;
+                margin-right: 10px;
                 cursor: pointer;
                 .svg-icon{
-                    margin: 3px;
+                    margin: 5px;
                     vertical-align: top;
                 }
             }
@@ -78,23 +81,19 @@
                 display: inline-block;
                 width: 30px;
                 height: 30px;
-                font-size: 16px;
-                text-align: center;
-                line-height: 30px;
                 border-radius: 100%;
-                background: #63666c;
+                background: #fff5ed;
+                overflow: hidden;
                 vertical-align: middle;
-                color: #d8d8d8;
                 img{
-                    width: 30px;
-                    height: 30px;
+                    width: 100%;
                     border-radius: 50%;
                 }
             }
             .user-name{
                 display: inline-block;
                 line-height: 30px;
-                color: #fff;
+                color: #1b1b1b;
                 font-size: 14px;
                 font-weight: 500;
                 margin-left: 12px;
@@ -188,7 +187,7 @@
                 }
                 .item-button{
                     display: inline-block;
-                    height: 28px;
+                    height: 32px;
                     background: #f9a500;
                     text-align: center;
                     line-height:0;
@@ -202,15 +201,15 @@
                     }
                     .button-icon{
                         display: inline-block;
-                        height: 28px;
+                        height: 32px;
                         font-size: 14px;
-                        line-height: 28px;
+                        line-height: 32px;
                         vertical-align: top;
                         color: #ffffff;
                     }
                     .button-font{
                         display: inline-block;
-                        line-height: 28px;
+                        line-height: 32px;
                         color: #fff;
                         font-size: 14px;
                         margin-left: 10px;
@@ -226,7 +225,7 @@
             .logo-link {
                 display: block;
                 height: 100%;
-                padding: 13px 18px;
+                padding: 12px 20px;
                 font-size:0;
                 line-height:0;
                 position: relative;
@@ -234,11 +233,28 @@
                     float:left;
                 }
                 .logo-img {
-                    height: 24px;
+                    height: 30px;
                 }
                 .logo-title {
-                    height: 24px;
+                    display: inline-block;
+                    height: 30px;
                     margin-left: 10px;
+                    font-size: 15px;
+                    color: #0e0e0e;
+                    line-height:36px;
+                    font-weight: bold;
+                    padding-left: 8px;
+                    position: relative;
+                    &::before{
+                        content:'';
+                        display: block;
+                        width: 1px;
+                        height: 14px;
+                        background: #ababab;
+                        position: absolute;
+                        left: 1px;
+                        top: 11px;
+                    }
                 }
             }
         }

@@ -5,7 +5,7 @@
   .sidebar-container {
     display: flex;
     flex-direction: column;
-    background:#fff;
+    background:#192136;
     transition: width .25s ease-out;
     width:$sideBarWidth!important;
     overflow: hidden!important;
@@ -35,15 +35,15 @@
       height: 42px;
       position: absolute;
       right:0;
-      top: 12px;
+      top: 24px;
       z-index: 10;
       overflow: hidden;
       cursor: pointer;
       transition: all .3s;
       &.is-fold{
         transform: rotate(180deg);
-        width: 60px;
-        top: 12px;
+        width: 50px;
+        top: 24px;
       }
       &:hover{
         .svg-i{
@@ -55,7 +55,7 @@
         width: 42px;
         height: 42px;
         font-size: 14px;
-        color: #4c516d;
+        color: #a2acc1;
         margin: 0 auto;
         overflow: hidden;
         .svg-icon {
@@ -69,27 +69,29 @@
       border: none;
       height: 100%;
       width: 100% !important;
-      padding-top: 10px;
+      padding-top: 16px;
+      padding-bottom: 20px;
       .item-link{
-        margin-top: 2px;
+        margin-top: 8px;
         display: block;
         transition: all .3s;
         .el-menu-item,.el-submenu__title{
           height: 42px;
           line-height: 42px;
           transition: all .3s;
-          padding-left: 30px!important;
-          color: #4c516d;
+          padding-left: 20px!important;
+          color: #fff;
+          position: relative;
+          font-family: "Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;
           .svg-i{
             display: inline-block;
-            width: 24px;
-            height: 20px;
-            font-size: 18px;
-            vertical-align: -4px;
+            width: 16px;
+            height: 16px;
+            font-size: 16px;
+            vertical-align: -2px;
+            color: #a2acc1;
             .svg-icon {
               display: block;
-              height: 20px;
-              margin: 0 auto;
             }
           }
           .sub-el-icon {
@@ -100,23 +102,29 @@
             height: 1em;
           }
           i{
-            color: #4c516d;
+            color: #a2acc1;
             transition: all .3s;
           }
           span{
             font-size: 14px;
             transition: all .3s;
             vertical-align: 1px;
-            margin-left: 12px;
+            margin-left: 8px;
           }
           &:hover,&:focus{
-            background: #f2f3f5;
-            color: #4c516d;
+            background: #2c344a;
+            color: #fff;
           }
           &.is-active{
-            background: #f2f3f5;
-            .svg-i{
-              color: #ff8000;
+            background: #2c344a;
+            &:before{
+              content:'';
+              height: 100%;
+              position: absolute;
+              top:0;
+              left:0;
+              width: 4px;
+              background: #044bff;
             }
           }
         }
@@ -132,8 +140,62 @@
       }
       .el-submenu{
         .el-menu{
-          padding: 0!important;
-          background: #ffffff!important;
+          padding-left: 10px!important;
+          margin-top: 4px;
+          .item-link{
+            width: 50%;
+            float:left;
+            margin-top:0;
+            .el-menu-item{
+              padding: 0!important;
+              min-width: 0!important;
+              height: 28px;
+              line-height: 28px;
+              font-size: 12px;
+              margin: 4px 0;
+              &:hover{
+                background: none!important;
+                span{
+                  background: #18387f;
+                }
+              }
+              &.is-active{
+                background: none!important;
+                &:before{
+                  display: none;
+                }
+                span{
+                  background: #18387f;
+                }
+              }
+              span{
+                display: inline-block;
+                font-size: 12px;
+                padding: 0 10px;
+                height: 28px;
+                line-height: 28px;
+              }
+            }
+          }
+          .item-link.has-children{
+            width: 100%;
+            float:none;
+            margin-left: -10px;
+            margin-bottom: 8px;
+            .el-submenu{
+              .el-submenu__title{
+                padding: 0 0 0 20px!important;
+                span{
+                  padding:0!important;
+                }
+              }
+              .el-menu-item{
+                padding:0!important;
+              }
+            }
+          }
+        }
+        .el-menu{
           .el-menu-item,.el-submenu__title{
             font-size: 14px;
             padding-left: 56px!important;
@@ -164,7 +226,7 @@
 .hideSidebar {
     .container-layout {
         .sidebar-container {
-          width: 60px !important;
+          width: 50px !important;
         }
         .submenu-title-noDropdown {
           padding: 0 !important;

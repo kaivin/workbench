@@ -1,5 +1,5 @@
 ﻿<template>
-  <div class="item-link" v-if="!item.meta.hidden">
+  <div class="item-link" v-bind:class="item.children&&item.children.length>0?'has-children':''" v-if="!item.meta.hidden">
     <el-submenu v-if="item.children&&item.children.length>0" ref="subMenu" :index="item.meta.index">
       <template slot="title">
         <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />

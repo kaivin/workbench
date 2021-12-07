@@ -146,9 +146,9 @@ export default {
           userView.polygon().state({
             active: {
               style: {
-                lineWidth: 0,
-                stroke:0,
-                fillOpacity:0.8,
+                lineWidth: 1,
+                stroke:"#555",
+                fillOpacity:1,
               },
             },
           })
@@ -157,7 +157,7 @@ export default {
             .tooltip('name*country*number')
             .style({
               fillOpacity: 1,
-              stroke:"#fff"
+              stroke:"#555"
             }).animate({
               leave: {
                 animation: 'fade-out'

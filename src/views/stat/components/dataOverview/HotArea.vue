@@ -258,13 +258,17 @@ export default {
               .tooltip('name*number')
               .style({
                 fillOpacity: 1,
-                stroke:"#fff"
+                stroke:"#999",
+                // shadowColor:"#999",
+                // shadowBlur:1,
+                // shadowOffsetX:1,
+                // shadowOffsetY:1,
               }).state({
                 active: {
                   style: {
-                    lineWidth: 0,
-                    stroke:0,
-                    fillOpacity:0.8,
+                    lineWidth: 1,
+                    stroke:"#555",
+                    fillOpacity:1,
                   },
                 },
               }).animate({
