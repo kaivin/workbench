@@ -609,14 +609,14 @@ export default {
         margin-left: -1px;
         position: relative;
         &:hover{
-          color: #2e88ff;
-          border: 1px solid #2e88ff;
+          color: #496bf2;
+          border: 1px solid #496bf2;
           z-index: 1;
         }
       }
       .active{
-        border: 1px solid #2e88ff;
-        background:#2e88ff;
+        border: 1px solid #496bf2;
+        background:#496bf2;
         color: #fff;
         z-index: 1;
         &:hover{

@@ -850,14 +850,23 @@
                 font-weight: normal;
             }
             .el-table .cell span{
+                position: relative;
+                text-align: left;
+                &.name1,&.name2,&.name3,&.name4{
+                    display: block;
+                    padding-left:25px;
+                }
                 &:before{
                     content: '';
-                    display: inline-block;
-                    vertical-align: middle;
+                    position:absolute;
+                    left:12px;
+                    top:50%;
+                    display:block;
                     width: 6px;
 	                height: 6px;
                     border-radius: 50%;
                     margin-right: 6px;
+                    margin-top:-3px;
                     background-color: #8fb2f3;
                 }
             }
