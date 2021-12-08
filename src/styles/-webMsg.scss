@@ -182,24 +182,70 @@
     .search-weblog{
         padding:5px 15px 15px 15px;
         background: #fff;
-        margin-left: -15px;
-        li{
-            float: left;
-            width: calc(33.3333% - 15px);
-            margin-top: 10px;
-            margin-left: 15px;
-            border:1px solid #e6ebf5;
-            border-radius:4px;
-            padding: 5px 10px;
-            font-size: 13px;
-            line-height: 20px;
-            cursor: pointer;
-            &.active,&:hover{
-                background:#0970ff;
-                border: 1px solid #0970ff;
+        position: relative;
+        margin-bottom: 25px;
+        ul{
+            clear: both;
+            display: block;
+            margin-left: -15px;
+            overflow: hidden;
+            li{
+                float: left;
+                width: calc(16.6666% - 15px);
+                margin-top: 10px;
+                margin-left: 15px;
+                border:1px solid #e6ebf5;
+                border-radius:4px;
+                padding: 5px 10px;
+                font-size: 13px;
+                line-height: 20px;
+                cursor: pointer;
                 span{
-                    color:#fff;
+                    clear: both;
+                    display: block;
+                    text-align: left;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
                 }
+                &.active,&:hover{
+                    background:#0970ff;
+                    border: 1px solid #0970ff;
+                    span{
+                        color:#fff;
+                    }
+                }
+            }
+        }
+        i{
+            width: 60px;
+            height:0px;
+            position: absolute;
+            cursor: pointer;
+            left: 50%;
+            margin-left: -30px;
+            bottom: -15px;
+            border-top: 15px solid #e2e3e8;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom:0px;
+            transition: all 0.3s ease;
+            &:before{
+                content: '';
+                display: block;
+                position: absolute;
+                left: 50%;
+                margin-left: -6px;
+                top: -10px;
+                width: 0;
+                height: 0;
+                border-left:5px solid transparent;
+                border-right:5px solid transparent;
+                border-top:5px solid #fff;
+                border-bottom:0px;
+            }
+            &:hover{
+                border-top-color:#0970ff;
             }
         }
     }

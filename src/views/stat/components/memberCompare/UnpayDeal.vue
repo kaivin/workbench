@@ -26,7 +26,7 @@
                     </div>
                     <div v-else class="nopic" :class="item.ranking<4?'headImgBorder':''"><span></span></div>  
                   </div>
-                  <div class="userName"><span>{{item.ownuser}}-{{item.deptName}}</span></div>
+                  <div class="userName"><span>{{item.ownuser}} - <span class="dept">{{item.deptName}}</span></span></div>
                   <div class="userInquiry flex-content" v-if="lang =='ch'">
                       <span v-if="item.ranking<4" :class="'num0'+(item.ranking)"> 
                         {{item.score}}分

@@ -2,7 +2,7 @@
   <div class="hxpage minHxpage">
     <div class="module-top">
       <div class="title-view">
-        <div class="title">个人年度成交{{language == '中文'?'积分':'个数'}} TOP5</div>
+        <div class="title">年度成交{{language == '中文'?'积分':'个数'}} TOP5</div>
         <div class="unit">（单位：{{language == '中文'?'分':'个'}} <img src="@/assets/no_icon.png" alt="">：百万）</div>
         <div class="more" @click="goPage">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
       </div>
@@ -276,13 +276,13 @@ export default {
           margin-left: 10px;
         }
         .top-bar0{
-          background-image: linear-gradient( 0deg,#fc544b 0%,rgba(252,84,75,0.8) 100%);
+          background:#fc544b;
         }
         .top-bar1{
-          background-image: linear-gradient( 0deg,#ff8317 0%,rgba(255,131,23,0.8) 100%);
+          background:#ff8317;
         }
         .top-bar2{
-          background-image: linear-gradient( 0deg,#fac322 0%,rgba(250,195,34,0.8) 100%);
+          background:#fac322;
         }
         .top-bar3{
           background: #d1dbe4;

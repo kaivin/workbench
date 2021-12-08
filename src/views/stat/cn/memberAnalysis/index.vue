@@ -237,7 +237,7 @@ export default {
       if($this.department&&$this.department.length>0){
         $this.department.forEach(function(item,index){
           if(varDate==item.id){
-             deptName=item.name
+             deptName=item.name.replace('电商','');
           }
         });
       }
@@ -250,69 +250,93 @@ export default {
           if (response) {
             if (response.status) {
               // 非付费询盘
-              $this.unpayInquiry = rankingWithTotalItem(response.xunulist,'number');
-              $this.unpayInquiry.forEach(function(item){
-                item.number = numSeparate(item.number);
-                item.deptName=$this.getDeap(item.dept_id);
-              });
-              if(response.xunulist.length < 9){
-                  $this.unpayInquirySet.ifFold = false;
-                  $this.unpayInquirySet.boxHeight = "auto";
-              }else{
-                  $this.unpayInquirySet.ifFold = true;
-                  $this.unpayInquirySet.boxHeight = "630px";
-                  $this.unpayInquirySet.isFold = false;
+              if(response.xunulist&&response.xunulist.length>0){
+                  var unpayInquiry=[];
+                  var unpayInquiryArr = rankingWithTotalItem(response.xunulist,'number');
+                  unpayInquiryArr.forEach(function(item){
+                    item.number = numSeparate(item.number);
+                    item.deptName=$this.getDeap(item.dept_id);
+                    unpayInquiry.push(item);
+                  });
+                  $this.unpayInquiry = unpayInquiry;
+                  if(response.xunulist.length < 9){
+                      $this.unpayInquirySet.ifFold = false;
+                      $this.unpayInquirySet.boxHeight = "auto";
+                  }else{
+                      $this.unpayInquirySet.ifFold = true;
+                      $this.unpayInquirySet.boxHeight = "630px";
+                      $this.unpayInquirySet.isFold = false;
+                  }
               }
               // 成交积分
-              $this.dealScore = rankingWithTotalItem(response.scorelist,'score');
-              $this.dealScore.forEach(function(item){
-                item.score = numSeparate(Math.floor(item.score*100)/100);
-                item.deptName=$this.getDeap(item.dept_id);
-              });
-              if(response.scorelist.length < 9){
-                  $this.dealScoreSet.ifFold = false;
-                  $this.dealScoreSet.boxHeight = "auto";
-              }else{
-                  $this.dealScoreSet.ifFold = true;
-                  $this.dealScoreSet.boxHeight = "630px";
-                  $this.dealScoreSet.isFold = false;
+              if(response.scorelist&&response.scorelist.length>0){
+                  var dealScore=[];
+                  var dealScoreArr = rankingWithTotalItem(response.scorelist,'score');
+                  dealScoreArr.forEach(function(item){
+                    item.score = numSeparate(Math.floor(item.score*100)/100);
+                    item.deptName=$this.getDeap(item.dept_id);
+                    dealScore.push(item);
+                  });
+                  $this.dealScore = dealScore;
+                  if(response.scorelist.length < 9){
+                      $this.dealScoreSet.ifFold = false;
+                      $this.dealScoreSet.boxHeight = "auto";
+                  }else{
+                      $this.dealScoreSet.ifFold = true;
+                      $this.dealScoreSet.boxHeight = "630px";
+                      $this.dealScoreSet.isFold = false;
+                  }
               }
               // 付费
-              $this.payMember = rankingWithTotalItem(response.semulist,'number');
-              $this.payMember.forEach(function(item){
-                item.number = numSeparate(item.number);
-                item.deptName=$this.getDeap(item.dept_id);
-              });
+              if(response.semulist&&response.semulist.length>0){
+                  var payMember=[];
+                  var payMemberaArr = rankingWithTotalItem(response.semulist,'number');
+                  payMemberaArr.forEach(function(item){
+                    item.number = numSeparate(item.number);
+                    item.deptName=$this.getDeap(item.dept_id);
+                    payMember.push(item);
+                  });
+                  $this.payMember=payMember;
+              }
               // 百万成交
-              $this.millionDeal = rankingWithTotalItem(response.Alist,'number');
-              $this.millionDeal.forEach(function(item){
-                item.deptName=$this.getDeap(item.dept_id);
-              });
-              if(response.Alist.length < 3){
-                  $this.millionDealSet.ifFold = false;
-                  $this.millionDealSet.boxHeight = "auto";
-              }else{
-                  $this.millionDealSet.ifFold = true;
-                  $this.millionDealSet.boxHeight = "630px";
-                  $this.millionDealSet.isFold = false;
+              if(response.Alist&&response.Alist.length>0){
+                  var millionDeal=[];
+                  var millionDealArr = rankingWithTotalItem(response.Alist,'number');
+                  millionDealArr.forEach(function(item){
+                    item.deptName=$this.getDeap(item.dept_id);
+                    millionDeal.push(item);
+                  });
+                  $this.millionDeal=millionDeal;
+                  if(response.Alist.length < 3){
+                      $this.millionDealSet.ifFold = false;
+                      $this.millionDealSet.boxHeight = "auto";
+                  }else{
+                      $this.millionDealSet.ifFold = true;
+                      $this.millionDealSet.boxHeight = "630px";
+                      $this.millionDealSet.isFold = false;
+                  }
               }
               // 奖金排序
-              var moneyarr = response.moneylist;
-              moneyarr.sort($this.compare('allmoney'));
-              $this.awardMoney = rankingWithTotalItem(moneyarr,'allmoney');
-              $this.awardMoney.forEach(function(item){
-                item.allmoney = numSeparate(Math.floor(item.allmoney*100)/100);
-                item.deptName=$this.getDeap(item.dept_id);
-              });
-              if(response.moneylist.length < 9){
-                  $this.awardMoneySet.ifFold = false;
-                  $this.awardMoneySet.boxHeight = "auto";
-              }else{
-                  $this.awardMoneySet.ifFold = true;
-                  $this.awardMoneySet.boxHeight = "1133px";
-                  $this.awardMoneySet.isFold = false;
+              if(response.moneylist&&response.moneylist.length>0){
+                var moneyarr = response.moneylist;
+                moneyarr.sort($this.compare('allmoney'));
+                var awardMoney = [];
+                var awardMoneyArr = rankingWithTotalItem(moneyarr,'allmoney');
+                awardMoneyArr.forEach(function(item){
+                  item.allmoney = numSeparate(Math.floor(item.allmoney*100)/100);
+                  item.deptName=$this.getDeap(item.dept_id);
+                  awardMoney.push(item);
+                });
+                $this.awardMoney=awardMoney;
+                if(response.moneylist.length < 9){
+                    $this.awardMoneySet.ifFold = false;
+                    $this.awardMoneySet.boxHeight = "auto";
+                }else{
+                    $this.awardMoneySet.ifFold = true;
+                    $this.awardMoneySet.boxHeight = "1133px";
+                    $this.awardMoneySet.isFold = false;
+                }
               }
-
             } else {
               $this.$message({
                 showClose: true,

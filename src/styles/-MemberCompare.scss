@@ -167,7 +167,10 @@
             }
             .userName{
                 color: #111111;
-                font-size: 13px;
+                font-size: 14px;
+                .dept{
+                    color:#666;
+                }
             }
             .userInquiry{
                 color: #333333;
@@ -178,18 +181,21 @@
                     background-clip: text;
                     -webkit-background-clip: text;
                     color: transparent;
+                    font-weight: bold;
                 }
                 .num02{
                     background-image: linear-gradient(90deg,#92acc7 ,#315c88);
                     background-clip: text;
                     -webkit-background-clip: text;
                     color: transparent;
+                    font-weight: bold;
                 }
                 .num03{
                     background-image: linear-gradient(90deg,#ad6d2d ,#f5c166);
                     background-clip: text;
                     -webkit-background-clip: text;
                     color: transparent;
+                    font-weight: bold;
                 }
             }
         }
@@ -357,7 +363,10 @@
             }
             .userName{
                 color: #111111;
-                font-size: 13px;
+                font-size: 14px;
+                .dept{
+                    color:#666;
+                }
             }
             .userInquiry{
                 color: #333333;
@@ -368,18 +377,21 @@
                     background-clip: text;
                     -webkit-background-clip: text;
                     color: transparent;
+                    font-weight: bold;
                 }
                 .num02{
                     background-image: linear-gradient(90deg,#92acc7 ,#315c88);
                     background-clip: text;
                     -webkit-background-clip: text;
                     color: transparent;
+                    font-weight: bold;
                 }
                 .num03{
                     background-image: linear-gradient(90deg,#ad6d2d ,#f5c166);
                     background-clip: text;
                     -webkit-background-clip: text;
                     color: transparent;
+                    font-weight: bold;
                 }
             }
         }
@@ -562,7 +574,10 @@
             }
             .userName{
                 color: #111111;
-                font-size: 13px;
+                font-size: 14px;
+                .dept{
+                    color:#666;
+                }
             }
             .milNum{
                 text-align: right;
@@ -809,6 +824,7 @@
     position: relative;
     margin-bottom: 15px;
     .memberTit{
+        position: relative;
         height:80px; 
         background: -moz-linear-gradient(right,#fffbfa 0%, #ffeeee 100%);
         background: -webkit-linear-gradient(right,#fffbfa 0%,#ffeeee 100%);
@@ -818,6 +834,22 @@
         &:after{
             background: url(../assets/personal_bg04.png) no-repeat top right;
             background-size:100%;
+            width:120px;
+            height:80px;
+            position: absolute;
+            right:0px;
+            top:0px;
+            z-index: 3;
+        }
+        &:before{
+            background: url(../assets/personal_bg05.gif) no-repeat top right;
+            background-size:100%;
+            width:120px;
+            height:80px;
+            position: absolute;
+            right:0px;
+            top:0px;
+            z-index: 2;
         }
         h3{color:#d62815;}
     }
@@ -901,7 +933,10 @@
             }
             .userName{
                 color: #111111;
-                font-size: 13px;
+                font-size: 14px;
+                .dept{
+                    color:#666;
+                }
             }
             .userAward{
                 color: #333333;
@@ -912,18 +947,21 @@
                     background-clip: text;
                     -webkit-background-clip: text;
                     color: transparent;
+                    font-weight: bold;
                 }
                 .num02{
                     background-image: linear-gradient(90deg,#92acc7 ,#315c88);
                     background-clip: text;
                     -webkit-background-clip: text;
                     color: transparent;
+                    font-weight: bold;
                 }
                 .num03{
                     background-image: linear-gradient(90deg,#ad6d2d ,#f5c166);
                     background-clip: text;
                     -webkit-background-clip: text;
                     color: transparent;
+                    font-weight: bold;
                 }
             }
         }

@@ -2,27 +2,33 @@
   <div class="hxpage minHxpage">
     <div class="module-top">
       <div class="title-view">
-        <div class="title">个人年度总询盘个数 TOP5</div>
-        <div class="unit">（单位：个）</div>
-        <div class="more" @click="goPage">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
+        <div class="title">年度总奖金 TOP5</div>
+        <div class="unit">（单位：元）</div>
+        <div class="more" @click="goPage">更多分析 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
       </div>
       <ul class="top-view" ref="topul" v-resize="setBarWidth">
-        <li class="top-item" v-for="(item,index) in topdata" :key="index" @click="handleContrast(item.dept_id,item.id)">
-          <div class="top-img">
-            <span v-if="index <= 2" :class="'topimg' + index"><img :src="item.headimg" alt=""></span>
-            <span v-if="index == 3"><img src="@/assets/top4.jpg" alt=""></span>
-            <span v-if="index == 4"><img src="@/assets/top5.jpg" alt=""></span>
-          </div>
-          <div class="top-name">
-            <img :class="'topicon' + index" v-if="index == 0" src="@/assets/top1.jpg" alt="">
-            <img :class="'topicon' + index" v-if="index == 1" src="@/assets/top2.jpg" alt="">
-            <img :class="'topicon' + index" v-if="index == 2" src="@/assets/top3.jpg" alt="">
-            <span>{{item.name}}</span>
-          </div>
-          <div class="top-width">
-            <div :class="'top-bar' + index" :style="'width:' + (barWidth * item.width) + 'px'"></div>
-            <span>{{item.number}}</span>
-          </div>
+        <li class="top-item" v-for="(item,index) in topdata" :key="index" @click="handleContrast(item.dept_id,item.uid)">        
+            <div class="rankNum">
+                <div class="numTop" v-if="(index+1)<=3" :class="'numTop0'+(index+1)"></div>
+                <div class="numTop" v-if="(index+1)>3">{{index+1}}</div>
+            </div>
+            <div class="userImg">
+              <div v-if="item.headimg" class="headImg">
+                <span><img :src="item.headimg" :alt="item.name" /></span>
+              </div>
+              <div v-else class="nopic"></div> 
+            </div>
+            <div class="userName">
+              <span>{{item.name}}</span> 
+            </div>
+            <div class="userAward flex-content">
+                <span v-if="index+1<=3" :class="'num0'+(index+1)"> 
+                  {{item.allmoney}}元
+                </span>
+                <span v-else> 
+                  {{item.allmoney}}元
+                </span>
+            </div>
         </li>
       </ul>
     </div>
@@ -43,7 +49,7 @@ export default {
         type:String,
         default:"中文"
       },
-      yearusertop5:{
+      moneytop5:{
         type:Array,
         default:function(){
           return []
@@ -51,7 +57,7 @@ export default {
       }
     },
     watch:{
-      yearusertop5:{
+      moneytop5:{
         handler(val,oldval){
           this.setTopData(val);
         },
@@ -125,13 +131,13 @@ export default {
     background: #fff;
     min-height: 306px;
     .module-top{
-      padding: 15px 30px 0;
+      padding:0;
       
     }
     .title-view{
-      height: 24px;
-      line-height: 24px;
-      margin-bottom: 25px;
+      line-height:16px;
+      margin-bottom:12px;
+      padding:22px 28px 0px 28px;
       .title{
         font-size: 14px;
         color: #1a1a1a;
@@ -219,94 +225,111 @@ export default {
     }
     .top-view{
       .top-item{
-        display: flex;
-        margin-bottom: 6px;
-        cursor: pointer;
-        .top-img{
-          display: flex;
-          width: 42px;
-          height: 42px;
-          >span{
-            border-radius: 50%;
-            margin: auto;
-            overflow: hidden;
-          }
-          img{
-            margin: auto;
-          }
-          .topimg0{
-            width: 42px;
-            height: 42px;
-            box-sizing: border-box;
-            border: 1px solid #fff;
-            box-shadow: 0px 5px 9px 0px rgba(185, 193, 204, 0.58);
-          }
-          .topimg1{
-            width: 36px;
-            height: 36px;
-            box-sizing: border-box;
-            border: 1px solid #fff;
-            box-shadow: 0px 5px 9px 0px rgba(185, 193, 204, 0.58);
-          }
-          .topimg2{
-            width: 32px;
-            height: 32px;
-            box-sizing: border-box;
-            border: 1px solid #fff;
-            box-shadow: 0px 5px 9px 0px rgba(185, 193, 204, 0.58);
-          }
-        }
-        .top-name{
-          width: 50px;
-          display: flex;
-          text-align: center;
-          flex-flow: column;
-          justify-content: center;
-          img{
-            margin: 0 auto;
-          }
-          span{
-            font-size: 12px;
-            color: #393939;
-          }
-          .topicon0{
-            width: 26px;
-          }
-          .topicon1{
-            width: 20px;
-          }
-          .topicon2{
-            width: 18px;
-          }
-        }
-        .top-width{
-          line-height: 42px;
-          display: flex;
-          div{
-            height: 12px;
-            margin: auto 0;
-          }
-          span{
-            font-size: 12px;
-            margin-left: 10px;
-            color: #3c3c3c;
-          }
-          .top-bar0{
-            background-color:#fc544b;
-          }
-          .top-bar1{
-            background-color:#ff8317;
-          }
-          .top-bar2{
-            background-color:#fac322;
-          }
-          .top-bar3{
-            background: #d1dbe4;
-          }
-          .top-bar4{
-            background: #d1dbe4;
-          }
-        }
+            padding:10px 35px 10px 20px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            border-top: 1px solid #f5f5f5;
+            cursor: pointer;
+            &:first-child{border-top:0px;}
+            .rankNum{
+                width:30px;
+                height:30px;
+                text-align: center;
+                line-height:30px;
+                font-family:Impact;
+                .numTop{
+                    width:30px;
+                    height:30px;
+                    line-height:30px;
+                    font-size:24px;
+                    color:#b9b9b9;
+                    &.numTop01{
+                        background: url(../../../../assets/personal_AwardIcon01.png) center center no-repeat;
+                        background-size:18px auto;
+                    }
+                    &.numTop02{
+                        background: url(../../../../assets/personal_AwardIcon02.png) center center no-repeat;
+                        background-size:18px auto;
+                    }
+                    &.numTop03{
+                        background: url(../../../../assets/personal_AwardIcon03.png) center center no-repeat;
+                        background-size:18px auto;
+                    }
+                }
+            }
+            .userImg{
+                padding-left:38px;
+                width:95px;
+                .headImg{
+                    width:30px;
+                    height:30px;
+                    overflow: hidden;
+                    position: relative;
+                    span{
+                        clear: both;
+                        display: block;
+                        overflow: hidden;
+                        width: 100%;
+                        height: 100%;
+                        border-radius: 4px;
+                        position: relative;
+                        margin: 0 auto;
+                        img{
+                            width: 100%;
+                            position: absolute;
+                            left: 0px;
+                            top: 0%;
+                            -o-object-fit: cover;
+                            object-fit: cover;
+                            transition: all 0.5s;
+                        }
+                    }
+                }
+                .nopic{
+                    width:30px;
+                    height:30px;
+                    overflow: hidden;
+                    border-radius: 4px;
+                    position: relative;
+                    cursor: pointer;
+                    background: url(../../../../assets/default_pic.jpg) center center no-repeat;
+                    background-size:100%;
+                }    
+            }
+            .userName{
+                color: #111111;
+                font-size: 14px;
+                .dept{
+                    color:#666;
+                }
+            }
+            .userAward{
+                color: #333333;
+                font-size: 13px;
+                text-align: right;
+                .num01{
+                    background-image: linear-gradient(90deg,#f9c020 0%,#f83801 60%);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    color: transparent;
+                    font-weight: bold;
+                }
+                .num02{
+                    background-image: linear-gradient(90deg,#92acc7 0%,#315c88 60%);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    color: transparent;
+                    font-weight: bold;
+                }
+                .num03{
+                    background-image: linear-gradient(90deg,#ad6d2d 40%,#f5c166 100%);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    color: transparent;
+                    font-weight: bold;
+                }
+            }
       }
     }
 }

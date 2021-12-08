@@ -39,7 +39,8 @@ export default {
       return {
         type:0,
         isUp:true,
-        isUpNum:0
+        isUpNum:0,
+        totalXpanYears:0,
       }
     },
     props:{
@@ -99,17 +100,6 @@ export default {
       }
 
     },
-    computed:{
-      totalXpanYears(){
-        let total = 0;
-        for(let i = 0;i<this.yearscoretong.length;i++){
-          total+=this.yearscoretong[i].score
-        }
-        return total.toLocaleString()
-        
-      }
-    },
-
     methods:{
        changeType(val){
         this.type = val;
@@ -216,8 +206,6 @@ export default {
           });
           $this.chartTop = chartTop;
           chartTop.render();
-
-        
       },
       setIsUp(){
         let val = [];
@@ -231,15 +219,15 @@ export default {
         if(this.type == 0){
           for(let i = 0;i<val.length;i++){
             oldXpanYears+=val[i].lastscore;
-            newXpanYears+=val[i].score
+            newXpanYears+=val[i].score;
           }
         }else{
           for(let i = 0;i<val.length;i++){
             oldXpanYears+=val[i].lastnumber;
-            newXpanYears+=val[i].number
+            newXpanYears+=val[i].number;
           }
         }
-        
+        this.totalXpanYears=newXpanYears.toFixed(2);
         if(newXpanYears>=oldXpanYears){
           this.isUp = true;
           this.isUpNum = (newXpanYears - oldXpanYears).toFixed(2)
@@ -387,14 +375,14 @@ export default {
         margin-left: -1px;
         position: relative;
         &:hover{
-          color: #2e88ff;
-          border: 1px solid #2e88ff;
+          color: #496bf2;
+          border: 1px solid #496bf2;
           z-index: 1;
         }
       }
       .active{
-        border: 1px solid #2e88ff;
-        background:#2e88ff;
+        border: 1px solid #496bf2;
+        background:#496bf2;
         color: #fff;
         z-index: 1;
         &:hover{

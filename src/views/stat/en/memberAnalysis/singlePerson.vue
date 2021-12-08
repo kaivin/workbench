@@ -880,7 +880,7 @@ export default {
                           objItem.tap='成交Top1';
                           objItem.icon='icon01';
                       }
-                      if(item.content.indexOf("部门奖金")>=0){
+                      if(item.content.indexOf("公司奖金")>=0){
                           objItem.tap='奖金Top1';
                           objItem.icon='icon01';
                       }

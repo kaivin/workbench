@@ -44,15 +44,15 @@
                :departList="departList"
                ></HotArea>
              </el-col>
-             <el-col class="hxmodule-item" :xl="6" :lg="12">
-               <XpanTop
-               :yearusertop5="yearusertop5"
-               ></XpanTop>
-             </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12" >
                <ScoreTop
                :yearuserscoretop5="yearuserscoretop5"
                ></ScoreTop>
+             </el-col>
+             <el-col class="hxmodule-item" :xl="6" :lg="12">
+               <XpanTop
+               :moneytop5="moneytop5"
+               ></XpanTop>
              </el-col>
            </el-row>
         </div>
@@ -68,6 +68,7 @@ import ScoreYears from "../../components/dataOverview/ScoreYears.vue";
 import XpanTop from "../../components/dataOverview/XpanTop.vue";
 import XpanYears from "../../components/dataOverview/XpanYears.vue";
 import {getChinacountnew} from "@/api/dataOverview.js";
+import {numSeparate} from "@/utils/index";
 export default {
   name: "cnDataOverview",
   data() {
@@ -80,7 +81,7 @@ export default {
       yeardeaprtscore:[],//各部门年度成交积分
       yearsanumbertong:[],//中文年度成交100万数量对比
       yearsmoneytong:[],//中文年度总成本对比
-      yearusertop5:[],//个人年度总询盘个数 TOP5
+      moneytop5:[],//个人年度总询盘个数 TOP5
       yearuserscoretop5:[],//年度积分top5
       provincecountmap:[],//询盘地图 
       provincescoretmap:[],//成交地图
@@ -145,7 +146,11 @@ export default {
           this.yeardeaprtscore = res.yeardeaprtscore;
           this.yearsanumbertong = res.yearsanumbertong;
           this.yearsmoneytong = res.yearsmoneytong;
-          this.yearusertop5 = res.yearusertop5;
+          var moneytop5=res.moneytop5;
+          moneytop5.forEach(function(item){
+            item.allmoney = numSeparate(item.allmoney);
+          });
+          this.moneytop5 = moneytop5;
           this.yearuserscoretop5 = res.yearuserscoretop5;
           this.provincecountmap =  res.provincecountmap;
           this.provincescoretmap = res.provincescoretmap;

@@ -23,7 +23,7 @@
                     <div v-else class="nopic"></div> 
                   </div>
                   <div class="userName">
-                    <span>{{item.name}}-{{item.deptName}}</span> 
+                    <span>{{item.name}} - <span class="dept">{{item.deptName}}</span></span> 
                   </div>
                   <div class="userAward flex-content">
                       <span v-if="item.ranking<=3" :class="'num0'+(item.ranking)"> 

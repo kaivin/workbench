@@ -268,12 +268,6 @@ function setRoutes(routers){
         meta: {id:'Webloglists-95',title: '日志列表', icon: null, keepAlive:false},
       },
       {
-        path: "/Weblog/logInfo",
-        name:'WeblogInfo',
-        component: () => import("@/views/Weblog/logInfo/index.vue"),
-        meta: {id:'WeblogInfo-95',title: '日志详情', icon: null, keepAlive:false},
-      },
-      {
         path: "/Demo/index",
         name:'Demo_index',
         component: () => import(/* webpackChunkName: "DemoIndex" */ "@/views/Demo/index/index.vue"),

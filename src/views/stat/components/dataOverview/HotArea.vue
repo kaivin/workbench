@@ -306,7 +306,6 @@ export default {
       // 热门地区TOP10
       drawTopTen(){
         var $this = this;
-        
         if($this.pieSourcePlot&&!$this.pieSourcePlot.destroyed){
           $this.pieSourcePlot.destroy();
         }
@@ -336,9 +335,9 @@ export default {
           yField: $this.language =='中文'?'name':'country',
           seriesField: $this.language =='中文'?'name':'country',
           barWidthRatio: 0.4,
-          height: 240,
+          height: 202,
           legend: false,
-          appendPadding:[0, 30, 0, 10],
+          appendPadding:[0, 30, 0, 0],
           xAxis:{
             grid: {
               line: {
@@ -554,13 +553,13 @@ export default {
 .hxpage{
   background: #fff;
   .module-top{
-    padding: 15px 30px;
+    padding:17px 30px 15px 30px;
     border-bottom: 2px solid #f6f7fa;
   }
   .title-view{
     height: 24px;
     line-height: 24px;
-    margin-bottom: 10px;
+    margin-bottom:6px;
     .title{
       font-size: 14px;
       color: #1a1a1a;
@@ -695,8 +694,9 @@ export default {
   .top-ten{
     float: right;
     width: 48%;
+    padding-top:23px;
     .chart-canva{
-      height: 242px;
+      height: 202px;
     }
   }
   
