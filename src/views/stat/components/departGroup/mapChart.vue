@@ -36,13 +36,14 @@
                   </div>
                   <div class="region-rank">
                     <div class="txt-header"><strong>{{item[0].topTitle}}</strong></div>
-                    <div class="bar-chart" v-if="item[0].topTenData[0].number>0">
+                    <div class="bar-chart" v-if="item[0].topTenData[0].value>0">
                       <top-region
                         :chart-data="item[0].topTenData"
                         :color-data="item[0].topTenColor"
                         :id-data="item[0].randomStr"
                         :alias-data="item[0].alias"
-                        :bar-height="isCn?item[0].mapHeight-60:280"
+                        :bar-height="280"
+                        :is-cn="isCn"
                       ></top-region>
                     </div>
                   </div>
@@ -71,7 +72,7 @@
               <template v-for="item1 in item.mapDataArr">
                 <div class="item-chart" v-bind:style="{width:item1.width}">
                   <div class="chart-title">{{item1.title}}</div>
-                  <div class="map-panel" v-bind:style="{width:item1.mapWidth+'px'}">
+                  <div class="map-panel" v-bind:style="{width:item1.mapWidth+'px',height:item1.mapHeight+'px'}">
                     <template v-if="isCn">
                       <cn-map-chart
                         :chart-data="item1.mapData"
@@ -95,13 +96,14 @@
                   </div>
                   <div class="region-rank" v-bind:style="{width:item1.mapWidth+'px',height:'268px'}">
                     <div class="txt-header"><strong>{{item1.topTitle}}</strong></div>
-                    <div class="bar-chart" v-if="item1.topTenData[0].number>0">
+                    <div class="bar-chart" v-if="item1.topTenData[0].value>0">
                       <top-region
                         :chart-data="item1.topTenData"
                         :color-data="item1.topTenColor"
                         :id-data="item1.randomStr"
                         :alias-data="item1.alias"
                         :bar-height="200"
+                        :is-cn="isCn"
                       ></top-region>
                     </div>
                   </div>

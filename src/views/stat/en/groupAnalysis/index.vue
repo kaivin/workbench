@@ -1505,7 +1505,7 @@ export default {
             dataArr = res.selfprovincedaycompare;
           }
           dataArr.forEach(function(item){
-            var itemData = worldCountry(item).sort(sortByDesc("number"));
+            var itemData = worldCountry(item,"country","number");
             mapData.push(itemData);
           });
           inquiryMapData.mapDataArr = [];
@@ -1537,23 +1537,23 @@ export default {
           itemMapChart1.alias = "询盘个数";
           itemMapChart1.mapWidth = mapWidth;
           itemMapChart1.mapHeight = mapHeight;
-          var maxNumArr = [mapData[0][0].number,mapData[1][0].number];
+          var maxNumArr = [mapData[0][0].value,mapData[1][0].value];
           maxNumArr.sort(function(a,b){return b-a});
           var maxNum = maxNumArr[0];
           itemMapChart0.colorData = MapInterval(maxNum);
           itemMapChart1.colorData = MapInterval(maxNum);
-          itemMapChart0.topTitle = "热门国家TOP5";
+          itemMapChart0.topTitle = "热门国家TOP10";
           itemMapChart0.topTenData = [];
           itemMapChart0.mapData.forEach(function(item,index){
-            if(index<5){
+            if(index<10){
               itemMapChart0.topTenData.push(item);
             }
           });
           itemMapChart0.topTenColor = TopTenColor(itemMapChart0.topTenData,itemMapChart0.colorData);
-          itemMapChart1.topTitle = "热门国家TOP5";
+          itemMapChart1.topTitle = "热门国家TOP10";
           itemMapChart1.topTenData = [];
           itemMapChart1.mapData.forEach(function(item,index){
-            if(index<5){
+            if(index<10){
               itemMapChart1.topTenData.push(item);
             }
           });
@@ -1577,13 +1577,13 @@ export default {
               dataArr = res.provincecompare;
             }
             dataArr.forEach(function(item){
-              var itemData = worldCountry(item).sort(sortByDesc("number"));
+              var itemData = worldCountry(item,"country","number");
               mapData.push(itemData);
             });
             inquiryMapData.mapDataArr = [];
             var maxNumArr = [];
             mapData.forEach(function(item,index){
-              maxNumArr.push(item[0].number)
+              maxNumArr.push(item[0].value)
             });
             maxNumArr.sort(function(a,b){return b-a});
             var maxNum = maxNumArr[0];
@@ -1642,10 +1642,10 @@ export default {
               itemChart.mapWidth = mapWidth;
               itemChart.mapHeight = mapHeight;
               itemChart.alias = "询盘个数";
-              itemChart.topTitle = "热门国家TOP5";
+              itemChart.topTitle = "热门国家TOP10";
               itemChart.topTenData = [];
               itemChart.mapData.forEach(function(item,index){
-                if(index<5){
+                if(index<10){
                   itemChart.topTenData.push(item);
                 }
               });
@@ -1661,12 +1661,12 @@ export default {
             // 月维度
             var itemMapData = {};
             if($this.selectedData.isMonth){
-              itemMapData.mapData = worldCountry(res.provincecountmapmonth).sort(sortByDesc("number"));
-              itemMapData.colorData = MapInterval(itemMapData.mapData[0].number);
+              itemMapData.mapData = worldCountry(res.provincecountmapmonth,"country","number");
+              itemMapData.colorData = MapInterval(itemMapData.mapData[0].value);
             }else{
               // 日维度
-              itemMapData.mapData = worldCountry(res.provincecountmapday).sort(sortByDesc("number"));
-              itemMapData.colorData = MapInterval(itemMapData.mapData[0].number);
+              itemMapData.mapData = worldCountry(res.provincecountmapday,"country","number");
+              itemMapData.colorData = MapInterval(itemMapData.mapData[0].value);
             }
             itemMapData.randomStr = randomString(4);
             itemMapData.alias = "询盘个数";
@@ -1700,7 +1700,7 @@ export default {
           var mapData = [];
           var dataArr = res.selfprovincebuymonthcompare;
           dataArr.forEach(function(item){
-            var itemData = worldCountry(item).sort(sortByDesc("number"));
+            var itemData = worldCountry(item,"country","number");
             mapData.push(itemData);
           });
           dealRegionMapData.mapDataArr = [];
@@ -1732,23 +1732,23 @@ export default {
           itemMapChart1.alias = "成交积分";
           itemMapChart1.mapWidth = mapWidth;
           itemMapChart1.mapHeight = mapHeight;
-          var maxNumArr = [mapData[0][0].number,mapData[1][0].number];
+          var maxNumArr = [mapData[0][0].value,mapData[1][0].value];
           maxNumArr.sort(function(a,b){return b-a});
           var maxNum = maxNumArr[0];
           itemMapChart0.colorData = MapInterval(maxNum);
           itemMapChart1.colorData = MapInterval(maxNum);
-          itemMapChart0.topTitle = "热门国家TOP5";
+          itemMapChart0.topTitle = "热门国家TOP10";
           itemMapChart0.topTenData = [];
           itemMapChart0.mapData.forEach(function(item,index){
-            if(index<5){
+            if(index<10){
               itemMapChart0.topTenData.push(item);
             }
           });
           itemMapChart0.topTenColor = TopTenColor(itemMapChart0.topTenData,itemMapChart0.colorData);
-          itemMapChart1.topTitle = "热门国家TOP5";
+          itemMapChart1.topTitle = "热门国家TOP10";
           itemMapChart1.topTenData = [];
           itemMapChart1.mapData.forEach(function(item,index){
-            if(index<5){
+            if(index<10){
               itemMapChart1.topTenData.push(item);
             }
           });
@@ -1764,13 +1764,13 @@ export default {
             var mapData = [];
             var dataArr = res.provincebuymonthcompare;
             dataArr.forEach(function(item){
-              var itemData = worldCountry(item).sort(sortByDesc("number"));
+              var itemData = worldCountry(item,"country","number");
               mapData.push(itemData);
             });
             dealRegionMapData.mapDataArr = [];
             var maxNumArr = [];
             mapData.forEach(function(item,index){
-              maxNumArr.push(item[0].number)
+              maxNumArr.push(item[0].value)
             });
             maxNumArr.sort(function(a,b){return b-a});
             var maxNum = maxNumArr[0];
@@ -1829,10 +1829,10 @@ export default {
               itemChart.mapWidth = mapWidth;
               itemChart.mapHeight = mapHeight;
               itemChart.alias = "成交积分";
-              itemChart.topTitle = "热门国家TOP5";
+              itemChart.topTitle = "热门国家TOP10";
               itemChart.topTenData = [];
               itemChart.mapData.forEach(function(item,index){
-                if(index<5){
+                if(index<10){
                   itemChart.topTenData.push(item);
                 }
               });
@@ -1846,8 +1846,8 @@ export default {
             dealRegionMapData = [];
             // 统计
             var itemMapData = {};
-            itemMapData.mapData = worldCountry(res.provincebuymapmonth).sort(sortByDesc("number"));
-            itemMapData.colorData = MapInterval(itemMapData.mapData[0].number);
+            itemMapData.mapData = worldCountry(res.provincebuymapmonth,"country","number");
+            itemMapData.colorData = MapInterval(itemMapData.mapData[0].value);
             itemMapData.randomStr = randomString(4);
             itemMapData.title = "成交积分地图展示 - 国家排行榜";
             itemMapData.unit = "（单位：分）";
@@ -1880,7 +1880,7 @@ export default {
           var mapData = [];
           var dataArr = res.selfprovincescorenumberbuycompare;
           dataArr.forEach(function(item){
-            var itemData = worldCountry(item).sort(sortByDesc("number"));
+            var itemData = worldCountry(item,"country","number");
             mapData.push(itemData);
           });
           dealCountMapData.mapDataArr = [];
@@ -1912,23 +1912,23 @@ export default {
           itemMapChart1.alias = "成交个数";
           itemMapChart1.mapWidth = mapWidth;
           itemMapChart1.mapHeight = mapHeight;
-          var maxNumArr = [mapData[0][0].number,mapData[1][0].number];
+          var maxNumArr = [mapData[0][0].value,mapData[1][0].value];
           maxNumArr.sort(function(a,b){return b-a});
           var maxNum = maxNumArr[0];
           itemMapChart0.colorData = MapInterval(maxNum);
           itemMapChart1.colorData = MapInterval(maxNum);
-          itemMapChart0.topTitle = "热门国家TOP5";
+          itemMapChart0.topTitle = "热门国家TOP10";
           itemMapChart0.topTenData = [];
           itemMapChart0.mapData.forEach(function(item,index){
-            if(index<5){
+            if(index<10){
               itemMapChart0.topTenData.push(item);
             }
           });
           itemMapChart0.topTenColor = TopTenColor(itemMapChart0.topTenData,itemMapChart0.colorData);
-          itemMapChart1.topTitle = "热门国家TOP5";
+          itemMapChart1.topTitle = "热门国家TOP10";
           itemMapChart1.topTenData = [];
           itemMapChart1.mapData.forEach(function(item,index){
-            if(index<5){
+            if(index<10){
               itemMapChart1.topTenData.push(item);
             }
           });
@@ -1944,13 +1944,13 @@ export default {
             var mapData = [];
             var dataArr = res.provincescorenumberbuymonthcompare;
             dataArr.forEach(function(item){
-              var itemData = worldCountry(item).sort(sortByDesc("number"));
+              var itemData = worldCountry(item,"country","number");
               mapData.push(itemData);
             });
             dealCountMapData.mapDataArr = [];
             var maxNumArr = [];
             mapData.forEach(function(item,index){
-              maxNumArr.push(item[0].number)
+              maxNumArr.push(item[0].value)
             });
             maxNumArr.sort(function(a,b){return b-a});
             var maxNum = maxNumArr[0];
@@ -2009,10 +2009,10 @@ export default {
               itemChart.mapWidth = mapWidth;
               itemChart.mapHeight = mapHeight;
               itemChart.alias = "成交个数";
-              itemChart.topTitle = "热门国家TOP5";
+              itemChart.topTitle = "热门国家TOP10";
               itemChart.topTenData = [];
               itemChart.mapData.forEach(function(item,index){
-                if(index<5){
+                if(index<10){
                   itemChart.topTenData.push(item);
                 }
               });
@@ -2026,7 +2026,7 @@ export default {
             dealCountMapData = [];
             // 统计
             var itemMapData = {};
-            itemMapData.mapData = worldCountry(res.provincescorenumberbuymapmonth).sort(sortByDesc("number"));
+            itemMapData.mapData = worldCountry(res.provincescorenumberbuymapmonth,"country","number");
             itemMapData.colorData = MapInterval(itemMapData.mapData[0].number);
             itemMapData.randomStr = randomString(4);
             itemMapData.title = "成交个数地图展示 - 国家排行榜";

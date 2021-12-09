@@ -155,6 +155,13 @@ Vue.config.productionTip = false;
 
 Vue.prototype.$pickerRangeOptions=pickerRangeOptions;
 
+import * as echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+
+// import '../node_modules/echarts/map/js/world.js' // 以欧洲为中心的世界地图
+import '@/utils/worldZH.js' // 以中国为中心的世界地图
+import "@/utils/china.js"; // 中国地图 
+
 new Vue({
   router,
   store,

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { Bar, P } from '@antv/g2plot';
+import { Bar } from '@antv/g2plot';
 export default {
   name: "topRegion",
   data:function() {
@@ -32,6 +32,10 @@ export default {
       type: Number,
       default: 0,
     },
+    isCn:{
+      type: Boolean,
+      default: true,
+    },
   },
   computed:{
     currentData(){
@@ -50,9 +54,9 @@ export default {
       if(!$this.barPlot){
         const barPlot = new Bar('bar-'+$this.idData, {
         data:$this.currentData,
-        xField: 'number',
-        yField: 'name',
-        seriesField: 'name',
+        xField: 'value',
+        yField: $this.isCn?'name':'country',
+        seriesField: $this.isCn?'name':'country',
         barWidthRatio: 0.4,
         height: $this.barHeight,
         legend: false,

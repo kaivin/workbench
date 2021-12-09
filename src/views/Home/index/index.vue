@@ -159,7 +159,7 @@ export default {
     const $this = this;
     $this.$refs.boxPane.addEventListener('scroll',this.handleScroll,true);
   },
-  destroyed(){
+  beforeDestroy(){
     this.$refs.boxPane.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods: {

@@ -139,6 +139,7 @@ import defaultChart from "../../components/departGroup/defaultChart.vue";
 import mapChart from "../../components/departGroup/mapChart.vue";
 import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate,numSeparate,sortByDate,memberArrColor,singleNewArrColor} from "@/utils/index"
 import {MapInterval,TopTenColor} from "@/utils/MapColor"
+import { chinaData } from "@/utils/chinaMap";
 export default {
   name: "cnDepartAnalysis",
   components: {
@@ -1889,14 +1890,14 @@ export default {
           var mapWidth = parseInt(($this.minWidth-38)/2*0.7)-60;
           var mapHeight = parseInt(mapWidth*$this.mapRatio)+30;
           itemMapChart0.title = title+"("+$this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1]+")";
-          itemMapChart0.mapData = mapData[0];
+          itemMapChart0.mapData = chinaData(mapData[0],"name","number");
           itemMapChart0.randomStr = randomString(4);
           itemMapChart0.width = "50%";
           itemMapChart0.alias = "询盘个数";
           itemMapChart0.mapWidth = mapWidth;
           itemMapChart0.mapHeight = mapHeight;
           itemMapChart1.title = title+"("+$this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1]+")";
-          itemMapChart1.mapData = mapData[1];
+          itemMapChart1.mapData = chinaData(mapData[1],"name","number");
           itemMapChart1.randomStr = randomString(4);
           itemMapChart1.width = "50%";
           itemMapChart1.alias = "询盘个数";
@@ -1907,18 +1908,18 @@ export default {
           var maxNum = maxNumArr[0];
           itemMapChart0.colorData = MapInterval(maxNum);
           itemMapChart1.colorData = MapInterval(maxNum);
-          itemMapChart0.topTitle = "热门地区TOP5";
+          itemMapChart0.topTitle = "热门地区TOP10";
           itemMapChart0.topTenData = [];
           itemMapChart0.mapData.forEach(function(item,index){
-            if(index<5){
+            if(index<10){
               itemMapChart0.topTenData.push(item);
             }
           });
           itemMapChart0.topTenColor = TopTenColor(itemMapChart0.topTenData,itemMapChart0.colorData);
-          itemMapChart1.topTitle = "热门地区TOP5";
+          itemMapChart1.topTitle = "热门地区TOP10";
           itemMapChart1.topTenData = [];
           itemMapChart1.mapData.forEach(function(item,index){
-            if(index<5){
+            if(index<10){
               itemMapChart1.topTenData.push(item);
             }
           });
@@ -1969,7 +1970,7 @@ export default {
                 itemChart.title=selectContrastGroupList[index-1].name;
               }
               itemChart.randomStr = randomString(4);
-              itemChart.mapData = item;
+              itemChart.mapData = chinaData(item,"name","number");
               itemChart.colorData = MapInterval(maxNum);
               var itemWidth = "50%";
               var mapWidth = 0;
@@ -2002,10 +2003,10 @@ export default {
               itemChart.mapWidth = mapWidth;
               itemChart.mapHeight = mapHeight;
               itemChart.alias = "询盘个数";
-              itemChart.topTitle = "热门地区TOP5";
+              itemChart.topTitle = "热门地区TOP10";
               itemChart.topTenData = [];
               itemChart.mapData.forEach(function(item,index){
-                if(index<5){
+                if(index<10){
                   itemChart.topTenData.push(item);
                 }
               });
@@ -2021,12 +2022,12 @@ export default {
             // 月维度
             var itemMapData = {};
             if($this.selectedData.isMonth){
-              itemMapData.mapData = res.provincecountmapmonth;
-              itemMapData.colorData = MapInterval(res.provincecountmapmonth[0].number);
+              itemMapData.mapData = chinaData(res.provincecountmapmonth,"name","number");
+              itemMapData.colorData = MapInterval(itemMapData.mapData[0].value);
             }else{
               // 日维度
-              itemMapData.mapData = res.provincecountmapday;
-              itemMapData.colorData = MapInterval(res.provincecountmapday[0].number);
+              itemMapData.mapData = chinaData(res.provincecountmapday,"name","number");
+              itemMapData.colorData = MapInterval(itemMapData.mapData[0].value);
             }
             itemMapData.randomStr = randomString(4);
             itemMapData.alias = "询盘个数";
@@ -2074,14 +2075,14 @@ export default {
           var mapWidth = parseInt(($this.minWidth-38)/2*0.7)-60;
           var mapHeight = parseInt(mapWidth*$this.mapRatio)+30;
           itemMapChart0.title = title+"（"+$this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1]+"）";
-          itemMapChart0.mapData = mapData[0];
+          itemMapChart0.mapData = chinaData(mapData[0],"name","number");
           itemMapChart0.randomStr = randomString(4);
           itemMapChart0.width = "50%";
           itemMapChart0.alias = "成交积分";
           itemMapChart0.mapWidth = mapWidth;
           itemMapChart0.mapHeight = mapHeight;
           itemMapChart1.title = title+"（"+$this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1]+"）";
-          itemMapChart1.mapData = mapData[1];
+          itemMapChart1.mapData = chinaData(mapData[1],"name","number");
           itemMapChart1.randomStr = randomString(4);
           itemMapChart1.width = "50%";
           itemMapChart1.alias = "成交积分";
@@ -2092,18 +2093,18 @@ export default {
           var maxNum = maxNumArr[0];
           itemMapChart0.colorData = MapInterval(maxNum);
           itemMapChart1.colorData = MapInterval(maxNum);
-          itemMapChart0.topTitle = "热门地区TOP5";
+          itemMapChart0.topTitle = "热门地区TOP10";
           itemMapChart0.topTenData = [];
           itemMapChart0.mapData.forEach(function(item,index){
-            if(index<5){
+            if(index<10){
               itemMapChart0.topTenData.push(item);
             }
           });
           itemMapChart0.topTenColor = TopTenColor(itemMapChart0.topTenData,itemMapChart0.colorData);
-          itemMapChart1.topTitle = "热门地区TOP5";
+          itemMapChart1.topTitle = "热门地区TOP10";
           itemMapChart1.topTenData = [];
           itemMapChart1.mapData.forEach(function(item,index){
-            if(index<5){
+            if(index<10){
               itemMapChart1.topTenData.push(item);
             }
           });
@@ -2146,7 +2147,7 @@ export default {
                 itemChart.title=selectContrastGroupList[index-1].name;
               }
               itemChart.randomStr = randomString(4);
-              itemChart.mapData = item;
+              itemChart.mapData = chinaData(item,"name","number");
               itemChart.colorData = MapInterval(maxNum);
               var itemWidth = "50%";
               var mapWidth = 0;
@@ -2179,10 +2180,10 @@ export default {
               itemChart.mapWidth = mapWidth;
               itemChart.mapHeight = mapHeight;
               itemChart.alias = "成交积分";
-              itemChart.topTitle = "热门地区TOP5";
+              itemChart.topTitle = "热门地区TOP10";
               itemChart.topTenData = [];
               itemChart.mapData.forEach(function(item,index){
-                if(index<5){
+                if(index<10){
                   itemChart.topTenData.push(item);
                 }
               });
@@ -2196,7 +2197,7 @@ export default {
             dealRegionMapData = [];
             // 统计
             var itemMapData = {};
-            itemMapData.mapData = res.provincebuymapmonth;
+            itemMapData.mapData = chinaData(res.provincebuymapmonth,"name","number");;
             itemMapData.colorData = MapInterval(res.provincebuymapmonth[0].number);
             itemMapData.randomStr = randomString(4);
             itemMapData.title = "成交积分地图展示 - 地区排行榜";

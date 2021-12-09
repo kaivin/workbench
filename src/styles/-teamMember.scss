@@ -885,10 +885,15 @@
               padding: 0 0 30px;
             }
           }
-          .map-chart{
-            position:relative;
-            top: 50%;
-            transform: translateY(-50%);
+          .map-panel{
+            position: relative;
+            .map-chart{
+              position:absolute;
+              top: 0;
+              left:0;
+              width: 100%;
+              height: 100%;
+            }
           }
         }
         .region-rank{
@@ -1032,6 +1037,14 @@
               }
               .map-panel{
                 margin: 0 auto;
+                position: relative;
+                .map-chart{
+                  position:absolute;
+                  top: 0;
+                  left:0;
+                  width: 100%;
+                  height: 100%;
+                }
               }
               .region-rank{
                 margin: 0 auto;

@@ -12,12 +12,8 @@
         </div>
       </div>
       <div class="rowTwoOneItem">
-        <div class="map-chart" ref="cmap" v-resize="redraw">
-          <div
-            v-if="language == '中文'"
-            id="regionMapChart"
-            class="chart-canvas"
-          ></div>
+        <div class="map-chart">
+          <div v-if="language == '中文'" id="regionMapChart" class="chart-canvas"></div>
           <div v-else id="worldRegionMapChart" class="chart-canvas"></div>
         </div>
         <div class="top-ten">
@@ -31,23 +27,18 @@
 </template>
 
 <script>
-import { Bar,P,G2,} from '@antv/g2plot';
+import { Bar} from '@antv/g2plot';
 import { worldCountry } from "@/utils/worldCountry";
-import DataSet from '@antv/data-set';
-import {MapInterval,MapColor,TopTenColor} from "@/utils/MapColor";
+import { chinaData } from "@/utils/chinaMap";
+import {MapInterval,TopTenColor} from "@/utils/MapColor";
 export default {
     name:'demo',
     data(){
       return {
-        mapDateData:'',
-        numList:[],
-        sumColor:[],
         type:0,//0 询盘  1 成交积分  2 成交个数
         worldRegionMapChart:null,//世界地图
         regionMapChart:null,//中国地图
         pieSourcePlot:null,//热门地区TOP10
-        mapWidth: 400,
-        mapHeight: 240,
       }
     },
     props:{
@@ -79,50 +70,25 @@ export default {
           return []
         }
       }
-
     },
     watch:{
       provincecountmap:{
         handler(newval,oldval){
-          if(this.language == '中文'){
-            this.drawCnCluesRegionChart(newval);
-          }else{
-            this.drawEnCluesRegionChart(newval);
-          }
-          
-          this.drawTopTen();
+          this.getRuleData();
         },
         deep:true
       },
       type:function(newval,oldval){
-        if(this.language == '中文'){
-            this.drawCnCluesRegionChart(newval);
-          }else{
-            this.drawEnCluesRegionChart(newval);
-          }
-        this.drawTopTen();
+        this.getRuleData();
       }
     },
     mounted(){
-     
+      window.addEventListener('resize',this.echartsSize)
     },
-    directives: {  // 使用局部注册指令的方式
-      resize: { // 指令的名称
-        bind(el, binding) { // el为绑定的元素，binding为绑定给指令的对象
-          let width = '', height = '';
-          function isReize() {
-            const style = document.defaultView.getComputedStyle(el);
-            if (width !== style.width || height !== style.height) {
-              binding.value();  // 关键
-            }
-            width = style.width;
-            height = style.height;
-          }
-          el.__vueSetInterval__ = setInterval(isReize, 300);
-        },
-        unbind(el) {
-          clearInterval(el.__vueSetInterval__);
-        }
+    destroyed(){
+      window.removeEventListener('resize',this.echartsSize);
+      if(this.myChart){
+        this.myChart.dispose();
       }
     },
     methods:{
@@ -163,175 +129,191 @@ export default {
       changeType(val){
         this.type = val;
       },
-      // 中文地区询盘地图
-      drawCnCluesRegionChart(newval){
+      // 处理地图数据
+      getRuleData(){
         var $this = this;
-        var maxNum='';
-        var minAverage='';
         let mapCountData = [];
-        if(this.type == 0){
-          mapCountData = $this.provincecountmap;
-        }else{
-          mapCountData = $this.provincescoretmap;
-         
-          mapCountData.sort(function(a,b){
-            return a.number-b.number
-          }).reverse();
-        }
-        if($this.worldRegionMapChart&&!$this.worldRegionMapChart.destroyed){
-        $this.worldRegionMapChart.destroy();
-        }
-        if($this.regionMapChart&&!$this.regionMapChart.destroyed){
-          $this.regionMapChart.destroy();
-        }
-        mapCountData.forEach(function(item,index){
-            if(maxNum<item.number){
-              maxNum=item.number;
-            }
-        });
-        let mapInterval = MapInterval(maxNum);
-        let mapColor = MapColor(mapCountData,mapInterval)
-        
-        if(mapCountData.length>0){   
-          fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/china-provinces.geo.json')
-          .then(res => res.json())
-          .then(GeoJSON => {
-            const regionMapChart = new G2.Chart({
-              container: 'regionMapChart',
-              width: $this.mapWidth,
-              height: $this.mapHeight,
-              // 添加 element 选中和激活交互
-              interactions: [{ type: 'element-single-selected' }, { type: 'element-active' }],
-            });
-            regionMapChart.scale({
-              latitude: { sync: true },
-              longitude: { sync: true }
-            });
-            regionMapChart.tooltip({
-              showTitle: false,
-              showMarkers: false,
-              shared: true,
-            });
-            regionMapChart.axis(false);
-            regionMapChart.legend('trend', {
-              position: 'right-bottom',
-              flipPage:false,
-            });
-            // 绘制中国地图背景
-            var ds = new DataSet();
-            const geoDv = ds.createView('back').source(GeoJSON, {type: 'GeoJSON'});
-            const geoView = regionMapChart.createView();
-            geoView.data(geoDv.rows);
-            geoView.tooltip(false);
-            geoView.polygon()
-              .position('longitude*latitude')
-              .color('grey')
-              .style({
-                fill: '#fff',
-                stroke: '#ccc',
-                lineWidth: 1,
-              });
-            // 可视化用户数据
-            const userData = [];
-            mapCountData.forEach(function(item,index){
-              var itemData = {};
-              itemData.name = item.name;
-              itemData.number = item.number;
-              userData.push(itemData);
-            });
-            
-            const userDv = ds.createView().source(userData).transform({
-              geoDataView: geoDv,
-              field: 'name',
-              type: 'geo.region',
-              as: ['longitude', 'latitude']
-            }).transform({
-              type: 'map',
-              callback: obj => {
-                  if(obj.number <=mapInterval.minAverage){
-                      obj.trend=mapInterval.averArr[0];
-                  }else if(obj.number <=mapInterval.minAverage*2 && obj.number>mapInterval.minAverage){
-                      obj.trend=mapInterval.averArr[1];
-                  }else if(obj.number <=mapInterval.minAverage*3 && obj.number>mapInterval.minAverage*2){
-                      obj.trend=mapInterval.averArr[2];
-                  }else if(obj.number <=mapInterval.minAverage*4 && obj.number>mapInterval.minAverage*3){
-                      obj.trend=mapInterval.averArr[3];
-                  }else{
-                      obj.trend=mapInterval.averArr[4];
-                  }
-                  return obj;
-              }
-            });
-            const userView = regionMapChart.createView();
-            userView.data(userDv.rows);
-            userView.scale({
-              number: {
-                alias: $this.type == 0?'数量':'积分'
-              },
-              name:{
-                alias:"地区"
-              }
-            });
-            
-            userView.polygon()
-              .position('longitude*latitude')     
-              .color('trend', mapColor)
-              .tooltip('name*number')
-              .style({
-                fillOpacity: 1,
-                stroke:"#999",
-                // shadowColor:"#999",
-                // shadowBlur:1,
-                // shadowOffsetX:1,
-                // shadowOffsetY:1,
-              }).state({
-                active: {
-                  style: {
-                    lineWidth: 1,
-                    stroke:"#555",
-                    fillOpacity:1,
-                  },
-                },
-              }).animate({
-                leave: {
-                  animation: 'fade-out'
-                }
-              });
-            userView.interaction('element-active');
-            $this.regionMapChart = regionMapChart;
-            regionMapChart.render();
-          });
-        }
-      },
-      // 热门地区TOP10
-      drawTopTen(){
-        var $this = this;
-        if($this.pieSourcePlot&&!$this.pieSourcePlot.destroyed){
-          $this.pieSourcePlot.destroy();
-        }
-         let mapCountData = [];
         if(this.type == 0){
           mapCountData = $this.provincecountmap;
         }else if(this.type == 1){
           mapCountData = $this.provincescoretmap;
-          
-          mapCountData.sort(function(a,b){
-            return a.number-b.number
-          }).reverse();
-        }else if(this.type == 2){
+        }else{
           mapCountData = $this.provincescorenumbertmap;
-          mapCountData.sort(function(a,b){
-            return a.number-b.number
-          }).reverse();
         }
-        mapCountData = mapCountData.slice(0,5);
-        const maxNum =  mapCountData[0].number;
+        if(this.language == '中文'){
+          mapCountData = chinaData(mapCountData,"name","number")
+          $this.drawCnRegionChart(mapCountData);
+        }else{
+          mapCountData = worldCountry(mapCountData,"country","number");
+          $this.drawEnRegionChart(mapCountData);
+        }
+        $this.drawTopTen(mapCountData);
+      },
+      // 中文地区询盘地图
+      drawCnRegionChart(dataArr){
+        var $this = this;
+        var maxNum=dataArr[0].value;
+        let mapInterval = MapInterval(maxNum);
+        var myChart = $this.$echarts.init(document.getElementById('regionMapChart'));
+        var alias = "";
+        if($this.type==0){
+          alias = "询盘个数";
+        }else{
+          alias = "成交积分";
+        }
+        var option = {
+          // 提示框组件
+          tooltip: {
+            trigger: 'item', // 触发类型, 数据项图形触发，主要在散点图，饼图等无类目轴的图表中使用
+            // 提示框浮层内容格式器，支持字符串模板和回调函数两种形式
+            // 使用函数模板  传入的数据值 -> value: number | Array
+            backgroundColor:'rgba(255, 255, 255, 0.9)',
+            extraCssText: 'box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);',
+            showDelay: 0,
+            padding:[5,10],
+            transitionDuration: 0.2,
+            formatter: function (params) {
+                  return `<div class="echarts-tooltip">
+                    <div class="tooltip-list">
+                      <div class="item-tooltip">
+                        <span class="icon" style="background:${params.color}"></span>
+                        <span class="name">地区：</span>
+                        <div class="num">${params.data.name}</div>
+                      </div>
+                      <div class="item-tooltip">
+                        <span class="icon" style="background:${params.color}"></span>
+                        <span class="name">${alias}：</span>
+                        <div class="num">${params.data.value}</div>
+                      </div>
+                    </div>
+                  </div>`
+            },
+            textStyle:{
+              fontSize:12,
+              color:'#333'
+            }
+          },
+          // 视觉映射组件
+          visualMap: {
+            type: 'piecewise', // continuous 类型为连续型  piecewise 类型为分段型
+            pieces:mapInterval.pieces,
+            left:0,
+            bottom:0,
+            zlevel:1,
+            // 文本样式
+            textStyle: {
+              height: 140,
+              lineHeight:140,
+              fontSize: 12,
+              color: '#333'
+            },
+            realtime: false, // 拖拽时，是否实时更新
+            calculable: true, // 是否显示拖拽用的手柄
+            // 定义 在选中范围中 的视觉元素
+            inRange: {
+              color: mapInterval.defaultColor // 图元的颜色
+            },
+            inverse:false,
+            orient:'vertical',
+            itemWidth:9,
+            itemHeight:9,
+            align:'left',
+            textGap:8,
+            outOfRange: {
+              color: '#eee'
+            }
+          },
+          // geo: {
+          //   map: "china",
+          //   roam: false,// 一定要关闭拖拽
+          //   zoom: 1.2,
+          //   label: {
+          //     normal: {
+          //       show: false, //关闭省份名展示
+          //       fontSize: "10",
+          //       color: "rgba(0,0,0,0.7)"
+          //     },
+          //     emphasis: {
+          //       show: false
+          //     }
+          //   },
+          //   itemStyle: {
+          //     normal: {
+          //       areaColor: "#0d0059",
+          //       borderColor: "#389dff",
+          //       borderWidth: 1, //设置外层边框
+          //       shadowBlur: 3,
+          //       shadowOffsetY: 3,
+          //       shadowOffsetX: 0,
+          //       shadowColor: "#01012a"
+          //     },
+          //     emphasis: {
+          //       areaColor: "#184cff",
+          //       shadowOffsetX: 0,
+          //       shadowOffsetY: 0,
+          //       shadowBlur: 3,
+          //       borderWidth: 0,
+          //       shadowColor: "rgba(0, 0, 0, 0.5)"
+          //     }
+          //   }
+          // },
+          series: [
+            {
+              type: 'map', // 类型
+              // 系列名称，用于tooltip的显示，legend 的图例筛选 在 setOption 更新数据和配置项时用于指定对应的系列
+              map: 'china', // 地图类型
+              // 是否开启鼠标缩放和平移漫游 默认不开启 如果只想要开启缩放或者平移，可以设置成 'scale' 或者 'move' 设置成 true 为都开启
+              roam: false,
+              zoom:1.2,
+              // 自定义地区的名称映射
+              // nameMap:worldNameMap(),
+              // 图形上的文本标签
+              label: {
+                show: false // 是否显示对应地名
+              },
+              // 地图区域的多边形 图形样式
+              itemStyle: {
+                borderWidth: 0.5, // 描边线宽 为 0 时无描边
+                borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+                borderType: 'solid' // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
+              },
+              // 高亮状态下的多边形和标签样式
+              emphasis: {
+                label: {
+                  show: false, // 是否显示标签
+                },
+                itemStyle: {
+                  areaColor: 'yellow', // 地图区域的颜色
+                  borderWidth: 0.5, // 描边线宽 为 0 时无描边
+                  borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+                  borderType: 'solid' // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
+                }
+              },
+              // 地图系列中的数据内容数组 数组项可以为单个数值
+              data: dataArr
+            },
+          ]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        this.myChart = myChart;
+        this.echartsResize = this.myChart.resize();
+      },
+      // 热门地区TOP10
+      drawTopTen(dataArr){
+        var $this = this;
+        if($this.pieSourcePlot&&!$this.pieSourcePlot.destroyed){
+          $this.pieSourcePlot.destroy();
+        }
+        let mapCountData = [];
+        mapCountData = dataArr.slice(0,5);
+        const maxNum =  mapCountData[0].value;
         const mapInterval = MapInterval(maxNum);
         const topTenColor = TopTenColor(mapCountData,mapInterval);
         if(mapCountData.length>0){
           const pieSourcePlot = new Bar('topTen', {
           data:mapCountData,
-          xField: 'number',
+          xField: 'value',
           yField: $this.language =='中文'?'name':'country',
           seriesField: $this.language =='中文'?'name':'country',
           barWidthRatio: 0.4,
@@ -384,167 +366,137 @@ export default {
         pieSourcePlot.render();
         }
       },
-      // 英文地区询盘地图
-      drawEnCluesRegionChart(){
+      // 英文国家地图
+      drawEnRegionChart(dataArr){
         var $this = this;
-        var maxNum='';
-        var minAverage='';
-        let mapCountData = [];
-        if(this.type == 0){
-          mapCountData = worldCountry($this.provincecountmap);
-        }else if(this.type == 1){
-          mapCountData = worldCountry($this.provincescoretmap);
-        }else{
-          mapCountData = worldCountry($this.provincescorenumbertmap);
-        }
-        mapCountData.sort(function(a,b){return a.number-b.number}).reverse();
-        if($this.worldRegionMapChart&&!$this.worldRegionMapChart.destroyed){
-          $this.worldRegionMapChart.destroy();
-        }
-        if($this.regionMapChart&&!$this.regionMapChart.destroyed){
-          $this.regionMapChart.destroy();
-        }
-        $this.numList='';
-        $this.sumColor=[];
-        mapCountData.forEach(function(item,index){
-            if(maxNum<item.number){
-              maxNum=item.number;
-            }
-        });
+        var maxNum=dataArr[0].value;
         let mapInterval = MapInterval(maxNum);
-        let mapColor = MapColor(mapCountData,mapInterval)
-       
-        fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/world.geo.json')
-        .then(res => res.json())
-        .then(mapData => {
-          const worldRegionMapChart = new G2.Chart({
-            container: 'worldRegionMapChart',
-            width: $this.mapWidth,
-            height: $this.mapHeight,
-          });
-          worldRegionMapChart.tooltip({
-            showTitle: false,
-            showMarkers: false,
-            shared: true,
-          });
-          // 同步度量
-          worldRegionMapChart.scale({
-            longitude: {
-              sync: true
-            },
-            latitude: {
-              sync: true
-            }
-          });
-          worldRegionMapChart.axis(false);
-          worldRegionMapChart.legend('trend', {
-            position: 'bottom-left',
-            itemHeight:20,
-            flipPage:false,
-          });
-          // 绘制世界地图背景
-          var ds = new DataSet();
-          const worldMap = ds.createView('back').source(mapData, {type: 'GeoJSON'});
-          const worldMapView = worldRegionMapChart.createView();
-          worldMapView.data(worldMap.rows);
-          worldMapView.tooltip(false);
-          worldMapView.polygon()
-            .position('longitude*latitude')
-            .color('grey')
-            .style({
-              fill: '#fff',
-              stroke: '#ccc',
-              lineWidth: 1,
-            });
-          // 可视化用户数据
-          const userData = mapCountData;
-          
-          const userDv = ds.createView().source(userData).transform({
-            // sizeByCount: true,
-            geoDataView: worldMap,
-            field: 'country',
-            type: 'geo.region',
-            as: ['longitude', 'latitude']
-          }).transform({
-            type: 'map',
-            callback: obj => {
-              if(obj.number <=mapInterval.minAverage){
-                  obj.trend=mapInterval.averArr[0];
-              }else if(obj.number <=mapInterval.minAverage*2 && obj.number>mapInterval.minAverage){
-                  obj.trend=mapInterval.averArr[1];
-              }else if(obj.number <=mapInterval.minAverage*3 && obj.number>mapInterval.minAverage*2){
-                  obj.trend=mapInterval.averArr[2];
-              }else if(obj.number <=mapInterval.minAverage*4 && obj.number>mapInterval.minAverage*3){
-                  obj.trend=mapInterval.averArr[3];
-              }else{
-                  obj.trend=mapInterval.averArr[4];
-              }
-              return obj;
-            }
-          });
-          const userView = worldRegionMapChart.createView();
-          userView.data(userDv.rows);
-          userView.scale({
-            number: {
-              alias: $this.type == 1?'积分':'数量'
-            },
-            name:{
-              alias:"国家"
-            },
-            country:{
-              alias:"英文名"
-            }
-          });
-          userView.polygon()
-            .position('longitude*latitude')         
-            .color('trend', mapColor)
-            .tooltip('name*country*number')
-            .style({
-              fillOpacity: 1,
-              stroke:"#fff"
-            }).state({
-                active: {
-                  style: {
-                    lineWidth: 0,
-                    stroke:0,
-                    fillOpacity:0.8,
-                  },
-                },
-              }).animate({
-              leave: {
-                animation: 'fade-out'
-              }
-            });
-          userView.interaction('element-active');
-          $this.worldRegionMapChart = worldRegionMapChart;
-          worldRegionMapChart.render();
-        });
-      },
-      redraw(){
-        var $this = this;
-        var allWidth = this.$refs["cmap"].offsetWidth;
-        if(allWidth < 400){
-          $this.mapWidth = 360;
-          $this.mapHeight = 210;
-
-          if($this.language == '中文'){
-              $this.regionMapChart.changeSize($this.mapWidth,$this.mapHeight);
-          }else{
-              $this.worldRegionMapChart.changeSize($this.mapWidth,$this.mapHeight);
-          }
-
-        }else if(allWidth < 450 && allWidth > 400){
-          $this.mapWidth = 400;
-          $this.mapHeight = 240;
-
-          if($this.language == '中文'){
-              $this.regionMapChart.changeSize($this.mapWidth,$this.mapHeight);
-          }else{
-              $this.worldRegionMapChart.changeSize($this.mapWidth,$this.mapHeight);
-          }
-
+        var myChart = $this.$echarts.init(document.getElementById('worldRegionMapChart'));
+        var alias = "";
+        if($this.type==0){
+          alias = "询盘个数";
+        }else if($this.type==1){
+          alias = "成交积分";
+        }else{
+          alias = "成交个数";
         }
-      }
+        var option = {
+          // 提示框组件
+          tooltip: {
+            trigger: 'item', // 触发类型, 数据项图形触发，主要在散点图，饼图等无类目轴的图表中使用
+            // 提示框浮层内容格式器，支持字符串模板和回调函数两种形式
+            // 使用函数模板  传入的数据值 -> value: number | Array
+            backgroundColor:'rgba(255, 255, 255, 0.9)',
+            extraCssText: 'box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);',
+            showDelay: 0,
+            padding:[5,10],
+            transitionDuration: 0.2,
+            formatter: function (params) {
+                  return `<div class="echarts-tooltip">
+                    <div class="tooltip-list">
+                      <div class="item-tooltip">
+                        <span class="icon" style="background:${params.color}"></span>
+                        <span class="name">国家：</span>
+                        <div class="num">${params.data.country}</div>
+                      </div>
+                      <div class="item-tooltip">
+                        <span class="icon" style="background:${params.color}"></span>
+                        <span class="name">英文名：</span>
+                        <div class="num">${params.data.name}</div>
+                      </div>
+                      <div class="item-tooltip">
+                        <span class="icon" style="background:${params.color}"></span>
+                        <span class="name">${alias}：</span>
+                        <div class="num">${params.data.value}</div>
+                      </div>
+                    </div>
+                  </div>`
+            },
+            textStyle:{
+              fontSize:12,
+              color:'#333'
+            }
+          },
+          // 视觉映射组件
+          visualMap: {
+            type: 'piecewise', // continuous 类型为连续型  piecewise 类型为分段型
+            // 指定 visualMapContinuous 组件的允许的最小/大值。'min'/'max' 必须用户指定。
+            // [visualMap.min, visualMax.max] 形成了视觉映射的『定义域』
+            pieces:mapInterval.pieces,
+            left:0,
+            bottom:0,
+            right:0,
+            top:'auto',
+            // 文本样式
+            textStyle: {
+              height: 140,
+              lineHeight:140,
+              fontSize: 12,
+              color: '#333'
+            },
+            realtime: false, // 拖拽时，是否实时更新
+            calculable: true, // 是否显示拖拽用的手柄
+            // 定义 在选中范围中 的视觉元素
+            inRange: {
+              color: mapInterval.defaultColor // 图元的颜色
+            },
+            inverse:true,
+            orient:'horizontal',
+            itemWidth:9,
+            itemHeight:9,
+            align:'left',
+            textGap:8,
+            outOfRange: {
+              color: '#eee'
+            }
+          },
+          series: [
+            {
+              type: 'map', // 类型
+              // 系列名称，用于tooltip的显示，legend 的图例筛选 在 setOption 更新数据和配置项时用于指定对应的系列
+              map: 'world', // 地图类型
+              // 是否开启鼠标缩放和平移漫游 默认不开启 如果只想要开启缩放或者平移，可以设置成 'scale' 或者 'move' 设置成 true 为都开启
+              roam: false,
+              zoom:1.2,
+              // 自定义地区的名称映射
+              // nameMap:worldNameMap(),
+              // 图形上的文本标签
+              label: {
+                show: false // 是否显示对应地名
+              },
+              // 地图区域的多边形 图形样式
+              itemStyle: {
+                borderWidth: 0.5, // 描边线宽 为 0 时无描边
+                borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+                borderType: 'solid' // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
+              },
+              // 高亮状态下的多边形和标签样式
+              emphasis: {
+                label: {
+                  show: false, // 是否显示标签
+                },
+                itemStyle: {
+                  areaColor: 'yellow', // 地图区域的颜色
+                  borderWidth: 0.5, // 描边线宽 为 0 时无描边
+                  borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+                  borderType: 'solid' // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
+                }
+              },
+              // 地图系列中的数据内容数组 数组项可以为单个数值
+              data: dataArr
+            },
+          ]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        this.myChart = myChart;
+        this.echartsResize = this.myChart.resize();
+      },
+      echartsSize(){
+        if(this.myChart){
+          this.myChart.resize();
+        }
+      },
     }
 }
 </script>
@@ -553,13 +505,13 @@ export default {
 .hxpage{
   background: #fff;
   .module-top{
-    padding:17px 30px 15px 30px;
-    border-bottom: 2px solid #f6f7fa;
+    padding: 15px;
   }
   .title-view{
     height: 24px;
     line-height: 24px;
-    margin-bottom:6px;
+    margin-bottom: 10px;
+    padding: 0 15px;
     .title{
       font-size: 14px;
       color: #1a1a1a;
@@ -681,7 +633,7 @@ export default {
   }
   .map-chart{
     float: left;
-    width: 50%;
+    width: 54%;
     .chart-canvas{
       height: 242px;
       line-height: 242px;
@@ -693,10 +645,9 @@ export default {
   }
   .top-ten{
     float: right;
-    width: 48%;
-    padding-top:23px;
+    width: 46%;
     .chart-canva{
-      height: 202px;
+      height: 242px;
     }
   }
   

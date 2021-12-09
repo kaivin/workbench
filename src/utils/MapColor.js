@@ -1,35 +1,44 @@
 ﻿export function MapInterval(maxNum){    
-    var minAverage='';  
-    var defaulColor = []   
-        if(maxNum>=6){
-            var average=parseInt(maxNum/4);
-            var averageStr=average.toString();
-            var numRes = [];
-            if(average > 0){
-                for(var i=0;i<averageStr.length;i++){
-                    numRes.push(averageStr[i]);
-                }
+    var minAverage = 0;  
+    var defaultColor = []   
+    var pieces = [];
+    var numList = [];
+    if(maxNum>=4){
+        var average=parseInt(maxNum/4);
+        var averageStr=average.toString();
+        var numRes = [];
+        if(average > 0){
+            for(var i=0;i<averageStr.length;i++){
+                numRes.push(parseInt(averageStr[i]));
             }
-            if(averageStr.length>=2){
-                minAverage=numRes[0]*Math.pow(10,(averageStr.length-1))
-            }else{
-                minAverage=numRes[0]
-            }
-            var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
-            var averArr=['0-'+minAverage,minAverage+'-'+minAverage*2,minAverage*2+'-'+minAverage*3,minAverage*3+'-'+minAverage*4,'大于'+minAverage*4];
-            defaulColor=['#fe3a33','#ffa037','#1760ff','#a4b8de','#e3e3e9'];
-            var numList=[minAverage*4,minAverage*3,minAverage*2,minAverage*1]; 
-        }else{
-            minAverage=10;
-            var averArr=['0-'+minAverage];
-            defaulColor=['#e3e3e9'];
-            var numList=[minAverage*1];          
         }
+        if(averageStr.length>=2){
+            minAverage=numRes[0]*Math.pow(10,(averageStr.length-1))
+        }else{
+            minAverage=numRes[0]
+        }
+        defaultColor = ['#fe3a33','#ffa037','#1760ff','#a4b8de','#e3e3e9'];
+        numList = [minAverage*4,minAverage*3,minAverage*2,minAverage*1]; 
+        pieces = [
+            {lt:minAverage,label:'0-'+minAverage,color:'#e3e3e9',symbol:'rect'},
+            {gte:minAverage,lt:minAverage*2,label:minAverage+'-'+minAverage*2,color:'#a4b8de',symbol:'rect'},
+            {gte:minAverage*2,lt:minAverage*3,label:minAverage*2+'-'+minAverage*3,color:'#1760ff',symbol:'rect'},
+            {gte:minAverage*3,lt:minAverage*4,label:minAverage*3+'-'+minAverage*4,color:'#ffa037',symbol:'rect'},
+            {gte:minAverage*4,label:'大于'+minAverage*4,color:'#fe3a33',symbol:'rect'},
+        ]
+    }else{
+        minAverage=4;
+        defaultColor=['#e3e3e9'];
+        numList=[minAverage*1];    
+        pieces = [
+            {lt:minAverage,label:'0-'+minAverage,color:'#e3e3e9',symbol:'rect'},
+        ]      
+    }
     var valDateObj={}
     valDateObj.minAverage=minAverage;         // 平均值
     valDateObj.numList=numList;               // 色块区间
-    valDateObj.averArr=averArr;               // 区间值
-    valDateObj.defaulColor=defaulColor;       // 区间值
+    valDateObj.pieces=pieces;               // 区间值
+    valDateObj.defaultColor=defaultColor;       // 区间值
     return valDateObj;    
 };
 
@@ -64,12 +73,16 @@ export function TopTenColor(resArr,obj){
     var topTenColor=[];
     resArr.forEach(function(item,index){
         for(var i=0;i<obj.numList.length;i++){
-            if(item.number>obj.numList[i]){
-                topTenColor.push(obj.defaulColor[i]);
+            if(item.value>=obj.numList[i]){
+                topTenColor.push(obj.defaultColor[i]);
                 break;
             }
-            if(item.number<=obj.numList[obj.numList.length-1]){
-                topTenColor.push(obj.defaulColor[obj.numList.length-1]);
+            if(item.value<obj.numList[obj.numList.length-1]){
+                if(obj.defaultColor.length==1){
+                    topTenColor.push(obj.defaultColor[0]);
+                }else{
+                    topTenColor.push(obj.defaultColor[obj.numList.length]);
+                }
                 break;
             }
         }

@@ -1595,6 +1595,35 @@
     }
   }
 }
+.echarts-tooltip{
+  .tooltip-list{
+    width: 100%;
+    overflow: hidden;
+    .item-tooltip{
+      display: flex;
+      .icon{
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: block;
+        margin-right: 8px;
+        margin-top: 8px;
+      }
+      .name{
+        color: rgb(89, 89, 89);
+        flex: 1;
+        padding-right: 15px;
+        height: 24px;
+        line-height: 24px;
+      }
+      .num{
+        color: rgb(89, 89, 89);
+        height: 24px;
+        line-height: 24px;
+      }
+    }
+  }
+}
 @media (max-width:1600px){
   .article-info{
     .ArticleSixFlTop{
