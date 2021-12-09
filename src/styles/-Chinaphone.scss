@@ -1,6 +1,6 @@
 ﻿.cn-phone-index{
   .sub-router{
-    width:200px;
+    width:210px;
   }
   .search-wrap{
     margin: 0 -5px;
@@ -50,7 +50,7 @@
       >span{
         display: inline-block;
         line-height: 24px;
-        font-size: 16px;
+        font-size:$fontsize17;
         font-weight: bold;
         color: $menuActiveText;
       }
@@ -145,7 +145,7 @@
     .el-checkbox{
       .el-checkbox__label{
           line-height:20px!important;
-          font-size:14px!important;
+          font-size:$fontsize15!important;
           color:#1a1a1a;
       }
       &.is-bordered{
@@ -156,7 +156,7 @@
       }
     }
     .require{
-      font-size: 12px;
+      font-size:$fontsize13;
       line-height: 24px;
       display: inline-block;
       color: $red;
@@ -179,7 +179,7 @@
         line-height: 0;
         font-size:0;
         .require{
-          font-size: 14px;
+          font-size:$fontsize15;
           line-height: 28px;
           margin-right: 10px;
           margin-top: 4px;
@@ -231,7 +231,7 @@
     padding:0px;
     h2{
       float: left;
-      font-size:24px;
+      font-size:$fontsize25;
       color:#2b3848;
     }
     .ChinaphoneNumTag{
@@ -239,7 +239,7 @@
       .item-clues{
         float:left;
         position: relative;
-        font-size: 14px;
+        font-size:$fontsize15;
         color:$menuBg;
         cursor: pointer;
         line-height: 23px;
@@ -320,13 +320,13 @@
         text-align:left;
       }
       dt{
-        font-size: 16px;
+        font-size:$fontsize17;
         line-height: 48px;
         height: 48px;
         .svg-i{
           width: 28px;
           height: 28px;
-          font-size: 24px;
+          font-size:$fontsize25;
           margin-left: 6px;
           vertical-align: middle;
           display: inline-block;
@@ -336,7 +336,7 @@
         }
       }
       dd{
-        font-size: 46px;
+        font-size:$fontsize47;
         line-height: 1;
         color: #fc5457;
       }
@@ -354,7 +354,7 @@
     padding:0px;
     h2{
       float: left;
-      font-size:24px;
+      font-size:$fontsize25;
       color:#2b3848;
     }
     .ChinaphoneMapDate{
@@ -407,10 +407,10 @@
         margin-left:4%;
         dl{
           dt{
-            font-size: 14px;
+            font-size:$fontsize15;
           }
           dd{
-            font-size:35px;
+            font-size:$fontsize36;
           }
         }
       }
@@ -427,7 +427,7 @@
         dl{
           padding: 10px 10px 30px 10px;
           dd{
-            font-size:30px;
+            font-size:$fontsize31;
           }
         }
       }

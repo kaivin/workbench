@@ -54,7 +54,7 @@
         display: block;
         width: 42px;
         height: 42px;
-        font-size: 14px;
+        font-size:$fontsize15;
         color: #a2acc1;
         margin: 0 auto;
         overflow: hidden;
@@ -75,7 +75,7 @@
         margin-top: 8px;
         display: block;
         transition: all .3s;
-        .el-menu-item,.el-submenu__title{
+        .el-menu-item{
           height: 42px;
           line-height: 42px;
           transition: all .3s;
@@ -85,9 +85,9 @@
           font-family: "Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;
           .svg-i{
             display: inline-block;
-            width: 16px;
-            height: 16px;
-            font-size: 16px;
+            width: 18px;
+            height: 18px;
+            font-size:$fontsize19;
             vertical-align: -2px;
             color: #a2acc1;
             .svg-icon {
@@ -106,7 +106,7 @@
             transition: all .3s;
           }
           span{
-            font-size: 14px;
+            font-size:$fontsize15;
             transition: all .3s;
             vertical-align: 1px;
             margin-left: 8px;
@@ -128,10 +128,65 @@
             }
           }
         }
+        .el-submenu{
+          .el-submenu__title{
+            height: 42px;
+            line-height: 42px;
+            transition: all .3s;
+            //padding-left: 20px!important;
+            color: #fff;
+            position: relative;
+            font-family: "Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;
+            .svg-i{
+              display: inline-block;
+              width: 18px;
+              height: 18px;
+              font-size:$fontsize19;
+              vertical-align: -2px;
+              color: #a2acc1;
+              .svg-icon {
+                display: block;
+              }
+            }
+            .sub-el-icon {
+              vertical-align: -1px;
+              margin-right:0;
+              color: currentColor;
+              width: 1em;
+              height: 1em;
+            }
+            i{
+              color: #a2acc1;
+              transition: all .3s;
+            }
+            span{
+              font-size:$fontsize15;
+              transition: all .3s;
+              vertical-align: 1px;
+              margin-left: 8px;
+            }
+            &:hover,&:focus{
+              background: #2c344a;
+              color: #fff;
+            }
+            &.is-active{
+              background: #2c344a;
+              &:before{
+                content:'';
+                height: 100%;
+                position: absolute;
+                top:0;
+                left:0;
+                width: 4px;
+                background: #044bff;
+              }
+            }
+          }
+        }
         .el-submenu__title{
           .el-submenu__icon-arrow{
             margin-top: -7px;
-            font-size: 14px;
+            font-size:$fontsize15;
             right: 15px;
             color: #666;
             font-weight: bold;
@@ -150,11 +205,29 @@
               min-width: 0!important;
               height: 32px;
               line-height: 32px;
-              font-size: 12px;
+              font-size:$fontsize13;
               margin: 2px 0;
+              color:#a5abb8;
+              &:hover,&:focus{
+                background: #2c344a;
+                color: #fff;
+              }
+              &.is-active{
+                background: #2c344a;
+                color: #fff;
+                &:before{
+                  content:'';
+                  height: 100%;
+                  position: absolute;
+                  top:0;
+                  left:0;
+                  width: 4px;
+                  background: #044bff;
+                }
+              }
               span{
                 display: inline-block;
-                font-size: 12px;
+                font-size:$fontsize13;
                 padding: 0 10px 0 20px;
                 height: 32px;
                 line-height: 32px;
@@ -180,10 +253,10 @@
         }
         .el-menu{
           .el-menu-item,.el-submenu__title{
-            font-size: 14px;
+            font-size:$fontsize15;
             padding-left: 56px!important;
             span{
-              font-size: 14px;
+              font-size:$fontsize15;
               margin-left:0;
               padding-left: 15px;
               position: relative;

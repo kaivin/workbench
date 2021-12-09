@@ -18,7 +18,7 @@
               padding: 0 10px;
               line-height: 28px;
               cursor: pointer;
-              font-size: 12px;
+              font-size:$fontsize13;
               &:hover,&.active{
                 border: 1px solid #BDDEFF;
                 background-color: #F6FBFF;
@@ -30,7 +30,7 @@
               i{
                 margin-left: 5px;
                 color:#888;
-                font-size: 12px;
+                font-size:$fontsize13;
               }
             }
           }
@@ -47,7 +47,7 @@
             padding: 0 10px;
             line-height: 28px;
             cursor: pointer;
-            font-size: 12px;
+            font-size:$fontsize13;
             &:hover,&.active{
               border: 1px solid #BDDEFF;
               background-color: #F6FBFF;
@@ -59,7 +59,7 @@
             i{
               margin-left: 5px;
               color:#888;
-              font-size: 12px;
+              font-size:$fontsize13;
               &.redsale{
                 font-weight: bold;
               }
@@ -107,7 +107,7 @@
             text-align:left;
             margin-bottom: 10px;
             color:#333333;
-            font-size: 13px;
+            font-size:$fontsize14;
             padding:11px 15px;
             border-radius:20px;
             background-color: #fff;
@@ -119,7 +119,7 @@
             cursor: pointer;
             &:hover{background-position:-50% center}
             i{
-              font-size: 13px;
+              font-size:$fontsize14;
               font-weight: bold;
               padding-left:3px;
               padding-right:3px;
@@ -212,7 +212,7 @@
      .tips,b,em{
        font-style: normal;
        vertical-align: top;
-       font-size: 12px;
+       font-size:$fontsize13;
        height: 28px;
        line-height: 28px;
      }
@@ -259,7 +259,7 @@
       span{
         clear: both;
         display: inline-block;
-        font-size: 14px;
+        font-size:$fontsize15;
         line-height:20px;
       }
     }
@@ -268,7 +268,7 @@
       .team-panel{
         margin-top:9px;
         .require{
-          font-size: 14px;
+          font-size:$fontsize15;
           line-height: 24px;
           margin-right: 10px;
           vertical-align:top;
@@ -303,7 +303,7 @@
         dl{
           dt{
             line-height: 24px;
-            font-size: 13px;
+            font-size:$fontsize14;
             i{
               font-style: normal;
               color:$red;
@@ -313,7 +313,7 @@
             margin-top: 5px;
             p{
               line-height: 32px;
-              font-size: 12px;
+              font-size:$fontsize13;
             }
           }
         }
@@ -369,7 +369,7 @@
                 box-sizing: border-box;
                 min-height:128px;
                 border:1px solid #e4e8ee;
-                font-size:14px;
+                font-size:$fontsize15;
                 line-height:24px;
                 padding:15px 20px;
                 color:$subMenuBg;
@@ -383,7 +383,7 @@
                     display: inline-block;
                   }
                   a{
-                    font-size: 12px;
+                    font-size:$fontsize13;
                     font-weight: bold;
                     color:$red;
                     &:hover{
@@ -402,7 +402,7 @@
           text-align: center;
           line-height: 24px;
           color:#333333;
-          font-size: 13px;
+          font-size:$fontsize14;
           strong{
             margin-left: 5px;
             color:#ff840b;
@@ -428,7 +428,7 @@
                 }
                 span{
                   line-height:32px;
-                  font-size: 13px;
+                  font-size:$fontsize14;
                   color: #333;
                   i{
                     font-style: normal;
@@ -441,7 +441,7 @@
               dt{
                 span{
                   line-height:32px;
-                  font-size: 13px;
+                  font-size:$fontsize14;
                   color: #333;
                   i{
                     font-style: normal;
@@ -457,7 +457,7 @@
               dd{
                 &>span{
                   line-height:32px;
-                  font-size: 14px;
+                  font-size:$fontsize15;
                   color: $red;
                 }
                 .el-radio-group{
@@ -486,7 +486,7 @@
               dt{
                 span{
                   line-height:32px;
-                  font-size: 13px;
+                  font-size:$fontsize14;
                   color: #333;
                   i{
                     color:$red;
@@ -498,7 +498,7 @@
                 &.SaleFootFrTop{
                   &>span{
                     line-height:32px;
-                    font-size: 14px;
+                    font-size:$fontsize15;
                     color: $red;
                   }
                   .el-radio-group{
@@ -535,7 +535,7 @@
           text-align: right;
           padding-top:20px;
           padding-bottom:20px;
-          font-size: 13px;
+          font-size:$fontsize14;
           color:#333;
           &>p{
             padding-right: 10px;

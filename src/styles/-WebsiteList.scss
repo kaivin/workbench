@@ -20,7 +20,7 @@
                 line-height:30px;
                 width:75px;
                 font-weight:normal;
-                font-size:15px;
+                font-size:$fontsize16;
                 color:#999;
                 padding:5px 0px;
                 border:0px;
@@ -57,7 +57,7 @@
                         color:#fff;
                         background:#1e252e;
                         border-radius:0px 4px 4px 0px;
-                        font-size:16px;
+                        font-size:$fontsize17;
                         height:36px;
                         display:block;
                         margin-right:0px!important;
@@ -71,7 +71,7 @@
                             }
                         }
                         &:active{
-                            font-size: 14px;
+                            font-size:$fontsize15;
                         }
                     }
                     .el-input--suffix{
@@ -80,7 +80,7 @@
                             display:block;
                             width:100%;
                             line-height:34px;
-                            font-size:15px;
+                            font-size:$fontsize16;
                             color:#a5a5a5;
                             text-align:left;
                             border:none;
@@ -93,7 +93,7 @@
                 .el-button{
                     padding:0px 10px;
                     margin:0px 5px 0px 0px!important;
-                    font-size:14px;
+                    font-size:$fontsize15;
                     border-radius:3px;
                     line-height:30px;
                     border:0px;
@@ -150,7 +150,7 @@
                             margin-bottom:4px;
                             margin-right:10px;
                             color:$menuActiveText;
-                            font-size:14px;
+                            font-size:$fontsize15;
                             &:hover{
                                 text-decoration:underline;
                             }
@@ -167,7 +167,7 @@
                             margin-bottom:5px;
                             margin-right:10px;
                             color:$menuActiveText;
-                            font-size:13px;
+                            font-size:$fontsize14;
                             cursor: pointer;
                             &:hover{
                                 text-decoration: underline;
@@ -184,7 +184,7 @@
                         line-height:32px;
                         margin-left:10px;
                         color:$menuActiveText;
-                        font-size:14px;
+                        font-size:$fontsize15;
                         &:hover{
                             text-decoration:underline;
                         }
@@ -204,7 +204,7 @@
                     }
                     .item-wrap{
                         .text{
-                            font-size: 13px;
+                            font-size:$fontsize14;
                             line-height: 32px;
                             color: #808080;
                         }
@@ -214,7 +214,7 @@
                         .svg-i{
                             height:32px;
                             line-height:32px;
-                            font-size: 16px;
+                            font-size:$fontsize17;
                             color: #808080;
                             &.online{
                                 color: #49c969;
@@ -236,7 +236,7 @@
                             line-height:24px;
                             margin-left:10px;
                             color:$menuActiveText;
-                            font-size:14px;
+                            font-size:$fontsize15;
                             margin-top:4px;
                             &:hover{
                                 text-decoration:underline;
@@ -249,7 +249,7 @@
                         line-height:24px;
                         margin-left:10px;
                         color:$menuActiveText;
-                        font-size:14px;
+                        font-size:$fontsize15;
                         margin-top:4px;
                         &:hover{
                             text-decoration:underline;
@@ -280,7 +280,7 @@
                     .remarks-content{
                       p{
                         line-height:2;
-                        font-size:14px;
+                        font-size:$fontsize15;
                         padding-top:5px;
                         padding-bottom:5px;
                       }
@@ -292,7 +292,7 @@
                         line-height:24px;
                         margin-left:10px;
                         color:$menuActiveText;
-                        font-size:13px;
+                        font-size:$fontsize14;
                         cursor: pointer;
                         &:hover{
                             text-decoration:underline;
@@ -320,14 +320,14 @@
             }
             label{
                 float:left;
-                font-size:15px;
+                font-size:$fontsize16;
                 line-height:32px;
                 color:#1a1a1a;
                 width:116px;
                 padding-right:10px;
                 text-align:right;
                 .svg-i{
-                    font-size: 16px;
+                    font-size:$fontsize17;
                     color: red;
                     cursor: pointer;
                 }
@@ -345,7 +345,7 @@
                 line-height:30px;
                 box-sizing:border-box;
                 padding-right:15px;
-                font-size:14px;
+                font-size:$fontsize15;
                 &:focus{
                     border-color:$menuActiveText;
                 }

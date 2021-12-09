@@ -13,7 +13,7 @@
             span{
                 clear:both;
                 display:block;
-                font-size:14px;
+                font-size:$fontsize15;
                 color:#808080;
                 padding:6px 0px;
                 line-height:23px;
@@ -37,11 +37,11 @@
         dt{
             float: right;
             color:#2440b3;
-            font-size:14px;
+            font-size:$fontsize15;
             line-height:35px;
             cursor: pointer;
             i{
-                font-size: 20px;
+                font-size:$fontsize21;
                 margin-right: 3px;
                 vertical-align: top;
                 color: #2440b3;
@@ -55,7 +55,7 @@
     .search-orderTwo{
         padding-top:13px;
         &>span{
-            font-size:13px;
+            font-size:$fontsize14;
             color:#999999;
             margin-top:5px;
             line-height:28px;
@@ -68,7 +68,7 @@
                 border-radius:4px;
                 line-height:28px;
                 padding:0px 20px;
-                font-size:13px;
+                font-size:$fontsize14;
                 color:#4c4c4c;
                 margin-left:10px;
                 cursor:pointer;
@@ -94,7 +94,7 @@
                 border-radius:2px;
                 line-height:28px;
                 padding:0px 5px;
-                font-size:13px;
+                font-size:$fontsize14;
                 background:none;
                 color:#4c4c4c;
                 cursor: pointer;
@@ -108,7 +108,7 @@
                   margin-right: 3px;
                   padding-top: 1px;
                   svg{
-                    font-size: 14px;
+                    font-size:$fontsize15;
                   }
                 }
                 .workBg{
@@ -160,7 +160,7 @@
                     display: block;
                     line-height:25px;
                     color:#2e88ff;
-                    font-size:13px;
+                    font-size:$fontsize14;
                     cursor: pointer;
                     &:hover{
                         text-decoration: underline;
@@ -197,7 +197,7 @@
                 margin-left:5px;
                 color:#999;
                 svg{
-                    font-size:14px;
+                    font-size:$fontsize15;
                 }
             }
             &.toolCancel{span{color: #f9a500;}}
@@ -233,7 +233,7 @@
                 text-align: center;
                 line-height:10px;
                 margin-right: 5px;
-                svg{font-size:9px;}
+                svg{font-size:$fontsize10;}
             }
         }
         .color1{
@@ -389,7 +389,7 @@
                       }
                   }
                   span{
-                      font-size: 13px;
+                      font-size:$fontsize14;
                       display: inline-block;
                       height: 28px;
                       line-height: 28px;
@@ -469,7 +469,7 @@
 .el-table-filter__checkbox-group{
     .el-checkbox{
         .el-checkbox__label{
-            font-size:12px;
+            font-size:$fontsize13;
         }
         .el-checkbox__input{
             .el-checkbox__inner{

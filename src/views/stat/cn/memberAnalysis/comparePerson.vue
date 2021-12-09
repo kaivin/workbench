@@ -2,7 +2,7 @@
   <div class="page-root scroll-panel personAnalysis" ref="boxPane">
       <div class="personTopTab">
            <div class="chooseDepart flex-box">
-                <span class="choosetit">部门选择：</span>
+                <span class="choosetit">添加对比：</span>
                 <div class="departItems flex-content">
                 <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
                 </div>
@@ -23,10 +23,6 @@
                   <p>{{item.depart}}</p>
               </div>
               <span class="delIt" v-on:click="handlePerson(parseInt(item.id))"><svg-icon icon-class="error" /></span>
-          </div>
-          <div class="compareWhoItem nouser" v-for="item in 4-comapreuser.length">
-              <div class="user_img">
-              </div>
           </div>
       </div>
       <template v-if="defaultChartData.length>0" v-for="item in defaultChartData">

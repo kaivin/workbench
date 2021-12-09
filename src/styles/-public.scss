@@ -51,11 +51,11 @@
               span{
                   display: inline-block;
                   line-height:24px;
-                  font-size: 14px;
+                  font-size:$fontsize15;
                   i{
                      display: inline-block;
                      margin-right: 10px;
-                     font-size: 15px;
+                     font-size:$fontsize16;
                      .svg-icon{
                           width:20px;
                           height:20px;
@@ -97,7 +97,7 @@
           span{
             vertical-align: top;
             line-height: 24px;
-            font-size: 16px;
+            font-size:$fontsize17;
             color: $menuActiveText;
           }
         }
@@ -132,7 +132,7 @@
             display: inline-block;
             height: 20px;
             font-style: normal;
-            font-size: 12px;
+            font-size:$fontsize13;
             line-height:20px;
             font-weight: normal;
             color:#52575c;
@@ -151,7 +151,7 @@
         }
         span,i,b,em{
           font-style: normal;
-          font-size: 12px;
+          font-size:$fontsize13;
           line-height:24px;
           font-weight: normal;
           color:#52575c;
@@ -189,7 +189,7 @@
     .txt-font{
         padding: 6px 10px;
         color: #fff;
-        font-size: 12px;
+        font-size:$fontsize13;
         font-weight: bold;
     }
     i{

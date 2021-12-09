@@ -173,6 +173,12 @@
                                           >
                                       </el-table-column>
                                       <el-table-column
+                                          prop="goodnumber"
+                                          label="好评数量"
+                                          min-width="80"
+                                          >
+                                      </el-table-column>
+                                      <el-table-column
                                           prop="monthscore"
                                           label="本月已获得积分"
                                           min-width="120"

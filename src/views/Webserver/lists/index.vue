@@ -100,7 +100,7 @@
                               type="index"
                               label="序号"
                               align="center"
-                              width="50">
+                              width="60">
                             </el-table-column>
                             <el-table-column
                               prop="id"

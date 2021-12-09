@@ -43,12 +43,12 @@
             &.txt-font{
                 .font{
                     line-height:32px;
-                    font-size:14px;
+                    font-size:$fontsize15;
                 }
             }
             label{
                 float:left;
-                font-size:15px;
+                font-size:$fontsize16;
                 line-height:32px;
                 color:#1a1a1a;
                 width:100px;
@@ -60,7 +60,7 @@
                 padding:0 5px;
                 margin:0 5px;
                 height:32px;
-                font-size:13px;
+                font-size:$fontsize14;
                 line-height:32px;
                 color:#2e88ff;
             }
@@ -75,7 +75,7 @@
                 box-sizing:border-box;
                 padding-left:15px;
                 padding-right:15px;
-                font-size:14px;
+                font-size:$fontsize15;
                 &:focus{
                     border-color:$menuActiveText;
                 }
@@ -88,7 +88,7 @@
     .el-button.updateBtn{
         background-color:$menuActiveText!important;
         border-color:$menuActiveText!important;
-        font-size:16px!important;
+        font-size:$fontsize17!important;
         min-width:96px;
         box-sizing:border-box!important;
         height:35px;
@@ -117,7 +117,7 @@
     .el-button.resetBtn{
         background-color:#f5f7fa !important;
         border-color:#e4e8ee !important;
-        font-size:16px !important;
+        font-size:$fontsize17 !important;
         color:#808080 !important;
         min-width:83px;
         box-sizing:border-box !important;

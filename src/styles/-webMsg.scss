@@ -4,7 +4,7 @@
         overflow: hidden;
         p{
             padding: 0 10px;
-            font-size: 12px;
+            font-size:$fontsize13;
             line-height: 24px;
             color: #999;
         }
@@ -28,7 +28,7 @@
                 border: 1px solid #e4e8ee;
                 span{
                     color: #333;
-                    font-size: 12px;
+                    font-size:$fontsize13;
                 }
             }
             &.active,&:hover{
@@ -48,7 +48,7 @@
                 height: 28px;
                 line-height: 28px;
                 vertical-align: top;
-                font-size: 12px;
+                font-size:$fontsize13;
             }
         }
     }
@@ -78,7 +78,7 @@
                     display: inline-block;
                     color: #666;
                     font-weight: bold;
-                    font-size: 12px;
+                    font-size:$fontsize13;
                     vertical-align: top;
                     line-height: 1.6;
                 }
@@ -96,14 +96,14 @@
                 .txt-span{
                     display: inline-block;
                     color: #666;
-                    font-size: 12px;
+                    font-size:$fontsize13;
                     line-height:1.6;
                     vertical-align: top;
                 }
                 .txt-link{
                     display: inline-block;
                     color: $menuActiveText;
-                    font-size: 12px;
+                    font-size:$fontsize13;
                     line-height: 1.6;
                     vertical-align: top;
                     cursor: pointer;
@@ -197,7 +197,7 @@
                 border:1px solid #e6ebf5;
                 border-radius:4px;
                 padding: 5px 10px;
-                font-size: 13px;
+                font-size:$fontsize14;
                 line-height: 20px;
                 cursor: pointer;
                 span{
@@ -260,7 +260,7 @@
                     display: inline-block;
                     color: #666;
                     font-weight: bold;
-                    font-size: 12px;
+                    font-size:$fontsize13;
                     vertical-align: top;
                     line-height: 1.6;
                 }
@@ -278,14 +278,14 @@
                 .txt-span{
                     display: inline-block;
                     color: #666;
-                    font-size: 12px;
+                    font-size:$fontsize13;
                     line-height:1.6;
                     vertical-align: top;
                 }
                 .txt-link{
                     display: inline-block;
                     color: $menuActiveText;
-                    font-size: 12px;
+                    font-size:$fontsize13;
                     line-height: 1.6;
                     vertical-align: top;
                     cursor: pointer;

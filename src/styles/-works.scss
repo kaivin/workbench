@@ -13,7 +13,7 @@
             span{
                 clear:both;
                 display:block;
-                font-size:14px;
+                font-size:$fontsize15;
                 color:#808080;
                 padding:6px 0px;
                 line-height:23px;
@@ -37,11 +37,11 @@
         dt{
             float: right;
             color:#2440b3;
-            font-size:14px;
+            font-size:$fontsize15;
             line-height:35px;
             cursor: pointer;
             i{
-                font-size: 20px;
+                font-size:$fontsize21;
                 margin-right: 3px;
                 vertical-align: top;
                 color: #2440b3;
@@ -55,7 +55,7 @@
     .search-orderTwo{
         padding-top:13px;
         &>span{
-            font-size:13px;
+            font-size:$fontsize14;
             color:#999999;
             margin-top:5px;
             line-height:28px;
@@ -68,7 +68,7 @@
                 border-radius:4px;
                 line-height:28px;
                 padding:0px 20px;
-                font-size:13px;
+                font-size:$fontsize14;
                 color:#4c4c4c;
                 margin-left:10px;
                 cursor:pointer;
@@ -95,7 +95,7 @@
                 line-height:28px;
                 background:none;
                 padding:0px 5px;
-                font-size:13px;
+                font-size:$fontsize14;
                 color:#4c4c4c;
                 cursor: pointer;
                 position: relative;                
@@ -108,7 +108,7 @@
                   margin-right: 3px;
                   padding-top: 1px;
                   svg{
-                    font-size: 14px;
+                    font-size:$fontsize15;
                   }
                 }
                 .workBg{
@@ -158,7 +158,7 @@
                 .resetBtn{
                     line-height:25px;
                     color:#2e88ff;
-                    font-size:13px;
+                    font-size:$fontsize14;
                     margin-right:15px;
                     cursor: pointer;
                     &:hover{
@@ -211,7 +211,7 @@
                 margin-left:5px;
                 color:#999;
                 svg{
-                    font-size:14px;
+                    font-size:$fontsize15;
                 }
             }
             &.toolCancel{span{color: #f9a500;}}
@@ -321,7 +321,7 @@
                 text-align: center;
                 line-height:10px;
                 margin-right: 5px;
-                svg{font-size:9px;}
+                svg{font-size:$fontsize10;}
             }
         }
       }
@@ -436,7 +436,7 @@
                       }
                   }
                   span{
-                      font-size: 13px;
+                      font-size:$fontsize14;
                       display: inline-block;
                       height: 28px;
                       line-height: 28px;
@@ -532,14 +532,14 @@
     margin-top: 20px;
     p{
       color:#6688b4;
-      font-size:14px;
+      font-size:$fontsize15;
       line-height:24px;
       padding-top:3px;
       padding-bottom:3px;
       mark{
           margin:0 10px;
           color: lighten(#6688b4,30%);
-          font-size: 12px;
+          font-size:$fontsize13;
           background-color: transparent;
       }
       em{
@@ -566,7 +566,7 @@
       overflow: hidden;
       padding: 30px;
       h1{
-        font-size: 24px;
+        font-size:$fontsize25;
         line-height: 2;
         color: #1a1a1a;
       }
@@ -593,7 +593,7 @@
               border: 1px solid #b9c0c1;
               text-align: center;
               line-height: 38px;
-              font-size: 20px;
+              font-size:$fontsize21;
               color: #858585;
               &.color1{
                 border-color: #94c2ff;
@@ -631,7 +631,7 @@
           .value-panel{
             height: 24px;
             line-height: 24px;
-            font-size: 14px;
+            font-size:$fontsize15;
             color: #1a1a1a;
             font-weight: bold;
             &.red{
@@ -641,7 +641,7 @@
           .title-panel{
             height: 16px;
             line-height: 16px;
-            font-size: 12px;
+            font-size:$fontsize13;
             color: #999999;
           }
         }
@@ -677,11 +677,11 @@
           color: #4292ff;
         }
         .svg-i{
-          font-size: 14px;
+          font-size:$fontsize15;
           margin-right: 10px;
         }
         >span{
-          font-size: 14px;
+          font-size:$fontsize15;
         }
       }
       .other-info{
@@ -697,14 +697,14 @@
         dt{
           height: 28px;
           line-height: 28px;
-          font-size: 14px;
+          font-size:$fontsize15;
           color: #999999;
         }
         dd{
           width: 100%;
           overflow: hidden;
           .default-text{
-            font-size: 14px;
+            font-size:$fontsize15;
             height: 22px;
             line-height: 22px;
             margin-top: 8px;
@@ -712,7 +712,7 @@
           }
           .score{
             color: #ffa415;
-            font-size: 14px;
+            font-size:$fontsize15;
             height: 22px;
             line-height: 22px;
             position: relative;
@@ -733,7 +733,7 @@
           }
           .range-date{
             height: 22px;
-            font-size:14px;
+            font-size:$fontsize15;
             line-height: 22px;
             margin-top: 8px;
             overflow: hidden;
@@ -760,7 +760,7 @@
               float:left;
               height: 22px;
               line-height: 22px;
-              font-size: 14px;
+              font-size:$fontsize15;
               color: #a8a7a7;
               margin-left: 10px;
             }
@@ -775,7 +775,7 @@
               padding: 0 10px;
               border-radius: 4px;
               color: #fff;
-              font-size: 13px;
+              font-size:$fontsize14;
               margin: 0 2px;
             }
           }
@@ -786,7 +786,7 @@
           table td {border: 1px solid #a8d3ff !important;padding: 12px 10px !important;} 
       }
       .info-content p, .info-content div{
-        font-size: 14px;
+        font-size:$fontsize15;
       }
       .info-content.rich-text > p, .info-content.rich-text > div{
         margin: 10px 0;
@@ -874,7 +874,7 @@
                 line-height: 24px;
                 border-radius: 12px;
                 padding: 0 10px;
-                font-size: 12px;
+                font-size:$fontsize13;
                 color: #999ca1;
                 background: #ececec;
               }
@@ -903,7 +903,7 @@
                   >span{
                     display: block;
                     text-align: center;
-                    font-size: 12px;
+                    font-size:$fontsize13;
                     color: #999ca1;
                     height: 16px;
                     line-height: 16px;
@@ -914,7 +914,7 @@
                     width: 16px;
                     height: 16px;
                     margin: 0 auto;
-                    font-size: 13px;
+                    font-size:$fontsize14;
                     color: #999ca1;
                     text-align: center;
                     line-height: 16px;
@@ -933,7 +933,7 @@
                     border-radius: 100%;
                     background: #c4c8cd;
                     color: #fff;
-                    font-size: 13px;
+                    font-size:$fontsize14;
                     text-align: center;
                     line-height: 20px;
                     &.color1{
@@ -951,7 +951,7 @@
                     line-height:0;
                     font-size:0;
                     strong,span{
-                      font-size: 14px;
+                      font-size:$fontsize15;
                       line-height: 36px;
                     }
                     strong{
@@ -966,7 +966,7 @@
                   .time-info{
                     min-height: 24px;
                     line-height: 24px;
-                    font-size: 14px;
+                    font-size:$fontsize15;
                     color: #3a3a3a;
                   }
                 }

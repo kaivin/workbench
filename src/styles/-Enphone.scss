@@ -1,6 +1,6 @@
 ﻿.EnphoneCard{
     .sub-router{
-        width:220px;
+        width:230px;
         .Sales-list{
           width: 100%;
           padding-top:23px;
@@ -14,7 +14,7 @@
             margin-bottom: 8px;
             padding: 5px 10px;
             border-radius: 5px;
-            font-size: 14px;
+            font-size:$fontsize15;
             span{
               vertical-align: top;
               line-height: 20px;
@@ -44,7 +44,7 @@
                 span{
                   clear: both;
                   display: block;
-                  font-size: 14px;
+                  font-size:$fontsize15;
                   font-weight: bold;
                   color:#000;
                   padding:15px 0px;
@@ -85,7 +85,7 @@
                 dt{
                   clear: both;
                   display: block;
-                  font-size:14px;
+                  font-size:$fontsize15;
                   padding:7px 15px;
                   line-height:24px;
                   text-align: left;
@@ -102,12 +102,12 @@
                     float: left;
                     width:33.3333%;
                     text-align: center;
-                    font-size: 14px;
+                    font-size:$fontsize15;
                     line-height: 20px;
                     span{
                       clear: both;
                       display:block;
-                      font-size: 30px;
+                      font-size:$fontsize31;
                       line-height: 45px;
                       color:#5ca0f9;
                     }
@@ -134,7 +134,7 @@
               h2{
                 clear: both;
                 display: block;
-                font-size:15px;
+                font-size:$fontsize16;
                 padding:7px 0px 7px 30px;
                 line-height:24px;
                 text-align: left;
@@ -156,7 +156,7 @@
                   h3{
                     clear: both;
                     display: block;
-                    font-size: 14px;
+                    font-size:$fontsize15;
                     padding:10px 10px 10px 10px;
                     margin-bottom: 5px;
                     font-weight:normal;
@@ -205,7 +205,7 @@
                             border:0px; 
                             background:#edf2f2;
                             color:#999;
-                            font-size: 12px;
+                            font-size:$fontsize13;
                           }
                         }
                       }
@@ -234,7 +234,7 @@
         text-align:left;
         margin-bottom: 10px;
         color:#333333;
-        font-size: 13px;
+        font-size:$fontsize14;
         padding:11px 15px;
         border-radius:20px;
         background-color: #fff;
@@ -246,7 +246,7 @@
         cursor: pointer;
         &:hover{background-position:-50% center}
         i{
-          font-size: 13px;
+          font-size:$fontsize14;
           font-weight: bold;
           padding-left:3px;
           padding-right:3px;
@@ -312,7 +312,7 @@
         .tips-title{
           height: 32px;
           line-height: 32px;
-          font-size: 14px;
+          font-size:$fontsize15;
         }
       }
     }
@@ -329,7 +329,7 @@
         .tips,b,em{
           font-style: normal;
           vertical-align: top;
-          font-size: 12px;
+          font-size:$fontsize13;
           height: 28px;
           line-height: 28px;
         }
@@ -368,17 +368,17 @@
           float: left;
           dt{
             line-height: 24px;
-            font-size: 14px;
+            font-size:$fontsize15;
             height: 24px;
             span{
               color:red;
-              font-size: 12px;
+              font-size:$fontsize13;
               font-weight: normal;
             }
             em{
               font-style: normal;
               margin-left: 10px;
-              font-size: 12px;
+              font-size:$fontsize13;
             }
           }
           dd{
@@ -396,7 +396,7 @@
             }
             p{
               line-height: 32px;
-              font-size: 12px;
+              font-size:$fontsize13;
             }
           }
         }
@@ -505,7 +505,7 @@
               strong{
                 clear: both;
                 display: block;
-                font-size:14px;
+                font-size:$fontsize15;
                 text-align: left;
                 height: 24px;
                 line-height: 24px;
@@ -519,7 +519,7 @@
               }
               p{
                 line-height: 32px;
-                font-size: 12px;
+                font-size:$fontsize13;
                 color: #fa4d4d;
                 margin-top: 10px;
               }
@@ -536,7 +536,7 @@
                   float:left;
                   width:160px;
                   position: relative;
-                  font-size: 12px;
+                  font-size:$fontsize13;
                   color: #606266;
                   cursor: pointer;
                   line-height:20px;
@@ -594,7 +594,7 @@
             dd{
               margin-top:10px;
               span{
-                font-size:14px;
+                font-size:$fontsize15;
                 line-height:32px;
               }
               &.CustomerNote{
@@ -604,7 +604,7 @@
                   position: absolute;
                   left:0px;
                   bottom:0px;
-                  font-size:12px;
+                  font-size:$fontsize13;
                   color:#333;
                   line-height: 20px;
                   font-style: normal;
@@ -621,7 +621,7 @@
             dd{
               margin-top: 5px;
               & > span{
-                font-size:14px;
+                font-size:$fontsize15;
                 line-height:32px;
               }
             }
@@ -672,7 +672,7 @@
     h3{
       color: #666;
       font-weight: normal;
-      font-size: 14px;
+      font-size:$fontsize15;
       padding: 0 5px;
     }
     .line{
@@ -694,7 +694,7 @@
       clear: both;
       padding-top: 5px;
       strong{
-        font-size: 14px;
+        font-size:$fontsize15;
         line-height: 24px;
         margin-right: 10px;
         margin-top: 4px;

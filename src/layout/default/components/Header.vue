@@ -3,7 +3,7 @@
         <div class="logo">
             <router-link class="logo-link" :to="homeRedirect">
                 <img class="logo-img" v-bind:src="logo" alt="">
-                <span class="logo-title">分析系统</span>
+                <span class="logo-title">工作台</span>
             </router-link>
         </div>
         <div class="header-center">

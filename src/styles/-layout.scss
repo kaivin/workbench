@@ -30,7 +30,7 @@
                     display: inline-block;
                     height: 30px;
                     line-height: 30px;
-                    font-size: 16px;
+                    font-size:$fontsize17;
                     color: #d8d8d8;
                 }
                 .el-badge__content{
@@ -49,7 +49,7 @@
                 display: inline-block;
                 width: 30px;
                 height: 30px;
-                font-size: 26px;
+                font-size:$fontsize27;
                 text-align: center;
                 line-height: 30px;
                 vertical-align: middle;
@@ -65,7 +65,7 @@
                 display: inline-block;
                 width: 30px;
                 height: 30px;
-                font-size: 20px;
+                font-size:$fontsize21;
                 text-align: center;
                 line-height: 30px;
                 vertical-align: middle;
@@ -94,7 +94,7 @@
                 display: inline-block;
                 line-height: 30px;
                 color: #1b1b1b;
-                font-size: 14px;
+                font-size:$fontsize15;
                 font-weight: 500;
                 margin-left: 12px;
                 vertical-align: middle;
@@ -117,7 +117,7 @@
                         background: #fff;
                         border: 1px solid #0048ff;
                         color: #1b1b1b;
-                        font-size: 14px;
+                        font-size:$fontsize15;
                         border-radius:0;
                         border-right:none;
                     }
@@ -142,7 +142,7 @@
                                     vertical-align: top;
                                     height: 32px;
                                     line-height: 32px;
-                                    font-size: 16px;
+                                    font-size:$fontsize17;
                                     color: #fff;
                                 }
                                 .search-font{
@@ -150,7 +150,7 @@
                                     height: 32px;
                                     line-height: 32px;
                                     color: #fff;
-                                    font-size: 14px;
+                                    font-size:$fontsize15;
                                     font-weight: 500;
                                     margin-left: 10px;
                                     vertical-align: top;
@@ -193,7 +193,7 @@
                     .button-icon{
                         display: inline-block;
                         height: 32px;
-                        font-size: 14px;
+                        font-size:$fontsize15;
                         line-height: 32px;
                         vertical-align: top;
                         color: #ffffff;
@@ -202,7 +202,7 @@
                         display: inline-block;
                         line-height: 32px;
                         color: #fff;
-                        font-size: 14px;
+                        font-size:$fontsize15;
                         margin-left: 10px;
                         vertical-align: top;
                     }
@@ -216,7 +216,7 @@
             .logo-link {
                 display: block;
                 height: 100%;
-                padding: 12px 20px;
+                padding: 9px 20px;
                 font-size:0;
                 line-height:0;
                 position: relative;
@@ -224,17 +224,18 @@
                     float:left;
                 }
                 .logo-img {
-                    height: 30px;
+                    height: 35px;
                 }
                 .logo-title {
                     display: inline-block;
                     height: 30px;
                     margin-left: 10px;
-                    font-size: 15px;
+                    font-size:$fontsize19;
                     color: #0e0e0e;
-                    line-height:36px;
+                    line-height: 35px;
                     font-weight: bold;
                     padding-left: 8px;
+                    margin-top:5px;
                     position: relative;
                     &::before{
                         content:'';

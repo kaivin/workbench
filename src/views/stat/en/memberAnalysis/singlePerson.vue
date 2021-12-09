@@ -213,10 +213,10 @@ export default {
   },
   mounted(){
     const $this = this;
-    window.addEventListener('scroll',this.handleScroll,true);
+    $this.$refs.boxPane.addEventListener('scroll',this.handleScroll,true);
   },
   destroyed(){
-    window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
+    this.$refs.boxPane.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods: {
     // loading自定义
@@ -868,23 +868,23 @@ export default {
                       var objItem={};
                       objItem.addtime=item.addtime;
                       objItem.content=item.content;
-                      if(item.content.indexOf("排名第一")>=0){
+                      if(item.content.indexOf("询盘冠军")>=0||item.content.indexOf("询盘成绩")>=0){
                           objItem.tap='询盘Top1';
                           objItem.icon='icon01';
                       }
-                      if(item.content.indexOf("销售冠军")>=0){
+                      if(item.content.indexOf("成交分")>=0||item.content.indexOf("部门第一")>=0){
                           objItem.tap='销售冠军';
                           objItem.icon='icon01';
                       }
-                      if(item.content.indexOf("成交单")>=0){
+                      if(item.content.indexOf("公司第一")>=0||item.content.indexOf("公司新高")>=0){
                           objItem.tap='成交Top1';
                           objItem.icon='icon01';
                       }
-                      if(item.content.indexOf("公司奖金")>=0){
+                      if(item.content.indexOf("奖金")>=0){
                           objItem.tap='奖金Top1';
                           objItem.icon='icon01';
                       }
-                      if(item.content.indexOf("最高询盘")>=0){
+                      if(item.content.indexOf("最高历史")>=0){
                           objItem.tap='询盘突破峰值';
                           objItem.icon='icon02';
                       }

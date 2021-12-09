@@ -136,6 +136,12 @@
                                     min-width="120"
                                     >
                                 </el-table-column>
+                                <el-table-column
+                                    prop="returnscorre"
+                                    label="返还积分"
+                                    min-width="90"
+                                    >
+                                </el-table-column>
                               </el-table>
                           </div>
                           <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">

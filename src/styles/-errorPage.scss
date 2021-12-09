@@ -40,7 +40,7 @@
       color: #484848;
     }
     .list-unstyled {
-      font-size: 14px;
+      font-size:$fontsize15;
       margin-top: 10px;
       li {
         padding-bottom: 5px;
@@ -207,7 +207,7 @@
         animation-fill-mode: forwards;
       }
       &__info {
-        font-size: 13px;
+        font-size:$fontsize14;
         line-height: 21px;
         color: grey;
         opacity: 0;
@@ -227,7 +227,7 @@
         text-align: center;
         color: #ffffff;
         opacity: 0;
-        font-size: 14px;
+        font-size:$fontsize15;
         line-height: 36px;
         cursor: pointer;
         margin-top: 20px;
