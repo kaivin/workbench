@@ -658,29 +658,19 @@ export default {
             var avg=(tolNum/nowyear.length).toFixed(2)*1;
         }
         //别名设置
-        //var aliasTit='';
-        //var aliasName='';
-        //var lastaliasName='';
-        //if($this.currentTab=='enquirie'){
-        //    aliasTit='年度总询盘';
-        //    aliasName='今年询盘';
-        //    lastaliasName='去年询盘';
-        //}
-        //if($this.currentTab=='clinchScore'){
-        //    aliasTit='年度总成交积分';
-        //    aliasName='今年成交积分';
-        //    lastaliasName='去年成交积分';
-        //}
-        //if($this.currentTab=='clinchNum'){
-        //    aliasTit='年度100万成交个数';
-        //    aliasName='今年100万成交个数';
-        //    lastaliasName='去年100万成交个数';
-        //}
-        //if($this.currentTab=='money'){
-        //    aliasTit='年度总奖金';
-        //    aliasName='今年总奖金';
-        //    lastaliasName='去年总奖金';
-        //}
+        var aliasName='';
+        if($this.currentTab=='enquirie'){
+            aliasName='询盘个数';
+        }
+        if($this.currentTab=='clinchScore'){
+            aliasName='成交积分';
+        }
+        if($this.currentTab=='clinchNum'){
+            aliasName='100万成交个数';
+        }
+        if($this.currentTab=='money'){
+            aliasName='总奖金';
+        }
         //计算y轴显示的最大数值
         var maxnum = 0;
         for(var i=0;i<nowyear.length;i++){
@@ -696,25 +686,13 @@ export default {
         const MixChart = new Mix('inquirybox', {
         tooltip: { 
             shared: true,
-            customItems:(item) => {                
-                var aliasTit='';
-                if($this.currentTab=='enquirie'){
-                    aliasTit='年度总询盘';
-                }
-                if($this.currentTab=='clinchScore'){
-                    aliasTit='年度总成交积分';
-                }
-                if($this.currentTab=='clinchNum'){
-                    aliasTit='年度100万成交个数';
-                }
-                if($this.currentTab=='money'){
-                    aliasTit='年度总奖金';
-                }
-                for (let i = 0; i < item.length; i++) {
-                    item[i].title=aliasTit;
-                }
-                console.log(item,'res');
-                return item;
+            title:aliasName,
+            customItems: (originalItems) => {
+                console.log(originalItems);
+                originalItems.forEach(function(item){
+                    item.name = item.data.time;
+                });
+                return originalItems;
             },
         },      
         syncViewPadding: true,

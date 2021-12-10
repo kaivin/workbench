@@ -658,22 +658,17 @@ export default {
         }
         //别名设置
         var aliasName='';
-        var lastaliasName='';
         if($this.currentTab=='enquirie'){
-            aliasName='今年询盘';
-            lastaliasName='去年询盘';
+            aliasName='询盘个数';
         }
         if($this.currentTab=='clinchScore'){
-            aliasName='今年成交积分';
-            lastaliasName='去年成交积分';
+            aliasName='成交积分';
         }
         if($this.currentTab=='clinchNum'){
-            aliasName='今年100万成交个数';
-            lastaliasName='去年100万成交个数';
+            aliasName='100万成交个数';
         }
         if($this.currentTab=='money'){
-            aliasName='今年总奖金';
-            lastaliasName='去年总奖金';
+            aliasName='总奖金';
         }
         //计算y轴显示的最大数值
         var maxnum = 0;
@@ -689,7 +684,15 @@ export default {
         }
         const MixChart = new Mix('inquirybox', {
         tooltip: { 
-            shared: true
+            shared: true,
+            title:aliasName,
+            customItems: (originalItems) => {
+                console.log(originalItems);
+                originalItems.forEach(function(item){
+                    item.name = item.data.time;
+                });
+                return originalItems;
+            },
         },      
         syncViewPadding: true,
         plots: [
@@ -742,16 +745,6 @@ export default {
                         style:{
                             lineHeight:18
                         }
-                        },
-                    },
-                    meta: {
-                        time: {
-                            formatter:(item)=>{
-                                return item
-                            }
-                        },
-                        number: {
-                            alias:aliasName,
                         },
                     },
                     label: {
@@ -807,16 +800,6 @@ export default {
                             fill: '#fff',
                             stroke: '#f3be1c',
                             lineWidth:  1,
-                        },
-                    },
-                    meta: {
-                        time: {
-                            formatter:(item)=>{
-                                return item
-                            }
-                        },
-                        number: {
-                            alias:lastaliasName,
                         },
                     },
                     yAxis: {
