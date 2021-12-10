@@ -332,28 +332,32 @@ export default {
                       var objItem={};
                       objItem.addtime=item.addtime;
                       objItem.content=item.content;
-                      if(item.content.indexOf("排名第一")>=0){
+                      if(item.content.indexOf("询盘冠军")>=0||item.content.indexOf("询盘成绩")>=0){
                           objItem.tap='询盘Top1';
                           objItem.icon='icon01';
                       }
-                      if(item.content.indexOf("销售冠军")>=0){
+                      if(item.content.indexOf("成交分")>=0||item.content.indexOf("部门第一")>=0){
                           objItem.tap='销售冠军';
                           objItem.icon='icon01';
                       }
-                      if(item.content.indexOf("成交单")>=0){
+                      if(item.content.indexOf("公司第一")>=0||item.content.indexOf("公司新高")>=0){
                           objItem.tap='成交Top1';
                           objItem.icon='icon01';
                       }
-                      if(item.content.indexOf("公司奖金")>=0){
+                      if(item.content.indexOf("奖金超越")>=0){
                           objItem.tap='奖金Top1';
                           objItem.icon='icon01';
                       }
-                      if(item.content.indexOf("最高询盘")>=0){
+                      if(item.content.indexOf("最高历史")>=0){
                           objItem.tap='询盘突破峰值';
                           objItem.icon='icon02';
                       }
                       if(item.content.indexOf("历史新高")>=0){
                           objItem.tap='成交分突破峰值';
+                          objItem.icon='icon02';
+                      }
+                      if(item.content.indexOf("成交量突破")>=0){
+                          objItem.tap='成交量突破峰值';
                           objItem.icon='icon02';
                       }
                       if(item.content.indexOf("最高奖金")>=0){

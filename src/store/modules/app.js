@@ -39,6 +39,7 @@ const state = {
   addResource:false,
   addCnScore:false,
   addEnScore:false,
+  addUserBonus:false,
 }
 
 const mutations = {
@@ -255,6 +256,12 @@ const mutations = {
   CLOSE_ENSCORE: (state) => {
     state.addEnScore = false
   },
+  ADD_USERBONUS: (state) => {
+    state.addUserBonus = true
+  },
+  CLOSE_USERBONUS: (state) => {
+    state.addUserBonus = false
+  },
 }
 
 const actions = {
@@ -466,6 +473,12 @@ const actions = {
   },
   closeEnScore({ commit }) {
     commit('CLOSE_ENSCORE')
+  },
+  addUserBonus({ commit }) {
+    commit('ADD_USERBONUS')
+  },
+  closeUserBonus({ commit }) {
+    commit('CLOSE_USERBONUS')
   },
 }
 

@@ -166,7 +166,7 @@ export default {
         }
         const plot = new Mix('dayTarget', {
             tooltip: {
-            shared: true,
+              shared: true,
               customItems: (originalItems) => {
                 var isdep1 = 0;
                 for (let i = 0; i < originalItems.length; i++) {

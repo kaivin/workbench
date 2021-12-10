@@ -85,6 +85,8 @@
     isHomeCache: state => state.api.isHomeCache,
     isNohomeCache: state => state.api.isNohomeCache,
     isCustormbuyFile:state=>state.api.isCustormbuyFile,
+    isUserbonusAdd: state => state.api.isUserbonusAdd,
+    addUserBonus:state => state.app.addUserBonus,
 }
 export default getters
   

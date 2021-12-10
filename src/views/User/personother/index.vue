@@ -37,9 +37,6 @@
                                   </label>
                                 </el-button>
                               </div>
-                              <div style="float:right" v-if="menuButtonPermit.includes('User_personotheradd')">
-                                  <el-button type="primary" class="resetBtn" size="small" v-on:click="addTableRow">添加</el-button>
-                              </div>
                           </div>
                       </div>
                     </div>
@@ -219,15 +216,15 @@ export default {
   computed: {
     ...mapGetters([
       'addCompareList',
-      'addCompareGroupList',
       'sidebar',
-      'menuData'
+      'menuData',
+      'addUserBonus'
     ]),
     isOpen() {
       return this.sidebar.opened;
     },
     isAdd() {
-      return this.addCompareGroupList
+      return this.addUserBonus
     }
   },
   mounted(){
@@ -572,7 +569,7 @@ export default {
     handleClose(){
       var $this = this;
       $this.dialogFormVisible = false;
-      $this.$store.dispatch('app/closeCompareGroupList');
+      $this.$store.dispatch('app/closeUserBonus');
     },
     // 添加表格行数据
     addTableRow(row,index){

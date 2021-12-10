@@ -90,6 +90,7 @@ const state = {
     isHomeCache:false,
     isNohomeCache:false,
     isCustormbuyFile:false,
+    isUserbonusAdd:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -306,6 +307,11 @@ const mutations = {
       state.isCustormbuyFile = true;
     }else{
       state.isCustormbuyFile = false;
+    }
+    if(permitData.includes("User_personotheradd")&&data.page==""){
+      state.isUserbonusAdd = true;
+    }else{
+      state.isUserbonusAdd = false;
     }
     
   },
