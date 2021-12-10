@@ -65,13 +65,17 @@
                     padding-right:18px;
                     cursor: pointer;
                     line-height: 24px;
+                    position: relative;
+                    padding-left:21px;
                     i{
+                        position: absolute;
+                        left:0px;
+                        top:50%;
+                        margin-top:-6px;
                         display: inline-block;
                         width: 11px;
                         height: 11px;
                         border: 1px solid #848484;
-                        margin-right: 10px;
-                        position: relative;
                         box-sizing: border-box;
                         border-radius:50%;
                         vertical-align: middle;
@@ -116,13 +120,17 @@
                     padding-right:18px;
                     cursor: pointer;
                     line-height: 24px;
+                    position: relative;
+                    padding-left:21px;
                     i{
+                        position: absolute;
+                        left:0px;
+                        top:50%;
+                        margin-top:-6px;
                         display: inline-block;
                         width: 11px;
                         height: 11px;
                         border: 1px solid #848484;
-                        margin-right: 10px;
-                        position: relative;
                         box-sizing: border-box;
                         vertical-align: middle;
                     }

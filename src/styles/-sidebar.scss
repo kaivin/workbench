@@ -5,7 +5,11 @@
   .sidebar-container {
     display: flex;
     flex-direction: column;
-    background:#192136;
+    background: -moz-linear-gradient(left,#192136 0%, #212e4e 100%);
+    background: -webkit-linear-gradient(left,#192136 0%, #212e4e 100%);
+    background: -o-linear-gradient(left,#192136 0%, #212e4e 100%);
+    background: -ms-linear-gradient(left,#192136 0%, #212e4e 100%);
+    background: linear-gradient(to right,#192136 0%, #212e4e 100%);
     transition: width .25s ease-out;
     width:$sideBarWidth!important;
     overflow: hidden!important;

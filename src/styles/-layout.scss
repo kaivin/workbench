@@ -229,23 +229,23 @@
                 .logo-title {
                     display: inline-block;
                     height: 30px;
-                    margin-left: 10px;
-                    font-size:$fontsize20;
+                    margin-left: 15px;
+                    font-size:$fontsize18;
                     color: #0e0e0e;
                     line-height: 35px;
                     font-weight: bold;
-                    padding-left: 8px;
+                    padding-left: 13px;
                     margin-top:4px;
                     position: relative;
                     &::before{
                         content:'';
                         display: block;
                         width: 1px;
-                        height: 14px;
+                        height: 17px;
                         background: #ababab;
                         position: absolute;
                         left: 1px;
-                        top: 10px;
+                        top:9px;
                     }
                 }
             }
