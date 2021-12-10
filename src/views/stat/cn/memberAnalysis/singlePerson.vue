@@ -28,7 +28,7 @@
               </div>
               <div class="personMore">
                   <div class="pHistory" @click="handleHistory">历史成就</div>
-                  <div class="pCompare"><router-link :to="{path: '/stat/cn/memberAnalysis/comparePerson',query:{deptId:searchData.dept_id,itemId:searchData.id}}" tag="a" target="_blank">对比</router-link></div>
+                  <router-link :to="{path: '/stat/cn/memberAnalysis/comparePerson',query:{deptId:searchData.dept_id,itemId:searchData.id}}" tag="a" target="_blank" class="pCompare">对比</router-link>
               </div>
               <div class="personDepart">
                   <div class="pdname">
