@@ -294,7 +294,7 @@ export default {
                 var payMember=[];
                 var payMemberaArr = rankingWithTotalItem(response.semulist,'number');
                 payMemberaArr.forEach(function(item){
-                  item.number = numSeparate(item.number);
+                  item.numberStr = numSeparate(item.number);
                   item.deptName=$this.getDeap(item.dept_id);
                   payMember.push(item);
                 });

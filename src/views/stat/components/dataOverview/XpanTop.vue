@@ -4,10 +4,11 @@
       <div class="title-view">
         <div class="title">年度总奖金 TOP5</div>
         <div class="unit">（单位：元）</div>
-        <div class="more" @click="goPage">更多分析 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
+        <router-link :to="{path:language == '中文'?'/stat/cn/memberAnalysis':'/stat/en/memberAnalysis'}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
       </div>
       <ul class="top-view" ref="topul" v-resize="setBarWidth">
-        <li class="top-item" v-for="(item,index) in topdata" :key="index" @click="handleContrast(item.dept_id,item.uid)">        
+        <li class="top-item" v-for="(item,index) in topdata" :key="index" @click="handleContrast(item.dept_id,item.uid)">      
+            <router-link :to="{path: language == '中文'?'/stat/cn/memberAnalysis/singlePerson':'/stat/en/memberAnalysis/singlePerson',query:{deptId:item.dept_id,itemId:item.uid}}" tag="a" target="_blank">  
             <div class="rankNum">
                 <div class="numTop" v-if="(index+1)<=3" :class="'numTop0'+(index+1)"></div>
                 <div class="numTop" v-if="(index+1)>3">{{index+1}}</div>
@@ -29,6 +30,7 @@
                   {{item.allmoney}}元
                 </span>
             </div>
+            </router-link>
         </li>
       </ul>
     </div>
@@ -91,13 +93,6 @@ export default {
       window.removeEventListener('resize',this.setBarWidth)
     },
     methods:{
-      goPage(){
-        if(this.language == '中文'){
-          this.$router.push('/stat/cn/memberAnalysis')
-        }else{
-          this.$router.push('/stat/en/memberAnalysis')
-        }
-      },
       setTopData(val){
         let topdata = JSON.parse(JSON.stringify(val));
         let maxwidth = topdata[0].number;
@@ -111,16 +106,6 @@ export default {
       setBarWidth(){
         let topul = this.$refs["topul"].offsetWidth;
         this.barWidth = topul - 42 - 50 - 46;
-      },
-      // 跳转到个人详情
-      handleContrast(deptId,itemId){
-        var $this=this;
-        if($this.language == '中文'){
-          var routeUrl =  $this.$router.resolve({path: "/stat/cn/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
-        }else{
-          var routeUrl =  $this.$router.resolve({path: "/stat/en/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
-        }
-        window.open(routeUrl.href,'_blank');
       },
     }
 }
@@ -225,13 +210,17 @@ export default {
     }
     .top-view{
       .top-item{
-            padding:10px 35px 10px 20px;
             display: flex;
-            flex-direction: row;
-            align-items: center;
-            border-top: 1px solid #f5f5f5;
             cursor: pointer;
             &:first-child{border-top:0px;}
+            a{
+              flex:1;
+              display: flex;
+              padding:10px 35px 10px 20px;
+              flex-direction: row;
+              align-items: center;
+              border-top: 1px solid #f5f5f5;
+            }
             .rankNum{
                 width:30px;
                 height:30px;

@@ -20,9 +20,8 @@
                                     <dd v-if="menuButtonPermit.includes('Worksaccpet_personwork')" v-on:click="jumpLink('person')" v-bind:class="currentStatus === 'person'?'active':''"><span>我的任务<b>[{{defaultData.personNum}}]</b></span></dd>
                                     <dd v-if="menuButtonPermit.includes('Worksaccpet_myfocuswork')" v-on:click="jumpLink('focuson')" v-bind:class="currentStatus === 'focuson'?'active':''"><span>我的关注<b>[{{defaultData.focusonNum}}]</b></span></dd>                                  
                                     <dd v-if="menuButtonPermit.includes('Worksaccpet_waitwork')" v-on:click="jumpLink('receive')" v-bind:class="currentStatus === 'receive'?'active':''"><span>待接收<b>({{defaultData.receiveNum}})</b></span></dd>
-                                    <dt class="search-orderOneFr" v-if="menuButtonPermit.includes('Worksaccpet_workcount')" v-bind:class="currentStatus === 'stat'?'active':''" v-on:click="jumpLink('stat')">
-                                    <i class="svg-i"><svg-icon icon-class="workOrder_data" /></i>
-                                    <span>数据统计</span>
+                                    <dt class="search-orderOneFr" v-if="menuButtonPermit.includes('Worksaccpet_workcount')" v-bind:class="currentStatus === 'stat'?'active':''">
+                                      <router-link :to="{path:'/WorkOrder/orderList',query:{Status:'stat'}}" tag="a" target="_blank"><i class="svg-i"><svg-icon icon-class="workOrder_data" /></i><span>数据统计</span></router-link>
                                     </dt>
                                 </dl>
                                 <div class="search-orderTwo flex-wrap" v-if="currentStatus=='alltasks'||currentStatus=='focuson'||currentStatus=='person'">
@@ -216,7 +215,8 @@
                                           >
                                           <template slot-scope="scope">
                                             <div class="order-title">
-                                              <span v-on:click="jumpArticle(scope.row.id)">{{scope.row.title}}</span>
+                                              <router-link :to="{path:'/WorkOrder/workInfo',query:{ID:scope.row.id,Status:currentStatus}}" tag="a" target="_blank">
+                                              <span>{{scope.row.title}}</span></router-link>
                                               <el-tooltip class="toolCancel" effect="dark" content="取消关注" placement="top" v-if="(currentStatus=='focuson'||scope.row.focus==1)&&menuButtonPermit.includes('Worksaccpet_workfocuscancel')"><el-button v-on:click="handleCancelFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></el-button></el-tooltip>
                                               <el-tooltip class="toolFocus" effect="dark" content="关注任务" placement="top" v-if="scope.row.focus==0&&menuButtonPermit.includes('Worksaccpet_workfocus')"><el-button v-on:click="handleAddFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></el-button></el-tooltip>
                                             </div>
@@ -339,7 +339,8 @@
                                           >
                                           <template slot-scope="scope">
                                             <div class="order-title">
-                                              <span v-on:click="jumpArticle(scope.row.id)">{{scope.row.title}}</span>
+                                              <router-link :to="{path:'/WorkOrder/workInfo',query:{ID:scope.row.id,Status:currentStatus}}" tag="a" target="_blank">
+                                              <span>{{scope.row.title}}</span></router-link>
                                               <el-tooltip class="toolCancel" effect="dark" content="取消关注" placement="top" v-if="(currentStatus=='focuson'||scope.row.focus==1)&&menuButtonPermit.includes('Worksaccpet_workfocuscancel')"><el-button v-on:click="handleCancelFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></el-button></el-tooltip>
                                               <el-tooltip class="toolFocus" effect="dark" content="关注任务" placement="top" v-if="scope.row.focus==0&&menuButtonPermit.includes('Worksaccpet_workfocus')"><el-button v-on:click="handleAddFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></el-button></el-tooltip>
                                             </div>

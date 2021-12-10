@@ -52,7 +52,7 @@
                             <el-table-column
                               align="center"
                               prop="hide"
-                              label="是否隐藏"
+                              label="隐藏"
                               width="80" >
                               <template slot-scope="scope">
                                 <el-checkbox v-model="scope.row.hide" disabled></el-checkbox>

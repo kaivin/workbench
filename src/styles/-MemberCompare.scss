@@ -59,12 +59,15 @@
             overflow: hidden;
         }
         li{
-            padding:12px 35px 12px 12px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            border-top: 1px solid rgba(245, 243, 228, 0.8);
             cursor: pointer;
+            a{
+                flex:1;
+                padding:12px 35px 12px 12px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                border-top: 1px solid rgba(245, 243, 228, 0.8);
+            }
             .rankNum{
                 width: 50px;
                 height: 38px;
@@ -267,12 +270,15 @@
             overflow: hidden;
         }
         li{
-            padding:12px 35px 12px 24px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            border-top: 1px solid rgba(245, 243, 228, 0.8);
             cursor: pointer;
+            a{
+                flex:1;
+                padding:12px 35px 12px 12px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                border-top: 1px solid rgba(245, 243, 228, 0.8);
+            }
             .rankNum{
                 width: 27px;
                 height: 32px;
@@ -458,12 +464,15 @@
             overflow: hidden;
         }
         li{
-            padding:12px 35px 12px 26px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            border-top: 1px solid rgba(245, 243, 228, 0.8);
             cursor: pointer;
+            a{
+                flex:1;
+                padding:12px 35px 12px 12px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                border-top: 1px solid rgba(245, 243, 228, 0.8);
+            }
             .rankNum{
                 width:26px;
                 height:38px;
@@ -858,12 +867,15 @@
             overflow: hidden;
         }
         li{
-            padding: 13px 20px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            border-top: 1px solid rgba(245, 231, 231, 0.6);
             cursor: pointer;
+            a{
+                flex:1;
+                padding: 13px 20px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                border-top: 1px solid rgba(245, 231, 231, 0.6);
+            }
             .rankNum{
                 width:30px;
                 height:36px;

@@ -4,10 +4,11 @@
       <div class="title-view">
         <div class="title">年度成交{{language == '中文'?'积分':'个数'}} TOP5</div>
         <div class="unit">（单位：{{language == '中文'?'分':'个'}} <img src="@/assets/no_icon.png" alt="">：百万）</div>
-        <div class="more" @click="goPage">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
+        <router-link :to="{path:language == '中文'?'/stat/cn/memberAnalysis':'/stat/en/memberAnalysis'}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
       </div>
       <ul class="top-view" ref="topul">
-        <li class="top-item" v-for="(item,index) in topdata" :key="index" @click="handleContrast(item.dept_id,language == '中文'?item.userid:item.uid)">
+        <li class="top-item" v-for="(item,index) in topdata" :key="index">
+          <router-link :to="{path: language == '中文'?'/stat/cn/memberAnalysis/singlePerson':'/stat/en/memberAnalysis/singlePerson',query:{deptId:item.dept_id,itemId:language == '中文'?item.userid:item.uid}}" tag="a">
           <div class="top-icon">
             <img :src="require('@/assets/no'+(index+1)+'.jpg')" alt="">
           </div>
@@ -25,6 +26,7 @@
             <img src="@/assets/no_icon.png" alt="">
             <span>x{{item.anumber}}</span>
           </div>
+          </router-link>
         </li>
       </ul>
     </div>
@@ -70,13 +72,6 @@ export default {
       
     },
     methods:{
-      goPage(){
-        if(this.language == '中文'){
-          this.$router.push('/stat/cn/memberAnalysis')
-        }else{
-          this.$router.push('/stat/en/memberAnalysis')
-        }
-      },
       setTopData(val){
         let topdata = JSON.parse(JSON.stringify(val));
         topdata.sort(function(a, b){return a.number - b.number}).reverse(); 
@@ -227,6 +222,10 @@ export default {
       display: flex;
       margin-bottom: 15px;
       cursor: pointer;
+      a{
+        flex:1;
+        display: flex;
+      }
       .top-icon{
         display: flex;
         width: 34px;

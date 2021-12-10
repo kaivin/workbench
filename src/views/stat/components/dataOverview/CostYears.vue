@@ -4,7 +4,7 @@
       <div class="title-view">
         <div class="title">{{language}}年度总成本</div>
         <div class="unit">（单位：万）</div>
-        <div class="more" @click="goPage">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
+        <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:type,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
       </div>
       <div class="contrast-view">
         <div class="redtext">{{totalXpanYears}}</div>
@@ -22,7 +22,6 @@
       </div>
       <div class="chart-bottom" id="CostYearsChartBot"></div>
     </div>
-
   </div>
 </template>
 
@@ -34,7 +33,12 @@ export default {
     data(){
       return {
         isUp:true,
-        isUpNum:0
+        isUpNum:0,
+        startTime:"",
+        endTime:"",
+        baseDepart:"",
+        contrastDepart:"",
+        type:3,
       }
     },
     props:{
@@ -64,6 +68,7 @@ export default {
     watch:{
       yearsmoneytong:{
         handler(val,oldval){
+          this.goPage();
           this.costAverageChart(val);
           this.setIsUp(val);
         },
@@ -85,8 +90,11 @@ export default {
         return total.toLocaleString()
       }
     },
+    created(){
+    },
     methods:{
       goPage(){
+        var $this = this;
         var newDate = new Date();
         var newYear = newDate.getFullYear();
         var startTime = newYear + "/01";
@@ -105,11 +113,10 @@ export default {
         if(contrastDepartArr.length>0){
           contrastDepart = contrastDepartArr.join(",");
         }
-       if(this.language == '中文'){
-         this.$router.push({path:'/stat/cn/departAnalysis',query:{type:3,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-       }else{
-         this.$router.push({path:'/stat/en/departAnalysis',query:{type:3,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-       }
+        $this.startTime = startTime;
+        $this.endTime = endTime;
+        $this.baseDepart = baseDepart;
+        $this.contrastDepart = contrastDepart;
       },
       //chart top
       costAverageChart(val){

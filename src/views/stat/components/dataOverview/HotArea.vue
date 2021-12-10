@@ -4,11 +4,11 @@
       <div class="title-view">
         <div class="title">{{language=="中文"?'中文年度热门地区TOP5':'英文年度热门国家TOP5'}}</div>
         <div class="unit">{{type == 1?'（单位：分）':'（单位：个）'}}</div>
-        <div class="more" @click="goPage">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
+        <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:type,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
         <div class="btn-group">
-          <div @click="changeType(0)" class="btn-item" :class="type == 0?'active':''">询盘</div>
-          <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">成交积分</div>
-          <div v-if="language=='英文'" @click="changeType(2)" class="btn-item" :class="type == 2?'active':''">成交个数</div>
+          <div @click="changeType(4)" class="btn-item" :class="type == 4?'active':''">询盘</div>
+          <div @click="changeType(5)" class="btn-item" :class="type == 5?'active':''">成交积分</div>
+          <div v-if="language=='英文'" @click="changeType(7)" class="btn-item" :class="type == 7?'active':''">成交个数</div>
         </div>
       </div>
       <div class="rowTwoOneItem">
@@ -20,7 +20,6 @@
           <div id="topTen" class="chart-canva"></div>
         </div>
       </div>
-
     </div>
   </div>
   
@@ -35,10 +34,14 @@ export default {
     name:'demo',
     data(){
       return {
-        type:0,//0 询盘  1 成交积分  2 成交个数
+        type:4,//4 询盘  5 成交积分  7 成交个数
         worldRegionMapChart:null,//世界地图
         regionMapChart:null,//中国地图
         pieSourcePlot:null,//热门地区TOP10
+        startTime:"",
+        endTime:"",
+        baseDepart:"",
+        contrastDepart:"",
       }
     },
     props:{
@@ -93,6 +96,7 @@ export default {
     },
     methods:{
       goPage(){
+        var $this = this;
         var newDate = new Date();
         var newYear = newDate.getFullYear();
         var startTime = newYear + "/01";
@@ -110,21 +114,10 @@ export default {
         if(contrastDepartArr.length>0){
           contrastDepart = contrastDepartArr.join(",");
         }
-       if(this.language == '中文'){
-         if(this.type == 0){
-           this.$router.push({path:'/stat/cn/departAnalysis',query:{type:4,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-         }else if(this.type == 1){
-           this.$router.push({path:'/stat/cn/departAnalysis',query:{type:5,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-         }
-       }else{
-         if(this.type == 0){
-           this.$router.push({path:'/stat/en/departAnalysis',query:{type:4,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-         }else if(this.type == 1){
-           this.$router.push({path:'/stat/en/departAnalysis',query:{type:5,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-         }else if(this.type == 2){
-           this.$router.push({path:'/stat/en/departAnalysis',query:{type:7,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-         }
-       }
+        $this.startTime = startTime;
+        $this.endTime = endTime;
+        $this.baseDepart = baseDepart;
+        $this.contrastDepart = contrastDepart;
       },
       changeType(val){
         this.type = val;
@@ -132,10 +125,11 @@ export default {
       // 处理地图数据
       getRuleData(){
         var $this = this;
+        $this.goPage();
         let mapCountData = [];
-        if(this.type == 0){
+        if(this.type == 4){
           mapCountData = $this.provincecountmap;
-        }else if(this.type == 1){
+        }else if(this.type == 5){
           mapCountData = $this.provincescoretmap;
         }else{
           mapCountData = $this.provincescorenumbertmap;

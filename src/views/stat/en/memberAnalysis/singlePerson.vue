@@ -28,7 +28,7 @@
               </div>
               <div class="personMore">
                   <div class="pHistory" @click="handleHistory">历史成就</div>
-                  <div class="pCompare" @click="handleContrast(searchData.dept_id,searchData.id)">对比</div>
+                  <div class="pCompare"><router-link :to="{path: '/stat/en/memberAnalysis/comparePerson',query:{deptId:searchData.dept_id,itemId:searchData.id}}" tag="a" target="_blank">对比</router-link></div>
               </div>
               <div class="personDepart">
                   <div class="pdname">
@@ -845,12 +845,6 @@ export default {
         });
         $this.MixChart=MixChart;
         MixChart.render();
-    },
-    // 跳转到对比页
-    handleContrast(deptId,itemId){
-      var $this=this;
-      var routeUrl =  $this.$router.resolve({path: "/stat/en/memberAnalysis/comparePerson",query: {deptId:deptId,itemId:itemId}});
-      window.open(routeUrl.href,'_blank');
     },
     // 组员个人历史成就
     handleHistory(){

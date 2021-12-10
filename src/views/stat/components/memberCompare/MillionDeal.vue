@@ -6,7 +6,8 @@
       </div>
     <div class="milRank">
         <ul class="milul" :style="'height:'+ millionDealSet.boxHeight">
-            <li v-for="(item,index) in millionDeal" :key="index" @click="handleContrast(item.dept_id,item.uid)">
+            <li v-for="(item,index) in millionDeal" :key="index">
+                <router-link :to="{path: lang == 'ch'?'/stat/cn/memberAnalysis/singlePerson':'/stat/en/memberAnalysis/singlePerson',query:{deptId:item.dept_id,itemId:item.uid}}" tag="a" target="_blank"> 
                 <div class="rankNum" >
                     <div v-if="item.ranking<4" class="rankstyle" :class="'rank0'+(item.ranking)"></div>
                     <div class="numNormal" v-if="item.ranking>3 && item.ranking <= 9">
@@ -28,6 +29,7 @@
                 <div class="milNum flex-content">
                      <p>×{{item.number}}</p>
                 </div>
+                </router-link>
             </li>
         </ul>
         <div class="milMore" v-if="millionDealSet.ifFold" :class="!millionDealSet.isFold? 'inRotate' : 'rowRotate' "  @click="showAll" ></div>
@@ -78,16 +80,6 @@ export default {
         }
         
         $this.$emit("changeSet", $this.millionDealSet, isFold, boxHeight);
-    },
-    // 跳转到个人详情
-    handleContrast(deptId,itemId){
-      var $this=this;
-      if($this.lang=='ch'){
-        var routeUrl =  $this.$router.resolve({path: "/stat/cn/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
-      }else{
-        var routeUrl =  $this.$router.resolve({path: "/stat/en/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
-      }
-      window.open(routeUrl.href,'_blank');
     },
   }
 }
