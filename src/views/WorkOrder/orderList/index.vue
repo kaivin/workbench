@@ -806,7 +806,7 @@ export default {
     setHeight(){
       var $this = this;
       $this.minHeight = 0;
-      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       if($this.$refs.headerPane){
         var headerHeight = $this.$refs.headerPane.offsetHeight+45;

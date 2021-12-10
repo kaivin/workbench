@@ -151,6 +151,7 @@ export default {
         mnumber:"",
       },
       pageSizeList:[15],
+      pagerCount:5,
       totalDataNum:0,
       searchData:{
         page:1,
@@ -326,7 +327,7 @@ export default {
       var $this = this;
       $this.tableHeight = 0;      
       var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40;
       $this.getBrowserType();

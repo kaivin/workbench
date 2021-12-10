@@ -165,8 +165,8 @@
   </div>
 </template>
 <script>
-import { Mix } from '@antv/g2plot';
-import {numSeparate} from "@/utils/index";
+import { Mix }from '@antv/g2plot';
+import {numSeparate}from "@/utils/index";
 export default {
   name: "cnSinglePerson",
   data() {
@@ -267,7 +267,7 @@ export default {
                     $this.department=department;
                 }
                 $this.getCnPersonlist();
-            } else {
+            }else {
               $this.$message({
                 showClose: true,
                 message: response.info,
@@ -300,7 +300,7 @@ export default {
                     });
                     $this.choosePerson=choosePerson;
                 }
-            } else {
+            }else {
               $this.$message({
                 showClose: true,
                 message: response.info,
@@ -367,7 +367,7 @@ export default {
                         currentTab:'enquirie',
                         nowYear:[],
                         lastYear:[],
-                    }               
+                    }   
                     res.yearcount.forEach(function(item,index){
                         var nowYearObj={};
                         var lastYearObj={};
@@ -408,7 +408,7 @@ export default {
                         currentTab:'clinchScore',
                         nowYear:[],
                         lastYear:[],
-                    }               
+                    }   
                     res.yearscore.forEach(function(item,index){
                         var nowYearObj={};
                         var lastYearObj={};
@@ -445,7 +445,7 @@ export default {
                         currentTab:'clinchNum',
                         nowYear:[],
                         lastYear:[],
-                    }                
+                    }    
                     res.yearanumber.forEach(function(item,index){
                         var nowYearObj={};
                         var lastYearObj={};
@@ -482,7 +482,7 @@ export default {
                         currentTab:'money',
                         nowYear:[],
                         lastYear:[],
-                    }               
+                    }   
                     res.yearmoney.forEach(function(item,index){
                         var nowYearObj={};
                         var lastYearObj={};
@@ -565,7 +565,7 @@ export default {
                   $this.personCount=personCount;
                 }
                 $this.isLoading.close();
-            } else {
+            }else {
               $this.$message({
                 showClose: true,
                 message: response.info,
@@ -880,7 +880,7 @@ export default {
                           objItem.tap='成交Top1';
                           objItem.icon='icon01';
                       }
-                      if(item.content.indexOf("奖金")>=0){
+                      if(item.content.indexOf("奖金超越")>=0){
                           objItem.tap='奖金Top1';
                           objItem.icon='icon01';
                       }
@@ -892,6 +892,10 @@ export default {
                           objItem.tap='成交分突破峰值';
                           objItem.icon='icon02';
                       }
+                      if(item.content.indexOf("成交量突破")>=0){
+                          objItem.tap='成交量突破峰值';
+                          objItem.icon='icon02';
+                      }
                       if(item.content.indexOf("最高奖金")>=0){
                           objItem.tap='奖金突破峰值';
                           objItem.icon='icon02';
@@ -900,7 +904,7 @@ export default {
                   });
                   $this.historyDate=historyDate;
               }
-            } else {
+            }else {
               $this.$message({
                 showClose: true,
                 message: response.info,
@@ -920,15 +924,17 @@ export default {
     // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
-      var scrTop = event.target.scrollTop;
-      var personTopTabHeight = $this.$refs.personTopTabPane.offsetHeight+20+5;
-      if(scrTop>=personTopTabHeight){
-         $this.scrHeight=scrTop-personTopTabHeight+'px';
-         $this.scrBool=true;
-      }else{
-         $this.scrHeight='auto';
-         $this.scrBool=false;
-      }      
+      if(!$this.dialogFormVisible){
+        var scrTop = event.target.scrollTop;
+        var personTopTabHeight = $this.$refs.personTopTabPane.offsetHeight+20+5;
+        if(scrTop>=personTopTabHeight){
+            $this.scrHeight=scrTop-personTopTabHeight+'px';
+            $this.scrBool=true;
+        }else{
+            $this.scrHeight='auto';
+            $this.scrBool=false;
+        }
+      }
     }
   }
 }

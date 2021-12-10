@@ -262,7 +262,7 @@ export default {
     setTableHeight(){
       var $this = this;
       $this.tableHeight = 0;  
-      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;    
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;    
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       $this.tableHeight = screenHeight-breadcrumbHeight-40;
       $this.getBrowserType();

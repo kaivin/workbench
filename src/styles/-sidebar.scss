@@ -42,7 +42,7 @@
       transition: all .3s;
       &.is-fold{
         transform: rotate(180deg);
-        width: 50px;
+        width:60px;
         top: 24px;
       }
       &:hover{
@@ -282,7 +282,7 @@
 .hideSidebar {
     .container-layout {
         .sidebar-container {
-          width: 50px !important;
+          width:60px !important;
         }
         .submenu-title-noDropdown {
           padding: 0 !important;
@@ -308,14 +308,14 @@
           .item-link{
             .el-menu-item{
               >div{
-                padding: 0 16px!important;
+                padding: 0 21px!important;
               }
             }
           }
           .el-submenu {
             &>.el-submenu__title {
               transition: all .3s;
-              padding: 0 16px!important;
+              padding: 0 21px!important;
               &>span {
                 height: 0;
                 width: 0;

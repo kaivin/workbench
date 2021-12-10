@@ -240,7 +240,7 @@ export default {
       $this.$nextTick(()=>{
         var screenHeight = $this.$refs.mainPane.offsetHeight-30;
         var leftHeight = $this.$refs.leftPane.offsetHeight;
-        var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;
+        var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
         if($this.articleData.issay==1||$this.articleData.issay==0&&$this.commentList.length>0){
           var rightHeight = $this.$refs.rightPane.offsetHeight;
           if(leftHeight>rightHeight){

@@ -528,7 +528,7 @@ export default {
       var $this = this;
       $this.minHeight = 0;
       var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;      
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;      
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       if($this.isSearch){
          var searchTit = $this.$refs.searchTit.offsetHeight; 

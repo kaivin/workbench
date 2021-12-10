@@ -1032,7 +1032,7 @@ export default {
       }
     }else{
         var headerHeight = $this.$refs.enTopPane.offsetHeight+30;        
-        var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;
+        var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
         var screenHeight = $this.$refs.boxPane.offsetHeight;
         $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40;
         window.onresize = () => {
@@ -1243,7 +1243,7 @@ export default {
       if($this.$route.query.phoneID||$this.$route.query.key){
         $this.tableHeight = 0;      
         var headerHeight = $this.$refs.headerPane.offsetHeight;      
-        var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;
+        var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
         var screenHeight = $this.$refs.boxPane.offsetHeight;
         $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40;
         $this.getBrowserType();      

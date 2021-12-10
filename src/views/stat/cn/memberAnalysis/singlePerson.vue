@@ -869,7 +869,7 @@ export default {
                           objItem.tap='成交Top1';
                           objItem.icon='icon01';
                       }
-                      if(item.content.indexOf("奖金")>=0){
+                      if(item.content.indexOf("奖金超越")>=0){
                           objItem.tap='奖金Top1';
                           objItem.icon='icon01';
                       }
@@ -879,6 +879,10 @@ export default {
                       }
                       if(item.content.indexOf("历史新高")>=0){
                           objItem.tap='成交分突破峰值';
+                          objItem.icon='icon02';
+                      }
+                      if(item.content.indexOf("成交量突破")>=0){
+                          objItem.tap='成交量突破峰值';
                           objItem.icon='icon02';
                       }
                       if(item.content.indexOf("最高奖金")>=0){
@@ -909,15 +913,17 @@ export default {
     // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
-      var scrTop = event.target.scrollTop;
-      var personTopTabHeight = $this.$refs.personTopTabPane.offsetHeight+20+5;
-      if(scrTop>=personTopTabHeight){
-         $this.scrHeight=scrTop-personTopTabHeight+'px';
-         $this.scrBool=true;
-      }else{
-         $this.scrHeight='auto';
-         $this.scrBool=false;
-      }      
+      if(!$this.dialogFormVisible){
+        var scrTop = event.target.scrollTop;
+        var personTopTabHeight = $this.$refs.personTopTabPane.offsetHeight+20+5;
+        if(scrTop>=personTopTabHeight){
+            $this.scrHeight=scrTop-personTopTabHeight+'px';
+            $this.scrBool=true;
+        }else{
+            $this.scrHeight='auto';
+            $this.scrBool=false;
+        }
+      }     
     }
   }
 }

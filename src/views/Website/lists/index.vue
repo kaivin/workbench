@@ -133,7 +133,7 @@
                       <el-table-column
                         prop="is_online"
                         label="上线"
-                        width="50"
+                        width="60"
                         >
                         <template #default="scope">
                           <div class="table-icon center">
@@ -652,7 +652,7 @@ export default {
       var $this = this;
       $this.minHeight = 0;      
       var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       $this.minHeight = screenHeight-headerHeight-breadcrumbHeight-40;
       $this.getBrowserType();

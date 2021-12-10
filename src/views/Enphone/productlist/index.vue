@@ -153,7 +153,6 @@ export default {
       operationsWidth:"",
       tableData:[],
       tableHeight:200,
-      pagerCount:5,
       dialogFormVisible:false,
       dialogText:"",
       formLabelWidth:"120px",
@@ -342,7 +341,7 @@ export default {
       var $this = this;
       $this.tableHeight = 0;      
       var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
       $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40;
       $this.getBrowserType();

@@ -64,7 +64,7 @@
                                 <el-table-column prop="code" label="状态码" width="70"></el-table-column>
                                 <el-table-column prop="content" label="内容" min-width="120"></el-table-column>
                                 <el-table-column prop="spider" label="蜘蛛类型" width="140"></el-table-column>
-                                <el-table-column prop="time" label="抓取时间" width="160"></el-table-column>
+                                <el-table-column prop="time" label="抓取时间" width="180"></el-table-column>
                             </el-table>
                          </div>
                     </div>
@@ -272,6 +272,15 @@ export default {
       }
       if($this.searchData.isfile&&$this.searchData.isfile!=''){
         searchData.file =$this.$route.query.weburl+'/'+$this.searchData.isfile;
+      }
+      if($this.searchData.ip&&$this.searchData.ip!=''){
+        searchData.webip = $this.searchData.ip;
+      }
+      if($this.searchData.ftpuser&&$this.searchData.ftpuser!=''){
+        searchData.ftpuser = $this.searchData.ftpuser;
+      }
+      if($this.searchData.ftppwd&&$this.searchData.ftppwd!=''){
+        searchData.ftppwd = $this.searchData.ftppwd;
       }
       return searchData;
     },
