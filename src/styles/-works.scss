@@ -191,7 +191,7 @@
         margin-top:15px;
     }
     .order-title{
-        &>span{
+        &>a{
             cursor:pointer;
             transition:all .3s;
             &:hover{
@@ -510,6 +510,9 @@
                 }
             }
         }
+    }
+    .editBtn{
+      display: inline-block;
     }
 }
 .work-add-edit{

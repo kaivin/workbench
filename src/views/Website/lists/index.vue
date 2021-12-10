@@ -296,7 +296,9 @@
                         fixed="right"
                         >
                         <template #default="scope">
-                          <el-button v-if="scope.row.show===1" class="logs-button" size="mini" @click="linkToLog(scope.row,scope.$index)">工作日志<span v-if="scope.row.weblogcount!=0" class="logs-num">({{scope.row.weblogcount}})</span></el-button>
+                          <router-link class="clickBtn" :to="{name:'websiteLogList',query:{websiteID:scope.row.id,website:scope.row.domain}}">
+                            <el-button v-if="scope.row.show===1" class="logs-button" size="mini">工作日志<span v-if="scope.row.weblogcount!=0" class="logs-num">({{scope.row.weblogcount}})</span></el-button>
+                          </router-link>
                         </template>
                       </el-table-column>
                       <el-table-column
@@ -307,7 +309,10 @@
                         label="操作">
                         <template #default="scope">
                           <div class="table-button">
-                            <el-button v-if="scope.row.show===1&&menuButtonPermit.includes('Website_edit')" size="mini" @click="editTableRow(scope.row,scope.$index)">编辑</el-button>
+                            <router-link class="clickBtn" :to="{name:'websiteEdit',query:{websiteID:scope.row.id,website:scope.row.domain}}">
+                              <el-button v-if="scope.row.show===1&&menuButtonPermit.includes('Website_edit')" size="mini">编辑</el-button>
+                            </router-link>
+                            
                             <el-button v-if="scope.row.deletepermit===1&&menuButtonPermit.includes('Website_delete')" size="mini" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
                           </div>
                         </template>

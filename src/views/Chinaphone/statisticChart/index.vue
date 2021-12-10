@@ -2,14 +2,19 @@
   <div class="page-root flex-box no-padding cn-phone-index cn-phone-stat" ref="boxPane">
     <div class="sub-router">
       <el-scrollbar wrap-class="scrollbar-wrapper">
+              <el-scrollbar wrap-class="scrollbar-wrapper">
         <div class="sub-wrapper">
           <div class="side-button">
-            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Chinaphone_search')" v-on:click="searchStatisticsData()"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
-            <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="statisticsClues()"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>统计分析</el-button>
+            <router-link v-if="menuButtonPermit.includes('Chinaphone_search')" :to="{path:'/Chinaphone/searchClues'}">
+              <el-button type="primary" plain size="mini" ><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
+            </router-link>
+            <router-link v-if="menuButtonPermit.includes('Chinaphone_countlist')" :to="{path:'/Chinaphone/statisticChart'}" >
+              <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>统计分析</el-button>
+            </router-link>    
           </div>
           <dl class="phone-list" v-for="(item,index) in phoneBrandList" v-bind:key="index">
             <dt><span>{{item.name}}</span></dt>
-            <dd v-for="phone in item.phone" class="tipphone" v-bind:class="phone.isOn?'active':''" :key="phone.id" v-on:click="phoneJump(phone.id)">           
+            <dd v-for="phone in item.phone" class="tipphone" v-bind:class="phone.isOn?'active':''" :key="phone.id">           
                 <el-tooltip placement="right" class="el-tooltip" effect="light">
                   <div slot="content">
                     <span v-if="phone.phonenumber&&phone.phonenumber!=''">电话：{{phone.phonenumber}}</span><br v-if="phone.othername&&phone.othername!=''" />
@@ -17,11 +22,16 @@
                     <span v-if="phone.departname&&phone.departname!=''">部门：{{phone.departname}}</span><br v-if="phone.user&&phone.user!=''" />
                     <span v-if="phone.user&&phone.user!=''">负责人：{{phone.user}}</span>
                   </div>
-                  <el-button><span>{{phone.shortPhonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b> </el-button>
+                  <el-button>
+                    <router-link :to="{path:'/Chinaphone/phoneindex',query:{phoneID:phone.id}}">
+                      <span>{{phone.shortPhonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b> 
+                    </router-link>
+                  </el-button>
                 </el-tooltip>
             </dd>
           </dl>
         </div>
+      </el-scrollbar>
       </el-scrollbar>
     </div>
     <div class="flex-content relative">

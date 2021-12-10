@@ -32,6 +32,9 @@
                 color:#888;
                 font-size:$fontsize13;
               }
+              a{
+                display: block;
+              }
             }
           }
         }
@@ -63,6 +66,9 @@
               &.redsale{
                 font-weight: bold;
               }
+            }
+            a{
+              display: block;
             }
           }
         }
@@ -180,6 +186,9 @@
         color: $apricot;
         &:hover{
           color: $Rougecolor;
+        }
+        a{
+          color: $apricot;
         }
       }      
      }

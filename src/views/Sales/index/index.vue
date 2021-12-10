@@ -5,23 +5,67 @@
         <div class="sub-wrapper">
           <div class="side-button">
             <dl class="Sales-list">
-                <dt v-if="menuButtonPermit.includes('Sales_lookphoneall')||menuButtonPermit.includes('Sales_phonecount')" v-on:click="datastatisticClues()"><span>业务员数据统计</span></dt>
-                <dt v-if="menuButtonPermit.includes('Sales_waitphone')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitcount'?'active':''" v-on:click="jumpLink('waitcount')"><span>等待分配</span><i>({{defaultData.waitcount}})</i></dt>
-                <dt v-if="menuButtonPermit.includes('Sales_allphone')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'allotcount'?'active':''" v-on:click="jumpLink('allotcount')"><span>所有已分配询盘</span><i>({{defaultData.allotcount}})</i></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_lookphoneall')||menuButtonPermit.includes('Sales_phonecount')">
+                  <router-link :to="{path:'/Sales/phonecount'}">
+                    <span>业务员数据统计</span>
+                  </router-link>
+                </dt>
+                <dt v-if="menuButtonPermit.includes('Sales_waitphone')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitcount'?'active':''">
+                  <router-link :to="{path:'/Sales/index',query:{Status:'waitcount'}}">
+                    <span>等待分配</span><i>({{defaultData.waitcount}})</i>
+                  </router-link>
+                </dt>
+                <dt v-if="menuButtonPermit.includes('Sales_allphone')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'allotcount'?'active':''">
+                  <router-link :to="{path:'/Sales/index',query:{Status:'allotcount'}}">
+                    <span>所有已分配询盘</span><i>({{defaultData.allotcount}})</i>
+                  </router-link>
+                </dt>
             </dl>
           </div>
           <dl class="Salelist">
-              <dt v-if="menuButtonPermit.includes('Sales_index')" v-bind:class="currentStatus === 'personcount'?'active':''" v-on:click="jumpLink('personcount')"><span>个人所有询盘</span><i>({{defaultData.personcount}})</i></dt>
-              <dt v-if="menuButtonPermit.includes('Sales_waitdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitdealcount'?'active':''" v-on:click="jumpLink('waitdealcount')"><span>等待处理</span><i class="redsale">({{defaultData.waitdealcount}})</i></dt>
-              <dt v-if="menuButtonPermit.includes('Sales_monthsay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'monthsaycount'?'active':''" v-on:click="jumpLink('monthsaycount')"><span>月底前需反馈</span><i>({{defaultData.monthsaycount}})</i></dt>
-              <dt v-if="menuButtonPermit.includes('Sales_hasnosay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasnosaycount'?'active':''" v-on:click="jumpLink('hasnosaycount')"><span>所有未反馈</span><i>({{defaultData.hasnosaycount}})</i></dt>
-              <dt v-if="menuButtonPermit.includes('Sales_waitftword')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitftwordcount'?'active':''" v-on:click="jumpLink('waitftwordcount')"><span>等待添加富通ID</span><i>({{defaultData.waitftwordcount}})</i></dt>
-              <dt v-if="menuButtonPermit.includes('Sales_hasdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasdealcount'?'active':''" v-on:click="jumpLink('hasdealcount')"><span>已处理</span><i>({{defaultData.hasdealcount}})</i></dt>
-              <dt v-if="menuButtonPermit.includes('Sales_hassay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hassaycount'?'active':''" v-on:click="jumpLink('hassaycount')"><span>已做反馈</span><i>({{defaultData.hassaycount}})</i></dt>
+              <dt v-if="menuButtonPermit.includes('Sales_index')" v-bind:class="currentStatus === 'personcount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'personcount'}}">
+                <span>个人所有询盘</span><i>({{defaultData.personcount}})</i>
+                </router-link>
+              </dt>
+              <dt v-if="menuButtonPermit.includes('Sales_waitdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitdealcount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'waitdealcount'}}">
+                <span>等待处理</span><i class="redsale">({{defaultData.waitdealcount}})</i>
+                </router-link>
+              </dt>
+              <dt v-if="menuButtonPermit.includes('Sales_monthsay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'monthsaycount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'monthsaycount'}}">
+                <span>月底前需反馈</span><i>({{defaultData.monthsaycount}})</i>
+                </router-link>
+              </dt>
+              <dt v-if="menuButtonPermit.includes('Sales_hasnosay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasnosaycount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'hasnosaycount'}}">
+                <span>所有未反馈</span><i>({{defaultData.hasnosaycount}})</i>
+                </router-link>
+              </dt>
+              <dt v-if="menuButtonPermit.includes('Sales_waitftword')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitftwordcount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'waitftwordcount'}}">
+                <span>等待添加富通ID</span><i>({{defaultData.waitftwordcount}})</i>
+                </router-link>
+              </dt>
+              <dt v-if="menuButtonPermit.includes('Sales_hasdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasdealcount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'hasdealcount'}}">
+                <span>已处理</span><i>({{defaultData.hasdealcount}})</i>
+                </router-link>
+              </dt>
+              <dt v-if="menuButtonPermit.includes('Sales_hassay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hassaycount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'hassaycount'}}">
+                <span>已做反馈</span><i>({{defaultData.hassaycount}})</i>
+                </router-link>
+              </dt>
           </dl>
           <div class="side-button">
             <dl class="Sales-list">
-                <dt v-if="menuButtonPermit.includes('Sales_search')" v-on:click="dataStatistic()"><span>数据分析</span></dt>
+                <dt v-if="menuButtonPermit.includes('Sales_search')">
+                  <router-link :to="{path:'/Sales/search'}">
+                    <span>数据分析</span>
+                  </router-link>
+                </dt>
             </dl>
           </div>
         </div>
@@ -43,10 +87,12 @@
                     <div slot="header">  
                       <div class="card-header" ref="headerPane">                      
                         <div class="tips-list" v-if="defaultData.warningcount>0" ref="tipsPane">
-                              <div class="item-tips type-1" v-for="(item,index) in defaultData.warning" v-bind:key="index" v-on:click="editTableRow(item,index,'1')">
-                                  <i>{{index+1}}</i>
-                                  <strong>ID：{{item.id}}</strong>
-                                  <span>{{item.givesaleswarn}}</span>
+                              <div class="item-tips type-1" v-for="(item,index) in defaultData.warning" v-bind:key="index">
+                                  <router-link :to="{path:'/Sales/phoneinfosub',query:{ID:item.id, status: '1'}}">
+                                    <i>{{index+1}}</i>
+                                    <strong>ID：{{item.id}}</strong>
+                                    <span>{{item.givesaleswarn}}</span>
+                                  </router-link>
                               </div>
                         </div>
                         <div class="tipsHasItem">
@@ -285,8 +331,10 @@
                                       <span v-if="scope.row.custormemail&&scope.row.managestatus==2" style="cursor: pointer;"> 
                                           <i style="font-style:normal;" v-for="(item,index) in scope.row.emailList" v-bind:key="index"><em style="font-style:normal;display:inline-block;">{{item}}</em></i>
                                       </span>
-                                      <span v-if="scope.row.custormemail&&scope.row.managestatus!=2" @click="editTableRow(scope.row,scope.$index,'2')" style="cursor: pointer;"> 
-                                          <i style="font-style:normal;">查看Email</i>
+                                      <span v-if="scope.row.custormemail&&scope.row.managestatus!=2" style="cursor: pointer;"> 
+                                          <router-link :to="{path:'/Sales/phoneinfosub',query:{ID:scope.row.id, status: '2'}}">
+                                            <i style="font-style:normal;">查看Email</i>
+                                          </router-link>
                                       </span>
                                     </p>
                                     <p><span class="EnColor05">电话：</span><i style="font-style:normal" v-for="(item,index) in scope.row.phoneList" v-bind:key="index"><em style="font-style:normal;display:inline-block;">{{item}}</em><br/></i></p>
@@ -301,7 +349,11 @@
                                 <template slot-scope="scope">
                                     <div class="table-text">                       
                                         <p v-if="scope.row.contentedittime"><span class="SiteColor-01">内容有修改：修改时间{{scope.row.contentedittime}}</span></p>
-                                        <p>{{scope.row.Salescustormneedinfo}}<span class="SiteColor-03 clear" style="cursor:pointer;" v-if="scope.row.Salescustormneedinfo.length>150" @click="editTableRow(scope.row,scope.$index,'2')" :title="scope.row.custormneedinfo">#查看更多</span></p>
+                                        <p>{{scope.row.Salescustormneedinfo}}<span class="SiteColor-03 clear" style="cursor:pointer;" v-if="scope.row.Salescustormneedinfo.length>150" :title="scope.row.custormneedinfo">
+                                          <router-link :to="{path:'/Sales/phoneinfosub',query:{ID:scope.row.id, status: '2'}}">
+                                            #查看更多
+                                          </router-link>
+                                          </span></p>
                                     </div>
                                 </template>
                                 </el-table-column>
@@ -345,7 +397,10 @@
                                 >
                                 <template #default="scope">
                                     <div class="table-button">
-                                    <el-button size="mini" @click="editTableRow(scope.row,scope.$index,'2')">详情</el-button><br />
+                                      <router-link :to="{path:'/Sales/phoneinfosub',query:{ID:scope.row.id, status: '2'}}">
+                                        <el-button size="mini">详情</el-button>
+                                      </router-link>
+                                    <br />
                                     <span class="SiteColor-03" style="cursor:pointer;" v-if="scope.row.is_read==1">未读</span>
                                     </div>
                                 </template>

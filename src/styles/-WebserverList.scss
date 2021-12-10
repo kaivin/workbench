@@ -18,6 +18,12 @@
             cursor:pointer;
         }
     }
+    .newBtn{
+        display: inline-block;
+    }
+    .newBtn+.el-button{
+        margin-left: 10px;
+    }
 }
 .WebServerAddEditPost{
     clear:both;

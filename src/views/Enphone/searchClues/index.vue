@@ -4,17 +4,33 @@
           <el-scrollbar wrap-class="scrollbar-wrapper">
             <div class="sub-wrapper">
               <div class="side-button">
-                <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="searchStatisticsData()"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
-                <el-button type="primary" plain size="mini" v-if="menuButtonPermit.includes('Enphone_phonecount')" v-on:click="statisticsClues()"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
+                <router-link v-if="menuButtonPermit.includes('Enphone_search')" :to="{path:'/Enphone/searchClues'}">
+                  <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
+                </router-link>
+                <router-link v-if="menuButtonPermit.includes('Enphone_phonecount')" :to="{path:'/Enphone/statisticClues'}">
+                  <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
+                </router-link>
               </div>
               <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')">
-                  <dd v-on:click="phoneJump('','all')" v-bind:class="currentKey&&currentKey=='all'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookall')"><span>查看所有</span><i>({{linkAll.monthNum}})</i><em>({{linkAll.yestodayNum}})</em><b>({{linkAll.todayNum}})</b></dd>
-                  <dd v-on:click="phoneJump('','unAllot')" v-bind:class="currentKey&&currentKey=='unAllot'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookwaitdealall')"><span>未分配</span><i>({{linkAll.unAllotNum}})</i></dd>
+                  <dd v-bind:class="currentKey&&currentKey=='all'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookall')">
+                    <router-link :to="{path:'/Enphone/phoneindex',query:{key:'all'}}">
+                      <span>查看所有</span><i>({{linkAll.monthNum}})</i><em>({{linkAll.yestodayNum}})</em><b>({{linkAll.todayNum}})</b>
+                    </router-link>
+                  </dd>
+                  <dd v-bind:class="currentKey&&currentKey=='unAllot'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookwaitdealall')">
+                    <router-link :to="{path:'/Enphone/phoneindex',query:{key:'unAllot'}}">
+                      <span>未分配</span><i>({{linkAll.unAllotNum}})</i>
+                    </router-link>
+                  </dd>
               </dl>
               <template v-for="(item,index) in defaultData.data">
                 <dl class="phone-list" v-if="item.phone.length>0" v-bind:key="index">
                   <dt><span>{{item.brandname}}</span></dt>
-                  <dd v-for="(phone,index) in item.phone" v-bind:class="phone.isOn?'active':''" :key="index" :title="phone.phonenumber+phone.othername" v-on:click="phoneJump(phone.id,phone.waitstatus)"><span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b></dd>
+                  <dd v-for="(phone,index) in item.phone" v-bind:class="phone.isOn?'active':''" :key="index" :title="phone.phonenumber+phone.othername">
+                    <router-link :to="{path:'/Enphone/phoneindex',query:{phoneID:phone.id, waitstatus:phone.waitstatus}}">
+                      <span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b>
+                    </router-link>
+                  </dd>
                 </dl>
               </template>
             </div>
@@ -472,7 +488,10 @@
                                         label="操作">
                                         <template #default="scope">
                                           <div class="table-button">
-                                            <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')">编辑</el-button>
+                                            <router-link :to="{path:'/Enphone/addEditClues',query:{ID:scope.row.id}}" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')" >
+                                              <el-button size="mini" >编辑</el-button>
+                                            </router-link>
+                                            
                                           </div>
                                         </template>
                                       </el-table-column>

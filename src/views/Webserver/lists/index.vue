@@ -137,7 +137,11 @@
                               align="left"
                               >
                               <template #default="scope">
-                                <div class="table-link"><span class="link" @click="jumpWebsiteList(scope.row,scope.$index)">{{scope.row.ip}}</span></div>
+                                <div class="table-link">
+                                  <router-link class="link" :to="{name:'Website_lists',query:{key:scope.row.ip}}">
+                                    {{scope.row.ip}}  
+                                  </router-link>
+                                </div>
                               </template>
                             </el-table-column>
                             <el-table-column
@@ -161,7 +165,10 @@
                               fixed="right"
                               label="操作">
                               <template #default="scope">
-                                <el-button v-if="scope.row.editshow===1" size="mini" @click="editTableRow(scope.row,scope.$index)">编辑</el-button>
+                                <router-link :to="{name:'webserverAddEdit',query:{webserverID:scope.row.id}}" class="newBtn">
+                                  <el-button v-if="scope.row.editshow===1" size="mini">编辑</el-button>
+                                </router-link>
+                                
                                 <el-button v-if="scope.row.deletepermit===1" size="mini" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
                               </template>
                             </el-table-column>

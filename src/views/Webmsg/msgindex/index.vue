@@ -3,18 +3,62 @@
         <div class="sub-router">
             <el-scrollbar wrap-class="scrollbar-wrapper">
                 <ul class="sub-router-list">
-                    <li v-if="menuButtonPermit.includes('Webmsg_allmsg')" v-bind:class="currentStatus === 'All'?'active':''" v-on:click="jumpLink('All')"><span>全部</span><b>({{defaultData.totalNum}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Webmsg_nodealmsg')" v-bind:class="currentStatus === 'Untreated'?'active':''" v-on:click="jumpLink('Untreated')"><span>未处理</span><b>({{defaultData.untreatedNum}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Webmsg_persondealmsg')" v-bind:class="currentStatus === 'Pending'?'active':''" v-on:click="jumpLink('Pending')"><span>个人待处理</span><b>({{defaultData.pendingNum}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Webmsg_hasdealmsg')" v-bind:class="currentStatus === 'Processed'?'active':''" v-on:click="jumpLink('Processed')"><span>已处理</span><b>({{defaultData.processedNum}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Webmsg_hasstarmsg')" v-bind:class="currentStatus === 'Starred'?'active':''" v-on:click="jumpLink('Starred')"><span>加星标</span><b>({{defaultData.starNum}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Webmsg_rubblishmsg')" v-bind:class="currentStatus === 'Spam'?'active':''" v-on:click="jumpLink('Spam')"><span>垃圾信息</span><b>({{defaultData.spamNum}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Webmsg_testmsg')" v-bind:class="currentStatus === 'Test'?'active':''" v-on:click="jumpLink('Test')"><span>测试数据</span><b>({{defaultData.testNum}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Webmsg_pushwaitdeal')" v-bind:class="currentStatus === 'SNS_1'?'active':''" v-on:click="jumpLink('SNS_1')" style="margin-top:32px;"><span>推广待处理</span><b>({{defaultData.sns1Num}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Webmsg_pushhasdeal')" v-bind:class="currentStatus === 'SNS_2'?'active':''" v-on:click="jumpLink('SNS_2')"><span>推广已处理</span><b>({{defaultData.sns2Num}})</b></li>
-                    <li v-if="menuButtonPermit.includes('Webmsg_filetermsg')" v-bind:class="currentStatus === 'Filter'?'active':''" v-on:click="jumpLink('Filter')" style="margin-top:32px;"><span>已过滤垃圾信息</span><b>({{defaultData.filterNum}})</b></li>
+                    <li v-if="menuButtonPermit.includes('Webmsg_allmsg')" v-bind:class="currentStatus === 'All'?'active':''">
+                      <router-link :to="{path:'/Webmsg/msgindex',query:{Status:'All'}}">
+                      <span>全部</span><b>({{defaultData.totalNum}})</b>
+                      </router-link>
+                    </li>
+                    <li v-if="menuButtonPermit.includes('Webmsg_nodealmsg')" v-bind:class="currentStatus === 'Untreated'?'active':''">
+                      <router-link :to="{path:'/Webmsg/msgindex',query:{Status:'Untreated'}}">
+                      <span>未处理</span><b>({{defaultData.untreatedNum}})</b>
+                      </router-link>
+                    </li>
+                    <li v-if="menuButtonPermit.includes('Webmsg_persondealmsg')" v-bind:class="currentStatus === 'Pending'?'active':''">
+                      <router-link :to="{path:'/Webmsg/msgindex',query:{Status:'Pending'}}">
+                      <span>个人待处理</span><b>({{defaultData.pendingNum}})</b>
+                      </router-link>
+                    </li>
+                    <li v-if="menuButtonPermit.includes('Webmsg_hasdealmsg')" v-bind:class="currentStatus === 'Processed'?'active':''">
+                      <router-link :to="{path:'/Webmsg/msgindex',query:{Status:'Processed'}}">
+                      <span>已处理</span><b>({{defaultData.processedNum}})</b>
+                      </router-link>
+                    </li>
+                    <li v-if="menuButtonPermit.includes('Webmsg_hasstarmsg')" v-bind:class="currentStatus === 'Starred'?'active':''">
+                      <router-link :to="{path:'/Webmsg/msgindex',query:{Status:'Starred'}}">
+                      <span>加星标</span><b>({{defaultData.starNum}})</b>
+                      </router-link>
+                    </li>
+                    <li v-if="menuButtonPermit.includes('Webmsg_rubblishmsg')" v-bind:class="currentStatus === 'Spam'?'active':''">
+                      <router-link :to="{path:'/Webmsg/msgindex',query:{Status:'Spam'}}">
+                      <span>垃圾信息</span><b>({{defaultData.spamNum}})</b>
+                      </router-link>
+                    </li>
+                    <li v-if="menuButtonPermit.includes('Webmsg_testmsg')" v-bind:class="currentStatus === 'Test'?'active':''">
+                      <router-link :to="{path:'/Webmsg/msgindex',query:{Status:'Test'}}">
+                      <span>测试数据</span><b>({{defaultData.testNum}})</b>
+                      </router-link>
+                    </li>
+                    <li v-if="menuButtonPermit.includes('Webmsg_pushwaitdeal')" v-bind:class="currentStatus === 'SNS_1'?'active':''" style="margin-top:32px;">
+                      <router-link :to="{path:'/Webmsg/msgindex',query:{Status:'SNS_1'}}">
+                      <span>推广待处理</span><b>({{defaultData.sns1Num}})</b>
+                      </router-link>
+                    </li>
+                    <li v-if="menuButtonPermit.includes('Webmsg_pushhasdeal')" v-bind:class="currentStatus === 'SNS_2'?'active':''">
+                      <router-link :to="{path:'/Webmsg/msgindex',query:{Status:'SNS_2'}}">
+                      <span>推广已处理</span><b>({{defaultData.sns2Num}})</b>
+                      </router-link>
+                    </li>
+                    <li v-if="menuButtonPermit.includes('Webmsg_filetermsg')" v-bind:class="currentStatus === 'Filter'?'active':''" style="margin-top:32px;">
+                      <router-link :to="{path:'/Webmsg/msgindex',query:{Status:'Filter'}}">
+                      <span>已过滤垃圾信息</span><b>({{defaultData.filterNum}})</b>
+                      </router-link>
+                    </li>
                     <li class="li-button" v-if="menuButtonPermit.includes('Webmsg_filetermsg')&&menuButtonPermit.includes('Webmsg_deletefiltermsg')&&defaultData.filterNum>0" v-on:click="deleteHistory('Filter')"><span>清除已过滤垃圾信息</span></li>
-                    <li v-if="menuButtonPermit.includes('Webmsg_deletemsg')" v-bind:class="currentStatus === 'Recycle'?'active':''" v-on:click="jumpLink('Recycle')" style="margin-top:32px;"><span>回收站</span><b>({{defaultData.recycleNum}})</b></li>
+                    <li v-if="menuButtonPermit.includes('Webmsg_deletemsg')" v-bind:class="currentStatus === 'Recycle'?'active':''" style="margin-top:32px;">
+                      <router-link :to="{path:'/Webmsg/msgindex',query:{Status:'Recycle'}}">
+                      <span>回收站</span><b>({{defaultData.recycleNum}})</b>
+                      </router-link>
+                    </li>
                     <li class="li-button" v-if="menuButtonPermit.includes('Webmsg_deletemsg')&&menuButtonPermit.includes('Webmsg_deleterecyclemsg')&&defaultData.recycleNum>0" v-on:click="deleteHistory('Recycle')"><span>清除回收站信息</span></li>
                     <li class="li-button" v-if="menuButtonPermit.includes('Webmsg_deleteapi')" v-on:click="deleteHistory('api')" style="margin-top:32px;"><span>清除中文留言信息</span></li>
                 </ul>

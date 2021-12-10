@@ -99,9 +99,9 @@
                               min-width="240"
                               >
                               <template #default="scope">
-                                  <div class="table-title" v-on:click="jumpArticle(scope.row.id)">
+                                  <router-link class="table-title" :to="{path:'/Article/info',query:{id:scope.row.id}}">
                                   <i class="svg-i"><svg-icon v-if="scope.row.is_top" icon-class="top" class-name="disabled" /></i><span :style="{color:scope.row.titlecolor?scope.row.titlecolor:''}">{{scope.row.title}}</span>
-                                  </div>
+                                  </router-link>
                               </template>
                               </el-table-column>
                               <el-table-column
@@ -170,7 +170,9 @@
                               align="center"
                               label="操作">
                               <template #default="scope">
-                                  <el-button size="mini" v-if="scope.row.editshow&&menuButtonPermit.includes('Article_edit')" @click="editTableRow(scope.row,scope.$index)">修改</el-button>
+                                  <router-link class="newBtn" v-if="scope.row.editshow&&menuButtonPermit.includes('Article_edit')" :to="{path:'/Article/addEdit',query:{id:scope.row.id}}">
+                                    <el-button size="mini" >修改</el-button>
+                                  </router-link>
                                   <el-button size="mini" v-if="scope.row.deleteshow&&menuButtonPermit.includes('Article_delete')" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
                               </template>
                               </el-table-column>
@@ -231,9 +233,9 @@
                             min-width="240"
                             >
                             <template #default="scope">
-                                <div class="table-title" v-on:click="jumpArticle(scope.row.id)">
+                                <router-link class="table-title" :to="{path:'/Article/info',query:{id:scope.row.id}}">
                                 <span v-html="scope.row.title"></span>
-                                </div>
+                                </router-link>
                             </template>
                             </el-table-column>
                             <el-table-column
@@ -279,7 +281,9 @@
                             label="操作">
                             <template #default="scope">
                                 <div class="table-button">
-                                <el-button size="mini" v-if="scope.row.editshow&&menuButtonPermit.includes('Article_edit')" @click="editTableRow(scope.row,scope.$index)">修改</el-button>
+                                  <router-link v-if="scope.row.editshow&&menuButtonPermit.includes('Article_edit')" :to="{path:'/Article/addEdit',query:{id:scope.row.id}}">
+                                    <el-button size="mini">修改</el-button>
+                                  </router-link>
                                 <el-button size="mini" v-if="scope.row.deleteshow&&menuButtonPermit.includes('Article_delete')" @click="deleteTableRow(scope.row,scope.$index)" type="info" plain>删除</el-button>
                                 </div>
                             </template>

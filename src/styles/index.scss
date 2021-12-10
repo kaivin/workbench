@@ -984,6 +984,9 @@
       cursor:pointer;
     }
   }
+  .clickBtn{
+    display: inline-block;
+  }
   .logs-num{
     color:red;
     margin-left:4px;
@@ -1044,6 +1047,9 @@
   .table-button{
     .el-button{
       margin: 5px;
+    }
+    .editBtn{
+      display: inline-block;
     }
   }
   .export-dialog{

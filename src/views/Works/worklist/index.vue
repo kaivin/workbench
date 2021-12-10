@@ -17,9 +17,11 @@
                                     <dd v-if="menuButtonPermit.includes('Works_worklist')" v-on:click="jumpLink('alltasks')" v-bind:class="currentStatus === 'alltasks'?'active':''"><span>全部任务<b>[{{defaultData.accpetcountNum}}]</b></span></dd>
                                     <dd v-if="menuButtonPermit.includes('Works_mypublish')" v-on:click="jumpLink('person')" v-bind:class="currentStatus === 'person'?'active':''"><span>我的任务<b>[{{defaultData.personNum}}]</b></span></dd>
                                     <dd v-if="menuButtonPermit.includes('Works_myfocus')" v-on:click="jumpLink('focuson')" v-bind:class="currentStatus === 'focuson'?'active':''"><span>我的关注<b>[{{defaultData.focusonNum}}]</b></span></dd>
-                                    <dt class="search-orderOneFr" v-if="menuButtonPermit.includes('Works_workcount')" v-on:click="jumpStatPage">
-                                    <i class="svg-i"><svg-icon icon-class="workOrder_data" /></i>
-                                    <span>数据统计</span>
+                                    <dt class="search-orderOneFr" v-if="menuButtonPermit.includes('Works_workcount')">
+                                    <router-link :to="{path:'/Works/statData'}">
+                                      <i class="svg-i"><svg-icon icon-class="workOrder_data" /></i>
+                                      <span>数据统计</span>
+                                    </router-link>
                                     </dt>
                                 </dl>
                                 <div class="search-orderTwo flex-wrap">
@@ -123,7 +125,9 @@
                                     >
                                     <template slot-scope="scope">
                                         <div class="order-title">
-                                            <span v-on:click="jumpArticle(scope.row.id)">{{scope.row.title}}</span>
+                                          <router-link :to="{path:'/Works/workInfo',query:{ID:scope.row.id}}">
+                                            {{scope.row.title}}
+                                          </router-link>
                                             <el-tooltip class="toolCancel" effect="dark" content="取消关注" placement="top" v-if="(currentStatus=='focuson'||scope.row.focus==1)&&menuButtonPermit.includes('Works_workfocuscancel')"><el-button v-on:click="handleCancelFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></el-button></el-tooltip>
                                             <el-tooltip class="toolFocus" effect="dark" content="关注任务" placement="top" v-if="scope.row.focus==0&&menuButtonPermit.includes('Works_workfocus')"><el-button v-on:click="handleAddFocus(scope.row.id)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></el-button></el-tooltip>
                                         </div>
@@ -244,7 +248,9 @@
                                     </template>  
                                     <template #default="scope">
                                       <div class="table-button">
-                                          <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_workedit')&&scope.row.status==1">编辑</el-button>
+                                          <router-link class="editBtn" :to="{path:'/Works/addEdit',query:{ID:scope.row.id}}">
+                                            <el-button size="mini" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_workedit')&&scope.row.status==1">编辑</el-button>
+                                          </router-link>
                                           <el-button size="mini" @click="cancelTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_workcancel')&&(scope.row.status==1||scope.row.status==2||scope.row.status==4||scope.row.status==5)">撤销</el-button>
                                           <el-button size="mini" @click="rejectTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_noconfirm')&&(scope.row.status==4)">驳回</el-button>
                                           <el-button size="mini" @click="confirmTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_workconfirm')&&(scope.row.status==4)">确认完成</el-button>

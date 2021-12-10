@@ -4,28 +4,72 @@
       <div class="sub-router SaleCardFl" ref="SaleCardFl">
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <div class="sub-wrapper">
-            <div class="side-button">
-              <dl class="Sales-list">
-                  <dt v-if="menuButtonPermit.includes('Sales_lookphoneall')||menuButtonPermit.includes('Sales_phonecount')" v-bind:class="currentStatus === 'stat'?'active':''" v-on:click="datastatisticClues()"><span>业务员数据统计</span></dt>
-                  <dt v-if="menuButtonPermit.includes('Sales_waitphone')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitcount'?'active':''" v-on:click="jumpLink('waitcount')"><span>等待分配</span><i>({{defaultData.waitcount}})</i></dt>
-                  <dt v-if="menuButtonPermit.includes('Sales_allphone')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'allotcount'?'active':''" v-on:click="jumpLink('allotcount')"><span>所有已分配询盘</span><i>({{defaultData.allotcount}})</i></dt>
-              </dl>
-            </div>
-            <dl class="Salelist">
-                <dt v-if="menuButtonPermit.includes('Sales_index')" v-bind:class="currentStatus === 'personcount'?'active':''" v-on:click="jumpLink('personcount')"><span>个人所有询盘</span><i>({{defaultData.personcount}})</i></dt>
-                <dt v-if="menuButtonPermit.includes('Sales_waitdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitdealcount'?'active':''" v-on:click="jumpLink('waitdealcount')"><span>等待处理</span><i class="redsale">({{defaultData.waitdealcount}})</i></dt>
-                <dt v-if="menuButtonPermit.includes('Sales_monthsay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'monthsaycount'?'active':''" v-on:click="jumpLink('monthsaycount')"><span>月底前需反馈</span><i>({{defaultData.monthsaycount}})</i></dt>
-                <dt v-if="menuButtonPermit.includes('Sales_hasnosay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasnosaycount'?'active':''" v-on:click="jumpLink('hasnosaycount')"><span>所有未反馈</span><i>({{defaultData.hasnosaycount}})</i></dt>
-                <dt v-if="menuButtonPermit.includes('Sales_waitftword')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitftwordcount'?'active':''" v-on:click="jumpLink('waitftwordcount')"><span>等待添加富通ID</span><i>({{defaultData.waitftwordcount}})</i></dt>
-                <dt v-if="menuButtonPermit.includes('Sales_hasdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasdealcount'?'active':''" v-on:click="jumpLink('hasdealcount')"><span>已处理</span><i>({{defaultData.hasdealcount}})</i></dt>
-                <dt v-if="menuButtonPermit.includes('Sales_hassay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hassaycount'?'active':''" v-on:click="jumpLink('hassaycount')"><span>已做反馈</span><i>({{defaultData.hassaycount}})</i></dt>
+          <div class="side-button">
+            <dl class="Sales-list">
+                <dt v-if="menuButtonPermit.includes('Sales_lookphoneall')||menuButtonPermit.includes('Sales_phonecount')">
+                  <router-link :to="{path:'/Sales/phonecount'}">
+                    <span>业务员数据统计</span>
+                  </router-link>
+                </dt>
+                <dt v-if="menuButtonPermit.includes('Sales_waitphone')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitcount'?'active':''">
+                  <router-link :to="{path:'/Sales/index',query:{Status:'waitcount'}}">
+                    <span>等待分配</span><i>({{defaultData.waitcount}})</i>
+                  </router-link>
+                </dt>
+                <dt v-if="menuButtonPermit.includes('Sales_allphone')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'allotcount'?'active':''">
+                  <router-link :to="{path:'/Sales/index',query:{Status:'allotcount'}}">
+                    <span>所有已分配询盘</span><i>({{defaultData.allotcount}})</i>
+                  </router-link>
+                </dt>
             </dl>
-            <div class="side-button">
-              <dl class="Sales-list">
-                  <dt v-if="menuButtonPermit.includes('Sales_search')" v-on:click="dataStatistic()"><span>数据分析</span></dt>
-              </dl>
-            </div>
           </div>
+          <dl class="Salelist">
+              <dt v-if="menuButtonPermit.includes('Sales_index')" v-bind:class="currentStatus === 'personcount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'personcount'}}">
+                <span>个人所有询盘</span><i>({{defaultData.personcount}})</i>
+                </router-link>
+              </dt>
+              <dt v-if="menuButtonPermit.includes('Sales_waitdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitdealcount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'waitdealcount'}}">
+                <span>等待处理</span><i class="redsale">({{defaultData.waitdealcount}})</i>
+                </router-link>
+              </dt>
+              <dt v-if="menuButtonPermit.includes('Sales_monthsay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'monthsaycount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'monthsaycount'}}">
+                <span>月底前需反馈</span><i>({{defaultData.monthsaycount}})</i>
+                </router-link>
+              </dt>
+              <dt v-if="menuButtonPermit.includes('Sales_hasnosay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasnosaycount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'hasnosaycount'}}">
+                <span>所有未反馈</span><i>({{defaultData.hasnosaycount}})</i>
+                </router-link>
+              </dt>
+              <dt v-if="menuButtonPermit.includes('Sales_waitftword')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'waitftwordcount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'waitftwordcount'}}">
+                <span>等待添加富通ID</span><i>({{defaultData.waitftwordcount}})</i>
+                </router-link>
+              </dt>
+              <dt v-if="menuButtonPermit.includes('Sales_hasdeal')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hasdealcount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'hasdealcount'}}">
+                <span>已处理</span><i>({{defaultData.hasdealcount}})</i>
+                </router-link>
+              </dt>
+              <dt v-if="menuButtonPermit.includes('Sales_hassay')||menuButtonPermit.includes('Sales_lookphoneall')" v-bind:class="currentStatus === 'hassaycount'?'active':''">
+                <router-link :to="{path:'/Sales/index',query:{Status:'hassaycount'}}">
+                <span>已做反馈</span><i>({{defaultData.hassaycount}})</i>
+                </router-link>
+              </dt>
+          </dl>
+          <div class="side-button">
+            <dl class="Sales-list">
+                <dt v-if="menuButtonPermit.includes('Sales_search')">
+                  <router-link :to="{path:'/Sales/search'}">
+                    <span>数据分析</span>
+                  </router-link>
+                </dt>
+            </dl>
+          </div>
+        </div>
         </el-scrollbar>
       </div>
       <div class="flex-content SaleCardFr">

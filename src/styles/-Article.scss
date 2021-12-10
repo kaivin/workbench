@@ -204,6 +204,12 @@
     .scroll-panel{
         padding:0px;
     }
+    .newBtn{
+        display: inline-block;
+    }
+    .newBtn+.el-button{
+        margin-left: 10px;
+    }
 }
 .ArticleFour{
     width:100%;

@@ -117,11 +117,19 @@
               background: none;
               border: 0px;
               font-size: 0px;
-              padding: 4px 10px;
+              padding: 0;
               clear: both;
               display: block;
               width: 100%;
               text-align:left;
+              >span{
+                display: block;
+                height: auto;
+              }
+              a{
+                padding: 4px 10px;
+                display: block;
+              }
             }
           }
           &.active,&:hover{
@@ -147,6 +155,9 @@
           }
           b{
             color:$menuActiveText;
+          }
+          a{
+            display: block;
           }
         }
         span,i,b,em{
