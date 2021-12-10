@@ -641,13 +641,7 @@ export default {
                   $this.$router.push({path:'/Works/worklist',query:{Status:$this.permitStatus[0]}});
                 }
               }else{
-                  $this.$message({
-                      showClose: true,
-                      message: "未找到对应页面或页面缺失参数",
-                      type: 'error',
-                      duration:6000
-                  });
-                  $this.$router.push({path:`/404?redirect=${$this.$router.currentRoute.fullPath}`});
+                $this.$router.push({path:'/Works/worklist',query:{Status:'alltasks'}});
               }
             }else{
               $this.$message({

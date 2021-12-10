@@ -534,13 +534,7 @@ export default {
           if($this.$route.query.Status){
               $this.currentStatus = $this.$route.query.Status;
           }else{
-              $this.$message({
-                  showClose: true,
-                  message: "未找到对应页面或页面缺失参数",
-                  type: 'error',
-                  duration:6000
-              });
-              $this.$router.push({path:`/404?redirect=${$this.$router.currentRoute.fullPath}`});
+            $this.$router.push({path:'/Sales/index',query:{Status:'personcount'}});
           }
           $this.initData();
       },

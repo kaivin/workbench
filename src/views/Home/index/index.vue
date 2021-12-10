@@ -1,7 +1,7 @@
 ﻿<template>
   <div class="page-root scroll-panel home-index flex-box" ref="boxPane">
       <div class="infoBox flex-content" :class="scrBool?'fixed':''">          
-          <div class="infoBoxCard" :style='"top:"+scrHeight'>
+          <div class="infoBoxCard" :style='"top:"+scrHeight' v-if="userInfo.id!=533">
               <div class="personMsg">
                   <div class="personAvatar">
                       <p v-if="userBasicInfo.headimg"><span><img :src="userBasicInfo.headimg" alt="" /></span><i v-if='historyDate.length>0' @click="handlediogHistory"></i></p>
@@ -45,7 +45,7 @@
                   </ul>
               </div>
           </div>
-          <div class="infoBoxRight flex-box">
+          <div class="infoBoxRight flex-box" v-bind:class="userInfo.id!=533?'':'no-left'">
               <p class="infoBoxRightTop">消息提醒：全部消息<b>{{allNumber}}</b>条；未读<b>{{allNumber-allIsread}}</b>条</p>
               <div class="infoBoxRightBom flex-box flex-content" :class="scrBool?'BomPadBom':''" v-if="permitModules.includes('Module_bbs')">
                   <div class="infoBoxRightBominfo flex-content" v-if="newsList.length > 0">
@@ -62,8 +62,9 @@
                           :class="[item1.is_read==1?'isRead':'',item1.isOn?'isRead':'']"
                           v-for="item1 in item.article"
                           v-bind:key="item1.id"
+                          
                         >
-                          <div class="txt-font flex-content" v-on:click="jumpArticle(item1)" :title="item1.title">
+                          <router-link v-if="item1.type == 1" :to="{path:'/Website/logInfo',query:{logID:item1.id,websiteID:item1.website_id,website:item1.domain}}" tag="a" class="txt-font flex-content" target="_blank" :title="item1.title">
                             <span
                               class="txt-icon"
                               :class="item1.is_new == 1 ? 'update' : 'new'"
@@ -80,10 +81,30 @@
                               :style="{
                                 color: item1.titlecolor ? item1.titlecolor : '',
                               }"
-                              >{{ item1.title }}</span
+                              >{{ item1.title }}</span>
+                              <span class="txt-time" v-if="userInfo.id==533">({{ item1.updatetime }})</span>
+                          </router-link>
+                          <router-link v-else :to="{path:'/Article/info',query:{id:item1.id}}" tag="a" class="txt-font flex-content" target="_blank" :title="item1.title">
+                            <span
+                              class="txt-icon"
+                              :class="item1.is_new == 1 ? 'update' : 'new'"
+                              ><b>{{ item1.is_new == 1 ? "改" : "新" }}</b></span
                             >
-                          </div>
-                          <div class="txt-time">({{ item1.updatetime }})</div>
+                            <span class="txt-type" v-if="item1.type == 1"
+                              >【{{ item1.domain }} [{{ item1.website_id }}]】</span
+                            >
+                            <span class="txt-type" v-else
+                              >【{{ item1.typename }}】</span
+                            >
+                            <span
+                              class="txt-title"
+                              :style="{
+                                color: item1.titlecolor ? item1.titlecolor : '',
+                              }"
+                              >{{ item1.title }}</span>
+                              <span class="txt-time" v-if="userInfo.id==533">({{ item1.updatetime }})</span>
+                          </router-link>
+                          <div class="txt-time" v-if="userInfo.id!=533">({{ item1.updatetime }})</div>
                         </div>
                       </dd>
                     </dl>
@@ -236,36 +257,6 @@ export default {
       if ($this.permitModules.includes("Module_bbs")) {
         $this.getPostData();
       }
-    },
-    // 跳转到文章详情
-    jumpArticle(row) {
-      var $this = this;
-      var routeUrl = "";
-      var newsList=$this.newsList;
-      newsList.forEach(function(item,index){
-          item.article.forEach(function(items,indexs){
-            if(row.id==items.id){
-              items.isOn=true;
-            }
-          });
-      });
-      $this.newsList=newsList;
-      if (row.type == 1) {
-        routeUrl = $this.$router.resolve({
-          path: "/Website/logInfo",
-          query: {
-            logID: row.id,
-            websiteID: row.website_id,
-            website: row.domain,
-          },
-        });
-      } else {
-        routeUrl = $this.$router.resolve({
-          path: "/Article/info",
-          query: { id: row.id },
-        });
-      }
-      window.open(routeUrl.href, "_blank");
     },
     // 获取论坛最新资讯
     getPostData() {

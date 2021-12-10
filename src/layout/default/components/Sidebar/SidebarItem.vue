@@ -12,9 +12,11 @@
         class="nest-menu"
       />
     </el-submenu>
-    <el-menu-item v-else :index="item.meta.index" v-on:click="jumpLink(item.path)">
-        <item v-if="item.meta" :icon="item.meta&&item.meta.icon" :title="item.meta.title" />
-    </el-menu-item>
+    <router-link v-else class="a-link" :to="{path:item.path}" tag="a">
+      <el-menu-item :index="item.meta.index">
+          <item v-if="item.meta" :icon="item.meta&&item.meta.icon" :title="item.meta.title" />
+      </el-menu-item>
+    </router-link>
   </div>
 </template>
 
@@ -34,19 +36,6 @@ export default {
     return {}
   },
   methods: {
-    jumpLink:function(path,index){
-      if(path === "/Webmsg/msgindex"){
-        this.$router.push({path,query:{Status:'Untreated'}});
-      }else if(path === "/Sales/index"){
-        this.$router.push({path,query:{Status:'personcount'}});
-      }else if(path === "/WorkOrder/orderList"){
-        this.$router.push({path,query:{Status:'alltasks'}});
-      }else if(path === "/Works/worklist"){
-        this.$router.push({path,query:{Status:'alltasks'}});
-      }else{
-        this.$router.push(path);
-      }
-    }
   }
 }
 </script>
