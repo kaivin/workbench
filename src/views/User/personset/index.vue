@@ -195,7 +195,7 @@ export default {
         actionUrl:process.env.VUE_APP_BASE_API + '/hxindex/Api/uping',//上传地址
         menuButtonPermit:[],
         userData:{},
-        formLabelWidth:"110px",
+        formLabelWidth:"120px",
         dialogNameVisible:false,
         dialogNameForm:{
           id:0,

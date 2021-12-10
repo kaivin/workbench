@@ -127,7 +127,7 @@ export default {
             capsTooltip:false,
             redirect: undefined,
             otherQuery: {},
-            formLabelWidth:"110px",
+            formLabelWidth:"120px",
             dialogForgetPwdVisible:false,
             dialogForgetPwdForm:{
                 username:"",

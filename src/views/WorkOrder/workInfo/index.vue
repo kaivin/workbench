@@ -281,9 +281,9 @@ export default {
     // 设置高度
     setHeight(){
       var $this = this;
-      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;
       $this.$nextTick(()=>{
-        $this.minHeight = $this.$refs.mainPane.offsetHeight-breadcrumbHeight-30;
+        $this.minHeight = $this.$refs.mainPane.offsetHeight-breadcrumbHeight-40;
         $this.rightWidth = $this.$refs.rightPane.offsetWidth;
       });
     },

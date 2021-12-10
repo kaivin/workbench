@@ -509,7 +509,7 @@ export default {
       scrollPosition:{
         width:0,
         left:0,
-        fixedBottom: 15,
+        fixedBottom: 20,
         insetWidth:0,
         oldInsetLeft:0,
         insetLeft:0,
@@ -644,7 +644,7 @@ export default {
       // 获取右侧固定列的总宽度
       $this.scrollTable.fixedRightWidth = fixedRightObj.width;
       var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
-      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+60+15;
+      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+54+20;
       $this.scrollTable.clientHeight = document.documentElement.clientHeight;
       // 头部固定情况下视窗宽高改变，需要重新设置的一些宽高
       if($this.scrollPosition.isFixed){
@@ -653,15 +653,15 @@ export default {
         document.querySelector(".table-mask").style = tableHeaderStyle;
         var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
         document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
-        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+60+15;
+        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+54+20;
       }
       // 视窗宽高改变时需要设置默认滚动条的位置
       if($this.totalDataNum>20){
         var scrTop = $this.$refs.scrollDom.scrollTop;
-        if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+        if(scrTop+$this.scrollTable.clientHeight>=$this.scrollTable.tableBottom-20){
           $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom;
         }else{
-          $this.scrollPosition.fixedBottom = 15;
+          $this.scrollPosition.fixedBottom = 20;
         }
       }
     },
@@ -691,10 +691,10 @@ export default {
           document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
         }
         if($this.totalDataNum>20){
-          if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
+          if(scrTop+$this.scrollTable.clientHeight>=$this.scrollTable.tableBottom-20){
             $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom;
           }else{
-            $this.scrollPosition.fixedBottom = 15;
+            $this.scrollPosition.fixedBottom = 20;
           }
         }
       }

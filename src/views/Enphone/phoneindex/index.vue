@@ -959,7 +959,7 @@ export default {
         levelOneCountMonth:0,
         levelTwoCountMonth:0,
       },
-      formLabelWidth:"110px",
+      formLabelWidth:"120px",
       exportForm:{
         fileName:"",
         bookType:"xlsx"
@@ -1032,12 +1032,12 @@ export default {
       }
     }else{
         var headerHeight = $this.$refs.enTopPane.offsetHeight+30;        
-        var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
+        var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;
         var screenHeight = $this.$refs.boxPane.offsetHeight;
-        $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-30;
+        $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40;
         window.onresize = () => {
           return (() => {
-              $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-30;
+              $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40;
           })()
         }
     }
@@ -1107,9 +1107,9 @@ export default {
       }else{
         if(this.$refs.mainPane&&this.$refs.enTopPane){          
         var headerHeight = this.$refs.enTopPane.offsetHeight+30;
-        var breadcrumbHeight = this.$refs.breadcrumbPane.offsetHeight;
+        var breadcrumbHeight = this.$refs.breadcrumbPane.offsetHeight+15;
         var screenHeight = this.$refs.boxPane.offsetHeight;        
-        this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-30;
+        this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40;
         }
       }
     })
@@ -1243,9 +1243,9 @@ export default {
       if($this.$route.query.phoneID||$this.$route.query.key){
         $this.tableHeight = 0;      
         var headerHeight = $this.$refs.headerPane.offsetHeight;      
-        var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
+        var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;
         var screenHeight = $this.$refs.boxPane.offsetHeight;
-        $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-30;
+        $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40;
         $this.getBrowserType();      
         if($this.$route.query.phoneID||$this.$route.query.key){
           setTimeout(function() {
@@ -2210,9 +2210,9 @@ export default {
       $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
       // 获取表格头吸顶需滚动的高度
       if($this.$refs.headerPane){
-         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15;
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20;
       }else{
-         $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15;
+         $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15+20;
       }
       $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
       if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
@@ -2238,15 +2238,15 @@ export default {
         if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
           document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
         }
-        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+60+15;
+        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+54+20;
       }
       // 视窗宽高改变时需要设置默认滚动条的位置
       if($this.totalDataNum>20){
         var scrTop = $this.$refs.scrollDom.scrollTop;
-        if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-15){
-          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom+15;
+        if(scrTop+$this.scrollTable.clientHeight>=$this.scrollTable.tableBottom-20){
+          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-10;
         }else{
-          $this.scrollPosition.fixedBottom = 15;
+          $this.scrollPosition.fixedBottom = 20;
         }
       }
     },
@@ -2283,10 +2283,10 @@ export default {
                 }
               }
               if($this.totalDataNum>20){
-                if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-15){
-                  $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom+15;
+                if(scrTop+$this.scrollTable.clientHeight>=$this.scrollTable.tableBottom-20){
+                  $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-10;
                 }else{
-                  $this.scrollPosition.fixedBottom = 15;
+                  $this.scrollPosition.fixedBottom = 20;
                 }
               }
             }

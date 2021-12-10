@@ -229,7 +229,7 @@ export default {
       scrollPosition:{
         width:0,
         left:0,
-        fixedBottom: 15,
+        fixedBottom: 20,
         insetWidth:0,
         oldInsetLeft:0,
         insetLeft:0,
@@ -396,9 +396,9 @@ export default {
       var $this = this;
       $this.tableHeight = 0;      
       var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
-      $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-30;
+      $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40;
       $this.getBrowserType();
         setTimeout(function() {
           $this.setScrollDom();
@@ -612,23 +612,23 @@ export default {
       $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
       // 获取表格头吸顶需滚动的高度
       if($this.$refs.headerPane){
-         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15;
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20;
       }else{
-         $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15;
+         $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15+20;
       }
       $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
       var fixedHeaderObj = $this.scrollTable.tableHeaderFixedDom.getBoundingClientRect();
       // 获取表格头的高度
       $this.scrollTable.tableheaderHeight = fixedHeaderObj.height;
       var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
-      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+60+15;
+      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+54+20;
       $this.scrollTable.clientHeight = document.documentElement.clientHeight;
       // 头部固定情况下视窗宽高改变，需要重新设置的一些宽高
       if($this.scrollPosition.isFixed){
         var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;";
         $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
         document.querySelector(".table-mask").style = tableHeaderStyle;
-        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+60+15;
+        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+54+20;
       }
     },
     // 竖向滚动条滚动事件

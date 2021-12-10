@@ -332,7 +332,7 @@ export default {
       tableHeight:"auto",
       dialogFormVisible:false,
       dialogText:"",
-      formLabelWidth:"110px",
+      formLabelWidth:"120px",
       noconfirmForm:{
         id:0,
         rejectinfo:"",
@@ -397,7 +397,7 @@ export default {
       scrollPosition:{
         width:0,
         left:0,
-        fixedBottom: 15,
+        fixedBottom: 20,
         insetWidth:0,
         oldInsetLeft:0,
         insetLeft:0,
@@ -573,9 +573,9 @@ export default {
       var $this = this;
       $this.tableHeight = 0;      
       var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight+15;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
-      $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-30;
+      $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40;
       $this.getBrowserType();
         setTimeout(function() {
           $this.setScrollDom();
@@ -1375,9 +1375,9 @@ export default {
       $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
       // 获取表格头吸顶需滚动的高度
       if($this.$refs.headerPane){
-         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15;
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20;
       }else{
-         $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15;
+         $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15+20;
       }
       $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
       if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
@@ -1392,7 +1392,7 @@ export default {
          $this.scrollTable.fixedRightWidth = fixedRightObj.width;
       }
       var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
-      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+60+15;
+      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+54+20;
       $this.scrollTable.clientHeight = document.documentElement.clientHeight;
       // 头部固定情况下视窗宽高改变，需要重新设置的一些宽高
       if($this.scrollPosition.isFixed){
@@ -1403,15 +1403,15 @@ export default {
         if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
           document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
         }
-        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+60+15;
+        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+54+20;
       }
       // 视窗宽高改变时需要设置默认滚动条的位置
       if($this.totalDataNum>20){
         var scrTop = $this.$refs.scrollDom.scrollTop;
-        if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
-          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+        if(scrTop+$this.scrollTable.clientHeight>=$this.scrollTable.tableBottom-20){
+          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-10;
         }else{
-          $this.scrollPosition.fixedBottom = 15;
+          $this.scrollPosition.fixedBottom = 20;
         }
       }
     },
@@ -1447,10 +1447,10 @@ export default {
           }
         }
         if($this.totalDataNum>20){
-          if(scrTop+$this.scrollTable.clientHeight-60>=$this.scrollTable.tableBottom-60-15){
-            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-30;
+          if(scrTop+$this.scrollTable.clientHeight>=$this.scrollTable.tableBottom-20){
+            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-10;
           }else{
-            $this.scrollPosition.fixedBottom = 15;
+            $this.scrollPosition.fixedBottom = 20;
           }
         }
       }

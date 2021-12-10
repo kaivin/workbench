@@ -4,8 +4,8 @@
           <div class="infoBoxCard" :style='"top:"+scrHeight'>
               <div class="personMsg">
                   <div class="personAvatar">
-                       <span v-if="userBasicInfo.headimg"><img :src="userBasicInfo.headimg" alt="" /><i v-if='historyDate.length>0' @click="handlediogHistory"></i></span>
-                       <span v-else><img src="@/assets/default_pic.jpg" alt="" /><i v-if='historyDate.length>0' @click="handlediogHistory"></i></span>
+                      <p v-if="userBasicInfo.headimg"><span><img :src="userBasicInfo.headimg" alt="" /></span><i v-if='historyDate.length>0' @click="handlediogHistory"></i></p>
+                      <p v-else><span><img src="@/assets/default_pic.jpg" alt="" /></span><i v-if='historyDate.length>0' @click="handlediogHistory"></i></p>                       
                   </div> 
                   <h3 class="personName">{{userBasicInfo.name}}</h3>
                   <p class="workTime" v-if='userBasicInfo.comday'>在河南红星机器有限公司工作了{{userBasicInfo.comday}}天</p>
@@ -59,7 +59,7 @@
                       <dd>
                         <div
                           class="item-news flex-box"
-                          :class="item1.is_read==1?'isRead':''"
+                          :class="[item1.is_read==1?'isRead':'',item1.isOn?'isRead':'']"
                           v-for="item1 in item.article"
                           v-bind:key="item1.id"
                         >
@@ -241,6 +241,15 @@ export default {
     jumpArticle(row) {
       var $this = this;
       var routeUrl = "";
+      var newsList=$this.newsList;
+      newsList.forEach(function(item,index){
+          item.article.forEach(function(items,indexs){
+            if(row.id==items.id){
+              items.isOn=true;
+            }
+          });
+      });
+      $this.newsList=newsList;
       if (row.type == 1) {
         routeUrl = $this.$router.resolve({
           path: "/Website/logInfo",
@@ -255,8 +264,7 @@ export default {
           path: "/Article/info",
           query: { id: row.id },
         });
-      }   
-      $this.getPostData();   
+      }
       window.open(routeUrl.href, "_blank");
     },
     // 获取论坛最新资讯
@@ -274,6 +282,11 @@ export default {
                 res.data.forEach(function(item,index){
                     allIsread+=item.isread;
                     allNumber+=item.number;
+                    if(item.article&&item.article.length>0){
+                      item.article.forEach(function(items,indexs){
+                        items.isOn=false;
+                      });
+                    }
                 });
                 $this.lastGroupname=res.data[res.data.length-1].groupname;
                 $this.allIsread=allIsread;
