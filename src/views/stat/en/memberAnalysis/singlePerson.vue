@@ -668,7 +668,7 @@ export default {
             aliasName='100万成交个数';
         }
         if($this.currentTab=='money'){
-            aliasName='总奖金';
+            aliasName='月奖金';
         }
         //计算y轴显示的最大数值
         var maxnum = 0;
