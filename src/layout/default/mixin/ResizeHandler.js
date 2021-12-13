@@ -20,12 +20,17 @@ export default {
   mounted() {
     const isMobile = this.$_isMobile();
     const isIMax = this.$_isIMax();
+    const isDesktop = this.$_isDesktop();
     if (isMobile) {
+      body.setAttribute("device", 'mobile');
       store.dispatch('app/toggleDevice', 'mobile')
       store.dispatch('app/closeSideBar', { withoutAnimation: true })
     }else{
       if(isIMax){
+        body.setAttribute("device", 'iMax');
         store.dispatch('app/toggleDevice', 'iMax')
+      }else{
+        body.setAttribute("device", 'desktop');
       }
     }
   },
@@ -38,16 +43,27 @@ export default {
     },
     $_isIMax() {
       const rect = body.getBoundingClientRect()
-      return rect.width - 1 > 1920
+      return rect.width - 1 >= 1920
+    },
+    $_isDesktop() {
+      const rect = body.getBoundingClientRect()
+      return rect.width - 1 < 1920 && rect.width - 1 >= WIDTH
     },
     $_resizeHandler() {
       if (!document.hidden) {
         const isMobile = this.$_isMobile()
         const isIMax = this.$_isIMax();
+        const isDesktop = this.$_isDesktop();
         store.dispatch('app/toggleDevice', isMobile ? 'mobile' : isIMax ? 'iMax': 'desktop')
-
         if (isMobile) {
+          body.setAttribute("device", 'mobile');
           store.dispatch('app/closeSideBar', { withoutAnimation: true })
+        }
+        if(isIMax){
+          body.setAttribute("device", 'iMax');
+        }
+        if(isDesktop){
+          body.setAttribute("device", 'desktop');
         }
       }
     }

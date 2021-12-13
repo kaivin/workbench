@@ -4,10 +4,10 @@
       <el-scrollbar wrap-class="scrollbar-wrapper">
         <div class="sub-wrapper">
           <div class="side-button">
-            <router-link v-if="menuButtonPermit.includes('Enphone_search')" :to="{path:'/Enphone/searchClues'}">
+            <router-link v-if="menuButtonPermit.includes('Enphone_search')" :to="{path:'/Enphone/searchClues'}" tag="a" target="_blank">
               <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
             </router-link>
-            <router-link v-if="menuButtonPermit.includes('Enphone_phonecount')" :to="{path:'/Enphone/statisticClues'}">
+            <router-link v-if="menuButtonPermit.includes('Enphone_phonecount')" :to="{path:'/Enphone/statisticClues'}" tag="a" target="_blank">
               <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
             </router-link>
           </div>
@@ -758,7 +758,7 @@
                                   <template #default="scope">
                                     <div class="table-button">
                                       <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_otheredit')">修改</el-button>
-                                      <router-link :to="{path:'/Enphone/addEditClues',query:{ID:scope.row.id}}" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')">
+                                      <router-link :to="{path:'/Enphone/addEditClues',query:{ID:scope.row.id}}" tag="a" target="_blank" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')">
                                       <el-button size="mini" >编辑</el-button>
                                       </router-link>
                                       <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')" style="color:red;">({{scope.row.eidtnumber}})</span>

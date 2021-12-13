@@ -1,205 +1,105 @@
-﻿
-
-
-.container-layout {
-  .sidebar-container {
-    display: flex;
-    flex-direction: column;
-    background: -moz-linear-gradient(left,#192136 0%, #212e4e 100%);
-    background: -webkit-linear-gradient(left,#192136 0%, #212e4e 100%);
-    background: -o-linear-gradient(left,#192136 0%, #212e4e 100%);
-    background: -ms-linear-gradient(left,#192136 0%, #212e4e 100%);
-    background: linear-gradient(to right,#192136 0%, #212e4e 100%);
-    transition: width .25s ease-out;
-    width:$sideBarWidth!important;
-    overflow: hidden!important;
-    font-size:0;
-    position: relative;
-    &.is-fold{
-      .scrollbar-wrapper{
-        padding-top: 52px;
-      }
-    }
-    .el-scrollbar {
-      height: 100%;
-      .scrollbar-wrapper {
-        overflow-x: hidden !important;
-        position: relative;
-        transition: all .3s;
-      }
-      .el-scrollbar__bar.is-vertical {
-        right: 0px;
-      }
-      .is-horizontal {
-        display: none;
-      }
-    }
-    .fold-button{
-      width: 42px;
-      height: 42px;
-      position: absolute;
-      right:0;
-      top: 24px;
-      z-index: 10;
-      overflow: hidden;
-      cursor: pointer;
+﻿.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to right,#192136 0%, #212e4e 100%);
+  transition: width .25s ease-out;
+  overflow: hidden!important;
+  font-size:0;
+  position: relative;
+  // 侧边导航滚动条样式初始化
+  .el-scrollbar {
+    height: 100%;
+    .scrollbar-wrapper {
+      overflow-x: hidden !important;
+      position: relative;
       transition: all .3s;
-      &.is-fold{
-        transform: rotate(180deg);
-        width:60px;
-        top: 24px;
-      }
-      &:hover{
-        .svg-i{
-          color: #ff8000;
-        }
-      }
+    }
+    .el-scrollbar__bar.is-vertical {
+      right: 0px;
+    }
+    .is-horizontal {
+      display: none;
+    }
+  }
+  // 折叠按钮样式定位
+  .fold-button{
+    position: absolute;
+    right:0;
+    z-index: 10;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .3s;
+    &:hover{
       .svg-i{
-        display: block;
-        width: 42px;
-        height: 42px;
-        font-size:$fontsize15;
-        color: #a2acc1;
-        margin: 0 auto;
-        overflow: hidden;
-        .svg-icon {
-          display: block;
-          height: 14px;
-          margin: 14px auto;
-        }
+        color: #ff8000;
       }
     }
-    .sidebar-menu{
-      border: none;
-      height: 100%;
-      width: 100% !important;
-      padding-top: 16px;
-      padding-bottom: 20px;
-      .item-link{
-        margin-top:11px;
+    .svg-i{
+      display: block;
+      color: #a2acc1;
+      margin: 0 auto;
+      overflow: hidden;
+      .svg-icon {
         display: block;
+      }
+    }
+  }
+  // 侧边导航菜单样式
+  .sidebar-menu{
+    border: none;
+    height: 100%;
+    width: 100% !important;
+    .item-link{
+      display: block;
+      transition: all .3s;
+      .el-menu-item,.el-submenu__title{
         transition: all .3s;
-        .el-menu-item{
-          height: 42px;
-          line-height: 42px;
+        color: #fff;
+        position: relative;
+        font-family: "Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;
+        // svg图标样式
+        .svg-i{
+          display: inline-block;
+          .svg-icon {
+            display: block;
+          }
+        }
+        // 饿了么图标样式
+        .sub-el-icon {
+          vertical-align: -1px;
+          margin-right:0;
+          color: currentColor;
+          width: 1em;
+          height: 1em;
+        }
+        i{
+          color: #a2acc1;
           transition: all .3s;
-          padding-left: 20px!important;
+        }
+        span{
+          transition: all .3s;
+        }
+        &:hover,&:focus{
+          background:rgba(207,221,255,0.1);
           color: #fff;
-          position: relative;
-          font-family: "Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;
-          .svg-i{
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            font-size:$fontsize19;
-            vertical-align: -2px;
-            color: #a2acc1;
-            .svg-icon {
-              display: block;
-            }
-          }
-          .sub-el-icon {
-            vertical-align: -1px;
-            margin-right:0;
-            color: currentColor;
-            width: 1em;
-            height: 1em;
-          }
-          i{
-            color: #a2acc1;
-            transition: all .3s;
-          }
-          span{
-            font-size:$fontsize15;
-            transition: all .3s;
-            vertical-align: 1px;
-            margin-left: 8px;
-          }
-          &:hover,&:focus{
-            background:rgba(207,221,255,0.1);
-            color: #fff;
-          }
-          &.is-active{
-            background:rgba(207,221,255,0.1);
-            &:before{
-              content:'';
-              height: 100%;
-              position: absolute;
-              top:0;
-              left:0;
-              width: 4px;
-              background: #044bff;
-            }
+        }
+        &.is-active{
+          background:rgba(207,221,255,0.1);
+          &:before{
+            content:'';
+            height: 100%;
+            position: absolute;
+            top:0;
+            left:0;
+            background: #044bff;
           }
         }
-        .el-submenu{
-          .el-submenu__title{
-            height: 42px;
-            line-height: 42px;
-            transition: all .3s;
-            //padding-left: 20px!important;
-            color: #fff;
-            position: relative;
-            font-family: "Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;
-            .svg-i{
-              display: inline-block;
-              width: 18px;
-              height: 18px;
-              font-size:$fontsize19;
-              vertical-align: -2px;
-              color: #a2acc1;
-              .svg-icon {
-                display: block;
-              }
-            }
-            .sub-el-icon {
-              vertical-align: -1px;
-              margin-right:0;
-              color: currentColor;
-              width: 1em;
-              height: 1em;
-            }
-            i{
-              color: #a2acc1;
-              transition: all .3s;
-            }
-            span{
-              font-size:$fontsize15;
-              transition: all .3s;
-              vertical-align: 1px;
-              margin-left: 8px;
-            }
-            &:hover,&:focus{
-              background:rgba(207,221,255,0.1);
-              color: #fff;
-            }
-            &.is-active{
-              background:rgba(207,221,255,0.1);
-              &:before{
-                content:'';
-                height: 100%;
-                position: absolute;
-                top:0;
-                left:0;
-                width: 4px;
-                background: #044bff;
-              }
-            }
-          }
-        }
-        .el-submenu__title{
-          .el-submenu__icon-arrow{
-            margin-top: -7px;
-            font-size:$fontsize15;
-            right: 15px;
-            color: #666;
-            font-weight: bold;
-          }
+        .el-submenu__icon-arrow{
+          font-weight: bold;
         }
       }
       .el-submenu{
         .el-menu{
-          margin-top: 4px;
           .item-link{
             width: 50%;
             float:left;
@@ -207,10 +107,6 @@
             .el-menu-item{
               padding: 0!important;
               min-width: 0!important;
-              height: 32px;
-              line-height: 32px;
-              font-size:$fontsize13;
-              margin: 2px 0;
               color:#a5abb8;
               &:hover,&:focus{
                 background:rgba(207,221,255,0.1);
@@ -225,180 +121,372 @@
                   position: absolute;
                   top:0;
                   left:0;
-                  width: 4px;
                   background: #044bff;
                 }
               }
               span{
                 display: inline-block;
-                font-size:$fontsize13;
-                padding: 0 10px 0 20px;
-                height: 32px;
-                line-height: 32px;
+                margin-left:0;
               }
             }
-          }
-          .item-link.has-children{
-            width: 100%;
-            float:none;
-            margin-bottom: 8px;
-            .el-submenu{
-              .el-submenu__title{
-                padding: 0 0 0 20px!important;
-                span{
-                  padding:0!important;
-                  font-size: 14px;
-                  color:#e6e9ef;
+            &.has-children{
+              width: 100%;
+              float:none;
+              .el-submenu{
+                .el-submenu__title{
+                  span{
+                    padding:0!important;
+                    color:#fff;
+                    margin-left:0;
+                  }
                 }
-              }
-              .el-menu-item{
-                padding:0!important;
-              }
-            }
-          }
-        }
-        .el-menu{
-          .el-menu-item,.el-submenu__title{
-            font-size:$fontsize15;
-            padding-left: 56px!important;
-            span{
-              font-size:$fontsize15;
-              margin-left:0;
-              padding-left: 15px;
-              position: relative;
-              font-weight: normal;
-            }
-          }
-          .el-submenu{
-            .el-menu{
-              .el-menu-item{
-                padding-left: 56px!important;
               }
             }
           }
         }
       }
     }
-    & .el-submenu .el-submenu>.el-submenu__title,
-    & .el-submenu .el-menu-item {
-      min-width: $sideBarWidth !important;
+  }
+}
+body[device="desktop"] ,body[device="mobile"]{
+  .sidebar-container {
+    width:220px !important;
+    .fold-button{
+      width:42px;
+      height: 42px;
+      top: 27px;
+      .svg-i{
+        width: 42px;
+        height: 42px;
+        font-size:$fontsize15;
+        .svg-icon {
+          height: 14px;
+          margin: 14px auto;
+        }
+      }
+    }
+    .sidebar-menu{
+      padding-top: 16px;
+      padding-bottom: 20px;
+      .item-link{
+        margin-top:11px;
+        .el-menu-item,.el-submenu__title{
+          height: 42px;
+          line-height: 42px;
+          padding-left: 20px!important;
+          .svg-i{
+            width: 18px;
+            height: 18px;
+            font-size:$fontsize19;
+            vertical-align: -2px;
+          }
+          span{
+            font-size:$fontsize15;
+            margin-left: 8px;
+            vertical-align: 1px;
+          }
+          &.is-active{
+            &:before{
+              width: 4px;
+            }
+          }
+          .el-submenu__icon-arrow{
+            margin-top: -7px;
+            font-size:$fontsize15;
+            right: 15px;
+          }
+        }
+        .el-submenu{
+          .el-menu{
+            margin-top: 4px;
+            .item-link{
+              .el-menu-item{
+                height: 32px;
+                line-height: 32px;
+                font-size:$fontsize13;
+                margin: 2px 0;
+                &.is-active{
+                  &:before{
+                    width: 4px;
+                  }
+                }
+                span{
+                  font-size:$fontsize13;
+                  padding: 0 10px 0 20px;
+                  height: 32px;
+                  line-height: 32px;
+                }
+              }
+              &.has-children{
+                margin-bottom: 8px;
+                .el-submenu{
+                  .el-submenu__title{
+                    padding: 0 0 0 20px!important;
+                    span{
+                      font-size: $fontsize13;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
-.hideSidebar {
-    .container-layout {
-        .sidebar-container {
-          width:60px !important;
+body[device="iMax"]{
+  .sidebar-container {
+    width:300px !important;
+    .fold-button{
+      width:56px;
+      height: 56px;
+      top: 27px;
+      .svg-i{
+        width: 56px;
+        height: 56px;
+        font-size:$fontsize20;
+        .svg-icon {
+          height: 20px;
+          margin: 18px auto;
         }
-        .submenu-title-noDropdown {
-          padding: 0 !important;
-          position: relative;
-
-          .el-tooltip {
-            padding: 0 !important;
+      }
+    }
+    .sidebar-menu{
+      padding-top: 16px;
+      padding-bottom: 20px;
+      .item-link{
+        margin-top:11px;
+        .el-menu-item,.el-submenu__title{
+          height: 56px;
+          line-height: 56px;
+          padding-left: 26px!important;
+          .svg-i{
+            width: 24px;
+            height: 24px;
+            font-size:$fontsize25;
+            vertical-align: -5px;
+          }
+          span{
+            font-size:$fontsize20;
+            margin-left: 14px;
+            vertical-align: 1px;
+          }
+          &.is-active{
+            &:before{
+              width: 8px;
+            }
+          }
+          .el-submenu__icon-arrow{
+            margin-top: -7px;
+            font-size:$fontsize18;
+            right: 15px;
           }
         }
-
+        .el-submenu{
+          .el-menu{
+            margin-top: 4px;
+            .item-link{
+              .el-menu-item{
+                height: 48px;
+                line-height: 48px;
+                font-size:$fontsize18;
+                margin: 4px 0;
+                &.is-active{
+                  &:before{
+                    width: 8px;
+                  }
+                }
+                span{
+                  font-size:$fontsize18;
+                  padding: 0 10px 0 26px;
+                  height: 48px;
+                  line-height: 48px;
+                }
+              }
+              &.has-children{
+                margin-bottom: 8px;
+                .el-submenu{
+                  .el-submenu__title{
+                    padding: 0 0 0 26px!important;
+                    span{
+                      font-size: $fontsize18;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .el-tooltip__popper{
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .el-menu--vertical{
+    .el-menu-item,.el-submenu__title{
+      span{
+        display: inline-block;
+        vertical-align: top;
+      }
+    }
+    .el-menu-item,.el-submenu__title,.el-submenu__icon-arrow{
+      font-size: 18px;
+    }
+  }
+}
+// 折叠的侧边导航样式
+.foldSidebar {
+  &.web,&.mobile{
+    .sidebar-container{
+      width:60px !important;
+      .fold-button{
+        transform: rotate(180deg);
+        width:60px;
+        top: 16px;
+      }
+      .sidebar-menu{
+        padding-top: 58px;
+        .item-link{
+          margin-top:11px;
+          .el-menu-item > div,.el-submenu > .el-submenu__title{
+            padding: 0 21px!important;
+          }
+          .el-submenu{
+            &.is-active{
+              .el-submenu__title{
+                background:rgba(207,221,255,0.1);
+                color: #fff;
+                &:before{
+                  content:'';
+                  height: 100%;
+                  position: absolute;
+                  top:0;
+                  left:0;
+                  width:4px;
+                  background: #044bff;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  &.iMax{
+    .sidebar-container{
+      width:76px !important;
+      .fold-button{
+        transform: rotate(180deg);
+        width:76px;
+        top: 16px;
+      }
+      .sidebar-menu{
+        padding-top: 72px;
+        .item-link{
+          .el-menu-item > div,.el-submenu > .el-submenu__title{
+            padding: 0 26px!important;
+          }
+          .el-submenu{
+            &.is-active{
+              .el-submenu__title{
+                background:rgba(207,221,255,0.1);
+                color: #fff;
+                &:before{
+                  content:'';
+                  height: 100%;
+                  position: absolute;
+                  top:0;
+                  left:0;
+                  width:8px;
+                  background: #044bff;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .sidebar-container {
+    .sidebar-menu{
+      .item-link{
         .el-submenu {
           overflow: hidden;
-
           &>.el-submenu__title {
-
+            &>span {
+              height: 0;
+              width: 0;
+              overflow: hidden;
+              visibility: hidden;
+              display: inline-block;
+            }
             .el-submenu__icon-arrow {
               display: none;
             }
           }
         }
-
-        .el-menu--collapse {
-          .item-link{
-            .el-menu-item{
-              >div{
-                padding: 0 21px!important;
-              }
-            }
-          }
-          .el-submenu {
-            &>.el-submenu__title {
-              transition: all .3s;
-              padding: 0 21px!important;
-              &>span {
-                height: 0;
-                width: 0;
-                overflow: hidden;
-                visibility: hidden;
-                display: inline-block;
-              }
-            }
-          }
-        }
+      }
     }
+  }
 }
-.el-menu--collapse .el-menu .el-submenu {
-  min-width: $sideBarWidth !important;
-}
-
+// 无过度动画的样式
 .withoutAnimation {
-
-  .main-container,
-  .sidebar-container {
+  .main-container,.sidebar-container {
     transition: none;
   }
 }
-  
-  // when menu collapsed
-  .el-menu--vertical {
-    &>.el-menu {
-      .sub-el-icon {
-        margin-right: 12px;
-        margin-left: -2px;
-        vertical-align: -1px;
-      }
-    }
-  
-    // the scroll bar appears when the subMenu is too long
-    >.el-menu--popup {
-      max-height: 100vh;
-      background:$menuBg!important;
-      .el-submenu__title{
-        i,span{
-          color: rgba(255,255,255,.7)!important;
-        }
-        &:hover{
-          background: none!important;
-          i,span{
-            color: #ffffff!important;
-          }
-        }
-      }
-      .el-menu-item{
-        color: rgba(255,255,255,.7)!important;
-        &.is-active{
-          background: $menuActiveText!important;
-          color: #ffffff!important;
-          &:hover{
-              background: $menuActiveText!important;
-              color: #ffffff!important;
-          }
-        }
-        &:hover{
-          background: none!important;
-            color: #ffffff!important;
-        }
-      }
-  
-      &::-webkit-scrollbar-track-piece {
-        background: #d3dce6;
-      }
-  
-      &::-webkit-scrollbar {
-        width: 6px;
-      }
-  
-      &::-webkit-scrollbar-thumb {
-        background: #99a9bf;
-        border-radius: 20px;
-      }
+// 侧边导航折叠后子导航样式
+.el-menu--vertical {
+  &>.el-menu {
+    .sub-el-icon {
+      margin-right: 12px;
+      margin-left: -2px;
+      vertical-align: -1px;
     }
   }
+  // the scroll bar appears when the subMenu is too long
+  >.el-menu--popup {
+    max-height: 100vh;
+    background:$menuBg!important;
+    .el-submenu__title{
+      i,span{
+        color: rgba(255,255,255,.7)!important;
+      }
+      &:hover{
+        background: none!important;
+        i,span{
+          color: #ffffff!important;
+        }
+      }
+    }
+    .el-menu-item{
+      color: rgba(255,255,255,.7)!important;
+      &.is-active{
+        background: $menuActiveText!important;
+        color: #ffffff!important;
+        &:hover{
+            background: $menuActiveText!important;
+            color: #ffffff!important;
+        }
+      }
+      &:hover{
+        background: none!important;
+          color: #ffffff!important;
+      }
+    }
+    &::-webkit-scrollbar-track-piece {
+      background: #d3dce6;
+    }
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #99a9bf;
+      border-radius: 20px;
+    }
+  }
+}
   

@@ -5,10 +5,10 @@
           <el-scrollbar wrap-class="scrollbar-wrapper">
             <div class="sub-wrapper">
               <div class="side-button">
-                <router-link v-if="menuButtonPermit.includes('Enphone_search')" :to="{path:'/Enphone/searchClues'}">
+                <router-link v-if="menuButtonPermit.includes('Enphone_search')" :to="{path:'/Enphone/searchClues'}" tag="a" target="_blank">
                   <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
                 </router-link>
-                <router-link v-if="menuButtonPermit.includes('Enphone_phonecount')" :to="{path:'/Enphone/statisticClues'}">
+                <router-link v-if="menuButtonPermit.includes('Enphone_phonecount')" :to="{path:'/Enphone/statisticClues'}" tag="a" target="_blank">
                   <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
                 </router-link>
               </div>
@@ -172,7 +172,7 @@
                                           <el-table-column
                                               prop="countnoread"
                                               label="未读询盘数"
-                                              min-width="50"
+                                              min-width="60"
                                               >
                                               <template slot-scope="scope">
                                                   <div class="table-text">
@@ -183,7 +183,7 @@
                                           <el-table-column
                                               prop="countwarn"
                                               label="提醒未处理"
-                                              min-width="50"
+                                              min-width="60"
                                               >
                                               <template slot-scope="scope">
                                                   <div class="table-text">

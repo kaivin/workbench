@@ -48,10 +48,12 @@ export default {
     }),
     classObj() {
       return {
-        hideSidebar: !this.sidebar.opened,
-        openSidebar: this.sidebar.opened,
+        foldSidebar: !this.sidebar.opened,
+        unfoldSidebar: this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
-        iMax:this.device=='iMax'
+        iMax:this.device=='iMax',
+        web:this.device=='desktop',
+        mobile:this.device=='mobile',
       }
     },
     cachedViews() {
