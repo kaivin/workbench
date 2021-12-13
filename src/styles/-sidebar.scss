@@ -237,14 +237,14 @@ body[device="desktop"] ,body[device="mobile"]{
 }
 body[device="iMax"]{
   .sidebar-container {
-    width:300px !important;
+    width:290px !important;
     .fold-button{
-      width:56px;
-      height: 56px;
+      width:52px;
+      height: 52px;
       top: 27px;
       .svg-i{
-        width: 56px;
-        height: 56px;
+        width: 52px;
+        height: 52px;
         font-size:$fontsize20;
         .svg-icon {
           height: 20px;
@@ -258,28 +258,28 @@ body[device="iMax"]{
       .item-link{
         margin-top:11px;
         .el-menu-item,.el-submenu__title{
-          height: 56px;
-          line-height: 56px;
-          padding-left: 26px!important;
+          height: 52px;
+          line-height: 52px;
+          padding-left: 24px!important;
           .svg-i{
             width: 24px;
             height: 24px;
-            font-size:$fontsize25;
-            vertical-align: -5px;
+            font-size:$fontsize23;
+            vertical-align: -4px;
           }
           span{
-            font-size:$fontsize20;
-            margin-left: 14px;
+            font-size:$fontsize18;
+            margin-left: 10px;
             vertical-align: 1px;
           }
           &.is-active{
             &:before{
-              width: 8px;
+              width: 6px;
             }
           }
           .el-submenu__icon-arrow{
             margin-top: -7px;
-            font-size:$fontsize18;
+            font-size:$fontsize16;
             right: 15px;
           }
         }
@@ -288,20 +288,20 @@ body[device="iMax"]{
             margin-top: 4px;
             .item-link{
               .el-menu-item{
-                height: 48px;
-                line-height: 48px;
-                font-size:$fontsize18;
-                margin: 4px 0;
+                height: 42px;
+                line-height: 42px;
+                font-size:$fontsize16;
+                margin: 3px 0;
                 &.is-active{
                   &:before{
-                    width: 8px;
+                    width: 6px;
                   }
                 }
                 span{
-                  font-size:$fontsize18;
+                  font-size:$fontsize16;
                   padding: 0 10px 0 26px;
-                  height: 48px;
-                  line-height: 48px;
+                  height: 42px;
+                  line-height: 42px;
                 }
               }
               &.has-children{
@@ -310,7 +310,7 @@ body[device="iMax"]{
                   .el-submenu__title{
                     padding: 0 0 0 26px!important;
                     span{
-                      font-size: $fontsize18;
+                      font-size: $fontsize16;
                     }
                   }
                 }
@@ -333,7 +333,7 @@ body[device="iMax"]{
       }
     }
     .el-menu-item,.el-submenu__title,.el-submenu__icon-arrow{
-      font-size: 18px;
+      font-size: 16px;
     }
   }
 }
@@ -384,7 +384,7 @@ body[device="iMax"]{
         top: 16px;
       }
       .sidebar-menu{
-        padding-top: 72px;
+        padding-top: 68px;
         .item-link{
           .el-menu-item > div,.el-submenu > .el-submenu__title{
             padding: 0 26px!important;
@@ -400,7 +400,7 @@ body[device="iMax"]{
                   position: absolute;
                   top:0;
                   left:0;
-                  width:8px;
+                  width:6px;
                   background: #044bff;
                 }
               }
