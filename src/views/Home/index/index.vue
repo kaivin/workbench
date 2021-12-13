@@ -289,7 +289,7 @@ export default {
                 $this.newsList = res.data;
                 // 折叠信息赋值
                 for(var i=0;i<res.data.length;i++){
-                  $this.arrowArr.push({isShow:false});
+                  $this.arrowArr.push({isShow:true});
                 }
               }
               //组员基本信息
