@@ -561,7 +561,7 @@
                                   <template #default="scope">
                                     <div class="table-button">
                                       <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_otheredit')">修改</el-button>
-                                      <router-link :to="{path:'/Enphone/addEditClues',query:{ID:scope.row.id}}" v-if="menuButtonPermit.includes('Enphone_edit')">
+                                      <router-link :to="{path:'/Enphone/addEditClues',query:{ID:scope.row.id}}" tag="a" target="_blank" v-if="menuButtonPermit.includes('Enphone_edit')">
                                         <el-button size="mini">编辑</el-button>        
                                       </router-link>
                                       <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="menuButtonPermit.includes('Enphone_edit')" style="color:red;">({{scope.row.eidtnumber}})</span>

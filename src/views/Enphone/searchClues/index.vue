@@ -488,7 +488,7 @@
                                         label="操作">
                                         <template #default="scope">
                                           <div class="table-button">
-                                            <router-link :to="{path:'/Enphone/addEditClues',query:{ID:scope.row.id}}" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')" >
+                                            <router-link :to="{path:'/Enphone/addEditClues',query:{ID:scope.row.id}}" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')" tag="a" target="_blank" >
                                               <el-button size="mini" >编辑</el-button>
                                             </router-link>
                                             
