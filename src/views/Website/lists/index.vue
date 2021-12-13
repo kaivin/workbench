@@ -286,7 +286,7 @@
                       <el-table-column
                         prop="addtime"
                         label="添加时间"
-                        width="160"
+                        width="170"
                         >
                       </el-table-column>
                       <el-table-column
