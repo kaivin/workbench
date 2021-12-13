@@ -22,21 +22,48 @@
                 prop="bad"
                 label="不合格">
                 <template slot-scope="scope">
-                    <span class="cet01">×{{scope.row.bad}}</span>
+                    <el-tooltip placement="top" effect="light" :visible-arrow="false" :disabled="scope.row.badmonth.length>0? false : true">
+                        <div slot="content">
+                            <div class="showmonth">
+                                <span class="sitem" v-for="(item,index) in scope.row.badmonth.slice(0,-1).split('|')" :key="index">{{item}}</span>
+                            </div>
+                        </div>
+                        <div class="cetbox">
+                            <span class="cet01"><i>×</i>{{scope.row.bad}}</span>
+                        </div>
+                    </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column
                 prop="qualified"
                 label="合格">
                 <template slot-scope="scope">
-                    <span class="cet02">×{{scope.row.qualified}}</span>
+                    <el-tooltip placement="top" effect="light" :visible-arrow="false" :disabled="scope.row.qualifiedmonth.length > 0? false : true">
+                        <div slot="content">
+                            <div class="showmonth">
+                                <span class="sitem" v-for="(item,index) in scope.row.qualifiedmonth.slice(0,-1).split('|')" :key="index">{{item}}</span>
+                            </div>
+                        </div>
+                        <div class="cetbox">
+                            <span class="cet02"><i>×</i>{{scope.row.qualified}}</span>
+                        </div>
+                    </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column
                 prop="medium"
                 label="中等">
                 <template slot-scope="scope">
-                    <span class="cet03">×{{scope.row.medium}}</span>
+                    <el-tooltip placement="top" effect="light" :visible-arrow="false" :disabled="scope.row.mediummonth.length > 0? false : true">
+                        <div slot="content">
+                            <div class="showmonth">
+                                <span class="sitem" v-for="(item,index) in scope.row.mediummonth.slice(0,-1).split('|')" :key="index">{{item}}</span>
+                            </div>
+                        </div>
+                        <div class="cetbox">
+                            <span class="cet03"><i>×</i>{{scope.row.medium}}</span>
+                        </div>
+                    </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column
@@ -44,47 +71,19 @@
                 label="优秀"
                 >
                 <template slot-scope="scope">
-                    <span class="cet04">×{{scope.row.good}}</span>
+                    <el-tooltip placement="top" effect="light" :visible-arrow="false" :disabled="scope.row.goodmonth.length>0? false : true">
+                        <div slot="content">
+                            <div class="showmonth">
+                                <span class="sitem" v-for="(item,index) in scope.row.goodmonth.slice(0,-1).split('|')" :key="index">{{item}}</span>
+                            </div>
+                        </div>
+                        <div class="cetbox">
+                            <span class="cet04"><i>×</i>{{scope.row.good}}</span>
+                        </div>
+                    </el-tooltip>
                 </template>
             </el-table-column>
         </el-table>
-
-        <!-- <ul class="depMonthCont">
-            <li class="firstLine">
-                <div class="fItem">部门</div>
-                <div class="fItem">不合格</div>
-                <div class="fItem">合格</div>
-                <div class="fItem">中等</div>
-                <div class="fItem">优秀</div>
-            </li>
-            <li class="secLine" v-for="(item,index) in MonthFinish" :key="index">
-                <div class="cItem">
-                    <span>
-                        {{item.name}}
-                    </span>
-                </div>
-                <div class="cItem">
-                    <span>
-                        × {{item.bad}}
-                    </span>
-                </div>
-                <div class="cItem">
-                    <span>
-                        × {{item.qualified}}
-                    </span>
-                </div>
-                <div class="cItem">
-                    <span>
-                        × {{item.medium}}
-                    </span>
-                </div>
-                <div class="cItem">
-                    <span>
-                        × {{item.good}}
-                    </span>
-                </div>
-            </li>
-        </ul> -->
     </div>
   </div>
 </template>

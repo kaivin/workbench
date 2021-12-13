@@ -736,7 +736,17 @@
             line-height: normal;
         }
         td.el-table__cell{
-            padding: 16px 0 14px;
+            padding: 6px 0;
+            .cetbox{
+                padding: 10px 0 8px;
+            }
+            span{
+                i{
+                    display: inline-block;
+                    vertical-align: top;
+                    line-height: 20px;
+                }
+            }
             .cet01{
                 color: #4d4d4d;
                 font-size:$fontsize17;
@@ -745,6 +755,9 @@
                 background-position: left center;
                 background-repeat: no-repeat;
                 background-size: auto;
+                display: inline-block;
+                vertical-align: middle;
+                line-height: 22px;
             }
             .cet02{
                 color: #2f9e32;
@@ -754,6 +767,9 @@
                 background-repeat: no-repeat;
                 background-size: auto;
                 background-image: url(../assets/face02.png);
+                display: inline-block;
+                vertical-align: middle;
+                line-height: 22px;
             }
             .cet03{
                 color: #ff7e00;
@@ -763,6 +779,9 @@
                 background-repeat: no-repeat;
                 background-size: auto;
                 background-image: url(../assets/face03.png);
+                display: inline-block;
+                vertical-align: middle;
+                line-height: 22px;
             }
             .cet04{
                 color: #ff3434;
@@ -772,6 +791,9 @@
                 background-repeat: no-repeat;
                 background-size: auto;
                 background-image: url(../assets/face04.png);
+                display: inline-block;
+                vertical-align: middle;
+                line-height: 22px;
             }
         }
         .el-table__row .el-table__cell:first-child{
@@ -1219,3 +1241,25 @@
         }
     }
 }
+
+.showmonth{
+    .sitem{
+        display: inline-block;
+        vertical-align: top;
+        line-height: 18px;
+    }
+    .sitem+.sitem{
+        margin-left: 11px;
+        position: relative;
+        &:before{
+            content: '';
+            display: block;
+            width: 1px;
+            height: 12px;
+            position: absolute;
+            left: -6px;
+            top: 4px;
+            background-color: #929292;
+        }
+    }
+} 

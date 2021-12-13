@@ -55,8 +55,11 @@
                       v-for="(item, index) in newsList"
                       v-bind:key="index"
                     >
-                      <dt>{{ item.groupname }}<span>(未读{{item.number-item.isread}})</span></dt>
-                      <dd>
+                      <dt>
+                        {{ item.groupname }}<span>(未读{{item.number-item.isread}})</span>
+                        <div class="scrollIcon" :class="arrowArr[index].isShow ? '' : 'scrollTop' " @click="newsShow(index)"></div>
+                      </dt>
+                      <dd v-show="arrowArr[index].isShow">
                         <div
                           class="item-news flex-box"
                           :class="[item1.is_read==1?'isRead':'',item1.isOn?'isRead':'']"
@@ -167,6 +170,7 @@ export default {
             userMonthanumber:'',//月成交个数数据
             userMonthmoney:'',//月奖金数据
         },
+        arrowArr:[]
     };
   },
   computed: {
@@ -283,6 +287,10 @@ export default {
                 $this.allIsread=allIsread;
                 $this.allNumber=allNumber;
                 $this.newsList = res.data;
+                // 折叠信息赋值
+                for(var i=0;i<res.data.length;i++){
+                  $this.arrowArr.push({isShow:false});
+                }
               }
               //组员基本信息
               $this.userBasicInfo.headimg=res.userinfo.headimg;
@@ -392,6 +400,11 @@ export default {
          $this.scrBool=false;
       } 
     },
+    // 折叠消息
+    newsShow(i){
+      var $this = this;
+      $this.arrowArr[i].isShow =  !$this.arrowArr[i].isShow;
+    }
   },
 };
 </script>

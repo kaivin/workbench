@@ -58,7 +58,8 @@ export default {
         maxAimNum: 200,
         departScore:[],
         stepNum: 50,
-        month:''
+        month:'',
+        showstep: false
       },
       DayTarget:[],
       Dep1DayNum:0,
@@ -229,6 +230,7 @@ export default {
       var maxnum = (num+1)*10;
       $this.DealCount.maxAimNum = maxnum;
       $this.DealCount.stepNum = maxnum/10;
+      $this.DealCount.showstep = true;
     },
     // 2.英文目标完成情况日期变更
     monthChange(val){

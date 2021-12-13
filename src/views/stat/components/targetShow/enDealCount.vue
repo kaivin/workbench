@@ -97,7 +97,7 @@
                 <div class="departName"></div>
                 <div class="delCircle"></div>
                 <div class="delText"></div>
-                <div class="departLine departLine2 flex-content">
+                <div class="departLine departLine2 flex-content" v-if="DealCount.showstep">
                     <div class="step" v-for="(item,index) in 11" :key="index" :style="'left:'+ 10*index +'%'">{{DealCount.stepNum*index}}</div>
                 </div>
             </li>
