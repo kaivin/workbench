@@ -949,6 +949,9 @@
         }
       }
       .item-product{
+        .product-panel{
+          width: calc(100% - 250px);
+        }
         .table-panel{
           overflow: hidden;
           transition: height,0.3s;

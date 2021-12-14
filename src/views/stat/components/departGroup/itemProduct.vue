@@ -112,6 +112,15 @@ export default {
       return this.itemData;
     },
   },
+  watch: {
+    itemData:{
+      handler(newValue, oldValue) {
+        this.itemData = newValue;
+      },
+      deep: true,
+      immediate:true
+    },
+  },
   mounted(){
   },
   methods:{
