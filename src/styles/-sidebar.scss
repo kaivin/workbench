@@ -237,18 +237,18 @@ body[device="desktop"] ,body[device="mobile"]{
 }
 body[device="iMax"]{
   .sidebar-container {
-    width:290px !important;
+    width:260px !important;
     .fold-button{
-      width:52px;
-      height: 52px;
+      width:46px;
+      height: 46px;
       top: 27px;
       .svg-i{
-        width: 52px;
-        height: 52px;
-        font-size:$fontsize20;
+        width: 46px;
+        height: 46px;
+        font-size:$fontsize18;
         .svg-icon {
-          height: 20px;
-          margin: 18px auto;
+          height: 18px;
+          margin: 14px auto;
         }
       }
     }
@@ -258,18 +258,18 @@ body[device="iMax"]{
       .item-link{
         margin-top:11px;
         .el-menu-item,.el-submenu__title{
-          height: 52px;
-          line-height: 52px;
+          height: 46px;
+          line-height: 46px;
           padding-left: 24px!important;
           .svg-i{
-            width: 24px;
-            height: 24px;
-            font-size:$fontsize23;
+            width: 22px;
+            height: 22px;
+            font-size:$fontsize21;
             vertical-align: -4px;
           }
           span{
-            font-size:$fontsize18;
-            margin-left: 10px;
+            font-size:$fontsize17;
+            margin-left: 8px;
             vertical-align: 1px;
           }
           &.is-active{
@@ -278,8 +278,8 @@ body[device="iMax"]{
             }
           }
           .el-submenu__icon-arrow{
-            margin-top: -7px;
-            font-size:$fontsize16;
+            margin-top: -5px;
+            font-size:$fontsize15;
             right: 15px;
           }
         }
@@ -288,29 +288,29 @@ body[device="iMax"]{
             margin-top: 4px;
             .item-link{
               .el-menu-item{
-                height: 42px;
-                line-height: 42px;
-                font-size:$fontsize16;
-                margin: 3px 0;
+                height: 36px;
+                line-height: 36px;
+                font-size:$fontsize15;
+                margin: 2px 0;
                 &.is-active{
                   &:before{
                     width: 6px;
                   }
                 }
                 span{
-                  font-size:$fontsize16;
-                  padding: 0 10px 0 26px;
-                  height: 42px;
-                  line-height: 42px;
+                  font-size:$fontsize15;
+                  padding: 0 10px 0 24px;
+                  height: 36px;
+                  line-height: 36px;
                 }
               }
               &.has-children{
                 margin-bottom: 8px;
                 .el-submenu{
                   .el-submenu__title{
-                    padding: 0 0 0 26px!important;
+                    padding: 0 0 0 24px!important;
                     span{
-                      font-size: $fontsize16;
+                      font-size: $fontsize15;
                     }
                   }
                 }
@@ -322,7 +322,7 @@ body[device="iMax"]{
     }
   }
   .el-tooltip__popper{
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.6;
   }
   .el-menu--vertical{
@@ -333,7 +333,7 @@ body[device="iMax"]{
       }
     }
     .el-menu-item,.el-submenu__title,.el-submenu__icon-arrow{
-      font-size: 16px;
+      font-size: 15px;
     }
   }
 }
@@ -384,10 +384,10 @@ body[device="iMax"]{
         top: 16px;
       }
       .sidebar-menu{
-        padding-top: 68px;
+        padding-top: 62px;
         .item-link{
           .el-menu-item > div,.el-submenu > .el-submenu__title{
-            padding: 0 26px!important;
+            padding: 0 24px!important;
           }
           .el-submenu{
             &.is-active{
