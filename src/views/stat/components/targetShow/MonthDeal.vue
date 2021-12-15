@@ -22,7 +22,7 @@
                 prop="bad"
                 label="不合格">
                 <template slot-scope="scope">
-                    <el-tooltip placement="top" effect="light" :visible-arrow="false" :disabled="scope.row.badmonth.length>0? false : true">
+                    <el-tooltip placement="top" effect="light" popper-class="newtooltip" :disabled="scope.row.badmonth.length>0? false : true">
                         <div slot="content">
                             <div class="showmonth">
                                 <span class="sitem" v-for="(item,index) in scope.row.badmonth.slice(0,-1).split('|')" :key="index">{{item}}</span>
@@ -38,7 +38,7 @@
                 prop="qualified"
                 label="合格">
                 <template slot-scope="scope">
-                    <el-tooltip placement="top" effect="light" :visible-arrow="false" :disabled="scope.row.qualifiedmonth.length > 0? false : true">
+                    <el-tooltip placement="top" effect="light" popper-class="newtooltip" :disabled="scope.row.qualifiedmonth.length > 0? false : true">
                         <div slot="content">
                             <div class="showmonth">
                                 <span class="sitem" v-for="(item,index) in scope.row.qualifiedmonth.slice(0,-1).split('|')" :key="index">{{item}}</span>
@@ -54,7 +54,7 @@
                 prop="medium"
                 label="中等">
                 <template slot-scope="scope">
-                    <el-tooltip placement="top" effect="light" :visible-arrow="false" :disabled="scope.row.mediummonth.length > 0? false : true">
+                    <el-tooltip placement="top" effect="light" popper-class="newtooltip" :disabled="scope.row.mediummonth.length > 0? false : true">
                         <div slot="content">
                             <div class="showmonth">
                                 <span class="sitem" v-for="(item,index) in scope.row.mediummonth.slice(0,-1).split('|')" :key="index">{{item}}</span>
@@ -71,7 +71,7 @@
                 label="优秀"
                 >
                 <template slot-scope="scope">
-                    <el-tooltip placement="top" effect="light" :visible-arrow="false" :disabled="scope.row.goodmonth.length>0? false : true">
+                    <el-tooltip placement="top" effect="light" popper-class="newtooltip" :visible-arrow="true" :disabled="scope.row.goodmonth.length>0? false : true">
                         <div slot="content">
                             <div class="showmonth">
                                 <span class="sitem" v-for="(item,index) in scope.row.goodmonth.slice(0,-1).split('|')" :key="index">{{item}}</span>

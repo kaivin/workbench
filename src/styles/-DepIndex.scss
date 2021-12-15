@@ -736,9 +736,9 @@
             line-height: normal;
         }
         td.el-table__cell{
-            padding: 6px 0;
+            padding: 14px 0px 12px;
             .cetbox{
-                padding: 10px 0 8px;
+                padding: 2px 0 2px;
             }
             span{
                 i{
@@ -1263,3 +1263,13 @@
         }
     }
 } 
+
+.newtooltip.is-light[x-placement^="top"] .popper__arrow{
+    border-top-color: #e8e6e6;
+    border-right-color: transparent!important;
+}
+
+.newtooltip.is-light[x-placement^="bottom"] .popper__arrow{
+    border-bottom-color: #e8e6e6;
+    border-right-color: transparent!important;
+}

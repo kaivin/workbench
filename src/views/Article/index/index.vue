@@ -13,6 +13,11 @@
             <el-card class="box-card scroll-card ArticleMain" shadow="hover">
                 <div slot="header">
                     <div class="card-header" ref="headerPane">
+                        <div class="header-search">
+                          <el-input placeholder="请输入您想搜索的内容" v-model="keyword" @keypress.native.enter="searchResult" size="small" class="article-search">
+                            <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span><span class="search-text">搜索</span></el-button>
+                          </el-input>
+                        </div>
                         <div class="border-wrap post-class ArticleOne" v-if="postTypeData.length>0">
                             <div class="border-row flex-wrap" v-for="item in postTypeData" v-bind:key="item.id" v-bind:class="item.id==isArticleTit?'active':''">
                                 <div class="border-cell txt-font" v-on:click="handArticleTit(item.id)">
@@ -20,7 +25,19 @@
                                 </div>
                                 <div class="border-cell flex-content" style="left:0px;">
                                     <div class="tag-panel">
-                                        <el-button type="primary" plain v-bind:class="type.plain?'is-active':''" size="small" v-for="type in item.children" v-bind:key="type.id" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
+                                       <template v-if="item.id==602 && item.children.length > 23">
+                                            <template v-for="(type,index) in item.children"  >
+                                                <el-button type="primary" plain v-bind:class="type.plain?'is-active':''" size="small" v-bind:key="index" v-if="index<23 && !isAll" v-on:click="linkTo(type.id,type.typename)" >{{type.typename}}</el-button>
+                                            </template>
+                                            <template v-for="type in item.children" >
+                                                <el-button type="primary" plain v-bind:class="type.plain?'is-active':''" size="small" v-bind:key="type.id" v-if="isAll" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
+                                            </template>
+                                            <el-button type="primary" class="btn_more" v-if="!isAll" @click="showAll()">更多</el-button>
+                                            <el-button type="primary" class="btn_more btn_more2" v-if="isAll" @click="showAll()">收起</el-button>
+                                        </template>
+                                        <template v-else>
+                                          <el-button type="primary" plain v-bind:class="type.plain?'is-active':''" size="small" v-for="type in item.children" v-bind:key="type.id" v-on:click="linkTo(type.id,type.typename)">{{type.typename}}</el-button>
+                                        </template>
                                     </div>
                                 </div>
                             </div>
@@ -373,6 +390,7 @@ export default {
         clientHeight:0,
       },
       isLoading:null,
+      isAll: false
     }
   },
   computed: {
@@ -558,8 +576,8 @@ export default {
     // 搜索结果点击事件
     searchResult(){
       var $this = this;
-      $this.loadingFun();
       if($this.keyword!=""){
+        $this.loadingFun();
         $this.$router.push({path:'/Article/index',query:{keyword:$this.keyword}});
       }else{
         $this.$router.push({path:'/Article/index'});
@@ -1230,6 +1248,11 @@ export default {
       $this.scrollPosition.isMouseDown = false;
       $this.scrollPosition.startPageX = 0;
       $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
+    },
+    // 点击站开全部栏目
+    showAll(){
+      var $this = this;
+      $this.isAll = !$this.isAll;
     }
   }
 }

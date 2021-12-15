@@ -49,11 +49,11 @@
               <div class="item-button" v-if="isUserbonusAdd" v-on:click="userBonusAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加</span></div>
             
             </div>
-            <div class="header-search" v-if="isArticleSearch">
+            <!-- <div class="header-search" v-if="isArticleSearch">
               <el-input placeholder="请输入内容" v-model="searchWord" @keypress.native.enter="searchResult" size="small" class="article-search">
                 <el-button slot="append" @click="searchResult"><span class="search-icon"><svg-icon icon-class="search1" class-name="disabled" /></span></el-button>
               </el-input>
-            </div>
+            </div> -->
         </div>
         <div class="header-right">
           <span class="cache-icon" v-if="isHomeCache" v-on:click="clearHomeCache" title="清除首页数据缓存">

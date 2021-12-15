@@ -26,7 +26,7 @@
                 <div class="departName">
                     {{item.departname}}
                 </div>
-                <el-tooltip placement="top" effect="light" :visible-arrow="false">
+                <el-tooltip placement="top" effect="light" popper-class="newtooltip" :visible-arrow="true">
                     <div slot="content">
                         <div class="tipnumber">合格线：{{item.passnumber}}</div>
                         <div class="tipnumber">中等线：{{item.mediumnumber}}</div>
