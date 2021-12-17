@@ -256,7 +256,6 @@ export default {
       defaultChartData:[],
       mapChart:[],
       isFix:false,
-      scrollpane: 0,
       boxWidth:0
     };
   },
@@ -2137,21 +2136,11 @@ export default {
       if(!$this.selectedData.isDateCompare && $this.selectedData.groupID.length>0){
           var scrolltop = $this.$refs.boxPane.scrollTop;
           var boxheight = $this.$refs.filterbox.offsetHeight;
-          if(scrolltop > $this.scrollpane){
-            $this.scrollpane = scrolltop;
-            if(scrolltop > parseInt(boxheight) + 20){
-              $this.isFix = true;
-            }else{
-              $this.isFix = false;
-            }
+          if(scrolltop > parseInt(boxheight) + 20){
+            $this.isFix = true;
           }else{
-            $this.scrollpane = scrolltop;
-            if(scrolltop < parseInt(boxheight) + 20){
-              $this.isFix = false;
-            }else{
-              $this.isFix = true;
-            }
-          } 
+            $this.isFix = false;
+          }
       }
     },
     changeSize(){
