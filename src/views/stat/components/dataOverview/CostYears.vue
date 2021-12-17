@@ -10,8 +10,8 @@
         <div class="redtext">{{totalXpanYears}}</div>
         <div class="redright">
           <div class="conname">环比上年同期</div>
-          <div class="num up" v-if="isUp"><i class="svg-i"><svg-icon icon-class="data-up" /></i>{{isUpNum}}</div>
-          <div class="num down" v-else><i class="svg-i"><svg-icon icon-class="data-down" /></i>{{isUpNum}}</div>
+          <div class="num up" v-if="isUp"><i class="svg-i"><svg-icon icon-class="data-up" /></i>{{isUpNum.toFixed(2)}}</div>
+          <div class="num down" v-else><i class="svg-i"><svg-icon icon-class="data-down" /></i>{{isUpNum.toFixed(2)}}</div>
         </div>
       </div>
       <div class="chart-top" id="CostYearsChartTop"></div>     
