@@ -235,19 +235,6 @@ export default {
       $this.getCnDepartList();
       $this.GetInquiryResult();
     },
-    // 返回部门数据
-    getDeap(varDate){
-      var $this = this;
-      var deptName='';
-      if($this.department&&$this.department.length>0){
-        $this.department.forEach(function(item,index){
-          if(varDate==item.id){
-             deptName=item.name.replace('电商','');
-          }
-        });
-      }
-      return deptName;
-    },
     // 获取中文询盘、成交等情况
     GetInquiryResult(){
       var $this = this;
@@ -256,12 +243,10 @@ export default {
             if (response.status) {
               // 非付费询盘
               if(response.xunulist&&response.xunulist.length>0){
-                  var unpayInquiry=[];
-                  var unpayInquiryArr = rankingWithTotalItem(response.xunulist,'number');
-                  unpayInquiryArr.forEach(function(item){
+                  var unpayInquiry=rankingWithTotalItem(response.xunulist,'number');
+                  unpayInquiry.forEach(function(item){
                     item.number = numSeparate(item.number);
-                    item.deptName=$this.getDeap(item.dept_id);
-                    unpayInquiry.push(item);
+                    item.deptName=item.departname;
                   });
                   $this.unpayInquiry = unpayInquiry;
                   if(response.xunulist.length < 9){
@@ -275,12 +260,10 @@ export default {
               }
               // 成交积分
               if(response.scorelist&&response.scorelist.length>0){
-                  var dealScore=[];
-                  var dealScoreArr = rankingWithTotalItem(response.scorelist,'score');
-                  dealScoreArr.forEach(function(item){
+                  var dealScore=rankingWithTotalItem(response.scorelist,'score');
+                  dealScore.forEach(function(item){
                     item.score = numSeparate(Math.floor(item.score*100)/100);
-                    item.deptName=$this.getDeap(item.dept_id);
-                    dealScore.push(item);
+                    item.deptName=item.departname;
                   });
                   $this.dealScore = dealScore;
                   $this.scoretime = response.scoretime;
@@ -295,22 +278,18 @@ export default {
               }
               // 付费
               if(response.semulist&&response.semulist.length>0){
-                  var payMember=[];
-                  var payMemberaArr = rankingWithTotalItem(response.semulist,'number');
-                  payMemberaArr.forEach(function(item){
+                  var payMember=rankingWithTotalItem(response.semulist,'number');
+                  payMember.forEach(function(item){
                     item.numberStr = numSeparate(item.number);
-                    item.deptName=$this.getDeap(item.dept_id);
-                    payMember.push(item);
+                    item.deptName=item.departname;
                   });
                   $this.payMember=payMember;
               }
               // 百万成交
               if(response.Alist&&response.Alist.length>0){
-                  var millionDeal=[];
-                  var millionDealArr = rankingWithTotalItem(response.Alist,'number');
-                  millionDealArr.forEach(function(item){
-                    item.deptName=$this.getDeap(item.dept_id);
-                    millionDeal.push(item);
+                  var millionDeal=rankingWithTotalItem(response.Alist,'number');
+                  millionDeal.forEach(function(item){
+                    item.deptName=item.departname;
                   });
                   $this.millionDeal=millionDeal;
                   if(response.Alist.length < 3){
@@ -326,12 +305,10 @@ export default {
               if(response.moneylist&&response.moneylist.length>0){
                 var moneyarr = response.moneylist;
                 moneyarr.sort($this.compare('allmoney'));
-                var awardMoney = [];
-                var awardMoneyArr = rankingWithTotalItem(moneyarr,'allmoney');
-                awardMoneyArr.forEach(function(item){
+                var awardMoney = rankingWithTotalItem(moneyarr,'allmoney');
+                awardMoney.forEach(function(item){
                   item.allmoney = numSeparate(Math.floor(item.allmoney*100)/100);
-                  item.deptName=$this.getDeap(item.dept_id);
-                  awardMoney.push(item);
+                  item.deptName=item.departname;
                 });
                 $this.awardMoney=awardMoney;
                 $this.moneytime = response.moneytime;
