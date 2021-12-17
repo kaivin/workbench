@@ -1,7 +1,7 @@
 <template>
   <div class="millionDeal" v-if="millionDeal.length > 0">
       <div class="memberTit">
-          <h3>百万成交榜单</h3>
+          <h3>百万成交榜单<span>({{dateTime}})</span></h3>
           <p>(单位：个)</p>
       </div>
     <div class="milRank">
@@ -66,6 +66,23 @@ export default {
       default: function () {
         return {};
       },
+    },
+    scoretime:{
+      type: String,
+      default: function () {
+        return "";
+      },
+    },
+  },
+  computed:{
+    dateTime(){
+      var $this = this;
+      var datearr=$this.scoretime.split("|");
+      var newarr=[];
+      for(var i=0;i<datearr.length;i++){
+        datearr[i] = datearr[i].split("-").join(".");
+      }
+      return datearr.join("-");
     }
   },
   methods:{

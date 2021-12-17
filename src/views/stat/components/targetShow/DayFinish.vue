@@ -2,7 +2,7 @@
   <div class="rowDayFinish">
     <div class="rowTitle">
       <div class="title-left">
-        <h3 class="tit-h3">各部门日询盘完成情况统计</h3>
+        <h3 class="tit-h3">日询盘优秀天数统计</h3>
         <span class="tit-span">（单位：次）</span>
         <span class="tit-span">注：与上月同期对比</span>
       </div>

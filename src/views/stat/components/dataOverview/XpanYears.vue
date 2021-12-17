@@ -2,7 +2,7 @@
   <div class="hxpage">
     <div class="module-top">
       <div class="title-view">
-        <div class="title">{{language}}年度总询盘</div>
+        <div class="title">年度总询盘</div>
         <div class="unit">（单位：个）</div>
         <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:type,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
       </div>

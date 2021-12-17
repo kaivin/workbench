@@ -21,7 +21,7 @@
             </el-table-column>
             <el-table-column
                 prop="headimg"
-                label="组员"
+                label="头像"
                 min-width="100">
                 <template slot-scope="scope">
                     <div v-if="scope.row.headimg" class="headImg">

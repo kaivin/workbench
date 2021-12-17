@@ -2,7 +2,7 @@
   <div class="rowDayCount">
     <div class="rowTitle">
       <div class="title-left">
-        <h3 class="tit-h3"><span v-if="lang == 'ch'">中文</span><span v-else>英文</span>各部门日目标</h3>
+        <h3 class="tit-h3"><span v-if="lang == 'ch'">中文</span><span v-else>英文</span>日目标</h3>
         <span class="tit-span">（单位：个）</span>
       </div>
     </div>

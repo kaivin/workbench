@@ -2,7 +2,7 @@
   <div class="hxpage">
     <div class="module-top">
       <div class="title-view">
-        <div class="title">{{language=="中文"?'中文年度热门地区TOP5':'英文年度热门国家TOP5'}}</div>
+        <div class="title">{{language=="中文"?'年度热门地区TOP10':'年度热门国家TOP10'}}</div>
         <div class="unit">{{type == 1?'（单位：分）':'（单位：个）'}}</div>
         <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:type,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
         <div class="btn-group">
@@ -300,7 +300,7 @@ export default {
           $this.pieSourcePlot.destroy();
         }
         let mapCountData = [];
-        mapCountData = dataArr.slice(0,5);
+        mapCountData = dataArr.slice(0,10);
         const maxNum =  mapCountData[0].value;
         const mapInterval = MapInterval(maxNum);
         const topTenColor = TopTenColor(mapCountData,mapInterval);

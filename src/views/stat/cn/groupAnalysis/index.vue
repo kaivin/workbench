@@ -1,6 +1,6 @@
 ﻿<template>
-  <div class="page-root scroll-panel group-index" ref="boxPane">
-    <div class="filter-panel">
+  <div class="page-root scroll-panel group-index" ref="boxPane" v-resize="changeSize">
+    <div class="filter-panel" ref="filterbox">
       <div class="filter-list">
         <div class="item-filter flex-box group">
           <div class="filter-title"><span class="txt-title">小组：</span></div>
@@ -104,7 +104,7 @@
       </div>
       <div class="filter-tips"><p><i class="svg-i"><svg-icon icon-class="tips" class-name="disabled" /></i>{{tipsInfo}}</p></div>
     </div>
-    <div class="contrast-panel flex-box" v-if="!selectedData.isDateCompare&&selectedData.groupID.length>0">
+    <div class="contrast-panel flex-box" :class="isFix ? 'contrast-fixed' : ''" :style="'width:'+ boxWidth + 'px' " v-if="!selectedData.isDateCompare&&selectedData.groupID.length>0">
       <div class="title-font"><span class="txt-title">对比项：</span></div>
       <div class="contrast-content flex-content">
         <div class="item-list">
@@ -122,7 +122,7 @@
         </div>
       </div>
     </div>
-    <div class="result-panel">
+    <div class="result-panel" :class="isFix ? 'resulttop' : ''">
       <template v-if="defaultChartData.length>0" v-for="item in defaultChartData">
         <default-chart 
           :item-data="item" 
@@ -255,6 +255,9 @@ export default {
       judgeData:{},
       defaultChartData:[],
       mapChart:[],
+      isFix:false,
+      scrollpane: 0,
+      boxWidth:0
     };
   },
   created() {
@@ -272,19 +275,57 @@ export default {
         }, 400)
       }
     },
+    boxWidth(val) {
+      if (!this.timer) {
+        this.boxWidth = val
+        this.timer = true
+        const $this = this
+        setTimeout(function() {
+          $this.timer = false
+        }, 400)
+      }
+    },
   },
   mounted(){
     const $this = this;
     if($this.$refs.boxPane){  
-      $this.minWidth = $this.$refs.boxPane.offsetWidth; 
+      $this.minWidth = $this.$refs.boxPane.offsetWidth;
+      $this.boxWidth = $this.$refs.boxPane.offsetWidth - 48; 
+      $this.$refs.boxPane.addEventListener('scroll', $this.getScroll);
     }
     window.onresize = () => {
       return (() => {
         if($this.$refs.boxPane){
           $this.minWidth = $this.$refs.boxPane.offsetWidth; 
+          $this.boxWidth = $this.$refs.boxPane.offsetWidth - 48;
         }
       })()
     }
+  },
+  destroyed(){
+    const $this = this;
+    if($this.$refs.boxPane){
+      $this.$refs.boxPane.removeEventListener('scroll', $this.getScroll);
+    }
+  },
+  directives: {  // 使用局部注册指令的方式
+      resize: { // 指令的名称
+        bind(el, binding) { // el为绑定的元素，binding为绑定给指令的对象
+          let width = '', height = '';
+          function isReize() {
+            const style = document.defaultView.getComputedStyle(el);
+            if (width !== style.width || height !== style.height) {
+              binding.value();  // 关键
+            }
+            width = style.width;
+            height = style.height;
+          }
+          el.__vueSetInterval__ = setInterval(isReize, 300);
+        },
+        unbind(el) {
+          clearInterval(el.__vueSetInterval__);
+        }
+      }
   },
   methods: {
     // 获取当前登陆用户在该页面的操作权限
@@ -972,18 +1013,30 @@ export default {
           if($this.selectedData.groupID.length==1){
             $this.groupList.forEach(function(item){
               if(item.userid == $this.selectedData.groupID[0]){
-                inquiryData.chartTitle = item.departName+"-"+item.groupName+"组询盘日期对比趋势";
+                if($this.selectedData.isMonth){
+                  inquiryData.chartTitle = item.departName+"-"+item.groupName+"组询盘日期对比月趋势";
+                }else{
+                  inquiryData.chartTitle = item.departName+"-"+item.groupName+"组询盘日期对比日趋势";
+                }
                 inquiryData.name = item.departName+"-"+item.groupName+"组询盘统计";
               }
             });
           }else{
-            inquiryData.chartTitle = "小组组合询盘日期对比趋势";
+            if($this.selectedData.isMonth){
+              inquiryData.chartTitle = "小组组合询盘日期对比月趋势";
+            }else{
+              inquiryData.chartTitle = "小组组合询盘日期对比日趋势";
+            }
             inquiryData.name = "小组组合询盘统计";
           }
         }else{
           // 小组对比
           if($this.selectedData.contrastGroupID.length>0){
-            inquiryData.chartTitle = "各小组询盘趋势对比";
+            if($this.selectedData.isMonth){
+              inquiryData.chartTitle = "各小组询盘月趋势对比";
+            }else{
+              inquiryData.chartTitle = "各小组询盘日趋势对比";
+            }
             inquiryData.mainData = [];
             var chartData = []
             if($this.selectedData.isMonth){
@@ -1122,19 +1175,25 @@ export default {
             if($this.selectedData.groupID.length==1){
               $this.groupList.forEach(function(item){
                 if(item.userid == $this.selectedData.groupID[0]){
-                  inquiryData.chartTitle = item.departName+"-"+item.groupName+"组询盘趋势";
-                  inquiryData.name = item.departName+"-"+item.groupName+"组询盘统计";
+                  if($this.selectedData.isMonth){
+                    inquiryData.chartTitle = "询盘月趋势";
+                  }else{
+                    inquiryData.chartTitle = "询盘日趋势";
+                  }
+                  inquiryData.name = "询盘统计";
                 }
               });
             }else{// 多小组被选中
-              inquiryData.chartTitle = "小组组合询盘趋势";
               inquiryData.name = "小组组合询盘统计";
               inquiryData.totalChart = [];
               var compareData = [];
               if($this.selectedData.isMonth){
-                compareData = res.monthdepartpercenter
+                compareData = res.monthdepartpercenter;
+                inquiryData.chartTitle = "小组组合询盘月趋势";
+                
               }else{
-                compareData = res.departpercenter
+                compareData = res.departpercenter;
+                inquiryData.chartTitle = "小组组合询盘日趋势";
               }
               compareData.forEach(function(item){
                 var itemChart = {};
@@ -1170,18 +1229,30 @@ export default {
           if($this.selectedData.groupID.length==1){
             $this.groupList.forEach(function(item){
               if(item.userid == $this.selectedData.groupID[0]){
-                dealScoreData.chartTitle = item.departName+"-"+item.groupName+"组成交积分日期对比趋势";
+                if($this.selectedData.isMonth){
+                  dealScoreData.chartTitle = item.departName+"-"+item.groupName+"组成交积分日期对比月趋势";
+                }else{
+                  dealScoreData.chartTitle = item.departName+"-"+item.groupName+"组成交积分日期对比日趋势";
+                }
                 dealScoreData.name = item.departName+"-"+item.groupName+"组成交积分统计";
               }
             });
           }else{
-            dealScoreData.chartTitle = "小组组合成交积分日期对比趋势";
+            if($this.selectedData.isMonth){
+              dealScoreData.chartTitle = "小组组合成交积分日期对比月趋势";
+            }else{
+              dealScoreData.chartTitle = "小组组合成交积分日期对比日趋势";
+            }
             dealScoreData.name = "小组组合成交积分统计";
           }
         }else{
           // 小组对比
           if($this.selectedData.contrastGroupID.length>0){
-            dealScoreData.chartTitle = "各小组成交积分趋势对比";
+            if($this.selectedData.isMonth){
+              dealScoreData.chartTitle = "各小组成交积分月趋势对比";
+            }else{
+              dealScoreData.chartTitle = "各小组成交积分日趋势对比";
+            }
             dealScoreData.mainData = [];
             dealScoreData.colorArr = [];
             var chartData = groupColor(res.monthscoretrendcompare);
@@ -1270,12 +1341,21 @@ export default {
             if($this.selectedData.groupID.length==1){
               $this.groupList.forEach(function(item){
                 if(item.userid == $this.selectedData.groupID[0]){
-                  dealScoreData.chartTitle = item.departName+"-"+item.groupName+"组成交积分趋势";
-                  dealScoreData.name = item.departName+"-"+item.groupName+"组成交积分统计";
+                  if($this.selectedData.isMonth){
+                    dealScoreData.chartTitle = "成交积分月趋势";
+                  }else{
+                    dealScoreData.chartTitle = "成交积分日趋势";
+                  }
+                  dealScoreData.name = "成交积分统计";
+
                 }
               });
             }else{// 多小组被选中
-              dealScoreData.chartTitle = "小组组合成交积分趋势";
+              if($this.selectedData.isMonth){
+                dealScoreData.chartTitle = "小组组合成交积分月趋势";
+              }else{
+                dealScoreData.chartTitle = "小组组合成交积分日趋势";
+              }
               dealScoreData.name = "小组组合成交积分统计";
               dealScoreData.totalChart = [];
               res.monthdepartscorepercenter.forEach(function(item){
@@ -1373,7 +1453,8 @@ export default {
             }
           });
           itemMapChart1.topTenColor = TopTenColor(itemMapChart1.topTenData,itemMapChart1.colorData);
-          inquiryMapData.title = "询盘地图展示 - 地区排行榜";
+          // inquiryMapData.title = "询盘地图展示 - 地区排行榜";
+          inquiryMapData.title = "询盘 - 地区排行榜";
           inquiryMapData.unit = "（单位：个）";
           inquiryMapData.isMap = true;
           inquiryMapData.mapDataArr.push(itemMapChart0);
@@ -1462,7 +1543,8 @@ export default {
               itemChart.topTenColor = TopTenColor(itemChart.topTenData,itemChart.colorData);
               inquiryMapData.mapDataArr.push(itemChart);
             });
-            inquiryMapData.title = "询盘地图展示 - 地区排行榜";
+            // inquiryMapData.title = "询盘地图展示 - 地区排行榜";
+            inquiryMapData.title = "询盘 - 地区排行榜";
             inquiryMapData.unit = "（单位：个）";
             inquiryMapData.isMap = true;
           }else{
@@ -1480,7 +1562,8 @@ export default {
             }
             itemMapData.randomStr = randomString(4);
             itemMapData.alias = "询盘个数";
-            itemMapData.title = "询盘地图展示 - 地区排行榜";
+            // itemMapData.title = "询盘地图展示 - 地区排行榜";
+            itemMapData.title = "询盘 - 地区排行榜";
             itemMapData.unit = "（单位：个）";
             itemMapData.isMap = true;
             itemMapData.topTitle = "热门地区TOP10";
@@ -1558,7 +1641,8 @@ export default {
             }
           });
           itemMapChart1.topTenColor = TopTenColor(itemMapChart1.topTenData,itemMapChart1.colorData);
-          dealRegionMapData.title = "成交积分地图展示 - 地区排行榜";
+          // dealRegionMapData.title = "成交积分地图展示 - 地区排行榜";
+          dealRegionMapData.title = "成交积分 - 地区排行榜";
           dealRegionMapData.unit = "（单位：分）";
           dealRegionMapData.isMap = true;
           dealRegionMapData.mapDataArr.push(itemMapChart0);
@@ -1639,7 +1723,8 @@ export default {
               itemChart.topTenColor = TopTenColor(itemChart.topTenData,itemChart.colorData);
               dealRegionMapData.mapDataArr.push(itemChart);
             });
-            dealRegionMapData.title = "成交积分地图展示 - 地区排行榜";
+            // dealRegionMapData.title = "成交积分地图展示 - 地区排行榜";
+            dealRegionMapData.title = "成交积分 - 地区排行榜";
             dealRegionMapData.unit = "（单位：分）";
             dealRegionMapData.isMap = true;
           }else{
@@ -1649,7 +1734,8 @@ export default {
             itemMapData.mapData = chinaData(res.provincebuymapmonth,"name","number");
             itemMapData.colorData = MapInterval(res.provincebuymapmonth[0].number);
             itemMapData.randomStr = randomString(4);
-            itemMapData.title = "成交积分地图展示 - 地区排行榜";
+            // itemMapData.title = "成交积分地图展示 - 地区排行榜";
+            itemMapData.title = "成交积分 - 地区排行榜";
             itemMapData.unit = "（单位：分）";
             itemMapData.alias = "成交积分";
             itemMapData.topTitle = "热门地区TOP10";
@@ -2044,6 +2130,34 @@ export default {
       backData.dateCompareData.compareValue = numSeparate(backData.dateCompareData.compareValue);
       return backData;
     },
+
+    // 滚动悬浮
+    getScroll(){
+      var $this = this;
+      if(!$this.selectedData.isDateCompare && $this.selectedData.groupID.length>0){
+          var scrolltop = $this.$refs.boxPane.scrollTop;
+          var boxheight = $this.$refs.filterbox.offsetHeight;
+          if(scrolltop > $this.scrollpane){
+            $this.scrollpane = scrolltop;
+            if(scrolltop > parseInt(boxheight) + 20){
+              $this.isFix = true;
+            }else{
+              $this.isFix = false;
+            }
+          }else{
+            $this.scrollpane = scrolltop;
+            if(scrolltop < parseInt(boxheight) + 20){
+              $this.isFix = false;
+            }else{
+              $this.isFix = true;
+            }
+          } 
+      }
+    },
+    changeSize(){
+      var $this = this;
+      $this.boxWidth = $this.$refs.boxPane.offsetWidth -48;
+    }
   }
 }
 </script>

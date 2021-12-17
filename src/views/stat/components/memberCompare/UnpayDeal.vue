@@ -1,11 +1,11 @@
 <template>
   <div class="memberDeal">
       <div class="memberTit" v-if="lang =='ch'">
-          <h3>成交积分榜单</h3>
+          <h3>成交积分榜单<span>({{dateTime}})</span></h3>
           <p><span>非付费成员年度排行</span>(单位：分)</p>
       </div>
       <div class="memberTit" v-else>
-          <h3>成交个数榜单</h3>
+          <h3>成交个数榜单<span>({{dateTime}})</span></h3>
           <p><span>非付费成员年度排行</span>(单位：个)</p>
       </div>
       <div class="dealRank">
@@ -54,7 +54,7 @@
 
 <script>
 export default {
-      name: "UnpayDeal",
+  name: "UnpayDeal",
   data() {
     return {
 
@@ -81,6 +81,23 @@ export default {
       default: function () {
         return "";
       },
+    },
+    scoretime:{
+      type: String,
+      default: function () {
+        return "";
+      },
+    },
+  },
+  computed:{
+    dateTime(){
+      var $this = this;
+      var datearr=$this.scoretime.split("|");
+      var newarr=[];
+      for(var i=0;i<datearr.length;i++){
+        datearr[i] = datearr[i].split("-").join(".");
+      }
+      return datearr.join("-");
     }
   },
   methods:{

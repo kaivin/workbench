@@ -2,7 +2,7 @@
   <div class="hxpage">
     <div class="module-top">
       <div class="title-view">
-        <div class="title">{{language}}年度总成交{{language=='英文'&&type==1?'个数':'积分'}}</div>
+        <div class="title">年度总成交{{language=='英文'&&type==1?'个数':'积分'}}</div>
         <div class="unit">{{language=='英文'&&type==1?'（单位：个）':'（单位：分）'}}</div>
         <!-- <div class="more">更多分析 ></div> -->
         <div class="btn-group" v-if="language=='英文'">

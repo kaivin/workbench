@@ -26,12 +26,14 @@
               :dealScore="dealScore"
               :dealScoreSet="dealScoreSet"
               @changeSet="changeSet"
+              :scoretime ="scoretime"
               :lang="ch"
             ></unpay-deal>
             <million-deal
               :millionDeal="millionDeal"
               :millionDealSet="millionDealSet"
               :lang="ch"
+              :scoretime ="scoretime"
               @changeSet="changeSet"
             ></million-deal>
           </div>
@@ -45,6 +47,7 @@
             :awardMoney="awardMoney"
             :awardMoneySet="awardMoneySet"
             :lang="ch"
+            :moneytime ="moneytime"
             @changeSet="changeSet"
           ></award-rank>
         </div>
@@ -94,6 +97,8 @@ export default {
           dept_id:'',
           id:'',
       },
+      scoretime:'',
+      moneytime: ''
     };
   },
   components:{
@@ -278,6 +283,7 @@ export default {
                     dealScore.push(item);
                   });
                   $this.dealScore = dealScore;
+                  $this.scoretime = response.scoretime;
                   if(response.scorelist.length < 9){
                       $this.dealScoreSet.ifFold = false;
                       $this.dealScoreSet.boxHeight = "auto";
@@ -328,6 +334,7 @@ export default {
                   awardMoney.push(item);
                 });
                 $this.awardMoney=awardMoney;
+                $this.moneytime = response.moneytime;
                 if(response.moneylist.length < 9){
                     $this.awardMoneySet.ifFold = false;
                     $this.awardMoneySet.boxHeight = "auto";

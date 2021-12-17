@@ -2,7 +2,7 @@
   <div class="rowDealCount">
     <div class="rowTitle">
       <div class="title-left">
-        <h3 class="tit-h3"><span v-if="lang == 'ch'">中文</span><span v-else>英文</span>成交目标完成情况</h3>
+        <h3 class="tit-h3"><span v-if="lang == 'ch'">中文</span><span v-else>英文</span>月成交成绩</h3>
         <span class="tit-span">（单位：分）</span>
       </div>
       <div class="datePicker">

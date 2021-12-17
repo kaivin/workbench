@@ -22,6 +22,13 @@
         font-size:$fontsize17;
         padding-bottom:12px;
         line-height:1;
+        span{
+            display: inline-block;
+            margin-left:10px;
+            font-size: $fontsize14;
+            color: #a1a1a1;
+            font-weight: normal;
+        }
     }
     p{
         clear: both;

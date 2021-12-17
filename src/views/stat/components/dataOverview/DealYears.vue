@@ -2,7 +2,7 @@
   <div class="hxpage">
     <div class="module-top">
       <div class="title-view">
-        <div class="title">{{language}}年度总成交100万数量</div>
+        <div class="title">年度总成交100万数量</div>
         <div class="unit">（单位：个）</div>
         <!-- <div class="more">更多分析 ></div> -->
       </div>
