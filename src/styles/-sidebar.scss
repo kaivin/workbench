@@ -138,6 +138,16 @@
                     padding:0!important;
                     color:#fff;
                     margin-left:0;
+                    &:before{
+                      content: '';
+                      display: inline-block;
+                      vertical-align: middle;
+                      width: 10px;
+                      height: 2px;
+                      background-color: #a2acc1;
+                      margin-right: 14px;
+                      margin-left: 2px;
+                    }
                   }
                 }
               }
@@ -311,6 +321,10 @@ body[device="iMax"]{
                     padding: 0 0 0 24px!important;
                     span{
                       font-size: $fontsize15;
+                      &:before{
+                        margin-left: 4px;
+                        margin-right: 16px;
+                      }
                     }
                   }
                 }
