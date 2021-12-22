@@ -1,9 +1,12 @@
 ﻿
 <template><transition name="fade-transform" mode="out-in">
   <div class="page-root scroll-panel home-index" ref="boxPane">
+    <div class="nowCate">
+      {{nowcate}}
+    </div>
     <el-card class="box-card scroll-card" shadow="hover">
         <div class="homeMain flex-content">
-           <el-row :gutter="20" class="hxmodule-view">
+           <el-row class="hxmodule-view">
              <el-col class="hxmodule-item" :xl="6" :lg="12">
                <XpanYears
                language="中文"
@@ -86,6 +89,7 @@ export default {
       provincecountmap:[],//询盘地图 
       provincescoretmap:[],//成交地图
       departList:[],
+      nowcate: ""
     };
   },
   components:{
@@ -99,6 +103,7 @@ export default {
   },
   created() {
     this.getUserMenuButtonPermit()
+    this.nowcate = this.$route.meta.title;
   },
   methods: {
     // 获取当前登陆用户在该页面的操作权限
@@ -162,7 +167,18 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.hxmodule-item{
-  margin-bottom: 22px;
+.home-index{
+  padding: 0;
+}
+.box-card{
+  padding: 10px;
+}
+.nowCate{
+  padding: 15px 20px;
+  background-color: #fff;
+  font-size: 18px;
+  line-height: 24px;
+  color: #1a1a1a;
+  border: solid 1px #ededed;
 }
 </style>

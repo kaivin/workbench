@@ -335,8 +335,15 @@ export default {
 .hxpage{
   background: #fff;
   .module-top{
-    padding: 15px 30px;
-    border-bottom: 2px solid #f6f7fa;
+    padding: 30px;
+    border-right: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    &:hover{
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
   }
   .title-view{
     height: 24px;
@@ -427,7 +434,15 @@ export default {
     height: 68px;
   }
   .module-bottom{
-    padding: 20px 30px;
+    padding: 30px;
+    border-right: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    &:hover{
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
   }
   .chart-bottom{
     height: 260px;
