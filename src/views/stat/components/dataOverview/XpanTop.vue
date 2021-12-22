@@ -159,7 +159,7 @@ export default {
       margin-bottom: 15px;
       .redtext{
         float: left;
-        font-size: 26px;
+        font-size: 24px;
         color: #eb3737;
         font-weight: bold;
         margin-right: 15px;
