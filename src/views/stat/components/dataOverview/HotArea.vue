@@ -200,7 +200,7 @@ export default {
               height: 140,
               lineHeight:140,
               fontSize: 12,
-              color: '#333'
+              color: '#999'
             },
             realtime: false, // 拖拽时，是否实时更新
             calculable: true, // 是否显示拖拽用的手柄
@@ -427,7 +427,7 @@ export default {
               height: 140,
               lineHeight:140,
               fontSize: 12,
-              color: '#333'
+              color: '#999'
             },
             realtime: false, // 拖拽时，是否实时更新
             calculable: true, // 是否显示拖拽用的手柄
@@ -497,162 +497,4 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.hxpage{
-  background: #fff;
-  .module-top{
-    padding: 30px;
-    border-right: 1px solid #efefef;
-    border-bottom: 1px solid #efefef;
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 1;
-    &:hover{
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-    }
-  }
-  .title-view{
-    height: 24px;
-    line-height: 24px;
-    margin-bottom: 10px;
-    padding: 0 15px;
-    .title{
-      font-size: 14px;
-      color: #1a1a1a;
-      float: left;
-      margin-right: 4px;
-      font-weight: bold;
-      span{
-        font-size: 12px;
-        color: #a1a1a1;
-        font-weight: normal;
-        margin-left: 10px;
-      }
-    }
-    .unit{
-      font-size: 12px;
-      color: #a1a1a1;
-      float: left;
-    }
-    .more{
-      font-size: 12px;
-      color: #a1a1a1;
-      float: right;
-      cursor: pointer;
-      position: relative;
-      top: -1px;
-      .svg-i{
-        font-size: 10px;
-        color: #a1a1a1;
-        vertical-align: 1px;
-      }
-    }
-    .btn-group{
-      float: right;
-      margin-right: 20px;
-      display: flex;
-      .btn-item{
-        padding: 0 10px;
-        height: 24px;
-        text-align: center;
-        line-height: 22px;
-        border: 1px solid #e1e3ea;
-        color: #9ea5af;
-        font-size: 12px;
-        box-sizing: border-box;
-        cursor: pointer;
-        margin-left: -1px;
-        position: relative;
-        &:hover{
-          color: #496bf2;
-          border: 1px solid #496bf2;
-          z-index: 1;
-        }
-      }
-      .active{
-        border: 1px solid #496bf2;
-        background:#496bf2;
-        color: #fff;
-        z-index: 1;
-        &:hover{
-          color: #fff;
-        }
-      }
-    }
-  }
-  .contrast-view{
-    height: 40px;
-    margin-bottom: 15px;
-    .redtext{
-      float: left;
-      font-size: 24px;
-      color: #eb3737;
-      font-weight: bold;
-      margin-right: 15px;
-    }
-    .redright{
-      float: left;
-      .conname{
-        font-size: 12px;
-        line-height: 20px;
-        color: #999999;
-      }
-      .num{
-        font-size: 12px;
-        line-height: 20px;
-        padding-left: 12px;
-        position: relative;
-      }
-      .up{
-        color: #f25e5e;
-        &:before{
-          content: '↑';
-          position: absolute;
-          left: 0;
-          font-size: 12px;
-          line-height: 12px;
-          top: 3px;
-          
-        }
-      }
-      .down{
-        color: #2dbb4c;
-        &:before{
-          content: '↓';
-          position: absolute;
-          left: 0;
-          font-size: 12px;
-          line-height: 12px;
-          top: 3px;
-          
-        }
-      }
-    }
-  }
-  .chart-top{
-    height: 68px;
-  }
-  .module-bottom{
-    padding: 20px 30px;
-  }
-  .map-chart{
-    float: left;
-    width: 54%;
-    .chart-canvas{
-      height: 242px;
-      line-height: 242px;
-      div{
-        display: inline-block;
-        vertical-align: middle;
-      }
-    }
-  }
-  .top-ten{
-    float: right;
-    width: 46%;
-    .chart-canva{
-      height: 242px;
-    }
-  }
-  
-}
 </style>

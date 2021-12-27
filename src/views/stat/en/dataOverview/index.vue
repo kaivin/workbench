@@ -1,5 +1,5 @@
 ﻿<template>
-  <div class="page-root scroll-panel home-index" ref="boxPane">
+  <div class="page-root scroll-panel overview-page en-stat" ref="boxPane">
     <div class="nowCate">
       {{nowcate}}
     </div>
@@ -178,18 +178,5 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.home-index{
-  padding: 0;
-}
-.box-card{
-  padding: 10px;
-}
-.nowCate{
-  padding: 15px 20px;
-  background-color: #fff;
-  font-size: 18px;
-  line-height: 24px;
-  color: #1a1a1a;
-  border: solid 1px #ededed;
-}
+
 </style>
