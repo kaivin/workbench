@@ -95,10 +95,18 @@
                             <el-table-column
                                 prop="xunnumber"
                                 label="询盘个数">
+                                <template slot-scope="scope">
+                                    <span class="scoreTableSpan" v-if="scope.row.xunnumber==0">{{scope.row.xunnumber}}</span>
+                                    <router-link class="scoreTableA" v-else :to="{path:'/stat/cn/productAnalysis/ProStatistic',query:{uid:userBasicInfo.id,month:scope.row.time,type:'2',pick:'enquirie'}}" tag="a" target="_blank">{{scope.row.xunnumber}}</router-link>
+                                </template>
                             </el-table-column>
                             <el-table-column
                                 prop="score"
                                 label="成交积分">
+                                <template slot-scope="scope">
+                                    <span class="scoreTableSpan" v-if="scope.row.score==0">{{scope.row.score}}</span>
+                                    <router-link class="scoreTableA" v-else :to="{path:'/stat/cn/productAnalysis/ProStatistic',query:{uid:userBasicInfo.id,month:scope.row.time,type:'2',pick:'score'}}" tag="a" target="_blank">{{scope.row.score}}</router-link>
+                                </template>
                             </el-table-column>
                             <el-table-column
                                 prop="anumber"
@@ -180,6 +188,7 @@ export default {
         currentTimeMonth:'',
         userBasicInfo:{
             headimg:'',
+            id:'',
             comtime:"",//入职时间
             depart:"",//部门
             comday:0,//入职时长
@@ -320,6 +329,7 @@ export default {
         $this.userBasicInfo.comday='';
         $this.userBasicInfo.manangename='';
         $this.userBasicInfo.name='';
+        $this.userBasicInfo.id='';
         $this.userBasicInfo.postionname='';
         $this.userBasicInfo.userTimeMonth='';
         $this.userBasicInfo.userMonthcount='';
@@ -516,6 +526,7 @@ export default {
                 $this.getYearInquiryChart();
                 $this.currentMix=currentMix;
                 //组员基本信息
+                $this.userBasicInfo.id=res.userinfo.id;
                 $this.userBasicInfo.comtime=res.userinfo.comtime;
                 $this.userBasicInfo.depart=res.userinfo.depart;
                 $this.userBasicInfo.comday=res.userinfo.comday;
@@ -538,8 +549,9 @@ export default {
                   var maxmoney=0;
                   res.personcount.forEach(function(item,index){
                       var objItem={};
-                      item.date=item.date.split('-')[1]+'月';
-                      objItem.date=item.date;                      
+                      objItem.time=item.date;
+                      var time=item.date.split('-')[1]+'月';
+                      objItem.date=time;            
                       objItem.xunnumber=numSeparate(item.xunnumber);
                       objItem.score=numSeparate(item.score);
                       objItem.anumber=item.anumber;

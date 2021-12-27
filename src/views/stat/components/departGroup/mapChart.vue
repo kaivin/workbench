@@ -156,7 +156,7 @@ export default {
     cnMapChart,
     topRegion,
     itemProduct,
-},
+  },
   data:function() {
     return {
       parentData:{},

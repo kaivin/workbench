@@ -260,13 +260,12 @@ export default {
               }
               // 成交积分
               if(response.scorelist&&response.scorelist.length>0){
-                var dealScore=rankingWithTotalItem(response.scorelist,'score');
-                dealScore.forEach(function(item){
-                  item.score = numSeparate(Math.floor(item.score*100)/100);
-                  item.deptName=item.departname;
-                });
-                $this.dealScore = dealScore;
-                $this.scoretime = response.scoretime;
+                  var dealScore=rankingWithTotalItem(response.scorelist,'score');
+                  dealScore.forEach(function(item){
+                    item.score = numSeparate(Math.floor(item.score*100)/100);
+                    item.deptName=item.departname;
+                  });
+                  $this.dealScore = dealScore;
                 if(response.scorelist.length < 9){
                     $this.dealScoreSet.ifFold = false;
                     $this.dealScoreSet.boxHeight = "auto";

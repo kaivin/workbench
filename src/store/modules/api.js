@@ -44,6 +44,35 @@
   getEnPersonlist,
   getEnPersoncountinfo,
   getEnPersoncountCompare,
+  getChinaproductlist,
+  getChinaproductFocus,
+  getChinaAddfocusproduct,
+  getChinaprovince,
+  getChinaproductcountfooter,
+  getchinaproduct,
+  getChinaproductinfocount,
+  getChinaproductcompare,
+  getChinaproductdepartcompare,
+  getChinaproducttimecompare,
+  getChinaAddfocusproductone,
+  getChinafocusproductcancel,
+  getPersonproductinfo,
+  getEnproductlist,
+  getEnproductfocus,
+  getEnAddenfocusproduct,
+  getEnprovince,
+  getEnproductcountfooter,
+  getEnproduct,
+  getEnproductinfocount,
+
+
+
+
+  getEnproductcompare,
+  getEnproductdepartcompare,
+  getEnproducttimecompare,
+  getEnAddfocusproductone,
+  getEnfocusproductcance,
 } from '@/api/api'
 //import { reject, resolve } from 'core-js/fn/promise';
 import Cookies from 'js-cookie';
@@ -780,6 +809,256 @@ const actions = {
     getEnPersoncountCompareAction({ commit, state },data) {
       return new Promise((resolve, reject) => {
         getEnPersoncountCompare(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    //首页中文统计（中文产品列表）（中文产品分析）
+    getChinaproductlistAction({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getChinaproductlist().then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计(添加关注产品)（中文产品分析）
+    getChinaAddfocusproductAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getChinaAddfocusproduct(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计(产品分析默认-顶部我的关注产品) （中文产品分析）
+    getChinaproductFocusAction({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getChinaproductFocus().then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计（地区列表、产品分类）（中文产品分析）
+    getChinaprovinceAction({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getChinaprovince().then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计（产品分析默认-底部产品询盘 积分 百万）（中文产品分析）
+    getChinaproductcountfooterAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getChinaproductcountfooter(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计（点击产品类型获取产品列表）（产品分析）
+    getChinaproductinfocountAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getChinaproductinfocount(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计（点击产品类型获取产品列表）（产品分析）
+    getchinaproductAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getchinaproduct(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },    
+    // 首页中文统计（产品对比）（中文产品分析）
+    getChinaproductcompareAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getChinaproductcompare(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计（单个产品部门对比）（中文产品分析）
+    getChinaproductdepartcompareAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getChinaproductdepartcompare(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计（添加关注单个产品）（产品分析）
+    getChinaAddfocusproductoneAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getChinaAddfocusproductone(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计（取消关注单个产品）（产品分析）
+    getChinafocusproductcancelAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getChinafocusproductcancel(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文统计（单个产品时间范围数据对比）（中文产品分析）
+    getChinaproducttimecompareAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getChinaproducttimecompare(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页中文|英文统计（个人月产品分析）（个人->产品分析）
+    getPersonproductinfoAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getPersonproductinfo(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    //首页英文统计（英文产品列表）（英文产品分析）
+    getEnproductlistAction({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getEnproductlist().then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文统计(添加关注产品)（英文产品分析）
+    getEnAddenfocusproductAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getEnAddenfocusproduct(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文统计(产品分析默认-顶部我的关注产品) （英文产品分析）
+    getEnproductfocusAction({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getEnproductfocus().then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文统计（地区列表、产品分类）（英文产品分析）
+    getEnprovinceAction({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getEnprovince().then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文统计（产品分析默认-底部产品询盘 积分 百万）（英文产品分析）
+    getEnproductcountfooterAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getEnproductcountfooter(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文统计（点击产品类型获取产品列表）（英文产品分析）
+    getEnproductAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getEnproduct(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文统计（点击产品类型获取产品列表）（英文产品分析）
+    getEnproductinfocountAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getEnproductinfocount(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    }, 
+    // 首页英文统计（产品对比）（英文产品分析）
+    getEnproductcompareAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getEnproductcompare(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文统计（单个产品部门对比）（英文产品分析）
+    getEnproductdepartcompareAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getEnproductdepartcompare(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文统计（单个产品时间范围数据对比）（英文产品分析）
+    getEnproducttimecompareAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getEnproducttimecompare(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文统计（添加关注单个产品）（产品分析）
+    getEnAddfocusproductoneAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getEnAddfocusproductone(data).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 首页英文统计（取消关注单个产品）（产品分析）
+    getEnfocusproductcanceAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getEnfocusproductcance(data).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)

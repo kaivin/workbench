@@ -40,6 +40,7 @@
                         transform: rotate(55deg) skew(20deg);
                         left: 35px;
                         top:37px;
+                        margin-left:-7px;
                     }
                 }
             }
@@ -160,7 +161,6 @@
             }
     }
 }
-
 .middleBox{
     &:after{
         content: '';
@@ -181,7 +181,6 @@
         float: right;
     }
 }
-
 .personalCard{
     padding: 40px 30px 80px;
     border: 1px solid #ececec;
@@ -423,7 +422,6 @@
         }
     }
 }
-
 .personYearChart{
     background-color: #ffffff;
     .yearChartTab{
@@ -581,7 +579,6 @@
         }
     }
 }
-
 .personScoreNum{
     padding: 30px;
     margin-top: 20px;
@@ -639,6 +636,15 @@
             width: 8px;
             height: 1px;
             background-color: #999999;
+        }
+        .scoreTableSpan{
+            color:#333;
+        }
+        .scoreTableA{
+            color:#333;
+            &:hover{
+                color:#f35555;
+            }
         }
     }
     .scoreSepcount{
@@ -751,7 +757,6 @@
         }  
     }
 }
-
 .compareBox{
     margin-top: 20px;
     display: flex;
@@ -805,7 +810,6 @@
         }
     }
 }
-
 .ComparePerson{
     padding: 20px 30px 36px;
     background-color: #fff;

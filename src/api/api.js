@@ -351,3 +351,197 @@ export function getEnPersoncountCompare(data) {
     data
   });
 }
+//首页中文统计（中文产品列表）（中文产品分析）
+export function getChinaproductlist() {
+  return request({
+    url: "/hxindex/Api/chinaproductlist",
+    method: "POST",
+  });
+}
+// 首页中文统计(添加关注产品)（中文产品分析）
+export function getChinaAddfocusproduct(data) {
+  return request({
+    url: "/hxindex/Api/addfocusproduct",
+    method: "POST",
+    data
+  });
+}
+// 首页中文统计（添加关注单个产品）（产品分析）
+export function getChinaAddfocusproductone(data) {
+  return request({
+    url: "/hxindex/Api/addfocusproductone",
+    method: "POST",
+    data
+  });
+}
+// 首页中文统计（取消关注单个产品）（产品分析）
+export function getChinafocusproductcancel(data) {
+  return request({
+    url: "/hxindex/Api/focusproductcancel",
+    method: "POST",
+    data
+  });
+}
+// 首页中文统计(产品分析默认-顶部我的关注产品) （中文产品分析）
+export function getChinaproductFocus() {
+  return request({
+    url: "/hxindex/Api/chinaproductfocus",
+    method: "POST",
+  });
+}
+// 首页中文统计（地区列表、产品分类）（中文产品分析）
+export function getChinaprovince() {
+  return request({
+    url: "/hxindex/Api/chinaprovince",
+    method: "POST",
+  });
+}
+// 首页中文统计（产品分析默认-底部产品询盘 积分 百万）（中文产品分析）
+export function getChinaproductcountfooter(data) {
+  return request({
+    url: "/hxindex/Api/chinaproductcountfooter",
+    method: "POST",
+    data
+  });
+}
+// 首页中文统计（点击产品类型获取产品列表）（中文产品分析）
+export function getchinaproduct(data) {
+  return request({
+    url: "/hxindex/Api/getchinaproduct",
+    method: "POST",
+    data
+  });
+}
+// 首页中文统计（总览）（中文产品分析）
+export function getChinaproductinfocount(data) {
+  return request({
+    url: "/hxindex/Api/chinaproductinfocount",
+    method: "POST",
+    data
+  });
+}
+// 首页中文统计（产品对比）（中文产品分析）
+export function getChinaproductcompare(data) {
+  return request({
+    url: "/hxindex/Api/chinaproductcompare",
+    method: "POST",
+    data
+  });
+}
+// 首页中文统计（单个产品部门对比）（中文产品分析）
+export function getChinaproductdepartcompare(data) {
+  return request({
+    url: "/hxindex/Api/chinaproductdepartcompare",
+    method: "POST",
+    data
+  });
+}
+// 首页中文统计（单个产品时间范围数据对比）（中文产品分析）
+export function getChinaproducttimecompare(data) {
+  return request({
+    url: "/hxindex/Api/chinaproducttimecompare",
+    method: "POST",
+    data
+  });
+}
+// 首页中文|英文统计（个人月产品分析）（个人->产品分析）
+export function getPersonproductinfo(data) {
+  return request({
+    url: "/hxindex/Api/personproductinfo",
+    method: "POST",
+    data
+  });
+}
+//首页英文统计（英文产品列表）（英文产品分析）
+export function getEnproductlist() {
+  return request({
+    url: "/hxindex/Api/enproductlist",
+    method: "POST",
+  });
+}
+// 首页英文统计(添加关注产品)（英文产品分析）
+export function getEnAddenfocusproduct(data) {
+  return request({
+    url: "/hxindex/Api/addenfocusproduct",
+    method: "POST",
+    data
+  });
+}
+// 首页英文统计(产品分析默认-顶部我的关注产品) （英文产品分析）
+export function getEnproductfocus() {
+  return request({
+    url: "/hxindex/Api/enproductfocus",
+    method: "POST",
+  });
+}
+// 首页英文统计（地区列表、产品分类）（英文产品分析）
+export function getEnprovince() {
+  return request({
+    url: "/hxindex/Api/enprovince",
+    method: "POST",
+  });
+}
+// 首页英文统计（产品分析默认-底部产品询盘 积分 百万）（英文产品分析）
+export function getEnproductcountfooter(data) {
+  return request({
+    url: "/hxindex/Api/enproductcountfooter",
+    method: "POST",
+    data
+  });
+}
+// 首页英文统计（点击产品类型获取产品列表）（英文产品分析）
+export function getEnproduct(data) {
+  return request({
+    url: "/hxindex/Api/getenproduct",
+    method: "POST",
+    data
+  });
+}
+// 首页英文统计（总览）（英文产品分析）
+export function getEnproductinfocount(data) {
+  return request({
+    url: "/hxindex/Api/enproductinfocount",
+    method: "POST",
+    data
+  });
+}
+// 首页英文统计（产品对比）（英文产品分析）
+export function getEnproductcompare(data) {
+  return request({
+    url: "/hxindex/Api/enproductcompare",
+    method: "POST",
+    data
+  });
+}
+// 首页英文统计（单个产品部门对比）（英文产品分析）
+export function getEnproductdepartcompare(data) {
+  return request({
+    url: "/hxindex/Api/enproductdepartcompare",
+    method: "POST",
+    data
+  });
+}
+// 首页英文统计（单个产品时间范围数据对比）（英文产品分析）
+export function getEnproducttimecompare(data) {
+  return request({
+    url: "/hxindex/Api/enproducttimecompare",
+    method: "POST",
+    data
+  });
+}
+// 首页中文统计（添加关注单个产品）（产品分析）
+export function getEnAddfocusproductone(data) {
+  return request({
+    url: "/hxindex/Api/addenfocusproductone",
+    method: "POST",
+    data
+  });
+}
+// 首页中文统计（取消关注单个产品）（产品分析）
+export function getEnfocusproductcance(data) {
+  return request({
+    url: "/hxindex/Api/enfocusproductcancel",
+    method: "POST",
+    data
+  });
+}

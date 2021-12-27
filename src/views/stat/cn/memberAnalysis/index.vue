@@ -1,5 +1,5 @@
 ﻿<template>
-  <div class="page-root scroll-panel" ref="boxPane">
+  <div class="page-root scroll-panel personAnalysis" ref="boxPane">
       <div class="personTopTab">
           <div class="chooseDepart flex-box">
                 <span class="choosetit">部门选择：</span>

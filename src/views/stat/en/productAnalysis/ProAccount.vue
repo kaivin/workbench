@@ -1,0 +1,1692 @@
+﻿<template>
+  <div class="page-root scroll-panel product-Analy" ref="boxPane">
+      <div class="personTopTab" v-if="contrastName=='overview'">
+           <div class="chooseDepart flex-box">
+                <span class="choosetit">产品分类：</span>
+                <div class="departItems flex-content">
+                <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in ProCategoryList" :key="index" v-on:click="handleCategory(item.id)">{{item.name}}</span>
+                </div>
+           </div>
+           <div class="choosePerson" :class="routTag.typeid?'active':''">
+                <div class="departItems">
+                    <p class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="(item,index) in ProList" :key="index" v-on:click="handlePro(item.id,item.typeid)"><i></i><span>{{item.name}}</span></p>
+                </div>
+           </div>
+      </div>
+      <div class="prodeptBox">
+          <div class="proBox">
+               <el-tooltip v-if="(routTag.productnameId!=0||routTag.productnameId!='')&&hasfocus==1" class="proBoxStar" effect="dark" content="取消关注" placement="top">
+                   <el-button v-on:click="getCancelfocuspro(routTag.productname)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></el-button>
+               </el-tooltip>
+               <el-tooltip v-if="(routTag.productnameId!=0||routTag.productnameId!='')&&hasfocus==2" class="proBoxStar" effect="dark" content="添加关注" placement="top">
+                   <el-button v-on:click="getAddfocuspro(routTag.productname)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></el-button>
+               </el-tooltip>
+               <span>{{routTag.productname}}</span>
+          </div>
+          <p class="contrastTab">
+             <span v-for="(item,index) in contrastTab" v-if="item.isDisplay" :class='item.isOn?"active":""' :key='index' v-on:click="handlecontrastTab(item.tagName)">{{item.name}}</span>
+          </p>
+          <div class="deptBox" v-if="contrastName!='departCont'">
+               <span class="deptBoxTit">部门选择:</span>
+               <p class="deptBoxItem" v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="handleDepart(item.id)"><i></i><span>{{item.name}}</span></p>
+          </div>
+      </div>
+      <div class="contrast" v-if="contrastName=='productCont'||contrastName=='departCont'">
+           <p class="contrastPro" v-if="contrastProname.length>0"><span v-for="(item,index) in contrastProname" :class="'color-0'+(index+1)" :key="index">{{item}}</span></p>
+           <span class="contrastProTab" v-if="contrastName=='productCont'" v-on:click="handleAddcontrast('productCont')"><i><svg-icon icon-class="work_add" /></i>添加产品</span>
+           <span class="contrastProTab" v-if="contrastName=='departCont'" v-on:click="handleAddcontrast('departCont')"><i><svg-icon icon-class="work_add" /></i>添加对比部门</span>
+      </div>
+      <div class="contrast contrastTime" v-if="contrastName=='timeCont'">        
+            <el-date-picker
+                v-model="routTag.csdata"
+                @change="handleContData"
+                type="monthrange"
+                format="yyyy-MM"
+                value-format="yyyy-MM"
+                key="b"
+                size="mini"
+                class="date-range"
+                range-separator="～"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :picker-options="pickerMonthRangeOptions">
+            </el-date-picker>
+      </div>
+      <template v-for="(item,index) in enquirieList" v-if="contrastName!='timeCont'">
+        <score-days :enquirieChart="item" :contrastTag="contrastName"></score-days>
+      </template>
+      <div class="enquirieTag">
+          <div class="enquirieTagTop flex-box">  
+                <h3>阶段数据</h3>   
+                <div class="filter-title"><span class="txt-title">时间选择：</span></div>
+                <div class="filter-content flex-content">
+                    <div class="item-list">
+                        <div class="item-change">
+                            <span :class="item.isOn?'active':''" v-for="(item,index) in changeTime" :key="index" v-on:click="handlerTime(item.name)">{{item.name}}</span>
+                        </div>
+                        <div class="item-date">
+                            <el-date-picker
+                            v-model="routTag.data"
+                            @change="handleData"
+                            type="monthrange"
+                            format="yyyy-MM"
+                            value-format="yyyy-MM"
+                            key="b"
+                            size="mini"
+                            class="date-range"
+                            range-separator="～"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :picker-options="pickerMonthRangeOptions">
+                            </el-date-picker>
+                        </div>
+                    </div>
+                </div>
+          </div>
+          <div class="enquirieTagCore flex-box"  v-if="contrastName=='overview'">
+               <div class="enquirieTagCoreBox" v-if="routTag.productnameId==0">
+                    <p class="CoreBoxTit">核心数据</p>
+                    <dl class="CoreBoxBom">
+                        <dd class='Core01'> 
+                            <el-tooltip placement="right" class="CoreBoxBomPer" effect="light">
+                                <div slot="content" class="CoreBoxBomPerTop">
+                                    <p>历史最高询盘</p>
+                                    <p>时间：<span>{{xunmaxmonth.xunmonth}}</span></p>
+                                    <p>询盘：<span>{{xunmaxmonth.number}}</span></p>
+                                </div>
+                                <div>
+                                    <div class="CoreBoxBomNum">
+                                        <span>{{CoreData.enquiriesNum}}</span>
+                                        <p>询盘个数</p>
+                                    </div>
+                                    <div class="CoreBoxBomPerBom">
+                                        <b>100个询盘=<span>{{CoreData.EnquiryPoints}}</span>分</b>
+                                        <p>（成交积分 / 询盘个数）</p>
+                                    </div>
+                                </div>
+                            </el-tooltip>
+                        </dd> 
+                        <dd class='Core02'>
+                            <div class="CoreBoxBomNum">
+                                 <span>{{CoreData.ClinchIntegral}}</span>
+                                 <p>成交积分</p>
+                            </div>
+                            <div class="CoreBoxBomPer">
+                                 <b>平均分:<span>{{CoreData.average}}</span></b>
+                                 <p>（成交积分 / 成交个数）</p>
+                            </div>
+                        </dd> 
+                        <dd class='Core03'>
+                            <div class="CoreBoxBomNum">
+                                 <span>{{CoreData.ClinchNum}}</span>
+                                 <p>成交个数</p>
+                            </div>
+                            <div class="CoreBoxBomPer">
+                                 <b>成交率:<span>{{CoreData.closing}}</span></b>
+                                 <p>（成交个数 / 询盘个数）</p>
+                            </div>
+                        </dd> 
+                    </dl>
+               </div>             
+               <div class="personYearChart flex-content">
+                    <div class="yearChartTab">
+                        <div class="yearTabItem" :class="item.isOn?'active':''" v-for="(item,index) in ChartTab" :key='index' @click="handleTab(item.tap)">
+                                <p class="yearTabTitle">{{item.name}}<span>{{item.unit}}</span></p>
+                                <div class="yearNum">{{item.numSeptotalNum}}</div>
+                                <div class="numCompare" v-if='isOnTab'>环比上年同期<span class="numsep" :class="item.totalNum-item.lasttotalNum>0?'':'numdec'">{{item.sequential}}</span>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="chartContainer">
+                        <div id="inquirybox"></div>
+                        <div class="showLine">
+                            <span class="line1">2021年</span>
+                            <span class="line2">2020年</span>
+                            <span class="line3">月平均值</span>
+                        </div>
+                    </div>
+               </div>
+          </div>
+          <div class="proAccount">
+                <template v-if="ChartEnquirie.length>0" v-for="(item,index) in ChartEnquirie">
+                    <score-days :enquirieChart="item" :contrastTag="contrastName"></score-days>
+                </template>
+                <template v-if="ChartAccount.length>0" v-for="item in ChartAccount">
+                    <account-chart 
+                    :accountArr="item" 
+                    ></account-chart>
+                </template>
+          </div>
+          <div class="enpromapBox">
+                <map-chart 
+                :ChartMapArr="EnquirieMap" 
+                :is-cn="false"
+                ></map-chart>
+                <div class="promapBoxFr">
+                    <div class="enpromapBoxItem" v-for="(item,index) in ChartMap" v-if="ChartMap.length>0">
+                        <tapmap-chart
+                        :worldMapArr="item"
+                        ></tapmap-chart>
+                    </div>
+                </div>
+          </div>
+      </div>
+      <el-dialog :title="focusProTitle" custom-class="transfer-dialog" :visible.sync="dialogFocusProVisible" width="900px">
+            <div class="contrastOption">
+                 <p v-for="(item,index) in contrastList" :key="index" :class="item.isDisplay?'active':''" @click="AddContrast(item.id)"><i></i><span>{{item.name}}</span></p>
+            </div>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="closePopup">取 消</el-button>
+                    <el-button type="primary" @click="saveContrast">确 定</el-button>
+                </span>
+            </template>
+      </el-dialog>
+  </div>
+</template>
+<script>
+import { Mix } from '@antv/g2plot';
+import {randomString,formatDate,numSeparate,rankingWithTotalItem} from "@/utils/index"
+import {MapInterval,TopTenColor} from "@/utils/MapColor"
+import { worldCountry } from "@/utils/worldCountry";
+import scoreDays from "../../components/productAnalysis/scoreDays";
+import accountChart from "../../components/productAnalysis/accountChart";
+import mapChart from "../../components/productAnalysis/mapChart";
+import tapmapChart from "../../components/productAnalysis/tapmapChart";
+import Areachart from "../../components/productAnalysis/Areachart";
+export default {
+  name: "enProAccount",
+  data() {
+    return {
+      isCate:false,//点击分类属性
+      xunmaxmonth:{},//最大询盘月份
+      wordroutMap:false,
+      isContrast:false,//判断是否有对比
+      minWidth:"",
+      ChartColor:['#044bff','#fe4c46','#fdcb66','#47cbfe'],
+      mapRatio:0.75,
+      minWidth:"",
+      ProCategoryList:[],
+      ProList:[],
+      hasfocus:'',//是否关注
+      routTag:{
+          csdata:[],
+          data:[],
+          productnameId:0,
+          productname:'',
+          typeid:'',
+          starttime:'',
+          endtime:'',
+          cstarttime:'',
+          cendtime:'',
+          dept_id:[]
+      },
+      AllProList:[],
+      allDept_id:[],//部门全选id
+      department:[],//部门数据
+      enquirieList:[],//获取询盘趋势*
+      currentTab:'enquirie',
+      MixData:[],
+      ChartTab:[],
+      isOnTab:false,
+      currentMix:[],
+      MixChart:null,      
+      dialogFocusProVisible:false,
+      focusProTitle:"",
+      contrastList:[],
+      contrastName:'overview',
+      contrastTab:[
+        {name:'总览',tagName:'overview',isOn:true,isDisplay:true},
+        {name:'产品对比',tagName:'productCont',isOn:false,isDisplay:true},
+        {name:'部门对比',tagName:'departCont',isOn:false,isDisplay:true},
+        {name:'时间对比',tagName:'timeCont',isOn:false,isDisplay:true},
+      ],
+      contrastProname:[],
+      contrastDeptname:[],
+      changeTime:[
+        {name:'近3月',isOn:false},
+        {name:'近半年',isOn:false},
+        {name:'今年',isOn:false},
+      ],
+      pickerMonthRangeOptions: {
+        shortcuts: [{
+          text: '今年至今',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date(new Date().getFullYear(), 0);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近六个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setMonth(start.getMonth() - 6);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
+      ChartEnquirie:[],
+      ChartAccount:[],
+      ChartMap:[],
+      EnquirieMap:[],
+      CoreData:{
+          enquiriesNum:0,
+          ClinchNum:0,
+          ClinchIntegral:0,
+          average:0,
+          closing:'',
+          EnquiryPoints:'',
+      },
+    };
+  },
+  components:{
+    scoreDays,
+    accountChart,
+    mapChart,
+    Areachart,
+    tapmapChart,
+  },
+  watch:{
+    minWidth(val) {
+      if (!this.timer) {
+        this.minWidth = val
+        this.timer = true
+        const $this = this
+        setTimeout(function() {
+          $this.timer = false
+        }, 400)
+      }
+    },
+  },
+  created() {
+    var $this = this;
+    $this.getNearMonth();
+    $this.getChinaproductlist();
+  },
+  mounted(){
+    const $this = this;
+    if($this.$refs.boxPane){  
+      $this.minWidth = $this.$refs.boxPane.offsetWidth; 
+    }
+    window.onresize = () => {
+      return (() => {
+        if($this.$refs.boxPane){
+          $this.minWidth = $this.$refs.boxPane.offsetWidth; 
+        }
+      })()
+    }
+  },
+  methods: {
+    //默认时间周期
+    getNearMonth(){
+      var $this=this;
+      var end = new Date();
+      var endYear = end.getFullYear();
+      var endMonth = end.getMonth() + 1;
+      endMonth = endMonth<10?'0'+endMonth:endMonth; 
+      var endDate = endYear+"-"+endMonth;
+      var changeTime=$this.changeTime;
+      changeTime.forEach(function(item,index){
+          if(item.name=='近3月'){
+            var start = new Date();
+            start.setMonth(start.getMonth() - 3);
+            var startYear = start.getFullYear();
+            var startMonth = start.getMonth() +1;
+            startMonth = startMonth<10?'0'+startMonth:startMonth;
+            var startDate = startYear+"-"+startMonth;
+            item.data=[startDate,endDate];
+          }
+          if(item.name=='近半年'){
+            var start = new Date();
+            start.setMonth(start.getMonth() - 6);
+            var startYear = start.getFullYear();
+            var startMonth = start.getMonth() +1;
+            startMonth = startMonth<10?'0'+startMonth:startMonth;
+            var startDate = startYear+"-"+startMonth;
+            item.data=[startDate,endDate];
+          }
+          if(item.name=='今年'){
+            var start = new Date();
+            start.setMonth(start.getMonth() - 6);
+            var startYear = start.getFullYear();
+            var startDate = startYear+"-01";
+            item.data=[startDate,endDate];
+          }
+      });
+      $this.changeTime=changeTime;
+      $this.getForRouting();
+    },
+    // 获取路由参数
+    getForRouting(){
+      var $this = this;
+      $this.routTag.typeid=$this.$route.query.typeid;
+      if($this.$route.query.productname){
+        $this.routTag.productname=$this.$route.query.productname;
+      }else{
+        $this.routTag.productname='';
+        $this.isCate=true;
+      }
+      $this.routTag.productnameId='';
+      $this.routTag.data=[$this.$route.query.starttime,$this.$route.query.endtime];
+      $this.getCategory();      
+    },
+    //获取搜索地区和产品分类数据
+    getCategory(){
+      var $this = this;
+      $this.$store.dispatch("api/getEnprovinceAction").then((res) => {
+          if (res) {
+            if (res.status) {
+               if(res.type&&res.type.length>0){
+                 res.type.forEach(function(item,index){
+                    item.isOn=false;
+                    if($this.routTag.typeid==item.id){
+                        item.isOn=true;
+                        if(!$this.$route.query.productname){
+                            $this.routTag.productname=item.name; 
+                        }
+                    }
+                 });
+                 $this.ProCategoryList=res.type;
+                 $this.getchinaproduct();
+               }
+            } else {
+              $this.$message({
+                showClose: true,
+                message: res.info,
+                type: "error",
+                duration: 6000
+              });
+            }
+          }
+      });
+    },  
+    //获取分类下的产品
+    getchinaproduct(){
+      var $this = this;
+      var searchData={};
+      searchData.id=$this.routTag.typeid;
+      $this.$store.dispatch("api/getEnproductAction",searchData).then((res) => {
+          if (res) {
+            if (res.status) {
+                if(res.data&&res.data.length>0){
+                    var objItem={
+                        name:"全部",
+                        id:0
+                    };
+                    res.data.unshift(objItem);
+                    res.data.forEach(function(item,index){
+                        item.isOn=false;
+                        if($this.$route.query.productname==''||$this.$route.query.productname==undefined){
+                            if(index==0){
+                                item.isOn=true;
+                                $this.routTag.productnameId=item.id; 
+                            } 
+                            $this.contrastTab.forEach(function(item,index){
+                                if(item.tagName=='productCont'){
+                                    item.isDisplay=false;
+                                }
+                            });
+                        }else{
+                            if($this.isCate){
+                                if(index==0){
+                                    item.isOn=true;
+                                    $this.routTag.productnameId=item.id;
+                                }
+                            }else{
+                                if($this.routTag.productname==item.name){
+                                    item.isOn=true;
+                                    $this.routTag.productnameId=item.id;
+                                }
+                            }
+                        }
+                    });
+                    $this.ProList=res.data;
+                    $this.isCate=false;
+                }
+                $this.getCnDepartList();
+            } else {
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: "error",
+                duration: 6000
+              });
+            }
+          }
+      });
+    },  
+    //获取所有产品列表
+    getChinaproductlist(){
+      var $this = this;
+      $this.$store.dispatch("api/getEnproductlistAction").then((res) => {
+          if (res) {
+            if (res.status) {
+                if(res.data&&res.data.length>0){
+                    var AllProList=[];
+                    res.data.forEach(function(item,index){
+                        item.isOn=false;
+                        AllProList.push(item);
+                    });
+                    $this.AllProList=AllProList;
+                }
+            } else {
+              $this.$message({
+                showClose: true,
+                message: res.info,
+                type: "error",
+                duration: 6000
+              });
+            }
+          }
+      });
+    },
+    //获取部门信息
+    getCnDepartList(){
+      var $this = this;
+      $this.$store.dispatch("api/getEnDepartAction").then((res) => {
+          if (res) {
+            if (res.status) {
+                if(res.data&&res.data.length>0){
+                    var objItem={
+                        name:"全部部门",
+                        id:0
+                    };
+                    var contrastDepartArr=res.data;
+                    var contrastDepart=[];
+                    contrastDepartArr.forEach(function(item,index){
+                        item.isOn=false;
+                        contrastDepart.push(item);
+                    });
+                    $this.contrastDepart=contrastDepart;
+
+                    res.data.unshift(objItem);
+                    var dept_id=[];
+                    res.data.forEach(function(item,index){
+                        item.isOn=false;
+                        if(index==0){
+                            item.isOn=true;
+                        }
+                        dept_id.push(item.id);
+                    });
+                    dept_id.shift();
+                    $this.department=res.data;
+                    $this.allDept_id=dept_id;
+                    $this.routTag.dept_id=dept_id;
+                }
+                $this.handleData();
+            } else {
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: "error",
+                duration: 6000
+              });
+            }
+          }
+      });
+    },
+    //清除核心数据
+    emptySearch(){
+      var $this=this;
+      $this.CoreData.enquiriesNum=0;
+      $this.CoreData.ClinchNum=0;
+      $this.CoreData.ClinchIntegral=0;
+      $this.CoreData.average=0;
+      $this.CoreData.closing='';
+      $this.CoreData.EnquiryPoints='';
+      $this.MixData=[];
+      $this.ChartTab=[];
+      $this.currentMix=[];
+      $this.enquirieList=[];
+      $this.ChartEnquirie=[];
+      $this.ChartAccount=[];
+      $this.ChartMap=[];
+      $this.EnquirieMap=[];
+      
+    },
+    //获取产品详情各种统计
+    getProFocount(){
+      var $this=this;
+      $this.emptySearch();
+      var searchData={};
+      if($this.routTag.dept_id&&$this.routTag.dept_id.length>0){
+          searchData.dept_id=$this.routTag.dept_id;
+      }
+      if($this.routTag.data&&$this.routTag.data.length>0){
+            searchData.starttime=$this.routTag.data[0];
+            searchData.endtime=$this.routTag.data[1];
+      }     
+      var pathUrl = "";
+      if($this.contrastName==="overview"){
+        if($this.routTag.productnameId!=0){
+          searchData.productname=$this.routTag.productname;
+        }
+        searchData.typeid=$this.routTag.typeid;
+        pathUrl = "api/getEnproductinfocountAction";
+      }else if($this.contrastName==="productCont"){
+        if($this.contrastProname&&$this.contrastProname.length>0){
+            var productname=[];
+            productname.push($this.routTag.productname);
+            $this.contrastProname.forEach(function(item,index){
+                productname.push(item);
+            });
+            if(productname.length>1){
+                $this.isContrast=true;
+            }
+            searchData.productname=productname;
+        }else{
+            searchData.productname=[$this.routTag.productname];
+        }
+
+        pathUrl = "api/getEnproductcompareAction";
+      }else if($this.contrastName==="departCont"){
+        if($this.routTag.productnameId!=0){
+          searchData.productname=$this.routTag.productname;
+        }
+        searchData.typeid=$this.routTag.typeid;
+        if($this.routTag.dept_id.length>1){
+            $this.isContrast=true;
+        }
+        pathUrl = "api/getEnproductdepartcompareAction";
+      }else if($this.contrastName==="timeCont"){        
+        if($this.routTag.productnameId!=0){
+          searchData.productname=$this.routTag.productname;
+        }
+        searchData.cstarttime=$this.routTag.cstarttime;
+        searchData.cendtime=$this.routTag.cendtime;
+        searchData.typeid=$this.routTag.typeid;
+        pathUrl = "api/getEnproducttimecompareAction";
+      }
+      if ($this.MixChart && !$this.MixChart.chart.destroyed) {
+          $this.MixChart.chart.destroy();
+      } 
+      $this.$store.dispatch(pathUrl,searchData).then((res) => {
+          if (res) {
+            if (res.status) {
+                if(res.hasfocus){
+                    $this.hasfocus=res.hasfocus;
+                }
+                if(res.xunmaxmonth&&res.xunmaxmonth.length>0){
+                    $this.xunmaxmonth=res.xunmaxmonth[0];
+                }
+                if($this.contrastName==="overview"){
+                    //顶部询盘趋势
+                    if(res.topxunnumber&&res.topxunnumber.length>0){
+                        res.topxunnumber.forEach(function(item,index){
+                            item.weekday=item.week;
+                            item.productname=$this.routTag.productname;
+                        });
+                        var topxunnumber=[res.topxunnumber]
+                        var tagName=[$this.routTag.productname]
+                        $this.enquirieList=$this.areaPlug(topxunnumber,tagName,'询盘趋势',$this.contrastName);                    
+                    }
+                    var ChartTab=[];
+                    var currentMix=[];
+                    var MixData={
+                        nowYear:[],
+                        lastYear:[],
+                    }
+                    //询盘个数
+                    if(res.xunmonthtong&&res.xunmonthtong.length>0){
+                        var totalNum=0;
+                        var lasttotalNum=0;
+                        var currentMixItem={
+                            currentTab:'enquirie',
+                            nowYear:[],
+                            lastYear:[],
+                        }               
+                        res.xunmonthtong.forEach(function(item,index){
+                            var nowYearObj={};
+                            var lastYearObj={};
+                            totalNum=totalNum+item.number;
+                            lasttotalNum=lasttotalNum+item.lastnumber;
+                            nowYearObj.time=item.date;
+                            nowYearObj.number=item.number;
+                            var lastdate=item.date.split('-');
+                            lastYearObj.time=(lastdate[0]-1)+'-'+lastdate[1];
+                            lastYearObj.number=item.lastnumber;
+                            if($this.currentTab=='enquirie'){
+                                MixData.nowYear.push(nowYearObj);
+                                MixData.lastYear.push(lastYearObj);
+                            }
+                            currentMixItem.nowYear.push(nowYearObj);
+                            currentMixItem.lastYear.push(lastYearObj);
+                        });
+                        $this.CoreData.enquiriesNum=totalNum;
+                        var ChartTabObj={};
+                        ChartTabObj.totalNum=totalNum.toFixed(2)*1;
+                        ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1;                    
+                        ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
+                        ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
+                        ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
+                        ChartTabObj.name='年度总询盘个数';
+                        ChartTabObj.unit='（单位：个）';
+                        ChartTabObj.tap='enquirie'; 
+                        ChartTabObj.isOn=true;
+                        ChartTab.push(ChartTabObj);
+                        currentMix.push(currentMixItem);
+                    }
+                    //询盘占比
+                    var departcount=[];
+                    if(res.departcount&&res.departcount.length>0){
+                        departcount=departcount.concat($this.piePlug(res.departcount,'询盘部门占比','enquirie','总询盘个数'));
+                    }
+                    //询盘地图
+                    var EnquirieMap=[];
+                    if(res.provincecountmap&&res.provincecountmap.length>0){
+                        EnquirieMap=EnquirieMap.concat($this.mapPlug(res.provincecountmap,'询盘个数','询盘地区'));
+                    }
+                    $this.EnquirieMap=EnquirieMap;
+                    if($this.routTag.productnameId==0){
+                        //成交积分
+                        if(res.monthscore&&res.monthscore.length>0){
+                            var totalNum=0;
+                            var lasttotalNum=0;
+                            var currentMixItem={
+                                currentTab:'clinchScore',
+                                nowYear:[],
+                                lastYear:[],
+                            }               
+                            res.monthscore.forEach(function(item,index){
+                                var nowYearObj={};
+                                var lastYearObj={};
+                                totalNum=totalNum+item.score;
+                                lasttotalNum=lasttotalNum+item.lastscore;
+                                nowYearObj.time=item.date;
+                                nowYearObj.number=item.score;
+
+                                var lastdate=item.date.split('-');
+                                lastYearObj.time=(lastdate[0]-1)+'-'+lastdate[1];
+                                lastYearObj.number=item.lastscore;
+                                currentMixItem.nowYear.push(nowYearObj);
+                                currentMixItem.lastYear.push(lastYearObj);
+                            });
+                            $this.CoreData.ClinchIntegral=totalNum;
+                            var ChartTabObj={};
+                            ChartTabObj.totalNum=totalNum.toFixed(2)*1;
+                            ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1;                    
+                            ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
+                            ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
+                            ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
+                            ChartTabObj.name='年度总成交积分';
+                            ChartTabObj.unit='（单位：分）';
+                            ChartTabObj.tap='clinchScore'; 
+                            ChartTabObj.isOn=false;
+                            ChartTab.push(ChartTabObj);
+                            currentMix.push(currentMixItem);
+                        }
+                        //年度100万成交个数
+                        if(res.monthanumber&&res.monthanumber.length>0){
+                            var totalNum=0;
+                            var lasttotalNum=0;
+                            var currentMixItem={
+                                currentTab:'clinchNum',
+                                nowYear:[],
+                                lastYear:[],
+                            }               
+                            res.monthanumber.forEach(function(item,index){
+                                var nowYearObj={};
+                                var lastYearObj={};
+                                totalNum=totalNum+item.anumber;
+                                lasttotalNum=lasttotalNum+item.lastanumber;
+                                nowYearObj.time=item.date;
+                                nowYearObj.number=item.anumber;
+
+                                var lastdate=item.date.split('-');
+                                lastYearObj.time=(lastdate[0]-1)+'-'+lastdate[1];
+                                lastYearObj.number=item.lastanumber;
+                                currentMixItem.nowYear.push(nowYearObj);
+                                currentMixItem.lastYear.push(lastYearObj);
+                            });
+                            var ChartTabObj={};
+                            ChartTabObj.totalNum=totalNum.toFixed(2)*1;
+                            ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1;                    
+                            ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
+                            ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
+                            ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
+                            ChartTabObj.name='年度100万成交个数';
+                            ChartTabObj.unit='（单位：个）';
+                            ChartTabObj.tap='clinchNum'; 
+                            ChartTabObj.isOn=false;
+                            ChartTab.push(ChartTabObj);
+                            currentMix.push(currentMixItem);
+                        }
+                        //平均成交率
+                        if(res.monthscorenumber&&res.monthscorenumber.length>0){
+                            var totalscoreNum=0;
+                            var totalNum=0;
+                            var lasttotalNum=0;
+                            var currentMixItem={
+                                currentTab:'closing',
+                                nowYear:[],
+                                lastYear:[],
+                            }               
+                            res.monthscorenumber.forEach(function(item,index){
+                                var nowYearObj={};
+                                var lastYearObj={};
+                                totalscoreNum=totalscoreNum+item.scorenumber;
+                                totalNum=totalNum+item.scorepercenter;
+                                lasttotalNum=lasttotalNum+item.lastscorepercenter;
+                                nowYearObj.time=item.date;
+                                nowYearObj.number=item.scorepercenter;
+
+                                var lastdate=item.date.split('-');
+                                lastYearObj.time=(lastdate[0]-1)+'-'+lastdate[1];
+                                lastYearObj.number=item.lastscorepercenter;
+                                currentMixItem.nowYear.push(nowYearObj);
+                                currentMixItem.lastYear.push(lastYearObj);
+                            });
+                            $this.CoreData.ClinchNum=totalscoreNum;
+                            var ChartTabObj={};
+                            ChartTabObj.totalNum=totalNum.toFixed(2)*1;
+                            ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1;                    
+                            ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
+                            ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
+                            ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
+                            ChartTabObj.name='年度平均成交率';
+                            ChartTabObj.unit='';
+                            ChartTabObj.tap='closing'; 
+                            ChartTabObj.isOn=false;
+                            ChartTab.push(ChartTabObj);
+                            currentMix.push(currentMixItem);
+                        }
+                        $this.CoreData.closing='0%';
+                        if($this.CoreData.enquiriesNum&&$this.CoreData.ClinchNum){
+                            $this.CoreData.closing=($this.CoreData.ClinchNum/$this.CoreData.enquiriesNum).toFixed(2)*1+'%';
+                        }
+                        $this.CoreData.average=0;
+                        if($this.CoreData.ClinchIntegral&&$this.CoreData.ClinchNum){
+                            $this.CoreData.average=($this.CoreData.ClinchIntegral/$this.CoreData.ClinchNum).toFixed(2)*1;
+                        }
+                        $this.CoreData.EnquiryPoints=0;
+                        if($this.CoreData.enquiriesNum&&$this.CoreData.ClinchIntegral){
+                            $this.CoreData.EnquiryPoints=(($this.CoreData.ClinchIntegral/$this.CoreData.enquiriesNum)*100).toFixed(2)*1;
+                        }
+                        //积分占比
+                        if(res.departscore&&res.departscore.length>0){
+                            departcount=departcount.concat($this.piePlug(res.departscore,'成交积分部门占比','score','总询盘积分'));
+                        }
+                        //成交个数地图
+                        var ChartMap=[];
+                        var ChartMapArr=[];
+                        if(res.provincescorenumbermap&&res.provincescorenumbermap.length>0){
+                            $this.wordroutMap=true;
+                            var ChartMapArr=[];
+                            if(res.provincescoretmap&&res.provincescoretmap.length>0){
+                                var productname=res.provincescorenumbermap[0].departname;
+                                var objItem01={};
+                                var objItem02={};
+                                objItem01.randomStr = randomString(4);
+                                objItem01.itemArr = res.provincescorenumbermap;
+                                objItem01.title = productname;
+                                objItem01.topTitle = "热门地区TOP10";
+                                objItem02.randomStr = randomString(4);
+                                objItem02.itemArr = res.provincescoretmap;
+                                objItem02.title = productname;
+                                objItem02.topTitle = "热门地区TOP10";
+                                ChartMapArr.push(objItem01);
+                                ChartMapArr.push(objItem02);
+                            }
+                            ChartMap.push(ChartMapArr);
+                        }
+                        $this.ChartMap=ChartMap;
+                        console.log($this.ChartMap,'$this.ChartMap');
+                    }
+                    //
+                    $this.MixData=MixData;
+                    $this.ChartTab=ChartTab;
+                    $this.currentMix=currentMix;
+                    // 组合图表
+                    $this.getYearInquiryChart();
+                    $this.ChartAccount=departcount;
+                }else{
+                    //顶部询盘趋势
+                    if(res.topxunnumber&&res.topxunnumber.length>0){
+                        $this.enquirieList=$this.areaPlug(res.topxunnumber,searchData.productname,'询盘趋势',$this.contrastName);                   
+                    }
+                    var ChartEnquirie=[];
+                    var departcountChart=[];
+                    if(res.xunmonthtong&&res.xunmonthtong.length>0){
+                        if($this.contrastName=='timeCont'){
+                            var backData = $this.dateCompare(res.xunmonthtong,'xunnumber');
+                        }else{
+                            var backData = res.xunmonthtong;
+                        }  
+                        ChartEnquirie=ChartEnquirie.concat($this.areaPlug(backData,searchData.productname,'询盘个数',$this.contrastName));  
+                        //积分占比                    
+                        var departCount=[];
+                        backData.forEach(function(item,index){
+                            var itemObj={
+                                departname:'',
+                                number:0,
+                            }
+                            item.forEach(function(items,indexs){
+                                if($this.contrastName=='productCont'||$this.contrastName=='timeCont'){
+                                    itemObj.departname=items.productname;
+                                }
+                                if($this.contrastName=='departCont'){
+                                    itemObj.departname=items.departname;
+                                }
+                                itemObj.number+=items.number
+                            });
+                            departCount.push(itemObj);
+                        });
+                        departcountChart=departcountChart.concat($this.piePlug(departCount,'询盘部门占比','enquirie','总询盘个数'));
+                    }
+
+                    //询盘地图
+                    var EnquirieMap=[];
+                    if(res.provincecountmap&&res.provincecountmap.length>0){
+                        var EnquirieMapArr=[];
+                        res.provincecountmap.forEach(function(item,index){
+                            if(item&&item.length>0){
+                                var productname='';
+                                if($this.contrastName=='timeCont'){
+                                    if(index==0){
+                                        productname=$this.routTag.data[0]+'-'+$this.routTag.data[1];
+                                    }
+                                    if(index==1){
+                                        productname=$this.routTag.cstarttime+'-'+$this.routTag.cendtime;
+                                    }
+                                }
+                                if($this.contrastName=='productCont'){
+                                    productname=item[0].productname;
+                                }
+                                if($this.contrastName=='departCont'){
+                                    productname=item[0].departname;
+                                }
+                                EnquirieMapArr=EnquirieMapArr.concat($this.mapPlug(item,'询盘个数',productname));
+                            }
+                        });
+                        EnquirieMap=EnquirieMap.concat(EnquirieMapArr);
+                    }
+                    $this.EnquirieMap=EnquirieMap;
+                    if($this.routTag.productnameId==0){
+                        //积分占比
+                        if(res.productmonthscore&&res.productmonthscore.length>0){
+                            if($this.contrastName=='timeCont'){
+                                var backData = $this.dateCompare(res.productmonthscore,'score');
+                            }else{
+                                var backData = res.productmonthscore;
+                            } 
+                            ChartEnquirie=ChartEnquirie.concat($this.areaPlug(backData,searchData.productname,'成交积分',$this.contrastName));
+                            var departCount=[];
+                            backData.forEach(function(item,index){
+                                var itemObj={
+                                    departname:'',
+                                    score:0,
+                                }
+                                item.forEach(function(items,indexs){
+                                    if($this.contrastName=='productCont'||$this.contrastName=='timeCont'){
+                                        itemObj.departname=items.productname;
+                                    }
+                                    if($this.contrastName=='departCont'){
+                                        itemObj.departname=items.departname;
+                                    }
+                                    itemObj.score+=items.score
+                                });
+                                departCount.push(itemObj);
+                            });                        
+                            departcountChart=departcountChart.concat($this.piePlug(departCount,'成交积分部门占比','score','总询盘积分'));
+                        }
+                        //成交个数地图
+                        var ChartMap=[];
+                        if(res.provincescorenumbermap&&res.provincescorenumbermap.length>0){
+                            $this.wordroutMap=true;
+                            res.provincescorenumbermap.forEach(function(item,index){
+                                if(item&&item.length>0){
+                                    var ChartMapArr=[];
+                                    if(res.provincescoretmap&&res.provincescoretmap.length>0){
+                                        res.provincescoretmap.forEach(function(items,indexs){
+                                            if(items&&items.length>0){
+                                                if(item[0].departname==items[0].departname){
+                                                    var productname='';
+                                                    if($this.contrastName=='timeCont'){
+                                                        if(index==0){
+                                                            productname=$this.routTag.data[0]+'-'+$this.routTag.data[1];
+                                                        }
+                                                        if(index==1){
+                                                            productname=$this.routTag.cstarttime+'-'+$this.routTag.cendtime;
+                                                        }
+                                                    }else{
+                                                    var productname=item[0].departname;
+                                                    }
+                                                    var objItem01={};
+                                                    var objItem02={};
+                                                    objItem01.randomStr = randomString(4);
+                                                    objItem01.itemArr = item;
+                                                    objItem01.title = productname+'成交地区';
+                                                    objItem01.topTitle = "热门地区TOP10";
+                                                    objItem02.randomStr = randomString(4);
+                                                    objItem02.itemArr = items;
+                                                    objItem02.title = productname+'成交地区';
+                                                    objItem02.topTitle = "热门地区TOP10";
+                                                    ChartMapArr.push(objItem01);
+                                                    ChartMapArr.push(objItem02);
+                                                }
+                                            }
+                                        });
+                                    }
+                                    ChartMap.push(ChartMapArr);
+                                }
+                            });
+                        }
+                        $this.ChartMap=ChartMap;
+                        console.log(ChartMap,'ChartMap');
+                    }
+                    $this.ChartEnquirie=ChartEnquirie;
+                    $this.ChartAccount=departcountChart;
+                }
+                $this.isContrast=false;
+            } else {
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: "error",
+                duration: 6000
+              });
+            }
+          }
+      });
+    },
+    // 时间对比数据封装函数
+    dateCompare(dataArr,key){
+      var $this = this;
+      // 默认时间数据条数多于对比时间数据条数
+      var tongData = dataArr;
+      var backData = [];
+      if(tongData[0].length>=tongData[1].length){           
+        var itemArr0 = [];
+        var itemArr1 = [];
+        for(var i=0;i<tongData[0].length;i++){ 
+          var itemChart0 = {};
+          var itemChart1 = {};
+          if(tongData[1][i]){
+            itemChart0.time = tongData[0][i].xunmonth+"&"+tongData[1][i].xunmonth;
+            itemChart0.productname = $this.routTag.data[0]+" ~ "+$this.routTag.data[1];
+            itemChart1.time = tongData[0][i].xunmonth+"&"+tongData[1][i].xunmonth;
+            itemChart1.productname = $this.routTag.cstarttime+" ~ "+$this.routTag.cendtime;
+            itemChart1.xunmonth=tongData[1][i].xunmonth;
+            if(key=='xunnumber'){
+                itemChart1.number=tongData[1][i].number;
+            }else{
+                itemChart1.score=tongData[1][i].score;
+            }
+            itemArr1.push(itemChart1);
+          }else{
+            itemChart0.time = tongData[0][i].xunmonth;
+            itemChart0.productname = $this.routTag.data[0]+" ~ "+$this.routTag.data[1];
+          }
+          itemChart0.xunmonth=tongData[0][i].xunmonth;
+          if(key=='xunnumber'){
+              itemChart0.number=tongData[0][i].number;
+          }else{
+              itemChart0.score=tongData[0][i].score;
+          }
+          itemArr0.push(itemChart0);
+        }
+        backData.push(itemArr0);
+        backData.push(itemArr1);
+      }else{        
+        var itemArr0 = [];
+        var itemArr1 = [];
+        for(var i=0;i<tongData[1].length;i++){   
+          var itemChart0 = {};
+          var itemChart1 = {};
+          if(tongData[0][i]){
+            itemChart0.time = tongData[0][i].xunmonth+"&"+tongData[1][i].xunmonth;
+            itemChart0.productname = $this.routTag.data[0]+" ~ "+$this.routTag.data[1];
+            itemChart0.xunmonth=tongData[0][i].xunmonth;
+            itemChart1.time = tongData[0][i].xunmonth+"&"+tongData[1][i].xunmonth;
+            itemChart1.productname = $this.routTag.cstarttime+" ~ "+$this.routTag.cendtime;
+            if(key=='xunnumber'){
+                itemChart0.number=tongData[0][i].number;
+            }else{
+                itemChart0.score=tongData[0][i].score;
+            }
+            itemArr0.push(itemChart0);
+          }else{
+            itemChart1.time = tongData[1][i].xunmonth;
+            itemChart1.productname = $this.routTag.cstarttime+" ~ "+$this.routTag.cendtime;
+          }
+          itemChart1.xunmonth=tongData[1][i].xunmonth;
+          if(key=='xunnumber'){
+              itemChart1.number=tongData[1][i].number;
+          }else{
+              itemChart1.score=tongData[1][i].score;
+          }
+          itemArr1.push(itemChart1);
+        }
+        backData.push(itemArr0);
+        backData.push(itemArr1);
+      }
+      return backData;
+    },
+    // 面积图插件
+    areaPlug(valData,valName,TagName,contrastName){
+        var $this = this;
+        var ChartColor=['#044bff','#fe4c46','#fdcb66','#47cbfe'];
+        var enquirieList=[];
+        var enquirieObj={
+            TagName:TagName,
+            chartName:valName,
+            randomStr:randomString(4),
+            ChartColor:[],
+            enquirieArr:[],
+        };
+        valData.forEach(function(item,index){
+            item.forEach(function(items,indexs){
+                if(contrastName=='timeCont'){
+                  items.name=items.productname;
+                }else{
+                    var itemDate = [];
+                    if(items.date){
+                        itemDate = items.date.split("-");
+                        items.time =itemDate[1] + "-" + itemDate[2] + "\n" + items.weekday.replace("星期", "周");
+                    }else{
+                        itemDate = items.xunmonth.split("-");
+                        items.time =itemDate[1] + "月";
+                    }
+                }
+                if(contrastName=='overview'||contrastName=='productCont'){
+                  items.name=items.productname;
+                }
+                if(contrastName=='departCont'){
+                  items.name=items.departname;
+                }
+                if(TagName!='成交积分'){
+                    items.number=items.number;
+                }else{
+                    items.number=items.score;
+                }
+                items.color=ChartColor[index];
+                enquirieObj.enquirieArr.push(items);
+            });
+        });
+        enquirieObj.ChartColor=ChartColor;
+        enquirieList.push(enquirieObj);
+        return enquirieList;
+    },
+    // 饼图插件
+    piePlug(valData,valName,valTag,valUnit){
+        var $this = this;
+        var departcount=[];
+        var totalNum=0;
+        var ChartColor=['#2368ff','#49cdff','#ffcb60','#fe443d'];
+        if(valTag=='enquirie'){
+            valData.forEach(function(item,index){
+                totalNum+=item.number;
+            });
+        }
+        if(valTag=='score'){
+            valData.forEach(function(item,index){
+                totalNum+=item.score;
+            });
+        }
+        var departcountObj={
+            currentName:valName,
+            currentTag:valTag,
+            totalNum:totalNum,
+            totalNumName:valUnit,
+            ChartColor:ChartColor,
+            itemArr:[],
+        };
+        var departscoreArr = rankingWithTotalItem(valData,'score');
+        departscoreArr.forEach(function(item,index){
+            if(valTag=='enquirie'){
+                if(totalNum!=0){
+                    if(item.number==0){
+                        item.percent='0%';
+                    }else{
+                        item.percent=(item.number/totalNum*100).toFixed(2)+'%';
+                    }
+                }else{
+                    item.percent='0%';
+                }
+            }            
+            if(valTag=='score'){
+                if(totalNum!=0){
+                    if(item.score==0){
+                        item.percent='0%';
+                    }else{
+                        item.percent=(item.score/totalNum*100).toFixed(2)+'%';
+                    }
+                }else{
+                    item.percent='0%';
+                }
+                item.number=item.score;
+            }
+            item.name=item.departname;
+            item.color=ChartColor[index];
+            departcountObj.itemArr.push(item);
+        });
+        departcount.push(departcountObj);
+        return departcount;
+    },
+    // 地图插件
+    mapPlug(valData,valName,valTag){
+        var $this = this;
+        var ChartMap=[];
+        var itemMapData = {};
+        itemMapData.mapData = worldCountry(valData,"country","number");
+        itemMapData.colorData = MapInterval(itemMapData.mapData[0].value);
+            //询盘趋势
+            var mapWidth = parseInt(($this.minWidth-40)/2*0.7)-60;
+            var mapHeight = parseInt(mapWidth*$this.mapRatio)+30;
+            itemMapData.mapWidth = mapWidth;
+            itemMapData.mapHeight = mapHeight;
+        itemMapData.randomStr = randomString(4);
+        itemMapData.alias = valName;
+        itemMapData.title = valTag;
+        itemMapData.topTitle = "热门地区TOP10";
+        itemMapData.topTenData = [];
+        itemMapData.mapData.forEach(function(item,index){
+            if(index<10){
+                itemMapData.topTenData.push(item);
+            }
+        });
+        itemMapData.topTenColor = TopTenColor(itemMapData.topTenData,itemMapData.colorData);
+        ChartMap.push(itemMapData);
+        return ChartMap;
+    },
+    // 组合图表
+    getYearInquiryChart(){
+        var $this = this;
+        if ($this.MixChart && !$this.MixChart.chart.destroyed) {
+            $this.MixChart.chart.destroy();
+        }
+        var nowyear = $this.MixData.nowYear;
+        var lastyear = $this.MixData.lastYear;
+        //平均值
+        var aliasTime='';
+        var lastaliasTime='';
+        if(nowyear&&nowyear.length>0){
+            var tolNum=0;
+            nowyear.forEach(function(item,index){
+                tolNum=tolNum+item.number;
+            });
+            var avg=(tolNum/nowyear.length).toFixed(2)*1;
+        }
+        //别名设置
+        var aliasName='';
+        var annotations=false;
+        if($this.currentTab=='enquirie'){
+            aliasName='询盘个数';
+            annotations= [
+                {
+                    type: "line",
+                    start: ["min",avg],
+                    end: ["max",avg],
+                    top: true,
+                    offsetY: 0,
+                    offsetX: 0,
+                    style: {
+                        stroke: "#5fce45",
+                        lineDash: [8, 4],
+                        lineWidth:1,
+                    },
+                },
+                // 平均值
+                {
+                    type: "html",
+                    position: ["max", avg],
+                    top: true,
+                    html:"<span class='chart-font target'><span class='txt-font'>" + avg + "</span><i></i></span>",
+                    alignX: "left",
+                    alignY: "bottom",
+                },
+            ]
+        }
+        if($this.currentTab=='clinchScore'){
+            aliasName='成交积分';
+        }
+        if($this.currentTab=='clinchNum'){
+            aliasName='100万成交个数';
+        }
+        if($this.currentTab=='money'){
+            aliasName='月奖金';
+        }
+        //计算y轴显示的最大数值
+        var maxnum = 0;
+        for(var i=0;i<nowyear.length;i++){
+            if(nowyear[i].number > maxnum){
+                maxnum = nowyear[i].number;
+            }
+        }
+        for(var i=0;i<lastyear.length;i++){
+            if(lastyear[i].number > maxnum){
+                maxnum = lastyear[i].number;
+            }
+        }
+        const MixChart = new Mix('inquirybox', {
+        tooltip: { 
+            shared: true,
+            title:aliasName,
+            customItems: (originalItems) => {
+                originalItems.forEach(function(item){
+                    item.name = item.data.time;
+                });
+                return originalItems;
+            },
+        },      
+        syncViewPadding: true,
+        plots: [
+            {
+                type: 'column',
+                options: {
+                    data: nowyear,
+                    xField: 'time',
+                    yField: 'number',
+                    appendPadding:[15,0,0,0],
+                    minColumnWidth: 22,
+                    maxColumnWidth: 22,
+                    yAxis: {
+                        grid: {
+                            line: {
+                                style: {
+                                    stroke: '#f2f2f2',
+                                },
+                            
+                            },
+                        },
+                        tickCount: 5,
+                        max:maxnum,
+                        label:{
+                            style:{
+                                fontSize: 12,
+                                fill: "#b3b3b3"
+                            }
+                        }
+                    },
+                    xAxis: {
+                        tickCount:15,
+                        label: {
+                            // 数值格式化为千分位
+                            formatter: (v) => {
+                                var item = "";
+                                if(v.indexOf("&")!=-1){
+                                    item = v.split("&")[0]+'\n'+v.split("&")[1];
+                                }else{
+                                    if(v.indexOf(" ")!=-1){
+                                        var week = "周"+v.split(" ")[1].substr(2);
+                                        var date = v.split(" ")[0];
+                                        item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
+                                    }else{
+                                        item = v.split("-")[1]+"月";
+                                    }
+                                }
+                                return item
+                            },
+                            style:{
+                                lineHeight:18
+                            }
+                        },
+                    },
+                    label:false,
+                    annotations:annotations,
+                    columncolor:'#9bbaff',
+                },
+            },
+            {
+                type: 'area', 
+                options: {
+                    data: lastyear,
+                    xField: 'time',
+                    yField: 'number',
+                    areaStyle: () => {
+                        return {
+                            fill: 'l(270) 0:#ffffff 0.5:#efd587 1:#f1cb56',
+                        };
+                    },
+                    color: "#f3be1c",
+                    line:{
+                        color: "#f3be1c",
+                        size:2
+                    },
+                    label:false,
+                    yAxis: {
+                        grid: {
+                            line: {
+                                style: {
+                                    stroke: '#f2f2f2',
+                                },
+                            
+                            },
+                        },
+                        tickCount: 5,
+                        max: maxnum,
+                        label:{
+                            style:{
+                                fontSize: 12,
+                                fill: "#b3b3b3",
+                                fillOpacity: 1
+                            }
+                        }
+                    },
+                    xAxis:false,
+                }
+            }
+        ],
+        });
+        $this.MixChart=MixChart;
+        MixChart.render();
+    },
+    // 点击产品分类获取产品
+    handleCategory(valData){
+      var $this = this;
+      if($this.routTag.typeid!=valData){
+        $this.routTag.typeid=valData;
+        $this.routTag.productnameId=''; 
+        $this.isCate=true;
+        $this.ProCategoryList.forEach(function(item,index){
+            item.isOn=false;
+            if(item.id==valData){
+                item.isOn=true;
+                $this.routTag.productname=item.name;
+            }
+        });
+        $this.getchinaproduct();          
+      }
+    },
+    // 点击产品获取详情
+    handlePro(valData,valType){
+        var $this = this;
+        if($this.routTag.productnameId!=valData){
+            if(valData==0){
+                $this.contrastTab.forEach(function(item,index){
+                    if(item.tagName=='productCont'){
+                        item.isDisplay=false;
+                    }
+                });
+                $this.ProList.forEach(function(item,index){
+                    item.isOn=false;
+                    if(item.id==valData){
+                        item.isOn=true;
+                        $this.routTag.productnameId=item.id;
+                    }
+                });
+                $this.ProCategoryList.forEach(function(item,index){
+                    if(item.isOn){
+                        $this.routTag.productname=item.name;
+                    }
+                });
+            }else{
+                $this.contrastTab.forEach(function(item,index){
+                    item.isDisplay=true;
+                });
+                $this.ProList.forEach(function(item,index){
+                    item.isOn=false;
+                    if(item.id==valData){
+                        item.isOn=true;
+                        $this.routTag.productname=item.name;
+                        $this.routTag.productnameId=item.id;
+                    }
+                });
+                $this.wordroutMap=false;
+            }
+            $this.getProFocount();
+        }
+    },
+    // 点击部门获取部门ID
+    handleDepart(valData){
+        var $this=this;
+        $this.routTag.dept_id=[];
+        var dept_id=[];
+        var department=$this.department;
+        department.forEach(function(item,index){
+            item.isOn=false;
+            if(valData==item.id){
+                item.isOn=true;
+            }
+            if(valData!=0&&valData==item.id){
+                dept_id.push(item.id);
+            }
+        });
+        $this.department=department;
+        if(valData==0){
+            $this.routTag.dept_id=$this.allDept_id;
+        }
+        if(valData!=0){
+            $this.routTag.dept_id=dept_id;
+        }
+        $this.getProFocount();
+    },
+    //点击时间选择
+    handlerTime(varData){
+      var $this=this;
+      var changeTime=$this.changeTime;
+      if(varData=='今年'){
+          $this.isOnTab=true;
+      }else{
+          $this.isOnTab=false;
+      }
+      changeTime.forEach(function(item,index){
+        item.isOn=false;
+        if(item.name==varData){
+          $this.routTag.data=item.data;
+          item.isOn=true;
+        }
+      });
+      $this.getProFocount();
+    },
+    //点击时间选择
+    handleData(){
+      var $this=this;
+      var changeTime=$this.changeTime;
+      changeTime.forEach(function(item,index){
+        item.isOn=false;
+        var dataOne=$this.routTag.data.toString();
+        var dataTwo=item.data.toString();
+        if(dataOne==dataTwo){
+          item.isOn=true;
+          if(item.name=='今年'){
+              $this.isOnTab=true;
+          }else{
+              $this.isOnTab=false;
+          }
+        }
+      });
+      $this.getProFocount();
+    },
+    //点击对比时间
+    handleContData(){
+      var $this=this;
+      if($this.routTag.csdata&&$this.routTag.csdata.length>0){
+          $this.routTag.cstarttime=$this.routTag.csdata[0];
+          $this.routTag.cendtime=$this.routTag.csdata[1];
+          $this.getProFocount();
+      }
+    },
+    // 点击切换
+    handleTab(valData){
+        var $this=this;
+        var ChartTab=$this.ChartTab;
+        $this.MixData=[];
+        if(ChartTab&&ChartTab.length>0){
+            ChartTab.forEach(function(item,index){
+                item.isOn=false;
+                if(item.tap==valData){
+                    item.isOn=true;
+                }
+            });
+        }
+        $this.ChartTab=ChartTab;
+        $this.currentTab=valData;
+        var MixData={
+            nowYear:[],
+            lastYear:[],
+        }
+        if($this.currentMix&&$this.currentMix.length>0){
+            $this.currentMix.forEach(function(item,index){
+                if(item.currentTab==valData){
+                    MixData.nowYear=item.nowYear;
+                    MixData.lastYear=item.lastYear;
+                }
+            });
+        }
+        $this.MixData=MixData;
+        $this.getYearInquiryChart();
+    },
+    // 点击切换标签
+    handlecontrastTab(valData){
+      var $this=this;
+      var contrastTab=$this.contrastTab;
+      contrastTab.forEach(function(item,index){
+          item.isOn=false;
+          if(valData==item.tagName){
+              item.isOn=true;
+              $this.contrastName=item.tagName;
+          }
+      });
+      $this.contrastTab=contrastTab;
+      $this.department.forEach(function(item,index){
+        item.isOn=false;
+        if(index==0){
+            item.isOn=true;
+        }
+      });
+      $this.routTag.dept_id=$this.allDept_id;
+      $this.contrastList=[]; 
+      $this.contrastProname=[];
+      $this.routTag.cstarttime='';
+      $this.routTag.cendtime='';
+      if(valData=='overview'){
+          $this.getProFocount();
+      }
+      if(valData=='productCont'){
+        var contrastList=$this.AllProList;
+        contrastList.forEach(function(item,index){
+            item.isDisplay = false;
+            if($this.routTag.productname==item.name){
+                item.isDisplay = true;
+            }
+        });
+        $this.contrastList=contrastList;
+      }
+      if(valData=='departCont'){
+        var contrastList=[];
+        $this.department.forEach(function(item,index){
+            var itemObj={};
+            if(index!=0){
+                itemObj.isDisplay = false;
+                itemObj.id = item.id;
+                itemObj.name = item.name;
+                contrastList.push(itemObj)
+            }
+        });
+        $this.contrastList=contrastList;
+      }
+    },
+    // 弹出添加对比产品
+    handleAddcontrast(valData){
+        var $this=this;
+        $this.dialogFocusProVisible=true;
+        if(valData=='productCont'){
+            $this.focusProTitle='产品对比';
+        }
+        if(valData=='departCont'){
+            $this.focusProTitle='部门对比';
+        }
+    },
+    // 点击添加对比产品
+    AddContrast(valData){
+        var $this=this;
+        var contrastList=$this.contrastList;
+        var contrastProName=[];
+        var dept_id=[];
+        contrastList.forEach(function(item,index){
+            if(item.id == valData){
+                item.isDisplay = !item.isDisplay;
+                if($this.contrastName=='productCont'){
+                    if($this.routTag.productname==item.name){
+                        item.isDisplay = true;
+                    }
+                }
+            }
+            if(item.isDisplay){
+                if($this.contrastName=='productCont'){
+                    if($this.routTag.productname!=item.name){
+                      contrastProName.push(item.name);
+                    }
+                }
+                if($this.contrastName=='departCont'){
+                    contrastProName.push(item.name);
+                    dept_id.push(item.id);
+                }
+            }
+        });
+        $this.contrastList=contrastList;
+        $this.contrastProname=contrastProName;
+        if($this.contrastName=='departCont'){
+            $this.routTag.dept_id=dept_id;
+        }
+    },
+    //点击关闭弹出层
+    closePopup(){
+        var $this=this;
+        $this.dialogFocusProVisible=false;
+        $this.focusProTitle='';
+    },
+    // 点击确定添加对比产品
+    saveContrast(){
+        var $this=this;
+        $this.closePopup();
+        $this.getProFocount();
+    },
+    // 添加关注单个产品（产品分析）
+    getAddfocuspro(valData){
+      var $this = this;
+      var searchData={};
+      searchData.pname=valData;
+      $this.$store.dispatch("api/getEnAddfocusproductoneAction",searchData).then((res) => {
+          if (res) {
+            if (res.status) {
+                  $this.$message({
+                      showClose: true,
+                      message: res.info,
+                      type: 'success'
+                  });
+                  $this.getProFocount();
+            } else {
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: "error",
+                duration: 6000
+              });
+            }
+          }
+      });
+    },
+    // 取消关注单个产品（产品分析）
+    getCancelfocuspro(valData){
+      var $this = this;
+      var searchData={};
+      searchData.pname=valData;
+      $this.$store.dispatch("api/getEnfocusproductcanceAction",searchData).then((res) => {
+          if (res) {
+            if (res.status) {
+                  $this.$message({
+                      showClose: true,
+                      message: res.info,
+                      type: 'success'
+                  });
+                  $this.getProFocount();
+            } else {
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: "error",
+                duration: 6000
+              });
+            }
+          }
+      });
+    },
+  }
+}
+</script>
+
+
+

@@ -118,6 +118,18 @@ function setRoutes(routers){
         meta: {id:'cnPersonContrast-126',title: '组员对比', icon: null, keepAlive:false},
       },
       {
+        path: "/stat/cn/productAnalysis/ProAccount",
+        name:'cnProAccount',
+        component: () => import("@/views/stat/cn/productAnalysis/ProAccount.vue"),
+        meta: {id:'cnProAccount-131',title: '产品详情统计', icon: null, keepAlive:false},
+      },
+      {
+        path: "/stat/cn/productAnalysis/ProStatistic",
+        name:'personproductinfo',
+        component: () => import("@/views/stat/cn/productAnalysis/ProStatistic.vue"),
+        meta: {id:'personproductinfo-131',title: '个人成绩统计', icon: null, keepAlive:false},
+      },
+      {
         path: "/stat/en/memberAnalysis/singlePerson",
         name:'enSinglePerson',
         component: () => import("@/views/stat/en/memberAnalysis/singlePerson.vue"),
@@ -128,6 +140,12 @@ function setRoutes(routers){
         name:'enPersonContrast',
         component: () => import("@/views/stat/en/memberAnalysis/comparePerson.vue"),
         meta: {id:'enPersonContrast-131',title: '组员对比', icon: null, keepAlive:false},
+      },
+      {
+        path: "/stat/en/productAnalysis/ProAccount",
+        name:'enProAccount',
+        component: () => import("@/views/stat/en/productAnalysis/ProAccount.vue"),
+        meta: {id:'enProAccount-131',title: '产品详情统计', icon: null, keepAlive:false},
       },
       {
         path: "/Article/info",
