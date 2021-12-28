@@ -1,8 +1,7 @@
 <template>
   <div class="hxpage">
-    <div class="module-top">
       <div class="title-view">
-        <div class="title">年度总成交{{language=='英文'&&type==1?'个数':'积分'}}</div>
+        <div class="title">成交{{language=='英文'&&type==1?'个数':'积分'}}</div>
         <div class="unit">{{language=='英文'&&type==1?'（单位：个）':'（单位：分）'}}</div>
         <!-- <div class="more">更多分析 ></div> -->
         <div class="btn-group" v-if="language=='英文'">
@@ -10,28 +9,23 @@
           <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">个数</div>
         </div>
       </div>
-      <div class="contrast-view">
-        <div class="redtext">{{totalXpanYears}}</div>
-        <div class="redright">
-          <div class="conname">环比上年同期</div>
-          <div class="num up" v-if="isUp"><i class="svg-i"><svg-icon icon-class="data-up" /></i>{{isUpNum}}</div>
-          <div class="num down" v-else><i class="svg-i"><svg-icon icon-class="data-down" /></i>{{isUpNum}}</div>
+      <div class="mix_body">
+        <div class="contrast-view">
+          <div class="redtext">{{totalXpanYears}}</div>
+          <div class="redright">
+            <div class="conname">环比上年同期</div>
+            <div class="num up" v-if="isUp"><i class="svg-i"><svg-icon icon-class="data-up" /></i>{{isUpNum}}</div>
+            <div class="num down" v-else><i class="svg-i"><svg-icon icon-class="data-down" /></i>{{isUpNum}}</div>
+          </div>
         </div>
-      </div>
-      <div class="chart-top" id="ScoreYearsChartTop"></div>     
-    </div>
-    <div class="module-bottom">
-      <div class="title-view">
-        <div class="title">各部门年度总成交占比{{type == 0?'（积分+占比）':'（个数+占比）'}}</div>
-      </div>
-      <div class="chart-bottom" id="ScoreYearsChartBot"></div>
-    </div>
-
+        <div class="chart-top" id="ScoreYearsChartTop"></div>
+      </div>   
   </div>
 </template>
 
 <script>
 import { Area,Pie} from '@antv/g2plot';
+import * as echarts from 'echarts';
 import {parseTime} from "@/utils";
 export default {
     name:'demo',
@@ -41,6 +35,7 @@ export default {
         isUp:true,
         isUpNum:0,
         totalXpanYears:0,
+        myChart:null,
       }
     },
     props:{
@@ -49,12 +44,6 @@ export default {
         default:"中文"
       },
       yearscoretong:{
-        type:Array,
-        default:function(){
-          return []
-        }
-      },
-      yeardeaprtscore:{
         type:Array,
         default:function(){
           return []
@@ -83,7 +72,6 @@ export default {
       type:function(newval,oldval){
         this.costAverageChart();
         this.setIsUp();
-        this.setChartBottom();
       },
       yearscoretong:{
         handler(newval,oldval){
@@ -92,13 +80,10 @@ export default {
         },
         deep:true
       },
-      yeardeaprtscore:{
-        handler(newval,oldval){
-          this.setChartBottom();
-        },
-        deep:true
-      }
-
+    },
+    mounted(){
+      var $this = this;
+      window.addEventListener('resize',$this.echartsSize);
     },
     methods:{
        changeType(val){
@@ -106,6 +91,98 @@ export default {
       },
       //chart top
       costAverageChart(){
+        var $this = this;
+        let chartTopData = [];
+        if(this.type == 0){
+           chartTopData = JSON.parse(JSON.stringify(this.yearscoretong));
+        }else{
+           chartTopData = JSON.parse(JSON.stringify(this.yearscorenumbertong));
+        }
+        var chartDom = document.getElementById('ScoreYearsChartTop');
+        var myChart = echarts.init(chartDom);
+        var option;
+        var newlist = [];
+        var $this = this;
+        for(var i=6; i< chartTopData.length;i++){
+            var obj={};
+            obj.date = chartTopData[i].date.slice(-2) + '月';
+            obj.score = chartTopData[i].score;
+            newlist.push(obj);
+        }
+        option = {
+            tooltip: {
+                trigger: "axis",
+                axisPointer: {
+                    type: "line", 
+                },
+            },
+            grid: {
+                left: '-15%',
+                right: '0%',
+                bottom: '6%',
+                top:'8%',
+                containLabel: true
+            },
+            xAxis: {
+                type: "category",
+                name: "日期",
+                axisLine: {
+                    show: false
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {
+                    color: "#999",
+                    fontSize: "12",
+                },
+                nameTextStyle:{
+                    color: "transparent"
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: $this.type == 0 ? "积分" : "个数",
+                show: false
+            },
+            dataset:{
+                source: newlist
+            },
+            series: [
+                {
+                    name: $this.type == 0 ? "积分" : "个数",
+                    type: 'line',
+                    lineStyle: {
+                        normal: {
+                            width: 1,
+                            color: "#518dff", // 线条颜色
+                        },
+                    },
+                    areaStyle: {
+                        color:{
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: "#2678ff"
+                            }, {
+                                offset: 0.5, color: "#1c46a1"
+                            }, {
+                                offset: 1, color: "#2155b9"
+                            }]
+                        },
+                    },
+                    symbolSize: 7
+                },
+            ],
+        };
+        option && myChart.setOption(option);
+        $this.myChart = myChart;
+      },
+
+      costAverageChart2(){
         var $this = this;
         let chartTopData = [];
         if(this.type == 0){
@@ -240,93 +317,17 @@ export default {
         var thisDate = new Date(year,month,0); //当天数为0 js自动处理为上一月的最后一天
         return thisDate.getDate();
       },
-      setChartBottom(){
-          var $this = this;
-          let chartBotData = [];
-          if(this.type == 0){
-            chartBotData = JSON.parse(JSON.stringify(this.yeardeaprtscore));
-          }else{
-            chartBotData = JSON.parse(JSON.stringify(this.yearscorenumbercount));
-          }
-          if($this.chartBot&&!$this.chartBot.chart.destroyed){
-              $this.chartBot.destroy();
-            
-          } 
-          const chartBot = new Pie('ScoreYearsChartBot', {
-            appendPadding: 10,
-            data:chartBotData,
-            angleField: 'score',
-            colorField: 'departname',
-            radius: 1,
-            innerRadius: 0.6,
-            color:['#1760ff','#3fcaff','#ffc857','#fe3a33','#8ae45b'],
-            label: {
-              type: 'inner',
-              autoHide:true,
-              autoRotate:false,
-              content: (data) => {
-                return `${(data.percent * 100).toFixed(0)}%`
-              },
-              style: {
-                fontSize: 12,
-                
-              },
-            },
-            meta: {
-              score: {
-                alias: $this.type == 0?'积分':'个数',
-              },
-            },
-            pieStyle:{
-              cursor: 'pointer'
-            },
-            tooltip: {
-              fields: ['score'],
-              showTitle:true,
-              title:'departname'
-            },
-            legend: {
-              position:'bottom',
-              maxRow:2,
-              flipPage:false,
-              marker:{
-                symbol:'square'
-              },
-              itemName:{
-                style:{
-                  fontSize: 12,
-                  fill: '#a6a6a6',
-                }
-              }
-            },
-            state: {
-              active: {
-                style: {
-                  lineWidth: 1,
-                  stroke:'#fff'
-                },
-              },
-            },
-            statistic: null,
-          });
-          chartBot.on('element:click', (args) => {
-            let baseDepart = args.data.data.id;
-            let contrastDepart = '';
-            let startTime = parseTime(new Date(),'{y}') + '/01';
-            let endTime = parseTime(new Date(),'{y}') + '/12' 
-            if($this.language == '中文'){
-              $this.$router.push({path:'/stat/cn/departAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-            }else{
-              if(this.type == 0){
-                $this.$router.push({path:'/stat/en/departAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-              }else{
-                $this.$router.push({path:'/stat/en/departAnalysis',query:{type:8,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-              }
-            }
-          });
-          $this.chartBot = chartBot;
-          chartBot.render();
-      },
+      echartsSize(){
+        if(this.myChart){
+          this.myChart.resize();
+        }
+      }
+    },
+    destroyed(){
+      window.removeEventListener('resize',this.echartsSize);
+      if(this.myChart){
+        this.myChart.dispose();
+      }
     }
 }
 </script>

@@ -1,11 +1,11 @@
 <template>
   <div class="hxpage">
-    <div class="module-top">
-      <div class="title-view">
-        <div class="title">年度总成交100万数量</div>
-        <div class="unit">（单位：个）</div>
-        <!-- <div class="more">更多分析 ></div> -->
-      </div>
+    <div class="title-view">
+      <div class="title">100万成交数量</div>
+      <div class="unit">（单位：个）</div>
+      <!-- <div class="more">更多分析 ></div> -->
+    </div>
+    <div class="mix_body">
       <div class="contrast-view">
         <div class="redtext">{{totalXpanYears}}</div>
         <div class="redright">
@@ -14,20 +14,12 @@
           <div class="num down" v-else><i class="svg-i"><svg-icon icon-class="data-down" /></i>{{isUpNum}}</div>
         </div>
       </div>
-      <div class="chart-top" id="DealYearsChartTop"></div>     
-    </div>
-    <div class="module-bottom">
-      <div class="title-view">
-        <div class="title">各部门年度总成交100万数量</div>
-      </div>
-      <div class="chart-bottom" id="DealYearsChartBot"></div>
-    </div>
-
+      <div class="chart-top" id="DealYearsChartTop"></div>
+    </div>   
   </div>
 </template>
 
 <script>
-import { Column,P, G2} from '@antv/g2plot';
 import * as echarts from 'echarts';
 import {parseTime} from "@/utils";
 
@@ -52,12 +44,6 @@ export default {
           return []
         }
       },
-      yeardeaprtscore:{
-        type:Array,
-        default:function(){
-          return []
-        }
-      },
       departList:{
         type:Array,
         default:function(){
@@ -73,12 +59,6 @@ export default {
         },
         deep:true
       },
-      yeardeaprtscore:{
-        handler(val,oldval){
-          this.setChartBottom(val)
-        },
-        deep:true
-      }
     },
     computed:{
       totalXpanYears(){
@@ -95,6 +75,91 @@ export default {
     methods:{
       //chart top
       costAverageChart(val){
+        var $this = this;
+        let chartTopData = JSON.parse(JSON.stringify(val));
+        var chartDom = document.getElementById('DealYearsChartTop');
+        var myChart = echarts.init(chartDom);
+        var option;
+        var newlist = [];
+        var $this = this;
+        for(var i=6; i< chartTopData.length;i++){
+            var obj={};
+            obj.date = chartTopData[i].date.slice(-2) + '月';
+            obj.a_number = chartTopData[i].a_number;
+            newlist.push(obj);
+        }
+        option = {
+            tooltip: {
+                trigger: "axis",
+                axisPointer: {
+                    type: "line", 
+                },
+            },
+            grid: {
+                left: '-12%',
+                right: '0%',
+                bottom: '6%',
+                top:'8%',
+                containLabel: true
+            },
+            xAxis: {
+                type: "category",
+                name: "日期",
+                axisLine: {
+                    show: false
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {
+                    color: "#999",
+                    fontSize: "12",
+                },
+                nameTextStyle:{
+                    color: "transparent"
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: "数量",
+                show: false
+            },
+            dataset:{
+                source: newlist
+            },
+            series: [
+                {
+                    name: "数量",
+                    type: "line",
+                    lineStyle: {
+                        normal: {
+                            width: 1,
+                            color: "transparent", // 线条颜色
+                        },
+                    },
+                    areaStyle: {
+                        color:{
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: "#fdce5f"
+                            },{
+                                offset: 1, color: "#ff9621"
+                            }]
+                        },
+                    },
+                    showSymbol: false
+                },
+            ],
+        };
+        option && myChart.setOption(option);
+        $this.myChart = myChart;
+      },
+      // 原内容
+      costAverageChart2(val){
         
         var $this = this;
           let chartTopData = JSON.parse(JSON.stringify(val));
@@ -194,142 +259,6 @@ export default {
           this.isUp = false;
           this.isUpNum = oldXpanYears - newXpanYears
         }
-      },
-      setChartBottom(val){
-        var $this = this;
-        let chartBotData = JSON.parse(JSON.stringify(val));
-        chartBotData.forEach(item => {
-          item.departname = item.departname.slice(-2);
-        });
-        let xAxisData = [];
-        let seriesData = [];
-        for(let i = 0;i<chartBotData.length;i++){
-          xAxisData.push(chartBotData[i].departname);
-          seriesData.push(chartBotData[i].a_number==0?'':chartBotData[i].a_number);
-        }
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('DealYearsChartBot'));
-        
-        // 指定图表的配置项和数据
-        var option = {
-          xAxis: {
-            type: 'category',
-            data: xAxisData,
-            axisLine:{
-              show:false,
-            },
-            axisTick:{
-              show:false,
-            },
-            axisLabel:{
-              color:'#333',
-            }
-          },
-          yAxis: {
-            type: 'value',
-            axisLine:{
-              show:false,
-            },
-            axisTick:{
-              show:false,
-            },
-            axisLabel:{
-              color:'#333',
-            },
-            grid: {
-              line: {
-                style: {
-                  stroke: "#ebebeb",
-                  lineWidth: 1,
-                  lineDash: [3, 2],
-                  strokeOpacity: 0.3,
-                  shadowColor: null,
-                  shadowBlur: 0,
-                  shadowOffsetX: 0,
-                  shadowOffsetY: 0,
-                },
-              },
-            },
-            splitLine:{
-              lineStyle:{
-                type:'dotted',
-                color:'#ccc',
-                opacity:0.3,
-                dashOffset:3,
-                shadowColor: null,
-                shadowBlur: 0,
-                shadowOffsetX: 0,
-                shadowOffsetY: 0,
-              }
-            }
-          },
-          tooltip:{
-            show:true,
-            trigger:'axis',
-            backgroundColor:'#fff',
-            extraCssText: 'box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);',
-            formatter: function (params) {
-                  return `<div class="toolDiv">
-                    <div class="title">${params[0].name}</div>
-                    <div class="bar clearfix">
-                      <span class="icon"></span>
-                      <span class="name">数量：</span>
-                      <div class="num">${params[0].data}</div>
-                    </div>
-                  </div>`
-            },
-            textStyle:{
-              fontSize:12,
-            }
-          },
-          grid:{
-            left:40,
-            right:10,
-            bottom:20,
-            top:20
-          },
-          series: [
-            {
-              name: 'hill',
-              type: 'pictorialBar',
-              barCategoryGap: '-20%',
-              symbol: 'triangle',
-              label:{
-                show:true,
-                position:'top',
-                color:'#333'
-              },
-              itemStyle:{
-                color:'#869eff',
-                opacity:0.2,
-               
-              },
-              emphasis: {
-                itemStyle: {
-                  opacity: 1
-                }
-              },
-              data: seriesData,
-              z: 10
-            },            
-          ]
-        };
-        this.myChart = myChart;
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
-        this.echartsResize = this.myChart.resize();
-        myChart.on('click', function (params) {
-            // 在用户点击后控制台打印数据的名称
-            let baseDepart = $this.departList[params.dataIndex].id;
-            let contrastDepart = '';
-            let startTime = parseTime(new Date(),'{y}') + '/01';
-            let endTime = parseTime(new Date(),'{y}') + '/12' 
-            if($this.language == '中文'){
-              $this.$router.push({path:'/stat/cn/departAnalysis',query:{type:9,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-            }else{
-              $this.$router.push({path:'/stat/en/departAnalysis',query:{type:9,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-            }
-        });
       },
       echartsSize(){
         if(this.myChart){

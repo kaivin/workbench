@@ -2,42 +2,42 @@
 <template><transition name="fade-transform" mode="out-in">
   <div class="page-root scroll-panel overview-page cn-stat" ref="boxPane">
     <div class="nowCate">
-      {{nowcate}}
+      {{nowcate}}<span class="countTime">统计时间：2121/6 - 2121/12</span>
     </div>
     <el-card class="box-card scroll-card" shadow="hover">
         <div class="homeMain flex-content">
-           <el-row class="hxmodule-view">
-             <el-col class="hxmodule-item" :xl="6" :lg="12">
+           <el-row class="hxmodule-view" :gutter="20">
+             <el-col class="hxmodule-item" :xl="8" :lg="12">
                <XpanYears
                language="中文"
                :yeartong="yeartong"
-               :yearcount="yearcount"
                :departList="departList"
                ></XpanYears>
              </el-col>
-             <el-col class="hxmodule-item" :xl="6" :lg="12">
+             <el-col class="hxmodule-item" :xl="8" :lg="12">
                <ScoreYears
                language="中文"
                :yearscoretong="yearscoretong"
-               :yeardeaprtscore="yeardeaprtscore"
                :departList="departList"
                ></ScoreYears>
              </el-col>
-             <el-col class="hxmodule-item" :xl="6" :lg="12">
+             <el-col class="hxmodule-item" :xl="8" :lg="12">
                <DealYears
                language="中文"
                :yearsanumbertong="yearsanumbertong"
-               :yeardeaprtscore="yeardeaprtscore"
                :departList="departList"
                ></DealYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12">
-               <CostYears
+               <XpanPercent
                language="中文"
-               :yearsmoneytong="yearsmoneytong"
-               :yeardeaprtscore="yeardeaprtscore"
-               :departList="departList"
-               ></CostYears>
+               :yearcount="yearcount">
+               </XpanPercent>
+               <ScorePercent
+               language="中文"
+               :yeardeaprtscore="yeardeaprtscore">
+               </ScorePercent>
+               
              </el-col>
              <el-col class="hxmodule-item" :xl="12" :lg="24" >
                <HotArea
@@ -48,14 +48,31 @@
                ></HotArea>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12" >
-               <ScoreTop
-               :yearuserscoretop5="yearuserscoretop5"
-               ></ScoreTop>
+               <DealDepart
+               language="中文"
+               :yeardeaprtscore="yeardeaprtscore"
+               :departList="departList"
+               ></DealDepart>
+               <CostDepart
+              language="中文"
+              :yeardeaprtscore="yeardeaprtscore"
+              :departList="departList"
+              ></CostDepart>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12">
                <XpanTop
                :moneytop5="moneytop5"
                ></XpanTop>
+             </el-col>
+             <el-col>
+              <CostYears
+               language="中文"
+               :yearsmoneytong="yearsmoneytong"
+               :departList="departList"
+               ></CostYears>
+               <ScoreTop
+               :yearuserscoretop5="yearuserscoretop5"
+               ></ScoreTop>
              </el-col>
            </el-row>
         </div>
@@ -64,12 +81,16 @@
 </template>
 <script>
 import CostYears from "../../components/dataOverview/CostYears.vue";
+import CostDepart from "../../components/dataOverview/CostDepart.vue";
 import DealYears from "../../components/dataOverview/DealYears.vue";
+import DealDepart from "../../components/dataOverview/DealDepart.vue";
 import HotArea from "../../components/dataOverview/HotArea.vue";
 import ScoreTop from "../../components/dataOverview/ScoreTop.vue";
 import ScoreYears from "../../components/dataOverview/ScoreYears.vue";
+import ScorePercent from "../../components/dataOverview/ScorePercent.vue";
 import XpanTop from "../../components/dataOverview/XpanTop.vue";
 import XpanYears from "../../components/dataOverview/XpanYears.vue";
+import XpanPercent from "../../components/dataOverview/XpanPercent.vue";
 import {getChinacountnew} from "@/api/dataOverview.js";
 import {numSeparate} from "@/utils/index";
 export default {
@@ -94,12 +115,16 @@ export default {
   },
   components:{
     CostYears,//年度成本
+    CostDepart,//部门年度成本
     DealYears,//年度100万数量
+    DealDepart,//部门年度100万数量
     HotArea,//热门地区
     ScoreTop,//个人积分排行
     ScoreYears,//年度积分
+    ScorePercent,//部门年度积分
     XpanTop,//个人询盘排行
     XpanYears,//年度询盘
+    XpanPercent,//部门年度询盘
   },
   created() {
     this.getUserMenuButtonPermit()
