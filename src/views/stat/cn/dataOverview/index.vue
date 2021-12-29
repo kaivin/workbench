@@ -2,7 +2,11 @@
 <template><transition name="fade-transform" mode="out-in">
   <div class="page-root scroll-panel overview-page cn-stat" ref="boxPane">
     <div class="nowCate">
-      {{nowcate}}<span class="countTime">统计时间：2121/6 - 2121/12</span>
+      {{nowcate}} 
+      <div class="btn-group">
+        <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">{{prevYear}}年</div>
+        <div @click="changeType(2)" class="btn-item" :class="type == 2?'active':''">{{nowYear}}年</div>
+      </div>
     </div>
     <el-card class="box-card scroll-card" shadow="hover">
         <div class="homeMain flex-content">
@@ -31,13 +35,14 @@
              <el-col class="hxmodule-item" :xl="6" :lg="12">
                <XpanPercent
                language="中文"
+               :departList="departList"
                :yearcount="yearcount">
                </XpanPercent>
                <ScorePercent
                language="中文"
+               :departList="departList"
                :yeardeaprtscore="yeardeaprtscore">
                </ScorePercent>
-               
              </el-col>
              <el-col class="hxmodule-item" :xl="12" :lg="24" >
                <HotArea
@@ -59,7 +64,24 @@
               :departList="departList"
               ></CostDepart>
              </el-col>
-             <el-col class="hxmodule-item" :xl="6" :lg="12">
+             <el-col class="hxmodule-item" :xl="12" :lg="24">
+               <HotProduct
+               language="中文"
+               :productscoretop10="productscoretop10"
+               :productxuntop10="productxuntop10"
+               ></HotProduct>
+             </el-col>
+             <el-col class="hxmodule-item" :xl="12" :lg="24">
+               <ScoreTop
+               language="中文"
+               :yearuserscoretop5="yearuserscoretop5"
+               :moneytop5="moneytop5"
+               :yearuserxuntop5="yearuserxuntop5"
+               :anumbertop5="anumbertop5"
+               ></ScoreTop>
+             </el-col>
+
+             <!-- <el-col class="hxmodule-item" :xl="6" :lg="12">
                <XpanTop
                :moneytop5="moneytop5"
                ></XpanTop>
@@ -73,7 +95,7 @@
                <ScoreTop
                :yearuserscoretop5="yearuserscoretop5"
                ></ScoreTop>
-             </el-col>
+             </el-col> -->
            </el-row>
         </div>
     </el-card>
@@ -91,6 +113,7 @@ import ScorePercent from "../../components/dataOverview/ScorePercent.vue";
 import XpanTop from "../../components/dataOverview/XpanTop.vue";
 import XpanYears from "../../components/dataOverview/XpanYears.vue";
 import XpanPercent from "../../components/dataOverview/XpanPercent.vue";
+import HotProduct from "../../components/dataOverview/HotProduct.vue";
 import {getChinacountnew} from "@/api/dataOverview.js";
 import {numSeparate} from "@/utils/index";
 export default {
@@ -110,7 +133,12 @@ export default {
       provincecountmap:[],//询盘地图 
       provincescoretmap:[],//成交地图
       departList:[],
-      nowcate: ""
+      nowcate: "",//当前分类
+      productscoretop10:[],//产品积分top10
+      productxuntop10:[],//产品询盘top10
+      yearuserxuntop5:[],//询盘top5
+      anumbertop5:[],//百万成交top5
+      type: 2,//默认展示今年的数据
     };
   },
   components:{
@@ -125,10 +153,19 @@ export default {
     XpanTop,//个人询盘排行
     XpanYears,//年度询盘
     XpanPercent,//部门年度询盘
+    HotProduct,//热门产品
   },
   created() {
     this.getUserMenuButtonPermit()
     this.nowcate = this.$route.meta.title;
+  },
+  computed:{
+    nowYear(){
+      return new Date().getFullYear();
+    },
+    prevYear(){
+      return new Date().getFullYear()-1;
+    }
   },
   methods: {
     // 获取当前登陆用户在该页面的操作权限
@@ -163,8 +200,15 @@ export default {
       });
     },
     getPageData(){
-      getChinacountnew().then(res=>{
+      var data = {};
+      if(this.type == 1){
+        data.ytime = this.prevYear
+      }else{
+        data.ytime = this.nowYear
+      }
+      getChinacountnew(data).then(res=>{
         if(res.status){
+          console.log(res)
           this.yeartong = res.yeartong;
           this.yearcount = res.yearcount;
           let yearscoretong = res.yearscoretong;
@@ -185,9 +229,17 @@ export default {
           this.provincecountmap =  res.provincecountmap;
           this.provincescoretmap = res.provincescoretmap;
           this.departList = res.readart;
+          this.productxuntop10 = res.productxuntop10;
+          this.productscoretop10 = res.productscoretop10;
+          this.anumbertop5 = res.anumbertop5;
+          this.yearuserxuntop5 = res.yearuserxuntop5;
         }
       })
-    }
+    },
+    changeType(val){
+      this.type = val;
+      this.getPageData()
+    },
   }
 }
 </script>

@@ -22,6 +22,7 @@
 <script>
 import * as echarts from 'echarts';
 import {parseTime} from "@/utils";
+import { mapGetters } from 'vuex'
 export default {
     name:'demo',
     data(){
@@ -63,6 +64,11 @@ export default {
         },
         deep:true
       },
+      isCollapse(){
+        setTimeout(() => {
+          this.echartsSize();
+        }, 200)
+      }
     },
     computed:{
       totalXpanYears(){
@@ -71,6 +77,12 @@ export default {
           total+=this.yeartong[i].xunnumber
         }
         return total.toLocaleString()
+      },
+      ...mapGetters([
+        'sidebar',
+      ]),
+      isCollapse() {
+        return this.sidebar.opened
       }
     },
     mounted(){
@@ -110,7 +122,7 @@ export default {
             var newlist = [];
             let chartTopData = JSON.parse(JSON.stringify(val));
             var $this = this;
-            for(var i=6; i< chartTopData.length;i++){
+            for(var i=0; i< chartTopData.length;i++){
                 var obj={};
                 obj.month =  chartTopData[i].date.slice(-2)+"月";
                 obj.xunnumber = chartTopData[i].xunnumber;
@@ -124,7 +136,7 @@ export default {
                     },
                 },
                 grid: {
-                    left: '-15%',
+                    left: '-10%',
                     right: '0%',
                     bottom: '6%',
                     top:'10%',

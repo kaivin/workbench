@@ -2,29 +2,31 @@
   <div class="page-root scroll-panel overview-page en-stat" ref="boxPane">
     <div class="nowCate">
       {{nowcate}}
+      <div class="btn-group">
+        <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">{{prevYear}}年</div>
+        <div @click="changeType(2)" class="btn-item" :class="type == 2?'active':''">{{nowYear}}年</div>
+      </div>
     </div>
     <el-card class="box-card scroll-card" shadow="hover">
         <div class="homeMain flex-content">
-           <el-row class="hxmodule-view">
-             <el-col class="hxmodule-item" :xl="6" :lg="12">
+           <el-row class="hxmodule-view" :gutter="20">
+             <el-col class="hxmodule-item" :xl="8" :lg="12">
                <XpanYears
                language="英文"
                :yeartong="yeartong"
-               :yearcount="yearcount"
                :departList="departList"
                ></XpanYears>
              </el-col>
-             <el-col class="hxmodule-item" :xl="6" :lg="12">
+             <el-col class="hxmodule-item" :xl="8" :lg="12">
                <ScoreYears
                language="英文"
                :yearscoretong="yearscoretong"
-               :yeardeaprtscore="yeardeaprtscore"
                :yearscorenumbertong="yearscorenumbertong"
                :yearscorenumbercount="yearscorenumbercount"
                :departList="departList"
                ></ScoreYears>
              </el-col>
-             <el-col class="hxmodule-item" :xl="6" :lg="12">
+             <el-col class="hxmodule-item" :xl="8" :lg="12">
                <DealYears
                language="英文"
                :yearsanumbertong="yearsanumbertong"
@@ -33,12 +35,16 @@
                ></DealYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12">
-               <CostYears
+               <XpanPercent
                language="英文"
-               :yearsmoneytong="yearsmoneytong"
-               :yeardeaprtscore="yeardeaprtscore"
                :departList="departList"
-               ></CostYears>
+               :yearcount="yearcount">
+               </XpanPercent>
+               <ScorePercent
+               language="英文"
+               :departList="departList"
+               :yeardeaprtscore="yeardeaprtscore">
+               </ScorePercent>
              </el-col>
              <el-col class="hxmodule-item" :xl="12" :lg="24" >
                <HotArea
@@ -50,17 +56,40 @@
                ></HotArea>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12" >
-               <ScoreTop
+               <DealDepart
                language="英文"
+               :yeardeaprtscore="yeardeaprtscore"
+               :departList="departList"
+               ></DealDepart>
+               <CostDepart
+              language="英文"
+              :yeardeaprtscore="yeardeaprtscore"
+              :departList="departList"
+              ></CostDepart>
+               
+             </el-col>
+             <el-col class="hxmodule-item" :xl="12" :lg="24">
+               <HotProduct
+               language="中文"
+               :productscoretop10="productscoretop10"
+               :productxuntop10="productxuntop10"
+               ></HotProduct>
+             </el-col>
+             <el-col class="hxmodule-item" :xl="12" :lg="24">
+               <ScoreTop
+               language="中文"
                :yearuserscoretop5="yearuserscoretop5"
+               :moneytop5="moneytop5"
+               :yearuserxuntop5="yearuserxuntop5"
+               :anumbertop5="anumbertop5"
                ></ScoreTop>
              </el-col>
-             <el-col class="hxmodule-item" :xl="6" :lg="12" >
-               <XpanTop
+             <!-- <CostYears
                language="英文"
-               :moneytop5="moneytop5"
-               ></XpanTop>
-             </el-col>
+               :yearsmoneytong="yearsmoneytong"
+               :yeardeaprtscore="yeardeaprtscore"
+               :departList="departList"
+               ></CostYears> -->
            </el-row>
         </div>
     </el-card>
@@ -69,12 +98,17 @@
 
 <script>
 import CostYears from "../../components/dataOverview/CostYears.vue";
+import CostDepart from "../../components/dataOverview/CostDepart.vue";
 import DealYears from "../../components/dataOverview/DealYears.vue";
+import DealDepart from "../../components/dataOverview/DealDepart.vue";
 import HotArea from "../../components/dataOverview/HotArea.vue";
 import ScoreTop from "../../components/dataOverview/ScoreTop.vue";
 import ScoreYears from "../../components/dataOverview/ScoreYears.vue";
+import ScorePercent from "../../components/dataOverview/ScorePercent.vue";
 import XpanTop from "../../components/dataOverview/XpanTop.vue";
 import XpanYears from "../../components/dataOverview/XpanYears.vue";
+import XpanPercent from "../../components/dataOverview/XpanPercent.vue";
+import HotProduct from "../../components/dataOverview/HotProduct.vue";
 import {getEncountnew} from "@/api/dataOverview.js";
 import {numSeparate} from "@/utils/index";
 export default {
@@ -97,21 +131,39 @@ export default {
       yearscorenumbertong:[],//英文年度成交个数
       yearscorenumbercount:[],//英文年度成交个数占比
       departList:[],
-      nowcate:""
+      nowcate: "",//当前分类
+      productscoretop10:[],//产品积分top10
+      productxuntop10:[],//产品询盘top10
+      yearuserxuntop5:[],//询盘top5
+      anumbertop5:[],//百万成交top5
+      type: 2,//默认展示今年的数据
     };
   },
   components:{
     CostYears,//年度成本
+    CostDepart,//部门年度成本
     DealYears,//年度100万数量
+    DealDepart,//部门年度100万数量
     HotArea,//热门地区
     ScoreTop,//个人积分排行
     ScoreYears,//年度积分
+    ScorePercent,//部门年度积分
     XpanTop,//个人询盘排行
     XpanYears,//年度询盘
+    XpanPercent,//部门年度询盘
+    HotProduct,//热门产品
   },
   created() {
     this.getUserMenuButtonPermit()
     this.nowcate = this.$route.meta.title;
+  },
+  computed:{
+    nowYear(){
+      return new Date().getFullYear();
+    },
+    prevYear(){
+      return new Date().getFullYear()-1;
+    }
   },
   methods: {
     // 获取当前登陆用户在该页面的操作权限
@@ -146,7 +198,13 @@ export default {
       });
     },
     getPageData(){
-      getEncountnew().then(res=>{
+      var data = {};
+      if(this.type == 1){
+        data.ytime = this.prevYear
+      }else{
+        data.ytime = this.nowYear
+      }
+      getEncountnew(data).then(res=>{
         if(res.status){
           this.yeartong = res.yeartong;
           this.yearcount = res.yearcount;
@@ -171,9 +229,17 @@ export default {
           this.yearscorenumbertong = res.yearscorenumbertong;
           this.yearscorenumbercount = res.yearscorenumbercount;
           this.departList = res.readart;
+          this.productxuntop10 = res.productxuntop10;
+          this.productscoretop10 = res.productscoretop10;
+          this.anumbertop5 = res.anumbertop5;
+          this.yearuserxuntop5 = res.yearuserxuntop5;
         }
       })
-    }
+    },
+    changeType(val){
+      this.type = val;
+      this.getPageData()
+    },
   }
 }
 </script>

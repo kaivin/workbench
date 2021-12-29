@@ -2,6 +2,7 @@
   <div class="hxpage btm_shadow">
     <div class="title-view">
       <div class="title">部门询盘占比（个数+百分比）</div>
+      <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:1,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
     </div>
     <div class="chart-bottom" id="XpanYearsChartBot"></div>
   </div>
@@ -10,11 +11,16 @@
 <script>
 import * as echarts from 'echarts';
 import {parseTime} from "@/utils";
+import { mapGetters } from 'vuex'
 export default {
     name:'demo',
     data(){
       return {
         myChart:null,
+        startTime:"",
+        endTime:"",
+        baseDepart:"",
+        contrastDepart:"",
       }
     },
     props:{
@@ -28,22 +34,64 @@ export default {
           return []
         }
       },
+      departList:{
+        type:Array,
+        default:function(){
+          return []
+        }
+      }
     },
     watch:{
       yearcount:{
         handler(val,oldval){
+          this.goPage();
           this.setChartBottom(val)
         },
         deep:true
+      },
+      isCollapse(){
+        setTimeout(() => {
+          this.echartsSize();
+        }, 200)
       }
     },
     computed:{
+      ...mapGetters([
+        'sidebar',
+      ]),
+      isCollapse() {
+        return this.sidebar.opened
+      }
     },
     mounted(){
       var $this = this;
       window.addEventListener('resize',$this.echartsSize);
     },
     methods:{
+      goPage(){
+        var $this = this;
+        var newDate = new Date();
+        var newYear = newDate.getFullYear();
+        var startTime = newYear + "/01";
+        var endTime = newYear + "/12";
+        var baseDepart = "";
+        var contrastDepartArr = [];
+        this.departList.forEach(function(item,index){
+          if(index == 0){
+            baseDepart = item.id;
+          }else{
+            contrastDepartArr.push(item.id);
+          }
+        });
+        var contrastDepart = "";
+        if(contrastDepartArr.length>0){
+          contrastDepart = contrastDepartArr.join(",");
+        }
+        $this.startTime = startTime;
+        $this.endTime = endTime;
+        $this.baseDepart = baseDepart;
+        $this.contrastDepart = contrastDepart;
+      },
       setChartBottom(val){
         var $this = this;
         let chartBotData = JSON.parse(JSON.stringify(val));
@@ -105,21 +153,26 @@ export default {
                         normal:{
                             formatter: function(params){
                                 var str = '';
-                                str = '{a|'+params.name+'}'+'{b|\n占比: '+params.percent.toFixed(1)+'%}';
+                                str = '{a|'+params.name+'}{b|\n占比: '+params.percent.toFixed(1)+'%}{hr|}';
                                 return str
                             },
+                            position: 'outside',
                             fontSize: 13,
                             color: "rgba(140,162,221,0.8)",
                             rich: {
                               b:{
                                 padding: [5, 0, 0, 0],
-                              }
+                              },
+                              // hr: {
+                              //     backgroundColor: 't',
+                              //     borderRadius: 3,
+                              //     width: 3,
+                              //     height: 3,
+                              //     padding: [3, 3, 0, -12],
+                              // },
                             }
                         }
                     },
-                    labelLayout:{
-                        verticalAlign:"top"
-                    }
                 },
                 {
                     radius: ['35%', '40%'],
@@ -158,86 +211,6 @@ export default {
         };
         option && myChart.setOption(option);
         $this.myChart = myChart;
-      },
-      setChartBottom2(val){
-          var $this = this;
-          let chartBotData = JSON.parse(JSON.stringify(val));
-          
-          if($this.chartBot&&!$this.chartBot.chart.destroyed){
-              $this.chartBot.changeData(chartBotData);
-              return ;
-          } 
-          
-          const chartBot = new Pie('XpanYearsChartBot', {
-            appendPadding: 10,
-            data:chartBotData,
-            angleField: 'yearcount',
-            colorField: 'departname',
-            radius: 1,
-            color:['#1760ff','#3fcaff','#ffc857','#fe3a33','#8ae45b'],
-            label: {
-              type: 'inner',
-              offset: '-30%',
-              autoHide:true,
-              autoRotate:false,
-              content: (data) => {
-                return `${(data.percent * 100).toFixed(0)}%`
-              },
-              style: {
-                fontSize: 12,
-                textAlign: 'center',
-              },
-            },
-            meta: {
-              yearcount: {
-                alias: '个数',
-              },
-            },
-            tooltip: {
-              fields: ['yearcount'],
-              showTitle:true,
-              title:'departname'
-            },
-            pieStyle:{
-              cursor: 'pointer'
-            },
-            legend: {
-              position:'bottom',
-              maxRow:2,
-              flipPage:false,
-              marker:{
-                symbol:'square'
-              },
-              itemName:{
-                style:{
-                  fontSize: 12,
-                  fill: '#a6a6a6',
-                }
-              }
-            },
-            state: {
-              active: {
-                style: {
-                  lineWidth: 1,
-                  stroke:'#fff'
-                },
-              },
-            },
-           
-          });
-          chartBot.on('element:click', (args) => {
-            let baseDepart = args.data.data.depart;
-            let contrastDepart = '';
-            let startTime = parseTime(new Date(),'{y}') + '/01';
-            let endTime = parseTime(new Date(),'{y}') + '/12' 
-            if($this.language == '中文'){
-              $this.$router.push({path:'/stat/cn/departAnalysis',query:{type:1,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-            }else{
-              $this.$router.push({path:'/stat/en/departAnalysis',query:{type:1,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-            }
-          });
-          $this.chartBot = chartBot;
-          chartBot.render();
       },
       echartsSize(){
         if(this.myChart){

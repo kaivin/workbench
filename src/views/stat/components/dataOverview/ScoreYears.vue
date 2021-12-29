@@ -3,7 +3,7 @@
       <div class="title-view">
         <div class="title">成交{{language=='英文'&&type==1?'个数':'积分'}}</div>
         <div class="unit">{{language=='英文'&&type==1?'（单位：个）':'（单位：分）'}}</div>
-        <!-- <div class="more">更多分析 ></div> -->
+        <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
         <div class="btn-group" v-if="language=='英文'">
           <div @click="changeType(0)" class="btn-item" :class="type == 0?'active':''">积分</div>
           <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">个数</div>
@@ -24,9 +24,9 @@
 </template>
 
 <script>
-import { Area,Pie} from '@antv/g2plot';
 import * as echarts from 'echarts';
 import {parseTime} from "@/utils";
+import { mapGetters } from 'vuex'
 export default {
     name:'demo',
     data(){
@@ -36,6 +36,10 @@ export default {
         isUpNum:0,
         totalXpanYears:0,
         myChart:null,
+        startTime:"",
+        endTime:"",
+        baseDepart:"",
+        contrastDepart:"",
       }
     },
     props:{
@@ -75,40 +79,84 @@ export default {
       },
       yearscoretong:{
         handler(newval,oldval){
+          this.goPage();
           this.costAverageChart();
           this.setIsUp();
         },
         deep:true
       },
+      isCollapse(){
+        setTimeout(() => {
+          this.echartsSize();
+        }, 200)
+      }
     },
     mounted(){
       var $this = this;
       window.addEventListener('resize',$this.echartsSize);
     },
+    computed:{
+      ...mapGetters([
+        'sidebar',
+      ]),
+      isCollapse() {
+        return this.sidebar.opened
+      }
+    },
     methods:{
-       changeType(val){
+      goPage(){
+        var $this = this;
+        var newDate = new Date();
+        var newYear = newDate.getFullYear();
+        var startTime = newYear + "/01";
+        var endTime = newYear + "/12";
+        var baseDepart = "";
+        var contrastDepartArr = [];
+        this.departList.forEach(function(item,index){
+          if(index == 0){
+            baseDepart = item.id;
+          }else{
+            contrastDepartArr.push(item.id);
+          }
+        });
+        var contrastDepart = "";
+        if(contrastDepartArr.length>0){
+          contrastDepart = contrastDepartArr.join(",");
+        }
+        $this.startTime = startTime;
+        $this.endTime = endTime;
+        $this.baseDepart = baseDepart;
+        $this.contrastDepart = contrastDepart;
+      },
+      changeType(val){
         this.type = val;
       },
       //chart top
       costAverageChart(){
         var $this = this;
         let chartTopData = [];
+        var newlist = [];
         if(this.type == 0){
-           chartTopData = JSON.parse(JSON.stringify(this.yearscoretong));
+          chartTopData = JSON.parse(JSON.stringify(this.yearscoretong));
+          for(var i=0; i< chartTopData.length;i++){
+              var obj={};
+              obj.date = chartTopData[i].date.slice(-2) + '月';
+              obj.score = chartTopData[i].score;
+              newlist.push(obj);
+          }
         }else{
            chartTopData = JSON.parse(JSON.stringify(this.yearscorenumbertong));
+           for(var i=0; i< chartTopData.length;i++){
+              var obj={};
+              obj.date = chartTopData[i].date.slice(-2) + '月';
+              obj.number = chartTopData[i].number;
+              newlist.push(obj);
+          }
         }
         var chartDom = document.getElementById('ScoreYearsChartTop');
         var myChart = echarts.init(chartDom);
         var option;
-        var newlist = [];
-        var $this = this;
-        for(var i=6; i< chartTopData.length;i++){
-            var obj={};
-            obj.date = chartTopData[i].date.slice(-2) + '月';
-            obj.score = chartTopData[i].score;
-            newlist.push(obj);
-        }
+        
         option = {
             tooltip: {
                 trigger: "axis",
@@ -117,7 +165,7 @@ export default {
                 },
             },
             grid: {
-                left: '-15%',
+                left: '-8%',
                 right: '0%',
                 bottom: '6%',
                 top:'8%',

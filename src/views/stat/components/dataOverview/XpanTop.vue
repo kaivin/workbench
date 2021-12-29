@@ -11,7 +11,7 @@
             <router-link :to="{path: language == '中文'?'/stat/cn/memberAnalysis/singlePerson':'/stat/en/memberAnalysis/singlePerson',query:{deptId:item.dept_id,itemId:item.uid}}" tag="a" target="_blank">  
             <div class="rankNum">
                 <div class="numTop" v-if="(index+1)<=3" :class="'numTop0'+(index+1)"></div>
-                <div class="numTop" v-if="(index+1)>3">{{index+1}}</div>
+                <div class="numTop" v-if="(index+1)>3">0{{index+1}}</div>
             </div>
             <div class="userImg">
               <div v-if="item.headimg" class="headImg">
@@ -69,25 +69,6 @@ export default {
     mounted(){
       this.setBarWidth();
       window.addEventListener('resize',this.setBarWidth);
-    },
-    directives: {  // 使用局部注册指令的方式
-      resize: { // 指令的名称
-        bind(el, binding) { // el为绑定的元素，binding为绑定给指令的对象
-          let width = '', height = '';
-          function isReize() {
-            const style = document.defaultView.getComputedStyle(el);
-            if (width !== style.width || height !== style.height) {
-              binding.value();  // 关键
-            }
-            width = style.width;
-            height = style.height;
-          }
-          el.__vueSetInterval__ = setInterval(isReize, 300);
-        },
-        unbind(el) {
-          clearInterval(el.__vueSetInterval__);
-        }
-      }
     },
     destroyed(){
       window.removeEventListener('resize',this.setBarWidth)

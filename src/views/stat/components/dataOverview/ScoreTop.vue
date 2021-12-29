@@ -2,30 +2,71 @@
   <div class="hxpage score-top">
     <div class="module-top">
       <div class="title-view">
-        <div class="title">年度成交{{language == '中文'?'积分':'个数'}} TOP5</div>
-        <div class="unit">（单位：{{language == '中文'?'分':'个'}} <img src="@/assets/no_icon.png" alt="">：百万）</div>
-        <router-link :to="{path:language == '中文'?'/stat/cn/memberAnalysis':'/stat/en/memberAnalysis'}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
+        <div class="title">个人榜单TOP5</div>
+        <div class="unit" v-if="type==1">（单位：{{language == '中文'?'分':'个'}}）</div>
+        <div class="unit" v-if="type==2">（单位：个）</div>
+        <div class="unit" v-if="type==3">（单位：个）</div>
+        <div class="unit" v-if="type==4">（单位：元）</div>
+        <router-link :to="{path:language == '中文'?'/stat/cn/memberAnalysis':'/stat/en/memberAnalysis'}" tag="a" target="_blank" class="more">更多分析<i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
+        <div class="btn-group btn_change">
+          <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">
+            {{language == '中文'?'成交积分':'成交个数'}}
+          </div>
+          <div @click="changeType(2)" class="btn-item" :class="type == 2?'active':''">询盘个数</div>
+          <div @click="changeType(3)" class="btn-item" :class="type == 3?'active':''">百万个数</div>
+          <div @click="changeType(4)" class="btn-item" :class="type == 4?'active':''">奖金</div>
+        </div>
       </div>
       <ul class="top-view" ref="topul">
         <li class="top-item" v-for="(item,index) in topdata" :key="index">
-          <router-link :to="{path: language == '中文'?'/stat/cn/memberAnalysis/singlePerson':'/stat/en/memberAnalysis/singlePerson',query:{deptId:item.dept_id,itemId:language == '中文'?item.userid:item.uid}}" tag="a">
-          <div class="top-icon">
-            <img :src="require('@/assets/no'+(index+1)+'.jpg')" alt="">
-          </div>
-          <div class="top-img">
-            <img  :src="item.headimg"  alt="">
-          </div>
-          <div class="top-name">
-            {{item.username}}
-          </div>
-          <div class="top-width">
-            <div :class="'top-bar' + index" :style="'width:' + item.width"></div>
-            <span>{{item.number}}</span>
-          </div>
-          <div class="top-num" v-if="item.anumber>0">
-            <img src="@/assets/no_icon.png" alt="">
-            <span>x{{item.anumber}}</span>
-          </div>
+          <router-link :to="getlink(item)" tag="a" >
+            <div class="top-icon">
+              <img :src="require('@/assets/personal_InquiryIcon0'+(index+1)+'.png')" alt="" v-if="index < 3">
+              <span v-else>0{{index+1}}</span>
+            </div>
+            <div class="top-img">
+              <img  :src="item.headimg"  alt="">
+            </div>
+            <div class="top-name">
+              <span v-if="type == 4||type == 2">{{item.name}}</span>
+              <span v-if="type == 3">{{item.ownuser}}</span>
+              <span v-else>{{item.username}}</span>
+            </div>
+            <div class="top-width">
+              <div :class="'top-bar' + index" :style="'width:' + item.width"></div>
+            </div>
+            <div class="userAward flex-content" v-if="type == 4">
+                  <span v-if="index+1<=3" :class="'num0'+(index+1)"> 
+                    {{item.allmoney}}元
+                  </span>
+                  <span v-else> 
+                    {{item.allmoney}}元
+                  </span>
+            </div>
+            <div class="userAward flex-content" v-if="type == 3||type ==2">
+                  <span v-if="index+1<=3" :class="'num0'+(index+1)"> 
+                    {{item.number}}个
+                  </span>
+                  <span v-else> 
+                    {{item.number}}个
+                  </span>
+            </div>
+            <div class="userAward flex-content" v-if="type == 1&& language == '中文'">
+                  <span v-if="index+1<=3" :class="'num0'+(index+1)"> 
+                    {{item.number}}分
+                  </span>
+                  <span v-else> 
+                    {{item.number}}分
+                  </span>
+            </div>
+            <div class="userAward flex-content" v-if="type == 1&& language == '英文'">
+                  <span v-if="index+1<=3" :class="'num0'+(index+1)"> 
+                    {{item.number}}个
+                  </span>
+                  <span v-else> 
+                    {{item.number}}个
+                  </span>
+            </div>
           </router-link>
         </li>
       </ul>
@@ -35,14 +76,13 @@
 </template>
 
 <script>
-import parseInt from '@antv/util/lib/to-integer';
 export default {
     name:'demo',
     data(){
       return {
         topdata:[],
         barWidth:212,
-
+        type: 1,
       }
     },
     props:{
@@ -55,7 +95,25 @@ export default {
         default:function(){
           return []
         }
-      }
+      },
+      moneytop5:{
+        type:Array,
+        default:function(){
+          return []
+        }
+      },
+      yearuserxuntop5:{
+        type:Array,
+        default:function(){
+          return []
+        }
+      },
+      anumbertop5:{
+        type:Array,
+        default:function(){
+          return []
+        }
+      },
     },
     watch:{
       yearuserscoretop5:{
@@ -72,29 +130,81 @@ export default {
       
     },
     methods:{
+      changeType(val){
+        this.type = val;
+        this.getData();
+      },
       setTopData(val){
+        var $this = this;
         let topdata = JSON.parse(JSON.stringify(val));
-        topdata.sort(function(a, b){return a.number - b.number}).reverse(); 
+        topdata =  topdata.sort(function(a, b){return a.number - b.number}).reverse(); 
         let maxwidth = topdata[0].number;
         for(let i = 0;i<topdata.length;i++){
-          topdata[i].width = parseFloat((topdata[i].number/maxwidth).toFixed(2)) * 100 + '%';
-          topdata[i].anumber = parseInt(topdata[i].anumber);
-          topdata[i].color = '#fff';
+          topdata[i].width = parseFloat((topdata[i].number/maxwidth).toFixed(2)) * 85 + '%';
         }
         this.topdata = topdata;
         
       },
-      setBarColor(){
-        let topul = this.$refs["topul"].offsetWidth;
-        let barWidth = topul - 200;
-        for(let i = 0;i<this.topdata.length;i++){
-          if(parseFloat(this.topdata[i].width.replace('%',''))/100 * barWidth >=72 && i<3){
-            this.topdata[i].color = '#fff'
-          }else{
-            this.topdata[i].color = '#454545'
+      getData(){
+        let topdata = [];
+        var $this = this;
+        
+        // 获取长度百分比
+        if($this.type == 4){
+          // 奖金
+          topdata = $this.moneytop5;
+          topdata.sort(function(a, b){return a.allmoney.split(',').join('') - b.allmoney.split(',').join('')}).reverse(); 
+          let maxwidth = topdata[0].allmoney.split(',').join('');
+          for(let i = 0;i<topdata.length;i++){
+            topdata[i].width = parseFloat((topdata[i].allmoney.split(',').join('')/maxwidth).toFixed(2)) * 85 + '%';
+          }
+          console.log(topdata)
+        }else{
+          if($this.type == 1){
+            // 成交积分
+            topdata = $this.yearuserscoretop5;
+          }else if($this.type == 2){
+            // 询盘个数
+            topdata = $this.yearuserxuntop5;
+          }else if($this.type == 3){
+            // 百万个数
+            topdata = $this.anumbertop5;
+          }
+          topdata.sort(function(a, b){return a.number - b.number}).reverse(); 
+          let maxwidth = topdata[0].number;
+          for(let i = 0;i<topdata.length;i++){
+            topdata[i].width = parseFloat((topdata[i].number/maxwidth).toFixed(2)) * 85 + '%';
           }
         }
+
+        this.topdata = topdata;
+        
       },
+      // 获取链接
+      getlink(item){
+        var $this = this;
+        var link={};
+        if($this.language == "中文"){
+          link.path = '/stat/cn/memberAnalysis/singlePerson';
+        }else{
+          link.path = '/stat/en/memberAnalysis/singlePerson';
+        }
+        link.query = {};
+        link.query.deptId = item.dept_id;
+        if($this.type == 1){
+          if($this.language == "中文"){
+            link.query.itemId = item.userid;
+          }else{
+             link.query.itemId = item.uid;
+          }
+        }else if($this.type == 2){
+          link.query.itemId = item.id
+        }else{
+          link.query.itemId = item.uid
+        }
+        return link;
+      },
+
       // 跳转到个人详情
       handleContrast(deptId,itemId){
         var $this=this;

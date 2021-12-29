@@ -3,7 +3,7 @@
     <div class="title-view">
       <div class="title">100万成交数量</div>
       <div class="unit">（单位：个）</div>
-      <!-- <div class="more">更多分析 ></div> -->
+      <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:9,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
     </div>
     <div class="mix_body">
       <div class="contrast-view">
@@ -22,7 +22,7 @@
 <script>
 import * as echarts from 'echarts';
 import {parseTime} from "@/utils";
-
+import { mapGetters } from 'vuex'
 export default {
     name:'demo',
 
@@ -31,6 +31,10 @@ export default {
         isUp:true,
         isUpNum:0,
         myChart:null,
+        startTime:"",
+        endTime:"",
+        baseDepart:"",
+        contrastDepart:"",
       }
     },
     props:{
@@ -54,11 +58,17 @@ export default {
     watch:{
       yearsanumbertong:{
         handler(val,oldval){
+          this.goPage();
           this.costAverageChart(val);
           this.setIsUp(val);
         },
         deep:true
       },
+      isCollapse(){
+        setTimeout(() => {
+          this.echartsSize();
+        }, 200)
+      }
     },
     computed:{
       totalXpanYears(){
@@ -68,11 +78,41 @@ export default {
         }
         return total.toLocaleString()
       },
+      ...mapGetters([
+        'sidebar',
+      ]),
+      isCollapse() {
+        return this.sidebar.opened
+      }
     },
     mounted(){
       window.addEventListener('resize',this.echartsSize)
     },
     methods:{
+      goPage(){
+        var $this = this;
+        var newDate = new Date();
+        var newYear = newDate.getFullYear();
+        var startTime = newYear + "/01";
+        var endTime = newYear + "/12";
+        var baseDepart = "";
+        var contrastDepartArr = [];
+        this.departList.forEach(function(item,index){
+          if(index == 0){
+            baseDepart = item.id;
+          }else{
+            contrastDepartArr.push(item.id);
+          }
+        });
+        var contrastDepart = "";
+        if(contrastDepartArr.length>0){
+          contrastDepart = contrastDepartArr.join(",");
+        }
+        $this.startTime = startTime;
+        $this.endTime = endTime;
+        $this.baseDepart = baseDepart;
+        $this.contrastDepart = contrastDepart;
+      },
       //chart top
       costAverageChart(val){
         var $this = this;
@@ -82,7 +122,7 @@ export default {
         var option;
         var newlist = [];
         var $this = this;
-        for(var i=6; i< chartTopData.length;i++){
+        for(var i=0; i< chartTopData.length;i++){
             var obj={};
             obj.date = chartTopData[i].date.slice(-2) + '月';
             obj.a_number = chartTopData[i].a_number;
@@ -96,7 +136,7 @@ export default {
                 },
             },
             grid: {
-                left: '-12%',
+                left: '-6%',
                 right: '0%',
                 bottom: '6%',
                 top:'8%',
@@ -157,93 +197,6 @@ export default {
         };
         option && myChart.setOption(option);
         $this.myChart = myChart;
-      },
-      // 原内容
-      costAverageChart2(val){
-        
-        var $this = this;
-          let chartTopData = JSON.parse(JSON.stringify(val));
-          for(let i = 0;i<chartTopData.length;i++){
-            chartTopData[i].date = chartTopData[i].date.slice(-2) + '月'
-          }
-          if($this.chartTop&&!$this.chartTop.chart.destroyed){
-              $this.chartTop.changeData(chartTopData);
-              return ;
-          } 
-          const chartTop = new Column('DealYearsChartTop', {
-            data:chartTopData,
-            xField: 'date',
-            yField: 'a_number',
-            xAxis: {
-              grid:null,
-              line:null,
-              tickLine:null,
-              label: {
-                autoHide: true,
-                autoRotate: false,
-                style: {
-                  fill: '#bfbfbf',
-                  opacity: 1,
-                  fontSize: 12,
-                  lineHeight:18,
-                },
-              },
-            },
-            yAxis: {
-              grid:null,
-              line:null,
-              label:null
-            },
-            color:'#8bb2f2',
-            maxColumnWidth:16,
-            columnStyle:{
-              fill:'#b0c9ff',
-              cursor: 'pointer',
-              fillOpacity:1,
-              opacity:1,
-            },
-            meta: {
-              a_number: {
-                alias: '数量',
-              },
-            },
-            state: {
-              interactions: [{ type: 'element-active' }],
-              // 设置 active 激活状态的样式
-              active: {
-                columnStyle:{
-                  fill:'#83aafc',
-                },
-              },
-            }
-          });
-          chartTop.on('element:click', (args) => {
-            let data = args.data.data;
-            let month = data.date.slice(0,2);
-            let startTime = parseTime(new Date(),'{y}') + '/' +  month;
-            let endTime = parseTime(new Date(),'{y}') + '/' + month;
-            var baseDepart = "";
-            var contrastDepartArr = [];
-            $this.departList.forEach(function(item,index){
-              if(index == 0){
-                baseDepart = item.id;
-              }else{
-                contrastDepartArr.push(item.id);
-              }
-            });
-            var contrastDepart = "";
-            if(contrastDepartArr.length>0){
-              contrastDepart = contrastDepartArr.join(",");
-            }
-            if($this.language == '中文'){
-              $this.$router.push({path:'/stat/cn/departAnalysis',query:{type:9,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-            }else{
-              $this.$router.push({path:'/stat/en/departAnalysis',query:{type:9,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-            }
-          });
-          $this.chartTop = chartTop;
-          chartTop.render();
-        
       },
       setIsUp(val){
         let newXpanYears = 0;

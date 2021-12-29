@@ -20,6 +20,38 @@
       background: url(../assets/tips.png) left center no-repeat;
       background-size: 13px auto;
     }
+    .btn-group{
+      display: inline-block;
+      margin-left: 20px;
+      .btn-item{
+        padding: 0 10px;
+        height: 26px;
+        text-align: center;
+        line-height: 24px;
+        border: 1px solid #e1e3ea;
+        color: #9ea5af;
+        font-size: 12px;
+        box-sizing: border-box;
+        cursor: pointer;
+        margin-left: -1px;
+        position: relative;
+        display: inline-block;
+        &:hover{
+          color: #496bf2;
+          border: 1px solid #496bf2;
+          z-index: 1;
+        }
+      }
+      .active{
+        border: 1px solid #496bf2;
+        background:#496bf2;
+        color: #fff;
+        z-index: 1;
+        &:hover{
+          color: #fff;
+        }
+      }
+    }
   }
   // &.cn-stat{
   //   .hxpage{
@@ -65,11 +97,6 @@
       padding: 30px 30px 20px;
     }
   }
-  &.score-top{
-    .module-top{
-      padding: 30px 30px 15px;
-    }
-  }
   .title-view{
     height: 24px;
     line-height: 24px;
@@ -93,11 +120,12 @@
       float: left;
     }
     .more{
-      font-size: 13px;
+      font-size: 12px;
       color: #a1a1a1;
       float: right;
       cursor: pointer;
       position: relative;
+      line-height: 26px;
       top: -1px;
       .svg-i{
         font-size: 10px;
@@ -111,9 +139,9 @@
       display: flex;
       .btn-item{
         padding: 0 10px;
-        height: 24px;
+        height: 26px;
         text-align: center;
-        line-height: 22px;
+        line-height: 24px;
         border: 1px solid #e1e3ea;
         color: #9ea5af;
         font-size: 12px;
@@ -222,12 +250,14 @@
       height: 242px;
     }
   }
+  &.score-top{
+    padding-bottom: 22px;
+  }
   .top-view{
     margin-top: 25px;
-    height: 245px;
     .top-item{
       display: flex;
-      margin-bottom: 15px;
+      padding: 13px 5px;
       cursor: pointer;
       a{
         flex:1;
@@ -235,20 +265,45 @@
       }
       .top-icon{
         display: flex;
-        width: 34px;
-        height: 34px;
-        margin-right: 10px;
+        width: 50px;
+        height: 36px;
+        margin-right: 50px;
+        text-align: center;
+        position: relative;
         img{
-          margin: auto 0 auto 0;
+          position: absolute;
+          left: 0;
+          width: 50px;
+          top: -1px;
+        }
+        span{
+          font-size: 13px;
+          color: #fff;
+          display: block;
+          line-height: 36px;
+          width: 100%;
         }
       }
       .top-img{
         display: flex;
-        width: 34px;
-        height: 34px;
-        border: 1px solid #fee170;
-        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        border-radius: 2px;
         overflow: hidden;
+        position: relative;
+        padding: 1px;
+        z-index: 1;
+        &:before{
+          content: '';
+          display: block;
+          position: absolute;
+          left: -1px;
+          top: -1px;
+          right: -1px;
+          bottom: -1px;
+          background-image: linear-gradient(0deg,#ff4909,#f8b253);
+          z-index: -1;
+        }
         img{
           margin: auto;
           width: 100%;
@@ -259,42 +314,52 @@
       .top-name{
         width: 66px;
         height: 34px;
-        line-height: 34px;
-        font-size: 12px;
-        color: #1b1b1b;
+        line-height: 36px;
+        font-size: 13px;
+        color: #fff;
         text-align: center;
+        margin-left: 20px;
       }
       .top-width{
-        width: calc(100% - 200px);
-        height: 34px;
+        width: calc(100% - 335px);
+        height: 15px;
         box-sizing: border-box;
-        padding-top: 9px;
         position: relative;
-        margin-right: 20px;
         display: flex;
+        background-color: #29325c;
+        margin-top: 10px;
+	      border-radius: 0px 8px 8px 0px;
         div{
-          height: 16px;
-        }
-        span{
-          font-size: 12px;
-          line-height: 16px;
-          color: #454545;
-          margin-left: 10px;
+          height: 15px;
+          border-radius: 0px 8px 8px 0px;
+          background-image: linear-gradient(-90deg, #2e7ff3 0%, #4ab5f8 100%);
+          position: relative;
         }
         .top-bar0{
-          background:#fc544b;
+          background-image: linear-gradient(-90deg, #ff395d 0%, #d21435 100%);
+          &:after{
+            content: '';
+            display: block;
+            position: absolute;
+            width: 26px;
+            height: 16px;
+            background: url(../assets/airplane.png) center center no-repeat;
+            top: 0;
+            right: -33px;
+          }
         }
         .top-bar1{
-          background:#ff8317;
+          background-image: linear-gradient(-90deg, #f9c020 0%, #f83801 100%), 
+              linear-gradient(-90deg, #ffa734 0%, #ff7a21 100%);    
+          &:after{
+            @extend .top-bar0:after
+          }
         }
         .top-bar2{
-          background:#fac322;
-        }
-        .top-bar3{
-          background: #d1dbe4;
-        }
-        .top-bar4{
-          background: #d1dbe4;
+          background-image: linear-gradient(-90deg, #ffcf67 0%, #ff7a21 100%);
+          &:after{
+            @extend .top-bar0:after
+          }
         }
       }
       .top-num{
@@ -309,6 +374,37 @@
           margin: auto 0;
         }
       }
+      .userAward{
+        color: #fff;
+        font-size: 13px;
+        margin-left: 28px;
+        width: 85px;
+        line-height: 36px;
+        .num01{
+            background-image: linear-gradient(90deg,#f9c020 0%,#f83801 60%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            font-weight: bold;
+        }
+        .num02{
+            background-image: linear-gradient(90deg,#92acc7 0%,#315c88 60%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            font-weight: bold;
+        }
+        .num03{
+            background-image: linear-gradient(90deg,#ad6d2d 40%,#f5c166 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            font-weight: bold;
+        }
+      }
+    }
+    .top-item+.top-item{
+      border-top: 1px solid rgba(240,240,240,0.04);
     }
   }
   .top-money{
@@ -435,6 +531,14 @@
   margin-left: -25px;
   margin-right: -25px;
 }
+.hxpage.col_right{
+  .chart-bottom{
+    height: 306px;
+  }
+}
+.hxpage.btm_prochart{
+  padding-bottom: 10px;
+}
 .toolDiv{
   .title{
     font-size: 12px;
@@ -460,6 +564,45 @@
       float: right;
       margin-left: 30px;
       color: rgb(89, 89, 89);
+    }
+  }
+}
+#HotProductChart{
+  height: 230px;
+}
+.product_list{
+  margin-top: -24px;
+  position: relative;
+  z-index: 1;
+  margin-left: 50px;
+  font-size: 0;
+  .product_item{
+    display: inline-block;
+    vertical-align: top;
+    width: 10%;
+    top: 0;
+    .pro_img{
+      width: 42px;
+      height: 42px;
+      margin-left: auto;
+      margin-right: auto;
+      background-color: #2d335d;
+      border: solid 1px #0b597f;
+      border-radius: 50%;
+      overflow: hidden;
+      img{
+        width: 100%;
+      }
+    }
+    .pro_name{
+      color: #cccccc;
+      margin-top: 8px;
+      font-size: 13px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 13px;
+      line-height: 1;
+      height: 80px;
     }
   }
 }

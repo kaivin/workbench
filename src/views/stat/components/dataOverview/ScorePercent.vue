@@ -1,16 +1,17 @@
 <template>
-  <div class="hxpage">
+  <div class="hxpage btm_shadow">
       <div class="title-view">
-        <div class="title">各部门年度总成交占比{{type == 0?'（积分+占比）':'（个数+占比）'}}</div>
+        <div class="title">部门成交占比{{type == 0?'（积分+占比）':'（个数+占比）'}}</div>
+        <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
       </div>
       <div class="chart-bottom" id="ScoreYearsChartBot"></div>
   </div>
 </template>
 
 <script>
-import { Area,Pie} from '@antv/g2plot';
 import * as echarts from 'echarts';
 import {parseTime} from "@/utils";
+import { mapGetters } from 'vuex'
 export default {
     name:'demo',
     data(){
@@ -19,6 +20,10 @@ export default {
         isUp:true,
         isUpNum:0,
         totalXpanYears:0,
+        startTime:"",
+        endTime:"",
+        baseDepart:"",
+        contrastDepart:"",
       }
     },
     props:{
@@ -32,6 +37,20 @@ export default {
           return []
         }
       },
+      departList:{
+        type:Array,
+        default:function(){
+          return []
+        }
+      }
+    },
+    computed:{
+      ...mapGetters([
+        'sidebar',
+      ]),
+      isCollapse() {
+        return this.sidebar.opened
+      }
     },
     watch:{
       type:function(newval,oldval){
@@ -39,9 +58,15 @@ export default {
       },
       yeardeaprtscore:{
         handler(newval,oldval){
+          this.goPage();
           this.setChartBottom();
         },
         deep:true
+      },
+      isCollapse(){
+        setTimeout(() => {
+          this.echartsSize();
+        }, 200)
       }
     },
     methods:{
@@ -73,7 +98,6 @@ export default {
             tooltip: {
               trigger: 'item',
               formatter: (params) => {
-                console.log(params)
                    if(this.type == 0){
                       var text = `${params.data.departname}<br/>
                       <span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${
@@ -177,94 +201,35 @@ export default {
         option && myChart.setOption(option);
         $this.myChart = myChart;
       },
-      // 原图表
-      setChartBottom2(){
-          var $this = this;
-          let chartBotData = [];
-          if(this.type == 0){
-            chartBotData = JSON.parse(JSON.stringify(this.yeardeaprtscore));
+      goPage(){
+        var $this = this;
+        var newDate = new Date();
+        var newYear = newDate.getFullYear();
+        var startTime = newYear + "/01";
+        var endTime = newYear + "/12";
+        var baseDepart = "";
+        var contrastDepartArr = [];
+        this.departList.forEach(function(item,index){
+          if(index == 0){
+            baseDepart = item.id;
           }else{
-            chartBotData = JSON.parse(JSON.stringify(this.yearscorenumbercount));
+            contrastDepartArr.push(item.id);
           }
-          if($this.chartBot&&!$this.chartBot.chart.destroyed){
-              $this.chartBot.destroy();
-            
-          } 
-          const chartBot = new Pie('ScoreYearsChartBot', {
-            appendPadding: 10,
-            data:chartBotData,
-            angleField: 'score',
-            colorField: 'departname',
-            radius: 1,
-            innerRadius: 0.6,
-            color:['#1760ff','#3fcaff','#ffc857','#fe3a33','#8ae45b'],
-            label: {
-              type: 'inner',
-              autoHide:true,
-              autoRotate:false,
-              content: (data) => {
-                return `${(data.percent * 100).toFixed(0)}%`
-              },
-              style: {
-                fontSize: 12,
-                
-              },
-            },
-            meta: {
-              score: {
-                alias: $this.type == 0?'积分':'个数',
-              },
-            },
-            pieStyle:{
-              cursor: 'pointer'
-            },
-            tooltip: {
-              fields: ['score'],
-              showTitle:true,
-              title:'departname'
-            },
-            legend: {
-              position:'bottom',
-              maxRow:2,
-              flipPage:false,
-              marker:{
-                symbol:'square'
-              },
-              itemName:{
-                style:{
-                  fontSize: 12,
-                  fill: '#a6a6a6',
-                }
-              }
-            },
-            state: {
-              active: {
-                style: {
-                  lineWidth: 1,
-                  stroke:'#fff'
-                },
-              },
-            },
-            statistic: null,
-          });
-          chartBot.on('element:click', (args) => {
-            let baseDepart = args.data.data.id;
-            let contrastDepart = '';
-            let startTime = parseTime(new Date(),'{y}') + '/01';
-            let endTime = parseTime(new Date(),'{y}') + '/12' 
-            if($this.language == '中文'){
-              $this.$router.push({path:'/stat/cn/departAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-            }else{
-              if(this.type == 0){
-                $this.$router.push({path:'/stat/en/departAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-              }else{
-                $this.$router.push({path:'/stat/en/departAnalysis',query:{type:8,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-              }
-            }
-          });
-          $this.chartBot = chartBot;
-          chartBot.render();
+        });
+        var contrastDepart = "";
+        if(contrastDepartArr.length>0){
+          contrastDepart = contrastDepartArr.join(",");
+        }
+        $this.startTime = startTime;
+        $this.endTime = endTime;
+        $this.baseDepart = baseDepart;
+        $this.contrastDepart = contrastDepart;
       },
+      echartsSize(){
+        if(this.myChart){
+          this.myChart.resize();
+        }
+      }
     }
 }
 </script>
