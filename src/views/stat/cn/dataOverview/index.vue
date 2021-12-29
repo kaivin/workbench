@@ -49,6 +49,8 @@
                language="中文"
                :provincecountmap="provincecountmap"
                :provincescoretmap="provincescoretmap"
+               :regionInquiryCountDepart="regionInquiryCountDepart"
+               :regionDealScoreDepart="regionDealScoreDepart"
                :departList="departList"
                ></HotArea>
              </el-col>
@@ -132,6 +134,8 @@ export default {
       yearuserscoretop5:[],//年度积分top5
       provincecountmap:[],//询盘地图 
       provincescoretmap:[],//成交地图
+      regionInquiryCountDepart:[],// 地区各部门询盘个数
+      regionDealScoreDepart:[], // 地区各部门成交积分
       departList:[],
       nowcate: "",//当前分类
       productscoretop10:[],//产品积分top10
@@ -228,6 +232,8 @@ export default {
           this.yearuserscoretop5 = res.yearuserscoretop5;
           this.provincecountmap =  res.provincecountmap;
           this.provincescoretmap = res.provincescoretmap;
+          this.regionInquiryCountDepart = res.provincedepartxuntop10;
+          this.regionDealScoreDepart = res.provincedepartscoretop10;
           this.departList = res.readart;
           this.productxuntop10 = res.productxuntop10;
           this.productscoretop10 = res.productscoretop10;
