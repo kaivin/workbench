@@ -4,7 +4,7 @@
       <div class="title">部门询盘占比（个数+百分比）</div>
       <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:1,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
     </div>
-    <div class="chart-bottom" id="XpanYearsChartBot"></div>
+    <div class="chart-bottom scale-panel" id="XpanYearsChartBot"></div>
   </div>
 </template>
 
@@ -130,6 +130,66 @@ export default {
             series: [
                 {
                     radius: ['35%', '62%'],
+                    center: ['50%', '55%'],
+                    type: 'pie',
+                    showEmptyCircle: true,
+                    itemStyle: {
+                      color: function(params) {
+                          return colorList[params.dataIndex]
+                      }
+                    },
+                    z:2,
+                    label:{
+                      show:false,
+                    },
+                    labelLine:{
+                      show:false
+                    }
+                },
+                {
+                    radius: ['35%', '62%'],
+                    center: ['50%', '55%'],
+                    type: 'pie',
+                    showEmptyCircle: true,
+                    itemStyle: {
+                      color: {
+                        type: 'radial',
+                        x: 0.5,
+                        y: 0.5,
+                        r: 0.5,
+                        colorStops: [{
+                            offset: .4, color: 'rgba(255,255,255,.2)' // 0% 处的颜色
+                        }, {
+                            offset: 1, color:  'rgba(0,0,0,.2)' // 100% 处的颜色
+                        }],
+                        global: false // 缺省为 false
+                      }
+                      // color: {
+                      //   type: 'linear',
+                      //   x: 1,
+                      //   y: 1,
+                      //   x2: 0,
+                      //   y2: 0,
+                      //   colorStops: [{
+                      //       offset: .2, color: 'rgba(0,0,0,.2)' // 0% 处的颜色
+                      //   }, {
+                      //       offset: .5, color:  'rgba(255,255,255,.2)' // 100% 处的颜色
+                      //   },{
+                      //       offset: .8, color:  'rgba(0,0,0,.2)' // 100% 处的颜色
+                      //   }],
+                      //   global: false // 缺省为 false
+                      // }
+                    },
+                    z:3,
+                    label:{
+                      show:false,
+                    },
+                    labelLine:{
+                      show:false
+                    }
+                },
+                {
+                    radius: ['35%', '62%'],
                     center: ['50%', '50%'],
                     type: 'pie',
                     showEmptyCircle: true,
@@ -140,6 +200,7 @@ export default {
                             }
                         }
                     },
+                    z:4,
                     labelLine: {
                         normal: {
                             show: true,

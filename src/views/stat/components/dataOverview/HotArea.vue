@@ -1,9 +1,9 @@
 <template>
-  <div class="hxpage">
+  <div class="hxpage region-panel">
     <div class="module-panel">
       <div class="title-view">
         <div class="title">{{language=="中文"?'年度热门地区TOP10':'年度热门国家TOP10'}}</div>
-        <div class="unit">{{type == 1?'（单位：分）':'（单位：个）'}}</div>
+        <div class="unit">{{type == 5?'（单位：分）':'（单位：个）'}}</div>
         <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:type,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
         
         <div class="btn-group">
@@ -28,10 +28,12 @@
             <div class="item-box">
               <div class="title-panel" :style="'background:'+item[0].color"><span>NO.{{item[0].index}} {{language == '中文'?item[0].name:item[0].country}}</span></div>
               <div class="depart-list">
-                <div class="item-depart" v-for="(item1,index1) in item">
-                  <div class="txt-name">{{item1.depart}}</div>
-                  <div class="txt-value"><span>{{item1.number}}</span></div>
-                  <div class="txt-percent">{{item1.percent}}</div>
+                <div class="depart-wrap">
+                  <div class="item-depart" v-for="(item1,index1) in item">
+                    <div class="txt-name">{{item1.depart}}</div>
+                    <div class="txt-value"><span>{{item1.number}}{{type == 5?'分':'个'}}</span></div>
+                    <div class="txt-percent">{{item1.percent}}</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -322,22 +324,22 @@ export default {
               show: false // 是否显示对应地名
             },
             itemStyle: {
-              normal: {
-                areaColor: "#0d0059",
-                borderColor: "#389dff",
-                borderWidth: 1, //设置外层边框
-                shadowBlur: 3,
-                shadowOffsetY: 3,
+              borderWidth: 0.5, // 描边线宽 为 0 时无描边
+              borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+              borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
+              shadowOffsetY: 8,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(128, 217, 248, 1)',
+              shadowBlur: 8,
+            },
+            emphasis: {
+              itemStyle:{
+                areaColor: "#eee",
+                shadowOffsetY: 8,
                 shadowOffsetX: 0,
-                shadowColor: "#01012a"
-              },
-              emphasis: {
-                areaColor: "#184cff",
-                shadowOffsetX: 0,
-                shadowOffsetY: 0,
-                shadowBlur: 3,
                 borderWidth: 0,
-                shadowColor: "rgba(0, 0, 0, 0.5)"
+                shadowColor: "rgba(0, 0, 0, 0.5)",
+                shadowBlur: 8,
               }
             }
           },
@@ -665,20 +667,19 @@ export default {
               show: false // 是否显示对应地名
             },
             itemStyle: {
-              normal: {
-                areaColor: "#0d0059",
-                borderColor: "#eee",
-                borderWidth: 1, //设置外层边框
-                shadowBlur: 3,
-                shadowOffsetY: 3,
-                shadowOffsetX: 0,
-                shadowColor: "#01012a"
-              },
-              emphasis: {
+              borderWidth: 0.5, // 描边线宽 为 0 时无描边
+              borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+              borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
+              shadowOffsetY: 8,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(128, 217, 248, 1)',
+              shadowBlur: 8,
+            },
+            emphasis: {
+              itemStyle:{
                 areaColor: "#eee",
-                shadowOffsetX: 0,
-                shadowOffsetY: 0,
-                shadowBlur: 3,
+                shadowOffsetY: 8,
+                shadowOffsetX: -8,
                 borderWidth: 0,
                 shadowColor: "rgba(0, 0, 0, 0.5)"
               }
@@ -894,14 +895,14 @@ export default {
       // 无缝轮播临界判断
       slideMinMax(){
         var $this = this;
-        if($this.markIndex === $this.currentDepartData.length/3*2){
+        if($this.markIndex >= $this.currentDepartData.length/3*2){
           $this.markIndex = 10;
           $this.slideStyle = Object.assign({},$this.slideStyle,{
             transform:`translate(${-$this.itemWidth*($this.markIndex-1)}px,0)`,
             'transitionDuration':'0ms'
           })
         }
-        if($this.markIndex === $this.currentDepartData.length/3-1){
+        if($this.markIndex <= $this.currentDepartData.length/3-1){
           $this.markIndex = $this.currentDepartData.length/3*2-1;
           $this.slideStyle = Object.assign({},$this.slideStyle,{
             transform:`translate(${-$this.itemWidth*($this.markIndex-1)}px,0)`,

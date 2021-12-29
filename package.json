@@ -20,6 +20,7 @@
     "core-js": "^3.18.3",
     "cross-env": "^7.0.3",
     "echarts": "^5.2.2",
+    "echarts-gl": "^2.0.8",
     "element-ui": "^2.15.6",
     "file-saver": "^2.0.5",
     "increase-memory-limit": "^1.0.7",
