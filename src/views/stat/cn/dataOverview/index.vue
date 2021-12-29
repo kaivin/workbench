@@ -16,6 +16,7 @@
                language="中文"
                :yeartong="yeartong"
                :departList="departList"
+               :year="type==1?prevYear:nowYear"
                ></XpanYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="8" :lg="12">
@@ -23,6 +24,7 @@
                language="中文"
                :yearscoretong="yearscoretong"
                :departList="departList"
+               :year="type==1?prevYear:nowYear"
                ></ScoreYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="8" :lg="12">
@@ -30,17 +32,20 @@
                language="中文"
                :yearsanumbertong="yearsanumbertong"
                :departList="departList"
+               :year="type==1?prevYear:nowYear"
                ></DealYears>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12">
                <XpanPercent
                language="中文"
                :departList="departList"
+               :year="type==1?prevYear:nowYear"
                :yearcount="yearcount">
                </XpanPercent>
                <ScorePercent
                language="中文"
                :departList="departList"
+               :year="type==1?prevYear:nowYear"
                :yeardeaprtscore="yeardeaprtscore">
                </ScorePercent>
              </el-col>
@@ -52,6 +57,7 @@
                :regionInquiryCountDepart="regionInquiryCountDepart"
                :regionDealScoreDepart="regionDealScoreDepart"
                :departList="departList"
+               :year="type==1?prevYear:nowYear"
                ></HotArea>
              </el-col>
              <el-col class="hxmodule-item" :xl="6" :lg="12" >
@@ -59,11 +65,13 @@
                language="中文"
                :yeardeaprtscore="yeardeaprtscore"
                :departList="departList"
+               :year="type==1?prevYear:nowYear"
                ></DealDepart>
                <CostDepart
               language="中文"
               :yeardeaprtscore="yeardeaprtscore"
               :departList="departList"
+              :year="type==1?prevYear:nowYear"
               ></CostDepart>
              </el-col>
              <el-col class="hxmodule-item" :xl="12" :lg="24">
@@ -71,6 +79,8 @@
                language="中文"
                :productscoretop10="productscoretop10"
                :productxuntop10="productxuntop10"
+               :year="type==1?prevYear:nowYear"
+               :departList="departList"
                ></HotProduct>
              </el-col>
              <el-col class="hxmodule-item" :xl="12" :lg="24">
@@ -83,12 +93,7 @@
                ></ScoreTop>
              </el-col>
 
-             <!-- <el-col class="hxmodule-item" :xl="6" :lg="12">
-               <XpanTop
-               :moneytop5="moneytop5"
-               ></XpanTop>
-             </el-col>
-             <el-col>
+             <!-- <el-col>
               <CostYears
                language="中文"
                :yearsmoneytong="yearsmoneytong"

@@ -153,12 +153,13 @@ export default {
         if($this.type == 4){
           // 奖金
           topdata = $this.moneytop5;
-          topdata.sort(function(a, b){return a.allmoney.split(',').join('') - b.allmoney.split(',').join('')}).reverse(); 
-          let maxwidth = topdata[0].allmoney.split(',').join('');
-          for(let i = 0;i<topdata.length;i++){
-            topdata[i].width = parseFloat((topdata[i].allmoney.split(',').join('')/maxwidth).toFixed(2)) * 85 + '%';
+          if(topdata.length > 0){
+            topdata.sort(function(a, b){return a.allmoney.split(',').join('') - b.allmoney.split(',').join('')}).reverse(); 
+            let maxwidth = topdata[0].allmoney.split(',').join('');
+            for(let i = 0;i<topdata.length;i++){
+              topdata[i].width = parseFloat((topdata[i].allmoney.split(',').join('')/maxwidth).toFixed(2)) * 85 + '%';
+            }
           }
-          console.log(topdata)
         }else{
           if($this.type == 1){
             // 成交积分
@@ -170,10 +171,12 @@ export default {
             // 百万个数
             topdata = $this.anumbertop5;
           }
-          topdata.sort(function(a, b){return a.number - b.number}).reverse(); 
-          let maxwidth = topdata[0].number;
-          for(let i = 0;i<topdata.length;i++){
-            topdata[i].width = parseFloat((topdata[i].number/maxwidth).toFixed(2)) * 85 + '%';
+          if(topdata.length > 0){
+            topdata.sort(function(a, b){return a.number - b.number}).reverse(); 
+            let maxwidth = topdata[0].number;
+            for(let i = 0;i<topdata.length;i++){
+              topdata[i].width = parseFloat((topdata[i].number/maxwidth).toFixed(2)) * 85 + '%';
+            }
           }
         }
 

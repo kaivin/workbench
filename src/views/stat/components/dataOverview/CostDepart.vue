@@ -40,7 +40,11 @@ export default {
         default:function(){
           return []
         }
-      }
+      },
+      year:{
+        type: Number,
+        default: new Date().getFullYear()
+      },
     },
     watch:{
       yeardeaprtscore:{
@@ -76,6 +80,9 @@ export default {
       },
       setChartBottom(val){
           var $this = this;
+          if($this.myChart){
+            $this.myChart.dispose();
+          }
           let chartBotData = JSON.parse(JSON.stringify(val));
           for(let i = 0;i<chartBotData.length;i++){
             chartBotData[i].departname=chartBotData[i].departname.slice(-2)
@@ -153,7 +160,7 @@ export default {
                     lineStyle:{
                       color: "#323958",
                       type: "solid"
-                    }
+                    },
                   },
                   axisTick: {
                       show: false
@@ -162,7 +169,7 @@ export default {
                     fontSize: 13,
                     color: '#ccc',
                     padding: [3,0, 0, 0]
-                  }
+                  },
               }],
               yAxis: [{
                   type: 'value',
@@ -211,20 +218,20 @@ export default {
                   { //三个最低下的圆片
                       name: "",
                       type: "pictorialBar",
-                      symbolSize: [28, 7],
-                      symbolOffset: [-4, 0],
+                      symbolSize: [32, 10],
+                      symbolOffset: [-2, 2],
                       z: 12,
                       itemStyle: {
                           opacity: 1,
                           color: function(params){
                             if(params.dataIndex == 0){
-                              return '#b10a27'
+                              return  '#b10a27';
                             }else if(params.dataIndex == 1){
-                              return '#dc5b00'
+                              return  '#dc5b00';
                             }else if(params.dataIndex == 2){
-                              return '#0041d0'
+                                return  '#0041d0';
                             }else if(params.dataIndex == 3){
-                              return '#3a6cc6'
+                              return  '#3a6cc6';
                             }
                           }
                       },
@@ -237,44 +244,89 @@ export default {
                   {
                       name: '成本',
                       type: 'bar',
-                      barWidth: 28,
+                      barWidth: 32,
+                      z: 1,
                       itemStyle: { //lenged文本
-                          opacity: .7,
                           color: function(params) {
                               if(params.dataIndex == 0){
-                                return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
                                     offset: 0,
-                                    color: '#ff395d'
+                                    color: '#d21435'
+                                },{
+                                    offset: 0.3,
+                                    color: '#ff6682'
+                                },{
+                                    offset: 0.4,
+                                    color: '#ff6682'
+                                },{
+                                    offset: 0.7,
+                                    color: '#b10a27'
                                 }, {
+                                    offset: 0.95,
+                                    color: '#d21435'
+                                },{
                                     offset: 1,
                                     color: '#d21435'
                                 }], false)
                               }else if(params.dataIndex == 1){
-                                return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
                                     offset: 0,
-                                    color: '#ffaf47'
+                                    color: '#ff7b22'
+                                },{
+                                    offset: 0.3,
+                                    color: '#ffda51'
+                                },{
+                                    offset: 0.4,
+                                    color: '#ffda51'
+                                },{
+                                    offset: 0.7,
+                                    color: '#dc5b00'
                                 }, {
-                                    offset: 1,
-                                    color: '#ff7a21'
-                                }], false)
-                              }else if(params.dataIndex == 2){
-                                return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                    offset: 0,
-                                    color: '#2e7ff3'
-                                }, {
-                                    offset: 0.5,
-                                    color: '#1969f9'
+                                    offset: 0.95,
+                                    color: '#ffae46'
                                 },{
                                     offset: 1,
-                                    color: '#0352ff'
+                                    color: '#ffae46'
+                                }], false)
+                              }else if(params.dataIndex == 2){
+                                return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                    offset: 0,
+                                    color: '#0452ff'
+                                },{
+                                    offset: 0.3,
+                                    color: '#50c8f6'
+                                },{
+                                    offset: 0.4,
+                                    color: '#50c8f6'
+                                },{
+                                    offset: 0.7,
+                                    color: '#0041d0'
+                                }, {
+                                    offset: 0.95,
+                                    color: '#2d7ef3'
+                                },{
+                                    offset: 1,
+                                    color: '#2d7ef3'
                                 }], false)
                               }else if(params.dataIndex == 3){
-                                return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
                                     offset: 0,
-                                    color: '#2e7ff3'
+                                    color: '#49b3f8'
+                                },{
+                                    offset: 0.3,
+                                    color: '#87e6fe'
+                                },{
+                                    offset: 0.4,
+                                    color: '#87e6fe'
+                                },{
+                                    offset: 0.7,
+                                    color: '#3a6cc6'
                                 }, {
+                                    offset: 0.95,
+                                    color: '#2f80f3'
+                                },{
                                     offset: 1,
-                                    color: '#4ab5f8'
+                                    color: '#2f80f3'
                                 }], false)
                               }
                           }
@@ -285,8 +337,8 @@ export default {
                   {
                       name: "", 
                       type: "pictorialBar",
-                      symbolSize: [44, 10],
-                      symbolOffset: [-4, -3],
+                      symbolSize: [40, 10],
+                      symbolOffset: [-2, -3],
                       z: 12,
                       symbolPosition: "end",
                       itemStyle: {
@@ -301,14 +353,14 @@ export default {
                   {
                       name: "",
                       type: "pictorialBar",
-                      symbolSize: [28, 14],
-                      symbolOffset: [-4, -5],
+                      symbolSize: [32, 14],
+                      symbolOffset: [-2, -5],
                       z: 12,
                       itemStyle: {
                           opacity: 1,
                           color: function(params) {
                             if(params.dataIndex == 0){
-                              return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                              return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
                                       offset: 0,
                                       color: '#ff617e'
                                   }, {
@@ -316,7 +368,7 @@ export default {
                                       color: '#ff91a4'
                               }], false)
                             }else if(params.dataIndex == 1){
-                              return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                              return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
                                       offset: 0,
                                       color: '#ff9e37'
                                   }, {
@@ -324,7 +376,7 @@ export default {
                                       color: '#ffe154'
                               }], false)
                             }else if(params.dataIndex == 2){
-                              return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                              return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
                                       offset: 0,
                                       color: '#2d7df3'
                                   }, {
@@ -332,7 +384,7 @@ export default {
                                       color: '#53d0f6'
                               }], false)
                             }else if(params.dataIndex == 3){
-                              return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                              return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
                                       offset: 0,
                                       color: '#91eaff'
                                   }, {
@@ -351,8 +403,8 @@ export default {
                   {//最大值
                       name: 'max',
                       type: 'bar',
-                      barWidth: 44,
-                      barGap: '-130%',
+                      barWidth: 40,
+                      barGap: '-113%',
                       z: 0,
                       itemStyle: {
                           color: '#324071',
@@ -366,8 +418,8 @@ export default {
                   {
                     name: '数据',
                     type: 'pictorialBar',
-                    symbolSize: [44, 10],
-                    symbolOffset: [-4, -3],
+                    symbolSize: [40, 10],
+                    symbolOffset: [-2, -3],
                     z: 1,
                     zlevel: 0,
                     itemStyle: {
@@ -392,11 +444,24 @@ export default {
 
           option && myChart.setOption(option);
           $this.myChart = myChart;
+          myChart.on('click', function (params) {
+            // 在用户点击后控制台打印数据的名称
+            let baseDepart = chartBotData[params.dataIndex].id;
+            let contrastDepart = '';
+            let startTime = $this.year + '/01';
+            let endTime = $this.year + '/12';
+            if($this.language == '中文'){
+              $this.$router.push({path:'/stat/cn/departAnalysis',query:{type:3,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+            }else{
+              $this.$router.push({path:'/stat/en/departAnalysis',query:{type:3,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+            }
+        });
       },
       goPage(){
         var $this = this;
         var newDate = new Date();
-        var newYear = newDate.getFullYear();
+        // var newYear = newDate.getFullYear();
+        var newYear = $this.year;
         var startTime = newYear + "/01";
         var endTime = newYear + "/12";
         var baseDepart = "";

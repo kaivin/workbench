@@ -53,7 +53,11 @@ export default {
         default:function(){
           return []
         }
-      }
+      },
+      year:{
+        type: Number,
+        default: new Date().getFullYear()
+      },
     },
     watch:{
       yeartong:{
@@ -93,7 +97,8 @@ export default {
       goPage(){
         var $this = this;
         var newDate = new Date();
-        var newYear = newDate.getFullYear();
+        // var newYear = newDate.getFullYear();
+        var newYear = $this.year;
         var startTime = newYear + "/01";
         var endTime = newYear + "/12";
         var baseDepart = "";
@@ -193,8 +198,10 @@ export default {
             $this.myChart = myChart;
             myChart.on('click', function (params) {
               let month = params.name.slice(0,2);
-              let startTime = parseTime(new Date(),'{y}') + '/' +  month + '/01';
-              let endTime = parseTime(new Date(),'{y}') + '/' + month + '/' + $this.getMonthDays(parseTime(new Date(),'{y}'),month);
+              // let startTime = parseTime(new Date(),'{y}') + '/' +  month + '/01';
+              // let endTime = parseTime(new Date(),'{y}') + '/' + month + '/' + $this.getMonthDays(parseTime(new Date(),'{y}'),month);
+              let startTime = $this.year + '/' +  month + '/01';
+              let endTime = $this.year + '/' + month + '/' + $this.getMonthDays($this.year,month);
               var baseDepart = "";
               var contrastDepartArr = [];
               $this.departList.forEach(function(item,index){

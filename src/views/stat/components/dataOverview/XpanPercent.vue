@@ -39,7 +39,11 @@ export default {
         default:function(){
           return []
         }
-      }
+      },
+      year:{
+        type: Number,
+        default: new Date().getFullYear()
+      },
     },
     watch:{
       yearcount:{
@@ -71,7 +75,8 @@ export default {
       goPage(){
         var $this = this;
         var newDate = new Date();
-        var newYear = newDate.getFullYear();
+        // var newYear = newDate.getFullYear();
+        var newYear = $this.year;
         var startTime = newYear + "/01";
         var endTime = newYear + "/12";
         var baseDepart = "";

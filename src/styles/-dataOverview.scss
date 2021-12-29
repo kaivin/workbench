@@ -28,7 +28,7 @@
         height: 26px;
         text-align: center;
         line-height: 24px;
-        border: 1px solid #e1e3ea;
+        border: 1px solid rgba(225,227,234,.2);
         color: #9ea5af;
         font-size: 12px;
         box-sizing: border-box;
@@ -141,7 +141,7 @@
         padding: 0 10px;
         height: 26px;
         text-align: center;
-        line-height: 22px;
+        line-height: 24px;
         border: 1px solid rgba(225,227,234,.2);
         color: #9ea5af;
         font-size: 12px;
@@ -435,6 +435,17 @@
         }
         
       }
+      .nopic{
+        width:36px;
+        height:36px;
+        overflow: hidden;
+        border-radius: 2px;
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        background: url(../assets/default_pic.jpg) center center no-repeat;
+        background-size:100%;
+      } 
       .top-name{
         width: 66px;
         height: 34px;
@@ -692,7 +703,7 @@
   }
 }
 #HotProductChart{
-  height: 230px;
+  height: 336px;
 }
 .product_list{
   margin-top: -24px;

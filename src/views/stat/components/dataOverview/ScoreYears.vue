@@ -27,6 +27,7 @@
 import * as echarts from 'echarts';
 import {parseTime} from "@/utils";
 import { mapGetters } from 'vuex'
+import { parse } from 'qs';
 export default {
     name:'demo',
     data(){
@@ -70,7 +71,11 @@ export default {
         default:function(){
           return []
         }
-      }
+      },
+      year:{
+        type: Number,
+        default: new Date().getFullYear()
+      },
     },
     watch:{
       type:function(newval,oldval){
@@ -107,7 +112,8 @@ export default {
       goPage(){
         var $this = this;
         var newDate = new Date();
-        var newYear = newDate.getFullYear();
+        // var newYear = newDate.getFullYear();
+        var newYear = $this.year;
         var startTime = newYear + "/01";
         var endTime = newYear + "/12";
         var baseDepart = "";
@@ -352,7 +358,9 @@ export default {
             newXpanYears+=val[i].number;
           }
         }
-        this.totalXpanYears=newXpanYears.toFixed(2);
+        var newnum = newXpanYears.toFixed(2).split(".");
+        newnum = parseInt(newnum[0]).toLocaleString()+'.'+newnum[1];
+        this.totalXpanYears= newnum;
         if(newXpanYears>=oldXpanYears){
           this.isUp = true;
           this.isUpNum = (newXpanYears - oldXpanYears).toFixed(2)
