@@ -1,11 +1,11 @@
 <template>
   <div class="hxpage btm_prochart">
       <div class="title-view">
-        <div class="title">热门产品TOP10<span v-if="type==1">（单位：个）</span><span v-if="type==2">（单位：分）</span></div>
+        <div class="title">热门产品TOP10<span v-if="type==2 && language=='中文'">（单位：分）</span><span v-else>（单位：个）</span></div>
         <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:6,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">更多分析 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
         <div class="btn-group">
-          <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">询盘</div>
-          <div @click="changeType(2)" class="btn-item" :class="type == 2?'active':''">成交</div>
+          <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">询盘个数</div>
+          <div @click="changeType(2)" class="btn-item" :class="type == 2?'active':''">成交{{language=='中文'?'积分':'个数'}}</div>
         </div>
       </div>
       <div class="chart-bottom" id="HotProductChart"></div>
@@ -237,7 +237,14 @@ export default {
                 },
                 formatter: function (params) {
                     let returnData = '';
-                    let name = $this.type == 2 && $this.language=="中文" ? "积分" : "个数";
+                    let name = "";
+                    if($this.type == 1){
+                        name="询盘个数"
+                    }else if($this.type == 2&&$this.language == "中文"){  
+                      name="成交积分"
+                    }else if($this.type == 2&&$this.language == "英文"){
+                      name="成交个数"
+                    }
                     for (let i = 0; i < params.length; i++) {
                         returnData = params[i].name + '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background:#1e4acd"></span>'
                         +name + '<span style="padding-left:13px">' 
