@@ -1,7 +1,7 @@
 <template>
   <div class="memberAward">
       <div class="memberTit">
-          <h3>奖金排行榜<span>(截至{{moneytime.split("-").join(".")}})</span></h3>
+          <h3>奖金排行榜<span>({{moneytime}})</span></h3>
           <p>(单位：元)</p>
       </div>
       <div class="awardRank">

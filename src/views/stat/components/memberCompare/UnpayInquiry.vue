@@ -1,7 +1,7 @@
 <template>
   <div class="memberInquiry">
       <div class="memberTit">
-          <h3>询盘个数榜单<span>(截至{{datetime}})</span></h3>
+          <h3>询盘个数榜单<span>({{datetime}})</span></h3>
           <p><span>非付费成员年度排行</span>(单位：个)</p>
       </div>
       <div class="inquiryRank">
@@ -48,12 +48,23 @@ export default {
   created(){
     var $this = this;
     this.datetime = parseTime(new Date(),'{y}.{m}.{d}');
+    if(this.ByTime&&this.ByTime!=''){
+        this.datetime = this.ByTime;
+    }else{      
+        this.datetime = '截至'+parseTime(new Date(),'{y}.{m}.{d}');
+    }
   },
   props: {
     unpayInquiry: {
       type: Array,
       default: function () {
         return [];
+      },
+    },
+    ByTime:{
+      type: String,
+      default: function () {
+        return "";
       },
     },
     lang:{

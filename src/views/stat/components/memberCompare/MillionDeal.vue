@@ -82,7 +82,7 @@ export default {
       for(var i=0;i<datearr.length;i++){
         datearr[i] = datearr[i].split("-").join(".");
       }
-      return datearr.join("-");
+      return datearr.join(' ~ ');
     }
   },
   methods:{

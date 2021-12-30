@@ -33,6 +33,7 @@
                 :unpayInquiry="unpayInquiry"
                 :unpayInquirySet="unpayInquirySet"
                 :lang="en"
+                :ByTime ="Inquirytime"
                 @changeSet="changeSet"
                 v-if="unpayInquiry.length>0"
               ></unpay-inquiry>
@@ -84,6 +85,7 @@ export default {
   name: "enMemberAnalysis",
   data() {
     return {
+      ByTime:'',//截至时间
       department:[],//部门列表
       isAwardBool:false,
       unpayInquiry: [],
@@ -118,6 +120,7 @@ export default {
       },
       scoretime:'',
       moneytime: '',
+      Inquirytime: '',
       pickerMonthRangeOptions: {
         shortcuts: [{
           text: '今年至今',
@@ -279,6 +282,8 @@ export default {
         $this.awardMoneySet.isFold=false;
         $this.scoretime='';
         $this.moneytime='';
+        $this.Inquirytime='';
+        
     },
     // 获取英文询盘、成交等情况
     GetInquiryResult(){
@@ -299,16 +304,22 @@ export default {
                   if(response.moneylist&&response.moneylist.length>0){
                     var moneytime
                     if($this.searchData.data&&$this.searchData.data.length>0){
-                      moneytime=$this.searchData.data[1]
+                      moneytime=$this.searchData.data[0]+' ~ '+$this.searchData.data[1];
                     }else{
-                        moneytime=response.moneytime;
+                        moneytime='截至'+response.moneytime;
                     }
                     $this.BonusPlug(response.moneylist,moneytime);
                   }
                 }else{
                   // 非付费询盘
                   if(response.xunulist&&response.xunulist.length>0){
-                    $this.enquiriesPlug(response.xunulist);
+                    var moneytime
+                    if($this.searchData.data&&$this.searchData.data.length>0){
+                      moneytime=$this.searchData.data[0]+' ~ '+$this.searchData.data[1];
+                    }else{
+                        moneytime='';
+                    }
+                    $this.enquiriesPlug(response.xunulist,moneytime);
                   }
                   // 成交积分
                   if(response.scorelist&&response.scorelist.length>0){
@@ -332,30 +343,23 @@ export default {
                   if(response.moneylist&&response.moneylist.length>0){
                     var moneytime
                     if($this.searchData.data&&$this.searchData.data.length>0){
-                        moneytime=$this.searchData.data[1]
+                      moneytime=$this.searchData.data[0]+' ~ '+$this.searchData.data[1];
                     }else{
-                        moneytime=response.moneytime;
+                        moneytime='截至'+response.moneytime;
                     }
                     $this.BonusPlug(response.moneylist,moneytime);
                   }
                 }
-              }
-              // 成交积分
-              if(response.scorelist&&response.scorelist.length>0){
-                  var dealScore=rankingWithTotalItem(response.scorelist,'score');
-                  dealScore.forEach(function(item){
-                    item.score = numSeparate(Math.floor(item.score*100)/100);
-                    item.deptName=item.departname;
-                  });
-                  $this.dealScore = dealScore;
-                  $this.scoretime = response.scoretime;
-                if(response.scorelist.length < 9){
-                    $this.dealScoreSet.ifFold = false;
-                    $this.dealScoreSet.boxHeight = "auto";
-                }else{
-                    $this.dealScoreSet.ifFold = true;
-                    $this.dealScoreSet.boxHeight = "630px";
-                    $this.dealScoreSet.isFold = false;
+              }else{
+                // 非付费询盘
+                if(response.xunulist&&response.xunulist.length>0){
+                    var moneytime
+                    if($this.searchData.data&&$this.searchData.data.length>0){
+                      moneytime=$this.searchData.data[0]+' ~ '+$this.searchData.data[1];
+                    }else{
+                        moneytime='';
+                    }
+                  $this.enquiriesPlug(response.xunulist,moneytime);
                 }
                 // 成交积分
                 if(response.scorelist&&response.scorelist.length>0){
@@ -379,9 +383,9 @@ export default {
                 if(response.moneylist&&response.moneylist.length>0){
                   var moneytime
                   if($this.searchData.data&&$this.searchData.data.length>0){
-                      moneytime=$this.searchData.data[1]
+                    moneytime=$this.searchData.data[0]+' ~ '+$this.searchData.data[1];
                   }else{
-                      moneytime=response.moneytime;
+                      moneytime='截至'+response.moneytime;
                   }
                   $this.BonusPlug(response.moneylist,moneytime);
                 }
@@ -399,7 +403,7 @@ export default {
       });
     },
     //非付费询盘
-    enquiriesPlug(varData){
+    enquiriesPlug(varData,varTime){
       var $this = this;
       var unpayInquiry=rankingWithTotalItem(varData,'number');
       unpayInquiry.forEach(function(item){
@@ -407,6 +411,7 @@ export default {
         item.deptName=item.departname;
       });
       $this.unpayInquiry = unpayInquiry;
+      $this.Inquirytime = varTime;
       if(varData.length < 9){
           $this.unpayInquirySet.ifFold = false;
           $this.unpayInquirySet.boxHeight = "auto";

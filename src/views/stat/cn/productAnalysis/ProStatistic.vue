@@ -3,7 +3,7 @@
        <div class="proStatTop"><p><i class="svg-i"><svg-icon icon-class="tips" class-name="disabled" /></i>询盘数据统计：{{userBasicInfo.name}} - {{userBasicInfo.time}}</p></div>
        <div class="proStatMid">
          <div class="proStatMidFl">
-              <h3>产品询盘{{userBasicInfo.pick==1?'个数':'积分'}}</h3>
+              <h3>产品询盘{{userBasicInfo.pick=='enquirie'?'个数':'积分'}}</h3>
               <div class="proStatMidFlBox">
                    <column-chart :chartList="chartList" v-if='chartList'></column-chart>
               </div>
@@ -32,7 +32,13 @@
                     </el-table-column>
                     <el-table-column
                         prop="number"
+                        v-if="userBasicInfo.pick=='enquirie'"
                         label="询盘个数">
+                    </el-table-column>
+                    <el-table-column
+                        prop="number"
+                        v-if="userBasicInfo.pick=='score'"
+                        label="积分">
                     </el-table-column>
                     <el-table-column
                         prop="percent"
