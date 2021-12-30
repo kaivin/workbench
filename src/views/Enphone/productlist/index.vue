@@ -132,20 +132,6 @@
                   <el-input v-model="dialogForm.sort" ref="sort"></el-input>
               </el-form-item>
           </div>
-          <div class="item-form">
-            <el-form-item label="产品图片：" :label-width="formLabelWidth">
-              <el-upload
-                  class="avatar-uploader pro-uploader"
-                  action=""
-                  :http-request="httpRequest"
-                  :show-file-list="false"
-                  :before-upload="beforeAvatarUpload"
-                  >
-                  <img v-if="dialogForm.pimg" :src="dialogForm.pimg" class="avatar">
-                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
-            </el-form-item>
-          </div>
         </el-form>
         <template #footer>
           <span class="dialog-footer">
@@ -178,7 +164,6 @@ export default {
         typeid:"",
         productlevel:'',
         sort:"",
-        pimg: ""
       },
       pagerCount:5,
       pageSizeList:[15, 30, 50, 100],
@@ -519,7 +504,6 @@ export default {
       $this.dialogForm.sort = row.sort==0?"":row.sort;
       $this.dialogForm.typeid = row.typeid;
       $this.dialogForm.productlevel = row.productlevel;
-      $this.dialogForm.pimg = row.pimg;
     },
     // 保存添加/编辑数据
     saveData(){
@@ -535,7 +519,6 @@ export default {
         formData.sort = $this.dialogForm.sort;
         formData.typeid = $this.dialogForm.typeid;
         formData.productlevel = $this.dialogForm.productlevel;
-        formData.pimg = $this.dialogForm.pimg;
         var pathUrl = "";
         if($this.dialogText=="编辑产品"){
           pathUrl = "enphone/productEditAction";
@@ -564,43 +547,6 @@ export default {
         });
       }
     },
-        //图片上传
-    httpRequest(param){
-      var $this=this;
-      var formData = new FormData();
-      formData.append('file',param.file);
-      if(!$this.isSaveData){
-        $this.isSaveData=true;
-        $this.$store.dispatch("api/fileUploadAction", formData).then(response=>{
-          if(response.status){
-            $this.dialogForm.pimg = response.info;
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-          setTimeout(()=>{
-            $this.isSaveData=false;
-          },1000);
-        })
-      }
-
-      
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg'||'image/png';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 或PNG 格式!');
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isJPG && isLt2M;
-    },
     // 重置添加数据表单
     resetFormData(){
       var $this = this;
@@ -609,7 +555,6 @@ export default {
       $this.dialogForm.sort = "";
       $this.dialogForm.typeid = "";
       $this.dialogForm.productlevel = "";
-      $this.dialogForm.pimg = "";
     },
     // 验证是否为空
     validationForm(){

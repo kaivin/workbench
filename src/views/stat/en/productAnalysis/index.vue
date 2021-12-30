@@ -95,23 +95,15 @@
         </div> 
     <el-dialog :title="focusProTitle" custom-class="transfer-dialog" :visible.sync="dialogFocusProVisible" width="700px">
         <div class="transfer-panel">
-             <div class="transferFl">
-                  <p class="transferFlTit">可关注产品</p>
-                  <div class="transferBox">
-                       <dl :class="[item.isOn?'isOn':'',item.isDisplay?'isDisplay':'']" v-for="(item,index) in AllProList" :key="index">
-                          <dt @click="transferType(item.id)"><i></i><span>{{item.name}}</span></dt>
-                          <dd :class="items.isOn?'isOn':''" @click="transferPro(items.id)" v-for="(items,indexs) in item.son" :key="indexs">
-                              <i></i><span>{{items.name}}</span>
-                          </dd>
-                       </dl>
-                  </div>
-             </div>
-             <div class="transferFr">
-                  <p class="transferFlTit">已关注产品</p>
-                  <div class="transferBox">
-                       <p @click="cleartransferPro(item.id)" v-for="(item,index) in focusProArr" :key="index"><i></i><span>{{item.name}}</span></p>
-                  </div>
-             </div>
+        <div class="transfer-wrap">
+              <dir-transfer
+                v-model="focusProValue"
+                :data="AllProList"
+                :titles="['可关注产品', '已关注产品']"
+                :filter-method="filterfocusProMethod"
+                filter-placeholder="请输入用户关键字"
+                ></dir-transfer>
+        </div>
         </div>
         <template #footer>
         <span class="dialog-footer">
@@ -267,17 +259,14 @@ export default {
           if (res) {
             if (res.status) {
                 if(res.data&&res.data.length>0){
+                    var AllProList=[];
                     res.data.forEach(function(item,index){
-                      item.isOn=false;
-                      item.isDisplay=false;
-                      if(item.son&&item.son.length>0){
-                        item.son.forEach(function(items,indexs){
-                          items.isOn=false;
-                          items.isDisplay=false;
-                        });
-                      }
+                        var objItem={};
+                        objItem.key=item.id;
+                        objItem.label=item.name;
+                        AllProList.push(objItem);
                     });
-                    $this.AllProList=res.data;
+                    $this.AllProList=AllProList;
                     $this.getfocusPro();
                 }
             } else {
@@ -380,25 +369,6 @@ export default {
     //点击弹出添加关注产品框
     handleAddPro(){
         var $this=this;
-        var AllProList=$this.AllProList;
-        AllProList.forEach(function(item,index){
-           if($this.focusProArr&&$this.focusProArr.length>0){
-             $this.focusProArr.forEach(function(items,indexs){
-               if(item.id==items.typeid){
-                 item.isOn=true;
-               }
-             });
-           }
-           item.son.forEach(function(itemk,indexk){
-              if($this.focusProArr&&$this.focusProArr.length>0){
-                $this.focusProArr.forEach(function(items,indexs){
-                  if(itemk.id==items.id){
-                    itemk.isOn=true;
-                  }
-                });
-              }
-           });
-        });
         $this.dialogFocusProVisible=true;
     },
     // 用户分配保存
@@ -416,9 +386,6 @@ export default {
                         type: 'success'
                     });
                     $this.dialogFocusProVisible = false;
-                    $this.AllProList.forEach(function(item,index){
-                      item.isDisplay=false;
-                    });
                     $this.getfocusPro();
                     setTimeout(()=>{
                         $this.issaveFocusPro=false;
@@ -752,65 +719,6 @@ export default {
       var property = data;
       property.isFold = isfold;
       property.boxHeight = boxheight;
-    },
-    // 点击分类折叠展开产品
-    transferType(varData){
-      var $this=this;
-      var AllProList=$this.AllProList;
-      AllProList.forEach(function(item,index){
-        if(item.id==varData){
-          item.isDisplay=!item.isDisplay;
-          item.isOn=false;
-          if($this.focusProArr&&$this.focusProArr.length>0){
-            $this.focusProArr.forEach(function(items,indexs){
-              if(items.typeid==item.id){
-                item.isOn=true;
-              }
-            });
-          }
-          if(item.isDisplay){
-            item.isOn=true;
-          }
-        }
-      });
-      $this.AllProList=AllProList;
-    },
-    // 点击产品选择
-    transferPro(varData){
-      var $this=this;
-      var AllProList=$this.AllProList;
-      var focusProArr=[];
-      var focusProValue=[];
-      AllProList.forEach(function(item,index){
-        item.son.forEach(function(items,indexs){
-          if(items.id==varData){
-              items.isOn=!items.isOn;
-          }
-          if(items.isOn){
-            focusProArr.push(items);
-            focusProValue.push(items.id);
-          }
-        });        
-      });
-      $this.AllProList=AllProList;
-      $this.focusProArr=focusProArr;
-      $this.focusProNum=focusProArr.length;
-      $this.focusProValue=focusProValue;//关注产品id 
-    },
-    cleartransferPro(varData){
-      var $this=this;
-      var focusProArr=$this.focusProArr;
-      var focusProList=[];
-      var focusProValue=[];
-      focusProArr.forEach(function(item,index){
-        if(item.id!=varData){
-          focusProList.push(item);
-          focusProValue.push(item.id);
-        }
-      });
-      $this.focusProValue=focusProValue;//关注产品id 
-      $this.focusProArr=focusProList;
-      $this.focusProNum=focusProList.length;
     },
   }
 }

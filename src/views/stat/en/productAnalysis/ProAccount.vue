@@ -486,17 +486,12 @@ export default {
           if (res) {
             if (res.status) {
                 if(res.data&&res.data.length>0){
+                    var AllProList=[];
                     res.data.forEach(function(item,index){
-                      item.isOn=false;
-                      item.isDisplay=false;
-                      if(item.son&&item.son.length>0){
-                        item.son.forEach(function(items,indexs){
-                          items.isOn=false;
-                          items.isDisplay=false;
-                        });
-                      }
+                        item.isOn=false;
+                        AllProList.push(item);
                     });
-                    $this.AllProList=res.data;
+                    $this.AllProList=AllProList;
                 }
             } else {
               $this.$message({
@@ -707,7 +702,11 @@ export default {
                     //询盘占比
                     var departcount=[];
                     if(res.departcount&&res.departcount.length>0){
-                        departcount=departcount.concat($this.piePlug(res.departcount,'询盘部门占比','enquirie','总询盘个数'));
+                        var peitit='';
+                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='询盘部门占比'}
+                        if($this.contrastName=='productCont'){peitit='询盘产品占比'}
+                        if($this.contrastName=='timeCont'){peitit='询盘时间占比'}
+                        departcount=departcount.concat($this.piePlug(res.departcount,peitit,'enquirie','总询盘个数'));
                     }
                     //询盘地图
                     var EnquirieMap=[];
@@ -853,7 +852,11 @@ export default {
                         }
                         //积分占比
                         if(res.departscore&&res.departscore.length>0){
-                            departcount=departcount.concat($this.piePlug(res.departscore,'成交积分部门占比','score','总询盘积分'));
+                            var peitit='';
+                            if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='成交积分部门占比'}
+                            if($this.contrastName=='productCont'){peitit='成交积分产品占比'}
+                            if($this.contrastName=='timeCont'){peitit='成交积分时间占比'}
+                            departcount=departcount.concat($this.piePlug(res.departscore,peitit,'score','总成交积分'));
                         }
                         //成交个数地图
                         var ChartMap=[];
@@ -927,7 +930,11 @@ export default {
                             });
                             departCount.push(itemObj);
                         });
-                        departcountChart=departcountChart.concat($this.piePlug(departCount,'询盘部门占比','enquirie','总询盘个数'));
+                        var peitit='';
+                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='询盘部门占比'}
+                        if($this.contrastName=='productCont'){peitit='询盘产品占比'}
+                        if($this.contrastName=='timeCont'){peitit='询盘时间占比'}
+                        departcountChart=departcountChart.concat($this.piePlug(departCount,peitit,'enquirie','总询盘个数'));
                     }
                     //询盘地图
                     var EnquirieMap=[];
@@ -949,10 +956,10 @@ export default {
                                 var productname='';
                                 if($this.contrastName=='timeCont'){
                                     if(index==0){
-                                        productname=$this.routTag.data[0]+'-'+$this.routTag.data[1];
+                                        productname=$this.routTag.data[0]+" ~ "+$this.routTag.data[1];
                                     }
                                     if(index==1){
-                                        productname=$this.routTag.cstarttime+'-'+$this.routTag.cendtime;
+                                        productname=$this.routTag.cstarttime+" ~ "+$this.routTag.cendtime;
                                     }
                                 }
                                 if($this.contrastName=='productCont'){
@@ -999,8 +1006,12 @@ export default {
                                     itemObj.score=itemObj.score.toFixed(2)*1
                                 });
                                 departCount.push(itemObj);
-                            });                        
-                            departcountChart=departcountChart.concat($this.piePlug(departCount,'成交积分部门占比','score','总询盘积分'));
+                            });              
+                            var peitit='';
+                            if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='成交积分部门占比'}
+                            if($this.contrastName=='productCont'){peitit='成交积分产品占比'}
+                            if($this.contrastName=='timeCont'){peitit='成交积分时间占比'}          
+                            departcountChart=departcountChart.concat($this.piePlug(departCount,peitit,'score','总成交积分'));
                         }
                         //成交个数地图
                         var ChartMap=[];
@@ -1016,10 +1027,10 @@ export default {
                                                     var productname='';
                                                     if($this.contrastName=='timeCont'){
                                                         if(index==0){
-                                                            productname=$this.routTag.data[0]+'-'+$this.routTag.data[1];
+                                                            productname=$this.routTag.data[0]+" ~ "+$this.routTag.data[1];
                                                         }
                                                         if(index==1){
-                                                            productname=$this.routTag.cstarttime+'-'+$this.routTag.cendtime;
+                                                            productname=$this.routTag.cstarttime+" ~ "+$this.routTag.cendtime;
                                                         }
                                                     }else{
                                                     var productname=item[0].departname;
@@ -1498,13 +1509,7 @@ export default {
                         },
                         tickCount: 5,
                         max: maxnum,
-                        label:{
-                            style:{
-                                fontSize: 12,
-                                fill: "#b3b3b3",
-                                fillOpacity: 1
-                            }
-                        }
+                        label:false
                     },
                     xAxis:false,
                 }

@@ -187,26 +187,8 @@
             </div>
         </div>
       <el-dialog :title="focusProTitle" custom-class="transfer-dialogPro" :visible.sync="dialogFocusProVisible" width="830px">
-            <div class="contrastOption" v-if="contrastName=='departCont'">
+            <div class="contrastOption">
                  <p v-for="(item,index) in contrastList" :key="index" :class="[item.isDisplay?'active':'',item.isOn?'is-disabled':'']" @click="AddContrast(item.id)"><i></i><span>{{item.name}}</span></p>
-            </div>
-            <div class="transfer-panel" v-if="contrastName=='productCont'">
-                <div class="transferFl">
-                    <div class="transferBox">
-                        <dl :class="[item.isOn?'isOn':'',item.isDisplay?'isDisplay':'']" v-for="(item,index) in AllProList" :key="index">
-                            <dt @click="transferType(item.id)"><i></i><span>{{item.name}}</span></dt>
-                            <dd :class="items.isOn?'isOn':''" @click="transferPro(items.id)" v-for="(items,indexs) in item.son" :key="indexs">
-                                <i></i><span>{{items.name}}</span>
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-                <div class="transferFr">
-                    <div class="transferBox">
-                        <p><span>已选产品：{{contrastProname.length}}</span><i>清空</i></p>
-                        <p @click="cleartransferPro(item)" v-for="(item,index) in contrastProname" :key="index"><span>{{item.name}}</span><i v-if="item.name==routTag.productname"><svg-icon icon-class="websiteHttps" /></i><i v-else><svg-icon icon-class="close" /></i></p>
-                    </div>
-                </div>
             </div>
             <template #footer>
                 <span class="dialog-footer">
@@ -479,17 +461,12 @@ export default {
           if (res) {
             if (res.status) {
                 if(res.data&&res.data.length>0){
+                    var AllProList=[];
                     res.data.forEach(function(item,index){
-                      item.isOn=false;
-                      item.isDisplay=false;
-                      if(item.son&&item.son.length>0){
-                        item.son.forEach(function(items,indexs){
-                          items.isOn=false;
-                          items.isDisplay=false;
-                        });
-                      }
+                        item.isOn=false;
+                        AllProList.push(item);
                     });
-                    $this.AllProList=res.data;
+                    $this.AllProList=AllProList;
                 }
             } else {
               $this.$message({
@@ -831,11 +808,19 @@ export default {
                     //询盘占比
                     var departcount=[];
                     if(res.departcount&&res.departcount.length>0){
-                        departcount=departcount.concat($this.piePlug(res.departcount,'询盘部门占比','enquirie','总询盘个数'));
+                        var peitit='';
+                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='询盘部门占比'}
+                        if($this.contrastName=='productCont'){peitit='询盘产品占比'}
+                        if($this.contrastName=='timeCont'){peitit='询盘时间占比'}
+                        departcount=departcount.concat($this.piePlug(res.departcount,peitit,'enquirie','总询盘个数'));
                     }
                     //积分占比
                     if(res.departscore&&res.departscore.length>0){
-                        departcount=departcount.concat($this.piePlug(res.departscore,'成交积分部门占比','score','总询盘积分'));
+                        var peitit='';
+                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='成交积分部门占比'}
+                        if($this.contrastName=='productCont'){peitit='成交积分产品占比'}
+                        if($this.contrastName=='timeCont'){peitit='成交积分时间占比'}
+                        departcount=departcount.concat($this.piePlug(res.departscore,peitit,'score','总成交积分'));
                     }
                     $this.ChartAccount=departcount;
                     //询盘地图
@@ -895,7 +880,11 @@ export default {
                             });
                             departCount.push(itemObj);
                         });
-                        departcountChart=departcountChart.concat($this.piePlug(departCount,'询盘部门占比','enquirie','总询盘个数'));
+                        var peitit='';
+                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='询盘部门占比'}
+                        if($this.contrastName=='productCont'){peitit='询盘产品占比'}
+                        if($this.contrastName=='timeCont'){peitit='询盘时间占比'}
+                        departcountChart=departcountChart.concat($this.piePlug(departCount,peitit,'enquirie','总询盘个数'));
                     }
                     //积分占比
                     if(res.productmonthscore&&res.productmonthscore.length>0){
@@ -930,8 +919,12 @@ export default {
                                 itemObj.score=itemObj.score.toFixed(2)*1
                             });
                             departCount.push(itemObj);
-                        });                        
-                        departcountChart=departcountChart.concat($this.piePlug(departCount,'成交积分部门占比','score','总询盘积分'));
+                        });
+                        var peitit='';
+                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='成交积分部门占比'}
+                        if($this.contrastName=='productCont'){peitit='成交积分产品占比'}
+                        if($this.contrastName=='timeCont'){peitit='成交积分时间占比'}
+                        departcountChart=departcountChart.concat($this.piePlug(departCount,peitit,'score','总成交积分'));
                     }
                     $this.ChartEnquirie=ChartEnquirie;
                     $this.ChartAccount=departcountChart;
@@ -954,10 +947,10 @@ export default {
                             var productname='';
                             if($this.contrastName=='timeCont'){
                                 if(index==0){
-                                    productname=$this.routTag.data[0]+'-'+$this.routTag.data[1];
+                                    productname=$this.routTag.data[0]+" ~ "+$this.routTag.data[1];
                                 }
                                 if(index==1){
-                                    productname=$this.routTag.cstarttime+'-'+$this.routTag.cendtime;
+                                    productname=$this.routTag.cstarttime+" ~ "+$this.routTag.cendtime;
                                 }
                             }
                             if($this.contrastName=='productCont'){
@@ -989,10 +982,10 @@ export default {
                             var productname='';
                             if($this.contrastName=='timeCont'){
                                 if(index==0){
-                                    productname=$this.routTag.data[0]+'-'+$this.routTag.data[1];
+                                    productname=$this.routTag.data[0]+" ~ "+$this.routTag.data[1];
                                 }
                                 if(index==1){
-                                    productname=$this.routTag.cstarttime+'-'+$this.routTag.cendtime;
+                                    productname=$this.routTag.cstarttime+" ~ "+$this.routTag.cendtime;
                                 }
                             }
                             if($this.contrastName=='productCont'){
@@ -1449,13 +1442,7 @@ export default {
                         },
                         tickCount:3,
                         max: maxnum,
-                        label:{
-                            style:{
-                                fontSize: 12,
-                                fill: "#b3b3b3",
-                                fillOpacity: 1
-                            }
-                        }
+                        label:false
                     },
                     xAxis:false,
                 }
@@ -1673,24 +1660,17 @@ export default {
       if(valData=='productCont'){
         var contrastList=$this.AllProList;
         contrastList.forEach(function(item,index){
+            var objItem={};
             item.isDisplay = false;
-            item.isOn = false;
-            if(item.id==$this.routTag.typeid){
+            if($this.routTag.productname==item.name){
+                item.isDisplay = true;
                 item.isOn = true;
+                objItem.name=item.name;
+                objItem.isOn=true;
+                objItem.id=item.id;
+                $this.contrastItem.push(objItem);
+                $this.contrastProname.push(objItem);
             }
-            item.son.forEach(function(items,indexs){
-                var objItem={};
-                if(items.name==$this.routTag.productname){
-                    items.isOn = true;
-                    objItem.name=items.name;
-                    objItem.isOn=true;
-                    objItem.isDisplay=true;
-                    objItem.id=items.id;
-                    objItem.typeid=item.id;
-                    $this.contrastItem.push(objItem);
-                    $this.contrastProname.push(objItem);
-                }
-            });
         });
         $this.contrastList=contrastList;
       }
@@ -1713,7 +1693,7 @@ export default {
         var $this=this;
         $this.dialogFocusProVisible=true;
         if(valData=='productCont'){
-            $this.focusProTitle='添加产品';
+            $this.focusProTitle='产品对比';
         }
         if(valData=='departCont'){
             $this.focusProTitle='部门对比';
@@ -1731,13 +1711,28 @@ export default {
                 var objItem={};
                 if(item.id == valData){
                     item.isDisplay = !item.isDisplay;
+                    if($this.contrastName=='productCont'){
+                        if($this.routTag.productname==item.name){
+                            item.isDisplay = true;
+                        }
+                    }
                 }
                 if(item.isDisplay){
-                    objItem.name=item.name;
-                    objItem.isOn=true;
-                    objItem.id=item.id;
-                    contrastProName.push(objItem);
-                    dept_id.push(item.id);
+                    if($this.contrastName=='productCont'){
+                        if($this.routTag.productname!=item.name){
+                            objItem.name=item.name;
+                            objItem.isOn=true;
+                            objItem.id=item.id;
+                            contrastProName.push(objItem);
+                        }
+                    }
+                    if($this.contrastName=='departCont'){
+                        objItem.name=item.name;
+                        objItem.isOn=true;
+                        objItem.id=item.id;
+                        contrastProName.push(objItem);
+                        dept_id.push(item.id);
+                    }
                 }
             });
             $this.contrastList=contrastList;
@@ -1745,25 +1740,14 @@ export default {
             if($this.contrastProname.length>=4){
                 $this.contrastBtnShow=false;
             }
-            $this.routTag.dept_id=dept_id;
+            if($this.contrastName=='departCont'){
+                $this.routTag.dept_id=dept_id;
+            }
         }
     },
     //点击关闭弹出层
     closePopup(){
         var $this=this;
-        if($this.contrastName=='productCont'){
-            $this.contrastList.forEach(function(item,index){
-                item.isDisplay=false;
-                item.isOn=false;
-                if($this.contrastProname&&$this.contrastProname.length>0){
-                    $this.contrastProname.forEach(function(items,indexs){
-                        if(items.typeid==item.id){
-                            item.isOn=true;
-                        }
-                    });
-                }
-            });
-        }
         $this.dialogFocusProVisible=false;
         $this.focusProTitle='';
     },
@@ -1823,7 +1807,6 @@ export default {
           }
       });
     },
-    // 关闭对比标签
     deleteDefault(valData){
         var $this=this;
         var dept_id=[];
@@ -1853,80 +1836,6 @@ export default {
             });
             $this.getProFocount();
         }
-    },
-    // 点击分类折叠展开产品
-    transferType(varData){
-      var $this=this;
-      var contrastList=$this.contrastList;
-      contrastList.forEach(function(item,index){
-        if(item.id==varData){
-          item.isDisplay=!item.isDisplay;
-          item.isOn=false;
-          if($this.contrastProname&&$this.contrastProname.length>0){
-            $this.contrastProname.forEach(function(items,indexs){
-              if(items.typeid==item.id){
-                item.isOn=true;
-              }
-            });
-          }
-          if(item.isDisplay){
-            item.isOn=true;
-          }
-        }
-      });
-      $this.contrastList=contrastList;
-    },
-    // 点击产品选择
-    transferPro(varData){
-      var $this=this;
-      var contrastList=$this.contrastList;
-      var contrastProname=[];
-      contrastList.forEach(function(item,index){
-        item.son.forEach(function(items,indexs){
-          var objItem={};
-          if(items.id==varData){
-            if(items.name!=$this.routTag.productname){
-              items.isOn=!items.isOn;
-            }
-          }
-          if(items.isOn){
-            if(items.name!=$this.routTag.productname){
-                objItem.id=items.id;
-                objItem.isDisplay=true;
-                objItem.isOn=true;
-                objItem.name=items.name;
-                objItem.typeid=item.id;
-                contrastProname.push(objItem);
-            }
-          }
-        });        
-      });
-      $this.contrastList=contrastList;
-      $this.contrastProname=$this.contrastItem.concat(contrastProname);
-    },
-    cleartransferPro(varData){
-      var $this=this;
-      if(varData.name!=$this.routTag.productname){
-        var contrastProname=$this.contrastProname;
-        var focusProList=[];
-        contrastProname.forEach(function(item,index){
-            if(item.id!=varData.id){
-                focusProList.push(item);
-            }
-        });
-        $this.contrastProname=focusProList;
-
-        var contrastList=$this.contrastList;
-        contrastList.forEach(function(item,index){
-            item.son.forEach(function(items,indexs){
-                if(items.id==varData.id){
-                    items.isOn=false;
-                }
-            });
-        });
-        $this.contrastList=contrastList;
-      }
-
     }
   }
 }

@@ -90,21 +90,3 @@ export function TopTenColor(resArr,obj){
     topTenColor.reverse();
     return topTenColor;
 }
-export function currentColor(value,obj){ 
-    var currentColor="";
-    for(var i=0;i<obj.numList.length;i++){
-        if(value>=obj.numList[i]){
-            currentColor = obj.defaultColor[i];
-            break;
-        }
-        if(value<obj.numList[obj.numList.length-1]){
-            if(obj.defaultColor.length==1){
-                currentColor = obj.defaultColor[0];
-            }else{
-                currentColor = obj.defaultColor[obj.numList.length];
-            }
-            break;
-        }
-    }
-    return currentColor;
-}

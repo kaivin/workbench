@@ -1,72 +1,31 @@
 <template>
-  <div class="hxpage score-top">
+  <div class="hxpage minHxpage">
     <div class="module-top">
       <div class="title-view">
-        <div class="title">个人榜单TOP5</div>
-        <div class="unit" v-if="type==1">（单位：{{language == '中文'?'分':'个'}}）</div>
-        <div class="unit" v-if="type==2">（单位：个）</div>
-        <div class="unit" v-if="type==3">（单位：个）</div>
-        <div class="unit" v-if="type==4">（单位：元）</div>
-        <router-link :to="{path:language == '中文'?'/stat/cn/memberAnalysis':'/stat/en/memberAnalysis'}" tag="a" target="_blank" class="more">更多分析<i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
-        <div class="btn-group btn_change">
-          <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">
-            {{language == '中文'?'成交积分':'成交个数'}}
-          </div>
-          <div @click="changeType(2)" class="btn-item" :class="type == 2?'active':''">询盘个数</div>
-          <div @click="changeType(3)" class="btn-item" :class="type == 3?'active':''">百万个数</div>
-          <div @click="changeType(4)" class="btn-item" :class="type == 4?'active':''">奖金</div>
-        </div>
+        <div class="title">年度成交{{language == '中文'?'积分':'个数'}} TOP5</div>
+        <div class="unit">（单位：{{language == '中文'?'分':'个'}} <img src="@/assets/no_icon.png" alt="">：百万）</div>
+        <router-link :to="{path:language == '中文'?'/stat/cn/memberAnalysis':'/stat/en/memberAnalysis'}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
       </div>
       <ul class="top-view" ref="topul">
         <li class="top-item" v-for="(item,index) in topdata" :key="index">
-          <router-link :to="getlink(item)" tag="a" >
-            <div class="top-icon">
-              <img :src="require('@/assets/personal_InquiryIcon0'+(item.ranking)+'.png')" alt="" v-if="item.ranking < 4">
-              <span v-else>0{{item.ranking}}</span>
-            </div>
-            <div class="top-img">
-              <img  :src="item.headimg"  alt="">
-            </div>
-            <div class="top-name">
-              <span v-if="type == 4||type == 2">{{item.name}}</span>
-              <span v-if="type == 3">{{item.ownuser}}</span>
-              <span v-else>{{item.username}}</span>
-            </div>
-            <div class="top-width">
-              <div :class="'top-bar' + item.ranking" :style="'width:' + item.width"></div>
-            </div>
-            <div class="userAward flex-content" v-if="type == 4">
-                  <span v-if="item.ranking<4" :class="'num0'+item.ranking"> 
-                    {{item.allmoney}}元
-                  </span>
-                  <span v-else> 
-                    {{item.allmoney}}元
-                  </span>
-            </div>
-            <div class="userAward flex-content" v-if="type == 3||type ==2">
-                  <span v-if="item.ranking<4" :class="'num0'+item.ranking"> 
-                    {{item.number}}个
-                  </span>
-                  <span v-else> 
-                    {{item.number}}个
-                  </span>
-            </div>
-            <div class="userAward flex-content" v-if="type == 1&& language == '中文'">
-                  <span v-if="item.ranking<4" :class="'num0'+item.ranking"> 
-                    {{item.number}}分
-                  </span>
-                  <span v-else> 
-                    {{item.number}}分
-                  </span>
-            </div>
-            <div class="userAward flex-content" v-if="type == 1&& language == '英文'">
-                  <span v-if="item.ranking<4" :class="'num0'+item.ranking"> 
-                    {{item.number}}个
-                  </span>
-                  <span v-else> 
-                    {{item.number}}个
-                  </span>
-            </div>
+          <router-link :to="{path: language == '中文'?'/stat/cn/memberAnalysis/singlePerson':'/stat/en/memberAnalysis/singlePerson',query:{deptId:item.dept_id,itemId:language == '中文'?item.userid:item.uid}}" tag="a">
+          <div class="top-icon">
+            <img :src="require('@/assets/no'+(index+1)+'.jpg')" alt="">
+          </div>
+          <div class="top-img">
+            <img  :src="item.headimg"  alt="">
+          </div>
+          <div class="top-name">
+            {{item.username}}
+          </div>
+          <div class="top-width">
+            <div :class="'top-bar' + index" :style="'width:' + item.width"></div>
+            <span>{{item.number}}</span>
+          </div>
+          <div class="top-num" v-if="item.anumber>0">
+            <img src="@/assets/no_icon.png" alt="">
+            <span>x{{item.anumber}}</span>
+          </div>
           </router-link>
         </li>
       </ul>
@@ -76,13 +35,14 @@
 </template>
 
 <script>
+import parseInt from '@antv/util/lib/to-integer';
 export default {
     name:'demo',
     data(){
       return {
         topdata:[],
         barWidth:212,
-        type: 1,
+
       }
     },
     props:{
@@ -95,25 +55,7 @@ export default {
         default:function(){
           return []
         }
-      },
-      moneytop5:{
-        type:Array,
-        default:function(){
-          return []
-        }
-      },
-      yearuserxuntop5:{
-        type:Array,
-        default:function(){
-          return []
-        }
-      },
-      anumbertop5:{
-        type:Array,
-        default:function(){
-          return []
-        }
-      },
+      }
     },
     watch:{
       yearuserscoretop5:{
@@ -130,81 +72,29 @@ export default {
       
     },
     methods:{
-      changeType(val){
-        this.type = val;
-        this.getData();
-      },
       setTopData(val){
-        var $this = this;
         let topdata = JSON.parse(JSON.stringify(val));
-        topdata =  topdata.sort(function(a, b){return a.number - b.number}).reverse(); 
+        topdata.sort(function(a, b){return a.number - b.number}).reverse(); 
         let maxwidth = topdata[0].number;
         for(let i = 0;i<topdata.length;i++){
-          topdata[i].width = parseFloat((topdata[i].number/maxwidth).toFixed(2)) * 85 + '%';
+          topdata[i].width = parseFloat((topdata[i].number/maxwidth).toFixed(2)) * 100 + '%';
+          topdata[i].anumber = parseInt(topdata[i].anumber);
+          topdata[i].color = '#fff';
         }
         this.topdata = topdata;
         
       },
-      getData(){
-        let topdata = [];
-        var $this = this;
-        
-        // 获取长度百分比
-        if($this.type == 4){
-          // 奖金
-          topdata = $this.moneytop5;
-          if(topdata.length > 0){
-            let maxwidth = topdata[0].allmoney.split(',').join('');
-            for(let i = 0;i<topdata.length;i++){
-              topdata[i].width = parseFloat((topdata[i].allmoney.split(',').join('')/maxwidth).toFixed(2)) * 85 + '%';
-            }
-          }
-        }else{
-          if($this.type == 1){
-            // 成交积分
-            topdata = $this.yearuserscoretop5;
-          }else if($this.type == 2){
-            // 询盘个数
-            topdata = $this.yearuserxuntop5;
-          }else if($this.type == 3){
-            // 百万个数
-            topdata = $this.anumbertop5;
-          }
-          if(topdata.length > 0){
-            let maxwidth = topdata[0].number;
-            for(let i = 0;i<topdata.length;i++){
-              topdata[i].width = parseFloat((topdata[i].number/maxwidth).toFixed(2)) * 85 + '%';
-            }
-          }
-        }
-        this.topdata = topdata;
-        
-      },
-      // 获取链接
-      getlink(item){
-        var $this = this;
-        var link={};
-        if($this.language == "中文"){
-          link.path = '/stat/cn/memberAnalysis/singlePerson';
-        }else{
-          link.path = '/stat/en/memberAnalysis/singlePerson';
-        }
-        link.query = {};
-        link.query.deptId = item.dept_id;
-        if($this.type == 1){
-          if($this.language == "中文"){
-            link.query.itemId = item.userid;
+      setBarColor(){
+        let topul = this.$refs["topul"].offsetWidth;
+        let barWidth = topul - 200;
+        for(let i = 0;i<this.topdata.length;i++){
+          if(parseFloat(this.topdata[i].width.replace('%',''))/100 * barWidth >=72 && i<3){
+            this.topdata[i].color = '#fff'
           }else{
-             link.query.itemId = item.uid;
+            this.topdata[i].color = '#454545'
           }
-        }else if($this.type == 2){
-          link.query.itemId = item.id
-        }else{
-          link.query.itemId = item.uid
         }
-        return link;
       },
-
       // 跳转到个人详情
       handleContrast(deptId,itemId){
         var $this=this;
@@ -221,4 +111,215 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.hxpage{
+  background: #fff;
+  min-height: 306px;
+  .module-top{
+    padding: 30px 22px 17px;
+    border-right: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    &:hover{
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+  .title-view{
+    height: 24px;
+    line-height: 24px;
+    margin-bottom: 20px;
+    .title{
+      font-size: 14px;
+      color: #1a1a1a;
+      float: left;
+      margin-right: 0;
+      font-weight: bold;
+    }
+    .unit{
+      font-size: 12px;
+      color: #a1a1a1;
+      float: left;
+      line-height: 24px;
+      height: 24px;
+      img{
+        width: 18px;
+        position: relative;
+        top: 4px;
+        vertical-align: top;
+        display: inline-block;
+        margin-left: 5px;
+      }
+    }
+    .more{
+      font-size: 12px;
+      color: #a1a1a1;
+      float: right;
+      cursor: pointer;
+      position: relative;
+      top: -1px;
+      .svg-i{
+        font-size: 10px;
+        color: #a1a1a1;
+        vertical-align: 1px;
+      }
+    }
+  }
+  .contrast-view{
+    height: 40px;
+    margin-bottom: 15px;
+    .redtext{
+      float: left;
+      font-size: 24px;
+      color: #eb3737;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+    .redright{
+      float: left;
+      .conname{
+        font-size: 12px;
+        line-height: 20px;
+        color: #999999;
+      }
+      .num{
+        font-size: 12px;
+        line-height: 20px;
+        padding-left: 12px;
+        position: relative;
+      }
+      .up{
+        color: #f25e5e;
+        &:before{
+          content: '↑';
+          position: absolute;
+          left: 0;
+          font-size: 12px;
+          line-height: 12px;
+          top: 3px;
+          
+        }
+      }
+      .down{
+        color: #2dbb4c;
+        &:before{
+          content: '↓';
+          position: absolute;
+          left: 0;
+          font-size: 12px;
+          line-height: 12px;
+          top: 3px;
+          
+        }
+      }
+    }
+  }
+
+  .chart-top{
+    height: 68px;
+  }
+  .module-bottom{
+    padding: 30px;
+    border-right: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    &:hover{
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+  .chart-bottom{
+    height: 260px;
+    margin-top: 35px;
+  }
+  .top-view{
+    .top-item{
+      display: flex;
+      margin-bottom: 15px;
+      cursor: pointer;
+      a{
+        flex:1;
+        display: flex;
+      }
+      .top-icon{
+        display: flex;
+        width: 34px;
+        height: 34px;
+        margin-right: 10px;
+        img{
+          margin: auto 0 auto 0;
+        }
+      }
+      .top-img{
+        display: flex;
+        width: 34px;
+        height: 34px;
+        border: 1px solid #fee170;
+        border-radius: 50%;
+        overflow: hidden;
+        img{
+          margin: auto;
+          width: 100%;
+          box-sizing: border-box;
+        }
+        
+      }
+      .top-name{
+        width: 66px;
+        height: 34px;
+        line-height: 34px;
+        font-size: 12px;
+        color: #1b1b1b;
+        text-align: center;
+      }
+      .top-width{
+        width: calc(100% - 200px);
+        height: 34px;
+        box-sizing: border-box;
+        padding-top: 9px;
+        position: relative;
+        margin-right: 20px;
+        display: flex;
+        div{
+          height: 16px;
+        }
+        span{
+          font-size: 12px;
+          line-height: 16px;
+          color: #454545;
+          margin-left: 10px;
+        }
+        .top-bar0{
+          background:#fc544b;
+        }
+        .top-bar1{
+          background:#ff8317;
+        }
+        .top-bar2{
+          background:#fac322;
+        }
+        .top-bar3{
+          background: #d1dbe4;
+        }
+        .top-bar4{
+          background: #d1dbe4;
+        }
+      }
+      .top-num{
+        display: flex;
+        img{
+          margin: auto 3px auto 0;
+          width: 22px;
+        }
+        span{
+          font-size: 12px;
+          color: #dea21c;
+          margin: auto 0;
+        }
+      }
+    }
+  }
+  
+}
 </style>
