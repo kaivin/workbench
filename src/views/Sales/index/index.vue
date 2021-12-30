@@ -397,7 +397,7 @@
                                 >
                                 <template #default="scope">
                                     <div class="table-button">
-                                      <router-link :to="{path:'/Sales/phoneinfosub',query:{ID:scope.row.id, status: '2'}}">
+                                      <router-link :to="{path:'/Sales/phoneinfosub',query:{ID:scope.row.id, status: '2'}}" target="_blank">
                                         <el-button size="mini">详情</el-button>
                                       </router-link>
                                     <br />

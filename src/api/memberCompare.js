@@ -1,15 +1,17 @@
 import request from "@/utils/request";
 // 中文成员询盘、成交排行情况
-export function getInquiryRank() {
+export function getInquiryRank(data) {
     return request({
       url: "/hxindex/Api/chinapersoncountdefault",
-      method: "POST"
+      method: "POST",
+      data
     });
 }
 // 英文成员询盘、成交排行情况
-export function getEnInquiryRank() {
+export function getEnInquiryRank(data) {
   return request({
     url: "/hxindex/Api/enpersoncountdefault",
-    method: "POST"
+    method: "POST",
+    data
   });
 }

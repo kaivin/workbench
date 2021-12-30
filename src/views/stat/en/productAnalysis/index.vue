@@ -1,105 +1,117 @@
 ﻿<template>
-  <div class="page-root scroll-panel product-Analy" ref="boxPane">       
-    <div class="focusPro">
-        <div class="focusProTit">
-            <h3><i><svg-icon icon-class="star" /></i>我关注的产品<span>（{{focusProNum}}）</span></h3>
-            <span @click="handleAddPro"><i><svg-icon icon-class="work_add" /></i>添加产品</span>
-        </div>
-        <ul class="focusProUl" :class="focusProSet.isFold? 'focusShow' : ''" v-if="focusProArr.length>0" :style="'height:'+ focusProSet.boxHeight">
-            <li v-for="(item,index) in focusProArr" :key="index">
-               <focus-pro :focusPro="item"></focus-pro>
-            </li>
-        </ul>
-        <div class="focusProMore" v-if="focusProSet.ifFold" :class="!focusProSet.isFold? '' : 'active'" @click="showAll"></div>
-    </div>
-    <div class="filter-panel">
-      <div class="filter-list">
-        <div class="item-filter flex-box">
-          <div class="filter-title"><span class="txt-title">地区：</span></div>
-          <div class="filter-content">
-            <div class="item-list region">              
-              <el-select v-model="province" @change="handleRegion" size="small" clearable placeholder="选择地区">
-                  <el-option
-                      v-for="item in ProvinceList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                  </el-option>
-              </el-select>
+  <div class="page-root scroll-panel product-Analy" ref="boxPane">  
+        <div class="nowCate">
+        {{nowcate}}
+        </div>   
+        <div class='product-AnalyMain'>  
+            <div class="focusPro">
+                <div class="focusProTit">
+                    <h3><i><svg-icon icon-class="star" /></i>我关注的产品<span>（{{focusProNum}}）</span></h3>
+                    <span @click="handleAddPro"><i><svg-icon icon-class="work_add" /></i>添加产品</span>
+                </div>
+                <ul class="focusProUl" :class="focusProSet.isFold? 'focusShow' : ''" v-if="focusProArr.length>0" :style="'height:'+ focusProSet.boxHeight">
+                    <li v-for="(item,index) in focusProArr" :key="index">
+                       <focus-pro :lang="ch" :starttime="searchForm.starttime" :endtime="searchForm.endtime" :focusPro="item"></focus-pro>
+                    </li>
+                </ul>
+                <div class="focusProMore" v-if="focusProSet.ifFold" :class="!focusProSet.isFold? '' : 'active'" @click="showAll"></div>
             </div>
-          </div>
-          <div class="filter-title"><span class="txt-title">时间选择：</span></div>
-          <div class="filter-content flex-content">
-            <div class="item-list time">
-              <div class="item-change">
-                   <span :class="item.isOn?'active':''" v-for="(item,index) in changeTime" :key="index" v-on:click="handlerTime(item.name)">{{item.name}}</span>
+            <div class="filter-panel">
+              <div class="filter-list">
+                <div class="item-filter flex-box">
+                  <div class="filter-title"><span class="txt-title">地区：</span></div>
+                  <div class="filter-content">
+                    <div class="item-list region">              
+                      <el-select v-model="province" @change="handleRegion" size="small" clearable placeholder="选择地区">
+                          <el-option
+                              v-for="item in ProvinceList"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                          </el-option>
+                      </el-select>
+                    </div>
+                  </div>
+                  <div class="filter-title"><span class="txt-title">时间选择：</span></div>
+                  <div class="filter-content flex-content">
+                    <div class="item-list time">
+                      <div class="item-change">
+                          <span :class="item.isOn?'active':''" v-for="(item,index) in changeTime" :key="index" v-on:click="handlerTime(item.name)">{{item.name}}</span>
+                      </div>
+                      <div class="item-date">
+                        <el-date-picker
+                          v-model="searchForm.data"
+                          @change="handleData"
+                          type="monthrange"
+                          format="yyyy-MM"
+                          value-format="yyyy-MM"
+                          key="b"
+                          size="mini"
+                          class="date-range"
+                          range-separator="～"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"
+                          :picker-options="pickerMonthRangeOptions">
+                        </el-date-picker>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="item-filter flex-box">
+                  <div class="filter-title"><span class="txt-title">产品类型：</span></div>
+                  <div class="filter-content flex-content">
+                    <div class="item-list pro">
+                      <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="item in ProList" v-bind:key="item.id" v-on:click="handlerPro(item.id)"><i></i><span>{{item.name}}</span></div>
+                      <div class="item-reset" v-if="isFilter"><span>全部重置</span></div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="item-date">
-                <el-date-picker
-                  v-model="searchForm.data"
-                  @change="handleData"
-                  type="monthrange"
-                  format="yyyy-MM"
-                  value-format="yyyy-MM"
-                  key="b"
-                  size="mini"
-                  class="date-range"
-                  range-separator="～"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                  :picker-options="pickerMonthRangeOptions">
-                </el-date-picker>
-              </div>
+              <div class="filter-tips"><p><i class="svg-i"><svg-icon icon-class="tips" class-name="disabled" /></i>当前为产品榜单页面，展示<span v-html='tipsInfo'></span>数据信息</p></div>
             </div>
-          </div>
-        </div>
-        <div class="item-filter flex-box">
-          <div class="filter-title"><span class="txt-title">产品类型：</span></div>
-          <div class="filter-content flex-content">
-            <div class="item-list pro">
-              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="item in ProList" v-bind:key="item.id" v-on:click="handlerPro(item.id)"><i></i><span>{{item.name}}</span></div>
-              <div class="item-reset" v-if="isFilter"><span>全部重置</span></div>
+            <div class="focusMain">
+                <unpay-inquiry 
+                  :unpayInquiry="unpayInquiry"
+                  :unpayInquirySet="unpayInquirySet"
+                  :lang="ch"
+                  @changeSet="changeSet"
+                  v-if="unpayInquiry.length>0"
+                ></unpay-inquiry>
+                <unpay-deal
+                  :dealScore="dealScore"
+                  :dealScoreSet="dealScoreSet"
+                  :lang="ch"
+                  @changeSet="changeSet"
+                  v-if="dealScore.length>0"
+                ></unpay-deal>
+                <million-deal
+                  :millionDeal="millionDeal"
+                  :millionDealSet="millionDealSet"
+                  :lang="ch"
+                  @changeSet="changeSet"
+                  v-if="millionDeal.length>0"
+                ></million-deal>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="filter-tips"><p><i class="svg-i"><svg-icon icon-class="tips" class-name="disabled" /></i>当前为产品榜单页面，展示<span v-html='tipsInfo'></span>数据信息</p></div>
-    </div>
-    <div class="focusMain">
-        <unpay-inquiry 
-          :unpayInquiry="unpayInquiry"
-          :unpayInquirySet="unpayInquirySet"
-          :lang="ch"
-          @changeSet="changeSet"
-          v-if="unpayInquiry.length>0"
-        ></unpay-inquiry>
-        <unpay-deal
-          :dealScore="dealScore"
-          :dealScoreSet="dealScoreSet"
-          :lang="ch"
-          @changeSet="changeSet"
-          v-if="dealScore.length>0"
-        ></unpay-deal>
-        <million-deal
-          :millionDeal="millionDeal"
-          :millionDealSet="millionDealSet"
-          :lang="ch"
-          @changeSet="changeSet"
-          v-if="millionDeal.length>0"
-        ></million-deal>
-    </div>
-    <el-dialog :title="focusProTitle" custom-class="transfer-dialog" :visible.sync="dialogFocusProVisible" width="840px">
+        </div> 
+    <el-dialog :title="focusProTitle" custom-class="transfer-dialog" :visible.sync="dialogFocusProVisible" width="700px">
         <div class="transfer-panel">
-        <div class="transfer-wrap">
-            <el-transfer 
-            v-model="focusProValue" 
-            :data="AllProList"
-            :titles="['可关注产品', '已关注产品']"
-            filterable
-            :filter-method="filterfocusProMethod"
-            filter-placeholder="请输入用户关键字"
-            ></el-transfer>
-        </div>
+             <div class="transferFl">
+                  <p class="transferFlTit">可关注产品</p>
+                  <div class="transferBox">
+                       <dl :class="[item.isOn?'isOn':'',item.isDisplay?'isDisplay':'']" v-for="(item,index) in AllProList" :key="index">
+                          <dt @click="transferType(item.id)"><i></i><span>{{item.name}}</span></dt>
+                          <dd :class="items.isOn?'isOn':''" @click="transferPro(items.id)" v-for="(items,indexs) in item.son" :key="indexs">
+                              <i></i><span>{{items.name}}</span>
+                          </dd>
+                       </dl>
+                  </div>
+             </div>
+             <div class="transferFr">
+                  <p class="transferFlTit">已关注产品</p>
+                  <div class="transferBox">
+                       <p @click="cleartransferPro(item.id)" v-for="(item,index) in focusProArr" :key="index"><i></i><span>{{item.name}}</span></p>
+                  </div>
+             </div>
         </div>
         <template #footer>
         <span class="dialog-footer">
@@ -111,6 +123,7 @@
   </div>
 </template>
 <script>
+import DirTransfer from '../../components/transfer/transfermain';
 import focusPro from "../../components/productAnalysis/focusPro";
 import UnpayInquiry from "../../components/productAnalysis/UnpayInquiry";
 import UnpayDeal from "../../components/productAnalysis/UnpayDeal";
@@ -191,9 +204,11 @@ export default {
         boxHeight: '',
         isFold: false,
       },
+      nowcate: ""
     };
   },
   components:{
+    DirTransfer,
     focusPro,
     UnpayInquiry,
     UnpayDeal,
@@ -201,6 +216,7 @@ export default {
   },
   created() {
     var $this = this;
+    this.nowcate = this.$route.meta.title;
     $this.getUserMenuButtonPermit();
   },
   mounted(){
@@ -251,14 +267,17 @@ export default {
           if (res) {
             if (res.status) {
                 if(res.data&&res.data.length>0){
-                    var AllProList=[];
                     res.data.forEach(function(item,index){
-                        var objItem={};
-                        objItem.key=item.id;
-                        objItem.label=item.name;
-                        AllProList.push(objItem);
+                      item.isOn=false;
+                      item.isDisplay=false;
+                      if(item.son&&item.son.length>0){
+                        item.son.forEach(function(items,indexs){
+                          items.isOn=false;
+                          items.isDisplay=false;
+                        });
+                      }
                     });
-                    $this.AllProList=AllProList;
+                    $this.AllProList=res.data;
                     $this.getfocusPro();
                 }
             } else {
@@ -341,7 +360,6 @@ export default {
                     $this.focusProNum=res.myfoucs.length;//关注数量  
                     $this.focusProArr=res.myfoucs;//基础数据                  
                 }
-                console.log($this.focusProArr,'$this.focusProArr');
             } else {
               $this.$message({
                 showClose: true,
@@ -362,6 +380,25 @@ export default {
     //点击弹出添加关注产品框
     handleAddPro(){
         var $this=this;
+        var AllProList=$this.AllProList;
+        AllProList.forEach(function(item,index){
+           if($this.focusProArr&&$this.focusProArr.length>0){
+             $this.focusProArr.forEach(function(items,indexs){
+               if(item.id==items.typeid){
+                 item.isOn=true;
+               }
+             });
+           }
+           item.son.forEach(function(itemk,indexk){
+              if($this.focusProArr&&$this.focusProArr.length>0){
+                $this.focusProArr.forEach(function(items,indexs){
+                  if(itemk.id==items.id){
+                    itemk.isOn=true;
+                  }
+                });
+              }
+           });
+        });
         $this.dialogFocusProVisible=true;
     },
     // 用户分配保存
@@ -379,6 +416,9 @@ export default {
                         type: 'success'
                     });
                     $this.dialogFocusProVisible = false;
+                    $this.AllProList.forEach(function(item,index){
+                      item.isDisplay=false;
+                    });
                     $this.getfocusPro();
                     setTimeout(()=>{
                         $this.issaveFocusPro=false;
@@ -635,6 +675,8 @@ export default {
     handleData(){
       var $this=this;
       var changeTime=$this.changeTime;
+      $this.searchForm.starttime=$this.searchForm.data[0];
+      $this.searchForm.endtime=$this.searchForm.data[1];
       changeTime.forEach(function(item,index){
         item.isOn=false;
         var dataOne=$this.searchForm.data.toString();
@@ -654,6 +696,8 @@ export default {
         item.isOn=false;
         if(item.name==varData){
           $this.searchForm.data=item.data;
+          $this.searchForm.starttime=$this.searchForm.data[0];
+          $this.searchForm.endtime=$this.searchForm.data[1];
           item.isOn=true;
         }
       });
@@ -688,6 +732,8 @@ export default {
             var startDate = startYear+"-"+startMonth;
             item.data=[startDate,endDate];
             $this.searchForm.data=[startDate,endDate];
+            $this.searchForm.starttime=startDate;
+            $this.searchForm.endtime=endDate;
           }
           if(item.name=='今年'){
             var start = new Date();
@@ -706,6 +752,65 @@ export default {
       var property = data;
       property.isFold = isfold;
       property.boxHeight = boxheight;
+    },
+    // 点击分类折叠展开产品
+    transferType(varData){
+      var $this=this;
+      var AllProList=$this.AllProList;
+      AllProList.forEach(function(item,index){
+        if(item.id==varData){
+          item.isDisplay=!item.isDisplay;
+          item.isOn=false;
+          if($this.focusProArr&&$this.focusProArr.length>0){
+            $this.focusProArr.forEach(function(items,indexs){
+              if(items.typeid==item.id){
+                item.isOn=true;
+              }
+            });
+          }
+          if(item.isDisplay){
+            item.isOn=true;
+          }
+        }
+      });
+      $this.AllProList=AllProList;
+    },
+    // 点击产品选择
+    transferPro(varData){
+      var $this=this;
+      var AllProList=$this.AllProList;
+      var focusProArr=[];
+      var focusProValue=[];
+      AllProList.forEach(function(item,index){
+        item.son.forEach(function(items,indexs){
+          if(items.id==varData){
+              items.isOn=!items.isOn;
+          }
+          if(items.isOn){
+            focusProArr.push(items);
+            focusProValue.push(items.id);
+          }
+        });        
+      });
+      $this.AllProList=AllProList;
+      $this.focusProArr=focusProArr;
+      $this.focusProNum=focusProArr.length;
+      $this.focusProValue=focusProValue;//关注产品id 
+    },
+    cleartransferPro(varData){
+      var $this=this;
+      var focusProArr=$this.focusProArr;
+      var focusProList=[];
+      var focusProValue=[];
+      focusProArr.forEach(function(item,index){
+        if(item.id!=varData){
+          focusProList.push(item);
+          focusProValue.push(item.id);
+        }
+      });
+      $this.focusProValue=focusProValue;//关注产品id 
+      $this.focusProArr=focusProList;
+      $this.focusProNum=focusProList.length;
     },
   }
 }

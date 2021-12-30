@@ -8,10 +8,10 @@
              </p>
         </div>
         <div class="item-map">
-            <div class="map-panel"  :style="['width:'+currentDate.mapWidth,'height:'+currentDate.mapHeight]">
+            <div class="map-panel" v-bind:style="{width:currentDate.mapWidth+'px',height:currentDate.mapHeight+'px'}">
                  <div class="map-chart" :id="'map-'+currentDate.randomStr"></div>
             </div>
-            <div class="region-rank" :style="'width:'+currentDate.mapWidth">
+            <div class="region-rank" v-bind:style="{width:currentDate.mapWidth+'px',height:currentDate.mapHeight+'px'}">
                 <div class="txt-header"><strong>{{currentDate.topTitle}}</strong></div>
                 <div class="bar-chart">
                     <div class="top-chart" :id="'bar-'+currentDate.randomStr"></div>

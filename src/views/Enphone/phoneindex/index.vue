@@ -163,7 +163,15 @@
                                           :label="item.label"
                                           :value="item.value">
                                       </el-option>
-                                  </el-select>
+                                  </el-select>                                  
+                                  <el-input
+                                      size="small"
+                                      placeholder="国家"
+                                      style="width:80px;margin:5px 10px 5px 0px;float:left;"
+                                      v-model="searchData.country"
+                                      :class="searchData.country!=''?'el-xzstate':''"
+                                      clearable>
+                                  </el-input> 
                                   <el-select v-model="searchData.typekey" size="small" clearable placeholder="分类" @change="currentCateChange"
                                   :class="searchData.typekey!=''?'el-xzstate':''" style="width:90px;margin:5px 10px 5px 0px;float:left;">
                                       <el-option
@@ -1291,6 +1299,7 @@ export default {
         $this.searchData.date=[];
         $this.searchData.timeing="";
         $this.searchData.continent="";
+        $this.searchData.country="";
         $this.searchData.page=1;
         $this.searchData.limit=20;
         $this.searchData.mode="";
@@ -1594,6 +1603,9 @@ export default {
       }
       if($this.searchData.continent&&$this.searchData.continent!=''){
         searchData.continent = $this.searchData.continent;
+      }
+      if($this.searchData.country&&$this.searchData.country!=''){
+        searchData.country = $this.searchData.country;
       }
       if($this.searchData.mode&&$this.searchData.mode!=''){
         searchData.mode = $this.searchData.mode;

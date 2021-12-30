@@ -3,24 +3,38 @@
         <div class="personTopTab">
             <div class="chooseDepart flex-box">
                   <span class="choosetit">部门选择：</span>
-                  <div class="departItems flex-content">
-                  <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
-                  </div>
-            </div>
-            <div class="choosePerson" :class="searchData.dept_id?'active':''">
                   <div class="departItems">
-                      <p class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="(item,index) in choosePerson" :key="index" v-on:click="PersonChange(searchData.dept_id,item.id)"><i></i><span>{{item.name}}</span></p>
+                       <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
+                  </div>
+                  <span class="choosetit" style="margin-left:20px">时间选择：</span>
+                  <div class="departItems flex-content">
+                      <el-date-picker
+                        v-model="searchData.data"
+                        @change="handleData"
+                        type="monthrange"
+                        format="yyyy-MM"
+                        value-format="yyyy-MM"
+                        key="b"
+                        size="mini"
+                        class="date-range"
+                        range-separator="～"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :picker-options="pickerMonthRangeOptions">
+                      </el-date-picker>
+                      <i class="departItemBtn" v-on:click="departItemBtn">重置</i>
                   </div>
             </div>
         </div>
-        <div class="homeMain flex-content dealRankMain">
+        <div class="flex-content dealRankMain" :class="(searchData.dept_id==12||searchData.dept_id=='')?'':'active'">
           <div class="dealRankLeft">
-            <div class="dealRankTop">
+            <div class="dealRankTop" v-if='searchData.dept_id!=12'>
               <unpay-inquiry 
                 :unpayInquiry="unpayInquiry"
                 :unpayInquirySet="unpayInquirySet"
                 :lang="en"
                 @changeSet="changeSet"
+                v-if="unpayInquiry.length>0"
               ></unpay-inquiry>
               <unpay-deal
                 :dealScore="dealScore"
@@ -28,6 +42,7 @@
                 @changeSet="changeSet"
                 :scoretime ="scoretime"
                 :lang="en"
+                v-if="dealScore.length>0"
               ></unpay-deal>
               <million-deal
                 :millionDeal="millionDeal"
@@ -35,20 +50,24 @@
                 :lang="en"
                 @changeSet="changeSet"
                 :scoretime ="scoretime"
+                v-if="millionDeal.length>0"
               ></million-deal>
             </div>
             <pay-member
               :payMember="payMember"
               :lang="en"
+              v-if='(searchData.dept_id==12||searchData.dept_id=="")&&payMember.length>0'
             ></pay-member>
           </div>
-          <div class="dealRankRight">
+          <div class="dealRankRight" v-if='searchData.dept_id==12||searchData.dept_id==""'>
             <award-rank
               :awardMoney="awardMoney"
               :awardMoneySet="awardMoneySet"
               :lang="en"
+              :isAwardBool="isAwardBool"
               :moneytime ="moneytime"
               @changeSet="changeSet"
+              v-if="awardMoney.length>0"
             ></award-rank>
           </div>
         </div>
@@ -66,7 +85,7 @@ export default {
   data() {
     return {
       department:[],//部门列表
-      choosePerson:[], //组员列表  
+      isAwardBool:false,
       unpayInquiry: [],
       unpayInquirySet:{
         ifFold: false,//是否需要折叠
@@ -98,7 +117,25 @@ export default {
           id:'',
       },
       scoretime:'',
-      moneytime: ''
+      moneytime: '',
+      pickerMonthRangeOptions: {
+        shortcuts: [{
+          text: '今年至今',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date(new Date().getFullYear(), 0);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近六个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setMonth(start.getMonth() - 6);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
     };
   },
   components:{
@@ -130,7 +167,6 @@ export default {
                     });
                     $this.department=department;
                 }
-                $this.getCnPersonlist();
             } else {
               $this.$message({
                 showClose: true,
@@ -142,35 +178,17 @@ export default {
           }
       });
     },
-    //获取部门下组员信息
-    getCnPersonlist(){
-      var $this = this;
-      var searchData={};
-      searchData.dept_id=$this.searchData.dept_id;
-      $this.$store.dispatch("api/getEnPersonlistAction",searchData).then((res) => {
-          if (res) {
-            if (res.status) {
-                if(res.ulist&&res.ulist.length>0){
-                    var choosePerson=[];
-                    res.ulist.forEach(function(item,index){
-                        var objItem={};
-                        objItem.name=item.name;
-                        objItem.id=item.id;
-                        objItem.isOn=false;
-                        choosePerson.push(objItem);
-                    });
-                    $this.choosePerson=choosePerson;
-                }
-            } else {
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: "error",
-                duration: 6000
-              });
-            }
-          }
-      });
+    // 清除搜索数据
+    departItemBtn(){
+        var $this=this;
+        $this.department.forEach(function(item,index){
+            item.isOn=false;
+        });
+        $this.searchData.dept_id='';
+        $this.searchData.data=[];
+        $this.searchData.starttime='';
+        $this.searchData.endtime='';
+        $this.GetInquiryResult();
     },
     // 点击部门获取部门ID
     departChange(valData){
@@ -182,21 +200,12 @@ export default {
               item.isOn=true;
             }
         });
-        $this.getCnPersonlist();
+        $this.GetInquiryResult();
     },
-    // 点击组员获取组员ID
-    PersonChange(deptId,itemId){
-        var $this=this;
-        $this.choosePerson.forEach(function(item,index){
-            item.isOn=false;
-            if(item.id==itemId){
-              item.isOn=true;
-              $this.searchData.id=item.id;
-            }
-        });
-        // 跳转个人详情
-        var routeUrl =  $this.$router.resolve({path: "/stat/en/memberAnalysis/singlePerson",query:{deptId:deptId,itemId:itemId}});
-        window.open(routeUrl.href,'_blank');
+    //点击时间搜索
+    handleData(){
+      var $this=this;
+      $this.GetInquiryResult();
     },
     // 获取当前登陆用户在该页面的操作权限
     getUserMenuButtonPermit(){
@@ -235,90 +244,134 @@ export default {
       $this.getCnDepartList();
       $this.GetInquiryResult();
     },
+    //重组搜索数据
+    initsearch(){
+      var $this = this;
+      var searchData={};
+      if($this.searchData.dept_id&&$this.searchData.dept_id!=''){
+        searchData.dept_id=$this.searchData.dept_id;
+      }
+      if($this.searchData.data&&$this.searchData.data.length>0){
+        searchData.starttime=$this.searchData.data[0];
+        searchData.endtime=$this.searchData.data[1];
+      }
+      return searchData;
+    },
+    // 清空数据
+    emptyData(){
+        var $this=this;
+        $this.unpayInquiry=[];
+        $this.unpayInquirySet.ifFold=false;
+        $this.unpayInquirySet.boxHeight='';
+        $this.unpayInquirySet.isFold=false;
+        $this.dealScore=[];
+        $this.dealScoreSet.ifFold=false;
+        $this.dealScoreSet.boxHeight='';
+        $this.dealScoreSet.isFold=false;
+        $this.payMember=[];
+        $this.millionDeal=[];
+        $this.millionDealSet.ifFold=false;
+        $this.millionDealSet.boxHeight='';
+        $this.millionDealSet.isFold=false;
+        $this.awardMoney=[];
+        $this.awardMoneySet.ifFold=false;
+        $this.awardMoneySet.boxHeight='';
+        $this.awardMoneySet.isFold=false;
+        $this.scoretime='';
+        $this.moneytime='';
+    },
     // 获取英文询盘、成交等情况
     GetInquiryResult(){
       var $this = this;
-      $this.$store.dispatch("memberCompare/postEnInquiryRank").then((response) => {
+      var searchData={};
+      searchData=$this.initsearch();
+      $this.emptyData();
+      $this.$store.dispatch("memberCompare/postEnInquiryRank",searchData).then((response) => {
           if (response) {
             if (response.status) {
-              // 非付费询盘
-              if(response.xunulist&&response.xunulist.length>0){
-                  var unpayInquiry=rankingWithTotalItem(response.xunulist,'number');
-                  unpayInquiry.forEach(function(item){
-                    item.number = numSeparate(item.number);
-                    item.deptName=item.departname;
-                  });
-                  $this.unpayInquiry = unpayInquiry;
-                if(response.xunulist.length < 9){
-                    $this.unpayInquirySet.ifFold = false;
-                    $this.unpayInquirySet.boxHeight = "auto";
+              if($this.searchData.dept_id&&$this.searchData.dept_id!=''){
+                if($this.searchData.dept_id==12){
+                  // 付费
+                  if(response.semulist&&response.semulist.length>0){
+                    $this.payPlug(response.semulist);
+                  }
+                  // 奖金排序
+                  if(response.moneylist&&response.moneylist.length>0){
+                    var moneytime
+                    if($this.searchData.data&&$this.searchData.data.length>0){
+                      moneytime=$this.searchData.data[1]
+                    }else{
+                        moneytime=response.moneytime;
+                    }
+                    $this.BonusPlug(response.moneylist,moneytime);
+                  }
                 }else{
-                    $this.unpayInquirySet.ifFold = true;
-                    $this.unpayInquirySet.boxHeight = "630px";
-                    $this.unpayInquirySet.isFold = false;
+                  // 非付费询盘
+                  if(response.xunulist&&response.xunulist.length>0){
+                    $this.enquiriesPlug(response.xunulist);
+                  }
+                  // 成交积分
+                  if(response.scorelist&&response.scorelist.length>0){
+                    var scoretime
+                    if($this.searchData.data&&$this.searchData.data.length>0){
+                        scoretime=$this.searchData.data[0]+'|'+$this.searchData.data[1]
+                    }else{
+                        scoretime=response.scoretime;
+                    }
+                    $this.integralPlug(response.scorelist,scoretime);
+                  }
+                  // 付费
+                  if(response.semulist&&response.semulist.length>0){
+                    $this.payPlug(response.semulist);
+                  }
+                  // 百万成交
+                  if(response.Alist&&response.Alist.length>0){
+                    $this.MillionsPlug(response.Alist);
+                  }
+                  // 奖金排序
+                  if(response.moneylist&&response.moneylist.length>0){
+                    var moneytime
+                    if($this.searchData.data&&$this.searchData.data.length>0){
+                        moneytime=$this.searchData.data[1]
+                    }else{
+                        moneytime=response.moneytime;
+                    }
+                    $this.BonusPlug(response.moneylist,moneytime);
+                  }
                 }
-              }
-              // 成交积分
-              if(response.scorelist&&response.scorelist.length>0){
-                  var dealScore=rankingWithTotalItem(response.scorelist,'score');
-                  dealScore.forEach(function(item){
-                    item.score = numSeparate(Math.floor(item.score*100)/100);
-                    item.deptName=item.departname;
-                  });
-                  $this.dealScore = dealScore;
-                if(response.scorelist.length < 9){
-                    $this.dealScoreSet.ifFold = false;
-                    $this.dealScoreSet.boxHeight = "auto";
-                }else{
-                    $this.dealScoreSet.ifFold = true;
-                    $this.dealScoreSet.boxHeight = "630px";
-                    $this.dealScoreSet.isFold = false;
+              }else{
+                // 非付费询盘
+                if(response.xunulist&&response.xunulist.length>0){
+                  $this.enquiriesPlug(response.xunulist);
                 }
-              }
-              // 付费
-              if(response.semulist&&response.semulist.length>0){
-                  var payMember=rankingWithTotalItem(response.semulist,'number');
-                  payMember.forEach(function(item){
-                    item.numberStr = numSeparate(item.number);
-                    item.deptName=item.departname;
-                  });
-                  $this.payMember=payMember;
-              }
-              // 百万成交
-              if(response.Alist&&response.Alist.length>0){
-                  var millionDeal=rankingWithTotalItem(response.Alist,'number');
-                  millionDeal.forEach(function(item){
-                    item.deptName=item.departname;
-                  });
-                  $this.millionDeal=millionDeal;
-                if(response.Alist.length < 3){
-                    $this.millionDealSet.ifFold = false;
-                    $this.millionDealSet.boxHeight = "auto";
-                }else{
-                    $this.millionDealSet.ifFold = true;
-                    $this.millionDealSet.boxHeight = "630px";
-                    $this.millionDealSet.isFold = false;
+                // 成交积分
+                if(response.scorelist&&response.scorelist.length>0){
+                  var scoretime
+                  if($this.searchData.data&&$this.searchData.data.length>0){
+                      scoretime=$this.searchData.data[0]+'|'+$this.searchData.data[1]
+                  }else{
+                      scoretime=response.scoretime;
+                  }
+                  $this.integralPlug(response.scorelist,scoretime);
                 }
-              }
-              // 奖金排序
-              if(response.moneylist&&response.moneylist.length>0){
-                var moneyarr = response.moneylist;
-                moneyarr.sort($this.compare('allmoney'));
-                var awardMoney = rankingWithTotalItem(moneyarr,'allmoney');
-                awardMoney.forEach(function(item){
-                  item.allmoney = numSeparate(Math.floor(item.allmoney*100)/100);
-                  item.deptName=item.departname;
-                });
-                $this.awardMoney=awardMoney;
-                $this.moneytime = response.moneytime;
-                if(response.moneylist.length < 9){
-                    $this.awardMoneySet.ifFold = false;
-                    $this.awardMoneySet.boxHeight = "auto";
-                }else{
-                    $this.awardMoneySet.ifFold = true;
-                    $this.awardMoneySet.boxHeight = "1133px";
-                    $this.awardMoneySet.isFold = false;
-                }                
+                // 付费
+                if(response.semulist&&response.semulist.length>0){
+                  $this.payPlug(response.semulist);
+                }
+                // 百万成交
+                if(response.Alist&&response.Alist.length>0){
+                  $this.MillionsPlug(response.Alist);
+                }
+                // 奖金排序
+                if(response.moneylist&&response.moneylist.length>0){
+                  var moneytime
+                  if($this.searchData.data&&$this.searchData.data.length>0){
+                      moneytime=$this.searchData.data[1]
+                  }else{
+                      moneytime=response.moneytime;
+                  }
+                  $this.BonusPlug(response.moneylist,moneytime);
+                }
               }
             } else {
               $this.$message({
@@ -332,6 +385,97 @@ export default {
           }
       });
     },
+    //非付费询盘
+    enquiriesPlug(varData){
+      var $this = this;
+      var unpayInquiry=rankingWithTotalItem(varData,'number');
+      unpayInquiry.forEach(function(item){
+        item.number = numSeparate(item.number);
+        item.deptName=item.departname;
+      });
+      $this.unpayInquiry = unpayInquiry;
+      if(varData.length < 9){
+          $this.unpayInquirySet.ifFold = false;
+          $this.unpayInquirySet.boxHeight = "auto";
+      }else{
+          $this.unpayInquirySet.ifFold = true;
+          $this.unpayInquirySet.boxHeight = "630px";
+          $this.unpayInquirySet.isFold = false;
+      }
+    },
+    //成交积分
+    integralPlug(varData,varTime){
+      var $this = this;
+      var dealScore=rankingWithTotalItem(varData,'score');
+      dealScore.forEach(function(item){
+        item.score = numSeparate(Math.floor(item.score*100)/100);
+        item.deptName=item.departname;
+      });
+      $this.dealScore = dealScore;
+      $this.scoretime = varTime;
+      if(varData.length < 9){
+          $this.dealScoreSet.ifFold = false;
+          $this.dealScoreSet.boxHeight = "auto";
+      }else{
+          $this.dealScoreSet.ifFold = true;
+          $this.dealScoreSet.boxHeight = "630px";
+          $this.dealScoreSet.isFold = false;
+      }
+    },
+    //付费
+    payPlug(varData){
+      var $this = this;
+      var payMember=rankingWithTotalItem(varData,'number');
+      payMember.forEach(function(item){
+        item.numberStr = numSeparate(item.number);
+        item.deptName=item.departname;
+      });
+      $this.payMember=payMember;
+    },
+    //百万成交
+    MillionsPlug(varData){
+      var $this = this;
+      var millionDeal=rankingWithTotalItem(varData,'number');
+      millionDeal.forEach(function(item){
+        item.deptName=item.departname;
+      });
+      $this.millionDeal=millionDeal;
+      if(varData.length < 3){
+          $this.millionDealSet.ifFold = false;
+          $this.millionDealSet.boxHeight = "auto";
+      }else{
+          $this.millionDealSet.ifFold = true;
+          $this.millionDealSet.boxHeight = "630px";
+          $this.millionDealSet.isFold = false;
+      }
+    },
+    //奖金排序
+    BonusPlug(varData,varTime){
+      var $this = this;                  
+      var moneyarr = varData;
+      moneyarr.sort($this.compare('allmoney'));
+      var awardMoney = rankingWithTotalItem(moneyarr,'allmoney');
+      awardMoney.forEach(function(item){
+        item.allmoney = numSeparate(Math.floor(item.allmoney*100)/100);
+        item.deptName=item.departname;
+      });
+      $this.awardMoney=awardMoney;
+      $this.moneytime = varTime;
+      if(varData.length < 9){
+          $this.awardMoneySet.ifFold = false;
+          $this.awardMoneySet.boxHeight = "auto";
+      }else{
+          $this.awardMoneySet.ifFold = true;
+          if($this.searchData.dept_id==""){
+              $this.isAwardBool=false;
+              $this.awardMoneySet.boxHeight = "1133px";
+          }else{
+              $this.isAwardBool=true;
+              $this.awardMoneySet.boxHeight = "630px";
+          }
+          $this.awardMoneySet.isFold = false;
+      }
+    },
     // 展开折叠点击事件
     changeSet(data,isfold,boxheight){
       var $this = this;
@@ -339,7 +483,6 @@ export default {
       property.isFold = isfold;
       property.boxHeight = boxheight;
     },
-
     // 数组排序
     compare(property) {
       return function(a,b){

@@ -23,7 +23,31 @@
                           prop="departname"
                           align="center"
                           min-width="70"
+                          v-if="contrastTag=='productCont'"
+                          label="产品">
+                        <template slot-scope="scope">
+                            <span class="depart">{{scope.row.departname}}</span>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                          prop="name"
+                          align="center"
+                          min-width="70"
+                          v-if="contrastTag=='timeCont'"
+                          label="时间">
+                        <template slot-scope="scope">
+                            <span class="depart">{{scope.row.name}}</span>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                          prop="departname"
+                          align="center"
+                          min-width="70"
+                          v-if="contrastTag=='overview'||contrastTag=='departCont'"
                           label="部门">
+                        <template slot-scope="scope">
+                            <span class="depart">{{scope.row.departname}}</span>
+                        </template>
                       </el-table-column>
                       <el-table-column
                           prop="number"
@@ -60,6 +84,10 @@ export default {
       default: function () {
         return {};
       },
+    },
+    contrastTag:{
+      type: String,
+      default: "",
     }
   },
   data() {

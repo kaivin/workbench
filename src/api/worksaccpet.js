@@ -194,3 +194,11 @@ export function getmyfocuswork(data) {
     data,
   });
 }
+// 个人的好评列表
+export function getGoodcomment(data) {
+  return request({
+    url: "/hxindex/Worksaccpet/goodcomment",
+    method: "POST",
+    data,
+  });
+}

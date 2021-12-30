@@ -162,6 +162,7 @@ Vue.prototype.$echarts = echarts
 import '@/utils/worldZH.js' // 以中国为中心的世界地图
 import "@/utils/china.js"; // 中国地图 
 
+
 new Vue({
   router,
   store,

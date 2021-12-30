@@ -176,6 +176,10 @@
                                           label="好评数量"
                                           min-width="80"
                                           >
+                                          <template slot-scope="scope">
+                                            <span class="goodnumberSpan" v-if="scope.row.goodnumber==0">{{scope.row.goodnumber}}</span>
+                                            <router-link class="goodnumberA" v-else :to="{path:'/WorkOrder/goodComment',query:{ID:scope.row.id}}" tag="a" target="_blank">{{scope.row.goodnumber}}</router-link>
+                                          </template>
                                       </el-table-column>
                                       <el-table-column
                                           prop="monthscore"

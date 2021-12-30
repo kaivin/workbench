@@ -5,7 +5,7 @@
           <span v-if="contrastTag=='overview'">统计时间：近30天</span>
       </p>
       <div class="enquirieTrendBox">
-          <div :id="'cluesChart'+enquirieChart.randomStr" style="height:250px" class="chart-canvas"></div>
+          <div :id="'cluesChart'+enquirieChart.randomStr" :style="'height:'+scoreHeight+'px'" class="chart-canvas"></div>
           <div class="trendlegend" v-if="contrastTag=='overview'">
               <span class="legendItem1" v-for="item in enquirieChart.chartName" :key='item'>{{item}}</span>
               <span class="legendItem2">平均值</span>
@@ -31,6 +31,10 @@ export default {
     contrastTag:{
       type: String,
       default: "",
+    },
+    scoreHeight:{
+      type: Number,
+      default: "",
     }
   },
   mounted(){
@@ -40,9 +44,12 @@ export default {
     // 近30天询盘统计趋势图
     drawAreaTrendChart() {
       var $this = this;
+      console.log($this.enquirieChart.enquirieArr,'$this.enquirieChart.enquirieArr');
       if(!$this.areaTrendPlot){
         var legend=false;
         var annotations=false;
+        var point = null;
+        var label = null;
         if($this.contrastTag=='overview'){
           legend=false;
           //总览平均数
@@ -78,6 +85,32 @@ export default {
                   alignY: "bottom",
               },
           ];
+          label = {
+            layout: [{ type: "hide-overlap" }], // 隐藏重叠label
+            style: {
+              textAlign: "center",
+              color: "#9e9e9e",
+              fontsize: 12,
+            },
+          };
+          point = {
+            size: 3,
+            shape: "circle",
+            style: (res) => {
+              var itemColor = "";
+              $this.enquirieChart.enquirieArr.forEach(function(item){
+                if(item.name == res.name){
+                  itemColor = item.color;
+                }
+              });
+              var obj = {
+                opacity: 0.5,
+                stroke: itemColor,
+                fill: "#fff",
+              };
+              return obj;
+            },
+          }
         }else{
           legend={
             marker:{
@@ -155,18 +188,8 @@ export default {
                     }
                 },
             },
-            point: {
-              size: 3,
-              shape: "circle",
-              style: (res) => {
-                var obj = {
-                  opacity: 0.5,
-                  stroke: "#6392ec",
-                  fill: "#fff",
-                };
-                return obj;
-              },
-            },
+            label: label,
+            point: point,
             tooltip: {
               formatter: (datum) => {
                 return { name:datum.name, value: datum.number };

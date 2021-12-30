@@ -139,6 +139,7 @@
   </div>
 </template>
 <script>
+import io from '@/utils/socket.io.js';
 import { mapGetters } from "vuex";
 export default {
   name: "Home",

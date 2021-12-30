@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="focusProMain flex-wrap">
         <div class="focusProUlFl">
-            <h3>{{focusPro.name}}</h3>
+            <router-link :to="{path: lang == 'ch'?'/stat/cn/productAnalysis/ProAccount':'/stat/en/productAnalysis/ProAccount',query:{starttime:starttime,endtime:endtime,productname:focusPro.name,typeid:focusPro.typeid}}" tag="a" target="_blank">{{focusPro.name}}</router-link>
             <dl>
                 <dd>
                     <p class="focusProUlFlTop">{{focusPro.todayxunnumber}}</p>
@@ -51,7 +51,25 @@ export default {
       default: function () {
         return {};
       },
-    }
+    },
+    lang:{
+      type: String,
+      default: function () {
+        return "";
+      },
+    },
+    starttime:{
+      type: String,
+      default: function () {
+        return "";
+      },
+    },
+    endtime:{
+      type: String,
+      default: function () {
+        return "";
+      },
+    },
   },
   watch: {
     focusPro:{
@@ -138,16 +156,17 @@ export default {
             marker:{
               symbol:"hyphen",
             },
-            itemSpacing:10,
+            itemSpacing:15,
             layout:'horizontal',
             position:'top-right',
             flipPage:false,
-            offsetX:-15,
-            offsetY:0,
+            offsetX:0,
+            offsetY:5,
             itemName: {
               formatter: (val) => `${val}`,
               style: {
                 fill: '#c2c2c2',
+                lineHeight:20,
               },
             },
             label:{
@@ -253,11 +272,11 @@ export default {
                     marker:{
                       symbol:"hyphen",
                     },
-                    itemSpacing:10,
+                    itemSpacing:20,
                     position:'top-right',
                     flipPage:false,
                     offsetX:0,
-                    offsetY:0,
+                    offsetY:5,
                     itemName: {
                       formatter: (val) => `${val}`,
                       style: {

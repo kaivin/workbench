@@ -1,9 +1,9 @@
 ﻿<template>
     <div class="promapBoxFl">
-      <div class="proAccountBox" v-for='(item,index) in currentData'>
+      <div class="proAccountBox" :style="'width:'+1/currentData.length*100+'%'" v-for='(item,index) in currentData'>
             <p class="proAccountTit">{{item.title}}</p>
-            <div class="item-map" :style="'width:'+item.mapWidth">
-                <div class="map-panel">
+            <div class="item-map">
+                <div class="map-panel" v-bind:style="{width:item.mapWidth+'px',height:item.mapHeight+'px'}">
                     <template v-if="isCn">
                         <cn-map-chart
                         :chart-data="item.mapData"
@@ -25,9 +25,9 @@
                         ></word-map-chart>
                     </template>
                 </div>
-                <div class="region-rank">
+                <div class="region-rank" v-bind:style="{width:item.mapWidth+'px',height:item.mapHeight+'px'}">
                     <div class="txt-header"><strong>{{item.topTitle}}</strong></div>
-                    <div class="bar-chart" v-if="item.topTenData[0].value>0">
+                    <div class="bar-chart">
                         <top-region
                         :chart-data="item.topTenData"
                         :color-data="item.topTenColor"
@@ -50,6 +50,7 @@ import topRegion from "../departGroup/topRegion.vue";
 export default {
   name: "proMapChart",
   components: {
+    cnMapChart,
     wordMapChart,
     topRegion,
   },

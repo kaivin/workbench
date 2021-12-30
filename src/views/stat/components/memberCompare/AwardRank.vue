@@ -64,6 +64,10 @@ export default {
         return "";
       },
     },
+    isAwardBool:{
+      type:Boolean,
+      default:false,
+    },
     //折叠情况
     awardMoneySet: {
       type: Object,
@@ -86,9 +90,12 @@ export default {
         if(isFold){
           boxHeight = "auto";
         }else{
-          boxHeight = '1133px'
+          if($this.isAwardBool){
+            boxHeight = '630px'
+          }else{
+            boxHeight = '1130px'
+          }
         }
-        
         $this.$emit("changeSet", $this.awardMoneySet, isFold, boxHeight);
     },
   }

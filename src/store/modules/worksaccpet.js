@@ -24,6 +24,7 @@
     getworkAddfocus,
     getCancelworkfocus,
     getmyfocuswork,
+    getGoodcomment,
 } from '@/api/worksaccpet'
 
 const state = {}
@@ -273,6 +274,16 @@ const actions = {
     getmyfocusworkAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             getmyfocuswork(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //个人的好评列表
+    getGoodcommentAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getGoodcomment(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

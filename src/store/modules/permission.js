@@ -121,7 +121,7 @@ function setRoutes(routers){
         path: "/stat/cn/productAnalysis/ProAccount",
         name:'cnProAccount',
         component: () => import("@/views/stat/cn/productAnalysis/ProAccount.vue"),
-        meta: {id:'cnProAccount-131',title: '产品详情统计', icon: null, keepAlive:false},
+        meta: {id:'cnProAccount-131',title: '中文产品详情统计', icon: null, keepAlive:false},
       },
       {
         path: "/stat/cn/productAnalysis/ProStatistic",
@@ -145,7 +145,7 @@ function setRoutes(routers){
         path: "/stat/en/productAnalysis/ProAccount",
         name:'enProAccount',
         component: () => import("@/views/stat/en/productAnalysis/ProAccount.vue"),
-        meta: {id:'enProAccount-131',title: '产品详情统计', icon: null, keepAlive:false},
+        meta: {id:'enProAccount-131',title: '英文产品详情统计', icon: null, keepAlive:false},
       },
       {
         path: "/Article/info",
@@ -278,6 +278,12 @@ function setRoutes(routers){
         name:'workOrderInfo',
         component: () => import(/* webpackChunkName: "workOrderInfo" */ "@/views/WorkOrder/workInfo/index.vue"),
         meta: {id:'workInfo-95',title: '工单详情', icon: null, keepAlive:false},
+      },
+      {
+        path: "/WorkOrder/goodComment",
+        name:'goodcomment',
+        component: () => import(/* webpackChunkName: "workOrderInfo" */ "@/views/WorkOrder/goodComment/index.vue"),
+        meta: {id:'goodcomment-95',title: '个人的好评列表', icon: null, keepAlive:false},
       },
       {
         path: "/Weblog/logList",
