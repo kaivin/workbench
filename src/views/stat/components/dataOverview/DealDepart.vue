@@ -167,6 +167,9 @@ export default {
           tooltip:{
             show:true,
             trigger:'axis',
+            axisPointer: {
+                type: 'shadow',
+            },
             backgroundColor:'#fff',
             extraCssText: 'box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);',
             formatter: function (params) {

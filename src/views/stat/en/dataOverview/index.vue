@@ -81,7 +81,7 @@
              </el-col>
              <el-col class="hxmodule-item" :xl="12" :lg="24">
                <HotProduct
-               language="中文"
+               language="英文"
                :productscoretop10="productscoretop10"
                :productxuntop10="productxuntop10"
                :year="type==1?prevYear:nowYear"
@@ -90,7 +90,7 @@
              </el-col>
              <el-col class="hxmodule-item" :xl="12" :lg="24">
                <ScoreTop
-               language="中文"
+               language="英文"
                :yearuserscoretop5="yearuserscoretop5"
                :moneytop5="moneytop5"
                :yearuserxuntop5="yearuserxuntop5"
@@ -123,7 +123,7 @@ import XpanYears from "../../components/dataOverview/XpanYears.vue";
 import XpanPercent from "../../components/dataOverview/XpanPercent.vue";
 import HotProduct from "../../components/dataOverview/HotProduct.vue";
 import {getEncountnew} from "@/api/dataOverview.js";
-import {numSeparate} from "@/utils/index";
+import {numSeparate,rankingWithTotalItem} from "@/utils/index";
 export default {
   name: "enDataOverview",
   data() {
@@ -234,11 +234,16 @@ export default {
           this.yearsanumbertong = res.yearsanumbertong;
           this.yearsmoneytong = res.yearsmoneytong;
           var moneytop5=res.moneytop5;
+          moneytop5.sort(function(a, b){return a.allmoney - b.allmoney}).reverse();
+          moneytop5 = rankingWithTotalItem(moneytop5,'allmoney');
           moneytop5.forEach(function(item){
             item.allmoney = numSeparate(item.allmoney);
           });
           this.moneytop5 = moneytop5;
-          this.yearuserscoretop5 = res.yearuserscoretop5;
+          var yearuserscoretop5 = res.yearuserscoretop5;
+          yearuserscoretop5.sort(function(a, b){return a.number - b.number}).reverse(); 
+          yearuserscoretop5 = rankingWithTotalItem(yearuserscoretop5,'number');
+          this.yearuserscoretop5 = yearuserscoretop5;
           this.provincecountmap =  res.provincecountmap;
           this.provincescoretmap = res.provincescoretmap;
           this.provincescorenumbertmap = res. provincescorenumbertmap;
@@ -250,8 +255,14 @@ export default {
           this.departList = res.readart;
           this.productxuntop10 = res.productxuntop10;
           this.productscoretop10 = res.productscoretop10;
-          this.anumbertop5 = res.anumbertop5;
-          this.yearuserxuntop5 = res.yearuserxuntop5;
+          var anumbertop5 = res.anumbertop5;
+          anumbertop5.sort(function(a, b){return a.number - b.number}).reverse(); 
+          anumbertop5 = rankingWithTotalItem(anumbertop5,'number');
+          this.anumbertop5 = anumbertop5;
+          var yearuserxuntop5 = res.yearuserxuntop5;
+          yearuserxuntop5.sort(function(a, b){return a.number - b.number}).reverse(); 
+          yearuserxuntop5 = rankingWithTotalItem(yearuserxuntop5,'number');
+          this.yearuserxuntop5 =yearuserxuntop5;
         }
       })
     },

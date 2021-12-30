@@ -109,12 +109,18 @@ export default {
                   maxValue = chartBotData[i].avgallmoney;
               }
           }
-          maxNum = Math.ceil(maxValue/1000)*1000;
+          var numlen = Math.ceil(maxValue).toString().split('').length;
+          var step = 15;
+          for(var i=0;i< numlen-2 ;i++){
+            step = step*10
+          }
+          maxNum = Math.ceil(maxValue/step)*step;
           for(var i=0;i< chartBotData.length;i++){
               var obj={};
               obj.departname= chartBotData[i].departname;
               obj.avgallmoney= maxNum;
               maxList.push(obj);
+              console.log(maxList)
               var obj2 = {};
               obj2.departname= chartBotData[i].departname;
               obj2.avgallmoney= 0.5;
@@ -145,7 +151,7 @@ export default {
                   left: '0',
                   right: '0',
                   bottom: '3%',
-                  top: '5%',
+                  top: '20',
                   containLabel: true
               },
               xAxis: [{
@@ -190,6 +196,7 @@ export default {
                   nameTextStyle:{
                       color: "transparent"
                   },
+                  splitNumber:3,
                   splitLine:{
                     lineStyle:{
                       type: [4, 3],
@@ -213,97 +220,25 @@ export default {
                       source: btmList
                   }
               ],
-              series: [
-                //三个最低下的圆片
-                {
+              series: [       
+                { //最低下的圆片
                   name: "",
                   type: "pictorialBar",
-                  symbolSize: [32, 20],
-                  symbolOffset: [-2, 10],
-                  z: 1,
-                  itemStyle: { //lenged文本
-                      color: function(params) {
-                          if(params.dataIndex == 0){
-                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                offset: 0,
-                                color: '#d21435'
-                            },{
-                                offset: 0.3,
-                                color: '#ff6682'
-                            },{
-                                offset: 0.4,
-                                color: '#ff6682'
-                            },{
-                                offset: 0.7,
-                                color: '#b10a27'
-                            }, {
-                                offset: 0.95,
-                                color: '#d21435'
-                            },{
-                                offset: 1,
-                                color: '#d21435'
-                            }], false)
-                          }else if(params.dataIndex == 1){
-                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                offset: 0,
-                                color: '#ff7b22'
-                            },{
-                                offset: 0.3,
-                                color: '#ffda51'
-                            },{
-                                offset: 0.4,
-                                color: '#ffda51'
-                            },{
-                                offset: 0.7,
-                                color: '#dc5b00'
-                            }, {
-                                offset: 0.95,
-                                color: '#ffae46'
-                            },{
-                                offset: 1,
-                                color: '#ffae46'
-                            }], false)
-                          }else if(params.dataIndex == 2){
-                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                offset: 0,
-                                color: '#0452ff'
-                            },{
-                                offset: 0.3,
-                                color: '#50c8f6'
-                            },{
-                                offset: 0.4,
-                                color: '#50c8f6'
-                            },{
-                                offset: 0.7,
-                                color: '#0041d0'
-                            }, {
-                                offset: 0.95,
-                                color: '#2d7ef3'
-                            },{
-                                offset: 1,
-                                color: '#2d7ef3'
-                            }], false)
-                          }else if(params.dataIndex == 3){
-                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                offset: 0,
-                                color: '#49b3f8'
-                            },{
-                                offset: 0.3,
-                                color: '#87e6fe'
-                            },{
-                                offset: 0.4,
-                                color: '#87e6fe'
-                            },{
-                                offset: 0.7,
-                                color: '#3a6cc6'
-                            }, {
-                                offset: 0.95,
-                                color: '#2f80f3'
-                            },{
-                                offset: 1,
-                                color: '#2f80f3'
-                            }], false)
-                          }
+                  symbolSize: [32, 7],
+                  symbolOffset: [-2, 4],
+                  z: 12,
+                  itemStyle: {
+                      opacity: 1,
+                      color: function(params){
+                        if(params.dataIndex == 0){
+                          return  '#b10a27';
+                        }else if(params.dataIndex == 1){
+                          return  '#dc5b00';
+                        }else if(params.dataIndex == 2){
+                            return  '#0041d0';
+                        }else if(params.dataIndex == 3){
+                          return  '#3a6cc6';
+                        }
                       }
                   },
                   datasetIndex:2,
@@ -315,91 +250,46 @@ export default {
                   barWidth: 32,
                   z: 1,
                   itemStyle: { //lenged文本
-                      color: function(params) {
-                          if(params.dataIndex == 0){
-                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                offset: 0,
-                                color: '#d21435'
-                            },{
-                                offset: 0.3,
-                                color: '#ff6682'
-                            },{
-                                offset: 0.4,
-                                color: '#ff6682'
-                            },{
-                                offset: 0.7,
-                                color: '#b10a27'
-                            }, {
-                                offset: 0.95,
-                                color: '#d21435'
-                            },{
-                                offset: 1,
-                                color: '#d21435'
-                            }], false)
-                          }else if(params.dataIndex == 1){
-                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                offset: 0,
-                                color: '#ff7b22'
-                            },{
-                                offset: 0.3,
-                                color: '#ffda51'
-                            },{
-                                offset: 0.4,
-                                color: '#ffda51'
-                            },{
-                                offset: 0.7,
-                                color: '#dc5b00'
-                            }, {
-                                offset: 0.95,
-                                color: '#ffae46'
-                            },{
-                                offset: 1,
-                                color: '#ffae46'
-                            }], false)
-                          }else if(params.dataIndex == 2){
-                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                offset: 0,
-                                color: '#0452ff'
-                            },{
-                                offset: 0.3,
-                                color: '#50c8f6'
-                            },{
-                                offset: 0.4,
-                                color: '#50c8f6'
-                            },{
-                                offset: 0.7,
-                                color: '#0041d0'
-                            }, {
-                                offset: 0.95,
-                                color: '#2d7ef3'
-                            },{
-                                offset: 1,
-                                color: '#2d7ef3'
-                            }], false)
-                          }else if(params.dataIndex == 3){
-                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                offset: 0,
-                                color: '#49b3f8'
-                            },{
-                                offset: 0.3,
-                                color: '#87e6fe'
-                            },{
-                                offset: 0.4,
-                                color: '#87e6fe'
-                            },{
-                                offset: 0.7,
-                                color: '#3a6cc6'
-                            }, {
-                                offset: 0.95,
-                                color: '#2f80f3'
-                            },{
-                                offset: 1,
-                                color: '#2f80f3'
-                            }], false)
-                          }
+                    color: function(params) {
+                      if(params.dataIndex == 0){
+                        return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#ff395d'
+                        },{
+                            offset: 1,
+                            color: '#d21435'
+                        }], false)
+                      }else if(params.dataIndex == 1){
+                        return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#ffaf47'
+                        },{
+                            offset: 1,
+                            color: '#ff7a21'
+                        }], false)
+                      }else if(params.dataIndex == 2){
+                        return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#2e7ff3'
+                        },{
+                            offset: 0.5,
+                            color: '#1969f9'
+                        },{
+                            offset: 1,
+                            color: '#0352ff'
+                        }], false)
+                      }else if(params.dataIndex == 3){
+                        return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#2e7ff3'
+                        },{
+                            offset: 1,
+                            color: '#4ab5f8'
+                        }], false)
                       }
-                    },
-                    dataIndex: 0
+                    }
+                  },
+                  dataIndex: 0
                 },
                 //头部圆形
                 {

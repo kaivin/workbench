@@ -29,27 +29,25 @@
         text-align: center;
         line-height: 24px;
         border: 1px solid rgba(225,227,234,.2);
-        color: #9ea5af;
-        font-size: 12px;
+        color: #9ea3b3;
+        font-size: 13px;
         box-sizing: border-box;
         cursor: pointer;
         margin-left: -1px;
         position: relative;
         display: inline-block;
         &:hover{
-          color: #496bf2;
-          border: 1px solid #496bf2;
+          color: #fff;
+          background-color: #213064;
+	        border: solid 1px #496bf2;
           z-index: 1;
         }
       }
       .active{
         border: 1px solid #496bf2;
-        background:#496bf2;
+        background:#213064;
         color: #fff;
         z-index: 1;
-        &:hover{
-          color: #fff;
-        }
       }
     }
   }
@@ -502,30 +500,30 @@
           background-image: linear-gradient(-90deg, #2e7ff3 0%, #4ab5f8 100%);
           position: relative;
         }
-        .top-bar0{
+        .top-bar1{
           background-image: linear-gradient(-90deg, #ff395d 0%, #d21435 100%);
           &:after{
             content: '';
             display: block;
             position: absolute;
-            width: 26px;
+            width: 16px;
             height: 16px;
             background: url(../assets/airplane.png) center center no-repeat;
             top: 0;
-            right: -33px;
-          }
-        }
-        .top-bar1{
-          background-image: linear-gradient(-90deg, #f9c020 0%, #f83801 100%), 
-              linear-gradient(-90deg, #ffa734 0%, #ff7a21 100%);    
-          &:after{
-            @extend .top-bar0:after
+            right: -26px;
           }
         }
         .top-bar2{
+          background-image: linear-gradient(-90deg, #f9c020 0%, #f83801 100%), 
+              linear-gradient(-90deg, #ffa734 0%, #ff7a21 100%);    
+          &:after{
+            @extend .top-bar1:after
+          }
+        }
+        .top-bar3{
           background-image: linear-gradient(-90deg, #ffcf67 0%, #ff7a21 100%);
           &:after{
-            @extend .top-bar0:after
+            @extend .top-bar1:after
           }
         }
       }

@@ -3,7 +3,7 @@
       <div class="title-view">
         <div class="title">成交{{language=='英文'&&type==1?'个数':'积分'}}</div>
         <div class="unit">{{language=='英文'&&type==1?'（单位：个）':'（单位：分）'}}</div>
-        <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
+        <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:type==0?2:8,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
         <div class="btn-group" v-if="language=='英文'">
           <div @click="changeType(0)" class="btn-item" :class="type == 0?'active':''">积分</div>
           <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">个数</div>
@@ -352,21 +352,33 @@ export default {
             oldXpanYears+=val[i].lastscore;
             newXpanYears+=val[i].score;
           }
+          var newnum = newXpanYears.toFixed(2).split(".");
+          newnum = parseInt(newnum[0]).toLocaleString()+'.'+newnum[1];
+          this.totalXpanYears= newnum;
         }else{
           for(let i = 0;i<val.length;i++){
             oldXpanYears+=val[i].lastnumber;
             newXpanYears+=val[i].number;
           }
+          var newnum = newXpanYears.toLocaleString();
+          this.totalXpanYears= newnum;
         }
-        var newnum = newXpanYears.toFixed(2).split(".");
-        newnum = parseInt(newnum[0]).toLocaleString()+'.'+newnum[1];
-        this.totalXpanYears= newnum;
+        
         if(newXpanYears>=oldXpanYears){
           this.isUp = true;
-          this.isUpNum = (newXpanYears - oldXpanYears).toFixed(2)
+          if(this.type == 0){
+            this.isUpNum = (newXpanYears - oldXpanYears).toFixed(2)
+          }else{
+            this.isUpNum = newXpanYears - oldXpanYears
+          }
+          
         }else{
           this.isUp = false;
-          this.isUpNum = (oldXpanYears - newXpanYears).toFixed(2)
+          if(this.type == 0){
+            this.isUpNum = (oldXpanYears - newXpanYears).toFixed(2)
+          }else{
+            this.isUpNum = oldXpanYears - newXpanYears
+          }
         }
       },
       getMonthDays(year,month){

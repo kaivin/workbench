@@ -21,8 +21,8 @@
         <li class="top-item" v-for="(item,index) in topdata" :key="index">
           <router-link :to="getlink(item)" tag="a" >
             <div class="top-icon">
-              <img :src="require('@/assets/personal_InquiryIcon0'+(index+1)+'.png')" alt="" v-if="index < 3">
-              <span v-else>0{{index+1}}</span>
+              <img :src="require('@/assets/personal_InquiryIcon0'+(item.ranking)+'.png')" alt="" v-if="item.ranking < 4">
+              <span v-else>0{{item.ranking}}</span>
             </div>
             <div class="top-img">
               <img  :src="item.headimg"  alt="">
@@ -33,10 +33,10 @@
               <span v-else>{{item.username}}</span>
             </div>
             <div class="top-width">
-              <div :class="'top-bar' + index" :style="'width:' + item.width"></div>
+              <div :class="'top-bar' + item.ranking" :style="'width:' + item.width"></div>
             </div>
             <div class="userAward flex-content" v-if="type == 4">
-                  <span v-if="index+1<=3" :class="'num0'+(index+1)"> 
+                  <span v-if="item.ranking<4" :class="'num0'+item.ranking"> 
                     {{item.allmoney}}元
                   </span>
                   <span v-else> 
@@ -44,7 +44,7 @@
                   </span>
             </div>
             <div class="userAward flex-content" v-if="type == 3||type ==2">
-                  <span v-if="index+1<=3" :class="'num0'+(index+1)"> 
+                  <span v-if="item.ranking<4" :class="'num0'+item.ranking"> 
                     {{item.number}}个
                   </span>
                   <span v-else> 
@@ -52,7 +52,7 @@
                   </span>
             </div>
             <div class="userAward flex-content" v-if="type == 1&& language == '中文'">
-                  <span v-if="index+1<=3" :class="'num0'+(index+1)"> 
+                  <span v-if="item.ranking<4" :class="'num0'+item.ranking"> 
                     {{item.number}}分
                   </span>
                   <span v-else> 
@@ -60,7 +60,7 @@
                   </span>
             </div>
             <div class="userAward flex-content" v-if="type == 1&& language == '英文'">
-                  <span v-if="index+1<=3" :class="'num0'+(index+1)"> 
+                  <span v-if="item.ranking<4" :class="'num0'+item.ranking"> 
                     {{item.number}}个
                   </span>
                   <span v-else> 
@@ -154,7 +154,6 @@ export default {
           // 奖金
           topdata = $this.moneytop5;
           if(topdata.length > 0){
-            topdata.sort(function(a, b){return a.allmoney.split(',').join('') - b.allmoney.split(',').join('')}).reverse(); 
             let maxwidth = topdata[0].allmoney.split(',').join('');
             for(let i = 0;i<topdata.length;i++){
               topdata[i].width = parseFloat((topdata[i].allmoney.split(',').join('')/maxwidth).toFixed(2)) * 85 + '%';
@@ -172,14 +171,12 @@ export default {
             topdata = $this.anumbertop5;
           }
           if(topdata.length > 0){
-            topdata.sort(function(a, b){return a.number - b.number}).reverse(); 
             let maxwidth = topdata[0].number;
             for(let i = 0;i<topdata.length;i++){
               topdata[i].width = parseFloat((topdata[i].number/maxwidth).toFixed(2)) * 85 + '%';
             }
           }
         }
-
         this.topdata = topdata;
         
       },
