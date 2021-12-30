@@ -266,6 +266,7 @@ export default {
                     item.deptName=item.departname;
                   });
                   $this.dealScore = dealScore;
+                  $this.scoretime = response.scoretime;
                 if(response.scorelist.length < 9){
                     $this.dealScoreSet.ifFold = false;
                     $this.dealScoreSet.boxHeight = "auto";
