@@ -306,8 +306,8 @@ export default {
             inRange: {
               color: mapInterval.defaultColor // 图元的颜色
             },
-            inverse:true,
-            orient:'horizontal',
+            inverse:false,
+            orient:'vertical',
             itemWidth:9,
             itemHeight:9,
             align:'left',
@@ -718,8 +718,8 @@ export default {
             inRange: {
               color: mapInterval.defaultColor // 图元的颜色
             },
-            inverse:true,
-            orient:'horizontal',
+            inverse:false,
+            orient:'vertical',
             itemWidth:9,
             itemHeight:9,
             align:'left',
