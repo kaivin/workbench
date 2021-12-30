@@ -91,37 +91,39 @@ export default {
         var myChart = echarts.init(chartDom);
         var option;
         var $this = this;
-
-        var  colorList=['#3a72ff', '#1bd7ff', '#ff395d', '#ffcd6a', '#f1bb4c', "rgba(250,250,250,0.5)"];
+        var pieData = [];
+        var totalScore = 0;
+        var  colorList=['#3a72ff', '#1bd7ff', '#ff395d', '#ffcd6a', '#f1bb4c',];
+        chartBotData.forEach(function(item){
+          var itemData = {};
+          itemData.name = item.departname;
+          itemData.value = item.score;
+          pieData.push(itemData);
+        });
         option = {
-            grid: {
-                top: '-5%',
-                bottom: 0,
-                left: '-15%',
-                right: '-15%',
-                containLabel: true,
-            },
+            color: colorList,
             tooltip: {
               trigger: 'item',
               formatter: (params) => {
-                   if(this.type == 0){
-                      var text = `${params.data.departname}<br/>
-                      <span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${
-                          params.color
-                      };"></span>积分：${params.data.score}`;
-                      return text;
-                   }else{
-                     var text = `${params.data.departname}<br/>
-                      <span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${
-                          params.color
-                      };"></span>个数：${params.data.score}`;
-                      return text;
-                   }
+                console.log(params,"tooltip")
+                if(this.type == 0){
+                  var text = `${params.data.name}<br/>
+                  <span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${
+                      params.color
+                  };"></span>积分：${params.data.value}`;
+                  return text;
+                }else{
+                  var text = `${params.data.name}<br/>
+                  <span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${
+                      params.color
+                  };"></span>个数：${params.data.value}`;
+                  return text;
+                }
               },
             },
-            dataset:{
-                source: chartBotData
-            },
+            // dataset:{
+            //     source: chartBotData
+            // },
             series: [
                 // {
                 //     radius: ['35%', '62%'],
@@ -184,47 +186,39 @@ export default {
                 //     }
                 // },
                 {
-                    radius: ['35%', '62%'],
+                    radius: ['32%', '58%'],
                     center: ['50%', '50%'],
                     type: 'pie',
                     showEmptyCircle: true,
+                    data:pieData,
                     itemStyle: {
-                        normal: {
-                            color: function(params) {
-                                return colorList[params.dataIndex]
-                            }
-                        }
+                      color: function(params) {
+                        return colorList[params.dataIndex]
+                      }
                     },
                     z:4,
                     labelLine: {
-                        normal: {
-                            show: true,
-                            length: 15,
-                            length2: 10,
-                            lineStyle: {
-                                color: 'rgba(140,162,221,0.8)'
-                            },
-                            align: 'right'
-                        },
-                        emphasis: {
-                            show: true
-                        }
+                      show: true,
+                      length: 15,
+                      length2: 10,
+                      lineStyle: {
+                          color: 'rgba(140,162,221,0.8)'
+                      },
+                      align: 'right'
                     },
                     label:{
-                        normal:{
-                            formatter: function(params){
-                                var str = '';
-                                str = '{a|'+params.name+'}'+'{b|\n占比: '+params.percent.toFixed(1)+'%}';
-                                return str
-                            },
-                            fontSize: 13,
-                            color: "rgba(140,162,221,0.8)",
-                            rich: {
-                              b:{
-                                padding: [5, 0, 0, 0],
-                              }
-                            }
+                      formatter: function(params){
+                          var str = '';
+                          str = '{a|'+params.name+'}'+'{b|\n占比: '+params.percent.toFixed(1)+'%}';
+                          return str
+                      },
+                      fontSize: 13,
+                      color: "rgba(140,162,221,0.8)",
+                      rich: {
+                        b:{
+                          padding: [5, 0, 0, 0],
                         }
+                      }
                     },
                     labelLayout:{
                         verticalAlign:"top"
@@ -232,28 +226,28 @@ export default {
                 },
                 // 边框的设置
                 {
-                    radius: ['35%', '42%'],
-                    center: ['50%', '50%'],
-                    type: 'pie',
-                    z:4,
-                    label: {
+                  radius: ['32%', '38%'],
+                  center: ['50%', '50%'],
+                  type: 'pie',
+                  z:4,
+                  label: {
+                    show: false
+                  },
+                  labelLine: {
+                    show: false
+                  },
+                  tooltip: {
                       show: false
-                    },
-                    labelLine: {
-                      show: false
-                    },
-                    tooltip: {
-                        show: false
-                    },
-                    itemStyle: {
-                      color:'rgba(0,0,0,0.2)'
-                    },
-                    emphasis: {
-                      scale: false
-                    },
-                    data: [{
-                        value: 1,
-                    }],
+                  },
+                  itemStyle: {
+                    color:'rgba(0,0,0,0.2)'
+                  },
+                  emphasis: {
+                    scale: false
+                  },
+                  data: [{
+                      value: 1,
+                  }],
                 }
             ]
         };

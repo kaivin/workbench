@@ -104,29 +104,31 @@ export default {
         var myChart = echarts.init(chartDom);
         var option;
         var $this = this;
-
+        var pieData = [];
+        var totalScore = 0;
+        var  colorList=['#3a72ff', '#1bd7ff', '#ff395d', '#ffcd6a', '#f1bb4c',];
+        chartBotData.forEach(function(item){
+          var itemData = {};
+          itemData.name = item.departname;
+          itemData.value = item.yearcount;
+          pieData.push(itemData);
+        });
         var  colorList=['#3a72ff', '#1bd7ff', '#ff395d', '#ffcd6a', '#f1bb4c', "rgba(250,250,250,0.5)"];
         option = {
-            grid: {
-                top: '-5%',
-                bottom: 0,
-                left: '-15%',
-                right: '-15%',
-                containLabel: true,
-            },
+            color: colorList,
             tooltip: {
               trigger: 'item',
               formatter: (params) => {
-                    var text = `${params.data.departname}<br/>
+                    var text = `${params.data.name}<br/>
                     <span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${
                         params.color
-                    };"></span>个数：${params.data.yearcount}`;
+                    };"></span>个数：${params.data.value}`;
                     return text;
               },
             },
-            dataset:{
-                source: chartBotData
-            },
+            // dataset:{
+            //     source: chartBotData
+            // },
             series: [
                 // {
                 //     radius: ['35%', '62%'],
@@ -189,10 +191,11 @@ export default {
                 //     }
                 // },
                 {
-                    radius: ['35%', '62%'],
+                    radius: ['32%', '58%'],
                     center: ['50%', '50%'],
                     type: 'pie',
                     showEmptyCircle: true,
+                    data:pieData,
                     itemStyle: {
                       color: function(params) {
                           return colorList[params.dataIndex]
@@ -239,7 +242,7 @@ export default {
                     },
                 },
                 {
-                    radius: ['35%', '42%'],
+                    radius: ['32%', '38%'],
                     center: ['50%', '50%'],
                     type: 'pie',
                     z:4,

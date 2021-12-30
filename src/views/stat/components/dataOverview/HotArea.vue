@@ -499,6 +499,12 @@ export default {
             scale: true,
             position: 'top',
             splitNumber:2,
+            max: function (value) {
+              var len = value.max.toString().length;
+              if(len>2){
+                return (parseInt(value.max/Math.pow(10,len-1))+2)*Math.pow(10,len-1)
+              }
+            },
             axisLine: {
               show: true,
               lineStyle: {
@@ -536,6 +542,7 @@ export default {
               show: false,
             },
             axisLabel: {
+              rotate:$this.language=="英文"?45:0,
               textStyle: {
                   color: '#c0e6f9',
                   
