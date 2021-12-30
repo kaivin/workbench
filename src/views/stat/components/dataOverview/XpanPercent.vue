@@ -128,77 +128,75 @@ export default {
                 source: chartBotData
             },
             series: [
-                {
-                    radius: ['35%', '62%'],
-                    center: ['50%', '55%'],
-                    type: 'pie',
-                    showEmptyCircle: true,
-                    itemStyle: {
-                      color: function(params) {
-                          return colorList[params.dataIndex]
-                      }
-                    },
-                    z:2,
-                    label:{
-                      show:false,
-                    },
-                    labelLine:{
-                      show:false
-                    }
-                },
-                {
-                    radius: ['35%', '62%'],
-                    center: ['50%', '55%'],
-                    type: 'pie',
-                    showEmptyCircle: true,
-                    itemStyle: {
-                      color: {
-                        type: 'radial',
-                        x: 0.5,
-                        y: 0.5,
-                        r: 0.5,
-                        colorStops: [{
-                            offset: .4, color: 'rgba(255,255,255,.2)' // 0% 处的颜色
-                        }, {
-                            offset: 1, color:  'rgba(0,0,0,.2)' // 100% 处的颜色
-                        }],
-                        global: false // 缺省为 false
-                      }
-                      // color: {
-                      //   type: 'linear',
-                      //   x: 1,
-                      //   y: 1,
-                      //   x2: 0,
-                      //   y2: 0,
-                      //   colorStops: [{
-                      //       offset: .2, color: 'rgba(0,0,0,.2)' // 0% 处的颜色
-                      //   }, {
-                      //       offset: .5, color:  'rgba(255,255,255,.2)' // 100% 处的颜色
-                      //   },{
-                      //       offset: .8, color:  'rgba(0,0,0,.2)' // 100% 处的颜色
-                      //   }],
-                      //   global: false // 缺省为 false
-                      // }
-                    },
-                    z:3,
-                    label:{
-                      show:false,
-                    },
-                    labelLine:{
-                      show:false
-                    }
-                },
+                // {
+                //     radius: ['35%', '62%'],
+                //     center: ['50%', '55%'],
+                //     type: 'pie',
+                //     showEmptyCircle: true,
+                //     itemStyle: {
+                //       color: function(params) {
+                //           return colorList[params.dataIndex]
+                //       }
+                //     },
+                //     z:2,
+                //     label:{
+                //       show:false,
+                //     },
+                //     labelLine:{
+                //       show:false
+                //     }
+                // },
+                // {
+                //     radius: ['35%', '62%'],
+                //     center: ['50%', '55%'],
+                //     type: 'pie',
+                //     showEmptyCircle: true,
+                //     itemStyle: {
+                //       // color: {
+                //       //   type: 'radial',
+                //       //   x: 0.5,
+                //       //   y: 0.5,
+                //       //   r: 0.5,
+                //       //   colorStops: [{
+                //       //       offset: .4, color: 'rgba(255,255,255,.2)' // 0% 处的颜色
+                //       //   }, {
+                //       //       offset: 1, color:  'rgba(0,0,0,.2)' // 100% 处的颜色
+                //       //   }],
+                //       //   global: false // 缺省为 false
+                //       // }
+                //       color: {
+                //         type: 'linear',
+                //         x: 1,
+                //         y: 1,
+                //         x2: 0,
+                //         y2: 1,
+                //         colorStops: [{
+                //             offset: .2, color: 'rgba(0,0,0,.2)' // 0% 处的颜色
+                //         }, {
+                //             offset: .5, color:  'rgba(255,255,255,.2)' // 100% 处的颜色
+                //         },{
+                //             offset: .8, color:  'rgba(0,0,0,.2)' // 100% 处的颜色
+                //         }],
+                //         global: false // 缺省为 false
+                //       }
+                //     },
+                //     z:3,
+                //     label:{
+                //       show:false,
+                //     },
+                //     labelLine:{
+                //       show:false
+                //     }
+                // },
                 {
                     radius: ['35%', '62%'],
                     center: ['50%', '50%'],
                     type: 'pie',
                     showEmptyCircle: true,
                     itemStyle: {
-                        normal: {
-                            color: function(params) {
-                                return colorList[params.dataIndex]
-                            }
-                        }
+                      color: function(params) {
+                          return colorList[params.dataIndex]
+                      }
                     },
                     z:4,
                     labelLine: {
@@ -241,33 +239,25 @@ export default {
                     },
                 },
                 {
-                    radius: ['35%', '40%'],
+                    radius: ['35%', '42%'],
                     center: ['50%', '50%'],
                     type: 'pie',
+                    z:4,
                     label: {
-                        normal: {
-                            show: false
-                        },
-                        emphasis: {
-                            show: false
-                        }
+                      show: false
                     },
                     labelLine: {
-                        normal: {
-                            show: false
-                        },
-                        emphasis: {
-                            show: false
-                        }
+                      show: false
                     },
                     animation: false,
                     tooltip: {
-                        show: false
+                      show: false
                     },
                     itemStyle: {
-                        normal: {
-                            color:'rgba(0,0,0,0.2)'
-                        }
+                      color:'rgba(0,0,0,0.2)'
+                    },
+                    emphasis: {
+                      scale: false
                     },
                     data: [{
                         value: 1,

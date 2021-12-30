@@ -214,231 +214,300 @@ export default {
                   }
               ],
               series: [
-                  
-                  { //三个最低下的圆片
-                      name: "",
-                      type: "pictorialBar",
-                      symbolSize: [32, 10],
-                      symbolOffset: [-2, 2],
-                      z: 12,
-                      itemStyle: {
-                          opacity: 1,
-                          color: function(params){
-                            if(params.dataIndex == 0){
-                              return  '#b10a27';
-                            }else if(params.dataIndex == 1){
-                              return  '#dc5b00';
-                            }else if(params.dataIndex == 2){
-                                return  '#0041d0';
-                            }else if(params.dataIndex == 3){
-                              return  '#3a6cc6';
-                            }
+                //三个最低下的圆片
+                {
+                  name: "",
+                  type: "pictorialBar",
+                  symbolSize: [32, 20],
+                  symbolOffset: [-2, 10],
+                  z: 1,
+                  itemStyle: { //lenged文本
+                      color: function(params) {
+                          if(params.dataIndex == 0){
+                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                offset: 0,
+                                color: '#d21435'
+                            },{
+                                offset: 0.3,
+                                color: '#ff6682'
+                            },{
+                                offset: 0.4,
+                                color: '#ff6682'
+                            },{
+                                offset: 0.7,
+                                color: '#b10a27'
+                            }, {
+                                offset: 0.95,
+                                color: '#d21435'
+                            },{
+                                offset: 1,
+                                color: '#d21435'
+                            }], false)
+                          }else if(params.dataIndex == 1){
+                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                offset: 0,
+                                color: '#ff7b22'
+                            },{
+                                offset: 0.3,
+                                color: '#ffda51'
+                            },{
+                                offset: 0.4,
+                                color: '#ffda51'
+                            },{
+                                offset: 0.7,
+                                color: '#dc5b00'
+                            }, {
+                                offset: 0.95,
+                                color: '#ffae46'
+                            },{
+                                offset: 1,
+                                color: '#ffae46'
+                            }], false)
+                          }else if(params.dataIndex == 2){
+                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                offset: 0,
+                                color: '#0452ff'
+                            },{
+                                offset: 0.3,
+                                color: '#50c8f6'
+                            },{
+                                offset: 0.4,
+                                color: '#50c8f6'
+                            },{
+                                offset: 0.7,
+                                color: '#0041d0'
+                            }, {
+                                offset: 0.95,
+                                color: '#2d7ef3'
+                            },{
+                                offset: 1,
+                                color: '#2d7ef3'
+                            }], false)
+                          }else if(params.dataIndex == 3){
+                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                offset: 0,
+                                color: '#49b3f8'
+                            },{
+                                offset: 0.3,
+                                color: '#87e6fe'
+                            },{
+                                offset: 0.4,
+                                color: '#87e6fe'
+                            },{
+                                offset: 0.7,
+                                color: '#3a6cc6'
+                            }, {
+                                offset: 0.95,
+                                color: '#2f80f3'
+                            },{
+                                offset: 1,
+                                color: '#2f80f3'
+                            }], false)
                           }
-                      },
-                      datasetIndex:2,
-                      tooltip:{
-                          show: false
                       }
                   },
-                  //下半截柱状图
-                  {
-                      name: '成本',
-                      type: 'bar',
-                      barWidth: 32,
-                      z: 1,
-                      itemStyle: { //lenged文本
-                          color: function(params) {
-                              if(params.dataIndex == 0){
-                                return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                    offset: 0,
-                                    color: '#d21435'
-                                },{
-                                    offset: 0.3,
-                                    color: '#ff6682'
-                                },{
-                                    offset: 0.4,
-                                    color: '#ff6682'
-                                },{
-                                    offset: 0.7,
-                                    color: '#b10a27'
-                                }, {
-                                    offset: 0.95,
-                                    color: '#d21435'
-                                },{
-                                    offset: 1,
-                                    color: '#d21435'
-                                }], false)
-                              }else if(params.dataIndex == 1){
-                                return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                    offset: 0,
-                                    color: '#ff7b22'
-                                },{
-                                    offset: 0.3,
-                                    color: '#ffda51'
-                                },{
-                                    offset: 0.4,
-                                    color: '#ffda51'
-                                },{
-                                    offset: 0.7,
-                                    color: '#dc5b00'
-                                }, {
-                                    offset: 0.95,
-                                    color: '#ffae46'
-                                },{
-                                    offset: 1,
-                                    color: '#ffae46'
-                                }], false)
-                              }else if(params.dataIndex == 2){
-                                return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                    offset: 0,
-                                    color: '#0452ff'
-                                },{
-                                    offset: 0.3,
-                                    color: '#50c8f6'
-                                },{
-                                    offset: 0.4,
-                                    color: '#50c8f6'
-                                },{
-                                    offset: 0.7,
-                                    color: '#0041d0'
-                                }, {
-                                    offset: 0.95,
-                                    color: '#2d7ef3'
-                                },{
-                                    offset: 1,
-                                    color: '#2d7ef3'
-                                }], false)
-                              }else if(params.dataIndex == 3){
-                                return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                    offset: 0,
-                                    color: '#49b3f8'
-                                },{
-                                    offset: 0.3,
-                                    color: '#87e6fe'
-                                },{
-                                    offset: 0.4,
-                                    color: '#87e6fe'
-                                },{
-                                    offset: 0.7,
-                                    color: '#3a6cc6'
-                                }, {
-                                    offset: 0.95,
-                                    color: '#2f80f3'
-                                },{
-                                    offset: 1,
-                                    color: '#2f80f3'
-                                }], false)
-                              }
+                  datasetIndex:2,
+                },
+                //下半截柱状图
+                {
+                  name: '成本',
+                  type: 'bar',
+                  barWidth: 32,
+                  z: 1,
+                  itemStyle: { //lenged文本
+                      color: function(params) {
+                          if(params.dataIndex == 0){
+                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                offset: 0,
+                                color: '#d21435'
+                            },{
+                                offset: 0.3,
+                                color: '#ff6682'
+                            },{
+                                offset: 0.4,
+                                color: '#ff6682'
+                            },{
+                                offset: 0.7,
+                                color: '#b10a27'
+                            }, {
+                                offset: 0.95,
+                                color: '#d21435'
+                            },{
+                                offset: 1,
+                                color: '#d21435'
+                            }], false)
+                          }else if(params.dataIndex == 1){
+                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                offset: 0,
+                                color: '#ff7b22'
+                            },{
+                                offset: 0.3,
+                                color: '#ffda51'
+                            },{
+                                offset: 0.4,
+                                color: '#ffda51'
+                            },{
+                                offset: 0.7,
+                                color: '#dc5b00'
+                            }, {
+                                offset: 0.95,
+                                color: '#ffae46'
+                            },{
+                                offset: 1,
+                                color: '#ffae46'
+                            }], false)
+                          }else if(params.dataIndex == 2){
+                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                offset: 0,
+                                color: '#0452ff'
+                            },{
+                                offset: 0.3,
+                                color: '#50c8f6'
+                            },{
+                                offset: 0.4,
+                                color: '#50c8f6'
+                            },{
+                                offset: 0.7,
+                                color: '#0041d0'
+                            }, {
+                                offset: 0.95,
+                                color: '#2d7ef3'
+                            },{
+                                offset: 1,
+                                color: '#2d7ef3'
+                            }], false)
+                          }else if(params.dataIndex == 3){
+                            return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                offset: 0,
+                                color: '#49b3f8'
+                            },{
+                                offset: 0.3,
+                                color: '#87e6fe'
+                            },{
+                                offset: 0.4,
+                                color: '#87e6fe'
+                            },{
+                                offset: 0.7,
+                                color: '#3a6cc6'
+                            }, {
+                                offset: 0.95,
+                                color: '#2f80f3'
+                            },{
+                                offset: 1,
+                                color: '#2f80f3'
+                            }], false)
                           }
-                      },
-                      dataIndex: 0
-                  },
-                  //头部圆形
-                  {
-                      name: "", 
-                      type: "pictorialBar",
-                      symbolSize: [40, 10],
-                      symbolOffset: [-2, -3],
-                      z: 12,
-                      symbolPosition: "end",
-                      itemStyle: {
-                          color: '#44548c',
-                      },
-                      datasetIndex: 1,
-                      tooltip:{
-                          show: false
                       }
-                  },
-                  // 下半截柱状图顶部圆形
-                  {
-                      name: "",
-                      type: "pictorialBar",
-                      symbolSize: [32, 14],
-                      symbolOffset: [-2, -5],
-                      z: 12,
-                      itemStyle: {
-                          opacity: 1,
-                          color: function(params) {
-                            if(params.dataIndex == 0){
-                              return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                      offset: 0,
-                                      color: '#ff617e'
-                                  }, {
-                                      offset: 1,
-                                      color: '#ff91a4'
-                              }], false)
-                            }else if(params.dataIndex == 1){
-                              return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                      offset: 0,
-                                      color: '#ff9e37'
-                                  }, {
-                                      offset: 1,
-                                      color: '#ffe154'
-                              }], false)
-                            }else if(params.dataIndex == 2){
-                              return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                      offset: 0,
-                                      color: '#2d7df3'
-                                  }, {
-                                      offset: 1,
-                                      color: '#53d0f6'
-                              }], false)
-                            }else if(params.dataIndex == 3){
-                              return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                                      offset: 0,
-                                      color: '#91eaff'
-                                  }, {
-                                      offset: 1,
-                                      color: '#53d0f6'
-                              }], false)
-                            }
-                          }
-                      },
-                      symbolPosition: "end",
-                      datasetIndex: 0,
-                      tooltip:{
-                          show: false
-                      }
-                  },
-                  {//最大值
-                      name: 'max',
-                      type: 'bar',
-                      barWidth: 40,
-                      barGap: '-113%',
-                      z: 0,
-                      itemStyle: {
-                          color: '#324071',
-                      },
-                      datasetIndex: 1,
-                      tooltip:{
-                          show: false
-                      }
-                  },
-                  // 数字展示
-                  {
-                    name: '数据',
-                    type: 'pictorialBar',
-                    symbolSize: [40, 10],
-                    symbolOffset: [-2, -3],
-                    z: 1,
-                    zlevel: 0,
-                    itemStyle: {
-                        normal: {
-                            color: 'transparent', //数据的间隔颜色
-                        },
-                    },
-                    label: {
-                      show: true,
-                      position: 'top',
-                      distance: 10,
-                      color: "#cccccc",
-                      fontSize: 13,
-                      align: "center",
-                      offset: [-4,0]
-                        
                     },
                     dataIndex: 0
+                },
+                //头部圆形
+                {
+                  name: "", 
+                  type: "pictorialBar",
+                  symbolSize: [40, 10],
+                  symbolOffset: [-2, -3],
+                  z: 12,
+                  symbolPosition: "end",
+                  itemStyle: {
+                      color: '#44548c',
                   },
+                  datasetIndex: 1,
+                  tooltip:{
+                      show: false
+                  }
+                },
+                // 下半截柱状图顶部圆形
+                {
+                  name: "",
+                  type: "pictorialBar",
+                  symbolSize: [32, 14],
+                  symbolOffset: [-2, -5],
+                  z: 12,
+                  itemStyle: {
+                      opacity: 1,
+                      color: function(params) {
+                        if(params.dataIndex == 0){
+                          return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                  offset: 0,
+                                  color: '#ff617e'
+                              }, {
+                                  offset: 1,
+                                  color: '#ff91a4'
+                          }], false)
+                        }else if(params.dataIndex == 1){
+                          return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                  offset: 0,
+                                  color: '#ff9e37'
+                              }, {
+                                  offset: 1,
+                                  color: '#ffe154'
+                          }], false)
+                        }else if(params.dataIndex == 2){
+                          return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                  offset: 0,
+                                  color: '#2d7df3'
+                              }, {
+                                  offset: 1,
+                                  color: '#53d0f6'
+                          }], false)
+                        }else if(params.dataIndex == 3){
+                          return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                  offset: 0,
+                                  color: '#91eaff'
+                              }, {
+                                  offset: 1,
+                                  color: '#53d0f6'
+                          }], false)
+                        }
+                      }
+                  },
+                  symbolPosition: "end",
+                  datasetIndex: 0,
+                  tooltip:{
+                      show: false
+                  }
+                },
+                //最大值
+                {
+                  name: 'max',
+                  type: 'bar',
+                  barWidth: 40,
+                  barGap: '-113%',
+                  z: 0,
+                  itemStyle: {
+                      color: '#324071',
+                  },
+                  datasetIndex: 1,
+                  tooltip:{
+                      show: false
+                  }
+                },
+                // 数字展示
+                {
+                  name: '数据',
+                  type: 'pictorialBar',
+                  symbolSize: [40, 10],
+                  symbolOffset: [-2, -3],
+                  z: 1,
+                  zlevel: 0,
+                  itemStyle: {
+                      normal: {
+                          color: 'transparent', //数据的间隔颜色
+                      },
+                  },
+                  label: {
+                    show: true,
+                    position: 'top',
+                    distance: 10,
+                    color: "#cccccc",
+                    fontSize: 13,
+                    align: "center",
+                    offset: [-4,0]
+                      
+                  },
+                  dataIndex: 0
+                },
               ]
           };
 

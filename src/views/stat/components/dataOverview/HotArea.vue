@@ -575,11 +575,14 @@ export default {
                 y: $this.language=="中文"?'name':'country'
               },
               barWidth:15,
+              label: {
+                show: true, // 是否显示标签
+                position:'right',
+                borderWidth:0,
+                color: '#c0e6f9',
+              },
               // 高亮状态下的多边形和标签样式
               emphasis: {
-                label: {
-                  show: false, // 是否显示标签
-                },
                 itemStyle: {
                   color: 'yellow', // 地图区域的颜色
                 }
