@@ -82,8 +82,7 @@
              <el-col class="hxmodule-item" :xl="12" :lg="24">
                <HotProduct
                language="英文"
-               :productscoretop10="productscoretop10"
-               :productxuntop10="productxuntop10"
+               :producttop10="producttop10"
                :year="type==1?prevYear:nowYear"
                :departList="departList"
                ></HotProduct>
@@ -143,8 +142,10 @@ export default {
       regionDealCountDepart:[], // 地区各部门成交个数
       departList:[],
       nowcate: "",//当前分类
-      productscoretop10:[],//产品积分top10->个数top10
-      productxuntop10:[],//产品询盘top10
+      producttop10:{
+        productscoretop10:[],//产品积分top10->个数top10
+        productxuntop10:[],//产品询盘top10
+      },
       scoretop5:{
         yearuserxuntop5:[],//询盘top5
         anumbertop5:[],//百万成交top5
@@ -241,8 +242,8 @@ export default {
           this.regionDealScoreDepart = res.provincedepartscoretop10;
           this.regionDealCountDepart = res.provincedepartscorenumbertop10;
           this.departList = res.readart;
-          this.productxuntop10 = res.productxuntop10;
-          this.productscoretop10 = res.productscorenumbertop10;
+          this.producttop10.productxuntop10 = res.productxuntop10;
+          this.producttop10.productscoretop10 = res.productscorenumbertop10;
           var moneytop5=res.moneytop5;
           moneytop5.sort(function(a, b){return a.allmoney - b.allmoney}).reverse();
           moneytop5 = rankingWithTotalItem(moneytop5,'allmoney');

@@ -28,16 +28,10 @@ export default {
       }
     },
     props:{
-      productscoretop10:{
-        type:Array,
+      producttop10:{
+        type:Object,
         default:function(){
-          return []
-        }
-      },
-      productxuntop10:{
-        type:Array,
-        default:function(){
-          return []
+          return {}
         }
       },
       departList:{
@@ -59,7 +53,7 @@ export default {
       type:function(val,oldval){
         this.setChartBottom()
       },
-      productxuntop10:{
+      producttop10:{
         handler(val,oldval){
           this.goPage();
           this.setChartBottom()
@@ -97,7 +91,7 @@ export default {
         let shadowData = [];
         if($this.type == 1){
             // 询盘个数
-            chartBotData = JSON.parse(JSON.stringify($this.productxuntop10));          
+            chartBotData = JSON.parse(JSON.stringify($this.producttop10.productxuntop10));          
             for(let i = 0;i<chartBotData.length;i++){
                 xAxisData.push(chartBotData[i].productname);
                 seriesData.push(chartBotData[i].number);
@@ -125,7 +119,7 @@ export default {
             }
         }else if($this.type == 2 && $this.language == "中文"){
           // 中文成交积分
-            chartBotData = JSON.parse(JSON.stringify($this.productscoretop10));
+            chartBotData = JSON.parse(JSON.stringify($this.producttop10.productscoretop10));
             for(let i = 0;i<chartBotData.length;i++){
                 xAxisData.push(chartBotData[i].xunproduct);
                 seriesData.push(chartBotData[i].score);
@@ -152,7 +146,7 @@ export default {
             }
         }else if($this.type == 2 && $this.language == "英文"){
           // 英文成交个数
-            chartBotData = JSON.parse(JSON.stringify($this.productscoretop10));
+            chartBotData = JSON.parse(JSON.stringify($this.producttop10.productscoretop10));
             for(let i = 0;i<chartBotData.length;i++){
                 xAxisData.push(chartBotData[i].xunproduct);
                 seriesData.push(chartBotData[i].number);

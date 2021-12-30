@@ -116,17 +116,6 @@ export default {
         this.type = val;
         this.getData();
       },
-      // setTopData(val){
-      //   var $this = this;
-      //   let topdata = JSON.parse(JSON.stringify(val));
-      //   if(topdata.length > 0){
-      //     let maxwidth = topdata[0].number;
-      //     for(let i = 0;i<topdata.length;i++){
-      //       topdata[i].width = parseFloat((topdata[i].number/maxwidth).toFixed(2)) * 85 + '%';
-      //     }
-      //     this.topdata = topdata;
-      //   }
-      // },
       getData(){
         let topdata = [];
         var $this = this;
