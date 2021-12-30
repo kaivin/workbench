@@ -91,10 +91,7 @@
              <el-col class="hxmodule-item" :xl="12" :lg="24">
                <ScoreTop
                language="英文"
-               :yearuserscoretop5="yearuserscoretop5"
-               :moneytop5="moneytop5"
-               :yearuserxuntop5="yearuserxuntop5"
-               :anumbertop5="anumbertop5"
+               :scoretop5 = "scoretop5"
                ></ScoreTop>
              </el-col>
              <!-- <CostYears
@@ -136,8 +133,6 @@ export default {
       yeardeaprtscore:[],//各部门年度成交积分
       yearsanumbertong:[],//中文年度成交100万数量对比
       yearsmoneytong:[],//中文年度总成本对比
-      moneytop5:[],//个人年度总奖金 top5
-      yearuserscoretop5:[],//年度积分top5
       provincecountmap:[],//询盘地图 
       provincescoretmap:[],//成交积分地图
       provincescorenumbertmap:[],//成交个数地图
@@ -150,8 +145,12 @@ export default {
       nowcate: "",//当前分类
       productscoretop10:[],//产品积分top10->个数top10
       productxuntop10:[],//产品询盘top10
-      yearuserxuntop5:[],//询盘top5
-      anumbertop5:[],//百万成交top5
+      scoretop5:{
+        yearuserxuntop5:[],//询盘top5
+        anumbertop5:[],//百万成交top5
+        moneytop5:[],//个人年度总奖金 top5
+        yearuserscoretop5:[],//年度积分top5
+      },
       type: 2,//默认展示今年的数据
     };
   },
@@ -233,17 +232,6 @@ export default {
           this.yeardeaprtscore = res.yeardeaprtscore;
           this.yearsanumbertong = res.yearsanumbertong;
           this.yearsmoneytong = res.yearsmoneytong;
-          var moneytop5=res.moneytop5;
-          moneytop5.sort(function(a, b){return a.allmoney - b.allmoney}).reverse();
-          moneytop5 = rankingWithTotalItem(moneytop5,'allmoney');
-          moneytop5.forEach(function(item){
-            item.allmoney = numSeparate(item.allmoney);
-          });
-          this.moneytop5 = moneytop5;
-          var yearuserscoretop5 = res.yearuserscoretop5;
-          yearuserscoretop5.sort(function(a, b){return a.number - b.number}).reverse(); 
-          yearuserscoretop5 = rankingWithTotalItem(yearuserscoretop5,'number');
-          this.yearuserscoretop5 = yearuserscoretop5;
           this.provincecountmap =  res.provincecountmap;
           this.provincescoretmap = res.provincescoretmap;
           this.provincescorenumbertmap = res. provincescorenumbertmap;
@@ -255,14 +243,25 @@ export default {
           this.departList = res.readart;
           this.productxuntop10 = res.productxuntop10;
           this.productscoretop10 = res.productscorenumbertop10;
+          var moneytop5=res.moneytop5;
+          moneytop5.sort(function(a, b){return a.allmoney - b.allmoney}).reverse();
+          moneytop5 = rankingWithTotalItem(moneytop5,'allmoney');
+          moneytop5.forEach(function(item){
+            item.allmoney = numSeparate(item.allmoney);
+          });
+          this.scoretop5.moneytop5 = moneytop5;
+          var yearuserscoretop5 = res.yearuserscoretop5;
+          yearuserscoretop5.sort(function(a, b){return a.number - b.number}).reverse(); 
+          yearuserscoretop5 = rankingWithTotalItem(yearuserscoretop5,'number');
+          this.scoretop5.yearuserscoretop5 = yearuserscoretop5;
           var anumbertop5 = res.anumbertop5;
           anumbertop5.sort(function(a, b){return a.number - b.number}).reverse(); 
           anumbertop5 = rankingWithTotalItem(anumbertop5,'number');
-          this.anumbertop5 = anumbertop5;
+          this.scoretop5.anumbertop5 = anumbertop5;
           var yearuserxuntop5 = res.yearuserxuntop5;
           yearuserxuntop5.sort(function(a, b){return a.number - b.number}).reverse(); 
           yearuserxuntop5 = rankingWithTotalItem(yearuserxuntop5,'number');
-          this.yearuserxuntop5 =yearuserxuntop5;
+          this.scoretop5.yearuserxuntop5 =yearuserxuntop5;
         }
       })
     },

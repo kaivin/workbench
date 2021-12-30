@@ -90,38 +90,20 @@ export default {
         type:String,
         default:"中文"
       },
-      yearuserscoretop5:{
-        type:Array,
+      scoretop5:{
+        type: Object,
         default:function(){
-          return []
-        }
-      },
-      moneytop5:{
-        type:Array,
-        default:function(){
-          return []
-        }
-      },
-      yearuserxuntop5:{
-        type:Array,
-        default:function(){
-          return []
-        }
-      },
-      anumbertop5:{
-        type:Array,
-        default:function(){
-          return []
+          return {}
         }
       },
     },
     watch:{
-      yearuserscoretop5:{
+      scoretop5:{
         handler(val,oldval){
-          this.setTopData(val);
+          this.getData();
         },
         deep:true
-      }
+      },
     },
     mounted(){
       
@@ -134,25 +116,24 @@ export default {
         this.type = val;
         this.getData();
       },
-      setTopData(val){
-        var $this = this;
-        let topdata = JSON.parse(JSON.stringify(val));
-        topdata =  topdata.sort(function(a, b){return a.number - b.number}).reverse(); 
-        let maxwidth = topdata[0].number;
-        for(let i = 0;i<topdata.length;i++){
-          topdata[i].width = parseFloat((topdata[i].number/maxwidth).toFixed(2)) * 85 + '%';
-        }
-        this.topdata = topdata;
-        
-      },
+      // setTopData(val){
+      //   var $this = this;
+      //   let topdata = JSON.parse(JSON.stringify(val));
+      //   if(topdata.length > 0){
+      //     let maxwidth = topdata[0].number;
+      //     for(let i = 0;i<topdata.length;i++){
+      //       topdata[i].width = parseFloat((topdata[i].number/maxwidth).toFixed(2)) * 85 + '%';
+      //     }
+      //     this.topdata = topdata;
+      //   }
+      // },
       getData(){
         let topdata = [];
         var $this = this;
-        
         // 获取长度百分比
         if($this.type == 4){
           // 奖金
-          topdata = $this.moneytop5;
+          topdata = $this.scoretop5.moneytop5;
           if(topdata.length > 0){
             let maxwidth = topdata[0].allmoney.split(',').join('');
             for(let i = 0;i<topdata.length;i++){
@@ -162,13 +143,13 @@ export default {
         }else{
           if($this.type == 1){
             // 成交积分
-            topdata = $this.yearuserscoretop5;
+            topdata = $this.scoretop5.yearuserscoretop5;
           }else if($this.type == 2){
             // 询盘个数
-            topdata = $this.yearuserxuntop5;
+            topdata = $this.scoretop5.yearuserxuntop5;
           }else if($this.type == 3){
             // 百万个数
-            topdata = $this.anumbertop5;
+            topdata = $this.scoretop5.anumbertop5;
           }
           if(topdata.length > 0){
             let maxwidth = topdata[0].number;
