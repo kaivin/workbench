@@ -9,26 +9,6 @@
         </div>
       </div>
       <div class="chart-bottom" id="HotProductChart"></div>
-      <!-- <div class="product_list" v-if="type==1">
-          <div class="product_item" v-for="(item,index) in productxuntop10" :key="index">
-            <div class="pro_img">
-              <img :src="item.pimg" :alt="item.productname" >
-            </div>
-            <div class="pro_name">
-                {{item.productname.slice(0,6)}}
-            </div>
-          </div>
-      </div>
-      <div class="product_list" v-if="type==2">
-          <div class="product_item" v-for="(item,index) in productscoretop10" :key="index">
-            <div class="pro_img">
-              <img :src="item.pimg" :alt="item.xunproduct" >
-            </div>
-            <div class="pro_name">
-                {{item.xunproduct.slice(0,6)}}
-            </div>
-          </div>
-      </div> -->
   </div>
 </template>
 
@@ -116,10 +96,12 @@ export default {
         let bgData = [];
         let shadowData = [];
         if($this.type == 1){
-            chartBotData = JSON.parse(JSON.stringify($this.productxuntop10));
+            // 询盘个数
+            chartBotData = JSON.parse(JSON.stringify($this.productxuntop10));          
             for(let i = 0;i<chartBotData.length;i++){
                 xAxisData.push(chartBotData[i].productname);
                 seriesData.push(chartBotData[i].number);
+
                 var obj = {};
                 obj.value= chartBotData[i].number;
                 obj.symbol = 'image://' + chartBotData[i].pimg;
@@ -128,6 +110,7 @@ export default {
                 obj.symbolOffset= [0, 49];
                 obj.symbolBorderRadius= "50%";
                 picData.push(obj);
+
                 var obj2 = {};
                 obj2.value= chartBotData[i].number;
                 obj2.symbol = 'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAYAAAAehFoBAAAEzUlEQVRYhc2ZTWwUVRzAf292Z95+t12WfpKQTMMmEoSD1wZO1ZOa4EFoYiIeJOjRC0KEVQLhbkzDRYmJqwc1KgchcAE8GhIQPSwyCYSW0o8t3e7Xm+3ueOhsre0uy+K2099t33uz75d/3vu/mfcXL7/yDi+KlTTDwAhwANgNJIE+IOIOyQNPgAzwF3ADuGlmrEL9P+78/nVbc/pfQFIArwFHhOO8LssqGCyWMJSNblfwV5cQNQcARxPxJZ8/XjH0l2xpvFkKBT9WAVmykuYl4CvgCuC0M79oJ8JW0jwInDKUvS+2kCOymEer1tqZj5pPIx+NkOuKYUvjNpDKp1M/dVTYSprDwLhUarRndp5QodiWZDOK4RDZRBxbGleBY/l06n6rZ7RWA6yk+bZwnFvbZuZGhx5MdEwWIFQoMvRwgm0zc6PCcW5FxlKHWj3TNMLuWj2jVyon+yafYCi7Y6KNsKXBk8E+Krp+Fvgkn041XNsNI+zKfi7L6uTgw8kNlwUwlM3gw0lkWZ0ExiNjKdFoXLMlcU6W1YcDjx7jq1Y3znINvmqVgUePkWV1FDjXaMw6YStpHtIrleP9E1NotfYyQCfQajX6J6bQK5XjkbHU4XX9q39YSXNYOM6F3snpTY3sWnzVKr2T0wjHuRAZSw2v7lsb4fH4bDYmldpEvcZIpYjPZqPA+Or2FWEraR40lD3aNb+w6XLN6JpfwFD2aGQsdbDepsFKVjgVn816JtcM1+l0PWvUI/yqVGpfJw+FThEqFJFK7WX5/WVF+Ejsac47qxa4bu8CiPDh02HhOLM77z8IeJHGnoeapvFgeGfZESKhASOyrLasLCznZllWAWBEAw4EiyWvnVriOh7QgD2b8a7wf3Ed92jALt2ueKzTGtdxlwZs9/IYfl5cx+0aEN3KG66O6xht+cWx1dCAxZq29b1dx0UNmKn6fB7rtMZ1nNGAexVD91inNa7jPQ24a0vDY53WuI53NeBGKRT0WKc1ruMNDbipArK8lTdeTdNQAVkGbmpmxio4QvxciIa99mpKIRrGEeKXfDpVqIf14kJ3l6dSz8J1uwj/vsBfsaVxpxgOeeXUlGI4hC2NO8BlcIXNjOUAn2YTcRzR8MLFExwhyCbiAJ/Vr65WdpqZsX60pXE11x3zym8due4YtjSu5dOpH+pta1PDsWwivqik3GS19SgpySbii8Cx1e3/ETYz1n1HiPenB3vx8riu+nxMD/biCHE0n079vbpvXfI1M9Z3FV0/PzXUjxe5uaZpTA31U9H18/l06tu1/c2MTqiA/OLxjoFNjXTV5+PxjgFUQF4ATjQa4+sb3LeusWdunvltPb9W/X5/MRreHyyVN/xy0JYGUzsGsKVxFvio2YV2yxqHlTTHhOOMx2ezsY24d3OEINcdI5uI5xwhPsinU988a3zDCK+mZ27+j/lE/PtSOLS7GAmZ/qUqeqUzH63FcIjpgT7yseg1hHgjn05db/VMu2Wvt1gue+2NPc0Ryb9g2SsSYbE7ipLyNnBmdZ7tqLArXS8svucWFgPPKCyy5PNTMXRsaVAKBVEBWXaEuAR8CVxptlab0XYl1D3GLwOXraQZKQcDI+VgYD+wB9jF+tLtNMul2z+B68BvZsbKtztvnX8AcK7kgXAIBSAAAAAASUVORK5CYII=';
@@ -140,7 +123,8 @@ export default {
                 obj3.value= 0.5;
                 shadowData.push(obj3);
             }
-        }else if($this.type == 2){
+        }else if($this.type == 2 && $this.language == "中文"){
+          // 中文成交积分
             chartBotData = JSON.parse(JSON.stringify($this.productscoretop10));
             for(let i = 0;i<chartBotData.length;i++){
                 xAxisData.push(chartBotData[i].xunproduct);
@@ -153,6 +137,7 @@ export default {
                 obj.symbolSize = [42,42];
                 obj.symbolOffset= [0, 49];
                 picData.push(obj);
+
                 var obj2 = {};
                 obj2.value= chartBotData[i].score;
                 obj2.symbol = 'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAYAAAAehFoBAAAEzUlEQVRYhc2ZTWwUVRzAf292Z95+t12WfpKQTMMmEoSD1wZO1ZOa4EFoYiIeJOjRC0KEVQLhbkzDRYmJqwc1KgchcAE8GhIQPSwyCYSW0o8t3e7Xm+3ueOhsre0uy+K2099t33uz75d/3vu/mfcXL7/yDi+KlTTDwAhwANgNJIE+IOIOyQNPgAzwF3ADuGlmrEL9P+78/nVbc/pfQFIArwFHhOO8LssqGCyWMJSNblfwV5cQNQcARxPxJZ8/XjH0l2xpvFkKBT9WAVmykuYl4CvgCuC0M79oJ8JW0jwInDKUvS+2kCOymEer1tqZj5pPIx+NkOuKYUvjNpDKp1M/dVTYSprDwLhUarRndp5QodiWZDOK4RDZRBxbGleBY/l06n6rZ7RWA6yk+bZwnFvbZuZGhx5MdEwWIFQoMvRwgm0zc6PCcW5FxlKHWj3TNMLuWj2jVyon+yafYCi7Y6KNsKXBk8E+Krp+Fvgkn041XNsNI+zKfi7L6uTgw8kNlwUwlM3gw0lkWZ0ExiNjKdFoXLMlcU6W1YcDjx7jq1Y3znINvmqVgUePkWV1FDjXaMw6YStpHtIrleP9E1NotfYyQCfQajX6J6bQK5XjkbHU4XX9q39YSXNYOM6F3snpTY3sWnzVKr2T0wjHuRAZSw2v7lsb4fH4bDYmldpEvcZIpYjPZqPA+Or2FWEraR40lD3aNb+w6XLN6JpfwFD2aGQsdbDepsFKVjgVn816JtcM1+l0PWvUI/yqVGpfJw+FThEqFJFK7WX5/WVF+Ejsac47qxa4bu8CiPDh02HhOLM77z8IeJHGnoeapvFgeGfZESKhASOyrLasLCznZllWAWBEAw4EiyWvnVriOh7QgD2b8a7wf3Ed92jALt2ueKzTGtdxlwZs9/IYfl5cx+0aEN3KG66O6xht+cWx1dCAxZq29b1dx0UNmKn6fB7rtMZ1nNGAexVD91inNa7jPQ24a0vDY53WuI53NeBGKRT0WKc1ruMNDbipArK8lTdeTdNQAVkGbmpmxio4QvxciIa99mpKIRrGEeKXfDpVqIf14kJ3l6dSz8J1uwj/vsBfsaVxpxgOeeXUlGI4hC2NO8BlcIXNjOUAn2YTcRzR8MLFExwhyCbiAJ/Vr65WdpqZsX60pXE11x3zym8due4YtjSu5dOpH+pta1PDsWwivqik3GS19SgpySbii8Cx1e3/ETYz1n1HiPenB3vx8riu+nxMD/biCHE0n079vbpvXfI1M9Z3FV0/PzXUjxe5uaZpTA31U9H18/l06tu1/c2MTqiA/OLxjoFNjXTV5+PxjgFUQF4ATjQa4+sb3LeusWdunvltPb9W/X5/MRreHyyVN/xy0JYGUzsGsKVxFvio2YV2yxqHlTTHhOOMx2ezsY24d3OEINcdI5uI5xwhPsinU988a3zDCK+mZ27+j/lE/PtSOLS7GAmZ/qUqeqUzH63FcIjpgT7yseg1hHgjn05db/VMu2Wvt1gue+2NPc0Ryb9g2SsSYbE7ipLyNnBmdZ7tqLArXS8svucWFgPPKCyy5PNTMXRsaVAKBVEBWXaEuAR8CVxptlab0XYl1D3GLwOXraQZKQcDI+VgYD+wB9jF+tLtNMul2z+B68BvZsbKtztvnX8AcK7kgXAIBSAAAAAASUVORK5CYII=';
@@ -165,7 +150,35 @@ export default {
                 obj3.value= 0.5;
                 shadowData.push(obj3);
             }
-        }
+        }else if($this.type == 2 && $this.language == "英文"){
+          // 英文成交个数
+            chartBotData = JSON.parse(JSON.stringify($this.productscoretop10));
+            for(let i = 0;i<chartBotData.length;i++){
+                xAxisData.push(chartBotData[i].xunproduct);
+                seriesData.push(chartBotData[i].number);
+
+                var obj = {};
+                obj.value= chartBotData[i].number;
+                obj.symbol = 'image://' + chartBotData[i].pimg;
+                obj.symbolPosition = 'start';
+                obj.symbolSize = [42,42];
+                obj.symbolOffset= [0, 49];
+                obj.symbolBorderRadius= "50%";
+                picData.push(obj);
+
+                var obj2 = {};
+                obj2.value= chartBotData[i].number;
+                obj2.symbol = 'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAYAAAAehFoBAAAEzUlEQVRYhc2ZTWwUVRzAf292Z95+t12WfpKQTMMmEoSD1wZO1ZOa4EFoYiIeJOjRC0KEVQLhbkzDRYmJqwc1KgchcAE8GhIQPSwyCYSW0o8t3e7Xm+3ueOhsre0uy+K2099t33uz75d/3vu/mfcXL7/yDi+KlTTDwAhwANgNJIE+IOIOyQNPgAzwF3ADuGlmrEL9P+78/nVbc/pfQFIArwFHhOO8LssqGCyWMJSNblfwV5cQNQcARxPxJZ8/XjH0l2xpvFkKBT9WAVmykuYl4CvgCuC0M79oJ8JW0jwInDKUvS+2kCOymEer1tqZj5pPIx+NkOuKYUvjNpDKp1M/dVTYSprDwLhUarRndp5QodiWZDOK4RDZRBxbGleBY/l06n6rZ7RWA6yk+bZwnFvbZuZGhx5MdEwWIFQoMvRwgm0zc6PCcW5FxlKHWj3TNMLuWj2jVyon+yafYCi7Y6KNsKXBk8E+Krp+Fvgkn041XNsNI+zKfi7L6uTgw8kNlwUwlM3gw0lkWZ0ExiNjKdFoXLMlcU6W1YcDjx7jq1Y3znINvmqVgUePkWV1FDjXaMw6YStpHtIrleP9E1NotfYyQCfQajX6J6bQK5XjkbHU4XX9q39YSXNYOM6F3snpTY3sWnzVKr2T0wjHuRAZSw2v7lsb4fH4bDYmldpEvcZIpYjPZqPA+Or2FWEraR40lD3aNb+w6XLN6JpfwFD2aGQsdbDepsFKVjgVn816JtcM1+l0PWvUI/yqVGpfJw+FThEqFJFK7WX5/WVF+Ejsac47qxa4bu8CiPDh02HhOLM77z8IeJHGnoeapvFgeGfZESKhASOyrLasLCznZllWAWBEAw4EiyWvnVriOh7QgD2b8a7wf3Ed92jALt2ueKzTGtdxlwZs9/IYfl5cx+0aEN3KG66O6xht+cWx1dCAxZq29b1dx0UNmKn6fB7rtMZ1nNGAexVD91inNa7jPQ24a0vDY53WuI53NeBGKRT0WKc1ruMNDbipArK8lTdeTdNQAVkGbmpmxio4QvxciIa99mpKIRrGEeKXfDpVqIf14kJ3l6dSz8J1uwj/vsBfsaVxpxgOeeXUlGI4hC2NO8BlcIXNjOUAn2YTcRzR8MLFExwhyCbiAJ/Vr65WdpqZsX60pXE11x3zym8due4YtjSu5dOpH+pta1PDsWwivqik3GS19SgpySbii8Cx1e3/ETYz1n1HiPenB3vx8riu+nxMD/biCHE0n079vbpvXfI1M9Z3FV0/PzXUjxe5uaZpTA31U9H18/l06tu1/c2MTqiA/OLxjoFNjXTV5+PxjgFUQF4ATjQa4+sb3LeusWdunvltPb9W/X5/MRreHyyVN/xy0JYGUzsGsKVxFvio2YV2yxqHlTTHhOOMx2ezsY24d3OEINcdI5uI5xwhPsinU988a3zDCK+mZ27+j/lE/PtSOLS7GAmZ/qUqeqUzH63FcIjpgT7yseg1hHgjn05db/VMu2Wvt1gue+2NPc0Ryb9g2SsSYbE7ipLyNnBmdZ7tqLArXS8svucWFgPPKCyy5PNTMXRsaVAKBVEBWXaEuAR8CVxptlab0XYl1D3GLwOXraQZKQcDI+VgYD+wB9jF+tLtNMul2z+B68BvZsbKtztvnX8AcK7kgXAIBSAAAAAASUVORK5CYII=';
+                obj2.symbolPosition = 'start';
+                obj2.symbolSize = [44,44];
+                obj2.symbolOffset= [0, 49];
+                bgData.push(obj2);
+
+                var obj3 = {};
+                obj3.value= 0.5;
+                shadowData.push(obj3);
+            }
+          }
         
         var chartDom = document.getElementById('HotProductChart');
         var myChart = echarts.init(chartDom);
@@ -224,7 +237,7 @@ export default {
                 },
                 formatter: function (params) {
                     let returnData = '';
-                    let name = $this.type == 1 ? "个数" : "积分";
+                    let name = $this.type == 2 && $this.language=="中文" ? "积分" : "个数";
                     for (let i = 0; i < params.length; i++) {
                         returnData = params[i].name + '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background:#1e4acd"></span>'
                         +name + '<span style="padding-left:13px">' 
@@ -332,7 +345,7 @@ export default {
                   },
                   {
                       type: 'custom',
-                      name: $this.type == 1 ? "个数" : "积分",
+                      name: $this.type == 2 && $this.language == "中文" ? "积分" : "个数",
                       renderItem: (params, api) => {
                           const location = api.coord([api.value(0), api.value(1)]);
                           return {

@@ -148,7 +148,7 @@ export default {
       regionDealCountDepart:[], // 地区各部门成交个数
       departList:[],
       nowcate: "",//当前分类
-      productscoretop10:[],//产品积分top10
+      productscoretop10:[],//产品积分top10->个数top10
       productxuntop10:[],//产品询盘top10
       yearuserxuntop5:[],//询盘top5
       anumbertop5:[],//百万成交top5
@@ -254,7 +254,7 @@ export default {
           this.regionDealCountDepart = res.provincedepartscorenumbertop10;
           this.departList = res.readart;
           this.productxuntop10 = res.productxuntop10;
-          this.productscoretop10 = res.productscoretop10;
+          this.productscoretop10 = res.productscorenumbertop10;
           var anumbertop5 = res.anumbertop5;
           anumbertop5.sort(function(a, b){return a.number - b.number}).reverse(); 
           anumbertop5 = rankingWithTotalItem(anumbertop5,'number');
