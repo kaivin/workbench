@@ -1,11 +1,11 @@
 <template>
-  <div class="hxpage">
-    <div class="module-top">
-      <div class="title-view">
-        <div class="title">年度总询盘</div>
-        <div class="unit">（单位：个）</div>
-        <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:type,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
-      </div>
+  <div class="hxpage" ref="page">
+    <div class="title-view">
+      <div class="title">询盘个数</div>
+      <div class="unit">（单位：个）</div>
+      <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:type,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
+    </div>
+    <div class="mix_body">
       <div class="contrast-view">
         <div class="redtext">{{totalXpanYears}}</div>
         <div class="redright">
@@ -14,20 +14,15 @@
           <div class="num down" v-else><i class="svg-i"><svg-icon icon-class="data-down" /></i>{{isUpNum}}</div>
         </div>
       </div>
-      <div class="chart-top" id="XpanYearsChartTop"></div>     
-    </div>
-    <div class="module-bottom">
-      <div class="title-view">
-        <div class="title">各部门年度总询盘占比（个数+百分比）</div>
-      </div>
-      <div class="chart-bottom" id="XpanYearsChartBot"></div>
+      <div class="chart-top" id="XpanYearsChartTop"></div>  
     </div>
   </div>
 </template>
 
 <script>
-import { Column,Pie} from '@antv/g2plot';
+import * as echarts from 'echarts';
 import {parseTime} from "@/utils";
+import { mapGetters } from 'vuex'
 export default {
     name:'demo',
     data(){
@@ -39,6 +34,7 @@ export default {
         baseDepart:"",
         contrastDepart:"",
         type:1,
+        myChart:null,
       }
     },
     props:{
@@ -52,18 +48,16 @@ export default {
           return []
         }
       },
-      yearcount:{
-        type:Array,
-        default:function(){
-          return []
-        }
-      },
       departList:{
         type:Array,
         default:function(){
           return []
         }
-      }
+      },
+      year:{
+        type: Number,
+        default: new Date().getFullYear()
+      },
     },
     watch:{
       yeartong:{
@@ -74,11 +68,10 @@ export default {
         },
         deep:true
       },
-      yearcount:{
-        handler(val,oldval){
-          this.setChartBottom(val)
-        },
-        deep:true
+      isCollapse(){
+        setTimeout(() => {
+          this.echartsSize();
+        }, 200)
       }
     },
     computed:{
@@ -88,13 +81,24 @@ export default {
           total+=this.yeartong[i].xunnumber
         }
         return total.toLocaleString()
+      },
+      ...mapGetters([
+        'sidebar',
+      ]),
+      isCollapse() {
+        return this.sidebar.opened
       }
+    },
+    mounted(){
+      var $this = this;
+      window.addEventListener('resize',$this.echartsSize);
     },
     methods:{
       goPage(){
         var $this = this;
         var newDate = new Date();
-        var newYear = newDate.getFullYear();
+        // var newYear = newDate.getFullYear();
+        var newYear = $this.year;
         var startTime = newYear + "/01";
         var endTime = newYear + "/12";
         var baseDepart = "";
@@ -117,10 +121,112 @@ export default {
       },
       //chart top
       costAverageChart(val){
-        
+            var chartDom = document.getElementById('XpanYearsChartTop');
+            var myChart = echarts.init(chartDom);
+            var option;
+            var newlist = [];
+            let chartTopData = JSON.parse(JSON.stringify(val));
+            var $this = this;
+            for(var i=0; i< chartTopData.length;i++){
+                var obj={};
+                obj.month =  chartTopData[i].date.slice(-2)+"月";
+                obj.xunnumber = chartTopData[i].xunnumber;
+                newlist.push(obj);
+            }
+            option = {
+                tooltip: {
+                    trigger: "axis",
+                    axisPointer: {
+                        type: "shadow", 
+                    },
+                },
+                grid: {
+                    left: '-10%',
+                    right: '0%',
+                    bottom: '6%',
+                    top:'10%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: "category",
+                    name: "日期",
+                    axisLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false,
+                    },
+                    axisLabel: {
+                        color: "#999",
+                        fontSize: "12",
+                    },
+                    nameTextStyle:{
+                        color: "transparent"
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: "询盘数量",
+                    show: false
+                },
+                dataset:{
+                    source: newlist
+                },
+                series: [
+                    {
+                        name: "询盘数量",
+                        type: "bar",
+                        barWidth: "14",
+                        itemStyle: {
+                            normal: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 0,
+                                    color: '#24a5ff'
+                                }, {
+                                    offset: 0.5,
+                                    color: '#54ddf7'
+                                },{
+                                    offset: 1,
+                                    color: '#70fcf3'
+                                }]),
+                            },
+                        }
+                    },
+                ],
+            };
+            option && myChart.setOption(option);
+            $this.myChart = myChart;
+            myChart.on('click', function (params) {
+              let month = params.name.slice(0,2);
+              // let startTime = parseTime(new Date(),'{y}') + '/' +  month + '/01';
+              // let endTime = parseTime(new Date(),'{y}') + '/' + month + '/' + $this.getMonthDays(parseTime(new Date(),'{y}'),month);
+              let startTime = $this.year + '/' +  month + '/01';
+              let endTime = $this.year + '/' + month + '/' + $this.getMonthDays($this.year,month);
+              var baseDepart = "";
+              var contrastDepartArr = [];
+              $this.departList.forEach(function(item,index){
+                if(index == 0){
+                  baseDepart = item.id;
+                }else{
+                  contrastDepartArr.push(item.id);
+                }
+              });
+              var contrastDepart = "";
+              if(contrastDepartArr.length>0){
+                contrastDepart = contrastDepartArr.join(",");
+              }
+              if($this.language == '中文'){
+                $this.$router.push({path:'/stat/cn/departAnalysis',query:{type:1,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+              }else{
+                $this.$router.push({path:'/stat/en/departAnalysis',query:{type:1,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+              }
+            });
+      },
+
+      // 原图表
+      costAverageChart2(val){
         var $this = this;
           let chartTopData = JSON.parse(JSON.stringify(val));
-
           for(let i = 0;i<chartTopData.length;i++){
             chartTopData[i].date = chartTopData[i].date.slice(-2) + '月'
           }
@@ -176,6 +282,7 @@ export default {
             
             
           });
+
           chartTop.on('element:click', (args) => {
             let data = args.data.data;
             let month = data.date.slice(0,2);
@@ -204,6 +311,7 @@ export default {
           chartTop.render();
         
       },
+
       getMonthDays(year,month){
         var thisDate = new Date(year,month,0); //当天数为0 js自动处理为上一月的最后一天
         return thisDate.getDate();
@@ -223,184 +331,20 @@ export default {
           this.isUpNum = oldXpanYears - newXpanYears
         }
       },
-      setChartBottom(val){
-          var $this = this;
-          let chartBotData = JSON.parse(JSON.stringify(val));
-          
-          if($this.chartBot&&!$this.chartBot.chart.destroyed){
-              $this.chartBot.changeData(chartBotData);
-              return ;
-          } 
-          
-          const chartBot = new Pie('XpanYearsChartBot', {
-            appendPadding: 10,
-            data:chartBotData,
-            angleField: 'yearcount',
-            colorField: 'departname',
-            radius: 1,
-            color:['#1760ff','#3fcaff','#ffc857','#fe3a33','#8ae45b'],
-            label: {
-              type: 'inner',
-              offset: '-30%',
-              autoHide:true,
-              autoRotate:false,
-              content: (data) => {
-                return `${(data.percent * 100).toFixed(0)}%`
-              },
-              style: {
-                fontSize: 12,
-                textAlign: 'center',
-              },
-            },
-            meta: {
-              yearcount: {
-                alias: '个数',
-              },
-            },
-            tooltip: {
-              fields: ['yearcount'],
-              showTitle:true,
-              title:'departname'
-            },
-            pieStyle:{
-              cursor: 'pointer'
-            },
-            legend: {
-              position:'bottom',
-              maxRow:2,
-              flipPage:false,
-              marker:{
-                symbol:'square'
-              },
-              itemName:{
-                style:{
-                  fontSize: 12,
-                  fill: '#a6a6a6',
-                }
-              }
-            },
-            state: {
-              active: {
-                style: {
-                  lineWidth: 1,
-                  stroke:'#fff'
-                },
-              },
-            },
-           
-          });
-          chartBot.on('element:click', (args) => {
-            let baseDepart = args.data.data.depart;
-            let contrastDepart = '';
-            let startTime = parseTime(new Date(),'{y}') + '/01';
-            let endTime = parseTime(new Date(),'{y}') + '/12' 
-            if($this.language == '中文'){
-              $this.$router.push({path:'/stat/cn/departAnalysis',query:{type:1,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-            }else{
-              $this.$router.push({path:'/stat/en/departAnalysis',query:{type:1,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
-            }
-          });
-          $this.chartBot = chartBot;
-          chartBot.render();
-      },
+      echartsSize(){
+        if(this.myChart){
+          this.myChart.resize();
+        }
+      }
+    },
+    destroyed(){
+      window.removeEventListener('resize',this.echartsSize);
+      if(this.myChart){
+        this.myChart.dispose();
+      }
     }
 }
 </script>
 
 <style scoped lang="scss">
-.hxpage{
-  background: #fff;
-  .module-top{
-    padding: 30px;
-    border-right: 1px solid #efefef;
-    border-bottom: 1px solid #efefef;
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 1;
-    &:hover{
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-    }
-  }
-  .title-view{
-    height: 24px;
-    line-height: 24px;
-    margin-bottom: 10px;
-    .title{
-      font-size: 14px;
-      color: #1a1a1a;
-      float: left;
-      margin-right: 4px;
-      font-weight: bold;
-    }
-    .unit{
-      font-size: 12px;
-      color: #a1a1a1;
-      float: left;
-    }
-    .more{
-      font-size: 12px;
-      color: #a1a1a1;
-      float: right;
-      cursor: pointer;
-      position: relative;
-      top: -1px;
-      .svg-i{
-        font-size: 10px;
-        color: #a1a1a1;
-        vertical-align: 1px;
-      }
-    }
-  }
-  .contrast-view{
-    height: 40px;
-    margin-bottom: 15px;
-    .redtext{
-      float: left;
-      font-size: 24px;
-      color: #eb3737;
-      font-weight: bold;
-      margin-right: 15px;
-    }
-    .redright{
-      float: left;
-      .conname{
-        font-size: 12px;
-        line-height: 20px;
-        color: #999999;
-      }
-      .num{
-        font-size: 12px;
-        line-height: 20px;
-        position: relative;
-      }
-      .up{
-        color: #f25e5e;
-        
-      }
-      .down{
-        color: #2dbb4c;
-        
-      }
-    }
-  }
-  .chart-top{
-    height: 68px;
-  }
-  .module-bottom{
-    padding: 30px;
-    border-right: 1px solid #efefef;
-    border-bottom: 1px solid #efefef;
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 1;
-    &:hover{
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-    }
-  }
-  .chart-bottom{
-    height: 260px;
-    margin-top: 35px;
-  }
-  
-}
 </style>

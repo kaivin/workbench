@@ -3,7 +3,7 @@
         <div class="personTopTab">
             <div class="chooseDepart flex-box">
                   <span class="choosetit">部门选择：</span>
-                  <div class="departItems">
+                  <div class="departItems noAfter">
                        <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
                   </div>
                   <span class="choosetit" style="margin-left:20px">时间选择：</span>
@@ -339,10 +339,23 @@ export default {
                     $this.BonusPlug(response.moneylist,moneytime);
                   }
                 }
-              }else{
-                // 非付费询盘
-                if(response.xunulist&&response.xunulist.length>0){
-                  $this.enquiriesPlug(response.xunulist);
+              }
+              // 成交积分
+              if(response.scorelist&&response.scorelist.length>0){
+                  var dealScore=rankingWithTotalItem(response.scorelist,'score');
+                  dealScore.forEach(function(item){
+                    item.score = numSeparate(Math.floor(item.score*100)/100);
+                    item.deptName=item.departname;
+                  });
+                  $this.dealScore = dealScore;
+                  $this.scoretime = response.scoretime;
+                if(response.scorelist.length < 9){
+                    $this.dealScoreSet.ifFold = false;
+                    $this.dealScoreSet.boxHeight = "auto";
+                }else{
+                    $this.dealScoreSet.ifFold = true;
+                    $this.dealScoreSet.boxHeight = "630px";
+                    $this.dealScoreSet.isFold = false;
                 }
                 // 成交积分
                 if(response.scorelist&&response.scorelist.length>0){

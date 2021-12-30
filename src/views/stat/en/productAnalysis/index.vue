@@ -93,7 +93,7 @@
                 ></million-deal>
             </div>
         </div> 
-    <el-dialog :title="focusProTitle" custom-class="transfer-dialog" :visible.sync="dialogFocusProVisible" width="700px">
+    <el-dialog :title="focusProTitle" custom-class="transfer-dialog" :visible.sync="dialogFocusProVisible" width="704px">
         <div class="transfer-panel">
         <div class="transfer-wrap">
               <dir-transfer

@@ -1,18 +1,18 @@
 import request from "@/utils/request";
 
 // 中文统计总览
-export function getChinacountnew() {
+export function getChinacountnew(data) {
   return request({
     url: "/hxindex/Api/chinacountnew",
     method: "POST",
-    //data
+    data
   });
 }
 // 英文统计总览
-export function getEncountnew() {
+export function getEncountnew(data) {
   return request({
     url: "/hxindex/Api/encountnew",
     method: "POST",
-    //data
+    data
   });
 }

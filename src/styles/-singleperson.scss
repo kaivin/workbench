@@ -15,6 +15,14 @@
         }
         .departItems{
             line-height:30px;
+            &.noAfter{
+                span{
+                    &.active{
+                        &:after{display: none;
+                        }
+                    }
+                }
+            }
             span{
                 color: #4c4c4c;
                 font-size:$fontsize14;

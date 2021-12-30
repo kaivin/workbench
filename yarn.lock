@@ -4360,8 +4360,8 @@ ecc-jsbn@~0.1.1:
 
 echarts-gl@^2.0.8:
   version "2.0.8"
-  resolved "https://registry.npmmirror.com/echarts-gl/download/echarts-gl-2.0.8.tgz#81260be0891e5e30c1710311f8b764d65329b03c"
-  integrity sha512-ayFmjLxdF9pRpnh1Lz5aOgjnLqL3WIGu0t4Bt+oFwXGsViU2XcjCkHZARsZdv05lySow8eMD9JYZGXfLpuqYng==
+  resolved "https://registry.nlark.com/echarts-gl/download/echarts-gl-2.0.8.tgz#81260be0891e5e30c1710311f8b764d65329b03c"
+  integrity sha1-gSYL4IkeXjDBcQMR+Ldk1lMpsDw=
   dependencies:
     claygl "^1.2.1"
     zrender "^5.1.1"

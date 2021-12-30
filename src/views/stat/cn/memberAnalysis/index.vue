@@ -3,7 +3,7 @@
       <div class="personTopTab">
           <div class="chooseDepart flex-box">
                 <span class="choosetit">部门选择：</span>
-                <div class="departItems">
+                <div class="departItems noAfter">
                      <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
                 </div>
                 <span class="choosetit" style="margin-left:20px">时间选择：</span>

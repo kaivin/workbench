@@ -19,7 +19,7 @@
                     </div>
                 </div> 
                 <div class="item-form">
-                    <div class="flex-box" style="width: 360px;">
+                    <div class="flex-box">
                         <div class="item-title">外网IP的系统访问权限：</div>
                         <div class="flex-content flex-box item-content">
                           <div class="flex-content item-input">
@@ -32,7 +32,7 @@
                     </div>
                 </div> 
                 <div class="item-form">
-                    <div class="flex-box" style="width: 360px;">
+                    <div class="flex-box">
                         <div class="item-title">外网IP权限菜单的访问权限：</div>
                         <div class="flex-content flex-box item-content">
                           <div class="flex-content item-input">
