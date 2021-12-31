@@ -216,17 +216,18 @@ export default {
                         color:{
                             type: 'linear',
                             x: 0,
-                            y: 0,
+                            y: 1,
                             x2: 0,
-                            y2: 1,
+                            y2: 0,
                             colorStops: [{
                                 offset: 0, color: "#2678ff"
                             }, {
-                                offset: 0.5, color: "#1c46a1"
+                                offset: 0.77, color: "rgba(16, 95, 255, 0.55)"
                             }, {
-                                offset: 1, color: "#2155b9"
+                                offset: 1, color: "rgba(16, 95, 255, 0.41)"
                             }]
                         },
+                        opacity: 0.66
                     },
                     symbolSize: 7
                 },
@@ -234,6 +235,29 @@ export default {
         };
         option && myChart.setOption(option);
         $this.myChart = myChart;
+        myChart.on('click', function (params) {
+          let month = params.name.slice(0,2);
+          let startTime = $this.year + '/' +  month;
+          let endTime = $this.year + '/' + month;
+          var baseDepart = "";
+          var contrastDepartArr = [];
+          $this.departList.forEach(function(item,index){
+            if(index == 0){
+              baseDepart = item.id;
+            }else{
+              contrastDepartArr.push(item.id);
+            }
+          });
+          var contrastDepart = "";
+          if(contrastDepartArr.length>0){
+            contrastDepart = contrastDepartArr.join(",");
+          }
+          if($this.language == '中文'){
+            $this.$router.push({path:'/stat/cn/departAnalysis',query:{type:$this.type==0?2:8,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+          }else{
+            $this.$router.push({path:'/stat/en/departAnalysis',query:{type:$this.type==0?2:8,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+          }
+        });
       },
 
       costAverageChart2(){

@@ -26,23 +26,38 @@
                 </div>
           </div>
       </div>
-      <div class="flex-content dealRankMain" :class="(searchData.dept_id==12||searchData.dept_id=='')?'':'active'">
+      <div class="flex-content dealRankMain" :class="searchData.dept_id==''?'':'active'">
         <div class="dealRankLeft">
-          <div class="dealRankTop" v-if='searchData.dept_id!=12'>
+          <div class="dealRankTop">
+             <template v-if='searchData.dept_id!=12'>
               <unpay-inquiry 
                 :unpayInquiry="unpayInquiry"
                 :unpayInquirySet="unpayInquirySet"
                 :lang="ch"
                 :ByTime ="Inquirytime"
                 @changeSet="changeSet"
+                :isdep1="isdep1"
                 v-if="unpayInquiry.length>0"
               ></unpay-inquiry>
+            </template>
+            <template v-if='searchData.dept_id==12'>
+              <unpay-inquiry 
+                :unpayInquiry="payMember"
+                :unpayInquirySet="payMemberSet"
+                :lang="ch"
+                :ByTime ="Paytime"
+                :isdep1="isdep1"
+                @changeSet="changeSet"
+                v-if="payMember.length>0"
+              ></unpay-inquiry>
+            </template>
               <unpay-deal
                 :dealScore="dealScore"
                 :dealScoreSet="dealScoreSet"
                 @changeSet="changeSet"
                 :scoretime ="scoretime"
                 :lang="ch"
+                :isdep1="isdep1"
                 v-if="dealScore.length>0"
               ></unpay-deal>
               <million-deal
@@ -53,7 +68,7 @@
                 @changeSet="changeSet"
                 v-if="millionDeal.length>0"
               ></million-deal>
-              <div class="dealRankRight" v-if='searchData.dept_id!=12&&searchData.dept_id!=""'>
+              <div class="dealRankRight" v-if='searchData.dept_id!=""'>
                 <award-rank
                   :awardMoney="awardMoney"
                   :awardMoneySet="awardMoneySet"
@@ -68,10 +83,10 @@
           <pay-member
             :payMember="payMember"
             :lang="ch"
-            v-if='(searchData.dept_id==12||searchData.dept_id=="")&&payMember.length>0'
+            v-if='searchData.dept_id==""&&payMember.length>0'
           ></pay-member>
         </div>
-        <div class="dealRankRight" v-if='searchData.dept_id==12||searchData.dept_id==""'>
+        <div class="dealRankRight" v-if='searchData.dept_id==""'>
           <award-rank
             :awardMoney="awardMoney"
             :awardMoneySet="awardMoneySet"
@@ -112,6 +127,11 @@ export default {
         isFold: false,
       },
       payMember:[],
+      payMemberSet:{
+        ifFold: false,//是否需要折叠
+        boxHeight: '',
+        isFold: false,
+      },
       millionDeal:[],
       millionDealSet:{
         ifFold: false,//是否需要折叠
@@ -132,6 +152,7 @@ export default {
       scoretime:'',
       moneytime: '',
       Inquirytime: '',
+      Paytime: '',
       pickerMonthRangeOptions: {
         shortcuts: [{
           text: '今年至今',
@@ -150,6 +171,7 @@ export default {
           }
         }]
       },
+      isdep1:false
     };
   },
   components:{
@@ -304,11 +326,59 @@ export default {
       $this.$store.dispatch("memberCompare/postInquiryRank",searchData).then((response) => {
           if (response) {
             if (response.status) {
-              if($this.searchData.dept_id&&$this.searchData.dept_id!=''){
                 if($this.searchData.dept_id==12){
-                  // 付费
+                  var scorelist = [];
+                  var inquirylist = [];
+                  var alist = [];
                   if(response.semulist&&response.semulist.length>0){
-                    $this.payPlug(response.semulist);
+                    for(var i=0;i<response.semulist.length;i++){
+                      var scoreobj={};
+                      var inquiryobj={};
+                      var aobj={};
+                      scoreobj.uid = response.semulist[i].id;
+                      scoreobj.headimg = response.semulist[i].headimg;
+                      scoreobj.departname = response.semulist[i].departname;
+                      scoreobj.dept_id = response.semulist[i].dept_id;
+                      scoreobj.score = response.semulist[i].score;
+                      scoreobj.ownuser = response.semulist[i].name;
+                      
+                      inquiryobj.id = response.semulist[i].id;
+                      inquiryobj.headimg = response.semulist[i].headimg;
+                      inquiryobj.departname = response.semulist[i].departname;
+                      inquiryobj.dept_id = response.semulist[i].dept_id;
+                      inquiryobj.number = response.semulist[i].number;
+                      inquiryobj.name = response.semulist[i].name;
+                      
+                      aobj.dept_id = response.semulist[i].dept_id;
+                      aobj.headimg = response.semulist[i].headimg;
+                      aobj.departname = response.semulist[i].departname;
+                      aobj.uid = response.semulist[i].id;
+                      aobj.number = response.semulist[i].Anumber;
+                      aobj.ownuser = response.semulist[i].name;
+
+                      scorelist.push(scoreobj);
+                      inquirylist.push(inquiryobj);
+                      alist.push(aobj);
+                    }
+                    // 付费
+                    var inquirytime
+                    if($this.searchData.data&&$this.searchData.data.length>0){
+                      inquirytime=$this.searchData.data[0]+' ~ '+$this.searchData.data[1];
+                    }else{
+                        inquirytime='';
+                    }
+                    $this.payInquiryPlug(inquirylist,inquirytime);
+                    // 成交积分
+                    var scoretime
+                    if($this.searchData.data&&$this.searchData.data.length>0){
+                        scoretime=$this.searchData.data[0]+'|'+$this.searchData.data[1]
+                    }else{
+                        scoretime=response.scoretime;
+                    }
+                    $this.integralPlug(scorelist,scoretime);
+                    // 百万成交
+                    $this.MillionsPlug(alist);
+                    $this.anumber=1;
                   }
                   // 奖金排序
                   if(response.moneylist&&response.moneylist.length>0){
@@ -320,6 +390,8 @@ export default {
                     }
                     $this.BonusPlug(response.moneylist,moneytime);
                   }
+
+                  $this.isdep1=true
                 }else{
                   // 非付费询盘
                   if(response.xunulist&&response.xunulist.length>0){
@@ -360,46 +432,6 @@ export default {
                     $this.BonusPlug(response.moneylist,moneytime);
                   }
                 }
-              }else{
-                // 非付费询盘
-                if(response.xunulist&&response.xunulist.length>0){
-                    var moneytime
-                    if($this.searchData.data&&$this.searchData.data.length>0){
-                      moneytime=$this.searchData.data[0]+' ~ '+$this.searchData.data[1];
-                    }else{
-                        moneytime='';
-                    }
-                  $this.enquiriesPlug(response.xunulist,moneytime);
-                }
-                // 成交积分
-                if(response.scorelist&&response.scorelist.length>0){
-                  var scoretime
-                  if($this.searchData.data&&$this.searchData.data.length>0){
-                      scoretime=$this.searchData.data[0]+'|'+$this.searchData.data[1]
-                  }else{
-                      scoretime=response.scoretime;
-                  }
-                  $this.integralPlug(response.scorelist,scoretime);
-                }
-                // 付费
-                if(response.semulist&&response.semulist.length>0){
-                  $this.payPlug(response.semulist);
-                }
-                // 百万成交
-                if(response.Alist&&response.Alist.length>0){
-                  $this.MillionsPlug(response.Alist);
-                }
-                // 奖金排序
-                if(response.moneylist&&response.moneylist.length>0){
-                  var moneytime
-                  if($this.searchData.data&&$this.searchData.data.length>0){
-                    moneytime=$this.searchData.data[0]+' ~ '+$this.searchData.data[1];
-                  }else{
-                      moneytime='截至'+response.moneytime;
-                  }
-                  $this.BonusPlug(response.moneylist,moneytime);
-                }
-              }
             } else {
               $this.$message({
                 showClose: true,
@@ -422,7 +454,7 @@ export default {
       });
       $this.unpayInquiry = unpayInquiry;
       $this.Inquirytime = varTime;
-      if(varData.length < 9){
+      if(varData.length < 10){
           $this.unpayInquirySet.ifFold = false;
           $this.unpayInquirySet.boxHeight = "auto";
       }else{
@@ -434,20 +466,43 @@ export default {
     //成交积分
     integralPlug(varData,varTime){
       var $this = this;
-      var dealScore=rankingWithTotalItem(varData,'score');
+      var dealScore=varData.sort(function(a, b){return b.score - a.score});
+      dealScore=rankingWithTotalItem(dealScore,'score');
       dealScore.forEach(function(item){
         item.score = numSeparate(Math.floor(item.score*100)/100);
         item.deptName=item.departname;
       });
       $this.dealScore = dealScore;
       $this.scoretime = varTime;
-      if(varData.length < 9){
+      if(varData.length < 10){
           $this.dealScoreSet.ifFold = false;
           $this.dealScoreSet.boxHeight = "auto";
       }else{
           $this.dealScoreSet.ifFold = true;
           $this.dealScoreSet.boxHeight = "630px";
           $this.dealScoreSet.isFold = false;
+      }
+    },
+    //付费询盘
+    payInquiryPlug(varData,varTime){
+      var $this = this;
+      var payMember = varData.sort(function(a, b){return b.number - a.number});
+      payMember = rankingWithTotalItem(payMember,'number');
+      
+      payMember.forEach(function(item){
+        item.numberStr = numSeparate(item.number);
+        item.deptName=item.departname;
+      });
+      console.log(payMember)
+      $this.payMember=payMember;
+      $this.Paytime = varTime;
+      if(varData.length < 10){
+          $this.payMemberSet.ifFold = false;
+          $this.payMemberSet.boxHeight = "auto";
+      }else{
+          $this.payMemberSet.ifFold = true;
+          $this.payMemberSet.boxHeight = "630px";
+          $this.payMemberSet.isFold = false;
       }
     },
     //付费
@@ -463,12 +518,13 @@ export default {
     //百万成交
     MillionsPlug(varData){
       var $this = this;
-      var millionDeal=rankingWithTotalItem(varData,'number');
+      var millionDeal=varData.sort(function(a, b){return b.number - a.number});
+      var millionDeal=rankingWithTotalItem(millionDeal,'number');
       millionDeal.forEach(function(item){
         item.deptName=item.departname;
       });
       $this.millionDeal=millionDeal;
-      if(varData.length < 3){
+      if(varData.length < 10){
           $this.millionDealSet.ifFold = false;
           $this.millionDealSet.boxHeight = "auto";
       }else{
@@ -489,7 +545,7 @@ export default {
       });
       $this.awardMoney=awardMoney;
       $this.moneytime = varTime;
-      if(varData.length < 9){
+      if(varData.length < 10){
           $this.awardMoneySet.ifFold = false;
           $this.awardMoneySet.boxHeight = "auto";
       }else{

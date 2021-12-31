@@ -195,13 +195,37 @@ export default {
                                 offset: 1, color: "#ff9621"
                             }]
                         },
+                        opacity:1
                     },
-                    showSymbol: false
+                    showSymbol: false,
                 },
             ],
         };
         option && myChart.setOption(option);
         $this.myChart = myChart;
+        myChart.on('click', function (params) {
+          let month = params.name.slice(0,2);
+          let startTime = $this.year + '/' +  month;
+          let endTime = $this.year + '/' + month;
+          var baseDepart = "";
+          var contrastDepartArr = [];
+          $this.departList.forEach(function(item,index){
+            if(index == 0){
+              baseDepart = item.id;
+            }else{
+              contrastDepartArr.push(item.id);
+            }
+          });
+          var contrastDepart = "";
+          if(contrastDepartArr.length>0){
+            contrastDepart = contrastDepartArr.join(",");
+          }
+          if($this.language == '中文'){
+            $this.$router.push({path:'/stat/cn/departAnalysis',query:{type:9,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+          }else{
+            $this.$router.push({path:'/stat/en/departAnalysis',query:{type:9,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}});
+          }
+        });
       },
       setIsUp(val){
         let newXpanYears = 0;
@@ -217,6 +241,10 @@ export default {
           this.isUp = false;
           this.isUpNum = oldXpanYears - newXpanYears
         }
+      },
+      getMonthDays(year,month){
+        var thisDate = new Date(year,month,0); //当天数为0 js自动处理为上一月的最后一天
+        return thisDate.getDate();
       },
       echartsSize(){
         if(this.myChart){

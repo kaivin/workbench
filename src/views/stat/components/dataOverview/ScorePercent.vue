@@ -86,7 +86,6 @@ export default {
         }else{
           chartBotData = JSON.parse(JSON.stringify(this.yearscorenumbercount));
         }
-        console.log(chartBotData)
         var chartDom = document.getElementById('ScoreYearsChartBot');
         var myChart = echarts.init(chartDom);
         var option;

@@ -2,11 +2,11 @@
   <div class="memberDeal">
       <div class="memberTit" v-if="lang =='ch'">
           <h3>成交积分榜单<span>({{dateTime}})</span></h3>
-          <p><span>非付费成员年度排行</span>(单位：分)</p>
+          <p><span>{{isdep1?"付费":"非付费"}}成员年度排行</span>(单位：分)</p>
       </div>
       <div class="memberTit" v-else>
           <h3>成交个数榜单<span>({{dateTime}})</span></h3>
-          <p><span>非付费成员年度排行</span>(单位：个)</p>
+          <p><span>{{isdep1?"付费":"非付费"}}成员年度排行</span>(单位：个)</p>
       </div>
       <div class="dealRank">
           <ul class="deul" :style="'height:'+ dealScoreSet.boxHeight">
@@ -88,6 +88,12 @@ export default {
         return "";
       },
     },
+    isdep1:{
+      type: Boolean,
+      default: function () {
+        return false;
+      },
+    }
   },
   computed:{
     dateTime(){

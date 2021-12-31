@@ -201,7 +201,7 @@ export default {
                 const xAxisPoint = shape.xAxisPoint;
                 const c1 = [shape.x+7, shape.y];
                 const c2 = [xAxisPoint[0]+7, xAxisPoint[1]];
-                const c3 = [xAxisPoint[0] + 14, xAxisPoint[1] - 4];
+                const c3 = [xAxisPoint[0] + 14, xAxisPoint[1]];
                 const c4 = [shape.x + 14, shape.y - 4];
                 ctx.moveTo(c1[0], c1[1]).lineTo(c2[0], c2[1]).lineTo(c3[0], c3[1]).lineTo(c4[0], c4[1]).closePath();
             },
@@ -454,6 +454,7 @@ export default {
                       symbolOffset: [3, -5],
                       z: 1,
                       itemStyle: {
+                        color: "#1c2042",
                         shadowBlur: 9,
                         shadowColor: 'rgba(85, 149, 253, 1)',
                         shadowOffsetY: 8,

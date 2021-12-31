@@ -2,7 +2,7 @@
   <div class="memberInquiry">
       <div class="memberTit">
           <h3>询盘个数榜单<span>({{datetime}})</span></h3>
-          <p><span>非付费成员年度排行</span>(单位：个)</p>
+          <p><span>{{isdep1?"付费":"非付费"}}成员年度排行</span>(单位：个)</p>
       </div>
       <div class="inquiryRank">
           <ul class="inul"  :style="'height:'+ unpayInquirySet.boxHeight" >
@@ -78,6 +78,12 @@ export default {
       type: Object,
       default: function () {
         return {};
+      },
+    },
+    isdep1:{
+      type: Boolean,
+      default: function () {
+        return false;
       },
     }
   },

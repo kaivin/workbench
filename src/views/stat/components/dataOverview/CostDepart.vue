@@ -120,7 +120,6 @@ export default {
               obj.departname= chartBotData[i].departname;
               obj.avgallmoney= maxNum;
               maxList.push(obj);
-              console.log(maxList)
               var obj2 = {};
               obj2.departname= chartBotData[i].departname;
               obj2.avgallmoney= 0.5;
