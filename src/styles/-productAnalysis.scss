@@ -2025,6 +2025,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            .transferFlTit{
+                clear: both;
+                display: block;
+                height: 40px;
+                line-height: 40px;
+                background: #F5F7FA;
+                margin: 0;
+                padding-left: 15px;
+                border-bottom: 1px solid #e6ebf5;
+                box-sizing: border-box;
+                color: #000000;
+            }
             .transferFl{
                 flex: 1;
                 border: 1px solid #e6ebf5;

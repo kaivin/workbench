@@ -93,7 +93,7 @@
                 ></million-deal>
             </div>
         </div> 
-    <el-dialog :title="focusProTitle" custom-class="transfer-dialog" :visible.sync="dialogFocusProVisible" width="700px">
+    <el-dialog :title="focusProTitle" custom-class="transfer-dialogPro" :visible.sync="dialogFocusProVisible" width="700px">
         <div class="transfer-panel">
              <div class="transferFl">
                   <p class="transferFlTit">可关注产品</p>
