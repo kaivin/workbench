@@ -880,13 +880,15 @@ export default {
       var AllProList=$this.AllProList;
       AllProList.forEach(function(item,index){
           item.isOn=false;
+          item.son.forEach(function(itemk,indexk){
+              itemk.isOn=false;
+          });
           if($this.focusRright&&$this.focusRright.length>0){
             $this.focusRright.forEach(function(items,indexs){
               if(items.typeid==item.id){
                 item.isOn=true;
               }
               item.son.forEach(function(itemk,indexk){
-                itemk.isOn=false;
                 if(items.id==itemk.id){
                   itemk.isOn=true;
                 }
