@@ -53,6 +53,17 @@
                 :scoretime ="scoretime"
                 v-if="millionDeal.length>0"
               ></million-deal>
+              <div class="dealRankRight" v-if='searchData.dept_id!=12&&searchData.dept_id!=""'>
+                <award-rank
+                  :awardMoney="awardMoney"
+                  :awardMoneySet="awardMoneySet"
+                  :lang="ch"
+                  :isAwardBool="isAwardBool"
+                  :moneytime ="moneytime"
+                  @changeSet="changeSet"
+                  v-if="awardMoney.length>0"
+                ></award-rank>
+              </div>
             </div>
             <pay-member
               :payMember="payMember"

@@ -809,17 +809,17 @@ export default {
                     var departcount=[];
                     if(res.departcount&&res.departcount.length>0){
                         var peitit='';
-                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='询盘部门占比'}
-                        if($this.contrastName=='productCont'){peitit='询盘产品占比'}
-                        if($this.contrastName=='timeCont'){peitit='询盘时间占比'}
+                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='询盘个数 - 部门占比'}
+                        if($this.contrastName=='productCont'){peitit='询盘个数 - 产品占比'}
+                        if($this.contrastName=='timeCont'){peitit='询盘个数 - 时间占比'}
                         departcount=departcount.concat($this.piePlug(res.departcount,peitit,'enquirie','总询盘个数'));
                     }
                     //积分占比
                     if(res.departscore&&res.departscore.length>0){
                         var peitit='';
-                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='成交积分部门占比'}
-                        if($this.contrastName=='productCont'){peitit='成交积分产品占比'}
-                        if($this.contrastName=='timeCont'){peitit='成交积分时间占比'}
+                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='成交积分 - 部门占比'}
+                        if($this.contrastName=='productCont'){peitit='成交积分 - 产品占比'}
+                        if($this.contrastName=='timeCont'){peitit='成交积分 - 时间占比'}
                         departcount=departcount.concat($this.piePlug(res.departscore,peitit,'score','总成交积分'));
                     }
                     $this.ChartAccount=departcount;
@@ -881,9 +881,9 @@ export default {
                             departCount.push(itemObj);
                         });
                         var peitit='';
-                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='询盘部门占比'}
-                        if($this.contrastName=='productCont'){peitit='询盘产品占比'}
-                        if($this.contrastName=='timeCont'){peitit='询盘时间占比'}
+                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='询盘个数 - 部门占比'}
+                        if($this.contrastName=='productCont'){peitit='询盘个数 - 产品占比'}
+                        if($this.contrastName=='timeCont'){peitit='询盘个数 - 时间占比'}
                         departcountChart=departcountChart.concat($this.piePlug(departCount,peitit,'enquirie','总询盘个数'));
                     }
                     //积分占比
@@ -921,9 +921,9 @@ export default {
                             departCount.push(itemObj);
                         });
                         var peitit='';
-                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='成交积分部门占比'}
-                        if($this.contrastName=='productCont'){peitit='成交积分产品占比'}
-                        if($this.contrastName=='timeCont'){peitit='成交积分时间占比'}
+                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='成交积分 - 部门占比'}
+                        if($this.contrastName=='productCont'){peitit='成交积分 - 产品占比'}
+                        if($this.contrastName=='timeCont'){peitit='成交积分 - 时间占比'}
                         departcountChart=departcountChart.concat($this.piePlug(departCount,peitit,'score','总成交积分'));
                     }
                     $this.ChartEnquirie=ChartEnquirie;
