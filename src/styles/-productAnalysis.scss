@@ -16,7 +16,7 @@
         display:block;
         border:1px solid #e6e6e6;
         background:#fff;
-        margin-bottom:37px;
+        margin-bottom:27px;
         position:relative;
         .focusProTit{
             clear:both;
@@ -978,84 +978,84 @@
             }
         }
     }
-    .contrastOption{
-        display:block;
-        p{
-            float: left;
-            cursor: pointer;
-            position: relative;
-            padding-left: 19px;
-            height: 22px;
-            vertical-align: top;
-            line-height: 0;
-            font-size:0;
-            width: 20%;
-            margin-bottom: 10px;
-            i{
-                position:absolute;
-                left:0px;
-                top:50%;
-                display:inline-block;
-                width:11px;
-                height:11px;
-                border:1px solid #cbcbcb;
-                margin-top:-6px;
-            }
-            span{
-                font-size:$fontsize14;
-                display:inline-block;
-                height:22px;
-                line-height:22px;
-                color:#1a1a1a;
-            }
-            &:hover{
-                i{
-                border:1px solid $menuActiveText;
-                }
-                span{
-                color:$menuActiveText;
-                }
-            }
-            &.active.is-disabled{
-                cursor:not-allowed!important;
-                &:hover{
-                    i{
-                        border:1px solid #dcdfe6;
-                    }
-                }
-                i{
-                    background-color:#edf2fc;
-                    border:1px solid #dcdfe6;
-                }
-                span{
-                    color:#c0c4cc;
-                }
-            }
-            &.active{
-                i{
-                    border:1px solid $menuActiveText;
-                    background:$menuActiveText;
-                    &:before{
-                        content:'';
-                        width:7px;
-                        height:4px;
-                        transform:rotate(-45deg);
-                        border-left:1px solid #fff;
-                        border-bottom:1px solid #fff;
-                        position:absolute;
-                        left:1px;
-                        top:1px;
-                    }
-                }
-                span{
-                    color:$menuActiveText;
-                }
-                b{
-                    color:lighten($menuActiveText, 20);
-                }
-            }
-        }
-    }
+    //.contrastOption{
+    //    display:block;
+    //    p{
+    //        float: left;
+    //        cursor: pointer;
+    //        position: relative;
+    //        padding-left: 19px;
+    //        height: 22px;
+    //        vertical-align: top;
+    //        line-height: 0;
+    //        font-size:0;
+    //        width: 20%;
+    //        margin-bottom: 10px;
+    //        i{
+    //            position:absolute;
+    //            left:0px;
+    //            top:50%;
+    //            display:inline-block;
+    //            width:11px;
+    //            height:11px;
+    //            border:1px solid #cbcbcb;
+    //            margin-top:-6px;
+    //        }
+    //        span{
+    //            font-size:$fontsize14;
+    //            display:inline-block;
+    //            height:22px;
+    //            line-height:22px;
+    //            color:#1a1a1a;
+    //        }
+    //        &:hover{
+    //            i{
+    //            border:1px solid $menuActiveText;
+    //            }
+    //            span{
+    //            color:$menuActiveText;
+    //            }
+    //        }
+    //        &.active.is-disabled{
+    //            cursor:not-allowed!important;
+    //            &:hover{
+    //                i{
+    //                    border:1px solid #dcdfe6;
+    //                }
+    //            }
+    //            i{
+    //                background-color:#edf2fc;
+    //                border:1px solid #dcdfe6;
+    //            }
+    //            span{
+    //                color:#c0c4cc;
+    //            }
+    //        }
+    //        &.active{
+    //            i{
+    //                border:1px solid $menuActiveText;
+    //                background:$menuActiveText;
+    //                &:before{
+    //                    content:'';
+    //                    width:7px;
+    //                    height:4px;
+    //                    transform:rotate(-45deg);
+    //                    border-left:1px solid #fff;
+    //                    border-bottom:1px solid #fff;
+    //                    position:absolute;
+    //                    left:1px;
+    //                    top:1px;
+    //                }
+    //            }
+    //            span{
+    //                color:$menuActiveText;
+    //            }
+    //            b{
+    //                color:lighten($menuActiveText, 20);
+    //            }
+    //        }
+    //    }
+    //}
     .enquirieTrend{
         padding:27px 0px 25px 0px;
         background:#fff;
@@ -1997,24 +1997,34 @@
     }
     .transfer-dialogPro{
         .el-dialog__title{font-weight: bold;}
+        .el-dialog__body {
+            padding:15px 20px 0px 20px !important;
+        }
+        .el-dialog__header{
+            padding-bottom:0px;
+            .el-dialog__headerbtn{display: none;}
+        }
         .el-dialog__footer{padding: 15px;}
+        .transfer-panelTit{
+            clear: both;
+            display: block;
+            margin-bottom: 15px;
+            background:#f0f4ff;
+            padding:10px 13px;
+            line-height:22px;
+            font-size:$fontsize14;
+            color:#333333;
+            i{
+                float: left;
+                color: #2868ff;
+                margin-right: 10px;
+            }
+        }
         .transfer-panel{
             clear: both;
             display: flex;
             justify-content: center;
             align-items: center;
-            .transferFlTit{
-                clear: both;
-                display: block;
-                height: 40px;
-                line-height: 40px;
-                background: #F5F7FA;
-                margin: 0;
-                padding-left: 15px;
-                border-bottom: 1px solid #e6ebf5;
-                box-sizing: border-box;
-                color: #000000;
-            }
             .transferFl{
                 flex: 1;
                 border: 1px solid #e6ebf5;
@@ -2325,22 +2335,50 @@
                     padding: 10px 5px;
                     p{
                         clear: both;
-                        padding:5px 10px;
-                        cursor: pointer;
                         overflow: hidden;
-                        i{
-                            float: left;
-                            width: 12px;
-                            height: 12px;
-                            border: 1px solid #ccc;
-                            margin-top: 2px;
-                            margin-right: 10px;
-                            border-radius:3px;
+                        margin: 10px 10px 14px 10px;
+                        &.transferBoxTop{
+                            span{
+                                float: left;
+                                color:#333;
+                                font-size: $fontsize14;
+                            }
+                            i{
+                                float: right;
+                                color:#004aff;
+                                font-size: $fontsize14;
+                                font-style: normal;
+                                cursor: pointer;
+                            }
                         }
-                        span{
-                            float: left;
-                            color: #333;
-                            font-size:$fontsize14;
+                        &.transferBoxTit{
+                            &.active{
+                                span{
+                                    color:#888f99;
+                                }
+                            }
+                            i{
+                                float: right;
+                                color:#a6abb3;
+                                width:14px;
+                                height:14px;
+                                font-style: normal;
+                                font-size:$fontsize14;
+                                &.transClose{
+                                    border:1px solid #a6abb3;
+                                    border-radius:50%;
+                                    font-style: normal;
+                                    text-align: center;
+                                    line-height: 9px;
+                                    font-size: 10px;
+                                    cursor: pointer;
+                                }
+                            }
+                            span{
+                                float: left;
+                                color: #333;
+                                font-size:$fontsize14;
+                            }
                         }
                     }
                 }

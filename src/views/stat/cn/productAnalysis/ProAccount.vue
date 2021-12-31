@@ -187,8 +187,28 @@
             </div>
         </div>
       <el-dialog :title="focusProTitle" custom-class="transfer-dialogPro" :visible.sync="dialogFocusProVisible" width="830px">
-            <div class="contrastOption">
-                 <p v-for="(item,index) in contrastList" :key="index" :class="[item.isDisplay?'active':'',item.isOn?'is-disabled':'']" @click="AddContrast(item.id)"><i></i><span>{{item.name}}</span></p>
+            <p class='transfer-panelTit'><i><svg-icon icon-class="tips" /></i>共可添加 4 组产品进行对比，当前已选 {{contrastRright.length}} 组</p>
+            <div class="transfer-panel">
+                <div class="transferFl">
+                    <div class="transferBox">
+                        <dl :class="[item.isOn?'isOn':'',item.isDisplay?'isDisplay':'']" v-for="(item,index) in contrastList" :key="index">
+                            <dt @click="transferType(item.id)"><i></i><span>{{item.name}}</span></dt>
+                            <dd :class="items.isOn?'isOn':''" @click="transferPro(items.id)" v-for="(items,indexs) in item.son" :key="indexs">
+                                <i></i><span>{{items.name}}</span>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                <div class="transferFr">
+                    <div class="transferBox">
+                        <p class="transferBoxTop"><span>已选产品：{{contrastRright.length}}</span></p>
+                        <p class="transferBoxTit" v-for="(item,index) in contrastRright" :key="index">
+                            <span>{{item.name}}</span>
+                            <i v-if="item.name==routTag.productname"><svg-icon icon-class="websiteHttps" /></i>
+                            <i @click="cleartransferPro(item.id)" class="transClose" v-else><svg-icon icon-class="close" /></i>
+                        </p>
+                    </div>
+                </div>
             </div>
             <template #footer>
                 <span class="dialog-footer">
@@ -248,6 +268,8 @@ export default {
       dialogFocusProVisible:false,
       focusProTitle:"",
       contrastList:[],
+      contrastRright:[],//弹出框右侧数据
+      contrastPass:[],//弹出框传递
       contrastName:'overview',
       contrastBtnShow:true,
       contrastTab:[
@@ -423,7 +445,9 @@ export default {
                         id:0
                     };
                     res.data.unshift(objItem);
+                    var contrastPass=[];
                     res.data.forEach(function(item,index){
+                        var itemObj={};
                         item.isOn=false;
                         if($this.isCate){
                             if($this.routTag.productnameId==''){
@@ -436,9 +460,15 @@ export default {
                             if($this.routTag.productname==item.name){
                                 item.isOn=true;
                                 $this.routTag.productnameId=item.id;
+                                itemObj.isOn=true;
+                                itemObj.id=$this.routTag.productnameId;
+                                itemObj.name=$this.routTag.productname;
+                                itemObj.typeid=$this.routTag.typeid;
+                                contrastPass.push(itemObj);
                             }
                         }
                     });
+                    $this.contrastPass=contrastPass; 
                     $this.ProList=res.data;
                     $this.isCate=false;
                 }
@@ -461,12 +491,17 @@ export default {
           if (res) {
             if (res.status) {
                 if(res.data&&res.data.length>0){
-                    var AllProList=[];
                     res.data.forEach(function(item,index){
-                        item.isOn=false;
-                        AllProList.push(item);
+                      item.isOn=false;
+                      item.isDisplay=false;
+                      if(item.son&&item.son.length>0){
+                        item.son.forEach(function(items,indexs){
+                          items.isOn=false;
+                          items.isDisplay=false;
+                        });
+                      }
                     });
-                    $this.AllProList=AllProList;
+                    $this.AllProList=res.data;
                 }
             } else {
               $this.$message({
@@ -546,6 +581,24 @@ export default {
     getProFocount(){
       var $this=this;
       $this.emptySearch();
+
+      if($this.contrastPass&&$this.contrastPass.length>0){ 
+          var contrastProname=[];             
+          $this.contrastPass.forEach(function(item){
+            contrastProname.push(item);
+          });
+          $this.contrastProname=contrastProname;//关注产品id
+            if($this.contrastProname.length>=4){
+                    $this.contrastBtnShow=false
+            }else{
+                    $this.contrastBtnShow=true
+            } 
+      }else{
+        if($this.contrastName==="departCont"){
+          $this.contrastProname=[];
+        }
+      }
+
       var searchData={};
       if($this.routTag.dept_id&&$this.routTag.dept_id.length>0){
           searchData.dept_id=$this.routTag.dept_id;
@@ -1514,14 +1567,24 @@ export default {
                 $this.contrastTab.forEach(function(item,index){
                     item.isDisplay=true;
                 });
+                var contrastPass=[];
                 $this.ProList.forEach(function(item,index){
                     item.isOn=false;
+                    var itemObj={};
                     if(item.id==valData){
                         item.isOn=true;
+                        
+                        itemObj.isOn=true;
+                        itemObj.id=item.id;
+                        itemObj.name=item.name;
+                        itemObj.typeid=item.typeid;
+                        contrastPass.push(itemObj);
+
                         $this.routTag.productname=item.name;
                         $this.routTag.productnameId=item.id;
                     }
                 });
+                $this.contrastPass=contrastPass;  
             }
             $this.getProFocount();
         }
@@ -1649,7 +1712,9 @@ export default {
       $this.contrastBtnShow=true;
       $this.routTag.dept_id=$this.allDept_id; //默认选择所有部门
       $this.contrastList=[];       //重置对比搜索列表
+      $this.contrastRright=[];     //弹出框右侧数据
       $this.contrastProname=[];    //重置对比搜索名字
+      $this.contrastPass=[];      
       $this.contrastItem=[];       //重置对比搜索默认搜索名
       $this.routTag.csdata=[];     //重置对比时间
       $this.routTag.cstarttime=''; //重置对比开始时间
@@ -1658,19 +1723,41 @@ export default {
           $this.getProFocount();
       }
       if(valData=='productCont'){
+        var itemObj={};
+        itemObj.isOn=true;
+        itemObj.id=$this.routTag.productnameId;
+        itemObj.name=$this.routTag.productname;
+        itemObj.typeid=$this.routTag.typeid;
+        $this.contrastPass.push(itemObj);
         var contrastList=$this.AllProList;
-        contrastList.forEach(function(item,index){
-            var objItem={};
-            item.isDisplay = false;
-            if($this.routTag.productname==item.name){
-                item.isDisplay = true;
-                item.isOn = true;
-                objItem.name=item.name;
-                objItem.isOn=true;
-                objItem.id=item.id;
-                $this.contrastItem.push(objItem);
-                $this.contrastProname.push(objItem);
-            }
+        $this.contrastRright=$this.contrastPass;
+        contrastList.forEach(function(item,index){            
+           if($this.contrastPass&&$this.contrastPass.length>0){
+             $this.contrastPass.forEach(function(items,indexs){
+               if(item.id==items.typeid){
+                 item.isOn=true;
+               }
+             });
+           }
+           item.son.forEach(function(itemk,indexk){
+              if($this.contrastPass&&$this.contrastPass.length>0){
+                $this.contrastPass.forEach(function(items,indexs){
+                    if(itemk.id==items.id){
+                        itemk.isOn=true;
+                    }
+                    var objItem={};
+                    if($this.routTag.productname==itemk.name){
+                        items.isOn = true;
+                        objItem.name=itemk.name;
+                        objItem.isOn=true;
+                        objItem.id=itemk.id;
+                        objItem.typeid=item.id;
+                        $this.contrastItem.push(objItem);
+                        $this.contrastProname.push(objItem);
+                    }
+                });
+              }
+           });
         });
         $this.contrastList=contrastList;
       }
@@ -1680,6 +1767,7 @@ export default {
             var itemObj={};
             if(index!=0){
                 itemObj.isDisplay = false;
+                itemObj.isOn = false;
                 itemObj.id = item.id;
                 itemObj.name = item.name;
                 contrastList.push(itemObj)
@@ -1693,68 +1781,45 @@ export default {
         var $this=this;
         $this.dialogFocusProVisible=true;
         if(valData=='productCont'){
-            $this.focusProTitle='产品对比';
+            $this.focusProTitle='产品对比';            
+            var contrastList=$this.contrastList;
+            $this.contrastRright=$this.contrastPass;
+            contrastList.forEach(function(item,index){
+                if($this.contrastPass&&$this.contrastPass.length>0){
+                    $this.contrastPass.forEach(function(items,indexs){
+                    if(item.id==items.typeid){
+                        item.isOn=true;
+                    }
+                    });
+                }
+                item.son.forEach(function(itemk,indexk){
+                    if($this.contrastPass&&$this.contrastPass.length>0){
+                        $this.contrastPass.forEach(function(items,indexs){
+                        if(itemk.id==items.id){
+                            itemk.isOn=true;
+                        }
+                        });
+                    }
+                });
+            });
         }
         if(valData=='departCont'){
             $this.focusProTitle='部门对比';
         }
     },
-    // 点击添加对比产品
-    AddContrast(valData){
-        var $this=this;
-        var Num=$this.contrastProname.length;
-        if (Num<4){
-            var contrastList=$this.contrastList;
-            var contrastProName=[];
-            var dept_id=[];
-            contrastList.forEach(function(item,index){
-                var objItem={};
-                if(item.id == valData){
-                    item.isDisplay = !item.isDisplay;
-                    if($this.contrastName=='productCont'){
-                        if($this.routTag.productname==item.name){
-                            item.isDisplay = true;
-                        }
-                    }
-                }
-                if(item.isDisplay){
-                    if($this.contrastName=='productCont'){
-                        if($this.routTag.productname!=item.name){
-                            objItem.name=item.name;
-                            objItem.isOn=true;
-                            objItem.id=item.id;
-                            contrastProName.push(objItem);
-                        }
-                    }
-                    if($this.contrastName=='departCont'){
-                        objItem.name=item.name;
-                        objItem.isOn=true;
-                        objItem.id=item.id;
-                        contrastProName.push(objItem);
-                        dept_id.push(item.id);
-                    }
-                }
-            });
-            $this.contrastList=contrastList;
-            $this.contrastProname=$this.contrastItem.concat(contrastProName);
-            if($this.contrastProname.length>=4){
-                $this.contrastBtnShow=false;
-            }
-            if($this.contrastName=='departCont'){
-                $this.routTag.dept_id=dept_id;
-            }
-        }
-    },
-    //点击关闭弹出层
-    closePopup(){
-        var $this=this;
-        $this.dialogFocusProVisible=false;
-        $this.focusProTitle='';
-    },
     // 点击确定添加对比产品
     saveContrast(){
         var $this=this;
-        $this.closePopup();
+        $this.dialogFocusProVisible=false;
+        $this.focusProTitle='';
+        $this.contrastPass=$this.contrastRright;
+        if($this.contrastName=='departCont'){
+            var dept_id=[];
+            $this.contrastPass.forEach(function(item){
+                dept_id.push(item.id);
+            });
+            $this.routTag.dept_id=dept_id;
+        }
         $this.getProFocount();
     },
     // 添加关注单个产品（产品分析）
@@ -1807,13 +1872,14 @@ export default {
           }
       });
     },
+    // 点击删除对比项
     deleteDefault(valData){
         var $this=this;
         var dept_id=[];
         if(valData.name!=$this.routTag.productname){
             var contrastItem=[];
-            var contrastProname=$this.contrastProname;
-            contrastProname.forEach(function(item,index){
+            var contrastPass=$this.contrastPass;
+            contrastPass.forEach(function(item,index){
                 if(valData.id!=item.id){
                     contrastItem.push(item);
                     if($this.contrastName=='departCont'){
@@ -1821,22 +1887,209 @@ export default {
                     }
                 }
             });
-            $this.contrastProname=contrastItem;
+            $this.contrastPass=contrastItem;
             if($this.contrastName=='departCont'){
                 $this.routTag.dept_id=dept_id;
             }
             $this.contrastBtnShow=true;
             $this.contrastList.forEach(function(item,index){
-                item.isDisplay = false;
+                item.isOn = false;
                 contrastItem.forEach(function(items,indexs){
-                    if(item.id==items.id){
-                        item.isDisplay = true;
+                    if(item.id==items.typeid){
+                        item.isOn = true;
                     }
                 });
+                if($this.contrastName=='productCont'){
+                    item.son.forEach(function(items,indexs){
+                        items.isOn = false;
+                        contrastItem.forEach(function(itemk,indexk){
+                            if(items.id==itemk.id){
+                                items.isOn = true;
+                            }
+                        });
+                    });
+                }
             });
             $this.getProFocount();
         }
-    }
+    },
+    //点击关闭弹出层
+    closePopup(){
+        var $this=this;
+        $this.dialogFocusProVisible=false;
+        $this.focusProTitle='';
+        var contrastList=$this.contrastList;
+        if($this.contrastName=='departCont'){
+            if($this.contrastPass&&$this.contrastPass.length>0){
+                $this.contrastPass.forEach(function(item,index){
+                    contrastList.forEach(function(items,indexs){
+                        items.isOn=false;
+                        if(item.typeid==items.id){
+                            items.isOn=true;
+                        }
+                    });
+                });
+            }else{
+                contrastList.forEach(function(item,index){
+                    item.isOn=false;
+                });
+            }
+        }
+        if($this.contrastName=='productCont'){
+            if($this.contrastPass&&$this.contrastPass.length>0){
+                $this.contrastPass.forEach(function(item,index){
+                    contrastList.forEach(function(items,indexs){
+                    items.isDisplay=false;
+                    items.isOn=false;
+                    if(item.typeid==items.id){
+                        items.isOn=true;
+                    }
+                    items.son.forEach(function(itemk,indexk){
+                        itemk.isOn=false;
+                        if(item.id==itemk.id){
+                            itemk.isOn=true;
+                        }
+                    });
+                    });
+                });
+            }else{
+                contrastList.forEach(function(item,index){
+                    item.isDisplay=false;
+                    item.isOn=false;
+                    item.son.forEach(function(items,indexs){
+                        items.isOn=false;
+                    });
+                });
+            }
+        }
+        $this.contrastList=contrastList;
+        $this.contrastRright=$this.contrastPass;
+        if($this.contrastProname.length>=4){
+                $this.contrastBtnShow=false
+        }else{
+                $this.contrastBtnShow=true
+        }
+    },
+    // 点击分类折叠展开产品
+    transferType(varData){
+      var $this=this;
+      if($this.contrastName=='productCont'){
+        var contrastList=$this.contrastList;
+        contrastList.forEach(function(item,index){
+            if(item.id==varData){
+            item.isOn=false;
+            item.isDisplay=!item.isDisplay;
+            if($this.contrastRright&&$this.contrastRright.length>0){
+                $this.contrastRright.forEach(function(items,indexs){
+                if(items.typeid==item.id){
+                    item.isOn=true;
+                }
+                });
+            }
+            if(item.isDisplay){
+                item.isOn=true;
+            }
+            }
+        });
+        $this.contrastList=contrastList;
+      }
+      if($this.contrastName=='departCont'){
+        var contrastList=$this.contrastList;
+        contrastList.forEach(function(item,index){
+            if(item.id==varData){
+                item.isOn=!item.isOn;
+            }
+        });
+        var contrastRright=[];
+        contrastList.forEach(function(item,index){
+            if(item.isOn){
+                contrastRright.push(item);
+            }
+        });
+        $this.contrastList=contrastList;
+        $this.contrastRright=contrastRright;
+      }
+    },
+    // 点击产品选择
+    transferPro(varData){
+      var $this=this;
+      if($this.contrastRright.length<4){
+        var contrastList=$this.contrastList;
+        var contrastRright=[];
+        contrastList.forEach(function(item,index){
+          item.son.forEach(function(items,indexs){
+            if(items.name!=$this.routTag.productname){
+                if(items.id==varData){
+                    items.isOn=!items.isOn;
+                }
+                var itemObj={};
+                itemObj.id=items.id;
+                itemObj.isOn=items.isOn;
+                itemObj.name=items.name;
+                itemObj.typeid=item.id;
+                if(items.isOn){
+                  contrastRright.push(itemObj);
+                }
+            }
+          });
+        });
+        $this.contrastList=contrastList;
+        $this.contrastRright=$this.contrastItem.concat(contrastRright);
+      }
+    },
+    // 点击右侧取消选项
+    cleartransferPro(varData){
+      var $this=this;
+      var contrastRright=$this.contrastRright;
+      var contProList=[];
+      if(contrastRright&&contrastRright.length>0){
+            contrastRright.forEach(function(item,index){
+                if(item.id!=varData){
+                   contProList.push(item);
+                }
+            });
+      }
+      $this.contrastRright=contProList;      
+      var contrastList=$this.contrastList;
+      if($this.contrastName=='departCont'){
+        contrastList.forEach(function(item,index){
+            item.isOn=false;
+            if($this.contrastRright&&$this.contrastRright.length>0){
+                $this.contrastRright.forEach(function(items,indexs){
+                    if(item.id==items.id){
+                        item.isOn=true;
+                    }
+                });
+            }
+        });
+      }
+      if($this.contrastName=='productCont'){
+        contrastList.forEach(function(item,index){
+            item.isOn=false;
+            if($this.contrastRright&&$this.contrastRright.length>0){
+                $this.contrastRright.forEach(function(items,indexs){
+                if(items.typeid==item.id){
+                    item.isOn=true;
+                }
+                item.son.forEach(function(itemk,indexk){
+                    itemk.isOn=false;
+                    if(items.id==itemk.id){
+                    itemk.isOn=true;
+                    }
+                });
+                });
+            }else{
+                item.son.forEach(function(itemk,indexk){
+                    itemk.isOn=false;
+                });
+            }
+            if(item.isDisplay){
+                item.isOn=true;
+            }
+        });
+      }
+      $this.contrastList=contrastList;
+    },
   }
 }
 </script>

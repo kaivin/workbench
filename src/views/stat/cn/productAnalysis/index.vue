@@ -93,21 +93,29 @@
           ></million-deal>
       </div>
     </div>    
-    <el-dialog :title="focusProTitle" custom-class="transfer-dialog" :visible.sync="dialogFocusProVisible" width="704px">
+    <el-dialog :title="focusProTitle" custom-class="transfer-dialog" :visible.sync="dialogFocusProVisible" width="700px">
         <div class="transfer-panel">
-            <div class="transfer-wrap">
-                <dir-transfer
-                v-model="focusProValue"
-                :data="AllProList"
-                :titles="['可关注产品', '已关注产品']"
-                :filter-method="filterfocusProMethod"
-                filter-placeholder="请输入用户关键字"
-                ></dir-transfer>
-            </div>
+             <div class="transferFl">
+                  <p class="transferFlTit">可关注产品</p>
+                  <div class="transferBox">
+                       <dl :class="[item.isOn?'isOn':'',item.isDisplay?'isDisplay':'']" v-for="(item,index) in AllProList" :key="index">
+                          <dt @click="transferType(item.id)"><i></i><span>{{item.name}}</span></dt>
+                          <dd :class="items.isOn?'isOn':''" @click="transferPro(items.id)" v-for="(items,indexs) in item.son" :key="indexs">
+                              <i></i><span>{{items.name}}</span>
+                          </dd>
+                       </dl>
+                  </div>
+             </div>
+             <div class="transferFr">
+                  <p class="transferFlTit">已关注产品</p>
+                  <div class="transferBox">
+                        <p class="transferBoxTit" v-for="(item,index) in focusRright" :key="index"><span>{{item.name}}</span><i @click="cleartransferPro(item.id)" class="transClose"><svg-icon icon-class="close" /></i></p>
+                  </div>
+             </div>
         </div>
         <template #footer>
             <span class="dialog-footer">
-                <el-button @click="dialogFocusProVisible = false">取 消</el-button>
+                <el-button @click="closePopup">取 消</el-button>
                 <el-button type="primary" :class="issaveFocusPro?'isDisabled':''" :disabled="issaveFocusPro" @click="saveFocusPro">确 定</el-button>
             </span>
         </template>
@@ -115,8 +123,6 @@
   </div>
 </template>
 <script>
-
-import DirTransfer from '../../components/transfer/transfermain';
 import focusPro from "../../components/productAnalysis/focusPro";
 import UnpayInquiry from "../../components/productAnalysis/UnpayInquiry";
 import UnpayDeal from "../../components/productAnalysis/UnpayDeal";
@@ -128,7 +134,9 @@ export default {
     return {
       ch:'ch',
       defaultChartData:[],
-      focusProArr:[], 
+      focusProArr:[],//展示关注数据
+      focusRright:[],//弹出框右侧数据
+      focusPass:[],//弹出框传递
       focusProNum:0,
       focusProSet:{
         ifFold: true,//是否需要折叠
@@ -140,11 +148,6 @@ export default {
       dialogFocusProVisible:false,
       focusProTitle:"关注产品",
       issaveFocusPro:false,
-      filterfocusProMethod(query, item) {
-          if(item.label){
-            return item.label.indexOf(query) > -1;
-          }
-      },
       isFilter:false,
       tipsInfo:'当前为产品榜单页面，展示今年数据信息',
       ProvinceList:[],
@@ -201,7 +204,6 @@ export default {
     };
   },
   components:{
-    DirTransfer,
     focusPro,
     UnpayInquiry,
     UnpayDeal,
@@ -260,14 +262,17 @@ export default {
           if (res) {
             if (res.status) {
                 if(res.data&&res.data.length>0){
-                    var AllProList=[];
                     res.data.forEach(function(item,index){
-                        var objItem={};
-                        objItem.key=item.id;
-                        objItem.label=item.name;
-                        AllProList.push(objItem);
+                      item.isOn=false;
+                      item.isDisplay=false;
+                      if(item.son&&item.son.length>0){
+                        item.son.forEach(function(items,indexs){
+                          items.isOn=false;
+                          items.isDisplay=false;
+                        });
+                      }
                     });
-                    $this.AllProList=AllProList;
+                    $this.AllProList=res.data;
                     $this.getfocusPro();
                 }
             } else {
@@ -292,6 +297,8 @@ export default {
       var $this = this;
       $this.defaultChartData=[];
       $this.focusProArr=[];
+      $this.focusRright=[];
+      $this.focusPass=[];
       $this.focusProNum=0;
       $this.focusProSet.boxHeight = "auto";
       $this.focusProSet.isFold = true;
@@ -307,8 +314,15 @@ export default {
             if (res.status) {
                 if(res.myfoucs&&res.myfoucs.length>0){
                     var focusProValue=[];
+                    var focusPass=[];
                     res.myfoucs.forEach(function(item,index){
+                        var itemObj={};
+                        itemObj.isOn=true;
+                        itemObj.id=item.id;
+                        itemObj.name=item.name;
+                        itemObj.typeid=item.typeid;
                         focusProValue.push(item.id);
+                        focusPass.push(itemObj);
                         if(item.xuntong&&item.xuntong.length>0){
                             var focusProTrend=[];//趋势
                             var focusProPie=[];//占比
@@ -348,7 +362,9 @@ export default {
                     });
                     $this.focusProValue=focusProValue;//关注产品id 
                     $this.focusProNum=res.myfoucs.length;//关注数量  
-                    $this.focusProArr=res.myfoucs;//基础数据                  
+                    $this.focusProArr=res.myfoucs;//基础数据   
+                    $this.focusPass=focusPass;   
+                                 
                 }
             } else {
               $this.$message({
@@ -370,39 +386,27 @@ export default {
     //点击弹出添加关注产品框
     handleAddPro(){
         var $this=this;
+        var AllProList=$this.AllProList;
+        $this.focusRright=$this.focusPass;
+        AllProList.forEach(function(item,index){
+           if($this.focusPass&&$this.focusPass.length>0){
+             $this.focusPass.forEach(function(items,indexs){
+               if(item.id==items.typeid){
+                 item.isOn=true;
+               }
+             });
+           }
+           item.son.forEach(function(itemk,indexk){
+              if($this.focusPass&&$this.focusPass.length>0){
+                $this.focusPass.forEach(function(items,indexs){
+                  if(itemk.id==items.id){
+                    itemk.isOn=true;
+                  }
+                });
+              }
+           });
+        });
         $this.dialogFocusProVisible=true;
-    },
-    // 用户分配保存
-    saveFocusPro(){
-        var $this = this;
-        if(!$this.issaveFocusPro){ 
-            $this.issaveFocusPro=true;       
-            var searchForm = {};
-            searchForm.id=$this.focusProValue;
-            $this.$store.dispatch('api/getChinaAddfocusproductAction', searchForm).then(res=>{
-                if(res.status){
-                    $this.$message({
-                        showClose: true,
-                        message: res.info,
-                        type: 'success'
-                    });
-                    $this.dialogFocusProVisible = false;
-                    $this.getfocusPro();
-                    setTimeout(()=>{
-                        $this.issaveFocusPro=false;
-                    },1000);
-                }else{
-                    $this.$message({
-                        showClose: true,
-                        message: res.info,
-                        type: 'error'
-                    });
-                    setTimeout(()=>{
-                        $this.issaveFocusPro=false;
-                    },1000);
-                }
-            });
-        }
     },
     showAll(){
         var $this=this;
@@ -726,12 +730,178 @@ export default {
       $this.changeTime=changeTime;
       $this.searchData();
     },
+    // 用户分配保存
+    saveFocusPro(){
+        var $this = this;
+        if(!$this.issaveFocusPro){ 
+            $this.issaveFocusPro=true;
+
+            $this.focusPass=$this.focusRright;
+            $this.focusProNum=$this.focusPass.length;
+            if($this.focusPass&&$this.focusPass.length>0){ 
+                var focusProValue=[];             
+                $this.focusPass.forEach(function(item){
+                  focusProValue.push(item.id);
+                });
+                $this.focusProValue=focusProValue;//关注产品id 
+            }else{
+                $this.focusProValue=[];//关注产品id 
+            }
+
+            var searchForm = {};
+            searchForm.id=$this.focusProValue;
+            $this.$store.dispatch('api/getChinaAddfocusproductAction', searchForm).then(res=>{
+                if(res.status){
+                    $this.$message({
+                        showClose: true,
+                        message: res.info,
+                        type: 'success'
+                    });
+                    $this.dialogFocusProVisible = false;
+                    $this.AllProList.forEach(function(item,index){
+                      item.isDisplay=false;
+                    });
+                    $this.getfocusPro();
+                    setTimeout(()=>{
+                        $this.issaveFocusPro=false;
+                    },1000);
+                }else{
+                    $this.$message({
+                        showClose: true,
+                        message: res.info,
+                        type: 'error'
+                    });
+                    setTimeout(()=>{
+                        $this.issaveFocusPro=false;
+                    },1000);
+                }
+            });
+        }
+    },
     // 展开折叠点击事件
     changeSet(data,isfold,boxheight){
       var $this = this;
       var property = data;
       property.isFold = isfold;
       property.boxHeight = boxheight;
+    },
+    //点击关闭弹出层
+    closePopup(){
+        var $this=this;
+        $this.dialogFocusProVisible=false;
+        var AllProList=$this.AllProList;
+        if($this.focusPass&&$this.focusPass.length>0){
+          $this.focusPass.forEach(function(item,index){
+            AllProList.forEach(function(items,indexs){
+              items.isDisplay=false;
+              items.isOn=false;
+              if(item.trpeid==items.id){
+                items.isOn=true;
+              }
+              items.son.forEach(function(itemk,indexk){
+                  itemk.isOn=false;
+                  if(item.id==itemk.id){
+                    itemk.isOn=true;
+                  }
+              });
+            });
+          });
+        }else{
+          AllProList.forEach(function(item,index){
+              item.isDisplay=false;
+              item.isOn=false;
+              item.son.forEach(function(items,indexs){
+                  items.isOn=false;
+              });
+          });
+          $this.AllProList=AllProList;
+        }
+        $this.focusRright=$this.focusPass;
+    },
+    // 点击分类折叠展开产品
+    transferType(varData){
+      var $this=this;
+      var AllProList=$this.AllProList;
+      AllProList.forEach(function(item,index){
+        if(item.id==varData){
+          item.isDisplay=!item.isDisplay;
+          item.isOn=false;
+          if($this.focusPass&&$this.focusPass.length>0){
+            $this.focusPass.forEach(function(items,indexs){
+              if(items.typeid==item.id){
+                item.isOn=true;
+              }
+            });
+          }
+          if(item.isDisplay){
+            item.isOn=true;
+          }
+        }
+      });
+      $this.AllProList=AllProList;
+    },
+    // 点击产品选择
+    transferPro(varData){
+      var $this=this;
+      if($this.focusRright.length<4){
+        var AllProList=$this.AllProList;
+        var focusRright=[];
+        var focusProValue=[];
+        AllProList.forEach(function(item,index){
+          item.son.forEach(function(items,indexs){
+            var itemObj={};
+            if(items.id==varData){
+                items.isOn=!items.isOn;
+            }
+            itemObj.id=items.id;
+            itemObj.isOn=items.isOn;
+            itemObj.name=items.name;
+            itemObj.trpeid=item.id;
+            if(items.isOn){
+              focusRright.push(itemObj);
+              focusProValue.push(items.id);
+            }
+          });
+        });
+        $this.AllProList=AllProList;
+        $this.focusRright=focusRright;
+      }
+    },
+    cleartransferPro(varData){
+      var $this=this;
+      var focusRright=$this.focusRright;
+      var focusProList=[];
+      focusRright.forEach(function(item,index){
+        if(item.id!=varData){
+          focusProList.push(item);
+        }
+      });
+      $this.focusRright=focusProList;
+      var AllProList=$this.AllProList;
+      AllProList.forEach(function(item,index){
+          item.isOn=false;
+          if($this.focusRright&&$this.focusRright.length>0){
+            $this.focusRright.forEach(function(items,indexs){
+              if(items.typeid==item.id){
+                item.isOn=true;
+              }
+              item.son.forEach(function(itemk,indexk){
+                itemk.isOn=false;
+                if(items.id==itemk.id){
+                  itemk.isOn=true;
+                }
+              });
+            });
+          }else{
+              item.son.forEach(function(itemk,indexk){
+                itemk.isOn=false;
+              });
+          }
+          if(item.isDisplay){
+            item.isOn=true;
+          }
+      });
+      $this.AllProList=AllProList;
     },
   }
 }
