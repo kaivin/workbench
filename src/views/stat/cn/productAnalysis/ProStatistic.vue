@@ -1,9 +1,9 @@
 ﻿<template>
   <div class="page-root scroll-panel product-Analy" ref="boxPane">
-       <div class="proStatTop"><p><i class="svg-i"><svg-icon icon-class="tips" class-name="disabled" /></i>询盘数据统计：{{userBasicInfo.name}} - {{userBasicInfo.time}}</p></div>
+       <div class="proStatTop"><p><i class="svg-i"><svg-icon icon-class="tips" class-name="disabled" /></i>{{userBasicInfo.pick=='enquirie'?'询盘':'积分'}}数据统计：{{userBasicInfo.name}} - {{userBasicInfo.time}}</p></div>
        <div class="proStatMid">
          <div class="proStatMidFl">
-              <h3>产品询盘{{userBasicInfo.pick=='enquirie'?'个数':'积分'}}</h3>
+              <h3>产品{{userBasicInfo.pick=='enquirie'?'询盘个数':'成交积分'}}</h3>
               <div class="proStatMidFlBox">
                    <column-chart :chartList="chartList" v-if='chartList'></column-chart>
               </div>

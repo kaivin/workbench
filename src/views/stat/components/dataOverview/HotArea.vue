@@ -22,11 +22,11 @@
         </div>
       </div>
       <div class="depart-title"><span>TOP10{{language=="中文"?'地区':'国家'}}部门（{{type == 4?'询盘':type == 5?'成交积分':'成交个数'}}+占比）</span></div>
-      <div class="slide-panel" v-if="currentDepartData.length>0" ref="slidePanel" v-on:mouseover="clearTimer($event)" v-on:mouseout="setTimer($event)">
-        <div class="prev" v-on:click="prevClick"><i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
-        <div class="next" v-on:click="nextClick"><i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
+      <div class="slide-panel" ref="slidePanel" v-on:mouseover="clearTimer($event)" v-on:mouseout="setTimer($event)">
+        <div class="prev" v-on:click="prevClick" v-if="currentDepartData.length>0"><i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
+        <div class="next" v-on:click="nextClick" v-if="currentDepartData.length>0"><i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
         <div class="slide-box" ref="slideBox" :style="slideStyle">
-          <div class="item-slide" :style="itemStyle" v-on:click="clickItem(index)" :class="markIndex===index?'active':''" v-for="(item,index) in currentDepartData">
+          <div class="item-slide" v-if="currentDepartData.length>0" :style="itemStyle" v-on:click="clickItem(index)" :class="markIndex===index?'active':''" v-for="(item,index) in currentDepartData">
             <div class="item-box">
               <div class="title-panel" :style="'background:'+item[0].color"><span>NO.{{item[0].index}} {{language == '中文'?item[0].name:item[0].country}}</span></div>
               <div class="depart-list">
@@ -42,7 +42,6 @@
           </div>
         </div>
       </div>
-      <div class="slide-panel" v-else ref="slidePanel"></div>
     </div>
   </div>
   
