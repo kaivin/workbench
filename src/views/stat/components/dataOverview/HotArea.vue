@@ -23,6 +23,8 @@
       </div>
       <div class="depart-title"><span>TOP10{{language=="中文"?'地区':'国家'}}部门（{{type == 4?'询盘':type == 5?'成交积分':'成交个数'}}+占比）</span></div>
       <div class="slide-panel" ref="slidePanel" v-on:mouseover="clearTimer($event)" v-on:mouseout="setTimer($event)">
+        <div class="prev" v-on:click="prevClick"><i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
+        <div class="next" v-on:click="nextClick"><i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
         <div class="slide-box" ref="slideBox" :style="slideStyle">
           <div class="item-slide" :style="itemStyle" v-on:click="clickItem(index)" :class="markIndex===index?'active':''" v-for="(item,index) in currentDepartData">
             <div class="item-box">
@@ -46,7 +48,6 @@
 </template>
 
 <script>
-import { Bar} from '@antv/g2plot';
 import { worldCountry } from "@/utils/worldCountry";
 import { chinaData } from "@/utils/chinaMap";
 import {MapInterval,currentColor} from "@/utils/MapColor";
@@ -848,6 +849,26 @@ export default {
         });
         $this.highLight($this.markIndex);
       },
+      // 上一个
+      prevClick(){
+        var $this = this;
+        $this.markIndex -= 1;
+        $this.slideStyle = Object.assign({},$this.slideStyle,{
+          transform:`translate(${-($this.markIndex-1)*$this.itemWidth}px,0)`,
+          'transitionDuration':'500ms'
+        });
+        $this.highLight($this.markIndex);
+      },
+      // 下一个
+      nextClick(){
+        var $this = this;
+        $this.markIndex += 1;
+        $this.slideStyle = Object.assign({},$this.slideStyle,{
+          transform:`translate(${-($this.markIndex-1)*$this.itemWidth}px,0)`,
+          'transitionDuration':'500ms'
+        });
+        $this.highLight($this.markIndex);
+      },
       // 清除自动轮播
       clearTimer(){
         clearInterval(this.timer);
@@ -922,9 +943,9 @@ export default {
         $this.slideStyle = Object.assign({},$this.slideStyle,{
           'transitionDuration':'0ms'
         })
-        if($this.timer===null){
-          $this.loop();
-        }
+        // if($this.timer===null){
+        //   $this.loop();
+        // }
       },
     }
 }
