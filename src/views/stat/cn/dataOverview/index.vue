@@ -52,10 +52,7 @@
              <el-col class="hxmodule-item" :xl="12" :lg="24" >
                <HotArea
                language="中文"
-               :provincecountmap="provincecountmap"
-               :provincescoretmap="provincescoretmap"
-               :regionInquiryCountDepart="regionInquiryCountDepart"
-               :regionDealScoreDepart="regionDealScoreDepart"
+               :regionData="regionData"
                :departList="departList"
                :year="type==1?prevYear:nowYear"
                ></HotArea>
@@ -131,10 +128,12 @@ export default {
       yeardeaprtscore:[],//各部门年度成交积分
       yearsanumbertong:[],//中文年度成交100万数量对比
       yearsmoneytong:[],//中文年度总成本对比
-      provincecountmap:[],//询盘地图 
-      provincescoretmap:[],//成交地图
-      regionInquiryCountDepart:[],// 地区各部门询盘个数
-      regionDealScoreDepart:[], // 地区各部门成交积分
+      regionData:{
+        provincecountmap:[],//询盘地图 
+        provincescoretmap:[],//成交地图
+        regionInquiryCountDepart:[],// 地区各部门询盘个数
+        regionDealScoreDepart:[], // 地区各部门成交积分
+      },
       departList:[],
       nowcate: "",//当前分类
       producttop10:{
@@ -228,10 +227,10 @@ export default {
           this.yeardeaprtscore = res.yeardeaprtscore;
           this.yearsanumbertong = res.yearsanumbertong;
           this.yearsmoneytong = res.yearsmoneytong;
-          this.provincecountmap =  res.provincecountmap;
-          this.provincescoretmap = res.provincescoretmap;
-          this.regionInquiryCountDepart = res.provincedepartxuntop10;
-          this.regionDealScoreDepart = res.provincedepartscoretop10;
+          this.regionData.provincecountmap =  res.provincecountmap;
+          this.regionData.provincescoretmap = res.provincescoretmap;
+          this.regionData.regionInquiryCountDepart = res.provincedepartxuntop10;
+          this.regionData.regionDealScoreDepart = res.provincedepartscoretop10;
           this.departList = res.readart;
           this.producttop10.productxuntop10 = res.productxuntop10;
           this.producttop10.productscoretop10 = res.productscoretop10;

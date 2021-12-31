@@ -172,13 +172,31 @@
                                                 clearable>
                                             </el-input>
                                             <el-input
-                                                size="mini"
-                                                placeholder="备注"
-                                                style="width:150px;margin-right:10px;margin-bottom:10px;"
-                                                v-model="searchData.anymessage"
-                                                @keyup.enter.native="enCluesSearchData"
-                                                :class="searchData.anymessage!=''?'el-xzstate':''"
-                                                clearable>
+                                              class="tips-input-2"
+                                              style="width: 150px;margin-right:10px;margin-bottom:10px;" size="mini"
+                                              placeholder="模糊搜索、备注1"
+                                              v-model="searchData.anymessage"
+                                              @keyup.enter.native="enCluesSearchData"
+                                              :class="searchData.anymessage!=''?'el-xzstate':''"
+                                              clearable>
+                                            </el-input>
+                                            <el-input
+                                              class="tips-input-3"
+                                              style="width: 100px;margin-right:10px;margin-bottom:10px;" size="mini"
+                                              placeholder="备注2"
+                                              v-model="searchData.remark2"
+                                              @keyup.enter.native="enCluesSearchData"
+                                              :class="searchData.remark2!=''?'el-xzstate':''"
+                                              clearable>
+                                            </el-input>
+                                            <el-input
+                                              class="tips-input-4"
+                                              style="width: 100px;margin-right:10px;margin-bottom:10px;" size="mini"
+                                              placeholder="备注3"
+                                              v-model="searchData.remark3"
+                                              @keyup.enter.native="enCluesSearchData"
+                                              :class="searchData.remark3!=''?'el-xzstate':''"
+                                              clearable>
                                             </el-input>
                                             <el-input
                                                 size="mini"
@@ -786,6 +804,8 @@ export default {
             erroring:"",
             country:"",
             anymessage:"",
+            remark2:"",
+            remark3:"",
             domain:"",
             url:"",
             is_url:false,
@@ -1411,6 +1431,8 @@ export default {
         resultData.erroring = $this.searchData.erroring;
         resultData.country = $this.searchData.country;
         resultData.anymessage = $this.searchData.anymessage;
+        resultData.remark2 = $this.searchData.remark2;
+        resultData.remark3 = $this.searchData.remark3;
         resultData.domain = $this.searchData.domain;
         resultData.url = $this.searchData.url;
         resultData.is_url = $this.searchData.is_url?1:0;
@@ -1698,6 +1720,8 @@ export default {
         $this.searchData.erroring="";
         $this.searchData.country="";
         $this.searchData.anymessage="";
+        $this.searchData.remark2="";
+        $this.searchData.remark3="";
         $this.searchData.domain="";
         $this.searchData.url="";
         $this.searchData.is_url=false;

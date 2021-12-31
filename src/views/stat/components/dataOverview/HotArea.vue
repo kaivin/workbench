@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="depart-title"><span>TOP10{{language=="中文"?'地区':'国家'}}部门（{{type == 4?'询盘':type == 5?'成交积分':'成交个数'}}+占比）</span></div>
-      <div class="slide-panel" ref="slidePanel" v-on:mouseover="clearTimer($event)" v-on:mouseout="setTimer($event)">
+      <div class="slide-panel" v-if="currentDepartData.length>0" ref="slidePanel" v-on:mouseover="clearTimer($event)" v-on:mouseout="setTimer($event)">
         <div class="prev" v-on:click="prevClick"><i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
         <div class="next" v-on:click="nextClick"><i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></div>
         <div class="slide-box" ref="slideBox" :style="slideStyle">
@@ -42,6 +42,7 @@
           </div>
         </div>
       </div>
+      <div class="slide-panel" v-else ref="slidePanel"></div>
     </div>
   </div>
   
@@ -50,7 +51,7 @@
 <script>
 import { worldCountry } from "@/utils/worldCountry";
 import { chinaData } from "@/utils/chinaMap";
-import {MapInterval,currentColor} from "@/utils/MapColor";
+import {MapDarkInterval,currentColor} from "@/utils/MapColor";
 export default {
     name:'demo',
     data(){
@@ -77,6 +78,10 @@ export default {
       language:{
         type:String,
         default:"中文"
+      },
+      regionData:{
+        type:Object,
+        default:{},
       },
       provincecountmap:{//询盘地图
           type:Array,
@@ -126,7 +131,7 @@ export default {
       },
     },
     watch:{
-      provincecountmap:{
+      regionData:{
         handler(newval,oldval){
           this.getRuleData();
         },
@@ -186,66 +191,74 @@ export default {
         let mapCountData = [];
         let currentDepartData = [];
         if(this.type == 4){
-          mapCountData = $this.provincecountmap;
-          currentDepartData = $this.regionInquiryCountDepart;
+          mapCountData = $this.regionData.provincecountmap;
+          currentDepartData = $this.regionData.regionInquiryCountDepart;
         }else if(this.type == 5){
-          mapCountData = $this.provincescoretmap;
-          currentDepartData = $this.regionDealScoreDepart;
+          mapCountData = $this.regionData.provincescoretmap;
+          currentDepartData = $this.regionData.regionDealScoreDepart;
         }else{
-          mapCountData = $this.provincescorenumbertmap;
-          currentDepartData = $this.regionDealCountDepart;
+          mapCountData = $this.regionData.provincescorenumbertmap;
+          currentDepartData = $this.regionData.regionDealCountDepart;
         }
         if(this.language == '中文'){
           mapCountData = chinaData(mapCountData,"name","number")
           var maxNum=mapCountData[0].value;
-          let mapInterval = MapInterval(maxNum);
-          currentDepartData.forEach(function(item,index){
-            mapCountData.forEach(function(item1){
-              if(item[0].province == item1.name){
-                item.forEach(function(item2){
-                  item2.name = item1.name;
-                  item2.index =index+1;
-                  item2.depart = item2.departname.substring(2);
-                  item2.percent = item2.number==0||item1.value==0?'0%':parseInt(item2.number/item1.value*100)+"%";
-                  item2.color = currentColor(item1.value,mapInterval);
-                });
-              }
+          let mapInterval = MapDarkInterval(maxNum);
+          if(currentDepartData&&currentDepartData.length>0){
+            currentDepartData.forEach(function(item,index){
+              mapCountData.forEach(function(item1){
+                if(item[0].province == item1.name){
+                  item.forEach(function(item2){
+                    item2.name = item1.name;
+                    item2.index =index+1;
+                    item2.depart = item2.departname.substring(2);
+                    item2.percent = item2.number==0||item1.value==0?'0%':parseInt(item2.number/item1.value*100)+"%";
+                    item2.color = currentColor(item1.value,mapInterval);
+                  });
+                }
+              });
             });
-          });
+          }
           $this.drawCnRegionChart(mapCountData);
         }else{
           mapCountData = worldCountry(mapCountData,"country","number");
           var maxNum=mapCountData[0].value;
-          let mapInterval = MapInterval(maxNum);
-          currentDepartData.forEach(function(item,index){
-            mapCountData.forEach(function(item1){
-              if(item[0].country == item1.country){
-                item.forEach(function(item2){
-                  item2.name = item1.name;
-                  item2.index =index+1;
-                  item2.depart = item2.departname.substring(2);
-                  item2.percent = item2.number==0||item1.value==0?'0%':parseInt(item2.number/item1.value*100)+"%";
-                  item2.color = currentColor(item1.value,mapInterval);
-                });
-              }
+          let mapInterval = MapDarkInterval(maxNum);
+          if(currentDepartData&&currentDepartData.length>0){
+            currentDepartData.forEach(function(item,index){
+              mapCountData.forEach(function(item1){
+                if(item[0].country == item1.country){
+                  item.forEach(function(item2){
+                    item2.name = item1.name;
+                    item2.index =index+1;
+                    item2.depart = item2.departname.substring(2);
+                    item2.percent = item2.number==0||item1.value==0?'0%':parseInt(item2.number/item1.value*100)+"%";
+                    item2.color = currentColor(item1.value,mapInterval);
+                  });
+                }
+              });
             });
-          });
+          }
           $this.drawEnRegionChart(mapCountData);
         }
         $this.drawTopTen(mapCountData);
-        let regionDepartList = [...currentDepartData,...currentDepartData,...currentDepartData]
-        $this.currentDepartData = regionDepartList;
-        $this.markIndex = 10;
-        $this.clearTimer();
-        $this.setSize();
-        $this.setTimer();
+        if(currentDepartData&&currentDepartData.length>0){
+          let regionDepartList = [...currentDepartData,...currentDepartData,...currentDepartData]
+          $this.currentDepartData = regionDepartList;
+          $this.markIndex = 10;
+          $this.clearTimer();
+          $this.setSize();
+          $this.setTimer();
+        }else{
+          $this.currentDepartData = [];
+        }
       },
       // 中文地区询盘地图
       drawCnRegionChart(dataArr){
         var $this = this;
         $this.initName = dataArr[0].name;
         var maxNum=dataArr[0].value;
-        let mapInterval = MapInterval(maxNum);
+        let mapInterval = MapDarkInterval(maxNum);
         var myChart = $this.$echarts.init(document.getElementById('regionMapChart'));
         var alias = "";
         if($this.type==4){
@@ -292,7 +305,7 @@ export default {
             type: 'piecewise', // continuous 类型为连续型  piecewise 类型为分段型
             pieces:mapInterval.pieces,
             left:0,
-            bottom:0,
+            bottom:20,
             zlevel:1,
             // 文本样式
             textStyle: {
@@ -326,11 +339,11 @@ export default {
             },
             itemStyle: {
               borderWidth: 0.5, // 描边线宽 为 0 时无描边
-              borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+              borderColor: '#91f4ff', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
               borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
               shadowOffsetY: 8,
               shadowOffsetX: 0,
-              shadowColor: 'rgba(128, 217, 248, 1)',
+              shadowColor: 'rgba(71, 129, 255, .9)',
               shadowBlur: 8,
             },
             emphasis: {
@@ -356,23 +369,34 @@ export default {
               // nameMap:worldNameMap(),
               // 图形上的文本标签
               label: {
-                show: false // 是否显示对应地名
+                show: true, // 是否显示对应地名
+                color:'#fff',
+                textBorderColor:'#666',
+                textBorderWidth:2,
+                textBorderType:'solid',
+                shadowColor:'#000',
+                shadowBlur:5,
+                position:['50%','50%'],
               },
               // 地图区域的多边形 图形样式
               itemStyle: {
                 borderWidth: 0.5, // 描边线宽 为 0 时无描边
-                borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+                borderColor: '#91f4ff', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
                 borderType: 'solid' // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
               },
               // 高亮状态下的多边形和标签样式
               emphasis: {
                 label: {
-                  show: false, // 是否显示标签
+                  show: true, // 是否显示标签
+                  color:'#fff',
+                  textBorderColor:'#444',
+                  textBorderWidth:2,
+                  textBorderType:'solid',
                 },
                 itemStyle: {
                   areaColor: 'yellow', // 地图区域的颜色
                   borderWidth: 0.5, // 描边线宽 为 0 时无描边
-                  borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+                  borderColor: '#91f4ff', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
                   borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
                   shadowBlur: 8,
                   borderWidth: 0,
@@ -421,7 +445,7 @@ export default {
         let mapCountData = [];
         mapCountData = dataArr.slice(0,10);
         const maxNum =  mapCountData[0].value;
-        const mapInterval = MapInterval(maxNum);
+        const mapInterval = MapDarkInterval(maxNum);
         var topTenChart = $this.$echarts.init(document.getElementById('topTen'));
         var alias = "";
         if($this.type==4){
@@ -501,7 +525,12 @@ export default {
             position: 'top',
             splitNumber:2,
             max: function (value) {
-              var len = value.max.toString().length;
+              var len = 0;
+              if(value.max.toString().indexOf(".")-1){
+                len = value.max.toString().split(".")[0].length;
+              }else{
+                len = value.max.toString().length;
+              }
               if(len>2){
                 return (parseInt(value.max/Math.pow(10,len-1))+2)*Math.pow(10,len-1)
               }
@@ -623,7 +652,7 @@ export default {
         $this.initName = dataArr[0].name;
         $this.initCountry = dataArr[0].country;
         var maxNum=dataArr[0].value;
-        let mapInterval = MapInterval(maxNum);
+        let mapInterval = MapDarkInterval(maxNum);
         var myChart = $this.$echarts.init(document.getElementById('worldRegionMapChart'));
         var alias = "";
         if($this.type==4){
@@ -679,11 +708,11 @@ export default {
             },
             itemStyle: {
               borderWidth: 0.5, // 描边线宽 为 0 时无描边
-              borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+              borderColor: '#91f4ff', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
               borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
               shadowOffsetY: 8,
               shadowOffsetX: 0,
-              shadowColor: 'rgba(128, 217, 248, 1)',
+              shadowColor: 'rgba(71, 129, 255, .9)',
               shadowBlur: 8,
             },
             emphasis: {
@@ -703,7 +732,7 @@ export default {
             // [visualMap.min, visualMax.max] 形成了视觉映射的『定义域』
             pieces:mapInterval.pieces,
             left:0,
-            bottom:0,
+            bottom:20,
             right:0,
             top:'auto',
             // 文本样式
@@ -741,23 +770,36 @@ export default {
               // nameMap:worldNameMap(),
               // 图形上的文本标签
               label: {
-                show: false // 是否显示对应地名
+                show: false, // 是否显示对应地名
+                color:'#fff',
+                textBorderColor:'#666',
+                textBorderWidth:2,
+                textBorderType:'solid',
+                position:['50%','50%'],
+                formatter:function(params){
+                  return params.data&&params.data.country?params.data.country:'';
+                }
               },
               // 地图区域的多边形 图形样式
               itemStyle: {
                 borderWidth: 0.5, // 描边线宽 为 0 时无描边
-                borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+                borderColor: '#91f4ff', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
                 borderType: 'solid' // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
               },
               // 高亮状态下的多边形和标签样式
               emphasis: {
                 label: {
-                  show: false, // 是否显示标签
+                  show: false, // 是否显示对应地名
+                  color:'#fff',
+                  textBorderColor:'#666',
+                  textBorderWidth:2,
+                  textBorderType:'solid',
+                  position:['50%','50%'],
                 },
                 itemStyle: {
                   areaColor: 'yellow', // 地图区域的颜色
                   borderWidth: 0.5, // 描边线宽 为 0 时无描边
-                  borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+                  borderColor: '#91f4ff', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
                   borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
                   shadowBlur: 8,
                   borderWidth: 0,

@@ -2124,7 +2124,7 @@ export default {
         backData.dateCompareData.compareWidth = "100%";
       }
       backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue));
-      backData.dateCompareData.compareRate = backData.dateCompareData.compareValue==0?'0%':(backData.dateCompareData.compareNumber/backData.dateCompareData.compareValue*100).toFixed(2)+"%";
+      backData.dateCompareData.compareRate = backData.dateCompareData.compareValue==0?'0%':(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue)/backData.dateCompareData.compareValue*100).toFixed(2)+"%";
       backData.dateCompareData.baseValue = numSeparate(backData.dateCompareData.baseValue);
       backData.dateCompareData.compareValue = numSeparate(backData.dateCompareData.compareValue);
       return backData;
