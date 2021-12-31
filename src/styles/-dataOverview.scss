@@ -1,4 +1,10 @@
-﻿.overview-page{
+﻿@font-face{
+  font-family: 'din'; 
+  src:url('../fonts/din.woff') format('woff'),
+      url('../fonts/din.ttf') format('truetype');
+  font-display: swap;
+}
+.overview-page{
   padding: 0!important;
   background-color: #101626;
   .box-card{
@@ -327,6 +333,7 @@
       line-height: 42px;
       color: #fff;
       font-weight: bold;
+      font-family: 'din'; 
     }
     .redright{
       margin-top: 4px;
