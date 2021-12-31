@@ -522,7 +522,7 @@ export default {
                       item.productname=item.xunproduct;
                     }
                     item.percentNum=(item.number/maxNum*100).toFixed(2);
-                    item.percentScore=(item.scorenumber/maxNum*100).toFixed(2);
+                    item.percentScore=(item.scorenumber/maxScore*100).toFixed(2);
                     item.scorenumber = numSeparate(Math.floor(item.scorenumber*100)/100);
                     item.number = numSeparate(Math.floor(item.number*100)/100);
                     if(!item.xunproduct||item.xunproduct==''){

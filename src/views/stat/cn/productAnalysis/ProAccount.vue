@@ -187,7 +187,7 @@
             </div>
         </div>
       <el-dialog :title="focusProTitle" custom-class="transfer-dialogPro" :visible.sync="dialogFocusProVisible" width="830px">
-            <p class='transfer-panelTit'><i><svg-icon icon-class="tips" /></i>共可添加 4 组产品进行对比，当前已选 {{contrastRright.length}} 组</p>
+            <p class='transfer-panelTit'><i><svg-icon icon-class="tips" /></i>共可添加 4 组{{contrastName=='productCont'?'产品':contrastName=='departCont'?'部门':''}}进行对比，当前已选 {{contrastRright.length}} 组</p>
             <div class="transfer-panel">
                 <div class="transferFl">
                     <div class="transferBox">
@@ -201,7 +201,7 @@
                 </div>
                 <div class="transferFr">
                     <div class="transferBox">
-                        <p class="transferBoxTop"><span>已选产品：{{contrastRright.length}}</span></p>
+                        <p class="transferBoxTop"><span>已选{{contrastName=='productCont'?'产品':contrastName=='departCont'?'部门':''}}：{{contrastRright.length}}</span></p>
                         <p class="transferBoxTit" v-for="(item,index) in contrastRright" :key="index">
                             <span>{{item.name}}</span>
                             <i v-if="item.name==routTag.productname"><svg-icon icon-class="websiteHttps" /></i>
@@ -1805,6 +1805,18 @@ export default {
         }
         if(valData=='departCont'){
             $this.focusProTitle='部门对比';
+            var contrastList=$this.contrastList;
+            $this.contrastRright=$this.contrastPass;
+            contrastList.forEach(function(item,index){
+                item.isOn=false;
+                if($this.contrastPass&&$this.contrastPass.length>0){
+                    $this.contrastPass.forEach(function(items,indexs){
+                        if(item.id==items.id){
+                            item.isOn=true;
+                        }
+                    });
+                }
+            });
         }
     },
     // 点击确定添加对比产品
@@ -1895,8 +1907,15 @@ export default {
             $this.contrastList.forEach(function(item,index){
                 item.isOn = false;
                 contrastItem.forEach(function(items,indexs){
-                    if(item.id==items.typeid){
-                        item.isOn = true;
+                    if($this.contrastName=='departCont'){
+                        if(item.id==items.id){
+                            item.isOn = true;
+                        }
+                    }
+                    if($this.contrastName=='productCont'){
+                        if(item.id==items.typeid){
+                            item.isOn = true;
+                        }
                     }
                 });
                 if($this.contrastName=='productCont'){
@@ -2066,23 +2085,19 @@ export default {
       if($this.contrastName=='productCont'){
         contrastList.forEach(function(item,index){
             item.isOn=false;
-            if($this.contrastRright&&$this.contrastRright.length>0){
-                $this.contrastRright.forEach(function(items,indexs){
+            item.son.forEach(function(itemk,indexk){
+                itemk.isOn=false;
+            });
+            $this.contrastRright.forEach(function(items,indexs){
                 if(items.typeid==item.id){
                     item.isOn=true;
                 }
                 item.son.forEach(function(itemk,indexk){
-                    itemk.isOn=false;
                     if(items.id==itemk.id){
-                    itemk.isOn=true;
+                        itemk.isOn=true;
                     }
                 });
-                });
-            }else{
-                item.son.forEach(function(itemk,indexk){
-                    itemk.isOn=false;
-                });
-            }
+            });
             if(item.isDisplay){
                 item.isOn=true;
             }
