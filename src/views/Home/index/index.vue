@@ -179,7 +179,7 @@ export default {
   },
   created() {
     var $this = this;
-    $this.getSend();
+    //$this.getSend();
     $this.initData();
   },
   mounted(){

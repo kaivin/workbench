@@ -192,12 +192,6 @@
             </div>
         </div>
       <el-dialog :title="focusProTitle" custom-class="transfer-dialogPro" :visible.sync="dialogFocusProVisible" :before-close="closePopup" width="830px">
-            <template #header>
-                 <div class="el-dialog__header">
-                    <span class="el-dialog__title">产品对比</span>
-                    <button type="button" aria-label="Close" class="el-dialog__headerbtn"><i class="el-dialog__close el-icon el-icon-close"></i></button>
-                 </div>
-            </template>
             <p class='transfer-panelTit'><i><svg-icon icon-class="tips" /></i>共可添加 4 组{{contrastName=='productCont'?'产品':contrastName=='departCont'?'部门':''}}进行对比，当前已选 {{contrastRright.length}} 组</p>
             <div class="transfer-panel" :class="contrastName=='departCont'?'transferDepart':''">
                 <div class="transferFl">
