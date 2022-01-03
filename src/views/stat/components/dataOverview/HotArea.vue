@@ -368,7 +368,7 @@ export default {
               // nameMap:worldNameMap(),
               // 图形上的文本标签
               label: {
-                show: true, // 是否显示对应地名
+                show: false, // 是否显示对应地名
                 color:'#fff',
                 textBorderColor:'#666',
                 textBorderWidth:2,
@@ -386,7 +386,7 @@ export default {
               // 高亮状态下的多边形和标签样式
               emphasis: {
                 label: {
-                  show: true, // 是否显示标签
+                  show: false, // 是否显示标签
                   color:'#fff',
                   textBorderColor:'#444',
                   textBorderWidth:2,
