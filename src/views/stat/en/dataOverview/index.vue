@@ -169,6 +169,10 @@ export default {
   created() {
     this.getUserMenuButtonPermit()
     this.nowcate = this.$route.meta.title;
+    var month = new Date().getMonth();
+    if(month < 3){
+      this.type = 1
+    }
   },
   computed:{
     nowYear(){

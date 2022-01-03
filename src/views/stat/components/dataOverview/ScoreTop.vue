@@ -17,11 +17,11 @@
           <div @click="changeType(4)" class="btn-item" :class="type == 4?'active':''">奖金</div>
         </div>
       </div>
-      <ul class="top-view" ref="topul">
+      <ul class="top-view" ref="topul" v-if="topdata.length > 0">
         <li class="top-item" v-for="(item,index) in topdata" :key="index">
           <router-link :to="getlink(item)" tag="a" >
             <div class="top-icon">
-              <img :src="require('@/assets/personal_InquiryIcon0'+(item.ranking)+'.png')" alt="" v-if="item.ranking < 4">
+              <img :src="require('@/assets/personal_InquiryIcon0'+(item.ranking)+'.png')" alt="" v-if="item.ranking < 4 &&item.ranking > 0">
               <span v-else>0{{item.ranking}}</span>
             </div>
             <div class="top-img">
@@ -115,6 +115,7 @@ export default {
       changeType(val){
         this.type = val;
         this.getData();
+        console.log(this.scoretop5)
       },
       getData(){
         let topdata = [];

@@ -832,6 +832,7 @@ export default {
       searchData.is_group = $this.searchData.is_group?1:0;
       searchData.mode = $this.searchData.mode;
       searchData.typekey = $this.searchData.typekey;
+      searchData.productid = $this.searchData.productid;
       searchData.level_id = $this.searchData.level_id;
       searchData.productlevel = $this.searchData.productlevel;
       searchData.device = $this.searchData.device;

@@ -272,8 +272,22 @@ export default {
                     interval: 0,
                     margin: 59,
                     formatter: function (value) {
-                      var str = value.split("").slice(0,6);
-                      return str.join("\n");
+                      var num = value.split("").length;
+                      var str = value;
+                      if(num>6){
+                        str = str.split("").slice(0,5).join("\n");
+                        str = str + '\n{addtext|…}';
+                      }else{
+                        str = str.split("").join("\n");
+                      }
+                      return str;
+                    },
+                    rich:{
+                      addtext:{
+                        rotate: 90,
+                        align: "top",
+                        verticalAlign: "top"
+                      },
                     },
                     textStyle: {
                         padding: [2,0,0,0],

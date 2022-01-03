@@ -4,7 +4,8 @@
       <div class="title-left">
         <h3 class="tit-h3">月成交等级统计</h3>
         <span class="tit-span">（单位：次）</span>
-        <span class="tit-span">注：{{NowYear}}年{{scoremonth.split("-")[0]}}<span v:if="isShow">至{{NowYear}}年{{scoremonth.split("-")[1]}}</span></span>
+        <span class="tit-span" v-if="isShow">注：{{NowYear}}年{{scoremonth.split("-")[0]}}<span>至{{NowYear}}年{{scoremonth.split("-")[1]}}</span></span>
+        <span class="tit-span" v-else>注：{{NowYear}}年暂无数据</span>
       </div>
     </div>
     <div class="rowMain">
@@ -116,10 +117,16 @@ export default {
         var $this = this;
         $this.NowYear = new Date().getFullYear();
         $this.NowMonth = new Date().getMonth() + 1;
-        if(new Date().getMonth() +1 == 1){
+        if(new Date().getMonth() == 0){
             $this.isShow = false
         }
 
+    },
+    mounted(){
+        var $this = this;
+        if($this.scoremonth == ''){
+            $this.isShow = false
+        }
     },
     methods:{
         
