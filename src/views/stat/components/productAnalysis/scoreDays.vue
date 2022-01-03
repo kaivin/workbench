@@ -44,7 +44,6 @@ export default {
     // 近30天询盘统计趋势图
     drawAreaTrendChart() {
       var $this = this;
-      console.log($this.enquirieChart.enquirieArr,'$this.enquirieChart.enquirieArr');
       if(!$this.areaTrendPlot){
         var legend=false;
         var annotations=false;

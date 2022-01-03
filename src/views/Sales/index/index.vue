@@ -210,6 +210,11 @@
                                   <el-checkbox v-for="item in feedbackList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
                                 </el-checkbox-group>
                               </div>
+                              <div class="item-search" v-if="currentStatus == 'waitcount'||currentStatus == 'allotcount'||currentStatus == 'personcount'||currentStatus == 'waitdealcount'||currentStatus == 'monthsaycount'||currentStatus == 'hasnosaycount'||currentStatus == 'waitftwordcount'">
+                                <el-checkbox-group v-model="readArr" class="checkbox-group" @change="readClick"  size="small">
+                                  <el-checkbox v-for="item in readList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
+                                </el-checkbox-group>
+                              </div>
                               <div class="item-search" style="width: 150px;">
                                 <el-input
                                   size="small"
@@ -462,6 +467,7 @@ export default {
         endtime:"",
         keyword:"",
         feedback:"",
+        is_read:"",
         ftword_id:"",
         deal:"",
         date:[],
@@ -505,6 +511,11 @@ export default {
         {label:"已反馈",value:1},
         {label:"未反馈",value:2},
       ],
+      readList:[
+        {label:"已读",value:2},
+        {label:"未读",value:1},
+      ],
+      readArr:[],
       pageSizeList:[20,50,100,200,500],
       totalDataNum:0,
       pickerRangeOptions: this.$pickerRangeOptions,
@@ -773,6 +784,7 @@ export default {
         $this.searchData.salesownid='';
         $this.searchData.continent='';
         $this.searchData.producttype_id='';
+        $this.searchData.is_read='';
         $this.searchData.productid='';
         $this.searchData.ennature='';
         $this.searchData.enxunprice='';
@@ -966,6 +978,9 @@ export default {
       }
       if($this.searchData.feedback&&$this.searchData.feedback!=''){
         searchData.feedback = $this.searchData.feedback;
+      }
+      if($this.searchData.is_read&&$this.searchData.is_read!=''){
+        searchData.is_read = $this.searchData.is_read;
       }
       if($this.searchData.ftword_id&&$this.searchData.ftword_id!=''){
         searchData.ftword_id = $this.searchData.ftword_id;
@@ -1279,6 +1294,22 @@ export default {
         }
       }else{
         $this.searchData.feedback = '';
+      }
+    },
+    // 已读未读点击事件
+    readClick(){
+      var $this = this;
+      var readArr = $this.readArr;
+      if(readArr.length > 0){
+        if (readArr.length > 1) {
+          readArr.shift();
+          $this.readArr = readArr;
+          $this.searchData.is_read = $this.readArr.toString();
+        }else{
+          $this.searchData.is_read = $this.readArr.toString();
+        }
+      }else{
+        $this.searchData.is_read = '';
       }
     },
     // 修改询盘

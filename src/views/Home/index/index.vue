@@ -179,6 +179,7 @@ export default {
   },
   created() {
     var $this = this;
+    $this.getSend();
     $this.initData();
   },
   mounted(){
@@ -189,6 +190,32 @@ export default {
     this.$refs.boxPane.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods: {
+    //推送
+    getSend(){
+      var $this = this;
+      // 连接服务端，workerman.net:2120换成实际部署web-msg-sender服务的域名或者ip
+      var socket = io('http://122.114.87.169:2120');
+      // uid可以是自己网站的用户id，以便针对uid推送以及统计在线人数
+      var uid = $this.userInfo.id;
+      // socket连接后以uid登录
+      socket.on('connect', function(){
+          socket.emit('login', uid);
+      });
+      // 后端推送来消息时
+      socket.on('new_msg', function(msg){
+          console.log("收到消息："+msg);
+          var msgArr=eval(msg);
+          var newsList=$this.newsList;
+          newsList.forEach(function(item,index){
+            msgArr.forEach(function(items,indexs){
+              if(index==indexs){
+                item.isread=items.isread;
+              }
+            });
+          });
+          $this.newsList=newsList;
+      });
+    },
     // 初始化数据
     initData() {
       var $this = this;

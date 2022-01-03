@@ -331,22 +331,22 @@
                             float:left;
                             vertical-align:top;
                             .date-range{
-                            width:200px;
-                            border-radius:0;
-                            position:relative;
-                            height:30px;
-                            padding:3px 25px 3px 8px;
-                            border:1px solid #e1e3ea;
-                            &.el-date-editor .el-range__icon{
-                                float:right;
-                                margin-left:0;
-                                position:absolute;
-                                right:0;
-                                top:0;
-                                &:before{
-                                vertical-align:middle;
+                                width:200px;
+                                border-radius:0;
+                                position:relative;
+                                height:30px;
+                                padding:3px 25px 3px 8px;
+                                border:1px solid #e1e3ea;
+                                &.el-date-editor .el-range__icon{
+                                    float:right;
+                                    margin-left:0;
+                                    position:absolute;
+                                    right:0;
+                                    top:0;
+                                    &:before{
+                                    vertical-align:middle;
+                                    }
                                 }
-                            }
                             }
                         }
                     }
@@ -743,112 +743,123 @@
     .prodeptBox{
         padding-bottom:13px;
         padding-top:5px;
-        .proBox{
-            float:left;
-            line-height:24px;
-            .proBoxStar{
+        height: 43px;
+        .prodeptMain{
+            &.prodeptFix{
+                position:fixed;
+                top:54px;
+                background:#fff;
+                padding:10px;
+                z-index:10;
+                box-shadow: 0px 0px 10px #eee;
+            }
+            .proBox{
                 float:left;
-                color:#ffc618;
-                padding:0px;
-                background:none;
-                border:0px;
-                margin-left:0px;
-                margin-right:10px;
-                font-size:$fontsize20;
-                border-radius:0px;
-            }
-            &>span{
-                font-size:$fontsize18;
-                color:#161616;
-                font-weight: bold;
-            }
-        }
-        .contrastTab{
-            float: left;
-            padding-left:22px;
-            margin-left:22px;
-            position: relative;
-            &::before{
-                content:'';
-                position: absolute;
-                left:0px;
-                top:4px;
-                width:1px;
-                height:18px;
-                background:#d1d1d1;
-            }
-            span{
-                font-size:$fontsize14;
-                line-height: 22px;
-                color: #101010;
-                float: left;
-                position: relative;
-                cursor: pointer;
-                padding: 0px 5px 3px 5px;
-                cursor:pointer;
-                margin-right: 15px;
-                &:hover{color:#0048ff;}
-                &.active{
-                    color:#0048ff;
-                    &:before{
-                        content:'';
-                        position:absolute;
-                        left:0px;
-                        bottom:0px;
-                        background:#0048ff;
-                        height:2px;
-                        right:0px;
-                    }
+                line-height:24px;
+                .proBoxStar{
+                    float:left;
+                    color:#ffc618;
+                    padding:0px;
+                    background:none;
+                    border:0px;
+                    margin-left:0px;
+                    margin-right:10px;
+                    font-size:$fontsize20;
+                    border-radius:0px;
+                }
+                &>span{
+                    font-size:$fontsize18;
+                    color:#161616;
+                    font-weight: bold;
                 }
             }
-        }
-        .deptBox{
-            float:right;
-            .deptBoxTit{
-                float:left;
-                font-size:$fontsize14;
-                color:#333;
-                line-height:24px;
-            }
-            p{
-                float:left;
-                border:none;
-                margin-left:10px;
-                cursor:pointer;
-                line-height:24px;
-                position:relative;
-                padding-left:21px;
-                color:#333; 
-                i{
+            .contrastTab{
+                float: left;
+                padding-left:22px;
+                margin-left:22px;
+                position: relative;
+                &::before{
+                    content:'';
                     position: absolute;
-                    left: 0px;
-                    top: 50%;
-                    margin-top: -6px;
-                    display: inline-block;
-                    width: 11px;
-                    height: 11px;
-                    border: 1px solid #848484;
-                    box-sizing: border-box;
-                    border-radius: 50%;
-                    vertical-align: middle;
+                    left:0px;
+                    top:4px;
+                    width:1px;
+                    height:18px;
+                    background:#d1d1d1;
                 }
                 span{
                     font-size:$fontsize14;
-                    display:inline-block;
-                    color:#333;
-                }
-                &.active,&:hover{
-                    i{
-                        border-color:#2f88ff;
+                    line-height: 22px;
+                    color: #101010;
+                    float: left;
+                    position: relative;
+                    cursor: pointer;
+                    padding: 0px 5px 3px 5px;
+                    cursor:pointer;
+                    margin-right: 15px;
+                    &:hover{color:#0048ff;}
+                    &.active{
+                        color:#0048ff;
                         &:before{
-                            content: '';
-                            width: 7px;
-                            height: 7px;
-                            background: #2f88ff;
-                            border-radius: 50%;
-                            position: absolute;
-                            left: 1px;
-                            top: 1px;
+                            content:'';
+                            position:absolute;
+                            left:0px;
+                            bottom:0px;
+                            background:#0048ff;
+                            height:2px;
+                            right:0px;
+                        }
+                    }
+                }
+            }
+            .deptBox{
+                float:right;
+                .deptBoxTit{
+                    float:left;
+                    font-size:$fontsize14;
+                    color:#333;
+                    line-height:24px;
+                }
+                p{
+                    float:left;
+                    border:none;
+                    margin-left:10px;
+                    cursor:pointer;
+                    line-height:24px;
+                    position:relative;
+                    padding-left:21px;
+                    color:#333; 
+                    i{
+                        position: absolute;
+                        left: 0px;
+                        top: 50%;
+                        margin-top: -6px;
+                        display: inline-block;
+                        width: 11px;
+                        height: 11px;
+                        border: 1px solid #848484;
+                        box-sizing: border-box;
+                        border-radius: 50%;
+                        vertical-align: middle;
+                    }
+                    span{
+                        font-size:$fontsize14;
+                        display:inline-block;
+                        color:#333;
+                    }
+                    &.active,&:hover{
+                        i{
+                            border-color:#2f88ff;
+                            &:before{
+                                content: '';
+                                width: 7px;
+                                height: 7px;
+                                background: #2f88ff;
+                                border-radius: 50%;
+                                position: absolute;
+                                left: 1px;
+                                top: 1px;
+                            }
                         }
                     }
                 }
@@ -978,84 +989,6 @@
             }
         }
     }
-    //.contrastOption{
-    //    display:block;
-    //    p{
-    //        float: left;
-    //        cursor: pointer;
-    //        position: relative;
-    //        padding-left: 19px;
-    //        height: 22px;
-    //        vertical-align: top;
-    //        line-height: 0;
-    //        font-size:0;
-    //        width: 20%;
-    //        margin-bottom: 10px;
-    //        i{
-    //            position:absolute;
-    //            left:0px;
-    //            top:50%;
-    //            display:inline-block;
-    //            width:11px;
-    //            height:11px;
-    //            border:1px solid #cbcbcb;
-    //            margin-top:-6px;
-    //        }
-    //        span{
-    //            font-size:$fontsize14;
-    //            display:inline-block;
-    //            height:22px;
-    //            line-height:22px;
-    //            color:#1a1a1a;
-    //        }
-    //        &:hover{
-    //            i{
-    //            border:1px solid $menuActiveText;
-    //            }
-    //            span{
-    //            color:$menuActiveText;
-    //            }
-    //        }
-    //        &.active.is-disabled{
-    //            cursor:not-allowed!important;
-    //            &:hover{
-    //                i{
-    //                    border:1px solid #dcdfe6;
-    //                }
-    //            }
-    //            i{
-    //                background-color:#edf2fc;
-    //                border:1px solid #dcdfe6;
-    //            }
-    //            span{
-    //                color:#c0c4cc;
-    //            }
-    //        }
-    //        &.active{
-    //            i{
-    //                border:1px solid $menuActiveText;
-    //                background:$menuActiveText;
-    //                &:before{
-    //                    content:'';
-    //                    width:7px;
-    //                    height:4px;
-    //                    transform:rotate(-45deg);
-    //                    border-left:1px solid #fff;
-    //                    border-bottom:1px solid #fff;
-    //                    position:absolute;
-    //                    left:1px;
-    //                    top:1px;
-    //                }
-    //            }
-    //            span{
-    //                color:$menuActiveText;
-    //            }
-    //            b{
-    //                color:lighten($menuActiveText, 20);
-    //            }
-    //        }
-    //    }
-    //}
     .enquirieTrend{
         padding:27px 0px 25px 0px;
         background:#fff;
@@ -1213,24 +1146,31 @@
                         float:left;
                         vertical-align:top;
                         .date-range{
-                        width:200px;
-                        border-radius:0;
-                        position:relative;
-                        height:30px;
-                        padding:3px 25px 3px 8px;
-                        border:1px solid #e1e3ea;
-                        background: none;
-                        &.el-range-editor--mini .el-range-input{background: none;}
-                        &.el-date-editor .el-range__icon{
-                            float:right;
-                            margin-left:0;
-                            position:absolute;
-                            right:0;
-                            top:0;
-                            &:before{
-                            vertical-align:middle;
+                            width:200px;
+                            border-radius:0;
+                            position:relative;
+                            height:30px;
+                            padding:3px 25px 3px 8px;
+                            border:1px solid #e1e3ea;
+                            background: none;
+                            &.el-range-editor--mini .el-range-input{background: none;}
+                            &.el-date-editor .el-range__icon{
+                                float:right;
+                                margin-left:0;
+                                position:absolute;
+                                right:0;
+                                top:0;
+                                &:before{
+                                vertical-align:middle;
+                                }
                             }
                         }
+                        &.active{
+                            .date-range{
+                                color: #044bff;
+                                border: 1px solid #044bff;
+                                background: #e0e9ff;
+                            }
                         }
                     }
                 }
@@ -1996,15 +1936,53 @@
         }
     }
     .transfer-dialogPro{
+        top:50%;
+        margin-top:0px!important;
+        transform: translateY(-50%);
+        transition:all 0.5s;
         .el-dialog__title{font-weight: bold;}
         .el-dialog__body {
-            padding:15px 20px 0px 20px !important;
+            padding:15px 30px 0px 30px !important;
         }
         .el-dialog__header{
-            padding-bottom:0px;
-            .el-dialog__headerbtn{display: none;}
+            padding:20px 30px 0px 30px;
+            .el-dialog__headerbtn{
+                right:30px;
+                font-size: 22px;
+                color: #666;
+            }
         }
-        .el-dialog__footer{padding: 15px;}
+        .el-dialog__footer{padding:20px 30px;}
+        .transferFlTop{
+            clear: both;
+            display: block;
+            position: relative;
+            margin:19px 22px 0px 22px;
+            .el-transfer-panel__filter{
+                clear: both;
+                display: block;
+                margin:0px;
+                position: relative;
+                .el-input__inner{
+                    border-radius: 0px;
+                    border-color: #dddfe1;
+                    height: 34px;
+                    padding-left: 36px;
+                    color: #959ba4;
+                }
+            }
+            .el-input__prefix{
+                position: absolute;
+                width: 14px;
+                height: 14px;
+                top: 50%;
+                margin-top: -7px;
+                left: 15px;
+                i{
+                    color:#959ba4;
+                }
+            }
+        }
         .transfer-panelTit{
             clear: both;
             display: block;
@@ -2024,14 +2002,14 @@
             clear: both;
             display: flex;
             justify-content: center;
-            align-items: center;
+            max-height: 517px;
             .transferFlTit{
                 clear: both;
                 display: block;
                 height: 40px;
                 line-height: 40px;
                 background: #F5F7FA;
-                margin: 0;
+                margin:0px 0px 20px 0px;
                 padding-left: 15px;
                 border-bottom: 1px solid #e6ebf5;
                 box-sizing: border-box;
@@ -2040,54 +2018,32 @@
             .transferFl{
                 flex: 1;
                 border: 1px solid #e6ebf5;
-                border-radius: 4px;
+                border-radius:0px;
                 overflow: hidden;
                 background: #FFFFFF;
                 display: inline-block;
                 vertical-align: middle;
                 width: 200px;
-                max-height: 100%;
                 box-sizing: border-box;
                 position: relative;
-                .transferBox{
-                    height: 360px !important;
+                padding-top:0px;
+                .transferFlSearch{
+                    height:288px !important;
                     overflow: auto;
-                    padding:10px 5px;
+                    padding:0px 22px 10px 22px;
                     dl{
                         clear: both;
-                        padding:5px 10px;
-                        dt{
-                            clear: both;
-                            padding:0px 0px;
-                            cursor: pointer;
-                            i{
-                                float: left;
-                                width: 12px;
-                                height: 12px;
-                                border: 1px solid #ccc;
-                                margin-top: 2px;
-                                margin-right: 10px;
-                                border-radius:3px;
-                            }
-                            span{
-                                float: left;
-                                color: #333;
-                                font-size:$fontsize14;
-                            }
-                        }
                         dd{
                             clear: both;
-                            display: none;
                             cursor: pointer;
-                            padding:5px 0px 5px 22px;
+                            padding-bottom:22px;
                             i{
                                 float: left;
-                                width: 12px;
-                                height: 12px;
+                                width: 16px;
+                                height: 16px;
                                 border: 1px solid #ccc;
-                                margin-top: 2px;
-                                margin-right: 10px;
-                                border-radius:3px;
+                                margin-right:8px;
+                                border-radius:2px;
                             }
                             span{
                                 float: left;
@@ -2102,163 +2058,50 @@
                                     &:after{
                                         content: '';
                                         position: absolute;
-                                        left: 1px;
-                                        width: 8px;
-                                        height: 0;
-                                        top: 4px;
+                                        left: 2px;
+                                        width: 10px;
+                                        height: 6px;
+                                        top: 3px;
                                         border-bottom: 2px solid #fff;
+                                        border-left: 2px solid #fff;
+                                        transform: rotate(-50deg);
                                     }
                                 }
                             }
                         }
-                        &.isOn{
-                            dt{
-                                i{
-                                    background:#0048ff;
-                                    position: relative;
-                                    border: 1px solid #0048ff;
-                                    &:after{
-                                        content: '';
-                                        position: absolute;
-                                        left: 1px;
-                                        width: 8px;
-                                        height: 0;
-                                        top: 4px;
-                                        border-bottom: 2px solid #fff;
-                                    }
-                                }
-                            }
-                        }
-                        &.isDisplay{
-                            dd{
-                                display: block;
-                            }
-                        }
                     }
                 }
-            }
-            .transferFr{
-                flex: 1;
-                border: 1px solid #e6ebf5;
-                border-left:0px;
-                border-radius: 4px;
-                overflow: hidden;
-                background: #FFFFFF;
-                display: inline-block;
-                vertical-align: middle;
-                width: 200px;
-                max-height: 100%;
-                box-sizing: border-box;
-                position: relative;
                 .transferBox{
-                    height: 360px !important;
                     overflow: auto;
-                    padding: 10px 5px;
-                    p{
-                        clear: both;
-                        overflow: hidden;
-                        margin: 10px 10px 14px 10px;
-                        &.transferBoxTop{
-                            span{
-                                float: left;
-                                color:#333;
-                                font-size: $fontsize14;
-                            }
-                            i{
-                                float: right;
-                                color:#004aff;
-                                font-size: $fontsize14;
-                                font-style: normal;
-                                cursor: pointer;
-                            }
-                        }
-                        &.transferBoxTit{
-                            &.active{
-                                span{
-                                    color:#888f99;
-                                }
-                            }
-                            i{
-                                float: right;
-                                color:#a6abb3;
-                                width:14px;
-                                height:14px;
-                                font-style: normal;
-                                font-size:$fontsize14;
-                                &.transClose{
-                                    border:1px solid #a6abb3;
-                                    border-radius:50%;
-                                    font-style: normal;
-                                    text-align: center;
-                                    line-height: 9px;
-                                    font-size: 10px;
-                                    cursor: pointer;
-                                }
-                            }
-                            span{
-                                float: left;
-                                color: #333;
-                                font-size:$fontsize14;
-                            }
-                        }
+                    margin:19px 0px 19px 22px;
+                    &.transHeight{
+                      height: calc(100% - 91px);
                     }
-                }
-            }
-
-        }
-    }
-    .transfer-dialog{
-        .el-dialog__header{display: none;}
-        .el-dialog__body{padding:0px!important;}
-        .el-dialog__footer{background: #f5f5f5;padding: 15px;}
-        .transfer-panel{
-            clear: both;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            .transferFlTit{
-                clear: both;
-                display: block;
-                height: 40px;
-                line-height: 40px;
-                background: #F5F7FA;
-                margin: 0;
-                padding-left: 15px;
-                border-bottom: 1px solid #e6ebf5;
-                box-sizing: border-box;
-                color: #000000;
-            }
-            .transferFl{
-                flex: 1;
-                border: 1px solid #e6ebf5;
-                border-radius: 4px;
-                overflow: hidden;
-                background: #FFFFFF;
-                display: inline-block;
-                vertical-align: middle;
-                width: 200px;
-                max-height: 100%;
-                box-sizing: border-box;
-                position: relative;
-                .transferBox{
-                    height: 360px !important;
-                    overflow: auto;
-                    padding:10px 5px;
                     dl{
                         clear: both;
-                        padding:5px 10px;
                         dt{
                             clear: both;
-                            padding:0px 0px;
+                            padding-bottom:22px;
                             cursor: pointer;
+                            position: relative;
+                            padding-left: 26px;
+                            &:before{
+                                content:'';
+                                position: absolute;
+                                border-top:5px solid transparent;
+                                border-bottom:5px solid transparent;
+                                border-right:0px;
+                                border-left:6px solid #71767e;
+                                top: 3px;
+                                left: 3px;
+                            }
                             i{
                                 float: left;
-                                width: 12px;
-                                height: 12px;
+                                width: 16px;
+                                height: 16px;
                                 border: 1px solid #ccc;
-                                margin-top: 2px;
-                                margin-right: 10px;
-                                border-radius:3px;
+                                margin-right:8px;
+                                border-radius:2px;
                             }
                             span{
                                 float: left;
@@ -2270,15 +2113,15 @@
                             clear: both;
                             display: none;
                             cursor: pointer;
-                            padding:5px 0px 5px 22px;
+                            padding-left:50px;
+                            padding-bottom:22px;
                             i{
                                 float: left;
-                                width: 12px;
-                                height: 12px;
+                                width: 16px;
+                                height: 16px;
                                 border: 1px solid #ccc;
-                                margin-top: 2px;
-                                margin-right: 10px;
-                                border-radius:3px;
+                                margin-right:8px;
+                                border-radius:2px;
                             }
                             span{
                                 float: left;
@@ -2293,11 +2136,13 @@
                                     &:after{
                                         content: '';
                                         position: absolute;
-                                        left: 1px;
-                                        width: 8px;
-                                        height: 0;
-                                        top: 4px;
+                                        left: 2px;
+                                        width: 10px;
+                                        height: 6px;
+                                        top: 3px;
                                         border-bottom: 2px solid #fff;
+                                        border-left: 2px solid #fff;
+                                        transform: rotate(-50deg);
                                     }
                                 }
                             }
@@ -2311,18 +2156,37 @@
                                     &:after{
                                         content: '';
                                         position: absolute;
-                                        left: 1px;
+                                        left: 3px;
                                         width: 8px;
                                         height: 0;
-                                        top: 4px;
+                                        top: 6px;
                                         border-bottom: 2px solid #fff;
                                     }
                                 }
                             }
                         }
                         &.isDisplay{
+                            dt{
+                                &:before{
+                                    transform: rotate(90deg);
+                                    top: 5px;
+                                }
+                            }
                             dd{
                                 display: block;
+                            }
+                        }
+                        &:last-child{
+                            dt{
+                                padding-bottom: 0px;
+                            }
+                            dd:last-child{
+                                padding-bottom: 0px;
+                            }
+                            &.isDisplay{
+                                dt{
+                                    padding-bottom: 22px;
+                                }
                             }
                         }
                     }
@@ -2332,24 +2196,23 @@
                 flex: 1;
                 border: 1px solid #e6ebf5;
                 border-left:0px;
-                border-radius: 4px;
+                border-radius:0px;
                 overflow: hidden;
                 background: #FFFFFF;
                 display: inline-block;
                 vertical-align: middle;
                 width: 200px;
-                max-height: 100%;
                 box-sizing: border-box;
                 position: relative;
                 .transferBox{
-                    height: 360px !important;
                     overflow: auto;
-                    padding: 10px 5px;
+                    margin: 19px 22px 10px 32px;
                     p{
                         clear: both;
-                        overflow: hidden;
-                        margin: 10px 10px 14px 10px;
+                        overflow: hidden;                        
+                        margin:0px;
                         &.transferBoxTop{
+                            margin:0px 0px 26px 0px;
                             span{
                                 float: left;
                                 color:#333;
@@ -2364,6 +2227,7 @@
                             }
                         }
                         &.transferBoxTit{
+                            margin:0px 0px 20px 0px;
                             &.active{
                                 span{
                                     color:#888f99;
@@ -2377,13 +2241,12 @@
                                 font-style: normal;
                                 font-size:$fontsize14;
                                 &.transClose{
-                                    border:1px solid #a6abb3;
-                                    border-radius:50%;
                                     font-style: normal;
                                     text-align: center;
-                                    line-height: 9px;
-                                    font-size: 10px;
+                                    line-height: 14px;
+                                    font-size: 13px;
                                     cursor: pointer;
+                                    margin-top: 1px;
                                 }
                             }
                             span{
@@ -2395,7 +2258,24 @@
                     }
                 }
             }
-
+            &.transferDepart{
+                .transferFl{
+                    .transferBox{
+                        dl{
+                            dt{
+                                padding-left:0px;
+                                &:before{
+                                    display: none;
+                                }
+                            }
+                        }
+                    } 
+                }
+                .transferFr{
+                    .transferBox{
+                    } 
+                }
+            }
         }
     }
 }

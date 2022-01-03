@@ -17,22 +17,24 @@
                         </div>
                 </div>
             </div>
-            <div class="prodeptBox">
-                <div class="proBox">
-                    <el-tooltip v-if="(routTag.productnameId!=0||routTag.productnameId!='')&&hasfocus==1" class="proBoxStar" effect="dark" content="取消关注" placement="top">
-                        <el-button v-on:click="getCancelfocuspro(routTag.productname)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></el-button>
-                    </el-tooltip>
-                    <el-tooltip v-if="(routTag.productnameId!=0||routTag.productnameId!='')&&hasfocus==2" class="proBoxStar" effect="dark" content="添加关注" placement="top">
-                        <el-button v-on:click="getAddfocuspro(routTag.productname)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></el-button>
-                    </el-tooltip>
-                    <span>{{routTag.productname}}</span>
-                </div>
-                <p class="contrastTab">
-                    <span v-for="(item,index) in contrastTab" v-if="item.isDisplay" :class='item.isOn?"active":""' :key='index' v-on:click="handlecontrastTab(item.tagName)">{{item.name}}</span>
-                </p>
-                <div class="deptBox" v-if="contrastName!='departCont'">
-                    <span class="deptBoxTit">部门选择:</span>
-                    <p class="deptBoxItem" v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="handleDepart(item.id)"><i></i><span>{{item.name}}</span></p>
+            <div class="prodeptBox" ref="prodeptPaneBox">
+                <div class="prodeptMain" :style="'width:'+personTopTabWidth" ref="prodeptPane" :class="scrBool?'prodeptFix':''">
+                    <div class="proBox">
+                        <el-tooltip v-if="(routTag.productnameId!=0||routTag.productnameId!='')&&hasfocus==1" class="proBoxStar" effect="dark" content="取消关注" placement="top">
+                            <el-button v-on:click="getCancelfocuspro(routTag.productname)" class="svg-i"><svg-icon icon-class="workOrder_starSolid" /></el-button>
+                        </el-tooltip>
+                        <el-tooltip v-if="(routTag.productnameId!=0||routTag.productnameId!='')&&hasfocus==2" class="proBoxStar" effect="dark" content="添加关注" placement="top">
+                            <el-button v-on:click="getAddfocuspro(routTag.productname)" class="svg-i"><svg-icon icon-class="workOrder_starHollow" /></el-button>
+                        </el-tooltip>
+                        <span>{{routTag.productname}}</span>
+                    </div>
+                    <p class="contrastTab">
+                        <span v-for="(item,index) in contrastTab" v-if="item.isDisplay" :class='item.isOn?"active":""' :key='index' v-on:click="handlecontrastTab(item.tagName)">{{item.name}}</span>
+                    </p>
+                    <div class="deptBox" v-if="contrastName!='departCont'">
+                        <span class="deptBoxTit">部门选择:</span>
+                        <p class="deptBoxItem" v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="handleDepart(item.id)"><i></i><span>{{item.name}}</span></p>
+                    </div>
                 </div>
             </div>
             <div class="contrast" v-if="contrastName=='productCont'||contrastName=='departCont'">
@@ -83,10 +85,10 @@
                                 <div class="item-change">
                                     <span :class="item.isOn?'active':''" v-for="(item,index) in changeTime" :key="index" v-on:click="handlerTime(item.name)">{{item.name}}</span>
                                 </div>
-                                <div class="item-date">
+                                <div class="item-date" :class="isTimeSelecte?'active':''">
                                     <el-date-picker
                                     v-model="routTag.data"
-                                    @change="handleData"
+                                    @change="handleData"                                    
                                     type="monthrange"
                                     format="yyyy-MM"
                                     value-format="yyyy-MM"
@@ -186,11 +188,28 @@
                 </div>
             </div>
         </div>
-      <el-dialog :title="focusProTitle" custom-class="transfer-dialogPro" :visible.sync="dialogFocusProVisible" width="830px">
+      <el-dialog :title="focusProTitle" custom-class="transfer-dialogPro" :visible.sync="dialogFocusProVisible" :before-close="closePopup" width="830px">
             <p class='transfer-panelTit'><i><svg-icon icon-class="tips" /></i>共可添加 4 组{{contrastName=='productCont'?'产品':contrastName=='departCont'?'部门':''}}进行对比，当前已选 {{contrastRright.length}} 组</p>
-            <div class="transfer-panel">
+            <div class="transfer-panel" :class="contrastName=='departCont'?'transferDepart':''">
                 <div class="transferFl">
-                    <div class="transferBox">
+                     <div class="transferFlTop" v-if="contrastName=='productCont'">
+                          <el-input
+                                class="el-transfer-panel__filter"
+                                v-model="dialogSearch"
+                                placeholder="搜索产品"
+                                @input="dialogSearchBtn"
+                                size="small">
+                          </el-input>
+                          <i class="el-input__prefix" @click="clearQuery"><svg-icon icon-class="search1" /></i>
+                     </div>
+                    <div class="transferFlSearch" v-if='dialogSearchList.length>0'>
+                        <dl>
+                            <dd :class="item.isOn?'isOn':''" @click="transferPro(item.id)" v-for="(item,index) in dialogSearchList" :key="index">
+                                <i></i><span>{{item.name}}</span>
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="transferBox" :class="contrastName=='productCont'?'transHeight':''" v-else>
                         <dl :class="[item.isOn?'isOn':'',item.isDisplay?'isDisplay':'']" v-for="(item,index) in contrastList" :key="index">
                             <dt @click="transferType(item.id)"><i></i><span>{{item.name}}</span></dt>
                             <dd :class="items.isOn?'isOn':''" @click="transferPro(items.id)" v-for="(items,indexs) in item.son" :key="indexs">
@@ -201,11 +220,11 @@
                 </div>
                 <div class="transferFr">
                     <div class="transferBox">
-                        <p class="transferBoxTop"><span>已选{{contrastName=='productCont'?'产品':contrastName=='departCont'?'部门':''}}：{{contrastRright.length}}</span></p>
-                        <p class="transferBoxTit" v-for="(item,index) in contrastRright" :key="index">
+                        <p class="transferBoxTop"><span>已选{{contrastName=='productCont'?'产品':contrastName=='departCont'?'部门':''}}：{{contrastRright.length}}</span><i @click="cleartransfer">清空</i></p>
+                        <p class="transferBoxTit" :class="item.name==routTag.productname?'active':''" v-for="(item,index) in contrastRright" :key="index">
                             <span>{{item.name}}</span>
-                            <i v-if="item.name==routTag.productname"><svg-icon icon-class="websiteHttps" /></i>
-                            <i @click="cleartransferPro(item.id)" class="transClose" v-else><svg-icon icon-class="close" /></i>
+                            <i v-if="item.name==routTag.productname"><svg-icon icon-class="stat_lock" /></i>
+                            <i @click="cleartransferPro(item.id)" class="transClose" v-else><svg-icon icon-class="stat_Circlefork" /></i>
                         </p>
                     </div>
                 </div>
@@ -232,6 +251,10 @@ export default {
   name: "cnProAccount",
   data() {
     return {
+      dialogSearch:'',
+      dialogSearchList:[],
+      scrBool:false,
+      personTopTabWidth:'auto',
       isYearBool:false,//时间是否跨年
       isCate:false,//点击分类属性
       xunmaxmonth:{},//最大询盘月份
@@ -285,6 +308,7 @@ export default {
         {name:'近半年',isOn:false},
         {name:'今年',isOn:false},
       ],
+      isTimeSelecte:true,
       pickerMonthRangeOptions: {
         shortcuts: [{
           text: '今年至今',
@@ -344,6 +368,7 @@ export default {
   },
   mounted(){
     const $this = this;
+    $this.$refs.boxPane.addEventListener('scroll',this.handleScroll,true);
     if($this.$refs.boxPane){  
       $this.minWidth = $this.$refs.boxPane.offsetWidth; 
     }
@@ -354,6 +379,9 @@ export default {
         }
       })()
     }
+  },
+  beforeDestroy(){
+    this.$refs.boxPane.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods: {
     //默认时间周期
@@ -385,8 +413,7 @@ export default {
             item.data=[startDate,endDate];
           }
           if(item.name=='今年'){
-            var start = new Date();
-            start.setMonth(start.getMonth() - 6);
+            var start = new Date(new Date().getFullYear(), 0);
             var startYear = start.getFullYear();
             var startDate = startYear+"-01";
             item.data=[startDate,endDate];
@@ -588,11 +615,11 @@ export default {
             contrastProname.push(item);
           });
           $this.contrastProname=contrastProname;//关注产品id
-            if($this.contrastProname.length>=4){
-                    $this.contrastBtnShow=false
-            }else{
-                    $this.contrastBtnShow=true
-            } 
+          if($this.contrastProname.length>=4){
+                $this.contrastBtnShow=false
+          }else{
+                $this.contrastBtnShow=true
+          } 
       }else{
         if($this.contrastName==="departCont"){
           $this.contrastProname=[];
@@ -713,7 +740,7 @@ export default {
                         ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
                         ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
                         ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
-                        ChartTabObj.name='年度总询盘个数';
+                        ChartTabObj.name='总询盘个数';
                         ChartTabObj.unit='（单位：个）';
                         ChartTabObj.tap='enquirie'; 
                         ChartTabObj.isOn=true;
@@ -750,7 +777,7 @@ export default {
                         ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
                         ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
                         ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
-                        ChartTabObj.name='年度总成交积分';
+                        ChartTabObj.name='总成交积分';
                         ChartTabObj.unit='（单位：分）';
                         ChartTabObj.tap='clinchScore'; 
                         ChartTabObj.isOn=false;
@@ -786,7 +813,7 @@ export default {
                         ChartTabObj.numSeptotalNum=numSeparate(totalNum.toFixed(2)*1);
                         ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
                         ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
-                        ChartTabObj.name='年度100万成交个数';
+                        ChartTabObj.name='100万成交个数';
                         ChartTabObj.unit='（单位：个）';
                         ChartTabObj.tap='clinchNum'; 
                         ChartTabObj.isOn=false;
@@ -826,14 +853,14 @@ export default {
                         if($this.routTag.data&&$this.routTag.data.length>0){
                             var dataTimeOne=$this.routTag.data[0].split('-')[1];
                             var dataTimeTwo=$this.routTag.data[1].split('-')[1];
-                            var timeNum=dataTimeTwo-dataTimeOne+1;
+                            var timeNum=Math.abs(dataTimeTwo-dataTimeOne+1);
                         }
                         ChartTabObj.totalNum=totalNum.toFixed(2)*1;
                         ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1;
                         ChartTabObj.numSeptotalNum=numSeparate((totalNum/timeNum).toFixed(2)*1);
                         ChartTabObj.numSeplasttotalNum=numSeparate(lasttotalNum.toFixed(2)*1);
                         ChartTabObj.sequential=numSeparate((Math.abs(totalNum-lasttotalNum)/timeNum).toFixed(2)*1);
-                        ChartTabObj.name='年度平均成交率';
+                        ChartTabObj.name='平均成交率';
                         ChartTabObj.unit='';
                         ChartTabObj.tap='closing'; 
                         ChartTabObj.isOn=false;
@@ -1617,6 +1644,7 @@ export default {
     handlerTime(varData){
       var $this=this;
       var changeTime=$this.changeTime;
+      $this.isTimeSelecte=false;
       if(varData=='今年'){
           $this.isOnTab=true;
       }else{
@@ -1636,11 +1664,13 @@ export default {
       var $this=this;
       var changeTime=$this.changeTime;
       var dataOne=$this.routTag.data.toString();
+      $this.isTimeSelecte=true;
       changeTime.forEach(function(item,index){
         var dataTwo=item.data.toString();
         item.isOn=false;
         if(dataOne==dataTwo){
           item.isOn=true;
+          $this.isTimeSelecte=false;
           if(item.name=='今年'){
               $this.isOnTab=true;
           }else{
@@ -1649,7 +1679,7 @@ export default {
         }else{
               $this.isOnTab=false;
         }
-      });
+      });      
       $this.getProFocount();
     },
     //点击对比时间
@@ -1740,6 +1770,7 @@ export default {
              });
            }
            item.son.forEach(function(itemk,indexk){
+              itemk.isOn=false;
               if($this.contrastPass&&$this.contrastPass.length>0){
                 $this.contrastPass.forEach(function(items,indexs){
                     if(itemk.id==items.id){
@@ -1779,10 +1810,10 @@ export default {
     // 弹出添加对比产品
     handleAddcontrast(valData){
         var $this=this;
-        $this.dialogFocusProVisible=true;
+        $this.dialogFocusProVisible=true;    
+        var contrastList=$this.contrastList;
         if(valData=='productCont'){
-            $this.focusProTitle='产品对比';            
-            var contrastList=$this.contrastList;
+            $this.focusProTitle='产品对比';        
             $this.contrastRright=$this.contrastPass;
             contrastList.forEach(function(item,index){
                 if($this.contrastPass&&$this.contrastPass.length>0){
@@ -1805,7 +1836,6 @@ export default {
         }
         if(valData=='departCont'){
             $this.focusProTitle='部门对比';
-            var contrastList=$this.contrastList;
             $this.contrastRright=$this.contrastPass;
             contrastList.forEach(function(item,index){
                 item.isOn=false;
@@ -1818,6 +1848,7 @@ export default {
                 }
             });
         }
+        $this.contrastList=contrastList;
     },
     // 点击确定添加对比产品
     saveContrast(){
@@ -1988,6 +2019,8 @@ export default {
         }else{
                 $this.contrastBtnShow=true
         }
+        $this.dialogSearch='';
+        $this.dialogSearchList=[];
     },
     // 点击分类折叠展开产品
     transferType(varData){
@@ -2105,9 +2138,88 @@ export default {
       }
       $this.contrastList=contrastList;
     },
+    dialogSearchBtn(){
+      var $this=this;
+      var dialogSearchList=[];
+      if($this.dialogSearch&&$this.dialogSearch!=''){
+        $this.contrastList.forEach(function(item,index){
+            item.son.forEach(function(items,indexs){
+                if(items.name.toLowerCase().indexOf($this.dialogSearch.toLowerCase()) > -1){
+                    dialogSearchList.push(items);
+                }
+            });
+        });
+      }else{
+        dialogSearchList=[];
+      }
+      $this.dialogSearchList=dialogSearchList;
+    },
+    clearQuery() {
+      var $this=this;
+      $this.dialogSearch='';
+      $this.dialogSearchList=[];
+    },
+    cleartransfer(){
+      var $this=this;
+      if($this.contrastName=='productCont'){
+          var contrastRright=$this.contrastRright;
+          var contrastLI=[];
+          contrastRright.forEach(function(item,index){
+              if(item.name==$this.routTag.productname){
+                  contrastLI.push(item);
+              }
+          });
+          $this.contrastRright=contrastLI;
+          var contrastList=$this.contrastList;
+          if($this.contrastRright&&$this.contrastRright.length>0){
+            $this.contrastRright.forEach(function(item,index){
+                contrastList.forEach(function(items,indexs){
+                items.isDisplay=false;
+                items.isOn=false;
+                if(item.typeid==items.id){
+                    items.isOn=true;
+                }
+                items.son.forEach(function(itemk,indexk){
+                    itemk.isOn=false;
+                    if(item.id==itemk.id){
+                        itemk.isOn=true;
+                    }
+                });
+                });
+            });
+          }else{
+            contrastList.forEach(function(item,index){
+                item.isDisplay=false;
+                item.isOn=false;
+                item.son.forEach(function(items,indexs){
+                    items.isOn=false;
+                });
+            });
+          }
+          $this.contrastPass=contrastLI;
+          $this.contrastList=contrastList;
+      };
+      if($this.contrastName=='departCont'){
+          $this.contrastRright=[];
+          $this.contrastPass=[];
+      };
+    },
+    // 竖向滚动条滚动事件
+    handleScroll(event){
+      var $this = this;
+      if(!$this.dialogFocusProVisible){
+        var scrTop = event.target.scrollTop;
+        var personTopTabHeight = $this.$refs.prodeptPaneBox.offsetTop;
+        var personTopTabWidth = $this.$refs.prodeptPane.clientWidth;
+        if(scrTop>=personTopTabHeight){
+            $this.scrBool=true;
+            $this.personTopTabWidth=personTopTabWidth+'px';
+        }else{
+            $this.scrBool=false;
+            $this.personTopTabWidth='auto';
+        }           
+      }
+    },
   }
 }
 </script>
-
-
-

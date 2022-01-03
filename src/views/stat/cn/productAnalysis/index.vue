@@ -93,11 +93,28 @@
           ></million-deal>
       </div>
     </div>    
-    <el-dialog :title="focusProTitle" custom-class="transfer-dialogPro" :visible.sync="dialogFocusProVisible" width="700px">
+    <el-dialog :title="focusProTitle" custom-class="transfer-dialogPro" :visible.sync="dialogFocusProVisible" :before-close="closePopup" width="830px">
         <div class="transfer-panel">
              <div class="transferFl">
                   <p class="transferFlTit">可关注产品</p>
-                  <div class="transferBox">
+                  <div class="transferFlTop">
+                        <el-input
+                              class="el-transfer-panel__filter"
+                              v-model="dialogSearch"
+                              @input="dialogSearchBtn"
+                              placeholder="搜索产品"
+                              size="small">
+                        </el-input>
+                        <i class="el-input__prefix" @click="clearQuery"><svg-icon icon-class="search1" /></i>
+                  </div>
+                  <div class="transferFlSearch" v-if='dialogSearchList.length>0'>
+                      <dl>
+                          <dd :class="item.isOn?'isOn':''" @click="transferPro(item.id)" v-for="(item,index) in dialogSearchList" :key="index">
+                              <i></i><span>{{item.name}}</span>
+                          </dd>
+                      </dl>
+                  </div>
+                  <div class="transferBox transHeight" v-else>
                        <dl :class="[item.isOn?'isOn':'',item.isDisplay?'isDisplay':'']" v-for="(item,index) in AllProList" :key="index">
                           <dt @click="transferType(item.id)"><i></i><span>{{item.name}}</span></dt>
                           <dd :class="items.isOn?'isOn':''" @click="transferPro(items.id)" v-for="(items,indexs) in item.son" :key="indexs">
@@ -132,6 +149,8 @@ export default {
   name: "cnProductAnalysis",
   data() {
     return {
+      dialogSearch:'',
+      dialogSearchList:[],
       ch:'ch',
       defaultChartData:[],
       focusProArr:[],//展示关注数据
@@ -817,6 +836,8 @@ export default {
           $this.AllProList=AllProList;
         }
         $this.focusRright=$this.focusPass;
+        $this.dialogSearch='';
+        $this.dialogSearchList=[];
     },
     // 点击分类折叠展开产品
     transferType(varData){
@@ -904,6 +925,27 @@ export default {
           }
       });
       $this.AllProList=AllProList;
+    },
+    dialogSearchBtn(){
+      var $this=this;
+      var dialogSearchList=[];
+      if($this.dialogSearch&&$this.dialogSearch!=''){
+        $this.AllProList.forEach(function(item,index){
+            item.son.forEach(function(items,indexs){
+                if(items.name.toLowerCase().indexOf($this.dialogSearch.toLowerCase()) > -1){
+                    dialogSearchList.push(items);
+                }
+            });
+        });
+      }else{
+        dialogSearchList=[];
+      }
+      $this.dialogSearchList=dialogSearchList;
+    },
+    clearQuery() {
+      var $this=this;
+      $this.dialogSearch='';
+      $this.dialogSearchList=[];
     },
   }
 }
