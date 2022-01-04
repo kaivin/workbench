@@ -82,7 +82,7 @@
                                 <el-table-column
                                     align="left"
                                     label="部门本月已用积分"
-                                    width="136"
+                                    width="145"
                                     >
                                     <template slot-scope="scope">
                                       <span>{{scope.row.monthscore && scope.row.monthscore - scope.row.monthusescore}}</span>
@@ -92,7 +92,7 @@
                                     prop="monthusescore"
                                     align="left"
                                     label="部门本月剩余积分"
-                                    width="136"
+                                    width="145"
                                     ></el-table-column>
                                 <el-table-column
                                     prop="waitcount"

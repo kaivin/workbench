@@ -33,6 +33,11 @@
                                               :picker-options="pickerRangeOptions">
                                           </el-date-picker>
                                         </div>
+                                        <div class="item-search commentClass" style="width: 240px;">
+                                            <el-checkbox-group v-model="commentArr" class="checkbox-group" @change="commentClick"  size="small">
+                                              <el-checkbox v-for="item in commentList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
+                                            </el-checkbox-group>
+                                        </div>
                                      </div>
                                 </div>
                             </div>
@@ -118,7 +123,14 @@ export default {
             page:1,
             limit:50,
             date:[],
+            commentstatus:'',
         },
+        commentArr:[],
+        commentList:[
+          {label:'好评',value:1},
+          {label:'一般',value:2},
+          {label:'差评',value:3},
+        ],
         pageSizeList:[50, 100, 500],
         totalDataNum:0,
         pickerRangeOptions: this.$pickerRangeOptions,
@@ -375,6 +387,9 @@ export default {
       if($this.$route.query.ID&&$this.$route.query.ID!=''){
         searchData.dealuserid = $this.$route.query.ID;
       }
+      if($this.searchData.commentstatus&&$this.searchData.commentstatus!=''){
+        searchData.commentstatus = $this.searchData.commentstatus;
+      }
       return searchData;
     },
     // 默认最近30天时间周期
@@ -435,6 +450,23 @@ export default {
     // 点击时间事件选择
     hanldetime(){
       var $this = this;
+      $this.searchResult();
+    },
+    //点击评论事件
+    commentClick(){
+      var $this = this;
+      var commentArr = $this.commentArr;
+      if(commentArr.length > 0){
+        if (commentArr.length > 1) {
+          commentArr.shift();
+          $this.commentArr = commentArr;
+          $this.searchData.commentstatus = $this.commentArr.toString();
+        }else{
+          $this.searchData.commentstatus = $this.commentArr.toString();
+        }
+      }else{
+        $this.searchData.commentstatus = '';
+      }
       $this.searchResult();
     },
     // 设置横向滚动条相关DOM数据

@@ -166,6 +166,34 @@
                         text-decoration: underline;
                     }
                 }
+                &.commentClass{
+                    .el-checkbox-group{
+                        .el-checkbox{
+                            float: left;
+                            border: 0px;
+                            padding: 0px;
+                            margin: 0px 20px 0px 0px;
+                            height: 28px;
+                            border-radius: 0px;
+                            line-height: 28px;
+                            .el-checkbox__input{
+                                .el-checkbox__inner{
+                                    border-radius: 50%;
+                                    background: #fff;
+                                    &:after {
+                                        height: 6px;
+                                        width: 6px;
+                                        left: 2px;
+                                        top: 2px;
+                                        background-color: #0970ff;
+                                        border: 0px;
+                                        border-radius: 50%;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             .date-range{width:100%;box-sizing:border-box;vertical-align:top;}
             .select-panel{

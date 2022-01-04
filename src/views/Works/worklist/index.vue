@@ -778,13 +778,13 @@ export default {
       var $this =this;      
       var searchData = {};
       searchData = $this.initSearchData();
-      if($this.currentStatus==="alltasks"||$this.currentStatus==="person"||$this.currentStatus==="focuson"){
-        searchData.page = $this.isPageBtn?$this.searchData.page:1;
-        if(!$this.isPageBtn){
-          $this.searchData.page = 1
-        }
-        $this.isPageBtn = false;
-      }
+      //if($this.currentStatus==="alltasks"||$this.currentStatus==="person"||$this.currentStatus==="focuson"){
+      //  searchData.page = $this.isPageBtn?$this.searchData.page:1;
+      //  if(!$this.isPageBtn){
+      //    $this.searchData.page = 1
+      //  }
+      //  $this.isPageBtn = false;
+      //}
       var pathUrl = "";
       if($this.currentStatus==="alltasks"){
         pathUrl = "works/workOrderListAction";
