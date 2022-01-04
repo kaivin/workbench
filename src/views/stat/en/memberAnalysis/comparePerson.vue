@@ -106,7 +106,7 @@ export default {
               $this.comapreuser=res.comapreuser;
               //年度询盘趋势
               var yearcount = {};
-              yearcount.Mobtitle='年度询盘趋势';
+              yearcount.Mobtitle='年度询盘趋势（对比）';
               yearcount.unit='（单位：个）';
               yearcount.chartType = "area";
               yearcount.chartClass = "enquirie";
@@ -140,7 +140,7 @@ export default {
               }
               //年度成交积分趋势
               var yearscore = {};
-              yearscore.Mobtitle='年度成交积分趋势';
+              yearscore.Mobtitle='年度成交积分趋势（对比）';
               yearscore.unit='（单位：分）';
               yearscore.chartType = "line";
               yearscore.chartClass = "score";
@@ -174,7 +174,7 @@ export default {
               }
               //年度成交100万个数
               var yearanumber = {};
-              yearanumber.Mobtitle='年度成交100万个数';
+              yearanumber.Mobtitle='年度成交100万个数（对比）';
               yearanumber.unit='（单位：个）';
               yearanumber.chartType = "column";
               yearanumber.chartClass = "clinch";
@@ -216,7 +216,7 @@ export default {
               }
               //年度总奖金趋势
               var yearmoney = {};
-              yearmoney.Mobtitle='年度总奖金趋势';
+              yearmoney.Mobtitle='年度总奖金趋势（对比）';
               yearmoney.unit='（单位：元）';
               yearmoney.chartType = "area";
               yearmoney.chartClass = "money";

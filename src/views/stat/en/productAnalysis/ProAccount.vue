@@ -74,7 +74,7 @@
                     </el-date-picker>
             </div>
             <template v-for="(item,index) in enquirieList" v-if="contrastName!='timeCont'">
-                <score-days :scoreHeight='300' :enquirieChart="item" :contrastTag="contrastName"></score-days>
+                <echart-days :scoreHeight='300' :enquirieChart="item" :contrastTag="contrastName"></echart-days>
             </template>
             <div class="enquirieTag" :class="[contrastName=='timeCont'?'TwoTagTop':'']">
                 <div class="enquirieTagTop flex-box"  v-if="contrastName!='timeCont'">  
@@ -246,6 +246,7 @@ import { Mix } from '@antv/g2plot';
 import {randomString,formatDate,numSeparate,rankingWithTotalItem} from "@/utils/index"
 import {MapInterval,TopTenColor} from "@/utils/MapColor"
 import { worldCountry } from "@/utils/worldCountry";
+import echartDays from "../../components/productAnalysis/echartDays";
 import scoreDays from "../../components/productAnalysis/scoreDays";
 import accountChart from "../../components/productAnalysis/accountChart";
 import mapChart from "../../components/productAnalysis/mapChart";
@@ -349,6 +350,7 @@ export default {
     };
   },
   components:{
+    echartDays,
     scoreDays,
     accountChart,
     mapChart,
@@ -730,7 +732,7 @@ export default {
                         });
                         var topxunnumber=[res.topxunnumber]
                         var tagName=[$this.routTag.productname]
-                        $this.enquirieList=$this.areaPlug(topxunnumber,tagName,'询盘趋势',$this.contrastName);                    
+                        $this.enquirieList=$this.echartareaPlug(topxunnumber,tagName,'询盘趋势',$this.contrastName);                    
                     }
                     var ChartTab=[];
                     var currentMix=[];
@@ -972,7 +974,7 @@ export default {
                 }else{
                     //顶部询盘趋势
                     if(res.topxunnumber&&res.topxunnumber.length>0){
-                        $this.enquirieList=$this.areaPlug(res.topxunnumber,searchData.productname,'询盘趋势',$this.contrastName);                   
+                        $this.enquirieList=$this.echartareaPlug(res.topxunnumber,searchData.productname,'询盘趋势',$this.contrastName);                   
                     }
                     var ChartEnquirie=[];
                     var departcountChart=[];
@@ -1010,9 +1012,9 @@ export default {
                             departCount.push(itemObj);
                         });
                         var peitit='';
-                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='询盘个数 - 部门占比'}
-                        if($this.contrastName=='productCont'){peitit='询盘个数 - 产品占比'}
-                        if($this.contrastName=='timeCont'){peitit='询盘个数 - 时间占比'}
+                        if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='询盘个数 - 部门对比'}
+                        if($this.contrastName=='productCont'){peitit='询盘个数 - 产品对比'}
+                        if($this.contrastName=='timeCont'){peitit='询盘个数 - 时间对比'}
                         departcountChart=departcountChart.concat($this.piePlug(departCount,peitit,'enquirie','总询盘个数'));
                     }
                     //询盘地图
@@ -1087,9 +1089,9 @@ export default {
                                 departCount.push(itemObj);
                             });              
                             var peitit='';
-                            if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='成交积分 - 部门占比'}
-                            if($this.contrastName=='productCont'){peitit='成交积分 - 产品占比'}
-                            if($this.contrastName=='timeCont'){peitit='成交积分 - 时间占比'}          
+                            if($this.contrastName=='overview'||$this.contrastName=='departCont'){peitit='成交积分 - 部门对比'}
+                            if($this.contrastName=='productCont'){peitit='成交积分 - 产品对比'}
+                            if($this.contrastName=='timeCont'){peitit='成交积分 - 时间对比'}          
                             departcountChart=departcountChart.concat($this.piePlug(departCount,peitit,'score','总成交积分'));
                         }
                         //成交个数地图
@@ -1236,6 +1238,49 @@ export default {
       backData.TagName = TagName;
       backData.chartName = valName;
       return backData;
+    },
+    // 面积图插件
+    echartareaPlug(valData,valName,TagName,contrastName){
+        var $this = this;
+        var ChartColor=['#044bff','#fe4c46','#fdcb66','#47cbfe'];
+        var enquirieList=[];
+        var enquirieObj={
+            TagName:TagName,
+            chartName:valName,
+            randomStr:randomString(4),
+            ChartColor:[],
+            enquirieArr:[],
+            TagTime:[],
+        };
+        var newArr=[];
+        valData.forEach(function(item,index){
+            var newItemArr=[];
+            item.forEach(function(items,indexs){
+                var itemDate = [];
+                itemDate = items.date.split("-");
+                items.time =itemDate[1] + "-" + itemDate[2] + "\n" + items.weekday.replace("星期", "周");
+                if(index==0){
+                   enquirieObj.TagTime.push(items.time);
+                }
+                var itemObj={};
+                itemObj.name=items.time;
+                itemObj.color=ChartColor[index];
+                if(contrastName=='overview'||contrastName=='productCont'){
+                  itemObj.itemName=items.productname;
+                }
+                if(contrastName=='departCont'){
+                  itemObj.itemName=items.departname;
+                }
+                itemObj.value=items.number;
+                newItemArr.push(itemObj);             
+            });
+            newArr.push(newItemArr);
+        });
+        enquirieObj.ChartColor=ChartColor;
+        enquirieObj.enquirieArr=newArr;
+        enquirieList.push(enquirieObj);
+        return enquirieList;
+
     },
     // 面积图插件
     areaPlug(valData,valName,TagName,contrastName){

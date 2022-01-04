@@ -1,12 +1,10 @@
 import {
     getDayTarget,
     getDealNumTarget,
-    getDayNum,
     getDayFinish,
     getDepYearFinish,
     getEnDayTarget,
     getEnDealNumTarget,
-    getEnDayNum,
     getEnDayFinish,
     getEnDepYearFinish
 } from '@/api/homeobject'
@@ -14,16 +12,6 @@ import {
 const state = {}
 const mutations = {}
 const actions = {
-    // 获取中文日询盘
-    postDayNum({ commit, state },data) {
-        return new Promise((resolve, reject) => {
-            getDayNum(data).then(response => {
-                resolve(response)
-            }).catch(error => {
-                reject(error)
-            })
-        })
-    },
     // 中文月成交积分统计
     postDealNum({ commit, state },data) {
         return new Promise((resolve, reject) => {
@@ -65,16 +53,6 @@ const actions = {
         })
     },
 
-    // 获取英文日询盘
-    postEnDayNum({ commit, state },data) {
-        return new Promise((resolve, reject) => {
-            getEnDayNum(data).then(response => {
-                resolve(response)
-            }).catch(error => {
-                reject(error)
-            })
-        })
-    },
     // 英文月成交积分统计
     postEnDealNum({ commit, state },data) {
         return new Promise((resolve, reject) => {

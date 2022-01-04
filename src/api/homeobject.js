@@ -1,12 +1,4 @@
 import request from "@/utils/request";
-// 中文日询盘
-export function getDayNum(data) {
-    return request({
-      url: "/hxindex/Api/chinadaytargetnew",
-      method: "POST",
-      data
-    });
-  }
 // 中文月成交积分统计
 export function getDealNumTarget(data) {
   return request({
@@ -41,14 +33,6 @@ export function getDepYearFinish() {
   });
 }
 
-// 英文日询盘
-export function getEnDayNum(data) {
-  return request({
-    url: "/hxindex/Api/endaytargetnew",
-    method: "POST",
-    data
-  });
-}
 // 英文月成交积分统计
 export function getEnDealNumTarget(data) {
 return request({

@@ -117,7 +117,6 @@ export default {
       var $this = this;
       // 获取中文日询盘
       var nowDay = parseTime(new Date(),'{y}-{m}-{d}');
-      $this.getDepDayNum(nowDay);
       // 获取中文月积分
       var nowMonth = parseTime(new Date(),'{y}-{m}');
       $this.getMonthScore();
@@ -129,45 +128,9 @@ export default {
       $this.GetMonthDeal();
     },
 
-    // 1.获取中文日询盘
-    getDepDayNum(val){
-      var $this = this;
-      var data = {};
-      data.time = val;
-      $this.$store
-        .dispatch("homeobject/postDayNum", data)
-        .then((response) => {
-          if (response) {
-            if (response.status) {
-              var daymax = 0;
-              if(response.daymaxnumber.length>0){
-                daymax = response.daymaxnumber[0].effectivenumber;
-              }
-              var historymax = response.historymaxnumber[0].effectivenumber;
-              var todaynum = response.alltoday;
-              var yeaterdaynum = response.alllastday;
-              $this.DayScore.dayMaxNum = daymax;
-              $this.DayScore.historyMaxNum = historymax;
-              $this.DayScore.allTodayNum = todaynum;
-              $this.DayScore.allYesterdayNum = yeaterdaynum;
-              $this.getPercent(todaynum,yeaterdaynum);
-            } else {
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: "error",
-                duration: 6000
-              });
-              $this.$router.push({path: `/login?redirect=${$this.$router.currentRoute.fullPath}`})
-            }
-          }
-      });
-    },
-
     // 1.中文日询盘：日期改变
     dayChange(val){
       var $this = this;
-      $this.getDepDayNum(val);
       $this.getDepDayTarget(val);
     },
 
@@ -317,6 +280,20 @@ export default {
               }
               $this.DayTarget = newArr;
               $this.DayAim = aimArr;
+              
+              
+              var daymax = 0;
+              if(response.daymaxnumber.length>0){
+                daymax = response.daymaxnumber[0].effectivenumber;
+              }
+              var historymax = response.historymaxnumber[0].effectivenumber;
+              var todaynum = response.alltoday;
+              var yeaterdaynum = response.alllastday;
+              $this.DayScore.dayMaxNum = daymax;
+              $this.DayScore.historyMaxNum = historymax;
+              $this.DayScore.allTodayNum = todaynum;
+              $this.DayScore.allYesterdayNum = yeaterdaynum;
+              $this.getPercent(todaynum,yeaterdaynum);
             } else {
               $this.$message({
                 showClose: true,
