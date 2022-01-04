@@ -70,6 +70,9 @@
           </router-link>
         </li>
       </ul>
+      <ul class="top-view" ref="topul" v-else>
+        <span class="nodata">暂无数据</span>
+      </ul>
     </div>
     
   </div>
@@ -115,7 +118,6 @@ export default {
       changeType(val){
         this.type = val;
         this.getData();
-        console.log(this.scoretop5)
       },
       getData(){
         let topdata = [];

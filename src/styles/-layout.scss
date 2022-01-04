@@ -8,7 +8,7 @@
     .header-panel{
         width:100%;
         position: relative;
-        height: 54px;
+        height: 50px;
         display: flex;
         -webkit-box-align: center;
         align-items: center;
@@ -216,7 +216,7 @@
             .logo-link {
                 display: block;
                 height: 100%;
-                padding: 9px 20px;
+                padding: 7px 20px;
                 font-size:0;
                 line-height:0;
                 position: relative;
@@ -224,28 +224,27 @@
                     float:left;
                 }
                 .logo-img {
-                    height: 35px;
+                    height: 33px;
                 }
                 .logo-title {
                     display: inline-block;
-                    height: 30px;
-                    margin-left: 15px;
-                    font-size:$fontsize18;
+                    height: 28px;
+                    margin-left: 17px;
+                    font-size:$fontsize16;
                     color: #0e0e0e;
-                    line-height: 35px;
-                    font-weight: bold;
-                    padding-left: 13px;
+                    line-height: 32px;
+                    padding-left: 15px;
                     margin-top:4px;
                     position: relative;
                     &::before{
                         content:'';
                         display: block;
                         width: 1px;
-                        height: 17px;
+                        height: 22px;
                         background: #ababab;
                         position: absolute;
                         left: 1px;
-                        top:9px;
+                        top:6px;
                     }
                 }
             }

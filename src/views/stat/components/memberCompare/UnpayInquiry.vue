@@ -5,7 +5,8 @@
           <p><span>{{isdep1?"付费":"非付费"}}成员年度排行</span>(单位：个)</p>
       </div>
       <div class="inquiryRank">
-          <ul class="inul"  :style="'height:'+ unpayInquirySet.boxHeight" >
+          <ul class="inul" :style="'height:'+ unpayInquirySet.boxHeight" >
+            <template v-if="unpayInquiry.length > 0">
               <li v-for="(item,index) in unpayInquiry" :key="index">
                 <router-link :to="{path: lang == 'ch'?'/stat/cn/memberAnalysis/singlePerson':'/stat/en/memberAnalysis/singlePerson',query:{deptId:item.dept_id,itemId:item.id}}" tag="a" target="_blank"> 
                   <div class="rankNum">
@@ -30,6 +31,10 @@
                   </div>
                   </router-link>
               </li>
+            </template>
+            <template v-else>
+              <li class="nodata">暂无数据</li>
+            </template>
           </ul>
           <div class="inMore" v-if="unpayInquirySet.ifFold" :class="!unpayInquirySet.isFold? 'inRotate' : 'rowRotate' "  @click="showAll" ></div>
       </div>

@@ -193,7 +193,10 @@ export default {
                     itemStyle: {
                       color: function(params) {
                         return colorList[params.dataIndex]
-                      }
+                      },
+                      // borderColor: "rgba(255, 255, 255, 0.6)",
+                      // borderWidth: "1",
+                      // borderType: "solid"
                     },
                     z:4,
                     labelLine: {
@@ -225,7 +228,8 @@ export default {
                 },
                 // 边框的设置
                 {
-                  radius: ['32%', '38%'],
+                  radius: ['0%', '33%'],
+                  // radius: ['32%', '38%'],
                   center: ['50%', '50%'],
                   type: 'pie',
                   z:4,
@@ -239,7 +243,8 @@ export default {
                       show: false
                   },
                   itemStyle: {
-                    color:'rgba(0,0,0,0.2)'
+                    // color:'rgba(0,0,0,0.2)'
+                    color: "#1d2244"
                   },
                   emphasis: {
                     scale: false
@@ -247,6 +252,34 @@ export default {
                   data: [{
                       value: 1,
                   }],
+                },
+                {
+                    radius: ['0%', '58%'],
+                    center: ['50%', '50%'],
+                    type: 'pie',
+                    z:0,
+                    label: {
+                      show: false
+                    },
+                    labelLine: {
+                      show: false
+                    },
+                    animation: false,
+                    tooltip: {
+                      show: false
+                    },
+                    itemStyle: {
+                      color: "rgba(255, 255, 255, 0.6)",
+                      borderColor: "rgba(255, 255, 255, 0.6)",
+                      borderWidth: "1",
+                      borderType: "solid"
+                    },
+                    emphasis: {
+                      scale: false
+                    },
+                    data: [{
+                        value: 1,
+                    }],
                 }
             ]
         };

@@ -435,7 +435,7 @@
       top: 0;
       right: 0;
       bottom: 0;
-      background: url(../assets/shadow_bg.png) left bottom no-repeat;
+      background: url(../assets/bg_light.png) center center no-repeat;
       background-size: 100% auto;
     }
   }
@@ -474,6 +474,14 @@
   }
   .top-view{
     margin-top: 25px;
+    height: 314px;
+    .nodata{
+      display: block;
+      text-align: center;
+      line-height: 300px;
+      font-size: 14px;
+      color: #9ea5af;
+    }
     .top-item{
       display: flex;
       padding: 13px 5px;
@@ -768,6 +776,18 @@
 }
 .hxpage.btm_prochart{
   padding-bottom: 10px;
+  position: relative;
+  .productChart{
+    height: 336px;
+    position: absolute;
+    bottom: 10px;
+    left: 25px;
+    right: 25px;
+    text-align: center;
+    line-height: 320px;
+    font-size: 14px;
+    color: #9ea5af;
+  }
 }
 .toolDiv{
   .title{
@@ -800,6 +820,7 @@
 #HotProductChart{
   height: 336px;
 }
+
 .product_list{
   margin-top: -24px;
   position: relative;

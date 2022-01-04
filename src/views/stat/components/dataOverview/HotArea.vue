@@ -311,7 +311,7 @@ export default {
               height: 140,
               lineHeight:140,
               fontSize: 12,
-              color: '#999'
+              color: '#a6c1d9'
             },
             realtime: false, // 拖拽时，是否实时更新
             calculable: true, // 是否显示拖拽用的手柄
@@ -332,7 +332,7 @@ export default {
           geo: {
             map: "china",
             roam: false,// 一定要关闭拖拽
-            zoom: 1.1,
+            zoom: 1.2,
             label: {
               show: false // 是否显示对应地名
             },
@@ -363,7 +363,7 @@ export default {
               map: 'china', // 地图类型
               // 是否开启鼠标缩放和平移漫游 默认不开启 如果只想要开启缩放或者平移，可以设置成 'scale' 或者 'move' 设置成 true 为都开启
               roam: false,
-              zoom:1.1,
+              zoom:1.2,
               // 自定义地区的名称映射
               // nameMap:worldNameMap(),
               // 图形上的文本标签
@@ -517,27 +517,27 @@ export default {
           dataset:{
             source:mapCountData
           },
-          grid: { containLabel: true },
+          grid: { containLabel: true,right: 40, top: 80 },
           xAxis: { 
             type: 'value',
             scale: true,
             position: 'top',
             splitNumber:2,
-            max: function (value) {
-              var len = 0;
-              if(value.max.toString().indexOf(".")-1){
-                len = value.max.toString().split(".")[0].length;
-              }else{
-                len = value.max.toString().length;
-              }
-              if(len>2){
-                return (parseInt(value.max/Math.pow(10,len-1))+2)*Math.pow(10,len-1)
-              }
-            },
+            // max: function (value) {
+            //   var len = 0;
+            //   if(value.max.toString().indexOf(".")-1){
+            //     len = value.max.toString().split(".")[0].length;
+            //   }else{
+            //     len = value.max.toString().length;
+            //   }
+            //   if(len>2){
+            //     return (parseInt(value.max/Math.pow(10,len-1))+2)*Math.pow(10,len-1)
+            //   }
+            // },
             axisLine: {
               show: true,
               lineStyle: {
-                  color: '#455B77',
+                  color: 'rgba(230,230,230,0.1)'
               },
             },
             axisTick: {
@@ -546,14 +546,13 @@ export default {
             axisLabel: {
               margin: 2,
               textStyle: {
-                  color: '#c0e6f9',
+                  color: '#a6a6a6',
               },
             },
             splitLine:{
               lineStyle:{
-                color: '#c0e6f9',
-                type:'dashed',
-                opacity:0.2
+                color: '#333958',
+                type:'dashed'
               }
             }
           },
@@ -564,7 +563,7 @@ export default {
             axisLine: {
               show: true,
               lineStyle: {
-                color: '#455B77',
+                color: '#333a59'
               },
             },
             axisTick: {
@@ -573,8 +572,7 @@ export default {
             axisLabel: {
               rotate:$this.language=="英文"?45:0,
               textStyle: {
-                  color: '#c0e6f9',
-                  
+                  color: '#a6a6a6',
               },
             },
           },
@@ -610,12 +608,12 @@ export default {
                 // Map the "product" column to Y axis
                 y: $this.language=="中文"?'name':'country'
               },
-              barWidth:15,
+              barWidth:10,
               label: {
                 show: true, // 是否显示标签
                 position:'right',
                 borderWidth:0,
-                color: '#c0e6f9',
+                color: '#a6a6a6',
               },
               // 高亮状态下的多边形和标签样式
               emphasis: {
@@ -739,7 +737,7 @@ export default {
               height: 140,
               lineHeight:140,
               fontSize: 12,
-              color: '#999'
+              color: '#a6c1d9'
             },
             realtime: false, // 拖拽时，是否实时更新
             calculable: true, // 是否显示拖拽用的手柄

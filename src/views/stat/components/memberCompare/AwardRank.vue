@@ -1,11 +1,12 @@
 <template>
   <div class="memberAward">
       <div class="memberTit">
-          <h3>奖金排行榜<span>({{moneytime}})</span></h3>
+          <h3>奖金排行榜<span v-if="moneytime">({{moneytime}})</span></h3>
           <p>(单位：元)</p>
       </div>
       <div class="awardRank">
           <ul class="inul" :style="'height:'+ awardMoneySet.boxHeight">
+            <template v-if="awardMoney.length > 0">
               <li class="flex-box" v-for="(item,index) in awardMoney" :key="index">
                 <router-link :to="{path: lang == 'ch'?'/stat/cn/memberAnalysis/singlePerson':'/stat/en/memberAnalysis/singlePerson',query:{deptId:item.dept_id,itemId:item.uid}}" tag="a" target="_blank">  
                   <div class="rankNum">
@@ -36,6 +37,10 @@
                   </div>
                   </router-link>
               </li>
+            </template>
+            <template v-else>
+              <li class="nodata">暂无数据</li>
+            </template>
           </ul>
           <div class="awardMore" v-if="awardMoneySet.ifFold" :class="!awardMoneySet.isFold? 'inRotate' : 'rowRotate' "  @click="showAll" ></div>
       </div>

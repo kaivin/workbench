@@ -546,7 +546,7 @@ export function rankingWithTotalItem(dataArr,key){
   let ranking = 0; // 排名
   let same = 0; // 是否相同
   dataArr.forEach((item,index)=>{
-      if(item[key]==preValue){
+      if(item[key]==preValue && ranking != 0){
           item.ranking = ranking;
           same++;
       }else{

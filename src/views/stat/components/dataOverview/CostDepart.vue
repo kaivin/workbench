@@ -240,6 +240,9 @@ export default {
                         }
                       }
                   },
+                  tooltip:{
+                      show: false
+                  },
                   datasetIndex:2,
                 },
                 //下半截柱状图

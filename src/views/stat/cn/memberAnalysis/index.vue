@@ -37,7 +37,6 @@
                 :ByTime ="Inquirytime"
                 @changeSet="changeSet"
                 :isdep1="isdep1"
-                v-if="unpayInquiry.length>0"
               ></unpay-inquiry>
             </template>
             <template v-if='searchData.dept_id==12'>
@@ -48,7 +47,6 @@
                 :ByTime ="Paytime"
                 :isdep1="isdep1"
                 @changeSet="changeSet"
-                v-if="payMember.length>0"
               ></unpay-inquiry>
             </template>
               <unpay-deal
@@ -58,7 +56,6 @@
                 :scoretime ="scoretime"
                 :lang="ch"
                 :isdep1="isdep1"
-                v-if="dealScore.length>0"
               ></unpay-deal>
               <million-deal
                 :millionDeal="millionDeal"
@@ -66,7 +63,6 @@
                 :lang="ch"
                 :scoretime ="scoretime"
                 @changeSet="changeSet"
-                v-if="millionDeal.length>0"
               ></million-deal>
               <div class="dealRankRight" v-if='searchData.dept_id!=""'>
                 <award-rank
@@ -76,14 +72,13 @@
                   :isAwardBool="isAwardBool"
                   :moneytime ="moneytime"
                   @changeSet="changeSet"
-                  v-if="awardMoney.length>0"
                 ></award-rank>
               </div>
           </div>
           <pay-member
             :payMember="payMember"
             :lang="ch"
-            v-if='searchData.dept_id==""&&payMember.length>0'
+            v-if='searchData.dept_id==""'
           ></pay-member>
         </div>
         <div class="dealRankRight" v-if='searchData.dept_id==""'>
@@ -94,7 +89,6 @@
             :isAwardBool="isAwardBool"
             :moneytime ="moneytime"
             @changeSet="changeSet"
-            v-if="awardMoney.length>0"
           ></award-rank>
         </div>
       </div>
@@ -116,32 +110,32 @@ export default {
       unpayInquiry: [],
       unpayInquirySet:{
         ifFold: false,//是否需要折叠
-        boxHeight: '',
+        boxHeight: '630px',
         isFold: false,
       },
       ch:'ch',
       dealScore:[],
       dealScoreSet:{
         ifFold: false,//是否需要折叠
-        boxHeight: '',
+        boxHeight: '630px',
         isFold: false,
       },
       payMember:[],
       payMemberSet:{
         ifFold: false,//是否需要折叠
-        boxHeight: '',
+        boxHeight: '630px',
         isFold: false,
       },
       millionDeal:[],
       millionDealSet:{
         ifFold: false,//是否需要折叠
-        boxHeight: '',
+        boxHeight: '630px',
         isFold: false,
       },
       awardMoney:[],
       awardMoneySet:{
         ifFold: false,//是否需要折叠
-        boxHeight: '',
+        boxHeight: '630px',
         isFold: false,
       },
       searchData:{
@@ -298,20 +292,23 @@ export default {
         var $this=this;
         $this.unpayInquiry=[];
         $this.unpayInquirySet.ifFold=false;
-        $this.unpayInquirySet.boxHeight='';
+        $this.unpayInquirySet.boxHeight='630px';
         $this.unpayInquirySet.isFold=false;
+        $this.payMemberSet.ifFold=false;
+        $this.payMemberSet.boxHeight='630px';
+        $this.payMemberSet.isFold=false;
         $this.dealScore=[];
         $this.dealScoreSet.ifFold=false;
-        $this.dealScoreSet.boxHeight='';
+        $this.dealScoreSet.boxHeight='630px';
         $this.dealScoreSet.isFold=false;
         $this.payMember=[];
         $this.millionDeal=[];
         $this.millionDealSet.ifFold=false;
-        $this.millionDealSet.boxHeight='';
+        $this.millionDealSet.boxHeight='630px';
         $this.millionDealSet.isFold=false;
         $this.awardMoney=[];
         $this.awardMoneySet.ifFold=false;
-        $this.awardMoneySet.boxHeight='';
+        $this.awardMoneySet.boxHeight='630px';
         $this.awardMoneySet.isFold=false;
         $this.scoretime='';
         $this.moneytime='';
@@ -378,7 +375,6 @@ export default {
                     $this.integralPlug(scorelist,scoretime);
                     // 百万成交
                     $this.MillionsPlug(alist);
-                    $this.anumber=1;
                   }
                   // 奖金排序
                   if(response.moneylist&&response.moneylist.length>0){
@@ -456,10 +452,8 @@ export default {
       $this.Inquirytime = varTime;
       if(varData.length < 10){
           $this.unpayInquirySet.ifFold = false;
-          $this.unpayInquirySet.boxHeight = "auto";
       }else{
           $this.unpayInquirySet.ifFold = true;
-          $this.unpayInquirySet.boxHeight = "630px";
           $this.unpayInquirySet.isFold = false;
       }
     },
@@ -476,10 +470,8 @@ export default {
       $this.scoretime = varTime;
       if(varData.length < 10){
           $this.dealScoreSet.ifFold = false;
-          $this.dealScoreSet.boxHeight = "auto";
       }else{
           $this.dealScoreSet.ifFold = true;
-          $this.dealScoreSet.boxHeight = "630px";
           $this.dealScoreSet.isFold = false;
       }
     },
@@ -493,15 +485,12 @@ export default {
         item.numberStr = numSeparate(item.number);
         item.deptName=item.departname;
       });
-      console.log(payMember)
       $this.payMember=payMember;
       $this.Paytime = varTime;
       if(varData.length < 10){
           $this.payMemberSet.ifFold = false;
-          $this.payMemberSet.boxHeight = "auto";
       }else{
           $this.payMemberSet.ifFold = true;
-          $this.payMemberSet.boxHeight = "630px";
           $this.payMemberSet.isFold = false;
       }
     },
@@ -526,10 +515,8 @@ export default {
       $this.millionDeal=millionDeal;
       if(varData.length < 10){
           $this.millionDealSet.ifFold = false;
-          $this.millionDealSet.boxHeight = "auto";
       }else{
           $this.millionDealSet.ifFold = true;
-          $this.millionDealSet.boxHeight = "630px";
           $this.millionDealSet.isFold = false;
       }
     },
@@ -547,7 +534,6 @@ export default {
       $this.moneytime = varTime;
       if(varData.length < 10){
           $this.awardMoneySet.ifFold = false;
-          $this.awardMoneySet.boxHeight = "auto";
       }else{
           $this.awardMoneySet.ifFold = true;
           if($this.searchData.dept_id==""){
@@ -555,7 +541,6 @@ export default {
               $this.awardMoneySet.boxHeight = "1133px";
           }else{
               $this.isAwardBool=true;
-              $this.awardMoneySet.boxHeight = "630px";
           }
           $this.awardMoneySet.isFold = false;
       }

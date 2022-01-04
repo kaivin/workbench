@@ -1,11 +1,12 @@
 <template>
-  <div class="millionDeal" v-if="millionDeal.length > 0">
+  <div class="millionDeal">
       <div class="memberTit">
-          <h3>百万成交榜单<span>({{dateTime}})</span></h3>
+          <h3>百万成交榜单<span v-if="dateTime">({{dateTime}})</span></h3>
           <p>(单位：个)</p>
       </div>
     <div class="milRank">
         <ul class="milul" :style="'height:'+ millionDealSet.boxHeight">
+          <template v-if="millionDeal.length > 0">
             <li v-for="(item,index) in millionDeal" :key="index">
                 <router-link :to="{path: lang == 'ch'?'/stat/cn/memberAnalysis/singlePerson':'/stat/en/memberAnalysis/singlePerson',query:{deptId:item.dept_id,itemId:item.uid}}" tag="a" target="_blank"> 
                 <div class="rankNum" >
@@ -31,6 +32,10 @@
                 </div>
                 </router-link>
             </li>
+          </template>
+          <template v-else>
+            <li class="nodata">暂无数据</li>
+          </template>
         </ul>
         <div class="milMore" v-if="millionDealSet.ifFold" :class="!millionDealSet.isFold? 'inRotate' : 'rowRotate' "  @click="showAll" ></div>
     </div>
@@ -77,12 +82,16 @@ export default {
   computed:{
     dateTime(){
       var $this = this;
-      var datearr=$this.scoretime.split("|");
-      var newarr=[];
-      for(var i=0;i<datearr.length;i++){
-        datearr[i] = datearr[i].split("-").join(".");
+      if($this.scoretime){
+        var datearr=$this.scoretime.split("|");
+        var newarr=[];
+        for(var i=0;i<datearr.length;i++){
+          datearr[i] = datearr[i].split("-").join(".");
+        }
+        return datearr.join(' ~ ');
+      }else{
+        return ""
       }
-      return datearr.join(' ~ ');
     }
   },
   methods:{

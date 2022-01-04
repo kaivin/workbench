@@ -1,15 +1,16 @@
 <template>
   <div class="memberDeal">
       <div class="memberTit" v-if="lang =='ch'">
-          <h3>成交积分榜单<span>({{dateTime}})</span></h3>
+          <h3>成交积分榜单<span v-if="dateTime">({{dateTime}})</span></h3>
           <p><span>{{isdep1?"付费":"非付费"}}成员年度排行</span>(单位：分)</p>
       </div>
       <div class="memberTit" v-else>
-          <h3>成交个数榜单<span>({{dateTime}})</span></h3>
+          <h3>成交个数榜单<span v-if="dateTime">({{dateTime}})</span></h3>
           <p><span>{{isdep1?"付费":"非付费"}}成员年度排行</span>(单位：个)</p>
       </div>
       <div class="dealRank">
           <ul class="deul" :style="'height:'+ dealScoreSet.boxHeight">
+            <template v-if="dealScore.length >0">
               <li v-for="(item,index) in dealScore" :key="index">
                 <router-link :to="{path: lang == 'ch'?'/stat/cn/memberAnalysis/singlePerson':'/stat/en/memberAnalysis/singlePerson',query:{deptId:item.dept_id,itemId:item.uid}}" tag="a" target="_blank"> 
                   <div class="rankNum">
@@ -46,6 +47,10 @@
                   </div>
                   </router-link>
               </li>
+            </template>
+            <template v-else>
+               <li class="nodata">暂无数据</li>
+            </template>
           </ul>
           <div class="deMore" v-if="dealScoreSet.ifFold" :class="!dealScoreSet.isFold? 'inRotate' : 'rowRotate' "  @click="showAll" ></div>
       </div>
@@ -98,12 +103,16 @@ export default {
   computed:{
     dateTime(){
       var $this = this;
-      var datearr=$this.scoretime.split("|");
-      var newarr=[];
-      for(var i=0;i<datearr.length;i++){
-        datearr[i] = datearr[i].split("-").join(".");
+      if($this.scoretime){
+        var datearr=$this.scoretime.split("|");
+        var newarr=[];
+        for(var i=0;i<datearr.length;i++){
+          datearr[i] = datearr[i].split("-").join(".");
+        }
+        return datearr.join(' ~ ');
+      }else{
+        return ""
       }
-      return datearr.join(' ~ ');
     }
   },
   methods:{
