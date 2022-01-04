@@ -517,7 +517,7 @@ export default {
           dataset:{
             source:mapCountData
           },
-          grid: { containLabel: true,right: 40, top: 80 },
+          grid: { containLabel: true,right: 40, top: 80},
           xAxis: { 
             type: 'value',
             scale: true,
