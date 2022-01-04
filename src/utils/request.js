@@ -1,7 +1,7 @@
 ﻿/* eslint-disable */
 import axios from 'axios'
 import { Message } from 'element-ui'
-import Qs from 'qs';
+import qs from 'qs';
 import routerDom from '@/router'
 import store from '@/store'
 import { getSessionID } from '@/utils/session'
@@ -32,7 +32,7 @@ service.interceptors.request.use(
               }
             }
           }
-          newData = Qs.stringify(data);
+          newData = qs.stringify(data);
         }
         return newData;
     }];
