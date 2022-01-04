@@ -11,11 +11,11 @@ const service = axios.create({
   withCredentials: true, // send cookies when cross-domain requests
   crossDomain:true,
   timeout: 50000, // request timeout
-  url:""
-  // headers:{
-  //     'Content-Type':'application/x-www-form-urlencoded;charset=utf-8',
-  //     "Access-Control-Allow-Origin":"*"
-  // },
+  url:"",
+  headers:{
+      'Content-Type':'application/x-www-form-urlencoded;charset=utf-8',
+      // "Access-Control-Allow-Origin":"*"
+  },
 })
 // request interceptor
 service.interceptors.request.use(
