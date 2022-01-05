@@ -102,9 +102,8 @@ export default {
               $this.hasData = true;
               showchart = 1;
               for(let i = 0;i<chartBotData.length;i++){
-                xAxisData.push(chartBotData[i].productname);
+                xAxisData.push(chartBotData[i].aliasname);
                 seriesData.push(chartBotData[i].number);
-
                 var obj = {};
                 obj.value= chartBotData[i].number;
                 obj.symbol = 'image://' + chartBotData[i].pimg;
@@ -137,9 +136,8 @@ export default {
               $this.hasData = true;
               showchart = 1;
               for(let i = 0;i<chartBotData.length;i++){
-                  xAxisData.push(chartBotData[i].xunproduct);
+                  xAxisData.push(chartBotData[i].aliasname);
                   seriesData.push(chartBotData[i].score);
-
                   var obj = {};
                   obj.value= chartBotData[i].score;
                   obj.symbol = 'image://' + chartBotData[i].pimg;
@@ -170,7 +168,7 @@ export default {
               $this.hasData = true;
               showchart = 1;
               for(let i = 0;i<chartBotData.length;i++){
-                  xAxisData.push(chartBotData[i].xunproduct);
+                  xAxisData.push(chartBotData[i].aliasname);
                   seriesData.push(chartBotData[i].number);
 
                   var obj = {};
@@ -521,6 +519,40 @@ export default {
           myChart.setOption(option);
           this.echartsResize = this.myChart.resize();
 
+          myChart.on('click', function (params) {
+            let dataIndex = params.dataIndex;
+            let id = chartBotData[dataIndex].typeid;
+            let productname = '';
+            if($this.type==1){
+              productname = chartBotData[dataIndex].productname;
+            }else{
+              productname = chartBotData[dataIndex].xunproduct;
+            }
+            console.log(chartBotData)
+            var date = new Date();
+            var endDate = '';
+            var endYear = date.getFullYear();
+            var endMonth = date.getMonth() + 1;
+            var startYear;
+            var startMonth;
+            var startDate = '';
+            if(endMonth>6){
+              startMonth = endMonth-6;
+              startYear = endYear;
+            }else{
+              startMonth = endMonth+6;
+              startYear = endYear-1;
+            }
+            startMonth = startMonth<10?'0'+startMonth:startMonth;
+            endMonth = endMonth<10?'0'+endMonth:endMonth; 
+            startDate = startYear+"-"+startMonth;
+            endDate = endYear+"-"+endMonth;
+            if($this.language == '中文'){
+              $this.$router.push({path:'/stat/cn/productAnalysis/ProAccount',query:{starttime:startDate,endtime:endDate,productname:productname,typeid:id}});
+            }else{
+              $this.$router.push({path:'/stat/en/productAnalysis/ProAccount',query:{starttime:startDate,endtime:endDate,productname:productname,typeid:id}});
+            }
+          })
         }
 
       },

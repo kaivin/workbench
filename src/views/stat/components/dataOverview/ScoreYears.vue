@@ -229,7 +229,15 @@ export default {
                         },
                         opacity: 0.66
                     },
-                    symbolSize: 7
+                    symbolSize: 5,
+                    symbol:'circle',
+                    itemStyle : { 
+                      normal: {
+                        color: "#fff",
+                        borderColor:'#4f8afa',
+                        borderWidth:1,
+                      },
+                    }
                 },
             ],
         };

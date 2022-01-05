@@ -9,7 +9,7 @@
               <div class="tags-btn" :class="!sidebar.opened?'btn-active':''"><hamburger v-bind:is-fold="!sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" /></div>
               <div class="tags-list"><tags-view  /></div>
           </div>
-        <el-main :style="{'margin-top':isSales?'54px':''}" class="main-layout" v-if="isRefresh">
+        <el-main :style="{'margin-top':isSales?'48px':''}" class="main-layout" v-if="isRefresh">
           <transition name="fade-transform" mode="out-in">
               <router-view :key="key"></router-view>
             </transition>
@@ -138,20 +138,21 @@ export default {
     width: calc(100% - 220px);
     right: 0;
     border-top: 1px solid #d8dce5;
+    border-bottom: 1px solid #d8dce5;
     top: 50px;
     transition: width .28s;
     background: #fff;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+    // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
     .tags-btn{
-      width: 54px;
+      width: 48px;
       text-align: center;
-      line-height: 54px;
+      line-height: 48px;
       float: left;
       cursor: pointer;
     }
     .tags-list{
       float: left;
-      width: calc(100% - 54px);
+      width: calc(100% - 48px);
     }
     .fold-button{
       transition: all .3s;
@@ -164,7 +165,8 @@ export default {
 .tags-color{
   border-top: 1px solid #12182b;
   background: #12182b;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+  border-bottom: 1px solid #12182b;
+  // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
   .fold-button{
     color: #a2acc1;
   }

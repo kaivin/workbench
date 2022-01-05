@@ -71,7 +71,15 @@
                             <span
                               class="txt-icon"
                               :class="item1.is_new == 1 ? 'update' : 'new'"
-                              ><b>{{ item1.is_new == 1 ? "改" : "新" }}</b></span
+                              >
+                              <template v-if="item1.is_new == 1">
+                                <i class="svg-i"><svg-icon icon-class="new_update"></svg-icon></i>
+                              </template>
+                              <template v-else>
+                                <i class="svg-i"><svg-icon icon-class="new_add"></svg-icon></i>
+                              </template>
+                              <!-- <b>{{ item1.is_new == 1 ? "改" : "新" }}</b> -->
+                              </span
                             >
                             <span class="txt-type" v-if="item1.type == 1"
                               >【{{ item1.domain }} [{{ item1.website_id }}]】</span
@@ -91,7 +99,15 @@
                             <span
                               class="txt-icon"
                               :class="item1.is_new == 1 ? 'update' : 'new'"
-                              ><b>{{ item1.is_new == 1 ? "改" : "新" }}</b></span
+                              >
+                              <!-- <b>{{ item1.is_new == 1 ? "改" : "新" }}</b> -->
+                                <template v-if="item1.is_new == 1">
+                                  <i class="svg-i"><svg-icon icon-class="new_update"></svg-icon></i>
+                                </template>
+                                <template v-else>
+                                  <i class="svg-i"><svg-icon icon-class="new_add"></svg-icon></i>
+                                </template>
+                              </span
                             >
                             <span class="txt-type" v-if="item1.type == 1"
                               >【{{ item1.domain }} [{{ item1.website_id }}]】</span

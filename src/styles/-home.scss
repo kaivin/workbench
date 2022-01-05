@@ -356,26 +356,42 @@
                                     }
                                     .txt-icon{
                                         display:inline-block;
-                                        width:16px;
-                                        height:16px;
+                                        width:20px;
+                                        height:20px;
                                         line-height:15px;
                                         font-size:12px;
                                         text-align:center;
                                         border-radius:1px;
-                                        margin-top:8px;
+                                        margin-top:6px;
+                                        margin-right: 5px;
                                         b{
                                             display:block;
                                             font-weight:normal;
                                             transform:scale(.75);
                                         }
                                     }
+                                    .svg-i{
+                                        width: 20px;
+                                        height: 20px;
+                                        font-size: 20px;
+                                    }
+                                    // .update{
+                                    //     border:1px solid #2e88ff;
+                                    //     color:#2e88ff;
+                                    // }
+                                    // .new{
+                                    //     border:1px solid #ff840b;
+                                    //     color:#ff840b;
+                                    // }
                                     .update{
-                                        border:1px solid #2e88ff;
-                                        color:#2e88ff;
+                                        .svg-i{
+                                            color: #5787ff;
+                                        }
                                     }
                                     .new{
-                                        border:1px solid #ff840b;
-                                        color:#ff840b;
+                                        .svg-i{
+                                            color: #ff9c0f;
+                                        }
                                     }
                                     &:hover{
                                         margin-left:-5px;

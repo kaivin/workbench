@@ -72,7 +72,7 @@ export default {
     findHasChildrenMenu(dataArr){
       var $this = this;
       dataArr.forEach(function(item){
-        if(item.children.length>0){
+        if(item.children.length>0&&item.meta.id!=120){
           $this.openedSubMenu.push(item.meta.index);
         }
       });

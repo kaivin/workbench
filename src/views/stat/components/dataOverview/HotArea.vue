@@ -393,7 +393,7 @@ export default {
                   textBorderType:'solid',
                 },
                 itemStyle: {
-                  areaColor: 'yellow', // 地图区域的颜色
+                  areaColor: '#ffc119', // 地图区域的颜色
                   borderWidth: 0.5, // 描边线宽 为 0 时无描边
                   borderColor: '#91f4ff', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
                   borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
@@ -618,7 +618,7 @@ export default {
               // 高亮状态下的多边形和标签样式
               emphasis: {
                 itemStyle: {
-                  color: 'yellow', // 地图区域的颜色
+                  color: '#ffc119', // 地图区域的颜色
                 }
               },
             }
@@ -794,7 +794,7 @@ export default {
                   position:['50%','50%'],
                 },
                 itemStyle: {
-                  areaColor: 'yellow', // 地图区域的颜色
+                  areaColor: '#ffc119', // 地图区域的颜色
                   borderWidth: 0.5, // 描边线宽 为 0 时无描边
                   borderColor: '#91f4ff', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
                   borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'

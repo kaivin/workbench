@@ -84,7 +84,8 @@
           color: #fff;
         }
         &.is-active{
-          background:rgba(207,221,255,0.1);
+          // background:rgba(207,221,255,0.1);
+          background: #2b3354!important;
           &:before{
             content:'';
             height: 100%;
@@ -179,10 +180,10 @@ body[device="desktop"] ,body[device="mobile"]{
       padding-top: 0;
       padding-bottom: 20px;
       .item-link{
-        margin-top:11px;
+        margin-top:2px;
         .el-menu-item,.el-submenu__title{
-          height: 42px;
-          line-height: 42px;
+          height: 56px;
+          line-height: 56px;
           padding-left: 20px!important;
           .svg-i{
             width: 18px;
@@ -204,7 +205,7 @@ body[device="desktop"] ,body[device="mobile"]{
             margin-top: -7px;
             font-size:$fontsize13;
             right: 15px;
-            color: #656970;
+            color: #868c97;
           }
         }
         .el-submenu{
@@ -212,10 +213,10 @@ body[device="desktop"] ,body[device="mobile"]{
             margin-top: 4px;
             .item-link{
               .el-menu-item{
-                height: 32px;
-                line-height: 32px;
+                height: 36px;
+                line-height: 36px;
                 font-size:$fontsize13;
-                margin: 2px 0;
+                margin: 1px 0;
                 &.is-active{
                   &:before{
                     width: 4px;
@@ -224,8 +225,8 @@ body[device="desktop"] ,body[device="mobile"]{
                 span{
                   font-size:$fontsize13;
                   padding: 0 10px 0 20px;
-                  height: 32px;
-                  line-height: 32px;
+                  height: 36px;
+                  line-height: 36px;
                 }
               }
               &.has-children{

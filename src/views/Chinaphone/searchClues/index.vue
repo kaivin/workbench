@@ -1356,9 +1356,9 @@ export default {
       $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
       // 获取表格头吸顶需滚动的高度
       if($this.$refs.headerPane){
-         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20;
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20+48;
       }else{
-         $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15+20;
+         $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15+20+48;
       }
       $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
       if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
