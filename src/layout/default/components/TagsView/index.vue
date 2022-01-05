@@ -233,9 +233,9 @@ export default {
         color: #0048ff;
        
         &::before {
+          display: none;
           content: '';
           background: #fff;
-          display: inline-block;
           width: 8px;
           height: 8px;
           border-radius: 50%;

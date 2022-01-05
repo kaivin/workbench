@@ -2,9 +2,9 @@
     <el-aside class="sidebar-container" :class="sidebar.opened?'':'is-fold'">
       <div class="abs-panel">
         <el-scrollbar wrap-class="scrollbar-wrapper">
-          <el-tooltip class="item" effect="dark" :content="sidebar.opened?'收起':'展开'" placement="right">
+          <!-- <el-tooltip class="item" effect="dark" :content="sidebar.opened?'收起':'展开'" placement="right">
             <hamburger id="hamburger-container" v-bind:is-fold="!sidebar.opened" class="hamburger-container" v-on:toggleClick="toggleSideBar" />
-          </el-tooltip>
+          </el-tooltip> -->
           <el-menu
               :default-active="activeMenu"
               :collapse="isCollapse"

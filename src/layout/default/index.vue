@@ -138,7 +138,7 @@ export default {
     width: calc(100% - 220px);
     right: 0;
     border-top: 1px solid #d8dce5;
-    top: 54px;
+    top: 50px;
     transition: width .28s;
     background: #fff;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
