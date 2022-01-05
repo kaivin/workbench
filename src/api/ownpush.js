@@ -168,3 +168,11 @@ export function getExpenseadd(data) {
     }
   });
 }
+// 部门统计分析
+export function getOwnChinadepartcount(data) {
+  return request({
+    url: "/hxindex/Ownpush/chinadepartcount",
+    method: "POST",
+    data
+  });
+}

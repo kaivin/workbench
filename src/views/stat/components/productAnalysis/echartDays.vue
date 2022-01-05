@@ -108,6 +108,12 @@ export default {
                     ]),
                     opacity:0.3
               };
+              itemObj.showSymbol=false;
+              itemObj.emphasis={
+                lineStyle: {
+                  width: 2,	// hover时的折线宽度
+                }
+              };
               itemObj.symbolSize=7;
               itemObj.data=item;
               itemObj.animationDuration=2800;
@@ -122,6 +128,11 @@ export default {
                               width:1,
                               color:'#01b01d', // 线条颜色
                           },
+                       },
+                       emphasis:{
+                          lineStyle: {
+                            width:1,	// hover时的折线宽度
+                          }
                        }
             　　　}
               }
@@ -131,13 +142,13 @@ export default {
         var option;
         option = {
             tooltip: {
-                backgroundColor:'rgba(255,255,255,0.7)',
+                backgroundColor:'rgba(255,255,255,0.95)',
                 trigger: "axis",
             },
             grid: {
                 left: 10,
                 right: 40,
-                bottom:$this.contrastTag=='overview'?10:40,
+                bottom:$this.contrastTag=='overview'?'10':'40',
                 top: 30,
                 containLabel: true
             },
@@ -170,8 +181,9 @@ export default {
                     lineHeight: 18,
                 },
             },
-            yAxis: {
+            yAxis:[{
                 type: 'value',
+                position: 'left',
                 axisTick: {
                     show: false
                 },
@@ -209,7 +221,26 @@ export default {
                 nameTextStyle:{
                     lineHeight:20,
                 }
-            },
+            },{
+                type: 'value',
+                position: 'right',
+                axisTick: {
+                    show: false
+                },
+                axisLine:{
+                    show: true,
+                    lineStyle:{
+                        type: [4, 0],
+                        dashOffset: 3,
+                        color: '#e5e5e5',
+                        opacity: 1,
+                        shadowColor: null,
+                        shadowBlur: 0,
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                    }
+                },
+            }],
             legend:legend,
             series:series,
         };

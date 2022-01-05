@@ -30,7 +30,7 @@
                                         </el-date-picker>
                                     </div>
                                     <div class="item-search">
-                                        <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled"  type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+                                        <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                                         <el-button type="primary" plain class="resetBtn" size="small" v-if="menuButtonPermit.includes('Ownpush_expenseadd')">
                                           <label>
                                             <span class="button-font">导入excel</span>
@@ -86,7 +86,7 @@
                                 <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
                             </div>
                         </div>
-                        <div class="pagination-panel" v-if="totalDataNum>50" ref="pagePane">
+                        <div class="pagination-panel" v-if="totalDataNum>10" ref="pagePane">
                           <el-pagination
                             @size-change="handleSizeChange"
                             @current-change="handleCurrentChange"
@@ -140,7 +140,7 @@ export default {
       searchData:{                                   //搜索数据条件
         date:[],
         page:1,
-        limit:50,
+        limit:10,
       },
       pageSizeList:[10, 50, 100, 1000],           //分页每页条数
       totalDataNum:0,
@@ -162,8 +162,7 @@ export default {
             picker.$emit('pick', [start, end]);
           }
         }]
-      },
-      today:'',                                      //默认今天数据
+      },                                    //默认今天数据
       dialogExportVisible:false,                     //导出弹出边框
       exportloadLoading: false,                      //导入数据
       exportForm:{                                   //导出标签
@@ -195,7 +194,6 @@ export default {
         clientHeight:0,
       },
       isLoading:null,
-      isDisabled:false,                             //是否可以点击搜索按钮
     }
   },
   computed: {
@@ -238,7 +236,6 @@ export default {
   created(){
     var $this = this;
     $this.getBreadcrumbList();
-    $this.getToday();
     $this.initData();
   },
   updated(){
@@ -347,31 +344,12 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       });
     },
-    // 获取今天时间
-    getToday(){
-        var $this = this;
-        const date = new Date();
-        date.setTime(date.getTime());
-        var today = date.getFullYear()+"-"+(date.getMonth()+1>9?date.getMonth()+1:'0'+(date.getMonth()+1))+"-"+(date.getDate()+1>9?date.getDate():'0'+(date.getDate()));
-        $this.today = today;
-    },
     // 搜索数据
     searchResult(){
         var $this = this;
-        if(!$this.isDisabled){
-          $this.isDisabled=true;
-          //$this.loadingFun();
-          $this.searchData.page = 1;
-          $this.initPage();
-        }
-    },
-    // 重置表单
-    resetData(){
-        var $this = this;
-        $this.searchData.date=[];
-        $this.searchData.page=1;
-        $this.searchData.limit=50;
-        $this.searchResult();
+        $this.loadingFun();
+        $this.searchData.page = 1;
+        $this.initPage();
     },
     // 组装搜索数据
     searchDataInit(){
@@ -388,7 +366,7 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      //$this.loadingFun();
+      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -401,10 +379,7 @@ export default {
           if(res.status){
               $this.tableData=res.data;
               $this.totalDataNum = res.allcount;
-              //$this.isLoading.close();
-              setTimeout(()=>{
-                $this.isDisabled=false;
-              },1000);
+              $this.isLoading.close();
               $this.$nextTick(function () {
                 $this.setTableHeight();
               })
@@ -423,9 +398,6 @@ export default {
                 message: res.info,
                 type: 'error'
               });
-              setTimeout(()=>{
-                $this.isDisabled=false;
-              },1000);
             }
           }
         }
@@ -508,9 +480,9 @@ export default {
       let filedata = e.target.files[0];
       var formData = new FormData();
       formData.append('filename',filedata);
-      //$this.loadingFun();
+      $this.loadingFun();
       this.setExpenseaddAction(formData).then(res=>{
-        //$this.isLoading.close();
+        $this.isLoading.close();
         $this.$message({
           showClose: true,
           message: res.info,
@@ -594,7 +566,7 @@ export default {
         $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+54+20;
       }
       // 视窗宽高改变时需要设置默认滚动条的位置
-      if($this.totalDataNum>50){
+      if($this.totalDataNum>10){
         var scrTop = $this.$refs.scrollDom.scrollTop;
         if(scrTop+$this.scrollTable.clientHeight>=$this.scrollTable.tableBottom-20){
           $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-10;
@@ -634,7 +606,7 @@ export default {
             document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
           }
         }
-        if($this.totalDataNum>50){
+        if($this.totalDataNum>10){
           if(scrTop+$this.scrollTable.clientHeight>=$this.scrollTable.tableBottom-20){
             $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-10;
           }else{

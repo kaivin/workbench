@@ -20,6 +20,7 @@
     cnChannelDelete,
     getExpenselog,
     getExpenseadd,
+    getOwnChinadepartcount,
 } from '@/api/ownpush'
 
 const state = {}
@@ -232,6 +233,17 @@ const actions = {
     getExpenseaddAction({ commit }, data){
         return new Promise((resolve, reject) => {
             getExpenseadd(data).then(response => {
+                console.log(response)
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            });
+        });
+    },
+    // 部门统计分析
+    getOwnChinadepartcountAction({ commit }, data){
+        return new Promise((resolve, reject) => {
+            getOwnChinadepartcount(data).then(response => {
                 console.log(response)
                 resolve(response)
             }).catch(error => {

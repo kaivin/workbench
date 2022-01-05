@@ -118,7 +118,7 @@
 </template>
 <script>
 export default {
-  name: 'Ownpush_departAnalysis',
+  name: 'Ownpush_chinadepartcount',
   data() {
     return {
         minWidth:"",
