@@ -285,7 +285,7 @@ export default {
     }),
     //中文详情导入
     custormbuyFileUp(e){
-       var $this = this;
+      var $this = this;
       let filedata = e.target.files[0];
       var formData = new FormData();
       formData.append('filename',filedata);

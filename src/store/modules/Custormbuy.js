@@ -23,7 +23,6 @@ const actions = {
     setExportLinkAction({commit,state},data){
         return new Promise((resolve, reject)=>{
            setExportLink(data).then(response=>{
-               console.log(response)
                 resolve(response)
             }).catch(error => {
                 reject(error)

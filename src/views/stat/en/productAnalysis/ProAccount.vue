@@ -974,7 +974,22 @@ export default {
                 }else{
                     //顶部询盘趋势
                     if(res.topxunnumber&&res.topxunnumber.length>0){
-                        $this.enquirieList=$this.echartareaPlug(res.topxunnumber,searchData.productname,'询盘趋势',$this.contrastName);                   
+                        var tagName=[];
+                        res.topxunnumber.forEach(function(item,index){                            
+                            item.forEach(function(items,indexs){
+                                if($this.contrastName=='productCont'){
+                                    if(tagName.indexOf(items.productname)<0){
+                                      tagName.push(items.productname);
+                                    }
+                                }
+                                if($this.contrastName=='departCont'){
+                                    if(tagName.indexOf(items.departname)<0){
+                                      tagName.push(items.departname);
+                                    }
+                                }
+                            });
+                        });
+                        $this.enquirieList=$this.echartareaPlug(res.topxunnumber,tagName,'询盘趋势',$this.contrastName);                   
                     }
                     var ChartEnquirie=[];
                     var departcountChart=[];

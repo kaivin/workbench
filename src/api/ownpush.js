@@ -162,6 +162,9 @@ export function getExpenseadd(data) {
   return request({
     url: "/hxindex/Ownpush/expenseadd",
     method: "POST",
-    data
+    data,
+    headers:{
+      isFile:true,
+    }
   });
 }

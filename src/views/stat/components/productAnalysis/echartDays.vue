@@ -57,6 +57,24 @@ export default {
       var $this = this;
         var chartDom = document.getElementById('cluesChart'+$this.enquirieChart.randomStr);
         var myChart = echarts.init(chartDom, 'macarons');
+        var legend=false;
+        if($this.contrastTag=='overview'){
+          legend=false;
+        }else{
+          legend={
+            type:'plain',
+            show:true,
+            bottom:0,
+            orient:'horizontal',
+            data:$this.enquirieChart.chartName,
+            padding:0,
+            textStyle: {
+                color: "#555",
+                fontSize: "12",
+                lineHeight: 18,
+            },
+          }
+        }
         var series=[];
         if($this.enquirieChart.enquirieArr&&$this.enquirieChart.enquirieArr.length>0){
           $this.enquirieChart.enquirieArr.forEach(function(item,index){
@@ -96,7 +114,7 @@ export default {
               itemObj.animationEasing='quadraticOut';
               if($this.contrastTag=='overview'){
                   itemObj.markLine={
-            　　　　　　data : [
+            　　　　　　data:[
             　　　　　　　　{type :'average', name: '平均值'}
             　　　　　　],
                        lineStyle:{
@@ -119,7 +137,7 @@ export default {
             grid: {
                 left: 10,
                 right: 40,
-                bottom: 20,
+                bottom:$this.contrastTag=='overview'?10:40,
                 top: 30,
                 containLabel: true
             },
@@ -192,6 +210,7 @@ export default {
                     lineHeight:20,
                 }
             },
+            legend:legend,
             series:series,
         };
         option && myChart.setOption(option);

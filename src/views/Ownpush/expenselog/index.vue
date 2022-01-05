@@ -16,24 +16,32 @@
                                 <div class="search-wrap" ref="searchPane">
                                     <div class="item-search">
                                         <el-date-picker
-                                            class="date-picker"
-                                            size="small"
-                                            v-model="searchData.date"
-                                            type="daterange"
-                                            align="right"
-                                            value-format = "yyyy-MM-dd"
-                                            unlink-panels
-                                            range-separator="至"
-                                            start-placeholder="开始日期"
-                                            end-placeholder="结束日期"
-                                            :picker-options="pickerRangeOptions"
-                                            :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
+                                          v-model="searchData.date"
+                                          type="monthrange"
+                                          format="yyyy-MM"
+                                          value-format="yyyy-MM"
+                                          key="b"
+                                          size="mini"
+                                          class="date-range"
+                                          range-separator="～"
+                                          start-placeholder="开始日期"
+                                          end-placeholder="结束日期"
+                                          :picker-options="pickerMonthRangeOptions">
                                         </el-date-picker>
                                     </div>
                                     <div class="item-search">
                                         <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled"  type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
-                                        <el-button class="item-input sortup" type="primary" size="small" icon="el-icon-sort-up" @click="dialogImportVisible = true">导入Excel</el-button>
-                                        <el-button class="item-input sortdown" type="primary" size="small" icon="el-icon-sort-down" >导出Excel</el-button>
+                                        <el-button type="primary" plain class="resetBtn" size="small" v-if="menuButtonPermit.includes('Ownpush_expenseadd')">
+                                          <label>
+                                            <span class="button-font">导入excel</span>
+                                            <input style="display:none;" type="file" accept=".xlsx, .xls" @change="FileUp"/>
+                                          </label>
+                                        </el-button>
+                                        <el-button type="primary" plain class="resetBtn" size="small"  @click="dialogExportVisible = true">
+                                          <label>
+                                            <span class="button-font">导出Excel</span>
+                                          </label>
+                                        </el-button>
                                     </div>
                                 </div>
                             </div>
@@ -43,6 +51,7 @@
                                 <div class="table-mask"></div>
                                 <el-table
                                     ref="simpleTable"
+                                    :data="tableData"
                                     tooltip-effect="dark"
                                     stripe
                                     class="SiteTable"
@@ -51,8 +60,23 @@
                                     show-summary
                                     >
                                     <el-table-column
+                                    prop="mtime"
                                     label="日期"
-                                    width="100"
+                                    >
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop="pushname"
+                                    label="账户名"
+                                    >
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop="pushname"
+                                    label="渠道"
+                                    >
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop="money"
+                                    label="消费"
                                     sortable
                                     >
                                     </el-table-column>
@@ -62,18 +86,30 @@
                                 <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
                             </div>
                         </div>
+                        <div class="pagination-panel" v-if="totalDataNum>50" ref="pagePane">
+                          <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="searchData.page"
+                            :page-sizes="pageSizeList"
+                            :page-size="searchData.limit"
+                            :pager-count="pagerCount"
+                            :layout="'total, sizes, prev, pager, next, jumper'"
+                            :total="totalDataNum">
+                          </el-pagination>
+                        </div>
                     </el-card>
                 </div>
             </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-      <el-dialog title="导入" custom-class="export-dialog" :visible.sync="dialogImportVisible" width="440px">
-        <el-form :inline="true" :model="importForm">
+      <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="440px">
+        <el-form :inline="true" :model="exportForm">
             <el-form-item label="文件名称：" :label-width="formLabelWidth">
-            <el-input v-model="importForm.fileName" placeholder="文件名 (默认：excel-list)" prefix-icon="el-icon-document"></el-input>
+            <el-input v-model="exportForm.fileName" placeholder="文件名 (默认：excel-list)" prefix-icon="el-icon-document"></el-input>
             </el-form-item>
             <el-form-item label="文件类型：" :label-width="formLabelWidth">
-            <el-select v-model="importForm.bookType" placeholder="请选择导出文件类型" style="display:block;">
+            <el-select v-model="exportForm.bookType" placeholder="请选择导出文件类型" style="display:block;">
                 <el-option label="xlsx" value="xlsx"></el-option>
                 <el-option label="csv" value="csv"></el-option>
                 <el-option label="txt" value="txt"></el-option>
@@ -82,15 +118,15 @@
         </el-form>
         <template #footer>
             <span class="dialog-footer">
-            <el-button @click="dialogImportVisible = false">取 消</el-button>
-            <el-button :loading="importloadLoading" type="primary" icon="el-icon-document" @click="handleImportload">导 入</el-button>
+            <el-button @click="dialogExportVisible = false">取 消</el-button>
+            <el-button :loading="exportloadLoading" type="primary" icon="el-icon-document" @click="handleExportload">导 出</el-button>
             </span>
         </template>
       </el-dialog>
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters,mapActions} from 'vuex'
 export default {
   name: 'Ownpush_expenselog',
   data() {
@@ -100,20 +136,33 @@ export default {
       operationsWidth:"",                            //列表操作宽度
       tableData:[],                                  //列表数据
       tableHeight:200,                               //列表默认高度
-      dialogImportVisible:false,                     //导入弹出边框
-      importloadLoading: false,                      //导入数据
-      importForm:{                                   //导入标签
-        fileName:"",
-        bookType:"xlsx"
-      },
       formLabelWidth:"120px",                        //导出项目宽度
       searchData:{                                   //搜索数据条件
         date:[],
         page:1,
         limit:50,
       },
-      pageSizeList:[50, 500, 5000, 10000],           //分页每页条数
-      pickerRangeOptions: this.$pickerRangeOptions,  //时间数据
+      pageSizeList:[10, 50, 100, 1000],           //分页每页条数
+      totalDataNum:0,
+      pagerCount:5,
+      pickerMonthRangeOptions: {
+        shortcuts: [{
+          text: '今年至今',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date(new Date().getFullYear(), 0);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近六个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setMonth(start.getMonth() - 6);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
       today:'',                                      //默认今天数据
       dialogExportVisible:false,                     //导出弹出边框
       exportloadLoading: false,                      //导入数据
@@ -330,14 +379,7 @@ export default {
       var searchData = {};
       searchData.page = $this.searchData.page;
       searchData.limit = $this.searchData.limit;
-      searchData.pushtype = $this.searchData.processtype;
-      searchData.pushuser_id = $this.searchData.processuserid;
-      searchData.marketname = $this.searchData.account_id;
-      searchData.pushbrand = $this.searchData.brand_id;
-      if(!$this.searchData.date||$this.searchData.date.length==0){
-        searchData.starttime = "";
-        searchData.endtime = "";
-      }else{
+      if($this.searchData.date&&$this.searchData.date.length>0){
         searchData.starttime = $this.searchData.date[0];
         searchData.endtime = $this.searchData.date[1];
       }
@@ -354,9 +396,11 @@ export default {
       var $this = this;
       var searchData = $this.searchDataInit();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('ownpush/getExpenselogAction', searchData).then(response=>{
-        if(response){
-          if(response.status){
+      $this.$store.dispatch('ownpush/getExpenselogAction', searchData).then(res=>{
+        if(res){
+          if(res.status){
+              $this.tableData=res.data;
+              $this.totalDataNum = res.allcount;
               //$this.isLoading.close();
               setTimeout(()=>{
                 $this.isDisabled=false;
@@ -365,7 +409,7 @@ export default {
                 $this.setTableHeight();
               })
           }else{
-            if(response.permitstatus&&response.permitstatus==2){
+            if(res.permitstatus&&res.permitstatus==2){
               $this.$message({
                 showClose: true,
                 message: "未被分配该页面访问权限",
@@ -376,7 +420,7 @@ export default {
             }else{
               $this.$message({
                 showClose: true,
-                message: response.info,
+                message: res.info,
                 type: 'error'
               });
               setTimeout(()=>{
@@ -421,46 +465,28 @@ export default {
         }else{
           $this.$message({
             showClose: true,
-            message: response.info,
+            message: res.info,
             type: 'error'
           });
         }
       });
     },
     // 导出当前页数据
-    handleImportload() {
+    handleExportload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['ID', '电话','询盘时间','星期','域名','渠道', '地区', '城市', '意向设备','有效','无效原因','添加人','添加时间', '等级', '客服备注','客服原因', '链接', '平台', '关键词', '电商备注', '提供者', '设备']
+        const tHeader = ['ID','日期', '账户名','渠道','消费']
         const list = this.tableData
         const data = [];
         list.forEach(function(item,index){
           var itemData = [];
           itemData.push(item.id);
-          itemData.push(item.phonenumber);
-          itemData.push(item.xuntime);
-          itemData.push(item.weekday);
-          itemData.push(item.domain);
-          itemData.push(item.sourcename);
-          itemData.push(item.province);
-          itemData.push(item.city);
-          itemData.push(item.keyproduct);
-          itemData.push(item.effective==1?'有效':'无效');
-          itemData.push(item.invalidcause);
-          itemData.push(item.addusername);
-          itemData.push(item.addtime);
-          itemData.push(item.levelname);
-          itemData.push(item.custormremark);
-          itemData.push(item.custormcause);
-          itemData.push(item.url);
-          itemData.push(item.search);
-          itemData.push(item.searchword);
-          itemData.push(item.remark);
-          itemData.push(item.useridname);
-          itemData.push(item.device);
+          itemData.push(item.mtime);
+          itemData.push(item.pushname);
+          itemData.push(item.pushname);
+          itemData.push(item.money);
           data.push(itemData);
         });
-        // const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({
           header: tHeader,
           data,
@@ -472,6 +498,40 @@ export default {
         this.dialogExportVisible = false;
         this.exportForm.fileName = "";
       })
+    },
+    ...mapActions({
+      setExpenseaddAction:'ownpush/getExpenseaddAction'
+    }),
+    //导入数据
+    FileUp(e){
+      var $this = this;
+      let filedata = e.target.files[0];
+      var formData = new FormData();
+      formData.append('filename',filedata);
+      //$this.loadingFun();
+      this.setExpenseaddAction(formData).then(res=>{
+        //$this.isLoading.close();
+        $this.$message({
+          showClose: true,
+          message: res.info,
+          type: res.status?'success':'error',
+        });  
+        $this.searchData.page = 1;
+        $this.initPage();
+      })
+    },
+    // 每页显示条数改变事件
+    handleSizeChange(val) {
+      this.loadingFun();
+      this.searchData.limit = val;
+      this.searchData.page = 1;
+      this.initPage();
+    },
+    // 当前页改变事件
+    handleCurrentChange(val) {
+      this.loadingFun();
+      this.searchData.page = val;
+      this.initPage();
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){
