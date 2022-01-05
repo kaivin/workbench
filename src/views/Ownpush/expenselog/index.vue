@@ -92,7 +92,7 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Ownpush_consumption',
+  name: 'Ownpush_expenselog',
   data() {
     return {
       breadcrumbList:[],                             //面包屑导航
@@ -354,7 +354,7 @@ export default {
       var $this = this;
       var searchData = $this.searchDataInit();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('ownpush/cnCostListAction', searchData).then(response=>{
+      $this.$store.dispatch('ownpush/getExpenselogAction', searchData).then(response=>{
         if(response){
           if(response.status){
               //$this.isLoading.close();
@@ -396,7 +396,7 @@ export default {
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
-            if($this.menuButtonPermit.includes('Ownpush_consumption')){
+            if($this.menuButtonPermit.includes('Ownpush_expenselog')){
               var operationsWidth = 22;
               $this.operationsWidth = "" + operationsWidth;
               $this.initPage();

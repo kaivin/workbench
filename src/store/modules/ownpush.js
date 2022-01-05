@@ -18,6 +18,8 @@
     cnChannelAdd,
     cnChannelEdit,
     cnChannelDelete,
+    getExpenselog,
+    getExpenseadd,
 } from '@/api/ownpush'
 
 const state = {}
@@ -210,6 +212,26 @@ const actions = {
     cnChannelDeleteAction({ commit }, data){
         return new Promise((resolve, reject) => {
             cnChannelDelete(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            });
+        });
+    },
+    // 消费记录列表
+    getExpenselogAction({ commit }, data){
+        return new Promise((resolve, reject) => {
+            getExpenselog(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            });
+        });
+    },
+    // 消费记录excel导入
+    getExpenseaddAction({ commit }, data){
+        return new Promise((resolve, reject) => {
+            getExpenseadd(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

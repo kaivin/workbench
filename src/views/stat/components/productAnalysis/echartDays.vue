@@ -94,6 +94,19 @@ export default {
               itemObj.data=item;
               itemObj.animationDuration=2800;
               itemObj.animationEasing='quadraticOut';
+              if($this.contrastTag=='overview'){
+                  itemObj.markLine={
+            　　　　　　data : [
+            　　　　　　　　{type :'average', name: '平均值'}
+            　　　　　　],
+                       lineStyle:{
+                          normal: {
+                              width:1,
+                              color:'#01b01d', // 线条颜色
+                          },
+                       }
+            　　　}
+              }
               series.push(itemObj);
           });
         }

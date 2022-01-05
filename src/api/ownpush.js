@@ -149,3 +149,19 @@ export function cnChannelDelete(data) {
     data
   });
 }
+// 消费记录列表
+export function getExpenselog(data) {
+  return request({
+    url: "/hxindex/Ownpush/expenselog",
+    method: "POST",
+    data
+  });
+}
+// 消费记录excel导入
+export function getExpenseadd(data) {
+  return request({
+    url: "/hxindex/Ownpush/expenseadd",
+    method: "POST",
+    data
+  });
+}

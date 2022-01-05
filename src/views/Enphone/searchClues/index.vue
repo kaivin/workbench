@@ -720,7 +720,7 @@
             </div>     
             <el-backtop target=".scroll-panel"></el-backtop>
         </div>
-        <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="400px">
+        <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="440px">
             <el-form :inline="true" :model="exportForm">
                 <el-form-item label="文件名称：" :label-width="formLabelWidth">
                 <el-input v-model="exportForm.fileName" placeholder="文件名 (默认：excel-list)" prefix-icon="el-icon-document"></el-input>
@@ -1787,33 +1787,48 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['ID','电话','询盘时间','星期','域名','渠道','地区','城市','意向设备','有效','添加人','添加时间','等级','备注','原因','域名','链接','平台','关键词','备注','提供者','设备']
+        const tHeader = ['ID','时段','星期','本地时间','当地时间','域名','渠道','来源类型', '大洲', '国家','IP','设备','产品分类','意向产品','物料','产量','进料','出料','有效','无效原因','初次等级','性质','需求','状态','异常','备注','添加人','分配人','业务员','添加时间','分配时间','修改时间','业务时间','价值分', '备注1','备注2','备注3']
         const list = this.tableData
         const data = [];
         list.forEach(function(item,index){
           var itemData = [];
           itemData.push(item.id);
-          itemData.push(item.phonenumber);
-          itemData.push(item.xuntime);
+          itemData.push(item.timeing);
           itemData.push(item.weekday);
+          itemData.push(item.xuntime);
+          itemData.push(item.foreigntime);
           itemData.push(item.domain);
           itemData.push(item.sourcename);
-          itemData.push(item.province);
-          itemData.push(item.city);
-          itemData.push(item.keyproduct);
-          itemData.push(item.invalidcause);
-          itemData.push(item.addusername);
-          itemData.push(item.addtime);
-          itemData.push(item.levelname);
-          itemData.push(item.custormcause);
-          itemData.push(item.custormremark);
-          itemData.push(item.domain);
-          itemData.push(item.url);
-          itemData.push(item.search);
-          itemData.push(item.searchword);
-          itemData.push(item.remark);
-          itemData.push(item.useridname);
+          itemData.push(item.messagetype);
+          itemData.push(item.continent);
+          itemData.push(item.country);
+          itemData.push(item.ip);
           itemData.push(item.device);
+          itemData.push(item.producttypename);
+          itemData.push(item.keyproduct);
+          itemData.push(item.material);
+          itemData.push(item.production);
+          itemData.push(item.infeed);
+          itemData.push(item.outfeed);
+          itemData.push(item.isEffective?'有效':'无效');
+          itemData.push(item.invalidcause+item.noeffectivetime);
+          itemData.push(item.levelname);
+          itemData.push(item.ennaturename);
+          itemData.push(item.enxunpricename);
+          itemData.push(item.managestatus==1?'':'已开始处理');
+          itemData.push(item.erroring);
+          itemData.push(item.xunremark);
+          itemData.push(item.addusername);
+          itemData.push(item.allotusername);
+          itemData.push(item.hassale);
+          itemData.push(item.addtime);
+          itemData.push(item.allottime);
+          itemData.push(item.updatetime);
+          itemData.push(item.managetime);
+          itemData.push(item.score);
+          itemData.push(item.remark1);
+          itemData.push(item.remark2);
+          itemData.push(item.remark3);
           data.push(itemData);
         });
         // const data = this.formatJson(filterVal, list)

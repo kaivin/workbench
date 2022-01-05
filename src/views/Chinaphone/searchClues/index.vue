@@ -461,7 +461,7 @@
           </div>
       </div>    
     </div>   
-    <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="400px">
+    <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="440px">
       <el-form :inline="true" :model="exportForm">
         <el-form-item label="文件名称：" :label-width="formLabelWidth">
           <el-input v-model="exportForm.fileName" placeholder="文件名 (默认：excel-list)" prefix-icon="el-icon-document"></el-input>
