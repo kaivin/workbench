@@ -60,6 +60,12 @@
                               </template>
                             </el-table-column>
                             <el-table-column
+                              prop="aliasname"
+                              label="别名"
+                              min-width="120"
+                              >
+                            </el-table-column>
+                            <el-table-column
                               prop="typename"
                               label="产品分类"
                               min-width="120"
@@ -113,6 +119,11 @@
           <div class="item-form">
               <el-form-item label="产品名称：" :label-width="formLabelWidth">
                   <el-input v-model="dialogForm.name" ref="name"></el-input>
+              </el-form-item>
+          </div>
+          <div class="item-form">
+              <el-form-item label="别名：" :label-width="formLabelWidth">
+                  <el-input v-model="dialogForm.aliasname" ref="aliasname"></el-input>
               </el-form-item>
           </div>
           <div class="item-form">
@@ -175,6 +186,7 @@ export default {
       dialogForm:{
         id:0,
         name:"",
+        aliasname:"",
         typeid:"",
         productlevel:'',
         sort:"",
@@ -519,6 +531,7 @@ export default {
       $this.dialogForm.sort = row.sort==0?"":row.sort;
       $this.dialogForm.typeid = row.typeid;
       $this.dialogForm.productlevel = row.productlevel;
+      $this.dialogForm.aliasname = row.aliasname;
       $this.dialogForm.pimg = row.pimg;
     },
     // 保存添加/编辑数据
@@ -535,6 +548,7 @@ export default {
         formData.sort = $this.dialogForm.sort;
         formData.typeid = $this.dialogForm.typeid;
         formData.productlevel = $this.dialogForm.productlevel;
+        formData.aliasname = $this.dialogForm.aliasname;
         formData.pimg = $this.dialogForm.pimg;
         var pathUrl = "";
         if($this.dialogText=="编辑产品"){
@@ -609,6 +623,7 @@ export default {
       $this.dialogForm.sort = "";
       $this.dialogForm.typeid = "";
       $this.dialogForm.productlevel = "";
+      $this.dialogForm.aliasname = "";
       $this.dialogForm.pimg = "";
     },
     // 验证是否为空

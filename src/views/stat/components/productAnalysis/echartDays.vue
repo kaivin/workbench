@@ -86,6 +86,7 @@ export default {
         var option;
         option = {
             tooltip: {
+                backgroundColor:'rgba(255,255,255,0.7)',
                 trigger: "axis",
                 axisPointer: {
                     type: "line", 
