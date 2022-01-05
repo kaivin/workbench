@@ -95,7 +95,7 @@
           }
         }
         .el-submenu__icon-arrow{
-          font-weight: bold;
+          font-weight: none;
         }
       }
       .el-submenu{
@@ -176,7 +176,7 @@ body[device="desktop"] ,body[device="mobile"]{
       }
     }
     .sidebar-menu{
-      padding-top: 16px;
+      padding-top: 0;
       padding-bottom: 20px;
       .item-link{
         margin-top:11px;
@@ -202,8 +202,9 @@ body[device="desktop"] ,body[device="mobile"]{
           }
           .el-submenu__icon-arrow{
             margin-top: -7px;
-            font-size:$fontsize15;
+            font-size:$fontsize13;
             right: 15px;
+            color: #656970;
           }
         }
         .el-submenu{
@@ -263,7 +264,7 @@ body[device="iMax"]{
       }
     }
     .sidebar-menu{
-      padding-top: 16px;
+      padding-top: 0;
       padding-bottom: 20px;
       .item-link{
         margin-top:11px;
@@ -289,8 +290,9 @@ body[device="iMax"]{
           }
           .el-submenu__icon-arrow{
             margin-top: -5px;
-            font-size:$fontsize15;
+            font-size:$fontsize13;
             right: 15px;
+            color: #656970;
           }
         }
         .el-submenu{
@@ -346,8 +348,11 @@ body[device="iMax"]{
         vertical-align: top;
       }
     }
-    .el-menu-item,.el-submenu__title,.el-submenu__icon-arrow{
+    .el-menu-item,.el-submenu__title{
       font-size: 15px;
+    }.el-submenu__icon-arrow{
+      font-size: 13px;
+      color: #656970;
     }
   }
 }
@@ -362,7 +367,7 @@ body[device="iMax"]{
         top: 16px;
       }
       .sidebar-menu{
-        padding-top: 58px;
+        padding-top: 0;
         .item-link{
           margin-top:11px;
           .el-menu-item > div,.el-submenu > .el-submenu__title{
@@ -398,7 +403,7 @@ body[device="iMax"]{
         top: 16px;
       }
       .sidebar-menu{
-        padding-top: 62px;
+        padding-top: 0;
         .item-link{
           .el-menu-item > div,.el-submenu > .el-submenu__title{
             padding: 0 24px!important;

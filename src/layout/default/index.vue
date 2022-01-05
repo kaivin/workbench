@@ -134,7 +134,7 @@ export default {
 <style lang="scss" scoped>
 .tags-bar{
     position: fixed;
-    z-index: 98;
+    z-index: 1012;
     width: calc(100% - 220px);
     right: 0;
     border-top: 1px solid #d8dce5;
