@@ -460,7 +460,7 @@
                                   </template>
                                 </el-table-column>
                                 <el-table-column
-                                  prop="effective"
+                                  prop="isEffective"
                                   label="有效/原因"
                                   min-width="90"
                                   >
@@ -1935,7 +1935,7 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['ID','时段','星期','本地时间','当地时间','域名','渠道','来源类型', '大洲', '国家','IP','设备','产品分类','意向产品','物料','产量','进料','出料','有效','无效原因','初次等级','性质','需求','状态','异常','备注','添加人','分配人','业务员','添加时间','分配时间','修改时间','业务时间','价值分', '备注1','备注2',  '备注3']
+        const tHeader = ['ID','时段','星期','本地时间','当地时间','域名','渠道','来源类型', '大洲', '国家','IP','设备','产品分类','意向产品','物料','产量','进料','出料','有效','无效原因','初次等级','性质','需求','状态','异常','备注','添加人','分配人','业务员','添加时间','分配时间','修改时间','业务时间','价值分', '备注1','备注2','备注3']
         const list = this.tableData
         const data = [];
         list.forEach(function(item,index){
@@ -1958,7 +1958,7 @@ export default {
           itemData.push(item.production);
           itemData.push(item.infeed);
           itemData.push(item.outfeed);
-          itemData.push(item.effective==1?'有效':'无效');
+          itemData.push(item.isEffective?'有效':'无效');
           itemData.push(item.invalidcause+item.noeffectivetime);
           itemData.push(item.levelname);
           itemData.push(item.ennaturename);
@@ -1966,7 +1966,6 @@ export default {
           itemData.push(item.managestatus==1?'':'已开始处理');
           itemData.push(item.erroring);
           itemData.push(item.xunremark);
-          itemData.push(item.addusername);
           itemData.push(item.addusername);
           itemData.push(item.allotusername);
           itemData.push(item.hassale);

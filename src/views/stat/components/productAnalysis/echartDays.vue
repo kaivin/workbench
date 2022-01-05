@@ -70,13 +70,27 @@ export default {
                     width: 2,
                     color:$this.enquirieChart.ChartColor[index], // 线条颜色
                 },
-              },
-              itemObj.areaStyle={
+              };
+              itemObj.itemStyle={
                 normal: {
-                    color:$this.enquirieChart.ChartColor[index],
-                    opacity:0.05,
+                    color:$this.enquirieChart.ChartColor[index], // 折点颜色
                 },
-              },
+              };
+              itemObj.areaStyle={
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                      {
+                        offset: 0,
+                        color:$this.enquirieChart.ChartColor[index],
+                        opacity:1
+                      },
+                      {
+                        offset: 1,
+                        color: "rgba(255, 255, 255, 0)",
+                      }
+                    ]),
+                    opacity:0.3
+              };
+              itemObj.symbolSize=7;
               itemObj.data=item;
               itemObj.animationDuration=2800;
               itemObj.animationEasing='quadraticOut';
@@ -88,9 +102,6 @@ export default {
             tooltip: {
                 backgroundColor:'rgba(255,255,255,0.7)',
                 trigger: "axis",
-                axisPointer: {
-                    type: "line", 
-                },
             },
             grid: {
                 left: 10,
@@ -101,12 +112,26 @@ export default {
             },
             xAxis: {
                 type: 'category',
+                boundaryGap: false,
                 data: $this.enquirieChart.TagTime,
                 axisLine: {
                     show: false,
                 },
                 axisTick: {
                     show: false,
+                },
+                axisLine:{
+                    show: true,
+                    lineStyle:{
+                        type: [4, 0],
+                        dashOffset: 3,
+                        color: '#e5e5e5',
+                        opacity: 1,
+                        shadowColor: null,
+                        shadowBlur: 0,
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                    }
                 },
                 axisLabel: {
                     color: "#555",
@@ -123,13 +148,26 @@ export default {
                     color: "#555",
                     fontSize: "12",
                 },
+                axisLine:{
+                    show: true,
+                    lineStyle:{
+                        type: [4, 0],
+                        dashOffset: 3,
+                        color: '#e5e5e5',
+                        opacity: 1,
+                        shadowColor: null,
+                        shadowBlur: 0,
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                    }
+                },
                 splitLine:{
                     show: true,
                     lineStyle:{
-                        type: [4, 3],
+                        type: [4, 0],
                         dashOffset: 3,
-                        color: '#000',
-                        opacity: 0.02,
+                        color: '#eee',
+                        opacity: 1,
                         shadowColor: null,
                         shadowBlur: 0,
                         shadowOffsetX: 0,
