@@ -400,6 +400,9 @@ body[device="iMax"]{
     }
   }
   &.iMax{
+    .tags-bar{
+      width: calc(100% - 76px) !important;
+    }
     .sidebar-container{
       width:76px !important;
       .fold-button{
