@@ -387,7 +387,7 @@
     float: left;
     margin-top: 10px;
     .redtext{
-      font-size: 30px;
+      font-size: 32px;
       line-height: 42px;
       color: #fff;
       font-weight: bold;
@@ -409,7 +409,7 @@
         margin-left: 10px;
       }
       .up{
-        color: #ff1008;
+        color: #fe3a33;
       }
       .down{
         color: #2dbb4c;
@@ -856,5 +856,12 @@
       line-height: 1;
       height: 80px;
     }
+  }
+}
+
+@media screen and(max-width:1918px){
+  .overviewItem{
+    width:50%;
+    float: left;
   }
 }

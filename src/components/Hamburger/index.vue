@@ -1,5 +1,5 @@
 ﻿<template>
-  <div class="fold-button" :class="{'is-fold':isFold}" @click="toggleClick"><i class="svg-i"><svg-icon icon-class="menu-fold" /></i></div>
+  <div class="fold-button" :class="{'is-fold':isFold}" @click="toggleClick"><i class="svg-i"><svg-icon icon-class="fold" /></i></div>
 </template>
 <script>
 export default {

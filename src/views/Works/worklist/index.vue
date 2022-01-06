@@ -924,6 +924,9 @@ export default {
             infoData.overdueCount = response.hasouttimecount;
             $this.infoData = infoData;
             $this.isLoading.close();
+            $this.$nextTick(()=>{
+              $this.setTableHeight();
+            });
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -1534,6 +1537,10 @@ export default {
       });
       $this.labelColumn=labelColumn;
       $this.screen.screenBtn=false;
+      $this.$nextTick(() => {
+        $this.$refs.simpleTable.doLayout();
+      })
+      $this.setTableHeight();
     },
     resetHandler(){
       var $this = this;
@@ -1544,6 +1551,10 @@ export default {
       });
       $this.labelColumn=labelColumn;
       $this.screen.screenBtn=false;
+      $this.$nextTick(() => {
+        $this.$refs.simpleTable.doLayout();
+      })
+      $this.setTableHeight();
     }
   }
 }

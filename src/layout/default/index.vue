@@ -156,7 +156,8 @@ export default {
     }
     .fold-button{
       transition: all .3s;
-      font-size: 14px;
+      font-size: 22px;
+      color: #333;
     }
     .btn-active .fold-button{
       transform: rotate(180deg);
@@ -168,7 +169,8 @@ export default {
   border-bottom: 1px solid #12182b;
   // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
   .fold-button{
-    color: #a2acc1;
+    // color: #a2acc1;
+    color: #ccc;
   }
  
 }

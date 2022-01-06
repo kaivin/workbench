@@ -1947,6 +1947,10 @@ export default {
       });
       $this.labelColumn=labelColumn;
       $this.screen.screenBtn=false;
+      $this.$nextTick(() => {
+        $this.$refs.simpleTable.doLayout();
+      })
+      $this.setHeight();
     },
     resetHandler(){
       var $this = this;
@@ -1957,6 +1961,10 @@ export default {
       });
       $this.labelColumn=labelColumn;
       $this.screen.screenBtn=false;
+      $this.$nextTick(() => {
+        $this.$refs.simpleTable.doLayout();
+      })
+      $this.setHeight();
     }
   }
 }

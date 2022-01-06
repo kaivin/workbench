@@ -35,19 +35,24 @@
                :year="type==1?prevYear:nowYear"
                ></DealYears>
              </el-col>
-             <el-col class="hxmodule-item" :xl="6" :lg="12">
-               <XpanPercent
-               language="中文"
-               :departList="departList"
-               :year="type==1?prevYear:nowYear"
-               :yearcount="yearcount">
-               </XpanPercent>
-               <ScorePercent
-               language="中文"
-               :departList="departList"
-               :year="type==1?prevYear:nowYear"
-               :yeardeaprtscore="yeardeaprtscore">
-               </ScorePercent>
+             <el-col class="hxmodule-item" :xl="6" :lg="24">
+               <div class="overviewItem">
+                 <XpanPercent
+                  language="中文"
+                  :departList="departList"
+                  :year="type==1?prevYear:nowYear"
+                  :yearcount="yearcount">
+                  </XpanPercent>
+               </div>
+               <div class="overviewItem">
+                 <ScorePercent
+                  language="中文"
+                  :departList="departList"
+                  :year="type==1?prevYear:nowYear"
+                  :yeardeaprtscore="yeardeaprtscore">
+                  </ScorePercent>
+               </div>
+               
              </el-col>
              <el-col class="hxmodule-item" :xl="12" :lg="24" >
                <HotArea
@@ -57,19 +62,23 @@
                :year="type==1?prevYear:nowYear"
                ></HotArea>
              </el-col>
-             <el-col class="hxmodule-item" :xl="6" :lg="12" >
-               <DealDepart
-               language="中文"
-               :yeardeaprtscore="yeardeaprtscore"
-               :departList="departList"
-               :year="type==1?prevYear:nowYear"
-               ></DealDepart>
-               <CostDepart
-              language="中文"
-              :yeardeaprtscore="yeardeaprtscore"
-              :departList="departList"
-              :year="type==1?prevYear:nowYear"
-              ></CostDepart>
+             <el-col class="hxmodule-item" :xl="6" :lg="24" >
+                <div class="overviewItem">
+                <DealDepart
+                language="中文"
+                :yeardeaprtscore="yeardeaprtscore"
+                :departList="departList"
+                :year="type==1?prevYear:nowYear"
+                ></DealDepart>
+                </div>
+                <div class="overviewItem">
+                <CostDepart
+                language="中文"
+                :yeardeaprtscore="yeardeaprtscore"
+                :departList="departList"
+                :year="type==1?prevYear:nowYear"
+                ></CostDepart>
+                </div>
              </el-col>
              <el-col class="hxmodule-item" :xl="12" :lg="24">
                <HotProduct

@@ -274,9 +274,9 @@ export default {
               grid: {
                   left: '50',
                   right: '1',
-                  bottom: '0',
+                  bottom: '136',
                   top: '26',
-                  containLabel: true
+                  containLabel: false
               },
               xAxis: {
                   type: "category",
@@ -300,18 +300,16 @@ export default {
                         var str = value;
                         if(num>6){
                           str = str.split("").slice(0,5).join("\n");
-                          str = str + '\n{addtext|…}';
+                          str = str + '\n…';
                         }else{
                           str = str.split("").join("\n");
                         }
+                        // str="{addtext|"+str+"}"
                         return str;
                       },
                       rich:{
                         addtext:{
-                          rotate: 90,
-                          align: "top",
-                          verticalAlign: "top"
-                        },
+                        }
                       },
                       textStyle: {
                           padding: [2,0,0,0],

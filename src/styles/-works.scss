@@ -1028,3 +1028,25 @@
     }
   }
 }
+
+.works-index{
+  .fixed-table .el-table__fixed-header-wrapper{
+      overflow: visible;
+  }
+  .fixed-table .el-table__fixed-right .el-table__fixed-header-wrapper{
+      overflow-x: hidden;
+      overflow-y: visible;
+  }
+  .fixed-table .el-table__fixed-header-wrapper .temHeader .temHeaderfix{
+      position: fixed;
+      right: 30px;
+      top: 180px;
+  }
+  .el-table__header-wrapper, .el-table__footer-wrapper{
+      overflow-y: visible;
+      overflow-x: hidden;
+  }
+  .el-table .el-table__cell.is-hidden > *{
+      visibility: visible;
+  }
+}

@@ -1529,7 +1529,7 @@
     border-top-right-radius: 8px;
   }
   .el-table__fixed-header-wrapper{
-    z-index: 11;
+    z-index: 11!important;
     overflow: hidden;
     right:auto!important;
     top: 129px;
