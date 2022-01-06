@@ -271,7 +271,7 @@ body[device="iMax"]{
       padding-top: 0;
       padding-bottom: 20px;
       .item-link{
-        margin-top:11px;
+        margin-top:5px;
         .el-menu-item,.el-submenu__title{
           height: 46px;
           line-height: 46px;
@@ -374,7 +374,7 @@ body[device="iMax"]{
       .sidebar-menu{
         padding-top: 0;
         .item-link{
-          margin-top:11px;
+          margin-top: 5px;
           .el-menu-item > div,.el-submenu > .el-submenu__title{
             padding: 0 21px!important;
           }
@@ -413,6 +413,7 @@ body[device="iMax"]{
       .sidebar-menu{
         padding-top: 0;
         .item-link{
+          margin-top: 5px;
           .el-menu-item > div,.el-submenu > .el-submenu__title{
             padding: 0 24px!important;
           }
