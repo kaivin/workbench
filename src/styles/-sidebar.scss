@@ -248,6 +248,9 @@ body[device="desktop"] ,body[device="mobile"]{
   }
 }
 body[device="iMax"]{
+  .tags-bar{
+    width: calc(100% - 260px) !important;
+  }
   .sidebar-container {
     width:260px !important;
     .fold-button{
@@ -338,6 +341,7 @@ body[device="iMax"]{
       }
     }
   }
+  
   .el-tooltip__popper{
     font-size: 15px;
     line-height: 1.6;
