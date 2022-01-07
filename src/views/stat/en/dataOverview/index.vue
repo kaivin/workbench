@@ -81,26 +81,22 @@
                 ></CostDepart>
                </div>
              </el-col>
-             <el-col class="hxmodule-item" :xl="12" :lg="24">
-               <HotProduct
-               language="英文"
-               :producttop10="producttop10"
-               :year="type==1?prevYear:nowYear"
-               :departList="departList"
-               ></HotProduct>
+             <el-col class="hxmodule-item overbtm_box" :xl="24" :lg="24">
+               <div class="hotpro_box">
+                 <HotProduct
+                  language="英文"
+                  :producttop10="producttop10"
+                  :year="type==1?prevYear:nowYear"
+                  :departList="departList"
+                  ></HotProduct>
+               </div>
+               <div class="scoretop_box">
+                 <ScoreTop
+                  language="英文"
+                  :scoretop5 = "scoretop5"
+                  ></ScoreTop>
+               </div>
              </el-col>
-             <el-col class="hxmodule-item" :xl="12" :lg="24">
-               <ScoreTop
-               language="英文"
-               :scoretop5 = "scoretop5"
-               ></ScoreTop>
-             </el-col>
-             <!-- <CostYears
-               language="英文"
-               :yearsmoneytong="yearsmoneytong"
-               :yeardeaprtscore="yeardeaprtscore"
-               :departList="departList"
-               ></CostYears> -->
            </el-row>
         </div>
     </el-card>

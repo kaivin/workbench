@@ -10,102 +10,94 @@
     </div>
     <el-card class="box-card scroll-card" shadow="hover">
         <div class="homeMain flex-content">
-           <el-row class="hxmodule-view" :gutter="20">
-             <el-col class="hxmodule-item" :xl="8" :lg="12">
-               <XpanYears
-               language="中文"
-               :yeartong="yeartong"
-               :departList="departList"
-               :year="type==1?prevYear:nowYear"
-               ></XpanYears>
-             </el-col>
-             <el-col class="hxmodule-item" :xl="8" :lg="12">
-               <ScoreYears
-               language="中文"
-               :yearscoretong="yearscoretong"
-               :departList="departList"
-               :year="type==1?prevYear:nowYear"
-               ></ScoreYears>
-             </el-col>
-             <el-col class="hxmodule-item" :xl="8" :lg="12">
-               <DealYears
-               language="中文"
-               :yearsanumbertong="yearsanumbertong"
-               :departList="departList"
-               :year="type==1?prevYear:nowYear"
-               ></DealYears>
-             </el-col>
-             <el-col class="hxmodule-item" :xl="6" :lg="24">
-               <div class="overviewItem">
-                 <XpanPercent
-                  language="中文"
-                  :departList="departList"
-                  :year="type==1?prevYear:nowYear"
-                  :yearcount="yearcount">
-                  </XpanPercent>
-               </div>
-               <div class="overviewItem">
-                 <ScorePercent
-                  language="中文"
-                  :departList="departList"
-                  :year="type==1?prevYear:nowYear"
-                  :yeardeaprtscore="yeardeaprtscore">
-                  </ScorePercent>
-               </div>
-               
-             </el-col>
-             <el-col class="hxmodule-item" :xl="12" :lg="24" >
-               <HotArea
-               language="中文"
-               :regionData="regionData"
-               :departList="departList"
-               :year="type==1?prevYear:nowYear"
-               ></HotArea>
-             </el-col>
-             <el-col class="hxmodule-item" :xl="6" :lg="24" >
-                <div class="overviewItem">
-                <DealDepart
+          <el-row class="hxmodule-view" :gutter="20">
+              <el-col class="hxmodule-item" :xl="8" :lg="12">
+                <XpanYears
                 language="中文"
-                :yeardeaprtscore="yeardeaprtscore"
+                :yeartong="yeartong"
                 :departList="departList"
                 :year="type==1?prevYear:nowYear"
-                ></DealDepart>
-                </div>
-                <div class="overviewItem">
-                <CostDepart
+                ></XpanYears>
+              </el-col>
+              <el-col class="hxmodule-item" :xl="8" :lg="12">
+                <ScoreYears
                 language="中文"
-                :yeardeaprtscore="yeardeaprtscore"
+                :yearscoretong="yearscoretong"
                 :departList="departList"
                 :year="type==1?prevYear:nowYear"
-                ></CostDepart>
+                ></ScoreYears>
+              </el-col>
+              <el-col class="hxmodule-item" :xl="8" :lg="12">
+                <DealYears
+                language="中文"
+                :yearsanumbertong="yearsanumbertong"
+                :departList="departList"
+                :year="type==1?prevYear:nowYear"
+                ></DealYears>
+              </el-col>
+              <el-col class="hxmodule-item" :xl="6" :lg="24">
+                <div class="overviewItem">
+                  <XpanPercent
+                    language="中文"
+                    :departList="departList"
+                    :year="type==1?prevYear:nowYear"
+                    :yearcount="yearcount">
+                    </XpanPercent>
                 </div>
-             </el-col>
-             <el-col class="hxmodule-item" :xl="12" :lg="24">
-               <HotProduct
-               language="中文"
-               :producttop10="producttop10"
-               :year="type==1?prevYear:nowYear"
-               :departList="departList"
-               ></HotProduct>
-             </el-col>
-             <el-col class="hxmodule-item" :xl="12" :lg="24">
-               <ScoreTop
-               language="中文"
-               :scoretop5="scoretop5"
-               ></ScoreTop>
-             </el-col>
+                <div class="overviewItem">
+                  <ScorePercent
+                    language="中文"
+                    :departList="departList"
+                    :year="type==1?prevYear:nowYear"
+                    :yeardeaprtscore="yeardeaprtscore">
+                    </ScorePercent>
+                </div>
+                
+              </el-col>
+              <el-col class="hxmodule-item" :xl="12" :lg="24" >
+                <HotArea
+                language="中文"
+                :regionData="regionData"
+                :departList="departList"
+                :year="type==1?prevYear:nowYear"
+                ></HotArea>
+              </el-col>
+              <el-col class="hxmodule-item" :xl="6" :lg="24" >
+                  <div class="overviewItem">
+                  <DealDepart
+                  language="中文"
+                  :yeardeaprtscore="yeardeaprtscore"
+                  :departList="departList"
+                  :year="type==1?prevYear:nowYear"
+                  ></DealDepart>
+                  </div>
+                  <div class="overviewItem">
+                  <CostDepart
+                  language="中文"
+                  :yeardeaprtscore="yeardeaprtscore"
+                  :departList="departList"
+                  :year="type==1?prevYear:nowYear"
+                  ></CostDepart>
+                  </div>
+              </el-col>
 
-             <!-- <el-col>
-              <CostYears
-               language="中文"
-               :yearsmoneytong="yearsmoneytong"
-               :departList="departList"
-               ></CostYears>
-               <ScoreTop
-               :yearuserscoretop5="yearuserscoretop5"
-               ></ScoreTop>
-             </el-col> -->
-           </el-row>
+              <el-col class="hxmodule-item overbtm_box" :xl="24" :lg="24">
+                  <div class="hotpro_box">
+                    <HotProduct
+                    language="中文"
+                    :producttop10="producttop10"
+                    :year="type==1?prevYear:nowYear"
+                    :departList="departList"
+                    ></HotProduct>
+                  </div>
+                  <div class="scoretop_box">
+                    <ScoreTop
+                    language="中文"
+                    :scoretop5="scoretop5"
+                    ></ScoreTop>
+                  </div>
+              </el-col>
+          </el-row>
         </div>
     </el-card>
   </div></transition>
