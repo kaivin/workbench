@@ -33,7 +33,8 @@
                 margin-left:10px;
                 cursor: pointer;
                 &.active,&:hover{
-                    background-color:  #2f88ff;
+                    //background-color:  #2f88ff;
+                    background-color: #0048ff;
                     color: #fff;
                 }
                 &.active{
@@ -136,12 +137,12 @@
                     }
                     &.active,&:hover{
                         i{
-                            border: 1px solid #2f88ff;
+                            border: 1px solid #0048ff;
                             &:before{
                                 content:'';
                                 width: 7px;
                                 height: 7px;
-                                background:#2f88ff;
+                                background:#0048ff;
                                 border-radius:50%;
                                 position: absolute;
                                 left:1px;

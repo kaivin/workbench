@@ -3,6 +3,11 @@
     <div class="static-wrapper" v-if="judgeData.singleGroupStatic||judgeData.pluralGroupStatic">
       <template v-if="currentData.length>0">
         <template v-for="item in currentData">
+          <div class="item-column" v-if="item[0].isMap=='year'">
+            <item-year
+                :item-data="item[0]"
+            ></item-year>
+          </div>
           <div class="item-column" v-if="item[0].isMap=='map'">
             <div class="column-wrap">
               <div class="column-header flex-box">
@@ -56,30 +61,16 @@
               :item-data="item[0]"
             ></item-product>
           </div>
-          <template class="item-column" v-if="item[0].isMap=='qua'">
-            <quality-chart
-                :item-data="item[0]"
-            ></quality-chart>
-          </template>
         </template>
       </template>
     </div>
     <template v-else>
       <template v-if="currentData.length>0">
         <div class="compare-wrapper" v-for="item in currentData">
-          <div class="compare-wrap"  v-if="item.isMap=='qua'">
-            <div class="compare-header">
-              <div class="txt-header">
-                <strong>{{item.title}}</strong>
-              </div>
-            </div>
-            <div class="compare-body">
-                <template v-for="(item1,index) in item.itemData">
-                    <quality-chart
-                      :item-data="item1"
-                    ></quality-chart>
-                </template>
-            </div>
+          <div class="compare-year" v-if="item.isMap=='year'">
+            <item-year
+                :item-data="item"
+            ></item-year>
           </div>
           <div class="compare-wrap" v-if="item.isMap=='map'">
             <div class="compare-header">
@@ -164,7 +155,7 @@
 </template>
 
 <script>
-import qualityChart from "./qualityChart.vue";
+import itemYear from "./itemYear.vue";
 import wordMapChart from "../../../stat/components/departGroup/wordMapChart.vue";
 import cnMapChart from "../../../stat/components/departGroup/cnMapChart.vue";
 import topRegion from "../../../stat/components/departGroup/topRegion.vue";
@@ -172,7 +163,7 @@ import itemProduct from "../../../stat/components/departGroup/itemProduct.vue";
 export default {
   name: "mapChart",
   components: {
-    qualityChart,
+    itemYear,
     wordMapChart,
     cnMapChart,
     topRegion,

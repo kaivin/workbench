@@ -768,7 +768,7 @@
                     border-radius:0px;
                 }
                 &>span{
-                    font-size:$fontsize18;
+                    font-size:$fontsize20;
                     color:#161616;
                     font-weight: bold;
                 }
@@ -849,12 +849,12 @@
                     }
                     &.active,&:hover{
                         i{
-                            border-color:#2f88ff;
+                            border-color:#0048ff;
                             &:before{
                                 content: '';
                                 width: 7px;
                                 height: 7px;
-                                background: #2f88ff;
+                                background: #0048ff;
                                 border-radius: 50%;
                                 position: absolute;
                                 left: 1px;

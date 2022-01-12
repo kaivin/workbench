@@ -574,7 +574,7 @@
     }
     .contrast-fixed{
       position:fixed;
-      top:52px;
+      top:80px;
       z-index:999;
       box-shadow:0px 2px 3px #eee;
       &:before{
@@ -960,6 +960,45 @@
             }
           }
         }
+        &.quality-chart{
+          .item-column{
+            margin-right:10px;
+            background-color:#fff;
+            &:last-child{
+              margin-right:0px;
+            }
+            .column-header{
+              padding:30px 30px 15px;
+              .txt-header{
+                height:28px;
+                strong{
+                  display:inline-block;
+                  height:28px;
+                  line-height:28px;
+                  font-size:$fontsize17;
+                  color:#1a1a1a;
+                }
+                span{
+                  display:inline-block;
+                  height:28px;
+                  line-height:28px;
+                  font-size:$fontsize13;
+                  color:#a1a1a1;
+                }
+              }
+            }
+            .column-body{
+              position:relative;
+              .pie-panel{
+                clear: both;
+                display: block;
+                width:55%;
+                min-width:260px;
+                margin: 0 auto;
+              }
+            }
+          }
+        }
         >.flex-content{
           background-color:#fff;
           .chart-header{
@@ -1000,28 +1039,26 @@
           }
           .item-column{
             margin-top:20px;
-            .item-quality{
-              background-color:#fff;
-              padding:30px;
-              height:461px;
-              .column-header{
-                padding:0 0 30px;
-              }
-              .column-body{
-                .item-chart{
-                  float:none;
-                  padding:0;
-                  width:55%;
-                  margin: 0 auto;
-                }
-              }
-            }
             .item-table{
               background-color:#fff;
               padding:30px;
               height:461px;
               .column-header{
                 padding:0 0 30px;
+              }
+            }
+            .item-yarn{
+              background-color:#fff;
+              padding:30px;
+              height:461px;
+              .column-header{
+                padding:0 0 30px;
+              }
+              .column-chart{
+                clear: both;
+                display: block;
+                width:100%;
+                height:343px;
               }
             }
             .map-panel{
@@ -1064,7 +1101,7 @@
           font-size:0;
           height:28px;
           float:right;
-          width:220px;
+          //width:220px;
           text-align:center;
           .item-tab{
             display:inline-block;
@@ -1139,6 +1176,21 @@
         }
         .compare-wrapper{
           padding:0 10px;
+          .compare-year{
+            background-color:#fff;
+            padding:30px;
+            .column-header{
+              padding-bottom:30px;
+            }
+            .column-body{
+              clear: both;
+              width: 100%;
+              .column-chart{
+                clear: both;
+                width: 100%;
+              }
+            }
+          }
           .compare-wrap{
             background-color:#fff;
             .compare-header{
@@ -1209,19 +1261,20 @@
                   }
                 }
               }
-              .item-quality{
+              .item-table{
                 width:100%;
-                padding:0px 30px 30px 30px;
-                .column-body{
+                padding:0 30px 30px;
+                .column-header{
+                  margin-bottom:15px;
+                }
+                .product-rank{
                   .item-chart{
                     float:none;
                     padding:0;
-                    width:55%;
-                    margin: 0 auto;
                   }
                 }
               }
-              .item-table{
+              .item-yarn{
                 width:100%;
                 padding:0 30px 30px;
                 .column-header{

@@ -105,7 +105,7 @@
             </div>
             <div class="filter-tips"><p><i class="svg-i"><svg-icon icon-class="tips" class-name="disabled" /></i>{{tipsInfo}}</p></div>
         </div>
-        <div class="contrast-panel flex-box" v-if="!selectedData.isDateCompare&&selectedData.dept_id.length>0">
+        <div class="contrast-panel flex-box" :class="isFix ? 'contrast-fixed' : ''" :style="'width:'+ boxWidth + 'px' " v-if="!selectedData.isDateCompare&&selectedData.dept_id.length>0">
             <div class="title-font"><span class="txt-title">对比项：</span></div>
             <div class="contrast-content flex-content">
                 <div class="item-list">
@@ -123,48 +123,22 @@
                 </div>
             </div>
         </div>
-        <div class="result-panel">
+        <div class="result-panel" :class="isFix ? 'resulttop' : ''">
             <template v-if="defaultChartData.length>0" v-for="item in defaultChartData">
               <default-chart 
                 :item-data="item" 
                 :is-default-page="isDefaultPage"
                 :judge-data="judgeData"
                 ></default-chart>
-            </template>
-            <div class="item-row yearItem" v-if="defaultYearData.length>0">
-                <div class="yearItemTit">
-                    <strong></strong>
-                </div>
-                <div class="yearItemBox">
-                  <div class="item-column" :class="defaultYearData.length>1?'yearItemActive':''" v-for='(item,index) in defaultYearData' :key='index'>
-                      <div class="compare-body">
-                          <div class="yearItemTop flex-box">
-                              <p class="yearItemTopFl">
-                                  <span></span>
-                                  <span>{{item.name}}</span>
-                              </p>
-                              <div class="yearItemTopFr flex-content">
-                                  <span>{{item.chartTitle}}</span>
-                                  <p class="flex-box">
-                                      <span class="flex-content" v-for='(items,indexs) in item.newYear' :key="indexs">{{items}}</span>
-                                  </p>
-                              </div>
-                          </div>
-                          <div class="yearItemBom">
-                              <template v-for='(items,indexs) in item.mainData'>
-                                <div class="yearItemBomItem flex-box">
-                                    <p class="yearItemBomFl">
-                                        <span>{{items.date}}</span>
-                                    </p>
-                                    <div class="yearItemBomFr flex-box flex-content">
-                                        <span class="flex-content" v-for='(itemk,indexk) in items.newScore'>{{itemk.score}}</span>
-                                    </div>
-                                </div>
-                              </template>
-                          </div>
-                      </div>
-                  </div>
-                </div>
+            </template>            
+            <div class="item-row quality-chart flex-box" v-if="qualityChartData">
+                <template v-if="qualityChartData.length>0" v-for="item in qualityChartData">
+                  <quality-chart 
+                    :item-data="item" 
+                    :is-default-page="isDefaultPage"
+                    :judge-data="judgeData"
+                    ></quality-chart>
+                </template>
             </div>
             <template v-if="mapChart.length>0" v-for="item in mapChart">
               <map-chart
@@ -179,6 +153,7 @@
 <script>
 import {mapGetters} from 'vuex';
 import mapChart from "../components/chinadepartcount/mapChart.vue";
+import qualityChart from "../components/chinadepartcount/qualityChart.vue";
 import defaultChart from "../../stat/components/departGroup/defaultChart.vue";
 import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate,numSeparate,sortByDate,memberArrColor,singleNewArrColor} from "@/utils/index";
 import {MapInterval,TopTenColor} from "@/utils/MapColor"
@@ -187,6 +162,7 @@ export default {
   name: 'Ownpush_chinadepartcount',
   components: {
     defaultChart,
+    qualityChart,
     mapChart,
   },
   data() {
@@ -303,6 +279,7 @@ export default {
         mapChart:[],
         isContrastShow:false,
         boxWidth:0,
+        isFix:false,
     };
   },
   computed: {
@@ -343,15 +320,22 @@ export default {
     const $this = this;
     if($this.$refs.boxPane){  
       $this.minWidth = $this.$refs.boxPane.offsetWidth;
-      $this.boxWidth = $this.$refs.boxPane.offsetWidth - 40;
+      $this.boxWidth = $this.$refs.boxPane.offsetWidth - 50;
+      $this.$refs.boxPane.addEventListener('scroll', $this.getScroll);
     }
     window.onresize = () => {
       return (() => {
         if($this.$refs.boxPane){
           $this.minWidth = $this.$refs.boxPane.offsetWidth; 
-          $this.boxWidth = $this.$refs.boxPane.offsetWidth -40;
+          $this.boxWidth = $this.$refs.boxPane.offsetWidth -50;
         }
       })()
+    }
+  },
+  destroyed(){
+    const $this = this;
+    if($this.$refs.boxPane){
+      $this.$refs.boxPane.removeEventListener('scroll', $this.getScroll);
     }
   },
   directives: {  // 使用局部注册指令的方式
@@ -547,6 +531,7 @@ export default {
     clearData(){
       var $this = this;
       $this.isDefaultPage = false;
+      $this.qualityChartData = [];
       $this.defaultChartData = [];
       $this.mapChart = [];
     },
@@ -577,20 +562,20 @@ export default {
     filterDataClump(res){
       var $this = this;
       var defaultChartData = $this.defaultChartDataClump(res);
-      var defaultYearData = $this.defaultYearDataClump(res);
       var mapChartData = $this.mapChartDataClump(res);
       var productData = $this.productDataClump(res);
       if(productData){
         mapChartData[0].push(productData);
       }      
+      var defaultYearData = $this.defaultYearDataClump(res);
+      if(defaultYearData){
+        mapChartData[0].push(defaultYearData);
+      }   
       var qualityChartData = $this.qualityChartDataClump(res);
-      if(qualityChartData){
-        mapChartData[0].push(qualityChartData);
-      }
-
+      $this.qualityChartData = qualityChartData;
       $this.defaultChartData = defaultChartData;
-      $this.defaultYearData = defaultYearData;
       $this.mapChart = mapChartData;
+      console.log($this.mapChart,'$this.mapChart');
     },
     // 组装默认类型图表数据
     defaultChartDataClump(res){
@@ -1329,281 +1314,269 @@ export default {
     // 组装询盘年份
     defaultYearDataClump(res){
       var $this = this;
-      // 询盘趋势
-      var inquiryYear = [];
+      var inquiryYear = null;
       if($this.selectedType.includes("enquiriesYear")){
+        inquiryYear = [];
         // 时间对比
-        if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
+        if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){            
+            inquiryYear = {};
             var inquiryYearArr=res.selfxunscorecompare;
-            var inquiryYearDate=$this.ClumpYear(inquiryYearArr);
-            inquiryYearDate.forEach(function(item,index){
-              if(index==0){
-                item.chartTitle = item.chartTitle+"（"+$this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1]+"）";
-              }else{
-                item.chartTitle = item.chartTitle+"（"+$this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1]+"）";
-              }
-              if(item.newYear[0]>0){
-                inquiryYear.push(item);
-              }
-            });
+            inquiryYear=$this.ClumpYear(inquiryYearArr,'isCost');
+            inquiryYear.title = "询盘年份";
+            inquiryYear.isMap = 'year';
+            //inquiryYearDate.forEach(function(item,index){
+            //  if(index==0){
+            //    item.chartTitle = item.chartTitle+"（"+$this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1]+"）";
+            //  }else{
+            //    item.chartTitle = item.chartTitle+"（"+$this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1]+"）";
+            //  }
+            //  if(item.newYear[0]>0){
+            //    inquiryYear.push(item);
+            //  }
+            //});
         }else{
           // 部门对比
           if($this.selectedData.comparedept_id.length>0){
+            inquiryYear = {};
             var inquiryYearArr=res.monthscorexuntrendcompare;
-            var inquiryYearDate=$this.ClumpYear(inquiryYearArr);
-            inquiryYearDate.forEach(function(item,index){
-              if(index>0){
-                item.chartTitle = item.mainData[0].depart;
-              }
-              inquiryYear.push(item)
-            });
+            inquiryYear=$this.ClumpYear(inquiryYearArr,'isCost');
+            inquiryYear.title = "询盘年份";
+            inquiryYear.isMap = 'year';
           }else{
+            inquiryYear = [];
             var inquiryYearArr=[res.monthscorexuntrend];
-            inquiryYear=$this.ClumpYear(inquiryYearArr);
+            var itemData=$this.ClumpYear(inquiryYearArr,'noCost');
+            itemData.title = "询盘年份";
+            itemData.isMap = 'year';
+            inquiryYear.push(itemData);
           }
         }
       }
+      console.log(inquiryYear,'inquiryYear');
       return inquiryYear;
     },
-    ClumpYear(res){
-        var $this=this;
-        var inquiryYear= [];
-        if(res[0]&&res[0].length>0){
-          var max=0;
-          var min=res[0][0].date.split('-')[0]*1;
-          res.forEach(function(item,index){                  
+    ClumpYear(dataArr,TagName){
+      var $this=this;
+      var itemData = {};
+      itemData.inquiryYearCount = [];
+      itemData.inquiryMonthCount = [];
+      itemData.isYear=false;
+      if(TagName=='noCost'){
+        itemData.isCost = false;
+      }
+      if(TagName=='isCost'){
+        itemData.isCost = true;
+      }
+      var title='';
+      if($this.selectedData.dept_id.length==1){
+        $this.departList.forEach(function(item){
+          if(item.isOn){
+            title = item.name;
+          }
+        });
+      }else{
+        title = "电商一部";
+      }
+      //  判断是否跨年
+      var starttime=$this.selectedData.dateDefault[0].split('/')[0]*1;
+      var endtime=$this.selectedData.dateDefault[1].split('/')[0]*1;  
+      if(starttime!=endtime){
+        itemData.isYear=false;
+        var yarnArr=[];
+        while (starttime<=endtime){
+          yarnArr.push(starttime);
+          starttime++
+        }
+        //月份数据合并到年份
+        var newDataArr=[];
+        yarnArr.forEach(function(itemh,indexh){
+          dataArr.forEach(function(item,index){
+            var yearObj={};
+            yearObj.date=itemh;
+            if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){  
+                if(index==0){
+                  yearObj.name=$this.selectedData.dateDefault[0]+' ~ '+$this.selectedData.dateDefault[1];
+                }
+                if(index==1){
+                  yearObj.name=$this.selectedData.dateContrast[0]+' ~ '+$this.selectedData.dateContrast[1];
+                }
+            }else{
+                if(index==0){
+                  yearObj.name=title;
+                }else{
+                  yearObj.name=item[0].depart;
+                }
+            }
+            yearObj.score=[];
+            item.forEach(function(items,indexs){
+              if(items.date.indexOf(itemh)>-1){
+                if(items.score&&items.score.length>0){
+                  items.score.forEach(function(itemk){ 
+                    yearObj.score.push(itemk);               
+                  });
+                }
+              }
+            });
+            newDataArr.push(yearObj);
+          });
+        });
+        //去重合并 score        
+        newDataArr.forEach(function(item,index){
+          item.newscore=[];
+          if(item.score&&item.score.length>0){
+            var newTimeArr=[];
+            item.score.forEach(function(items,indexs){
+              var time=items.yeartime;
+              if(newTimeArr.indexOf(time)==-1){
+                newTimeArr.push(time);
+              }
+            });
+            var newScoreArr=[];
+            newTimeArr.forEach(function(itemk,indexk){
+              var itemArr={};
+              itemArr.yeartime=itemk;
+              itemArr.score=0;
+              item.score.forEach(function(items,indexs){
+                if(items.yeartime==itemk){
+                  itemArr.score+=items.score
+                }
+              });
+              item.newscore.push(itemArr);
+            });
+          }
+        });
+        newDataArr.forEach(function(items,indexs){
+            if(items.newscore&&items.newscore.length>0){
+              items.newscore.forEach(function(itemk,indexk){
+                var itemObj = {};
+                itemObj.name=items.name;
+                itemObj.time=items.date;
+                itemObj.value=itemk.score;
+                itemObj.yeartime=itemk.yeartime;
+                itemData.inquiryYearCount.push(itemObj);
+              });
+            }
+        });
+        //月
+        dataArr.forEach(function(item,index){
             item.forEach(function(items,indexs){
                 if(items.score&&items.score.length>0){
                   items.score.forEach(function(itemk,indexk){
-                    if(max<=itemk.yeartime){
-                      max=itemk.yeartime*1;
+                    var itemObj = {};
+                    if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){  
+                      if(index==0){
+                        itemObj.name=$this.selectedData.dateDefault[0]+' ~ '+$this.selectedData.dateDefault[1];
+                      }
+                      if(index==1){
+                        itemObj.name=$this.selectedData.dateContrast[0]+' ~ '+$this.selectedData.dateContrast[1];
+                      }
+                    }else{
+                      if(index==0){
+                        itemObj.name=title;
+                      }else{
+                        itemObj.name=items.depart;
+                      }
                     }
-                    if(min>=itemk.yeartime){
-                      min=itemk.yeartime*1;
-                    }
+                    itemObj.time=items.date;
+                    itemObj.value=itemk.score;
+                    itemObj.yeartime=itemk.yeartime;
+                    itemData.inquiryMonthCount.push(itemObj);
                   });
                 }
             });
-          }); 
-          var newYear=[];
-          if(max>min){
-              while (min<=max){
-                  newYear.push(min);
-                  min++;
-              }
-          }else{
-            var yeartime=max;
-            newYear.push(yeartime);
-          }
-          var resArr=[];
-          res.forEach(function(item,index){
-              var inquiryYearNew={};
-              inquiryYearNew.mainData=[];
-              item.forEach(function(items,indexs){
-                  var newItem=[];
-                  if(items.score&&items.score.length>0){                        
-                    newYear.forEach(function(itemd,indexd){
-                      var newItemObj={};
-                      newItemObj.yeartime=itemd;
-                      newItemObj.score=0;
-                      items.score.forEach(function(itemk,indexk){
-                        if(itemd==itemk.yeartime){
-                          newItemObj.score=itemk.score
-                        }
-                      });
-                      newItem.push(newItemObj);
-                    });                      
-                  }else{
-                    newYear.forEach(function(itemd,indexd){
-                      var newItemObj={};
-                      newItemObj.yeartime=itemd;
-                      newItemObj.score=0;
-                      newItem.push(newItemObj);
-                    });
-                  }
-                  items.newScore=newItem;
-              });
-              inquiryYearNew.newYear = newYear;  //获取记录年份
-              if($this.selectedData.dept_id.length==1){
-                inquiryYearNew.name = "成交年份";
-                $this.departList.forEach(function(item1){
-                  if(item1.id == $this.selectedData.dept_id[0]){
-                    item.name = item1.name;
-                    inquiryYearNew.chartTitle = item1.name;
-                  }
-                });
-              }else{
-                item.name = "已多选部门"
-                inquiryYearNew.name = "成交年份";
-                inquiryYearNew.chartTitle = "部门组合询盘月趋势";
-              }
-              inquiryYearNew.mainData=item;
-              inquiryYearNew.randomStr = randomString(4);
-              inquiryYear.push(inquiryYearNew);
-          });
-        }
-        return inquiryYear;
+        });
+      }else{
+        itemData.isYear=true;
+        dataArr.forEach(function(item,index){
+            item.forEach(function(items,indexs){
+                if(items.score&&items.score.length>0){
+                  items.score.forEach(function(itemk,indexk){
+                    var itemObj = {};
+                    if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){  
+                      if(index==0){
+                        itemObj.name=$this.selectedData.dateDefault[0]+' ~ '+$this.selectedData.dateDefault[1];
+                      }
+                      if(index==1){
+                        itemObj.name=$this.selectedData.dateContrast[0]+' ~ '+$this.selectedData.dateContrast[1];
+                      }
+                    }else{
+                      if(index==0){
+                        itemObj.name=title;
+                      }else{
+                        itemObj.name=items.depart;
+                      }
+                    }
+                    itemObj.time=items.date;
+                    itemObj.value=itemk.score;
+                    itemObj.yeartime=itemk.yeartime;
+                    itemData.inquiryMonthCount.push(itemObj);
+                  });
+                }
+            });
+        });
+      }
+      itemData.randomStr1 = randomString(4);
+      itemData.randomStr2 = randomString(4);
+      return itemData;
     },
     //质量分析
     qualityChartDataClump(res){
       var $this = this;
-      // 询盘趋势
       var qualityData = null;
-      if($this.selectedType.includes("qualityAnalysis")&&$this.selectedData.dept_id.indexOf(2)>-1){
-        qualityData = {};
-        // 时间对比
-        if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
-            if(res.selfqualitymonthcompare&&res.selfqualitymonthcompare.length>0){
-              qualityData.itemData = [];
-              res.selfqualitymonthcompare.forEach(function(item,index){
-                var dataArr=item.monthxuntrendpercenter;
-                dataArr.forEach(function(items,indexs){
-                    item.monthscoretrendpercenter.forEach(function(itemk,indexk){
-                      if(items.date==itemk.date){
-                        items.score=itemk.score;
-                      }
-                    });
-                });
-                dataArr.forEach(function(items,indexs){
-                    item.monthmoneypercenter.forEach(function(itemk,indexk){
-                      if(items.date==itemk.date){
-                        items.money=itemk.money;
-                      }
-                    });
-                });
-                var itemData = $this.clumpQuality(dataArr);
-                qualityData.itemData.push(itemData);
-              });
-              var title = "";
-              if($this.selectedData.dept_id.length==1){
-                $this.departList.forEach(function(item){
-                  if(item.isOn){
-                    title = item.name;
-                  }
-                });
-              }else{
-                title = "已多选部门";
-              }
-              qualityData.itemData.forEach(function(item,index){
-                if(index==0){
-                  item.title = title+"（"+$this.selectedData.dateDefault[0]+"~"+$this.selectedData.dateDefault[1]+"）";
-                }else{
-                  item.title = title+"（"+$this.selectedData.dateContrast[0]+"~"+$this.selectedData.dateContrast[1]+"）";
-                }
-              })
-              qualityData.title = "质量分析";
-              qualityData.isMap = 'qua';
-            }
-        }else{
-          // 部门对比
-          if($this.selectedData.comparedept_id.length>0){
-            if(res.qualitymonthcompare&&res.qualitymonthcompare.length>0){
-              qualityData.itemData = [];
-              res.qualitymonthcompare.forEach(function(item,index){
-                var dataArr=item.monthxuntrendpercenter;
-                dataArr.forEach(function(items,indexs){
-                    item.monthscoretrendpercenter.forEach(function(itemk,indexk){
-                      if(items.date==itemk.date){
-                        items.score=itemk.score;
-                      }
-                    });
-                });
-                dataArr.forEach(function(items,indexs){
-                    item.monthmoneypercenter.forEach(function(itemk,indexk){
-                      if(items.date==itemk.date){
-                        items.money=itemk.money;
-                      }
-                    });
-                });
-                var itemData = $this.clumpQuality(dataArr);
-                qualityData.itemData.push(itemData);
-              });
-              qualityData.title = "质量分析";
-              qualityData.isMap = 'qua';
-            }
-          }else{
-            // 统计
-            qualityData=[];
-            var dataArr=res.monthxuntrendpercenter;
-            dataArr.forEach(function(item,index){
-                res.monthscoretrendpercenter.forEach(function(items,indexs){
-                  if(item.date==items.date){
-                    item.score=items.score;
-                  }
-                });
-            });
-            dataArr.forEach(function(item,index){
-                res.monthmoneypercenter.forEach(function(items,indexs){
-                  if(item.date==items.date){
-                    item.money=items.money;
-                  }
-                });
-            });
-            var itemData = $this.clumpQuality(dataArr);
-            itemData.isMap = 'qua';
-            qualityData.push(itemData);
-          }
-        }
+      if($this.selectedType.includes("qualityAnalysis")){
+        qualityData=[];
+        var xunArr=res.monthxuntrendpercenter;    //询盘占比
+        qualityData.push($this.clumpQuality(xunArr,'询盘占比'));
+        var scoreArr=res.monthscoretrendpercenter;//积分占比
+        qualityData.push($this.clumpQuality(scoreArr,'积分占比'));
+        var moneyArr=res.monthmoneypercenter;     //消费占比
+        qualityData.push($this.clumpQuality(moneyArr,'消费占比'));
       }
       return qualityData;
     },
-    clumpQuality(dataArr){
+    clumpQuality(dataArr,TagName){
         var $this=this;
-        var qualityData =  []
         var itemData={};
         itemData.inquiryCount = [];
-        itemData.dealCount = [];
-        itemData.dealScore = [];
         itemData.inquiryCountColor = ['#fb7c6f','#ffcd6d','#72e4a1','#9c9cfe','#81cbfc',"#FF4500","#1AAF8B"];
-        itemData.dealCountColor = ['#416eff','#43ced7','#00a0e9','#0068b7','#41d0ff',"#406C85","#F6BD16"];
-        itemData.dealScoreColor = ['#ffc383','#f29b76','#ff783f','#f29c9f','#acd598',"#B40F0F","#2FB8FC"];
         var inquiryCount = [];
-        var dealCount = [];
-        var dealScore = [];
         dataArr.forEach(function(item,index){
-          var itemTable = {};
           var itemInquiryCount = {};
-          var itemDealCount = {};
-          var itemDealScore = {};
-          itemInquiryCount.depart = item.depart;
           itemInquiryCount.name = item.date;
-          itemInquiryCount.value = item.xunnumber;
+          if(TagName=='询盘占比'){
+              itemInquiryCount.value = item.xunnumber;
+          }
+          if(TagName=='积分占比'){
+              itemInquiryCount.value = item.score;
+          }
+          if(TagName=='消费占比'){
+              itemInquiryCount.value = item.money;
+          }
           inquiryCount.push(itemInquiryCount);
-          itemDealCount.depart = item.depart;
-          itemDealCount.name = item.date;
-          itemDealCount.value = item.score;
-          dealCount.push(itemDealCount);
-          itemDealScore.depart = item.depart;
-          itemDealScore.name = item.date;
-          itemDealScore.value = item.money;
-          dealScore.push(itemDealScore);
         });
         inquiryCount.sort(sortByDesc("value"));
-        dealCount.sort(sortByDesc("value"));
-        dealScore.sort(sortByDesc("value"));
         itemData.inquiryCount = inquiryCount;
-        itemData.dealScore = dealScore;
-        itemData.dealCount = dealCount;
         itemData.randomStr1 = randomString(4);
-        itemData.randomStr2 = randomString(4);
-        itemData.randomStr3 = randomString(4);
-        if($this.selectedData.comparedept_id.length==0){
-          // 只有一个部门被选中的情况
-          if($this.selectedData.dept_id.length==1){
-            $this.departList.forEach(function(item){
-                if($this.selectedData.dept_id[0]==item.id){
-                  itemData.title = item.name;
-                }
-            });
-          }else{// 多部门被选中   
-            itemData.title = "部门组合"; 
-          }
-        }else{
-          inquiryCount.forEach(function(item,index){
-            if(index==0){
-                itemData.title = item.depart;
-            }
+        if(TagName=='询盘占比'){
+            itemData.fontdata = '询盘个数\n占比';
+            itemData.unit = '（单位：个）';
+        }
+        if(TagName=='积分占比'){
+            itemData.fontdata = '成交积分\n占比';
+            itemData.unit = '（单位：分）';
+        }
+        if(TagName=='消费占比'){
+            itemData.fontdata = '消费月份\n占比';
+            itemData.unit = '（单位：元）';
+        }
+        if($this.selectedData.dept_id.length==1){
+          $this.departList.forEach(function(item){
+              if(item.isOn){
+                  itemData.title = item.name+'-'+TagName;
+              }
           });
+        }else{
+          itemData.title = '电商一部-'+TagName;
         }
         return itemData;
     },
@@ -2463,18 +2436,8 @@ export default {
         var selectedType = [];
         contrastList.forEach(function(item){
           if($this.selectedData.isMonth){
-            if(item.value!='qualityAnalysis'){
-              item.isOn = true;
-              item.disabled = false;
-            }else{
-              if($this.selectedData.dept_id.indexOf(2)>-1){
-                item.isOn = true;
-                item.disabled = false;
-              }else{
-                item.isOn = false;
-                item.disabled = false;
-              }
-            }
+            item.isOn = true;
+            item.disabled = false;
             if(item.isOn){
               selectedContrastType.push(item.id);
               selectedType.push(item.value);
@@ -2559,18 +2522,14 @@ export default {
         var selectedType = [];
         contrastList.forEach(function(item,index){
           if($this.selectedData.isMonth){
-            if(item.value!='qualityAnalysis'){
               item.isOn = true;
               item.disabled = false;
-            }else{
-              if($this.selectedData.dept_id.indexOf(2)>-1){
-                item.isOn = true;
-                item.disabled = false;
-              }else{
-                item.isOn = false;
-                item.disabled = false;
+              if($this.selectedData.comparedept_id.length>0){
+                if(item.value=='qualityAnalysis'){
+                  item.isOn = false;
+                  item.disabled = true;
+                }
               }
-            }
           }else{
             if(item.value=="enquiriesFew"||item.value=="regionEnquiries"){
               item.isOn = true;
@@ -2597,6 +2556,25 @@ export default {
       // 只有在对比部门没有被选中的，此时日期对比才是非禁用状态，可点击的
       if($this.selectedData.comparedept_id.length==0&&$this.dateSelected){
         if($this.selectedData.isDateCompare){
+          //月维度，日期对比添加质量分析
+          if($this.selectedData.isMonth){            
+            var contrastList=$this.contrastList;
+            var selectedContrastType = [];
+            var selectedType = [];
+            contrastList.forEach(function(item,index){
+              if(item.value=='qualityAnalysis'){
+                item.isOn=true;
+                item.disabled=false;
+              }
+              if(item.isOn){
+                selectedContrastType.push(item.id);
+                selectedType.push(item.value);
+              }
+            });
+            $this.selectedType = selectedType;
+            $this.selectedData.type = selectedContrastType;
+            $this.contrastList = contrastList;
+          }
           $this.selectedData.isDateCompare = false;
           if($this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
             $this.selectedData.dateContrast = [];
@@ -2604,6 +2582,25 @@ export default {
           }
         }else{
           $this.selectedData.isDateCompare = true;
+          //月维度，日期对比屏蔽质量分析
+          if($this.selectedData.isMonth){            
+            var contrastList=$this.contrastList;
+            var selectedContrastType = [];
+            var selectedType = [];
+            contrastList.forEach(function(item,index){
+              if(item.value=='qualityAnalysis'){
+                item.isOn=false;
+                item.disabled=true;
+              }
+              if(item.isOn){
+                selectedContrastType.push(item.id);
+                selectedType.push(item.value);
+              }
+            });
+            $this.selectedType = selectedType;
+            $this.selectedData.type = selectedContrastType;
+            $this.contrastList = contrastList;
+          }
         }
       }
     },
@@ -2644,6 +2641,27 @@ export default {
       });
       $this.contrastGroupList = contrastGroupList;
       $this.selectedData.comparedept_id = selectedContrastGroupID;
+      if($this.selectedData.comparedept_id.length==0){
+          //月维度，部门对比添加质量分析
+          if($this.selectedData.isMonth){            
+            var contrastList=$this.contrastList;
+            var selectedContrastType = [];
+            var selectedType = [];
+            contrastList.forEach(function(item,index){
+              if(item.value=='qualityAnalysis'){
+                item.isOn=true;
+                item.disabled=false;
+              }
+              if(item.isOn){
+                selectedContrastType.push(item.id);
+                selectedType.push(item.value);
+              }
+            });
+            $this.selectedType = selectedType;
+            $this.selectedData.type = selectedContrastType;
+            $this.contrastList = contrastList;
+          }
+      }
       $this.initData();
     },
     // 基础部门删除点击事件
@@ -2695,6 +2713,27 @@ export default {
     // 对比部门添加确定事件
     saveContrastGroup(){
       var $this = this;
+      if($this.selectedData.comparedept_id&&$this.selectedData.comparedept_id.length>0){
+          //月维度，部门对比屏蔽质量分析
+          if($this.selectedData.isMonth){            
+            var contrastList=$this.contrastList;
+            var selectedContrastType = [];
+            var selectedType = [];
+            contrastList.forEach(function(item,index){
+              if(item.value=='qualityAnalysis'){
+                item.isOn=false;
+                item.disabled=true;
+              }
+              if(item.isOn){
+                selectedContrastType.push(item.id);
+                selectedType.push(item.value);
+              }
+            });
+            $this.selectedType = selectedType;
+            $this.selectedData.type = selectedContrastType;
+            $this.contrastList = contrastList;
+          }
+      }
       $this.isContrastShow = !$this.isContrastShow;
       if($this.oldContrastGroupID!=$this.selectedData.comparedept_id.join(",")){
         $this.oldContrastGroupID = $this.selectedData.comparedept_id.join(",");
@@ -2858,9 +2897,22 @@ export default {
       });
       $this.tipsItem = "（展示项："+itemArr.join("、")+"）";
     },
+    // 滚动悬浮
+    getScroll(){
+      var $this = this;
+      if(!$this.selectedData.isDateCompare && $this.selectedData.dept_id.length>0){
+          var scrolltop = $this.$refs.boxPane.scrollTop;
+          var boxheight = $this.$refs.filterbox.offsetHeight;
+          if(scrolltop > parseInt(boxheight) + 20){
+            $this.isFix = true;
+          }else{
+            $this.isFix = false;
+          }
+      }
+    },
     changeSize(){
       var $this = this;
-      $this.boxWidth = $this.$refs.boxPane.offsetWidth -40;
+      $this.boxWidth = $this.$refs.boxPane.offsetWidth -50;
     }
   }
 }
