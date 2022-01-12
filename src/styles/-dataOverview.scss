@@ -475,17 +475,17 @@
   }
   .top-view{
     margin-top: 10px;
-    height: 334px;
+    height: 404px;
     .nodata{
       display: block;
       text-align: center;
-      line-height: 300px;
+      line-height: 360px;
       font-size: 14px;
       color: #9ea5af;
     }
     .top-item{
       display: flex;
-      padding: 14px 0;
+      padding: 21px 0 13px;
       cursor: pointer;
       a{
         flex:1;
@@ -494,7 +494,7 @@
       .top-icon{
         display: flex;
         width: 38px;
-        height: 36px;
+        height: 44px;
         margin-right: 32px;
         text-align: center;
         position: relative;
@@ -509,14 +509,14 @@
           font-size: 13px;
           color: #fff;
           display: block;
-          line-height: 36px;
+          line-height: 44px;
           width: 100%;
         }
       }
       .top-img{
         display: flex;
-        width: 38px;
-        height: 38px;
+        width: 44px;
+        height: 44px;
         border-radius: 2px;
         overflow: hidden;
         position: relative;
@@ -541,8 +541,8 @@
         
       }
       .nopic{
-        width:36px;
-        height:36px;
+        width:44px;
+        height:44px;
         overflow: hidden;
         border-radius: 2px;
         position: relative;
@@ -553,8 +553,8 @@
       } 
       .top-name{
         width: 68px;
-        height: 34px;
-        line-height: 36px;
+        height: 44px;
+        line-height: 44px;
         font-size: 13px;
         color: #fff;
         text-align: left;
@@ -562,15 +562,15 @@
       }
       .top-width{
         width: calc(100% - 277px);
-        height: 15px;
+        height: 17px;
         box-sizing: border-box;
         position: relative;
         display: flex;
         background-color: #29325c;
-        margin-top: 10px;
+        margin-top: 14px;
 	      border-radius: 0px 8px 8px 0px;
         div{
-          height: 15px;
+          height: 17px;
           border-radius: 0px 8px 8px 0px;
           background-image: linear-gradient(-90deg, #2e7ff3 0%, #4ab5f8 100%);
           position: relative;
@@ -619,7 +619,7 @@
         font-size: 13px;
         margin-left: 16px;
         width: 65px;
-        line-height: 36px;
+        line-height: 44px;
         .num01{
             background-image: linear-gradient(90deg,#f9c020 0%,#f83801 60%);
             background-clip: text;
@@ -820,7 +820,7 @@
   }
 }
 #HotProductChart{
-  height: 330px;
+  height: 400px;
   margin-top: 0px;
 }
 
