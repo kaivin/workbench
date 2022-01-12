@@ -57,7 +57,7 @@
                               <el-table-column
                               prop="id"
                               label="ID"
-                              width="50"
+                              width="70"
                               align="center"
                               >
                               </el-table-column>

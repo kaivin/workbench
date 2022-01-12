@@ -176,3 +176,18 @@ export function getOwnChinadepartcount(data) {
     data
   });
 }
+// 渠道列表
+export function getOwnsource() {
+  return request({
+    url: "/hxindex/Ownpush/getsource",
+    method: "POST",
+  });
+}
+// 渠道统计分析
+export function getOwnChinasourcecount(data) {
+  return request({
+    url: "/hxindex/Ownpush/chinasourcecount",
+    method: "POST",
+    data
+  });
+}

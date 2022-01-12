@@ -21,6 +21,8 @@
     getExpenselog,
     getExpenseadd,
     getOwnChinadepartcount,
+    getOwnChinasourcecount,
+    getOwnsource,
 } from '@/api/ownpush'
 
 const state = {}
@@ -233,7 +235,6 @@ const actions = {
     getExpenseaddAction({ commit }, data){
         return new Promise((resolve, reject) => {
             getExpenseadd(data).then(response => {
-                console.log(response)
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -244,13 +245,33 @@ const actions = {
     getOwnChinadepartcountAction({ commit }, data){
         return new Promise((resolve, reject) => {
             getOwnChinadepartcount(data).then(response => {
-                console.log(response)
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            });
+        });
+    }, 
+    // 渠道列表
+    getOwnsourceAction({ commit }){
+        return new Promise((resolve, reject) => {
+            getOwnsource().then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            });
+        });
+    },   
+    // 渠道统计分析
+    getOwnChinasourcecountAction({ commit }, data){
+        return new Promise((resolve, reject) => {
+            getOwnChinasourcecount(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
             });
         });
     },
+    
 }
 
 export default {

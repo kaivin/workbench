@@ -90,8 +90,6 @@ export default {
   },
   methods:{
     drawMapChart(){
-      console.log(this.colorData)
-      console.log(this.currentData)
       var $this = this; 
       var myChart = $this.$echarts.init(document.getElementById('map-'+$this.idData));
       var option = {
