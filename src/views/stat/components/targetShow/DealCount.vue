@@ -17,8 +17,12 @@
       </div>
     </div>
     <div class="rowMain">
-        <div class="maintit">
-            <span>百万成交</span>
+        <div class="maintit flex-wrap">
+            <div class="deptit">部门</div>
+            <div class="departMean flex-content">
+                <span>成交积分</span><span>合格线</span><span>中等线</span><span>优秀线</span>
+            </div>
+            <div class="dealtit">百万成交</div>
         </div>
         <ul class="departLineBox">
 
@@ -47,9 +51,6 @@
             </li>
 
         </ul>
-        <div class="departMean flex-content">
-            <span>成交积分</span><span>合格线</span><span>中等线</span><span>优秀线</span>
-        </div>
     </div>
   </div>
 </template>

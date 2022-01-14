@@ -26,10 +26,11 @@ export function getDayFinish(data) {
   });
 }
 // 部门月成交完成情况
-export function getDepYearFinish() {
+export function getDepYearFinish(data) {
   return request({
     url: "/hxindex/Api/chinadepartscoreyear",
-    method: "POST"
+    method: "POST",
+    data
   });
 }
 
@@ -61,9 +62,10 @@ export function getEnDayFinish(data) {
 }
 
 // 英文部门月成交完成情况
-export function getEnDepYearFinish() {
+export function getEnDepYearFinish(data) {
   return request({
     url: "/hxindex/Api/endepartscoreyear",
-    method: "POST"
+    method: "POST",
+    data
   });
 }

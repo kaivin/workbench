@@ -1,5 +1,5 @@
 <template>
-  <div class="rowDayFinish">
+  <div class="rowDayFinish" :class="lang=='en'? 'enrowDayFinish':''">
     <div class="rowTitle">
       <div class="title-left">
         <h3 class="tit-h3">日询盘优秀天数统计</h3>
@@ -18,18 +18,25 @@
       </div>
     </div>
     <div class="rowMain">
-        <ul class="depDayCont" :class="lang == 'en' ? 'endepDay' : '' ">
-            <li v-for="(item,index) in DayFinish" :key="index">
-                <div class="depName">{{item.name}}</div>
-                <div class="depRes">
-                    <span class="resnum">{{item.finishnumber}}</span>
-                    <span class="resdet" :class="parseInt(item.finishnumber) < parseInt(item.lastfinishnumber) ? 
-                        'down' : 'grow'"><span v-if="parseInt(item.finishnumber) < parseInt(item.lastfinishnumber)"><i class="svg-i"><svg-icon icon-class="data-down" /></i>同比下降</span>
-                        <span v-else><i class="svg-i"><svg-icon icon-class="data-up" /></i>同比增长</span>
-                    <i >{{parseInt(item.finishnumber) > parseInt(item.lastfinishnumber) ? parseInt(item.finishnumber) - parseInt(item.lastfinishnumber) : parseInt(item.lastfinishnumber) - parseInt(item.finishnumber)}}</i></span>
-                </div>
-            </li>
-        </ul>
+        <el-table
+            :data="DayFinish"
+            style="width: 100%"
+            border
+            class="depDayCont"
+            >
+            <el-table-column
+                prop="name"
+                label="部门">
+            </el-table-column>
+            <el-table-column
+                prop="finishnumber"
+                label="完成次数">
+            </el-table-column>
+            <el-table-column
+                prop="finishcent"
+                label="完成率">
+            </el-table-column>
+        </el-table>
     </div>
   </div>
 </template>
@@ -73,7 +80,7 @@ export default {
             res = parseTime(res,'{y}-{m}');
             $this.MonthChoose = res;
             $this.$emit('dayMonthChange', res);
-        }
+        },
     }
 }
 </script>

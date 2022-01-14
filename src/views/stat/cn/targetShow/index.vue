@@ -1,37 +1,43 @@
 ﻿<template>
   <div class="page-root scroll-panel home-index" ref="boxPane">
     <el-card class="box-card scroll-card target-part" shadow="hover">
-      <el-row>
-        <el-col :md="24" :lg="12" class="target_left">
-          <day-score 
-            :DayScore="DayScore" 
-            @dayChange="dayChange" 
-            :lang="ch"
-          ></day-score>
+      <div class="target_top">
+        <day-score 
+          :DayScore="DayScore" 
+          :lang="ch"
+        ></day-score>
+      </div>
+      <div class="target_box">
+        <div class="target_left">
           <day-target 
             :DayTarget="DayTarget" 
             :DayAim ="DayAim" 
             :Dep1DayNum="Dep1DayNum" 
             :lang="ch"
+            @dayChange="dayChange" 
           ></day-target>
-          <day-finish 
-            :DayFinish="DayFinish" 
-            @dayMonthChange="getDayFinish"
-            :lang="ch"
-          ></day-finish>
-        </el-col>
-        <el-col :md="24" :lg="12" class="target_right">
           <deal-count 
             :DealCount="DealCount" 
             @MonthChange="monthChange" 
             :lang="ch"
           ></deal-count>
+          
+        </div>
+        <div class="target_right">
+          <day-finish 
+            :DayFinish="DayFinish" 
+            @dayMonthChange="getDayFinish"
+            :lang="ch"
+          ></day-finish>
           <month-deal 
             :MonthFinish="MonthFinish"
             :scoremonth="scoremonth"
+            @yearChange="GetMonthDeal"
+            :lang="ch"
           ></month-deal>
-        </el-col>
-      </el-row>
+        </div>
+      </div>
+
     </el-card>
   </div>
 </template>
@@ -293,7 +299,7 @@ export default {
               $this.DayScore.historyMaxNum = historymax;
               $this.DayScore.allTodayNum = todaynum;
               $this.DayScore.allYesterdayNum = yeaterdaynum;
-              $this.getPercent(todaynum,yeaterdaynum);
+              // $this.getPercent(todaynum,yeaterdaynum);
             } else {
               $this.$message({
                 showClose: true,
@@ -317,7 +323,24 @@ export default {
         .then((response) => {
           if (response) {
             if (response.status) {
-              $this.DayFinish = response.departmonthdarget;
+              var res = response.departmonthdarget;
+              var nowmonth = parseTime(new Date(),'{y}-{m}');
+              var monthnumber=0;
+              if(nowmonth == val){
+                monthnumber = parseTime(new Date(),'{d}');
+              }else{
+                monthnumber = new Date(val.split("-")[0],val.split("-")[1],0).getDate();
+              }
+              for(var i = 0; i<res.length;i++){
+                if(res[i].finishnumber !=0 ||res[i].finishnumber!=''){
+                  res[i].finishcent = res[i].finishnumber/monthnumber*100;
+                  res[i].finishcent = res[i].finishcent.toFixed(1)+"%"
+                }else{
+                  res[i].finishcent = '0%'
+                }
+                
+              }
+              $this.DayFinish = res;
             } else {
               $this.$message({
                 showClose: true,
@@ -332,10 +355,16 @@ export default {
     },
 
     // 5.部门月成交完成情况
-    GetMonthDeal(){
+    GetMonthDeal(val){
       var $this = this;
       var data = {};
-      data.year = new Date().getFullYear;
+      if(val){
+        data.year = val;
+      }else if(new Date().getMonth() < 4){
+        data.year = new Date().getFullYear()-1;
+      }else{
+        data.year = new Date().getFullYear();
+      }
       $this.$store
         .dispatch("homeobject/postDepFinish", data)
         .then((response) => {

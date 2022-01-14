@@ -5,6 +5,18 @@
         <h3 class="tit-h3"><span v-if="lang == 'ch'">中文</span><span v-else>英文</span>日目标</h3>
         <span class="tit-span">（单位：个）</span>
       </div>
+      <div class="datePicker">
+        <span class="go-left on"  @click="dayPrev">前一天</span>
+        <el-date-picker
+          v-model="dateChoose"
+          @change = "dateChange"
+          type="date"
+          format="yyyy-MM-dd"
+          :picker-options="disabledTime"
+          placeholder="选择日期">
+        </el-date-picker>
+        <span class="go-right" :class="nextOn ? 'on' : '' " @click="dayNext" :style="!nextOn ? 'cursor:not-allowed' : '' ">后一天</span>
+      </div>
     </div>
     <div class="rowMain">
         <div id="dayTarget"></div>
@@ -22,11 +34,18 @@
 <script>
 import { each, groupBy } from '@antv/util';
 import { Mix } from '@antv/g2plot';
+import {parseTime}  from "@/utils";
 export default {
     name: "DayTarget",
     data() {
         return {
-            
+          dateChoose: '',
+          nextOn: false,
+          disabledTime:{
+            disabledDate(time){
+              return time.getTime() > Date.now();
+            }
+          }
         }
     },
     props:{
@@ -56,6 +75,8 @@ export default {
         }
     },
     created(){
+      var $this = this;
+      this.dateChoose = parseTime(new Date(),'{y}-{m}-{d}');
     },
     watch:{
         DayTarget:{//深度监听，可监听到对象、数组的变化
@@ -90,13 +111,12 @@ export default {
               offsetY: 6,
               style: {
                 textAlign: 'right',
-                fontWeight: "bold",
-                fill: "#ff4848"
+                fill: "#f43131"
               },
             },
             style: {
               lineDash: [9, 4],
-              stroke: "#ff4848",
+              stroke: "#fa6e57",
               shadowColor: '#ff4848',
               shadowBlur: 10,
               shadowOffsetX: 5,
@@ -113,7 +133,7 @@ export default {
                 type: 'text',
                 position: [k, values[i].number],
                 content: `${values[i].number}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#ebaa46' },
+                style: { textAlign: 'center', fontSize: 12, fill: '#1366ff' },
                 offsetY: -10,
                 offsetX: -27
               });
@@ -123,7 +143,7 @@ export default {
                 type: 'text',
                 position: [k, Dep1DayNum],
                 content: `${Dep1DayNum}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#ebaa46' },
+                style: { textAlign: 'center', fontSize: 12, fill: '#1366ff' },
                 offsetY: -10,
                 offsetX: -27
               });
@@ -144,7 +164,7 @@ export default {
                 type: 'text',
                 position: [k, values[i].number],
                 content: `${values[i].number}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#225ae5' },
+                style: { textAlign: 'center', fontSize: 12, fill: '#ffad00' },
                 offsetY: -10,
               });
             }
@@ -153,7 +173,7 @@ export default {
                 type: 'text',
                 position: [k, values[i].number],
                 content: `${values[i].number}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#f47070' },
+                style: { textAlign: 'center', fontSize: 12, fill: '#fe713c' },
                 offsetY: -10,
                 offsetX: 27
               });
@@ -195,7 +215,7 @@ export default {
                   xField: 'departname',
                   yField: 'number',
                   isGroup: true,
-                  color: [ '#ebaa46', '#3ebea7', '#225ae5','#f47070'],
+                  color: [ '#74bff9', '#6490ff', '#ffc107','#f65f54'],
                   minColumnWidth: 22,
                   maxColumnWidth: 22,
                   legend: false,
@@ -206,22 +226,30 @@ export default {
                   yAxis: {
                     label:{
                       style:{
-                        fill:"#111111",
+                        fill:"#333",
                         opacity:1,
                       }
                     },
                     grid: {
                       line: {
                         style: {
-                          stroke: '#e7e7e7',
+                          stroke: '#dedede',
                           lineWidth: 1,
-                          lineDash: [3, 2],
+                          // lineDash: [3, 2],
                         },
                         
                       },
                     },
                     tickCount: 4,
                     tickInterval: 50,
+                  },
+                  xAxis:{
+                    label:{
+                      style:{
+                        fill:"#333",
+                        opacity:1,
+                      }
+                    }
                   },
                   annotations
                 }
@@ -230,6 +258,45 @@ export default {
         })
         $this.plot = plot;
         plot.render();
+      },
+      dayPrev() { 
+        var $this = this;
+        var nowDayStr = new Date($this.dateChoose).getTime();
+        var prevDayStr = nowDayStr - 3600*24*1000;
+        var prevDay = new Date(prevDayStr);
+        prevDay = parseTime(prevDay,'{y}-{m}-{d}');
+        $this.nextOn = true;
+        $this.dateChoose = prevDay;
+        $this.$emit('dayChange', prevDay);
+      },
+      dayNext(){
+        var $this = this;
+        var nowDayStr = new Date($this.dateChoose).getTime();
+        if(new Date().getTime() - nowDayStr < 3600*24*1000){
+          $this.nextOn = false;
+        }else{
+          var nextDayStr = nowDayStr + 3600*24*1000;
+          var nextDay = new Date(nextDayStr);
+          nextDay = parseTime(nextDay,'{y}-{m}-{d}');
+          $this.dateChoose = nextDay;
+          if(new Date().getTime() - nowDayStr < 3600*24*1000*2){
+            $this.nextOn = false;
+          }
+          $this.$emit('dayChange', nextDay);
+        }
+      },
+      dateChange(){
+        var $this = this;
+        var res = $this.dateChoose;
+        res = parseTime(res,'{y}-{m}-{d}');
+        $this.dateChoose = res;
+        var normalstr = new Date($this.dateChoose).getTime();
+        if(new Date().getTime() - normalstr  < 3600*24*1000){
+          $this.nextOn = false;
+        }else{
+          $this.nextOn = true;
+        }
+        $this.$emit('dayChange', res);
       }
     }
 }
@@ -237,6 +304,6 @@ export default {
 
 <style>
   #dayTarget{
-    height: 200px;
+    height: 240px;
   }
 </style>

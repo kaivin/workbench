@@ -43,9 +43,9 @@ const actions = {
         })
     },
     // 部门年度月成交完成情况
-    postDepFinish({ commit, state }) {
+    postDepFinish({ commit, state },data) {
         return new Promise((resolve, reject) => {
-            getDepYearFinish().then(response => {
+            getDepYearFinish(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -84,9 +84,9 @@ const actions = {
         })
     },
     // 英文部门年度月成交完成情况
-    postEnDepFinish({ commit, state }) {
+    postEnDepFinish({ commit, state },data) {
         return new Promise((resolve, reject) => {
-            getEnDepYearFinish().then(response => {
+            getEnDepYearFinish(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

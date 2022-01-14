@@ -1,11 +1,15 @@
 <template>
-  <div class="rowMonthDeal">
+  <div class="rowMonthDeal" :class="lang=='en'? 'enrowMonthDeal':''">
     <div class="rowTitle">
       <div class="title-left">
         <h3 class="tit-h3">月成交等级统计</h3>
         <span class="tit-span">（单位：次）</span>
-        <span class="tit-span" v-if="isShow">注：{{NowYear}}年{{scoremonth.split("-")[0]}}<span>至{{NowYear}}年{{scoremonth.split("-")[1]}}</span></span>
-        <span class="tit-span" v-else>注：{{NowYear}}年暂无数据</span>
+        <span class="tit-span" v-if="isShow">注：{{showYear}}年{{scoremonth.split("-")[0]}}<span>至{{showYear}}年{{scoremonth.split("-")[1]}}</span></span>
+        <!-- <span class="tit-span" v-else>注：{{NowYear}}年暂无数据</span> -->
+      </div>
+      <div class="dealYear">
+        <span :class="type==1?'active':''" @click="changeType(1)">{{NowYear-1}}年</span>
+        <span :class="type==2?'active':''" @click="changeType(2)">{{NowYear}}年</span>
       </div>
     </div>
     <div class="rowMain">
@@ -96,7 +100,9 @@ export default {
         return {
             NowYear:"",
             NowMonth:"",
-            isShow: true
+            isShow: true,
+            type:2,
+            showYear:''
         }
     },
     props:{
@@ -111,25 +117,51 @@ export default {
             default: function() {
                 return '';
             }
+        },
+        lang: {
+            type: String,
+            default: function(){
+                return "";
+            }
         }
     },
     created(){
         var $this = this;
         $this.NowYear = new Date().getFullYear();
         $this.NowMonth = new Date().getMonth() + 1;
-        if(new Date().getMonth() == 0){
-            $this.isShow = false
+        if(new Date().getMonth() < 4){
+            $this.type = 1;
+            $this.showYear = new Date().getFullYear()-1;
+        }else{
+            $this.showYear = new Date().getFullYear();
         }
-
+    },
+    watch:{
+        scoremonth(val){
+            var $this = this;
+            if(val == ''){
+                $this.isShow = false
+            }else{
+                $this.isShow = true
+            }
+        }
     },
     mounted(){
-        var $this = this;
-        if($this.scoremonth == ''){
-            $this.isShow = false
-        }
     },
     methods:{
-        
+        changeType(val){
+            var $this = this;
+            $this.type = val;
+            $this.isShow = false;
+            var year = '';
+            if(val == 1){
+                year = $this.NowYear-1;
+            }else{
+                year = $this.NowYear;
+            }
+            $this.showYear = year;
+            $this.$emit('yearChange',year)
+        }
     }
 }
 </script>
