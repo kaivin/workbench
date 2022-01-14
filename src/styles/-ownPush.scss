@@ -17,10 +17,25 @@
         border-top:1px solid #eaeef0;
     }
 }
+.el-link.ImportTemplate{
+  margin-left:10px;
+  .el-link--inner{
+    cursor: pointer;
+    font-size: 12px;
+    color: #0870ff;
+    &:hover{
+      text-decoration: underline;
+      color: #0870ff;
+    }
+  }
+}
 .Consumption-statistic{
   .search-wrap{
     .item-search{
-      padding:0px 10px 0px 0
+      padding:0px 10px 0px 0;
+      .el-button--small{
+        padding:8px 15px 7px 15px;
+      }
     }
   }
 }
@@ -964,37 +979,258 @@
           .item-column{
             margin-right:10px;
             background-color:#fff;
+            position: relative;
             &:last-child{
               margin-right:0px;
             }
-            .column-header{
-              padding:30px 30px 15px;
-              .txt-header{
-                height:28px;
-                strong{
-                  display:inline-block;
+            .item-quality{
+              padding-bottom:30px;
+              .column-header{
+                padding:30px 30px 15px;
+                .txt-header{
                   height:28px;
-                  line-height:28px;
-                  font-size:$fontsize17;
-                  color:#1a1a1a;
+                  strong{
+                    display:inline-block;
+                    height:28px;
+                    line-height:28px;
+                    font-size:$fontsize17;
+                    color:#1a1a1a;
+                  }
+                  span{
+                    display:inline-block;
+                    height:28px;
+                    line-height:28px;
+                    font-size:$fontsize13;
+                    color:#a1a1a1;
+                  }
                 }
-                span{
-                  display:inline-block;
-                  height:28px;
-                  line-height:28px;
-                  font-size:$fontsize13;
-                  color:#a1a1a1;
+              }
+              .column-body{
+                position:relative;
+                .pie-panel{
+                  clear: both;
+                  display: block;
+                  width:100%;
+                  margin: 0 auto;
+                  min-width:300px;
+                }
+                .colum-panel{
+                  clear: both;
+                  display: block;
+                  width:100%;
+                  margin: 0 auto;
+                  min-width:300px;
                 }
               }
             }
-            .column-body{
-              position:relative;
-              .pie-panel{
+            .qualityTable{
+              clear: both;
+              display: block;
+              position: absolute;
+              left:0px;
+              top:0px;
+              right:0px;
+              bottom:0px;
+              padding: 30px;
+              width:100%;
+              z-index:10;
+              .qualityTableTop{
                 clear: both;
                 display: block;
-                width:55%;
-                min-width:260px;
-                margin: 0 auto;
+                height:351px;
+                overflow: hidden;
+                background:#fff;
+                .el-table--border .el-table__cell{
+                    border-right: none;
+                }
+                .el-table .el-table__cell{
+                    background-color: #f8fafc;
+                    text-align: center;
+                    color: #1a1a1a;
+                    font-size:$fontsize13;
+                    padding: 13px 0;
+                }
+                .el-table th.el-table__cell{
+                    background-color: #f4f6f9;
+                    color: #808080;
+                }
+                .el-table .cell{
+                    padding-left: 0;
+                    padding-right: 0;
+                    font-weight: normal;
+                }
+                .el-table .cell span{
+                    position: relative;
+                    text-align: left;
+                }
+              }
+              .qualityTableBom{
+                clear: both;
+                display: block;
+                background:#fff;
+                border: 1px solid #dfe6ec;
+                text-align: center;
+                border-top: 0px;
+                font-size: 13px;
+                line-height: 24px;
+                padding:8px;
+                span{
+                  clear: both;
+                  display: inline-block;
+                  cursor: pointer;
+                  line-height: 24px;
+                  position: relative;
+                  &:after{                    
+                    content: '';
+                    display: inline-block;
+                    margin-left: 6px;
+                    width: 0;
+                    height: 0;
+                    border-left: 5px solid transparent;
+                    border-right: 5px solid transparent;
+                    border-top: 5px solid #c0c4cc;
+                    border-bottom: 0px;
+                    transition: all 0.3s ease;
+                    vertical-align: middle;
+                  }
+                  &:hover{
+                    text-decoration: underline;
+                    color: #0870ff;
+                    &:after{
+                      border-top: 5px solid #0870ff;
+                    }
+                  }
+                }
+                &.active{
+                  span{
+                    color: #0870ff;
+                    &:after{
+                      border-top: 5px solid #0870ff;
+                      transform: rotate(180deg);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        &.year-chart{
+          .item-column{
+            margin-right:10px;
+            background-color:#fff;
+            position: relative;
+            &:last-child{
+              margin-right:0px;
+            }
+            .item-quality{
+              padding-bottom:30px;
+              .column-header{
+                padding:30px 30px 15px;
+                .txt-header{
+                  height:28px;
+                  strong{
+                    display:inline-block;
+                    height:28px;
+                    line-height:28px;
+                    font-size:$fontsize17;
+                    color:#1a1a1a;
+                  }
+                  span{
+                    display:inline-block;
+                    height:28px;
+                    line-height:28px;
+                    font-size:$fontsize13;
+                    color:#a1a1a1;
+                  }
+                }
+              }
+              .column-body{
+                position:relative;
+                .pie-panel{
+                  clear: both;
+                  display: block;
+                  width:100%;
+                  margin: 0 auto;
+                  min-width:300px;
+                }
+                .colum-panel{
+                  clear: both;
+                  display: block;
+                  width:100%;
+                  margin: 0 auto;
+                  min-width:300px;
+                }
+              }
+            }
+            .qualityTable{
+              clear: both;
+              padding:30px 30px 0px 30px;
+              width:100%;
+              z-index:10;
+              .qualityTableFl{
+                width: 60px;
+                float: left;
+                .quaTit{
+                  clear: both;
+                  background: #f4f6f9;
+                  font-size: 13px;
+                  padding: 40px 10px 5px 10px;
+                  border: 1px solid #eaedf3;
+                  line-height: 24px;
+                }
+                span{
+                  clear: both;
+                  display: block;
+                  border: 1px solid #eaedf3;
+                  border-top: 0px;
+                  font-size: 13px;
+                  padding: 5px 10px;
+                  line-height: 24px;
+                }
+              }
+              .qualityTableFr{
+                float: left;
+                width: calc(100% - 60px);
+                .qualityTableFrBom{
+                  clear: both;
+                  .quaTit{
+                    clear: both;
+                    text-align: left;
+                    background: #f4f6f9;
+                    font-size: 13px;
+                    padding: 5px 10px;
+                    border: 1px solid #eaedf3;
+                    line-height: 24px;
+                    border-left: 0px;
+                  }
+                  .quaYear{
+                    clear: both;
+                    font-size: 13px;
+                    span{
+                      flex: 1;
+                      border: 1px solid #eaedf3;
+                      background: #f4f6f9;
+                      border-left: 0px;
+                      border-top: 0px;
+                      padding: 5px 10px;
+                      line-height: 24px;
+                      min-width:50px;
+                    }
+                  }
+                  .quaMain{
+                    clear: both;
+                    font-size: 13px;
+                    span{
+                      flex: 1;
+                      border: 1px solid #eaedf3;
+                      border-left: 0px;
+                      border-top: 0px;
+                      padding: 5px 10px;
+                      line-height: 24px;
+                      min-width:50px;
+                    }
+                  }
+                }
               }
             }
           }

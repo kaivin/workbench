@@ -47,17 +47,9 @@ export default {
   name: "UnpayInquiry",
   data() {
     return {
-      datetime:''
     };
   },
   created(){
-    var $this = this;
-    this.datetime = parseTime(new Date(),'{y}.{m}.{d}');
-    if(this.ByTime&&this.ByTime!=''){
-        this.datetime = this.ByTime;
-    }else{      
-        this.datetime = '截至'+parseTime(new Date(),'{y}.{m}.{d}');
-    }
   },
   props: {
     unpayInquiry: {
@@ -90,6 +82,16 @@ export default {
       default: function () {
         return false;
       },
+    }
+  },
+  computed:{
+    datetime(){
+      if(this.ByTime&&this.ByTime!=''){
+          return this.ByTime;
+      }else{      
+          var datetime = '截至'+parseTime(new Date(),'{y}.{m}.{d}');
+          return datetime;
+      }
     }
   },
   methods:{

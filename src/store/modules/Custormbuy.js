@@ -2,7 +2,9 @@
     getCustormbuyList,
     setExportLink,
     getCustormenbuyList,
-    setExportLinken
+    setExportLinken,
+    getCnTemplate,
+    getEnTemplate
 } from '@/api/Custormbuy'
 
 
@@ -44,15 +46,13 @@ const actions = {
     setExportLinkActionen({commit,state},data){
         return new Promise((resolve, reject)=>{
            setExportLinken(data).then(response=>{
-               console.log(response)
                 resolve(response)
             }).catch(error => {
                 reject(error)
             }) 
         })
         
-    }
-   
+    },   
 }
 
 

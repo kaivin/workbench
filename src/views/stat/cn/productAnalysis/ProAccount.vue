@@ -702,6 +702,7 @@ export default {
                         var topxunnumber=[res.topxunnumber]
                         var tagName=[$this.routTag.productname]
                         $this.enquirieList=$this.echartareaPlug(topxunnumber,tagName,'询盘趋势',$this.contrastName);  
+                        console.log($this.enquirieList,'$this.enquirieList');
                     }
                     var ChartTab=[];
                     var currentMix=[];
@@ -1209,9 +1210,7 @@ export default {
                 itemDate = items.date.split("-");
                 items.time =itemDate[1] + "-" + itemDate[2] + "\n" + items.weekday.replace("星期", "周");
                 if(index==0){
-                    if((indexs+1)%2===1){
-                       enquirieObj.TagTime.push(items.time);
-                    }
+                    enquirieObj.TagTime.push(items.time);
                 }
                 var itemObj={};
                 itemObj.name=items.time;

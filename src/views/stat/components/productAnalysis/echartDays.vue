@@ -176,6 +176,7 @@ export default {
                     }
                 },
                 axisLabel: {
+                    interval:1,
                     color: "#555",
                     fontSize: "12",
                     lineHeight: 18,

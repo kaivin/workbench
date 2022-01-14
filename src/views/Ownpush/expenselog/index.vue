@@ -42,6 +42,7 @@
                                             <span class="button-font">导出Excel</span>
                                           </label>
                                         </el-button>
+                                        <el-link target="_blank" tag='a' href='https://mgl.hxjq.org/hxindex/Ownpush/gettemplate' class="ImportTemplate">导入表格模板</el-link> 
                                     </div>
                                 </div>
                             </div>

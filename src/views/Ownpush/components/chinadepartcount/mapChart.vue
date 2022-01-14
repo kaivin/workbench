@@ -3,11 +3,6 @@
     <div class="static-wrapper" v-if="judgeData.singleGroupStatic||judgeData.pluralGroupStatic">
       <template v-if="currentData.length>0">
         <template v-for="item in currentData">
-          <div class="item-column" v-if="item[0].isMap=='year'">
-            <item-year
-                :item-data="item[0]"
-            ></item-year>
-          </div>
           <div class="item-column" v-if="item[0].isMap=='map'">
             <div class="column-wrap">
               <div class="column-header flex-box">
@@ -67,11 +62,6 @@
     <template v-else>
       <template v-if="currentData.length>0">
         <div class="compare-wrapper" v-for="item in currentData">
-          <div class="compare-year" v-if="item.isMap=='year'">
-            <item-year
-                :item-data="item"
-            ></item-year>
-          </div>
           <div class="compare-wrap" v-if="item.isMap=='map'">
             <div class="compare-header">
               <div class="txt-header">
@@ -155,7 +145,6 @@
 </template>
 
 <script>
-import itemYear from "./itemYear.vue";
 import wordMapChart from "../../../stat/components/departGroup/wordMapChart.vue";
 import cnMapChart from "../../../stat/components/departGroup/cnMapChart.vue";
 import topRegion from "../../../stat/components/departGroup/topRegion.vue";
@@ -163,7 +152,6 @@ import itemProduct from "../../../stat/components/departGroup/itemProduct.vue";
 export default {
   name: "mapChart",
   components: {
-    itemYear,
     wordMapChart,
     cnMapChart,
     topRegion,

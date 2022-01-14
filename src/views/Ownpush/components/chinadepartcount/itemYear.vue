@@ -1,71 +1,164 @@
 ﻿<template>
-  <div class="item-yarn">
-    <div class="column-header">
-      <div class="txt-header">
-        <strong>{{currentData.title}}</strong>
-        <div class="tab-product" v-if='!currentData.isYear'>
-          <div class="item-tab" :class="currentType=='a'+currentData.randomStr1?'active':''" v-on:click="currentType='a'+currentData.randomStr1">月</div>
-          <div class="item-tab" :class="currentType=='b'+currentData.randomStr2?'active':''" v-on:click="currentType='b'+currentData.randomStr2">年</div>
-        </div>
-      </div>
-    </div>
-    <div class="column-body flex-box">
-        <div class="column-chart" v-show="currentType=='a'+currentData.randomStr1">
-            <column-chart
-              :chart-data="currentData.inquiryMonthCount"
-              :id-data="currentData.randomStr1"
-              :iscost="currentData.isCost"
-            ></column-chart>
-        </div>
-        <div class="column-chart" v-if='!currentData.isYear' v-show="currentType=='b'+currentData.randomStr2">
-            <column-chart
-              :chart-data="currentData.inquiryYearCount"
-              :id-data="currentData.randomStr2"
-              :iscost="currentData.isCost"
-            ></column-chart>
-        </div>
-    </div>
-  </div>
+    <div class="pie-chart" id='randomStr' :style="'height:'+scoreHeight+'px'" ></div>
 </template>
 
 <script>
-import columnChart from "./columnChart.vue";
+import * as echarts from 'echarts';
 export default {
-  name: "itemYear",
-  components: {
-    columnChart,
-  },
+  name: "pieChart",
   data:function() {
     return {
-      isFold:true,
-      currentType:"a"+this.itemData.randomStr1,
+        myChart:null,
     };
   },
   props: {
-    itemData: {
-      type: Object,
-      default:{},
+    chartData: {
+      type: Array,
+      default:[],
+    },
+    departArr: {
+      type: Array,
+      default:[],
+    },
+    yarnArr: {
+      type: Array,
+      default:[],
+    },
+    yarnClinch: {
+      type: Array,
+      default:[],
+    },
+    scoreHeight:{
+      type: Number,
+      default: "",
+    },
+    idData:{
+      type: String,
+      default: "",
     },
   },
   computed:{
     currentData(){
-      return this.itemData;
+      return this.chartData;
     },
   },
-  watch: {
-    itemData:{
+  watch:{
+    chartData:{
       handler(newValue, oldValue) {
-        this.itemData = newValue;
+          this.drawAreaTrendChart();
       },
-      deep: true,
-      immediate:true
+      deep: true
     },
   },
   mounted(){
+    var $this = this;
+    window.addEventListener('resize',this.echartsSize);
+    $this.drawAreaTrendChart();
   },
-  methods:{
+  methods: {
+    drawAreaTrendChart() {
+        var $this = this;
+        var chartDom = document.getElementById('randomStr');
+        var myChart = echarts.init(chartDom);
+        var series=[];
+        $this.yarnArr.forEach(function(item,index){
+          $this.yarnClinch.forEach(function(itemk,indexk){
+            var itemObj={};
+            itemObj.name=itemk;
+            itemObj.type='bar';
+            itemObj.barWidth=25;
+            itemObj.stack=item;
+            itemObj.data=[];
+            $this.chartData.forEach(function(items,indexs){
+              if(item==items.time&&itemk==items.yeartime){
+                itemObj.data.push(items.value);
+              }
+            });
+            series.push(itemObj);
+          });
+        });
+        var option;
+        var legend=false;
+        option = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          grid: {
+            left: 30,
+            right:30,
+            bottom: 0,
+            top: 20,
+            containLabel: true
+          },
+          xAxis:{
+              type: 'category',
+              data: $this.departArr,
+              axisLine: {
+                  show: false,
+              },
+              axisTick: {
+                  show: false,
+              },
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              axisLabel: {
+                  color: "#555",
+                  fontSize: "12",
+                  lineHeight: 18,
+              },
+          },
+          yAxis: [
+            {
+              type: 'value',
+              splitNumber:3,
+              splitLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 2],
+                      dashOffset: 3,
+                      color: '#f6f6f6',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+            }
+          ],
+          legend:legend,
+          series:series
+        };
+        option && myChart.setOption(option);
+        $this.myChart = myChart;
+    },
+    echartsSize(){
+        if(this.myChart){
+            this.myChart.resize();
+        }
+    }
   },
-};
+  destroyed(){
+    window.removeEventListener('resize',this.echartsSize);
+    if(this.myChart){
+        this.myChart.dispose();
+    }
+  },
+}
 </script>
 
 <style></style>
