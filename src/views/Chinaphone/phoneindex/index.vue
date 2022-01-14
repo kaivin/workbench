@@ -34,17 +34,17 @@
     </div>
     <div class="flex-content relative">
       <div class="abs-panel" ref="mainPane">
-        <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position"> 
+        <div class="scroll-panel chscroll-panel" ref="scrollDom" style="will-change:scroll-position"> 
           <div class="phone-index" v-if="!phoneID">
-            <p class="breadcrumb" ref="breadcrumbPane">
+            <!-- <p class="breadcrumb" ref="breadcrumbPane">
               <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
               <template v-for="item in breadcrumbList">
                 <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
                 <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
               </template>
-            </p>
+            </p> -->
             <div class="ChinaphoneNum" ref="numPane">
-              <div class="card-header">
+              <div class="card-header chcard-header">
                 <h2>{{currentTeam}}</h2>
                 <p class="ChinaphoneNumTag">
                     <span class="item-clues" v-for="item in topdepart" v-bind:class="item.isOn?'active':''" v-bind:key="item.id" v-on:click="topdepartClick(item.id,item.name,item.isOn)">{{item.name}}</span>
@@ -110,12 +110,12 @@
             </div>
           </div>
           <div class="true-height" v-else ref="scrollPane">       
-            <p class="breadcrumb" ref="breadcrumbPane">
+            <!-- <p class="breadcrumb" ref="breadcrumbPane">
                 <router-link class="breadcrumb-link" to="/">首页</router-link>
                 <template v-for="item in breadcrumbList">
                   <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
                 </template>
-            </p>
+            </p> -->
             <el-card class="box-card scroll-card EnphoneCardFrDate" shadow="hover">
               <div slot="header">
                 <div class="card-header EnphoneCardHeader" ref="headerPane">
@@ -584,7 +584,8 @@ export default {
         $this.setHeight();
       }else{
         if($this.$refs.mainPane&&$this.$refs.numPane){  
-          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-45-15; 
+          // $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-45-15; 
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45-15; 
         }
         $this.drawChart();
       }
@@ -595,7 +596,8 @@ export default {
           $this.setHeight();
         }else{
           if($this.$refs.mainPane&&$this.$refs.numPane){
-            $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-45-15; 
+            // $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-45-15; 
+            $this.minHeight = $this.$refs.mainPane.offsetHeight-45-15; 
           }
         }
       })()
@@ -647,7 +649,8 @@ export default {
           $this.$refs.simpleTable.doLayout();
       }else{
         if($this.$refs.mainPane&&$this.$refs.numPane){
-          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-45-15;  
+          // $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-45-15;  
+          $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45-15;  
         }
       }
     })
@@ -745,9 +748,10 @@ export default {
       var $this = this;
       $this.minHeight = 0;      
       var headerHeight = $this.$refs.headerPane.offsetHeight+45;
-      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
+      // var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
-      $this.minHeight = screenHeight-headerHeight-breadcrumbHeight-40;
+      // $this.minHeight = screenHeight-headerHeight-breadcrumbHeight-40;
+      $this.minHeight = screenHeight-headerHeight-40;
       $this.getBrowserType();
       setTimeout(function() {
           $this.setScrollDom();
@@ -1070,7 +1074,7 @@ export default {
           xField: 'date',
           yField: 'xunnumber',
           appendPadding:[15,15,15,15],
-          smooth:true,
+          // smooth:true,
           areaStyle: () => {
             return {
               fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
@@ -1571,9 +1575,11 @@ export default {
       $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
       // 获取表格头吸顶需滚动的高度
       if($this.$refs.headerPane){
-         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20+44;
+        //  $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20+44;
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15+20+44;
       }else{
-         $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15+20+44;
+        //  $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15+20+44;
+         $this.scrollTable.fixedTopHeight=15+20+44;
       }
       $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
       if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){

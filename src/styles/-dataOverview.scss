@@ -891,3 +891,12 @@
     width: 100%;
   }
 }
+
+body[device="iMax"]{
+  .overbtm_box .scoretop_box{
+    width: 900px;
+  }
+  .overbtm_box .hotpro_box{
+    width: calc(100% - 920px);
+  }
+}

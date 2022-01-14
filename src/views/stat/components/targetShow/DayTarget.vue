@@ -133,7 +133,7 @@ export default {
                 type: 'text',
                 position: [k, values[i].number],
                 content: `${values[i].number}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#1366ff' },
+                style: { textAlign: 'center', fontSize: 12, fill: '#7fb3ff' },
                 offsetY: -10,
                 offsetX: -27
               });
@@ -143,7 +143,7 @@ export default {
                 type: 'text',
                 position: [k, Dep1DayNum],
                 content: `${Dep1DayNum}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#1366ff' },
+                style: { textAlign: 'center', fontSize: 12, fill: '#7fb3ff' },
                 offsetY: -10,
                 offsetX: -27
               });
@@ -164,7 +164,7 @@ export default {
                 type: 'text',
                 position: [k, values[i].number],
                 content: `${values[i].number}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#ffad00' },
+                style: { textAlign: 'center', fontSize: 12, fill: '#4d7eff' },
                 offsetY: -10,
               });
             }
@@ -173,7 +173,7 @@ export default {
                 type: 'text',
                 position: [k, values[i].number],
                 content: `${values[i].number}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#fe713c' },
+                style: { textAlign: 'center', fontSize: 12, fill: '#ffb420' },
                 offsetY: -10,
                 offsetX: 27
               });
@@ -215,7 +215,7 @@ export default {
                   xField: 'departname',
                   yField: 'number',
                   isGroup: true,
-                  color: [ '#74bff9', '#6490ff', '#ffc107','#f65f54'],
+                  color: [ '#a0c7ff', '#7fb3ff', '#4d7eff','#ffb420'],
                   minColumnWidth: 22,
                   maxColumnWidth: 22,
                   legend: false,

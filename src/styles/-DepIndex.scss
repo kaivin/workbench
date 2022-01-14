@@ -20,7 +20,7 @@
                 color: #a1a1a1;
                 font-size:$fontsize13;
                 display: inline-block;
-                margin-left: 15px;
+                margin-left: 8px;
             }
         }
     }
@@ -216,7 +216,7 @@
                 color: #a1a1a1;
                 font-size:$fontsize13;
                 display: inline-block;
-                margin-left: 15px;
+                margin-left: 8px;
             }
         }
         .datePicker{
@@ -450,7 +450,7 @@
                 color: #a1a1a1;
                 font-size:$fontsize13;
                 display: inline-block;
-                margin-left: 15px;
+                margin-left: 8px;
             }
         }
         .datePicker{
@@ -557,7 +557,7 @@
                     display: block;
                     width: 10px;
                     height: 10px;
-                    background: #6490ff;
+                    background: #7fb3ff;
                     position: absolute;
                     left:0px;
                     top: 3px;
@@ -570,7 +570,7 @@
                     display: block;
                     width: 10px;
                     height: 10px;
-                    background: #f65f54;
+                    background: #ffb420;
                     box-sizing: border-box;
                     position: absolute;
                     left:0px;
@@ -584,7 +584,7 @@
                     display: block;
                     width: 10px;
                     height: 10px;
-                    background: #ffc107;
+                    background: #4d7eff;
                     position: absolute;
                     left:0px;
                     top: 3px;
@@ -597,7 +597,7 @@
                     display: block;
                     width: 10px;
                     height: 10px;
-                    background: #74bff9;
+                    background: #a0c7ff;
                     position: absolute;
                     left:0px;
                     top: 3px;
@@ -631,7 +631,7 @@
                 color: #a1a1a1;
                 font-size:$fontsize13;
                 display: inline-block;
-                margin-left: 15px;
+                margin-left: 8px;
             }
         }
         .datePicker{
@@ -752,7 +752,7 @@
                 color: #a1a1a1;
                 font-size:$fontsize13;
                 display: inline-block;
-                margin-left: 15px;
+                margin-left: 8px;
             }
         }
         .dealYear{
@@ -893,7 +893,7 @@
 }
 
 .enrowMonthDeal{
-    padding-bottom: 91px;
+    padding-bottom: 111px;
 }
 
 .target_top{
@@ -942,7 +942,7 @@
                 color: #a1a1a1;
                 font-size:$fontsize13;
                 display: inline-block;
-                margin-left: 15px;
+                margin-left: 8px;
             }
         }
         .datePicker{
@@ -984,6 +984,7 @@
                 span{
                     color: #a5a5a5;
                     font-size:$fontsize13;
+                    line-height: 20px;
                     position: relative;
                     &:before{
                         content: '';
@@ -1034,11 +1035,11 @@
                 float: right;
                 font-size:$fontsize13;
                 color:#111;
-                line-height:12px;
+                line-height:20px;
                 span{
                     padding-left:30px;
                     display:inline-block;
-                    line-height:12px;
+                    line-height:20px;
                     &:before{
                         content:'';
                         margin-right:10px;
@@ -1308,7 +1309,7 @@
 
             }
             li+li{
-                margin-top: 18px;
+                margin-top: 28px;
             }
             li+.last_li{
                 margin-top: -12px;
