@@ -1275,9 +1275,7 @@ export default {
                 itemDate = items.date.split("-");
                 items.time =itemDate[1] + "-" + itemDate[2] + "\n" + items.weekday.replace("星期", "周");
                 if(index==0){
-                    if((indexs+1)%2===1){
-                       enquirieObj.TagTime.push(items.time);
-                    }                   
+                    enquirieObj.TagTime.push(items.time);                  
                 }
                 var itemObj={};
                 itemObj.name=items.time;

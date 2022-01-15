@@ -153,6 +153,7 @@
                   ></year-chart>
             </template>
         </div>
+        <el-backtop target=".scroll-panel"></el-backtop>
   </div>
 </template>
 <script>
@@ -1454,12 +1455,14 @@ export default {
       newDataArr.forEach(function(items,indexs){
           if(items.newscore&&items.newscore.length>0){
             items.newscore.forEach(function(itemk,indexk){
-              var itemObj = {};
-              itemObj.name=items.name;
-              itemObj.time=items.date;
-              itemObj.value=itemk.score.toFixed(2)*1;
-              itemObj.yeartime=itemk.yeartime*1;
-              itemData.inquiryYearCount.push(itemObj);
+              if(itemk.score>0){
+                var itemObj = {};
+                itemObj.name=items.name;
+                itemObj.time=items.date;
+                itemObj.value=itemk.score.toFixed(2)*1;
+                itemObj.yeartime=itemk.yeartime*1;
+                itemData.inquiryYearCount.push(itemObj);
+              }
             });
           }
       });

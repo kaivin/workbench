@@ -36,7 +36,7 @@
                                     <input style="display:none;" type="file" accept=".xlsx, .xls" @change="custormbuyFileUp"/>
                                   </label>
                                 </el-button>
-                                <el-link target="_blank" tag='a' href='https://mgl.hxjq.org/hxindex/Custormenbuy/gettemplate' class="ImportTemplate">导入表格模板</el-link> 
+                                <el-link target="_blank" tag='a' href='https://mgl.hxjq.org/hxindex/Custormenbuy/gettemplate' class="ImportTemplate">下载导入模板</el-link> 
                                 
                               </div>
                           </div>
