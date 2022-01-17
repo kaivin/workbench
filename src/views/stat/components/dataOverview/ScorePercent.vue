@@ -104,7 +104,6 @@ export default {
             tooltip: {
               trigger: 'item',
               formatter: (params) => {
-                console.log(params,"tooltip")
                 if(this.type == 0){
                   var text = `${params.data.name}<br/>
                   <span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${
@@ -431,7 +430,6 @@ export default {
         }else{
           chartBotData = JSON.parse(JSON.stringify(this.yearscorenumbercount));
         }
-        console.log(chartBotData,"3D环")
         var pieData = []
         var totalScore = 0;
         chartBotData.forEach(function(item,index){
@@ -447,7 +445,6 @@ export default {
         pieData.forEach(function(item){
           item.value = item.score==0||totalScore==0?0:parseInt(item.score/totalScore*100);
         });
-        console.log(pieData)
         var option = $this.getPie3D(pieData, 0.6);
         option && myChart.setOption(option);
         $this.myChart = myChart;
@@ -632,7 +629,6 @@ export default {
             tooltip: {
               formatter: params => {
                 if (params.seriesName !== 'mouseoutSeries') {
-                  console.log(pieData)
                   var score = 0;
                   var percent = 0;
                   pieData.forEach(function(item){
@@ -641,7 +637,6 @@ export default {
                       percent = item.value+"%";
                     }
                   });
-                  console.log(params)
                   var text = `${params.seriesName}<br/>
                     <span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${
                         params.color

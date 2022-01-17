@@ -751,7 +751,6 @@ export default {
       var $this = this;
       var defaultChartData = $this.defaultChartDataClump(res);
       $this.defaultChartData = defaultChartData;
-      console.log($this.defaultChartData,'defaultChartData');
     },
     // 组装默认类型图表数据
     defaultChartDataClump(res){

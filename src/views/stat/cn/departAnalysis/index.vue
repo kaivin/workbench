@@ -606,7 +606,6 @@ export default {
                 costData.totalChart.sort(sortByDesc("value"));
 
                 $this.defaultChartData = [inquiryData,dealScoreData,costData];
-                console.log($this.defaultChartData,'$this.defaultChartData');
             }else{
               if(response.permitstatus&&response.permitstatus==2){
                 $this.$message({

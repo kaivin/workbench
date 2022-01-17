@@ -490,7 +490,6 @@ export default {
         item.numberStr = numSeparate(item.number);
         item.deptName=item.departname;
       });
-      console.log(payMember)
       $this.payMember=payMember;
       $this.Paytime = varTime;
       if(varData.length < 10){

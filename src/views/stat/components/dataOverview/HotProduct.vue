@@ -519,7 +519,6 @@ export default {
             }else{
               productname = chartBotData[dataIndex].xunproduct;
             }
-            console.log(chartBotData)
             var date = new Date();
             var endDate = '';
             var endYear = date.getFullYear();

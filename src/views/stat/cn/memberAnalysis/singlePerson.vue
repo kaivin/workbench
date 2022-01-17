@@ -737,7 +737,6 @@ export default {
             shared: true,
             title:aliasName,
             customItems: (originalItems) => {
-                console.log(originalItems);
                 originalItems.forEach(function(item){
                     item.name = item.data.time;
                 });

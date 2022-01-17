@@ -722,7 +722,6 @@ export default {
                         var topxunnumber=[res.topxunnumber]
                         var tagName=[$this.routTag.productname]
                         $this.enquirieList=$this.echartareaPlug(topxunnumber,tagName,'询盘趋势',$this.contrastName);  
-                        console.log($this.enquirieList,'$this.enquirieList');
                     }
                     var ChartTab=[];
                     var currentMix=[];
@@ -1009,7 +1008,6 @@ export default {
                             });
                         });
                         $this.enquirieList=$this.echartareaPlug(res.topxunnumber,tagName,'询盘趋势',$this.contrastName);  
-                        console.log($this.enquirieList,'$this.enquirieList-cost');                 
                     }
                     //询盘占比
                     var ChartEnquirie=[];

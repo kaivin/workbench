@@ -2408,7 +2408,6 @@ export default {
     departchange(chooseDepart,tag){
         this.chooseData.chooseDepart = chooseDepart;
         this.chooseData.tag = tag;
-        console.log(this.chooseData)
     }
   }
 }
