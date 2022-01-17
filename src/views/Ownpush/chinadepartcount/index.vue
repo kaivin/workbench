@@ -138,19 +138,19 @@
                   :judge-data="judgeData"
                   ></quality-chart>
             </template>
-            <template v-if="mapChart.length>0" v-for="item in mapChart">
-              <map-chart
-                :item-data="item" 
-                :judge-data="judgeData"
-                :is-cn="true"
-              ></map-chart>
-            </template>
             <template v-if="defaultYearData.length>0" v-for="item in defaultYearData">
                 <year-chart 
                   :item-data="item" 
                   :is-default-page="isDefaultPage"
                   :judge-data="judgeData"
                   ></year-chart>
+            </template>
+            <template v-if="mapChart.length>0" v-for="item in mapChart">
+              <map-chart
+                :item-data="item" 
+                :judge-data="judgeData"
+                :is-cn="true"
+              ></map-chart>
             </template>
         </div>
         <el-backtop target=".scroll-panel"></el-backtop>
@@ -162,7 +162,7 @@ import mapChart from "../components/chinadepartcount/mapChart.vue";
 import qualityChart from "../components/chinadepartcount/qualityChart.vue";
 import yearChart from "../components/chinadepartcount/yearChart.vue";
 import defaultChart from "../../stat/components/departGroup/defaultChart.vue";
-import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate,numSeparate,sortByDate,memberArrColor,singleNewArrColor} from "@/utils/index";
+import {randomString,sortByDesc,sortByAsc,groupColor,groupDateColor,singleArrColor,formatDate,numSeparate,sortByDate,memberArrColor,singleNewArrColor} from "@/utils/index";
 import {MapInterval,TopTenColor} from "@/utils/MapColor"
 import { chinaData } from "@/utils/chinaMap";
 export default {
@@ -192,11 +192,11 @@ export default {
             {label:"询盘分析",id:1,value:"enquiriesFew",isOn:true,disabled:false},
             {label:"成交积分分析",id:2,value:"clinchScore",isOn:false,disabled:true},
             {label:"质量分析",id:8,value:"qualityAnalysis",isOn:false,disabled:true},
+            {label:'询盘年份',id:3,value:"enquiriesYear",isOn:false,disabled:true},
             {label:"询盘地图",id:4,value:"regionEnquiries",isOn:true,disabled:false},
             {label:"成交积分地区",id:5,value:"regionClinchScore",isOn:false,disabled:true},
             {label:"成交个数地区",id:6,value:"regionClinchNumber",isOn:false,disabled:true},
             {label:"产品分析",id:7,value:"ProductAnalysis",isOn:false,disabled:true},
-            {label:'询盘年份',id:3,value:"enquiriesYear",isOn:false,disabled:true},
         ],
         selectedData:{               //搜索数据
           dateDefault:[],          //默认时间
@@ -571,20 +571,16 @@ export default {
       var $this = this;
       var defaultChartData = $this.defaultChartDataClump(res);
       $this.defaultChartData = defaultChartData;
-      
       var mapChartData = $this.mapChartDataClump(res);
       var productData = $this.productDataClump(res);
       if(productData){
         mapChartData[0].push(productData);
       }    
-      $this.mapChart = mapChartData;  
-
+      $this.mapChart = mapChartData;
       var qualityChartData = $this.qualityChartDataClump(res);
       $this.qualityChartData = qualityChartData;
-
       var defaultYearData = $this.defaultYearDataClump(res);
       $this.defaultYearData = defaultYearData;
-      console.log($this.defaultYearData,'$this.defaultYearData');
     },
     // 组装默认类型图表数据
     defaultChartDataClump(res){
@@ -621,11 +617,11 @@ export default {
             });
           }else{
             if($this.selectedData.isMonth){
-              inquiryData.chartTitle = "部门组合询盘日期对比月趋势";
+              inquiryData.chartTitle = "电商一部询盘日期对比月趋势";
             }else{
-              inquiryData.chartTitle = "部门组合询盘日期对比日趋势";
+              inquiryData.chartTitle = "电商一部询盘日期对比日趋势";
             }
-            inquiryData.name = "部门组合询盘统计";
+            inquiryData.name = "电商一部询盘统计";
           }
         }else{
           // 部门对比
@@ -697,7 +693,7 @@ export default {
               inquiryData.nowNumber = numSeparate(monthxunallnumbercompare);
               compareData = res.monthdepartpercentercompare;
               inquiryData.lastNumber = res.lastmonthxunallnumbercompare;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(monthxunallnumbercompare - res.lastmonthxunallnumbercompare));
+              inquiryData.nowLastNumber = numSeparate(Math.abs(monthxunallnumbercompare - res.lastmonthxunallnumbercompare).toFixed(2)*1);
               inquiryData.status = monthxunallnumbercompare - res.lastmonthxunallnumbercompare>0?'up':monthxunallnumbercompare - res.lastmonthxunallnumbercompare<0?'down':'flat';
               inquiryData.avgNumber = numSeparate(parseInt(monthxunallnumbercompare/res.monthxuntrendcompare[0].length));
               inquiryData.historyMaxNumber = numSeparate(res.historymaxnumbermonthcompare[0].number);
@@ -718,7 +714,7 @@ export default {
               inquiryData.nowNumber = numSeparate(dayxuntrendcompare);
               compareData = res.departpercentercompare;
               inquiryData.lastNumber = res.lastxunallnumbercompare;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(dayxuntrendcompare - res.lastxunallnumbercompare));
+              inquiryData.nowLastNumber = numSeparate(Math.abs(dayxuntrendcompare - res.lastxunallnumbercompare).toFixed(2)*1);
               inquiryData.status = dayxuntrendcompare - res.lastxunallnumbercompare>0?'up':dayxuntrendcompare - res.lastxunallnumbercompare<0?'down':'flat';
               inquiryData.avgNumber = numSeparate(parseInt(dayxuntrendcompare/res.dayxuntrendcompare[0].length));
               inquiryData.historyMaxNumber = numSeparate(res.historymaxnumberdaycompare[0].number);
@@ -751,7 +747,7 @@ export default {
               inquiryData.nowNumber = numSeparate(xunallnumber);
               tongData.push(res.monthxuntrend);
               inquiryData.lastNumber = res.lastmonthxunallnumber;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(xunallnumber - res.lastmonthxunallnumber));
+              inquiryData.nowLastNumber = numSeparate(Math.abs(xunallnumber - res.lastmonthxunallnumber).toFixed(2)*1);
               inquiryData.status = xunallnumber - res.lastmonthxunallnumber>0?'up':xunallnumber - res.lastmonthxunallnumber<0?'down':'flat';
               inquiryData.avgNumber = numSeparate(parseInt(xunallnumber/res.monthxuntrend.length));
               inquiryData.historyMaxNumber = numSeparate(res.historymaxnumbermonth[0].number);
@@ -770,7 +766,7 @@ export default {
               tongData.push(res.dayxuntrend);
               // 日维度
               inquiryData.lastNumber = res.lastxunallnumber;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(xunallnumber - res.lastxunallnumber));
+              inquiryData.nowLastNumber = numSeparate(Math.abs(xunallnumber - res.lastxunallnumber).toFixed(2)*1);
               inquiryData.status = xunallnumber - res.lastxunallnumber>0?'up':xunallnumber - res.lastxunallnumber<0?'down':'flat';
               inquiryData.avgNumber = numSeparate(parseInt(xunallnumber/res.dayxuntrend.length));
               inquiryData.historyMaxNumber = numSeparate(res.historymaxnumberday[0].number);
@@ -811,13 +807,13 @@ export default {
             }else{// 多部门被选中              
               inquiryData.totalChart = [];
               var compareData = [];
-              inquiryData.name = "部门组合询盘统计";
+              inquiryData.name = "电商一部询盘统计";
               if($this.selectedData.isMonth){
                 compareData = res.monthdepartpercenter;
-                inquiryData.chartTitle = "部门组合询盘月趋势";
+                inquiryData.chartTitle = "电商一部询盘月趋势";
               }else{
                 compareData = res.departpercenter;
-                inquiryData.chartTitle = "部门组合询盘日趋势";
+                inquiryData.chartTitle = "电商一部询盘日趋势";
               }
               compareData.forEach(function(item){
                 var itemChart = {};
@@ -869,11 +865,11 @@ export default {
             });
           }else{
             if($this.selectedData.isMonth){
-              dealScoreData.chartTitle = "部门组合成交积分日期对比月趋势";
+              dealScoreData.chartTitle = "电商一部成交积分日期对比月趋势";
             }else{
-              dealScoreData.chartTitle = "部门组合成交积分日期对比日趋势";
+              dealScoreData.chartTitle = "电商一部成交积分日期对比日趋势";
             }
-            dealScoreData.name = "部门组合成交积分统计";
+            dealScoreData.name = "电商一部成交积分统计";
           }
         }else{
           // 部门对比
@@ -928,7 +924,7 @@ export default {
             }
             dealScoreData.nowNumber = numSeparate(Math.floor(monthscoreallnumbercompare*100)/100);
             dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumbercompare*100)/100;
-            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100));
+            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100).toFixed(2)*1);
             dealScoreData.status = Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100>0?'up':Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100<0?'down':'flat';
             dealScoreData.avgNumber = numSeparate(Math.floor(monthscoreallnumbercompare/res.monthscoretrendcompare[0].length*100)/100);
             dealScoreData.historyMaxNumber = numSeparate(Math.floor(res.historymaxscoremonthcompare[0].score*100)/100);
@@ -972,7 +968,7 @@ export default {
               dealScoreData.mainData.push(item);
             });
             dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumber*100)/100;
-            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100));
+            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100).toFixed(2)*1);
             dealScoreData.status = Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100>0?'up':Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100<0?'down':'flat';
             dealScoreData.avgNumber = numSeparate(Math.floor(monthscoreallnumber/res.monthscoretrend.length*100)/100);
             dealScoreData.historyMaxNumber = numSeparate(Math.floor(res.historymaxscoremonth.length>0?res.historymaxscoremonth[0].score:0*100)/100);
@@ -991,11 +987,11 @@ export default {
               });
             }else{// 多部门被选中
               if($this.selectedData.isMonth){
-                dealScoreData.chartTitle = "部门组合成交积分月趋势";
+                dealScoreData.chartTitle = "电商一部成交积分月趋势";
               }else{
-                dealScoreData.chartTitle = "部门组合成交积分日趋势";
+                dealScoreData.chartTitle = "电商一部成交积分日趋势";
               }
-              dealScoreData.name = "部门组合成交积分统计"; 
+              dealScoreData.name = "电商一部成交积分统计"; 
               dealScoreData.totalChart = [];
               res.monthdepartscorepercenter.forEach(function(item){
                 var itemChart = {};
@@ -1037,12 +1033,12 @@ export default {
             });
           }else{
             if($this.selectedData.isMonth){
-              costCountData.chartTitle = "部门组合成本日期对比月趋势";
+              costCountData.chartTitle = "电商一部成本日期对比月趋势";
             }else{
-              costCountData.chartTitle = "部门组合成本日期对比日趋势";
+              costCountData.chartTitle = "电商一部成本日期对比日趋势";
             }
             
-            costCountData.name = "部门组合成本统计";
+            costCountData.name = "电商一部成本统计";
           }
         }else{
           // 部门对比
@@ -1087,7 +1083,7 @@ export default {
             costCountData.name = "部门成本统计";
             costCountData.nowNumber = numSeparate(Math.floor(res.monthmoneyallnumbercompare*10)/10);
             costCountData.lastNumber = Math.floor(res.lastmonthmoneyallnumbercompare*10)/10;
-            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthmoneyallnumbercompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10));
+            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthmoneyallnumbercompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10).toFixed(2)*1);
             costCountData.status = Math.floor(res.monthmoneyallnumbercompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10>0?'up':Math.floor(res.monthmoneyallnumbercompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10<0?'down':'flat';
             costCountData.avgNumber = numSeparate(Math.floor(res.monthmoneyallnumbercompare/res.monthmoneytrendcompare[0].length*10)/10);
             costCountData.historyMaxNumber = numSeparate(Math.floor(res.historymaxmoneymonthcompare[0].allmoney*10)/10);
@@ -1125,7 +1121,7 @@ export default {
               costCountData.mainData.push(item);
             });
             costCountData.lastNumber = Math.floor(res.lastmonthmoneyall*10)/10;
-            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10));
+            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10).toFixed(2)*1);
             costCountData.status = Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10>0?'up':Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10<0?'down':'flat';
             costCountData.avgNumber = numSeparate(Math.floor(res.avgmonthmoney*10)/10);
             costCountData.historyMaxNumber = numSeparate(Math.floor(res.historymaxmoneymonth[0].allmoney*10)/10);
@@ -1144,11 +1140,11 @@ export default {
               });
             }else{// 多部门被选中
               if($this.selectedData.isMonth){
-                costCountData.chartTitle = "部门组合成本月趋势";
+                costCountData.chartTitle = "电商一部成本月趋势";
               }else{
-                costCountData.chartTitle = "部门组合成本日趋势";
+                costCountData.chartTitle = "电商一部成本日趋势";
               }
-              costCountData.name = "部门组合成本统计";
+              costCountData.name = "电商一部成本统计";
               costCountData.totalChart = [];
               res.monthdepartmoneypercenter.forEach(function(item){
                 var itemChart = {};
@@ -1185,11 +1181,11 @@ export default {
             });
           }else{
             if($this.selectedData.isMonth){
-              millionCountData.chartTitle = "部门组合百万个数日期对比月趋势";
+              millionCountData.chartTitle = "电商一部百万个数日期对比月趋势";
             }else{
-              millionCountData.chartTitle = "部门组合百万个数日期对比日趋势";
+              millionCountData.chartTitle = "电商一部百万个数日期对比日趋势";
             }
-            millionCountData.name = "部门组合百万个数统计";
+            millionCountData.name = "电商一部百万个数统计";
           }
         }else{
           // 部门对比
@@ -1235,7 +1231,7 @@ export default {
             millionCountData.name = "部门百万个数统计";
             millionCountData.nowNumber = numSeparate(res.monthanumberallnumbercompare);
             millionCountData.lastNumber = res.lastmonthanumberallnumbercompare;
-            millionCountData.nowLastNumber = numSeparate(Math.abs(res.monthanumberallnumbercompare - res.lastmonthanumberallnumbercompare));
+            millionCountData.nowLastNumber = numSeparate(Math.abs(res.monthanumberallnumbercompare - res.lastmonthanumberallnumbercompare).toFixed(2)*1);
             millionCountData.status = res.monthanumberallnumbercompare - res.lastmonthanumberallnumbercompare>0?'up':res.monthanumberallnumbercompare - res.lastmonthanumberallnumbercompare<0?'down':'flat';
             millionCountData.avgNumber = numSeparate(parseInt(res.monthanumberallnumbercompare/res.monthanumbertrendcompare[0].length));
             millionCountData.historyMaxNumber = numSeparate(res.historymaxanumbermonthcompare[0].anumber);
@@ -1273,7 +1269,7 @@ export default {
               millionCountData.mainData.push(item);
             });
             millionCountData.lastNumber = res.lastmonthanumberallnumber;
-            millionCountData.nowLastNumber = numSeparate(Math.abs(res.monthanumberallnumber - res.lastmonthanumberallnumber));
+            millionCountData.nowLastNumber = numSeparate(Math.abs(res.monthanumberallnumber - res.lastmonthanumberallnumber).toFixed(2)*1);
             millionCountData.status = res.monthanumberallnumber - res.lastmonthanumberallnumber>0?'up':res.monthanumberallnumber - res.lastmonthanumberallnumber<0?'down':'flat';
             millionCountData.avgNumber = numSeparate(Math.floor(res.monthanumberavgxun*100)/100);
             millionCountData.historyMaxNumber = numSeparate(res.historymaxanumbermonth[0].anumber);
@@ -1287,8 +1283,8 @@ export default {
                 millionCountData.name = "百万个数统计";
               });
             }else{// 多小组被选中
-              millionCountData.chartTitle = "部门组合百万个数明细";
-              millionCountData.name = "部门组合百万个数统计";
+              millionCountData.chartTitle = "电商一部百万个数明细";
+              millionCountData.name = "电商一部百万个数统计";
               millionCountData.totalChart = [];
               res.monthdepartanumberpercenter.forEach(function(item){
                 var itemChart = {};
@@ -1351,7 +1347,6 @@ export default {
     },
     ClumpYear(dataArr,TagName){
       var $this=this;
-      console.log(dataArr,'dataArr');
       var itemData = {};
       itemData.inquiryYearCount = [];
       if(TagName=='noCost'){
@@ -1427,7 +1422,6 @@ export default {
         }
       });
       //去重合并 score 
-      itemData.tableData=[];
       newDataArr.forEach(function(item,index){
         item.newscore=[];
         if(item.score&&item.score.length>0){
@@ -1462,10 +1456,22 @@ export default {
                 itemObj.value=itemk.score.toFixed(2)*1;
                 itemObj.yeartime=itemk.yeartime*1;
                 itemData.inquiryYearCount.push(itemObj);
+              }else{
+                var itemObj = {};
+                itemObj.name=items.name;
+                itemObj.time=items.date;
+                itemObj.value=0;
+                itemObj.yeartime=itemk.yeartime*1;
+                itemData.inquiryYearCount.push(itemObj);
               }
             });
           }
       });
+      if($this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0||$this.selectedData.comparedept_id&&$this.selectedData.comparedept_id.length>0){
+        itemData.isCost = true;
+      }else{
+        itemData.isCost = false;
+      }
       itemData.randomStr = randomString(4);
       //获取table数据
       itemData.tableData=[];
@@ -1476,13 +1482,19 @@ export default {
         itemData.yarnArr.forEach(function(itemd,indexd){
           newDataArr.forEach(function(item,index){
             if(items==item.name&&itemd==item.date){
-              itemtableArr.mainArr.push(item.newscore);            
+              var tol={};
+              tol.yeartime='合计';
+              tol.score=0;
+              item.newscore.forEach(function(itemg,indexg){
+                tol.score=tol.score+itemg.score;
+              });
+              item.newscore.push(tol);       
+              itemtableArr.mainArr.push(item.newscore);       
             }
           });
         });
         itemData.tableData.push(itemtableArr);
       });
-      console.log(itemData.tableData,'itemData.tableData');
       /**/
       return itemData;
     },
@@ -1493,18 +1505,32 @@ export default {
       if($this.selectedType.includes("qualityAnalysis")){
         qualityData=[]
         var mainQuality={};
-        var mainDate={};
-        mainDate.enquirie=[];
-        mainDate.score=[];
-        mainDate.money=[];
+        var enquirieDate={};
+        var scoreDate={};
+        var moneyDate={};
+        enquirieDate.name='询盘个数';
+        enquirieDate.unit='（单位：个）';
+        enquirieDate.unitEnd='个';
+        enquirieDate.mainDate=[];
+        scoreDate.name='成交积分';
+        scoreDate.unit='（单位：分）';
+        scoreDate.unitEnd='分';
+        scoreDate.mainDate=[];
+        moneyDate.name='消费';
+        moneyDate.unit='（单位：元）';
+        moneyDate.unitEnd='元';
+        moneyDate.mainDate=[];
+
         var xunArr=res.monthxuntrendpercenter;    //询盘占比
-        mainDate.enquirie=$this.clumpQuality(xunArr,'询盘占比');
+        enquirieDate.mainDate=$this.clumpQuality(xunArr,'询盘占比');
         var scoreArr=res.monthscoretrendpercenter;//积分占比
-        mainDate.score=$this.clumpQuality(scoreArr,'积分占比');
+        scoreDate.mainDate=$this.clumpQuality(scoreArr,'积分占比');
         var moneyArr=res.monthmoneypercenter;     //消费占比
-        mainDate.money=$this.clumpQuality(moneyArr,'消费占比');
+        moneyDate.mainDate=$this.clumpQuality(moneyArr,'消费占比');
+
         var tableDate=[];
-        res.monthxuntrendpercenter.forEach(function(item){
+        res.monthxuntrendpercenter.forEach(function(item,index){
+          item.id=index+1;
           tableDate.push(item);
         });
         tableDate.forEach(function(item){
@@ -1527,13 +1553,17 @@ export default {
           mainQuality.tableHeight='351px';
           mainQuality.tableBom=true;
         }
-
+        tableDate.sort(function(a,b){return b['id']-a['id']});
         mainQuality.isTable = false;
         mainQuality.tableDate = tableDate;
-        mainQuality.mainDate = mainDate;
-        mainQuality.randomStr = randomString(4);
+        mainQuality.enquirieDate = enquirieDate;
+        mainQuality.scoreDate = scoreDate;
+        mainQuality.moneyDate = moneyDate;
+        mainQuality.randomStr1 = randomString(4);
+        mainQuality.randomStr2 = randomString(4);
+        mainQuality.randomStr3 = randomString(4);
         mainQuality.title = '质量分析';
-        mainQuality.inquiryCountColor = ['#fb7c6f','#ffcd6d','#72e4a1','#9c9cfe','#81cbfc',"#FF4500","#1AAF8B"];
+        mainQuality.inquiryCountColor = ['#7c4751','#d34d68','#df7949','#ecc76e','#60a958','#5c9256','#5dcac4','#cfa7e5','#957a67','#b2945a','#ce19a6','#eac9c4','#f0e266','#66c2a9','#d9e897','#aedf84','#d3f5d4','#c19878','#909c9a','#779ade'];
         qualityData.push(mainQuality);
       }
       return qualityData;
@@ -2377,7 +2407,7 @@ export default {
         backData.dateCompareData.baseWidth = "100%";
         backData.dateCompareData.compareWidth = "100%";
       }
-      backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue));
+      backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue).toFixed(2)*1);
       backData.dateCompareData.compareRate = backData.dateCompareData.compareValue==0?'0%':(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue)/backData.dateCompareData.compareValue*100).toFixed(2)+"%";
       backData.dateCompareData.baseValue = numSeparate(backData.dateCompareData.baseValue);
       backData.dateCompareData.compareValue = numSeparate(backData.dateCompareData.compareValue);
@@ -2459,11 +2489,18 @@ export default {
       var fontArr = [];
       departList.forEach(function(item,index){
         if(item.isOn){
-          var font = item.name.substring(4);
-          fontArr.push(font);
+          fontArr.push(item.name);
         }
       })
-      groupName = "电商一部"+fontArr.join("、");
+      if(fontArr&&fontArr.length>0){
+        if(fontArr.length==1){
+          groupName=fontArr[0];
+        }else{          
+          groupName='电商一部';
+        }
+      }else{
+        groupName = '';
+      }
       $this.groupName = groupName;
     },
     // 日期维度点击事件

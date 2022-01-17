@@ -4,15 +4,65 @@
           <div class="item-quality">
               <div class="column-header">
                   <div class="txt-header">
-                      <strong>{{currentData.title}}</strong>
+                      <strong>{{currentData.title}}——{{currentData.moneyDate.name}}</strong>
+                      <span>{{currentData.moneyDate.unit}}</span>
                   </div>
               </div>
               <div class="column-body">
                     <div class="pie-panel">
                         <pie-chart
-                          :chart-data="currentData.mainDate"
-                          :id-data="currentData.randomStr"
+                          :chart-data="currentData.moneyDate.mainDate"
+                          :id-data="currentData.randomStr1"
                           :color-data="currentData.inquiryCountColor"
+                          :tagName="currentData.moneyDate.name"
+                          :tagUnit="currentData.moneyDate.unit"
+                          :tagUnitend="currentData.moneyDate.unitEnd"
+                          :scoreHeight="350"
+                        ></pie-chart>
+                    </div>
+              </div>
+          </div>
+      </div>
+      <div class="item-column flex-content flex-box flex-column">
+          <div class="item-quality">
+              <div class="column-header">
+                  <div class="txt-header">
+                      <strong>{{currentData.title}}——{{currentData.enquirieDate.name}}</strong>
+                      <span>{{currentData.enquirieDate.unit}}</span>
+                  </div>
+              </div>
+              <div class="column-body">
+                    <div class="pie-panel">
+                        <pie-chart
+                          :chart-data="currentData.enquirieDate.mainDate"
+                          :id-data="currentData.randomStr2"
+                          :color-data="currentData.inquiryCountColor"
+                          :tagName="currentData.enquirieDate.name"
+                          :tagUnit="currentData.enquirieDate.unit"
+                          :tagUnitend="currentData.enquirieDate.unitEnd"
+                          :scoreHeight="350"
+                        ></pie-chart>
+                    </div>
+              </div>
+          </div>
+      </div>
+      <div class="item-column flex-content flex-box flex-column">
+          <div class="item-quality">
+              <div class="column-header">
+                  <div class="txt-header">
+                      <strong>{{currentData.title}}——{{currentData.scoreDate.name}}</strong>
+                      <span>{{currentData.scoreDate.unit}}</span>
+                  </div>
+              </div>
+              <div class="column-body">
+                    <div class="pie-panel">
+                        <pie-chart
+                          :chart-data="currentData.scoreDate.mainDate"
+                          :id-data="currentData.randomStr3"
+                          :color-data="currentData.inquiryCountColor"
+                          :tagName="currentData.scoreDate.name"
+                          :tagUnit="currentData.scoreDate.unit"
+                          :tagUnitend="currentData.scoreDate.unitEnd"
                           :scoreHeight="350"
                         ></pie-chart>
                     </div>
@@ -24,7 +74,10 @@
                <div class="qualityTableTop" :style="'height:'+currentData.tableHeight">  
                   <el-table
                     :data="currentData.tableDate"
+                    tooltip-effect="dark"
+                    class="quaTable"
                     border
+                    stripe
                     style="width: 100%">
                     <el-table-column
                       prop="date"

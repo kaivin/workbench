@@ -348,13 +348,12 @@
   display: block;
   background:#fff;
   border-radius:8px;
-  padding:30px;
-  overflow: hidden;
+  padding:30px 0px 30px 30px;
   .card-header{
-    padding:0px;
+    padding:0px 30px 0px 0px;
     h2{
       float: left;
-      font-size:$fontsize25;
+      font-size:$fontsize20;
       color:#2b3848;
     }
     .ChinaphoneMapDate{
@@ -377,6 +376,8 @@
     display: block;
     margin-top:30px;   
     position: relative; 
+    margin-right:0px;
+    overflow: auto;
     .canvas-wrap{
       position: absolute;
       left:0;

@@ -13,10 +13,8 @@ export default {
   },
   props: {
     chartData: {
-      type: Object,
-      default: function () {
-        return {};
-      },
+      type: Array,
+      default:[],
     },
     colorData: {
       type: Array,
@@ -27,6 +25,18 @@ export default {
       default: "",
     },
     idData:{
+      type: String,
+      default: "",
+    },
+    tagName:{
+      type: String,
+      default: "",
+    },
+    tagUnit:{
+      type: String,
+      default: "",
+    },
+    tagUnitend:{
       type: String,
       default: "",
     },
@@ -47,128 +57,115 @@ export default {
         var $this = this;
         var chartDom = document.getElementById('pie-'+$this.idData);
         var myChart = echarts.init(chartDom);
-        var enquirie = $this.chartData.enquirie;
-        var money = $this.chartData.money;
-        var score = $this.chartData.score;
-        let echartData = {
-            inner: money,
-            mider: score,
-            outer: enquirie
-        };
-        var colorList1=[];
-        $this.colorData.forEach(function(item){
-            var itemDate={};
-            itemDate.x=0;
-            itemDate.y=0;
-            itemDate.x2=0;
-            itemDate.y2=1;
-            itemDate.colorStops=[];
-            for(var i=0;i<=1;i++){
-                var itemObj={};
-                itemObj.offset=i;
-                itemObj.color=item;
-                itemDate.colorStops.push(itemObj);
-            }
-            colorList1.push(itemDate)
-        });
+        var tagNum=$this.chartData[0].value + $this.tagUnitend;
         var option;
         option = {
+            title: [   
+            {
+                text:$this.tagName,
+                subtext: tagNum,
+                textStyle:{
+                    fontSize:16,
+                    color:"black"
+                },
+                subtextStyle: {
+                    fontSize: 14,
+                    color: 'black'
+                },
+                textAlign:"center",
+                x: '49%',
+                y: '44%',
+            }],
             tooltip: {
                 trigger: 'item'
             },
-            series: [{
-                    name: '消费月份（元）',
-                    color:colorList1,
+            series: [
+                {
+                    name:$this.tagName,
                     type: 'pie',
-                    radius: ['20%', '40%'],
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    emphasis: {
+                        label: {
+                        show: true,
+                        fontSize: '40',
+                        fontWeight: 'bold'
+                        }
+                    },
                     itemStyle: {
                         normal: {
                             borderColor: '#ffffff',
                             borderWidth:1,
                         }
                     },
-                    label:false,
                     labelLine: {
                         normal: {
                             show: false
-                        }
-                    },
-                    data: echartData.inner
-                },
-                {
-                    name: '成交积分（分）',
-                    color:colorList1,
-                    type: 'pie',
-                    radius: ['40%', '60%'],
-                    itemStyle: {
-                        normal: {
-                            borderColor: '#ffffff',
-                            borderWidth:1,
-                        }
-                    },
-                    label:false,
-                    labelLine: {
-                        normal: {
-                            show: false
-                        }
-                    },
-                    data: echartData.mider
-                },
-                {
-                    name: '询盘个数（个）',
-                    color: colorList1,
-                    type: 'pie',
-                    radius: ['60%', '80%'],
-                    itemStyle: {
-                        normal: {
-                            borderColor: '#ffffff',
-                            borderWidth:1,
-                        }
-                    },
-                    label:false,
-                    labelLine: {
-                        normal: {
-                            length:20,
-                            length2: 0,
-                            lineStyle: {
-                                color: '#ccc'
-                            }
                         }
                     },
                     label: {
                         normal: {
+                            position: 'inner',
+                            fontSize: 12,
                             formatter: params => {
-                                return '{name|询盘个数}\n{hr|}\n{percent|' + params.name + '} {percent|' + params.value + '}'
+                                return (
+                                    '{value|' + params.value + '}'
+                                );
                             },
-                            distanceToLabelLine: 0,
-                            padding: [0, 0, 0, 0],
+                            padding: [0, -130, 0, -130],
                             rich: {
-                                name: {
-                                    color: "#888",
+                                color: '#fff',
+                                value: {
                                     fontSize: 12,
-                                    padding: [5, 5],
-                                    align: 'left'
+                                    padding: [0, 0, 3, 0],
+                                    color: '#fff'
                                 },
-                                percent: {
-                                    color: "#888",
-                                    align: 'center',
-                                    fontSize: 12,
-                                    padding: [5, 5]
-                                },
-                                hr: {
-                                    borderColor: '#ccc',
-                                    width: '100%',
-                                    borderWidth: 0.5,
-                                    height: 0,
-                                }
+                            },
+                            textStyle: {
+                                color: '#fff'
                             }
-                        }
+                        },
                     },
-                    data: echartData.outer,
+                    data:$this.chartData
                 }
             ]
         };
-        option && myChart.setOption(option);
+        option && myChart.setOption(option);        
+        setTimeout(function() {
+            myChart.on('mouseover', function(params) {
+                if (params.name == $this.chartData[0].name) {
+                    myChart.dispatchAction({
+                        type: 'highlight',
+                        seriesIndex: 0,
+                        dataIndex: 0
+                    });
+                } else {
+                    myChart.dispatchAction({
+                        type: 'downplay',
+                        seriesIndex: 0,
+                        dataIndex: 0
+                    });
+                }
+                let option = myChart.getOption();
+                option.title[0].subtext = params.data.value+$this.tagUnitend;
+                myChart.setOption(option);
+            });
+            myChart.on('mouseout', function(params) {
+                myChart.dispatchAction({
+                    type: 'highlight',
+                    seriesIndex: 0,
+                    dataIndex: 0
+                });
+                let option = myChart.getOption();
+                option.title[0].subtext = $this.chartData[0].value+$this.tagUnitend;
+                myChart.setOption(option);
+            });
+            myChart.dispatchAction({
+                type: 'highlight',
+                seriesIndex: 0,
+                dataIndex: 0
+            });
+        }, 1000);
         $this.myChart = myChart;
     },
     echartsSize(){

@@ -36,10 +36,9 @@ export default {
       type: String,
       default: "",
     },
-  },
-  computed:{
-    currentData(){
-      return this.chartData;
+    isCost:{
+      type:Boolean,
+      default:true,
     },
   },
   watch:{
@@ -58,44 +57,106 @@ export default {
   methods: {
     drawAreaTrendChart() {
         var $this = this;
+        if(this.myChart){
+            this.myChart.dispose();
+        }
         var chartDom = document.getElementById('randomStr');
         var myChart = echarts.init(chartDom);
         var series=[];
-        $this.yarnArr.forEach(function(item,index){
-          $this.yarnClinch.forEach(function(itemk,indexk){
-            var itemObj={};
-            itemObj.name=itemk;
-            itemObj.type='bar';
-            itemObj.barWidth=25;
-            itemObj.stack=item;
-            itemObj.data=[];
-            $this.chartData.forEach(function(items,indexs){
-              if(item==items.time&&itemk==items.yeartime){
-                itemObj.data.push(items.value);
-              }
+        var departArr=[];
+        if($this.isCost){ 
+          departArr=$this.departArr;
+          $this.yarnArr.forEach(function(item,index){
+            $this.yarnClinch.forEach(function(itemk,indexk){
+              var itemObj={};
+              itemObj.name=itemk;
+              itemObj.type='bar';
+              itemObj.barWidth=25;
+              itemObj.stack=item;
+              itemObj.data=[];
+              $this.chartData.forEach(function(items,indexs){
+                if(item==items.time&&itemk==items.yeartime){
+                  itemObj.data.push(items.value);
+                }
+              });
+              series.push(itemObj);
             });
-            series.push(itemObj);
           });
-        });
+        }else{ 
+          $this.yarnClinch.forEach(function(item,index){
+              var itemObj={};
+              itemObj.name=item;
+              itemObj.type='bar';
+              itemObj.barWidth=25;
+              itemObj.data=[];
+              $this.yarnArr.forEach(function(items,indexs){
+                $this.chartData.forEach(function(itemk,indexk){
+                  if(item==itemk.yeartime&&items==itemk.time){
+                    itemObj.data.push(itemk.value);
+                  }
+                });
+              });
+              series.push(itemObj);
+          });
+          departArr=$this.yarnArr;
+        }
         var option;
-        var legend=false;
         option = {
           tooltip: {
             trigger: 'axis',
             axisPointer: {
               type: 'shadow'
+            },
+            formatter: function (params, ticket, callback) {
+                var showHtm="";
+                if($this.isCost){ 
+                  departArr.forEach(function(item,index){  
+                      var showHtmDt='';                  
+                      $this.yarnArr.forEach(function(items,indexs){
+                          var len01=$this.yarnClinch.length*(indexs+1); 
+                          var len02=$this.yarnClinch.length;
+                          var showHtmDd='';
+                          for(var i=len01-len02;i<len01;i++){
+                            if(params[i]&&params[i]!=undefined){
+                              var name = params[i].axisValue;
+                              var text = params[i].seriesName;
+                              var value = params[i].value;
+                              showHtmDd+='<dd><i style="background:'+params[i].color+'"></i>'+text+'年：<strong>' + value+'</strong></dd>'
+                            }
+                          }
+                          showHtmDt+='<dl class="flex-content"><dt>'+items+'成交积分</dt>'+showHtmDd+'</dl>';
+                      });
+                      showHtm=showHtmDt
+                  });
+                }else{ 
+                  var showHtm="";
+                  var showHtmDt=''; 
+                  var showHtmDd='';
+                  var name = '';
+                  for(var i=0;i<params.length;i++){
+                      if(params[i]&&params[i]!=undefined){
+                          name = params[i].axisValue;
+                          var text = params[i].seriesName;
+                          var value = params[i].value;
+                          showHtmDd+='<dd><i style="background:'+params[i].color+'"></i>'+text+'年：<strong>' + value+'</strong></dd>'
+                      }
+                  }
+                  showHtmDt+='<dl class="flex-content"><dt>'+name+'成交积分</dt>'+showHtmDd+'</dl>';
+                  showHtm=showHtmDt;
+                }
+                return '<div class="mainTool flex-box">'+showHtm+'</div>';
             }
           },
           grid: {
             left: 30,
             right:30,
             bottom: 0,
-            top: 20,
+            top: 60,
             containLabel: true
           },
           xAxis:{
               type: 'category',
-              data: $this.departArr,
+              data: departArr,
               axisLine: {
                   show: false,
               },
@@ -140,7 +201,13 @@ export default {
               },
             }
           ],
-          legend:legend,
+          legend:{
+            type:'plain',
+            data:$this.yarnClinch,
+            right: 10,
+            top:0,
+            align:'left',
+          },
           series:series
         };
         option && myChart.setOption(option);

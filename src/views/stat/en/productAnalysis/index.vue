@@ -706,7 +706,7 @@ export default {
       changeTime.forEach(function(item,index){
           if(item.name=='近3月'){
             var start = new Date();
-            start.setMonth(start.getMonth() - 3);
+            start.setMonth(start.getMonth() - 2);
             var startYear = start.getFullYear();
             var startMonth = start.getMonth() +1;
             startMonth = startMonth<10?'0'+startMonth:startMonth;
@@ -715,7 +715,7 @@ export default {
           }
           if(item.name=='近半年'){
             var start = new Date();
-            start.setMonth(start.getMonth() - 6);
+            start.setMonth(start.getMonth() - 5);
             var startYear = start.getFullYear();
             var startMonth = start.getMonth() +1;
             startMonth = startMonth<10?'0'+startMonth:startMonth;
@@ -726,8 +726,7 @@ export default {
             $this.searchForm.endtime=endDate;
           }
           if(item.name=='今年'){
-            var start = new Date();
-            start.setMonth(start.getMonth() - 6);
+            var start = new Date(new Date().getFullYear(), 0);
             var startYear = start.getFullYear();
             var startDate = startYear+"-01";
             item.data=[startDate,endDate];

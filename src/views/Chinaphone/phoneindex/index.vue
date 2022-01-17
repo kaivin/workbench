@@ -84,7 +84,7 @@
               <el-card class="box-card canvas-card flex-box" shadow="hover" v-bind:style="'min-height:'+(minHeight-60)+'px;'">
                 <div class="card-header">
                      <h2>{{currentTeam}}询盘趋势</h2>
-                     <div class="ChinaphoneMapDate">                       
+                     <div class="ChinaphoneMapDate">
                         <el-date-picker
                           v-model="timeChart"
                           type="daterange"
@@ -103,7 +103,7 @@
                 </div>
                 <div class="card-content ChinaphoneMapChart">
                   <div class="canvas-wrap">
-                    <div id="cnCluesChart" class="chart-canvas"></div>
+                    <echart-days :enquirieChart="defaultData.cluesChartData"></echart-days>
                   </div>
                 </div>
               </el-card>
@@ -451,7 +451,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { Area } from '@antv/g2plot';
+import echartDays from "../components/echartDays";
 export default {
   name: 'Chinaphone_phoneindex',
   data() {
@@ -565,6 +565,9 @@ export default {
       isSearchResult:false,
     }
   },
+  components:{
+    echartDays,
+  },
   computed: {
     ...mapGetters([
       'userInfo',
@@ -587,7 +590,7 @@ export default {
           // $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-45-15; 
           $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45-15; 
         }
-        $this.drawChart();
+        //$this.drawChart();
       }
     });
     window.onresize = () => {
@@ -807,11 +810,16 @@ export default {
       $this.$store.dispatch('chinaphone/cluesPhoneIndexDataAction', null).then(response=>{
         if(response){
           if(response.status){
+            var cluesChartData=[];
             response.groupmonthtrend.forEach(function(item,index){
-              item.week = item.week.replace("星期","周");
-              item.date = item.date+"\n"+item.week;
+              var itemObj={};
+              var itemTime=item.date.split('-');
+              itemObj.name = itemTime[1]+'-'+itemTime[2]+"\n"+item.week.replace("星期","周");
+              itemObj.value = item.xunnumber;
+              cluesChartData.push(itemObj);
             });
-            $this.defaultData.cluesChartData = response.groupmonthtrend;
+            $this.defaultData.cluesChartData = cluesChartData;
+            console.log($this.defaultData.cluesChartData,'$this.defaultData.cluesChartData')
             $this.defaultData.avgnumber = response.avgnumber;
             $this.defaultData.alltodaynumber = response.alltodaynumber;
             $this.defaultData.alllastnumber = response.alllastnumber;
@@ -854,7 +862,7 @@ export default {
             });
             $this.topdepart=topdepart;
             $this.currentDepartID = "";
-            $this.drawChart();
+            //$this.drawChart();
             $this.isLoading.close();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -1066,87 +1074,88 @@ export default {
       });
     },
     // 图表功能
-    drawChart(){
-      var $this = this;
-      if($this.defaultData.cluesChartData.length>0){
-        const cnAreaPlot = new Area('cnCluesChart', {
-          data:$this.defaultData.cluesChartData,    
-          xField: 'date',
-          yField: 'xunnumber',
-          appendPadding:[15,15,15,15],
-          // smooth:true,
-          areaStyle: () => {
-            return {
-              fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
-            };
-          },
-          yAxis:{
-            grid:{
-              line:null
-            }
-          },
-          xAxis: {
-            tickCount:15,
-            label: {
-              // 数值格式化为千分位
-              formatter: (v) => {
-                var date = v.split("-")[1]+"-"+v.split("-")[2];
-                return date
-              },
-              style:{
-                lineHeight:16
-              }
-            },
-            grid:{
-              line:{
-                style:{
-                  stroke: 'black',
-                  lineWidth:1,
-                  lineDash:[6,3],
-                  strokeOpacity:0.1,
-                  shadowBlur:0
-                }
-              }
-            },
-          },
-          tooltip: {
-            formatter: (datum) => {
-              return { name: "询盘个数", value: datum.xunnumber };
-            },
-            title:(e)=>{
-              return e.replace(/\n/g," ")
-            }
-          },
-          annotations: [
-            // 平均值
-            {
-              type: 'line',
-              start: ['min', $this.defaultData.avgnumber],
-              end: ['max', $this.defaultData.avgnumber],
-              top:true,
-              offsetY: 0,
-              offsetX: 0,
-              style: {
-                stroke: '#f16b6b',
-                lineDash: [6, 4],
-                lineWidth: 1,
-              },
-            },
-            // 平均值
-            {
-              type: 'html',
-              position:['max',$this.defaultData.avgnumber],
-              top:true,
-              html:"<span class='chart-font avg'><span class='txt-font'>"+$this.defaultData.avgnumber+"</span><i></i></span>",
-              alignX:"left",
-              alignY:"bottom",
-            },
-          ],
-        });
-        $this.cnAreaPlot = cnAreaPlot;
-        cnAreaPlot.render();
-      }
-    },
+    //drawChart(){
+    //  var $this = this;
+    //  console.log($this.defaultData.cluesChartData,'$this.defaultData.cluesChartData')
+    //  if($this.defaultData.cluesChartData.length>0){
+    //    const cnAreaPlot = new Area('cnCluesChart', {
+    //      data:$this.defaultData.cluesChartData,    
+    //      xField: 'date',
+    //      yField: 'xunnumber',
+    //      appendPadding:[15,15,15,15],
+    //      // smooth:true,
+    //      areaStyle: () => {
+    //        return {
+    //          fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
+    //        };
+    //      },
+    //      yAxis:{
+    //        grid:{
+    //          line:null
+    //        }
+    //      },
+    //      xAxis: {
+    //        tickCount:15,
+    //        label: {
+    //          // 数值格式化为千分位
+    //          formatter: (v) => {
+    //            var date = v.split("-")[1]+"-"+v.split("-")[2];
+    //            return date
+    //          },
+    //          style:{
+    //            lineHeight:16
+    //          }
+    //        },
+    //        grid:{
+    //          line:{
+    //            style:{
+    //              stroke: 'black',
+    //              lineWidth:1,
+    //              lineDash:[6,3],
+    //              strokeOpacity:0.1,
+    //              shadowBlur:0
+    //            }
+    //          }
+    //        },
+    //      },
+    //      tooltip: {
+    //        formatter: (datum) => {
+    //          return { name: "询盘个数", value: datum.xunnumber };
+    //        },
+    //        title:(e)=>{
+    //          return e.replace(/\n/g," ")
+    //        }
+    //      },
+    //      annotations: [
+    //        // 平均值
+    //        {
+    //          type: 'line',
+    //          start: ['min', $this.defaultData.avgnumber],
+    //          end: ['max', $this.defaultData.avgnumber],
+    //          top:true,
+    //          offsetY: 0,
+    //          offsetX: 0,
+    //          style: {
+    //            stroke: '#f16b6b',
+    //            lineDash: [6, 4],
+    //            lineWidth: 1,
+    //          },
+    //        },
+    //        // 平均值
+    //        {
+    //          type: 'html',
+    //          position:['max',$this.defaultData.avgnumber],
+    //          top:true,
+    //          html:"<span class='chart-font avg'><span class='txt-font'>"+$this.defaultData.avgnumber+"</span><i></i></span>",
+    //          alignX:"left",
+    //          alignY:"bottom",
+    //        },
+    //      ],
+    //    });
+    //    $this.cnAreaPlot = cnAreaPlot;
+    //    cnAreaPlot.render();
+    //  }
+    //},
     // 电话点击跳转列表
     phoneJump(id){
       var $this=this;
@@ -1501,13 +1510,18 @@ export default {
       $this.$store.dispatch('chinaphone/cluesPhoneChartDataAction', $this.chartData).then(response=>{
         if(response){
           if(response.status){
+            var cluesChartData=[];
             response.groupmonthtrend.forEach(function(item,index){
-              item.week = item.week.replace("星期","周");
-              item.date = item.date+"\n"+item.week;
+              var itemObj={};
+              var itemTime=item.date.split('-');
+              itemObj.name = itemTime[1]+'-'+itemTime[2]+"\n"+item.week.replace("星期","周");
+              itemObj.value = item.xunnumber;
+              cluesChartData.push(itemObj);
             });
-            $this.defaultData.cluesChartData = response.groupmonthtrend;
+            $this.defaultData.cluesChartData = cluesChartData;
+            console.log($this.defaultData.cluesChartData,'$this.defaultData.cluesChartData')
             $this.defaultData.avgnumber = response.avgnumber;
-            $this.drawChart();
+            //$this.drawChart();
             $this.chartLoading = false;
           }else{
             $this.$message({

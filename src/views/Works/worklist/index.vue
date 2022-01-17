@@ -623,24 +623,6 @@ export default {
                     $this.currentStatus = $this.$route.query.Status;
                     var operationsWidth = 22;
                     operationsWidth+=222;
-                    //if($this.menuButtonPermit.includes('Works_workedit')){
-                    //  operationsWidth+=66;
-                    //}
-                    //if($this.menuButtonPermit.includes('Works_workcancel')){
-                    //  operationsWidth+=66;
-                    //}
-                    //if($this.menuButtonPermit.includes('Works_noconfirm')){
-                    //  operationsWidth+=66;
-                    //}
-                    //if($this.menuButtonPermit.includes('Works_workconfirm')){
-                    //  operationsWidth+=90;
-                    //}
-                    //if($this.menuButtonPermit.includes('Works_addevaluation')){
-                    //  operationsWidth+=66;
-                    //}
-                    //if($this.menuButtonPermit.includes('Works_workdelete')){
-                    //  operationsWidth+=66;
-                    //}
                     $this.operationsWidth = "" + operationsWidth;
                     $this.getpublishdepart();
                 }else{
@@ -778,13 +760,6 @@ export default {
       var $this =this;      
       var searchData = {};
       searchData = $this.initSearchData();
-      //if($this.currentStatus==="alltasks"||$this.currentStatus==="person"||$this.currentStatus==="focuson"){
-      //  searchData.page = $this.isPageBtn?$this.searchData.page:1;
-      //  if(!$this.isPageBtn){
-      //    $this.searchData.page = 1
-      //  }
-      //  $this.isPageBtn = false;
-      //}
       var pathUrl = "";
       if($this.currentStatus==="alltasks"){
         pathUrl = "works/workOrderListAction";
@@ -906,13 +881,12 @@ export default {
             }
             $this.tableData = tableDataArr;
             $this.totalDataNum = response.allcount;
-
             $this.defaultData.accpetcountNum=response.allcount;
             $this.defaultData.personNum=response.mypublishcount;
             $this.defaultData.focusonNum=response.myfocuscount;
             $this.statusList[1].departNum=response.waitcount;
             $this.statusList[2].departNum=response.workincount;
-            $this.statusList[3].departNum=response.hasouttimecount;
+            $this.statusList[3].departNum=response.waitcheckcount;
             $this.statusList[4].departNum=response.rejectedcount; 
             $this.statusList[5].departNum=response.hasfinishcount;                         
             $this.statusList[8].departNum=response.hasouttimecount;
@@ -1433,7 +1407,6 @@ export default {
           var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
           var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
           document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
-          
           if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
             document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
             document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;

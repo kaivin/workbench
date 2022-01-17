@@ -211,7 +211,7 @@ export default {
           onClick(picker) {
             const end = new Date();
             const start = new Date();
-            start.setMonth(start.getMonth() - 6);
+            start.setMonth(start.getMonth() - 5);
             picker.$emit('pick', [start, end]);
           }
         }]
@@ -505,9 +505,9 @@ export default {
                 dealScoreData.lastNumber = response.lastscoreall;
                 costData.lastNumber = response.lastmoneyall;
 
-                inquiryData.nowLastNumber = numSeparate(Math.abs(response.allxunnumber - response.lastallxunnumber));
-                dealScoreData.nowLastNumber = numSeparate(Math.abs(response.scoreall - response.lastscoreall));
-                costData.nowLastNumber = numSeparate(Math.abs(response.moneyeall - response.lastmoneyall).toFixed(1));
+                inquiryData.nowLastNumber = numSeparate(Math.abs(response.allxunnumber - response.lastallxunnumber).toFixed(2)*1);
+                dealScoreData.nowLastNumber = numSeparate(Math.abs(response.scoreall - response.lastscoreall).toFixed(2)*1);
+                costData.nowLastNumber = numSeparate(Math.abs(response.moneyeall - response.lastmoneyall).toFixed(1)*1);
 
                 inquiryData.status = response.allxunnumber - response.lastallxunnumber>0?'up':response.allxunnumber - response.lastallxunnumber<0?'down':'flat';
                 dealScoreData.status = response.scoreall - response.lastscoreall>0?'up':response.scoreall - response.lastscoreall<0?'down':'flat';
@@ -1154,7 +1154,7 @@ export default {
               inquiryData.nowNumber = numSeparate(res.monthxunallnumbercompare);
               compareData = res.monthdepartpercentercompare;
               inquiryData.lastNumber = res.lastmonthxunallnumbercompare;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(res.monthxunallnumbercompare - res.lastmonthxunallnumbercompare));
+              inquiryData.nowLastNumber = numSeparate(Math.abs(res.monthxunallnumbercompare - res.lastmonthxunallnumbercompare).toFixed(2)*1);
               inquiryData.status = res.monthxunallnumbercompare - res.lastmonthxunallnumbercompare>0?'up':res.monthxunallnumbercompare - res.lastmonthxunallnumbercompare<0?'down':'flat';
               inquiryData.avgNumber = numSeparate(parseInt(res.monthxunallnumbercompare/res.monthxuntrendcompare[0].length));
               inquiryData.historyMaxNumber = numSeparate(res.historymaxnumbermonthcompare[0].number);
@@ -1165,7 +1165,7 @@ export default {
               inquiryData.nowNumber = numSeparate(res.xunallnumbercompare);
               compareData = res.departpercentercompare;
               inquiryData.lastNumber = res.lastxunallnumbercompare;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(res.xunallnumbercompare - res.lastxunallnumbercompare));
+              inquiryData.nowLastNumber = numSeparate(Math.abs(res.xunallnumbercompare - res.lastxunallnumbercompare).toFixed(2)*1);
               inquiryData.status = res.xunallnumbercompare - res.lastxunallnumbercompare>0?'up':res.xunallnumbercompare - res.lastxunallnumbercompare<0?'down':'flat';
               inquiryData.avgNumber = numSeparate(parseInt(res.xunallnumbercompare/res.dayxuntrendcompare[0].length));
               inquiryData.historyMaxNumber = numSeparate(res.historymaxnumberdaycompare[0].number);
@@ -1192,7 +1192,7 @@ export default {
               inquiryData.nowNumber = numSeparate(res.monthxunallnumber);
               tongData.push(res.monthxuntrend);
               inquiryData.lastNumber = res.lastmonthxunallnumber;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(res.monthxunallnumber - res.lastmonthxunallnumber));
+              inquiryData.nowLastNumber = numSeparate(Math.abs(res.monthxunallnumber - res.lastmonthxunallnumber).toFixed(2)*1);
               inquiryData.status = res.monthxunallnumber - res.lastmonthxunallnumber>0?'up':res.monthxunallnumber - res.lastmonthxunallnumber<0?'down':'flat';
               inquiryData.avgNumber = numSeparate(parseInt(res.monthavgxun));
               inquiryData.historyMaxNumber = numSeparate(res.historymaxnumbermonth[0].number);
@@ -1204,7 +1204,7 @@ export default {
               tongData.push(res.dayxuntrend);
               // 日维度
               inquiryData.lastNumber = res.lastxunallnumber;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(res.xunallnumber - res.lastxunallnumber));
+              inquiryData.nowLastNumber = numSeparate(Math.abs(res.xunallnumber - res.lastxunallnumber).toFixed(2)*1);
               inquiryData.status = res.xunallnumber - res.lastxunallnumber>0?'up':res.xunallnumber - res.lastxunallnumber<0?'down':'flat';
               inquiryData.avgNumber = numSeparate(parseInt(res.avgxunnumber));
               inquiryData.historyMaxNumber = numSeparate(res.historymaxnumberday[0].number);
@@ -1345,7 +1345,7 @@ export default {
             dealScoreData.name = "部门成交积分统计";
             dealScoreData.nowNumber = numSeparate(Math.floor(res.monthscoreallnumbercompare*100)/100);
             dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumbercompare*100)/100;
-            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100));
+            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100).toFixed(2)*1);
             dealScoreData.status = Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100>0?'up':Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100<0?'down':'flat';
             dealScoreData.avgNumber = numSeparate(Math.floor(res.monthscoreallnumbercompare/res.monthscoretrendcompare[0].length*100)/100);
             dealScoreData.historyMaxNumber = numSeparate(Math.floor(res.historymaxscoremonthcompare[0].score*100)/100);
@@ -1383,7 +1383,7 @@ export default {
               dealScoreData.mainData.push(item);
             });
             dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumber*100)/100;
-            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100));
+            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100).toFixed(2)*1);
             dealScoreData.status = Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100>0?'up':Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100<0?'down':'flat';
             dealScoreData.avgNumber = numSeparate(Math.floor(res.monthscoreavgxun*100)/100);
             dealScoreData.historyMaxNumber = numSeparate(Math.floor(res.historymaxscoremonth[0].score*100)/100);
@@ -1500,7 +1500,7 @@ export default {
             costCountData.name = "部门成本统计";
             costCountData.nowNumber = numSeparate(Math.floor(res.monthmoneyallnumbercompare*10)/10);
             costCountData.lastNumber = Math.floor(res.lastmonthmoneyallnumbercompare*10)/10;
-            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthmoneyallnumbercompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10));
+            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthmoneyallnumbercompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10).toFixed(2)*1);
             costCountData.status = Math.floor(res.monthmoneyallnumbercompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10>0?'up':Math.floor(res.monthmoneyallnumbercompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10<0?'down':'flat';
             costCountData.avgNumber = numSeparate(Math.floor(res.monthmoneyallnumbercompare/res.monthmoneytrendcompare[0].length*10)/10);
             costCountData.historyMaxNumber = numSeparate(Math.floor(res.historymaxmoneymonthcompare[0].allmoney*10)/10);
@@ -1538,7 +1538,7 @@ export default {
               costCountData.mainData.push(item);
             });
             costCountData.lastNumber = Math.floor(res.lastmonthmoneyall*10)/10;
-            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10));
+            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10).toFixed(2)*1);
             costCountData.status = Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10>0?'up':Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10<0?'down':'flat';
             costCountData.avgNumber = numSeparate(Math.floor(res.avgmonthmoney*10)/10);
             costCountData.historyMaxNumber = numSeparate(Math.floor(res.historymaxmoneymonth[0].allmoney*10)/10);
@@ -1650,7 +1650,7 @@ export default {
             millionCountData.name = "部门百万个数统计";
             millionCountData.nowNumber = numSeparate(res.monthanumberallnumbercompare);
             millionCountData.lastNumber = res.lastmonthanumberallnumbercompare;
-            millionCountData.nowLastNumber = numSeparate(Math.abs(res.monthanumberallnumbercompare - res.lastmonthanumberallnumbercompare));
+            millionCountData.nowLastNumber = numSeparate(Math.abs(res.monthanumberallnumbercompare - res.lastmonthanumberallnumbercompare).toFixed(2)*1);
             millionCountData.status = res.monthanumberallnumbercompare - res.lastmonthanumberallnumbercompare>0?'up':res.monthanumberallnumbercompare - res.lastmonthanumberallnumbercompare<0?'down':'flat';
             millionCountData.avgNumber = numSeparate(parseInt(res.monthanumberallnumbercompare/res.monthanumbertrendcompare[0].length));
             millionCountData.historyMaxNumber = numSeparate(res.historymaxanumbermonthcompare[0].anumber);
@@ -1688,7 +1688,7 @@ export default {
               millionCountData.mainData.push(item);
             });
             millionCountData.lastNumber = res.lastmonthanumberallnumber;
-            millionCountData.nowLastNumber = numSeparate(Math.abs(res.monthanumberallnumber - res.lastmonthanumberallnumber));
+            millionCountData.nowLastNumber = numSeparate(Math.abs(res.monthanumberallnumber - res.lastmonthanumberallnumber).toFixed(2)*1);
             millionCountData.status = res.monthanumberallnumber - res.lastmonthanumberallnumber>0?'up':res.monthanumberallnumber - res.lastmonthanumberallnumber<0?'down':'flat';
             millionCountData.avgNumber = numSeparate(Math.floor(res.monthanumberavgxun*100)/100);
             millionCountData.historyMaxNumber = numSeparate(res.historymaxanumbermonth[0].anumber);

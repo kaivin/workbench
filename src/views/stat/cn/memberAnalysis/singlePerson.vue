@@ -5,6 +5,10 @@
                 <span class="choosetit">部门选择：</span>
                 <div class="departItems flex-content">
                 <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
+                <p class="departItemsYear">                
+                    <span @click="changeType(1)" class="btn-item" :class="type == 1?'hover':''">{{prevYear}}年</span>
+                    <span @click="changeType(2)" class="btn-item" :class="type == 2?'hover':''">{{nowYear}}年</span>
+                </p>
                 </div>
            </div>
            <div class="choosePerson" :class="searchData.dept_id?'active':''">
@@ -212,6 +216,7 @@ export default {
             id:'',
         },
         MixChart:null,
+        type: 2,//默认展示今年的数据
     };
   },
   created() {
@@ -219,6 +224,14 @@ export default {
     $this.searchData.dept_id = parseInt($this.$route.query.deptId);
     $this.searchData.id = parseInt($this.$route.query.itemId);
     $this.initData();
+  },
+  computed:{
+    nowYear(){
+      return new Date().getFullYear();
+    },
+    prevYear(){
+      return new Date().getFullYear()-1;
+    }
   },
   mounted(){
     const $this = this;
@@ -353,6 +366,11 @@ export default {
       $this.emptyData();
       var searchData={};
       searchData.id=$this.searchData.id;
+      if($this.type == 1){
+        searchData.year = $this.prevYear
+      }else{
+        searchData.year = $this.nowYear
+      }
       $this.MixData=[];
       if ($this.MixChart && !$this.MixChart.chart.destroyed) {
           $this.MixChart.chart.destroy();
@@ -551,23 +569,42 @@ export default {
                       objItem.time=item.date;
                       var time=item.date.split('-')[1]+'月';
                       objItem.date=time;
-                      objItem.xunnumber=numSeparate(item.xunnumber);
-                      objItem.score=numSeparate(item.score);
+                      if(item.xunnumber&&item.xunnumber!=null){
+                        objItem.xunnumber=numSeparate(item.xunnumber);
+                        if(maxxun<item.xunnumber){
+                            maxxun=item.xunnumber
+                        }
+                      }else{
+                         objItem.xunnumber=0; 
+                         maxxun=0;
+                      }
+                      if(item.score&&item.score!=null){
+                         objItem.score=numSeparate(item.score);
+                        if(maxscore<item.score){
+                            maxscore=item.score
+                        }
+                      }else{
+                         objItem.score=0; 
+                         maxscore=0;
+                      }
+                      if(item.money&&item.money!=null){
+                         objItem.money=numSeparate(item.money);
+                        if(maxmoney<item.money){
+                            maxmoney=item.money
+                        }
+                      }else{
+                         objItem.money=0; 
+                         maxmoney=0;
+                      }
+                      if(item.anumber&&item.anumber!=null){
+                        if(maxanum<item.anumber){
+                            maxanum=item.anumber
+                        }
+                      }else{
+                         maxanum=0;
+                      }
                       objItem.anumber=item.anumber;
-                      objItem.money=numSeparate(item.money);
                       personCount.push(objItem);
-                      if(maxxun<item.xunnumber){
-                        maxxun=item.xunnumber
-                      }
-                      if(maxscore<item.score){
-                        maxscore=item.score
-                      }
-                      if(maxanum<item.anumber){
-                        maxanum=item.anumber
-                      }
-                      if(maxmoney<item.money){
-                        maxmoney=item.money
-                      }
                   });
                   $this.maxPersonCount.maxxun=numSeparate(maxxun);
                   $this.maxPersonCount.maxscore=numSeparate(maxscore);
@@ -915,7 +952,11 @@ export default {
             $this.scrBool=false;
         }
       }     
-    }
+    },
+    changeType(val){
+      this.type = val;
+      this.getCnPersoncountinfo()
+    },
   }
 }
 

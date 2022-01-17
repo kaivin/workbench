@@ -4,7 +4,11 @@
            <div class="chooseDepart flex-box">
                 <span class="choosetit">添加对比：</span>
                 <div class="departItems flex-content">
-                <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
+                  <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
+                  <p class="departItemsYear">                
+                      <span @click="changeType(1)" class="btn-item" :class="type == 1?'hover':''">{{prevYear}}年</span>
+                      <span @click="changeType(2)" class="btn-item" :class="type == 2?'hover':''">{{nowYear}}年</span>
+                  </p>
                 </div>
            </div>
            <div class="multiSelect">
@@ -47,6 +51,7 @@ export default {
             dept_id:'',
             id:'',
         },
+        type: 2,//默认展示今年的数据
     };
   },
   components:{
@@ -65,6 +70,14 @@ export default {
     teamArr.push(parseInt($this.$route.query.itemId));
     $this.teamArr=teamArr;
     $this.initData();
+  },
+  computed:{
+    nowYear(){
+      return new Date().getFullYear();
+    },
+    prevYear(){
+      return new Date().getFullYear()-1;
+    }
   },
   methods: {
     // loading自定义
@@ -100,6 +113,11 @@ export default {
       $this.defaultChartData=[];
       var searchData={};
       searchData.userid=$this.teamArr;
+      if($this.type == 1){
+        searchData.year = $this.prevYear
+      }else{
+        searchData.year = $this.nowYear
+      }
       var ChartColor=['#91b4f3','#ffc545','#8feac0','#fa9b7c'];
       $this.$store.dispatch("api/getCnPersoncountCompareAction",searchData).then((res) => {
           if (res) {
@@ -134,7 +152,7 @@ export default {
                     objItem.name=item.name;
                     objItem.totalnum=numSeparate(item.xunnumber);
                     objItem.avgnum=numSeparate(item.avgnumber.toFixed(2)*1);
-                    objItem.historynum=numSeparate(item.maxmonthnumber);
+                    objItem.historynum=numSeparate((item.maxmonthnumber&&item.maxmonthnumber!=null)?item.maxmonthnumber:0);
                     objItem.color=ChartColor[index];
                     leftChartData.push(objItem);
                 });
@@ -168,7 +186,7 @@ export default {
                     objItem.name=item.name;
                     objItem.totalnum=numSeparate(item.score.toFixed(2)*1);
                     objItem.avgnum=numSeparate(item.avgscore.toFixed(2)*1);
-                    objItem.historynum=numSeparate(item.maxmonthscore);
+                    objItem.historynum=numSeparate((item.maxmonthscore&&item.maxmonthscore!=null)?item.maxmonthscore:0);
                     objItem.color=ChartColor[index];
                     leftChartData.push(objItem);
                 });
@@ -390,6 +408,10 @@ export default {
     handlePerson(valData){
       var $this=this;
       $this.PersonChange(valData);
+    },
+    changeType(val){
+      this.type = val;
+      this.getPersoncountCompare()
     },
   }
 }

@@ -1,6 +1,6 @@
 ﻿<template>
     <div class="item-row year-chart flex-box">
-      <div class="item-column flex-content flex-box flex-column">
+      <div class="item-column flex-content">
           <div class="item-quality">
               <div class="column-header">
                   <div class="txt-header">
@@ -15,7 +15,8 @@
                           :yarnArr="currentData.yarnArr"
                           :yarnClinch="currentData.yarnClinch"
                           :id-data="currentData.randomStr"
-                          :scoreHeight="350"
+                          :isCost="currentData.isCost"
+                          :scoreHeight="390"
                         ></item-year>
                     </div>
               </div>
@@ -33,6 +34,7 @@
                           <p class="quaTit">{{item.name}}</p>
                           <p class="quaYear flex-box">
                             <span v-for='(itemk,indexk) in currentData.yarnClinch' :key='indexk'>{{itemk}}</span>
+                            <span>合计</span>
                           </p>
                           <p class="quaMain flex-box" v-for='(items,indexs) in item.mainArr' :key='indexs'>
                               <span v-for='(itemk,indexk) in items' :key='indexk'>{{itemk.score}}
@@ -49,10 +51,11 @@
                     <span v-for='(item,index) in currentData.yarnArr' :key='index'>{{item}}</span>
                 </div>
                 <div class="qualityTableFr flex-box">
-                    <div class="qualityTableFrBom flex-content"v-for='(item,index) in currentData.tableData' v-if="index<2" :key='index'>
+                    <div class="qualityTableFrBom flex-content" v-for='(item,index) in currentData.tableData' v-if="index<2" :key='index'>
                           <p class="quaTit">{{item.name}}</p>
                           <p class="quaYear flex-box">
                             <span v-for='(itemk,indexk) in currentData.yarnClinch' :key='indexk'>{{itemk}}</span>
+                            <span>合计</span>
                           </p>
                           <p class="quaMain flex-box" v-for='(items,indexs) in item.mainArr' :key='indexs'>
                               <span v-for='(itemk,indexk) in items' :key='indexk'>{{itemk.score}}
@@ -71,6 +74,7 @@
                           <p class="quaTit">{{item.name}}</p>
                           <p class="quaYear flex-box">
                             <span v-for='(itemk,indexk) in currentData.yarnClinch' :key='indexk'>{{itemk}}</span>
+                            <span>合计</span>
                           </p>
                           <p class="quaMain flex-box" v-for='(items,indexs) in item.mainArr' :key='indexs'>
                               <span v-for='(itemk,indexk) in items' :key='indexk'>{{itemk.score}}
