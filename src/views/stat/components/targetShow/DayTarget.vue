@@ -235,7 +235,7 @@ export default {
                         style: {
                           stroke: '#dedede',
                           lineWidth: 1,
-                          // lineDash: [3, 2],
+                          opacity:1,
                         },
                         
                       },
@@ -244,6 +244,12 @@ export default {
                     tickInterval: 50,
                   },
                   xAxis:{
+                        line: {
+                          style: {
+                            stroke: '#666',
+                            lineWidth: 1,
+                          }
+                    },
                     label:{
                       style:{
                         fill:"#333",

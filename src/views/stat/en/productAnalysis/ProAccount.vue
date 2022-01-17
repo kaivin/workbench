@@ -175,6 +175,7 @@
                         <template v-if="ChartAccount.length>0" v-for="item in ChartAccount">
                             <account-chart 
                             :accountArr="item"  :contrastTag="contrastName"
+                            @departchange="departchange"
                             ></account-chart>
                         </template>
                         <map-chart 
@@ -187,6 +188,11 @@
                                 :worldMapArr="item"
                                 ></tapmap-chart>
                             </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="pro_user" id="pro_user" v-if="intableData.length>0||scoretableData.length>0">
+                            <inquiry-table :intableData="intableData" :chooseData="chooseData" :lang="en"></inquiry-table>
+                            <score-table :scoretableData="scoretableData" :chooseData="chooseData" :lang="en"></score-table>
                         </div>
                 </div>
             </div>
@@ -252,6 +258,8 @@ import accountChart from "../../components/productAnalysis/accountChart";
 import mapChart from "../../components/productAnalysis/mapChart";
 import tapmapChart from "../../components/productAnalysis/tapmapChart";
 import Areachart from "../../components/productAnalysis/Areachart";
+import InquiryTable from "../../components/productAnalysis/InquiryTable";
+import ScoreTable from "../../components/productAnalysis/ScoreTable";
 export default {
   name: "enProAccount",
   data() {
@@ -346,7 +354,15 @@ export default {
           closing:'',
           EnquiryPoints:'',
       },
-      nowcate: ""
+      nowcate: "",
+      intableData:[],//组员询盘
+      scoretableData:[],//组员积分
+      ch:"ch",
+      en:"en",
+      chooseData:{
+          chooseDepart:"",
+          tag:""
+      }
     };
   },
   components:{
@@ -356,6 +372,8 @@ export default {
     mapChart,
     Areachart,
     tapmapChart,
+    InquiryTable,
+    ScoreTable
   },
   watch:{
     minWidth(val) {
@@ -630,7 +648,8 @@ export default {
       $this.ChartAccount=[];
       $this.ChartMap=[];
       $this.EnquirieMap=[];
-      
+      $this.intableData=[];
+      $this.scoretableData=[];
     },
     //获取产品详情各种统计
     getProFocount(){
@@ -971,6 +990,53 @@ export default {
                     // 组合图表
                     $this.getYearInquiryChart();
                     $this.ChartAccount=departcount;
+
+                    // 成员询盘占比
+                    if(res.departcountuser){
+                        var indata = res.departcountuser;
+                        if(indata.length>0){
+                            let totalnum = indata.reduce((a,b) =>{
+                                a = a + b.number;
+                                return a;
+                            },0)
+                            indata.forEach(function(item,index){
+                                if(totalnum!=0){
+                                    if(item.number==0){
+                                        item.percent='0%';
+                                    }else{
+                                        item.percent=(item.number/totalnum*100).toFixed(2)+'%';
+                                    }
+                                }else{
+                                    item.percent='0%';
+                                }
+                            })
+                        }
+                        $this.intableData = indata;
+                    }
+                    
+                    // 成员积分占比
+                    if(res.departscoreuser){
+                        var scoredata = res.departscoreuser;
+                        if(scoredata.length>0){
+                            let totalscore = scoredata.reduce((a,b) =>{
+                                a = a + b.number;
+                                return a;
+                            },0)
+                            scoredata.forEach(function(item,index){
+                                if(totalscore!=0){
+                                    if(item.number==0){
+                                        item.percent='0%';
+                                    }else{
+                                        item.percent=(item.number/totalscore*100).toFixed(2)+'%';
+                                    }
+                                }else{
+                                    item.percent='0%';
+                                }
+                            })
+                        }
+                        $this.scoretableData = scoredata;
+                    }
+
                 }else{
                     //顶部询盘趋势
                     if(res.topxunnumber&&res.topxunnumber.length>0){
@@ -2339,6 +2405,11 @@ export default {
         }           
       }
     },
+    departchange(chooseDepart,tag){
+        this.chooseData.chooseDepart = chooseDepart;
+        this.chooseData.tag = tag;
+        console.log(this.chooseData)
+    }
   }
 }
 </script>

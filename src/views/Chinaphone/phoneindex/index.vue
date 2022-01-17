@@ -34,7 +34,7 @@
     </div>
     <div class="flex-content relative">
       <div class="abs-panel" ref="mainPane">
-        <div class="scroll-panel chscroll-panel" ref="scrollDom" style="will-change:scroll-position"> 
+        <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position"> 
           <div class="phone-index" v-if="!phoneID">
             <!-- <p class="breadcrumb" ref="breadcrumbPane">
               <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
@@ -1576,10 +1576,10 @@ export default {
       // 获取表格头吸顶需滚动的高度
       if($this.$refs.headerPane){
         //  $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20+44;
-         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+15+20+44;
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+10+44;
       }else{
         //  $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15+20+44;
-         $this.scrollTable.fixedTopHeight=15+20+44;
+         $this.scrollTable.fixedTopHeight=10+44;
       }
       $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
       if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
@@ -1594,7 +1594,7 @@ export default {
          $this.scrollTable.fixedRightWidth = fixedRightObj.width;
       }
       var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
-      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+54+20;
+      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+54+30;
       $this.scrollTable.clientHeight = document.documentElement.clientHeight;
       // 头部固定情况下视窗宽高改变，需要重新设置的一些宽高
       if($this.scrollPosition.isFixed){
@@ -1605,7 +1605,7 @@ export default {
         if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
           document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
         }
-        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+54+20;
+        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+54+30;
       }
       // 视窗宽高改变时需要设置默认滚动条的位置
       if($this.totalDataNum>20){
@@ -1620,10 +1620,11 @@ export default {
     // 竖向滚动条滚动事件
     handleScroll(event){
       var $this = this;
-      if($this.$route.query.phoneID){        
-          if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
+      if($this.$route.query.phoneID){      
+          if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件           
             var scrTop = event.target.scrollTop;
             var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+            console.log($this.scrollTable.fixedTopHeight)
             if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
               $this.scrollPosition.isFixed = true;
               var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"

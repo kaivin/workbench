@@ -46,7 +46,9 @@
                           v-if="contrastTag=='overview'||contrastTag=='departCont'"
                           label="部门">
                         <template slot-scope="scope">
-                            <span class="depart">{{scope.row.departname}}</span>
+                            <a href="#pro_user">
+                              <span class="depart" @click="departClick(scope.row.departname,accountArr.currentTag)">{{scope.row.departname}}</span>
+                            </a>
                         </template>
                       </el-table-column>
                       <el-table-column
@@ -55,6 +57,11 @@
                           align="center"
                           width="60"
                           label="个数">
+                          <template  slot-scope="scope">
+                            <a href="#pro_user">
+                              <span class="number" @click="departClick(scope.row.departname,accountArr.currentTag)">{{scope.row.number}}</span>
+                            </a>
+                          </template>
                       </el-table-column>
                       <el-table-column
                           prop="score"
@@ -62,6 +69,11 @@
                           align="center"
                           width="60"
                           label="积分">
+                          <template  slot-scope="scope">
+                            <a href="#pro_user">
+                              <span class="number" @click="departClick(scope.row.departname,accountArr.currentTag)">{{scope.row.number}}</span>
+                            </a>
+                          </template>
                       </el-table-column>
                       <el-table-column
                           prop="percent"
@@ -151,6 +163,9 @@ export default {
         piePlot.render();
       }
     },
+    departClick(name,tag){
+      this.$emit("departchange", name, tag);
+    }
   }
 }
 </script>

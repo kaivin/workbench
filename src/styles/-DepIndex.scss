@@ -17,10 +17,10 @@
                 vertical-align: top;
             }
             .tit-span{
-                color: #a1a1a1;
+                color: #444444;
                 font-size:$fontsize13;
                 display: inline-block;
-                margin-left: 8px;
+                margin-left: 4px;
             }
         }
     }
@@ -181,11 +181,13 @@
                 line-height: 20px;
                 text-align: left;
                 span{
-                    font-size:$fontsize24;
-                    line-height: 30px;
+                    font-size:$fontsize25;
+                    line-height: 26px;
                     display: block;
                     text-align: left;
                     color: #27282b;
+                    margin-bottom: 4px;
+                    font-family: "din";
                 }
             }
         }
@@ -213,10 +215,10 @@
                 vertical-align: top;
             }
             .tit-span{
-                color: #a1a1a1;
+                color: #444444;
                 font-size:$fontsize13;
                 display: inline-block;
-                margin-left: 8px;
+                margin-left: 4px;
             }
         }
         .datePicker{
@@ -348,6 +350,14 @@
                             z-index: 33;
                         }
                     }
+                    .outtext{
+                        i{
+                            right: auto;
+                            left: 100%;
+                            padding-left: 5px;
+                            color: #333;
+                        }
+                    }
                     .standardLine{
                         border-right:1px dashed #5fc63a;
                     }
@@ -447,10 +457,10 @@
                 vertical-align: top;
             }
             .tit-span{
-                color: #a1a1a1;
+                color: #444444;
                 font-size:$fontsize13;
                 display: inline-block;
-                margin-left: 8px;
+                margin-left: 4px;
             }
         }
         .datePicker{
@@ -628,10 +638,10 @@
                 vertical-align: top;
             }
             .tit-span{
-                color: #a1a1a1;
+                color: #444444;
                 font-size:$fontsize13;
                 display: inline-block;
-                margin-left: 8px;
+                margin-left: 4px;
             }
         }
         .datePicker{
@@ -749,10 +759,10 @@
                 vertical-align: top;
             }
             .tit-span{
-                color: #a1a1a1;
+                color: #444444;
                 font-size:$fontsize13;
                 display: inline-block;
-                margin-left: 8px;
+                margin-left: 4px;
             }
         }
         .dealYear{
@@ -939,10 +949,10 @@
                 vertical-align: top;
             }
             .tit-span{
-                color: #a1a1a1;
+                color: #444444;
                 font-size:$fontsize13;
                 display: inline-block;
-                margin-left: 8px;
+                margin-left: 4px;
             }
         }
         .datePicker{
@@ -1243,6 +1253,14 @@
                             font-style: normal;
                         }
                     }
+                    .outtext{
+                        i{
+                            right: auto;
+                            left: 100%;
+                            padding-left: 5px;
+                            color: #333;
+                        }
+                    }
                     .standardLine{
                         border-right:1px dashed #5fc63a;
                     }
@@ -1334,25 +1352,29 @@
 }
 
 .showmonth{
+    padding-left: 6px;
+    padding-right: 6px;
     .sitem{
-        display: inline-block;
-        vertical-align: top;
+        display: block;
         line-height: 18px;
     }
     .sitem+.sitem{
-        margin-left: 11px;
-        position: relative;
-        &:before{
-            content: '';
-            display: block;
-            width: 1px;
-            height: 12px;
-            position: absolute;
-            left: -6px;
-            top: 4px;
-            background-color: #929292;
-        }
+        margin-top: 5px;
     }
+    // .sitem+.sitem{
+    //     margin-left: 11px;
+    //     position: relative;
+    //     &:before{
+    //         content: '';
+    //         display: block;
+    //         width: 1px;
+    //         height: 12px;
+    //         position: absolute;
+    //         left: -6px;
+    //         top: 4px;
+    //         background-color: #929292;
+    //     }
+    // }
 } 
 
 .newtooltip.is-light[x-placement^="top"] .popper__arrow{

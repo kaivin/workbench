@@ -1460,6 +1460,10 @@
                                 white-space: nowrap;
                                 overflow: hidden;
                                 text-overflow: ellipsis;
+                                cursor: pointer;
+                            }
+                            .number{
+                                cursor: pointer;
                             }
                         }
                         .picCon{
@@ -2293,5 +2297,105 @@
             font-weight: bold;
             color: #7daeff;
         }
+    }
+}
+
+.pro_user{
+    padding-top: 24px;
+    border-top: 1px solid #efefef;
+    padding-bottom: 34px;
+    &:after{
+        content: '';
+        display: block;
+        clear: both;
+    }
+    .inTitle{
+        margin-bottom: 22px;
+        .in-h3{
+            color: #111111;
+            font-size: 18px;
+        }
+    }
+    .cpInquiry{
+        padding-left: 30px;
+        padding-right: 30px;
+        width: 50%;
+        float: left;
+        .rowMain{
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+    }
+    .cpScore{
+        padding-left: 30px;
+        padding-right: 30px;
+        width: 50%;
+        float: right;
+        .rowMain{
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+    }
+    .row-more{
+        font-size: 14px;
+        color: #666;
+        text-align: center;
+        line-height: 50px;
+        border-right: 1px solid #f1f1f1;
+        border-left: 1px solid #f1f1f1;
+        border-bottom: 1px solid #f1f1f1;
+        cursor: pointer;
+    }
+    .cpTableShow{
+        font-size: 14px;
+        color: #111;
+        text-align: center;
+        &.el-table--group, &.el-table--border{
+            border-left: 1px solid #f1f1f1;
+            border-top: 1px solid #f1f1f1;
+        }
+        &.el-table--border .el-table__cell{
+            border-right: 1px solid #f1f1f1;
+        }
+        &.el-table th.el-table__cell.is-leaf, &.el-table td.el-table__cell{
+            border-bottom: 1px solid #f1f1f1;
+        }
+        &.el-table--group::after, &.el-table--border::after, &.el-table::before{
+            background-color: #f1f1f1;
+        }
+        &.el-table thead{
+            color: #333;
+        }
+        &.el-table th.el-table__cell{
+            background-color: #fafafa;
+            padding: 5px 0;
+        }
+        &.el-table .el-table__cell{
+            text-align: center;
+            padding: 13px 0;
+        }
+        &.el-table th.el-table__cell > .cell{
+            font-size: 14px;
+            color: #333;
+            line-height: 24px;
+        }
+        .el-table__empty-text{
+            padding: 5px 0;
+        }
+        &.el-table td.el-table__cell div .tabledepart{
+            color: #666;
+        }
+        .cp_Header{
+            position: relative;
+        }
+    }
+}
+
+@media screen and(max-width:1600px){
+    .pro_user .cpInquiry{
+        width: 100%;
+    }
+    .pro_user .cpScore{
+        width: 100%;
     }
 }

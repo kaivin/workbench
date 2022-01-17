@@ -37,7 +37,7 @@
                         <div class="tipnumber">优秀线：{{item.goodnumber}}</div>
                     </div>
                     <div class="departLine flex-content">
-                        <span class="progressLine" :style="'width:'+item.score/DealCount.maxAimNum*100+'%'">
+                        <span class="progressLine" :class="item.score/DealCount.maxAimNum*100<4?'outtext':''" :style="'width:'+item.score/DealCount.maxAimNum*100+'%'">
                             <i>{{item.score}}</i>
                         </span>
                         <span class="standardLine" :style="'width:'+item.passnumber/DealCount.maxAimNum*100+'%'"></span>
