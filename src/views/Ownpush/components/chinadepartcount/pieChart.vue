@@ -76,7 +76,6 @@ export default {
             itemObj.colorStops.push(colorTwo);
             colorList1.push(itemObj);
         });
-        console.log(colorList1,'colorList1');
         var option;
         option = {
             title: [   

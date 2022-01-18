@@ -175,7 +175,7 @@ export default {
         isContrastShow:false,
         selectedType:['enquiriesNum'],
         oldContrastSourceID:"",
-        isDefaultPage:true,
+        isDefaultPage:false,
         tipsInfo:"当前部门分析页面，展示为：本年度数据信息。",
         tipsItem:"",
         pickerDateRangeOptions: {
@@ -530,6 +530,20 @@ export default {
       }
       $this.getSourceName();
       $this.getSearchData();
+    },
+    //组装部门选中名字
+    getSourceName(){
+      var $this = this;
+      var channelList = $this.channelList;
+      var groupName = "";
+      var fontArr = [];
+      channelList.forEach(function(item,index){
+        if(item.isOn){
+          fontArr.push(item.name);
+        }
+      })
+      groupName = fontArr.join("、");
+      $this.groupName = groupName;
     },
     // 日期维度点击事件
     dimensionChangeHandler(obj){
@@ -1357,20 +1371,6 @@ export default {
       });
       $this.tipsItem = "（展示项："+itemArr.join("、")+"）";
     },
-    //组装部门选中名字
-    getSourceName(){
-      var $this = this;
-      var channelList = $this.channelList;
-      var groupName = "";
-      var fontArr = [];
-      channelList.forEach(function(item,index){
-        if(item.isOn){
-          fontArr.push(item.name);
-        }
-      })
-      groupName = fontArr.join("、");
-      $this.groupName = groupName;
-    },
     // 判断当前展示情况
     judgeChartStatus(){
       var $this = this;
@@ -1482,7 +1482,6 @@ export default {
       $this.selectedData.type=[1];
       $this.selectedData.dateDefault = $this.getNearDay();
       $this.selectedData.dateContrast = [];
-      $this.selectedData.type = [1];
       $this.selectedData.is_compare=1;
       $this.selectedData.comparesource_id = [];
       $this.selectedData.is_timecopmare=1;
@@ -1493,7 +1492,7 @@ export default {
       $this.isContrastShow = false,
       $this.selectedType=['enquiriesNum'];
       $this.oldContrastSourceID = "";
-      $this.isDefaultPage = true;
+      $this.isDefaultPage = false;
       $this.judgeData = {};
       $this.defaultChartData = [];
       $this.getSearchData();

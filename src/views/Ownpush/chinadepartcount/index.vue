@@ -279,7 +279,7 @@ export default {
         },
         selectedType:['enquiriesFew','regionEnquiries'],       //选中分析项数据
         oldContrastGroupID:"",
-        isDefaultPage:true,
+        isDefaultPage:false,
         judgeData:{},
         defaultChartData:[],
         defaultYearData:[],
@@ -2814,7 +2814,7 @@ export default {
       $this.selectedData.type = [1,4];
       $this.selectedType = ['enquiriesFew','regionEnquiries'];
       $this.oldContrastGroupID = "";
-      $this.isDefaultPage = true;
+      $this.isDefaultPage = false;
       $this.judgeData = {};
       $this.defaultChartData = [];
       $this.mapChart = [];
