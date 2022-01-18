@@ -332,11 +332,18 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
+      'sidebar',
       'menuData'
     ]),
+    isOpen() {
+      return this.sidebar.opened;
+    },
   },
   mounted(){
       const $this = this;
+      if(this.sidebar.opened){
+        $this.$store.dispatch('app/toggleSideBar');
+      }   
       this.$nextTick(function () {
           $this.minHeight = $this.$refs.boxPane.offsetHeight-30;
       });

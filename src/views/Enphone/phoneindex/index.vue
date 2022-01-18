@@ -1046,7 +1046,10 @@ export default {
     },
   },
   mounted(){
-    const $this = this;    
+    const $this = this;
+    if(this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }    
     // 监听竖向滚动条滚动事件
     window.addEventListener('scroll',this.handleScroll,true);
     if($this.$route.query.phoneID||$this.$route.query.key){

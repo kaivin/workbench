@@ -146,6 +146,7 @@ import mapChart from "../../components/departGroup/mapChart.vue";
 import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate,numSeparate} from "@/utils/index"
 import {MapInterval,TopTenColor} from "@/utils/MapColor"
 import { worldCountry } from "@/utils/worldCountry";
+import { mapGetters } from 'vuex';
 export default {
   name: "enGroupAnalysis",
   components: {
@@ -261,6 +262,11 @@ export default {
       boxWidth:0
     };
   },
+  computed: {
+    ...mapGetters([
+      'sidebar',
+    ]),
+  },
   created() {
     var $this = this;
     $this.getUserMenuButtonPermit();
@@ -289,6 +295,9 @@ export default {
   },
   mounted(){
     const $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }
     if($this.$refs.boxPane){  
       $this.minWidth = $this.$refs.boxPane.offsetWidth;
       $this.boxWidth = $this.$refs.boxPane.offsetWidth - 48; 

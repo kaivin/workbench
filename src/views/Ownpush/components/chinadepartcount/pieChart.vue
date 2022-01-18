@@ -109,13 +109,13 @@ export default {
                             fontSize: 12,
                             formatter: params => {
                                 return (
-                                    '{value|' + params.value + '}'
+                                    '{percent|' + params.percent + '%}'
                                 );
                             },
                             padding: [0, -130, 0, -130],
                             rich: {
                                 color: '#fff',
-                                value: {
+                                percent: {
                                     fontSize: 12,
                                     padding: [0, 0, 3, 0],
                                     color: '#fff'

@@ -225,11 +225,15 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
+      'sidebar',
       'menuData'
     ]),
   },
   mounted(){
       const $this = this;
+      if(!$this.sidebar.opened){
+        $this.$store.dispatch('app/toggleSideBar');
+      };
       $this.$nextTick(function () {
         $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-30;
       });

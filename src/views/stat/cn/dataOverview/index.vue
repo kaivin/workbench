@@ -117,6 +117,7 @@ import XpanPercent from "../../components/dataOverview/XpanPercent.vue";
 import HotProduct from "../../components/dataOverview/HotProduct.vue";
 import {getChinacountnew} from "@/api/dataOverview.js";
 import {numSeparate,rankingWithTotalItem} from "@/utils/index";
+import { mapGetters } from 'vuex';
 export default {
   name: "cnDataOverview",
   data() {
@@ -150,6 +151,11 @@ export default {
       type: 2,//默认展示今年的数据
     };
   },
+  computed: {
+    ...mapGetters([
+      'sidebar',
+    ]),
+  },
   components:{
     CostYears,//年度成本
     CostDepart,//部门年度成本
@@ -163,6 +169,12 @@ export default {
     XpanYears,//年度询盘
     XpanPercent,//部门年度询盘
     HotProduct,//热门产品
+  },
+  mounted(){
+    const $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }    
   },
   created() {
     this.getUserMenuButtonPermit()

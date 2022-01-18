@@ -721,8 +721,15 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
+      'sidebar',
       'menuData'
     ]),
+  },
+  mounted(){
+    const $this = this;
+    if(this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }
   },
   created(){
     var $this = this;

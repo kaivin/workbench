@@ -37,6 +37,7 @@
 <script>
 import defaultChart from "../../components/memberDetail/defaultChart.vue";
 import {numSeparate} from "@/utils/index";
+import { mapGetters } from 'vuex';
 export default {
   name: "cnComparePerson",
   data() {
@@ -53,6 +54,11 @@ export default {
         },
         type: 2,//默认展示今年的数据
     };
+  },
+  computed: {
+    ...mapGetters([
+      'sidebar',
+    ]),
   },
   components:{
     defaultChart
@@ -75,6 +81,12 @@ export default {
     },
     prevYear(){
       return new Date().getFullYear()-1;
+    }
+  },
+  mounted(){
+    const $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
     }
   },
   methods: {

@@ -141,7 +141,7 @@
                                         <el-table-column
                                             prop="countnodeal"
                                             label="未处理询盘数"
-                                            min-width="70"
+                                            min-width="90"
                                             >
                                             <template slot-scope="scope">
                                                 <div class="table-text">
@@ -196,7 +196,7 @@
                                         <el-table-column
                                             prop="allotcount"
                                             label="近2日分配询盘数"
-                                            min-width="85"
+                                            min-width="95"
                                             >
                                             <template slot-scope="scope">
                                                 <div class="table-text">
@@ -310,6 +310,9 @@ export default {
   },
   mounted(){
     const $this = this;
+    if(this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }    
     // 监听竖向滚动条滚动事件
     window.addEventListener('scroll',$this.handleScroll,true);
     $this.$nextTick(function () {

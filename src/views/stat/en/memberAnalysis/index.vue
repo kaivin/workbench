@@ -95,12 +95,13 @@
   </div>
 </template>
 <script>
-import UnpayInquiry from "../../components/memberCompare/UnpayInquiry"
-import UnpayDeal from "../../components/memberCompare/UnpayDeal"
-import PayMember from "../../components/memberCompare/PayMember"
-import MillionDeal from "../../components/memberCompare/MillionDeal"
-import AwardRank from "../../components/memberCompare/AwardRank"
-import {numSeparate,rankingWithTotalItem} from "@/utils/index"
+import UnpayInquiry from "../../components/memberCompare/UnpayInquiry";
+import UnpayDeal from "../../components/memberCompare/UnpayDeal";
+import PayMember from "../../components/memberCompare/PayMember";
+import MillionDeal from "../../components/memberCompare/MillionDeal";
+import AwardRank from "../../components/memberCompare/AwardRank";
+import {numSeparate,rankingWithTotalItem} from "@/utils/index";
+import { mapGetters } from 'vuex';
 export default {
   name: "enMemberAnalysis",
   data() {
@@ -168,6 +169,11 @@ export default {
       isdep1:false
     };
   },
+  computed: {
+    ...mapGetters([
+      'sidebar',
+    ]),
+  },
   components:{
     UnpayInquiry,
     UnpayDeal,
@@ -178,6 +184,12 @@ export default {
   created() {
     var $this = this;
     $this.getUserMenuButtonPermit();
+  },
+  mounted(){
+    const $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }
   },
   methods: {
     //获取部门信息

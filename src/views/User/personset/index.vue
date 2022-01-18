@@ -190,8 +190,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'userPersonset',
   data() {
-    return {
-        
+    return {        
         actionUrl:process.env.VUE_APP_BASE_API + '/hxindex/Api/uping',//上传地址
         menuButtonPermit:[],
         userData:{},
@@ -235,7 +234,14 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
+      'sidebar',
     ]),
+  },
+  mounted(){
+      const $this = this;
+      if(!$this.sidebar.opened){
+        $this.$store.dispatch('app/toggleSideBar');
+      };
   },
   created(){
     var $this = this;

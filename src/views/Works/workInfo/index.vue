@@ -180,11 +180,15 @@ export default {
   },
   computed: {
     ...mapGetters([
+      'sidebar',
       'menuData'
     ]),
   },
   mounted(){
       const $this = this;
+      if(!$this.sidebar.opened){
+        $this.$store.dispatch('app/toggleSideBar');
+      };
       this.$nextTick(function () {
         $this.setHeight();
       });

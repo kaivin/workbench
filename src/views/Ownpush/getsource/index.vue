@@ -251,6 +251,12 @@ export default {
       'menuData'
     ]),
   },
+  mounted(){
+      const $this = this;
+      if(!$this.sidebar.opened){
+        $this.$store.dispatch('app/toggleSideBar');
+      }
+  },
   created() {
     var $this = this;
     $this.selectedData.dateDefault = $this.getNearDay();

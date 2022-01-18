@@ -179,6 +179,7 @@
 <script>
 import { Mix }from '@antv/g2plot';
 import {numSeparate}from "@/utils/index";
+import { mapGetters } from 'vuex';
 export default {
   name: "cnSinglePerson",
   data() {
@@ -226,6 +227,9 @@ export default {
     $this.initData();
   },
   computed:{
+    ...mapGetters([
+      'sidebar',
+    ]),
     nowYear(){
       return new Date().getFullYear();
     },
@@ -235,6 +239,9 @@ export default {
   },
   mounted(){
     const $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    };
     $this.$refs.boxPane.addEventListener('scroll',this.handleScroll,true);
   },
   beforeDestroy(){

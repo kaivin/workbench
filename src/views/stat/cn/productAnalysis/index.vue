@@ -145,6 +145,7 @@ import UnpayInquiry from "../../components/productAnalysis/UnpayInquiry";
 import UnpayDeal from "../../components/productAnalysis/UnpayDeal";
 import MillionDeal from "../../components/productAnalysis/MillionDeal";
 import {numSeparate,rankingWithTotalItem} from "@/utils/index";
+import { mapGetters } from 'vuex';
 export default {
   name: "cnProductAnalysis",
   data() {
@@ -222,6 +223,11 @@ export default {
       nowcate: ""
     };
   },
+  computed: {
+    ...mapGetters([
+      'sidebar',
+    ]),
+  },
   components:{
     focusPro,
     UnpayInquiry,
@@ -235,6 +241,9 @@ export default {
   },
   mounted(){
     const $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }
   },
   methods: {
     // 获取当前登陆用户在该页面的操作权限

@@ -296,6 +296,12 @@ export default {
       'menuData'
     ]),
   },
+  mounted(){
+      const $this = this;
+      if(!$this.sidebar.opened){
+        $this.$store.dispatch('app/toggleSideBar');
+      }
+  },
   created() {
     var $this = this;
     $this.selectedData.dateDefault = $this.getNearDay();
@@ -1488,6 +1494,7 @@ export default {
               item.newscore.forEach(function(itemg,indexg){
                 tol.score=tol.score+itemg.score;
               });
+              tol.score=tol.score.toFixed(2);
               item.newscore.push(tol);       
               itemtableArr.mainArr.push(item.newscore);       
             }

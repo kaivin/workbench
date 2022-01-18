@@ -329,6 +329,7 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
+      'sidebar',
       'menuData'
     ]),
   },
@@ -343,6 +344,12 @@ export default {
           }, 400)
         }
       },
+  },
+  mounted(){
+      const $this = this;
+      if(!$this.sidebar.opened){
+        $this.$store.dispatch('app/toggleSideBar');
+      };
   },
   created(){
     var $this = this;

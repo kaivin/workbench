@@ -179,6 +179,7 @@
 <script>
 import { Mix } from '@antv/g2plot';
 import {numSeparate} from "@/utils/index";
+import { mapGetters } from 'vuex';
 export default {
   name: "cnSinglePerson",
   data() {
@@ -219,6 +220,11 @@ export default {
         type: 2,//默认展示今年的数据
     };
   },
+  computed: {
+    ...mapGetters([
+      'sidebar',
+    ]),
+  },
   created() {
     var $this = this;
     $this.searchData.dept_id = parseInt($this.$route.query.deptId);
@@ -235,6 +241,9 @@ export default {
   },
   mounted(){
     const $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }
     $this.$refs.boxPane.addEventListener('scroll',this.handleScroll,true);
   },
   beforeDestroy(){

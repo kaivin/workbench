@@ -191,7 +191,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userInfo"]),
+    ...mapGetters([
+      'userInfo',
+      'sidebar',
+    ]),
   },
   created() {
     var $this = this;
@@ -200,6 +203,9 @@ export default {
   },
   mounted(){
     const $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }
     $this.$refs.boxPane.addEventListener('scroll',this.handleScroll,true);
   },
   beforeDestroy(){

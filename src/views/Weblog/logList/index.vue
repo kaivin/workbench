@@ -88,6 +88,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 export default {
   name: 'WeblogLists',
   data() {
@@ -117,8 +118,16 @@ export default {
         spidertypeList:[],
     }
   },
+  computed: {
+    ...mapGetters([
+      'sidebar',
+    ]),
+  },
   mounted(){
     var $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    };
     $this.getspidertypeList();
   },
   created(){

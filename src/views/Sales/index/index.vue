@@ -349,7 +349,7 @@
                                 <el-table-column
                                 prop="custormneedinfo"
                                 label="需求"
-                                min-width="210"
+                                min-width="170"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">                       
@@ -365,7 +365,7 @@
                                 <el-table-column
                                 prop="SalesEnnature"
                                 label="处理/客户性质/回复/个人备注"
-                                min-width="120"
+                                min-width="160"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
@@ -380,7 +380,7 @@
                                 <el-table-column
                                 prop="addtime"
                                 label="添加/修改时间"
-                                min-width="130"
+                                min-width="140"
                                 >
                                 <template slot-scope="scope">
                                     <div class="table-text">
@@ -572,6 +572,9 @@ export default {
   },
   mounted(){
     const $this = this;
+    if(this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }    
     // 监听竖向滚动条滚动事件
     window.addEventListener('scroll',this.handleScroll,true);
     $this.$nextTick(function () {

@@ -186,6 +186,9 @@ export default {
   },
   mounted(){
     const $this = this;
+    if(this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }
     $this.$nextTick(function () {   
         $this.setTableHeight();
         // 监听竖向滚动条滚动事件

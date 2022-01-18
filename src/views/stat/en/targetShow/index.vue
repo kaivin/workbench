@@ -47,7 +47,8 @@ import DayScore from "../../components/targetShow/DayScore";
 import enDealCount from "../../components/targetShow/enDealCount";
 import DayTarget from "../../components/targetShow/DayTarget";
 import DayFinish from "../../components/targetShow/DayFinish";
-import MonthDeal from "../../components/targetShow/MonthDeal"
+import MonthDeal from "../../components/targetShow/MonthDeal";
+import { mapGetters } from 'vuex';
 export default {
   name: "enTargetShow",
   data() {
@@ -76,6 +77,11 @@ export default {
       en:'en'
     };
   },
+  computed:{
+    ...mapGetters([
+      'sidebar',
+    ]),
+  },
   components:{
     DayScore,
     enDealCount,
@@ -86,6 +92,12 @@ export default {
   created() {
     var $this = this;
     $this.getUserMenuButtonPermit();
+  },
+  mounted(){
+    const $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    };
   },
   methods: {
     // 获取当前登陆用户在该页面的操作权限

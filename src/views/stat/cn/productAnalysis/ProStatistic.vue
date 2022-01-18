@@ -53,6 +53,7 @@
 import {sortByAsc,rankingWithTotalItem} from "@/utils/index";
 import PieChart from "../../components/productAnalysis/PieChart";
 import columnChart from "../../components/productAnalysis/columnChart";
+import { mapGetters } from 'vuex';
 export default {
   name: "personproductinfo",
   data() {
@@ -69,6 +70,11 @@ export default {
         chartList:{},
     };
   },
+  computed: {
+    ...mapGetters([
+      'sidebar',
+    ]),
+  },
   components:{
     PieChart,
     columnChart,
@@ -79,6 +85,9 @@ export default {
   },
   mounted(){
     const $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }
   },
   methods: {
     // 获取路由参数

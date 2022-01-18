@@ -260,6 +260,7 @@ import tapmapChart from "../../components/productAnalysis/tapmapChart";
 import Areachart from "../../components/productAnalysis/Areachart";
 import InquiryTable from "../../components/productAnalysis/InquiryTable";
 import ScoreTable from "../../components/productAnalysis/ScoreTable";
+import { mapGetters } from 'vuex';
 export default {
   name: "enProAccount",
   data() {
@@ -365,6 +366,11 @@ export default {
       }
     };
   },
+  computed:{
+    ...mapGetters([
+      'sidebar',
+    ]),
+  },
   components:{
     echartDays,
     scoreDays,
@@ -395,6 +401,9 @@ export default {
   },
   mounted(){
     const $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    };
     $this.$refs.boxPane.addEventListener('scroll',this.handleScroll,true);
     if($this.$refs.boxPane){  
       $this.minWidth = $this.$refs.boxPane.offsetWidth; 

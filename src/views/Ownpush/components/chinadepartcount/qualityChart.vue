@@ -85,16 +85,16 @@
                       width="100">
                     </el-table-column>
                     <el-table-column
+                      prop="money"
+                      label="消费">
+                    </el-table-column>
+                    <el-table-column
                       prop="xunnumber"
                       label="询盘个数">
                     </el-table-column>
                     <el-table-column
                       prop="score"
                       label="成交积分">
-                    </el-table-column>
-                    <el-table-column
-                      prop="money"
-                      label="消费">
                     </el-table-column>
                   </el-table>
                </div>
