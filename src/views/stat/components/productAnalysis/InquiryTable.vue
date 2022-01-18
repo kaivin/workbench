@@ -169,7 +169,6 @@ export default {
             }
             if(row[property] === value){
                 this.nowLength += 1;
-                
             }
             if(this.nowLength>10){
                 this.isshow=true;
@@ -178,7 +177,6 @@ export default {
                 this.isshow=false;
                 this.isMoreShow = false;
             }
-            
             return row[property] === value;
         },
         filterChanged(filters){
