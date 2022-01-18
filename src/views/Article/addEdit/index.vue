@@ -351,7 +351,7 @@ export default {
                 'removeformat', //清除格式
                 'pasteplain', //纯文本粘贴模式
                 '|',
-                'preview', //预览
+                // 'preview', //预览
                 'cleardoc', //清空文档
                 'selectall', //全选
                 'searchreplace', //查询替换

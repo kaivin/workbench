@@ -97,9 +97,10 @@ export default {
     },
     mounted(){
         if(this.intableData.length>10){
+            this.isshow=true;
             this.isMoreShow = true;
-            // this.nowheight = '546px';
         }else{
+            this.isshow=false;
             this.isMoreShow = false;
         }
         var newdepart = [];
@@ -119,11 +120,24 @@ export default {
     watch:{
         chooseData:{
             handler(val,oldval){
+                var $this = this;
+                $this.nowLength = 0;
                 if(val.tag == "enquirie"){
-                    this.filterdep = [val.chooseDepart];
-                    this.time = new Date().valueOf();
-                    this.nowLength = 0;
-                    this.ison = 1;
+                    $this.filterdep = [val.chooseDepart];
+                    $this.intableData.forEach(function(item,index){
+                        if(item.depart == val.chooseDepart){
+                            $this.nowLength +=1;
+                        }
+                    });
+                    if($this.nowLength>10){
+                        $this.isshow=true;
+                        $this.isMoreShow = true;
+                    }else{
+                        $this.isshow=false;
+                        $this.isMoreShow = false;
+                    }
+                    $this.nowLength = 0;
+                    $this.time = new Date().valueOf();
                 }
             },
             deep:true,
@@ -133,19 +147,10 @@ export default {
     methods:{
         showAll(){
             var $this = this;
-            if(!$this.isshow){
-                // $this.nowheight = "546px";
-            }else{
-                // var nowheight = 46+50*$this.intableData.length;
-                // $this.nowheight = ''
-            }
             $this.isshow = !$this.isshow;
         },
         filterDepart(value, row, column){
             const property = column['property'];
-            if(this.ison == 1){
-                this.nowLength = 0;
-            }
             if(row[property] === value){
                 this.nowLength += 1;
             }
@@ -161,12 +166,13 @@ export default {
         },
         filterChanged(filters){
             if(this.nowLength>10){
+                this.isshow=true;
                 this.isMoreShow = true;
             }else{
+                this.isshow=false;
                 this.isMoreShow = false;
             }
             this.nowLength = 0;
-            this.ison = 0;
         }
     }
 }
