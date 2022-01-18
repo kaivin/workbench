@@ -332,6 +332,9 @@ export default {
   },
   mounted(){
     const $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }  
     if($this.$refs.boxPane){  
       $this.minWidth = $this.$refs.boxPane.offsetWidth;
       $this.boxWidth = $this.$refs.boxPane.offsetWidth - 50;
@@ -1494,9 +1497,10 @@ export default {
               item.newscore.forEach(function(itemg,indexg){
                 tol.score=tol.score+itemg.score;
               });
+              var sortNewscore=item.newscore.sort(function(a,b){return b['yeartime']-a['yeartime']});
               tol.score=tol.score.toFixed(2);
-              item.newscore.push(tol);       
-              itemtableArr.mainArr.push(item.newscore);       
+              sortNewscore.push(tol);
+              itemtableArr.mainArr.push(sortNewscore);       
             }
           });
         });
@@ -2703,7 +2707,7 @@ export default {
       });
       $this.contrastGroupList = contrastGroupList;
       $this.selectedData.comparedept_id = [];
-      //$this.clearData();
+      $this.clearData();
     },
     // 添加对比部门点击事件
     toggleContrast(){

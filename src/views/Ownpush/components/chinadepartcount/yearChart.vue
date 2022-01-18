@@ -33,7 +33,7 @@
                     <div class="qualityTableFrBom flex-content" v-for='(item,index) in currentData.tableData' :key='index'>
                           <p class="quaTit">{{item.name}}</p>
                           <p class="quaYear flex-box">
-                            <span v-for='(itemk,indexk) in currentData.yarnClinch' :key='indexk'>{{itemk}}</span>
+                            <span v-for='(itemk,indexk) in currentYear' :key='indexk'>{{itemk}}</span>
                             <span>合计</span>
                           </p>
                           <p class="quaMain flex-box" v-for='(items,indexs) in item.mainArr' :key='indexs'>
@@ -54,7 +54,7 @@
                     <div class="qualityTableFrBom flex-content" v-for='(item,index) in currentData.tableData' v-if="index<2" :key='index'>
                           <p class="quaTit">{{item.name}}</p>
                           <p class="quaYear flex-box">
-                            <span v-for='(itemk,indexk) in currentData.yarnClinch' :key='indexk'>{{itemk}}</span>
+                            <span v-for='(itemk,indexk) in currentYear' :key='indexk'>{{itemk}}</span>
                             <span>合计</span>
                           </p>
                           <p class="quaMain flex-box" v-for='(items,indexs) in item.mainArr' :key='indexs'>
@@ -73,7 +73,7 @@
                     <div class="qualityTableFrBom flex-content" v-for='(item,index) in currentData.tableData' v-if="index>1" :key='index'>
                           <p class="quaTit">{{item.name}}</p>
                           <p class="quaYear flex-box">
-                            <span v-for='(itemk,indexk) in currentData.yarnClinch' :key='indexk'>{{itemk}}</span>
+                            <span v-for='(itemk,indexk) in currentYear' :key='indexk'>{{itemk}}</span>
                             <span>合计</span>
                           </p>
                           <p class="quaMain flex-box" v-for='(items,indexs) in item.mainArr' :key='indexs'>
@@ -112,6 +112,10 @@ export default {
     },
   },
   computed:{
+    currentYear(){
+      var sortYear=this.itemData.yarnClinch.sort(function(a,b){return b-a});
+      return sortYear;
+    },
     currentData(){
       return this.itemData;
     },

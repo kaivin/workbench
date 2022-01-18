@@ -128,7 +128,7 @@ export default {
     },
   },
   computed:{
-    currentData(){
+    currentData(){      
       return this.itemData;
     },
   },

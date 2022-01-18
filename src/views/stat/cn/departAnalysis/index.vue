@@ -1057,6 +1057,7 @@ export default {
         mapChartData[0].push(productData);
       }
       $this.defaultChartData = defaultChartData;
+      console.log($this.defaultChartData,'$this.defaultChartData');
       $this.mapChart = mapChartData;
     },
     // 组装默认类型图表数据

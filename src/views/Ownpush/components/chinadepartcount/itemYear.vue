@@ -73,6 +73,9 @@ export default {
               itemObj.type='bar';
               itemObj.barWidth=25;
               itemObj.stack=item;
+              itemObj.emphasis={
+                focus: 'series'
+              };
               itemObj.data=[];
               $this.chartData.forEach(function(items,indexs){
                 if(item==items.time&&itemk==items.yeartime){
@@ -88,6 +91,9 @@ export default {
               itemObj.name=item;
               itemObj.type='bar';
               itemObj.barWidth=25;
+              itemObj.emphasis={
+                focus: 'series'
+              };
               itemObj.data=[];
               $this.yarnArr.forEach(function(items,indexs){
                 $this.chartData.forEach(function(itemk,indexk){
