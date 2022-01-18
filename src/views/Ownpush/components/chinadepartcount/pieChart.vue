@@ -58,6 +58,25 @@ export default {
         var chartDom = document.getElementById('pie-'+$this.idData);
         var myChart = echarts.init(chartDom);
         var tagNum=$this.chartData[0].value + $this.tagUnitend;
+        var colorList1=[];
+        $this.colorData.forEach(function(item,index){
+            var itemObj={};
+            itemObj.x=0;
+            itemObj.y=0;
+            itemObj.x2=0;
+            itemObj.y2=1;
+            itemObj.colorStops=[];
+            var colorOne={};
+            colorOne.offset=0;
+            colorOne.color=item;            
+            itemObj.colorStops.push(colorOne);
+            var colorTwo={};
+            colorTwo.offset=1;
+            colorTwo.color=item;
+            itemObj.colorStops.push(colorTwo);
+            colorList1.push(itemObj);
+        });
+        console.log(colorList1,'colorList1');
         var option;
         option = {
             title: [   
@@ -81,6 +100,7 @@ export default {
             },
             series: [
                 {
+                    color:colorList1,
                     name:$this.tagName,
                     type: 'pie',
                     radius: ['40%', '70%'],

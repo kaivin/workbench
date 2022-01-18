@@ -660,7 +660,7 @@ export default {
                       }
                     });
                   }else{
-                    itemChart.name="已多选部门"
+                    itemChart.name="电商一部"
                   }
                 }else{
                   var selectContrastGroupList = [];
@@ -795,7 +795,7 @@ export default {
                   }
                 });
               }else{
-                item.name = "已多选部门"
+                item.name = "电商一部"
               }
               item.value = item.xunnumber;
               inquiryData.mainData.push(item);
@@ -900,7 +900,7 @@ export default {
                       }
                     });
                   }else{
-                    itemChart.name="已多选部门"
+                    itemChart.name="电商一部"
                   }
                 }else{
                   var selectContrastGroupList = [];
@@ -969,7 +969,7 @@ export default {
                   }
                 });
               }else{
-                item.name = "已多选部门"
+                item.name = "电商一部"
               }
               dealScoreData.mainData.push(item);
             });
@@ -1069,7 +1069,7 @@ export default {
                       }
                     });
                   }else{
-                    itemChart.name="已多选部门"
+                    itemChart.name="电商一部"
                   }
                 }else{
                   var selectContrastGroupList = [];
@@ -1122,7 +1122,7 @@ export default {
                   }
                 });
               }else{
-                item.name = "已多选部门"
+                item.name = "电商一部"
               }
               costCountData.mainData.push(item);
             });
@@ -1216,7 +1216,7 @@ export default {
                       }
                     });
                   }else{
-                    itemChart.name="已多选部门"
+                    itemChart.name="电商一部"
                   }
                 }else{
                   var selectContrastGroupList = [];
@@ -1270,7 +1270,7 @@ export default {
                   }
                 });
               }else{
-                item.name = "已多选部门"
+                item.name = "电商一部"
               }
               millionCountData.mainData.push(item);
             });
@@ -1570,7 +1570,7 @@ export default {
         mainQuality.randomStr2 = randomString(4);
         mainQuality.randomStr3 = randomString(4);
         mainQuality.title = '质量分析';
-        mainQuality.inquiryCountColor = ['#7c4751','#d34d68','#df7949','#ecc76e','#60a958','#5c9256','#5dcac4','#cfa7e5','#957a67','#b2945a','#ce19a6','#eac9c4','#f0e266','#66c2a9','#d9e897','#aedf84','#d3f5d4','#c19878','#909c9a','#779ade'];
+        mainQuality.inquiryCountColor = ['#0079e6','#f56463','#00c6ff','#f09614','#7ae5a6','#a1a1fe','#87cefc','#ff4d18','#28b391','#ce19a6','#eac9c4','#f0e266','#66c2a9','#d9e897','#aedf84','#d3f5d4','#c19878','#909c9a','#779ade'];
         qualityData.push(mainQuality);
       }
       return qualityData;
@@ -1622,7 +1622,7 @@ export default {
               }
             });
           }else{
-            title = "已多选部门";
+            title = "电商一部";
           }
           var mapWidth = parseInt(($this.minWidth-38)/2*0.7)-60;
           var mapHeight = parseInt(mapWidth*$this.mapRatio)+30;
@@ -1695,7 +1695,7 @@ export default {
                     }
                   });
                 }else{
-                  itemChart.title="已多选部门"
+                  itemChart.title="电商一部"
                 }
               }else{
                 var selectContrastGroupList = [];
@@ -1800,7 +1800,7 @@ export default {
               }
             });
           }else{
-            title = "已多选部门";
+            title = "电商一部";
           }
           var mapWidth = parseInt(($this.minWidth-38)/2*0.7)-60;
           var mapHeight = parseInt(mapWidth*$this.mapRatio)+30;
@@ -1865,7 +1865,7 @@ export default {
                     }
                   });
                 }else{
-                  itemChart.title="已多选部门"
+                  itemChart.title="电商一部"
                 }
               }else{
                 var selectContrastGroupList = [];
@@ -1964,7 +1964,7 @@ export default {
               }
             });
           }else{
-            title = "已多选部门";
+            title = "电商一部";
           }
           var mapWidth = parseInt(($this.minWidth-38)/2*0.7)-60;
           var mapHeight = parseInt(mapWidth*$this.mapRatio)+30;
@@ -2029,7 +2029,7 @@ export default {
                     }
                   });
                 }else{
-                  itemChart.title="已多选部门"
+                  itemChart.title="电商一部"
                 }
               }else{
                 var selectContrastGroupList = [];
@@ -2146,7 +2146,7 @@ export default {
               }
             });
           }else{
-            title = "已多选部门";
+            title = "电商一部";
           }
           productData.itemData.forEach(function(item,index){
             if(index==0){
@@ -2176,7 +2176,7 @@ export default {
                     }
                   });
                 }else{
-                  productData.itemData[0].title="已多选部门"
+                  productData.itemData[0].title="电商一部"
                 }
               }else{
                 var selectContrastGroupList = [];

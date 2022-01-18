@@ -152,28 +152,28 @@ export default {
           dateDefault:[],          //默认时间
           dateContrast:[],         //对比时间
           source_id:[],               //渠道类型
-          type:[],              //分析项数据
-          is_compare:'',            //是否部门对比
+          type:[1],              //分析项数据
+          is_compare:1,            //是否部门对比
           comparesource_id:[],       //对比渠道选择
-          is_timecopmare:'',        //是否时间对比
+          is_timecopmare:1,        //是否时间对比
           isMonth:false,
           isDateCompare:false,
         },
         dateDimension:[
-          {label:"日",value:"day",isOn:false},
+          {label:"日",value:"day",isOn:true},
           {label:"月",value:"month",isOn:false},
         ],
         contrastList:[
-          {label:"询盘个数",id:1,value:"enquiriesNum",isOn:false,disabled:false},
-          {label:"成交积分",id:2,value:"clinchScore",isOn:false,disabled:false},
-          {label:'消费',id:3,value:"consumpTion",isOn:false,disabled:false},
-          {label:'质量分析',id:4,value:"qualityAnalysis",isOn:false,disabled:false},
+          {label:"询盘个数",id:1,value:"enquiriesNum",isOn:true,disabled:false},
+          {label:"成交积分",id:2,value:"clinchScore",isOn:false,disabled:true},
+          {label:'消费',id:3,value:"consumpTion",isOn:false,disabled:true},
+          {label:'质量分析',id:4,value:"qualityAnalysis",isOn:false,disabled:true},
         ],
         groupName:"",
-        dateSelected:false,
+        dateSelected:true,
         isFilter:false,
         isContrastShow:false,
-        selectedType:[],
+        selectedType:['enquiriesNum'],
         oldContrastSourceID:"",
         isDefaultPage:true,
         tipsInfo:"当前部门分析页面，展示为：本年度数据信息。",
@@ -431,60 +431,31 @@ export default {
       $this.$store.dispatch('ownpush/getOwnsourceAction', null).then(res=>{
         var channelList = [];
         var contrastSourceList = [];
+        var baseDepart;
         res.data.forEach(function(item,index){
           var itemData = {};
           itemData.id = item.id;
           itemData.name = item.name;
           itemData.disabled = false;
           itemData.isOn = false;
+          if(index==0){
+            itemData.isOn=true;
+            baseDepart=item.id;
+            $this.selectedData.source_id.push(item.id);
+            $this.groupName = item.name;
+          }
           channelList.push(itemData);
         });
         $this.channelList = JSON.parse(JSON.stringify(channelList));
         $this.contrastSourceList = JSON.parse(JSON.stringify(channelList));
-        $this.getDefaultData();
+        $this.contrastSourceList.forEach(function(item){
+          item.disabled = false;
+          if(item.id == baseDepart){
+            item.disabled = true;
+          }
+        });
+        $this.getSearchData();
       });
-    },
-    // 获取默认数据
-    getDefaultData(){
-      var $this = this;
-      var baseDepart;
-      $this.channelList.forEach(function(item,index){
-        if(index==0){
-          item.isOn=true;
-          baseDepart=item.id;
-          $this.selectedData.source_id.push(item.id);
-          $this.groupName = item.name;
-        }
-      });
-      $this.contrastList.forEach(function(item,index){
-        item.disabled=true;
-        if(index==0){
-          item.isOn=true;
-          item.disabled=false;
-          $this.selectedData.type.push(item.id);
-          $this.selectedType.push(item.value);
-        }
-      });
-      $this.dateDimension.forEach(function(item,index){
-        item.isOn=false;
-        if(index==0){
-          item.isOn=true;
-        }
-      });
-      $this.contrastSourceList.forEach(function(item){
-        item.disabled = false;
-        if(item.id == baseDepart){
-          item.disabled = true;
-        }
-      });
-      $this.contrastSourceList.forEach(function(item){
-        item.disabled = false;
-      });
-      $this.selectedData.is_compare=1;
-      $this.selectedData.is_timecopmare=1;
-      $this.selectedData.isMonth=false;
-      $this.dateSelected=true;
-      $this.getSearchData();
     },
     // 部门点击事件
     groupChangeHandler(id){
@@ -1476,43 +1447,56 @@ export default {
     // 重置数据
     resetData(){
       var $this = this;
+      var baseDepart;
       $this.tipsInfo="当前部门分析页面，展示为：本年度数据信息。";
       $this.tipsItem="";
       $this.channelList.forEach(function(item,index){
         item.isOn=false;
-      });
-      $this.contrastList.forEach(function(item,index){
-        item.isOn=false;
-        item.disabled=false;
-      });
-      $this.dateDimension.forEach(function(item,index){
-        item.isOn=false;
+        if(index==0){
+          item.isOn=true;
+          baseDepart=item.id;
+          $this.selectedData.source_id.push(item.id);
+          $this.groupName = item.name;
+        }
       });
       $this.contrastSourceList.forEach(function(item){
         item.disabled = false;
+        if(item.id == baseDepart){
+          item.disabled = true;
+        }
       });
-      $this.groupName = '';
-      $this.selectedData.type=[];
+      $this.contrastList.forEach(function(item,index){
+        item.isOn=false;
+        item.disabled=true;
+        if(item.value=='enquiriesNum'){
+          item.isOn=true;
+          item.disabled=false;
+        }
+      });
+      $this.dateDimension.forEach(function(item,index){
+        item.isOn=false;
+        if(index==0){
+          item.isOn=true;
+        }
+      });
+      $this.selectedData.type=[1];
       $this.selectedData.dateDefault = $this.getNearDay();
       $this.selectedData.dateContrast = [];
-      $this.selectedData.source_id = [];
-      $this.selectedData.type = [];
-      $this.selectedData.is_compare='';
+      $this.selectedData.type = [1];
+      $this.selectedData.is_compare=1;
       $this.selectedData.comparesource_id = [];
-      $this.selectedData.is_timecopmare='';
+      $this.selectedData.is_timecopmare=1;
       $this.selectedData.isMonth=false;
       $this.selectedData.isDateCompare=false;
-      $this.dateSelected=false;
-      $this.groupName = "";
-      $this.dateSelected = false;
+      $this.dateSelected=true;
       $this.isFilter = false,
       $this.isContrastShow = false,
-      $this.selectedType=[];
+      $this.selectedType=['enquiriesNum'];
       $this.oldContrastSourceID = "";
       $this.isDefaultPage = true;
       $this.judgeData = {};
       $this.defaultChartData = [];
-      $this.getDefaultData();
+      $this.getSearchData();
     },
     // 最近六个月时间周期
     getNearMonth(){
