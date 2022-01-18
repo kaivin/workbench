@@ -72,7 +72,8 @@ export default {
             isMoreShow:true,
             filterdep:[],
             time: new Date().valueOf(),
-            ison:0
+            filteredNum:0,
+            isJump:false,
         }
     },
     props:{
@@ -122,6 +123,9 @@ export default {
             handler(val,oldval){
                 var $this = this;
                 $this.nowLength = 0;
+                if($this.$refs.table){
+                    $this.$refs.table.clearFilter();
+                }
                 if(val.tag == "enquirie"){
                     $this.filterdep = [val.chooseDepart];
                     $this.intableData.forEach(function(item,index){
@@ -137,6 +141,8 @@ export default {
                         $this.isMoreShow = false;
                     }
                     $this.nowLength = 0;
+                    $this.isJump = true;
+                    $this.filteredNum = 0;
                     $this.time = new Date().valueOf();
                 }
             },
@@ -151,8 +157,19 @@ export default {
         },
         filterDepart(value, row, column){
             const property = column['property'];
+            if(this.filteredNum===0){
+                this.nowLength = 0;
+            }
+            this.filteredNum +=1;
+            if(this.isJump){
+                this.filterdep = [];
+                if(this.filteredNum === this.intableData.length){
+                    this.filteredNum = 0;
+                }
+            }
             if(row[property] === value){
                 this.nowLength += 1;
+                
             }
             if(this.nowLength>10){
                 this.isshow=true;
@@ -172,6 +189,7 @@ export default {
                 this.isshow=false;
                 this.isMoreShow = false;
             }
+            this.isJump = false;
             this.nowLength = 0;
         }
     }
