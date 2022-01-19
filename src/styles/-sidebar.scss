@@ -283,8 +283,8 @@ body[device="iMax"]{
             vertical-align: -4px;
           }
           span{
-            font-size:$fontsize17;
-            margin-left: 12px;
+            font-size:$fontsize16;
+            margin-left: 15px;
             vertical-align: 1px;
           }
           &.is-active{
@@ -306,7 +306,7 @@ body[device="iMax"]{
               .el-menu-item{
                 height: 36px;
                 line-height: 36px;
-                font-size:$fontsize15;
+                font-size:$fontsize14;
                 margin: 2px 0;
                 &.is-active{
                   &:before{
@@ -314,7 +314,7 @@ body[device="iMax"]{
                   }
                 }
                 span{
-                  font-size:$fontsize15;
+                  font-size:$fontsize14;
                   padding: 0 10px 0 24px;
                   height: 36px;
                   line-height: 36px;
@@ -326,7 +326,7 @@ body[device="iMax"]{
                   .el-submenu__title{
                     padding: 0 0 0 24px!important;
                     span{
-                      font-size: $fontsize15;
+                      font-size: $fontsize14;
                       &:before{
                         margin-left: 4px;
                         margin-right: 20px;

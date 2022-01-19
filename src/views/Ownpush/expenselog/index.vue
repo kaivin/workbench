@@ -71,7 +71,7 @@
                                     >
                                     </el-table-column>
                                     <el-table-column
-                                    prop="pushname"
+                                    prop="scourename"
                                     label="渠道"
                                     >
                                     </el-table-column>
