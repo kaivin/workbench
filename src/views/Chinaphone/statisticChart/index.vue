@@ -494,7 +494,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import * as echarts from 'echarts';
-import {MapCountInterval} from "@/utils/MapColor";
+import {MapInterval} from "@/utils/MapColor";
 import {sortByDesc} from "@/utils/index";
 export default {
   name: 'statisticChart',
@@ -2493,7 +2493,7 @@ export default {
             axisPointer: {
               type: "line", 
               lineStyle:{
-                color: "#dedede"
+                color: "#5b8ff9"
               }
             },
           },
@@ -2522,8 +2522,16 @@ export default {
             {
               name: "询盘个数",
               type: 'line',
-              smooth: true,
-              symbol: 'none',
+              symbol: 'emptyCircle',
+              symbolSize: '7',
+              label:{
+                show: true,
+                position: 'top',
+                distance: '5'
+              },
+              itemStyle:{
+                color: "#0970ff"
+              },
               lineStyle:{
                 color: "#5b8ff9",
                 lineWidth: 1
@@ -2735,7 +2743,7 @@ export default {
         var chartDom = document.getElementById('cluesChart10');
         var myChart = echarts.init(chartDom);
         var maxNum = mapCountData[0].value;
-        let mapInterval = MapCountInterval(maxNum);
+        let mapInterval = MapInterval(maxNum);
         var option;
          option = {
           // 提示框组件
@@ -2810,7 +2818,7 @@ export default {
             },
             itemStyle: {
               borderWidth: 0.5, // 描边线宽 为 0 时无描边
-              borderColor: '#bae7ff', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+              borderColor: '#b8b8ba', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
               borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
             },
             emphasis: {
@@ -2834,7 +2842,7 @@ export default {
               // 地图区域的多边形 图形样式
               itemStyle: {
                 borderWidth: 0.5, // 描边线宽 为 0 时无描边
-                borderColor: '#bae7ff', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+                borderColor: '#b8b8ba', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
                 borderType: 'solid' // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
               },
               // 高亮状态下的多边形和标签样式
@@ -2848,7 +2856,7 @@ export default {
                 },
                 itemStyle: {
                   borderWidth: 0.5, // 描边线宽 为 0 时无描边
-                  borderColor: '#0050b3', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+                  borderColor: '#b8b8ba', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
                   borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
                 }
               },
