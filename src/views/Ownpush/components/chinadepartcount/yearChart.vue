@@ -27,7 +27,7 @@
             <div class="qualityTable">
                 <div class="qualityTableFl">
                     <p class="quaTit">日期</p>
-                    <span v-for='(item,index) in currentData.yarnArr' :key='index'>{{item}}</span>
+                    <span v-for='(item,index) in currentYarnLeft' :key='index'>{{item}}</span>
                 </div>
                 <div class="qualityTableFr flex-box">
                     <div class="qualityTableFrBom flex-content" v-for='(item,index) in currentData.tableData' :key='index'>
@@ -48,7 +48,7 @@
             <div class="qualityTable">
                 <div class="qualityTableFl">
                     <p class="quaTit">日期</p>
-                    <span v-for='(item,index) in currentData.yarnArr' :key='index'>{{item}}</span>
+                    <span v-for='(item,index) in currentYarnLeft' :key='index'>{{item}}</span>
                 </div>
                 <div class="qualityTableFr flex-box">
                     <div class="qualityTableFrBom flex-content" v-for='(item,index) in currentData.tableData' v-if="index<2" :key='index'>
@@ -67,7 +67,7 @@
             <div class="qualityTable">
                 <div class="qualityTableFl">
                     <p class="quaTit">日期</p>
-                    <span v-for='(item,index) in currentData.yarnArr' :key='index'>{{item}}</span>
+                    <span v-for='(item,index) in currentYarnLeft' :key='index'>{{item}}</span>
                 </div>
                 <div class="qualityTableFr flex-box">
                     <div class="qualityTableFrBom flex-content" v-for='(item,index) in currentData.tableData' v-if="index>1" :key='index'>
@@ -115,6 +115,10 @@ export default {
     currentYear(){
       var sortYear=this.itemData.yarnClinch.sort(function(a,b){return b-a});
       return sortYear;
+    },
+    currentYarnLeft(){
+      var yarnArrLeft=this.itemData.yarnArr.sort(function(a,b){return b-a});
+      return yarnArrLeft;
     },
     currentData(){
       return this.itemData;

@@ -2,7 +2,7 @@
     <div class="chart-pie" style="height:280px;" id="columnChart"></div> 
 </template>
 <script>
-import {Column} from '@antv/g2plot';
+import * as echarts from 'echarts';
 export default {
   name: "columnChart",
   props: {
@@ -25,104 +25,70 @@ export default {
       deep: true
     },
   },
+  destroyed(){
+    window.removeEventListener('resize',this.echartsSize);
+    if(this.myChart){
+        this.myChart.dispose();
+    }
+  },
   mounted(){
+      var $this = this;
+      window.addEventListener('resize',$this.echartsSize);
   },
   methods: {
     // 占比图例
     drawColumnChart(){
       var $this = this;
-      if(!$this.columnPlot){
-          //别名设置
-          var aliasName='';
-          if($this.chartList.pick=='enquirie'){
-              aliasName='询盘个数';
-          }
-          if($this.chartList.pick=='score'){
-              aliasName='成交积分';
-          }
-          const columnPlot = new Column('columnChart', {
-            data:$this.chartList.chartList,
-            xField: 'name',
-            yField: 'number',
-            xAxis: {
-              tickCount:15,
-              grid:null,
-              line:{
-                style:{
-                    stroke: '#e9e9e9',
-                    strokeOpacity: 0.2,
-                }
-              },
-              tickLine:null,
-              label: {
-                autoHide: false,
-                autoRotate: true,
-                style: {
-                  fill: '#444444',
-                  opacity: 1,
-                  fontSize: 13,
-                  lineHeight:18,
-                },
-              },
-            },
-            yAxis: {
-                tickCount:3,
-                line:{
-                    style:{
-                        stroke: '#e9e9e9',
-                        strokeOpacity:1,
-                    }
-                },
-                grid:{
-                    line:{
-                        style:{
-                            stroke: '#f2f2f2',
-                            lineWidth: 1,
-                            strokeOpacity: 1,
-                        }
-                    }
-                },
-                label: {
-                    style:{
-                        fontSize:12,
-                        lineHeight:18,
-                        fill:'#444444',
-                    }
-                },
-            },
-            maxColumnWidth:14,
-            columnStyle:{
-              fill:'#044bff',
-              cursor: 'pointer',
-              fillOpacity:1,
-              opacity:1,
-            },
-            tooltip: { 
-                shared: true,
-                title:aliasName,
-                customItems: (originalItems) => {
-                    originalItems.forEach(function(item){
-                        item.name = item.data.name;
-                    });
-                    return originalItems;
-                },
-            }, 
-            state: {
-              interactions: [{ type: 'element-active' }],
-              // 设置 active 激活状态的样式
-              active: {
-                columnStyle:{
-                  fill:'#83aafc',
-                },
-              },
+      var chartDom = document.getElementById('columnChart');
+      var myChart = echarts.init(chartDom);
+      var xAxiData=[];
+      var serieData=[];
+      $this.chartList.chartList.forEach(function(item,index){
+        serieData.push(item.value);
+        xAxiData.push(item.name);
+      });
+      var option;
+      option = {
+          tooltip: {
+              trigger: 'item'
+          },
+          grid: {
+              left:20,
+              right:0,
+              bottom:0,
+              top:10,
+              containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            data:xAxiData,
+            axisLabel: {
+              interval: 0,
+              rotate: 30
             }
-            
-            
-          });
-        $this.columnPlot = columnPlot;
-        columnPlot.render();
-      }
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              data:serieData,
+              barWidth:20,
+              type: 'bar',
+              itemStyle: {
+                color: '#044bff'
+              }
+            }
+          ]
+      };
+      option && myChart.setOption(option);  
+      $this.myChart = myChart;
     },
+    echartsSize(){
+        if(this.myChart){
+            this.myChart.resize();
+        }
+    }
   }
 }
 </script>

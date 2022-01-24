@@ -34,10 +34,10 @@
         </div>
         <template v-if="parentData.singleGroupTeamCompare||parentData.pluralGroupStatic||parentData.pluralGroupTeamCompare||isDefault">
           <div class="item-tab pie-panel" v-show="currentType=='pie'">
-            <div class="pie-chart" :id="'pie-'+currentData.randomStr"></div>
+            <div class="pie-chart" style="width:370px;height:287px; margin:0 auto;" :id="'pie-'+currentData.randomStr"></div>
           </div>
           <div class="item-tab rank-panel" v-show="currentType=='rank'">
-            <div class="column-chart" :id="'column-'+currentData.randomStr"></div>
+            <div class="column-chart" style="width:370px;height:297px; margin:0 auto;" :id="'column-'+currentData.randomStr"></div>
           </div>
         </template>
         <div class="item-tab date-panel" v-if="currentType=='date'&&(parentData.singleGroupDateCompare||parentData.pluralGroupDateCompare)">
@@ -80,20 +80,25 @@
         </div>
       </div>
       <div class="flex-content chart-content">
-        <div v-if="currentData.chartType=='area'" class="chart-panel" :id="'area-'+currentData.randomStr"></div>
-        <div v-else-if="currentData.chartType=='line'" class="chart-panel" :id="'line-'+currentData.randomStr"></div>
-        <div v-else class="chart-panel" :id="'mulitColumn-'+currentData.randomStr"></div>
+        <div v-if="currentData.chartType=='area'" style="height:320px;" class="chart-panel" :id="'area-'+currentData.randomStr"></div>
+        <div v-else-if="currentData.chartType=='line'" style="height:320px;" class="chart-panel" :id="'line-'+currentData.randomStr"></div>
+        <div v-else style="height:320px;" class="chart-panel" :id="'mulitColumn-'+currentData.randomStr"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Pie,Column,Area,Line } from '@antv/g2plot';
+import * as echarts from 'echarts';
+require('echarts/theme/macarons') // echarts theme
 export default {
   name: "defaultChart",
   data:function() {
     return {
+      myChart:null,
+      pieChart:null,
+      columnChart:null,
+      lineChart:null,
       currentType:"default",
       tabList:null,
       parentData:{},
@@ -122,6 +127,41 @@ export default {
     currentData(){
       return this.itemData;
     },
+    chartName(){
+      var chartName=[];
+      this.itemData.mainData.forEach(function(item,index){
+        chartName.push(item[0].name);
+      });
+      return chartName;
+    },
+    ChartColor(){
+      var ChartColor=[];
+      this.itemData.mainData.forEach(function(item,index){
+        ChartColor.push(item[0].color);
+      });
+      return ChartColor;
+    },
+    chartAxis(){
+      var chartAxis=[];
+      this.itemData.mainData.forEach(function(item,index){
+        if(index==0){
+          item.forEach(function(items,indexs){
+            if(items.key.indexOf("&")!=-1){
+              chartAxis.push(items.key.split("&")[0]+'\n'+items.key.split("&")[1]);
+            }else{
+              if(items.key.indexOf(" ")!=-1){
+                var week = "周"+items.key.split(" ")[1].substr(2);
+                var date = items.key.split(" ")[0];
+                chartAxis.push(date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week);
+              }else{
+                chartAxis.push(items.key.split("-")[1]+"月");
+              }
+            }            
+          });
+        }
+      });
+      return chartAxis;
+    },
   },
   watch: {
     judgeData:{
@@ -133,7 +173,23 @@ export default {
       immediate:true
     },
   },
+  destroyed(){
+    window.removeEventListener('resize',this.echartsSize);
+    if(this.myChart){
+        this.myChart.dispose();
+    }
+    if(this.pieChart){
+        this.pieChart.dispose();
+    }
+    if(this.columnChart){
+        this.columnChart.dispose();
+    }
+    if(this.lineChart){
+        this.lineChart.dispose();
+    }
+  },
   mounted(){
+    window.addEventListener('resize',this.echartsSize);
     if(this.currentData.chartType=='area'){
       this.drawAreaChart();
     }else if(this.currentData.chartType=='line'){
@@ -147,6 +203,12 @@ export default {
     tabChange(obj){
       var $this = this;
       var tabList = $this.tabList;
+      if($this.pieChart){
+          $this.pieChart.dispose();
+      }
+      if($this.columnChart){
+          $this.columnChart.dispose();
+      }
       tabList.forEach(function(item){
         if(item.value == obj.value){
           item.isOn = !item.isOn;
@@ -186,396 +248,519 @@ export default {
     // 排行图例
     drawColumnChart(){
       var $this = this;
-      var aliasName = "";
-      if($this.currentData.name.indexOf('询盘')!=-1){
-        aliasName = "询盘个数";
-      }
-      if($this.currentData.name.indexOf('成交')!=-1&&$this.currentData.name.indexOf('个数')!=-1){
-        aliasName = "成交个数";
-      }
-      if($this.currentData.name.indexOf('积分')!=-1){
-        aliasName = "积分";
-      }
-      if(!$this.columnPlot){
-        const columnPlot = new Column('column-'+$this.currentData.randomStr, {
-          appendPadding: [20,30, 10],
-          data:$this.currentData.totalChart,
-          xField: 'name',
-          yField: 'value',
-          width: 390,
-          height: 290,
-          minColumnWidth:30,
-          maxColumnWidth:30,
-          columnStyle:{
-            fill: 'l(270) 0:#c6d6f4 1:#81a7f1',
+      var chartDom = document.getElementById('column-'+$this.currentData.randomStr);
+      var columnChart = echarts.init(chartDom);
+      var DataArr=[];
+      var chartNameArr=[];
+      $this.currentData.totalChart.forEach(function(item,index){
+        if(item.name.indexOf('-')!=-1){
+          var itemStr=item.name.split("-")[0]+"\n"+item.name.split("-")[1];
+        }else{
+          var itemStr=item.name;
+        }
+        chartNameArr.push(itemStr);
+        DataArr.push(item.value);
+      });
+      var series=[];
+      series=[{
+          type: 'bar',
+          data:DataArr,
+          barWidth: '28px',
+          itemStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: '#81a7f1' },
+              { offset: 1, color: '#c6d6f4' }
+            ])
           },
           label: {
-            // 可手动配置 label 数据标签位置
-            position: 'top', // 'top', 'bottom', 'middle',
-            offsetY:8,
-            // 配置样式
-            style: {
-              fill: '#333333',
-              opacity: 1,
-              fontWeight:'bold',
-            },
-          },
-          xAxis: {
-            label: {
-              formatter: (v) => {
-                var item = "";
-                if(v.indexOf("-")!=-1){
-                  item = v.split("-")[0]+"\n"+v.split("-")[1];
-                }else{
-                  item = v
-                }
-                return item
-              },
-              style:{
-                lineHeight:18
+              normal: {
+                  show: false,
               }
-            },
-            grid:null,
-            tickLine:null,
-            subTickLine:null,
+          },
+      }];
+      var option;
+      option = {
+          tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                  type: 'shadow'
+              },
+          },
+          grid: {
+              top:'30',
+              right:'18',
+              left:'50',
+              bottom:'50'
+          },
+          xAxis:{
+              type: 'category',
+              data:chartNameArr,
+              axisTick: {
+                  show: false
+              },
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 2],
+                      dashOffset: 3,
+                      color: '#000',
+                      opacity:0.1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              axisLabel: {
+                  color: "#999",
+                  fontSize: "12",
+                  lineHeight: 18,
+              },
+              nameTextStyle:{
+                  lineHeight:18,
+              }
           },
           yAxis:{
-            tickCount:5,
-            grid: {
-              line: {
-                style: {
-                  stroke: 'black',
-                  lineWidth: .5,
-                  lineDash: [6, 3],
-                  strokeOpacity:0.2,
-                  shadowBlur:0
-                }
+              type: 'value',
+              axisTick: {
+                  show: false
+              },
+              axisLabel: {
+                  color: "#999",
+                  fontSize: "12",
+                  lineHeight: 18,
+              },
+              axisLine:{
+                  show: false,
+              },
+              splitLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 2],
+                      dashOffset: 3,
+                      color: '#000',
+                      opacity:0.1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              splitNumber:3,
+              nameTextStyle:{
+                  lineHeight:18,
               }
-            },
           },
-          meta: {
-            name: {
-              alias: '小组',
-            },
-            value: {
-              alias: aliasName,
-            },
-          },
-        });
-        $this.columnPlot = columnPlot;
-        columnPlot.render();
+          series:series,
       }
+      option && columnChart.setOption(option);
+      $this.columnChart = columnChart;
     },
     // 占比图例
     drawPieChart(){
       var $this = this;
-      var colorArr = [];
-      $this.currentData.totalChart.forEach(function(item){
-        colorArr.push(item.color);
+      var chartDom = document.getElementById('pie-'+$this.currentData.randomStr);
+      var pieChart = echarts.init(chartDom);
+      var serieData=[];
+      var echartColor=[];
+      $this.currentData.totalChart.forEach(function(item,index){
+        var itemObj={};
+        itemObj.value=item.value;
+        itemObj.name=item.name;
+        serieData.push(itemObj);
+
+        var colorObj={};
+        colorObj.x=0;
+        colorObj.y=0;
+        colorObj.x2=0;
+        colorObj.y2=1;
+        colorObj.colorStops=[];
+        var colorOne={};
+        colorOne.offset=0;
+        colorOne.color=item.color;            
+        colorObj.colorStops.push(colorOne);
+        var colorTwo={};
+        colorTwo.offset=1;
+        colorTwo.color=item.color;
+        colorObj.colorStops.push(colorTwo);
+        echartColor.push(colorObj);
       });
-      var aliasName = "";
-      if($this.currentData.name.indexOf('询盘')!=-1||($this.currentData.name.indexOf('成交')!=-1&&$this.currentData.name.indexOf('个数')!=-1)){
-        aliasName = "个数";
-      }
-      if($this.currentData.name.indexOf('积分')!=-1){
-        aliasName = "积分";
-      }
-      if(!$this.piePlot){
-        const piePlot = new Pie('pie-'+$this.currentData.randomStr, {
-          appendPadding: 10,
-          data:$this.currentData.totalChart,
-          angleField: 'value',
-          colorField: 'name',
-          radius: 0.75,
-          width: 390,
-          height: 290,
-          color:colorArr,
-          animation: {
-            // 配置图表第一次加载时的入场动画
-            appear: {
-              animation: 'zoom-in', // 动画效果
-              duration: 500,  // 动画执行时间
+      var option;
+      option = {
+        tooltip: {
+          trigger: 'item'
+        },
+        grid: {
+            top:0,
+            right:0,
+            bottom:20,
+            left:0,
+        },
+        legend: {
+          bottom:0
+        },
+        series: [
+          {
+            type: 'pie',
+            radius: '55%',
+            color:echartColor,
+            data:serieData,
+            label: {
+                normal: {
+                    formatter: params => {
+                        return '{percent|占比：' + params.percent + '%} '
+                    },
+                    distanceToLabelLine: 0,
+                    padding: [-2, 0, 0, 0],
+                    rich: {
+                        percent: {
+                            color: "#333",
+                            align: 'center',
+                            fontSize: 12,
+                            padding: [5, 10]
+                        }
+                    }
+                }
             },
-          },
-          label: {
-            type:'spider',
-            labelHeight: 28,
-            style:{
-              fill:'#333',
+            itemStyle: {
+                normal: {
+                    borderColor: '#ffffff',
+                    borderWidth:1,
+                }
             },
-            content:(data)=>{
-              return '占比：'+ Math.floor(data.percent * 10000) / 100+"%";//aliasName+'：'+data.value+'\n
-            } ,
-          },
-          legend:{
-            layout:'horizontal',
-            position:'bottom',
-            flipPage:false,
-          },// 自定义状态样式
-          state: {
-            active: {
-              style: {
-                lineWidth: 0,
-                fillOpacity: 0.65,
-              },
-            },
-          },
-          interactions: [{ type: 'element-selected' }, { type: 'element-active' }],
-        });
-        $this.piePlot = piePlot;
-        piePlot.render();
-      }
+          }
+        ]
+      };
+      option && pieChart.setOption(option);
+      $this.pieChart = pieChart;
     },
     // 面积趋势图例
     drawAreaChart(){
       var $this = this;
-      var isDate = false;
-      if($this.currentData.chartTitle.indexOf('日期')!=-1){
-        isDate = true;
-      }
-      var label = null;
-      var point = null;
-      if($this.currentData.colorArr.length<=3){
-        label = {
-          layout: [{ type: "hide-overlap" }], // 隐藏重叠label
-          style: {
-            textAlign: "center",
-            color: "#9e9e9e",
-            fontsize: 12,
-          },
-        };
-        point = {
-          size: 3,
-          shape: "circle",
-          style: (res) => {
-            var itemColor = "";
-            $this.currentData.mainData.forEach(function(item){
-              if(item.name == res.name){
-                itemColor = item.color;
+      var chartDom = document.getElementById('area-'+$this.currentData.randomStr);
+      var myChart = echarts.init(chartDom, 'macarons');
+      var series=[];
+      if($this.currentData.mainData&&$this.currentData.mainData.length>0){
+        $this.currentData.mainData.forEach(function(item,index){
+            var itemObj={};
+            itemObj.name=$this.chartName[index];
+            itemObj.smooth=false;
+            itemObj.type='line';
+            if($this.currentData.mainData.length<=3){
+              itemObj.label={
+                show: true,
+                position: 'top'
               }
-            });
-            var obj = {
-              opacity: 0.5,
-              stroke: itemColor,
-              fill: "#fff",
+            }else{
+              itemObj.showSymbol=false;
+            }
+            itemObj.lineStyle={
+              normal: {
+                  width: 2,
+                  color:$this.ChartColor[index], // 线条颜色
+              },
             };
-            return obj;
-          },
-        }
-      }
-      if(!$this.areaPlot&&$this.currentData){
-        const areaPlot = new Area('area-'+$this.currentData.randomStr, {
-          appendPadding:[30,30,20],
-          data:$this.currentData.mainData,
-          xField: 'key',
-          yField: 'value',
-          seriesField:'name',
-          isStack:false,
-          color:$this.currentData.colorArr.length==1?$this.currentData.colorArr[0]:$this.currentData.colorArr,
-          yAxis:{
-            tickCount:3,
-            grid:{
-              line:{
-                style:{
-                  stroke: 'black',
-                  lineWidth:1,
-                  lineDash:[6,3],
-                  strokeOpacity:0.1,
-                  shadowBlur:0
-                }
+            itemObj.itemStyle={
+              normal: {
+                  color:$this.ChartColor[index], // 折点颜色
+              },
+            };
+            itemObj.areaStyle={
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                      offset: 0,
+                      color:$this.ChartColor[index],
+                      opacity:1
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(255, 255, 255, 0)",
+                    }
+                  ]),
+                  opacity:0.3
+            };
+            itemObj.emphasis={
+              lineStyle: {
+                width: 2,	// hover时的折线宽度
               }
-            },
+            };
+            itemObj.symbolSize=7;
+            itemObj.data=[];
+            item.forEach(function(items,indexs){
+              itemObj.data.push(items.value);
+            });
+            itemObj.animationDuration=2800;
+            itemObj.animationEasing='quadraticOut';
+            series.push(itemObj);
+        });
+      }
+      var option;
+      option = {
+          tooltip: {
+              backgroundColor:'rgba(255,255,255,0.95)',
+              trigger: "axis",
+              textStyle:{
+                fontSize:'12',
+              }
+          },
+          grid: {
+              top:60,
+              right:30,
+              bottom:40,
+              left:52,
           },
           xAxis: {
-            tickCount:isDate?8:15,
-            label: {
-              // 数值格式化为千分位
-              formatter: (v) => {
-                var item = "";
-                if(v.indexOf("&")!=-1){
-                  item = v.split("&")[0]+'\n'+v.split("&")[1];
-                }else{
-                  if(v.indexOf(" ")!=-1){
-                    var week = "周"+v.split(" ")[1].substr(2);
-                    var date = v.split(" ")[0];
-                    item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
-                  }else{
-                    item = v.split("-")[1]+"月";
-                  }
-                }
-                return item
+              type: 'category',
+              boundaryGap: false,
+              data:$this.chartAxis,
+              axisLine: {
+                  show: false,
               },
-              style:{
-                lineHeight:18
-              }
-            },
+              axisTick: {
+                  show: false,
+              },
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              axisLabel: {
+                  interval:1,
+                  color: "#555",
+                  fontSize: "12",
+                  lineHeight: 18,
+              },
           },
+          yAxis:[{
+              type: 'value',
+              position: 'left',
+              axisTick: {
+                  show: true
+              },
+              axisLabel: {
+                  color: "#555",
+                  fontSize: "12",
+              },
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              splitLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#eee',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              splitNumber:3,
+              nameTextStyle:{
+                  lineHeight:20,
+              }
+          },{
+              type: 'value',
+              position: 'right',
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+          }],
           legend:{
-            marker:'line',
-            layout:'horizontal',
-            position:'top-right',
-            flipPage:false,
-            offsetX:-30,
-            label:{
-              style:{
-                textBaseline:"middle"
-              }
-            },
+            right:30,
+            data:$this.currentData.chartName
           },
-          // 自定义状态样式
-          areaStyle: (data) => {
-            var itemColor = "";
-            $this.currentData.mainData.forEach(function(item){
-              if(item.name){
-                if(item.name == data.name){
-                  itemColor = item.color;
-                }
-              }else{
-                itemColor = item.color;
-              }
-            });
-            return {
-              fill: 'l(270) 0:#ffffff 1:'+itemColor,
-            };
-          },
-          label: label,
-          point: point,
-        });
-        $this.areaPlot = areaPlot;
-        areaPlot.render();
-      }
+          series:series,
+      };
+      option && myChart.setOption(option);
+      $this.myChart = myChart;
     },
     // 多折线趋势图例
     drawLineChart(){
       var $this = this;
-      var isDate = false;
-      if($this.currentData.chartTitle.indexOf('日期')!=-1){
-        isDate = true;
-      }
-      var label = null;
-      var point = null;
-      if($this.currentData.colorArr.length<=3){
-        label = {
-          layout: [{ type: "hide-overlap" }], // 隐藏重叠label
-          style: {
-            textAlign: "center",
-            color: "#9e9e9e",
-            fontsize: 12,
-          },
-        };
-        point = {
-          size: 3,
-          shape: "circle",
-          style: (res) => {
-            var itemColor = "";
-            $this.currentData.mainData.forEach(function(item){
-              if(item.name == res.name){
-                itemColor = item.color;
+      var chartDom = document.getElementById('line-'+$this.currentData.randomStr);
+      var lineChart = echarts.init(chartDom, 'macarons');
+      var series=[];
+      if($this.currentData.mainData&&$this.currentData.mainData.length>0){
+        $this.currentData.mainData.forEach(function(item,index){
+            var itemObj={};
+            itemObj.name=$this.chartName[index];
+            itemObj.smooth=false;
+            itemObj.type='line';
+            if($this.currentData.mainData.length<=3){
+              itemObj.label={
+                show: true,
+                position: 'top'
               }
-            });
-            var obj = {
-              opacity: 0.5,
-              stroke: itemColor,
-              fill: "#fff",
+            }else{
+              itemObj.showSymbol=false;
+            }
+            itemObj.lineStyle={
+              normal: {
+                  width: 2,
+                  color:$this.ChartColor[index], // 线条颜色
+              },
             };
-            return obj;
+            itemObj.itemStyle={
+              normal: {
+                  color:$this.ChartColor[index], // 折点颜色
+              },
+            };
+            itemObj.emphasis={
+              lineStyle: {
+                width: 2,	// hover时的折线宽度
+              }
+            };
+            itemObj.symbolSize=7;
+            itemObj.data=[];
+            item.forEach(function(items,indexs){
+              itemObj.data.push(items.value);
+            });
+            itemObj.animationDuration=2800;
+            itemObj.animationEasing='quadraticOut';
+            series.push(itemObj);
+        });
+      }
+      var option;
+      option = {
+          tooltip: {
+              backgroundColor:'rgba(255,255,255,0.95)',
+              trigger: "axis",
+              textStyle:{
+                fontSize:'12',
+              }
           },
-        }
-      }
-      var tooltip = null;
-      if($this.currentData.chartTitle.indexOf('百万')!=-1){
-        tooltip = {
-            customContent: (title,datum) => {
-              var newArr = [];
-              datum.forEach(function(item,index){
-                newArr.push(item.data);
-              });
-              var templateHtml = "";
-              if(isDate){
-                templateHtml = '<div class="tooltip-panel date"><div class="tooltip-title">'+title+'</div><div class="tooltip-body">';
-              }else{
-                templateHtml = '<div class="tooltip-panel"><div class="tooltip-title">'+title+'</div><div class="tooltip-body">';
-              }
-              newArr.forEach(function(item,index){
-                var itemHtml = '<div class="tooltip-dl"><div class="tooltip-dt"><div class="txt-name" style="color:'+item.color+'">'+item.name+'</div><div class="txt-value" style="color:'+item.color+'">'+item.value+'</div></div>';
-                item.user.forEach(function(item1){
-                  itemHtml += '<div class="tooltip-dd"><div class="txt-name">'+item1.username+'</div><div class="txt-value">'+item1.number+'</div></div>';
-                });
-                itemHtml+='</div>'
-                templateHtml += itemHtml
-              });
-              templateHtml += '</div></div>'
-              return templateHtml;
-            },
-          }
-      }else{
-        tooltip = {};
-      }
-      if(!$this.linePlot){
-        const linePlot = new Line('line-'+$this.currentData.randomStr, {
-          appendPadding:[30,30,20],
-          data:$this.currentData.mainData,
-          xField: 'key',
-          yField: 'value',
-          seriesField:'name',
-          color:$this.currentData.colorArr.length==1?$this.currentData.colorArr[0]:$this.currentData.colorArr,
-          yAxis:{
-            tickCount:3,
-            grid:{
-              line:{
-                style:{
-                  stroke: 'black',
-                  lineWidth:1,
-                  lineDash:[6,3],
-                  strokeOpacity:0.1,
-                  shadowBlur:0
-                }
-              }
-            },
+          grid: {
+              top:60,
+              right:30,
+              bottom:40,
+              left:52,
           },
           xAxis: {
-            tickCount:isDate?8:15,
-            label: {
-              // 数值格式化为千分位
-              formatter: (v) => {
-                var item = "";
-                if(v.indexOf("&")!=-1){
-                  item = v.split("&")[0]+'\n'+v.split("&")[1];
-                }else{
-                  if(v.indexOf(" ")!=-1){
-                    var week = "周"+v.split(" ")[1].substr(2);
-                    var date = v.split(" ")[0];
-                    item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
-                  }else{
-                    item = v.split("-")[1]+"月";
-                  }
-                }
-                return item
+              type: 'category',
+              boundaryGap: false,
+              data:$this.chartAxis,
+              axisLine: {
+                  show: false,
               },
-              style:{
-                lineHeight:18
-              }
-            },
+              axisTick: {
+                  show: false,
+              },
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              axisLabel: {
+                  interval:1,
+                  color: "#555",
+                  fontSize: "12",
+                  lineHeight: 18,
+              },
           },
+          yAxis:[{
+              type: 'value',
+              position: 'left',
+              axisTick: {
+                  show: true
+              },
+              axisLabel: {
+                  color: "#555",
+                  fontSize: "12",
+              },
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              splitLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#eee',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              splitNumber:3,
+              nameTextStyle:{
+                  lineHeight:20,
+              }
+          },{
+              type: 'value',
+              position: 'right',
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+          }],
           legend:{
-            marker:'line',
-            layout:'horizontal',
-            position:'top-right',
-            flipPage:false,
-            offsetX:-30,
-            label:{
-              style:{
-                textBaseline:"middle"
-              }
-            },
+            right:30,
+            data:$this.currentData.chartName
           },
-          label: label,
-          point: point,
-          tooltip:tooltip,
-        });
-        $this.linePlot = linePlot;
-        linePlot.render();
-      }
+          series:series,
+      };
+      option && lineChart.setOption(option);
+      $this.lineChart = lineChart;
     },
     // 堆叠分组柱状图例
     drawMulitColumnChart(){
@@ -710,6 +895,20 @@ export default {
         mulitColumnPlot.render();
       }
     },
+    echartsSize(){
+        if(this.myChart){
+            this.myChart.resize();
+        }
+        if(this.pieChart){
+            this.pieChart.resize();
+        }
+        if(this.columnChart){
+            this.columnChart.resize();
+        }
+        if(this.lineChart){
+            this.lineChart.resize();
+        }
+    }
   },
 };
 </script>

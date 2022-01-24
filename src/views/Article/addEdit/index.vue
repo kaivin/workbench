@@ -1096,7 +1096,6 @@ export default {
     // 表格文字水平居中
     changeCenterHandler(e){
       var $this = this;
-      console.log(e);
       var html = $this.formData.content;
       if(e){
         html = html.replace(/<table/gi, "<table class='is-center'");

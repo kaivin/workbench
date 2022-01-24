@@ -503,7 +503,6 @@ export default {
       $this.$store.dispatch('Chinauserscore/CnscoreSearchAction', formData).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,'response');
             if(response.data.length>0){
                 $this.tableData = response.data;
                 $this.totalDataNum = response.allcount;
@@ -549,7 +548,6 @@ export default {
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
           if(res.data.length>0){
-            console.log(res,'权限');
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });

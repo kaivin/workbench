@@ -1858,7 +1858,6 @@ export default {
     getAllotedNetwork(){
       var $this = this;
       $this.$store.dispatch('role/roleNetworkAction', {rid:$this.currentRoleID}).then(response=>{
-        console.log(response);
         if(response.status){
           var roleNetworkData = [];
           var selectedRoleNetworkData = [];
@@ -1896,7 +1895,6 @@ export default {
       var networkDataNow = $this.networkData;
       var networkIngData = [];
       $this.$store.dispatch('role/getNetworkAction', {rid:$this.currentRoleID}).then(response=>{
-        console.log(response,"可分配");
         if(response.status){
           if(response.data.length>0){
             if(networkDataNow.length>0){

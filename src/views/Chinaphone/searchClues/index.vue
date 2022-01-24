@@ -971,7 +971,6 @@ export default {
       var $this = this;
       $this.$store.dispatch('chinaphone/cluesSearchSelectDataAction', null).then(response=>{
         if(response){
-          console.log(response,"搜索条件数据");
           if(response.status){
             var deviceList = [];
             response.device.forEach(function(item,index){
@@ -1022,7 +1021,6 @@ export default {
               });
             });
             $this.phoneList = phoneList;
-            console.log($this.phoneList,"部门电话");
             var levelList = [];
             response.xunlevel.forEach(function(item,index){
               var itemData = {};
@@ -1090,7 +1088,6 @@ export default {
     // 电商一部选择改变事件
     handleCheckedOneChange(e){
       var $this = this;
-      console.log(e);
       var phoneSelected=e;
       if(phoneSelected.length>0){
         $this.phoneList.forEach(function(item,index){

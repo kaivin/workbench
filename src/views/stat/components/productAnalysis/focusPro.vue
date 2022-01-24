@@ -24,22 +24,24 @@
         <div class="focusProUlFr flex-content" ref="focusProPane">
             <p class="focusProUlTit"><i class="icon"><svg-icon icon-class="tips" /></i>近7天部门<span :class="item.isOn?'active':''" v-for="item in tabList" :key="item.value" v-on:click="tabChange(item)">{{item.label}}</span></p>
             <div class="focusProUlChart" v-show="currentType=='trend'">
-                  <div class="chart-panel" style="height:270px;" :id="'trend'+focusPro.id"></div> 
+                  <div class="chart-panel" :style="'width:'+isWidth+'px; height:270px;'" :id="'trend'+focusPro.id"></div> 
             </div>
             <div class="focusProUlChart" v-show="currentType=='pie'">
-                  <div class="chart-pie" style="height:270px;" :id="'pie'+focusPro.id"></div> 
+                  <div class="chart-pie" :style="'width:'+isWidth+'px; height:270px; margin-left:-'+isWidth/2+'px;'" :id="'pie'+focusPro.id"></div> 
             </div>
         </div>
     </div>
 </template>
 <script>
-import {Area,Pie} from '@antv/g2plot';
+import * as echarts from 'echarts';
 export default {
   name: "focusPro",
   data() {
     return {
       currentType:"trend",
       tabList:null,
+      myChart:null,
+      pieChart:null,
     };
   },
   created() {
@@ -57,6 +59,10 @@ export default {
       default: function () {
         return "";
       },
+    },
+    isWidth:{
+      type: Number,
+      default: "",
     },
     starttime:{
       type: String,
@@ -80,7 +86,17 @@ export default {
       immediate:true
     },
   },
+  destroyed(){
+    window.removeEventListener('resize',this.echartsSize);
+    if(this.myChart){
+        this.myChart.dispose();
+    }
+    if(this.pieChart){
+        this.pieChart.dispose();
+    }
+  },
   mounted(){
+    window.addEventListener('resize',this.echartsSize);
     if(this.currentType=='trend'){
       this.drawAreaChart();
     }
@@ -123,192 +139,241 @@ export default {
     // 占比图例
     drawPieChart(){
       var $this = this;
-      if(!$this.piePlot){
-        const piePlot = new Pie('pie'+$this.focusPro.id, {
-          appendPadding:[30,10,10,10],
-          data:$this.focusPro.focusProPie,
-          angleField: 'value',
-          colorField: 'name',
-          radius: 0.75,
-          width:300,
-          height: 270,
-          radius: 1,
-          innerRadius: 0.6,
-          color:$this.focusPro.ChartColor,
-          animation: {
-            // 配置图表第一次加载时的入场动画
-            appear: {
-              animation: 'zoom-in', // 动画效果
-              duration: 500,  // 动画执行时间
-            },
+      var chartDom = document.getElementById('pie'+$this.focusPro.id);
+      var pieChart = echarts.init(chartDom);
+      var colorList1=[];
+      $this.focusPro.ChartColor.forEach(function(item,index){
+          var itemObj={};
+          itemObj.x=0;
+          itemObj.y=0;
+          itemObj.x2=0;
+          itemObj.y2=1;
+          itemObj.colorStops=[];
+          var colorOne={};
+          colorOne.offset=0;
+          colorOne.color=item;            
+          itemObj.colorStops.push(colorOne);
+          var colorTwo={};
+          colorTwo.offset=1;
+          colorTwo.color=item;
+          itemObj.colorStops.push(colorTwo);
+          colorList1.push(itemObj);
+      });
+      var option;
+      option = {
+          tooltip: {
+              trigger: 'item'
           },
-          label: {
-            type:'spider',
-            labelHeight: 28,
-            style:{
-              fill:'#90a6e8',
+          legend: {
+            show: true,
+            type: "plain",
+            icon: "rect",
+            itemWidth:12,
+            itemHeight:2,
+            itemGap:20,
+            right:10,
+            textStyle:{
+              color:'#c2c2c2',
+              fontStyle:'normal',
+              fontSize:'12'
             },
-            content:(data)=>{
-              return '占比：'+ Math.floor(data.percent * 10000) / 100+"%";
-            } ,
+            data:$this.focusPro.legendData,
           },
-          legend:{
-            marker:{
-              symbol:"hyphen",
-            },
-            itemSpacing:15,
-            layout:'horizontal',
-            position:'top-right',
-            flipPage:false,
-            offsetX:0,
-            offsetY:5,
-            itemName: {
-              formatter: (val) => `${val}`,
-              style: {
-                fill: '#c2c2c2',
-                lineHeight:20,
-              },
-            },
-            label:{
-                style:{
-                    textBaseline:"middle",
-                    fill:'#c2c2c2',
-                }
-            },
-          },
-          pieStyle:{
-            stroke:0,
-          },
-          state: {
-            active: {
-              style: {
-                fill:'#90a6e8',
-                lineWidth:0,
-                fillOpacity: 0.65,
-              },
-            },
-          },
-          interactions: [{ type: 'element-selected' }, { type: 'element-active' }],
-          statistic:false,
-        });
-        $this.piePlot = piePlot;
-        piePlot.render();
-      }
+          series: [
+              {
+                  color:colorList1,
+                  type: 'pie',
+                  top:30,
+                  radius: ['40%', '70%'],
+                  avoidLabelOverlap: false,
+                  itemStyle: {
+                      normal: {
+                          borderColor:'rgba(0,0,0,0)',
+                          borderWidth:1,
+                      }
+                  },
+                  labelLine: {
+                      normal: {
+                          length: 20,
+                          length2: 30,
+                          lineStyle: {
+                              width: 1
+                          }
+                      }
+                  },
+                  label: {
+                      show: true,
+                      position: 'outside',
+                      formatter: '{a|{b}：{d}%}',
+                      color:'#90a6e8',
+                      rich: {
+                          a: {
+                              padding: [-30, 15, -20, 15]
+                          }
+                      }
+                  },
+                  data:$this.focusPro.focusProPie
+              }
+          ]
+      };
+      var option;
+      option && pieChart.setOption(option);
+      $this.pieChart = pieChart;
     },
     // 面积趋势图例
     drawAreaChart(){
         var $this = this;
-        if(!$this.Plot){
-            const Plot = new Area('trend'+$this.focusPro.id, {
-                data:$this.focusPro.focusProTrend,
-                xField: 'date',
-                yField: 'number',
-                seriesField:'name',
-                isStack:false,
-                startOnZero:false,
-                color:$this.focusPro.focusProTrend.length==1?$this.focusPro.ChartColor[0]:$this.focusPro.ChartColor,
-                appendPadding:[15,0,0,0],
-                meta: {
-                  date: {
-                    range: [0, 1],
-                  },
-                },
-                yAxis:{
-                    tickCount:3,
-                    line:{
-                        style:{
-                          stroke: '#fff',
-                          strokeOpacity: 0.2,
-                        }
-                    },
-                    grid:{
-                        line:{
-                            style:{
-                              stroke: '#fff',
-                              lineWidth: 1,
-                              strokeOpacity: 0.05,
-                            }
-                        }
-                    },
-                    label: {
-                        style:{
-                            lineHeight:18,
-                            fill:'#e5e5e5',
-                        }
-                    },
-                },
-                xAxis: {
-                    tickCount:15,
-                    line:{
-                        style:{
-                          stroke: '#fff',
-                          strokeOpacity: 0.2,
-                        }
-                    },
-                    label: {
-                        // 数值格式化为千分位
-                        formatter: (v) => {
-                            var item = "";
-                            if(v.indexOf("&")!=-1){
-                              item = v.split("&")[0]+'\n'+v.split("&")[1];
-                            }else{
-                              if(v.indexOf(" ")!=-1){
-                                  var week = "周"+v.split(" ")[1].substr(2);
-                                  var date = v.split(" ")[0];
-                                  item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
-                              }else{
-                                  item = v.split("-")[1]+"-"+v.split("-")[2];
-                              }
-                            }
-                            return item
-                        },
-                        style:{
-                            lineHeight:18,
-                            fill:'#e5e5e5',
-                        }
-                    },
-                },
-                legend:{
-                    marker:{
-                      symbol:"hyphen",
-                    },
-                    itemSpacing:20,
-                    position:'top-right',
-                    flipPage:false,
-                    offsetX:0,
-                    offsetY:5,
-                    itemName: {
-                      formatter: (val) => `${val}`,
-                      style: {
-                        fill: '#c2c2c2',
-                      },
-                    },
-                    label:{
-                      style:{
-                        textBaseline:"middle",                          
-                      }
-                    },
-                },
-                areaStyle: (data) => {
-                    var itemColor = "";
-                    $this.focusPro.focusProTrend.forEach(function(item){
-                        if(item.name){
-                            if(item.name == data.name){
-                                itemColor = item.color;
-                            }
-                        }else{
-                            itemColor = item.color;
-                        }
-                    });
-                    return {
-                        fill: 'l(270) 0:rgba(255,255,255,0) 1:'+itemColor,
-                    };
-                },
-            });
-            $this.Plot = Plot;
-            Plot.render();
-        }
+        var chartDom = document.getElementById('trend'+$this.focusPro.id);
+        var myChart = echarts.init(chartDom);
+        var xAxisData=[];
+        $this.focusPro.xAxisData.forEach(function(item,index){
+            var itemArr=item.split('-')[1]+'-'+item.split('-')[2];
+            xAxisData.push(itemArr);
+        });
+        var series=[];
+        $this.focusPro.focusProTrend.forEach(function(item,index){
+          var itemObj={};
+          itemObj.name=$this.focusPro.legendData[index];
+          itemObj.type='line';
+          itemObj.data=item;
+          itemObj.showSymbol=false;
+          itemObj.lineStyle={
+            normal: {
+                width: 2,
+                color:$this.focusPro.ChartColor[index], // 线条颜色
+            },
+          };
+          itemObj.itemStyle={
+            normal: {
+                color:$this.focusPro.ChartColor[index], // 折点颜色
+            },
+          };
+          itemObj.emphasis={
+            lineStyle: {
+              width: 2,	// hover时的折线宽度
+            }
+          };
+          itemObj.symbolSize=7;
+          itemObj.animationDuration=2800;
+          itemObj.animationEasing='quadraticOut';
+          series.push(itemObj);
+        });
+        var option;
+        option = {
+          tooltip: {
+              backgroundColor:'rgba(255,255,255,0.95)',
+              trigger: "axis",
+              textStyle:{
+                fontSize:'12',
+              }
+          },
+          legend: {
+            show: true,
+            type: "plain",
+            icon: "rect",
+            itemWidth:12,
+            itemHeight:2,
+            itemGap:20,
+            right:10,
+            textStyle:{
+              color:'#c2c2c2',
+              fontStyle:'normal',
+              fontSize:'12'
+            },
+            data:$this.focusPro.legendData,
+          },
+          grid: {
+            top:50,
+            right:20,
+            bottom:10,
+            left:0,
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data:xAxisData,
+            axisTick: {
+                show: false,
+            },
+            axisLine:{
+                show: true,
+                lineStyle:{
+                    type: [4, 0],
+                    dashOffset: 3,
+                    color: '#fff',
+                    opacity:0.2,
+                    shadowColor: null,
+                    shadowBlur: 0,
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 0,
+                }
+            },
+            axisLabel: {
+                color: "#e5e5e5",
+                fontSize: "12",
+                lineHeight: 18,
+            },
+          },
+          yAxis: {
+            type: 'value',
+            splitNumber:3,
+            position: 'left',
+            axisTick: {
+                show: true
+            },
+            axisLabel: {
+                color: "#e5e5e5",
+                fontSize: "12",
+            },
+            axisLine:{
+                show: true,
+                lineStyle:{
+                    type: [4, 0],
+                    dashOffset: 3,
+                    color: '#fff',
+                    opacity: 0.2,
+                    shadowColor: null,
+                    shadowBlur: 0,
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 0,
+                }
+            },
+            splitLine:{
+                show: true,
+                lineStyle:{
+                    type: [4, 0],
+                    dashOffset: 3,
+                    color: '#fff',
+                    opacity: 0.05,
+                    shadowColor: null,
+                    shadowBlur: 0,
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 0,
+                }
+            },
+            axisTick:{
+              lineStyle:{
+                color:'#f00'
+              }
+            },
+            nameTextStyle:{
+                lineHeight:18,
+            }
+          },
+          series:series,
+        };
+        option && myChart.setOption(option);
+        $this.myChart = myChart;
     },
+    echartsSize(){
+        if(this.myChart){
+            this.myChart.resize();
+        }
+        if(this.pieChart){
+            this.pieChart.resize();
+        }
+    }
   }
 }
 </script>

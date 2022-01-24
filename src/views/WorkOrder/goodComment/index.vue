@@ -424,7 +424,6 @@ export default {
       searchData = $this.initSearchData();
       $this.$store.dispatch('worksaccpet/getGoodcommentAction', searchData).then(res=>{
         if(res){
-          console.log(res,'res');
           if(res.status){
               $this.tableData=res.data;
               $this.totalDataNum = res.allcount;

@@ -79,9 +79,7 @@
                   <div class="chartContainer">
                       <div id="inquirybox"></div>
                       <div class="showLine">
-                        <span class="line1">2021年</span>
-                        <span class="line2">2020年</span>
-                        <span class="line3">月平均值</span>
+                           <span v-for='(item,index) in showLineTime' :key="index" :class="'line'+(index+1)">{{item}}</span>
                       </div>
                   </div>
               </div>                          
@@ -177,9 +175,9 @@
   </div>
 </template>
 <script>
-import { Mix }from '@antv/g2plot';
+import * as echarts from 'echarts';
 import {numSeparate}from "@/utils/index";
-import { mapGetters } from 'vuex';
+import { mapGetters }from 'vuex';
 export default {
   name: "cnSinglePerson",
   data() {
@@ -216,6 +214,7 @@ export default {
             dept_id:'',
             id:'',
         },
+        showLineTime:[],
         MixChart:null,
         type: 2,//默认展示今年的数据
     };
@@ -374,13 +373,14 @@ export default {
       var searchData={};
       searchData.id=$this.searchData.id;
       if($this.type == 1){
-        searchData.year = $this.prevYear
+        searchData.year = $this.prevYear;
       }else{
         searchData.year = $this.nowYear
       }
+      $this.showLineTime=[(searchData.year-1)+'年',searchData.year+'年','平均值'];
       $this.MixData=[];
-      if ($this.MixChart && !$this.MixChart.chart.destroyed) {
-          $this.MixChart.chart.destroy();
+      if(this.MixChart){
+          this.MixChart.dispose();
       }
       $this.$store.dispatch("api/getEnPersoncountinfoAction",searchData).then((res) => {
           if (res) {
@@ -402,7 +402,7 @@ export default {
                         currentTab:'enquirie',
                         nowYear:[],
                         lastYear:[],
-                    }   
+                    }
                     res.yearcount.forEach(function(item,index){
                         var nowYearObj={};
                         var lastYearObj={};
@@ -430,7 +430,7 @@ export default {
                     ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
                     ChartTabObj.name='年度总询盘个数';
                     ChartTabObj.unit='（单位：个）';
-                    ChartTabObj.tap='enquirie'; 
+                    ChartTabObj.tap='enquirie';
                     ChartTabObj.isOn=true;
                     ChartTab.push(ChartTabObj);
                     currentMix.push(currentMixItem);
@@ -443,7 +443,7 @@ export default {
                         currentTab:'clinchScore',
                         nowYear:[],
                         lastYear:[],
-                    }   
+                    }
                     res.yearscore.forEach(function(item,index){
                         var nowYearObj={};
                         var lastYearObj={};
@@ -467,20 +467,20 @@ export default {
                     ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
                     ChartTabObj.name='年度总成交积分';
                     ChartTabObj.unit='（单位：分）';
-                    ChartTabObj.tap='clinchScore'; 
+                    ChartTabObj.tap='clinchScore';
                     ChartTabObj.isOn=false;
-                    ChartTab.push(ChartTabObj); 
-                    currentMix.push(currentMixItem); 
+                    ChartTab.push(ChartTabObj);
+                    currentMix.push(currentMixItem);
                 }
                 //年度100万成交个数
                 if(res.yearanumber&&res.yearanumber.length>0){
                     var totalNum=0;
-                    var lasttotalNum=0; 
+                    var lasttotalNum=0;
                     var currentMixItem={
                         currentTab:'clinchNum',
                         nowYear:[],
                         lastYear:[],
-                    }    
+                    }
                     res.yearanumber.forEach(function(item,index){
                         var nowYearObj={};
                         var lastYearObj={};
@@ -504,20 +504,20 @@ export default {
                     ChartTabObj.sequential=numSeparate(Math.abs(totalNum-lasttotalNum).toFixed(2)*1);
                     ChartTabObj.name='年度100万成交个数';
                     ChartTabObj.unit='（单位：个）';
-                    ChartTabObj.tap='clinchNum';  
+                    ChartTabObj.tap='clinchNum';
                     ChartTabObj.isOn=false;
-                    ChartTab.push(ChartTabObj); 
+                    ChartTab.push(ChartTabObj);
                     currentMix.push(currentMixItem);
                 }
                 //年度总奖金
                 if(res.yearmoney&&res.yearmoney.length>0){
                     var totalNum=0;
-                    var lasttotalNum=0; 
+                    var lasttotalNum=0;
                     var currentMixItem={
                         currentTab:'money',
                         nowYear:[],
                         lastYear:[],
-                    }   
+                    }
                     res.yearmoney.forEach(function(item,index){
                         var nowYearObj={};
                         var lastYearObj={};
@@ -544,7 +544,7 @@ export default {
                     ChartTabObj.tap='money';
                     ChartTabObj.isOn=false;
                     ChartTab.push(ChartTabObj);
-                    currentMix.push(currentMixItem);  
+                    currentMix.push(currentMixItem);
                 }
                 $this.MixData=MixData;
                 // 组合图表
@@ -576,7 +576,7 @@ export default {
                       var objItem={};
                       objItem.time=item.date;
                       var time=item.date.split('-')[1]+'月';
-                      objItem.date=time;            
+                      objItem.date=time;
                       objItem.xunnumber=numSeparate(item.xunnumber);
                       objItem.score=numSeparate(item.score);
                       objItem.anumber=item.anumber;
@@ -674,9 +674,14 @@ export default {
                 }
             });
         }
-        $this.MixData=MixData;        
-        if ($this.MixChart && !$this.MixChart.chart.destroyed) {
-            $this.MixChart.chart.destroy();
+        $this.MixData=MixData;
+        if(this.MixChart){
+            this.MixChart.dispose();
+        }
+        if($this.currentTab=='enquirie'){            
+            $this.showLineTime=[(($this.type == 1?$this.prevYear:$this.nowYear)-1)+'年',$this.type == 1?$this.prevYear:$this.nowYear+'年','平均值'];
+        }else{
+            $this.showLineTime=[(($this.type == 1?$this.prevYear:$this.nowYear)-1)+'年',$this.type == 1?$this.prevYear:$this.nowYear+'年'];
         }
         $this.getYearInquiryChart();
     },
@@ -685,185 +690,217 @@ export default {
         var $this = this;
         var nowyear = $this.MixData.nowYear;
         var lastyear = $this.MixData.lastYear;
-        //平均值
-        if(nowyear&&nowyear.length>0){
-            var tolNum=0;
-            nowyear.forEach(function(item,index){
-                tolNum=tolNum+item.number;
-            });
-            var avg=(tolNum/nowyear.length).toFixed(2)*1;
-        }
-        //别名设置
-        var aliasName='';
+        var timeArr=[];
+        var nowDataArr=[];
+        var lastDataArr=[];
+        nowyear.forEach(function(item,index){
+            timeArr.push(item.time.split("-")[1]+"月");
+            nowDataArr.push(item.number);
+        });
+        lastyear.forEach(function(item,index){
+            lastDataArr.push(item.number);
+        });
+        // 平均值
+        var avgMark=false;
         if($this.currentTab=='enquirie'){
-            aliasName='询盘个数';
-        }
-        if($this.currentTab=='clinchScore'){
-            aliasName='成交积分';
-        }
-        if($this.currentTab=='clinchNum'){
-            aliasName='100万成交个数';
-        }
-        if($this.currentTab=='money'){
-            aliasName='月奖金';
-        }
-        //计算y轴显示的最大数值
-        var maxnum = 0;
-        for(var i=0;i<nowyear.length;i++){
-            if(nowyear[i].number > maxnum){
-                maxnum = nowyear[i].number;
-            }
-        }
-        for(var i=0;i<lastyear.length;i++){
-            if(lastyear[i].number > maxnum){
-                maxnum = lastyear[i].number;
-            }
-        }
-        const MixChart = new Mix('inquirybox', {
-        tooltip: { 
-            shared: true,
-            title:aliasName,
-            customItems: (originalItems) => {
-                originalItems.forEach(function(item){
-                    item.name = item.data.time;
-                });
-                return originalItems;
-            },
-        },      
-        syncViewPadding: true,
-        plots: [
-            {
-                type: 'column',
-                options: {
-                    data: nowyear,
-                    xField: 'time',
-                    yField: 'number',
-                    appendPadding:[15,0,0,0],
-                    minColumnWidth: 22,
-                    maxColumnWidth: 22,
-                    yAxis: {
-                        grid: {
-                            line: {
-                                style: {
-                                    stroke: '#f2f2f2',
-                                },
-                            
-                            },
-                        },
-                        tickCount: 5,
-                        max:maxnum,
-                        label:{
-                            style:{
-                                fontSize: 12,
-                                fill: "#b3b3b3"
-                            }
-                        }
-                    },
-                    xAxis: {
-                        tickCount:15,
-                        label: {
-                        // 数值格式化为千分位
-                        formatter: (v) => {
-                            var item = "";
-                            if(v.indexOf("&")!=-1){
-                            item = v.split("&")[0]+'\n'+v.split("&")[1];
-                            }else{
-                            if(v.indexOf(" ")!=-1){
-                                var week = "周"+v.split(" ")[1].substr(2);
-                                var date = v.split(" ")[0];
-                                item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
-                            }else{
-                                item = v.split("-")[1]+"月";
-                            }
-                            }
-                            return item
-                        },
-                        style:{
-                            lineHeight:18
-                        }
-                        },
-                    },
+            avgMark={
+                    data: [
+                        {type: 'average', name: '平均值'}
+                    ],
                     label: {
-                        position: 'top',
+                        show: true,
+                        position: 'insideEndTop',
                     },
-                    annotations: [
-                        {
-                            type: "line",
-                            start: ["min",avg],
-                            end: ["max",avg],
-                            top: true,
-                            offsetY: 0,
-                            offsetX: 0,
-                            style: {
-                                stroke: "#5fce45",
-                                lineDash: [8, 4],
-                                lineWidth:1,
-                            },
+                    lineStyle:{
+                        normal: {
+                            width:1,
+                            color:'#01b01d', // 线条颜色
                         },
-                        // 平均值
-                        {
-                            type: "html",
-                            position: ["max", avg],
-                            top: true,
-                            html:"<span class='chart-font target'><span class='txt-font'>" + avg + "</span><i></i></span>",
-                            alignX: "left",
-                            alignY: "bottom",
-                        },
-                    ],                    
-                    columncolor:'#9bbaff',
+                    },
+                    emphasis:{
+                        lineStyle: {
+                        width:1,	// hover时的折线宽度
+                        }
+                    }
+                }
+        }else{
+            avgMark=false;
+        }
+        var series=[];
+        series=[{
+            type: 'bar',
+            data:nowDataArr,
+            barWidth: '28px',
+            itemStyle: {
+                color: '#6395f9'
+            },
+            markLine:avgMark,
+            label: {
+                normal: {
+                    show: false,
+                }
+            },
+        },{
+            type: 'line',
+            data:lastDataArr,
+            smooth:false,
+            showSymbol:false,
+            lineStyle:{
+                normal: {
+                    width: 2,
+                    color:'#efd587', // 线条颜色
                 },
             },
-            {
-                type: 'area', 
-                options: {
-                    data: lastyear,
-                    xField: 'time',
-                    yField: 'number',
-                    areaStyle: () => {
-                        return {
-                            fill: 'l(270) 0:#ffffff 0.5:#efd587 1:#f1cb56',
-                        };
+            itemStyle:{
+                normal: {
+                    color:'#efd587', // 折点颜色
+                },
+            },
+            areaStyle:{
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                    offset: 0,
+                    color:'#efd587',
+                    opacity:1
                     },
-                    color: "#f3be1c",
-                    line:{
-                        color: "#f3be1c",
-                        size:2
-                    },
-                    point:{
-                        size: 4,
-                        shape: "circle",
-                        style: {
-                            fill: '#fff',
-                            stroke: '#f3be1c',
-                            lineWidth:  1,
-                        },
-                    },
-                    yAxis: {
-                        grid: {
-                            line: {
-                                style: {
-                                    stroke: '#f2f2f2',
-                                },
-                            
-                            },
-                        },
-                        tickCount: 5,
-                        max: maxnum,
-                        label:{
-                            style:{
-                                fontSize: 12,
-                                fill: "#b3b3b3",
-                                fillOpacity: 1
-                            }
-                        }
-                    },
-                    xAxis:false,
+                    {
+                    offset: 1,
+                    color: "rgba(255, 255, 255, 0)",
+                    }
+                ]),
+                opacity:0.3
+            },
+            emphasis:{
+                lineStyle: {
+                    width: 2,	// hover时的折线宽度
                 }
-            }
-        ],
-        });
-        $this.MixChart=MixChart;
-        MixChart.render();
+            },
+            symbolSize:7,
+            animationDuration:2800,
+            animationEasing:'quadraticOut',
+        }]
+        var chartDom = document.getElementById('inquirybox');
+        var MixChart = echarts.init(chartDom);
+        var option;
+        option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                formatter: function (params, ticket, callback) {
+                    var showHtm="";
+                    var title = '';
+                    var showHtmDd='';
+                    for(var i=0;i<params.length;i++){
+                        if(params[i]&&params[i]!=undefined){
+                            var name = '';
+                            var nowyearStr='';
+                            var lastyearStr='';
+                            nowyear.forEach(function(item,index){
+                                if(index==0){                                    
+                                    nowyearStr=item.time.split("-")[0]+'-'+params[i].axisValue.replace('月','');
+                                }
+                            });
+                            lastyear.forEach(function(item,index){
+                                if(index==0){
+                                    lastyearStr=item.time.split("-")[0]+'-'+params[i].axisValue.replace('月','');
+                                }
+                            });
+                            if(i==0){
+                                name=nowyearStr;
+                            }
+                            if(i==1){
+                                name=lastyearStr;
+                            }
+                            var value = params[i].value;
+                            if($this.currentTab=='enquirie'){
+                                title='询盘个数';
+                            }
+                            if($this.currentTab=='clinchScore'){
+                                title='成交积分';
+                            }
+                            if($this.currentTab=='clinchNum'){
+                                title='100万成交个数';
+                            }
+                            if($this.currentTab=='money'){
+                                title='年度总奖金';
+                            }
+                            showHtmDd+='<dd><i style="background:'+params[i].color+'"></i><span>'+name+'：</span><strong>' + value +'</strong></dd>'
+                        }
+                    }
+                    showHtm='<dl class="columTool"><dt>'+title+'</dt>'+showHtmDd+'</dl>';
+                    return showHtm;
+                }
+            },
+            grid: {
+                top:'10',
+                right:'0',
+                left:'35',
+                bottom:'30'
+            },
+            xAxis:{
+                type: 'category',
+                data:timeArr,
+                axisTick: {
+                    show: false
+                },
+                axisLine:{
+                    show: true,
+                    lineStyle:{
+                        type: [4, 0],
+                        dashOffset: 3,
+                        color: '#e5e5e5',
+                        opacity:1,
+                        shadowColor: null,
+                        shadowBlur: 0,
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                    }
+                },
+                axisLabel: {
+                    color: "#555",
+                    fontSize: "13",
+                    lineHeight: 18,
+                },
+                nameTextStyle:{
+                    lineHeight:18,
+                }
+            },
+            yAxis:{
+                type: 'value',
+                axisTick: {
+                    show: false
+                },
+                axisLabel: {
+                    color: "#555",
+                    fontSize: "13",
+                },
+                axisLine:{
+                    show: false,
+                },
+                splitLine:{
+                    show: true,
+                    lineStyle:{
+                        type: [4, 2],
+                        dashOffset: 3,
+                        color: '#e5e5e5',
+                        opacity:1,
+                        shadowColor: null,
+                        shadowBlur: 0,
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                    }
+                },
+                splitNumber:3,
+                nameTextStyle:{
+                    lineHeight:18,
+                }
+            },
+            series:series,
+        }
+        option && MixChart.setOption(option);
+        $this.MixChart = MixChart;
     },
     // 组员个人历史成就
     handleHistory(){

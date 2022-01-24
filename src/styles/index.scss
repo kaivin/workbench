@@ -312,7 +312,7 @@
     margin-top: 4px;
   }
   p{
-    font-size:$fontsize13;
+    font-size:$fontsize12;
     line-height:20px;
     color:#333;
     em{
@@ -320,7 +320,7 @@
       margin:0 10px;
     }
     span{
-      color:#333;
+      color:#888;
       padding:0px 5px;
     }
     strong,b{
@@ -837,8 +837,9 @@
   clear:both;
   display:block;
   overflow:hidden;
-  font-size:$fontsize19;
-  color:#2e84f6;
+  font-size:$fontsize17;
+  //color:#2e84f6;
+  color:#044bff;
   line-height:24px;
   padding-bottom:10px;
   .svg-i{
@@ -868,7 +869,7 @@
   &:before{display:none;}
   th.is-leaf{
     background:#e2e9ed;
-    font-size:$fontsize15;
+    font-size:$fontsize14;
     color:#555;
     font-weight:normal;
     border-bottom:1px solid #ebeff1;
@@ -881,7 +882,7 @@
   td{
     border-bottom:1px solid #ebeff1 !important;
     border-right:1px solid #ebeff1 !important;
-    font-size:$fontsize14 !important;
+    font-size:$fontsize13 !important;
     color:#1a1a1a;
   }
   svg,i[class~="el-cion"]{

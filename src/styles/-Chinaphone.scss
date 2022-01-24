@@ -1,4 +1,19 @@
 ﻿.cn-phone-index{
+  .scroll-panel{
+    padding:10px;
+    .fixed-table .table-mask{
+      height: 10px!important;
+    }
+    .fixed-table .el-table__header-wrapper{
+      top:109px;
+    }
+    .fixed-table .el-table__fixed-header-wrapper{
+      top:109px;
+    }
+    .tipsHas.box-card .el-card__header .tipsHasItem{
+      margin-bottom:0px;
+    }
+  }
   .sub-router{
     width:210px;
   }
@@ -453,10 +468,6 @@
 }
 .pro-uploader .avatar {
   width: 100%;
-}
-
-.cn-phone-index .scroll-panel{
-  padding: 10px!important;
 }
 
 .ChinaphoneNum .chcard-header{

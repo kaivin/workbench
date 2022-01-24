@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import { G2 } from '@antv/g2plot';
 import DataSet from '@antv/data-set';
 import {MapColor} from "@/utils/MapColor"
 export default {
@@ -154,40 +153,6 @@ export default {
             color: '#eee'
           }
         },
-        // geo: {
-        //   map: "china",
-        //   roam: false,// 一定要关闭拖拽
-        //   zoom: 1.2,
-        //   label: {
-        //     normal: {
-        //       show: false, //关闭省份名展示
-        //       fontSize: "10",
-        //       color: "rgba(0,0,0,0.7)"
-        //     },
-        //     emphasis: {
-        //       show: false
-        //     }
-        //   },
-        //   itemStyle: {
-        //     normal: {
-        //       areaColor: "#0d0059",
-        //       borderColor: "#389dff",
-        //       borderWidth: 1, //设置外层边框
-        //       shadowBlur: 3,
-        //       shadowOffsetY: 3,
-        //       shadowOffsetX: 0,
-        //       shadowColor: "#01012a"
-        //     },
-        //     emphasis: {
-        //       areaColor: "#184cff",
-        //       shadowOffsetX: 0,
-        //       shadowOffsetY: 0,
-        //       shadowBlur: 3,
-        //       borderWidth: 0,
-        //       shadowColor: "rgba(0, 0, 0, 0.5)"
-        //     }
-        //   }
-        // },
         series: [
           {
             type: 'map', // 类型

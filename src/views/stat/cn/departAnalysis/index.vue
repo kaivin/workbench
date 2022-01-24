@@ -556,6 +556,7 @@ export default {
 
                 inquiryArr.forEach(function(item,index){
                   var itemChart = {};
+                  var newItemArr=[];
                   itemChart.name = item[0].depart;
                   itemChart.color = item[0].color;
                   inquiryData.colorArr.push(item[0].color);
@@ -565,15 +566,17 @@ export default {
                     item1.value = item1.xunnumber;
                     item1.name = item1.depart;
                     item1.color = item1.color;
-                    inquiryData.mainData.push(item1);
+                    newItemArr.push(item1);
                     itemChart.value += item1.xunnumber;
                   });
+                  inquiryData.mainData.push(newItemArr);
                   inquiryData.totalChart.push(itemChart);
                 });
                 inquiryData.totalChart.sort(sortByDesc("value"));
 
                 dealScoreArr.forEach(function(item,index){
                   var itemChart = {};
+                  var newItemArr=[];
                   itemChart.name = item[0].depart;
                   itemChart.color = item[0].color;
                   dealScoreData.colorArr.push(item[0].color);
@@ -583,9 +586,10 @@ export default {
                     item1.value = Math.floor(item1.score * 100)/100;
                     item1.name = item1.depart;
                     item1.color = item1.color;
-                    dealScoreData.mainData.push(item1);
+                    newItemArr.push(item1);
                     itemChart.value += Math.floor(item1.score * 100)/100;
                   });
+                  dealScoreData.mainData.push(newItemArr);
                   dealScoreData.totalChart.push(itemChart);
                 });
                 dealScoreData.totalChart.forEach(function(item){
@@ -595,6 +599,7 @@ export default {
 
                 costArr.forEach(function(item,index){
                   var itemChart = {};
+                  var newItemArr=[];
                   itemChart.name = item[0].depart;
                   itemChart.color = item[0].color;
                   costData.colorArr.push(item[0].color);
@@ -604,9 +609,10 @@ export default {
                     item1.value = Math.floor(item1.money * 100)/100;
                     item1.name = item1.depart;
                     item1.color = item1.color;
-                    costData.mainData.push(item1);
+                    newItemArr.push(item1);
                     itemChart.value += Math.floor(item1.money * 100)/100;
                   });
+                  costData.mainData.push(newItemArr);
                   costData.totalChart.push(itemChart);
                 });
                 costData.totalChart.forEach(function(item){
@@ -1057,7 +1063,6 @@ export default {
         mapChartData[0].push(productData);
       }
       $this.defaultChartData = defaultChartData;
-      console.log($this.defaultChartData,'$this.defaultChartData');
       $this.mapChart = mapChartData;
     },
     // 组装默认类型图表数据
@@ -1123,6 +1128,7 @@ export default {
             inquiryData.colorArr = [];
             var tongData = groupColor(chartData);
             tongData.forEach(function(item,index){
+              var newItemArr=[];
               inquiryData.colorArr.push(item[0].color);
               item.forEach(function(item1){
                 var itemChart = {};
@@ -1154,8 +1160,9 @@ export default {
                 }
                 itemChart.value = item1.xunnumber;
                 itemChart.color = item[0].color;
-                inquiryData.mainData.push(itemChart);
+                newItemArr.push(itemChart);
               });
+              inquiryData.mainData.push(newItemArr);
             });
             inquiryData.name = "部门询盘统计";
             var compareData = [];
@@ -1223,6 +1230,7 @@ export default {
             }
             tongData = groupColor(tongData);
             inquiryData.colorArr.push(tongData[0][0].color);
+            var newItemArr=[];
             tongData[0].forEach(function(item,index){
               if($this.selectedData.isMonth){
                 item.key = item.date;
@@ -1239,8 +1247,9 @@ export default {
                 item.name = "已多选部门"
               }
               item.value = item.xunnumber;
-              inquiryData.mainData.push(item);
+              newItemArr.push(item);
             });
+            inquiryData.mainData.push(newItemArr);
             // 只有一个部门被选中的情况
             if($this.selectedData.groupID.length==1){
               $this.groupList.forEach(function(item){
@@ -1323,6 +1332,7 @@ export default {
             dealScoreData.colorArr = [];
             var chartData = groupColor(res.monthscoretrendcompare);
             chartData.forEach(function(item,index){
+              var newItemArr=[];
               dealScoreData.colorArr.push(item[0].color);
               item.forEach(function(item1){
                 var itemChart = {};
@@ -1348,8 +1358,9 @@ export default {
                 itemChart.key = item1.date;
                 itemChart.value = Math.floor(item1.score*100)/100;
                 itemChart.color = item[0].color;
-                dealScoreData.mainData.push(itemChart);
+                newItemArr.push(itemChart);   
               });
+              dealScoreData.mainData.push(newItemArr);
             });
             dealScoreData.name = "部门成交积分统计";
             dealScoreData.nowNumber = numSeparate(Math.floor(res.monthscoreallnumbercompare*100)/100);
@@ -1377,6 +1388,7 @@ export default {
             dealScoreData.nowNumber = numSeparate(Math.floor(res.monthscoreallnumber*100)/100);
             var tongData = groupColor([res.monthscoretrend]);
             dealScoreData.colorArr.push(tongData[0][0].color);
+            var newItemArr=[];
             tongData[0].forEach(function(item,index){
               item.key = item.date;
               item.value = Math.floor(item.score*100)/100;
@@ -1389,8 +1401,9 @@ export default {
               }else{
                 item.name = "已多选部门"
               }
-              dealScoreData.mainData.push(item);
+              newItemArr.push(item);
             });
+            dealScoreData.mainData.push(newItemArr);
             dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumber*100)/100;
             dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100).toFixed(2)*1);
             dealScoreData.status = Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100>0?'up':Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100<0?'down':'flat';
@@ -1478,6 +1491,7 @@ export default {
             costCountData.colorArr = [];
             var chartData = groupColor(res.monthmoneytrendcompare);
             chartData.forEach(function(item,index){
+              var newItemArr=[];
               costCountData.colorArr.push(item[0].color);
               item.forEach(function(item1){
                 var itemChart = {};
@@ -1503,8 +1517,9 @@ export default {
                 itemChart.key = item1.date;
                 itemChart.value = Math.floor(item1.money*10)/10;
                 itemChart.color = item[0].color;
-                costCountData.mainData.push(itemChart);
+                newItemArr.push(itemChart);  
               });
+              costCountData.mainData.push(newItemArr);
             });
             costCountData.name = "部门成本统计";
             costCountData.nowNumber = numSeparate(Math.floor(res.monthmoneyallnumbercompare*10)/10);
@@ -1532,6 +1547,7 @@ export default {
             costCountData.nowNumber = numSeparate(Math.floor(res.monthmoneyallnumber*10)/10);
             var tongData = groupColor([res.monthmoneytrend]);
             costCountData.colorArr.push(tongData[0][0].color);
+            var newItemArr=[];
             tongData[0].forEach(function(item,index){
               item.key = item.date;
               item.value = Math.floor(item.money*10)/10;
@@ -1544,8 +1560,9 @@ export default {
               }else{
                 item.name = "已多选部门"
               }
-              costCountData.mainData.push(item);
+              newItemArr.push(item);
             });
+            costCountData.mainData.push(newItemArr);
             costCountData.lastNumber = Math.floor(res.lastmonthmoneyall*10)/10;
             costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10).toFixed(2)*1);
             costCountData.status = Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10>0?'up':Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10<0?'down':'flat';
@@ -1627,6 +1644,7 @@ export default {
             millionCountData.colorArr = [];
             var chartData = groupColor(res.monthanumbertrendcompare);
             chartData.forEach(function(item,index){
+              var newItemArr=[];
               millionCountData.colorArr.push(item[0].color);
               item.forEach(function(item1){
                 var itemChart = {};
@@ -1653,8 +1671,9 @@ export default {
                 itemChart.value = item1.anumber;
                 itemChart.color = item[0].color;
                 itemChart.user = item1.user;
-                millionCountData.mainData.push(itemChart);
+                newItemArr.push(itemChart);
               });
+              millionCountData.mainData.push(newItemArr);
             });
             millionCountData.name = "部门百万个数统计";
             millionCountData.nowNumber = numSeparate(res.monthanumberallnumbercompare);
@@ -1682,6 +1701,7 @@ export default {
             millionCountData.nowNumber = res.monthanumberallnumber;
             var tongData = groupColor([res.monthanumbertrend]);
             millionCountData.colorArr.push(tongData[0][0].color);
+            var newItemArr=[];
             tongData[0].forEach(function(item,index){
               item.key = item.date;
               item.value = item.anumber;
@@ -1694,8 +1714,9 @@ export default {
               }else{
                 item.name = "已多选部门"
               }
-              millionCountData.mainData.push(item);
+              newItemArr.push(item);
             });
+            millionCountData.mainData.push(newItemArr);
             millionCountData.lastNumber = res.lastmonthanumberallnumber;
             millionCountData.nowLastNumber = numSeparate(Math.abs(res.monthanumberallnumber - res.lastmonthanumberallnumber).toFixed(2)*1);
             millionCountData.status = res.monthanumberallnumber - res.lastmonthanumberallnumber>0?'up':res.monthanumberallnumber - res.lastmonthanumberallnumber<0?'down':'flat';
@@ -1731,234 +1752,6 @@ export default {
         millionCountData.unit = "（单位：分）";
         millionCountData.randomStr = randomString(4);
       }
-      // // 百万个数
-      // var millionCountData = null;
-      // if($this.selectedType.includes("millionCount")){
-      //   millionCountData = {};
-      //   millionCountData.chartType = "column";
-      //   // 时间对比
-      //   if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
-      //     // millionCountData.nowNumber = numSeparate(res.monthscorenumber);
-      //     var backData = $this.millionDateCompare(res.selfmonthanumbertrend,'anumber');
-      //     millionCountData.mainData = [];
-      //     millionCountData.colorArr = [];
-      //     var newData = [];
-      //     var chartData = singleNewArrColor(backData.mainData);
-      //     for(var i=0;i<chartData[0].data.length;i++){
-      //       if(chartData[0].data[i].user.length>0){
-      //         chartData[0].data[i].user.forEach(function(item,index){
-      //           var itemData = {};
-      //           itemData.depart = chartData[0].data[i].depart;
-      //           itemData.departColor = chartData[0].color;
-      //           itemData.key = chartData[0].data[i].key;
-      //           itemData.name = item.username=='-'||item.username=='其他'||item.username=='公共'||item.username=='未知'?'无归属':item.username;
-      //           itemData.value = item.number;
-      //           newData.push(itemData);
-      //         });
-      //       }
-      //       if(chartData[1].data[i].user.length>0){
-      //         chartData[1].data[i].user.forEach(function(item,index){
-      //           var itemData = {};
-      //           itemData.depart = chartData[1].data[i].depart;
-      //           itemData.departColor = chartData[1].color;
-      //           itemData.key = chartData[1].data[i].key;
-      //           itemData.name = item.username=='-'||item.username=='其他'||item.username=='公共'||item.username=='未知'?'无归属':item.username;
-      //           itemData.value = item.number;
-      //           newData.push(itemData);
-      //         });
-      //       }
-      //     }
-      //     var memberArr = [];
-      //     newData.forEach(function(item){
-      //       if(!memberArr.includes(item.name)){
-      //         memberArr.push(item.name);
-      //       }
-      //     });
-      //     var memberColorArr = memberArrColor(memberArr);
-      //     memberColorArr.forEach(function(item){
-      //       millionCountData.colorArr.push(item.memberColor);
-      //     });
-      //     newData.forEach(function(item){
-      //       memberColorArr.forEach(function(item1){
-      //         if(item1.name == item.name){
-      //           item.memberColor = item1.memberColor;
-      //         }
-      //       });
-      //     });
-      //     millionCountData.mainData = newData;
-      //     millionCountData.dateCompareData = backData.dateCompareData;
-      //     if($this.selectedData.groupID.length==1){
-      //       $this.groupList.forEach(function(item){
-      //         if(item.id == $this.selectedData.groupID[0]){
-      //           millionCountData.chartTitle = item.name+"百万个数日期对比明细";
-      //           millionCountData.name = item.name+"百万个数统计";
-      //         }
-      //       });
-      //     }else{
-      //       millionCountData.chartTitle = "部门组合百万个数日期对比趋势";
-      //       millionCountData.name = "部门组合百万个数统计";
-      //     }
-      //   }else{
-      //     // 小组对比
-      //     if($this.selectedData.contrastGroupID.length>0){
-      //       millionCountData.chartTitle = "各部门百万个数明细";
-      //       millionCountData.mainData = [];
-      //       millionCountData.colorArr = [];
-      //       var newData = [];
-      //       var chartData = singleNewArrColor(res.monthanumbertrendcompare);
-      //       chartData.forEach(function(item,index){
-      //         item.data.forEach(function(item1){
-      //           if(item1.user.length>0){
-      //             item1.user.forEach(function(item2){
-      //               var itemData = {};
-      //               if(index == 0){
-      //                 if($this.selectedData.groupID.length==1){
-      //                   $this.groupList.forEach(function(item3){
-      //                     if(item3.isOn){
-      //                       itemData.depart = item3.name;
-      //                     }
-      //                   });
-      //                 }else{
-      //                   itemData.depart="已多选部门"
-      //                 }
-      //               }else{
-      //                 var selectContrastGroupList = [];
-      //                 $this.contrastGroupList.forEach(function(item3){
-      //                   if(item3.isOn){
-      //                     selectContrastGroupList.push(item3);
-      //                   }
-      //                 });
-      //                 itemData.depart=selectContrastGroupList[index-1].name;
-      //               }
-      //               itemData.departColor = item.color;
-      //               itemData.key = item1.date;
-      //               itemData.name = item2.username=='-'||item2.username=='其他'||item2.username=='公共'||item2.username=='未知'?'无归属':item2.username;
-      //               itemData.value = item2.number;
-      //               newData.push(itemData);
-      //             });
-      //           }
-      //         });
-      //       });
-      //       newData = sortByDate(newData,"key");
-      //       var memberArr = [];
-      //       newData.forEach(function(item){
-      //         if(!memberArr.includes(item.name)){
-      //           memberArr.push(item.name);
-      //         }
-      //       });
-      //       var memberColorArr = memberArrColor(memberArr);
-      //       memberColorArr.forEach(function(item){
-      //         millionCountData.colorArr.push(item.memberColor);
-      //       });
-      //       newData.forEach(function(item){
-      //         memberColorArr.forEach(function(item1){
-      //           if(item1.name == item.name){
-      //             item.memberColor = item1.memberColor;
-      //           }
-      //         });
-      //       });
-      //       millionCountData.mainData = newData;
-      //       millionCountData.name = "部门百万个数统计";
-      //       millionCountData.nowNumber = numSeparate(res.monthanumberallnumbercompare);
-      //       millionCountData.lastNumber = res.lastmonthanumberallnumbercompare;
-      //       millionCountData.nowLastNumber = numSeparate(Math.abs(res.monthanumberallnumbercompare - res.lastmonthanumberallnumbercompare));
-      //       millionCountData.status = res.monthanumberallnumbercompare - res.lastmonthanumberallnumbercompare>0?'up':res.monthanumberallnumbercompare - res.lastmonthanumberallnumbercompare<0?'down':'flat';
-      //       millionCountData.avgNumber = numSeparate(parseInt(res.monthanumberallnumbercompare/res.monthanumbertrendcompare[0].length));
-      //       millionCountData.historyMaxNumber = numSeparate(res.historymaxanumbermonthcompare[0].anumber);
-      //       millionCountData.historyMaxNumberDate = res.historymaxanumbermonthcompare[0].yeartime;
-      //       millionCountData.avgTitle = "月平均百万个数";
-      //       millionCountData.historyTitle = "月历史峰值";
-      //       millionCountData.totalChart = [];
-      //       res.monthdepartanumberpercentercompare.forEach(function(item){
-      //         var itemChart = {};
-      //         itemChart.name = item.departname;
-      //         itemChart.value = item.score;
-      //         millionCountData.totalChart.push(itemChart);
-      //       });
-      //       millionCountData.totalChart = singleArrColor(millionCountData.totalChart);
-      //       millionCountData.totalChart.sort(sortByDesc("value"));
-      //     }else{
-      //       // 统计
-      //       millionCountData.mainData = [];
-      //       millionCountData.nowNumber = res.monthanumberallnumber;
-      //       var chartData = singleNewArrColor([res.monthanumbertrend]);
-      //       millionCountData.colorArr = [];
-      //       var newData = [];
-      //       chartData[0].data.forEach(function(item,index){
-      //         if(item.user.length>0){
-      //           item.user.forEach(function(item1){
-      //             var itemData = {};
-      //             if($this.selectedData.groupID.length==1){
-      //               $this.groupList.forEach(function(item2){
-      //                 if(item2.id == $this.selectedData.groupID[0]){
-      //                   itemData.depart = item2.name;
-      //                 }
-      //               });
-      //             }else{
-      //               itemData.depart = "已多选部门"
-      //             }
-      //             itemData.departColor = chartData[0].color;
-      //             itemData.key = item.date;
-      //             itemData.name = item1.username=='-'||item1.username=='其他'||item1.username=='公共'||item1.username=='未知'?'无归属':item1.username;
-      //             itemData.value = item1.number;
-      //             newData.push(itemData);
-      //           });
-      //         }
-      //       });
-      //       newData = sortByDate(newData,"key");
-      //       var memberArr = [];
-      //       newData.forEach(function(item){
-      //         if(!memberArr.includes(item.name)){
-      //           memberArr.push(item.name);
-      //         }
-      //       });
-      //       var memberColorArr = memberArrColor(memberArr);
-      //       memberColorArr.forEach(function(item){
-      //         millionCountData.colorArr.push(item.memberColor);
-      //       });
-      //       newData.forEach(function(item){
-      //         memberColorArr.forEach(function(item1){
-      //           if(item1.name == item.name){
-      //             item.memberColor = item1.memberColor;
-      //           }
-      //         });
-      //       });
-      //       millionCountData.mainData = newData;
-      //       millionCountData.lastNumber = res.lastmonthanumberallnumber;
-      //       millionCountData.nowLastNumber = numSeparate(Math.abs(res.monthanumberallnumber - res.lastmonthanumberallnumber));
-      //       millionCountData.status = res.monthanumberallnumber - res.lastmonthanumberallnumber>0?'up':res.monthanumberallnumber - res.lastmonthanumberallnumber<0?'down':'flat';
-      //       millionCountData.avgNumber = numSeparate(Math.floor(res.monthanumberavgxun*100)/100);
-      //       millionCountData.historyMaxNumber = numSeparate(res.historymaxanumbermonth[0].anumber);
-      //       millionCountData.historyMaxNumberDate = res.historymaxanumbermonth[0].yeartime;
-      //       millionCountData.avgTitle = "月平均百万个数";
-      //       millionCountData.historyTitle = "月历史峰值";
-      //       // 只有一个小组被选中的情况
-      //       if($this.selectedData.groupID.length==1){
-      //         $this.groupList.forEach(function(item){
-      //           if(item.id == $this.selectedData.groupID[0]){
-      //             millionCountData.chartTitle = item.name+"百万个数明细";
-      //             millionCountData.name = item.name+"百万个数统计";
-      //           }
-      //         });
-      //       }else{// 多小组被选中
-      //         millionCountData.chartTitle = "部门组合百万个数明细";
-      //         millionCountData.name = "部门组合百万个数统计";
-      //         millionCountData.totalChart = [];
-      //         res.monthdepartanumberpercenter.forEach(function(item){
-      //           var itemChart = {};
-      //           itemChart.name = item.departname;
-      //           itemChart.value = item.anumber;
-      //           millionCountData.totalChart.push(itemChart);
-      //         });
-      //         millionCountData.totalChart = singleArrColor(millionCountData.totalChart);
-      //         millionCountData.totalChart.sort(sortByDesc("value"));
-      //       }
-      //     }
-      //   }
-      //   millionCountData.totalTitle = "总百万个数";
-      //   millionCountData.unit = "（单位：个）";
-      //   millionCountData.randomStr = randomString(4);
-      // }
       var defaultChartData = [];
       if(inquiryData){
         defaultChartData.push(inquiryData);
@@ -2611,6 +2404,8 @@ export default {
         backData.colorArr.push(item[0].color);
       });
       if(tongData[0].length>=tongData[1].length){
+        var newChartOne=[];
+        var newChartTwo=[];
         for(var i=0;i<tongData[0].length;i++){
           var itemChart0 = {};
           var itemChart1 = {};
@@ -2648,10 +2443,14 @@ export default {
             itemChart0.user = tongData[0][i].user;
           }
           itemChart0.color = tongData[0][0].color;
-          backData.mainData.push(itemChart0);
-          backData.mainData.push(itemChart1);
+          newChartOne.push(itemChart0);
+          newChartTwo.push(itemChart1);
         }
+        backData.mainData.push(newChartOne);
+        backData.mainData.push(newChartTwo);
       }else{
+        var newChartOne=[];
+        var newChartTwo=[];
         for(var i=0;i<tongData[1].length;i++){
           var itemChart0 = {};
           var itemChart1 = {};
@@ -2689,9 +2488,11 @@ export default {
             itemChart1.user = tongData[1][i].user;
           }
           itemChart1.color = tongData[1][0].color;
-          backData.mainData.push(itemChart0);
-          backData.mainData.push(itemChart1);
+          newChartOne.push(itemChart0);
+          newChartTwo.push(itemChart1);
         }
+        backData.mainData.push(newChartOne);
+        backData.mainData.push(newChartTwo);
       }
       backData.dateCompareData = {};
       backData.dateCompareData.baseValue = 0;

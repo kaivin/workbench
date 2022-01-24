@@ -422,6 +422,7 @@ export default {
                 var semTong = groupColor(response.semtong);
                 semTong.forEach(function(item,index){
                   var itemChart = {};
+                  var newItemArr=[];
                   itemChart.name = item[0].name+"组";
                   itemChart.color = item[0].color;
                   semData.colorArr.push(item[0].color);
@@ -431,9 +432,10 @@ export default {
                     item1.value = item1.xunnumber;
                     item1.name = item1.name+"组";
                     item1.color = item1.color;
-                    semData.mainData.push(item1);
+                    newItemArr.push(item1);
                     itemChart.value += item1.xunnumber;
                   });
+                  semData.mainData.push(newItemArr);
                   semData.totalChart.push(itemChart);
                 });
                 semData.totalChart.sort(sortByDesc("value"));
@@ -459,6 +461,7 @@ export default {
                 var seoTong = groupColor(response.seotong);
                 seoTong.forEach(function(item){
                   var itemChart = {};
+                  var newItemArr=[];
                   itemChart.name = item[0].name+"组";
                   itemChart.color = item[0].color;
                   seoData.colorArr.push(item[0].color);
@@ -468,9 +471,10 @@ export default {
                     item1.value = item1.xunnumber;
                     item1.name = item1.name+"组";
                     item1.color = item1.color;
-                    seoData.mainData.push(item1);
+                    newItemArr.push(item1);
                     itemChart.value += item1.xunnumber;
                   });
+                  seoData.mainData.push(newItemArr);
                   seoData.totalChart.push(itemChart);
                 });
                 seoData.totalChart.sort(sortByDesc("value"));
@@ -496,6 +500,7 @@ export default {
                 var snsTong = groupColor(response.snstong);
                 snsTong.forEach(function(item){
                   var itemChart = {};
+                  var newItemArr=[];
                   itemChart.name = item[0].name+"组";
                   itemChart.color = item[0].color;
                   snsData.colorArr.push(item[0].color);
@@ -505,9 +510,10 @@ export default {
                     item1.value = item1.xunnumber;
                     item1.name = item1.name+"组";
                     item1.color = item1.color;
-                    snsData.mainData.push(item1);
+                    newItemArr.push(item1);
                     itemChart.value += item1.xunnumber;
                   });
+                  snsData.mainData.push(newItemArr);
                   snsData.totalChart.push(itemChart);
                 });
                 snsData.totalChart.sort(sortByDesc("value"));
@@ -1057,6 +1063,7 @@ export default {
             inquiryData.colorArr = [];
             var tongData = groupColor(chartData);
             tongData.forEach(function(item,index){
+              var newItemArr=[];
               inquiryData.colorArr.push(item[0].color);
               item.forEach(function(item1){
                 var itemChart = {};
@@ -1088,8 +1095,9 @@ export default {
                 }
                 itemChart.value = item1.xunnumber;
                 itemChart.color = item[0].color;
-                inquiryData.mainData.push(itemChart);
+                newItemArr.push(itemChart);
               });
+              inquiryData.mainData.push(newItemArr);
             });
             inquiryData.name = "小组询盘统计";
             var compareData = [];
@@ -1161,6 +1169,7 @@ export default {
             }
             tongData = groupColor(tongData);
             inquiryData.colorArr.push(tongData[0][0].color);
+            var newItemArr=[];
             tongData[0].forEach(function(item,index){
               if($this.selectedData.isMonth){
                 item.key = item.date;
@@ -1177,8 +1186,9 @@ export default {
               }else{
                 item.name = "已多选小组"
               }
-              inquiryData.mainData.push(item);
+              newItemArr.push(item);
             });
+            inquiryData.mainData.push(newItemArr);
             // 只有一个小组被选中的情况
             if($this.selectedData.groupID.length==1){
               $this.groupList.forEach(function(item){
@@ -1265,6 +1275,7 @@ export default {
             dealScoreData.colorArr = [];
             var chartData = groupColor(res.monthscoretrendcompare);
             chartData.forEach(function(item,index){
+              var newItemArr=[];
               dealScoreData.colorArr.push(item[0].color);
               item.forEach(function(item1){
                 var itemChart = {};
@@ -1290,13 +1301,14 @@ export default {
                 itemChart.key = item1.date;
                 itemChart.value = Math.floor(item1.score*100)/100;
                 itemChart.color = item[0].color;
-                dealScoreData.mainData.push(itemChart);
+                newItemArr.push(itemChart);                
               });
+              dealScoreData.mainData.push(newItemArr);
             });
             dealScoreData.name = "小组成交积分统计";
             dealScoreData.nowNumber = numSeparate(Math.floor(res.monthscoreallnumbercompare*100)/100);
             dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumbercompare*100)/100;
-            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100));
+            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100).toFixed(2)*1);
             dealScoreData.status = Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100>0?'up':Math.floor(res.monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100<0?'down':'flat';
             dealScoreData.avgNumber = numSeparate(Math.floor(res.monthscoreallnumbercompare/res.monthscoretrendcompare[0].length*100)/100);
             dealScoreData.historyMaxNumber = numSeparate(Math.floor(res.historymaxscoremonthcompare[0].score*100)/100);
@@ -1323,6 +1335,7 @@ export default {
             dealScoreData.nowNumber = numSeparate(Math.floor(res.monthscoreallnumber*100)/100);
             var tongData = groupColor([res.monthscoretrend]);
             dealScoreData.colorArr.push(tongData[0][0].color);
+            var newItemArr=[];
             tongData[0].forEach(function(item,index){
               item.key = item.date;
               item.value = Math.floor(item.score*100)/100;
@@ -1335,10 +1348,11 @@ export default {
               }else{
                 item.name = "已多选小组"
               }
-              dealScoreData.mainData.push(item);
+              newItemArr.push(item);
             });
+            dealScoreData.mainData.push(newItemArr);
             dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumber*100)/100;
-            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100));
+            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100).toFixed(2)*1);
             dealScoreData.status = Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100>0?'up':Math.floor(res.monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100<0?'down':'flat';
             dealScoreData.avgNumber = numSeparate(Math.floor(res.monthscoreavgxun*100)/100);
             dealScoreData.historyMaxNumber = numSeparate(Math.floor(res.historymaxscoremonth[0].score*100)/100);
@@ -2036,6 +2050,8 @@ export default {
         backData.colorArr.push(item[0].color);
       });
       if(tongData[0].length>=tongData[1].length){
+        var newChartOne=[];
+        var newChartTwo=[];
         for(var i=0;i<tongData[0].length;i++){
           var itemChart0 = {};
           var itemChart1 = {};
@@ -2064,10 +2080,14 @@ export default {
             itemChart0.value = tongData[0][i][key];
           }
           itemChart0.color = tongData[0][0].color;
-          backData.mainData.push(itemChart0);
-          backData.mainData.push(itemChart1);
+          newChartOne.push(itemChart0);
+          newChartTwo.push(itemChart1);
         }
+        backData.mainData.push(newChartOne);
+        backData.mainData.push(newChartTwo);
       }else{
+        var newChartOne=[];
+        var newChartTwo=[];
         for(var i=0;i<tongData[1].length;i++){
           var itemChart0 = {};
           var itemChart1 = {};
@@ -2096,9 +2116,11 @@ export default {
             itemChart1.value = tongData[1][i][key];
           }
           itemChart1.color = tongData[1][0].color;
-          backData.mainData.push(itemChart0);
-          backData.mainData.push(itemChart1);
+          newChartOne.push(itemChart0);
+          newChartTwo.push(itemChart1);
         }
+        backData.mainData.push(newChartOne);
+        backData.mainData.push(newChartTwo);
       }
       backData.dateCompareData = {};
       backData.dateCompareData.baseValue = 0;
@@ -2132,7 +2154,7 @@ export default {
         backData.dateCompareData.baseWidth = "100%";
         backData.dateCompareData.compareWidth = "100%";
       }
-      backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue));
+      backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue).toFixed(2)*1);
       backData.dateCompareData.compareRate = backData.dateCompareData.compareValue==0?'0%':(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue)/backData.dateCompareData.compareValue*100).toFixed(2)+"%";
       backData.dateCompareData.baseValue = numSeparate(backData.dateCompareData.baseValue);
       backData.dateCompareData.compareValue = numSeparate(backData.dateCompareData.compareValue);

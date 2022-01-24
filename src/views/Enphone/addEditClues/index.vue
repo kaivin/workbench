@@ -1763,7 +1763,6 @@ export default {
     },
     // 特别说明下拉框选择改变事件
     otherRemarkHandleSelect(e){
-      console.log(e);
     },
     //来自国家下拉框
     countryQuerySearch(queryString,cb){
@@ -1824,9 +1823,7 @@ export default {
       });
     },
     // 提醒下拉框选择改变事件
-    noticeHandleSelect(e){
-      console.log(e);
-    },
+    noticeHandleSelect(e){},
     // 物料下拉框
     wlQuerySearch(queryString,cb){
       var $this = this;
@@ -1855,7 +1852,6 @@ export default {
     },
     // 物料下拉框选择改变事件
     wlHandleSelect(e){
-      console.log(e);
     },
     // 进料下拉框
     jlQuerySearch(queryString,cb){
@@ -1884,9 +1880,7 @@ export default {
       });
     },
     // 进料下拉框选择改变事件
-    jlHandleSelect(e){
-      console.log(e);
-    },
+    jlHandleSelect(e){},
     // 出料下拉框
     clQuerySearch(queryString,cb){
       var $this = this;
@@ -1914,9 +1908,7 @@ export default {
       });
     },
     // 出料下拉框选择改变事件
-    clHandleSelect(e){
-      console.log(e);
-    },
+    clHandleSelect(e){},
     // 询盘备注下拉框
     xunRemarkQuerySearch(queryString,cb){
       var $this = this;
@@ -1944,9 +1936,7 @@ export default {
       });
     },
     // 询盘备注下拉框选择改变事件
-    xunRemarkHandleSelect(e){
-      console.log(e);
-    },
+    xunRemarkHandleSelect(e){},
     // 客服备注下拉框
     custormRemarkQuerySearch(queryString,cb){
       var $this = this;
@@ -1974,9 +1964,7 @@ export default {
       });
     },
     // 客服备注下拉框选择改变事件
-    custormRemarkHandleSelect(e){
-      console.log(e);
-    },
+    custormRemarkHandleSelect(e){},
   }
 }
 </script>

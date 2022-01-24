@@ -254,7 +254,6 @@ export default {
       var $this=this;
       var formData = new FormData();
       formData.append('file',parm.file);
-      console.log(formData)
       $this.$store.dispatch('api/fileUploadAction', formData).then(res=>{
         if(res.status){
           $this.userData.headimg = res.info;

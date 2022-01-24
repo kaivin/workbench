@@ -427,7 +427,6 @@ export default {
       $this.$store.dispatch('Enuserscore/EnscoreListAction', null).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,'userList');
             if(response.data.length>0){
                 var userList = [];
                 response.data.forEach(function(item,index){
@@ -505,7 +504,6 @@ export default {
       $this.$store.dispatch('Enuserscore/EnscoreSearchAction', formData).then(response=>{
         if(response){
           if(response.status){
-            console.log(response,'response');
             if(response.data.length>0){
                 $this.tableData = response.data;
             }else{
@@ -550,7 +548,6 @@ export default {
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.status){
           if(res.data.length>0){
-            console.log(res,'权限');
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });

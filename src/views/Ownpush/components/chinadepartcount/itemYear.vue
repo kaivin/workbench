@@ -147,7 +147,7 @@ export default {
                           showHtmDd+='<dd><i style="background:'+params[i].color+'"></i>'+text+'年：<strong>' + value+'</strong></dd>'
                       }
                   }
-                  showHtmDt+='<dl class="flex-content"><dt>'+name+'成交积分</dt>'+showHtmDd+'</dl>';
+                  showHtmDt+='<dl class="flex-content"><dt>'+name+'成交100万个数</dt>'+showHtmDd+'</dl>';
                   showHtm=showHtmDt;
                 }
                 return '<div class="mainTool flex-box">'+showHtm+'</div>';

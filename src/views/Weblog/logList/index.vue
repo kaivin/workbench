@@ -306,7 +306,6 @@ export default {
         if(res.status){
             $this.tableData=res.data;
             $this.totalDataNum = res.allcount;
-            console.log(res,'res');
             $this.isLoading.close();
         }else{
           $this.$message({

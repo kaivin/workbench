@@ -822,7 +822,6 @@ export default {
               cluesChartData.push(itemObj);
             });
             $this.defaultData.cluesChartData = cluesChartData;
-            console.log($this.defaultData.cluesChartData,'$this.defaultData.cluesChartData')
             $this.defaultData.avgnumber = response.avgnumber;
             $this.defaultData.alltodaynumber = response.alltodaynumber;
             $this.defaultData.alllastnumber = response.alllastnumber;
@@ -1076,89 +1075,6 @@ export default {
         }
       });
     },
-    // 图表功能
-    //drawChart(){
-    //  var $this = this;
-    //  console.log($this.defaultData.cluesChartData,'$this.defaultData.cluesChartData')
-    //  if($this.defaultData.cluesChartData.length>0){
-    //    const cnAreaPlot = new Area('cnCluesChart', {
-    //      data:$this.defaultData.cluesChartData,    
-    //      xField: 'date',
-    //      yField: 'xunnumber',
-    //      appendPadding:[15,15,15,15],
-    //      // smooth:true,
-    //      areaStyle: () => {
-    //        return {
-    //          fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
-    //        };
-    //      },
-    //      yAxis:{
-    //        grid:{
-    //          line:null
-    //        }
-    //      },
-    //      xAxis: {
-    //        tickCount:15,
-    //        label: {
-    //          // 数值格式化为千分位
-    //          formatter: (v) => {
-    //            var date = v.split("-")[1]+"-"+v.split("-")[2];
-    //            return date
-    //          },
-    //          style:{
-    //            lineHeight:16
-    //          }
-    //        },
-    //        grid:{
-    //          line:{
-    //            style:{
-    //              stroke: 'black',
-    //              lineWidth:1,
-    //              lineDash:[6,3],
-    //              strokeOpacity:0.1,
-    //              shadowBlur:0
-    //            }
-    //          }
-    //        },
-    //      },
-    //      tooltip: {
-    //        formatter: (datum) => {
-    //          return { name: "询盘个数", value: datum.xunnumber };
-    //        },
-    //        title:(e)=>{
-    //          return e.replace(/\n/g," ")
-    //        }
-    //      },
-    //      annotations: [
-    //        // 平均值
-    //        {
-    //          type: 'line',
-    //          start: ['min', $this.defaultData.avgnumber],
-    //          end: ['max', $this.defaultData.avgnumber],
-    //          top:true,
-    //          offsetY: 0,
-    //          offsetX: 0,
-    //          style: {
-    //            stroke: '#f16b6b',
-    //            lineDash: [6, 4],
-    //            lineWidth: 1,
-    //          },
-    //        },
-    //        // 平均值
-    //        {
-    //          type: 'html',
-    //          position:['max',$this.defaultData.avgnumber],
-    //          top:true,
-    //          html:"<span class='chart-font avg'><span class='txt-font'>"+$this.defaultData.avgnumber+"</span><i></i></span>",
-    //          alignX:"left",
-    //          alignY:"bottom",
-    //        },
-    //      ],
-    //    });
-    //    $this.cnAreaPlot = cnAreaPlot;
-    //    cnAreaPlot.render();
-    //  }
-    //},
     // 电话点击跳转列表
     phoneJump(id){
       var $this=this;
@@ -1522,9 +1438,7 @@ export default {
               cluesChartData.push(itemObj);
             });
             $this.defaultData.cluesChartData = cluesChartData;
-            console.log($this.defaultData.cluesChartData,'$this.defaultData.cluesChartData')
             $this.defaultData.avgnumber = response.avgnumber;
-            //$this.drawChart();
             $this.chartLoading = false;
           }else{
             $this.$message({
@@ -1641,7 +1555,6 @@ export default {
           if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件           
             var scrTop = event.target.scrollTop;
             var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
-            console.log($this.scrollTable.fixedTopHeight)
             if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
               $this.scrollPosition.isFixed = true;
               var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"

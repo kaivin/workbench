@@ -59,6 +59,12 @@ export default {
     ...mapGetters([
       'sidebar',
     ]),
+    nowYear(){
+      return new Date().getFullYear();
+    },
+    prevYear(){
+      return new Date().getFullYear()-1;
+    }
   },
   components:{
     defaultChart
@@ -74,14 +80,6 @@ export default {
     teamArr.push(parseInt($this.$route.query.itemId));
     $this.teamArr=teamArr;
     $this.initData();
-  },
-  computed:{
-    nowYear(){
-      return new Date().getFullYear();
-    },
-    prevYear(){
-      return new Date().getFullYear()-1;
-    }
   },
   mounted(){
     const $this = this;
@@ -141,19 +139,20 @@ export default {
               yearcount.chartType = "area";
               yearcount.chartClass = "enquirie";
               yearcount.ChartColor = ChartColor;
+              yearcount.ChartData = [];
               if(res.yearcountcompare&&res.yearcountcompare.length>0){
-                var ChartData=[];
-                res.yearcountcompare.forEach(function(item,index){      
+                res.yearcountcompare.forEach(function(item,index){  
+                    var itemArr=[];          
                     item.forEach(function(items,indexs){
                       var objItem={};        
                       objItem.name=items.name;
                       objItem.date=items.date;
-                      objItem.number=items.xunnumber;
+                      objItem.value=items.xunnumber;
                       objItem.color=ChartColor[index];
-                      ChartData.push(objItem);
+                      itemArr.push(objItem);
                     });
+                    yearcount.ChartData.push(itemArr);
                 });
-                yearcount.ChartData=ChartData;
               }
               if(res.leftyearcountcompare&&res.leftyearcountcompare.length>0){
                 var leftChartData=[];
@@ -175,19 +174,20 @@ export default {
               yearscore.chartType = "line";
               yearscore.chartClass = "score";
               yearscore.ChartColor = ChartColor;
+              yearscore.ChartData = [];
               if(res.yearscorecompare&&res.yearscorecompare.length>0){
-                var ChartData=[];
-                res.yearscorecompare.forEach(function(item,index){         
+                res.yearscorecompare.forEach(function(item,index){            
+                    var itemArr=[];              
                     item.forEach(function(items,indexs){
                       var objItem={};        
                       objItem.name=items.name;
                       objItem.date=items.date;
-                      objItem.number=items.score;
+                      objItem.value=items.score;
                       objItem.color=ChartColor[index];
-                      ChartData.push(objItem);
+                      itemArr.push(objItem);
                     });
+                    yearscore.ChartData.push(itemArr);
                 });
-                yearscore.ChartData=ChartData;
               }
               if(res.leftyearscorecompare&&res.leftyearscorecompare.length>0){
                 var leftChartData=[];
@@ -209,19 +209,20 @@ export default {
               yearanumber.chartType = "column";
               yearanumber.chartClass = "clinch";
               yearanumber.ChartColor = ChartColor;
+              yearanumber.ChartData = [];
               if(res.yearanumbercompare&&res.yearanumbercompare.length>0){
-                var ChartData=[];
                 res.yearanumbercompare.forEach(function(item,index){ 
+                    var itemArr=[]; 
                     item.forEach(function(items,indexs){
                       var objItem={};        
                       objItem.name=items.name;
                       objItem.date=items.date;
-                      objItem.number=items.anumber;
+                      objItem.value=items.anumber;
                       objItem.color=ChartColor[index];
-                      ChartData.push(objItem);
+                      itemArr.push(objItem);
                     });
+                    yearanumber.ChartData.push(itemArr);
                 });
-                yearanumber.ChartData=ChartData;
               }
               if(res.leftyearanumbercompare&&res.leftyearanumbercompare.length>0){
                 var leftChartData=[];
@@ -251,19 +252,20 @@ export default {
               yearmoney.chartType = "area";
               yearmoney.chartClass = "money";
               yearmoney.ChartColor = ChartColor;
+              yearmoney.ChartData = [];
               if(res.yearmoneycompare&&res.yearmoneycompare.length>0){
-                var ChartData=[];
                 res.yearmoneycompare.forEach(function(item,index){ 
+                    var itemArr=[]; 
                     item.forEach(function(items,indexs){
                       var objItem={};        
                       objItem.name=items.name;
                       objItem.date=items.date;
-                      objItem.number=items.money;
+                      objItem.value=items.money;
                       objItem.color=ChartColor[index];
-                      ChartData.push(objItem);
+                      itemArr.push(objItem);
                     });
+                    yearmoney.ChartData.push(itemArr);
                 });
-                yearmoney.ChartData=ChartData;
               }
               if(res.leftyearmoneycompare&&res.leftyearmoneycompare.length>0){
                 var leftChartData=[];

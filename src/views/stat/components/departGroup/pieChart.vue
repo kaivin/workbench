@@ -1,13 +1,14 @@
 ﻿<template>
-    <div class="pie-chart" :id="'pie-'+idData"></div>
+    <div class="pie-chart" style="width:220px;height:277px; margin:0 auto;" :id="'pie-'+idData"></div>
 </template>
 
 <script>
-import { Pie } from '@antv/g2plot';
+import * as echarts from 'echarts';
 export default {
   name: "pieChart",
   data:function() {
     return {
+        myChart:null,
     };
   },
   props: {
@@ -33,71 +34,73 @@ export default {
       return this.chartData;
     },
   },
+  destroyed(){
+    window.removeEventListener('resize',this.echartsSize);
+    if(this.myChart){
+        this.myChart.dispose();
+    }
+  },
   mounted(){
+    window.addEventListener('resize',this.echartsSize);
     this.drawPieChart();
   },
   methods:{
     drawPieChart(){
       var $this = this; 
-      if(!$this.piePlot){
-        const piePlot = new Pie('pie-'+$this.idData, {
-          appendPadding: 30,
-          data:$this.currentData,
-          angleField: 'value',
-          colorField: 'name',
-          color:$this.colorData,
-          radius: 1,
-          innerRadius: 0.55,
-          width: 280,
-          height: 340,
-          legend:false,
-          animation: {
-            // 配置图表第一次加载时的入场动画
-            appear: {
-              animation: 'zoom-in', // 动画效果
-              duration: 500,  // 动画执行时间
-            },
-          },
-          label: {
-            type: 'inner',
-            offset: '-47%',
-            content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
-            style: {
-              fontSize: 14,
-              textAlign: 'center',
-            },
-          },
-          state:{
-            active: {
-              style: {
-                lineWidth: 0,
-                stroke:0,
-                fillOpacity:0.8,
+      var chartDom = document.getElementById('pie-'+$this.idData);
+      var myChart = echarts.init(chartDom);
+      var option;
+      option = {
+          title:{
+              text:$this.fontData,
+              textStyle:{
+                  fontSize:14,
+                  color:"#666666",
+                  fontWeight:'400',
+                  lineHeight:24,
               },
-            },
+              textAlign:"center",
+              x: '48%',
+              y: '41%',
+              itemGap:0
           },
-          statistic: {
-            title: false,
-            content: {
-              style: {
-                fill:"#666666",
-                lineHeight:1.4,
-                opacity:.6,
-                fillOpacity:.4,
-                fontSize: 14,
-                whiteSpace: 'pre-wrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              },
-              content: $this.fontData,
-            },
+          tooltip: {
+              trigger: 'item'
           },
-          // 添加 中心统计文本 交互
-          interactions: [{ type: 'element-selected' }, { type: 'element-active' }],
-        });
-        piePlot.render();
-        $this.piePlot = piePlot;
-      }
+          series: [
+              {
+                  color:$this.colorData,
+                  type: 'pie',
+                  radius: ['50%', '90%'],
+                  avoidLabelOverlap: false,
+                  label: {
+                    show: false,
+                  },
+                  emphasis: {
+                    label: {
+                      show: false,
+                    }
+                  },
+                  itemStyle: {
+                      normal: {
+                          borderColor: '#ffffff',
+                          borderWidth:1,
+                      }
+                  },
+                  labelLine: {
+                    show: false
+                  },
+                  data:$this.currentData
+              }
+          ]
+      };
+      option && myChart.setOption(option);
+      $this.myChart = myChart;
+    },
+    echartsSize(){
+        if(this.myChart){
+            this.myChart.resize();
+        }
     }
   },
 };

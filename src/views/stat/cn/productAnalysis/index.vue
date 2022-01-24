@@ -4,14 +4,14 @@
       {{nowcate}}
     </div>
     <div class='product-AnalyMain'>
-      <div class="focusPro">
+      <div class="focusPro" ref='focusProBox'>
           <div class="focusProTit">
               <h3><i><svg-icon icon-class="star" /></i>我关注的产品<span>（{{focusProNum}}）</span></h3>
               <span @click="handleAddPro"><i><svg-icon icon-class="work_add" /></i>添加产品</span>
           </div>
           <ul class="focusProUl" :class="focusProSet.isFold? 'focusShow' : ''" v-if="focusProArr.length>0" :style="'height:'+ focusProSet.boxHeight">
               <li v-for="(item,index) in focusProArr" :key="index">
-                <focus-pro :lang="ch" :starttime="searchForm.starttime" :endtime="searchForm.endtime" :focusPro="item"></focus-pro>
+                <focus-pro :lang="ch" :isWidth='focusWidth' :starttime="searchForm.starttime" :endtime="searchForm.endtime" :focusPro="item"></focus-pro>
               </li>
           </ul>
           <div class="focusProMore" v-if="focusProSet.ifFold" :class="focusProSet.isFold? '' : 'active'" @click="showAll"></div>
@@ -220,7 +220,8 @@ export default {
         boxHeight: '',
         isFold: false,
       },
-      nowcate: ""
+      nowcate: "",
+      focusWidth:0,
     };
   },
   computed: {
@@ -343,6 +344,9 @@ export default {
                 if(res.myfoucs&&res.myfoucs.length>0){
                     var focusProValue=[];
                     var focusPass=[];
+                    var focusProArr=[];
+                    var colorArr = ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822"]
+                    $this.focusWidth=($this.$refs.focusProBox.offsetWidth-102)/2-272;
                     res.myfoucs.forEach(function(item,index){
                         var itemObj={};
                         itemObj.isOn=true;
@@ -351,47 +355,52 @@ export default {
                         itemObj.typeid=item.typeid;
                         focusProValue.push(item.id);
                         focusPass.push(itemObj);
+                        
+                        var itemFoucsArr={};
+                        itemFoucsArr.id=item.id;
+                        itemFoucsArr.lastdayxunnumber=item.lastdayxunnumber;
+                        itemFoucsArr.lastmonthxunnumber=item.lastmonthxunnumber;
+                        itemFoucsArr.lastweekxunnumber=item.lastweekxunnumber;
+                        itemFoucsArr.monthxunnumber=item.monthxunnumber;
+                        itemFoucsArr.name=item.name;
+                        itemFoucsArr.todayxunnumber=item.todayxunnumber;
+                        itemFoucsArr.typeid=item.typeid;
+                        itemFoucsArr.uid=item.uid;
+                        itemFoucsArr.weekxunnumber=item.weekxunnumber;
+                        itemFoucsArr.focusProTrend=[];
+                        itemFoucsArr.xAxisData=[];
+                        itemFoucsArr.legendData=[];
+                        itemFoucsArr.ChartColor=[];
+                        itemFoucsArr.focusProPie=[];
                         if(item.xuntong&&item.xuntong.length>0){
-                            var focusProTrend=[];//趋势
-                            var focusProPie=[];//占比
                             item.xuntong.forEach(function(items,indexs){
-                                var pieItem={
-                                    name:0,
-                                    value:0,
-                                    color:'',
-                                };
+                                itemFoucsArr.ChartColor.push(colorArr[indexs]); 
                                 if(items&&items.length>0){
-                                  items.forEach(function(itemk,indexk){     
-                                      var objItem={};
-                                      objItem.date=itemk.date;
-                                      objItem.number=itemk.number;
-                                      objItem.name=itemk.depart.replace('电商','');
-                                      objItem.color=ChartColor[index];
-                                      focusProTrend.push(objItem);
+                                  var pieItem={
+                                      name:0,
+                                      value:0,
+                                  };
+                                  pieItem.name=items[0].depart.replace('电商','');
+                                  itemFoucsArr.legendData.push(items[0].depart.replace('电商','')); 
+                                  var itemTrend=[];
+                                  items.forEach(function(itemk,indexk){    
+                                      itemTrend.push(itemk.number);
+                                      if(indexs==0){
+                                        itemFoucsArr.xAxisData.push(itemk.date);
+                                      }
                                       pieItem.value=pieItem.value+itemk.number;
-                                      pieItem.name=itemk.depart.replace('电商','');
-                                      pieItem.color=ChartColor[index];
                                   });
+                                  itemFoucsArr.focusProTrend.push(itemTrend);
+                                  itemFoucsArr.focusProPie.push(pieItem);
                                 }
-                                focusProPie.push(pieItem);
                             });
-                            if(focusProPie&&focusProPie.length>0){
-                              var focusProPieArr=[];
-                              focusProPie.forEach(function(items,indexs){ 
-                                  if(items.value!=0){
-                                      focusProPieArr.push(items);
-                                  }
-                              });
-                            }
-                            item.focusProTrend=focusProTrend;
-                            item.focusProPie=focusProPieArr;
-                            item.ChartColor=ChartColor;
+                            focusProArr.push(itemFoucsArr);
                         }
                     });
                     $this.focusProValue=focusProValue;//关注产品id 
-                    $this.focusProNum=res.myfoucs.length;//关注数量  
-                    $this.focusProArr=res.myfoucs;//基础数据   
+                    $this.focusProNum=focusProArr.length;//关注数量  
                     $this.focusPass=focusPass;   
+                    $this.focusProArr=focusProArr;//基础数据
                                  
                 }
             } else {

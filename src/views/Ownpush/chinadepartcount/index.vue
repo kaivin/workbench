@@ -652,6 +652,7 @@ export default {
             inquiryData.colorArr = [];
             var tongData = groupColor(chartData);
             tongData.forEach(function(item,index){
+              var newItemArr=[];
               inquiryData.colorArr.push(item[0].color);
               item.forEach(function(item1){
                 var itemChart = {};
@@ -683,8 +684,9 @@ export default {
                 }
                 itemChart.value = item1.xunnumber;
                 itemChart.color = item[0].color;
-                inquiryData.mainData.push(itemChart);
+                newItemArr.push(itemChart);
               });
+              inquiryData.mainData.push(newItemArr);
             });
             inquiryData.name = "部门询盘统计";
             var compareData = [];
@@ -732,11 +734,24 @@ export default {
               inquiryData.historyTitle = "日历史峰值";
             }
             inquiryData.totalChart = [];
+            var itemObj={
+              name:'',
+              value:0
+            };
+            compareData.forEach(function(item){
+              if(item.departname.indexOf('电商一部')>=0){
+                itemObj.name = '电商一部';
+                itemObj.value+=item.xunnumber;
+              }
+            });
+            inquiryData.totalChart.push(itemObj);
             compareData.forEach(function(item){
               var itemChart = {};
-              itemChart.name = item.departname;
-              itemChart.value = item.xunnumber;
-              inquiryData.totalChart.push(itemChart);
+              if(item.departname.indexOf('电商一部')==-1){
+                itemChart.name = item.departname;
+                itemChart.value = item.xunnumber;
+                inquiryData.totalChart.push(itemChart);
+              }
             });
             inquiryData.totalChart = singleArrColor(inquiryData.totalChart);
             inquiryData.totalChart.sort(sortByDesc("value"));
@@ -785,6 +800,7 @@ export default {
             }
             tongData = groupColor(tongData);
             inquiryData.colorArr.push(tongData[0][0].color);
+            var newItemArr=[];
             tongData[0].forEach(function(item,index){
               if($this.selectedData.isMonth){
                 item.key = item.date;
@@ -801,8 +817,9 @@ export default {
                 item.name = "电商一部"
               }
               item.value = item.xunnumber;
-              inquiryData.mainData.push(item);
+              newItemArr.push(item);
             });
+            inquiryData.mainData.push(newItemArr);
             // 只有一个部门被选中的情况
             if($this.selectedData.dept_id.length==1){
               $this.departList.forEach(function(item){
@@ -892,6 +909,7 @@ export default {
             dealScoreData.colorArr = [];
             var chartData = groupColor(res.monthscoretrendcompare);
             chartData.forEach(function(item,index){
+              var newItemArr=[];
               dealScoreData.colorArr.push(item[0].color);
               item.forEach(function(item1){
                 var itemChart = {};
@@ -917,8 +935,9 @@ export default {
                 itemChart.key = item1.date;
                 itemChart.value = Math.floor(item1.score*100)/100;
                 itemChart.color = item[0].color;
-                dealScoreData.mainData.push(itemChart);
+                newItemArr.push(itemChart);
               });
+              dealScoreData.mainData.push(newItemArr);
             });
             dealScoreData.name = "部门成交积分统计";
             var monthscoreallnumbercompare=0;
@@ -962,6 +981,7 @@ export default {
             dealScoreData.nowNumber = numSeparate(Math.floor(monthscoreallnumber*100)/100);
             var tongData = groupColor([res.monthscoretrend]);
             dealScoreData.colorArr.push(tongData[0][0].color);
+            var newItemArr=[];
             tongData[0].forEach(function(item,index){
               item.key = item.date;
               item.value = Math.floor(item.score*100)/100;
@@ -974,8 +994,9 @@ export default {
               }else{
                 item.name = "电商一部"
               }
-              dealScoreData.mainData.push(item);
+              newItemArr.push(item);
             });
+            dealScoreData.mainData.push(newItemArr);
             dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumber*100)/100;
             dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100).toFixed(2)*1);
             dealScoreData.status = Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100>0?'up':Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100<0?'down':'flat';
@@ -1061,6 +1082,7 @@ export default {
             costCountData.colorArr = [];
             var chartData = groupColor(res.monthmoneytrendcompare);
             chartData.forEach(function(item,index){
+              var newItemArr=[];
               costCountData.colorArr.push(item[0].color);
               item.forEach(function(item1){
                 var itemChart = {};
@@ -1086,8 +1108,9 @@ export default {
                 itemChart.key = item1.date;
                 itemChart.value = Math.floor(item1.money*10)/10;
                 itemChart.color = item[0].color;
-                costCountData.mainData.push(itemChart);
+                newItemArr.push(itemChart);
               });
+              costCountData.mainData.push(newItemArr);
             });
             costCountData.name = "部门成本统计";
             costCountData.nowNumber = numSeparate(Math.floor(res.monthmoneyallnumbercompare*10)/10);
@@ -1115,6 +1138,7 @@ export default {
             costCountData.nowNumber = numSeparate(Math.floor(res.monthmoneyallnumber*10)/10);
             var tongData = groupColor([res.monthmoneytrend]);
             costCountData.colorArr.push(tongData[0][0].color);
+            var newItemArr=[];
             tongData[0].forEach(function(item,index){
               item.key = item.date;
               item.value = Math.floor(item.money*10)/10;
@@ -1127,8 +1151,9 @@ export default {
               }else{
                 item.name = "电商一部"
               }
-              costCountData.mainData.push(item);
+              newItemArr.push(item);
             });
+            costCountData.mainData.push(newItemArr);
             costCountData.lastNumber = Math.floor(res.lastmonthmoneyall*10)/10;
             costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10).toFixed(2)*1);
             costCountData.status = Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10>0?'up':Math.floor(res.monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyall*10)/10<0?'down':'flat';
@@ -1208,6 +1233,7 @@ export default {
             millionCountData.colorArr = [];
             var chartData = groupColor(res.monthanumbertrendcompare);
             chartData.forEach(function(item,index){
+              var newItemArr=[];
               millionCountData.colorArr.push(item[0].color);
               item.forEach(function(item1){
                 var itemChart = {};
@@ -1234,8 +1260,9 @@ export default {
                 itemChart.value = item1.anumber;
                 itemChart.color = item[0].color;
                 itemChart.user = item1.user;
-                millionCountData.mainData.push(itemChart);
+                newItemArr.push(itemChart);
               });
+              millionCountData.mainData.push(newItemArr);
             });
             millionCountData.name = "部门百万个数统计";
             millionCountData.nowNumber = numSeparate(res.monthanumberallnumbercompare);
@@ -1263,6 +1290,7 @@ export default {
             millionCountData.nowNumber = res.monthanumberallnumber;
             var tongData = groupColor([res.monthanumbertrend]);
             millionCountData.colorArr.push(tongData[0][0].color);
+            var newItemArr=[];
             tongData[0].forEach(function(item,index){
               item.key = item.date;
               item.value = item.anumber;
@@ -1275,8 +1303,9 @@ export default {
               }else{
                 item.name = "电商一部"
               }
-              millionCountData.mainData.push(item);
+              newItemArr.push(item);
             });
+            millionCountData.mainData.push(newItemArr);
             millionCountData.lastNumber = res.lastmonthanumberallnumber;
             millionCountData.nowLastNumber = numSeparate(Math.abs(res.monthanumberallnumber - res.lastmonthanumberallnumber).toFixed(2)*1);
             millionCountData.status = res.monthanumberallnumber - res.lastmonthanumberallnumber>0?'up':res.monthanumberallnumber - res.lastmonthanumberallnumber<0?'down':'flat';
@@ -1504,6 +1533,7 @@ export default {
             }
           });
         });
+        itemtableArr.mainArr.reverse();
         itemData.tableData.push(itemtableArr);
       });
       /**/
@@ -2304,6 +2334,8 @@ export default {
         backData.colorArr.push(item[0].color);
       });
       if(tongData[0].length>=tongData[1].length){
+        var newChartOne=[];
+        var newChartTwo=[];
         for(var i=0;i<tongData[0].length;i++){
           var itemChart0 = {};
           var itemChart1 = {};
@@ -2341,10 +2373,14 @@ export default {
             itemChart0.user = tongData[0][i].user;
           }
           itemChart0.color = tongData[0][0].color;
-          backData.mainData.push(itemChart0);
-          backData.mainData.push(itemChart1);
+          newChartOne.push(itemChart0);
+          newChartTwo.push(itemChart1);
         }
+        backData.mainData.push(newChartOne);
+        backData.mainData.push(newChartTwo);
       }else{
+        var newChartOne=[];
+        var newChartTwo=[];
         for(var i=0;i<tongData[1].length;i++){
           var itemChart0 = {};
           var itemChart1 = {};
@@ -2382,9 +2418,11 @@ export default {
             itemChart1.user = tongData[1][i].user;
           }
           itemChart1.color = tongData[1][0].color;
-          backData.mainData.push(itemChart0);
-          backData.mainData.push(itemChart1);
+          newChartOne.push(itemChart0);
+          newChartTwo.push(itemChart1);
         }
+        backData.mainData.push(newChartOne);
+        backData.mainData.push(newChartTwo);
       }
       backData.dateCompareData = {};
       backData.dateCompareData.baseValue = 0;

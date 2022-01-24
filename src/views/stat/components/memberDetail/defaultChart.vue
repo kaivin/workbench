@@ -60,20 +60,48 @@
     </div>
 </template>
 <script>
-import {Column,Area,Line } from '@antv/g2plot';
+import * as echarts from 'echarts';
+require('echarts/theme/macarons') // echarts theme
 export default {
   name: "defaultChart",
+  data:function() {
+    return {
+      myChart:null,
+      currentData:this.itemData
+    };
+  },
   props: {
     itemData: {
       type: Object,
       default:{},
     },
   },
-  data:function() {
-    return {
-      Plot:null,
-      currentData:this.itemData,
-    };
+  computed:{
+    chartName(){
+      var chartName=[];
+      this.itemData.ChartData.forEach(function(item,index){
+        chartName.push(item[0].name);
+      });
+      return chartName;
+    },
+    ChartColor(){
+      var ChartColor=[];
+      this.itemData.ChartData.forEach(function(item,index){
+        ChartColor.push(item[0].color);
+      });
+      return ChartColor;
+    },
+    chartAxis(){
+      var chartAxis=[];
+      this.itemData.ChartData.forEach(function(item,index){
+        if(index==0){
+          item.forEach(function(items,indexs){
+            chartAxis.push(items.date.split("-")[1]+"月");           
+          });
+        }
+      });
+      return chartAxis;
+    },
   },
   watch: {
     itemData:{
@@ -84,7 +112,14 @@ export default {
       immediate:true
     },
   },
+  destroyed(){
+    window.removeEventListener('resize',this.echartsSize);
+    if(this.myChart){
+        this.myChart.dispose();
+    }
+  },
   mounted(){
+    window.addEventListener('resize',this.echartsSize);
     if(this.currentData.chartType=='area'){
       this.drawAreaChart();
     }
@@ -99,233 +134,483 @@ export default {
     // 面积趋势图例
     drawAreaChart(){
       var $this = this;
-        if($this.currentData.ChartData&&$this.currentData.ChartData.length>0){
-            const Plot = new Area('Chart'+$this.currentData.chartClass, {
-                data:$this.currentData.ChartData,
-                xField: 'date',
-                yField: 'number',
-                seriesField:'name',
-                isStack:false,
-                color:$this.currentData.ChartData.length==1?$this.currentData.ChartColor[0]:$this.currentData.ChartColor,
-                appendPadding:[15,15,0,15],
-                yAxis:{
-                    tickCount:3,
-                    grid:{
-                        line:{
-                          style:{
-                              stroke: 'black',
-                              lineWidth:1,
-                              lineDash:[6,3],
-                              strokeOpacity:0.05,
-                              shadowBlur:0
-                          }
-                        }
+      var chartDom = document.getElementById('Chart'+$this.currentData.chartClass);
+      var myChart = echarts.init(chartDom, 'macarons');
+      var series=[];
+      if($this.currentData.ChartData&&$this.currentData.ChartData.length>0){
+        $this.currentData.ChartData.forEach(function(item,index){
+            var itemObj={};
+            itemObj.name=$this.chartName[index];
+            itemObj.smooth=false;
+            itemObj.type='line';
+            itemObj.showSymbol=false;
+            itemObj.lineStyle={
+              normal: {
+                  width: 2,
+                  color:$this.ChartColor[index], // 线条颜色
+              },
+            };
+            itemObj.itemStyle={
+              normal: {
+                  color:$this.ChartColor[index], // 折点颜色
+              },
+            };
+            itemObj.areaStyle={
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                      offset: 0,
+                      color:$this.ChartColor[index],
+                      opacity:1
                     },
-                },
-                xAxis: {
-                    tickCount:15,
-                    label: {
-                      // 数值格式化为千分位
-                      formatter: (v) => {
-                          var item = "";
-                          if(v.indexOf("&")!=-1){
-                          item = v.split("&")[0]+'\n'+v.split("&")[1];
-                          }else{
-                          if(v.indexOf(" ")!=-1){
-                              var week = "周"+v.split(" ")[1].substr(2);
-                              var date = v.split(" ")[0];
-                              item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
-                          }else{
-                              item = v.split("-")[1]+"月";
-                          }
-                          }
-                          return item
-                      },
-                      style:{
-                          lineHeight:18
-                      }
-                    },
-                },
-                legend:{
-                  marker:{
-                    symbol:"hyphen",
-                  },
-                  layout:'horizontal',
-                  position:'top-right',
-                  flipPage:false,
-                  offsetX:-15,
-                  offsetY:0,
-                  label:{
-                    style:{
-                      textBaseline:"middle"
+                    {
+                      offset: 1,
+                      color: "rgba(255, 255, 255, 0)",
                     }
-                  },
-                },
-                areaStyle: (data) => {
-                    var itemColor = "";
-                    $this.currentData.ChartData.forEach(function(item){
-                        if(item.name){
-                            if(item.name == data.name){
-                                itemColor = item.color;
-                            }
-                        }else{
-                            itemColor = item.color;
-                        }
-                    });
-                    return {
-                        fill: 'l(270) 0:#ffffff 1:'+itemColor,
-                    };
-                },
+                  ]),
+                  opacity:0.3
+            };
+            itemObj.emphasis={
+              lineStyle: {
+                width: 2,	// hover时的折线宽度
+              }
+            };
+            itemObj.symbolSize=7;
+            itemObj.data=[];
+            item.forEach(function(items,indexs){
+              itemObj.data.push(items.value);
             });
-            $this.Plot = Plot;
-            Plot.render();
-        }
+            itemObj.animationDuration=2800;
+            itemObj.animationEasing='quadraticOut';
+            series.push(itemObj);
+        });
+      }
+      var option;
+      option = {
+          tooltip: {
+              backgroundColor:'rgba(255,255,255,0.95)',
+              trigger: "axis",
+              textStyle:{
+                fontSize:'12',
+              }
+          },
+          grid: {
+              top:45,
+              right:1,
+              bottom:25,
+              left:52,
+          },
+          xAxis: {
+              type: 'category',
+              boundaryGap: false,
+              data:$this.chartAxis,
+              axisLine: {
+                  show: false,
+              },
+              axisTick: {
+                  show: false,
+              },
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              axisLabel: {
+                  interval:1,
+                  color: "#555",
+                  fontSize: "12",
+                  lineHeight: 18,
+              },
+          },
+          yAxis:[{
+              type: 'value',
+              position: 'left',
+              axisTick: {
+                  show: true
+              },
+              axisLabel: {
+                  color: "#555",
+                  fontSize: "12",
+              },
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              splitLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#eee',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              splitNumber:3,
+              nameTextStyle:{
+                  lineHeight:20,
+              }
+          },{
+              type: 'value',
+              position: 'right',
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+          }],
+          legend:{
+            right:30,
+            data:$this.chartName
+          },
+          series:series,
+      };
+      option && myChart.setOption(option);
+      $this.myChart = myChart;
     },
     // 多折线趋势图例
     drawLineChart(){
       var $this = this;
+      var chartDom = document.getElementById('Chart'+$this.currentData.chartClass);
+      var lineChart = echarts.init(chartDom, 'macarons');
+      var series=[];
       if($this.currentData.ChartData&&$this.currentData.ChartData.length>0){
-        const Plot = new Line('Chart'+$this.currentData.chartClass, {
-          appendPadding:[30,30,0,30],
-          data:$this.currentData.ChartData,
-          xField: 'date',
-          yField: 'number',
-          seriesField:'name',
-          color:$this.currentData.ChartData.length==1?$this.currentData.ChartColor[0]:$this.currentData.ChartColor,
-          yAxis:{
-            tickCount:5,
-            grid:{
-              line:{
-                style:{
-                  stroke: 'black',
-                  lineWidth:1,
-                  lineDash:[6,3],
-                  strokeOpacity:0.05,
-                  shadowBlur:0
-                }
+        $this.currentData.ChartData.forEach(function(item,index){
+            var itemObj={};
+            itemObj.name=$this.chartName[index];
+            itemObj.smooth=false;
+            itemObj.type='line';
+            itemObj.showSymbol=false;
+            itemObj.lineStyle={
+              normal: {
+                  width: 2,
+                  color:$this.ChartColor[index], // 线条颜色
+              },
+            };
+            itemObj.itemStyle={
+              normal: {
+                  color:$this.ChartColor[index], // 折点颜色
+              },
+            };
+            itemObj.emphasis={
+              lineStyle: {
+                width: 2,	// hover时的折线宽度
               }
-            },
+            };
+            itemObj.symbolSize=7;
+            itemObj.data=[];
+            item.forEach(function(items,indexs){
+              itemObj.data.push(items.value);
+            });
+            itemObj.animationDuration=2800;
+            itemObj.animationEasing='quadraticOut';
+            series.push(itemObj);
+        });
+      }
+      var option;
+      option = {
+          tooltip: {
+              backgroundColor:'rgba(255,255,255,0.95)',
+              trigger: "axis",
+              textStyle:{
+                fontSize:'12',
+              }
+          },
+          grid: {
+              top:45,
+              right:1,
+              bottom:25,
+              left:52,
           },
           xAxis: {
-            tickCount:15,
-            label: {
-              // 数值格式化为千分位
-              formatter: (v) => {
-                var item = "";
-                if(v.indexOf("&")!=-1){
-                  item = v.split("&")[0]+'\n'+v.split("&")[1];
-                }else{
-                  if(v.indexOf(" ")!=-1){
-                    var week = "周"+v.split(" ")[1].substr(2);
-                    var date = v.split(" ")[0];
-                    item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
-                  }else{
-                    item = v.split("-")[1]+"月";
-                  }
-                }
-                return item
+              type: 'category',
+              boundaryGap: false,
+              data:$this.chartAxis,
+              axisLine: {
+                  show: false,
               },
-              style:{
-                lineHeight:18
-              }
-            },
+              axisTick: {
+                  show: false,
+              },
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              axisLabel: {
+                  interval:1,
+                  color: "#555",
+                  fontSize: "12",
+                  lineHeight: 18,
+              },
           },
+          yAxis:[{
+              type: 'value',
+              position: 'left',
+              axisTick: {
+                  show: true
+              },
+              axisLabel: {
+                  color: "#555",
+                  fontSize: "12",
+              },
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              splitLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#eee',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              splitNumber:3,
+              nameTextStyle:{
+                  lineHeight:20,
+              }
+          },{
+              type: 'value',
+              position: 'right',
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+          }],
           legend:{
-            marker:{
-              symbol:"hyphen",
-            },
-            layout:'horizontal',
-            position:'top-right',
-            flipPage:false,
-            offsetX:-15,
-            offsetY:0,
-            label:{
-              style:{
-                textBaseline:"middle"
-              }
-            },
+            right:30,
+            data:$this.currentData.chartName
           },
-        });
-        $this.Plot = Plot;
-        Plot.render();
-      }
+          series:series,
+      };
+      option && lineChart.setOption(option);
+      $this.lineChart = lineChart;
     },
     // 分组柱状图
     drawColumnChart(){
       var $this = this;
-      if($this.currentData.ChartData&&$this.currentData.ChartData.length>0){
-        const Plot = new Column('Chart'+$this.currentData.chartClass, {
-            data:$this.currentData.ChartData,
-            isGroup: true,
-            xField: 'date',
-            yField: 'number',
-            seriesField: 'name',
-            appendPadding: [20,30,0,30],
-            color:$this.currentData.ChartColor,
-            dodgePadding: 0,
-            maxColumnWidth:25,
-            legend:{
-              marker:{
-                symbol:"hyphen",
-              },
-              layout:'horizontal',
-              position:'top-right',
-              flipPage:false,
-              offsetX:-15,
-              offsetY:0,
-              label:{
-                style:{
-                  textBaseline:"middle"
+      var chartDom = document.getElementById('Chart'+$this.currentData.chartClass);
+      var myChart = echarts.init(chartDom, 'macarons');
+      var series=[];      
+      $this.chartName.forEach(function(item,index){
+          var itemObj={};
+          itemObj.name=item;
+          itemObj.type='bar';
+          itemObj.barGap=0;
+          itemObj.barWidth=18;
+          itemObj.emphasis={
+            focus: 'series'
+          };
+          itemObj.data=[];
+          $this.chartAxis.forEach(function(items,indexs){
+            $this.currentData.ChartData.forEach(function(itemk,indexk){
+              itemk.forEach(function(itemH,indexH){
+                var itemStr=itemH.date.split("-")[1]+"月";  
+                if(item==itemH.name&&items==itemStr){
+                  itemObj.data.push(itemH.value);
                 }
+              });
+            });
+          });
+          series.push(itemObj);
+      });
+      var option;
+      option = {
+        tooltip: {
+            trigger: 'axis',
+            backgroundColor:'rgba(255,255,255,0.95)',
+            axisPointer: {
+              type: 'shadow'
+            },
+            formatter: function (params, ticket, callback) {
+                var showHtm="";
+                var showHtmDt=''; 
+                var showHtmDd='';
+                var name = '';
+                for(var i=0;i<params.length;i++){
+                    if(params[i]&&params[i]!=undefined){
+                        name = params[i].axisValue;
+                        var text = params[i].seriesName;
+                        var value = params[i].value;
+                        showHtmDd+='<dd><i style="background:'+params[i].color+'"></i>'+text+'年：<strong>' + value+'</strong></dd>'
+                    }
+                }
+                showHtmDt+='<dl class="flex-content"><dt>'+name+'成交100万个数</dt>'+showHtmDd+'</dl>';
+                showHtm=showHtmDt;
+                return '<div class="mainTool flex-box">'+showHtm+'</div>';
+            }
+        },
+        grid: {
+          top:45,
+          right:1,
+          bottom:0,
+          left:30,
+          containLabel: true
+        },
+        xAxis:{
+            type: 'category',
+            data: $this.chartAxis,
+            axisLine: {
+                show: false,
+            },
+            axisTick: {
+                show: false,
+            },
+            axisLine:{
+                show: true,
+                lineStyle:{
+                    type: [4, 0],
+                    dashOffset: 3,
+                    color: '#e5e5e5',
+                    opacity: 1,
+                    shadowColor: null,
+                    shadowBlur: 0,
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 0,
+                }
+            },
+            axisLabel: {
+                color: "#555",
+                fontSize: "12",
+                lineHeight: 18,
+            },
+        },
+        yAxis: [
+          {
+            type: 'value',
+            splitNumber:3,
+            position: 'left',
+            axisTick: {
+                show: true
+            },
+            axisLabel: {
+                color: "#555",
+                fontSize: "12",
+            },
+            axisLine:{
+                show: true,
+                lineStyle:{
+                    type: [4, 0],
+                    dashOffset: 3,
+                    color: '#e5e5e5',
+                    opacity: 1,
+                    shadowColor: null,
+                    shadowBlur: 0,
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 0,
+                }
+            },
+            splitLine:{
+                show: true,
+                lineStyle:{
+                    type: [4, 0],
+                    dashOffset: 3,
+                    color: '#eee',
+                    opacity: 1,
+                    shadowColor: null,
+                    shadowBlur: 0,
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 0,
+                }
+            },
+            splitNumber:3,
+            nameTextStyle:{
+                lineHeight:20,
+            }
+          },{
+              type: 'value',
+              position: 'right',
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
               },
-            },
-            xAxis: {
-                tickCount:15,
-                label: {
-                    // 数值格式化为千分位
-                    formatter: (v) => {
-                        var item = "";
-                        if(v.indexOf("&")!=-1){
-                        item = v.split("&")[0]+'\n'+v.split("&")[1];
-                        }else{
-                        if(v.indexOf(" ")!=-1){
-                            var week = "周"+v.split(" ")[1].substr(2);
-                            var date = v.split(" ")[0];
-                            item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
-                        }else{
-                            item = v.split("-")[1]+"月";
-                        }
-                        }
-                        return item
-                    },
-                    style:{
-                        lineHeight:18
-                    }
-                },
-            },
-            yAxis: {
-                tickCount:5,
-                grid: {
-                    line: {
-                        style: {
-                            stroke: '#cccccc',
-                            lineWidth: 1,
-                            lineDash: [3, 2],
-                            strokeOpacity: 0.3,
-                            shadowColor: null,
-                            shadowBlur: 0,
-                            shadowOffsetX:0,
-                            shadowOffsetY:0,
-                            cursor: 'pointer'
-                        }
-                    }
-                },
-            },
-        });
-        $this.Plot = Plot;
-        Plot.render();
-      }
+          }
+        ],
+        legend:{
+          type:'plain',
+          data:$this.chartName,
+          right: 10,
+          top:0,
+          align:'left',
+        },
+        series:series
+      };
+      option && myChart.setOption(option);
+      $this.myChart = myChart;
     },
+    echartsSize(){
+        if(this.myChart){
+            this.myChart.resize();
+        }
+    }
   },
 };
 </script>

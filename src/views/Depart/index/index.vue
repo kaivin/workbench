@@ -364,7 +364,6 @@ export default {
             }else{
               $this.tableData = [];
             }
-            console.log($this.tableData,'$this.tableData');
             $this.isLoading.close();
             setTimeout(()=>{
               $this.isSaveData=false;

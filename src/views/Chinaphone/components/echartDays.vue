@@ -37,7 +37,6 @@ export default {
   mounted(){
       var $this = this;
       window.addEventListener('resize',$this.echartsSize);
-      console.log($this.enquirieChart,'enquirieChart');
       this.drawAreaTrendChart();
   },
   methods: {

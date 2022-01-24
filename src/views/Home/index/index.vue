@@ -225,7 +225,6 @@ export default {
       });
       // 后端推送来消息时
       socket.on('new_msg', function(msg){
-          console.log("收到消息："+msg);
           var msgArr=eval(msg);
           var newsList=$this.newsList;
           newsList.forEach(function(item,index){

@@ -74,7 +74,7 @@
                     </el-date-picker>
             </div>
             <template v-for="(item,index) in enquirieList" v-if="contrastName!='timeCont'">
-                <echart-days :scoreHeight='300' :enquirieChart="item" :contrastTag="contrastName"></echart-days>
+                <echart-days :scoreHeight='300' :is-interval='1' :enquirieChart="item" :contrastTag="contrastName"></echart-days>
             </template>
             <div class="enquirieTag" :class="[contrastName=='timeCont'?'TwoTagTop':'']">
                 <div class="enquirieTagTop flex-box"  v-if="contrastName!='timeCont'">  
@@ -170,7 +170,7 @@
                 </div>
                 <div class="proAccount" :class="[EnquirieMap.length>1?'mapOneAccount':'',EnquirieMap.length>2?'mapTwoAccount':'']">
                         <template v-if="ChartEnquirie.length>0" v-for="(item,index) in ChartEnquirie">
-                            <score-days :scoreHeight='250' :enquirieChart="item" :contrastTag="contrastName"></score-days>
+                            <echart-days :scoreHeight='250' :is-interval='0' :enquirieChart="item" :contrastTag="contrastName"></echart-days>
                         </template>
                         <template v-if="ChartAccount.length>0" v-for="item in ChartAccount">
                             <account-chart 
@@ -249,6 +249,7 @@
 </template>
 <script>
 import { Mix } from '@antv/g2plot';
+import * as echarts from 'echarts';
 import {randomString,formatDate,numSeparate,rankingWithTotalItem} from "@/utils/index"
 import {MapInterval,TopTenColor} from "@/utils/MapColor"
 import { worldCountry } from "@/utils/worldCountry";
@@ -398,6 +399,12 @@ export default {
     this.nowcate = this.$route.meta.title;
     $this.getNearMonth();
     $this.getChinaproductlist();
+  },
+  destroyed(){
+    window.removeEventListener('resize',this.echartsSize);
+    if(this.MixChart){
+        this.MixChart.dispose();
+    }
   },
   mounted(){
     const $this = this;
@@ -664,7 +671,9 @@ export default {
     getProFocount(){
       var $this=this;
       $this.emptySearch();
-
+      if($this.MixChart){
+          $this.MixChart.dispose();
+      }
       if($this.contrastPass&&$this.contrastPass.length>0){ 
           var contrastProname=[];             
           $this.contrastPass.forEach(function(item){
@@ -692,12 +701,12 @@ export default {
             var dataTimeTwo=$this.routTag.data[1].split('-');
             if(dataTimeOne[0]!=dataTimeTwo[0]){
                 $this.isYearBool=true;
-                $this.showLineTime=[dataTimeOne[0]+'年','平均值']
+                $this.showLineTime=['询盘','平均值']
             }else{
                 $this.isYearBool=false;
                 $this.showLineTime=[dataTimeOne[0]+'年',dataTimeTwo[0]+'年','平均值']
             }
-      }     
+      }
       var pathUrl = "";
       if($this.contrastName==="overview"){
         if($this.routTag.productnameId!=0){
@@ -739,9 +748,6 @@ export default {
         searchData.typeid=$this.routTag.typeid;
         pathUrl = "api/getEnproducttimecompareAction";
       }
-      if ($this.MixChart && !$this.MixChart.chart.destroyed) {
-          $this.MixChart.chart.destroy();
-      } 
       $this.$store.dispatch(pathUrl,searchData).then((res) => {
           if (res) {
             if (res.status) {
@@ -779,16 +785,16 @@ export default {
                         }
                         res.xunmonthtong.forEach(function(item,index){
                             var nowYearObj={};
-                            var lastYearObj={};
                             totalNum=totalNum+item.number;
                             lasttotalNum=lasttotalNum+item.lastnumber;
                             nowYearObj.time=item.date;
                             nowYearObj.number=item.number;
-                            var lastdate=item.date.split('-');
-                            lastYearObj.time=(lastdate[0]-1)+'-'+lastdate[1];
-                            lastYearObj.number=item.lastnumber;
+                            MixData.nowYear.push(nowYearObj);
                             if($this.currentTab=='enquirie'){
-                                MixData.nowYear.push(nowYearObj);
+                                var lastYearObj={};
+                                var lastdate=item.date.split('-');
+                                lastYearObj.time=(lastdate[0]-1)+'-'+lastdate[1];
+                                lastYearObj.number=item.lastnumber;
                                 MixData.lastYear.push(lastYearObj);
                             }
                             currentMixItem.nowYear.push(nowYearObj);
@@ -929,12 +935,7 @@ export default {
                             });
                             $this.CoreData.ClinchNum=totalscoreNum;
                             var ChartTabObj={};
-                            var timeNum='';
-                            if($this.routTag.data&&$this.routTag.data.length>0){
-                                var dataTimeOne=$this.routTag.data[0].split('-')[1];
-                                var dataTimeTwo=$this.routTag.data[1].split('-')[1];
-                                var timeNum=Math.abs(dataTimeTwo-dataTimeOne+1);
-                            }
+                            var timeNum=res.monthscorenumber.length==0?1:res.monthscorenumber.length;
                             ChartTabObj.totalNum=totalNum.toFixed(2)*1;
                             ChartTabObj.lasttotalNum=lasttotalNum.toFixed(2)*1;
                             ChartTabObj.numSeptotalNum=numSeparate((totalNum/timeNum).toFixed(2)*1);
@@ -1054,12 +1055,12 @@ export default {
                             item.forEach(function(items,indexs){
                                 if($this.contrastName=='productCont'){
                                     if(tagName.indexOf(items.productname)<0){
-                                      tagName.push(items.productname);
+                                        tagName.push(items.productname);
                                     }
                                 }
                                 if($this.contrastName=='departCont'){
                                     if(tagName.indexOf(items.departname)<0){
-                                      tagName.push(items.departname);
+                                        tagName.push(items.departname);
                                     }
                                 }
                             });
@@ -1070,9 +1071,12 @@ export default {
                     var departcountChart=[];
                     if(res.xunmonthtong&&res.xunmonthtong.length>0){
                         if($this.contrastName=='timeCont'){
-                            ChartEnquirie = ChartEnquirie.concat($this.dateCompare(res.xunmonthtong,'xunnumber',searchData.productname,'询盘趋势'));
+                            var timeOne=$this.routTag.data[0]+" ~ "+$this.routTag.data[1];
+                            var timeTwo=$this.routTag.cstarttime+" ~ "+$this.routTag.cendtime;
+                            var valName=[timeOne,timeTwo]
+                            ChartEnquirie = ChartEnquirie.concat($this.dateCompare(res.xunmonthtong,'xunnumber',valName,'询盘趋势'));
                         }else{
-                            ChartEnquirie=ChartEnquirie.concat($this.areaPlug(res.xunmonthtong,searchData.productname,'询盘个数',$this.contrastName)); 
+                            ChartEnquirie=ChartEnquirie.concat($this.echartareaPlug(res.xunmonthtong,tagName,'询盘个数',$this.contrastName)); 
                         }   
                         //积分占比                    
                         var departCount=[];
@@ -1149,9 +1153,12 @@ export default {
                         //积分占比
                         if(res.productmonthscore&&res.productmonthscore.length>0){
                             if($this.contrastName=='timeCont'){
-                                 ChartEnquirie = ChartEnquirie.concat($this.dateCompare(res.productmonthscore,'score',searchData.productname,'成交积分'));
+                                var timeOne=$this.routTag.data[0]+" ~ "+$this.routTag.data[1];
+                                var timeTwo=$this.routTag.cstarttime+" ~ "+$this.routTag.cendtime;
+                                var valName=[timeOne,timeTwo]
+                                 ChartEnquirie = ChartEnquirie.concat($this.dateCompare(res.productmonthscore,'score',valName,'成交积分'));
                             }else{
-                                ChartEnquirie=ChartEnquirie.concat($this.areaPlug(res.productmonthscore,searchData.productname,'成交积分',$this.contrastName));
+                                ChartEnquirie=ChartEnquirie.concat($this.echartareaPlug(res.productmonthscore,tagName,'成交积分',$this.contrastName));
                             } 
                             var departCount=[];
                             res.productmonthscore.forEach(function(item,index){
@@ -1260,69 +1267,81 @@ export default {
       var tongData = dataArr;
       var backData = {};
       backData.enquirieArr = [];
+      backData.TagTime = [];
       backData.ChartColor = ChartColor;
-      if(tongData[0].length>=tongData[1].length){   
+      if(tongData[0].length>=tongData[1].length){  
+        var newChartOne=[];
+        var newChartTwo=[]; 
         for(var i=0;i<tongData[0].length;i++){ 
           var itemChart0 = {};
           var itemChart1 = {};
+          var timeStr='';
           if(tongData[1][i]){
+            timeStr=tongData[0][i].xunmonth+"\n"+tongData[1][i].xunmonth;
             itemChart0.color = ChartColor[1];
-            itemChart0.time = tongData[0][i].xunmonth+"\n"+tongData[1][i].xunmonth;
             itemChart0.name = $this.routTag.data[0]+" ~ "+$this.routTag.data[1];
             itemChart1.color = ChartColor[0];
-            itemChart1.time = tongData[0][i].xunmonth+"\n"+tongData[1][i].xunmonth;
             itemChart1.name = $this.routTag.cstarttime+" ~ "+$this.routTag.cendtime;
             itemChart1.xunmonth=tongData[1][i].xunmonth;
+
             if(key=='xunnumber'){
-                itemChart1.number=tongData[1][i].number;
+                itemChart1.value=tongData[1][i].number;
             }else{
-                itemChart1.number=tongData[1][i].score;
+                itemChart1.value=tongData[1][i].score;
             }
-            backData.enquirieArr.push(itemChart1);
+            newChartTwo.push(itemChart1);
           }else{
+            timeStr=tongData[0][i].xunmonth;
             itemChart0.color = ChartColor[1];
-            itemChart0.time = tongData[0][i].xunmonth;
             itemChart0.name = $this.routTag.data[0]+" ~ "+$this.routTag.data[1];
           }
           itemChart0.xunmonth=tongData[0][i].xunmonth;
           if(key=='xunnumber'){
-              itemChart0.number=tongData[0][i].number;
+              itemChart0.value=tongData[0][i].number;
           }else{
-              itemChart0.number=tongData[0][i].score;
+              itemChart0.value=tongData[0][i].score;
           }
-          backData.enquirieArr.push(itemChart0);
+          backData.TagTime.push(timeStr);
+          newChartOne.push(itemChart0);
         }
+        backData.enquirieArr.push(newChartOne);
+        backData.enquirieArr.push(newChartTwo);
       }else{        
+        var newChartOne=[];
+        var newChartTwo=[];
         for(var i=0;i<tongData[1].length;i++){   
           var itemChart0 = {};
           var itemChart1 = {};
+          var timeStr='';
           if(tongData[0][i]){
+            timeStr=tongData[1][i].xunmonth+"\n"+tongData[0][i].xunmonth;
             itemChart0.color = ChartColor[0];
-            itemChart0.time = tongData[1][i].xunmonth+"\n"+tongData[0][i].xunmonth;
             itemChart0.name = $this.routTag.data[0]+" ~ "+$this.routTag.data[1];
             itemChart0.xunmonth=tongData[0][i].xunmonth;
             itemChart1.color = ChartColor[1];
-            itemChart1.time = tongData[1][i].xunmonth+"\n"+tongData[0][i].xunmonth;
             itemChart1.name = $this.routTag.cstarttime+" ~ "+$this.routTag.cendtime;
             if(key=='xunnumber'){
-                itemChart0.number=tongData[0][i].number;
+                itemChart0.value=tongData[0][i].number;
             }else{
-                itemChart0.number=tongData[0][i].score;
+                itemChart0.value=tongData[0][i].score;
             }
-            backData.enquirieArr.push(itemChart0);
+            newChartOne.push(itemChart0);
           }else{
+            timeStr=tongData[1][i].xunmonth;
             itemChart1.color = ChartColor[1];
-            itemChart1.time = tongData[1][i].xunmonth;
             itemChart1.name = $this.routTag.cstarttime+" ~ "+$this.routTag.cendtime;
           }
           itemChart1.xunmonth=tongData[1][i].xunmonth;
           if(key=='xunnumber'){
-              itemChart1.number=tongData[1][i].number;
+              itemChart1.value=tongData[1][i].number;
           }else{
-              itemChart1.number=tongData[1][i].score;
+              itemChart1.value=tongData[1][i].score;
           }
-          backData.enquirieArr.push(itemChart1);
+          backData.TagTime.push(timeStr);
+          newChartTwo.push(itemChart1);
         }
+        backData.enquirieArr.push(newChartOne);
+        backData.enquirieArr.push(newChartTwo);
       }
       backData.randomStr = randomString(4);
       backData.TagName = TagName;
@@ -1347,8 +1366,13 @@ export default {
             var newItemArr=[];
             item.forEach(function(items,indexs){
                 var itemDate = [];
-                itemDate = items.date.split("-");
-                items.time =itemDate[1] + "-" + itemDate[2] + "\n" + items.weekday.replace("星期", "周");
+                if(items.date){
+                    itemDate = items.date.split("-");
+                    items.time =itemDate[1] + "-" + itemDate[2] + "\n" + items.weekday.replace("星期", "周");
+                }else{
+                    itemDate = items.xunmonth.split("-");
+                    items.time =itemDate[1] + "月";
+                }
                 if(index==0){
                     enquirieObj.TagTime.push(items.time);                  
                 }
@@ -1361,7 +1385,11 @@ export default {
                 if(contrastName=='departCont'){
                   itemObj.itemName=items.departname;
                 }
-                itemObj.value=items.number;
+                if(TagName!='成交积分'){
+                    itemObj.value=items.number;
+                }else{
+                    itemObj.value=items.score;
+                }   
                 newItemArr.push(itemObj);             
             });
             newArr.push(newItemArr);
@@ -1371,47 +1399,6 @@ export default {
         enquirieList.push(enquirieObj);
         return enquirieList;
 
-    },
-    // 面积图插件
-    areaPlug(valData,valName,TagName,contrastName){
-        var $this = this;
-        var ChartColor=['#044bff','#fe4c46','#fdcb66','#47cbfe'];
-        var enquirieList=[];
-        var enquirieObj={
-            TagName:TagName,
-            chartName:valName,
-            randomStr:randomString(4),
-            ChartColor:[],
-            enquirieArr:[],
-        };
-        valData.forEach(function(item,index){
-            item.forEach(function(items,indexs){
-                var itemDate = [];
-                if(items.date){
-                    itemDate = items.date.split("-");
-                    items.time =itemDate[1] + "-" + itemDate[2] + "\n" + items.weekday.replace("星期", "周");
-                }else{
-                    itemDate = items.xunmonth.split("-");
-                    items.time =itemDate[1] + "月";
-                }
-                items.color=ChartColor[index];
-                if(contrastName=='overview'||contrastName=='productCont'){
-                items.name=items.productname;
-                }
-                if(contrastName=='departCont'){
-                items.name=items.departname;
-                }
-                if(TagName!='成交积分'){
-                    items.number=items.number;
-                }else{
-                    items.number=items.score;
-                }                
-                enquirieObj.enquirieArr.push(items);
-            });
-        });
-        enquirieObj.ChartColor=ChartColor;
-        enquirieList.push(enquirieObj);
-        return enquirieList;
     },
     // 饼图插件
     piePlug(valData,valName,valTag,valUnit){
@@ -1506,246 +1493,236 @@ export default {
     // 组合图表
     getYearInquiryChart(){
         var $this = this;
-        if ($this.MixChart && !$this.MixChart.chart.destroyed) {
-            $this.MixChart.chart.destroy();
-        }
         var nowyear = $this.MixData.nowYear;
         var lastyear = $this.MixData.lastYear;
-        //平均值
-        var aliasTime='';
-        var lastaliasTime='';
-        if(nowyear&&nowyear.length>0){
-            var tolNum=0;
-            nowyear.forEach(function(item,index){
-                tolNum=tolNum+item.number;
-            });
-            var avg=(tolNum/nowyear.length).toFixed(2)*1;
-        }
-        //别名设置
-        var aliasName='';
-        var annotations=false;
-        if($this.currentTab=='enquirie'){
-            aliasName='询盘个数';
-            annotations= [
-                {
-                    type: "line",
-                    start: ["min",avg],
-                    end: ["max",avg],
-                    top: true,
-                    offsetY: 0,
-                    offsetX: 0,
-                    style: {
-                        stroke: "#5fce45",
-                        lineDash: [8, 4],
-                        lineWidth:1,
-                    },
-                },
-                // 平均值
-                {
-                    type: "html",
-                    position: ["max", avg],
-                    top: true,
-                    html:"<span class='chart-font target'><span class='txt-font'>" + avg + "</span><i></i></span>",
-                    alignX: "left",
-                    alignY: "bottom",
-                },
-            ]
-        }
-        if($this.currentTab=='clinchScore'){
-            aliasName='成交积分';
-        }
-        if($this.currentTab=='clinchNum'){
-            aliasName='100万成交个数';
-        }
-        if($this.currentTab=='money'){
-            aliasName='月奖金';
-        }
-        //计算y轴显示的最大数值
-        var maxnum = 0;
-        for(var i=0;i<nowyear.length;i++){
-            if(nowyear[i].number > maxnum){
-                maxnum = nowyear[i].number;
-            }
-        }
-        for(var i=0;i<lastyear.length;i++){
-            if(lastyear[i].number > maxnum){
-                maxnum = lastyear[i].number;
-            }
-        }
-        //是否跨年
-        var plots='';
-        if($this.isYearBool){
-            plots=[{
-                type: 'column',
-                options: {
-                    data: nowyear,
-                    xField: 'time',
-                    yField: 'number',
-                    appendPadding:[15,0,0,0],
-                    minColumnWidth: 22,
-                    maxColumnWidth: 22,
-                    yAxis: {
-                        grid: {
-                            line: {
-                                style: {
-                                    stroke: '#f2f2f2',
-                                },
-                            
-                            },
-                        },
-                        tickCount:3,
-                        max:maxnum,
-                        label:{
-                            style:{
-                                lineHeight:18,
-                                fontSize: 13,
-                                fill: "#555555"
-                            }
-                        }
-                    },
-                    xAxis: {
-                        tickCount:15,
-                        label: {
-                            // 数值格式化为千分位
-                            formatter: (v) => {
-                                var item = "";
-                                if(v.indexOf("&")!=-1){
-                                    item = v.split("&")[0]+'\n'+v.split("&")[1];
-                                }else{
-                                    if(v.indexOf(" ")!=-1){
-                                        var week = "周"+v.split(" ")[1].substr(2);
-                                        var date = v.split(" ")[0];
-                                        item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
-                                    }else{
-                                        item = v.split("-")[1]+"月";
-                                    }
-                                }
-                                return item
-                            },
-                            style:{
-                                lineHeight:18,
-                                fontSize: 13,
-                                fill: "#555555"
-                            }
-                        },
-                    },
-                    label:false,
-                    annotations:annotations,
-                    columncolor:'#9bbaff',
-                },
-            }]
-        }else{
-            plots= [
-            {
-                type: 'column',
-                options: {
-                    data: nowyear,
-                    xField: 'time',
-                    yField: 'number',
-                    appendPadding:[15,0,0,0],
-                    minColumnWidth: 22,
-                    maxColumnWidth: 22,
-                    yAxis: {
-                        grid: {
-                            line: {
-                                style: {
-                                    stroke: '#f2f2f2',
-                                },
-                            
-                            },
-                        },
-                        tickCount:3,
-                        max:maxnum,
-                        label:{
-                            style:{
-                                lineHeight:18,
-                                fontSize: 13,
-                                fill: "#555555"
-                            }
-                        }
-                    },
-                    xAxis: {
-                        tickCount:15,
-                        label: {
-                            // 数值格式化为千分位
-                            formatter: (v) => {
-                                var item = "";
-                                if(v.indexOf("&")!=-1){
-                                    item = v.split("&")[0]+'\n'+v.split("&")[1];
-                                }else{
-                                    if(v.indexOf(" ")!=-1){
-                                        var week = "周"+v.split(" ")[1].substr(2);
-                                        var date = v.split(" ")[0];
-                                        item = date.split("-")[1]+"-"+date.split("-")[2]+'\n'+week;
-                                    }else{
-                                        item = v.split("-")[1]+"月";
-                                    }
-                                }
-                                return item
-                            },
-                            style:{
-                                lineHeight:18,
-                                fontSize: 13,
-                                fill: "#555555"
-                            }
-                        },
-                    },
-                    label:false,
-                    annotations:annotations,
-                    columncolor:'#9bbaff',
-                },
-            },
-            {
-                type: 'area', 
-                options: {
-                    data: lastyear,
-                    xField: 'time',
-                    yField: 'number',
-                    areaStyle: () => {
-                        return {
-                            fill: 'l(270) 0:#ffffff 0.5:#efd587 1:#f1cb56',
-                        };
-                    },
-                    color: "#f3be1c",
-                    line:{
-                        color: "#f3be1c",
-                        size:2
-                    },
-                    label:false,
-                    yAxis: {
-                        grid: {
-                            line: {
-                                style: {
-                                    stroke: '#f2f2f2',
-                                },
-                            
-                            },
-                        },
-                        tickCount: 5,
-                        max: maxnum,
-                        label:false
-                    },
-                    xAxis:false,
-                }
-            }
-        ]
-        }
-        const MixChart = new Mix('inquirybox', {
-        tooltip: { 
-            shared: true,
-            title:aliasName,
-            customItems: (originalItems) => {
-                originalItems.forEach(function(item){
-                    item.name = item.data.time;
-                });
-                return originalItems;
-            },
-        },      
-        syncViewPadding: true,
-        plots:plots,
+        var timeArr=[];
+        var nowDataArr=[];
+        var lastDataArr=[];
+        nowyear.forEach(function(item,index){
+            timeArr.push(item.time.split("-")[1]+"月");
+            nowDataArr.push(item.number);
         });
-        $this.MixChart=MixChart;
-        MixChart.render();
+        lastyear.forEach(function(item,index){
+            lastDataArr.push(item.number);
+        });
+        // 平均值
+        var avgMark=false;
+        if($this.currentTab=='enquirie'){
+            avgMark={
+                    data: [
+                        {type: 'average', name: '平均值'}
+                    ],
+                    label: {
+                        show: true,
+                        position: 'insideEndTop',
+                    },
+                    lineStyle:{
+                        normal: {
+                            width:1,
+                            color:'#01b01d', // 线条颜色
+                        },
+                    },
+                    emphasis:{
+                        lineStyle: {
+                        width:1,	// hover时的折线宽度
+                        }
+                    }
+                }
+        }else{
+            avgMark=false;
+        }
+        var series=[];
+        if($this.isYearBool){
+            series=[{
+                type: 'bar',
+                data:nowDataArr,
+                barWidth: '28px',
+                itemStyle: {
+                    color: '#6395f9'
+                },
+                markLine:avgMark,
+                label: {
+                    normal: {
+                        show: false,
+                    }
+                },
+            }];
+        }else{
+            series=[{
+                type: 'bar',
+                data:nowDataArr,
+                barWidth: '28px',
+                itemStyle: {
+                    color: '#6395f9'
+                },
+                markLine:avgMark,
+                label: {
+                    normal: {
+                        show: false,
+                    }
+                },
+            },{
+                type: 'line',
+                data:lastDataArr,
+                smooth:false,
+                showSymbol:false,
+                lineStyle:{
+                    normal: {
+                        width: 2,
+                        color:'#efd587', // 线条颜色
+                    },
+                },
+                itemStyle:{
+                    normal: {
+                        color:'#efd587', // 折点颜色
+                    },
+                },
+                areaStyle:{
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        {
+                        offset: 0,
+                        color:'#efd587',
+                        opacity:1
+                        },
+                        {
+                        offset: 1,
+                        color: "rgba(255, 255, 255, 0)",
+                        }
+                    ]),
+                    opacity:0.3
+                },
+                emphasis:{
+                    lineStyle: {
+                        width: 2,	// hover时的折线宽度
+                    }
+                },
+                symbolSize:7,
+                animationDuration:2800,
+                animationEasing:'quadraticOut',
+            }]
+        }
+        var chartDom = document.getElementById('inquirybox');
+        var MixChart = echarts.init(chartDom);
+        var option;
+        option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                formatter: function (params, ticket, callback) {
+                    var showHtm="";
+                    var title = '';
+                    var showHtmDd='';
+                    for(var i=0;i<params.length;i++){
+                        if(params[i]&&params[i]!=undefined){
+                            var name = '';    
+                            var nowyearStr='';
+                            var lastyearStr='';
+                            nowyear.forEach(function(item,index){
+                                if(index==0){                                    
+                                    nowyearStr=item.time.split("-")[0]+'-'+params[i].axisValue.replace('月','');
+                                }
+                            });
+                            lastyear.forEach(function(item,index){
+                                if(index==0){
+                                    lastyearStr=item.time.split("-")[0]+'-'+params[i].axisValue.replace('月','');
+                                }
+                            });
+                            if(i==0){
+                                name=nowyearStr;
+                            }
+                            if(i==1){
+                                name=lastyearStr;
+                            }
+                            var value = params[i].value;
+                            if($this.currentTab=='enquirie'){
+                                title='询盘个数';
+                            }
+                            if($this.currentTab=='clinchScore'){
+                                title='成交积分';
+                            }
+                            if($this.currentTab=='clinchNum'){
+                                title='100万成交个数';
+                            }
+                            if($this.currentTab=='closing'){
+                                title=name;
+                            }
+                            showHtmDd+='<dd><i style="background:'+params[i].color+'"></i><span>'+name+'：</span><strong>' + value +'</strong></dd>'
+                        }
+                    }
+                    showHtm='<dl class="columTool"><dt>'+title+'</dt>'+showHtmDd+'</dl>';
+                    return showHtm;
+                }
+            },
+            grid: {
+                top:'10',
+                right:'0',
+                left:'35',
+                bottom:'30'
+            },
+            xAxis:{
+                type: 'category',
+                data:timeArr,
+                axisTick: {
+                    show: false
+                },
+                axisLine:{
+                    show: true,
+                    lineStyle:{
+                        type: [4, 0],
+                        dashOffset: 3,
+                        color: '#e5e5e5',
+                        opacity:1,
+                        shadowColor: null,
+                        shadowBlur: 0,
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                    }
+                },
+                axisLabel: {
+                    color: "#555",
+                    fontSize: "13",
+                    lineHeight: 18,
+                },
+                nameTextStyle:{
+                    lineHeight:18,
+                }
+            },
+            yAxis:{
+                type: 'value',
+                axisTick: {
+                    show: false
+                },
+                axisLabel: {
+                    color: "#555",
+                    fontSize: "13",
+                },
+                axisLine:{
+                    show: false,
+                },
+                splitLine:{
+                    show: true,
+                    lineStyle:{
+                        type: [4, 2],
+                        dashOffset: 3,
+                        color: '#e5e5e5',
+                        opacity:1,
+                        shadowColor: null,
+                        shadowBlur: 0,
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                    }
+                },
+                splitNumber:3,
+                nameTextStyle:{
+                    lineHeight:18,
+                }
+            },
+            series:series,
+        }
+        option && MixChart.setOption(option);
+        $this.MixChart = MixChart;
     },
     // 点击产品分类获取产品
     handleCategory(valData){
@@ -1911,6 +1888,26 @@ export default {
             });
         }
         $this.MixData=MixData;
+        if($this.routTag.data&&$this.routTag.data.length>0){
+            var searchData={};
+            searchData.starttime=$this.routTag.data[0];
+            searchData.endtime=$this.routTag.data[1];
+            var dataTimeOne=$this.routTag.data[0].split('-');
+            var dataTimeTwo=$this.routTag.data[1].split('-');
+            if(dataTimeOne[0]!=dataTimeTwo[0]){
+                if($this.currentTab=='enquirie'){
+                    $this.showLineTime=['询盘','平均值']
+                }else{
+                    $this.showLineTime=['询盘']
+                }
+            }else{
+                if($this.currentTab=='enquirie'){
+                    $this.showLineTime=[dataTimeOne[0]-1+'年',dataTimeTwo[0]+'年','平均值']
+                }else{
+                    $this.showLineTime=[dataTimeOne[0]-1+'年',dataTimeTwo[0]+'年']
+                }
+            }
+        }
         $this.getYearInquiryChart();
     },
     // 点击切换标签
@@ -2417,6 +2414,11 @@ export default {
     departchange(chooseDepart,tag){
         this.chooseData.chooseDepart = chooseDepart;
         this.chooseData.tag = tag;
+    },
+    echartsSize(){
+        if(this.MixChart){
+            this.MixChart.resize();
+        }
     }
   }
 }

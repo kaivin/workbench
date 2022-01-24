@@ -129,7 +129,7 @@ export default {
                   xuntongArr.forEach(function(item,index){
                     var itemObj={};
                     itemObj.name=item.keyproduct;
-                    itemObj.number=item.number;
+                    itemObj.value=item.number;
                     itemObj.ranking=item.ranking;
                     if(tolNum==0||item.number==0){
                         itemObj.percent='0%';
@@ -156,7 +156,7 @@ export default {
                   xuntongArr.forEach(function(item,index){
                     var itemObj={};
                     itemObj.name=item.keyproduct;
-                    itemObj.number=item.score;
+                    itemObj.value=item.score;
                     itemObj.ranking=item.ranking;
                     if(tolNum==0||item.number==0){
                         itemObj.percent='0%';

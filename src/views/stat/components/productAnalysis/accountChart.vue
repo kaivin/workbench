@@ -87,7 +87,7 @@
     </div>
 </template>
 <script>
-import {Pie} from '@antv/g2plot';
+import * as echarts from 'echarts';
 export default {
   name: "accountChart",
   props: {
@@ -104,67 +104,110 @@ export default {
   },
   data() {
     return {
+        myChart:null,
     };
   },
+  destroyed(){
+    window.removeEventListener('resize',this.echartsSize);
+    if(this.myChart){
+        this.myChart.dispose();
+    }
+  },
   mounted(){
+    window.addEventListener('resize',this.echartsSize);
     this.drawPieChart();
   },
   methods: {
     // 占比图例
     drawPieChart(){
       var $this = this;
-      if(!$this.piePlot){
-        const piePlot = new Pie('pie-'+$this.accountArr.currentTag, {
-          data:$this.accountArr.itemArr,
-          angleField: 'number',
-          colorField: 'name',
-          radius: 0.75,
-          width:218,
-          height:218,
-          radius: 1,
-          innerRadius: 0.65,
-          color:$this.accountArr.ChartColor,
-          appendPadding:[10,10,10,10],
-          animation: {
-            // 配置图表第一次加载时的入场动画
-            appear: {
-              animation: 'zoom-in', // 动画效果
-              duration: 500,  // 动画执行时间
+      var chartDom = document.getElementById('pie-'+$this.accountArr.currentTag);
+      var myChart = echarts.init(chartDom);
+      let echartData=[];
+      let echartColor=[];
+      $this.accountArr.itemArr.forEach(function(item,index){
+        var itemObj={};
+        itemObj.name=item.name;
+        itemObj.value=item.number;
+        echartData.push(itemObj);
+        var colorObj={};
+        colorObj.x=0;
+        colorObj.y=0;
+        colorObj.x2=0;
+        colorObj.y2=1;
+        colorObj.colorStops=[];
+        var colorOne={};
+        colorOne.offset=0;
+        colorOne.color=item.color;            
+        colorObj.colorStops.push(colorOne);
+        var colorTwo={};
+        colorTwo.offset=1;
+        colorTwo.color=item.color;
+        colorObj.colorStops.push(colorTwo);
+        echartColor.push(colorObj);
+      });
+        var option;
+        option = {
+            title:{
+                text:$this.accountArr.totalNum,
+                subtext:$this.accountArr.totalNumName,
+                textStyle:{
+                    fontSize:20,
+                    color:"#252525",
+                    fontWeight:'400',
+                    lineHeight:1,
+                },
+                subtextStyle: {
+                    fontSize: 14,
+                    color: '#252525',
+                    fontWeight:'400',
+                    lineHeight:1,
+                },
+                textAlign:"center",
+                x: '48%',
+                y: '43%',
+                itemGap:0
             },
-          },
-          label:false,
-          legend:false,
-          state: {
-            active: {
-              style: {
-                fill:'#90a6e8',
-                lineWidth:0,
-                fillOpacity: 0.65,
-              },
+            tooltip: {
+                trigger: 'item'
             },
-          },
-          interactions: [{ type: 'element-selected' }, { type: 'element-active' }],
-          statistic: {
-            title:false,
-            content: {
-              style: {
-                whiteSpace: 'pre-wrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              },
-              customHtml:(v)=>{
-                var item='<p class="picCon"><span class="picConTit">'+$this.accountArr.totalNum+'</span><span class="picConMain">'+$this.accountArr.totalNumName+'</span></p>'
-                return item
-              },
-            },
-          },
-        });
-        $this.piePlot = piePlot;
-        piePlot.render();
-      }
+            series: [
+                {
+                    color:echartColor,
+                    type: 'pie',
+                    radius: ['60%', '90%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                      show: false,
+                    },
+                    emphasis: {
+                      label: {
+                        show: false,
+                      }
+                    },
+                    itemStyle: {
+                        normal: {
+                            borderColor: '#ffffff',
+                            borderWidth:1,
+                        }
+                    },
+                    labelLine: {
+                      show: false
+                    },
+                    data:echartData
+                }
+            ]
+        };
+        option && myChart.setOption(option);
+        $this.myChart = myChart;
     },
     departClick(name,tag){
       this.$emit("departchange", name, tag);
+    },
+    echartsSize(){
+        if(this.myChart){
+            this.myChart.resize();
+        }
     }
   }
 }

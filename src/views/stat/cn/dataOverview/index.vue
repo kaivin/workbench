@@ -155,6 +155,12 @@ export default {
     ...mapGetters([
       'sidebar',
     ]),
+    nowYear(){
+      return new Date().getFullYear();
+    },
+    prevYear(){
+      return new Date().getFullYear()-1;
+    }
   },
   components:{
     CostYears,//年度成本
@@ -182,14 +188,6 @@ export default {
     var month = new Date().getMonth();
     if(month < 3){
       this.type = 1
-    }
-  },
-  computed:{
-    nowYear(){
-      return new Date().getFullYear();
-    },
-    prevYear(){
-      return new Date().getFullYear()-1;
     }
   },
   methods: {

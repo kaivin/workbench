@@ -35,6 +35,10 @@ export default {
       type: String,
       default: "",
     },
+    isInterval:{
+      type: Number,
+      default: "",
+    },    
     scoreHeight:{
       type: Number,
       default: "",
@@ -147,7 +151,7 @@ export default {
             },
             grid: {
                 left: 10,
-                right: 40,
+                right:$this.contrastTag=='overview'?'40':'20',
                 bottom:$this.contrastTag=='overview'?'10':'40',
                 top: 30,
                 containLabel: true
@@ -176,7 +180,7 @@ export default {
                     }
                 },
                 axisLabel: {
-                    interval:1,
+                    interval:$this.isInterval,
                     color: "#555",
                     fontSize: "12",
                     lineHeight: 18,
