@@ -6,6 +6,7 @@
     <div class="rowMain" :style="isshow?'height:546px':''">
         <el-table
             :data="scoretableData"
+            ref="table"
             :key="time"
             style="width: 100%"
             border
@@ -64,7 +65,8 @@ export default {
             isMoreShow:true,
             filterdep:[],
             time: new Date().valueOf(),
-            ison:0
+            filteredNum:0,
+            isJump:false,
         }
     },
     props:{
@@ -112,11 +114,35 @@ export default {
     watch:{
         chooseData:{
             handler(val,oldval){
-                if(val.tag == "score"){
-                    this.filterdep = [val.chooseDepart];
-                    this.time = new Date().valueOf();
-                    this.nowLength = 0;
-                    this.ison = 1;
+                var $this = this;
+                if(val.chooseDepart){
+                    $this.nowLength = 0;
+                    if($this.$refs.table){
+                        $this.$refs.table.clearFilter();
+                    }
+                    if(val.tag == "score"){
+                        $this.filterdep = [val.chooseDepart];
+                        $this.scoretableData.forEach(function(item,index){
+                            if(item.depart == val.chooseDepart){
+                                $this.nowLength +=1;
+                            }
+                        });
+                        if($this.nowLength>10){
+                            $this.isshow=true;
+                            $this.isMoreShow = true;
+                        }else{
+                            $this.isshow=false;
+                            $this.isMoreShow = false;
+                        }
+                        $this.nowLength = 0;
+                        $this.isJump = true;
+                        $this.filteredNum = 0;
+                        $this.time = new Date().valueOf();
+                    }
+                }else{
+                    if($this.$refs.intable){
+                        $this.$refs.intable.clearFilter();
+                    }
                 }
             },
             deep:true,
@@ -130,8 +156,16 @@ export default {
         },
         filterDepart(value, row, column){
             const property = column['property'];
-            if(this.ison == 1){
+            if(this.filteredNum===0 && !this.isJump){
                 this.nowLength = 0;
+            }
+            this.filteredNum +=1;
+            if(this.isJump){
+                this.filterdep = [];
+                if(this.filteredNum === this.scoretableData.length){
+                    this.filteredNum = 0;
+                    this.isJump = false;
+                }
             }
             if(row[property] === value){
                 this.nowLength += 1;
@@ -151,8 +185,8 @@ export default {
             }else{
                 this.isMoreShow = false;
             }
+            this.isJump = false;
             this.nowLength = 0;
-            this.ison = 0;
         }
     }
 }

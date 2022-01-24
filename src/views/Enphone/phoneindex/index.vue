@@ -7,6 +7,9 @@
             <router-link v-if="menuButtonPermit.includes('Enphone_search')" :to="{path:'/Enphone/searchClues'}" tag="a" target="_blank">
               <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
             </router-link>
+            <router-link v-if="menuButtonPermit.includes('Enphone_countlist')" :to="{path:'/Enphone/statisticChart'}" tag="a" target="_blank">
+              <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>统计分析</el-button>
+            </router-link>
             <router-link v-if="menuButtonPermit.includes('Enphone_phonecount')" :to="{path:'/Enphone/statisticClues'}" tag="a" target="_blank">
               <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
             </router-link>

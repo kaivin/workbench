@@ -10,8 +10,7 @@
       <div class="target_box">
         <div class="target_left">
           <day-target 
-            :DayTarget="DayTarget" 
-            :DayAim ="DayAim" 
+            :DayData="DayData"
             :Dep1DayNum="Dep1DayNum" 
             :lang="ch"
             @dayChange="dayChange" 
@@ -67,8 +66,15 @@ export default {
         stepNum: 50,
         month: ''
       },
-      DayTarget:[],
-      DayAim:[],
+      DayData:{
+        departArr:[],
+        dayArr:[],
+        monthArr:[],
+        historyArr:[],
+        targetArr:[],
+        searchArr:[],
+        unsearchArr:[]
+      },
       DayFinish:[],
       Dep1DayNum: 0,
       MonthFinish:[],
@@ -235,8 +241,14 @@ export default {
           if (response) {
             if (response.status) {
               var res = response.groupcount;
-              var newArr = [];
-              var aimArr = [];
+
+              var departlist=[];
+              var historylist=[];
+              var monthlist=[];
+              var daylist=[];
+              var targetlist=[];
+              var searchlist=[];
+              var unsearchlist=[];
               for(var i=0; i<res.length;i++){
                 var departname = res[i].departname;
                 var historymaxnumber = res[i].historymaxnumber;
@@ -244,62 +256,31 @@ export default {
                 var daynumber = res[i].daynumber;
                 var daytargetnumber = res[i].daytargetnumber;
 
+                departlist.push(departname);
+                targetlist.push(daytargetnumber);
+                daylist.push(daynumber);
+                monthlist.push(monthmaxnumber);
+                historylist.push(historymaxnumber);
+
                 if(res[i].hasOwnProperty('searchdaynumber')){
-                  var searchdaynumber = res[i].searchdaynumber;
-                  
-                  var sepArr2 = {
-                    departname: departname,
-                    name: "非搜索询盘",
-                    number: daynumber - searchdaynumber,
-                    stack: 1
-                  }
-                  newArr.push(sepArr2);
-
-                  var sepArr1 = {
-                    departname: departname,
-                    name: "搜索询盘",
-                    number: searchdaynumber,
-                    stack: 1
-                  }
-                  newArr.push(sepArr1);
-                  
+                  var searchdaynumber = res[i].searchdaynumber;                 
                   $this.Dep1DayNum = res[i].daynumber;
+                  searchlist.push(searchdaynumber);
+                  unsearchlist.push(res[i].daynumber-searchdaynumber);
                 }else{
-                  var sepArr1 = {
-                    departname: departname,
-                    name: "搜索询盘",
-                    number: daynumber,
-                    stack: 1
-                  }
-                  newArr.push(sepArr1);
+                  unsearchlist.push(0);
+                  searchlist.push(res[i].daynumber);
                 }
-                var sepArr3 = {
-                  departname: departname,
-                  name: "本月最高",
-                  number: monthmaxnumber,
-                  stack: 2
-                }
-                newArr.push(sepArr3);
-
-                var sepArr4 = {
-                  departname: departname,
-                  name: "历史最高",
-                  number: historymaxnumber,
-                  stack: 3
-                }
-                newArr.push(sepArr4);
-
-                var sepArr5 = {
-                  departname: departname,
-                  name: "目标询盘",
-                  number: daytargetnumber
-                }
-                aimArr.push(sepArr5)
               }
-              $this.DayTarget = newArr;
-              $this.DayAim = aimArr;
-              
-              
+
+              $this.DayData.departArr = departlist;
+              $this.DayData.targetArr= targetlist;
+              $this.DayData.dayArr = daylist;
+              $this.DayData.monthArr = monthlist;
+              $this.DayData.historyArr = historylist;
+              $this.DayData.searchArr = searchlist;
+              $this.DayData.unsearchArr = unsearchlist;
+               
               var daymax = 0;
               if(response.daymaxnumber.length>0){
                 daymax = response.daymaxnumber[0].effectivenumber;

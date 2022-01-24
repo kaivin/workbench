@@ -88,10 +88,10 @@
       .map-panel{
         padding: 30px;
         .map-chart{
-            padding: 0 50px;
+            padding: 0 100px 0 0;
         }
         .chart-canvas{
-            width: 760px;
+            width: 740px;
             height: 480px;
         }
         .table-panel{
@@ -140,6 +140,32 @@
 .WebServerAddEditBtn.ChinaphoneTwoBtn{
   padding-left:0px;
 }
+.WebServerAddEditBtn{
+  .el-button.exportBtn{
+    background-color:#f9a500!important;
+    border-color:#f9a500!important;
+    font-size:$fontsize17!important;
+    min-width:96px;
+    box-sizing:border-box!important;
+    height:35px;
+    line-height:33px!important;
+    padding:0px 10px!important;
+    .svg-i{
+      margin-right: 8px;
+    }
+    &.is-disabled,&.is-disabled:hover{
+        background-color: #ffd27a !important;
+        border-color: #ffd27a !important;
+        cursor:no-drop;
+    }
+    &:hover{
+      background-color: #fcb528 !important;
+      border-color: #fcb528 !important;
+    }
+  }
+  
+}
+
 .card-content.ChinaphoneTwoBox{
   background:#fff!important;
   border-radius:8px!important;
@@ -475,4 +501,39 @@
 }
 .EnphoneCardFrDate .el-card__header{
   margin-bottom: 10px!important;
+}
+@media (max-width:1400px){
+  .cn-phone-stat{
+    .cn-phone-result{
+      .el-col-lg-12{
+        width: 100%;
+      }
+    }
+  }
+  .cn-phone-stat .chart-wrapper .chart-body .map-panel{
+    display: block;
+  }
+  .cn-phone-stat .chart-wrapper .chartmap-body{
+    height: auto!important;
+  }
+  .cn-phone-stat .chart-wrapper .chartmap-body .map-panel .table-panel{
+    height: 480px;
+  }
+}
+
+.ChinaphoneTwoBox .nocount{
+  color: #909399;
+  font-size: 14px;
+  text-align: center;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.cn-phone-stat .chart-wrapper .chart-body .map-panel .enmap-chart{
+  padding-right: 60px;
+}
+.cn-phone-stat .chart-wrapper .chart-body .map-panel .enmap-chart .chart-canvas{
+  width: 780px;
 }

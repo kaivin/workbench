@@ -1386,3 +1386,50 @@
     border-bottom-color: #e8e6e6;
     border-right-color: transparent!important;
 }
+
+.deptoolTip{
+    .title{
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    .bar{
+      .xun{
+        display:inline-block;
+        margin-right:4px;
+        border-radius:10px;
+        width:10px;
+        height:10px;
+        background-color:#7fb3ff;
+      }
+      .search{
+        display:inline-block;
+        margin-right:4px;
+        border-radius:10px;
+        width:10px;
+        height:10px;
+        background-color:#90bafa; 
+      }
+      .unsearch{
+        display:inline-block;
+        margin-right:4px;
+        border-radius:10px;
+        width:10px;
+        height:10px;
+        background-color:#a0c7ff;
+      }
+      .name{
+        color: rgb(89, 89, 89);
+        font-size: 12px;
+        display: inline-block;
+        width: 75px;
+      }
+      .num{
+        font-size: 12px;
+        display: inline-block;
+        width: 16px;
+        text-align: right;
+        color: rgb(89, 89, 89);
+      }
+    }
+  }

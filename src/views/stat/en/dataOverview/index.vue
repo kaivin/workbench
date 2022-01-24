@@ -156,11 +156,6 @@ export default {
       type: 2,//默认展示今年的数据
     };
   },
-  computed: {
-    ...mapGetters([
-      'sidebar',
-    ]),
-  },
   components:{
     CostYears,//年度成本
     CostDepart,//部门年度成本
@@ -189,7 +184,10 @@ export default {
     },
     prevYear(){
       return new Date().getFullYear()-1;
-    }
+    },
+    ...mapGetters([
+      'sidebar',
+    ]),
   },
   mounted(){
     const $this = this;

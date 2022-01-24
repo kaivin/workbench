@@ -188,8 +188,8 @@
                         ></map-chart>
                         <div class="clearfix"></div>
                         <div class="pro_user" id="pro_user" v-if="intableData.length>0||scoretableData.length>0">
-                            <inquiry-table :intableData="intableData" :chooseData="chooseData" :lang="ch"></inquiry-table>
-                            <score-table :scoretableData="scoretableData" :chooseData="chooseData" :lang="ch"></score-table>
+                            <inquiry-table :intableData="intableData" :chooseData="chooseData" :lang="ch" ></inquiry-table>
+                            <score-table :scoretableData="scoretableData" :chooseData="chooseData" :lang="ch" ></score-table>
                         </div>
                 </div>
             </div>
@@ -355,8 +355,9 @@ export default {
       en:"en",
       chooseData:{
           chooseDepart:"",
-          tag:""
-      }
+          tag:"",
+          time: ""
+      },
     };
   },
   computed: {
@@ -1670,6 +1671,7 @@ export default {
                 item.isDisplay=false;
             }
         });
+        $this.chooseData.chooseDepart='';
         $this.getchinaproduct();
       }
     },
@@ -2348,6 +2350,7 @@ export default {
     departchange(chooseDepart,tag){
         this.chooseData.chooseDepart = chooseDepart;
         this.chooseData.tag = tag;
+        this.chooseData.time = new Date().valueOf();
     },
     echartsSize(){
         if(this.MixChart){

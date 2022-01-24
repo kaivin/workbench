@@ -176,12 +176,6 @@ export default {
     XpanPercent,//部门年度询盘
     HotProduct,//热门产品
   },
-  mounted(){
-    const $this = this;
-    if(!$this.sidebar.opened){
-      $this.$store.dispatch('app/toggleSideBar');
-    }    
-  },
   created() {
     this.getUserMenuButtonPermit()
     this.nowcate = this.$route.meta.title;
@@ -189,6 +183,12 @@ export default {
     if(month < 3){
       this.type = 1
     }
+  },
+  mounted(){
+    const $this = this;
+    if(!$this.sidebar.opened){
+      $this.$store.dispatch('app/toggleSideBar');
+    }    
   },
   methods: {
     // 获取当前登陆用户在该页面的操作权限

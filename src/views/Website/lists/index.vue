@@ -536,7 +536,7 @@ export default {
         this.initData();
       },
       isOpen(e){
-        this.settableHeight();
+        this.setHeight();
       },
   },
   created(){

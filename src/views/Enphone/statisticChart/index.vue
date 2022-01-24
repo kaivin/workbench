@@ -1,37 +1,42 @@
-﻿<template>
+<template>
   <div class="page-root flex-box no-padding cn-phone-index cn-phone-stat" ref="boxPane">
     <div class="sub-router">
       <el-scrollbar wrap-class="scrollbar-wrapper">
-              <el-scrollbar wrap-class="scrollbar-wrapper">
         <div class="sub-wrapper">
           <div class="side-button">
-            <router-link v-if="menuButtonPermit.includes('Chinaphone_search')" :to="{path:'/Chinaphone/searchClues'}">
-              <el-button type="primary" plain size="mini" ><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
+            <router-link v-if="menuButtonPermit.includes('Enphone_search')" :to="{path:'/Enphone/searchClues'}" tag="a" target="_blank">
+              <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>搜索数据</el-button>
             </router-link>
-            <router-link v-if="menuButtonPermit.includes('Chinaphone_countlist')" :to="{path:'/Chinaphone/statisticChart'}" >
+            <router-link v-if="menuButtonPermit.includes('Enphone_countlist')" :to="{path:'/Enphone/statisticChart'}" tag="a" target="_blank">
               <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>统计分析</el-button>
-            </router-link>    
+            </router-link>
+            <router-link v-if="menuButtonPermit.includes('Enphone_phonecount')" :to="{path:'/Enphone/statisticClues'}" tag="a" target="_blank">
+              <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
+            </router-link>
           </div>
-          <dl class="phone-list" v-for="(item,index) in phoneBrandList" v-bind:key="index">
-            <dt><span>{{item.name}}</span></dt>
-            <dd v-for="phone in item.phone" class="tipphone" v-bind:class="phone.isOn?'active':''" :key="phone.id">           
-                <el-tooltip placement="right" class="el-tooltip" effect="light">
-                  <div slot="content">
-                    <span v-if="phone.phonenumber&&phone.phonenumber!=''">电话：{{phone.phonenumber}}</span><br v-if="phone.othername&&phone.othername!=''" />
-                    <span v-if="phone.othername&&phone.othername!=''">别名：{{phone.othername}}</span><br v-if="phone.departname&&phone.departname!=''" />
-                    <span v-if="phone.departname&&phone.departname!=''">部门：{{phone.departname}}</span><br v-if="phone.user&&phone.user!=''" />
-                    <span v-if="phone.user&&phone.user!=''">负责人：{{phone.user}}</span>
-                  </div>
-                  <el-button>
-                    <router-link :to="{path:'/Chinaphone/phoneindex',query:{phoneID:phone.id}}">
-                      <span>{{phone.shortPhonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b> 
-                    </router-link>
-                  </el-button>
-                </el-tooltip>
-            </dd>
+          <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')">
+              <dd v-if="menuButtonPermit.includes('Enphone_lookall')">
+                <router-link :to="{path:'/Enphone/phoneindex',query:{key:'all'}}">
+                  <span>查看所有</span><i>({{linkAll.monthNum}})</i><em>({{linkAll.yestodayNum}})</em><b>({{linkAll.todayNum}})</b>
+                </router-link>
+              </dd>
+              <dd v-if="menuButtonPermit.includes('Enphone_lookwaitdealall')">
+                <router-link :to="{path:'/Enphone/phoneindex',query:{key:'unAllot'}}">
+                  <span>未分配</span><i>({{linkAll.unAllotNum}})</i>
+                </router-link>
+              </dd>
           </dl>
+          <template v-for="(item,index) in defaultData.data">
+            <dl class="phone-list" v-if="item.phone.length>0" v-bind:key="index">
+              <dt><span>{{item.brandname}}</span></dt>
+              <dd v-for="(phone,index) in item.phone" v-bind:class="phone.isOn?'active':''" :key="index" :title="phone.phonenumber+phone.othername">
+                <router-link :to="{path:'/Enphone/phoneindex',query:{phoneID:phone.id, waitstatus:phone.waitstatus}}">
+                  <span>{{phone.phonenumber}}</span><i>({{phone.nowmonthnumber}})</i><em>({{phone.lastdaynumber}})</em><b>({{phone.nownumber}})</b>
+                </router-link>
+              </dd>
+            </dl>
+          </template>
         </div>
-      </el-scrollbar>
       </el-scrollbar>
     </div>
     <div class="flex-content relative">
@@ -53,28 +58,28 @@
                     </div>
                     <div class="group-body">
                       <div class="team-panel" v-for="item in phoneList" v-bind:key="item.id">
-                        <div class="team-header" v-if="item.icon=='sem'">
+                        <div class="team-header" v-if="item.icon=='i1'">
                           <span class="require">{{item.name}}：</span>
                           <el-checkbox class="all-select" :indeterminate="isAllSemPhone" border size="mini" v-model="checkAllSemPhone" @change="handleCheckAllSemPhoneChange">全选</el-checkbox>
                           <el-checkbox-group class="team-list" v-model="checkedSem" @change="handleCheckedSemChange" size="mini">
                             <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                           </el-checkbox-group>
                         </div>
-                        <div class="team-header" v-else-if="item.icon=='seo'">
+                        <div class="team-header" v-else-if="item.icon=='i2'">
                           <span class="require">{{item.name}}：</span>
                           <el-checkbox class="all-select" :indeterminate="isAllSeoPhone" border size="mini" v-model="checkAllSeoPhone" @change="handleCheckAllSeoPhoneChange">全选</el-checkbox>
                           <el-checkbox-group class="team-list" v-model="checkedSeo" @change="handleCheckedSeoChange" size="mini">
                             <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                           </el-checkbox-group>
                         </div>
-                        <div class="team-header" v-else-if="item.icon=='we-media'">
+                        <div class="team-header" v-else-if="item.icon=='i3'">
                           <span class="require">{{item.name}}：</span>
                           <el-checkbox class="all-select" :indeterminate="isAllMediaPhone" border size="mini" v-model="checkAllMediaPhone" @change="handleCheckAllMediaPhoneChange">全选</el-checkbox>
                           <el-checkbox-group class="team-list" v-model="checkedMedia" @change="handleCheckedMediaChange" size="mini">
                             <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                           </el-checkbox-group>
                         </div>
-                        <div class="team-header" v-else-if="item.icon=='sns'">
+                        <div class="team-header" v-else-if="item.icon=='i4'">
                           <span class="require">{{item.name}}：</span>
                           <el-checkbox class="all-select" :indeterminate="isAllSnsPhone" border size="mini" v-model="checkAllSnsPhone" @change="handleCheckAllSnsPhoneChange">全选</el-checkbox>
                           <el-checkbox-group class="team-list" v-model="checkedSns" @change="handleCheckedSnsChange" size="mini">
@@ -121,11 +126,20 @@
                                   </el-input>
                             </div>
                             <div class="team-headerItem">
+                                  <span class="require">url：</span>
+                                  <el-input
+                                      size="mini"
+                                      v-model="searchData.url"
+                                      :class="searchData.url!=''?'el-xzstate':''"
+                                      clearable>
+                                  </el-input>
+                            </div>
+                            <div class="team-headerItem">
                                   <span class="require">地区：</span>
                                   <el-input
                                       size="mini"
-                                      v-model="searchData.province"
-                                      :class="searchData.province!=''?'el-xzstate':''"
+                                      v-model="searchData.country"
+                                      :class="searchData.country!=''?'el-xzstate':''"
                                       clearable>
                                   </el-input>
                             </div>
@@ -135,7 +149,7 @@
                                       size="mini"
                                       v-model="searchData.name"
                                       :class="searchData.name!=''?'el-xzstate':''"
-                                      placeholder="域名备注等"
+                                      placeholder="备注1、备注2、备注3"
                                       clearable>
                                   </el-input>
                             </div>
@@ -156,15 +170,6 @@
                           <el-checkbox class="all-select" :indeterminate="isAllLevel" border size="mini" v-model="checkAllLevel" @change="handleCheckAllLevelChange">全选</el-checkbox>
                           <el-checkbox-group class="team-list" v-model="checkedLevel" @change="handleCheckedLevelChange" size="mini">
                             <el-checkbox class="item-checkbox" v-for="item in levelList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
-                          </el-checkbox-group>
-                        </div>
-                      </div>
-                      <div class="team-panel">
-                        <div class="team-header">
-                          <span class="require">类别：</span>
-                          <el-checkbox class="all-select" :indeterminate="isAllCategory" border size="mini" v-model="checkAllCategory" @change="handleCheckAllCategoryChange">全选</el-checkbox>
-                          <el-checkbox-group class="team-list" v-model="checkedCategory" @change="handleCheckedCategoryChange" size="mini">
-                            <el-checkbox class="item-checkbox" v-for="item in categoryList" :label="item.value" :key="item.value" border>{{item.label}}</el-checkbox>
                           </el-checkbox-group>
                         </div>
                       </div>
@@ -226,10 +231,52 @@
                             <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                           </el-checkbox-group>
                         </div>
-                        <div class="team-header" v-else>
+                        <div class="team-header" v-else-if="item.icon=='a7'">
                           <span class="require">{{item.name}}：</span>
                           <el-checkbox class="all-select" :indeterminate="isAllA7Product" border size="mini" v-model="checkAllA7Product" @change="handleCheckAllA7ProductChange">全选</el-checkbox>
                           <el-checkbox-group class="team-list" v-model="checkedA7Product" @change="handleCheckedA7ProductChange" size="mini">
+                            <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
+                        <div class="team-header" v-else-if="item.icon=='a8'">
+                          <span class="require">{{item.name}}：</span>
+                          <el-checkbox class="all-select" :indeterminate="isAllA8Product" border size="mini" v-model="checkAllA8Product" @change="handleCheckAllA8ProductChange">全选</el-checkbox>
+                          <el-checkbox-group class="team-list" v-model="checkedA8Product" @change="handleCheckedA8ProductChange" size="mini">
+                            <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
+                        <div class="team-header" v-else-if="item.icon=='a9'">
+                          <span class="require">{{item.name}}：</span>
+                          <el-checkbox class="all-select" :indeterminate="isAllA9Product" border size="mini" v-model="checkAllA9Product" @change="handleCheckAllA9ProductChange">全选</el-checkbox>
+                          <el-checkbox-group class="team-list" v-model="checkedA9Product" @change="handleCheckedA9ProductChange" size="mini">
+                            <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
+                        <div class="team-header" v-else-if="item.icon=='a10'">
+                          <span class="require">{{item.name}}：</span>
+                          <el-checkbox class="all-select" :indeterminate="isAllA10Product" border size="mini" v-model="checkAllA10Product" @change="handleCheckAllA10ProductChange">全选</el-checkbox>
+                          <el-checkbox-group class="team-list" v-model="checkedA10Product" @change="handleCheckedA10ProductChange" size="mini">
+                            <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
+                        <div class="team-header" v-else-if="item.icon=='a11'">
+                          <span class="require">{{item.name}}：</span>
+                          <el-checkbox class="all-select" :indeterminate="isAllA11Product" border size="mini" v-model="checkAllA11Product" @change="handleCheckAllA11ProductChange">全选</el-checkbox>
+                          <el-checkbox-group class="team-list" v-model="checkedA11Product" @change="handleCheckedA11ProductChange" size="mini">
+                            <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
+                        <div class="team-header" v-else-if="item.icon=='a12'">
+                          <span class="require">{{item.name}}：</span>
+                          <el-checkbox class="all-select" :indeterminate="isAllA12Product" border size="mini" v-model="checkAllA12Product" @change="handleCheckAllA12ProductChange">全选</el-checkbox>
+                          <el-checkbox-group class="team-list" v-model="checkedA12Product" @change="handleCheckedA12ProductChange" size="mini">
+                            <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
+                        <div class="team-header" v-else-if="item.icon=='a13'">
+                          <span class="require">{{item.name}}：</span>
+                          <el-checkbox class="all-select" :indeterminate="isAllA13Product" border size="mini" v-model="checkAllA13Product" @change="handleCheckAllA13ProductChange">全选</el-checkbox>
+                          <el-checkbox-group class="team-list" v-model="checkedA13Product" @change="handleCheckedA13ProductChange" size="mini">
                             <el-checkbox class="item-checkbox" v-for="product in item.children" :label="product.value" :key="product.value" border>{{product.label}}</el-checkbox>
                           </el-checkbox-group>
                         </div>
@@ -237,8 +284,9 @@
                     </div>
                   </div>
                   <div class="card-header WebServerAddEditBtn ChinaphoneTwoBtn">
-                      <el-button type="primary" class="updateBtn"  :class="isDisabled?'isDisabled':''" :disabled="isDisabled"  size="small" v-if="menuButtonPermit.includes('Chinaphone_countlist')" v-on:click="getCluesAnalysisData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
+                      <el-button type="primary" class="updateBtn"  :class="isDisabled?'isDisabled':''" :disabled="isDisabled"  size="small" v-if="menuButtonPermit.includes('Enphone_countlist')" v-on:click="getCluesAnalysisData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
                       <el-button type="primary" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+                      <el-button type="primary" size="small" class="exportBtn" :disabled="isExportDisabled"  @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
                   </div>
               </div>
           </el-card>
@@ -255,7 +303,7 @@
                             </div>
                             <div class="nocount" v-else>
                               暂无数据
-                            </div>                      
+                            </div>                     
                         </div>
                       </div>
                     </el-col>
@@ -374,8 +422,8 @@
                         <div class="chart-header"><span>热门地区</span></div>
                         <div class="chart-body chartmap-body" style="height:540px;text-align:center;">
                           <div class="map-panel flex-box">
-                            <div class="map-chart">
-                              <div id="cluesChart10" class="chart-canvas"></div>
+                            <div class="map-chart enmap-chart">
+                                <div id="cluesChart10" class="chart-canvas" ></div>
                             </div>
                             <div class="flex-content table-panel">
                               <div class="table-chart">
@@ -393,7 +441,7 @@
                                   :default-sort = "{prop: 'number', order: 'descending'}"
                                   >
                                   <el-table-column
-                                    prop="province"
+                                    prop="country"
                                     label="地区"
                                     >
                                   </el-table-column>
@@ -412,40 +460,6 @@
                     </el-col>
                   </el-row>
                   <el-row :gutter="15">
-                    <el-col :md="24" :lg="12">
-                      <div class="chart-wrapper">
-                        <div class="chart-header"><span>关键词</span></div>
-                        <div class="chart-body">
-                          <div class="table-chart">
-                            <el-table
-                              border
-                              ref="simpleKeywordTable"
-                              :data="searchResult.searchWordCount"
-                              tooltip-effect="dark"
-                              stripe
-                              style="width: 100%"
-                              height="540"
-                              row-key="id"
-                              show-summary
-                              :summary-method="getSummaries"
-                              :default-sort = "{prop: 'number', order: 'descending'}"
-                              >
-                              <el-table-column
-                                prop="searchword"
-                                label="关键词"
-                                >
-                              </el-table-column>
-                              <el-table-column
-                                prop="number"
-                                label="数量"
-                                sortable
-                                >
-                              </el-table-column>
-                            </el-table>
-                          </div>
-                        </div>
-                      </div>
-                    </el-col>
                     <el-col :md="24" :lg="12">
                       <div class="chart-wrapper">
                         <div class="chart-header"><span>产品</span></div>
@@ -488,20 +502,47 @@
       </div>
     </div>
     <el-backtop target=".scroll-panel"></el-backtop>
+    <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="440px">
+        <el-form :inline="true" :model="exportForm">
+            <el-form-item label="文件名称：" :label-width="formLabelWidth">
+            <el-input v-model="exportForm.fileName" placeholder="文件名 (默认：excel-list)" prefix-icon="el-icon-document"></el-input>
+            </el-form-item>
+            <el-form-item label="文件类型：" :label-width="formLabelWidth">
+            <el-select v-model="exportForm.bookType" placeholder="请选择导出文件类型">
+                <el-option label="xlsx" value="xlsx"></el-option>
+                <el-option label="csv" value="csv"></el-option>
+                <el-option label="txt" value="txt"></el-option>
+            </el-select>
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <span class="dialog-footer">
+            <el-button @click="dialogExportVisible = false">取 消</el-button>
+            <el-button :loading="downloadLoading" type="primary" icon="el-icon-document" @click="handleDownload">导 出</el-button>
+            </span>
+        </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import * as echarts from 'echarts';
-import {MapCountInterval} from "@/utils/MapColor";
+import {enMapCountInterval} from "@/utils/MapColor";
 import {sortByDesc} from "@/utils/index";
+import { worldCountry } from "@/utils/worldCountry";
 export default {
   name: 'statisticChart',
   data() {
     return {
       isSearch:false,
-      phoneBrandList:[],
+      linkAll:{
+        todayNum:0,
+        yestodayNum:0,
+        monthNum:0,
+        unAllotNum:0,
+      },
+      defaultData:{},
       breadcrumbList:[],
       menuButtonPermit:[],
       isAllPhone:false,
@@ -523,16 +564,16 @@ export default {
       checkedOther:[],
       searchData:{
         date:[],
-        province:"",
+        country:"",
         domain:'',
         name:'',
+        url:''
       },
       pickerRangeOptions: this.$pickerRangeOptions,
       deviceList:[],
       productList:[],
       sourceList:[],
       levelList:[],
-      categoryList:[],
       phoneList:[],
       phoneCount:0,
       productCount:0,
@@ -552,6 +593,18 @@ export default {
       checkAllA6Product:false,
       isAllA7Product:false,
       checkAllA7Product:false,
+      isAllA8Product:false,
+      checkAllA8Product:false,
+      isAllA9Product:false,
+      checkAllA9Product:false,
+      isAllA10Product:false,
+      checkAllA10Product:false,
+      isAllA11Product:false,
+      checkAllA11Product:false,
+      isAllA12Product:false,
+      checkAllA12Product:false,
+      isAllA13Product:false,
+      checkAllA13Product:false,
       checkedA1Product:[],
       checkedA2Product:[],
       checkedA3Product:[],
@@ -559,6 +612,12 @@ export default {
       checkedA5Product:[],
       checkedA6Product:[],
       checkedA7Product:[],
+      checkedA8Product:[],
+      checkedA9Product:[],
+      checkedA10Product:[],
+      checkedA11Product:[],
+      checkedA12Product:[],
+      checkedA13Product:[],
       isAllSource:false,
       checkAllSource:false,
       checkedSource:[],
@@ -586,6 +645,7 @@ export default {
         regionMap:[],
         searchWordCount:[],
         weekCount:[],
+        materlist:[]
       },
       maxWeek:[],
       minWeek:[],
@@ -612,7 +672,15 @@ export default {
         columnHoursPlot:'',
         columnProductPlot:'',
         chart:''
-      }
+      },
+      formLabelWidth:"120px",
+      exportForm:{
+          fileName:"",
+          bookType:"xlsx"
+      },
+      dialogExportVisible:false,
+      downloadLoading: false,
+      isExportDisabled:true,
     }
   },
   computed: {
@@ -636,6 +704,13 @@ export default {
     var $this = this;
     $this.getBreadcrumbList();
     $this.initData();
+  },
+  watch:{
+    isCollapse(){
+      setTimeout(() => {
+        this.echartsSize();
+      }, 200)
+    }
   },
   methods:{
     // 获取面包屑路径
@@ -709,6 +784,41 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       });
     },
+    // 右侧标题-左侧电话括号小数字
+    leftPhoto(){
+      var $this=this;
+      $this.loadingFun();
+      $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
+        if(response){
+          if(response.status){
+              $this.linkAll.todayNum = response.alltodaynumber;
+              $this.linkAll.yestodayNum = response.alllastnumber;
+              $this.linkAll.monthNum = response.allnumber;
+              $this.linkAll.unAllotNum = response.nodealcount;
+              var brandID = null;              
+              $this.brandID = brandID;
+              $this.defaultData = response;
+              $this.getSearchSystemData();
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          }
+        }
+      });
+    },
     // 重置选择项
     resetData(){
       var $this = this;
@@ -748,6 +858,18 @@ export default {
       $this.checkAllA6Product=false;
       $this.isAllA7Product=false;
       $this.checkAllA7Product=false;
+      $this.isAllA8Product=false;
+      $this.checkAllA8Product=false;
+      $this.isAllA9Product=false;
+      $this.checkAllA9Product=false;
+      $this.isAllA10Product=false;
+      $this.checkAllA10Product=false;
+      $this.isAllA11Product=false;
+      $this.checkAllA11Product=false;
+      $this.isAllA12Product=false;
+      $this.checkAllA12Product=false;
+      $this.isAllA13Product=false;
+      $this.checkAllA13Product=false;
       $this.checkedA1Product=[];
       $this.checkedA2Product=[];
       $this.checkedA3Product=[];
@@ -755,6 +877,12 @@ export default {
       $this.checkedA5Product=[];
       $this.checkedA6Product=[];
       $this.checkedA7Product=[];
+      $this.checkedA8Product=[];
+      $this.checkedA9Product=[];
+      $this.checkedA10Product=[];
+      $this.checkedA11Product=[];
+      $this.checkedA12Product=[];
+      $this.checkedA13Product=[];
       $this.isAllSource=false;
       $this.checkAllSource=false;
       $this.checkedSource=[];
@@ -780,9 +908,10 @@ export default {
       $this.maxProductNum=0;
       $this.minProductNum=0;
       $this.searchData.date=[];
-      $this.searchData.province="";
+      $this.searchData.country="";
       $this.searchData.domain='';
       $this.searchData.name='';
+      $this.searchData.url='';
       $this.searchResult.hoursCount=[];
       $this.searchResult.deviceCount=[];
       $this.searchResult.dayCount=[];
@@ -797,9 +926,7 @@ export default {
       $this.searchResult.regionMap=[];
       $this.searchResult.searchWordCount=[];
       $this.searchResult.weekCount=[];
-      if($this.chart&&!$this.chart.destroyed){
-        $this.chart.destroy();
-      }
+      $this.isExportDisabled = true;
     },
     // 初始化数据
     initData(){
@@ -810,15 +937,16 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
-      $this.getPhoneListNum();
+      $this.leftPhoto();
     },
     // 组装搜索接口所需数据
     initSearchData(){
       var $this = this;
       var searchData = {};
-      searchData.province = $this.searchData.province;
+      searchData.country = $this.searchData.country;
       searchData.domain = $this.searchData.domain;
       searchData.name = $this.searchData.name;
+      searchData.url = $this.searchData.url;
       if($this.searchData.date&&$this.searchData.date.length>0){
         searchData.starttime = $this.searchData.date[0];
         searchData.endtime = $this.searchData.date[1];
@@ -835,7 +963,6 @@ export default {
       searchData.mode = $this.checkedSource;
       searchData.level_id = $this.checkedLevel;
       searchData.device = $this.checkedDevice;
-      searchData.productlevel = $this.checkedCategory;
       var checkedA1Product = $this.checkedA1Product;
       var checkedA2Product = $this.checkedA2Product;
       var checkedA3Product = $this.checkedA3Product;
@@ -843,7 +970,13 @@ export default {
       var checkedA5Product = $this.checkedA5Product;
       var checkedA6Product = $this.checkedA6Product;
       var checkedA7Product = $this.checkedA7Product;
-      searchData.productid=checkedA1Product.concat(checkedA2Product).concat(checkedA3Product).concat(checkedA4Product).concat(checkedA5Product).concat(checkedA6Product).concat(checkedA7Product)
+      var checkedA8Product = $this.checkedA8Product;
+      var checkedA9Product = $this.checkedA9Product;
+      var checkedA10Product = $this.checkedA10Product;
+      var checkedA11Product = $this.checkedA11Product;
+      var checkedA12Product = $this.checkedA12Product;
+      var checkedA13Product = $this.checkedA13Product;
+      searchData.productid=checkedA1Product.concat(checkedA2Product).concat(checkedA3Product).concat(checkedA4Product).concat(checkedA5Product).concat(checkedA6Product).concat(checkedA7Product).concat(checkedA8Product).concat(checkedA9Product).concat(checkedA10Product).concat(checkedA11Product).concat(checkedA12Product).concat(checkedA13Product)
       return searchData;
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -855,7 +988,7 @@ export default {
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
-            if($this.menuButtonPermit.includes('Chinaphone_countlist')){
+            if($this.menuButtonPermit.includes('Enphone_countlist')){
               $this.initPage();
             }else{
               $this.$message({
@@ -887,7 +1020,7 @@ export default {
     // 获取询盘统计的搜索条件数据
     getSearchSystemData(){
       var $this = this;
-      $this.$store.dispatch('chinaphone/cluesAnalysisSystemDataAction', null).then(response=>{
+      $this.$store.dispatch('enphone/inquiryItemAction').then(response=>{
         if(response){
           if(response.status){
             var deviceList = [];
@@ -924,31 +1057,38 @@ export default {
             $this.productCount = productCount;
             var phoneList = [];
             var phoneCount = 0;
+            var newPhone = [];
             response.phone.forEach(function(item,index){
-              var itemData = {};
-              if(item.name!="其他"){
-                itemData.name = item.name+"组";
-              }else{
-                itemData.name = item.name;
+              if(newPhone.indexOf(item.departname) == -1){
+                newPhone.push(item.departname);
               }
-              itemData.id = item.id;
-              itemData.icon = item.icon;
-              itemData.children = [];
-              phoneCount+=item.phone.length;
-              item.phone.forEach(function(item1,index1){
-                var itemChildren = {};
-                if(item1.phonenumber.indexOf("-")!=-1){
-                  itemChildren.label = item1.phonenumber.split("-")[1];
-                }else{
-                  itemChildren.label = item1.phonenumber;
+            })
+            var newPhoneArr=[];
+            var nowindex = 1;
+            newPhone.forEach(function(item,index){
+                var newobj={};
+                newobj.id = nowindex;
+                newobj.icon="i"+ nowindex;
+                newobj.name = item;
+                newobj.children=[];
+                nowindex++;
+                newPhoneArr.push(newobj)
+            })
+            response.phone.forEach(function(item,index){
+              newPhoneArr.forEach(function(item1,index1){
+                if(item.departname==item1.name){
+                  var newobj={};
+                  newobj.label=item.phonenumber;
+                  newobj.value=item.id;
+                  item1.children.push(newobj);
+                  phoneCount++;
                 }
-                itemChildren.value = item1.id;
-                itemData.children.push(itemChildren);
               });
-              phoneList.push(itemData);
-            });
-            $this.phoneList = phoneList;
+            })
+            
+            $this.phoneList = newPhoneArr;
             $this.phoneCount = phoneCount;
+
             var sourceList = [];
             response.sourcetype.forEach(function(item,index){
               var itemData = {};
@@ -965,14 +1105,6 @@ export default {
               levelList.push(itemData);
             });
             $this.levelList = levelList;
-            var categoryList = [];
-            response.xuntype.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.id;
-              categoryList.push(itemData);
-            });
-            $this.categoryList = categoryList;
             $this.isLoading.close();
           }else{
             $this.$message({
@@ -994,52 +1126,12 @@ export default {
     // 搜索统计数据跳转
     searchStatisticsData(){
       var $this = this;
-      $this.$router.push({path:'/Chinaphone/searchClues'});
+      $this.$router.push({path:'/Enphone/searchClues'});
     },
     // 统计分析跳转
     statisticsClues(){
       var $this = this;
-      $this.$router.push({path:'/Chinaphone/statisticChart'});
-    },
-    // 获取电话列表及电话统计数字
-    getPhoneListNum(){
-      var $this = this;
-      $this.$store.dispatch('chinaphone/cluesPhoneStatDataAction', null).then(response=>{
-        if(response){
-          if(response.status){
-            var phoneArr=response.data;
-            phoneArr.forEach(function(item,index){
-               item.phone.forEach(function(item01,index01){
-                   var tagphone='-';
-                   item01.isOn = false;
-                　　if(item01.phonenumber.indexOf(tagphone)!=-1){
-                       item01.shortPhonenumber=item01.phonenumber.split("-")[1];
-                　　}else{
-                      item01.shortPhonenumber=item01.phonenumber;
-                    }
-               });
-            });
-            $this.phoneBrandList = phoneArr;
-            $this.getSearchSystemData();
-          }else{
-            if(response.permitstatus&&response.permitstatus==2){
-              $this.$message({
-                showClose: true,
-                message: "未被分配该页面访问权限",
-                type: 'error',
-                duration:6000
-              });
-              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-            }
-          }
-        }
-      });
+      $this.$router.push({path:'/Enphone/statisticChart'});
     },
     // 获取统计数据
     getCluesAnalysisData(){
@@ -1064,7 +1156,7 @@ export default {
         }
         $this.isDisabled=true;
         $this.loadingFun();
-        $this.$store.dispatch('chinaphone/cluesAnalysisResultDataAction', searchData).then(response=>{
+        $this.$store.dispatch('enphone/inquirySearchAction', searchData).then(response=>{
           if(response){
             if(response.status){
               $this.isSearch=true;
@@ -1087,7 +1179,8 @@ export default {
               $this.searchResult.productTypeCount = response.producttypecount;
               $this.searchResult.regionCount = response.provincecoun;
               $this.searchResult.regionMap = response.provincecountmap;
-              $this.searchResult.searchWordCount = response.searchwordcount;
+              $this.searchResult.materlist = response.materlist;
+              // $this.searchResult.searchWordCount = response.searchwordcount;
               var numArr = [];
               response.weekdaycount.forEach(function(item,index){
                 numArr.push(item.number);
@@ -1148,6 +1241,7 @@ export default {
               $this.minProduct = minProduct;
               $this.$nextTick(()=>{
                 document.getElementById("canvasPane").scrollIntoView({behavior: "smooth"});
+                $this.isExportDisabled = false;
                 if($this.chartlist.barPhoneTotalPlot){
                     $this.chartlist.barPhoneTotalPlot.dispose();
                     $this.drawChart1();
@@ -1208,6 +1302,7 @@ export default {
                 }else{
                   $this.drawChart10();
                 }
+                
                 $this.isLoading.close();
               });
               setTimeout(()=>{
@@ -1227,69 +1322,70 @@ export default {
         });
       }
     },
-    // 选中所有电话事件
+    // 选中所有电话事件 注！sem->i1;seo->i2;we-media->i3;sns->i4;other未修改
     handleCheckAllPhoneChange(e){
       var $this = this;
       if(e){
         $this.phoneList.forEach(function(item,index){
           var checkedList = [];
-          if(item.icon=="sem"){
+          if(item.icon=="i1"){
             item.children.forEach(function(item1,index1){
               checkedList.push(item1.value);
             });
             $this.checkedSem = checkedList;
             $this.checkAllSemPhone = true;
-          }else if(item.icon=="seo"){
+          }else if(item.icon=="i2"){
             item.children.forEach(function(item1,index1){
               checkedList.push(item1.value);
             });
             $this.checkedSeo = checkedList;
             $this.checkAllSeoPhone = true;
-          }else if(item.icon=="we-media"){
+          }else if(item.icon=="i3"){
             item.children.forEach(function(item1,index1){
               checkedList.push(item1.value);
             });
             $this.checkedMedia = checkedList;
             $this.checkAllMediaPhone = true;
-          }else if(item.icon=="sns"){
+          }else if(item.icon=="i4"){
             item.children.forEach(function(item1,index1){
               checkedList.push(item1.value);
             });
             $this.checkedSns = checkedList;
             $this.checkAllSnsPhone = true;
-          }else{
-            item.children.forEach(function(item1,index1){
-              checkedList.push(item1.value);
-            });
-            $this.checkedOther = checkedList;
-            $this.checkAllOtherPhone = true;
           }
+          // else{
+          //   item.children.forEach(function(item1,index1){
+          //     checkedList.push(item1.value);
+          //   });
+          //   $this.checkedOther = checkedList;
+          //   $this.checkAllOtherPhone = true;
+          // }
         });
       }else{
         $this.checkedSem = [];
         $this.checkedSeo = [];
         $this.checkedMedia = [];
         $this.checkedSns = [];
-        $this.checkedOther = [];
+        // $this.checkedOther = [];
         $this.checkAllSemPhone = false;
         $this.checkAllSeoPhone = false;
         $this.checkAllMediaPhone = false;
         $this.checkAllSnsPhone = false;
-        $this.checkAllOtherPhone = false;
+        // $this.checkAllOtherPhone = false;
       }
       $this.isAllPhone = false;
       $this.isAllSemPhone = false;
       $this.isAllSeoPhone = false;
       $this.isAllMediaPhone = false;
       $this.isAllSnsPhone = false;
-      $this.isAllOtherPhone = false;
+      // $this.isAllOtherPhone = false;
     },
     handleCheckAllSemPhoneChange(e){
       var $this = this;
       if(e){
         var checkedList = [];
         $this.phoneList.forEach(function(item,index){
-          if(item.icon=="sem"){
+          if(item.icon=="i1"){
             item.children.forEach(function(item1,index1){
               checkedList.push(item1.value);
             });
@@ -1307,7 +1403,7 @@ export default {
       if(e){
         var checkedList = [];
         $this.phoneList.forEach(function(item,index){
-          if(item.icon=="seo"){
+          if(item.icon=="i2"){
             item.children.forEach(function(item1,index1){
               checkedList.push(item1.value);
             });
@@ -1325,7 +1421,7 @@ export default {
       if(e){
         var checkedList = [];
         $this.phoneList.forEach(function(item,index){
-          if(item.icon=="we-media"){
+          if(item.icon=="i3"){
             item.children.forEach(function(item1,index1){
               checkedList.push(item1.value);
             });
@@ -1343,7 +1439,7 @@ export default {
       if(e){
         var checkedList = [];
         $this.phoneList.forEach(function(item,index){
-          if(item.icon=="sns"){
+          if(item.icon=="i4"){
             item.children.forEach(function(item1,index1){
               checkedList.push(item1.value);
             });
@@ -1378,7 +1474,7 @@ export default {
       var $this = this;
       var checkedCount = e.length;
       $this.phoneList.forEach(function(item,index){
-        if(item.icon=="sem"){
+        if(item.icon=="i1"){
           if(checkedCount === item.children.length){
             $this.checkAllSemPhone = true;
           }else{
@@ -1397,7 +1493,7 @@ export default {
       var $this = this;
       var checkedCount = e.length;
       $this.phoneList.forEach(function(item,index){
-        if(item.icon=="seo"){
+        if(item.icon=="i2"){
           if(checkedCount === item.children.length){
             $this.checkAllSeoPhone = true;
           }else{
@@ -1416,7 +1512,7 @@ export default {
       var $this = this;
       var checkedCount = e.length;
       $this.phoneList.forEach(function(item,index){
-        if(item.icon=="we-media"){
+        if(item.icon=="i3"){
           if(checkedCount === item.children.length){
             $this.checkAllMediaPhone = true;
           }else{
@@ -1435,7 +1531,7 @@ export default {
       var $this = this;
       var checkedCount = e.length;
       $this.phoneList.forEach(function(item,index){
-        if(item.icon=="sns"){
+        if(item.icon=="i4"){
           if(checkedCount === item.children.length){
             $this.checkAllSnsPhone = true;
           }else{
@@ -1472,7 +1568,8 @@ export default {
     // 全选按钮状态事件
     allPhoneSelectedStatus(){
       var $this = this;
-      var totalCheckedCount = $this.checkedSem.length+$this.checkedSeo.length+$this.checkedMedia.length+$this.checkedSns.length+$this.checkedOther.length;
+      var totalCheckedCount = $this.checkedSem.length+$this.checkedSeo.length+$this.checkedMedia.length+$this.checkedSns.length;
+      // +$this.checkedOther.length;
       if(totalCheckedCount>0&&totalCheckedCount<$this.phoneCount){
         $this.isAllPhone = true;
       }else{
@@ -1526,12 +1623,48 @@ export default {
             });
             $this.checkedA6Product = checkedList;
             $this.checkAllA6Product = true;
-          }else{
+          }else if(item.icon=="a7"){
             item.children.forEach(function(item1,index1){
               checkedList.push(item1.value);
             });
             $this.checkedA7Product = checkedList;
             $this.checkAllA7Product = true;
+          }else if(item.icon=="a8"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+            $this.checkedA8Product = checkedList;
+            $this.checkAllA8Product = true;
+          }else if(item.icon=="a9"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+            $this.checkedA9Product = checkedList;
+            $this.checkAllA9Product = true;
+          }else if(item.icon=="a10"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+            $this.checkedA10Product = checkedList;
+            $this.checkAllA10Product = true;
+          }else if(item.icon=="a11"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+            $this.checkedA11Product = checkedList;
+            $this.checkAllA11Product = true;
+          }else if(item.icon=="a12"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+            $this.checkedA12Product = checkedList;
+            $this.checkAllA12Product = true;
+          }else if(item.icon=="a13"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+            $this.checkedA13Product = checkedList;
+            $this.checkAllA13Product = true;
           }
         });
       }else{
@@ -1542,6 +1675,12 @@ export default {
         $this.checkedA5Product = [];
         $this.checkedA6Product = [];
         $this.checkedA7Product = [];
+        $this.checkedA8Product = [];
+        $this.checkedA9Product = [];
+        $this.checkedA10Product = [];
+        $this.checkedA11Product = [];
+        $this.checkedA12Product = [];
+        $this.checkedA13Product = [];
         $this.checkAllA1Product = false;
         $this.checkAllA2Product = false;
         $this.checkAllA3Product = false;
@@ -1549,6 +1688,12 @@ export default {
         $this.checkAllA5Product = false;
         $this.checkAllA6Product = false;
         $this.checkAllA7Product = false;
+        $this.checkAllA8Product = false;
+        $this.checkAllA9Product = false;
+        $this.checkAllA10Product = false;
+        $this.checkAllA11Product = false;
+        $this.checkAllA12Product = false;
+        $this.checkAllA13Product = false;
       }
       $this.isAllProduct = false;
       $this.isAllA1Product = false;
@@ -1558,6 +1703,12 @@ export default {
       $this.isAllA5Product = false;
       $this.isAllA6Product = false;
       $this.isAllA7Product = false;
+      $this.isAllA8Product = false;
+      $this.isAllA9Product = false;
+      $this.isAllA10Product = false;
+      $this.isAllA11Product = false;
+      $this.isAllA12Product = false;
+      $this.isAllA13Product = false;
     },
     handleCheckAllA1ProductChange(e){
       var $this = this;
@@ -1683,6 +1834,114 @@ export default {
         $this.checkedA7Product = [];
       }
       $this.isAllA7Product = false;
+      $this.allProductSelectedStatus();
+    },
+    handleCheckAllA8ProductChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.productList.forEach(function(item,index){
+          if(item.icon=="a8"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+          }
+        });
+        $this.checkedA8Product = checkedList;
+      }else{
+        $this.checkedA8Product = [];
+      }
+      $this.isAllA8Product = false;
+      $this.allProductSelectedStatus();
+    },
+    handleCheckAllA9ProductChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.productList.forEach(function(item,index){
+          if(item.icon=="a9"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+          }
+        });
+        $this.checkedA9Product = checkedList;
+      }else{
+        $this.checkedA9Product = [];
+      }
+      $this.isAllA9Product = false;
+      $this.allProductSelectedStatus();
+    },
+    handleCheckAllA10ProductChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.productList.forEach(function(item,index){
+          if(item.icon=="a10"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+          }
+        });
+        $this.checkedA10Product = checkedList;
+      }else{
+        $this.checkedA10Product = [];
+      }
+      $this.isAllA10Product = false;
+      $this.allProductSelectedStatus();
+    },
+    handleCheckAllA11ProductChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.productList.forEach(function(item,index){
+          if(item.icon=="a11"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+          }
+        });
+        $this.checkedA11Product = checkedList;
+      }else{
+        $this.checkedA11Product = [];
+      }
+      $this.isAllA11Product = false;
+      $this.allProductSelectedStatus();
+    },
+    handleCheckAllA12ProductChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.productList.forEach(function(item,index){
+          if(item.icon=="a12"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+          }
+        });
+        $this.checkedA12Product = checkedList;
+      }else{
+        $this.checkedA12Product = [];
+      }
+      $this.isAllA12Product = false;
+      $this.allProductSelectedStatus();
+    },
+    handleCheckAllA13ProductChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.productList.forEach(function(item,index){
+          if(item.icon=="a13"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+          }
+        });
+        $this.checkedA13Product = checkedList;
+      }else{
+        $this.checkedA13Product = [];
+      }
+      $this.isAllA13Product = false;
       $this.allProductSelectedStatus();
     },
     handleCheckedA1ProductChange(e){
@@ -1818,10 +2077,124 @@ export default {
       });
       $this.allProductSelectedStatus();
     },
+    handleCheckedA8ProductChange(e){
+      var $this = this;
+      var checkedCount = e.length;
+       $this.productList.forEach(function(item,index){
+        if(item.icon=="a8"){
+          if(checkedCount === item.children.length){
+            $this.checkAllA8Product = true;
+          }else{
+            $this.checkAllA8Product = false;
+          }
+          if(checkedCount>0&&checkedCount<item.children.length){
+            $this.isAllA8Product = true;
+          }else{
+            $this.isAllA8Product = false;
+          }
+        }
+      });
+      $this.allProductSelectedStatus();
+    },
+    handleCheckedA9ProductChange(e){
+      var $this = this;
+      var checkedCount = e.length;
+       $this.productList.forEach(function(item,index){
+        if(item.icon=="a9"){
+          if(checkedCount === item.children.length){
+            $this.checkAllA9Product = true;
+          }else{
+            $this.checkAllA9Product = false;
+          }
+          if(checkedCount>0&&checkedCount<item.children.length){
+            $this.isAllA9Product = true;
+          }else{
+            $this.isAllA9Product = false;
+          }
+        }
+      });
+      $this.allProductSelectedStatus();
+    },
+    handleCheckedA10ProductChange(e){
+      var $this = this;
+      var checkedCount = e.length;
+       $this.productList.forEach(function(item,index){
+        if(item.icon=="a10"){
+          if(checkedCount === item.children.length){
+            $this.checkAllA10Product = true;
+          }else{
+            $this.checkAllA10Product = false;
+          }
+          if(checkedCount>0&&checkedCount<item.children.length){
+            $this.isAllA10Product = true;
+          }else{
+            $this.isAllA10Product = false;
+          }
+        }
+      });
+      $this.allProductSelectedStatus();
+    },
+    handleCheckedA11ProductChange(e){
+      var $this = this;
+      var checkedCount = e.length;
+       $this.productList.forEach(function(item,index){
+        if(item.icon=="a11"){
+          if(checkedCount === item.children.length){
+            $this.checkAllA11Product = true;
+          }else{
+            $this.checkAllA11Product = false;
+          }
+          if(checkedCount>0&&checkedCount<item.children.length){
+            $this.isAllA11Product = true;
+          }else{
+            $this.isAllA11Product = false;
+          }
+        }
+      });
+      $this.allProductSelectedStatus();
+    },
+    handleCheckedA12ProductChange(e){
+      var $this = this;
+      var checkedCount = e.length;
+       $this.productList.forEach(function(item,index){
+        if(item.icon=="a12"){
+          if(checkedCount === item.children.length){
+            $this.checkAllA12Product = true;
+          }else{
+            $this.checkAllA12Product = false;
+          }
+          if(checkedCount>0&&checkedCount<item.children.length){
+            $this.isAllA12Product = true;
+          }else{
+            $this.isAllA12Product = false;
+          }
+        }
+      });
+      $this.allProductSelectedStatus();
+    },
+    handleCheckedA13ProductChange(e){
+      var $this = this;
+      var checkedCount = e.length;
+       $this.productList.forEach(function(item,index){
+        if(item.icon=="a13"){
+          if(checkedCount === item.children.length){
+            $this.checkAllA13Product = true;
+          }else{
+            $this.checkAllA13Product = false;
+          }
+          if(checkedCount>0&&checkedCount<item.children.length){
+            $this.isAllA13Product = true;
+          }else{
+            $this.isAllA13Product = false;
+          }
+        }
+      });
+      $this.allProductSelectedStatus();
+    },
     // 全选按钮状态事件
     allProductSelectedStatus(){
       var $this = this;
-      var totalCheckedCount = $this.checkedA1Product.length+$this.checkedA2Product.length+$this.checkedA3Product.length+$this.checkedA4Product.length+$this.checkedA5Product.length+$this.checkedA6Product.length+$this.checkedA7Product.length;
+      var totalCheckedCount = $this.checkedA1Product.length+$this.checkedA2Product.length+$this.checkedA3Product.length+$this.checkedA4Product.length+$this.checkedA5Product.length+$this.checkedA6Product.length+$this.checkedA7Product.length+$this.checkedA8Product.length+$this.checkedA9Product.length+$this.checkedA10Product.length+$this.checkedA11Product.length+$this.checkedA12Product.length+$this.checkedA13Product.length;
       if(totalCheckedCount>0&&totalCheckedCount<$this.productCount){
         $this.isAllProduct = true;
       }else{
@@ -1889,35 +2262,6 @@ export default {
           $this.isAllLevel = true;
         }else{
           $this.isAllLevel = false;
-        }
-    },
-    handleCheckAllCategoryChange(e){
-      var $this = this;
-      if(e){
-        var checkedList = [];
-        $this.categoryList.forEach(function(item,index){
-          checkedList.push(item.value);
-        });
-        $this.checkedCategory = checkedList;
-        $this.checkAllCategory= true;
-      }else{
-        $this.checkedCategory = [];
-        $this.checkAllCategory = false;
-      }
-      $this.isAllCategory = false;
-    },
-    handleCheckedCategoryChange(e){
-      var $this = this;
-      var checkedCount = e.length;
-       if(checkedCount === $this.categoryList.length){
-          $this.checkAllCategory = true;
-        }else{
-          $this.checkAllCategory = false;
-        }
-        if(checkedCount>0&&checkedCount<$this.categoryList.length){
-          $this.isAllCategory = true;
-        }else{
-          $this.isAllCategory = false;
         }
     },
     handleCheckAllDeviceChange(e){
@@ -2720,22 +3064,12 @@ export default {
       var $this = this;
       if($this.searchResult.regionMap.length>0){
         var mapData= $this.searchResult.regionMap;
-        var mapCountData = [];
-        mapData.forEach(function(item,index){
-          var obj ={};
-          if(item.name=="黑龙江省"||item.name=="内蒙古自治区"){
-            obj.name = item.name.slice(0,3)
-          }else{
-            obj.name = item.name.slice(0,2);
-          }
-          obj.value = item.number;
-          mapCountData.push(obj);
-        })
+        var mapCountData = worldCountry(mapData,"country","number");
         mapCountData.sort(sortByDesc("value"));
         var chartDom = document.getElementById('cluesChart10');
         var myChart = echarts.init(chartDom);
         var maxNum = mapCountData[0].value;
-        let mapInterval = MapCountInterval(maxNum);
+        let mapInterval = enMapCountInterval(maxNum);
         var option;
          option = {
           // 提示框组件
@@ -2751,19 +3085,24 @@ export default {
             formatter: function (params) {
               if(params.data){
                 return `<div class="echarts-tooltip">
-                  <div class="tooltip-list">
-                    <div class="item-tooltip">
-                      <span class="icon" style="background:${params.color}"></span>
-                      <span class="name" style="text-align:left">地区：</span>
-                      <div class="num">${params.data.name}</div>
+                    <div class="tooltip-list">
+                      <div class="item-tooltip">
+                        <span class="icon" style="background:${params.color}"></span>
+                        <span class="name" style="text-align:left">国家：</span>
+                        <div class="num">${params.data.country}</div>
+                      </div>
+                      <div class="item-tooltip">
+                        <span class="icon" style="background:${params.color}"></span>
+                        <span class="name" style="text-align:left">英文名：</span>
+                        <div class="num">${params.data.name}</div>
+                      </div>
+                      <div class="item-tooltip">
+                        <span class="icon" style="background:${params.color}"></span>
+                        <span class="name" style="text-align:left">询盘个数：</span>
+                        <div class="num">${params.data.value}</div>
+                      </div>
                     </div>
-                    <div class="item-tooltip">
-                      <span class="icon" style="background:${params.color}"></span>
-                      <span class="name">询盘个数：</span>
-                      <div class="num">${params.data.value}</div>
-                    </div>
-                  </div>
-                </div>`
+                  </div>`
               }
             },
             textStyle:{
@@ -2802,7 +3141,7 @@ export default {
             }
           },
           geo: {
-            map: "china",
+            map: "world",
             roam: false,// 一定要关闭拖拽
             zoom: 1.2,
             label: {
@@ -2824,7 +3163,7 @@ export default {
             {
               type: 'map', // 类型
               // 系列名称，用于tooltip的显示，legend 的图例筛选 在 setOption 更新数据和配置项时用于指定对应的系列
-              map: 'china', // 地图类型
+              map: 'world', // 地图类型
               // 是否开启鼠标缩放和平移漫游 默认不开启 如果只想要开启缩放或者平移，可以设置成 'scale' 或者 'move' 设置成 true 为都开启
               roam: false,
               zoom:1.2,
@@ -2887,7 +3226,35 @@ export default {
       });
       return sums;
     },
-
+    // 导出当前页数据
+    handleDownload() {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['ID','域名','物料','url'];
+        const list = this.searchResult.materlist;
+        const data = [];
+        list.forEach(function(item,index){
+          var itemData = [];
+          itemData.push(item.id);
+          itemData.push(item.domain);
+          itemData.push(item.material);
+          itemData.push(item.url);
+          data.push(itemData);
+        });
+        // const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.exportForm.fileName,
+          autoWidth: true,
+          bookType: this.exportForm.bookType
+        })
+        this.downloadLoading = false;
+        this.dialogExportVisible = false;
+        this.exportForm.fileName = "";
+      })
+    },
+    
     echartsSize(){
       var $this = this;
       if($this.chartlist.barPhoneTotalPlot){
@@ -2923,7 +3290,7 @@ export default {
     }
   },
   destroyed(){
-    window.removeEventListener('resize',this.echartsSize);
+      window.removeEventListener('resize',this.echartsSize);
   }
 }
 </script>

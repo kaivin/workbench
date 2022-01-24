@@ -363,8 +363,9 @@ export default {
       en:"en",
       chooseData:{
           chooseDepart:"",
-          tag:""
-      }
+          tag:"",
+          time: ""
+      },
     };
   },
   computed:{
@@ -1743,7 +1744,8 @@ export default {
                 item.isDisplay=false;
             }
         });
-        $this.getchinaproduct();          
+        $this.chooseData.chooseDepart='';
+        $this.getchinaproduct();     
       }
     },
     // 点击产品获取详情
@@ -2414,6 +2416,7 @@ export default {
     departchange(chooseDepart,tag){
         this.chooseData.chooseDepart = chooseDepart;
         this.chooseData.tag = tag;
+        this.chooseData.time = new Date().valueOf();
     },
     echartsSize(){
         if(this.MixChart){

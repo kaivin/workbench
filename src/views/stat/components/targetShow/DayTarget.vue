@@ -32,9 +32,9 @@
 </template>
 
 <script>
-import { each, groupBy } from '@antv/util';
-import { Mix } from '@antv/g2plot';
+import * as echarts from 'echarts';
 import {parseTime}  from "@/utils";
+import { mapGetters } from 'vuex'
 export default {
     name: "DayTarget",
     data() {
@@ -45,24 +45,13 @@ export default {
             disabledDate(time){
               return time.getTime() > Date.now();
             }
-          }
+          },
+          myChart: "",
         }
     },
     props:{
-        DayTarget:{
-          type: Array,
-          default: function () {
-            return [];
-          },
-        },
         Dep1DayNum:{
           type: Number,
-          default: function () {
-            return [];
-          },
-        },
-        DayAim:{
-          type: Array,
           default: function () {
             return [];
           },
@@ -72,198 +61,304 @@ export default {
           default: function () {
             return {};
           },
+        },
+        DayData:{
+          type: Object,
+          default: function () {
+            return {};
+          },
         }
     },
     created(){
       var $this = this;
       this.dateChoose = parseTime(new Date(),'{y}-{m}-{d}');
     },
+    computed:{
+      ...mapGetters([
+        'sidebar',
+      ]),
+      isCollapse() {
+        return this.sidebar.opened
+      }
+    },
     watch:{
-        DayTarget:{//深度监听，可监听到对象、数组的变化
+        DayData:{
             handler(val, oldVal){
                 this.drawColumn(val)
             },
             deep:true //true 深度监听
+        },
+        isCollapse(){
+          setTimeout(() => {
+            this.echartsSize();
+          }, 200)
         }
     },
     mounted(){
+      window.addEventListener('resize',this.echartsSize)
     },
     methods:{
       drawColumn(){
         var $this = this;
-        var data = $this.DayTarget;
-        var aimArr = $this.DayAim;
-        var Dep1DayNum = $this.Dep1DayNum;
-        var annotations = [];
-        each(aimArr, (value, k) => {
-          var number = value.number;
-          var snum = k - 0.30;
-          var endnum = k + 0.30;
-          
-          var line={
-            type: 'line',
-            start: [snum, number],
-            end: [endnum, number],
-            text: {
-              content: number,
-              position: 'right',
-              offsetX: 18,
-              offsetY: 6,
-              style: {
-                textAlign: 'right',
-                fill: "#f43131"
-              },
-            },
-            style: {
-              lineDash: [9, 4],
-              stroke: "#fa6e57",
-              shadowColor: '#ff4848',
-              shadowBlur: 10,
-              shadowOffsetX: 5,
-              shadowOffsetY: 5,
-            },
-          }
-          annotations.push(line);
-        });
-  
-        each(groupBy(data, 'departname'), (values, k) => {
-          for(var i=0; i<values.length;i++){
-            if(k!="电商一部" &&　values[i].name == "搜索询盘"){
-              annotations.push({
-                type: 'text',
-                position: [k, values[i].number],
-                content: `${values[i].number}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#7fb3ff' },
-                offsetY: -10,
-                offsetX: -27
-              });
-            }
-            if(k=="电商一部" &&　values[i].name == "搜索询盘"){
-              annotations.push({
-                type: 'text',
-                position: [k, Dep1DayNum],
-                content: `${Dep1DayNum}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#7fb3ff' },
-                offsetY: -10,
-                offsetX: -27
-              });
-              if(Dep1DayNum - values[i].number > 10){
-                annotations.push({
-                  type: 'text',
-                  position: [k, values[i].number],
-                  content: `${values[i].number}`,
-                  style: { textAlign: 'center', fontSize: 12, fill: '#fff' },
-                  offsetY: -10,
-                  offsetX: -27
-                });
-              }
-              
-            }
-            if(values[i].name == "本月最高"){
-              annotations.push({
-                type: 'text',
-                position: [k, values[i].number],
-                content: `${values[i].number}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#4d7eff' },
-                offsetY: -10,
-              });
-            }
-            if(values[i].name == "历史最高"){
-              annotations.push({
-                type: 'text',
-                position: [k, values[i].number],
-                content: `${values[i].number}`,
-                style: { textAlign: 'center', fontSize: 12, fill: '#ffb420' },
-                offsetY: -10,
-                offsetX: 27
-              });
-            }
-          }
-        });
-
-        if( $this.plot && !$this.plot.chart.destroyed){
-          $this.plot.destroy();
+        if($this.myChart){
+          $this.myChart.dispose();
         }
-        const plot = new Mix('dayTarget', {
-            tooltip: {
-              shared: true,
-              customItems: (originalItems) => {
-                var isdep1 = 0;
-                for (let i = 0; i < originalItems.length; i++) {
-                    if(originalItems[i].title != "电商一部" && originalItems[i].name == "搜索询盘"){
-                      originalItems[i].name = "询盘数量"
-                    }else if(originalItems[i].title == "电商一部"){
-                      isdep1 = 1
-                    }
-                }
-                if(isdep1 == 1){
-                  originalItems.unshift({
-                    title: "电商一部",
-                    name: "询盘数量",
-                    value: Dep1DayNum,
-                    color: "#89b2ff"
-                  })
-                }  
-                return originalItems;
-              },
+        var chartDom = document.getElementById('dayTarget');
+        var myChart = echarts.init(chartDom);
+        var daydata = $this.DayData;
+        var Dep1DayNum = $this.Dep1DayNum;
+        var option={
+            grid: {
+              left: '0',
+              right: '0',
+              bottom: '0',
+              top: '10',
+              containLabel: true
             },
-            plots: [
-              {
-                type: 'column',
-                options: {
-                  data,
-                  xField: 'departname',
-                  yField: 'number',
-                  isGroup: true,
-                  color: [ '#a0c7ff', '#7fb3ff', '#4d7eff','#ffb420'],
-                  minColumnWidth: 22,
-                  maxColumnWidth: 22,
-                  legend: false,
-                  dodgePadding: 6,
-                  isStack: true,
-                  seriesField: 'name',
-                  groupField: 'stack',
-                  yAxis: {
-                    label:{
-                      style:{
-                        fill:"#333",
-                        opacity:1,
-                      }
-                    },
-                    grid: {
-                      line: {
-                        style: {
-                          stroke: '#dedede',
-                          lineWidth: 1,
-                          opacity:1,
-                        },
-                        
-                      },
-                    },
-                    tickCount: 4,
-                    tickInterval: 50,
-                  },
-                  xAxis:{
-                        line: {
-                          style: {
-                            stroke: '#666',
-                            lineWidth: 1,
-                          }
-                    },
-                    label:{
-                      style:{
-                        fill:"#333",
-                        opacity:1,
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'shadow'
+              },
+              formatter(items){
+                var tooltext = `<div class="deptoolTip"><div class="title">${items[0].name}</div>`;
+                  items.forEach(function(item,index){
+                    if(item.name=="电商一部"){
+                        if(item.seriesName == "搜索询盘"){
+                            tooltext += `<div class="bar clearfix">
+                                      <span class="xun"></span>
+                                      <span class="name">询盘数量：</span>
+                                      <span class="num">${Dep1DayNum}</span></div>
+                                      <div class="bar clearfix">
+                                      <span class="search"></span>
+                                      <span class="name">${item.seriesName}：</span>
+                                      <span class="num">${item.value}</span>
+                                    </div>`;
+                        }else if(item.seriesName == "询盘数量"){
+                            tooltext+=`<div class="bar clearfix">
+                                        <span class="unsearch"></span>
+                                        <span class="name">非搜索询盘：</span>
+                                        <span class="num">${item.value}</span>
+                                      </div>`;
+                        }else{
+                            tooltext += `<div class="bar clearfix">
+                                    ${item.marker}
+                                    <span class="name">${item.seriesName}：</span>
+                                    <span class="num">${item.value}</span>
+                                  </div>`;
+                              
+                        }
+                    }else{
+                      if(item.seriesName == "搜索询盘"){
+                        tooltext += `<div class="bar clearfix">
+                                    ${item.marker}
+                                    <span class="name">询盘数量：</span>
+                                    <span class="num">${item.value}</span>
+                                  </div>`;
+                      }else if(item.seriesName != "询盘数量"){
+                        tooltext += `<div class="bar clearfix">
+                                    ${item.marker}
+                                    <span class="name">${item.seriesName}：</span>
+                                    <span class="num">${item.value}</span>
+                                  </div>`;
                       }
                     }
-                  },
-                  annotations
+                  })
+                  tooltext +='</div>';
+                  return tooltext;
+              }
+            },
+            color: [ '#7fb3ff', '#a0c7ff', '#4d7eff','#ffb420'],
+            barMaxWidth: 22,
+            barMinWidth: 22,
+            xAxis: [
+              {
+                type: 'category',
+                data: daydata.departArr,
+                axisTick: {
+                  show: false
+                },
+                axisLine:{
+                  lineStyle:{
+                    color:"#dedede"
+                  }
+                },
+                axisLabel:{
+                  color:"#333"
                 }
               }
+            ],
+            yAxis: [
+              {
+                type: 'value',
+                splitNumber: 3,
+                splitLine: {
+                  lineStyle:{
+                    color:"#dedede"
+                  }
+                }
+              }
+            ],
+            series: [
+              {
+                name: '搜索询盘',
+                type: 'bar',
+                stack: '询盘数量',
+                data: daydata.searchArr,
+                label: {
+                  show: true,
+                  position: 'top',
+                  formatter:function(params){
+                    if(params.name == "电商一部"){
+                      if(Dep1DayNum-params.value >10){
+                        return '{a|'+params.value+"}";
+                      }else{
+                        return ""
+                      }
+                    }else{
+                      return '{b|'+params.value+"}";
+                    }
+                  },
+                  rich:{
+                    a:{
+                      color: "#fff"
+                    },
+                    b:{
+                      color: "#7fb3ff",
+                    }
+                  }
+                },
+              },
+              {
+                name: '询盘数量',
+                type: 'bar',
+                stack: '询盘数量',
+                data: daydata.unsearchArr,
+                label: {
+                  position: 'top',
+                  show: true,
+                  formatter:function(params){
+                    if(params.name == "电商一部"){
+                      return '{a|'+Dep1DayNum+'}';
+                    }else{
+                      return ""
+                    }
+                  },
+                  rich:{
+                    a:{
+                      color: "#7fb3ff"
+                    }
+                  }
+                },
+              },
+              {
+                name: '本月最高',
+                type: 'bar',
+                data: daydata.monthArr,
+                label: {
+                  show: true,
+                  position: 'top',
+                  color: "#4d7eff"
+                },
+              },
+              {
+                name: '历史最高',
+                type: 'bar',
+                data: daydata.historyArr,
+                label: {
+                  show: true,
+                  position: 'top',
+                  color: "#ffb420"
+                },
+              },
+              {
+                type: 'custom',
+                name: '平均',
+                z:"3",
+                tooltip:{
+                  show: false
+                },
+                renderItem: function(param, api) {
+                  var bandWidth = api.size([0, 0])[0] * 0.5;
+                  var point = api.coord([api.value(0), api.value(1)]);
+                  return {
+                    type: 'line',
+                    transition: ['shape'],
+                    shape: {
+                      x1: point[0] - bandWidth / 2,
+                      x2: point[0] + bandWidth / 2,
+                      y1: point[1],
+                      y2: point[1]
+                    },
+                    style: api.style({
+                      fill: null,
+                      // stroke: '#f43131',
+                      stroke: new echarts.graphic.LinearGradient(1, 0, 0, 0,[
+                          {offset: 0.02,color: '#f43131'},
+                          {offset: 0.09,color: '#f43131'},
+                          {offset: 0.09,color: 'transparent'},
+                          {offset: 0.13,color: 'transparent'},
+                          {offset: 0.13,color: '#f43131'},
+                          {offset: 0.2,color: '#f43131'},
+                          {offset: 0.2,color: 'transparent'},
+                          {offset: 0.24,color: 'transparent'},
+                          {offset: 0.24,color: '#f43131'},
+                          {offset: 0.31,color: '#f43131'},
+                          {offset: 0.31,color: 'transparent'},
+                          {offset: 0.35,color: 'transparent'},
+                          {offset: 0.35,color: '#f43131'},
+                          {offset: 0.42,color: '#f43131'},
+                          {offset: 0.42,color: 'transparent'},
+                          {offset: 0.46,color: 'transparent'},
+                          {offset: 0.46,color: '#f43131'},
+                          {offset: 0.53,color: '#f43131'},
+                          {offset: 0.53,color: 'transparent'},
+                          {offset: 0.57,color: 'transparent'},
+                          {offset: 0.57,color: '#f43131'},
+                          {offset: 0.64,color: '#f43131'},
+                          {offset: 0.64,color: 'transparent'},
+                          {offset: 0.68,color: 'transparent'},
+                          {offset: 0.68,color: '#f43131'},
+                          {offset: 0.75,color: '#f43131'},
+                          {offset: 0.75,color: 'transparent'},
+                          {offset: 0.79,color: 'transparent'},
+                          {offset: 0.79,color: '#f43131'},
+                          {offset: 0.86,color: '#f43131'},
+                          {offset: 0.86,color: 'transparent'},
+                          {offset: 0.91,color: 'transparent'},
+                          {offset: 0.91,color: '#f43131'},
+                          {offset: 0.98,color: '#f43131'}
+                      ]),
+                      LineWidth: 1,
+                      // shadowColor: '#ff4848',
+                      // shadowBlur: 10,
+                      // shadowOffsetX: 5,
+                      // shadowOffsetY: 5,
+                    }),
+                  }
+                },
+                label:{
+                  normal:{
+                    show: true,
+                    position: "right",
+                    color: "#f43131"
+                  }
+                },
+                encode: {
+                  x: 0,
+                  y: 1
+                },
+                data: daydata.targetArr
+              },
             ]
-        })
-        $this.plot = plot;
-        plot.render();
+        };
+        option && myChart.setOption(option);
+        $this.myChart = myChart;
+      },
+      echartsSize(){
+        if(this.myChart){
+          this.myChart.resize();
+        }
       },
       dayPrev() { 
         var $this = this;
@@ -303,6 +398,12 @@ export default {
           $this.nextOn = true;
         }
         $this.$emit('dayChange', res);
+      }
+    },
+    destroyed(){
+      window.removeEventListener('resize',this.echartsSize);
+      if(this.myChart){
+        this.myChart.dispose();
       }
     }
 }

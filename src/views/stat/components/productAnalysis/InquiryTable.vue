@@ -5,7 +5,7 @@
     </div>
     <div class="rowMain" :style="isshow?'height:546px':''">
         <el-table
-            ref="table"
+            ref="intable"
             :key="time"
             :data="intableData"
             style="width: 100%"
@@ -122,33 +122,39 @@ export default {
         chooseData:{
             handler(val,oldval){
                 var $this = this;
-                $this.nowLength = 0;
-                if($this.$refs.table){
-                    $this.$refs.table.clearFilter();
-                }
-                if(val.tag == "enquirie"){
-                    $this.filterdep = [val.chooseDepart];
-                    $this.intableData.forEach(function(item,index){
-                        if(item.depart == val.chooseDepart){
-                            $this.nowLength +=1;
-                        }
-                    });
-                    if($this.nowLength>10){
-                        $this.isshow=true;
-                        $this.isMoreShow = true;
-                    }else{
-                        $this.isshow=false;
-                        $this.isMoreShow = false;
-                    }
+                if(val.chooseDepart){
                     $this.nowLength = 0;
-                    $this.isJump = true;
-                    $this.filteredNum = 0;
-                    $this.time = new Date().valueOf();
+                    if($this.$refs.intable){
+                        $this.$refs.intable.clearFilter();
+                    }
+                    if(val.tag == "enquirie"){
+                        $this.filterdep = [val.chooseDepart];
+                        $this.intableData.forEach(function(item,index){
+                            if(item.depart == val.chooseDepart){
+                                $this.nowLength +=1;
+                            }
+                        });
+                        if($this.nowLength>10){
+                            $this.isshow=true;
+                            $this.isMoreShow = true;
+                        }else{
+                            $this.isshow=false;
+                            $this.isMoreShow = false;
+                        }
+                        $this.nowLength = 0;
+                        $this.isJump = true;
+                        $this.filteredNum = 0;
+                        $this.time = new Date().valueOf();
+                    }
+                }else{
+                    if($this.$refs.intable){
+                        $this.$refs.intable.clearFilter();
+                    }
                 }
             },
             deep:true,
             immediate: true
-        }
+        },
     },
     methods:{
         showAll(){
@@ -157,7 +163,7 @@ export default {
         },
         filterDepart(value, row, column){
             const property = column['property'];
-            if(this.filteredNum===0){
+            if(this.filteredNum===0 && !this.isJump){
                 this.nowLength = 0;
             }
             this.filteredNum +=1;
@@ -165,6 +171,7 @@ export default {
                 this.filterdep = [];
                 if(this.filteredNum === this.intableData.length){
                     this.filteredNum = 0;
+                    this.isJump = false;
                 }
             }
             if(row[property] === value){

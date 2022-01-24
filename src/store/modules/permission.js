@@ -226,6 +226,12 @@ function setRoutes(routers){
         meta: {id:'searchEnClues-72',title: '搜索数据', icon: null, keepAlive:false},
       },
       {
+        path: "/Enphone/statisticChart",
+        name:'enstatisticChart',
+        component: () => import(/* webpackChunkName: "statisticChart" */ "@/views/Enphone/statisticChart/index.vue"),
+        meta: {id:'statisticChart-72',title: '英文询盘统计', icon: null, keepAlive:false},
+      },
+      {
         path: "/Enphone/editHistoryLog",
         name:'editHistoryLog',
         component: () => import(/* webpackChunkName: "editHistoryLog" */ "@/views/Enphone/editHistoryLog/index.vue"),
