@@ -773,13 +773,15 @@ export default {
             showSymbol:false,
             lineStyle:{
                 normal: {
-                    width: 2,
+                    width: 1,
                     color:'#efd587', // 线条颜色
                 },
             },
             itemStyle:{
                 normal: {
-                    color:'#efd587', // 折点颜色
+                    borderColor:'#efd587', // 折点颜色
+                    borderWidth: 1,
+                    color: '#fff'
                 },
             },
             areaStyle:{
@@ -799,9 +801,13 @@ export default {
             emphasis:{
                 lineStyle: {
                     width: 2,	// hover时的折线宽度
+                },
+                itemStyle:{
+                    borderWidth: 2
                 }
             },
-            symbolSize:7,
+            symbolSize:5,
+            symbol:'circle',
             animationDuration:2800,
             animationEasing:'quadraticOut',
         }]
@@ -851,6 +857,9 @@ export default {
                             }
                             if($this.currentTab=='money'){
                                 title='年度总奖金';
+                            }
+                            if(params[i].color=='#fff'){
+                                params[i].color='#efd587'
                             }
                             showHtmDd+='<dd><i style="background:'+params[i].color+'"></i><span>'+name+'：</span><strong>' + value +'</strong></dd>'
                         }

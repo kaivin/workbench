@@ -456,13 +456,15 @@ export default {
             }
             itemObj.lineStyle={
               normal: {
-                  width: 2,
+                  width: 1,
                   color:$this.ChartColor[index], // 线条颜色
               },
             };
             itemObj.itemStyle={
               normal: {
-                  color:$this.ChartColor[index], // 折点颜色
+                  color: '#fff',
+                  borderColor:$this.ChartColor[index], // 折点颜色
+                  borderWidth: 1
               },
             };
             itemObj.areaStyle={
@@ -482,9 +484,13 @@ export default {
             itemObj.emphasis={
               lineStyle: {
                 width: 2,	// hover时的折线宽度
+              },
+              itemStyle:{
+                borderWidth: 2
               }
             };
-            itemObj.symbolSize=7;
+            itemObj.symbolSize=5;
+            itemObj.symbol='circle';
             itemObj.data=[];
             item.forEach(function(items,indexs){
               itemObj.data.push(items.value);
@@ -501,7 +507,18 @@ export default {
               trigger: "axis",
               textStyle:{
                 fontSize:'12',
-              }
+              },
+              formatter(params){
+                let returnData = `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>`;
+                for (let i = 0; i < params.length; i++) {
+                    returnData += `<div class="bar clearfix"><span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].borderColor};"></span>
+                      <span>${params[i].seriesName}：</span>
+                      <span>${params[i].value}</span></div>`;
+                }
+                returnData +=`</div>`;
+                return returnData;
+            }
           },
           grid: {
               top:60,
@@ -627,21 +644,27 @@ export default {
             }
             itemObj.lineStyle={
               normal: {
-                  width: 2,
+                  width: 1,
                   color:$this.ChartColor[index], // 线条颜色
               },
             };
             itemObj.itemStyle={
               normal: {
-                  color:$this.ChartColor[index], // 折点颜色
+                  color: '#fff',
+                  borderColor:$this.ChartColor[index], // 折点颜色
+                  borderWidth: 1
               },
             };
             itemObj.emphasis={
               lineStyle: {
                 width: 2,	// hover时的折线宽度
+              },
+              itemStyle:{
+                borderWidth: 2
               }
             };
-            itemObj.symbolSize=7;
+            itemObj.symbolSize=5;
+            itemObj.symbol='circle';
             itemObj.data=[];
             item.forEach(function(items,indexs){
               itemObj.data.push(items.value);
@@ -658,7 +681,18 @@ export default {
               trigger: "axis",
               textStyle:{
                 fontSize:'12',
-              }
+              },
+              formatter(params){
+                let returnData = `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>`;
+                for (let i = 0; i < params.length; i++) {
+                    returnData += `<div class="bar clearfix"><span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].borderColor};"></span>
+                      <span>${params[i].seriesName}：</span>
+                      <span>${params[i].value}</span></div>`;
+                }
+                returnData +=`</div>`;
+                return returnData;
+            }
           },
           grid: {
               top:60,

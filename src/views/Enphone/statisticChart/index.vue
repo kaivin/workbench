@@ -296,7 +296,7 @@
                   <el-row :gutter="15">
                     <el-col :md="24" :lg="12">
                       <div class="chart-wrapper">
-                        <div class="chart-header"><span>电话总数（{{searchResult.phoneTotalNum}}）</span></div>
+                        <div class="chart-header"><span>询盘总数（{{searchResult.phoneTotalNum}}）</span></div>
                         <div class="chart-body" style="height:640px;">                        
                             <div class="abs-canvas" v-if="searchResult.phoneCount.length>0">
                               <div id="cluesChart1" class="chart-canvas"></div>
@@ -309,7 +309,7 @@
                     </el-col>
                     <el-col :md="24" :lg="12">
                       <div class="chart-wrapper">
-                        <div class="chart-header"><span>有效电话（{{searchResult.phoneEffectiveNum}}）</span></div>
+                        <div class="chart-header"><span>有效询盘（{{searchResult.phoneEffectiveNum}}）</span></div>
                         <div class="chart-body" style="height:640px;">                              
                             <div class="abs-canvas" v-if="searchResult.phoneEffectiveCount.length>0">
                               <div id="cluesChart2" class="chart-canvas"></div>
@@ -350,7 +350,7 @@
                   <el-row :gutter="15">
                     <el-col :md="24" :lg="12">
                       <div class="chart-wrapper">
-                        <div class="chart-header"><span>平均星期电话量</span></div>
+                        <div class="chart-header"><span>平均星期询盘量</span></div>
                         <div class="chart-body" style="height:400px;">
                             <div class="abs-canvas" v-if="searchResult.weekCount.length>0">
                               <div id="cluesChart5" class="chart-canvas"></div>
@@ -376,7 +376,7 @@
                   <el-row :gutter="15">
                     <el-col :xs="24">
                       <div class="chart-wrapper">
-                        <div class="chart-header"><span>每天电话量</span></div>
+                        <div class="chart-header"><span>每天询盘量</span></div>
                         <div class="chart-body" style="height:400px;">
                           <div class="abs-canvas" v-if="searchResult.dayCount.length"><div id="cluesChart7" class="chart-canvas"></div></div>
                           <div class="nocount" v-else>
@@ -389,7 +389,7 @@
                   <el-row :gutter="15">
                     <el-col :xs="24">
                       <div class="chart-wrapper">
-                        <div class="chart-header"><span>平均小时电话量</span></div>
+                        <div class="chart-header"><span>平均小时询盘量</span></div>
                         <div class="chart-body" style="height:400px;">
                             <div class="abs-canvas" v-if="searchResult.hoursCount.length>0">
                               <div id="cluesChart8" class="chart-canvas"></div>
@@ -2840,6 +2840,16 @@ export default {
                 color: "#5b8ff9"
               }
             },
+            formatter(params){
+              return `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                      <span>${params[0].seriesName}：</span>
+                      <span>${params[0].data.number}</span>
+                    </div>
+                  </div>`;
+            }
           },
           xAxis: {
             type: 'category',
@@ -2866,19 +2876,29 @@ export default {
             {
               name: "询盘个数",
               type: 'line',
-              symbol: 'emptyCircle',
-              symbolSize: '7',
+              symbol:'circle',
+              symbolSize: '5',
               label:{
                 show: true,
                 position: 'top',
-                distance: '5'
+                distance: '5',
               },
               itemStyle:{
-                color: "#0970ff"
+                color: '#fff',
+                borderColor: "#0970ff",
+                borderWidth: 1
               },
               lineStyle:{
-                color: "#5b8ff9",
-                lineWidth: 1
+                color: "#0970ff",
+                width: 1
+              },
+              emphasis:{
+                lineStyle: {
+                  width: 2,
+                },
+                itemStyle:{
+                  borderWidth: 2
+                }
               }
             }
           ]
@@ -3157,7 +3177,7 @@ export default {
             },
             itemStyle: {
               borderWidth: 0.5, // 描边线宽 为 0 时无描边
-              borderColor: '#b8b8ba', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+              borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
               borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
             },
             emphasis: {
@@ -3181,7 +3201,7 @@ export default {
               // 地图区域的多边形 图形样式
               itemStyle: {
                 borderWidth: 0.5, // 描边线宽 为 0 时无描边
-                borderColor: '#b8b8ba', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+                borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
                 borderType: 'solid' // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
               },
               // 高亮状态下的多边形和标签样式
@@ -3195,7 +3215,7 @@ export default {
                 },
                 itemStyle: {
                   borderWidth: 0.5, // 描边线宽 为 0 时无描边
-                  borderColor: '#b8b8ba', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
+                  borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
                   borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
                 }
               },

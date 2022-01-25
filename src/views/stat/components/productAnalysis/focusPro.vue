@@ -239,21 +239,27 @@ export default {
           itemObj.showSymbol=false;
           itemObj.lineStyle={
             normal: {
-                width: 2,
+                width: 1,
                 color:$this.focusPro.ChartColor[index], // 线条颜色
             },
           };
           itemObj.itemStyle={
             normal: {
-                color:$this.focusPro.ChartColor[index], // 折点颜色
+                color: '#fff',
+                borderColor:$this.focusPro.ChartColor[index], // 折点颜色
+                borderWidth:1
             },
           };
           itemObj.emphasis={
             lineStyle: {
               width: 2,	// hover时的折线宽度
+            },
+            itemStyle:{
+              borderWidth: 2
             }
           };
-          itemObj.symbolSize=7;
+          itemObj.symbolSize=5;
+          itemObj.symbol='circle',
           itemObj.animationDuration=2800;
           itemObj.animationEasing='quadraticOut';
           series.push(itemObj);
@@ -265,6 +271,17 @@ export default {
               trigger: "axis",
               textStyle:{
                 fontSize:'12',
+              },
+              formatter(params){
+                let returnData = `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>`;
+                for (let i = 0; i < params.length; i++) {
+                    returnData += `<div class="bar clearfix"><span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].borderColor};"></span>
+                      <span>${params[i].seriesName}：</span>
+                      <span>${params[i].value}</span></div>`;
+                }
+                returnData +=`</div>`;
+                return returnData;
               }
           },
           legend: {

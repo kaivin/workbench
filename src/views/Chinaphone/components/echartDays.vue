@@ -54,14 +54,16 @@ export default {
             itemObj.type='line';
             itemObj.lineStyle={
             normal: {
-                width: 2,
+                width: 1,
                 color:'#0970ff', // 线条颜色
             },
             };
             itemObj.itemStyle={
-            normal: {
-                color:'#0970ff', // 折点颜色
-            },
+                normal: {
+                    color: '#fff',
+                    borderColor:'#0970ff', // 折点颜色
+                    borderWidth: 1
+                },
             };
             itemObj.areaStyle={
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -79,11 +81,15 @@ export default {
             };
             itemObj.showSymbol=false;
             itemObj.emphasis={
-            lineStyle: {
-                width: 2,	// hover时的折线宽度
-            }
+                lineStyle: {
+                    width: 2,	// hover时的折线宽度
+                },
+                itemStyle:{
+                    borderWidth: 2
+                }
             };
-            itemObj.symbolSize=7;
+            itemObj.symbolSize=5;
+            itemObj.symbol='circle';
             itemObj.animationDuration=2800;
             itemObj.animationEasing='quadraticOut';
             itemObj.markLine={
@@ -122,6 +128,16 @@ export default {
                     textStyle:{
                         fontSize:12,
                     },
+                    formatter(params){
+                        return `<div class="toolDiv">
+                                <div class="tooltitle">${params[0].name}</div>
+                                <div class="bar clearfix">
+                                <span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                                <span>${params[0].seriesName}：</span>
+                                <span>${params[0].data}</span>
+                                </div>
+                            </div>`;
+                        }
                 },
                 grid: {
                     left: 0,

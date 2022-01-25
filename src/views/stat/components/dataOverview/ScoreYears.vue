@@ -155,7 +155,7 @@ export default {
            for(var i=0; i< chartTopData.length;i++){
               var obj={};
               obj.date = chartTopData[i].date.slice(-2) + '月';
-              obj.number = chartTopData[i].number;
+              obj.score = chartTopData[i].number;
               newlist.push(obj);
           }
         }
@@ -169,6 +169,16 @@ export default {
                 axisPointer: {
                     type: "line", 
                 },
+                formatter(params){
+                  return `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#518dff;"></span>
+                      <span>${params[0].seriesName}：</span>
+                      <span>${params[0].value.score}</span>
+                    </div>
+                  </div>`;
+                }
             },
             grid: {
                 left: '-8%',

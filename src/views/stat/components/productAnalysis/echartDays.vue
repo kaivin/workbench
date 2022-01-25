@@ -89,13 +89,15 @@ export default {
               itemObj.type='line';
               itemObj.lineStyle={
                 normal: {
-                    width: 2,
+                    width: 1,
                     color:$this.enquirieChart.ChartColor[index], // 线条颜色
                 },
               };
               itemObj.itemStyle={
                 normal: {
-                    color:$this.enquirieChart.ChartColor[index], // 折点颜色
+                    color: '#fff',
+                    borderColor:$this.enquirieChart.ChartColor[index], // 折点颜色
+                    borderWidth: 1
                 },
               };
               itemObj.areaStyle={
@@ -114,11 +116,15 @@ export default {
               };
               itemObj.showSymbol=false;
               itemObj.emphasis={
-                lineStyle: {
-                  width: 2,	// hover时的折线宽度
+                lineStyle:{
+                  width: 2
+                },
+                itemStyle:{
+                  borderWidth: 2
                 }
               };
-              itemObj.symbolSize=7;
+              itemObj.symbolSize=5;
+              itemObj.symbol='circle',
               itemObj.data=item;
               itemObj.animationDuration=2800;
               itemObj.animationEasing='quadraticOut';
@@ -148,6 +154,17 @@ export default {
             tooltip: {
                 backgroundColor:'rgba(255,255,255,0.95)',
                 trigger: "axis",
+                formatter(params){
+                  let returnData = `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>`;
+                  for (let i = 0; i < params.length; i++) {
+                    returnData += `<div class="bar clearfix"><span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].borderColor};"></span>
+                      <span class="tooltit">${params[i].seriesName}</span>
+                      <span class="toolval">${params[i].value}</span></div>`;
+                  }
+                  returnData +=`</div>`;
+                  return returnData;
+                }
             },
             grid: {
                 left: 10,
