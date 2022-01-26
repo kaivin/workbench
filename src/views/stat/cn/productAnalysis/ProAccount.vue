@@ -933,7 +933,6 @@ export default {
                         departcount=departcount.concat($this.piePlug(res.departscore,peitit,'score','总成交积分'));
                     }
                     $this.ChartAccount=departcount;
-                    console.log($this.ChartAccount,'$this.ChartAccount');
                     //询盘地图
                     var EnquirieMap=[];
                     if(res.provincecountmap&&res.provincecountmap.length>0){
@@ -1104,7 +1103,6 @@ export default {
                     }
                     $this.ChartEnquirie=ChartEnquirie;
                     $this.ChartAccount=departcountChart;
-                    console.log($this.ChartAccount,'$this.ChartAccount');
                     //询盘地图
                     var EnquirieMap=[];
                     if(res.provincecountmap&&res.provincecountmap.length>0){
@@ -1340,7 +1338,8 @@ export default {
         var totalNum=0;
         var ChartColor=['#044bff','#fe4c46','#fdcb66','#47cbfe'];        
         valData.forEach(function(item,index){
-            item.color = ChartColor[index]
+            item.color = ChartColor[index];
+            item.num = index+1;
         });
         if(valTag=='enquirie'){
             valData.forEach(function(item,index){

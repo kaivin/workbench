@@ -123,10 +123,18 @@ export default {
       var $this = this;
       var chartDom = document.getElementById('pie-'+$this.accountArr.currentTag);
       var myChart = echarts.init(chartDom);
+      var itemNewArr=[];
+      $this.accountArr.itemArr.forEach(function(item,index){
+        itemNewArr.push(item);
+      });
+      itemNewArr.sort(function(a,b){
+          return a.num - b.num
+      });
       let echartData=[];
       let echartColor=[];
-      $this.accountArr.itemArr.forEach(function(item,index){
+      itemNewArr.forEach(function(item,index){
         var itemObj={};
+        itemObj.num=item.num;
         itemObj.name=item.name;
         itemObj.value=item.number;
         echartData.push(itemObj);

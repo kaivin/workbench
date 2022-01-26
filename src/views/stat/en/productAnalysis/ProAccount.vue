@@ -1412,7 +1412,8 @@ export default {
         var totalNum=0;
         var ChartColor=['#044bff','#fe4c46','#fdcb66','#47cbfe'];        
         valData.forEach(function(item,index){
-            item.color = ChartColor[index]
+            item.color = ChartColor[index];
+            item.num = index+1;
         });
         if(valTag=='enquirie'){
             valData.forEach(function(item,index){
