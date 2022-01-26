@@ -933,6 +933,7 @@ export default {
                         departcount=departcount.concat($this.piePlug(res.departscore,peitit,'score','总成交积分'));
                     }
                     $this.ChartAccount=departcount;
+                    console.log($this.ChartAccount,'$this.ChartAccount');
                     //询盘地图
                     var EnquirieMap=[];
                     if(res.provincecountmap&&res.provincecountmap.length>0){
@@ -1103,6 +1104,7 @@ export default {
                     }
                     $this.ChartEnquirie=ChartEnquirie;
                     $this.ChartAccount=departcountChart;
+                    console.log($this.ChartAccount,'$this.ChartAccount');
                     //询盘地图
                     var EnquirieMap=[];
                     if(res.provincecountmap&&res.provincecountmap.length>0){
@@ -1190,6 +1192,9 @@ export default {
     dateCompare(dataArr,key,valName,TagName){
       var $this = this;
       var ChartColor=['#044bff','#fe4c46','#fdcb66','#47cbfe'];
+      dataArr.forEach(function(item,index){
+          item.color = ChartColor[index]
+      });
       // 默认时间数据条数多于对比时间数据条数
       var tongData = dataArr;
       var backData = {};
@@ -1279,6 +1284,9 @@ export default {
     echartareaPlug(valData,valName,TagName,contrastName){
         var $this = this;
         var ChartColor=['#044bff','#fe4c46','#fdcb66','#47cbfe'];
+        valData.forEach(function(item,index){
+            item.color = ChartColor[index]
+        });
         var enquirieList=[];
         var enquirieObj={
             TagName:TagName,
@@ -1288,7 +1296,6 @@ export default {
             enquirieArr:[],
             TagTime:[],
         };
-        var newArr=[];
         valData.forEach(function(item,index){
             var newItemArr=[];
             item.forEach(function(items,indexs){
@@ -1319,10 +1326,9 @@ export default {
                 }
                 newItemArr.push(itemObj);             
             });
-            newArr.push(newItemArr);
+            enquirieObj.ChartColor.push(item.color);
+            enquirieObj.enquirieArr.push(newItemArr);
         });
-        enquirieObj.ChartColor=ChartColor;
-        enquirieObj.enquirieArr=newArr;
         enquirieList.push(enquirieObj);
         return enquirieList;
 
@@ -1332,7 +1338,10 @@ export default {
         var $this = this;
         var departcount=[];
         var totalNum=0;
-        var ChartColor=['#2368ff','#49cdff','#ffcb60','#fe443d'];
+        var ChartColor=['#044bff','#fe4c46','#fdcb66','#47cbfe'];        
+        valData.forEach(function(item,index){
+            item.color = ChartColor[index]
+        });
         if(valTag=='enquirie'){
             valData.forEach(function(item,index){
                 totalNum+=item.number;
@@ -1356,7 +1365,7 @@ export default {
             currentTag:valTag,
             totalNum:totalNum.toFixed(2)*1,
             totalNumName:valUnit,
-            ChartColor:ChartColor,
+            ChartColor:[],
             itemArr:[],
         };
         departscoreArr.forEach(function(item,index){
@@ -1384,8 +1393,8 @@ export default {
                 item.number=item.score;
             }
             item.name=item.departname;
-            item.color=ChartColor[index];
             departcountObj.itemArr.push(item);
+            departcountObj.ChartColor.push(item.color);
         });
         departcount.push(departcountObj);
         return departcount;

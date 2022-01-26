@@ -49,6 +49,7 @@
                         <a :href="isHttps?'httsp://www.'+formData.domain+'/Error/_Message_Error.txt':'http://www.'+formData.domain+'/Error/_Message_Error.txt'" target="_blank" class="link">ErrLog</a>
                         <a :href="'https://www.google.com/search?q=site:'+formData.domain+' (博彩|时时彩|澳门|斗地主|娱乐场|欢乐豆|成人|传奇)'" target="_blank" class="link">被黑查询</a>
                         <a :href="'https://www.google.com/search?q=site:'+formData.domain+' (黎明|世邦|西芝|嵩山|维科|科利瑞克|鑫海|一帆|豫晖|最佳|第一|最优)'" target="_blank" class="link">同行与违禁词</a>
+                        <a href="https://cp.aliyun.com/login" target="_blank" class="link">万网</a>
                       </div>
                   </div>
               </li>
