@@ -273,9 +273,7 @@ export default {
             ])
           },
           label: {
-              normal: {
-                  show: false,
-              }
+              show: false,
           },
       }];
       var option;
@@ -406,27 +404,23 @@ export default {
             color:echartColor,
             data:serieData,
             label: {
-                normal: {
-                    formatter: params => {
-                        return '{percent|占比：' + params.percent + '%} '
-                    },
-                    distanceToLabelLine: 0,
-                    padding: [-2, 0, 0, 0],
-                    rich: {
-                        percent: {
-                            color: "#333",
-                            align: 'center',
-                            fontSize: 12,
-                            padding: [5, 10]
-                        }
+                formatter: params => {
+                    return '{percent|占比：' + params.percent + '%} '
+                },
+                distanceToLabelLine: 0,
+                padding: [-2, 0, 0, 0],
+                rich: {
+                    percent: {
+                        color: "#333",
+                        align: 'center',
+                        fontSize: 12,
+                        padding: [5, 10]
                     }
                 }
             },
             itemStyle: {
-                normal: {
-                    borderColor: '#ffffff',
-                    borderWidth:1,
-                }
+                borderColor: '#ffffff',
+                borderWidth:1,
             },
           }
         ]
@@ -455,17 +449,13 @@ export default {
               itemObj.showSymbol=false;
             }
             itemObj.lineStyle={
-              normal: {
-                  width: 1,
-                  color:$this.ChartColor[index], // 线条颜色
-              },
+                width: 1,
+                color:$this.ChartColor[index], // 线条颜色
             };
             itemObj.itemStyle={
-              normal: {
-                  color: '#fff',
-                  borderColor:$this.ChartColor[index], // 折点颜色
-                  borderWidth: 1
-              },
+                color: '#fff',
+                borderColor:$this.ChartColor[index], // 折点颜色
+                borderWidth: 1
             };
             itemObj.areaStyle={
                   color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -643,17 +633,13 @@ export default {
               itemObj.showSymbol=false;
             }
             itemObj.lineStyle={
-              normal: {
-                  width: 1,
-                  color:$this.ChartColor[index], // 线条颜色
-              },
+                width: 1,
+                color:$this.ChartColor[index], // 线条颜色
             };
             itemObj.itemStyle={
-              normal: {
-                  color: '#fff',
-                  borderColor:$this.ChartColor[index], // 折点颜色
-                  borderWidth: 1
-              },
+                color: '#fff',
+                borderColor:$this.ChartColor[index], // 折点颜色
+                borderWidth: 1
             };
             itemObj.emphasis={
               lineStyle: {

@@ -76,6 +76,11 @@
                                     >
                                     </el-table-column>
                                     <el-table-column
+                                    prop="moneytype"
+                                    label="类型"
+                                    >
+                                    </el-table-column>
+                                    <el-table-column
                                     prop="money"
                                     label="消费"
                                     sortable

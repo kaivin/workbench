@@ -277,9 +277,7 @@ export default {
             ])
           },
           label: {
-              normal: {
-                  show: false,
-              }
+              show: false,
           },
       }];
       var option;
@@ -293,7 +291,7 @@ export default {
           grid: {
               top:'30',
               right:'18',
-              left:'50',
+              left:$this.currentData.totalTitle=='总消费'?80:50,
               bottom:'50'
           },
           xAxis:{
@@ -420,27 +418,23 @@ export default {
             color:echartColor,
             data:serieData,
             label: {
-                normal: {
-                    formatter: params => {
-                        return '{percent|占比：'+ params.percent + '%}';
-                    },
-                    distanceToLabelLine: 0,
-                    padding: [-2, 0, 0, 0],
-                    rich: {
-                        percent: {
-                            color: "#333",
-                            align: 'left',
-                            fontSize: 12,
-                            padding: [5, 10]
-                        }
+                formatter: params => {
+                    return '{percent|占比：'+ params.percent + '%}';
+                },
+                distanceToLabelLine: 0,
+                padding: [-2, 0, 0, 0],
+                rich: {
+                    percent: {
+                        color: "#333",
+                        align: 'left',
+                        fontSize: 12,
+                        padding: [5, 10]
                     }
                 }
             },
             itemStyle: {
-                normal: {
-                    borderColor: '#ffffff',
-                    borderWidth:1,
-                }
+                borderColor: '#ffffff',
+                borderWidth:1,
             },
           }
         ]
@@ -460,7 +454,7 @@ export default {
             itemObj.name=$this.chartName[index];
             itemObj.smooth=false;
             itemObj.type='line';
-            itemObj.symbol='emptyCircle';  //拐点样式
+            itemObj.symbol='circle';  //拐点样式
             itemObj.symbolSize=5;          //拐点大小
             if($this.currentData.mainData.length<=3){
               itemObj.label={
@@ -471,17 +465,13 @@ export default {
               itemObj.showSymbol=false;
             }
             itemObj.itemStyle={
-                normal: {
-                    color:$this.ChartColor[index],
-                    borderColor:$this.ChartColor[index],
-                    borderWidth:1,
-                }
+                color:'#fff',
+                borderColor:$this.ChartColor[index],
+                borderWidth:1,
             },
             itemObj.lineStyle={
-              normal: {
-                  width:1,
-                  color:$this.ChartColor[index], // 线条颜色
-              },
+                width:1,
+                color:$this.ChartColor[index], // 线条颜色
             };
             itemObj.areaStyle={
                   color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -645,7 +635,7 @@ export default {
             itemObj.name=$this.chartName[index];
             itemObj.smooth=false;
             itemObj.type='line';
-            itemObj.symbol='emptyCircle';  //拐点样式
+            itemObj.symbol='circle';  //拐点样式
             itemObj.symbolSize=5;          //拐点大小
             if($this.currentData.mainData.length<=3){
               itemObj.label={
@@ -656,17 +646,13 @@ export default {
               itemObj.showSymbol=false;
             }
             itemObj.itemStyle={
-                normal: {
-                    color:$this.ChartColor[index],
-                    borderColor:$this.ChartColor[index],
-                    borderWidth:1,
-                }
+                color:'#fff',
+                borderColor:$this.ChartColor[index],
+                borderWidth:1,
             },
             itemObj.lineStyle={
-              normal: {
-                  width:1,
-                  color:$this.ChartColor[index], // 线条颜色
-              },
+                width:1,
+                color:$this.ChartColor[index], // 线条颜色
             };
             itemObj.emphasis={
               lineStyle: {
