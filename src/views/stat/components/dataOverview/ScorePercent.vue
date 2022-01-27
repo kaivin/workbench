@@ -1,7 +1,7 @@
 <template>
   <div class="hxpage btm_shadow">
       <div class="title-view">
-        <div class="title">部门成交占比{{type == 0?'（积分+占比）':'（个数+占比）'}}</div>
+        <div class="title">部门成交占比</div>
         <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:2,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
       </div>
       <div class="chart-bottom scale-panel" id="ScoreYearsChartBot"></div>
@@ -100,6 +100,17 @@ export default {
           pieData.push(itemData);
         });
         option = {
+            title:{
+              text: $this.type == 0?'积分+占比':'个数+占比',
+              show: true,
+              left: 'center',
+              top: 'middle',
+              textStyle:{
+                color: '#b4bced',
+                fontSize: 14,
+                fontWeight: 'normal'
+              },
+            },
             color: colorList,
             tooltip: {
               trigger: 'item',

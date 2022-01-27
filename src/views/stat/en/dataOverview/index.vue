@@ -9,7 +9,7 @@
     </div>
     <el-card class="box-card scroll-card" shadow="hover">
         <div class="homeMain flex-content">
-           <el-row class="hxmodule-view" :gutter="20">
+           <el-row class="hxmodule-view" :gutter="14">
              <el-col class="hxmodule-item" :xl="8" :lg="12">
                <XpanYears
                language="英文"

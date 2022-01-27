@@ -2,7 +2,6 @@
   <div class="hxpage" ref="page">
     <div class="title-view">
       <div class="title">询盘个数</div>
-      <div class="unit">（单位：个）</div>
       <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:type,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
     </div>
     <div class="mix_body">
@@ -181,13 +180,13 @@ export default {
                             normal: {
                                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                                     offset: 0,
-                                    color: '#24a5ff'
+                                    color: '#70fcf3'
                                 }, {
                                     offset: 0.5,
                                     color: '#54ddf7'
                                 },{
                                     offset: 1,
-                                    color: '#70fcf3'
+                                    color: '#24a5ff'
                                 }]),
                             },
                         }

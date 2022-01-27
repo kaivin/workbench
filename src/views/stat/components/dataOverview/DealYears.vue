@@ -2,7 +2,6 @@
   <div class="hxpage">
     <div class="title-view">
       <div class="title">100万成交数量</div>
-      <div class="unit">（单位：个）</div>
       <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:9,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
     </div>
     <div class="mix_body">
@@ -183,19 +182,36 @@ export default {
                         },
                     },
                     areaStyle: {
+                        // color:{
+                        //     type: 'linear',
+                        //     x: 0,
+                        //     y: 0,
+                        //     x2: 0,
+                        //     y2: 1,
+                        //     colorStops: [{
+                        //         offset: 0, color: "#fdce5f"
+                        //     },{
+                        //         offset: 1, color: "#ff9621"
+                        //     }]
+                        // },
+                        // opacity:1
                         color:{
                             type: 'linear',
                             x: 0,
-                            y: 0,
+                            y: 1,
                             x2: 0,
-                            y2: 1,
+                            y2: 0,
                             colorStops: [{
-                                offset: 0, color: "#fdce5f"
+                                offset: 0, color: "rgba(112, 252, 243, 0.88)"
                             },{
-                                offset: 1, color: "#ff9621"
+                                offset: 0.5, color: "rgba(66, 200, 251, 0.62)"
+                            },{
+                                offset: 0.77, color: "rgba(41, 172, 254, 0.49)"
+                            },{
+                                offset: 1, color: "rgba(41, 172, 254, 0.37)"
                             }]
                         },
-                        opacity:1
+                        opacity:0.89
                     },
                     showSymbol: false,
                 },

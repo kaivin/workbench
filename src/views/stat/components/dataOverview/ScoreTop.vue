@@ -3,10 +3,10 @@
     <div class="module-top">
       <div class="title-view">
         <div class="title">个人榜单TOP5</div>
-        <div class="unit" v-if="type==1">（单位：{{language == '中文'?'分':'个'}}）</div>
+        <!-- <div class="unit" v-if="type==1">（单位：{{language == '中文'?'分':'个'}}）</div>
         <div class="unit" v-if="type==2">（单位：个）</div>
         <div class="unit" v-if="type==3">（单位：个）</div>
-        <div class="unit" v-if="type==4">（单位：元）</div>
+        <div class="unit" v-if="type==4">（单位：元）</div> -->
         <router-link :to="{path:language == '中文'?'/stat/cn/memberAnalysis':'/stat/en/memberAnalysis'}" tag="a" target="_blank" class="more">更多分析<i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
         <div class="btn-group btn_change">
           <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">
@@ -20,20 +20,22 @@
       <ul class="top-view" ref="topul" v-if="topdata.length > 0">
         <li class="top-item" v-for="(item,index) in topdata" :key="index">
           <router-link :to="getlink(item)" tag="a" >
-            <div class="top-icon">
+            <!-- <div class="top-icon">
               <img :src="require('@/assets/personal_InquiryIcon0'+(item.ranking)+'.png')" alt="" v-if="item.ranking < 4 &&item.ranking > 0">
               <span v-else>0{{item.ranking}}</span>
-            </div>
+            </div> -->
             <div class="top-img">
-              <img  :src="item.headimg"  alt="">
+              <img  :src="item.headimg"  alt="" />
             </div>
-            <div class="top-name">
-              <span v-if="type == 4||type == 2">{{item.name}}</span>
-              <span v-if="type == 3">{{item.ownuser}}</span>
-              <span v-else>{{item.username}}</span>
-            </div>
-            <div class="top-width">
-              <div :class="'top-bar' + item.ranking" :style="'width:' + item.width"></div>
+            <div class="top-all">
+              <div class="top-name">
+                <span v-if="type == 4||type == 2">{{item.name}}</span>
+                <span v-if="type == 3">{{item.ownuser}}</span>
+                <span v-else>{{item.username}}</span>
+              </div>
+              <div class="top-width">
+                <div :class="'top-bar' + item.ranking" :style="'width:' + item.width"></div>
+              </div>
             </div>
             <div class="userAward flex-content" v-if="type == 4">
                   <span v-if="item.ranking<4" :class="'num0'+item.ranking"> 

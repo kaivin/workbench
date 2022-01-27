@@ -688,7 +688,7 @@
                   padding: 30px 0;
                   text-align: left;
                   &:first-child{
-                    border-right: 1px solid #fbfbfb;
+                    // border-right: 1px solid #fbfbfb;
                   }
                   dl{
                     display: inline-block;
@@ -699,6 +699,7 @@
                       color: #2aade0;
                       font-weight: bold;
                       text-align: left;
+                      margin-bottom: 8px;
                     }
                     dd{
                       height: 22px;
@@ -710,7 +711,7 @@
                   }
                 }
                 .item-num+.item-num{
-                  border-left: 1px solid #fbfbfb;
+                  // border-left: 1px solid #fbfbfb;
                   text-align: right;
                   dl{
                     dt{

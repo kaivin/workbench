@@ -1,7 +1,9 @@
 <template>
   <div class="hxpage btm_prochart">
       <div class="title-view">
-        <div class="title">热门产品TOP10<span v-if="type==2 && language=='中文'">（单位：分）</span><span v-else>（单位：个）</span></div>
+        <div class="title">热门产品TOP10
+          <!-- <span v-if="type==2 && language=='中文'">（单位：分）</span><span v-else>（单位：个）</span> -->
+        </div>
         <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:6,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">更多分析 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
         <div class="btn-group">
           <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">询盘个数</div>

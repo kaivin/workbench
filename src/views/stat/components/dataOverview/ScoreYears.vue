@@ -2,7 +2,6 @@
   <div class="hxpage">
       <div class="title-view">
         <div class="title">成交{{language=='英文'&&type==1?'个数':'积分'}}</div>
-        <div class="unit">{{language=='英文'&&type==1?'（单位：个）':'（单位：分）'}}</div>
         <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:type==0?2:8,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
         <div class="btn-group" v-if="language=='英文'">
           <div @click="changeType(0)" class="btn-item" :class="type == 0?'active':''">积分</div>
@@ -239,6 +238,7 @@ export default {
                         },
                         opacity: 0.66
                     },
+                    showSymbol: false,
                     symbolSize: 5,
                     symbol:'circle',
                     itemStyle : { 

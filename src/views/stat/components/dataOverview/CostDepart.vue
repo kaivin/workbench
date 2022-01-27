@@ -1,7 +1,7 @@
 <template>
   <div class="hxpage col_right">
       <div class="title-view">
-        <div class="title">部门平均成本排行<span>（单位：元）</span></div>
+        <div class="title">部门平均成本排行</div>
         <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:3,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
       </div>
       <div class="chart-bottom" id="CostYearsChartBot"></div>

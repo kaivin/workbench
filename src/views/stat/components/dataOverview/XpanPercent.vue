@@ -1,7 +1,7 @@
 <template>
   <div class="hxpage btm_shadow">
     <div class="title-view">
-      <div class="title">部门询盘占比（个数+百分比）</div>
+      <div class="title">部门询盘占比</div>
       <router-link :to="{path:language == '中文'?'/stat/cn/departAnalysis':'/stat/en/departAnalysis',query:{type:1,startTime:startTime,endTime:endTime,baseDepart:baseDepart,contrastDepart:contrastDepart}}" tag="a" target="_blank" class="more">详情 <i class="svg-i"><svg-icon icon-class="rt-more"></svg-icon></i></router-link>
     </div>
     <div class="chart-bottom scale-panel" id="XpanYearsChartBot"></div>
@@ -114,6 +114,17 @@ export default {
         });
         var  colorList=['#3a72ff', '#1bd7ff', '#ff395d', '#ffcd6a', '#f1bb4c', "rgba(250,250,250,0.5)"];
         option = {
+            title:{
+              text:'个数+百分比',
+              show: true,
+              left: 'center',
+              top: 'middle',
+              textStyle:{
+                color: '#b4bced',
+                fontSize: 14,
+                fontWeight: 'normal'
+              },
+            },
             color: colorList,
             tooltip: {
               trigger: 'item',
