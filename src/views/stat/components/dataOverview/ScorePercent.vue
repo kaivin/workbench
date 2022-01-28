@@ -81,10 +81,13 @@ export default {
       setChartBottom(val){
         var $this = this;
         let chartBotData = [];
+        var bartitle='';
         if(this.type == 0){
           chartBotData = JSON.parse(JSON.stringify(this.yeardeaprtscore));
+          bartitle="积分+占比"
         }else{
           chartBotData = JSON.parse(JSON.stringify(this.yearscorenumbercount));
+          bartitle="个数+占比"
         }
         var chartDom = document.getElementById('ScoreYearsChartBot');
         var myChart = echarts.init(chartDom);
@@ -92,7 +95,7 @@ export default {
         var $this = this;
         var pieData = [];
         var totalScore = 0;
-        var  colorList=['#3a72ff', '#1bd7ff', '#ff395d', '#ffcd6a', '#f1bb4c',];
+        var  colorList=['#3a72ff', '#0aafcd', '#ff395d', '#2e53ad', '#f1bb4c',];
         chartBotData.forEach(function(item){
           var itemData = {};
           itemData.name = item.departname;
@@ -101,7 +104,7 @@ export default {
         });
         option = {
             title:{
-              text: $this.type == 0?'积分+占比':'个数+占比',
+              text: bartitle,
               show: true,
               left: 'center',
               top: 'middle',

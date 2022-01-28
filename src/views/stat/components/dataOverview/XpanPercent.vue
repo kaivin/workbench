@@ -112,7 +112,7 @@ export default {
           itemData.value = item.yearcount;
           pieData.push(itemData);
         });
-        var  colorList=['#3a72ff', '#1bd7ff', '#ff395d', '#ffcd6a', '#f1bb4c', "rgba(250,250,250,0.5)"];
+        var  colorList=['#3a72ff', '#0aafcd', '#ff395d', '#2e53ad', '#f1bb4c', "rgba(250,250,250,0.5)"];
         option = {
             title:{
               text:'个数+百分比',
