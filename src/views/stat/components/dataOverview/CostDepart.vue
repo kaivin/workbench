@@ -384,9 +384,7 @@ export default {
                   z: 1,
                   zlevel: 0,
                   itemStyle: {
-                      normal: {
-                          color: 'transparent', //数据的间隔颜色
-                      },
+                      color: 'transparent', //数据的间隔颜色
                   },
                   label: {
                     show: true,

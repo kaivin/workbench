@@ -306,12 +306,6 @@ export default {
       'menuData'
     ]),
   },
-  mounted(){
-      const $this = this;
-      if(!$this.sidebar.opened){
-        $this.$store.dispatch('app/toggleSideBar');
-      }
-  },
   created() {
     var $this = this;
     $this.selectedData.dateDefault = $this.getNearDay();
@@ -349,14 +343,6 @@ export default {
       $this.minWidth = $this.$refs.boxPane.offsetWidth;
       $this.boxWidth = $this.$refs.boxPane.offsetWidth - 50;
       $this.$refs.boxPane.addEventListener('scroll', $this.getScroll);
-    }
-    window.onresize = () => {
-      return (() => {
-        if($this.$refs.boxPane){
-          $this.minWidth = $this.$refs.boxPane.offsetWidth; 
-          $this.boxWidth = $this.$refs.boxPane.offsetWidth -50;
-        }
-      })()
     }
   },
   destroyed(){
@@ -596,7 +582,6 @@ export default {
       var $this = this;
       var defaultChartData = $this.defaultChartDataClump(res);
       $this.defaultChartData = defaultChartData;
-      console.log($this.defaultChartData,'$this.defaultChartData');
       var mapChartData = $this.mapChartDataClump(res);
       var productData = $this.productDataClump(res);
       if(productData){
@@ -607,7 +592,7 @@ export default {
       $this.qualityChartData = qualityChartData;
       var defaultYearData = $this.defaultYearDataClump(res);
       $this.defaultYearData = defaultYearData;
-      
+      $this.changeSize();
     },
     // 组装默认类型图表数据
     defaultChartDataClump(res){
@@ -2474,8 +2459,8 @@ export default {
         backData.dateCompareData.baseWidth = "100%";
         backData.dateCompareData.compareWidth = "100%";
       }
-      backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue).toFixed(2)*1);
-      backData.dateCompareData.compareRate = backData.dateCompareData.compareValue==0?'0%':(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue)/backData.dateCompareData.compareValue*100).toFixed(2)+"%";
+      backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue).toFixed(1)*1);
+      backData.dateCompareData.compareRate = backData.dateCompareData.compareValue==0?'0%':(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue)/backData.dateCompareData.compareValue*100).toFixed(1)+"%";
       backData.dateCompareData.baseValue = numSeparate(backData.dateCompareData.baseValue);
       backData.dateCompareData.compareValue = numSeparate(backData.dateCompareData.compareValue);
       return backData;
@@ -2655,51 +2640,37 @@ export default {
       // 只有在对比部门没有被选中的，此时日期对比才是非禁用状态，可点击的
       if($this.selectedData.comparedept_id.length==0&&$this.dateSelected){
         if($this.selectedData.isDateCompare){
-          //月维度，日期对比添加质量分析
-          if($this.selectedData.isMonth){            
-            var contrastList=$this.contrastList;
-            var selectedContrastType = [];
-            var selectedType = [];
-            contrastList.forEach(function(item,index){
-              if(item.value=='qualityAnalysis'){
-                item.isOn=true;
-                item.disabled=false;
-              }
-              if(item.isOn){
-                selectedContrastType.push(item.id);
-                selectedType.push(item.value);
-              }
-            });
-            $this.selectedType = selectedType;
-            $this.selectedData.type = selectedContrastType;
-            $this.contrastList = contrastList;
-          }
           $this.selectedData.isDateCompare = false;
           if($this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
             $this.selectedData.dateContrast = [];
-            $this.initData();
           }
         }else{
           $this.selectedData.isDateCompare = true;
-          //月维度，日期对比屏蔽质量分析
-          if($this.selectedData.isMonth){            
-            var contrastList=$this.contrastList;
-            var selectedContrastType = [];
-            var selectedType = [];
-            contrastList.forEach(function(item,index){
-              if(item.value=='qualityAnalysis'){
+        }
+        //月维度，日期对比添加质量分析
+        if($this.selectedData.isMonth){            
+          var contrastList=$this.contrastList;
+          var selectedContrastType = [];
+          var selectedType = [];
+          contrastList.forEach(function(item,index){
+            if(item.value=='qualityAnalysis'){
+              if($this.selectedData.isDateCompare){
                 item.isOn=false;
                 item.disabled=true;
+              }else{
+                item.isOn=true;
+                item.disabled=false;
               }
-              if(item.isOn){
-                selectedContrastType.push(item.id);
-                selectedType.push(item.value);
-              }
-            });
-            $this.selectedType = selectedType;
-            $this.selectedData.type = selectedContrastType;
-            $this.contrastList = contrastList;
-          }
+            }
+            if(item.isOn){
+              selectedContrastType.push(item.id);
+              selectedType.push(item.value);
+            }
+          });
+          $this.selectedType = selectedType;
+          $this.selectedData.type = selectedContrastType;
+          $this.contrastList = contrastList;
+          $this.initData();
         }
       }
     },
@@ -3149,7 +3120,15 @@ export default {
     },
     changeSize(){
       var $this = this;
-      $this.boxWidth = $this.$refs.boxPane.offsetWidth -50;
+      $this.$nextTick(function () {    
+        var boxHeight=0;
+        boxHeight = document.body.clientHeight-$this.$refs.boxPane.scrollHeight-98;
+        if(boxHeight>=0){
+            $this.boxWidth = $this.$refs.boxPane.offsetWidth - 40;
+        }else{
+            $this.boxWidth = $this.$refs.boxPane.offsetWidth - 50;
+        }
+      });
     }
   }
 }

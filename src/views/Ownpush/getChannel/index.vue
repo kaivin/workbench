@@ -115,7 +115,7 @@
               </template>
               <div class="item-button">
                 <div class="button-click" v-on:click="toggleContrast"><i class="svg-i"><svg-icon icon-class="s-add" class-name="disabled" /></i><span>添加对比</span></div>
-                <div class="group-contrast depart" v-show="isContrastShow">
+                <div class="group-contrast depart getChannel" v-show="isContrastShow">
                   <div class="item-checkbox" v-bind:class="[item.disabled?'is-disabled':'',item.isOn?'active':'']" v-for="item in contrastSourceList" v-bind:key="item.id" v-on:click="contrastGroupChangeHandler(item)"><i></i><span>{{item.name}}</span></div>
                   <div class="item-sure" v-on:click="saveContrastGroup">确定</div>
                 </div>
@@ -143,11 +143,11 @@
 </template>
 <script>
 import {mapGetters} from 'vuex';
-import defaultChart from "../../stat/components/departGroup/defaultChart.vue";
+import defaultChart from "../components/chinadepartcount/defaultChart.vue";
 import qualityChart from "../components/chinadepartcount/qualityChart.vue";
 import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate,numSeparate,sortByDate,memberArrColor,singleNewArrColor} from "@/utils/index"
 export default {
-  name: 'Ownpush_getsource',
+  name: 'Ownpush_getChannel',
   components: {
     defaultChart,
     qualityChart,
@@ -177,16 +177,16 @@ export default {
           {label:"月",value:"month",isOn:false},
         ],
         contrastList:[
-          {label:"询盘个数",id:1,value:"enquiriesNum",isOn:true,disabled:false},
+          {label:'消费分析',id:3,value:"consumptionAnalysis",isOn:false,disabled:true},
+          {label:"询盘个数",id:1,value:"enquiriesFew",isOn:true,disabled:false},
           {label:"成交积分",id:2,value:"clinchScore",isOn:false,disabled:true},
-          {label:'消费',id:3,value:"consumpTion",isOn:false,disabled:true},
           {label:'质量分析',id:4,value:"qualityAnalysis",isOn:false,disabled:true},
         ],
         groupName:"",
         dateSelected:true,
         isFilter:false,
         isContrastShow:false,
-        selectedType:['enquiriesNum'],
+        selectedType:['enquiriesFew'],
         oldContrastSourceID:"",
         isDefaultPage:false,
         tipsInfo:"当前部门分析页面，展示为：本年度数据信息。",
@@ -249,7 +249,7 @@ export default {
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setMonth(start.getMonth() - 6);
+              start.setMonth(start.getMonth() - 5);
               picker.$emit('pick', [start, end]);
             }
           }]
@@ -292,7 +292,7 @@ export default {
           $this.timer = false
         }, 400)
       }
-    },
+    }
   },
   mounted(){
     const $this = this;
@@ -303,14 +303,6 @@ export default {
       $this.minWidth = $this.$refs.boxPane.offsetWidth;
       $this.boxWidth = $this.$refs.boxPane.offsetWidth - 50;
       $this.$refs.boxPane.addEventListener('scroll', $this.getScroll);
-    }
-    window.onresize = () => {
-      return (() => {
-        if($this.$refs.boxPane){
-          $this.minWidth = $this.$refs.boxPane.offsetWidth; 
-          $this.boxWidth = $this.$refs.boxPane.offsetWidth -50;
-        }
-      })()
     }
   },
   destroyed(){
@@ -422,7 +414,7 @@ export default {
           res.data.forEach(function(item,index){
             permitData.push(item.action_route);
           });
-          if(permitData.includes('Ownpush_getsource')){
+          if(permitData.includes('Ownpush_getChannel')){
               $this.getChannelList()
           }else{
             $this.$message({
@@ -521,7 +513,7 @@ export default {
             selectedContrastType.push(item.id);
             selectedType.push(item.value);
           }else{
-            if(item.value=="enquiriesNum"){
+            if(item.value=="enquiriesFew"){
               item.isOn = true;
               selectedContrastType.push(item.id);
               selectedType.push(item.value);
@@ -598,14 +590,21 @@ export default {
         var selectedType = [];
         contrastList.forEach(function(item,index){
           if($this.selectedData.isMonth){
-            item.disabled = false;
             item.isOn = true;
+            item.disabled = false;
+            if($this.selectedData.comparesource_id.length>0||$this.selectedData.comparesource_id.length>0){
+              if(item.value=='qualityAnalysis'){
+                item.isOn = false;
+                item.disabled = true;
+              }
+            }
           }else{
-            item.disabled = true;
-            item.isOn = false;
-            if(item.value=="enquiriesNum"){
-              item.disabled = false;
+            if(item.value=="enquiriesFew"){
               item.isOn = true;
+              item.disabled = false;
+            }else{
+              item.isOn = false;
+              item.disabled = true;
             }
           }
           if(item.isOn){
@@ -628,11 +627,35 @@ export default {
           $this.selectedData.isDateCompare = false;
           if($this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
             $this.selectedData.dateContrast = [];
-            $this.getSearchData();
           }
         }else{
           $this.selectedData.isDateCompare = true;
         }
+      }
+      //月维度，日期对比屏蔽质量分析
+      if($this.selectedData.isMonth){            
+        var contrastList=$this.contrastList;
+        var selectedContrastType = [];
+        var selectedType = [];
+        contrastList.forEach(function(item,index){
+          if(item.value=='qualityAnalysis'){
+            if($this.selectedData.isDateCompare){
+              item.isOn=false;
+              item.disabled=true;
+            }else{
+              item.isOn=true;
+              item.disabled=false;
+            }
+          }
+          if(item.isOn){
+            selectedContrastType.push(item.id);
+            selectedType.push(item.value);
+          }
+        });
+        $this.selectedType = selectedType;
+        $this.selectedData.type = selectedContrastType;
+        $this.contrastList = contrastList;
+        $this.getSearchData();
       }
     },
     // 分析项点击事件
@@ -686,9 +709,34 @@ export default {
     // 对比部门添加确定事件
     saveContrastGroup(){
       var $this = this;
+      if($this.selectedData.comparesource_id&&$this.selectedData.comparesource_id.length>0){
+          //月维度，部门对比屏蔽质量分析
+          if($this.selectedData.isMonth){            
+            var contrastList=$this.contrastList;
+            var selectedContrastType = [];
+            var selectedType = [];
+            contrastList.forEach(function(item,index){
+              item.isOn=true;
+              item.disabled=false;
+              if(item.value=='qualityAnalysis'){
+                item.isOn=false;
+                item.disabled=true;
+              }
+              if(item.isOn){
+                selectedContrastType.push(item.id);
+                selectedType.push(item.value);
+              }
+            });
+            $this.selectedType = selectedType;
+            $this.selectedData.type = selectedContrastType;
+            $this.contrastList = contrastList;
+          }
+      };
       $this.isContrastShow = !$this.isContrastShow;
       if($this.oldContrastSourceID!=$this.selectedData.comparesource_id.join(",")){
-        $this.oldContrastSourceID = $this.selectedData.comparesource_id.join(",");
+         if($this.selectedData.comparesource_id.length>0){
+              $this.oldContrastSourceID = $this.selectedData.comparesource_id.join(",");
+         }
         $this.getSearchData();
       }
     },
@@ -791,13 +839,14 @@ export default {
       $this.defaultChartData = defaultChartData;
       var qualityChartData = $this.qualityChartDataClump(res);
       $this.qualityChartData = qualityChartData;
+      $this.changeSize();
     },
     // 组装默认类型图表数据
     defaultChartDataClump(res){
       var $this = this;
       // 询盘个数
       var inquiryData = null;
-      if($this.selectedType.includes("enquiriesNum")){
+      if($this.selectedType.includes("enquiriesFew")){
         inquiryData = {};
         inquiryData.chartType = "area";
         // 时间对比
@@ -853,6 +902,7 @@ export default {
             inquiryData.colorArr = [];
             var tongData = groupColor(chartData);
             tongData.forEach(function(item,index){
+              var newItemArr=[];
               inquiryData.colorArr.push(item[0].color);
               item.forEach(function(item1){
                 var itemChart = {};
@@ -868,7 +918,7 @@ export default {
                   }
                 }else{
                   var selectContrastGroupList = [];
-                  $this.contrastGroupList.forEach(function(item1){
+                  $this.contrastSourceList.forEach(function(item1){
                     if(item1.isOn){
                       selectContrastGroupList.push(item1);
                     }
@@ -884,8 +934,9 @@ export default {
                 }
                 itemChart.value = item1.xunnumber;
                 itemChart.color = item[0].color;
-                inquiryData.mainData.push(itemChart);
+                newItemArr.push(itemChart);
               });
+              inquiryData.mainData.push(newItemArr);
             });
             inquiryData.name = "部门询盘统计";
             var compareData = [];
@@ -903,7 +954,7 @@ export default {
               inquiryData.nowNumber = numSeparate(monthxunallnumbercompare);
               compareData = res.monthdepartpercentercompare;
               inquiryData.lastNumber = res.lastmonthxunallnumbercompare;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(monthxunallnumbercompare - res.lastmonthxunallnumbercompare));
+              inquiryData.nowLastNumber = numSeparate(Math.abs(monthxunallnumbercompare - res.lastmonthxunallnumbercompare).toFixed(2)*1);
               inquiryData.status = monthxunallnumbercompare - res.lastmonthxunallnumbercompare>0?'up':monthxunallnumbercompare - res.lastmonthxunallnumbercompare<0?'down':'flat';
               inquiryData.avgNumber = numSeparate(parseInt(monthxunallnumbercompare/res.monthxuntrendcompare[0].length));
               if(res.historymaxnumbermonthcompare&&res.historymaxnumbermonthcompare.length>0){
@@ -926,7 +977,7 @@ export default {
               inquiryData.nowNumber = numSeparate(dayxuntrendcompare);
               compareData = res.departpercentercompare;
               inquiryData.lastNumber = res.lastxunallnumbercompare;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(dayxuntrendcompare - res.lastxunallnumbercompare));
+              inquiryData.nowLastNumber = numSeparate(Math.abs(dayxuntrendcompare - res.lastxunallnumbercompare).toFixed(2)*1);
               inquiryData.status = dayxuntrendcompare - res.lastxunallnumbercompare>0?'up':dayxuntrendcompare - res.lastxunallnumbercompare<0?'down':'flat';
               inquiryData.avgNumber = numSeparate(parseInt(dayxuntrendcompare/res.dayxuntrendcompare[0].length));
               if(res.historymaxnumberdaycompare&&res.historymaxnumberdaycompare.length>0){
@@ -937,7 +988,7 @@ export default {
               inquiryData.historyTitle = "日历史峰值";
             }
             inquiryData.totalChart = [];
-            compareData.forEach(function(item){
+            compareData.forEach(function(item,index){
               var itemChart = {};
               itemChart.name = item.departname;
               itemChart.value = item.xunnumber;
@@ -961,7 +1012,7 @@ export default {
               inquiryData.nowNumber = numSeparate(xunallnumber);
               tongData.push(res.monthxuntrend);
               inquiryData.lastNumber = res.lastmonthxunallnumber;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(xunallnumber - res.lastmonthxunallnumber));
+              inquiryData.nowLastNumber = numSeparate(Math.abs(xunallnumber - res.lastmonthxunallnumber).toFixed(2)*1);
               inquiryData.status = xunallnumber - res.lastmonthxunallnumber>0?'up':xunallnumber - res.lastmonthxunallnumber<0?'down':'flat';
               inquiryData.avgNumber = numSeparate(parseInt(xunallnumber/res.monthxuntrend.length));
               if(res.historymaxnumbermonth&&res.historymaxnumbermonth.length>0){
@@ -982,7 +1033,7 @@ export default {
               tongData.push(res.dayxuntrend);
               // 日维度
               inquiryData.lastNumber = res.lastxunallnumber;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(xunallnumber - res.lastxunallnumber));
+              inquiryData.nowLastNumber = numSeparate(Math.abs(xunallnumber - res.lastxunallnumber).toFixed(2)*1);
               inquiryData.status = xunallnumber - res.lastxunallnumber>0?'up':xunallnumber - res.lastxunallnumber<0?'down':'flat';
               inquiryData.avgNumber = numSeparate(parseInt(xunallnumber/res.dayxuntrend.length));
               if(res.historymaxnumberday&&res.historymaxnumberday.length>0){
@@ -994,6 +1045,7 @@ export default {
             }
             tongData = groupColor(tongData);
             inquiryData.colorArr.push(tongData[0][0].color);
+            var newItemArr=[];
             tongData[0].forEach(function(item,index){
               if($this.selectedData.isMonth){
                 item.key = item.date;
@@ -1010,8 +1062,9 @@ export default {
                 item.name = "已多选渠道"
               }
               item.value = item.xunnumber;
-              inquiryData.mainData.push(item);
+              newItemArr.push(item);
             });
+            inquiryData.mainData.push(newItemArr);
             // 只有一个部门被选中的情况
             if($this.selectedData.source_id.length==1){
               $this.channelList.forEach(function(item){
@@ -1101,6 +1154,7 @@ export default {
             dealScoreData.colorArr = [];
             var chartData = groupColor(res.monthscoretrendcompare);
             chartData.forEach(function(item,index){
+              var newItemArr=[];
               dealScoreData.colorArr.push(item[0].color);
               item.forEach(function(item1){
                 var itemChart = {};
@@ -1116,7 +1170,7 @@ export default {
                   }
                 }else{
                   var selectContrastGroupList = [];
-                  $this.contrastGroupList.forEach(function(item1){
+                  $this.contrastSourceList.forEach(function(item1){
                     if(item1.isOn){
                       selectContrastGroupList.push(item1);
                     }
@@ -1126,8 +1180,9 @@ export default {
                 itemChart.key = item1.date;
                 itemChart.value = Math.floor(item1.score*100)/100;
                 itemChart.color = item[0].color;
-                dealScoreData.mainData.push(itemChart);
+                newItemArr.push(itemChart);
               });
+              dealScoreData.mainData.push(newItemArr);
             });
             dealScoreData.name = "部门成交积分统计";
             var monthscoreallnumbercompare=0;
@@ -1142,7 +1197,7 @@ export default {
             }
             dealScoreData.nowNumber = numSeparate(Math.floor(monthscoreallnumbercompare*100)/100);
             dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumbercompare*100)/100;
-            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100));
+            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100).toFixed(2)*1);
             dealScoreData.status = Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100>0?'up':Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100<0?'down':'flat';
             dealScoreData.avgNumber = numSeparate((Math.floor(monthscoreallnumbercompare/res.monthscoretrendcompare[0].length*100)/100).toFixed(2)*1);
             if(res.historymaxscoremonthcompare&&res.historymaxscoremonthcompare.length>0){
@@ -1152,14 +1207,16 @@ export default {
             dealScoreData.avgTitle = "月平均成交积分";
             dealScoreData.historyTitle = "月历史峰值";
             dealScoreData.totalChart = [];
-            res.monthdepartscorepercentercompare.forEach(function(item){
-              var itemChart = {};
-              itemChart.name = item.departname;
-              itemChart.value = Math.floor(item.score*100)/100;
-              dealScoreData.totalChart.push(itemChart);
-            });
-            dealScoreData.totalChart = singleArrColor(dealScoreData.totalChart);
-            dealScoreData.totalChart.sort(sortByDesc("value"));
+            if(res.monthdepartscorepercentercompare&&res.monthdepartscorepercentercompare.length>0){
+                res.monthdepartscorepercentercompare.forEach(function(item){
+                  var itemChart = {};
+                  itemChart.name = item.departname;
+                  itemChart.value = Math.floor(item.score*100)/100;
+                  dealScoreData.totalChart.push(itemChart);
+                });
+                dealScoreData.totalChart = singleArrColor(dealScoreData.totalChart);
+                dealScoreData.totalChart.sort(sortByDesc("value"));
+            };
           }else{
             // 统计
             dealScoreData.mainData = [];
@@ -1173,6 +1230,7 @@ export default {
             dealScoreData.nowNumber = numSeparate(Math.floor(monthscoreallnumber*100)/100);
             var tongData = groupColor([res.monthscoretrend]);
             dealScoreData.colorArr.push(tongData[0][0].color);
+            var newItemArr=[];
             tongData[0].forEach(function(item,index){
               item.key = item.date;
               item.value = Math.floor(item.score*100)/100;
@@ -1185,8 +1243,9 @@ export default {
               }else{
                 item.name = "已多选渠道"
               }
-              dealScoreData.mainData.push(item);
+              newItemArr.push(item);
             });
+            dealScoreData.mainData.push(newItemArr);
             dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumber*100)/100;
             dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100).toFixed(2)*1);
             dealScoreData.status = Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100>0?'up':Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100<0?'down':'flat';
@@ -1215,14 +1274,16 @@ export default {
               }
               dealScoreData.name = "渠道组合成交积分统计"; 
               dealScoreData.totalChart = [];
-              res.monthdepartscorepercenter.forEach(function(item){
-                var itemChart = {};
-                itemChart.name = item.departname;
-                itemChart.value =  Math.floor(item.score*100)/100;
-                dealScoreData.totalChart.push(itemChart);
-              });
-              dealScoreData.totalChart = singleArrColor(dealScoreData.totalChart);
-              dealScoreData.totalChart.sort(sortByDesc("value"));
+              if(res.monthdepartscorepercenter&&res.monthdepartscorepercenter.length>0){
+                  res.monthdepartscorepercenter.forEach(function(item){
+                    var itemChart = {};
+                    itemChart.name = item.departname;
+                    itemChart.value =  Math.floor(item.score*100)/100;
+                    dealScoreData.totalChart.push(itemChart);
+                  });
+                  dealScoreData.totalChart = singleArrColor(dealScoreData.totalChart);
+                  dealScoreData.totalChart.sort(sortByDesc("value"));
+              };
             }
           }
         }
@@ -1230,9 +1291,9 @@ export default {
         dealScoreData.unit = "（单位：分）";
         dealScoreData.randomStr = randomString(4);
       }
-      // 消费
+      // 消费分析
       var costCountData = null;
-      if($this.selectedType.includes("consumpTion")){
+      if($this.selectedType.includes("consumptionAnalysis")){
         costCountData = {};
         costCountData.chartType = "area";
         // 时间对比
@@ -1256,34 +1317,35 @@ export default {
             $this.channelList.forEach(function(item){
               if(item.id == $this.selectedData.source_id[0]){
                 if($this.selectedData.isMonth){
-                  costCountData.chartTitle = item.name+"成本日期对比月趋势";
+                  costCountData.chartTitle = item.name+"消费日期对比月趋势";
                 }else{
-                  costCountData.chartTitle = item.name+"成本日期对比日趋势";
+                  costCountData.chartTitle = item.name+"消费日期对比日趋势";
                 }
-                costCountData.name = item.name+"成本统计";
+                costCountData.name = item.name+"消费统计";
               }
             });
           }else{
             if($this.selectedData.isMonth){
-              costCountData.chartTitle = "渠道组合成本日期对比月趋势";
+              costCountData.chartTitle = "渠道组合消费日期对比月趋势";
             }else{
-              costCountData.chartTitle = "渠道组合成本日期对比日趋势";
+              costCountData.chartTitle = "渠道组合消费日期对比日趋势";
             }
             
-            costCountData.name = "渠道组合成本统计";
+            costCountData.name = "渠道组合消费统计";
           }
         }else{
           // 部门对比
           if($this.selectedData.comparesource_id.length>0){
             if($this.selectedData.isMonth){
-              costCountData.chartTitle = "各渠道成本月趋势对比";
+              costCountData.chartTitle = "各渠道消费月趋势对比";
             }else{
-              costCountData.chartTitle = "各渠道成本日趋势对比";
+              costCountData.chartTitle = "各渠道消费日趋势对比";
             }
             costCountData.mainData = [];
             costCountData.colorArr = [];
             var chartData = groupColor(res.monthmoneytrendcompare);
             chartData.forEach(function(item,index){
+              var newItemArr=[];
               costCountData.colorArr.push(item[0].color);
               item.forEach(function(item1){
                 var itemChart = {};
@@ -1299,7 +1361,7 @@ export default {
                   }
                 }else{
                   var selectContrastGroupList = [];
-                  $this.contrastGroupList.forEach(function(item1){
+                  $this.contrastSourceList.forEach(function(item1){
                     if(item1.isOn){
                       selectContrastGroupList.push(item1);
                     }
@@ -1309,40 +1371,43 @@ export default {
                 itemChart.key = item1.date;
                 itemChart.value = Math.floor(item1.money*10)/10;
                 itemChart.color = item[0].color;
-                costCountData.mainData.push(itemChart);
+                newItemArr.push(itemChart);
               });
+              costCountData.mainData.push(newItemArr);
             });
-            costCountData.name = "部门成本统计";
+            costCountData.name = "部门消费统计";
             var monthmoneytrendcompare=0;
             if(res.monthmoneytrendcompare&&res.monthmoneytrendcompare.length){
               res.monthmoneytrendcompare.forEach(function(item,index){
                 if(item&&item.length>0){
                   item.forEach(function(items,indexs){
-                    monthmoneytrendcompare+=items.score;
+                    monthmoneytrendcompare+=items.money;
                   });
                 }
               });
             }
             costCountData.nowNumber = numSeparate(Math.floor(monthmoneytrendcompare*100)/100);
             costCountData.lastNumber = Math.floor(res.lastmonthmoneyallnumbercompare*100)/100;
-            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthmoneytrendcompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10));
+            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthmoneytrendcompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10).toFixed(2)*1);
             costCountData.status = Math.floor(monthmoneytrendcompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10>0?'up':Math.floor(monthmoneytrendcompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10<0?'down':'flat';
             costCountData.avgNumber = numSeparate((Math.floor(monthmoneytrendcompare/res.monthmoneytrendcompare[0].length*10)/10).toFixed(2)*1);
             if(res.historymaxmoneymonthcompare&&res.historymaxmoneymonthcompare.length>0){
                 costCountData.historyMaxNumber = numSeparate(Math.floor(res.historymaxmoneymonthcompare[0].allmoney*10)/10);
                 costCountData.historyMaxNumberDate = res.historymaxmoneymonthcompare[0].yeartime;
             }
-            costCountData.avgTitle = "月平均成本";
+            costCountData.avgTitle = "月平均消费";
             costCountData.historyTitle = "月历史峰值";
             costCountData.totalChart = [];
-            res.monthdepartmoneypercentercompare.forEach(function(item){
-              var itemChart = {};
-              itemChart.name = item.departname;
-              itemChart.value = Math.floor(item.money*10)/10;
-              costCountData.totalChart.push(itemChart);
-            });
-            costCountData.totalChart = singleArrColor(costCountData.totalChart);
-            costCountData.totalChart.sort(sortByDesc("value"));
+            if(res.monthdepartmoneypercentercompare&&res.monthdepartmoneypercentercompare.length>0){
+                res.monthdepartmoneypercentercompare.forEach(function(item){
+                  var itemChart = {};
+                  itemChart.name = item.departname;
+                  itemChart.value = Math.floor(item.money*10)/10;
+                  costCountData.totalChart.push(itemChart);
+                });
+                costCountData.totalChart = singleArrColor(costCountData.totalChart);
+                costCountData.totalChart.sort(sortByDesc("value"));
+            };
           }else{
             // 统计
             costCountData.mainData = [];
@@ -1355,7 +1420,8 @@ export default {
             }
             costCountData.nowNumber = numSeparate(Math.floor(monthmoneyallnumber*10)/10);
             var tongData = groupColor([res.monthmoneytrend]);
-            costCountData.colorArr.push(tongData[0][0].color);
+            costCountData.colorArr.push(tongData[0][0].color); 
+            var newItemArr=[];
             tongData[0].forEach(function(item,index){
               item.key = item.date;
               item.value = Math.floor(item.money*10)/10;
@@ -1368,60 +1434,63 @@ export default {
               }else{
                 item.name = "已多选渠道"
               }
-              costCountData.mainData.push(item);
+              newItemArr.push(item);
             });
+            costCountData.mainData.push(newItemArr);
             costCountData.lastNumber = Math.floor(res.lastmonthmoneyallnumber*10)/10;
-            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyallnumber*10)/10));
+            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyallnumber*10)/10).toFixed(2)*1);
             costCountData.status = Math.floor(monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyallnumber*10)/10>0?'up':Math.floor(monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyallnumber*10)/10<0?'down':'flat';
             costCountData.avgNumber = numSeparate((Math.floor(monthmoneyallnumber/res.monthmoneytrend.length*100)/100).toFixed(2)*1);
             if(res.historymaxmoneymonth&&res.historymaxmoneymonth.length>0){
                 costCountData.historyMaxNumber = numSeparate(Math.floor(res.historymaxmoneymonth[0].allmoney*10)/10);
                 costCountData.historyMaxNumberDate = res.historymaxmoneymonth[0].yeartime;
             }
-            costCountData.avgTitle = "月平均成本";
+            costCountData.avgTitle = "月平均消费";
             costCountData.historyTitle = "月历史峰值";
             // 只有一个部门被选中的情况
             if($this.selectedData.source_id.length==1){
               $this.channelList.forEach(function(item){
                   if($this.selectedData.isMonth){
-                    costCountData.chartTitle = "成本月趋势";
+                    costCountData.chartTitle = "消费月趋势";
                   }else{
-                    costCountData.chartTitle = "成本日趋势";
+                    costCountData.chartTitle = "消费日趋势";
                   }
-                  costCountData.name = "成本统计"; 
+                  costCountData.name = "消费统计"; 
               });
             }else{// 多部门被选中
               if($this.selectedData.isMonth){
-                costCountData.chartTitle = "渠道组合成本月趋势";
+                costCountData.chartTitle = "渠道组合消费月趋势";
               }else{
-                costCountData.chartTitle = "渠道组合成本日趋势";
+                costCountData.chartTitle = "渠道组合消费日趋势";
               }
-              costCountData.name = "渠道组合成本统计";
+              costCountData.name = "渠道组合消费统计";
               costCountData.totalChart = [];
-              res.monthdepartmoneypercenter.forEach(function(item){
-                var itemChart = {};
-                itemChart.name = item.departname;
-                itemChart.value = Math.floor(item.money*10)/10;
-                costCountData.totalChart.push(itemChart);
-              });
-              costCountData.totalChart = singleArrColor(costCountData.totalChart);
-              costCountData.totalChart.sort(sortByDesc("value"));
+              if(res.monthdepartmoneypercenter&&res.monthdepartmoneypercenter.length>0){
+                  res.monthdepartmoneypercenter.forEach(function(item){
+                    var itemChart = {};
+                    itemChart.name = item.departname;
+                    itemChart.value = Math.floor(item.money*10)/10;
+                    costCountData.totalChart.push(itemChart);
+                  });
+                  costCountData.totalChart = singleArrColor(costCountData.totalChart);
+                  costCountData.totalChart.sort(sortByDesc("value"));
+              };
             }
           }
         }
-        costCountData.totalTitle = "总成本";
+        costCountData.totalTitle = "总消费";
         costCountData.unit = "（单位：万元）";
         costCountData.randomStr = randomString(4);
       }
       var defaultChartData = [];
+      if(costCountData){
+        defaultChartData.push(costCountData);
+      }
       if(inquiryData){
         defaultChartData.push(inquiryData);
       }
       if(dealScoreData){
         defaultChartData.push(dealScoreData);
-      }
-      if(costCountData){
-        defaultChartData.push(costCountData);
       }
       return defaultChartData;
     },
@@ -1448,12 +1517,12 @@ export default {
         moneyDate.unitEnd='元';
         moneyDate.mainDate=[];
 
+        var moneyArr=res.monthmoneypercenter;     //消费占比
+        moneyDate.mainDate=$this.clumpQuality(moneyArr,'消费占比');
         var xunArr=res.monthxuntrendpercenter;    //询盘占比
         enquirieDate.mainDate=$this.clumpQuality(xunArr,'询盘占比');
         var scoreArr=res.monthscoretrendpercenter;//积分占比
         scoreDate.mainDate=$this.clumpQuality(scoreArr,'积分占比');
-        var moneyArr=res.monthmoneypercenter;     //消费占比
-        moneyDate.mainDate=$this.clumpQuality(moneyArr,'消费占比');
 
         var tableDate=[];
         res.monthxuntrendpercenter.forEach(function(item,index){
@@ -1639,7 +1708,7 @@ export default {
       $this.contrastList.forEach(function(item,index){
         item.isOn=false;
         item.disabled=true;
-        if(item.value=='enquiriesNum'){
+        if(item.value=='enquiriesFew'){
           item.isOn=true;
           item.disabled=false;
         }
@@ -1661,7 +1730,7 @@ export default {
       $this.dateSelected=true;
       $this.isFilter = false,
       $this.isContrastShow = false,
-      $this.selectedType=['enquiriesNum'];
+      $this.selectedType=['enquiriesFew'];
       $this.oldContrastSourceID = "";
       $this.isDefaultPage = false;
       $this.judgeData = {};
@@ -1672,7 +1741,7 @@ export default {
     getNearMonth(){
       const end = new Date();
       const start = new Date();
-      start.setMonth(start.getMonth() - 6);
+      start.setMonth(start.getMonth() - 5);
       var startYear = start.getFullYear();
       var startMonth = start.getMonth() +1;
       var endYear = end.getFullYear();
@@ -1718,7 +1787,15 @@ export default {
     },
     changeSize(){
       var $this = this;
-      $this.boxWidth = $this.$refs.boxPane.offsetWidth -40;
+      $this.$nextTick(function () {    
+        var boxHeight=0;
+        boxHeight = document.body.clientHeight-$this.$refs.boxPane.scrollHeight-98;
+        if(boxHeight>=0){
+            $this.boxWidth = $this.$refs.boxPane.offsetWidth - 40;
+        }else{
+            $this.boxWidth = $this.$refs.boxPane.offsetWidth - 50;
+        }
+      });
     }
   }
 }

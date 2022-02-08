@@ -508,7 +508,18 @@ export default {
               trigger: "axis",
               textStyle:{
                 fontSize:'12',
-              }
+              },
+              formatter(params){
+                let returnData = `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>`;
+                for (let i = 0; i < params.length; i++) {
+                    returnData += `<div class="bar clearfix"><span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].borderColor};"></span>
+                      <span>${params[i].seriesName}：</span>
+                      <span>${params[i].value}</span></div>`;
+                }
+                returnData +=`</div>`;
+                return returnData;
+            }
           },
           grid: {
               top:60,
@@ -675,7 +686,18 @@ export default {
               trigger: "axis",
               textStyle:{
                 fontSize:'12',
-              }
+              },
+              formatter(params){
+                let returnData = `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>`;
+                for (let i = 0; i < params.length; i++) {
+                    returnData += `<div class="bar clearfix"><span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].borderColor};"></span>
+                      <span>${params[i].seriesName}：</span>
+                      <span>${params[i].value}</span></div>`;
+                }
+                returnData +=`</div>`;
+                return returnData;
+            }
           },
           grid: {
               top:60,

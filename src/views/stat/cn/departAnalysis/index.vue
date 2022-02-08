@@ -2526,8 +2526,8 @@ export default {
         backData.dateCompareData.baseWidth = "100%";
         backData.dateCompareData.compareWidth = "100%";
       }
-      backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue));
-      backData.dateCompareData.compareRate = backData.dateCompareData.compareValue==0?'0%':(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue)/backData.dateCompareData.compareValue*100).toFixed(2)+"%";
+      backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue).toFixed(1)*1);
+      backData.dateCompareData.compareRate = backData.dateCompareData.compareValue==0?'0%':(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue)/backData.dateCompareData.compareValue*100).toFixed(1)+"%";
       backData.dateCompareData.baseValue = numSeparate(backData.dateCompareData.baseValue);
       backData.dateCompareData.compareValue = numSeparate(backData.dateCompareData.compareValue);
       return backData;
@@ -2618,8 +2618,8 @@ export default {
         backData.dateCompareData.baseWidth = "100%";
         backData.dateCompareData.compareWidth = "100%";
       }
-      backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue));
-      backData.dateCompareData.compareRate = backData.dateCompareData.compareValue==0?'0%':(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue)/backData.dateCompareData.compareValue*100).toFixed(2)+"%";
+      backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue).toFixed(1)*1);
+      backData.dateCompareData.compareRate = backData.dateCompareData.compareValue==0?'0%':(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue)/backData.dateCompareData.compareValue*100).toFixed(1)+"%";
       backData.dateCompareData.baseValue = numSeparate(backData.dateCompareData.baseValue);
       backData.dateCompareData.compareValue = numSeparate(backData.dateCompareData.compareValue);
       return backData;

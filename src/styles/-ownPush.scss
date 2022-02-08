@@ -484,6 +484,16 @@
                 }
               }
             }
+            &.getChannel{
+              min-width: 240px;
+              .item-checkbox{
+                float: left;
+                width:calc(50% - 6px);
+              }
+              .item-sure{
+                clear: both;
+              }
+            }
           }
           .item-checkbox{
             display:block;

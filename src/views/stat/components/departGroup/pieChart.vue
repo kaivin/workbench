@@ -82,10 +82,8 @@ export default {
                     }
                   },
                   itemStyle: {
-                      normal: {
-                          borderColor: '#ffffff',
-                          borderWidth:1,
-                      }
+                      borderColor: '#ffffff',
+                      borderWidth:1,
                   },
                   labelLine: {
                     show: false

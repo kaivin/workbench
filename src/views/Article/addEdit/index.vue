@@ -147,6 +147,12 @@
                         </el-input>
                       </div>
                     </div>
+                    <div class="item-form buttonTwo inline-item other-td">
+                      <strong>权限：</strong>
+                      <div class="item-form-panel">
+                        <el-checkbox v-model="formData.otherpermit" label="仅自己和上级可见" border size="small"></el-checkbox>
+                      </div>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -287,6 +293,7 @@ export default {
         isCommentClose:false,
         isEditShareOpen:false,
         isAnonymous:false,
+        otherpermit:false,  
         sort:"",
         isTop:false,
         day:"2",
@@ -728,6 +735,7 @@ export default {
       $this.formData.isCommentClose = data.issay==0?true:false;
       $this.formData.isEditShareOpen = data.isedit==0?false:true;
       $this.formData.isAnonymous = data.is_hidename==0?false:true;
+      $this.formData.otherpermit = data.otherpermit==1?false:true;      
       $this.formData.sort = data.sort==0?"":data.sort;
       $this.formData.isTop = data.is_top==0?false:true;
       $this.formData.day = data.showdays;
@@ -809,6 +817,7 @@ export default {
       $this.formData.isCommentClose = false;
       $this.formData.isEditShareOpen = false;
       $this.formData.isAnonymous = false;
+      $this.formData.otherpermit = false;
       $this.formData.sort = "";
       $this.formData.isTop = false;
       $this.formData.day = "3";
@@ -910,6 +919,7 @@ export default {
         formData.issay = $this.formData.isCommentClose?0:1;
         formData.isedit = $this.formData.isEditShareOpen?1:0;
         formData.is_hidename = $this.formData.isAnonymous?1:0;
+        formData.otherpermit = $this.formData.otherpermit?2:1;
         formData.titlecolor = $this.formData.titleColor;
         if($this.permitField.includes("readpermit")){
           formData.readpermit = $this.formData.isAllPermit?1:0;

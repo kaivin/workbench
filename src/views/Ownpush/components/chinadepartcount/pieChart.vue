@@ -112,38 +112,32 @@ export default {
                         }
                     },
                     itemStyle: {
-                        normal: {
-                            borderColor: '#ffffff',
-                            borderWidth:1,
-                        }
+                        borderColor: '#ffffff',
+                        borderWidth:1,
                     },
                     labelLine: {
-                        normal: {
-                            show: false
-                        }
+                        show: false
                     },
                     label: {
-                        normal: {
-                            position: 'inner',
-                            fontSize: 12,
-                            formatter: params => {
-                                return (
-                                    '{percent|' + params.percent + '%}'
-                                );
-                            },
-                            padding: [0, -130, 0, -130],
-                            rich: {
-                                color: '#fff',
-                                percent: {
-                                    fontSize: 12,
-                                    padding: [0, 0, 3, 0],
-                                    color: '#fff'
-                                },
-                            },
-                            textStyle: {
-                                color: '#fff'
-                            }
+                        position: 'inner',
+                        fontSize: 12,
+                        formatter: params => {
+                            return (
+                                '{percent|' + params.percent + '%}'
+                            );
                         },
+                        padding: [0, -130, 0, -130],
+                        rich: {
+                            color: '#fff',
+                            percent: {
+                                fontSize: 12,
+                                padding: [0, 0, 3, 0],
+                                color: '#fff'
+                            },
+                        },
+                        textStyle: {
+                            color: '#fff'
+                        }
                     },
                     data:$this.chartData
                 }
