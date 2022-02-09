@@ -144,6 +144,15 @@
                                   </el-input>
                             </div>
                             <div class="team-headerItem">
+                                  <span class="require">物料：</span>
+                                  <el-input
+                                      size="mini"
+                                      v-model="searchData.material"
+                                      :class="searchData.material!=''?'el-xzstate':''"
+                                      clearable>
+                                  </el-input>
+                            </div>
+                            <div class="team-headerItem">
                                   <span class="require">备注：</span>
                                   <el-input
                                       size="mini"
@@ -564,7 +573,8 @@ export default {
       checkedOther:[],
       searchData:{
         date:[],
-        country:"",
+        country:'',
+        material:'',
         domain:'',
         name:'',
         url:''
@@ -909,6 +919,7 @@ export default {
       $this.minProductNum=0;
       $this.searchData.date=[];
       $this.searchData.country="";
+      $this.searchData.material="";
       $this.searchData.domain='';
       $this.searchData.name='';
       $this.searchData.url='';
@@ -944,6 +955,7 @@ export default {
       var $this = this;
       var searchData = {};
       searchData.country = $this.searchData.country;
+      searchData.material = $this.searchData.material;
       searchData.domain = $this.searchData.domain;
       searchData.name = $this.searchData.name;
       searchData.url = $this.searchData.url;

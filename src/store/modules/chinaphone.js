@@ -51,6 +51,7 @@
     CntargetlistAdd,
     CntargetlistEdit,
     CntargetlistDel,
+    getkeyword,
 } from '@/api/chinaphone'
 
 const state = {}
@@ -579,6 +580,16 @@ const actions = {
     CntargetlistDelAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             CntargetlistDel(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 填写关键词获取下拉
+    getkeywordAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getkeyword(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

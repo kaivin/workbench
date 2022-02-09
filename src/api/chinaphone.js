@@ -410,3 +410,11 @@ export function CntargetlistDel(data) {
     data
   });
 }
+// 填写关键词获取下拉
+export function getkeyword(data) {
+  return request({
+    url: "/hxindex/Chinaphone/getkeyword",
+    method: "POST",
+    data
+  });
+}

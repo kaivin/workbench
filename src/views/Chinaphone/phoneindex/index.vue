@@ -36,13 +36,6 @@
       <div class="abs-panel" ref="mainPane">
         <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position"> 
           <div class="phone-index" v-if="!phoneID">
-            <!-- <p class="breadcrumb" ref="breadcrumbPane">
-              <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
-              <template v-for="item in breadcrumbList">
-                <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
-                <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
-              </template>
-            </p> -->
             <div class="ChinaphoneNum" ref="numPane">
               <div class="card-header chcard-header">
                 <h2>{{currentTeam}}</h2>
@@ -109,13 +102,7 @@
               </el-card>
             </div>
           </div>
-          <div class="true-height" v-else ref="scrollPane">       
-            <!-- <p class="breadcrumb" ref="breadcrumbPane">
-                <router-link class="breadcrumb-link" to="/">首页</router-link>
-                <template v-for="item in breadcrumbList">
-                  <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id"><b>-</b><span>{{item.title}}</span></router-link>
-                </template>
-            </p> -->
+          <div class="true-height" v-else ref="scrollPane">
             <el-card class="box-card scroll-card EnphoneCardFrDate" shadow="hover">
               <div slot="header">
                 <div class="card-header EnphoneCardHeader" ref="headerPane">
@@ -349,7 +336,10 @@
                           >
                           <template slot-scope="scope">
                             <div class="table-input">
-                              <el-input size="small" v-model="scope.row.search" v-if="permitField.includes('search')"></el-input>
+                              <el-autocomplete size="small" v-model="scope.row.search"    
+                                        :fetch-suggestions="searchQuerySearch"
+                                        :trigger-on-focus="false"
+                                        v-if="permitField.includes('search')"></el-autocomplete>
                               <el-input size="small" v-model="scope.row.useridname" v-if="permitField.includes('userid')"></el-input>
                               <el-input size="small" v-model="scope.row.device" v-if="permitField.includes('device')"></el-input>
                             </div>
@@ -472,7 +462,7 @@ export default {
       },
       phoneList:[],
       operationsWidth:"",
-      tableData:[],     
+      tableData:[], 
       searchData:{
         date:[],
         name:"",
@@ -1470,6 +1460,32 @@ export default {
             });
           }
         }
+      });
+    },
+    //渠道下拉框
+    searchQuerySearch(queryString,cb){
+      var $this = this;
+      var resultData = {};
+      var returnData = [];
+      resultData.keywork = queryString;
+      resultData.phoneid=$this.phoneID;
+      $this.$store.dispatch("chinaphone/getkeywordAction", resultData).then(response=>{
+          if(response.status){
+            if(response.data.length>0){
+              response.data.forEach(function(item){
+                var itemData = {};
+                itemData.value = item.name;
+                returnData.push(itemData);
+              });
+            }
+            cb(returnData);
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
       });
     },
     handleLockClick(){

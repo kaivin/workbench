@@ -2608,7 +2608,7 @@ export default {
           if($this.selectedData.isMonth){
               item.isOn = true;
               item.disabled = false;
-              if($this.selectedData.comparedept_id.length>0||$this.selectedData.comparetype_id.length>0){
+              if($this.selectedData.comparedept_id.length>0||$this.selectedData.comparetype_id.length>0||$this.selectedData.isDateCompare){
                 if(item.value=='qualityAnalysis'||item.value=='consumptionAnalysis'){
                   item.isOn = false;
                   item.disabled = true;

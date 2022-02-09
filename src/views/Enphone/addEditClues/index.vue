@@ -1667,18 +1667,28 @@ export default {
       var $this=this;
       var formCountry = {};
       formCountry.name=$this.formData.country;
-      $this.$store.dispatch("enphone/getcontientAction", formCountry).then(response=>{
-          if(response.status){
-            $this.formData.continent=response.data.contient;
-            $this.formData.timediff=response.data.timecha;
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
+      if(formCountry.name!=''){
+          $this.$store.dispatch("enphone/getcontientAction", formCountry).then(response=>{
+              if(response.status){
+                if(response.data==null||response.data==''){
+                  $this.formData.continent='';
+                  $this.formData.timediff='';
+                }else{
+                  $this.formData.continent=response.data.contient;
+                  $this.formData.timediff=response.data.timecha;
+                }
+              }else{
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+                });
+              }
+          });
+      }else{
+          $this.formData.continent='';
+          $this.formData.timediff='';
+      }
     },
     // 默认当前日期时间
     currentTime(){

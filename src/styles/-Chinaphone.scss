@@ -165,7 +165,7 @@
   }
   
 }
-
+.el-autocomplete-suggestion li{padding: 0 15px;}
 .card-content.ChinaphoneTwoBox{
   background:#fff!important;
   border-radius:8px!important;
@@ -248,7 +248,7 @@
         .team-headerItem{
             float: left;
             .el-date-editor{width:200px; margin:4px 0;}
-            .el-input{width:200px; margin:4px 0;}
+            .el-input{width:160px; margin:4px 0;}
         }
       }
       .team-list{

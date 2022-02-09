@@ -147,7 +147,7 @@ import defaultChart from "../components/chinadepartcount/defaultChart.vue";
 import qualityChart from "../components/chinadepartcount/qualityChart.vue";
 import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate,numSeparate,sortByDate,memberArrColor,singleNewArrColor} from "@/utils/index"
 export default {
-  name: 'Ownpush_getChannel',
+  name: 'Ownpush_chinasourcecount',
   components: {
     defaultChart,
     qualityChart,
@@ -414,7 +414,7 @@ export default {
           res.data.forEach(function(item,index){
             permitData.push(item.action_route);
           });
-          if(permitData.includes('Ownpush_getChannel')){
+          if(permitData.includes('Ownpush_chinasourcecount')){
               $this.getChannelList()
           }else{
             $this.$message({
@@ -592,19 +592,18 @@ export default {
           if($this.selectedData.isMonth){
             item.isOn = true;
             item.disabled = false;
-            if($this.selectedData.comparesource_id.length>0||$this.selectedData.comparesource_id.length>0){
+            if($this.selectedData.comparesource_id.length>0||$this.selectedData.comparesource_id.length>0||$this.selectedData.isDateCompare){
               if(item.value=='qualityAnalysis'){
                 item.isOn = false;
                 item.disabled = true;
               }
             }
           }else{
+            item.isOn = false;
+            item.disabled = true;
             if(item.value=="enquiriesFew"){
               item.isOn = true;
               item.disabled = false;
-            }else{
-              item.isOn = false;
-              item.disabled = true;
             }
           }
           if(item.isOn){
@@ -943,11 +942,22 @@ export default {
             if($this.selectedData.isMonth){
               var monthxunallnumbercompare=0;
               if(res.monthxuntrendcompare&&res.monthxuntrendcompare.length){
-                res.monthxuntrendcompare.forEach(function(item,index){
-                  if(item&&item.length>0){
-                    item.forEach(function(items,indexs){
-                      monthxunallnumbercompare+=items.xunnumber;
-                    });
+                res.monthxuntrendcompare.forEach(function(item,index){                  
+                  if(index==0){
+                      if(item&&item.length>0){
+                        item.forEach(function(items,indexs){
+                          monthxunallnumbercompare+=items.xunnumber;
+                        });
+                      }
+                  }
+                  if(index>0){
+                      if(item&&item.length>0){
+                        item.forEach(function(items,indexs){
+                          if(res.monthxuntrendcompare[0][0].depart.indexOf(items.depart)==-1){
+                            monthxunallnumbercompare+=items.xunnumber;
+                          }
+                        });
+                      }
                   }
                 });
               }
@@ -967,10 +977,21 @@ export default {
               var dayxuntrendcompare=0;
               if(res.dayxuntrendcompare&&res.dayxuntrendcompare.length){
                 res.dayxuntrendcompare.forEach(function(item,index){
-                  if(item&&item.length>0){
-                    item.forEach(function(items,indexs){
-                      dayxuntrendcompare+=items.xunnumber;
-                    });
+                  if(index==0){
+                      if(item&&item.length>0){
+                        item.forEach(function(items,indexs){
+                          dayxuntrendcompare+=items.xunnumber;
+                        });
+                      }
+                  }
+                  if(index>0){
+                      if(item&&item.length>0){
+                        item.forEach(function(items,indexs){
+                          if(res.dayxuntrendcompare[0][0].depart.indexOf(items.depart)==-1){
+                            dayxuntrendcompare+=items.xunnumber;
+                          }
+                        });
+                      }
                   }
                 });
               }
@@ -1188,11 +1209,22 @@ export default {
             var monthscoreallnumbercompare=0;
             if(res.monthscoretrendcompare&&res.monthscoretrendcompare.length){
               res.monthscoretrendcompare.forEach(function(item,index){
-                if(item&&item.length>0){
-                  item.forEach(function(items,indexs){
-                    monthscoreallnumbercompare+=items.score;
-                  });
-                }
+                  if(index==0){
+                    if(item&&item.length>0){
+                      item.forEach(function(items,indexs){
+                        monthscoreallnumbercompare+=items.score;
+                      });
+                    }
+                  }
+                  if(index>0){
+                      if(item&&item.length>0){
+                        item.forEach(function(items,indexs){
+                          if(res.monthscoretrendcompare[0][0].depart.indexOf(items.depart)==-1){
+                            monthscoreallnumbercompare+=items.score;
+                          }
+                        });
+                      }
+                  }
               });
             }
             dealScoreData.nowNumber = numSeparate(Math.floor(monthscoreallnumbercompare*100)/100);
@@ -1291,6 +1323,7 @@ export default {
         dealScoreData.unit = "（单位：分）";
         dealScoreData.randomStr = randomString(4);
       }
+
       // 消费分析
       var costCountData = null;
       if($this.selectedType.includes("consumptionAnalysis")){
@@ -1379,11 +1412,22 @@ export default {
             var monthmoneytrendcompare=0;
             if(res.monthmoneytrendcompare&&res.monthmoneytrendcompare.length){
               res.monthmoneytrendcompare.forEach(function(item,index){
-                if(item&&item.length>0){
-                  item.forEach(function(items,indexs){
-                    monthmoneytrendcompare+=items.money;
-                  });
-                }
+                  if(index==0){
+                    if(item&&item.length>0){
+                      item.forEach(function(items,indexs){
+                        monthmoneytrendcompare+=items.money;
+                      });
+                    }
+                  }
+                  if(index>0){
+                      if(item&&item.length>0){
+                        item.forEach(function(items,indexs){
+                          if(res.monthmoneytrendcompare[0][0].depart.indexOf(items.depart)==-1){
+                            monthmoneytrendcompare+=items.money;
+                          }
+                        });
+                      }
+                  }
               });
             }
             costCountData.nowNumber = numSeparate(Math.floor(monthmoneytrendcompare*100)/100);
@@ -1582,6 +1626,146 @@ export default {
           itemData.push(itemInquiryCount);
         });
         return itemData;
+    },
+    // 时间对比数据封装函数
+    dateCompare(dataArr,key,isMulit){
+      var $this = this;
+      // 默认时间数据条数多于对比时间数据条数
+      var tongData = groupDateColor(dataArr);
+      var backData = {};
+      backData.mainData = [];
+      backData.colorArr = [];
+      tongData.forEach(function(item){
+        backData.colorArr.push(item[0].color);
+      });
+      if(tongData[0].length>=tongData[1].length){
+        var newChartOne=[];
+        var newChartTwo=[];
+        for(var i=0;i<tongData[0].length;i++){
+          var itemChart0 = {};
+          var itemChart1 = {};
+          if(tongData[1][i]){
+            itemChart0.key = tongData[0][i].date+"&"+tongData[1][i].date;
+            itemChart0.name = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
+            itemChart1.key = tongData[0][i].date+"&"+tongData[1][i].date;
+            itemChart1.name = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1];
+            if(key == "score"||key=="money"){
+              itemChart1.value = Math.floor(tongData[1][i][key]*100)/100;
+            }else{
+              itemChart1.value = tongData[1][i][key];
+            }
+            if(key=="anumber"){
+              itemChart1.user = tongData[1][i].user;
+            }
+            itemChart1.color = tongData[1][0].color;
+          }else{
+            itemChart0.key = tongData[0][i].date+"&";
+            itemChart0.name = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
+            itemChart1.key = tongData[0][i].date+"&";
+            itemChart1.name = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1];
+            itemChart1.value = null;
+            itemChart1.color = tongData[1][0].color;
+            if(key=="anumber"){
+              itemChart1.user = [];
+            }
+          }
+          if(key == "score"||key=="money"){
+            itemChart0.value = Math.floor(tongData[0][i][key]*100)/100;
+          }else{
+            itemChart0.value = tongData[0][i][key];
+          }
+          if(key=="anumber"){
+            itemChart0.user = tongData[0][i].user;
+          }
+          itemChart0.color = tongData[0][0].color;
+          newChartOne.push(itemChart0);
+          newChartTwo.push(itemChart1);
+        }
+        backData.mainData.push(newChartOne);
+        backData.mainData.push(newChartTwo);
+      }else{
+        var newChartOne=[];
+        var newChartTwo=[];
+        for(var i=0;i<tongData[1].length;i++){
+          var itemChart0 = {};
+          var itemChart1 = {};
+          if(tongData[0][i]){
+            itemChart1.key = tongData[0][i].date+"&"+tongData[1][i].date;
+            itemChart1.name = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1];
+            itemChart0.key = tongData[0][i].date+"&"+tongData[1][i].date;
+            itemChart0.name = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
+            if(key == "score"||key=="money"){
+              itemChart0.value = Math.floor(tongData[0][i][key]*100)/100;
+            }else{
+              itemChart0.value = tongData[0][i][key];
+            }
+            if(key=="anumber"){
+              itemChart0.user = tongData[0][i].user;
+            }
+            itemChart0.color = tongData[0][0].color;
+          }else{
+            itemChart1.key = "&"+tongData[1][i].date;
+            itemChart1.name = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1];
+            itemChart0.key = "&"+tongData[1][i].date;
+            itemChart0.name = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
+            itemChart0.value = null;
+            itemChart0.color = tongData[0][0].color;
+            if(key=="anumber"){
+              itemChart0.user = [];
+            }
+          }
+          if(key == "score"||key=="money"){
+            itemChart1.value = Math.floor(tongData[1][i][key]*100)/100;
+          }else{
+            itemChart1.value = tongData[1][i][key];
+          }
+          if(key=="anumber"){
+            itemChart1.user = tongData[1][i].user;
+          }
+          itemChart1.color = tongData[1][0].color;
+          newChartOne.push(itemChart0);
+          newChartTwo.push(itemChart1);
+        }
+        backData.mainData.push(newChartOne);
+        backData.mainData.push(newChartTwo);
+      }
+      backData.dateCompareData = {};
+      backData.dateCompareData.baseValue = 0;
+      backData.dateCompareData.compareValue = 0;
+      tongData.forEach(function(item,index){
+        item.forEach(function(item1){
+          if(index == 0){
+            backData.dateCompareData.baseValue += item1[key];
+          }else{
+            backData.dateCompareData.compareValue += item1[key];
+          }
+        });
+      });
+      if(key == "score"||key == "money"){
+        backData.dateCompareData.baseValue =Math.floor(backData.dateCompareData.baseValue*100)/100;
+        backData.dateCompareData.compareValue = Math.floor(backData.dateCompareData.compareValue*100)/100;
+      }
+      // 时间对比数据
+      backData.dateCompareData.baseDate = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
+      backData.dateCompareData.compareDate = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1]
+      if(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue>0){
+        backData.dateCompareData.status = "up";
+        backData.dateCompareData.baseWidth = "100%";
+        backData.dateCompareData.compareWidth = parseInt(backData.dateCompareData.compareValue/backData.dateCompareData.baseValue*100)+"%";
+      }else if(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue<0){
+        backData.dateCompareData.status = "down";
+        backData.dateCompareData.compareWidth = "100%";
+        backData.dateCompareData.baseWidth = parseInt(backData.dateCompareData.baseValue/backData.dateCompareData.compareValue*100)+"%";
+      }else{
+        backData.dateCompareData.status = "flat";
+        backData.dateCompareData.baseWidth = "100%";
+        backData.dateCompareData.compareWidth = "100%";
+      }
+      backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue).toFixed(1)*1);
+      backData.dateCompareData.compareRate = backData.dateCompareData.compareValue==0?'0%':(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue)/backData.dateCompareData.compareValue*100).toFixed(1)+"%";
+      backData.dateCompareData.baseValue = numSeparate(backData.dateCompareData.baseValue);
+      backData.dateCompareData.compareValue = numSeparate(backData.dateCompareData.compareValue);
+      return backData;
     },
     // 判断日期维度，跳转参数，添加补充说明信息
     dateInfoTips(){
