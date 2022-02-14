@@ -148,7 +148,7 @@ export default {
                     left: 0,
                     right:30,
                     bottom:10,
-                    top:10,
+                    top:20,
                     containLabel: true
                 },
                 xAxis: {
