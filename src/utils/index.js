@@ -461,7 +461,7 @@ export function groupDateColor(groupArr){
 }
 // 单一数组的图表主题色添加
 export function singleArrColor(dataArr){
-  var colorArr = ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822"]
+  var colorArr = ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"]
   dataArr.forEach(function(item,index){
     item.color = colorArr[index]
   });

@@ -23,6 +23,7 @@
     getOwnChinadepartcount,
     getOwnChinasourcecount,
     getOwnsource,
+    getOwnChinasourcedefault,
 } from '@/api/ownpush'
 
 const state = {}
@@ -265,6 +266,16 @@ const actions = {
     getOwnChinasourcecountAction({ commit }, data){
         return new Promise((resolve, reject) => {
             getOwnChinasourcecount(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            });
+        });
+    },
+    // 电商一部 （渠道统计分析默认页面）
+    getOwnChinasourcedefaultAction({ commit }, data){
+        return new Promise((resolve, reject) => {
+            getOwnChinasourcedefault(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

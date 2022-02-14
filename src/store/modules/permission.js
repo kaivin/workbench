@@ -142,6 +142,12 @@ function setRoutes(routers){
         meta: {id:'enPersonContrast-131',title: '组员对比', icon: null, keepAlive:false},
       },
       {
+        path: "/Ownpush/chinasourcecount/channelAnalysis",
+        name:'OwnpushChannelAnalysis',
+        component: () => import("@/views/Ownpush/chinasourcecount/channelAnalysis.vue"),
+        meta: {id:'OwnpushChannelAnalysis-131',title: '电商一部渠道分析', icon: null, keepAlive:false},
+      },
+      {
         path: "/stat/en/productAnalysis/ProAccount",
         name:'enProAccount',
         component: () => import("@/views/stat/en/productAnalysis/ProAccount.vue"),

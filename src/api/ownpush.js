@@ -191,3 +191,11 @@ export function getOwnChinasourcecount(data) {
     data
   });
 }
+// 电商一部 （渠道统计分析默认页面）
+export function getOwnChinasourcedefault(data) {
+  return request({
+    url: "/hxindex/Ownpush/chinasourcedefault",
+    method: "POST",
+    data
+  });
+}

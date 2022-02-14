@@ -1,241 +1,62 @@
 ﻿<template>
-  <div class="page-root scroll-panel depart-index" ref="boxPane" v-resize="changeSize">
-        <p class="breadcrumb" ref="breadcrumbPane">
-            <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
-            <template v-for="item in breadcrumbList">
-            <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
-            <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
-            </template>
-        </p>
-        <div class="filter-panel" ref="filterbox">
-            <div class="filter-list">
-                <div class="item-filter flex-box depart">
-                    <div class="filter-title"><span class="txt-title">渠道：</span></div>
-                    <div class="filter-content flex-content">
-                        <div class="item-list depart">
-                        <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="item in channelList" v-bind:key="item.id" v-on:click="groupChangeHandler(item.id)"><i></i><span>{{item.name}}</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="item-filter flex-box date">
-                  <div class="filter-title"><span class="txt-title">日期：</span></div>
-                  <div class="filter-content flex-content">
-                    <div class="item-list">
-                      <div class="item-change">
-                        <div class="item-font" v-bind:class="item.isOn?'active':''" v-for="item in dateDimension" v-bind:key="item.value" v-on:click="dimensionChangeHandler(item)">{{item.label}}</div>
-                      </div>
-                      <div class="item-date">
-                        <el-date-picker
-                          v-if="!selectedData.isMonth"
-                          v-model="selectedData.dateDefault"
-                          :disabled="!dateSelected"
-                          @change="getSearchData"
-                          type="daterange"
-                          format="yyyy/MM/dd"
-                          value-format="yyyy/MM/dd"
-                          key="a"
-                          size="mini"
-                          class="date-range"
-                          range-separator="～"
-                          start-placeholder="开始日期"
-                          end-placeholder="结束日期"
-                          :picker-options="pickerDateRangeOptions">
-                        </el-date-picker>
-                        <el-date-picker
-                          v-else
-                          v-model="selectedData.dateDefault"
-                          @change="getSearchData"
-                          type="monthrange"
-                          format="yyyy/MM"
-                          value-format="yyyy/MM"
-                          key="b"
-                          size="mini"
-                          class="date-range"
-                          range-separator="～"
-                          start-placeholder="开始日期"
-                          end-placeholder="结束日期"
-                          :picker-options="pickerMonthRangeOptions">
-                        </el-date-picker>
-                      </div>
-                      <div class="item-checkbox" v-bind:class="[selectedData.comparesource_id.length>0||!dateSelected?'is-disabled':'',selectedData.isDateCompare?'active':'']" v-on:click="dateCompareChangeHandler"><i></i><span>日期对比</span></div>
-                      <div class="item-date" v-if="selectedData.isDateCompare" style="margin-right: 20px;">
-                        <el-date-picker
-                          v-if="!selectedData.isMonth"
-                          v-model="selectedData.dateContrast"
-                          @change="getSearchData"
-                          type="daterange"
-                          format="yyyy/MM/dd"
-                          value-format="yyyy/MM/dd"
-                          key="c"
-                          size="mini"
-                          class="date-range"
-                          range-separator="～"
-                          start-placeholder="开始日期"
-                          end-placeholder="结束日期"
-                          :picker-options="pickerDateRangeOptions">
-                        </el-date-picker>
-                        <el-date-picker
-                          v-else
-                          v-model="selectedData.dateContrast"
-                          @change="getSearchData"
-                          type="monthrange"
-                          format="yyyy/MM"
-                          value-format="yyyy/MM"
-                          key="d"
-                          size="mini"
-                          class="date-range"
-                          range-separator="～"
-                          start-placeholder="开始日期"
-                          end-placeholder="结束日期"
-                          :picker-options="pickerMonthRangeOptions">
-                        </el-date-picker>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="item-filter flex-box filter">
-                  <div class="filter-title"><span class="txt-title">分析项：</span></div>
-                  <div class="filter-content flex-content">
-                    <div class="item-list">
-                      <div class="item-checkbox" v-for="item in contrastList" v-bind:class="[item.isOn?'active':'', item.disabled?'is-disabled':'']" v-bind:key="item.value" v-on:click="analysisItemChangeHandler(item)"><i></i><span>{{item.label}}</span></div>
-                      <div class="item-reset" v-if="isFilter"><span v-on:click="resetData">全部重置</span></div>
-                    </div>
-                  </div>
-                </div>
-            </div>
-            <div class="filter-tips"><p><i class="svg-i"><svg-icon icon-class="tips" class-name="disabled" /></i>{{tipsInfo}}</p></div>
-        </div>
-        <div class="contrast-panel flex-box" :class="isFix ? 'contrast-fixed' : ''" :style="'width:'+ boxWidth + 'px' " v-if="!selectedData.isDateCompare&&selectedData.source_id.length>0">
-          <div class="title-font"><span class="txt-title">对比项：</span></div>
-          <div class="contrast-content flex-content">
-            <div class="item-list">
-              <div class="item-contrast" v-if="selectedData.source_id.length>0"><span>{{groupName}}</span><i  v-on:click="deleteDefaultGroup" class="svg-i"><svg-icon icon-class="close" class-name="disabled" /></i></div>
-              <template v-if="selectedData.comparesource_id.length>0">
-                <div class="item-contrast" v-if="item.isOn" v-for="item in contrastSourceList" v-bind:key="item.id"><span>{{item.name}}</span><i v-on:click="deleteContrastGroup(item.id)" class="svg-i"><svg-icon icon-class="close" class-name="disabled" /></i></div>
-              </template>
-              <div class="item-button">
-                <div class="button-click" v-on:click="toggleContrast"><i class="svg-i"><svg-icon icon-class="s-add" class-name="disabled" /></i><span>添加对比</span></div>
-                <div class="group-contrast depart getChannel" v-show="isContrastShow">
-                  <div class="item-checkbox" v-bind:class="[item.disabled?'is-disabled':'',item.isOn?'active':'']" v-for="item in contrastSourceList" v-bind:key="item.id" v-on:click="contrastGroupChangeHandler(item)"><i></i><span>{{item.name}}</span></div>
-                  <div class="item-sure" v-on:click="saveContrastGroup">确定</div>
-                </div>
-              </div>
-            </div>
+  <div class="page-root scroll-panel depart-index" ref="boxPane">  
+      <div class="ChannelTab">
+          <div class="ChannelMain flex-box">
+                <span class="Channeltit">渠道：</span>
+                <div class="ChannelItem">
+                     <span class="ChannelItemTag" v-bind:class="item.isOn?'active':''" v-for="(item,index) in channelList" :key="index" v-on:click="groupChangeHandler(item.id)">{{item.name}}</span>
+                     <span class="Channeltit" style="margin-left:20px">时间选择：</span>                     
+                    <el-date-picker
+                      v-model="searchData.data"
+                      @change="handleData"
+                      type="monthrange"
+                      format="yyyy-MM"
+                      value-format="yyyy-MM"
+                      key="b"
+                      size="mini"
+                      class="date-range"
+                      range-separator="～"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期"
+                      :picker-options="pickerMonthRangeOptions">
+                    </el-date-picker>
+                    <i class="ChannelBtn" v-on:click="ChannelBtn">重置</i>
+                    <i class="ChannelBtn" v-on:click="defaultSort">默认排序</i>
+                </div>                
           </div>
-        </div>
-        <div class="result-panel" :class="isFix ? 'resulttop' : ''">
-            <template v-if="defaultChartData.length>0" v-for="item in defaultChartData">
-              <default-chart 
-                :item-data="item" 
-                :is-default-page="isDefaultPage"
-                :judge-data="judgeData"
-                ></default-chart>
-            </template>
-            <template v-if="qualityChartData.length>0" v-for="item in qualityChartData">
-                <quality-chart 
-                  :item-data="item" 
-                  :is-default-page="isDefaultPage"
-                  :judge-data="judgeData"
-                  ></quality-chart>
-            </template>
-        </div>
+      </div>
+      <div class="flex-content OwnRank">
+          <div class="OwnRankTop">
+              <template v-if="sourceData.length>0" v-for="item in sourceData">
+                <source-rank 
+                  :itemData="item" 
+                  :ByTime ="searchTime"
+                  :YSort='true'
+                  @fallSort='getfallSort'
+                  ></source-rank>
+              </template>
+          </div>
+      </div>
   </div>
 </template>
 <script>
 import {mapGetters} from 'vuex';
-import defaultChart from "../components/chinadepartcount/defaultChart.vue";
-import qualityChart from "../components/chinadepartcount/qualityChart.vue";
-import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate,numSeparate,sortByDate,memberArrColor,singleNewArrColor} from "@/utils/index"
+import sourceRank from "../components/chinadepartcount/sourceRank.vue";
+import {randomString,numSeparate,sortByDesc,rankingWithTotalItem,singleArrColor} from "@/utils/index";
 export default {
   name: 'Ownpush_chinasourcecount',
   components: {
-    defaultChart,
-    qualityChart,
+    sourceRank,
   },
   data() {
     return {
-        breadcrumbList:[],                             //面包屑导航
-        menuButtonPermit:[],                           //网页权限字段
-        minWidth:"",
-        boxWidth:0,
-        mapRatio:0.75,
+        menuButtonPermit:[],         //网页权限字段
         channelList:[],              //渠道数据
-        contrastSourceList:[],       //对比渠道数据
-        selectedData:{               //搜索数据
-          dateDefault:[],          //默认时间
-          dateContrast:[],         //对比时间
-          source_id:[],               //渠道类型
-          type:[1],              //分析项数据
-          is_compare:1,            //是否部门对比
-          comparesource_id:[],       //对比渠道选择
-          is_timecopmare:1,        //是否时间对比
-          isMonth:false,
-          isDateCompare:false,
+        searchData:{
+          data:[],
+          source_id:[],
         },
-        dateDimension:[
-          {label:"日",value:"day",isOn:true},
-          {label:"月",value:"month",isOn:false},
-        ],
-        contrastList:[
-          {label:'消费分析',id:3,value:"consumptionAnalysis",isOn:false,disabled:true},
-          {label:"询盘个数",id:1,value:"enquiriesFew",isOn:true,disabled:false},
-          {label:"成交积分",id:2,value:"clinchScore",isOn:false,disabled:true},
-          {label:'质量分析',id:4,value:"qualityAnalysis",isOn:false,disabled:true},
-        ],
-        groupName:"",
-        dateSelected:true,
-        isFilter:false,
-        isContrastShow:false,
-        selectedType:['enquiriesFew'],
-        oldContrastSourceID:"",
-        isDefaultPage:false,
-        tipsInfo:"当前部门分析页面，展示为：本年度数据信息。",
-        tipsItem:"",
-        pickerDateRangeOptions: {
-          shortcuts: [{
-            text: '最近一个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-              text: '上月',
-              onClick(picker) {
-                var date = new Date();
-                var year = date.getFullYear().toString();
-                //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
-                var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
-                var end = year + '/' + month + '/01';
-                var start = '';
-              
-                if(month == '01'){
-                  start = (parseInt(year) - 1) + '/12/01';
-                }else{
-                  start = parseInt(month) - 1>9 ? year + '/' + (parseInt(month) - 1)  + '/01':year + '/0' + (parseInt(month) - 1)  + '/01';
-                }
-                picker.$emit('pick', [start, end]);
-              }
-          }, {
-            text: '本月',
-            onClick(picker) {
-              var date = new Date();
-              var year = date.getFullYear().toString();
-              //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
-              var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
-              var end = '';
-              var start = year + '/' + month + '/01';
-              if(month == '12'){
-                end = (parseInt(year) + 1) + '/01/01';
-              }else{
-                end = parseInt(month) + 1>9 ? year + '/' + (parseInt(month) + 1)  + '/01':year + '/0' + (parseInt(month) + 1)  + '/01';
-              }
-              picker.$emit('pick', [start, end]);
-            }
-          }]
-        },
+        searchTime: '',
         pickerMonthRangeOptions: {
           shortcuts: [{
             text: '今年至今',
@@ -249,15 +70,20 @@ export default {
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setMonth(start.getMonth() - 5);
+              start.setMonth(start.getMonth() - 6);
               picker.$emit('pick', [start, end]);
             }
           }]
         },
-        judgeData:{},
-        defaultChartData:[],
-        qualityChartData:[],
-        isFix:false,
+        sourceData:[],
+        moneylist:[],
+        priceAlist:[],
+        priceBlist:[],
+        priceClist:[],
+        priceDlist:[],
+        priceElist:[],
+        scorelist:[],
+        xunlist:[],
     };
   },
   computed: {
@@ -268,48 +94,14 @@ export default {
   },
   created() {
     var $this = this;
-    $this.selectedData.dateDefault = $this.getNearDay();
-    $this.getBreadcrumbList();
+    $this.searchData.data=$this.getNearMonth();
     $this.getUserMenuButtonPermit();
-  },
-  watch:{
-    minWidth(val) {
-      if (!this.timer) {
-        this.minWidth = val
-        this.timer = true
-        const $this = this
-        setTimeout(function() {
-          $this.timer = false
-        }, 400)
-      }
-    },
-    boxWidth(val) {
-      if (!this.timer) {
-        this.boxWidth = val
-        this.timer = true
-        const $this = this
-        setTimeout(function() {
-          $this.timer = false
-        }, 400)
-      }
-    }
   },
   mounted(){
     const $this = this;
     if(!$this.sidebar.opened){
       $this.$store.dispatch('app/toggleSideBar');
     }  
-    if($this.$refs.boxPane){  
-      $this.minWidth = $this.$refs.boxPane.offsetWidth;
-      $this.boxWidth = $this.$refs.boxPane.offsetWidth - 50;
-      $this.$refs.boxPane.addEventListener('scroll', $this.getScroll);
-    }
-  },
-  destroyed(){
-    const $this = this;
-    if($this.$refs.boxPane){
-      $this.$refs.boxPane.removeEventListener('scroll', $this.getScroll);
-    }
   },
   directives: {  // 使用局部注册指令的方式
       resize: { // 指令的名称
@@ -331,67 +123,6 @@ export default {
       }
   },
   methods: {
-    // 获取面包屑路径
-    getBreadcrumbList(){
-      var $this = this;
-      var breadcrumbList = [];
-      var currentID = ""+$this.$router.currentRoute.meta.id;
-      var pageID = 0;
-      if(currentID.indexOf('-')!=-1){
-        pageID = parseInt(currentID.split("-")[1]);
-      }else{
-        pageID = parseInt(currentID);
-      }
-      $this.menuData.forEach(function(item,index){
-        if(item.meta.id == pageID){
-          var itemData = {};
-          itemData.id = item.meta.id;
-          itemData.router = item.path;
-          itemData.title = item.meta.title;
-          breadcrumbList.push(itemData);
-        }else{
-          if(item.children.length>0){
-            item.children.forEach(function(item1,index1){
-              if(item1.meta.id == pageID){
-                var itemData = {};
-                itemData.id = item.meta.id;
-                itemData.router = item.path;
-                itemData.title = item.meta.title;
-                breadcrumbList.push(itemData);
-                var itemData2 = {};
-                itemData2.id = item1.meta.id;
-                itemData2.router = item1.path;
-                itemData2.title = item1.meta.title;
-                breadcrumbList.push(itemData2);
-              }else{
-                if(item1.children.length>0){
-                  item1.children.forEach(function(item2,index2){
-                    if(item2.meta.id == pageID){
-                      var itemData = {};
-                      itemData.id = item.meta.id;
-                      itemData.router = item.path;
-                      itemData.title = item.meta.title;
-                      breadcrumbList.push(itemData);
-                      var itemData2 = {};
-                      itemData2.id = item1.meta.id;
-                      itemData2.router = item1.path;
-                      itemData2.title = item1.meta.title;
-                      breadcrumbList.push(itemData2);
-                      var itemData3 = {};
-                      itemData3.id = item2.meta.id;
-                      itemData3.router = item2.path;
-                      itemData3.title = item2.meta.title;
-                      breadcrumbList.push(itemData3);
-                    }
-                  });
-                }
-              }
-            });
-          }
-        }
-      });
-      $this.breadcrumbList = breadcrumbList;
-    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -442,34 +173,62 @@ export default {
       $this.$store.dispatch('ownpush/getOwnsourceAction', null).then(res=>{
         var channelList = [];
         var contrastSourceList = [];
-        var baseDepart;
         res.data.forEach(function(item,index){
           var itemData = {};
           itemData.id = item.id;
           itemData.name = item.name;
           itemData.disabled = false;
           itemData.isOn = false;
-          if(index==0){
-            itemData.isOn=true;
-            baseDepart=item.id;
-            $this.selectedData.source_id.push(item.id);
-            $this.groupName = item.name;
-          }
           channelList.push(itemData);
         });
         $this.channelList = JSON.parse(JSON.stringify(channelList));
-        $this.contrastSourceList = JSON.parse(JSON.stringify(channelList));
-        $this.contrastSourceList.forEach(function(item){
-          item.disabled = false;
-          item.isOn = false;
-          if(item.id == baseDepart){
-            item.disabled = true;
-          }
-        });
         $this.getSearchData();
       });
     },
-    // 部门点击事件
+    ChannelData(dateArr,Tag){
+      var $this=this;
+      var channelList=$this.channelList;
+      var itemArr=[];
+      if($this.searchData.source_id&&$this.searchData.source_id.length>0){
+        var newChannelList=[];
+        $this.searchData.source_id.forEach(function(item,index){
+          channelList.forEach(function(items,indexs){
+            if(item==items.id){
+              newChannelList.push(items);
+            }
+          });
+        });
+        newChannelList.forEach(function(item,index){
+          var itemObj={}
+          itemObj.id=item.id;
+          itemObj.name=item.name;
+          itemObj.value=0;
+          dateArr.forEach(function(items,indexs){
+            if(items.source_id==item.id){
+              itemObj.value=items[Tag];
+            }
+          });
+          itemArr.push(itemObj);
+        });
+      }else{
+        channelList.forEach(function(item,index){
+          var itemObj={}
+          itemObj.id=item.id;
+          itemObj.name=item.name;
+          itemObj.value=0;
+          dateArr.forEach(function(items,indexs){
+            if(items.source_id==item.id){
+              itemObj.value=items[Tag];
+            }
+          });
+          itemArr.push(itemObj);
+        });
+      }
+      itemArr=singleArrColor(itemArr);
+      itemArr.sort(sortByDesc("value"));
+      return itemArr;
+    },
+    // 渠道点击事件
     groupChangeHandler(id){
       var $this = this;
       var channelList = $this.channelList;
@@ -482,343 +241,163 @@ export default {
           sourceID.push(item.id);
         }
       });
-      $this.channelList = channelList;
-      $this.selectedData.source_id = sourceID;
-      // 日期维度未选择的情况下，部门选中后，需要默认将日维度选中
-      if(!$this.dateSelected){
-        $this.dateDimension.forEach(function(item,index){
-          if(index==0){
-            item.isOn = true;
-            $this.dateSelected = true;
-          }
-        });
-      }
-      // 部门有被选中的，且默认时间是空的情况下，需要给默认时间一个默认时间范围
-      if($this.selectedData.source_id.length>0&&(!$this.selectedData.dateDefault||$this.selectedData.dateDefault.length==0)){
-        if($this.selectedData.isMonth){
-          $this.selectedData.dateDefault = $this.getNearMonth();
-        }else{
-          $this.selectedData.dateDefault = $this.getNearDay();
-        }
-      }
-      // 初始第一次部门被选中（即此时只有一个部门被选中），日维度需默认将询盘个数分析、询盘地区分析选中，月维度需将所有分析项选中
-      if($this.selectedData.source_id.length==1&&$this.selectedData.type.length==0){
-        var contrastList = $this.contrastList;
-        var selectedContrastType = [];
-        var selectedType = [];
-        contrastList.forEach(function(item){
-          if($this.selectedData.isMonth){
-            item.isOn = true;
-            item.disabled = false;
-            selectedContrastType.push(item.id);
-            selectedType.push(item.value);
-          }else{
-            if(item.value=="enquiriesFew"){
-              item.isOn = true;
-              selectedContrastType.push(item.id);
-              selectedType.push(item.value);
-            }
-          }
-        });
-        $this.selectedType = selectedType;
-        $this.selectedData.type = selectedContrastType;
-        $this.contrastList = contrastList;
-      }
-      // 部门有被选中的，且只有一个部门被选中的情况下，对比部门中，当前被选中部门需被禁用不可选（不能自己和自己在部门维度比）,部门选中超过1个或没有被选中的，则对比部门不需要有禁用状态
-      if($this.selectedData.source_id.length==1){
-        var contrastSourceList = $this.contrastSourceList;
-        contrastSourceList.forEach(function(item){
-          if(item.id == $this.selectedData.source_id[0]){
-            item.disabled = true;
-          }
-        });
-        $this.contrastSourceList = contrastSourceList;
-      }else{
-        var contrastSourceList = $this.contrastSourceList;
-        contrastSourceList.forEach(function(item){
-          item.disabled = false;
-        });
-        $this.contrastSourceList = contrastSourceList;
-      }
-      $this.getSourceName();
+      $this.searchData.source_id=sourceID;
       $this.getSearchData();
     },
-    //组装部门选中名字
-    getSourceName(){
-      var $this = this;
-      var channelList = $this.channelList;
-      var groupName = "";
-      var fontArr = [];
-      channelList.forEach(function(item,index){
-        if(item.isOn){
-          fontArr.push(item.name);
-        }
-      })
-      groupName = fontArr.join("、");
-      $this.groupName = groupName;
+    //点击时间搜索
+    handleData(){
+      var $this=this;
+      $this.getSearchData();
     },
-    // 日期维度点击事件
-    dimensionChangeHandler(obj){
-      var $this = this;
-      if(!obj.isOn){
-        var dateDimension = $this.dateDimension;
-        dateDimension.forEach(function(item){
-          if(item.value==obj.value){
-            item.isOn = true;
-            $this.dateSelected = true;
-            if(item.value=="month"){
-              $this.selectedData.isMonth = true;
-            }else{
-              $this.selectedData.isMonth = false;
-            }
-          }else{
-            item.isOn = false;
-          }
+    // 重置搜索数据
+    ChannelBtn(){
+        var $this=this;
+        $this.channelList.forEach(function(item,index){
+            item.isOn=false;
         });
-        $this.dateDimension = dateDimension;
-        // 切换日期维度，对比时间清空，默认时间给一个默认时间范围
-        if($this.selectedData.isMonth){
-          $this.selectedData.dateDefault = $this.getNearMonth();
-          $this.selectedData.dateContrast = [];
-        }else{
-          $this.selectedData.dateDefault = $this.getNearDay();
-          $this.selectedData.dateContrast = [];
-        }
-        // 切换日期维度，分析项只在月时可选的，切换到日维度时，需禁用，且清除选中状态；切换到月维度时，则需解除禁用并全部选中
-        var contrastList = $this.contrastList;
-        var selectedContrastType = [];
-        var selectedType = [];
-        contrastList.forEach(function(item,index){
-          if($this.selectedData.isMonth){
-            item.isOn = true;
-            item.disabled = false;
-            if($this.selectedData.comparesource_id.length>0||$this.selectedData.comparesource_id.length>0||$this.selectedData.isDateCompare){
-              if(item.value=='qualityAnalysis'){
-                item.isOn = false;
-                item.disabled = true;
-              }
-            }
-          }else{
-            item.isOn = false;
-            item.disabled = true;
-            if(item.value=="enquiriesFew"){
-              item.isOn = true;
-              item.disabled = false;
-            }
-          }
-          if(item.isOn){
-            selectedContrastType.push(item.id);
-            selectedType.push(item.value);
-          }
-        });
-        $this.selectedData.type = selectedContrastType;
-        $this.contrastList = contrastList;
-        $this.selectedType = selectedType;
+        $this.searchData.source_id=[];
+        $this.searchData.data=$this.getNearMonth();
         $this.getSearchData();
-      }
     },
-    // 日期对比点击事件
-    dateCompareChangeHandler(){
+    // 清空数据
+    emptyData(){
+        var $this=this;
+    },
+    //重组搜索数据
+    initsearch(){
       var $this = this;
-      // 只有在对比部门没有被选中的，此时日期对比才是非禁用状态，可点击的
-      if($this.selectedData.comparesource_id.length==0&&$this.dateSelected){
-        if($this.selectedData.isDateCompare){
-          $this.selectedData.isDateCompare = false;
-          if($this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
-            $this.selectedData.dateContrast = [];
-          }
-        }else{
-          $this.selectedData.isDateCompare = true;
-        }
+      var searchData={};
+      if($this.searchData.source_id&&$this.searchData.source_id!=''){
+        searchData.source_id=$this.searchData.source_id;
       }
-      //月维度，日期对比屏蔽质量分析
-      if($this.selectedData.isMonth){            
-        var contrastList=$this.contrastList;
-        var selectedContrastType = [];
-        var selectedType = [];
-        contrastList.forEach(function(item,index){
-          if(item.value=='qualityAnalysis'){
-            if($this.selectedData.isDateCompare){
-              item.isOn=false;
-              item.disabled=true;
-            }else{
-              item.isOn=true;
-              item.disabled=false;
-            }
-          }
-          if(item.isOn){
-            selectedContrastType.push(item.id);
-            selectedType.push(item.value);
-          }
-        });
-        $this.selectedType = selectedType;
-        $this.selectedData.type = selectedContrastType;
-        $this.contrastList = contrastList;
-        $this.getSearchData();
-      }
-    },
-    // 分析项点击事件
-    analysisItemChangeHandler(obj){
-      var $this = this;
-      if(!obj.disabled){
-        var contrastList = $this.contrastList;
-        var selectedContrastType = [];
-        var selectedType = [];
-        contrastList.forEach(function(item,index){
-          if(item.value == obj.value){
-            item.isOn = !item.isOn;
-          }
-          if(item.isOn){
-            selectedContrastType.push(item.id);
-            selectedType.push(item.value);
-          }
-        });
-        $this.selectedType = selectedType;
-        $this.selectedData.type = selectedContrastType;
-        $this.contrastList = contrastList;
-        $this.getSearchData();
-      }
-    },
-    // 添加对比部门点击事件
-    toggleContrast(){
-      this.isContrastShow = !this.isContrastShow;
-    },
-    // 对比部门点击事件
-    contrastGroupChangeHandler(obj){
-      var $this = this;
-      if(!obj.disabled){
-        var selectedContrastGroupID = [];
-        var contrastSourceList = $this.contrastSourceList;
-        contrastSourceList.forEach(function(item,index){
-          if(item.id == obj.id){
-            if(item.isOn){
-              item.isOn = false;
-            }else{
-              item.isOn = true;
-            }
-          }
-          if(item.isOn){
-            selectedContrastGroupID.push(item.id);
-          }
-        });
-        $this.selectedData.comparesource_id = selectedContrastGroupID;
-        $this.contrastSourceList = contrastSourceList;
-      }
-    },
-    // 对比部门添加确定事件
-    saveContrastGroup(){
-      var $this = this;
-      if($this.selectedData.comparesource_id&&$this.selectedData.comparesource_id.length>0){
-          //月维度，部门对比屏蔽质量分析
-          if($this.selectedData.isMonth){            
-            var contrastList=$this.contrastList;
-            var selectedContrastType = [];
-            var selectedType = [];
-            contrastList.forEach(function(item,index){
-              item.isOn=true;
-              item.disabled=false;
-              if(item.value=='qualityAnalysis'){
-                item.isOn=false;
-                item.disabled=true;
-              }
-              if(item.isOn){
-                selectedContrastType.push(item.id);
-                selectedType.push(item.value);
-              }
-            });
-            $this.selectedType = selectedType;
-            $this.selectedData.type = selectedContrastType;
-            $this.contrastList = contrastList;
-          }
-      };
-      $this.isContrastShow = !$this.isContrastShow;
-      if($this.oldContrastSourceID!=$this.selectedData.comparesource_id.join(",")){
-         if($this.selectedData.comparesource_id.length>0){
-              $this.oldContrastSourceID = $this.selectedData.comparesource_id.join(",");
-         }
-        $this.getSearchData();
-      }
-    },
-    // 基础部门删除点击事件
-    deleteDefaultGroup(){
-      var $this = this;
-      // 基础部门被删除，则对比部门选中状态全部清空，基础部门选中状态全部清空，页面数据清空
-      var channelList = $this.channelList;
-      channelList.forEach(function(item,index){
-        item.isOn = false;
-      });
-      $this.channelList = channelList;
-      $this.selectedData.source_id = [];
-      $this.oldContrastSourceID = "";
-      $this.groupName = "";
-      var contrastSourceList = $this.contrastSourceList;
-      contrastSourceList.forEach(function(item,index){
-        item.isOn = false;
-      });
-      $this.contrastSourceList = contrastSourceList;
-      $this.selectedData.comparesource_id = [];
-      $this.clearData();
-    },
-    // 组装请求所需数据
-    searchDataInit(){
-      var $this = this;
-      var searchData = {};
-      if($this.selectedData.dateDefault&&$this.selectedData.dateDefault.length>0){
-        searchData.starttime = formatDate($this.selectedData.dateDefault[0],'/','-');
-        searchData.endtime = formatDate($this.selectedData.dateDefault[1],'/','-');
-      }
-      if($this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0&&$this.selectedData.isDateCompare){
-        searchData.comparestarttime = formatDate($this.selectedData.dateContrast[0],'/','-');
-        searchData.compareendtime = formatDate($this.selectedData.dateContrast[1],'/','-');
-      }
-      if($this.selectedData.source_id.length>0){
-        searchData.source_id = $this.selectedData.source_id;
-      }
-      if($this.selectedData.type.length>0){
-        searchData.type = $this.selectedData.type;
-      }
-      if($this.selectedData.comparesource_id.length>0){
-        searchData.comparesource_id = $this.selectedData.comparesource_id
-      }
-      searchData.is_compare = $this.selectedData.comparesource_id.length>0?2:1;
-      searchData.is_timecopmare = $this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0?2:1;
-      if($this.selectedData.source_id.length==0){
-        $this.tipsInfo = "请选择数据分析的部门";
+      if($this.searchData.data&&$this.searchData.data.length>0){
+        searchData.starttime=$this.searchData.data[0];
+        searchData.endtime=$this.searchData.data[1];
+        $this.searchTime=$this.searchData.data[0]+' ~ '+$this.searchData.data[1];
       }else{
-        if(!$this.selectedData.dateDefault||$this.selectedData.dateDefault.length==0){
-          $this.tipsInfo = "请选择数据分析的日期范围";
-        }else{
-          if($this.selectedData.type.length==0){
-            $this.tipsInfo = "请选择数据分析的分析项";
-          }else{
-            $this.dateInfoTips();
-            if(searchData.is_timecopmare==2&&searchData.starttime&&searchData.endtime){
-              $this.tipsInfo = "当前部门分析页面，展示为："+$this.selectedData.dateDefault[0]+" ~ " + $this.selectedData.dateDefault[1]+" 与 "+$this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1]+" 的日期对比数据信息。"+$this.tipsItem;
-            }
-            if(searchData.is_timecopmare==1&&searchData.starttime&&searchData.endtime){
-              $this.tipsInfo = "当前部门分析页面，展示为："+$this.selectedData.dateDefault[0]+" ~ " + $this.selectedData.dateDefault[1]+" 的数据信息。"+$this.tipsItem;
-            }
-          }
-        }
+          $this.searchTime='';
       }
       return searchData;
     },
-    // 清空数据
-    clearData(){
-      var $this = this;
-      $this.isDefaultPage = false;
-      $this.defaultChartData = [];
-    },
     getSearchData(){
       var $this = this;
-      $this.isFilter = true;
-      $this.judgeChartStatus();
-      var searchData = $this.searchDataInit();
-      $this.clearData();
-      if(searchData.source_id&&searchData.starttime&&searchData.endtime&&searchData.type){
-        $this.$store.dispatch('ownpush/getOwnChinasourcecountAction', searchData).then(res=>{
-         if(res.status){
-            $this.filterDataClump(res);
+      var searchData={};
+      searchData=$this.initsearch();
+      $this.emptyData();
+      $this.$store.dispatch('ownpush/getOwnChinasourcedefaultAction', searchData).then(res=>{
+          if(res.status){
+            var sourceData=[];
+            //  消费
+            $this.moneylist=$this.ChannelData(res.moneylist,'allmoney');
+            var moneySource=rankingWithTotalItem($this.moneylist,'value');
+            var moneyObj=$this.sourceRank(moneySource,'消费排行榜','元');
+            sourceData.push(moneyObj);
+            //  询盘
+            $this.xunlist=$this.ChannelData(res.xunlist,'number');
+            var xunSource=rankingWithTotalItem($this.xunlist,'value');
+            var xunObj=$this.sourceRank(xunSource,'询盘排行榜','个');
+            sourceData.push(xunObj);
+            //  成交积分
+            $this.scorelist=$this.ChannelData(res.scorelist,'score');
+            var xunSource=rankingWithTotalItem($this.scorelist,'value');
+            var scoreObj=$this.sourceRank(xunSource,'成交积分排行榜','分');
+            sourceData.push(scoreObj);
+            //  询盘均价
+            var xunAvg=[];
+            $this.moneylist.forEach(function(item,index){
+                var itemObj={}
+                itemObj.id=item.id;
+                itemObj.color=item.color;
+                itemObj.name=item.name;
+                itemObj.value=0;
+                $this.xunlist.forEach(function(items,indexs){
+                    if(items.id==item.id){
+                      if(item.value==0||items.value==0){
+                        itemObj.value=0;
+                      }else{
+                        itemObj.value=(item.value/items.value).toFixed(2)*1;
+                      }
+                    }
+                });
+                xunAvg.push(itemObj);
+            });
+            xunAvg.sort(sortByDesc("value"));
+            var xunAvgSource=rankingWithTotalItem(xunAvg,'value');
+            var xunAvgObj=$this.sourceRank(xunAvgSource,'询盘均价排行榜','元');
+            sourceData.push(xunAvgObj);
+            //  成交积分均价
+            var scoreAvg=[];
+            $this.moneylist.forEach(function(item,index){
+                var itemObj={}
+                itemObj.id=item.id;
+                itemObj.color=item.color;
+                itemObj.name=item.name;
+                itemObj.value=0;
+                $this.scorelist.forEach(function(items,indexs){
+                    if(items.id==item.id){
+                      if(item.value==0||items.value==0){
+                        itemObj.value=0;
+                      }else{
+                        itemObj.value=(item.value/items.value).toFixed(2)*1;
+                      }
+                    }
+                });
+                scoreAvg.push(itemObj);
+            });
+            scoreAvg.sort(sortByDesc("value"));
+            var scoreAvgSource=rankingWithTotalItem(scoreAvg,'value');
+            var scoreAvgObj=$this.sourceRank(scoreAvgSource,'成交积分均价排行榜','元');
+            sourceData.push(scoreAvgObj);
+            //  积分询盘比
+            var scoreAndxun=[];
+            $this.scorelist.forEach(function(item,index){
+                var itemObj={}
+                itemObj.id=item.id;
+                itemObj.color=item.color;
+                itemObj.name=item.name;
+                itemObj.value=0;
+                $this.xunlist.forEach(function(items,indexs){
+                    if(items.id==item.id){
+                      if(item.value==0||items.value==0){
+                        itemObj.value=0;
+                      }else{
+                        itemObj.value=(item.value/items.value).toFixed(2)*1;
+                      }
+                    }
+                });
+                scoreAndxun.push(itemObj);
+            });
+            scoreAndxun.sort(sortByDesc("value"));
+            var scoreAndxunSource=rankingWithTotalItem(scoreAndxun,'value');
+            var scoreAndxunObj=$this.sourceRank(scoreAndxunSource,'积分询盘比排行榜','');
+            sourceData.push(scoreAndxunObj);
+            //  等级
+            //A
+            $this.priceAlist=$this.ChannelData(res.priceAlist,'number');
+            var priceASource=rankingWithTotalItem($this.priceAlist,'value');
+            var priceAObj=$this.sourceRank(priceASource,'成交等级A','个');
+            sourceData.push(priceAObj);
+            //B
+            $this.priceBlist=$this.ChannelData(res.priceBlist,'number');
+            var priceBSource=rankingWithTotalItem($this.priceBlist,'value');
+            var priceBObj=$this.sourceRank(priceBSource,'成交等级B','个');
+            sourceData.push(priceBObj);
+            //C
+            $this.priceClist=$this.ChannelData(res.priceClist,'number');
+            var priceCSource=rankingWithTotalItem($this.priceClist,'value');
+            var priceCObj=$this.sourceRank(priceCSource,'成交等级C','个');
+            sourceData.push(priceCObj);
+            //D
+            $this.priceDlist=$this.ChannelData(res.priceDlist,'number');
+            var priceDSource=rankingWithTotalItem($this.priceDlist,'value');
+            var priceDObj=$this.sourceRank(priceDSource,'成交等级D','个');
+            sourceData.push(priceDObj);
+            //E
+            $this.priceElist=$this.ChannelData(res.priceElist,'number');
+            var priceESource=rankingWithTotalItem($this.priceElist,'value');
+            var priceEObj=$this.sourceRank(priceESource,'成交等级E','个');
+            sourceData.push(priceEObj);            
+            $this.sourceData=sourceData;
           }else{
             $this.$message({
               showClose: true,
@@ -826,1099 +405,57 @@ export default {
               type: 'error',
               duration:6000
             });
-            $this.$router.push({path:`/login?redirect=${$this.$router.currentRoute.fullPath}`});
           }
-        });
-      }
-    },
-    // 组装筛选结果数据
-    filterDataClump(res){
-      var $this = this;
-      var defaultChartData = $this.defaultChartDataClump(res);
-      $this.defaultChartData = defaultChartData;
-      var qualityChartData = $this.qualityChartDataClump(res);
-      $this.qualityChartData = qualityChartData;
-      $this.changeSize();
-    },
-    // 组装默认类型图表数据
-    defaultChartDataClump(res){
-      var $this = this;
-      // 询盘个数
-      var inquiryData = null;
-      if($this.selectedType.includes("enquiriesFew")){
-        inquiryData = {};
-        inquiryData.chartType = "area";
-        // 时间对比
-        if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
-          var dateData = [];
-          // 月维度
-          if($this.selectedData.isMonth){
-            dateData = res.selfmonthxuncompare;
-          }else{
-            // 日维度
-            dateData = res.selfdayxuncompare;
-          }
-          var backData = $this.dateCompare(dateData,'xunnumber');
-          inquiryData.mainData = backData.mainData;
-          inquiryData.dateCompareData = backData.dateCompareData;
-          inquiryData.colorArr = backData.colorArr;
-          if($this.selectedData.source_id.length==1){
-            $this.channelList.forEach(function(item){
-              if(item.id == $this.selectedData.source_id[0]){
-                if($this.selectedData.isMonth){
-                  inquiryData.chartTitle = item.name+"询盘日期对比月趋势";
-                }else{
-                  inquiryData.chartTitle = item.name+"询盘日期对比日趋势";
-                }
-                inquiryData.name = item.name+"询盘统计";
-              }
-            });
-          }else{
-            if($this.selectedData.isMonth){
-              inquiryData.chartTitle = "渠道组合询盘日期对比月趋势";
-            }else{
-              inquiryData.chartTitle = "渠道组合询盘日期对比日趋势";
-            }
-            inquiryData.name = "渠道组合询盘统计";
-          }
-        }else{
-          // 部门对比
-          if($this.selectedData.comparesource_id.length>0){
-            if($this.selectedData.isMonth){
-              inquiryData.chartTitle = "各渠道询盘月趋势对比";
-            }else{
-              inquiryData.chartTitle = "各渠道询盘日趋势对比";
-            }
-            inquiryData.mainData = [];
-            var chartData = []
-            if($this.selectedData.isMonth){
-              // 月维度
-              chartData = res.monthxuntrendcompare;
-            }else{
-              // 日维度
-              chartData = res.dayxuntrendcompare;
-            }
-            inquiryData.colorArr = [];
-            var tongData = groupColor(chartData);
-            tongData.forEach(function(item,index){
-              var newItemArr=[];
-              inquiryData.colorArr.push(item[0].color);
-              item.forEach(function(item1){
-                var itemChart = {};
-                if(index == 0){
-                  if($this.selectedData.source_id.length==1){
-                    $this.channelList.forEach(function(item1){
-                      if(item1.isOn){
-                        itemChart.name = item1.name;
-                      }
-                    });
-                  }else{
-                    itemChart.name="已多选渠道"
-                  }
-                }else{
-                  var selectContrastGroupList = [];
-                  $this.contrastSourceList.forEach(function(item1){
-                    if(item1.isOn){
-                      selectContrastGroupList.push(item1);
-                    }
-                  });
-                  itemChart.name=selectContrastGroupList[index-1].name;
-                }
-                if($this.selectedData.isMonth){
-                  // 月维度
-                  itemChart.key = item1.date;
-                }else{
-                  // 日维度
-                  itemChart.key = item1.date+" "+item1.week;
-                }
-                itemChart.value = item1.xunnumber;
-                itemChart.color = item[0].color;
-                newItemArr.push(itemChart);
-              });
-              inquiryData.mainData.push(newItemArr);
-            });
-            inquiryData.name = "部门询盘统计";
-            var compareData = [];
-            if($this.selectedData.isMonth){
-              var monthxunallnumbercompare=0;
-              if(res.monthxuntrendcompare&&res.monthxuntrendcompare.length){
-                res.monthxuntrendcompare.forEach(function(item,index){                  
-                  if(index==0){
-                      if(item&&item.length>0){
-                        item.forEach(function(items,indexs){
-                          monthxunallnumbercompare+=items.xunnumber;
-                        });
-                      }
-                  }
-                  if(index>0){
-                      if(item&&item.length>0){
-                        item.forEach(function(items,indexs){
-                          if(res.monthxuntrendcompare[0][0].depart.indexOf(items.depart)==-1){
-                            monthxunallnumbercompare+=items.xunnumber;
-                          }
-                        });
-                      }
-                  }
-                });
-              }
-              inquiryData.nowNumber = numSeparate(monthxunallnumbercompare);
-              compareData = res.monthdepartpercentercompare;
-              inquiryData.lastNumber = res.lastmonthxunallnumbercompare;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(monthxunallnumbercompare - res.lastmonthxunallnumbercompare).toFixed(2)*1);
-              inquiryData.status = monthxunallnumbercompare - res.lastmonthxunallnumbercompare>0?'up':monthxunallnumbercompare - res.lastmonthxunallnumbercompare<0?'down':'flat';
-              inquiryData.avgNumber = numSeparate(parseInt(monthxunallnumbercompare/res.monthxuntrendcompare[0].length));
-              if(res.historymaxnumbermonthcompare&&res.historymaxnumbermonthcompare.length>0){
-                inquiryData.historyMaxNumber = numSeparate(res.historymaxnumbermonthcompare[0].number);
-                inquiryData.historyMaxNumberDate = res.historymaxnumbermonthcompare[0].yeartime;
-              }
-              inquiryData.avgTitle = "月平均询盘个数";
-              inquiryData.historyTitle = "月历史峰值";
-            }else{
-              var dayxuntrendcompare=0;
-              if(res.dayxuntrendcompare&&res.dayxuntrendcompare.length){
-                res.dayxuntrendcompare.forEach(function(item,index){
-                  if(index==0){
-                      if(item&&item.length>0){
-                        item.forEach(function(items,indexs){
-                          dayxuntrendcompare+=items.xunnumber;
-                        });
-                      }
-                  }
-                  if(index>0){
-                      if(item&&item.length>0){
-                        item.forEach(function(items,indexs){
-                          if(res.dayxuntrendcompare[0][0].depart.indexOf(items.depart)==-1){
-                            dayxuntrendcompare+=items.xunnumber;
-                          }
-                        });
-                      }
-                  }
-                });
-              }
-              inquiryData.nowNumber = numSeparate(dayxuntrendcompare);
-              compareData = res.departpercentercompare;
-              inquiryData.lastNumber = res.lastxunallnumbercompare;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(dayxuntrendcompare - res.lastxunallnumbercompare).toFixed(2)*1);
-              inquiryData.status = dayxuntrendcompare - res.lastxunallnumbercompare>0?'up':dayxuntrendcompare - res.lastxunallnumbercompare<0?'down':'flat';
-              inquiryData.avgNumber = numSeparate(parseInt(dayxuntrendcompare/res.dayxuntrendcompare[0].length));
-              if(res.historymaxnumberdaycompare&&res.historymaxnumberdaycompare.length>0){
-                inquiryData.historyMaxNumber = numSeparate(res.historymaxnumberdaycompare[0].number);
-                inquiryData.historyMaxNumberDate = res.historymaxnumberdaycompare[0].xundate;
-              }
-              inquiryData.avgTitle = "日平均询盘个数";
-              inquiryData.historyTitle = "日历史峰值";
-            }
-            inquiryData.totalChart = [];
-            compareData.forEach(function(item,index){
-              var itemChart = {};
-              itemChart.name = item.departname;
-              itemChart.value = item.xunnumber;
-              inquiryData.totalChart.push(itemChart);
-            });
-            inquiryData.totalChart = singleArrColor(inquiryData.totalChart);
-            inquiryData.totalChart.sort(sortByDesc("value"));
-          }else{
-            // 统计
-            inquiryData.mainData = [];
-            inquiryData.colorArr = [];
-            var tongData = []
-            // 月维度
-            if($this.selectedData.isMonth){
-              var xunallnumber=0;
-              if(res.monthxuntrend&&res.monthxuntrend.length){
-                res.monthxuntrend.forEach(function(item,index){
-                  xunallnumber+=item.xunnumber;
-                });
-              }
-              inquiryData.nowNumber = numSeparate(xunallnumber);
-              tongData.push(res.monthxuntrend);
-              inquiryData.lastNumber = res.lastmonthxunallnumber;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(xunallnumber - res.lastmonthxunallnumber).toFixed(2)*1);
-              inquiryData.status = xunallnumber - res.lastmonthxunallnumber>0?'up':xunallnumber - res.lastmonthxunallnumber<0?'down':'flat';
-              inquiryData.avgNumber = numSeparate(parseInt(xunallnumber/res.monthxuntrend.length));
-              if(res.historymaxnumbermonth&&res.historymaxnumbermonth.length>0){
-                inquiryData.historyMaxNumber = numSeparate(res.historymaxnumbermonth[0].number);
-                inquiryData.historyMaxNumberDate = res.historymaxnumbermonth[0].yeartime;
-              }
-              inquiryData.avgTitle = "月平均询盘个数";
-              inquiryData.historyTitle = "月历史峰值";
-            }else{
-              //现阶段询盘总数
-              var xunallnumber=0;
-              if(res.dayxuntrend&&res.dayxuntrend.length){
-                res.dayxuntrend.forEach(function(item,index){
-                  xunallnumber+=item.xunnumber;
-                });
-              }
-              inquiryData.nowNumber = numSeparate(xunallnumber);
-              tongData.push(res.dayxuntrend);
-              // 日维度
-              inquiryData.lastNumber = res.lastxunallnumber;
-              inquiryData.nowLastNumber = numSeparate(Math.abs(xunallnumber - res.lastxunallnumber).toFixed(2)*1);
-              inquiryData.status = xunallnumber - res.lastxunallnumber>0?'up':xunallnumber - res.lastxunallnumber<0?'down':'flat';
-              inquiryData.avgNumber = numSeparate(parseInt(xunallnumber/res.dayxuntrend.length));
-              if(res.historymaxnumberday&&res.historymaxnumberday.length>0){
-                inquiryData.historyMaxNumber = numSeparate(res.historymaxnumberday[0].number);
-                inquiryData.historyMaxNumberDate = res.historymaxnumberday[0].xundate;
-              }
-              inquiryData.avgTitle = "日平均询盘个数";
-              inquiryData.historyTitle = "日历史峰值";
-            }
-            tongData = groupColor(tongData);
-            inquiryData.colorArr.push(tongData[0][0].color);
-            var newItemArr=[];
-            tongData[0].forEach(function(item,index){
-              if($this.selectedData.isMonth){
-                item.key = item.date;
-              }else{
-                item.key = item.date+" "+item.week;
-              }
-              if($this.selectedData.source_id.length==1){
-                $this.channelList.forEach(function(item1){
-                  if(item1.id == $this.selectedData.source_id[0]){
-                    item.name = item1.name;
-                  }
-                });
-              }else{
-                item.name = "已多选渠道"
-              }
-              item.value = item.xunnumber;
-              newItemArr.push(item);
-            });
-            inquiryData.mainData.push(newItemArr);
-            // 只有一个部门被选中的情况
-            if($this.selectedData.source_id.length==1){
-              $this.channelList.forEach(function(item){
-                  inquiryData.name = "询盘统计";
-                  if($this.selectedData.isMonth){
-                    inquiryData.chartTitle = "询盘月趋势";
-                  }else{
-                    inquiryData.chartTitle = "询盘日趋势";
-                  }
-              });
-            }else{// 多部门被选中              
-              inquiryData.totalChart = [];
-              var compareData = [];
-              inquiryData.name = "渠道组合询盘统计";
-              if($this.selectedData.isMonth){
-                compareData = res.monthdepartpercenter;
-                inquiryData.chartTitle = "渠道组合询盘月趋势";
-              }else{
-                compareData = res.departpercenter;
-                inquiryData.chartTitle = "渠道组合询盘日趋势";
-              }
-              compareData.forEach(function(item){
-                var itemChart = {};
-                itemChart.name = item.departname;
-                itemChart.value = item.xunnumber;
-                inquiryData.totalChart.push(itemChart);
-              });
-              inquiryData.totalChart = singleArrColor(inquiryData.totalChart);
-              inquiryData.totalChart.sort(sortByDesc("value"));
-            }
-          }
-        }
-        inquiryData.totalTitle = "总询盘数量";
-        inquiryData.unit = "（单位：个）";
-        inquiryData.randomStr = randomString(4);
-      }
-      // 成交积分
-      var dealScoreData = null;
-      if($this.selectedType.includes("clinchScore")){
-        dealScoreData = {};
-        dealScoreData.chartType = "line";
-        // 时间对比
-        if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){          
-          var monthscoreallnumber=0;
-          if(res.selfmonthscoretrend&&res.selfmonthscoretrend.length){
-            res.selfmonthscoretrend.forEach(function(item,index){
-              if(item&&item.length>0){
-                item.forEach(function(items,indexs){
-                  monthscoreallnumber+=items.score;
-                });
-              }
-            });
-          }
-          dealScoreData.nowNumber = numSeparate(monthscoreallnumber);
-          var backData = $this.dateCompare(res.selfmonthscoretrend,'score');
-          dealScoreData.mainData = backData.mainData;
-          dealScoreData.dateCompareData = backData.dateCompareData;
-          dealScoreData.colorArr = backData.colorArr;
-          if($this.selectedData.source_id.length==1){
-            $this.channelList.forEach(function(item){
-              if(item.id == $this.selectedData.source_id[0]){
-                if($this.selectedData.isMonth){
-                  dealScoreData.chartTitle = item.name+"成交积分日期对比月趋势";
-                }else{
-                  dealScoreData.chartTitle = item.name+"成交积分日期对比日趋势";
-                }
-                dealScoreData.name = item.name+"成交积分统计";
-              }
-            });
-          }else{
-            if($this.selectedData.isMonth){
-              dealScoreData.chartTitle = "渠道组合成交积分日期对比月趋势";
-            }else{
-              dealScoreData.chartTitle = "渠道组合成交积分日期对比日趋势";
-            }
-            dealScoreData.name = "渠道组合成交积分统计";
-          }
-        }else{
-          // 部门对比
-          if($this.selectedData.comparesource_id.length>0){
-            if($this.selectedData.isMonth){
-              dealScoreData.chartTitle = "各渠道成交积分月趋势对比";
-            }else{
-              dealScoreData.chartTitle = "各渠道成交积分日趋势对比";
-            }
-            dealScoreData.mainData = [];
-            dealScoreData.colorArr = [];
-            var chartData = groupColor(res.monthscoretrendcompare);
-            chartData.forEach(function(item,index){
-              var newItemArr=[];
-              dealScoreData.colorArr.push(item[0].color);
-              item.forEach(function(item1){
-                var itemChart = {};
-                if(index == 0){
-                  if($this.selectedData.source_id.length==1){
-                    $this.channelList.forEach(function(item1){
-                      if(item1.isOn){
-                        itemChart.name = item1.name;
-                      }
-                    });
-                  }else{
-                    itemChart.name="已多选渠道"
-                  }
-                }else{
-                  var selectContrastGroupList = [];
-                  $this.contrastSourceList.forEach(function(item1){
-                    if(item1.isOn){
-                      selectContrastGroupList.push(item1);
-                    }
-                  });
-                  itemChart.name=selectContrastGroupList[index-1].name;
-                }
-                itemChart.key = item1.date;
-                itemChart.value = Math.floor(item1.score*100)/100;
-                itemChart.color = item[0].color;
-                newItemArr.push(itemChart);
-              });
-              dealScoreData.mainData.push(newItemArr);
-            });
-            dealScoreData.name = "部门成交积分统计";
-            var monthscoreallnumbercompare=0;
-            if(res.monthscoretrendcompare&&res.monthscoretrendcompare.length){
-              res.monthscoretrendcompare.forEach(function(item,index){
-                  if(index==0){
-                    if(item&&item.length>0){
-                      item.forEach(function(items,indexs){
-                        monthscoreallnumbercompare+=items.score;
-                      });
-                    }
-                  }
-                  if(index>0){
-                      if(item&&item.length>0){
-                        item.forEach(function(items,indexs){
-                          if(res.monthscoretrendcompare[0][0].depart.indexOf(items.depart)==-1){
-                            monthscoreallnumbercompare+=items.score;
-                          }
-                        });
-                      }
-                  }
-              });
-            }
-            dealScoreData.nowNumber = numSeparate(Math.floor(monthscoreallnumbercompare*100)/100);
-            dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumbercompare*100)/100;
-            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100).toFixed(2)*1);
-            dealScoreData.status = Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100>0?'up':Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthscoreallnumbercompare*100)/100<0?'down':'flat';
-            dealScoreData.avgNumber = numSeparate((Math.floor(monthscoreallnumbercompare/res.monthscoretrendcompare[0].length*100)/100).toFixed(2)*1);
-            if(res.historymaxscoremonthcompare&&res.historymaxscoremonthcompare.length>0){
-              dealScoreData.historyMaxNumber = numSeparate(Math.floor(res.historymaxscoremonthcompare[0].score*100)/100);
-              dealScoreData.historyMaxNumberDate = res.historymaxscoremonthcompare[0].yeartime;
-            }
-            dealScoreData.avgTitle = "月平均成交积分";
-            dealScoreData.historyTitle = "月历史峰值";
-            dealScoreData.totalChart = [];
-            if(res.monthdepartscorepercentercompare&&res.monthdepartscorepercentercompare.length>0){
-                res.monthdepartscorepercentercompare.forEach(function(item){
-                  var itemChart = {};
-                  itemChart.name = item.departname;
-                  itemChart.value = Math.floor(item.score*100)/100;
-                  dealScoreData.totalChart.push(itemChart);
-                });
-                dealScoreData.totalChart = singleArrColor(dealScoreData.totalChart);
-                dealScoreData.totalChart.sort(sortByDesc("value"));
-            };
-          }else{
-            // 统计
-            dealScoreData.mainData = [];
-            dealScoreData.colorArr = [];
-            var monthscoreallnumber=0;
-            if(res.monthscoretrend&&res.monthscoretrend.length){
-              res.monthscoretrend.forEach(function(item,index){
-                    monthscoreallnumber+=item.score;
-              });
-            }
-            dealScoreData.nowNumber = numSeparate(Math.floor(monthscoreallnumber*100)/100);
-            var tongData = groupColor([res.monthscoretrend]);
-            dealScoreData.colorArr.push(tongData[0][0].color);
-            var newItemArr=[];
-            tongData[0].forEach(function(item,index){
-              item.key = item.date;
-              item.value = Math.floor(item.score*100)/100;
-              if($this.selectedData.source_id.length==1){
-                $this.channelList.forEach(function(item1){
-                  if(item1.id == $this.selectedData.source_id[0]){
-                    item.name = item1.name;
-                  }
-                });
-              }else{
-                item.name = "已多选渠道"
-              }
-              newItemArr.push(item);
-            });
-            dealScoreData.mainData.push(newItemArr);
-            dealScoreData.lastNumber = Math.floor(res.lastmonthscoreallnumber*100)/100;
-            dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100).toFixed(2)*1);
-            dealScoreData.status = Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100>0?'up':Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100<0?'down':'flat';
-            dealScoreData.avgNumber = numSeparate((Math.floor(monthscoreallnumber/res.monthscoretrend.length*100)/100).toFixed(2)*1);
-            if(res.historymaxscoremonth&&res.historymaxscoremonth.length>0){
-                dealScoreData.historyMaxNumber = numSeparate(Math.floor(res.historymaxscoremonth.length>0?res.historymaxscoremonth[0].score:0*100)/100);
-                dealScoreData.historyMaxNumberDate = res.historymaxscoremonth.length>0?res.historymaxscoremonth[0].yeartime:0;
-            }
-            dealScoreData.avgTitle = "月平均成交积分";
-            dealScoreData.historyTitle = "月历史峰值";
-            // 只有一个部门被选中的情况
-            if($this.selectedData.source_id.length==1){
-              $this.channelList.forEach(function(item){
-                  if($this.selectedData.isMonth){
-                    dealScoreData.chartTitle = "成交积分月趋势";
-                  }else{
-                    dealScoreData.chartTitle = "成交积分日趋势";
-                  }
-                  dealScoreData.name = "成交积分统计";
-              });
-            }else{// 多部门被选中
-              if($this.selectedData.isMonth){
-                dealScoreData.chartTitle = "渠道组合成交积分月趋势";
-              }else{
-                dealScoreData.chartTitle = "渠道组合成交积分日趋势";
-              }
-              dealScoreData.name = "渠道组合成交积分统计"; 
-              dealScoreData.totalChart = [];
-              if(res.monthdepartscorepercenter&&res.monthdepartscorepercenter.length>0){
-                  res.monthdepartscorepercenter.forEach(function(item){
-                    var itemChart = {};
-                    itemChart.name = item.departname;
-                    itemChart.value =  Math.floor(item.score*100)/100;
-                    dealScoreData.totalChart.push(itemChart);
-                  });
-                  dealScoreData.totalChart = singleArrColor(dealScoreData.totalChart);
-                  dealScoreData.totalChart.sort(sortByDesc("value"));
-              };
-            }
-          }
-        }
-        dealScoreData.totalTitle = "总成交积分";
-        dealScoreData.unit = "（单位：分）";
-        dealScoreData.randomStr = randomString(4);
-      }
-
-      // 消费分析
-      var costCountData = null;
-      if($this.selectedType.includes("consumptionAnalysis")){
-        costCountData = {};
-        costCountData.chartType = "area";
-        // 时间对比
-        if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
-          var selfmonthmoneycompare=0;
-          if(res.selfmonthmoneycompare&&res.selfmonthmoneycompare.length){
-            res.selfmonthmoneycompare.forEach(function(item,index){
-              if(item&&item.length>0){
-                item.forEach(function(items,indexs){
-                  selfmonthmoneycompare+=items.score;
-                });
-              }
-            });
-          }
-          costCountData.nowNumber = numSeparate(Math.floor(selfmonthmoneycompare*10)/10);
-          var backData = $this.dateCompare(res.selfmonthmoneycompare,'money');
-          costCountData.mainData = backData.mainData;
-          costCountData.dateCompareData = backData.dateCompareData;
-          costCountData.colorArr = backData.colorArr;
-          if($this.selectedData.source_id.length==1){
-            $this.channelList.forEach(function(item){
-              if(item.id == $this.selectedData.source_id[0]){
-                if($this.selectedData.isMonth){
-                  costCountData.chartTitle = item.name+"消费日期对比月趋势";
-                }else{
-                  costCountData.chartTitle = item.name+"消费日期对比日趋势";
-                }
-                costCountData.name = item.name+"消费统计";
-              }
-            });
-          }else{
-            if($this.selectedData.isMonth){
-              costCountData.chartTitle = "渠道组合消费日期对比月趋势";
-            }else{
-              costCountData.chartTitle = "渠道组合消费日期对比日趋势";
-            }
-            
-            costCountData.name = "渠道组合消费统计";
-          }
-        }else{
-          // 部门对比
-          if($this.selectedData.comparesource_id.length>0){
-            if($this.selectedData.isMonth){
-              costCountData.chartTitle = "各渠道消费月趋势对比";
-            }else{
-              costCountData.chartTitle = "各渠道消费日趋势对比";
-            }
-            costCountData.mainData = [];
-            costCountData.colorArr = [];
-            var chartData = groupColor(res.monthmoneytrendcompare);
-            chartData.forEach(function(item,index){
-              var newItemArr=[];
-              costCountData.colorArr.push(item[0].color);
-              item.forEach(function(item1){
-                var itemChart = {};
-                if(index == 0){
-                  if($this.selectedData.source_id.length==1){
-                    $this.channelList.forEach(function(item1){
-                      if(item1.isOn){
-                        itemChart.name = item1.name;
-                      }
-                    });
-                  }else{
-                    itemChart.name="已多选渠道"
-                  }
-                }else{
-                  var selectContrastGroupList = [];
-                  $this.contrastSourceList.forEach(function(item1){
-                    if(item1.isOn){
-                      selectContrastGroupList.push(item1);
-                    }
-                  });
-                  itemChart.name=selectContrastGroupList[index-1].name;
-                }
-                itemChart.key = item1.date;
-                itemChart.value = Math.floor(item1.money*10)/10;
-                itemChart.color = item[0].color;
-                newItemArr.push(itemChart);
-              });
-              costCountData.mainData.push(newItemArr);
-            });
-            costCountData.name = "部门消费统计";
-            var monthmoneytrendcompare=0;
-            if(res.monthmoneytrendcompare&&res.monthmoneytrendcompare.length){
-              res.monthmoneytrendcompare.forEach(function(item,index){
-                  if(index==0){
-                    if(item&&item.length>0){
-                      item.forEach(function(items,indexs){
-                        monthmoneytrendcompare+=items.money;
-                      });
-                    }
-                  }
-                  if(index>0){
-                      if(item&&item.length>0){
-                        item.forEach(function(items,indexs){
-                          if(res.monthmoneytrendcompare[0][0].depart.indexOf(items.depart)==-1){
-                            monthmoneytrendcompare+=items.money;
-                          }
-                        });
-                      }
-                  }
-              });
-            }
-            costCountData.nowNumber = numSeparate(Math.floor(monthmoneytrendcompare*100)/100);
-            costCountData.lastNumber = Math.floor(res.lastmonthmoneyallnumbercompare*100)/100;
-            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthmoneytrendcompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10).toFixed(2)*1);
-            costCountData.status = Math.floor(monthmoneytrendcompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10>0?'up':Math.floor(monthmoneytrendcompare*10)/10 - Math.floor(res.lastmonthmoneyallnumbercompare*10)/10<0?'down':'flat';
-            costCountData.avgNumber = numSeparate((Math.floor(monthmoneytrendcompare/res.monthmoneytrendcompare[0].length*10)/10).toFixed(2)*1);
-            if(res.historymaxmoneymonthcompare&&res.historymaxmoneymonthcompare.length>0){
-                costCountData.historyMaxNumber = numSeparate(Math.floor(res.historymaxmoneymonthcompare[0].allmoney*10)/10);
-                costCountData.historyMaxNumberDate = res.historymaxmoneymonthcompare[0].yeartime;
-            }
-            costCountData.avgTitle = "月平均消费";
-            costCountData.historyTitle = "月历史峰值";
-            costCountData.totalChart = [];
-            if(res.monthdepartmoneypercentercompare&&res.monthdepartmoneypercentercompare.length>0){
-                res.monthdepartmoneypercentercompare.forEach(function(item){
-                  var itemChart = {};
-                  itemChart.name = item.departname;
-                  itemChart.value = Math.floor(item.money*10)/10;
-                  costCountData.totalChart.push(itemChart);
-                });
-                costCountData.totalChart = singleArrColor(costCountData.totalChart);
-                costCountData.totalChart.sort(sortByDesc("value"));
-            };
-          }else{
-            // 统计
-            costCountData.mainData = [];
-            costCountData.colorArr = [];
-            var monthmoneyallnumber=0;
-            if(res.monthmoneytrend&&res.monthmoneytrend.length){
-              res.monthmoneytrend.forEach(function(item,index){
-                    monthmoneyallnumber+=item.money;
-              });
-            }
-            costCountData.nowNumber = numSeparate(Math.floor(monthmoneyallnumber*10)/10);
-            var tongData = groupColor([res.monthmoneytrend]);
-            costCountData.colorArr.push(tongData[0][0].color); 
-            var newItemArr=[];
-            tongData[0].forEach(function(item,index){
-              item.key = item.date;
-              item.value = Math.floor(item.money*10)/10;
-              if($this.selectedData.source_id.length==1){
-                $this.channelList.forEach(function(item1){
-                  if(item1.id == $this.selectedData.source_id[0]){
-                    item.name = item1.name;
-                  }
-                });
-              }else{
-                item.name = "已多选渠道"
-              }
-              newItemArr.push(item);
-            });
-            costCountData.mainData.push(newItemArr);
-            costCountData.lastNumber = Math.floor(res.lastmonthmoneyallnumber*10)/10;
-            costCountData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyallnumber*10)/10).toFixed(2)*1);
-            costCountData.status = Math.floor(monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyallnumber*10)/10>0?'up':Math.floor(monthmoneyallnumber*10)/10 - Math.floor(res.lastmonthmoneyallnumber*10)/10<0?'down':'flat';
-            costCountData.avgNumber = numSeparate((Math.floor(monthmoneyallnumber/res.monthmoneytrend.length*100)/100).toFixed(2)*1);
-            if(res.historymaxmoneymonth&&res.historymaxmoneymonth.length>0){
-                costCountData.historyMaxNumber = numSeparate(Math.floor(res.historymaxmoneymonth[0].allmoney*10)/10);
-                costCountData.historyMaxNumberDate = res.historymaxmoneymonth[0].yeartime;
-            }
-            costCountData.avgTitle = "月平均消费";
-            costCountData.historyTitle = "月历史峰值";
-            // 只有一个部门被选中的情况
-            if($this.selectedData.source_id.length==1){
-              $this.channelList.forEach(function(item){
-                  if($this.selectedData.isMonth){
-                    costCountData.chartTitle = "消费月趋势";
-                  }else{
-                    costCountData.chartTitle = "消费日趋势";
-                  }
-                  costCountData.name = "消费统计"; 
-              });
-            }else{// 多部门被选中
-              if($this.selectedData.isMonth){
-                costCountData.chartTitle = "渠道组合消费月趋势";
-              }else{
-                costCountData.chartTitle = "渠道组合消费日趋势";
-              }
-              costCountData.name = "渠道组合消费统计";
-              costCountData.totalChart = [];
-              if(res.monthdepartmoneypercenter&&res.monthdepartmoneypercenter.length>0){
-                  res.monthdepartmoneypercenter.forEach(function(item){
-                    var itemChart = {};
-                    itemChart.name = item.departname;
-                    itemChart.value = Math.floor(item.money*10)/10;
-                    costCountData.totalChart.push(itemChart);
-                  });
-                  costCountData.totalChart = singleArrColor(costCountData.totalChart);
-                  costCountData.totalChart.sort(sortByDesc("value"));
-              };
-            }
-          }
-        }
-        costCountData.totalTitle = "总消费";
-        costCountData.unit = "（单位：万元）";
-        costCountData.randomStr = randomString(4);
-      }
-      var defaultChartData = [];
-      if(costCountData){
-        defaultChartData.push(costCountData);
-      }
-      if(inquiryData){
-        defaultChartData.push(inquiryData);
-      }
-      if(dealScoreData){
-        defaultChartData.push(dealScoreData);
-      }
-      return defaultChartData;
-    },
-    //质量分析
-    qualityChartDataClump(res){
-      var $this = this;
-      var qualityData = null;
-      if($this.selectedType.includes("qualityAnalysis")){
-        qualityData=[]
-        var mainQuality={};
-        var enquirieDate={};
-        var scoreDate={};
-        var moneyDate={};
-        enquirieDate.name='询盘个数';
-        enquirieDate.unit='（单位：个）';
-        enquirieDate.unitEnd='个';
-        enquirieDate.mainDate=[];
-        scoreDate.name='成交积分';
-        scoreDate.unit='（单位：分）';
-        scoreDate.unitEnd='分';
-        scoreDate.mainDate=[];
-        moneyDate.name='消费';
-        moneyDate.unit='（单位：元）';
-        moneyDate.unitEnd='元';
-        moneyDate.mainDate=[];
-
-        var moneyArr=res.monthmoneypercenter;     //消费占比
-        moneyDate.mainDate=$this.clumpQuality(moneyArr,'消费占比');
-        var xunArr=res.monthxuntrendpercenter;    //询盘占比
-        enquirieDate.mainDate=$this.clumpQuality(xunArr,'询盘占比');
-        var scoreArr=res.monthscoretrendpercenter;//积分占比
-        scoreDate.mainDate=$this.clumpQuality(scoreArr,'积分占比');
-
-        var tableDate=[];
-        res.monthxuntrendpercenter.forEach(function(item,index){
-          item.id=index+1;
-          tableDate.push(item);
-        });
-        tableDate.forEach(function(item){
-          res.monthscoretrendpercenter.forEach(function(items){
-             if(item.date==items.date){
-               item.score=items.score;
-             }
-          });
-        });
-        tableDate.forEach(function(item){
-          res.monthmoneypercenter.forEach(function(items){
-             if(item.date==items.date){
-               item.money=items.money;
-             }
-          });
-        });
-        mainQuality.tableBom=false;
-        mainQuality.tableHeight='auto';
-        if(tableDate.length>6){
-          mainQuality.tableHeight='351px';
-          mainQuality.tableBom=true;
-        }
-        tableDate.sort(function(a,b){return b['id']-a['id']});
-        mainQuality.isTable = false;
-        mainQuality.tableDate = tableDate;
-        mainQuality.enquirieDate = enquirieDate;
-        mainQuality.scoreDate = scoreDate;
-        mainQuality.moneyDate = moneyDate;
-        mainQuality.randomStr1 = randomString(4);
-        mainQuality.randomStr2 = randomString(4);
-        mainQuality.randomStr3 = randomString(4);
-        mainQuality.title = '质量分析';
-        mainQuality.inquiryCountColor = ['#0079e6','#f56463','#00c6ff','#f09614','#7ae5a6','#a1a1fe','#87cefc','#ff4d18','#28b391','#ce19a6','#eac9c4','#f0e266','#66c2a9','#d9e897','#aedf84','#d3f5d4','#c19878','#909c9a','#779ade'];
-        qualityData.push(mainQuality);
-      }
-      return qualityData;
-    },
-    clumpQuality(dataArr,TagName){
-        var $this=this;
-        var itemData = [];
-        dataArr.forEach(function(item,index){
-          var itemInquiryCount = {};
-          itemInquiryCount.name = item.date;
-          if(TagName=='询盘占比'){
-              itemInquiryCount.value = item.xunnumber;
-          }
-          if(TagName=='积分占比'){
-              itemInquiryCount.value = item.score;
-          }
-          if(TagName=='消费占比'){
-              itemInquiryCount.value = item.money;
-          }
-          itemData.push(itemInquiryCount);
-        });
-        return itemData;
-    },
-    // 时间对比数据封装函数
-    dateCompare(dataArr,key,isMulit){
-      var $this = this;
-      // 默认时间数据条数多于对比时间数据条数
-      var tongData = groupDateColor(dataArr);
-      var backData = {};
-      backData.mainData = [];
-      backData.colorArr = [];
-      tongData.forEach(function(item){
-        backData.colorArr.push(item[0].color);
       });
-      if(tongData[0].length>=tongData[1].length){
-        var newChartOne=[];
-        var newChartTwo=[];
-        for(var i=0;i<tongData[0].length;i++){
-          var itemChart0 = {};
-          var itemChart1 = {};
-          if(tongData[1][i]){
-            itemChart0.key = tongData[0][i].date+"&"+tongData[1][i].date;
-            itemChart0.name = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
-            itemChart1.key = tongData[0][i].date+"&"+tongData[1][i].date;
-            itemChart1.name = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1];
-            if(key == "score"||key=="money"){
-              itemChart1.value = Math.floor(tongData[1][i][key]*100)/100;
-            }else{
-              itemChart1.value = tongData[1][i][key];
-            }
-            if(key=="anumber"){
-              itemChart1.user = tongData[1][i].user;
-            }
-            itemChart1.color = tongData[1][0].color;
-          }else{
-            itemChart0.key = tongData[0][i].date+"&";
-            itemChart0.name = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
-            itemChart1.key = tongData[0][i].date+"&";
-            itemChart1.name = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1];
-            itemChart1.value = null;
-            itemChart1.color = tongData[1][0].color;
-            if(key=="anumber"){
-              itemChart1.user = [];
-            }
-          }
-          if(key == "score"||key=="money"){
-            itemChart0.value = Math.floor(tongData[0][i][key]*100)/100;
-          }else{
-            itemChart0.value = tongData[0][i][key];
-          }
-          if(key=="anumber"){
-            itemChart0.user = tongData[0][i].user;
-          }
-          itemChart0.color = tongData[0][0].color;
-          newChartOne.push(itemChart0);
-          newChartTwo.push(itemChart1);
-        }
-        backData.mainData.push(newChartOne);
-        backData.mainData.push(newChartTwo);
+    },
+    sourceRank(dateArr,Name,Tag,isLevel){
+      var itemObj={};
+      itemObj.mainArr=dateArr;
+      itemObj.name=Name;
+      itemObj.unit=Tag;
+      itemObj.randomStr = randomString(4);
+      if(Name.indexOf('询盘均价排行榜')>=0){
+        itemObj.isavg='消费/询盘';
+      }else if(Name.indexOf('成交积分均价排行榜')>=0){
+        itemObj.isavg='消费/成交积分';
+      }else if(Name.indexOf('积分询盘比排行榜')>=0){
+        itemObj.isavg='成交积分/询盘';
       }else{
-        var newChartOne=[];
-        var newChartTwo=[];
-        for(var i=0;i<tongData[1].length;i++){
-          var itemChart0 = {};
-          var itemChart1 = {};
-          if(tongData[0][i]){
-            itemChart1.key = tongData[0][i].date+"&"+tongData[1][i].date;
-            itemChart1.name = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1];
-            itemChart0.key = tongData[0][i].date+"&"+tongData[1][i].date;
-            itemChart0.name = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
-            if(key == "score"||key=="money"){
-              itemChart0.value = Math.floor(tongData[0][i][key]*100)/100;
-            }else{
-              itemChart0.value = tongData[0][i][key];
-            }
-            if(key=="anumber"){
-              itemChart0.user = tongData[0][i].user;
-            }
-            itemChart0.color = tongData[0][0].color;
-          }else{
-            itemChart1.key = "&"+tongData[1][i].date;
-            itemChart1.name = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1];
-            itemChart0.key = "&"+tongData[1][i].date;
-            itemChart0.name = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
-            itemChart0.value = null;
-            itemChart0.color = tongData[0][0].color;
-            if(key=="anumber"){
-              itemChart0.user = [];
-            }
-          }
-          if(key == "score"||key=="money"){
-            itemChart1.value = Math.floor(tongData[1][i][key]*100)/100;
-          }else{
-            itemChart1.value = tongData[1][i][key];
-          }
-          if(key=="anumber"){
-            itemChart1.user = tongData[1][i].user;
-          }
-          itemChart1.color = tongData[1][0].color;
-          newChartOne.push(itemChart0);
-          newChartTwo.push(itemChart1);
-        }
-        backData.mainData.push(newChartOne);
-        backData.mainData.push(newChartTwo);
+        itemObj.isavg=''
       }
-      backData.dateCompareData = {};
-      backData.dateCompareData.baseValue = 0;
-      backData.dateCompareData.compareValue = 0;
-      tongData.forEach(function(item,index){
-        item.forEach(function(item1){
-          if(index == 0){
-            backData.dateCompareData.baseValue += item1[key];
-          }else{
-            backData.dateCompareData.compareValue += item1[key];
-          }
-        });
-      });
-      if(key == "score"||key == "money"){
-        backData.dateCompareData.baseValue =Math.floor(backData.dateCompareData.baseValue*100)/100;
-        backData.dateCompareData.compareValue = Math.floor(backData.dateCompareData.compareValue*100)/100;
-      }
-      // 时间对比数据
-      backData.dateCompareData.baseDate = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
-      backData.dateCompareData.compareDate = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1]
-      if(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue>0){
-        backData.dateCompareData.status = "up";
-        backData.dateCompareData.baseWidth = "100%";
-        backData.dateCompareData.compareWidth = parseInt(backData.dateCompareData.compareValue/backData.dateCompareData.baseValue*100)+"%";
-      }else if(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue<0){
-        backData.dateCompareData.status = "down";
-        backData.dateCompareData.compareWidth = "100%";
-        backData.dateCompareData.baseWidth = parseInt(backData.dateCompareData.baseValue/backData.dateCompareData.compareValue*100)+"%";
+      if(Name.indexOf('等级')>=0){
+        itemObj.isLevel=true;
       }else{
-        backData.dateCompareData.status = "flat";
-        backData.dateCompareData.baseWidth = "100%";
-        backData.dateCompareData.compareWidth = "100%";
+        itemObj.isLevel=false;
       }
-      backData.dateCompareData.compareNumber = numSeparate(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue).toFixed(1)*1);
-      backData.dateCompareData.compareRate = backData.dateCompareData.compareValue==0?'0%':(Math.abs(backData.dateCompareData.baseValue - backData.dateCompareData.compareValue)/backData.dateCompareData.compareValue*100).toFixed(1)+"%";
-      backData.dateCompareData.baseValue = numSeparate(backData.dateCompareData.baseValue);
-      backData.dateCompareData.compareValue = numSeparate(backData.dateCompareData.compareValue);
-      return backData;
+      return itemObj;
     },
-    // 判断日期维度，跳转参数，添加补充说明信息
-    dateInfoTips(){
-      var $this = this;
-      var itemArr = [];
-      $this.contrastList.forEach(function(item){
-        if(item.isOn){
-          itemArr.push(item.label);
-        }
-      });
-      $this.tipsItem = "（展示项："+itemArr.join("、")+"）";
-    },
-    // 判断当前展示情况
-    judgeChartStatus(){
-      var $this = this;
-      var judgeData = {};
-      judgeData.singleGroupStatic = false;          // 单基础部门统计
-      judgeData.singleGroupDateCompare = false;     // 单基础部门时间对比
-      judgeData.singleGroupTeamCompare = false;     // 单基础部门与其他部门对比
-      judgeData.pluralGroupStatic = false;          // 多基础部门统计
-      judgeData.pluralGroupDateCompare = false;     // 多基础部门的时间对比
-      judgeData.pluralGroupTeamCompare = false;     // 多基础部门与其他部门对比
-      judgeData.pluralGroupTeamSameCompare = false; // 多基础部门与其他部门对比，且有部门同时存在于基础部门与对比部门
-      // 基础部门有被选中的
-      if($this.selectedData.source_id.length>0){
-        // 基础部门有一个被选中
-        if($this.selectedData.source_id.length==1){
-          // 且基础时间有值
-          if($this.selectedData.dateDefault&&$this.selectedData.dateDefault.length>0){
-            // 且对比时间有值，此时是单一部门的时间对比
-            if($this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
-              if($this.selectedData.type.length>0){
-                judgeData.singleGroupDateCompare = true;
-              }
-            }else{
-              // 基础部门选中1个，且基础时间有值，而对比时间无值
-              // 且有对比部门被选中
-              if($this.selectedData.comparesource_id.length>0){
-                if($this.selectedData.type.length>0){
-                  judgeData.singleGroupTeamCompare = true;
-                }
-              }else{
-                // 对比时间无值，对比部门也无值，此情况为单一部门统计
-                if($this.selectedData.type.length>0){
-                  judgeData.singleGroupStatic = true;
-                }
-              }
-            }
+    getfallSort(dateArr){
+      var $this=this;
+      var sourceData=$this.sourceData;
+      var defaultArr=[];
+      sourceData.forEach(function(item,index){
+          if(item.name==dateArr){
+            defaultArr=item.mainArr;
           }
-        }else{
-          // 基础部门有多个被选中
-          // 且基础时间有值
-          if($this.selectedData.dateDefault&&$this.selectedData.dateDefault.length>0){
-            // 且对比时间有值，此时是基础多部门的时间对比
-            if($this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
-              if($this.selectedData.type.length>0){
-                judgeData.pluralGroupDateCompare = true;
-              }
-            }else{
-              // 基础部门选中多个，且基础时间有值，而对比时间无值
-              // 且有对比部门被选中
-              if($this.selectedData.comparesource_id.length>0){
-                if($this.selectedData.type.length>0){
-                  judgeData.pluralGroupTeamCompare = true;
-                  // 判断基础部门与对比部门是否有同一个部门被选中
-                  $this.selectedData.comparesource_id.forEach(function(item){
-                    if($this.selectedData.source_id.includes(item)){
-                      if($this.selectedData.type.length>0){
-                        judgeData.pluralGroupTeamSameCompare = true;
+      });
+      sourceData.forEach(function(item,index){
+          if(item.name!=dateArr){
+              var itemArr=[];
+              defaultArr.forEach(function(items,indexs){
+                  item.mainArr.forEach(function(itemk,indexk){
+                      if(itemk.id==items.id){
+                        itemArr.push(itemk);
                       }
-                    }
                   });
-                }
-              }else{
-                // 对比时间无值，对比部门也无值，此情况为多基础部门统计
-                if($this.selectedData.type.length>0){
-                  judgeData.pluralGroupStatic = true;
-                }
-              }
-            }
+              });
+              item.mainArr=itemArr;
+              $this.sourceData=sourceData;
           }
-        }
-      }
-      $this.judgeData = judgeData;
+      });
     },
-    // 对比部门删除点击事件
-    deleteContrastGroup(id){
-      var $this = this;
-      var contrastSourceList = $this.contrastSourceList;
-      var selectedContrastGroupID = [];
-      contrastSourceList.forEach(function(item,index){
-        if(item.id == id){
-          item.isOn = false;
-        }
-        if(item.isOn){
-          selectedContrastGroupID.push(item.id);
-        }
-      });
-      $this.contrastSourceList = contrastSourceList;
-      $this.selectedData.comparesource_id = selectedContrastGroupID;
-      $this.getSearchData();
-    },
-    // 重置数据
-    resetData(){
-      var $this = this;
-      var baseDepart;
-      $this.tipsInfo="当前部门分析页面，展示为：本年度数据信息。";
-      $this.tipsItem="";
-      $this.channelList.forEach(function(item,index){
-        item.isOn=false;
-        if(index==0){
-          item.isOn=true;
-          baseDepart=item.id;
-          $this.selectedData.source_id.push(item.id);
-          $this.groupName = item.name;
-        }
-      });
-      $this.contrastSourceList.forEach(function(item){
-        item.disabled = false;
-        if(item.id == baseDepart){
-          item.disabled = true;
-        }
-      });
-      $this.contrastList.forEach(function(item,index){
-        item.isOn=false;
-        item.disabled=true;
-        if(item.value=='enquiriesFew'){
-          item.isOn=true;
-          item.disabled=false;
-        }
-      });
-      $this.dateDimension.forEach(function(item,index){
-        item.isOn=false;
-        if(index==0){
-          item.isOn=true;
-        }
-      });
-      $this.selectedData.type=[1];
-      $this.selectedData.dateDefault = $this.getNearDay();
-      $this.selectedData.dateContrast = [];
-      $this.selectedData.is_compare=1;
-      $this.selectedData.comparesource_id = [];
-      $this.selectedData.is_timecopmare=1;
-      $this.selectedData.isMonth=false;
-      $this.selectedData.isDateCompare=false;
-      $this.dateSelected=true;
-      $this.isFilter = false,
-      $this.isContrastShow = false,
-      $this.selectedType=['enquiriesFew'];
-      $this.oldContrastSourceID = "";
-      $this.isDefaultPage = false;
-      $this.judgeData = {};
-      $this.defaultChartData = [];
+    defaultSort(){
+      var $this=this;
       $this.getSearchData();
     },
     // 最近六个月时间周期
@@ -1932,54 +469,9 @@ export default {
       var endMonth = end.getMonth() + 1;
       startMonth = startMonth<10?'0'+startMonth:startMonth;
       endMonth = endMonth<10?'0'+endMonth:endMonth;
-      var startDate = startYear+"/"+startMonth;
-      var endDate = endYear+"/"+endMonth;
+      var startDate = startYear+"-"+startMonth;
+      var endDate = endYear+"-"+endMonth;
       return [startDate,endDate];
-    },
-    // 最近30天时间周期
-    getNearDay(){
-      const end = new Date();
-      const start = new Date();
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-      end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
-      var startYear = start.getFullYear();
-      var startMonth = start.getMonth() +1;
-      var startDay = start.getDate();
-      var endYear = end.getFullYear();
-      var endMonth = end.getMonth() + 1;
-      var endDay = end.getDate();
-      startMonth = startMonth<10?'0'+startMonth:startMonth;
-      startDay = startDay<10?'0'+startDay:startDay;
-      endMonth = endMonth<10?'0'+endMonth:endMonth;
-      endDay = endDay<10?'0'+endDay:endDay;
-      var startDate = startYear+"/"+startMonth+"/"+startDay;
-      var endDate = endYear+"/"+endMonth+"/"+endDay;
-      return [startDate,endDate];
-    },
-    // 滚动悬浮
-    getScroll(){
-      var $this = this;
-      if(!$this.selectedData.isDateCompare && $this.selectedData.source_id.length>0){
-          var scrolltop = $this.$refs.boxPane.scrollTop;
-          var boxheight = $this.$refs.filterbox.offsetHeight;
-          if(scrolltop > parseInt(boxheight) + 20){
-            $this.isFix = true;
-          }else{
-            $this.isFix = false;
-          }
-      }
-    },
-    changeSize(){
-      var $this = this;
-      $this.$nextTick(function () {    
-        var boxHeight=0;
-        boxHeight = document.body.clientHeight-$this.$refs.boxPane.scrollHeight-98;
-        if(boxHeight>=0){
-            $this.boxWidth = $this.$refs.boxPane.offsetWidth - 40;
-        }else{
-            $this.boxWidth = $this.$refs.boxPane.offsetWidth - 50;
-        }
-      });
     }
   }
 }

@@ -14,7 +14,7 @@
           <div class="total-num">
             <div class="txt-num">
             <strong>{{currentData.nowNumber}}</strong>
-            <span><em>环比上年同期</em><b v-bind:class="currentData.status"><i class="svg-i"><svg-icon :icon-class="'data-'+currentData.status" /></i>{{currentData.nowLastNumber}}</b></span></div>
+            <span v-if='currentData.nowLastNumber'><em>环比上年同期</em><b v-bind:class="currentData.status"><i class="svg-i"><svg-icon :icon-class="'data-'+currentData.status" /></i>{{currentData.nowLastNumber}}</b></span></div>
             <div class="txt-font">{{currentData.totalTitle}}</div>
           </div>
           <div class="other-num">
@@ -42,16 +42,12 @@
         </template>
         <div class="item-tab date-panel" v-if="currentType=='date'&&(parentData.singleGroupDateCompare||parentData.pluralGroupDateCompare)">
           <dl class="item-range" style="width:100%">
-          <!--<dl class="item-range" :style="{width:currentData.dateCompareData.baseWidth=='0%'?'50%':currentData.dateCompareData.baseWidth}">-->
             <dt class="flex-box"><span class="flex-content">{{currentData.dateCompareData.baseDate}}</span><strong>{{currentData.dateCompareData.baseValue}}</strong></dt>
             <dd  :style="{width:currentData.dateCompareData.baseWidth=='0%'?'50%':currentData.dateCompareData.baseWidth}"></dd>
-            <!--<dd :style="{width:currentData.dateCompareData.baseWidth=='0%'?'1%':'100%'}"></dd>-->
           </dl>
-          <!--<dl class="item-range" :style="{width:+currentData.dateCompareData.compareWidth=='0%'?'50%':currentData.dateCompareData.compareWidth}">-->
           <dl class="item-range" style="width:100%">
             <dt class="flex-box"><span class="flex-content">{{currentData.dateCompareData.compareDate}}</span><strong>{{currentData.dateCompareData.compareValue}}</strong></dt>
-            <dd :style="{width:currentData.dateCompareData.compareWidth=='0%'?'1%':'100%'}"></dd>
-            <!--<dd :style="{width:currentData.dateCompareData.compareWidth=='0%'?'1%':'100%'}"></dd>-->
+            <dd :style="{width:+currentData.dateCompareData.compareWidth=='0%'?'50%':currentData.dateCompareData.compareWidth}"></dd>
           </dl>
           <div class="num-panel">
             <div class="item-num">

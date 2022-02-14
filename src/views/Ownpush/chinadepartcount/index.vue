@@ -588,6 +588,7 @@ export default {
         mapChartData[0].push(productData);
       }    
       $this.mapChart = mapChartData;
+      console.log($this.mapChart,'$this.mapChart');
       var qualityChartData = $this.qualityChartDataClump(res);
       $this.qualityChartData = qualityChartData;
       var defaultYearData = $this.defaultYearDataClump(res);
@@ -1072,7 +1073,7 @@ export default {
             dealScoreData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100).toFixed(2)*1);
             dealScoreData.status = Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100>0?'up':Math.floor(monthscoreallnumber*100)/100 - Math.floor(res.lastmonthscoreallnumber*100)/100<0?'down':'flat';
             dealScoreData.avgNumber = numSeparate(Math.floor(monthscoreallnumber/res.monthscoretrend.length*100)/100);
-            dealScoreData.historyMaxNumber = numSeparate(Math.floor(res.historymaxscoremonth.length>0?res.historymaxscoremonth[0].score:0*100)/100);
+            dealScoreData.historyMaxNumber = numSeparate(Math.floor((res.historymaxscoremonth.length>0?res.historymaxscoremonth[0].score:0)*100)/100);
             dealScoreData.historyMaxNumberDate = res.historymaxscoremonth.length>0?res.historymaxscoremonth[0].yeartime:0;
             dealScoreData.avgTitle = "月平均成交积分";
             dealScoreData.historyTitle = "月历史峰值";
@@ -1236,7 +1237,7 @@ export default {
             consumptionData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthmoneycompare*100)/100).toFixed(2)*1);
             consumptionData.status = Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthmoneycompare*100)/100>0?'up':Math.floor(monthscoreallnumbercompare*100)/100 - Math.floor(res.lastmonthmoneycompare*100)/100<0?'down':'flat';
             consumptionData.avgNumber = numSeparate(Math.floor(monthscoreallnumbercompare/res.moneymonthcompare[0].length*100)/100);        
-            consumptionData.historyMaxNumber = numSeparate(Math.floor(res.historymaxmoneymonthcompare.length>0?res.historymaxmoneymonthcompare[0].allmoney:0*100)/100);
+            consumptionData.historyMaxNumber = numSeparate(Math.floor((res.historymaxmoneymonthcompare.length>0?res.historymaxmoneymonthcompare[0].allmoney:0)*100)/100);
             consumptionData.historyMaxNumberDate = res.historymaxmoneymonthcompare[0].yeartime;
             consumptionData.avgTitle = "月平均消费";
             consumptionData.historyTitle = "月历史峰值";
@@ -1282,7 +1283,7 @@ export default {
             consumptionData.nowLastNumber = numSeparate(Math.abs(Math.floor(monthmoneyallnumber*100)/100 - Math.floor(res.lastmonthmoneyallnumber*100)/100).toFixed(2)*1);
             consumptionData.status = Math.floor(monthmoneyallnumber*100)/100 - Math.floor(res.lastmonthmoneyallnumber*100)/100>0?'up':Math.floor(monthmoneyallnumber*100)/100 - Math.floor(res.lastmonthmoneyallnumber*100)/100<0?'down':'flat';            
             consumptionData.avgNumber = numSeparate(Math.floor(monthmoneyallnumber/res.monthmoneytend.length*100)/100);            
-            consumptionData.historyMaxNumber = numSeparate(Math.floor(res.historymaxmoneymonth.length>0?res.historymaxmoneymonth[0].allmoney:0*100)/100);            
+            consumptionData.historyMaxNumber = numSeparate(Math.floor((res.historymaxmoneymonth.length>0?res.historymaxmoneymonth[0].allmoney:0)*100)/100);            
             consumptionData.historyMaxNumberDate = res.historymaxmoneymonth.length>0?res.historymaxmoneymonth[0].yeartime:0;
             consumptionData.avgTitle = "月平均消费";
             consumptionData.historyTitle = "月历史峰值";

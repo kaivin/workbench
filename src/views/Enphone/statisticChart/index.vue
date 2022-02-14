@@ -191,6 +191,19 @@
                           </el-checkbox-group>
                         </div>
                       </div>
+                      <div class="team-panel">
+                        <div class="team-header">
+                          <span class="require">性质：</span>                          
+                          <el-select v-model="searchData.ennature" size="small" clearable placeholder="性质" :class="searchData.ennature!=''?'el-xzstate':''" style="width:320px;margin:5px 10px 5px 5px;">
+                              <el-option
+                                  v-for="item in natureList"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                              </el-option>
+                          </el-select>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="ChinaphoneTwo buttonTwo">
@@ -573,6 +586,7 @@ export default {
       checkedOther:[],
       searchData:{
         date:[],
+        ennature:'',
         country:'',
         material:'',
         domain:'',
@@ -580,6 +594,7 @@ export default {
         url:''
       },
       pickerRangeOptions: this.$pickerRangeOptions,
+      natureList:[],
       deviceList:[],
       productList:[],
       sourceList:[],
@@ -923,6 +938,7 @@ export default {
       $this.searchData.domain='';
       $this.searchData.name='';
       $this.searchData.url='';
+      $this.searchData.ennature='';
       $this.searchResult.hoursCount=[];
       $this.searchResult.deviceCount=[];
       $this.searchResult.dayCount=[];
@@ -954,11 +970,24 @@ export default {
     initSearchData(){
       var $this = this;
       var searchData = {};
-      searchData.country = $this.searchData.country;
-      searchData.material = $this.searchData.material;
-      searchData.domain = $this.searchData.domain;
-      searchData.name = $this.searchData.name;
-      searchData.url = $this.searchData.url;
+      if($this.searchData.country&&$this.searchData.country!=''){
+        searchData.country = $this.searchData.country;
+      }
+      if($this.searchData.material&&$this.searchData.material!=''){
+        searchData.material = $this.searchData.material;
+      }
+      if($this.searchData.domain&&$this.searchData.domain!=''){
+        searchData.domain = $this.searchData.domain;
+      }
+      if($this.searchData.name&&$this.searchData.name!=''){
+        searchData.name = $this.searchData.name;
+      }
+      if($this.searchData.url&&$this.searchData.url!=''){
+        searchData.url = $this.searchData.url;
+      }
+      if($this.searchData.ennature&&$this.searchData.ennature!=''){
+        searchData.ennature = $this.searchData.ennature;
+      }
       if($this.searchData.date&&$this.searchData.date.length>0){
         searchData.starttime = $this.searchData.date[0];
         searchData.endtime = $this.searchData.date[1];
@@ -972,9 +1001,15 @@ export default {
       var checkedSns = $this.checkedSns;
       var checkedOther = $this.checkedOther;
       searchData.phoneid = checkedSem.concat(checkedSeo).concat(checkedMedia).concat(checkedSns).concat(checkedOther);
-      searchData.mode = $this.checkedSource;
-      searchData.level_id = $this.checkedLevel;
-      searchData.device = $this.checkedDevice;
+      if($this.checkedSource&&$this.checkedSource!=''){
+        searchData.mode = $this.checkedSource;
+      }
+      if($this.checkedLevel&&$this.checkedLevel!=''){
+        searchData.level_id = $this.checkedLevel;
+      }
+      if($this.checkedDevice&&$this.checkedDevice!=''){
+        searchData.device = $this.checkedDevice;
+      }
       var checkedA1Product = $this.checkedA1Product;
       var checkedA2Product = $this.checkedA2Product;
       var checkedA3Product = $this.checkedA3Product;
@@ -1117,6 +1152,14 @@ export default {
               levelList.push(itemData);
             });
             $this.levelList = levelList;
+            var natureList=[];
+            response.ennature.forEach(function(item,index){
+              var itemData = {};
+              itemData.label = item.name;
+              itemData.value = item.id;
+              natureList.push(itemData);
+            });
+            $this.natureList = natureList;
             $this.isLoading.close();
           }else{
             $this.$message({
