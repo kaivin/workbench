@@ -335,7 +335,7 @@
                   <el-row :gutter="15">
                     <el-col :xs="24">
                       <div class="chart-wrapper">
-                        <div class="chart-header"><span>地区询盘</span></div>
+                        <div class="chart-header"><span>大洲询盘</span></div>
                         <div class="chart-body chartmap-body depsix-table" style="height:540px;text-align:center;padding:30px">
                             <div class="table-panel">
                               <div class="table-chart">
@@ -354,7 +354,7 @@
                                   >
                                   <el-table-column
                                     prop="continent"
-                                    label="地区"
+                                    label="大洲"
                                     >
                                   </el-table-column>
                                   <el-table-column
