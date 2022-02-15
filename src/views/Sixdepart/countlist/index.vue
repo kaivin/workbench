@@ -270,7 +270,8 @@
                     </el-col>
                   </el-row>
                   <el-row :gutter="15">
-                    <el-col :xs="24">
+
+                    <el-col :md="24" :lg="12">
                       <div class="chart-wrapper">
                         <div class="chart-header"><span>热门国家</span></div>
                         <div class="chart-body chartmap-body" style="height:540px;text-align:center;">
@@ -279,6 +280,19 @@
                                 <div id="cluesChart10" class="chart-canvas" ></div>
                             </div>
                           </div>
+                        </div>
+                      </div>
+                    </el-col>
+                    <el-col :md="24" :lg="12">
+                      <div class="chart-wrapper">
+                        <div class="chart-header"><span>大洲询盘占比</span></div>
+                        <div class="chart-body" style="height:540px;">                                              
+                            <div class="abs-canvas" v-if="searchResult.continentCount.length>0">
+                              <div id="cluesChart3" class="chart-canvas"></div>
+                            </div>
+                            <div class="nocount" v-else>
+                              暂无数据
+                            </div>
                         </div>
                       </div>
                     </el-col>
@@ -981,6 +995,12 @@ export default {
                   $this.drawChart2();
                 }else{
                   $this.drawChart2();
+                }
+                if($this.chartlist.pieDevicePlot){
+                  $this.chartlist.pieDevicePlot.dispose();
+                  $this.drawChart3();
+                }else{
+                  $this.drawChart3();
                 }
                 if($this.chartlist.chart){
                   $this.chartlist.chart.dispose();
@@ -2025,6 +2045,73 @@ export default {
         option && myChart.setOption(option);
         $this.chartlist.barPhoneEffectivePlot = myChart;
 
+      }
+    },
+    // 图表功能
+    drawChart3(){
+      var $this = this;
+      if($this.searchResult.continentCount.length>0){
+        var newData = [];
+        $this.searchResult.continentCount.forEach(function(item,index){
+          var objitem={};
+          objitem.value= item.number;
+          objitem.name = item.continent=="" ? "其他":item.continent;
+          newData.push(objitem);
+        });
+        var chartDom = document.getElementById('cluesChart3');
+        var myChart = echarts.init(chartDom);
+        var option;
+        option = {
+          tooltip: {
+            trigger: 'item',
+            formatter(items){
+              var tooltext = `<div class="counttoolTip">
+              <div class="title">${items.name}</div>
+              <div class="bar clearfix">
+                ${items.marker}
+                <span class="name">${items.seriesName}：</span>
+                <span class="num">${items.value}</span>
+              </div>
+              `;
+              return tooltext;
+            }
+          },
+          legend: {
+            orient: 'vertical',
+            right: 'right',
+            top: 'middle',
+            itemWidth: 8,
+            itemHeight: 8,
+            icon: "circle",
+          },
+          color: ["#6395f9","#62daab","#5d7092","#f6bd16","#7666f9"],
+          series: [
+            {
+              name: '询盘个数',
+              type: 'pie',
+              radius: '75%',
+              data: newData,
+              itemStyle: {
+                borderColor: '#ffffff',
+                borderWidth:1,
+              },
+              label:{
+                  normal:{
+                      formatter: function(params){
+                          var str = '';
+                          str = params.name+":"+params.percent.toFixed(1)+"%";
+                          return str
+                      },
+                      position: 'outside',
+                      fontSize: 13,
+                      color: "#666",
+                  }
+                },
+            }
+          ]
+        };
+        option && myChart.setOption(option);
+        $this.chartlist.pieDevicePlot = myChart;
       }
     },
     // 图表功能
