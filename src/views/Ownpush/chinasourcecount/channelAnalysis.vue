@@ -1932,10 +1932,14 @@ export default {
                         var itemObj={};
                         itemObj.color=itemn.color;
                         itemObj.key=itemn.key;
-                        itemObj.name=itemn.name;
-                        if(itemn.value==0||items.value==0||itemn.value==null||items.value==null){
+                        itemObj.name=itemn.name;                       
+                        if((items.value==0&&itemn.value!=0)||(items.value==0&&itemn.value==0)){
                           itemObj.value=0;
-                        }else{
+                        }
+                        if(items.value!=0&&itemn.value==0){
+                          itemObj.value=items.value;
+                        }
+                        if(items.value!=0&&itemn.value!=0){
                           itemObj.value=(items.value/itemn.value).toFixed(1)*1;
                         }
                         itemArr.push(itemObj);
@@ -2003,10 +2007,14 @@ export default {
                         var itemObj={};
                         itemObj.color=itemn.color;
                         itemObj.key=itemn.key;
-                        itemObj.name=itemn.name;
-                        if(itemn.value==0||items.value==0||itemn.value==null||items.value==null){
+                        itemObj.name=itemn.name;                       
+                        if((items.value==0&&itemn.value!=0)||(items.value==0&&itemn.value==0)){
                           itemObj.value=0;
-                        }else{
+                        }
+                        if(items.value!=0&&itemn.value==0){
+                          itemObj.value=items.value;
+                        }
+                        if(items.value!=0&&itemn.value!=0){
                           itemObj.value=(items.value/itemn.value).toFixed(1)*1;
                         }
                         itemArr.push(itemObj);
@@ -2064,20 +2072,24 @@ export default {
             scoreAndenquiriesData.chartType = "area";
             scoreAndenquiriesData.mainData = [];
             scoreAndenquiriesData.colorArr = [$this.enquirieList[0][0].color];
-            $this.costList.forEach(function(item,index){
+            $this.enquirieList.forEach(function(item,index){
               var itemArr=[];
               item.forEach(function(items,indexs){
-                $this.enquirieList.forEach(function(itemm,indexm){
+                $this.costList.forEach(function(itemm,indexm){
                   if(index==indexm){
                     itemm.forEach(function(itemn,indexn){
                       if(items.key==itemn.key){
                         var itemObj={};
                         itemObj.color=itemn.color;
                         itemObj.key=itemn.key;
-                        itemObj.name=itemn.name;
-                        if(itemn.value==0||items.value==0||itemn.value==null||items.value==null){
+                        itemObj.name=itemn.name;                        
+                        if((items.value==0&&itemn.value!=0)||(items.value==0&&itemn.value==0)){
                           itemObj.value=0;
-                        }else{
+                        }
+                        if(items.value!=0&&itemn.value==0){
+                          itemObj.value=items.value;
+                        }
+                        if(items.value!=0&&itemn.value!=0){
                           itemObj.value=(items.value/itemn.value).toFixed(1)*1;
                         }
                         itemArr.push(itemObj);
@@ -2103,12 +2115,12 @@ export default {
         }else{
           // 渠道对比
           if($this.selectedData.comparesource_id.length>0){
-            scoreAndenquiriesData=$this.dateAvg($this.scoreList,$this.enquirieList);
+            scoreAndenquiriesData=$this.dateAvg($this.enquirieList,$this.scoreList);
             scoreAndenquiriesData.chartTitle = "各渠道积分询盘比月趋势对比";
             scoreAndenquiriesData.name = "渠道积分询盘比统计";
             scoreAndenquiriesData.totalChart = [];
           }else{
-            scoreAndenquiriesData=$this.dateAvg($this.scoreList,$this.enquirieList);
+            scoreAndenquiriesData=$this.dateAvg($this.enquirieList,$this.scoreList);
             // 只有一个渠道被选中的情况
             if($this.selectedData.source_id.length==1){
               $this.channelList.forEach(function(item){
@@ -2715,9 +2727,13 @@ export default {
                     itemObj.color=itemn.color;
                     itemObj.key=itemn.key;
                     itemObj.name=itemn.name;
-                    if(itemn.value==0||items.value==0){
+                    if(((items.value==0||items.value==null)&&itemn.value!=0)||(items.value==0&&itemn.value==0)){
                       itemObj.value=0;
-                    }else{
+                    }
+                    if(items.value!=0&&itemn.value==0){
+                      itemObj.value=items.value;
+                    }
+                    if(items.value!=0&&itemn.value!=0){
                       itemObj.value=(items.value/itemn.value).toFixed(1)*1;
                     }
                     itemArr.push(itemObj);

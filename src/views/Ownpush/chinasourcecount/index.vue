@@ -203,6 +203,7 @@ export default {
           itemObj.id=item.id;
           itemObj.name=item.name;
           itemObj.value=0;
+          itemObj.emptyDivisor=false;
           dateArr.forEach(function(items,indexs){
             if(items.source_id==item.id){
               itemObj.value=items[Tag];
@@ -216,6 +217,7 @@ export default {
           itemObj.id=item.id;
           itemObj.name=item.name;
           itemObj.value=0;
+          itemObj.emptyDivisor=false;
           dateArr.forEach(function(items,indexs){
             if(items.source_id==item.id){
               itemObj.value=items[Tag];
@@ -303,70 +305,19 @@ export default {
             var scoreObj=$this.sourceRank(xunSource,'成交积分排行榜','分');
             sourceData.push(scoreObj);
             //  询盘均价
-            var xunAvg=[];
-            $this.moneylist.forEach(function(item,index){
-                var itemObj={}
-                itemObj.id=item.id;
-                itemObj.color=item.color;
-                itemObj.name=item.name;
-                itemObj.value=0;
-                $this.xunlist.forEach(function(items,indexs){
-                    if(items.id==item.id){
-                      if(item.value==0||items.value==0){
-                        itemObj.value=0;
-                      }else{
-                        itemObj.value=(item.value/items.value).toFixed(2)*1;
-                      }
-                    }
-                });
-                xunAvg.push(itemObj);
-            });
+            var xunAvg=$this.avgPlug($this.moneylist,$this.xunlist);
             xunAvg.sort(sortByDesc("value"));
             var xunAvgSource=rankingWithTotalItem(xunAvg,'value');
             var xunAvgObj=$this.sourceRank(xunAvgSource,'询盘均价排行榜','元');
             sourceData.push(xunAvgObj);
             //  成交积分均价
-            var scoreAvg=[];
-            $this.moneylist.forEach(function(item,index){
-                var itemObj={}
-                itemObj.id=item.id;
-                itemObj.color=item.color;
-                itemObj.name=item.name;
-                itemObj.value=0;
-                $this.scorelist.forEach(function(items,indexs){
-                    if(items.id==item.id){
-                      if(item.value==0||items.value==0){
-                        itemObj.value=0;
-                      }else{
-                        itemObj.value=(item.value/items.value).toFixed(2)*1;
-                      }
-                    }
-                });
-                scoreAvg.push(itemObj);
-            });
+            var scoreAvg=$this.avgPlug($this.moneylist,$this.scorelist);
             scoreAvg.sort(sortByDesc("value"));
             var scoreAvgSource=rankingWithTotalItem(scoreAvg,'value');
             var scoreAvgObj=$this.sourceRank(scoreAvgSource,'成交积分均价排行榜','元');
             sourceData.push(scoreAvgObj);
             //  积分询盘比
-            var scoreAndxun=[];
-            $this.scorelist.forEach(function(item,index){
-                var itemObj={}
-                itemObj.id=item.id;
-                itemObj.color=item.color;
-                itemObj.name=item.name;
-                itemObj.value=0;
-                $this.xunlist.forEach(function(items,indexs){
-                    if(items.id==item.id){
-                      if(item.value==0||items.value==0){
-                        itemObj.value=0;
-                      }else{
-                        itemObj.value=(item.value/items.value).toFixed(2)*1;
-                      }
-                    }
-                });
-                scoreAndxun.push(itemObj);
-            });
+            var scoreAndxun=$this.avgPlug($this.xunlist,$this.scorelist);
             scoreAndxun.sort(sortByDesc("value"));
             var scoreAndxunSource=rankingWithTotalItem(scoreAndxun,'value');
             var scoreAndxunObj=$this.sourceRank(scoreAndxunSource,'积分询盘比排行榜','');
@@ -407,6 +358,34 @@ export default {
             });
           }
       });
+    },
+    // 获取均价
+    avgPlug(Dividend,Divisor){
+        var xunAvg=[];
+        Dividend.forEach(function(item,index){
+            var itemObj={}
+            itemObj.id=item.id;
+            itemObj.color=item.color;
+            itemObj.name=item.name;
+            itemObj.value=0;
+            itemObj.emptyDivisor=false;
+            Divisor.forEach(function(items,indexs){
+                if(items.id==item.id){
+                  if((item.value==0&&items.value!=0)||(item.value==0&&items.value==0)){
+                    itemObj.value=0;
+                  }
+                  if(item.value!=0&&items.value==0){
+                    itemObj.value=item.value;
+                    itemObj.emptyDivisor=true;
+                  }
+                  if(item.value!=0&&items.value!=0){
+                    itemObj.value=(item.value/items.value).toFixed(2)*1;
+                  }
+                }
+            });
+            xunAvg.push(itemObj);
+        });
+        return xunAvg
     },
     sourceRank(dateArr,Name,Tag,isLevel){
       var itemObj={};

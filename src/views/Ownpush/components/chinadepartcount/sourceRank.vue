@@ -1,7 +1,7 @@
 ﻿<template>
   <div class="memberInquiry flex-content">
       <div class="memberTit">
-          <h3>{{currentData.name}}<span style="font-size:12px" v-if!=''>{{currentData.isavg}}</span></h3>
+          <h3>{{currentData.name}}<span style="font-size:12px">{{currentData.isavg}}</span></h3>
           <p>({{datetime}})<span class="memberBtn"><i v-if='YSort' v-on:click="fallSort(currentData.name)">排序</i></span></p>
       </div>
       <div class="inquiryRank">
@@ -16,18 +16,18 @@
               <li v-for="(item,index) in currentData.mainArr" :key="index">
                 <router-link :to="{path:'/Ownpush/chinasourcecount/channelAnalysis',query:{itemId:item.id,startTime:ByTime?startTime:'',endTime:ByTime?endTime:''}}" tag="a" target="_blank"> 
                   <div class="rankNum">
-                      <div class="numTop" v-if="item.ranking<numItem&&item.value>0" :class="'numTop0'+(item.ranking)"></div>
-                      <div class="numTop" v-if="item.ranking>(numItem-1) && item.ranking <= 9">
+                      <div :style="item.emptyDivisor?'color:red;font-weight:bold;':''" class="numTop" v-if="item.ranking<numItem&&item.value>0" :class="'numTop0'+(item.ranking)"></div>
+                      <div :style="item.emptyDivisor?'color:red;font-weight:bold;':''" class="numTop" v-if="item.ranking>(numItem-1) && item.ranking <= 9">
                           0{{item.ranking}}
                       </div>
-                      <div class="numTop" v-if="item.ranking > 9">
+                      <div :style="item.emptyDivisor?'color:red;font-weight:bold;':''" class="numTop" v-if="item.ranking > 9">
                           {{item.ranking}}
                       </div>
                   </div>
-                  <div class="userName"><span>{{item.name}}</span></div>
+                  <div class="userName" :style="item.emptyDivisor?'color:red;font-weight:bold;':''"><span>{{item.name}}</span></div>
                   <div class="userInquiry flex-content">
-                      <span v-if="item.ranking<numItem&&item.value>0" :class="'num0'+(item.ranking)">{{item.value}}<span v-if='currentData.unit'>{{currentData.unit}}</span></span>
-                      <span v-else>{{item.value}}<span v-if='currentData.unit'>{{currentData.unit}}</span></span>
+                      <span :style="item.emptyDivisor?'color:red;font-weight:bold;':''" v-if="item.ranking<numItem&&item.value>0" :class="'num0'+(item.ranking)">{{item.value}}<span v-if='currentData.unit'>{{currentData.unit}}</span></span>
+                      <span :style="item.emptyDivisor?'color:red;font-weight:bold;':''" v-else>{{item.value}}<span v-if='currentData.unit'>{{currentData.unit}}</span></span>
                   </div>
                   </router-link>
               </li>

@@ -145,7 +145,7 @@ function setRoutes(routers){
         path: "/Ownpush/chinasourcecount/channelAnalysis",
         name:'OwnpushChannelAnalysis',
         component: () => import("@/views/Ownpush/chinasourcecount/channelAnalysis.vue"),
-        meta: {id:'OwnpushChannelAnalysis-131',title: '电商一部渠道分析', icon: null, keepAlive:false},
+        meta: {id:'OwnpushChannelAnalysis-135',title: '电商一部渠道分析', icon: null, keepAlive:false},
       },
       {
         path: "/stat/en/productAnalysis/ProAccount",
