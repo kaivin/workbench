@@ -26,8 +26,8 @@
                   </div>
                   <div class="userName" :style="item.emptyDivisor?'color:red;font-weight:bold;':''"><span>{{item.name}}</span></div>
                   <div class="userInquiry flex-content">
-                      <span :style="item.emptyDivisor?'color:red;font-weight:bold;':''" v-if="item.ranking<numItem&&item.value>0" :class="'num0'+(item.ranking)">{{item.value}}<span v-if='currentData.unit'>{{currentData.unit}}</span></span>
-                      <span :style="item.emptyDivisor?'color:red;font-weight:bold;':''" v-else>{{item.value}}<span v-if='currentData.unit'>{{currentData.unit}}</span></span>
+                      <span :style="item.emptyDivisor?'color:red;font-weight:bold;':''" v-if="item.ranking<numItem&&item.value>0" :class="'num0'+(item.ranking)">{{item.number}}<span v-if='currentData.unit'>{{currentData.unit}}</span></span>
+                      <span :style="item.emptyDivisor?'color:red;font-weight:bold;':''" v-else>{{item.number}}<span v-if='currentData.unit'>{{currentData.unit}}</span></span>
                   </div>
                   </router-link>
               </li>
