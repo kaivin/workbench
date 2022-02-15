@@ -143,7 +143,7 @@
 <script>
 import defaultChart from "../../components/departGroup/defaultChart.vue";
 import mapChart from "../../components/departGroup/mapChart.vue";
-import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate,numSeparate} from "@/utils/index"
+import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate,numSeparate,pickerDateRangeOptions} from "@/utils/index"
 import {MapInterval,TopTenColor} from "@/utils/MapColor"
 import { chinaData } from "@/utils/chinaMap";
 import { mapGetters } from 'vuex';
@@ -160,51 +160,52 @@ export default {
       mapRatio:0.75,
       groupList:[],
       contrastGroupList:[],
-      pickerDateRangeOptions: {
-        shortcuts: [{
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-            text: '上月',
-            onClick(picker) {
-              var date = new Date();
-              var year = date.getFullYear().toString();
-              //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
-              var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
-              var end = year + '/' + month + '/01';
-              var start = '';
+      pickerDateRangeOptions: pickerDateRangeOptions,
+      // pickerDateRangeOptions: {
+      //   shortcuts: [{
+      //     text: '最近一个月',
+      //     onClick(picker) {
+      //       const end = new Date();
+      //       const start = new Date();
+      //       start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+      //       end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
+      //       picker.$emit('pick', [start, end]);
+      //     }
+      //   }, {
+      //       text: '上月',
+      //       onClick(picker) {
+      //         var date = new Date();
+      //         var year = date.getFullYear().toString();
+      //         //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
+      //         var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
+      //         var end = year + '/' + month + '/01';
+      //         var start = '';
             
-              if(month == '01'){
-                start = (parseInt(year) - 1) + '/12/01';
-              }else{
-                start = parseInt(month) - 1>9 ? year + '/' + (parseInt(month) - 1)  + '/01':year + '/0' + (parseInt(month) - 1)  + '/01';
-              }
-              picker.$emit('pick', [start, end]);
-            }
-        }, {
-          text: '本月',
-          onClick(picker) {
-            var date = new Date();
-            var year = date.getFullYear().toString();
-            //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
-            var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
-            var end = '';
-            var start = year + '/' + month + '/01';
-            if(month == '12'){
-              end = (parseInt(year) + 1) + '/01/01';
-            }else{
-              end = parseInt(month) + 1>9 ? year + '/' + (parseInt(month) + 1)  + '/01':year + '/0' + (parseInt(month) + 1)  + '/01';
-            }
-            picker.$emit('pick', [start, end]);
-          }
-        }]
-      },
+      //         if(month == '01'){
+      //           start = (parseInt(year) - 1) + '/12/01';
+      //         }else{
+      //           start = parseInt(month) - 1>9 ? year + '/' + (parseInt(month) - 1)  + '/01':year + '/0' + (parseInt(month) - 1)  + '/01';
+      //         }
+      //         picker.$emit('pick', [start, end]);
+      //       }
+      //   }, {
+      //     text: '本月',
+      //     onClick(picker) {
+      //       var date = new Date();
+      //       var year = date.getFullYear().toString();
+      //       //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
+      //       var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
+      //       var end = '';
+      //       var start = year + '/' + month + '/01';
+      //       if(month == '12'){
+      //         end = (parseInt(year) + 1) + '/01/01';
+      //       }else{
+      //         end = parseInt(month) + 1>9 ? year + '/' + (parseInt(month) + 1)  + '/01':year + '/0' + (parseInt(month) + 1)  + '/01';
+      //       }
+      //       picker.$emit('pick', [start, end]);
+      //     }
+      //   }]
+      // },
       pickerMonthRangeOptions: {
         shortcuts: [{
           text: '今年至今',
@@ -895,7 +896,7 @@ export default {
       const end = new Date();
       const start = new Date();
       start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-      end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
+      end.setTime(end.getTime());
       var startYear = start.getFullYear();
       var startMonth = start.getMonth() +1;
       var startDay = start.getDate();

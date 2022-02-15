@@ -495,7 +495,7 @@
 import { mapGetters } from 'vuex';
 import * as echarts from 'echarts';
 import {MapInterval} from "@/utils/MapColor";
-import {sortByDesc} from "@/utils/index";
+import {sortByDesc,pickerDayRangeOptions} from "@/utils/index";
 export default {
   name: 'statisticChart',
   data() {
@@ -527,7 +527,7 @@ export default {
         domain:'',
         name:'',
       },
-      pickerRangeOptions: this.$pickerRangeOptions,
+      pickerRangeOptions: pickerDayRangeOptions,
       deviceList:[],
       productList:[],
       sourceList:[],

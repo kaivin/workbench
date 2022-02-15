@@ -63,6 +63,144 @@ export const pickerRangeOptions = {
       }
     }]
 }
+
+/**
+ * 日期选择：最近一个月、上月、本月
+ */
+ export const pickerDateRangeOptions = {
+    shortcuts: [{
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            end.setTime(end.getTime());
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+            text: '上月',
+            onClick(picker) {
+              var date = new Date();
+              var year = date.getFullYear().toString();
+              //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
+              var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
+              var endtime = year + '/' + month + '/01';
+              endtime = new Date(endtime).getTime() - 1000*60*60*24;
+              endtime = new Date(endtime).getDate();
+              var start = '';
+              var end = '';
+              if(month == '01'){
+                start = (parseInt(year) - 1) + '/12/01';
+                end = (parseInt(year) - 1)+'/12/'+ endtime;
+              }else{
+                if(parseInt(month) - 1>9){
+                  start = year + '/' + (parseInt(month) - 1)  + '/01';
+                  end = parseInt(endtime) < 10 ? year + '/' + (parseInt(month) - 1)  + '/0'+endtime : year + '/' + (parseInt(month) - 1)  + '/'+endtime;
+                }else{
+                  start = year + '/0' + (parseInt(month) - 1)  + '/01';
+                  end = parseInt(endtime) < 10 ? year + '/0' + (parseInt(month) - 1)  + '/0'+endtime : year + '/0' + (parseInt(month) - 1)  + '/'+endtime;
+                }
+                
+              }
+              
+              picker.$emit('pick', [start, end]);
+            }
+        }, {
+          text: '本月',
+          onClick(picker) {
+            var date = new Date();
+            var year = date.getFullYear().toString();
+            //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
+            var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
+            var end = '';
+            var endmonth = date.getMonth() + 1 == 12 ? 1 : date.getMonth()+2;
+            endmonth = parseInt(endmonth) > 9 ? endmonth : '0' + endmonth;
+            var endday = new Date(year + '/' + endmonth + '/01').getTime() - 1000*60*60*24;
+            endday = new Date(endday).getDate();
+            var start = year + '/' + month + '/01';
+            end = parseInt(endday) < 10 ? year + '/' + month  + '/0' + endday : year + '/' + month  + '/' + endday;
+            picker.$emit('pick', [start, end]);
+          }
+    }]
+}
+
+/**
+ * 日期选择:今天、昨天、最近一个月、上月、本月(2)
+ */
+export const pickerDayRangeOptions = {
+  shortcuts: [{
+    text: '今天',
+    onClick(picker) {
+      const end = new Date();
+      const start = new Date();
+      //start.setTime(start.getTime() - 3600 * 1000 * 24 * 9);
+      picker.$emit('pick', [start, end]);
+    }
+  },{
+    text: '昨天',
+    onClick(picker) {
+      const end = new Date();
+      const start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+      end.setTime(end.getTime() - 3600 * 1000 * 24 * 1);
+      picker.$emit('pick', [start, end]);
+    }
+  },{
+    text: '最近一个月',
+    onClick(picker) {
+      const end = new Date();
+      const start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+      end.setTime(end.getTime());
+      picker.$emit('pick', [start, end]);
+    }
+  }, {
+      text: '上月',
+      onClick(picker) {
+        var date = new Date();
+        var year = date.getFullYear().toString();
+        //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
+        var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
+        var endtime = year + '/' + month + '/01';
+        endtime = new Date(endtime).getTime() - 1000*60*60*24;
+        endtime = new Date(endtime).getDate();
+        var start = '';
+        var end = '';
+        if(month == '01'){
+          start = (parseInt(year) - 1) + '-12-01';
+          end = (parseInt(year) - 1)+'-12-'+ endtime;
+        }else{
+          if(parseInt(month) - 1>9){
+            start = year + '-' + (parseInt(month) - 1)  + '-01';
+            end = parseInt(endtime) < 10 ? year + '-' + (parseInt(month) - 1)  + '-0'+endtime : year + '-' + (parseInt(month) - 1)  + '-'+endtime;
+          }else{
+            start = year + '-0' + (parseInt(month) - 1)  + '-01';
+            end = parseInt(endtime) < 10 ? year + '-0' + (parseInt(month) - 1)  + '-0'+endtime : year + '-0' + (parseInt(month) - 1)  + '-'+endtime;
+          }
+          
+        }
+        
+        picker.$emit('pick', [start, end]);
+      }
+  }, {
+    text: '本月',
+    onClick(picker) {
+      var date = new Date();
+      var year = date.getFullYear().toString();
+      //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
+      var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
+      var end = '';
+      var endmonth = date.getMonth() + 1 == 12 ? 1 : date.getMonth()+2;
+      endmonth = parseInt(endmonth) > 9 ? endmonth : '0' + endmonth;
+      var endday = new Date(year + '/' + endmonth + '/01').getTime() - 1000*60*60*24;
+      endday = new Date(endday).getDate();
+      var start = year + '-' + month + '-01';
+      end = parseInt(endday) < 10 ? year + '-' + month  + '-0' + endday : year + '-' + month  + '-' + endday;
+      picker.$emit('pick', [start, end]);
+    }
+  }]
+}
+
 /**
  * Parse the time to string
  * @param {(Object|string|number)} time
