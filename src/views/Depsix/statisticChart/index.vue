@@ -233,7 +233,7 @@
                     </div>
                   </div>
                   <div class="card-header WebServerAddEditBtn ChinaphoneTwoBtn">
-                      <el-button type="primary" class="updateBtn"  :class="isDisabled?'isDisabled':''" :disabled="isDisabled"  size="small" v-if="menuButtonPermit.includes('Depsix_statisticChart')" v-on:click="getCluesAnalysisData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
+                      <el-button type="primary" class="updateBtn"  :class="isDisabled?'isDisabled':''" :disabled="isDisabled"  size="small" v-if="menuButtonPermit.includes('Sixdepart_countlist')" v-on:click="getCluesAnalysisData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
                       <el-button type="primary" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                   </div>
               </div>
@@ -804,7 +804,7 @@ export default {
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
-            if($this.menuButtonPermit.includes('Depsix_statisticChart')){
+            if($this.menuButtonPermit.includes('Sixdepart_countlist')){
               $this.initPage();
             }else{
               $this.$message({
