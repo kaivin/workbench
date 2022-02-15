@@ -77,13 +77,16 @@ export default {
         },
         sourceData:[],
         moneylist:[],
+        xunlist:[],
+        scorelist:[],
+        avgXun:[],
+        avgScore:[],
+        avgXunscore:[],
         priceAlist:[],
         priceBlist:[],
         priceClist:[],
         priceDlist:[],
         priceElist:[],
-        scorelist:[],
-        xunlist:[],
     };
   },
   computed: {
@@ -290,27 +293,30 @@ export default {
           if(res.status){
             var sourceData=[];
             //  消费
-            $this.moneylist=$this.ChannelData(res.moneylist,'allmoney');
-            var moneySource=rankingWithTotalItem($this.moneylist,'value');
+            var moneylist=$this.ChannelData(res.moneylist,'allmoney');
+            var moneySource=rankingWithTotalItem(moneylist,'value');
             moneySource.forEach(function(item){
               item.number = numSeparate(item.value);
             });
+            $this.moneylist=moneySource;
             var moneyObj=$this.sourceRank(moneySource,'消费排行榜','元');
             sourceData.push(moneyObj);
             //  询盘
-            $this.xunlist=$this.ChannelData(res.xunlist,'number');
-            var xunSource=rankingWithTotalItem($this.xunlist,'value');
+            var xunlist=$this.ChannelData(res.xunlist,'number');
+            var xunSource=rankingWithTotalItem(xunlist,'value');
             xunSource.forEach(function(item){
               item.number = numSeparate(item.value);
             });
+            $this.xunlist=xunSource;
             var xunObj=$this.sourceRank(xunSource,'询盘排行榜','个');
             sourceData.push(xunObj);
             //  成交积分
-            $this.scorelist=$this.ChannelData(res.scorelist,'score');
-            var scoreSource=rankingWithTotalItem($this.scorelist,'value');
+            var scorelist=$this.ChannelData(res.scorelist,'score');
+            var scoreSource=rankingWithTotalItem(scorelist,'value');
             scoreSource.forEach(function(item){
               item.number = numSeparate(item.value);
             });
+            $this.scorelist=scoreSource;
             var scoreObj=$this.sourceRank(scoreSource,'成交积分排行榜','分');
             sourceData.push(scoreObj);
             //  询盘均价
@@ -319,7 +325,8 @@ export default {
             var xunAvgSource=rankingWithTotalItem(xunAvg,'value');
             xunAvgSource.forEach(function(item){
               item.number = numSeparate(item.value);
-            });
+            });            
+            $this.avgXun=xunAvgSource;
             var xunAvgObj=$this.sourceRank(xunAvgSource,'询盘均价排行榜','元');
             sourceData.push(xunAvgObj);
             //  成交积分均价
@@ -329,6 +336,7 @@ export default {
             scoreAvgSource.forEach(function(item){
               item.number = numSeparate(item.value);
             });
+            $this.avgScore=scoreAvgSource;
             var scoreAvgObj=$this.sourceRank(scoreAvgSource,'成交积分均价排行榜','元');
             sourceData.push(scoreAvgObj);
             //  积分询盘比
@@ -338,47 +346,53 @@ export default {
             scoreAndxunSource.forEach(function(item){
               item.number = numSeparate(item.value);
             });
+            $this.avgXunscore=scoreAndxunSource;
             var scoreAndxunObj=$this.sourceRank(scoreAndxunSource,'积分询盘比排行榜','');
             sourceData.push(scoreAndxunObj);
             //  等级
             //A
-            $this.priceAlist=$this.ChannelData(res.priceAlist,'number');
-            var priceASource=rankingWithTotalItem($this.priceAlist,'value');
+            var priceAlist=$this.ChannelData(res.priceAlist,'number');
+            var priceASource=rankingWithTotalItem(priceAlist,'value');
             priceASource.forEach(function(item){
               item.number = numSeparate(item.value);
             });
+            $this.priceAlist=priceASource;
             var priceAObj=$this.sourceRank(priceASource,'成交等级A','个');
             sourceData.push(priceAObj);
             //B
-            $this.priceBlist=$this.ChannelData(res.priceBlist,'number');
-            var priceBSource=rankingWithTotalItem($this.priceBlist,'value');
+            var priceBlist=$this.ChannelData(res.priceBlist,'number');
+            var priceBSource=rankingWithTotalItem(priceBlist,'value');
             priceBSource.forEach(function(item){
               item.number = numSeparate(item.value);
             });
+            $this.priceBlist=priceBSource;
             var priceBObj=$this.sourceRank(priceBSource,'成交等级B','个');
             sourceData.push(priceBObj);
             //C
-            $this.priceClist=$this.ChannelData(res.priceClist,'number');
-            var priceCSource=rankingWithTotalItem($this.priceClist,'value');           
+            var priceClist=$this.ChannelData(res.priceClist,'number');
+            var priceCSource=rankingWithTotalItem(priceClist,'value');           
             priceCSource.forEach(function(item){
               item.number = numSeparate(item.value);
             });
+            $this.priceClist=priceCSource;
             var priceCObj=$this.sourceRank(priceCSource,'成交等级C','个');
             sourceData.push(priceCObj);
             //D
-            $this.priceDlist=$this.ChannelData(res.priceDlist,'number');
-            var priceDSource=rankingWithTotalItem($this.priceDlist,'value');            
+            var priceDlist=$this.ChannelData(res.priceDlist,'number');
+            var priceDSource=rankingWithTotalItem(priceDlist,'value');            
             priceDSource.forEach(function(item){
               item.number = numSeparate(item.value);
             });
+            $this.priceDlist=priceDSource;
             var priceDObj=$this.sourceRank(priceDSource,'成交等级D','个');
             sourceData.push(priceDObj);
             //E
-            $this.priceElist=$this.ChannelData(res.priceElist,'number');
-            var priceESource=rankingWithTotalItem($this.priceElist,'value');            
+            var priceElist=$this.ChannelData(res.priceElist,'number');
+            var priceESource=rankingWithTotalItem(priceElist,'value');            
             priceESource.forEach(function(item){
               item.number = numSeparate(item.value);
             });
+            $this.priceElist=priceESource;
             var priceEObj=$this.sourceRank(priceESource,'成交等级E','个');
             sourceData.push(priceEObj);            
             $this.sourceData=sourceData;
@@ -442,33 +456,67 @@ export default {
       }
       return itemObj;
     },
+    //点击排序
     getfallSort(dateArr){
       var $this=this;
-      var sourceData=$this.sourceData;
-      var defaultArr=[];
-      sourceData.forEach(function(item,index){
-          if(item.name==dateArr){
-            defaultArr=item.mainArr;
-          }
-      });
-      sourceData.forEach(function(item,index){
-          if(item.name!=dateArr){
-              var itemArr=[];
-              defaultArr.forEach(function(items,indexs){
-                  item.mainArr.forEach(function(itemk,indexk){
-                      if(itemk.id==items.id){
-                        itemArr.push(itemk);
-                      }
-                  });
-              });
-              item.mainArr=itemArr;
-              $this.sourceData=sourceData;
-          }
-      });
+      if(dateArr=='消费排行榜'){
+        $this.getfallSortPlug($this.moneylist,dateArr);
+      }
+      if(dateArr=='询盘排行榜'){
+        $this.getfallSortPlug($this.xunlist,dateArr);
+      }
+      if(dateArr=='成交积分排行榜'){
+        $this.getfallSortPlug($this.scorelist,dateArr);
+      }
+      if(dateArr=='询盘均价排行榜'){
+        $this.getfallSortPlug($this.avgXun,dateArr);
+      }
+      if(dateArr=='成交积分均价排行榜'){
+        $this.getfallSortPlug($this.avgScore,dateArr);
+      }
+      if(dateArr=='积分询盘比排行榜'){
+        $this.getfallSortPlug($this.avgXunscore,dateArr);
+      }
+      if(dateArr=='成交等级A'){
+        $this.getfallSortPlug($this.priceAlist,dateArr);
+      }
+      if(dateArr=='成交等级B'){
+        $this.getfallSortPlug($this.priceBlist,dateArr);
+      }
+      if(dateArr=='成交等级C'){
+        $this.getfallSortPlug($this.priceClist,dateArr);
+      }
+      if(dateArr=='成交等级D'){
+        $this.getfallSortPlug($this.priceDlist,dateArr);
+      }
+      if(dateArr=='成交等级E'){
+        $this.getfallSortPlug($this.priceElist,dateArr);
+      }
     },
+    getfallSortPlug(dateArr,Tag){
+      var $this=this;
+      var sourceData=$this.sourceData;
+      sourceData.forEach(function(item,index){
+          var itemArr=[];
+          dateArr.forEach(function(items,indexs){
+              item.mainArr.forEach(function(itemk,indexk){
+                  if(itemk.id==items.id){
+                    itemArr.push(itemk);
+                  }
+              });
+          });
+          item.mainArr=itemArr;
+      });
+      $this.sourceData=sourceData;
+    },
+    //默认排序
     defaultSort(){
       var $this=this;
-      $this.getSearchData();
+      var sourceData=$this.sourceData;
+      sourceData.forEach(function(item,index){
+          item.mainArr.sort(sortByDesc("value"));
+      });
+      $this.sourceData=sourceData;
     },
     // 最近六个月时间周期
     getNearMonth(){

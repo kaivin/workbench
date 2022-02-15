@@ -1709,7 +1709,7 @@ export default {
           }
         }
         costCountData.totalTitle = "总消费";
-        costCountData.unit = "（单位：万元）";
+        costCountData.unit = "（单位：元）";
         costCountData.randomStr = randomString(4);
       }
       // 百万个数
@@ -1985,7 +1985,7 @@ export default {
           }
         }
         enquiriesAvgData.totalTitle = "总询盘均价";
-        enquiriesAvgData.unit = "（单位：元）";
+        enquiriesAvgData.unit = "（消费/询盘个数）";
         enquiriesAvgData.randomStr = randomString(4);
       }
       // 积分均价
@@ -2060,7 +2060,7 @@ export default {
           }
         }
         scoreAvgData.totalTitle = "总积分均价";
-        scoreAvgData.unit = "（单位：元）";
+        scoreAvgData.unit = "（消费/成交积分）";
         scoreAvgData.randomStr = randomString(4);
       }
       // 积分询盘比
@@ -2135,7 +2135,7 @@ export default {
           }
         }
         scoreAndenquiriesData.totalTitle = "总积分询盘比";
-        scoreAndenquiriesData.unit = "（单位：元）";
+        scoreAndenquiriesData.unit = "（询盘个数/成交积分）";
         scoreAndenquiriesData.randomStr = randomString(4);
       }
       var defaultChartData = [];
@@ -3174,7 +3174,7 @@ export default {
       var startDay = start.getDate();
       var endYear = end.getFullYear();
       var endMonth = end.getMonth() + 1;
-      var endDay = end.getDate();
+      var endDay = end.getDate()-1;
       startMonth = startMonth<10?'0'+startMonth:startMonth;
       startDay = startDay<10?'0'+startDay:startDay;
       endMonth = endMonth<10?'0'+endMonth:endMonth;
