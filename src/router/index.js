@@ -26,6 +26,12 @@ export const constantRoutes = [
     meta: {title: '登陆', icon: null, keepAlive:false},
   },
   {
+    path: "/welcome",
+    name:'welcome',
+    component: () => import(/* webpackChunkName: "welcome" */ "@/views/Ownpush/welcome/index.vue"),
+    meta: {title: '欢迎', icon: null, keepAlive:false},
+  },
+  {
     path: '/401',
     name:'401',
     component: () => import('@/views/errorPage/401.vue'),
