@@ -275,7 +275,7 @@
                       <div class="chart-wrapper">
                         <div class="chart-header"><span>热门国家</span></div>
                         <div class="chart-body chartmap-body" style="height:540px;text-align:center;">
-                          <div class="map-panel flex-box">
+                          <div class="map-panel flex-box" style="padding-left:15px">
                             <div class="map-chart enmap-chart">
                                 <div id="cluesChart10" class="chart-canvas" ></div>
                             </div>
@@ -301,7 +301,7 @@
                     <el-col :xs="24">
                       <div class="chart-wrapper">
                         <div class="chart-header"><span>国家询盘</span></div>
-                        <div class="chart-body chartmap-body depsix-table" style="height:670px;text-align:center;padding:30px">
+                        <div class="chart-body chartmap-body depsix-table" style="height:660px;text-align:center;padding:20px">
                             <div class="table-panel">
                               <div class="table-chart">
                                 <el-table
@@ -320,7 +320,6 @@
                                   <el-table-column
                                     prop="country"
                                     label="国家"
-                                    min-width="150"
                                     fixed
                                     >
                                   </el-table-column>
@@ -328,33 +327,31 @@
                                     prop="number"
                                     label="总数量"
                                     sortable
-                                    min-width="150"
                                     >
                                   </el-table-column>
                                   <el-table-column
                                     v-for="(item,index) in searchResult.phoneCount"
                                     :key="index"
                                     :label="item.phonenumber"
-                                    min-width="510"
                                     >
                                       <el-table-column 
-                                        :label="item.phonenumber+'询盘个数'" 
-                                        min-width="170">
+                                        :label="item.phonenumber" 
+                                        min-width="85">
                                         <template slot-scope="scope">
                                           <span class="numspan">{{numberSearch(scope.row.group,item.phonenumber)}}</span>
                                         </template>
                                       </el-table-column>
                                       <el-table-column 
-                                        label="各组国家占比部门各国" 
-                                        min-width="170">
+                                        label="国家各组占比" 
+                                        min-width="85">
                                         <template slot-scope="scope" >
                                           <span v-if="percentSearch(scope.row.group,item.phonenumber)">{{percentSearch(scope.row.group,item.phonenumber)+"%"}}</span>
                                           <span v-else>-</span>
                                         </template>
                                       </el-table-column>
                                       <el-table-column 
-                                        label="各组国家各自组内占比" 
-                                        min-width="170">
+                                        label="国家组内占比" 
+                                        min-width="85">
                                         <template slot-scope="scope" >
                                           <span v-if="percentSearch(scope.row.group,item.phonenumber)">{{percent2Search(scope.row.group,item.phonenumber,1)+"%"}}</span>
                                           <span v-else>-</span>
@@ -372,7 +369,7 @@
                     <el-col :xs="24">
                       <div class="chart-wrapper">
                         <div class="chart-header"><span>大洲询盘</span></div>
-                        <div class="chart-body chartmap-body depsix-table" style="height:670px;text-align:center;padding:30px">
+                        <div class="chart-body chartmap-body depsix-table" style="height:660px;text-align:center;padding:20px">
                             <div class="table-panel">
                               <div class="table-chart">
                                 <el-table
@@ -391,7 +388,6 @@
                                   <el-table-column
                                     prop="continent"
                                     label="大洲"
-                                    min-width="150"
                                     fixed
                                     >
                                   </el-table-column>
@@ -399,33 +395,31 @@
                                     prop="number"
                                     label="总数量"
                                     sortable
-                                    min-width="150"
                                     >
                                   </el-table-column>
                                   <el-table-column
                                     v-for="(item,index) in searchResult.phoneCount"
                                     :key="index"
                                     :label="item.phonenumber"
-                                    min-width="510"
                                     >
                                     <el-table-column 
-                                    :label="item.phonenumber+'询盘个数'"
-                                    min-width="170">
+                                    :label="item.phonenumber"
+                                    min-width="85">
                                       <template slot-scope="scope">
                                         <span class="numspan">{{numberSearch(scope.row.group,item.phonenumber)}}</span>
                                       </template>
                                     </el-table-column>
                                     <el-table-column 
-                                    label="各组大洲占比部门各洲"
-                                    min-width="170">
+                                    label="大洲各组占比"
+                                    min-width="85">
                                       <template slot-scope="scope">
                                         <span v-if="percentSearch(scope.row.group,item.phonenumber)">{{percentSearch(scope.row.group,item.phonenumber)+"%"}}</span>
                                         <span v-else>-</span>
                                       </template>
                                     </el-table-column>
                                     <el-table-column 
-                                    label="各组大洲各自组内占比"
-                                    min-width="170">
+                                    label="大洲组内占比"
+                                    min-width="85">
                                       <template slot-scope="scope">
                                         <span v-if="percentSearch(scope.row.group,item.phonenumber)">{{percent2Search(scope.row.group,item.phonenumber,2)+"%"}}</span>
                                         <span v-else>-</span>
@@ -2331,7 +2325,8 @@ export default {
           }
         }else{
           var totalnum = 0;
-          var aimlabel = column.label.slice(0,-4);
+          // var aimlabel = column.label.slice(0,-4);
+           var aimlabel = column.label;
           data.forEach(function(item,index){
             item.group.forEach(function(sitem,index){
               if(sitem.phonenumber == aimlabel){

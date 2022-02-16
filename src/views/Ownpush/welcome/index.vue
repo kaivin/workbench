@@ -19,10 +19,10 @@
                 <div class="nowNumber" :style="'left:'+numper">{{nownumber}}<span>分</span></div>
             </div>
             <div class="airBox">
-                <div class="air01"></div>
-                <div class="air02"></div>
+                <div class="air01" :class="ismove?'air01active':''"></div>
+                <div class="air02" :class="ismove?'air02active':''"></div>
                 <p class="airtext">恭喜你离目标又近了一天！</p>
-                <div class="airBtn"></div>
+                <div class="airBtn" @click="btnClick"></div>
             </div>
         </div>
     </div>
@@ -36,6 +36,7 @@ export default {
             finishTime: 0,
             aimnumber:320,
             nownumber:33.5,
+            ismove: false,
         };
     },
     components:{
@@ -55,6 +56,9 @@ export default {
     methods: {
         // 计时结束
         commitTimeEnd(){
+
+        },
+        btnClick(){
 
         }
     }

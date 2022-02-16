@@ -282,6 +282,14 @@
                 top: 99px;
             }
         }
+        .air01active{
+            &:before{
+                animation: well 0.6s linear infinite;
+            }
+            &:after{
+                animation: well 0.6s linear infinite;
+            }
+        }
         .air02{
             width: 58px;
             height: 53px;
@@ -290,5 +298,20 @@
             right: -95px;
             background: url(../assets/air01.png) right top no-repeat;
         }
+        .air02active{
+            animation: well 0.6s linear infinite;
+        }
+    }
+}
+
+@keyframes well{
+    0%{
+        transform: scale(0.8);
+    }
+    95%{
+        transform: scale(1.2);
+    }
+    100%{
+        transform: scale(0.8);
     }
 }
