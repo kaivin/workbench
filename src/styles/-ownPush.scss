@@ -308,17 +308,17 @@
                     &.active{
                         position:relative;
                         &:after{
-                            content:'';
-                            position:absolute;
-                            width:12px;
-                            height:12px;
-                            border-left:1px solid #f3f3f3;
-                            border-top:1px solid #f3f3f3;
-                            background:#f6f7f8;
-                            transform:rotate(55deg) skew(20deg);
-                            left:35px;
-                            top:37px;
-                            margin-left:-7px;
+                            //content:'';
+                            //position:absolute;
+                            //width:12px;
+                            //height:12px;
+                            //border-left:1px solid #f3f3f3;
+                            //border-top:1px solid #f3f3f3;
+                            //background:#f6f7f8;
+                            //transform:rotate(55deg) skew(20deg);
+                            //left:35px;
+                            //top:37px;
+                            //margin-left:-7px;
                         }
                     }
                 }
@@ -1382,7 +1382,7 @@
             .item-table{
               background-color:#fff;
               padding:30px;
-              //height:461px;
+              min-height:461px;
               .column-header{
                 padding:0 0 30px;
               }
@@ -1555,9 +1555,25 @@
             }
             .compare-body{
               width:100%;
+              &.levelMain{padding-left:20px;padding-right:20px;}
               .item-pie{
                 margin-top:-53px;
                 padding:0px 30px 30px 30px;
+              }
+              .level-pie{
+                float: left;
+                padding: 0 10px 30px;
+                .chart-title{
+                  width:100%;
+                  text-align:center;
+                  height:28px;
+                  line-height:28px;
+                  margin-bottom:30px;
+                }
+                .level-panel{
+                  margin:0 auto;
+                  position:relative;
+                }
               }
               .item-column{
                 width:50%;
@@ -1649,9 +1665,9 @@
         margin-left:-10px;
         .memberInquiry{
           float:left;
-          width:calc(16.6666% - 10px);
+          width:calc(33.3333% - 10px);
           margin-left:10px;
-          margin-bottom:10px;
+          margin-bottom: 25px;
           .memberTit{
             p{
               line-height:20px;
@@ -1856,8 +1872,6 @@
     .OwnRank{
       .OwnRankTop{
         .memberInquiry{
-          float:left;
-          width:calc(33.3333% - 10px);
         }
       }
     }

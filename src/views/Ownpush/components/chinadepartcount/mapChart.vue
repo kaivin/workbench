@@ -55,14 +55,12 @@
               </div>
               <div class="column-body">
                   <div class="item-pie">
-                      <level-column-chart
+                      <level-pie-chart
                         :chart-data="item[0].LevelCount"
-                        :axis-data="item[0].xAxisArr"
-                        :yarn-data="item[0].yarnArr"
                         :isCost="item[0].isCost"
                         :id-data="item[0].randomStr"
-                        :scoreHeight="390"
-                      ></level-column-chart>
+                        :scoreHeight="300"
+                      ></level-pie-chart>
                   </div>
               </div>
             </div>
@@ -145,17 +143,20 @@
                 <strong>{{item.title}}</strong>
               </div>
             </div>
-            <div class="compare-body">
-                <div class="item-pie">
-                    <level-column-chart
-                      :chart-data="item.LevelCount"
-                      :axis-data="item.xAxisArr"
-                      :yarn-data="item.yarnArr"
-                      :isCost="item.isCost"
-                      :id-data="item.randomStr"
-                      :scoreHeight="390"
-                    ></level-column-chart>
+            <div class="compare-body levelMain">
+              <template v-for="item1 in item.LevelCount">
+                <div class="level-pie" v-bind:style="{width:item1.width}">
+                  <div class="chart-title">{{item1.title}}</div>
+                  <div class="level-panel">
+                    <level-pie-chart
+                      :chart-data="item1.mapData"
+                      :isCost="item1.isCost"
+                      :id-data="item1.randomStr"
+                      :scoreHeight="300"
+                    ></level-pie-chart>
+                  </div>
                 </div>
+              </template>
             </div>
           </div>
         </div>
@@ -168,14 +169,14 @@
 import cnMapChart from "../../../stat/components/departGroup/cnMapChart.vue";
 import topRegion from "../../../stat/components/departGroup/topRegion.vue";
 import itemProduct from "../../../stat/components/departGroup/itemProduct.vue";
-import levelColumnChart from "./levelColumnChart.vue";
+import levelPieChart from "./levelPieChart.vue";
 export default {
   name: "mapChart",
   components: {
     cnMapChart,
     topRegion,
     itemProduct,
-    levelColumnChart,
+    levelPieChart,
   },
   data:function() {
     return {

@@ -147,6 +147,7 @@
               ></map-chart>
             </template>
         </div>
+      <el-backtop target=".scroll-panel"></el-backtop>
   </div>
 </template>
 <script>
@@ -1015,7 +1016,6 @@ export default {
       $this.mapChart = mapChartData;
       var qualityChartData = $this.qualityChartDataClump(res);
       $this.qualityChartData = qualityChartData;
-      console.log($this.mapChart,'$this.mapChart');
       $this.changeSize();
     },
     // 组装默认类型图表数据
@@ -2612,7 +2612,7 @@ export default {
       mapChartData.push(itemChartArr);
       return mapChartData;
     },
-    // 组装积分等级柱状类型图表数据
+    // 组装积分等级饼状类型图表数据
     dateIntegrallevel(res){
       var $this = this;
       var Integrallevel = null
@@ -2620,86 +2620,100 @@ export default {
         Integrallevel = {};
         // 时间对比
         if($this.selectedData.isDateCompare&&$this.selectedData.dateContrast&&$this.selectedData.dateContrast.length>0){
-            Integrallevel.xAxisArr = [];
-            Integrallevel.xAxisArr.push($this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1]); 
-            Integrallevel.xAxisArr.push($this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1]); 
-            var selfpricemonthcompare=[];
-            res.selfpricemonthcompare.forEach(function(item,index){
-              item.forEach(function(itemk,indexk){
-                  itemk.time=Integrallevel.xAxisArr[index];
-              });
-              selfpricemonthcompare.push(item);
-            }); 
-            Integrallevel.yarnArr = ['A','B','C','D','E'];
             Integrallevel.LevelCount = [];
-            Integrallevel.xAxisArr.forEach(function(item,index){
-              Integrallevel.yarnArr.forEach(function(items,indexs){
+            var yarnArr = ['A','B','C','D','E'];
+            res.selfpricemonthcompare.forEach(function(item,index){
+              var itemChart = {};
+              if(index==0){
+                itemChart.title = $this.selectedData.dateDefault[0]+" ~ "+$this.selectedData.dateDefault[1];
+              }
+              if(index==1){
+                itemChart.title = $this.selectedData.dateContrast[0]+" ~ "+$this.selectedData.dateContrast[1]
+              }
+              itemChart.randomStr = randomString(4);
+              itemChart.width = parseInt(1/res.selfpricemonthcompare.length*100)+"%";
+              itemChart.mapData=[];
+              yarnArr.forEach(function(items,indexs){
                 var itemObj={};
-                itemObj.departname=item;
-                itemObj.price=items;
-                itemObj.number=0;
-                selfpricemonthcompare.forEach(function(itemk,indexk){
-                  itemk.forEach(function(itemg,indexg){
-                    if(itemg.price==items&&itemg.time==item){
-                      itemObj.number=itemg.number;
-                    }
-                  });
-                }); 
-                Integrallevel.LevelCount.push(itemObj);
+                itemObj.departname=itemChart.title;
+                itemObj.name=items;
+                itemObj.value=0;
+                item.forEach(function(itemk,indexk){
+                  if(items==itemk.price){
+                    itemObj.value=itemk.number;
+                  }
+                });
+                itemChart.mapData.push(itemObj);
               });
-            });
-            Integrallevel.isCost = true;
+              itemChart.mapData=singleArrColor(itemChart.mapData);
+              Integrallevel.LevelCount.push(itemChart);
+            }); 
             Integrallevel.title = "积分等级";
-            Integrallevel.isMap = 'level';  
-            Integrallevel.randomStr = randomString(4);  
+            Integrallevel.isMap = 'level';
         }else{
           if($this.selectedData.comparesource_id.length>0){
-            Integrallevel = {};
-            Integrallevel.xAxisArr = [];
-            res.pricemonthcompare.forEach(function(item,index){
-              if(item&&item.length>0){
-                Integrallevel.xAxisArr.push(item[0].departname);
-              }
-            }); 
-            Integrallevel.yarnArr = ['A','B','C','D','E'];
             Integrallevel.LevelCount = [];
-            Integrallevel.xAxisArr.forEach(function(item,index){
-              Integrallevel.yarnArr.forEach(function(items,indexs){
-                var itemObj={};
-                itemObj.departname=item;
-                itemObj.price=items;
-                itemObj.number=0;
-                res.pricemonthcompare.forEach(function(itemk,indexk){
-                  itemk.forEach(function(itemg,indexg){
-                    if(itemg.departname==item&&itemg.price==items){
-                      itemObj.number=itemg.number;
+            var yarnArr = ['A','B','C','D','E'];
+            res.pricemonthcompare.forEach(function(item,index){
+              var itemChart = {};
+              if(index == 0){
+                if($this.selectedData.source_id.length==1){
+                  $this.channelList.forEach(function(item1){
+                    if(item1.isOn){
+                      itemChart.title = item1.name;
                     }
                   });
-                }); 
-                Integrallevel.LevelCount.push(itemObj);
+                }else{
+                  itemChart.title="已多选渠道"
+                }
+              }else{
+                var selectContrastSourceList = [];
+                $this.contrastSourceList.forEach(function(item1){
+                  if(item1.isOn){
+                    selectContrastSourceList.push(item1);
+                  }
+                });
+                itemChart.title=selectContrastSourceList[index-1].name;
+              }
+              itemChart.randomStr = randomString(4);
+              itemChart.mapData=[];
+              itemChart.width = parseInt(1/res.pricemonthcompare.length*100)+"%";
+              yarnArr.forEach(function(items,indexs){
+                var itemObj={};
+                itemObj.departname=itemChart.title;
+                itemObj.name=items;
+                itemObj.value=0;
+                item.forEach(function(itemk,indexk){
+                  if(items==itemk.price){
+                    itemObj.value=itemk.number;
+                  }
+                });
+                itemChart.mapData.push(itemObj);
               });
+              itemChart.mapData=singleArrColor(itemChart.mapData);
+              Integrallevel.LevelCount.push(itemChart);
             });
-            Integrallevel.isCost = true;
             Integrallevel.title = "积分等级";
-            Integrallevel.isMap = 'level';   
-            Integrallevel.randomStr = randomString(4);      
+            Integrallevel.isMap = 'level';     
           }else{
             Integrallevel =  []
+            var yarnArr = ['A','B','C','D','E'];
             var itemData = {};
-            itemData.xAxisArr = [];
             itemData.LevelCount = [];
-            itemData.yarnArr = ['A','B','C','D','E'];
-            res.pricelist.forEach(function(item,index){
-              item.departname=$this.groupName;
-              itemData.LevelCount.push(item);
+            yarnArr.forEach(function(item,index){
+              var itemObj={};
+              itemObj.departname=$this.groupName;
+              itemObj.name=item;
+              itemObj.value=0;
+              res.pricelist.forEach(function(items,indexs){
+                if(item==items.price){
+                  itemObj.name=items.price;
+                  itemObj.value=items.number;
+                }
+              })
+              itemData.LevelCount.push(itemObj);
             });
-            // 只有一个部门被选中的情况
-            if($this.selectedData.source_id.length==1){
-              itemData.xAxisArr.push($this.groupName);
-            }else{// 多部门被选中 
-              itemData.xAxisArr.push('电商一部询盘统计');
-            }
-            itemData.isCost = false;
+            itemData.LevelCount=singleArrColor(itemData.LevelCount);
             itemData.title = "积分等级";
             itemData.isMap = 'level';
             itemData.randomStr = randomString(4);

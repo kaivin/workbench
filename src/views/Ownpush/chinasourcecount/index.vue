@@ -27,12 +27,50 @@
       </div>
       <div class="flex-content OwnRank">
           <div class="OwnRankTop">
-              <template v-if="sourceData.length>0" v-for="item in sourceData">
+              <template v-if="sourceData.length>0" v-for="(item,index) in sourceData">
                 <source-rank 
                   :itemData="item" 
                   :ByTime ="searchTime"
                   :YSort='true'
+                   v-if="index>=0&&index<3"
                   @fallSort='getfallSort'
+                  @changeSet='changeSet'
+                  ></source-rank>
+              </template>
+          </div>
+          <div class="OwnRankTop">
+              <template v-if="sourceData.length>0" v-for="(item,index) in sourceData">
+                <source-rank 
+                  :itemData="item" 
+                  :ByTime ="searchTime"
+                  :YSort='true'
+                   v-if="index>2&&index<6"
+                  @fallSort='getfallSort'
+                  @changeSet='changeSet'
+                  ></source-rank>
+              </template>
+          </div>
+          <div class="OwnRankTop">
+              <template v-if="sourceData.length>0" v-for="(item,index) in sourceData">
+                <source-rank 
+                  :itemData="item" 
+                  :ByTime ="searchTime"
+                  :YSort='true'
+                   v-if="index>5&&index<9"
+                  @fallSort='getfallSort'
+                  @changeSet='changeSet'
+                  ></source-rank>
+              </template>
+          </div>
+          <div class="OwnRankTop">
+              <template v-if="sourceData.length>0" v-for="(item,index) in sourceData">
+                <source-rank 
+                  :itemData="item" 
+                  :ByTime ="searchTime"
+                  :YSort='true'
+                   v-if="index>8"
+                  @fallSort='getfallSort'
+                  @changeSet='changeSet'
                   ></source-rank>
               </template>
           </div>
@@ -439,6 +477,14 @@ export default {
       itemObj.mainArr=dateArr;
       itemObj.name=Name;
       itemObj.unit=Tag;
+      if(dateArr.length>8){
+        itemObj.ifFold=true;
+        itemObj.boxHeight='504px';
+      }else{
+        itemObj.ifFold=false;
+        itemObj.boxHeight=dateArr.length*63+'px';
+      }
+      itemObj.isFold=false;
       itemObj.randomStr = randomString(4);
       if(Name.indexOf('询盘均价排行榜')>=0){
         itemObj.isavg='消费/询盘';
@@ -455,6 +501,18 @@ export default {
         itemObj.isLevel=false;
       }
       return itemObj;
+    },
+    // 展开折叠点击事件
+    changeSet(isfold,boxheight,Tag){
+      var $this = this;
+      var sourceData=$this.sourceData;
+      sourceData.forEach(function(item,index){
+          if(item.name==Tag){
+            item.boxHeight=boxheight;
+            item.isFold=isfold;
+          }
+      });
+      $this.sourceData=sourceData;
     },
     //点击排序
     getfallSort(dateArr){

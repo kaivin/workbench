@@ -36,8 +36,12 @@ export default {
       handler(newValue, oldValue) {
         window.addEventListener('resize',this.echartsSize);
         var colorList1=[];
+        var newList=[];
         newValue.forEach(function(item,index){
+          if(item.value!=0){
             colorList1.push(item.color);
+            newList.push(item);
+          }
         });
         var option;
         option = {
@@ -50,15 +54,42 @@ export default {
                 {
                     type: 'pie',
                     radius: '60%',
+                    radius: '50%',
+                    avoidLabelOverlap: true,
                     label: {
-                    show: false
+                        show: true,
+                        formatter: '{a|{b}：{d}%}',
+                        rich: {
+                            a: {
+                              lineHeight: 20,
+                              padding: [5, 0, 5, 0],
+                              color: '#6E7079',
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            length: 20,
+                            length2: 30,
+                            lineStyle: {
+                                width: 1
+                            }
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            borderColor: '#fff',
+                            borderWidth:1,
+                        }
                     },
                     emphasis: {
-                    label: {
-                        show: true
-                    }
+                        itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.2)'
+                        }
                     },
-                    data:newValue,
+                    data:newList,
                 }
             ]
         };
@@ -78,8 +109,12 @@ export default {
         var chartDom = document.getElementById('pie-'+$this.idData);
         var myChart = echarts.init(chartDom);
         var colorList1=[];
+        var dataList=[];
         dataArr.forEach(function(item,index){
+          if(item.value!=0){
             colorList1.push(item.color);
+            dataList.push(item);
+          }
         });
         var option;
         option = {
@@ -91,10 +126,34 @@ export default {
             series: [
                 {
                     type: 'pie',
-                    radius: '60%',
-                    avoidLabelOverlap: false,
-                    label: {show: false},
-                    labelLine: {show: false},
+                    radius: '50%',
+                    avoidLabelOverlap: true,
+                    label: {
+                        show: true,
+                        formatter: '{a|{b}：{d}%}',
+                        rich: {
+                            a: {
+                              lineHeight: 20,
+                              padding: [5, 0, 5, 0],
+                              color: '#6E7079',
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            length: 20,
+                            length2: 30,
+                            lineStyle: {
+                                width: 1
+                            }
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            borderColor: '#fff',
+                            borderWidth:1,
+                        }
+                    },
                     emphasis: {
                         itemStyle: {
                         shadowBlur: 10,
@@ -102,7 +161,7 @@ export default {
                         shadowColor: 'rgba(0, 0, 0, 0.2)'
                         }
                     },
-                    data:dataArr,
+                    data:dataList,
                 }
             ]
         };

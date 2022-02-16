@@ -5,13 +5,7 @@
           <p>({{datetime}})<span class="memberBtn"><i v-if='YSort' v-on:click="fallSort(currentData.name)">排序</i></span></p>
       </div>
       <div class="inquiryRank">
-          <div v-if="!currentData.isLevel">
-              <pie-simple
-                        :chart-data="currentData.mainArr"
-                        :id-data="currentData.randomStr"
-                        :scoreHeight="200"></pie-simple>
-          </div>
-          <ul class="inul">
+          <ul class="inul" :style="'height:'+ currentData.boxHeight">
             <template v-if="currentData.mainArr.length > 0">
               <li v-for="(item,index) in currentData.mainArr" :key="index">
                 <router-link :to="{path:'/Ownpush/chinasourcecount/channelAnalysis',query:{itemId:item.id,startTime:ByTime?startTime:'',endTime:ByTime?endTime:''}}" tag="a" target="_blank"> 
@@ -36,6 +30,13 @@
               <li class="nodata">暂无数据</li>
             </template>
           </ul>
+          <div class="inMore" v-if="currentData.ifFold" :class="!currentData.isFold? 'inRotate' : 'rowRotate' "  @click="showAll" ></div>
+          <div v-if="!currentData.isLevel">
+              <pie-simple
+                        :chart-data="currentData.mainArr"
+                        :id-data="currentData.randomStr"
+                        :scoreHeight="350"></pie-simple>
+          </div>
       </div>
   </div>
 </template>
@@ -116,6 +117,21 @@ export default {
     fallSort(dateArr){
       var $this=this;
       $this.$emit('fallSort',$this.currentData.name);
+    },
+    showAll(){
+        var $this = this;
+        var isFold = !$this.currentData.isFold;
+        var boxHeight = '';
+        if(isFold){
+          boxHeight = "auto";
+        }else{
+          if($this.currentData.mainArr.length>8){
+              boxHeight = "504px";
+          }else{
+              boxHeight = $this.currentData.boxHeight;
+          }
+        }
+        $this.$emit("changeSet",isFold, boxHeight,$this.currentData.name);
     },
   }
 }
