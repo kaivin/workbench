@@ -916,7 +916,7 @@ export default {
       const end = new Date();
       const start = new Date();
       start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-      end.setTime(end.getTime());
+      // end.setTime(end.getTime());
       // end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
       var startYear = start.getFullYear();
       var startMonth = start.getMonth() +1;
