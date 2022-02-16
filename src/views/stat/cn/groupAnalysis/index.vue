@@ -902,7 +902,8 @@ export default {
       var startDay = start.getDate();
       var endYear = end.getFullYear();
       var endMonth = end.getMonth() + 1;
-      var endDay = end.getDate()-1;
+      // var endDay = end.getDate()-1;
+      var endDay = end.getDate();
       startMonth = startMonth<10?'0'+startMonth:startMonth;
       startDay = startDay<10?'0'+startDay:startDay;
       endMonth = endMonth<10?'0'+endMonth:endMonth;
