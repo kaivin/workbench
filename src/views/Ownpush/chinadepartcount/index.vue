@@ -1402,8 +1402,8 @@ export default {
             millionData.avgTitle = "月平均百万个数";
             millionData.historyTitle = "月历史峰值";
             millionData.totalChart = [];
-            if(res.monthanumberpercentercompare&&res.monthanumberpercentercompare.length>0){
-                res.monthanumberpercentercompare.forEach(function(item){
+            if(res.monthdepartanumberpercentercompare&&res.monthdepartanumberpercentercompare.length>0){
+                res.monthdepartanumberpercentercompare.forEach(function(item){
                   var itemChart = {};
                   itemChart.name = item.departname;
                   itemChart.value = Math.floor(item.anumber*100)/100;

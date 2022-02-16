@@ -266,15 +266,16 @@ export default {
           type: 'bar',
           data:DataArr,
           barWidth: '28px',
+          label: {
+            show: true,
+            position: 'top'
+          },
           itemStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               { offset: 0, color: '#81a7f1' },
               { offset: 1, color: '#c6d6f4' }
             ])
-          },
-          label: {
-              show: false,
-          },
+          }
       }];
       var option;
       option = {
