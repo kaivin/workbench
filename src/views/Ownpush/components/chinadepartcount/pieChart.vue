@@ -55,6 +55,7 @@ export default {
   methods: {
     drawAreaTrendChart() {
         var $this = this;
+        console.log($this.chartData,'$this.chartData')
         var chartDom = document.getElementById('pie-'+$this.idData);
         var myChart = echarts.init(chartDom);
         var tagNum=$this.chartData[0].value + $this.tagUnitend;
@@ -102,8 +103,7 @@ export default {
                     color:colorList1,
                     name:$this.tagName,
                     type: 'pie',
-                    radius: ['40%', '70%'],
-                    avoidLabelOverlap: false,
+                    radius: ['30%', '50%'],
                     emphasis: {
                         label: {
                         show: true,
@@ -111,33 +111,44 @@ export default {
                         fontWeight: 'bold'
                         }
                     },
+                    avoidLabelOverlap: true,
                     itemStyle: {
                         borderColor: '#ffffff',
                         borderWidth:1,
                     },
-                    labelLine: {
-                        show: false
-                    },
                     label: {
-                        position: 'inner',
-                        fontSize: 12,
-                        formatter: params => {
-                            return (
-                                '{percent|' + params.percent + '%}'
-                            );
-                        },
-                        padding: [0, -130, 0, -130],
+                        alignTo: 'edge',
+                        formatter: '{name|{b}：{d}%}\n{time|{c}'+$this.tagUnitend+'}',
+                        minMargin: 10,
+                        edgeDistance:10,
                         rich: {
-                            color: '#fff',
-                            percent: {
-                                fontSize: 12,
-                                padding: [0, 0, 3, 0],
-                                color: '#fff'
-                            },
-                        },
-                        textStyle: {
-                            color: '#fff'
+                          name: {
+                            fontSize: 12,
+                            lineHeight:20,
+                            color: '#333',
+                            fontWeight:'bold'
+                          },
+                          time: {
+                            fontSize: 12,
+                            lineHeight:20,
+                            color: '#999'
+                          }
                         }
+                    },
+                    labelLine: {
+                      length: 15,
+                      length2: 0,
+                    },
+                    labelLayout: function (params) {
+                      const isLeft = params.labelRect.x < myChart.getWidth() / 2;
+                      const points = params.labelLinePoints;
+                      // Update the end point.
+                      points[2][0] = isLeft
+                        ? params.labelRect.x
+                        : params.labelRect.x + params.labelRect.width;
+                      return {
+                        labelLinePoints: points
+                      };
                     },
                     data:$this.chartData
                 }

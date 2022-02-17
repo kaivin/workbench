@@ -1781,7 +1781,8 @@ export default {
         var itemData = [];
         dataArr.forEach(function(item,index){
           var itemInquiryCount = {};
-          itemInquiryCount.name = item.date;
+          var itemStr=item.date.split('-')[1]+'月';
+          itemInquiryCount.name = itemStr;
           if(TagName=='询盘占比'){
               itemInquiryCount.value = item.xunnumber;
           }
