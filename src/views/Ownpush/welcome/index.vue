@@ -94,7 +94,7 @@ export default {
             var $this = this;
             $this.ismove = true;
             setTimeout(() => {
-                $this.$router.push("/home/index");
+                $this.$router.push("/Home/index");
             }, 3000);
         }
     }
