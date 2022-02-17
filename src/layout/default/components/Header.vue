@@ -7,7 +7,7 @@
             </router-link>
         </div>
         <div class="header-center">
-            <div class="header-button" v-if="isArticleAdd||isWebsiteAdd||isWebserverAdd||isCnPhoneAdd||isEnPhoneAdd||isEnCateAdd||isEnProductAdd||isCnCateAdd||isCnProductAdd||isWebsiteAttrAdd||isInformationAdd||isTagAdd||isUserAdd||isDepartAdd||isRoleAdd||isMenuAdd||isPermitAdd||isPromotedAccountAdd||isPromotedChannelAdd||isCnProcessAdd||isCnMoneyAdd||isCnCluesAdd||isEnCluesAdd||isWebsiteLogAdd||isWebMsgIpAdd||iscompareListAdd||isEncompareListAdd||isCntargetlistAdd||isEntargetlistAdd||isWorkOrderTagAdd||isWorkOrderAdd||isDepartScoreAdd||isResourceTypeAdd||isResourceAdd||isCnScoreAdd||isEnScoreAdd||iscompareGroupListAdd||isEncompareGroupListAdd||isUserbonusAdd">
+            <div class="header-button" v-if="isArticleAdd||isWebsiteAdd||isWebserverAdd||isCnPhoneAdd||isEnPhoneAdd||isEnCateAdd||isEnProductAdd||isCnCateAdd||isCnProductAdd||isWebsiteAttrAdd||isInformationAdd||isTagAdd||isUserAdd||isDepartAdd||isRoleAdd||isMenuAdd||isPermitAdd||isPromotedAccountAdd||isPromotedChannelAdd||isCnProcessAdd||isCnMoneyAdd||isCnCluesAdd||isEnCluesAdd||isWebsiteLogAdd||isWebMsgIpAdd||iscompareListAdd||isEncompareListAdd||isCntargetlistAdd||isEntargetlistAdd||isWorkOrderTagAdd||isWorkOrderAdd||isDepartScoreAdd||isResourceTypeAdd||isResourceAdd||isCnScoreAdd||isEnScoreAdd||iscompareGroupListAdd||isEncompareGroupListAdd||isUserbonusAdd||ischAimScoreAdd||isenAimScoreAdd">
               <div class="item-button" v-if="isArticleAdd" v-on:click="articleAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">发布文章</span></div>
               <div class="item-button" v-if="isWebsiteAdd" v-on:click="websiteAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加网站</span></div>
               <div class="item-button" v-if="isWebserverAdd" v-on:click="webserverAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加服务器</span></div>
@@ -47,7 +47,8 @@
               <div class="item-button" v-if="isCnScoreAdd" v-on:click="cnScoreAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">中文个人成交添加</span></div>
               <div class="item-button" v-if="isEnScoreAdd" v-on:click="enScoreAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">英文个人成交添加</span></div>
               <div class="item-button" v-if="isUserbonusAdd" v-on:click="userBonusAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加</span></div>
-            
+              <div class="item-button" v-if="ischAimScoreAdd" v-on:click="depchAimAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加目标</span></div>
+              <div class="item-button" v-if="isenAimScoreAdd" v-on:click="depenAimAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加目标</span></div>
             </div>
             <!-- <div class="header-search" v-if="isArticleSearch">
               <el-input placeholder="请输入内容" v-model="searchWord" @keypress.native.enter="searchResult" size="small" class="article-search">
@@ -171,6 +172,8 @@ export default {
         'isNohomeCache',
         'isCustormbuyFile',
         'isUserbonusAdd',
+        'ischAimScoreAdd',
+        'isenAimScoreAdd',
       ]),
     },
   watch: {
@@ -495,6 +498,14 @@ export default {
       userBonusAdd(){
         this.$store.dispatch('app/addUserBonus')
       },
+      // 1部季度目标添加
+      depchAimAdd(){
+        this.$store.dispatch('app/addchAimScore')
+      },
+      // 1部季度目标添加
+      depenAimAdd(){
+        this.$store.dispatch('app/addenAimScore')
+      }
   }
 }
 </script>

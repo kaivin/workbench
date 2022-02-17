@@ -210,17 +210,26 @@ export default {
                                 message: response.info,
                                 type: 'success'
                             });
-                            var userInfo = Cookies.get('userInfo');
-                            userInfo = JSON.parse(userInfo);
-                            if(userInfo.issales==2){
-                                $this.$router.push({ path: $this.redirect || '/Sales/index?Status=personcount' });
+                            if(response.haschtarget == 1){
+                                $this.$router.push({ path: $this.redirect || '/welcome?status=1' });
+                            }else if(response.hasentarget == 1){
+                                $this.$router.push({ path: $this.redirect || '/welcome?status=2' });
                             }else{
-                                if(userInfo.id==533||userInfo.id==1112){
-                                    $this.$router.push({ path: $this.redirect || '/stat/cn/targetShow' });
+
+                                var userInfo = Cookies.get('userInfo');
+                                userInfo = JSON.parse(userInfo);
+                                if(userInfo.issales==2){
+                                    $this.$router.push({ path: $this.redirect || '/Sales/index?Status=personcount' });
                                 }else{
-                                    $this.$router.push({ path: $this.redirect || '/' });
+                                    if(userInfo.id==533||userInfo.id==1112){
+                                        $this.$router.push({ path: $this.redirect || '/stat/cn/targetShow' });
+                                    }else{
+                                        $this.$router.push({ path: $this.redirect || '/' });
+                                    }
                                 }
+
                             }
+                            
                         }else if(response.loginnumber==2||response.status==4){
                             if(response.loginnumber){
                                 if(response.loginnumber==2){

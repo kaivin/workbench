@@ -40,6 +40,8 @@ const state = {
   addCnScore:false,
   addEnScore:false,
   addUserBonus:false,
+  addchAimScore:false,
+  addenAimScore:false,
 }
 
 const mutations = {
@@ -262,6 +264,18 @@ const mutations = {
   CLOSE_USERBONUS: (state) => {
     state.addUserBonus = false
   },
+  ADD_CHAIMSCORE: (state) => {
+    state.addchAimScore = true
+  },
+  CLOSE_CHAIMSCORE: (state) => {
+    state.addchAimScore = false
+  },
+  ADD_ENAIMSCORE: (state) => {
+    state.addenAimScore = true
+  },
+  CLOSE_ENAIMSCORE: (state) => {
+    state.addenAimScore = false
+  },
 }
 
 const actions = {
@@ -479,6 +493,18 @@ const actions = {
   },
   closeUserBonus({ commit }) {
     commit('CLOSE_USERBONUS')
+  },
+  addchAimScore({ commit }) {
+    commit('ADD_CHAIMSCORE')
+  },
+  closechAimScore({ commit }) {
+    commit('CLOSE_CHAIMSCORE')
+  },
+  addenAimScore({ commit }) {
+    commit('ADD_ENAIMSCORE')
+  },
+  closeenAimScore({ commit }) {
+    commit('CLOSE_ENAIMSCORE')
   },
 }
 

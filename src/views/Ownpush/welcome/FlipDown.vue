@@ -5,7 +5,7 @@
       <div :class="['time-box','time-box'+index]"
            :key="index">
         <!-- 底层基础div -->
-        <div class="base">{{ item }}<div class="base-b">{{ timeArrayT[index] }}</div>
+        <div class="base">{{ item }}<div class="base-a"><div class="base-b">{{ timeArrayT[index] }}</div></div>
         </div>
         <!-- 翻页动画div -->
         <div :class="['face',{ anime: isAnimate[index] }]"
@@ -264,7 +264,7 @@ export default {
     min-width: 28px;
     font-size: 14px;
     text-align: center;
-    background-color: #6c96e8;
+    background-color: #f0f0f0;
     perspective: 60px;
     border-radius: 3px;
     padding: 0 2px;
@@ -273,7 +273,7 @@ export default {
     &:before {
       content: "";
       position: absolute;
-      background: #a7c7ff;
+      background: #f0f0f0;
       width: 1px;
       height: 6px;
       top: 50%;
@@ -284,7 +284,7 @@ export default {
     &:after {
       content: "";
       position: absolute;
-      background: #a7c7ff;
+      background: #f0f0f0;
       width: 1px;
       height: 6px;
       top: 50%;
@@ -311,7 +311,7 @@ export default {
           border-radius: 0 0 3px 3px;
           width: 100%;
           height: 100%;
-          background-color: #709bf1; // a1比base浅一点点，为了模拟翻页的阴影效果
+          background-color: #f0f0f0; // a1比base浅一点点，为了模拟翻页的阴影效果
           // background-color: #0ff;
           clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
         }
@@ -322,7 +322,7 @@ export default {
         top: 0;
         width: 100%;
         height: 100%;
-        background-color: #6c96e8;
+        background-color: #f0f0f0;
         // background-color: #f00;
         backface-visibility: visible;
         clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
@@ -337,7 +337,7 @@ export default {
         top: 0;
         width: 100%;
         height: 100%;
-        background-color: #709bf1; // b0和a1一致
+        background-color: #f0f0f0; // b0和a1一致
         // background-color: #aa0;
         transform: rotateX(-180deg);
         backface-visibility: visible;

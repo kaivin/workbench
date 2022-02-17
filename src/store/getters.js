@@ -87,6 +87,10 @@
     isCustormbuyFile:state=>state.api.isCustormbuyFile,
     isUserbonusAdd: state => state.api.isUserbonusAdd,
     addUserBonus:state => state.app.addUserBonus,
+    ischAimScoreAdd:state => state.api.ischAimScoreAdd,
+    addchAimScore:state => state.app.addchAimScore,
+    isenAimScoreAdd:state => state.api.isenAimScoreAdd,
+    addenAimScore:state => state.app.addenAimScore,
 }
 export default getters
   

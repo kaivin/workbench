@@ -118,6 +118,8 @@ const state = {
     isNohomeCache:false,
     isCustormbuyFile:false,
     isUserbonusAdd:false,
+    ischAimScoreAdd:false,
+    isenAimScoreAdd:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -340,7 +342,16 @@ const mutations = {
     }else{
       state.isUserbonusAdd = false;
     }
-    
+    if(permitData.includes("Ownpush_chscoretargetadd")&&data.page==""){
+      state.ischAimScoreAdd = true;
+    }else{
+      state.ischAimScoreAdd = false;
+    }
+    if(permitData.includes("Ownpush_enscoretargetadd")&&data.page==""){
+      state.isenAimScoreAdd = true;
+    }else{
+      state.isenAimScoreAdd = false;
+    }
   },
 }
 
