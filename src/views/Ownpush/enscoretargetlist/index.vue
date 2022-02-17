@@ -15,13 +15,20 @@
                     <div slot="header">
                         <div class="card-header" ref="headerPane">
                             <div class="search-wrap aimSearch" ref="searchPane">
+                                <div class="aimTitle">时间选择：</div>
                                 <div class="item-search">
-                                    <span class="aimTitle">开始时间：</span>
-                                    <el-date-picker type="month" format="yyyy-MM" placeholder="选择开始时间" v-model="searchData.starttime" ref="starttime"></el-date-picker>
-                                </div>
-                                <div class="item-search">
-                                    <span class="aimTitle">截止时间：</span>
-                                    <el-date-picker type="month" format="yyyy-MM" placeholder="选择截止时间" v-model="searchData.endtime" ref="endtime"></el-date-picker>
+                                    <el-date-picker
+                                        v-model="searchDate"
+                                        type="monthrange"
+                                        format="yyyy-MM"
+                                        value-format="yyyy-MM"
+                                        key="b"
+                                        size="mini"
+                                        class="date-range"
+                                        range-separator="～"
+                                        start-placeholder="开始日期"
+                                        end-placeholder="结束日期">
+                                    </el-date-picker>
                                 </div>
                                 <div class="item-search">
                                     <el-button class="item-input" type="primary" size="small" icon="el-icon-search" @click="initPage">查询</el-button>
@@ -106,10 +113,10 @@
       <el-dialog :title="dialogText" v-if="(menuButtonPermit.includes('Ownpush_enscoretargetadd')||menuButtonPermit.includes('Ownpush_enscoretargetedit'))" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="386px" center>
         <el-form :model="dialogForm">
             <el-form-item label="开始时间：" :label-width="formLabelWidth">
-                <el-date-picker type="month" format="yyyy-MM" placeholder="选择开始时间" v-model="dialogForm.starttime" ref="starttime"></el-date-picker>
+                <el-date-picker type="month" format="yyyy-MM" value-format="yyyy-MM" placeholder="选择开始时间" v-model="dialogForm.starttime" ref="starttime"></el-date-picker>
             </el-form-item>
             <el-form-item label="截止时间：" :label-width="formLabelWidth">
-                <el-date-picker type="month" format="yyyy-MM" placeholder="选择结束时间" v-model="dialogForm.endtime" ref="endtime"></el-date-picker>
+                <el-date-picker type="month" format="yyyy-MM" value-format="yyyy-MM" placeholder="选择结束时间" v-model="dialogForm.endtime" ref="endtime"></el-date-picker>
             </el-form-item>
             <el-form-item label="目标分数：" :label-width="formLabelWidth">
                 <el-input v-model="dialogForm.scoretarget" ref="scoretarget" style="width:220px"></el-input>
@@ -125,7 +132,6 @@
   </div>
 </template>
 <script>
-import {parseTime}  from "@/utils";
 import { mapGetters } from 'vuex'
 export default {
   name: 'Ownpush_index',
@@ -146,6 +152,7 @@ export default {
       },
       isLoading:null,
       isDisabled:false,
+      searchDate:[],
       searchData:{
         page:1,
         limit: 20,
@@ -276,8 +283,10 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;   
-      $this.searchData.starttime = parseTime($this.searchData.starttime,'{y}-{m}');
-      $this.searchData.endtime = parseTime($this.searchData.endtime,'{y}-{m}');       
+      if($this.searchDate.length > 0){
+        $this.searchData.starttime = $this.searchDate[0];
+        $this.searchData.endtime = $this.searchDate[1]; 
+      }      
       $this.$store.dispatch('ownaim/getenScoreList', $this.searchData).then(response=>{
         if(response){
           if(response.status){
@@ -383,8 +392,6 @@ export default {
         }else{
           pathUrl = "ownaim/editEnScore";
         }
-        $this.dialogForm.starttime = parseTime($this.dialogForm.starttime,'{y}-{m}');
-        $this.dialogForm.endtime = parseTime($this.dialogForm.endtime,'{y}-{m}');
         $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
             if(response.status){
               $this.isDisabled=false;
@@ -503,6 +510,7 @@ export default {
       var $this = this;
       $this.searchData.starttime="";
       $this.searchData.endtime="";
+      $this.searchDate=[];
       $this.initPage();
     }
   }

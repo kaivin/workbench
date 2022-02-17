@@ -372,6 +372,9 @@
     .aimTitle{
         font-size: 13px;
         color: #888;
-        margin-right: 15px;
+        line-height:32px;
+    }
+    .el-range-editor.el-input__inner{
+        height: 32px;
     }
 }
