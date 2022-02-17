@@ -103,28 +103,49 @@ export default {
                 {
                     color:colorList1,
                     type: 'pie',
-                    radius: ['28%', '50%'],
-                    avoidLabelOverlap: false,
+                    radius: ['40%', '70%'],
+                    width: 380,
+                    left: 'center',
+                    avoidLabelOverlap: true,
                     itemStyle: {
                         borderColor: '#ffffff',
                         borderWidth:1,
                     },
-                    labelLine: {
-                        length: 5,
-                        length2: 20,
-                        lineStyle: {
-                            width: 1
+                    label: {
+                        alignTo: 'edge',
+                        formatter: '{name|{b}：{d}%}\n{time|{c} 个}',
+                        minMargin: 10,
+                        edgeDistance:10,
+                        padding:[10,0,10,0],
+                        rich: {
+                          name: {
+                            fontSize: 12,
+                            lineHeight:20,
+                            color: '#333',
+                            fontWeight:'bold'
+                          },
+                          time: {
+                            fontSize: 12,
+                            lineHeight:20,
+                            color: '#999'
+                          }
                         }
                     },
-                    label: {
-                        show: true,
-                        position: 'outside',
-                        formatter: '{a|{b}：{d}%}',
-                        rich: {
-                            a: {
-                                padding: [0, 5, 0, 5]
-                            }
-                        }
+                    labelLine: {
+                      length: 15,
+                      length2: 0,
+                      maxSurfaceAngle: 80
+                    },
+                    labelLayout: function (params) {
+                      const isLeft = params.labelRect.x < myChart.getWidth() / 2;
+                      const points = params.labelLinePoints;
+                      // Update the end point.
+                      points[2][0] = isLeft
+                        ? params.labelRect.x
+                        : params.labelRect.x + params.labelRect.width;
+                      return {
+                        labelLinePoints: points
+                      };
                     },
                     data:$this.currentData
                 }
