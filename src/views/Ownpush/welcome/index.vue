@@ -29,7 +29,7 @@
                 <div class="air01" :class="ismove?'air01active':''"></div>
                 <div class="air02" :class="ismove?'air02active':''"></div>
                 <p class="airtext">恭喜你离目标又近了一天！</p>
-                <div class="airBtn" @click="btnClick"></div>
+                <div class="airBtn" @click="btnClick"><span class="light"></span></div>
             </div>
         </div>
     </div>
@@ -95,7 +95,7 @@ export default {
             $this.ismove = true;
             setTimeout(() => {
                 $this.$router.push("/Home/index");
-            }, 3000);
+            }, 2000);
         }
     }
 }
