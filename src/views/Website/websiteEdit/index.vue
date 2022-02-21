@@ -196,7 +196,7 @@
                         class="EditPostInput flex-content"
                         clearable>
                       </el-input>
-                      <span @click="handleIIS" class="link">IIS 分析</span>
+                      <span @click="handleIIS" class="link">日志分析</span>
                   </div>
               </li>
               <li v-if="writePermit.includes('ftpremarks')||readPermit.includes('ftpremarks')">

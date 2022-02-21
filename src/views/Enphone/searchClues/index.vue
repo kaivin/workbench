@@ -175,6 +175,15 @@
                                                 clearable>
                                             </el-input>
                                             <el-input
+                                                size="mini"
+                                                placeholder="大洲"
+                                                style="width:100px;margin-right:10px;margin-bottom:10px;"
+                                                v-model="searchData.continent"
+                                                @keyup.enter.native="enCluesSearchData"
+                                                :class="searchData.continent!=''?'el-xzstate':''"
+                                                clearable>
+                                            </el-input>
+                                            <el-input
                                               class="tips-input-2"
                                               style="width: 150px;margin-right:10px;margin-bottom:10px;" size="mini"
                                               placeholder="模糊搜索、备注1"
@@ -806,6 +815,7 @@ export default {
             level_id:"",
             erroring:"",
             country:"",
+            continent:"",
             anymessage:"",
             remark2:"",
             remark3:"",
@@ -1436,6 +1446,7 @@ export default {
         resultData.level_id = $this.searchData.level_id;
         resultData.erroring = $this.searchData.erroring;
         resultData.country = $this.searchData.country;
+        resultData.continent = $this.searchData.continent;        
         resultData.anymessage = $this.searchData.anymessage;
         resultData.remark2 = $this.searchData.remark2;
         resultData.remark3 = $this.searchData.remark3;
@@ -1725,6 +1736,7 @@ export default {
         $this.searchData.level_id="";
         $this.searchData.erroring="";
         $this.searchData.country="";
+        $this.searchData.continent="";
         $this.searchData.anymessage="";
         $this.searchData.remark2="";
         $this.searchData.remark3="";

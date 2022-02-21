@@ -36,6 +36,26 @@
                                     </el-select>
                                 </div>
                                 <div class="item-search" style="padding-top:0px;padding-bottom:0px;">
+                                    <el-select v-model="searchData.type" size="small" clearable placeholder="页面类型">
+                                        <el-option
+                                            v-for="item in pagetypeList"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="item-search" style="padding-top:0px;padding-bottom:0px;">
+                                    <el-select v-model="searchData.code" size="small" clearable placeholder="状态码">
+                                        <el-option
+                                            v-for="item in codeList"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="item-search" style="padding-top:0px;padding-bottom:0px;">
                                     <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                                 </div>
                             </div>
@@ -59,11 +79,16 @@
                               class="SiteTable"
                               row-key="id"
                               >
-                                <el-table-column prop="url" label="抓取页面" width="300"></el-table-column>
+                                <el-table-column prop="url" label="抓取页面"></el-table-column>
                                 <el-table-column prop="ip" label="ip" width="130"></el-table-column>
                                 <el-table-column prop="code" label="状态码" width="70"></el-table-column>
+                                <el-table-column prop="size" label="文件大小" width="80"></el-table-column>
                                 <el-table-column prop="content" label="内容" min-width="120"></el-table-column>
-                                <el-table-column prop="spider" label="蜘蛛类型" width="140"></el-table-column>
+                                <el-table-column prop="spider" label="蜘蛛类型" width="140">
+                                  <template slot-scope="scope">
+                                      <span @click="spiderBtn(scope.row)" class="spiderItem">{{scope.row.spider}}</span>
+                                  </template>
+                                </el-table-column>
                                 <el-table-column prop="time" label="抓取时间" width="180"></el-table-column>
                             </el-table>
                          </div>
@@ -114,8 +139,22 @@ export default {
           url:'',
           spidertype:'',
           isfile:'',
+          type:'',
+          code:'',
         },
         spidertypeList:[],
+        pagetypeList:[
+          {value:1,label:'图片'},
+          {value:2,label:'html'},
+          {value:3,label:'js'},
+        ],
+        codeList:[
+          {value:200,label:'200'},
+          {value:301,label:'301'},
+          {value:302,label:'302'},
+          {value:404,label:'404'},
+          {value:500,label:'500'},
+        ],
     }
   },
   computed: {
@@ -245,7 +284,7 @@ export default {
         }else{
           $this.$message({
             showClose: true,
-            message: response.info,
+            message: res.info,
             type: 'error'
           });
         }
@@ -275,6 +314,12 @@ export default {
       }
       if($this.searchData.spidertype&&$this.searchData.spidertype!=''){
         searchData.spidertype = $this.searchData.spidertype;
+      }
+      if($this.searchData.type&&$this.searchData.type!=''){
+        searchData.type = $this.searchData.type;
+      }
+      if($this.searchData.code&&$this.searchData.code!=''){
+        searchData.code = $this.searchData.code;
       }
       if($this.searchData.url&&$this.searchData.url!=''){
         searchData.url = $this.searchData.url;
@@ -350,6 +395,25 @@ export default {
       $this.loadingFun();
       $this.getWeblogLists();
     },
+    spiderBtn(varDate){
+      var $this=this;
+      var searchData={};
+      searchData.ip=varDate.ip
+      $this.$store.dispatch('Weblog/getlogCheckspiderActive',searchData).then(res=>{
+        if(res.status){
+          $this.$message({
+              message: res.data,
+            type: 'success'
+          });
+        }else{
+          $this.$message({
+            showClose: true,
+            message: res.info,
+            type: 'error'
+          });
+        }
+      });
+    }
   }
 }
 </script>

@@ -22,3 +22,11 @@ export function getlogSpidertype() {
     method: "POST",
   });
 }
+// 检测蜘蛛真实性
+export function getlogCheckspider(data) {
+  return request({
+    url: "/hxindex/Weblog/checkspider",
+    method: "POST",
+    data
+  });
+}

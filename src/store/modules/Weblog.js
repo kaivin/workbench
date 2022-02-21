@@ -1,7 +1,8 @@
 ﻿import { 
   getloglist,
   getlists,
-  getlogSpidertype
+  getlogSpidertype,
+  getlogCheckspider
  } from '@/api/Weblog'
 
 const state = {}
@@ -38,6 +39,16 @@ const actions = {
         })
     })
   },
+  // 检测蜘蛛真实性
+  getlogCheckspiderActive({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+      getlogCheckspider(data).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        })
+    })
+  }
 }
 
 export default {

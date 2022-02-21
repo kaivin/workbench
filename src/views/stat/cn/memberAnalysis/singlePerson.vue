@@ -871,7 +871,7 @@ export default {
             grid: {
                 top:'10',
                 right:'0',
-                left:'35',
+                left:'45',
                 bottom:'30'
             },
             xAxis:{
