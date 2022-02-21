@@ -211,9 +211,9 @@ export default {
                                 type: 'success'
                             });
                             if(response.haschtarget == 1){
-                                $this.$router.push({ path: $this.redirect || '/welcome?status=1' });
+                                $this.$router.push({ path: '/welcome?status=1' });
                             }else if(response.hasentarget == 1){
-                                $this.$router.push({ path: $this.redirect || '/welcome?status=2' });
+                                $this.$router.push({ path: '/welcome?status=2' });
                             }else{
 
                                 var userInfo = Cookies.get('userInfo');
