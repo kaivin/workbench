@@ -83,13 +83,13 @@
                                 <el-table-column prop="ip" label="ip" width="130"></el-table-column>
                                 <el-table-column prop="code" label="状态码" width="70"></el-table-column>
                                 <el-table-column prop="size" label="文件大小" width="80"></el-table-column>
-                                <el-table-column prop="content" label="内容" min-width="120"></el-table-column>
                                 <el-table-column prop="spider" label="蜘蛛类型" width="140">
                                   <template slot-scope="scope">
                                       <span @click="spiderBtn(scope.row)" class="spiderItem">{{scope.row.spider}}</span>
                                   </template>
                                 </el-table-column>
                                 <el-table-column prop="time" label="抓取时间" width="180"></el-table-column>
+                                <el-table-column prop="content" label="内容" min-width="120"></el-table-column>
                             </el-table>
                          </div>
                     </div>

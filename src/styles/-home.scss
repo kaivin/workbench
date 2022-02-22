@@ -346,11 +346,6 @@
                                     cursor:pointer;
                                     transition:all .3s;
                                     padding-left:15px;
-                                    &:visited{
-                                        .txt-type,.txt-title{
-                                            color: #999!important;
-                                        }
-                                    }
                                     span{
                                         vertical-align:top;
                                     }
@@ -375,14 +370,6 @@
                                         height: 20px;
                                         font-size: 20px;
                                     }
-                                    // .update{
-                                    //     border:1px solid #2e88ff;
-                                    //     color:#2e88ff;
-                                    // }
-                                    // .new{
-                                    //     border:1px solid #ff840b;
-                                    //     color:#ff840b;
-                                    // }
                                     .update{
                                         .svg-i{
                                             color: #5787ff;

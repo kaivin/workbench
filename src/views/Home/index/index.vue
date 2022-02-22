@@ -69,7 +69,7 @@
                         >
                           <router-link v-if="item1.type == 1" :to="{path:'/Website/logInfo',query:{logID:item1.id,websiteID:item1.website_id,website:item1.domain}}" tag="a" class="txt-font flex-content" target="_blank" :title="item1.title">
                             <span
-                              class="txt-icon"
+                              class="txt-icon" @click="handleBtn(item1)"
                               :class="item1.is_new == 1 ? 'update' : 'new'"
                               >
                               <template v-if="item1.is_new == 1">
@@ -81,23 +81,21 @@
                               <!-- <b>{{ item1.is_new == 1 ? "改" : "新" }}</b> -->
                               </span
                             >
-                            <span class="txt-type" v-if="item1.type == 1"
+                            <span class="txt-type" @click="handleBtn(item1)" :style="{color:item1.is_read==1?'#1a1a1a;':'#1a1a1a!important;'}" v-if="item1.type == 1"
                               >【{{ item1.domain }} [{{ item1.website_id }}]】</span
                             >
-                            <span class="txt-type" v-else
+                            <span class="txt-type" @click="handleBtn(item1)" :style="{color:item1.is_read==1?'#1a1a1a;':'#1a1a1a!important;'}" v-else
                               >【{{ item1.typename }}】</span
                             >
                             <span
-                              class="txt-title"
-                              :style="{
-                                color: item1.titlecolor ? item1.titlecolor : '',
-                              }"
+                              class="txt-title" @click="handleBtn(item1)"
+                              :style="{color:item1.titlecolor ? item1.titlecolor : ''}"
                               >{{ item1.title }}</span>
                               <span class="txt-time" v-if="userInfo.id==533">({{ item1.updatetime }})</span>
                           </router-link>
-                          <router-link v-else :to="{path:'/Article/info',query:{id:item1.id}}" tag="a" class="txt-font flex-content" target="_blank" :title="item1.title">
+                          <router-link v-else :to="{path:'/Article/info',query:{id:item1.id}}" tag="a" class="txt-font flex-content"  :class="item1.is_read==1?'YRead':'NRead'" target="_blank" :title="item1.title">
                             <span
-                              class="txt-icon"
+                              class="txt-icon" @click="handleBtn(item1)"
                               :class="item1.is_new == 1 ? 'update' : 'new'"
                               >
                               <!-- <b>{{ item1.is_new == 1 ? "改" : "新" }}</b> -->
@@ -109,17 +107,15 @@
                                 </template>
                               </span
                             >
-                            <span class="txt-type" v-if="item1.type == 1"
+                            <span class="txt-type" @click="handleBtn(item1)" :style="{color:item1.is_read==1?'#1a1a1a;':'#1a1a1a!important;'}" v-if="item1.type == 1"
                               >【{{ item1.domain }} [{{ item1.website_id }}]】</span
                             >
-                            <span class="txt-type" v-else
+                            <span class="txt-type" @click="handleBtn(item1)" :style="{color:item1.is_read==1?'#1a1a1a;':'#1a1a1a!important;'}" v-else
                               >【{{ item1.typename }}】</span
                             >
                             <span
-                              class="txt-title"
-                              :style="{
-                                color: item1.titlecolor ? item1.titlecolor : '',
-                              }"
+                              class="txt-title" @click="handleBtn(item1)"
+                              :style="{color:item1.titlecolor ? item1.titlecolor : ''}"
                               >{{ item1.title }}</span>
                               <span class="txt-time" v-if="userInfo.id==533">({{ item1.updatetime }})</span>
                           </router-link>
@@ -198,7 +194,6 @@ export default {
   },
   created() {
     var $this = this;
-    //$this.getSend();
     $this.initData();
   },
   mounted(){
@@ -212,31 +207,6 @@ export default {
     this.$refs.boxPane.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods: {
-    //推送
-    getSend(){
-      var $this = this;
-      // 连接服务端，workerman.net:2120换成实际部署web-msg-sender服务的域名或者ip
-      var socket = io('http://122.114.87.169:2120');
-      // uid可以是自己网站的用户id，以便针对uid推送以及统计在线人数
-      var uid = $this.userInfo.id;
-      // socket连接后以uid登录
-      socket.on('connect', function(){
-          socket.emit('login', uid);
-      });
-      // 后端推送来消息时
-      socket.on('new_msg', function(msg){
-          var msgArr=eval(msg);
-          var newsList=$this.newsList;
-          newsList.forEach(function(item,index){
-            msgArr.forEach(function(items,indexs){
-              if(index==indexs){
-                item.isread=items.isread;
-              }
-            });
-          });
-          $this.newsList=newsList;
-      });
-    },
     // 初始化数据
     initData() {
       var $this = this;
@@ -453,7 +423,23 @@ export default {
     newsShow(i){
       var $this = this;
       $this.arrowArr[i].isShow =  !$this.arrowArr[i].isShow;
-    }
+    },
+    handleBtn(dateArr){
+      var $this = this;
+      var newsList=$this.newsList;
+      newsList.forEach(function(item,index){
+         if(item.article&&item.article.length>0){
+           item.article.forEach(function(items,indexs){
+             if(items.id==dateArr.id){
+               if(dateArr.is_read==2){
+                 items.is_read=1;
+               }
+             }
+           });
+         }
+      });
+      $this.newsList=newsList;
+    },
   },
 };
 </script>

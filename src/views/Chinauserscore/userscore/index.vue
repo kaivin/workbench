@@ -35,6 +35,7 @@
                                 <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                                 <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                               </div>
+                              <span style="display:inline-block; font-size:14px; color:#666; line-height:32px; padding-left:5px; margin:5px;">非付费推广</span>
                           </div>
                       </div>
                     </div>
@@ -47,7 +48,7 @@
                               tooltip-effect="dark"
                               stripe
                               class="SiteTable EntableColor"
-                              style="width: 100%"
+                              style="width:100%"
                               :style="'min-height:'+tableHeight+'px;'"
                               row-key="id"
                               >

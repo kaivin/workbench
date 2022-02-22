@@ -986,6 +986,8 @@ export default {
       });
       if(departId!=0){
         $this.searchData.dept_id=departId;
+      }else{
+        $this.searchData.dept_id='';
       }
       $this.searchResult();
     },
