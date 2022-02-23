@@ -491,7 +491,7 @@ export default {
       }else if(Name.indexOf('成交积分均价排行榜')>=0){
         itemObj.isavg='消费/成交积分';
       }else if(Name.indexOf('积分询盘比排行榜')>=0){
-        itemObj.isavg='成交积分/询盘';
+        itemObj.isavg='询盘/成交积分';
       }else{
         itemObj.isavg=''
       }
