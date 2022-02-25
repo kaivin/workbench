@@ -614,16 +614,6 @@ export default {
     $this.initData();
   },
   methods:{
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 获取面包屑路径
     getBreadcrumbList(){
       var $this = this;
@@ -689,7 +679,6 @@ export default {
     initData(){
         var $this = this;
         if($this.$router.currentRoute.meta.id){
-           $this.loadingFun();
           $this.getUserMenuButtonPermit();
         }else{
           $this.$router.push({path:`/404?redirect=${$this.$router.currentRoute.fullPath}`});
@@ -966,7 +955,6 @@ export default {
           $this.formData.website_serveruser = [parseInt(data.website_serveruser)]
         }
       }
-      $this.isLoading.close();
     },
     // 清空信息
     clearForm(){
@@ -1020,7 +1008,6 @@ export default {
       var $this = this;
       if(!$this.isDisabled){
         $this.isDisabled=true;
-        $this.loadingFun();
         var formData = {}
         formData.id = $this.formData.id;
         formData.brand = $this.formData.brand;
@@ -1059,7 +1046,6 @@ export default {
                 message: response.info,
                 type: 'success'
               });
-              $this.isLoading.close();
               setTimeout(()=>{
                 $this.isDisabled=false;
               },1000);

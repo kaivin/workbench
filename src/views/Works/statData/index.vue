@@ -201,7 +201,6 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null,
       isSearchResult:false,
     }
   },
@@ -343,22 +342,11 @@ export default {
           $this.setScrollDom();
       }, 400);
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 搜索结果
     searchResult(){
       var $this = this;
       if(!$this.isSearchResult){
         $this.isSearchResult=true;
-        $this.loadingFun();
         $this.initPage();
       }
     },
@@ -371,7 +359,6 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -423,7 +410,6 @@ export default {
             groupArrw=groupArrw.concat(groupArr,dept_group);
             $this.groupArr=groupArrw;
             $this.tableData = $this.groupArr;
-            $this.isLoading.close();
             setTimeout(()=>{
               $this.isSearchResult=false;
             },1000);

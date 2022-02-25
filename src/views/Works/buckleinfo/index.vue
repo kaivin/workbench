@@ -67,7 +67,6 @@ export default {
         permitip:"1",
       },
       serverData:{},
-      isLoading:null,
       isSaveInfo:false,
     }
   },
@@ -151,27 +150,15 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 重置页面
     resetFormData(){
       var $this = this;
-      $this.loadingFun();
       $this.clearFormData();
       $this.initInfo($this.serverData);
     },
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -238,8 +225,7 @@ export default {
       var $this = this;
       $this.formData.score = ""+data.bucklescore;
       $this.formData.limit_ip = ""+data.limit_ip;
-      $this.formData.permitip = ""+data.permitip;
-      $this.isLoading.close();      
+      $this.formData.permitip = ""+data.permitip;     
       setTimeout(()=>{
         $this.isSaveInfo=false;
       },1000);
@@ -272,7 +258,6 @@ export default {
           return false;
         }
         $this.isSaveInfo=true;
-        $this.loadingFun();
         var formData = {}
         formData.score = $this.formData.score;
         formData.limit_ip = $this.formData.limit_ip;

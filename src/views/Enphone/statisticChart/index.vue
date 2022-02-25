@@ -204,6 +204,12 @@
                           </el-select>
                         </div>
                       </div>
+                      <div class="team-panel">
+                        <div class="team-header">
+                          <span class="require">有效：</span>                          
+                          <el-checkbox class="item-checkbox" v-model="searchData.effective" size="mini" border>只显示有效</el-checkbox>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="ChinaphoneTwo buttonTwo">
@@ -587,6 +593,7 @@ export default {
       searchData:{
         date:[],
         ennature:'',
+        effective:false,
         country:'',
         material:'',
         domain:'',
@@ -684,7 +691,6 @@ export default {
       minProduct:[],
       maxProductNum:0,
       minProductNum:0,
-      isLoading:null,
       isDisabled:false,
       chartlist:{
         barPhoneTotalPlot:'',
@@ -799,20 +805,9 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){
       var $this=this;
-      $this.loadingFun();
       $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
         if(response){
           if(response.status){
@@ -939,6 +934,7 @@ export default {
       $this.searchData.name='';
       $this.searchData.url='';
       $this.searchData.ennature='';
+      $this.searchData.effective=false;
       $this.searchResult.hoursCount=[];
       $this.searchResult.deviceCount=[];
       $this.searchResult.dayCount=[];
@@ -958,7 +954,6 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -988,6 +983,7 @@ export default {
       if($this.searchData.ennature&&$this.searchData.ennature!=''){
         searchData.ennature = $this.searchData.ennature;
       }
+      searchData.effective = $this.searchData.effective?1:0;
       if($this.searchData.date&&$this.searchData.date.length>0){
         searchData.starttime = $this.searchData.date[0];
         searchData.endtime = $this.searchData.date[1];
@@ -1160,7 +1156,6 @@ export default {
               natureList.push(itemData);
             });
             $this.natureList = natureList;
-            $this.isLoading.close();
           }else{
             $this.$message({
               showClose: true,
@@ -1210,7 +1205,6 @@ export default {
           return false;
         }
         $this.isDisabled=true;
-        $this.loadingFun();
         $this.$store.dispatch('enphone/inquirySearchAction', searchData).then(response=>{
           if(response){
             if(response.status){
@@ -1358,7 +1352,6 @@ export default {
                   $this.drawChart10();
                 }
                 
-                $this.isLoading.close();
               });
               setTimeout(()=>{
                 $this.isDisabled=false;

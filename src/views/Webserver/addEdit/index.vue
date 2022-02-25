@@ -322,20 +322,9 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 初始化数据
     initData(){
         var $this = this;
-        $this.loadingFun();
         $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -466,13 +455,10 @@ export default {
                       message: response.info,
                       type: 'error'
                     });
-                    $this.isLoading.close();
                   }
                 }
               }
           });
-      }else{
-        $this.isLoading.close();
       }
     },
     // 初始化网站信息
@@ -498,7 +484,6 @@ export default {
       }else{
         $this.formData.adminuserid = [parseInt(data.adminuserid)]
       }
-      $this.isLoading.close();
     },
     // 清空信息
     clearForm(){
@@ -528,7 +513,6 @@ export default {
       var $this = this;
       if(!$this.isDisabled){
         $this.isDisabled=true;
-        $this.loadingFun();
         var actionPath = "";
         var formData = {}
         formData.id = $this.formData.id;
@@ -555,7 +539,6 @@ export default {
                 message: response.info,
                 type: 'success'
               });
-              $this.isLoading.close();
               setTimeout(()=>{
                 $this.isDisabled=false;
               },1000);
@@ -565,7 +548,6 @@ export default {
                 message: response.info,
                 type: 'error'
               });
-              $this.isLoading.close();
               setTimeout(()=>{
                 $this.isDisabled=false;
               },1000);

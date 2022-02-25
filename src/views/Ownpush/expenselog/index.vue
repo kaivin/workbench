@@ -199,7 +199,6 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null,
     }
   },
   computed: {
@@ -343,20 +342,9 @@ export default {
           $this.setScrollDom();
       }, 400);
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 搜索数据
     searchResult(){
         var $this = this;
-        $this.loadingFun();
         $this.searchData.page = 1;
         $this.initPage();
     },
@@ -375,7 +363,6 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -388,7 +375,6 @@ export default {
           if(res.status){
               $this.tableData=res.data;
               $this.totalDataNum = res.allcount;
-              $this.isLoading.close();
               $this.$nextTick(function () {
                 $this.setTableHeight();
               })
@@ -489,9 +475,7 @@ export default {
       let filedata = e.target.files[0];
       var formData = new FormData();
       formData.append('filename',filedata);
-      $this.loadingFun();
       this.setExpenseaddAction(formData).then(res=>{
-        $this.isLoading.close();
         $this.$message({
           showClose: true,
           message: res.info,
@@ -503,14 +487,12 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      this.loadingFun();
       this.searchData.limit = val;
       this.searchData.page = 1;
       this.initPage();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      this.loadingFun();
       this.searchData.page = val;
       this.initPage();
     },

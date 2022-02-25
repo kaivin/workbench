@@ -22,7 +22,6 @@ export default {
   name: 'Page404',
   data() {
     return {
-      isLoading:null,
     }
   },
   computed: {
@@ -31,20 +30,8 @@ export default {
     }
   },
     created(){
-      this.loadingFun();
-      this.isLoading.close();
     },
   methods: {
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
   }
 }
 </script>

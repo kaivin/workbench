@@ -154,7 +154,6 @@ export default {
       content:"",
       isHideName:false,
       isFocus:false,
-      isLoading:null,
       ulist:[],
     }
   },
@@ -291,20 +290,9 @@ export default {
         $this.rightWidth = $this.$refs.rightPane.offsetWidth;
       });
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 初始化数据
     initData(){
         var $this = this;
-        $this.loadingFun();
         $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -429,7 +417,6 @@ export default {
               $this.logList = logList;
               $this.ulist=response.ulist;
               $this.articleData = response.data;
-              $this.isLoading.close();
             }else{
               if(response.permitstatus&&response.permitstatus==2){
                   $this.$message({

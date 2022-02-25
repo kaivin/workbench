@@ -599,7 +599,6 @@ export default {
       minProduct:[],
       maxProductNum:0,
       minProductNum:0,
-      isLoading:null,
       isDisabled:false,
       chartlist:{
         barPhoneTotalPlot:'',
@@ -699,16 +698,6 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 重置选择项
     resetData(){
       var $this = this;
@@ -804,7 +793,6 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -973,7 +961,6 @@ export default {
               categoryList.push(itemData);
             });
             $this.categoryList = categoryList;
-            $this.isLoading.close();
           }else{
             $this.$message({
               showClose: true,
@@ -1063,7 +1050,6 @@ export default {
           return false;
         }
         $this.isDisabled=true;
-        $this.loadingFun();
         $this.$store.dispatch('chinaphone/cluesAnalysisResultDataAction', searchData).then(response=>{
           if(response){
             if(response.status){
@@ -1208,7 +1194,6 @@ export default {
                 }else{
                   $this.drawChart10();
                 }
-                $this.isLoading.close();
               });
               setTimeout(()=>{
                 $this.isDisabled=false;

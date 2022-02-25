@@ -394,7 +394,6 @@ export default {
           tableBottom:0,
           clientHeight:0,
         },
-        isLoading:null,
         isSearchResult:false,
     }
   },
@@ -525,16 +524,6 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -564,7 +553,6 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
-      $this.loadingFun();
       $this.initPage();
     },
     // 重置表单
@@ -578,7 +566,6 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前状态分类的数据
@@ -667,7 +654,6 @@ export default {
             $this.$nextTick(()=>{
               $this.setHeight();
             });
-            $this.isLoading.close();
             setTimeout(()=>{
               $this.isSearchResult=false;
             },1000);
@@ -884,13 +870,11 @@ export default {
     handleSizeChange(val) {
       this.limit = val;
       this.page = 1;
-      this.loadingFun();
       this.initData();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
       this.page = val;
-      this.loadingFun();
       this.initData();
     },
     // 页面自跳转
@@ -911,7 +895,6 @@ export default {
     // 获取第三方平台中文留言信息
     getCnMsgData(){
       var $this = this;
-      $this.loadingFun();
       $this.isReady = false;
       $this.$store.dispatch('webmsg/webMsgSyncPlatMsgAction', {number:$this.msgPage}).then(response=>{
         if(response){
@@ -954,7 +937,6 @@ export default {
     // 添加到个人待处理
     allotToPending(){
       var $this = this;
-      $this.loadingFun();
       if($this.selectedData.length>0){
         var resultData = {};
         resultData.id = [];
@@ -984,7 +966,6 @@ export default {
     // 留言修改
     editTableRow(row,index){
       var $this = this;
-      $this.loadingFun();
       var resultData = {};
       resultData.id = row.id;
       resultData.remark = row.remark;
@@ -1016,7 +997,6 @@ export default {
     // 删除表格行
     deleteTableRow(row,index){
       var $this = this;
-      $this.loadingFun();
       var resultData = {};
       resultData.id =[];
       if(row.id){
@@ -1116,7 +1096,6 @@ export default {
     // 改为推广待处理
     promotePendingEdit(row,index){
       var $this = this;
-      $this.loadingFun();
       $this.$store.dispatch('webmsg/webMsgPromotePendingAction', {id:row.id}).then(response=>{
         if(response){
           if(response.status){
@@ -1139,7 +1118,6 @@ export default {
     // 撤回推广待处理
     revokeEdit(row,index){
       var $this = this;
-      $this.loadingFun();
       $this.$store.dispatch('webmsg/webMsgRevokeAction', {id:row.id}).then(response=>{
         if(response){
           if(response.status){
@@ -1162,7 +1140,6 @@ export default {
     // 改为推广已处理
     promoteProcessedEdit(row,index){
       var $this = this;
-      $this.loadingFun();
       $this.$store.dispatch('webmsg/webMsgPromoteProcessedAction', {id:row.id}).then(response=>{
         if(response){
           if(response.status){
@@ -1211,7 +1188,6 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
       }).then(() => {
-        $this.loadingFun();
         $this.$store.dispatch(url, null).then(response=>{
           if(response){
             if(response.status){

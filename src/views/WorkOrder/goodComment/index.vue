@@ -221,17 +221,6 @@ export default {
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)',
-        zindex:999
-      });
-    },
     // 获取面包屑路径
     getBreadcrumbList(){
       var $this = this;
@@ -326,13 +315,11 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
-      $this.loadingFun();
       $this.initPage();
     },
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -427,7 +414,6 @@ export default {
           if(res.status){
               $this.tableData=res.data;
               $this.totalDataNum = res.allcount;
-              $this.isLoading.close();
           }else{
               $this.$message({
                 showClose: true,

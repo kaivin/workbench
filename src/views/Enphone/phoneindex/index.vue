@@ -1019,7 +1019,6 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null,
       brandID:null,
       isSearchResult:false,
     }
@@ -1170,16 +1169,6 @@ export default {
         }
       });
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -1255,7 +1244,6 @@ export default {
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){
       var $this=this;
-      $this.loadingFun();
       $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
         if(response){
           if(response.status){
@@ -1352,8 +1340,7 @@ export default {
     initData(){
       var $this = this;
         $this.searchData.page=1;
-      $this.loadingFun();
-      $this.getUserMenuButtonPermit();
+        $this.getUserMenuButtonPermit();
     },
     // 电话首页-部门搜索
     initHomePage(){
@@ -1375,7 +1362,6 @@ export default {
              });
              $this.departcountUlist = departcountUlist;             
              $this.dept_Data=response.departusercount;
-             $this.isLoading.close();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -1494,7 +1480,6 @@ export default {
                 });
             }
             $this.defaultData.custorAndsalesmwarn=custorAndsalesmwarn.concat(custormwarn,saleswarning);
-            $this.isLoading.close();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -1621,7 +1606,6 @@ export default {
             }
           }
         }
-        $this.loadingFun();
         $this.$store.dispatch(pathUrl, searchData).then(response=>{
           if(response){
             if(response.status){
@@ -2022,7 +2006,6 @@ export default {
                   $this.setTableHeight();
                 })
             }
-            $this.isLoading.close();
             setTimeout(()=>{
               $this.isSearchResult=false;
             },1000);
@@ -2098,7 +2081,6 @@ export default {
     // 部门点击事件
     topdepartClick(Tid){
       var $this = this;
-      $this.loadingFun();
       var topdepart = $this.defaultData.departArr;
       topdepart.forEach(function(item){
         if(item.depart_id == Tid){
@@ -2131,7 +2113,6 @@ export default {
             departcountUlist.push(item);
         });
         $this.departcountUlist = departcountUlist;
-        $this.isLoading.close();
       }
     },  
     enterBtn(){

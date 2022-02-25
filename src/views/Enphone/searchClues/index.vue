@@ -948,7 +948,6 @@ export default {
           tableBottom:0,
           clientHeight:0,
         },
-        isLoading:null,
         isDisabled:false,
     }
   },
@@ -1092,16 +1091,6 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -1131,7 +1120,6 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登录用户有可写权限的询盘字段
@@ -1144,7 +1132,6 @@ export default {
             $this.$nextTick(function () {
               $this.setTableHeight();
             });
-            $this.isLoading.close();
             setTimeout(()=>{
               $this.isDisabled=false;
             },1000);
@@ -1164,8 +1151,7 @@ export default {
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){
       var $this=this;
-      $this.loadingFun();
-      $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
+      $this.loadingFuch('enphone/getLeftPhotoAction', null).then(response=>{
         if(response){
           if(response.status){
               $this.linkAll.todayNum = response.alltodaynumber;
@@ -1304,7 +1290,6 @@ export default {
               $this.$nextTick(function () {
                 $this.setTableHeight();
               })
-              $this.isLoading.close();
           }else{
             $this.$message({
                 showClose: true,
@@ -1476,7 +1461,6 @@ export default {
         $this.searchData.phoneid= $this.deptOneId;
         
         var resultData = $this.getSearchResultData(pageInit);
-        $this.loadingFun();
         document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
         $this.$store.dispatch('enphone/getCurrentCluesSearchListAction', resultData).then(response=>{
           if(response){

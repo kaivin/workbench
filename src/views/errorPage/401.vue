@@ -38,24 +38,11 @@ export default {
       errGif: require('@/assets/401_images/401.gif') + '?' + +new Date(),
       ewizardClap: require('@/assets/401_images/401.gif'),
       dialogVisible: false,
-      isLoading:null,
     }
   },
     created(){
-      this.loadingFun();
-      this.isLoading.close();
     },
   methods: {
-      // loading自定义
-      loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-      });
-      },
     // 退出登录
     async logout() {
         var $this = this;

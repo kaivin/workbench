@@ -247,21 +247,10 @@ export default {
     this.$refs.boxPane.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods: {
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 初始化数据
     initData() {
       var $this = this;
       if($this.searchData.id&&$this.searchData.id!=''){
-        $this.loadingFun();
         $this.getCnDepartList();
         $this.getCnPersoncountinfo();
       }else{
@@ -601,7 +590,6 @@ export default {
                   $this.maxPersonCount.maxmoney=numSeparate(maxmoney);
                   $this.personCount=personCount;
                 }
-                $this.isLoading.close();
             }else {
               $this.$message({
                 showClose: true,
@@ -637,7 +625,6 @@ export default {
     // 点击组员获取组员ID
     PersonChange(valData){
         var $this=this;
-        $this.loadingFun();
         $this.searchData.id=valData;
         $this.choosePerson.forEach(function(item,index){
             item.isOn=false;

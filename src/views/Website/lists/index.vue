@@ -632,16 +632,6 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -691,7 +681,6 @@ export default {
     // 初始化页面数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -897,7 +886,6 @@ export default {
             $this.$nextTick(function () {
               $this.setHeight();
             });
-            $this.isLoading.close();
             setTimeout(()=>{
               $this.isDisabled=false;
             },1000);
@@ -1280,14 +1268,12 @@ export default {
     handleSizeChange(val) {
       this.limit = val;
       this.page = 1;
-      this.loadingFun();
       this.initData();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
       this.page = val;
       this.isPageBtn = true;
-      this.loadingFun();
       this.initData();
     },
     // 关闭添加网站弹窗

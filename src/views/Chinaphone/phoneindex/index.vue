@@ -550,7 +550,6 @@ export default {
         clientHeight:0,
       },
       currentTeam:"中文合计",
-      isLoading:null,
       chartLoading:false,
       isSearchResult:false,
     }
@@ -729,16 +728,6 @@ export default {
         this.scrollPosition.isPC = true;
       }
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 设置高度
     setHeight(){
       var $this = this;
@@ -762,7 +751,6 @@ export default {
     searchResult(){
       var $this = this;
       $this.searchData.page = 1;
-      $this.loadingFun();
       $this.initCluesList();
     },
     // 重置表单
@@ -785,7 +773,6 @@ export default {
     initData(){
       var $this = this;
       $this.searchData.page=1;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -855,7 +842,6 @@ export default {
             $this.topdepart=topdepart;
             $this.currentDepartID = "";
             //$this.drawChart();
-            $this.isLoading.close();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -879,7 +865,6 @@ export default {
     // 获取电话列表及电话统计数字
     getPhoneListNum(){
       var $this = this;
-      $this.loadingFun();
       $this.$store.dispatch('chinaphone/cluesPhoneStatDataAction', null).then(response=>{
         if(response){
           if(response.status){
@@ -972,7 +957,6 @@ export default {
       if(!$this.isSearchResult){
         $this.isSearchResult=true;
         var searchData = $this.initSearchData();
-        $this.loadingFun();
         $this.$store.dispatch('chinaphone/cluesCurrentPhoneDataAction', searchData).then(response=>{
           if(response){
             if(response.status){
@@ -1361,7 +1345,6 @@ export default {
                   $this.setHeight();
                 })
             }
-            $this.isLoading.close();
             setTimeout(()=>{
               $this.isSearchResult=false;
             },1000);

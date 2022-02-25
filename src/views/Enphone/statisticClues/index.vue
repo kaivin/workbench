@@ -272,7 +272,6 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null,
       isDisabled:false,
     }
   },
@@ -393,16 +392,6 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -437,7 +426,6 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 右侧标题-左侧电话括号小数字
@@ -445,7 +433,6 @@ export default {
       var $this=this;
       if(!$this.isDisabled){
         $this.isDisabled=true;
-        $this.loadingFun();
         $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
           if(response){
             if(response.status){
@@ -517,7 +504,6 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
-      $this.loadingFun();
       $this.$store.dispatch('enphone/cluesAnalysisInitSystemDataAction', {status:$this.status}).then(response=>{
         if(response){
           if(response.status){
@@ -528,7 +514,6 @@ export default {
             $this.$nextTick(function () {
               $this.setTableHeight();
             })
-            $this.isLoading.close();
             setTimeout(()=>{
               $this.isDisabled=false;
             },1000);

@@ -174,16 +174,6 @@ export default {
     $this.initData();
   },
   methods:{
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 常用蜘蛛列表
     getspidertypeList(){
       var $this=this;
@@ -293,7 +283,6 @@ export default {
     // 点击日志标签
     handleLog(valDate){
       var $this=this;
-      $this.loadingFun();
       $this.searchData.isfile=valDate.label;
       $this.loglist.forEach(function(item,index){
         item.isOn=false;
@@ -351,7 +340,6 @@ export default {
         if(res.status){
             $this.tableData=res.data;
             $this.totalDataNum = res.allcount;
-            $this.isLoading.close();
         }else{
           $this.$message({
             showClose: true,
@@ -376,7 +364,6 @@ export default {
     // 搜索
     searchResult(){
       var $this=this;
-      $this.loadingFun();
       $this.getWeblogLists();
     },
     // 每页显示条数改变事件
@@ -384,7 +371,6 @@ export default {
       var $this=this;
       $this.searchData.limit = val;
       $this.page = 1;
-      $this.loadingFun();
       $this.getWeblogLists();
     },
     // 当前页改变事件
@@ -392,7 +378,6 @@ export default {
       var $this=this;
       $this.searchData.page = val;
       $this.isPageBtn = true;
-      $this.loadingFun();
       $this.getWeblogLists();
     },
     spiderBtn(varDate){

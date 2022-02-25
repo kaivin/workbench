@@ -442,7 +442,6 @@ export default {
       },
       isInit:false,
       count:0,
-      isLoading:null,
       isDisabled:false,
     }
   },
@@ -525,16 +524,6 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 重置页面
     resetFormData(){
       var $this = this;
@@ -546,7 +535,6 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -560,7 +548,6 @@ export default {
             });
             if($this.$route.query.id){
               if(!$this.menuButtonPermit.includes('Article_edit')){
-                $this.isLoading.close();
                 $this.$message({
                   showClose: true,
                   message: "未被分配该文章修改权限",
@@ -573,7 +560,6 @@ export default {
               }
             }else{
               if(!$this.menuButtonPermit.includes('Article_add')){
-                $this.isLoading.close();
                 $this.$message({
                   showClose: true,
                   message: "未被分配文章发布权限",
@@ -586,7 +572,6 @@ export default {
               }
             }
           }else{
-            $this.isLoading.close();
             $this.$message({
               showClose: true,
               message: "未被分配文章发布修改权限",
@@ -596,7 +581,6 @@ export default {
             $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
           }
         }else{
-          $this.isLoading.close();
           $this.$message({
             showClose: true,
             message: response.info,
@@ -628,8 +612,6 @@ export default {
             if($this.$route.query.id){
               $this.formData.id = parseInt($this.$route.query.id);
               $this.getArticleInfo();
-            }else{
-              $this.isLoading.close();
             }
           }else{
             $this.$message({
@@ -686,10 +668,8 @@ export default {
           if(response){
             if(response.status){
               $this.articleData = response.data;
-              $this.isLoading.close();
               $this.initArticle($this.articleData)
             }else{
-              $this.isLoading.close();
               if(response.permitstatus&&response.permitstatus==2){
                 $this.$message({
                   showClose: true,
@@ -706,8 +686,6 @@ export default {
                 });
               }
             }
-          }else{
-            $this.isLoading.close();
           }
       });
     },

@@ -143,7 +143,6 @@ export default {
             capsTooltip1:false,
             capsTooltip2:false,
             isTip:true,
-            isLoading:null,
             isDisplay:false,
             isDisabled:false,
         }
@@ -169,8 +168,6 @@ export default {
         }
     },
     created(){
-      this.loadingFun();
-      this.isLoading.close();
     },
     methods:{
         getModuleList() {
@@ -260,16 +257,6 @@ export default {
                 } else {
                     return false;
                 }
-            });
-        },
-        // loading自定义
-        loadingFun(){
-            var $this = this;
-            $this.isLoading = $this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
             });
         },
         getOtherQuery(query) {

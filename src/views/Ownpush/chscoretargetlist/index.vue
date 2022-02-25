@@ -150,7 +150,6 @@ export default {
         endtime:"",
         scoretarget:0
       },
-      isLoading:null,
       isDisabled:false,
       searchDate:[],
       searchData:{
@@ -264,20 +263,9 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -292,7 +280,6 @@ export default {
           if(response.status){
             $this.totalDataNum = response.allcount;
             $this.tableData = response.data;
-            $this.isLoading.close();
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({

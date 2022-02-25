@@ -55,7 +55,6 @@ export default {
   methods: {
     drawAreaTrendChart() {
         var $this = this;
-        console.log($this.chartData,'$this.chartData')
         var chartDom = document.getElementById('pie-'+$this.idData);
         var myChart = echarts.init(chartDom);
         var tagNum=$this.chartData[0].value + $this.tagUnitend;

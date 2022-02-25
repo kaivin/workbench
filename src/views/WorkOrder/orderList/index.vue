@@ -659,7 +659,6 @@ export default {
           tableBottom:0,
           clientHeight:0,
         },
-        isLoading:null,
         isDisabled:false,
         isSaveData:false,
     }
@@ -725,17 +724,6 @@ export default {
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)',
-        zindex:999
-      });
-    },
     // 获取面包屑路径
     getBreadcrumbList(){
       var $this = this;
@@ -832,14 +820,12 @@ export default {
       var $this = this;
       if(!$this.isDisabled){
         $this.isDisabled=true;
-        $this.loadingFun();
         $this.getCurrentStatusData();
       }
     },
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -1100,7 +1086,6 @@ export default {
             $this.$nextTick(() => {
               $this.$refs.simpleTable.doLayout();
             });
-            $this.isLoading.close();
             setTimeout(()=>{
               $this.isDisabled=false;
             },1000);

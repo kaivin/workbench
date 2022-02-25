@@ -132,7 +132,6 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null,
       isSaveData:false,
     }
   },
@@ -285,20 +284,9 @@ export default {
           $this.setScrollDom();
       }, 400);
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -313,7 +301,6 @@ export default {
             }else{
               $this.tableData = [];
             }
-            $this.isLoading.close();
             setTimeout(()=>{
               $this.isSaveData=false;
             },1000);

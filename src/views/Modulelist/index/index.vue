@@ -130,7 +130,6 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null,
       isSaveRoleData:false,
     }
   },
@@ -274,20 +273,9 @@ export default {
           $this.setScrollDom();
       }, 400);
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -340,8 +328,7 @@ export default {
       $this.$store.dispatch('modulelist/homePageModuleListAction', null).then(response=>{
         if(response){
           if(response.status){
-            $this.tableData = response.data;  
-            $this.isLoading.close();   
+            $this.tableData = response.data;     
             setTimeout(()=>{
               $this.isSaveRoleData=false;
             },1000);       
@@ -396,7 +383,6 @@ export default {
                   type: 'success'
                 });
                 $this.dialogRoleVisible = false;
-                $this.loadingFun();
                 $this.initPage();
             }else{
               $this.$message({

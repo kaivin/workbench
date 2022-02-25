@@ -383,16 +383,6 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 重置页面
     resetFormData(){
       var $this = this;
@@ -404,7 +394,6 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -489,8 +478,6 @@ export default {
             if($this.$route.query.ID){
               $this.formData.id = parseInt($this.$route.query.ID);
               $this.getArticleInfo();
-            }else{
-              $this.isLoading.close();
             }
           }else{
             $this.$message({
@@ -530,7 +517,6 @@ export default {
             });
         }
         $this.typeList = data;
-        $this.isLoading.close();
         setTimeout(()=>{
           $this.isDisabled=false;
         },1000);
@@ -596,7 +582,6 @@ export default {
       }else{
         $this.formData.tags_id = [];
       }
-      $this.isLoading.close();
     },
     // 重置添加文章表单
     clearFormData(){
@@ -677,7 +662,6 @@ export default {
           return false;
         }
         $this.isDisabled=true;
-        $this.loadingFun();
         var formData = {}
         formData.id = $this.formData.id;
         formData.typeid = $this.formData.typeid;
@@ -707,7 +691,6 @@ export default {
               if($this.formData.id==0){
                 $this.clearFormData();
               }else{
-                $this.isLoading.close();
                 setTimeout(()=>{
                   $this.isDisabled=false;
                 },1000);

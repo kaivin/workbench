@@ -42,7 +42,6 @@ service.interceptors.request.use(
       // please modify it according to the actual situation
       config.headers['session_id'] = getSessionID()
     }
-    // console.log(config,"请求数据");
     return config
   },
   error => {

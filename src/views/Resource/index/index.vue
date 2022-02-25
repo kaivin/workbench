@@ -336,7 +336,6 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null,
       isSaveData:false,
       isDisabled:false,
       isSaveRoleData:false,
@@ -492,22 +491,11 @@ export default {
           $this.setScrollDom();
       }, 400);
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 搜索点击事件
     searchResult(){
       var $this = this;
       if(!$this.isDisabled){
         $this.isDisabled=true;
-        $this.loadingFun();
         $this.searchData.page = 1;
         $this.initPage();
       }
@@ -515,7 +503,6 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -542,7 +529,6 @@ export default {
               $this.tableData = [];
             }
             $this.totalDataNum = response.allcount;
-            $this.isLoading.close();
             setTimeout(()=>{
               $this.isDisabled=false;
             },1000);
@@ -788,14 +774,12 @@ export default {
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
-      this.loadingFun();
       this.searchData.limit = val;
       this.searchData.page = 1;
       this.initPage();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
-      this.loadingFun();
       this.searchData.page = val;
       this.initPage();
     },

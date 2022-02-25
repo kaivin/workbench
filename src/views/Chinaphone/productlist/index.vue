@@ -236,7 +236,6 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null,
       isSearchResult:false,
       isSaveData:false,
     }
@@ -391,22 +390,11 @@ export default {
           $this.setScrollDom();
       }, 400);
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 搜索点击事件
     searchResult(){
       var $this = this;
       if(!$this.isSearchResult){
         $this.isSearchResult=true;
-        $this.loadingFun();
         $this.searchData.page = 1;
         $this.initPage();
       }
@@ -422,7 +410,6 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
@@ -442,7 +429,6 @@ export default {
             }else{
               $this.tableData = [];
             }
-            $this.isLoading.close();
             setTimeout(()=>{
               $this.isSearchResult=false;
               $this.isSaveData=false;
@@ -700,13 +686,11 @@ export default {
     handleSizeChange(val) {
       this.searchData.limit = val;
       this.searchData.page = 1;
-      this.loadingFun();
       this.initPage();
     },
     // 当前页改变事件
     handleCurrentChange(val) {
       this.searchData.page = val;
-      this.loadingFun();
       this.initPage();
     },
     // 获取产品添加编辑是需要的系统数据

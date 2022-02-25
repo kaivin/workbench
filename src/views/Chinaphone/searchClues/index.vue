@@ -614,7 +614,6 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null,
       isSerchBtn:false,
     }
   },
@@ -735,16 +734,6 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -779,7 +768,6 @@ export default {
     // 搜索结果
     searchResult(){
       var $this = this;
-      $this.loadingFun();
       $this.searchData.page = 1;
       $this.initCluesList();
     },
@@ -816,7 +804,6 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
-      $this.loadingFun();
       $this.getPhoneListNum();
     },
     // 组装搜索接口所需数据
@@ -858,7 +845,6 @@ export default {
       if(!$this.isSerchBtn){
         $this.isSerchBtn=true;
         var searchData = $this.initSearchData();
-        $this.loadingFun();
         document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
         $this.$store.dispatch('chinaphone/getCurrentCluesSearchListAction', searchData).then(response=>{
           if(response){
@@ -913,7 +899,6 @@ export default {
               setTimeout(()=>{
                 $this.isSerchBtn=false;
               },1000);
-              $this.isLoading.close();
             }else{
               $this.$message({
                 showClose: true,
@@ -1037,7 +1022,6 @@ export default {
               categoryList.push(itemData);
             });
             $this.categoryList = categoryList;
-            $this.isLoading.close();
           }else{
             $this.$message({
               showClose: true,

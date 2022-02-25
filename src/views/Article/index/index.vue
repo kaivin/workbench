@@ -389,7 +389,6 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isLoading:null,
       isAll: false
     }
   },
@@ -525,16 +524,6 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 判断浏览器类型
     getBrowserType(){
       var ua =  navigator.userAgent;
@@ -566,21 +555,10 @@ export default {
           $this.setScrollDom();
       }, 400);
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 搜索结果点击事件
     searchResult(){
       var $this = this;
       if($this.keyword!=""){
-        $this.loadingFun();
         $this.$router.push({path:'/Article/index',query:{keyword:$this.keyword}});
       }else{
         $this.$router.push({path:'/Article/index'});
@@ -589,7 +567,6 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 树形菜单
@@ -629,7 +606,6 @@ export default {
             });
             if($this.menuButtonPermit.includes('Article_index')){
               if(!$this.menuButtonPermit.includes('Article_search')&&$this.$route.query.keyword){
-                $this.isLoading.close();
                 $this.$message({
                   showClose: true,
                   message: "未被分配该页面的搜索权限",
@@ -639,7 +615,6 @@ export default {
                 $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
               }
               if(!$this.menuButtonPermit.includes('Article_lists')&&$this.$route.query.id){
-                $this.isLoading.close();
                 $this.$message({
                   showClose: true,
                   message: "未被分配该页面的文章访问权限",
@@ -658,7 +633,6 @@ export default {
               $this.operationsWidth = "" + operationsWidth;
               $this.getPostTypeData();
             }else{
-              $this.isLoading.close();
               $this.$message({
                 showClose: true,
                 message: "未被分配该页面的访问权限",
@@ -668,7 +642,6 @@ export default {
               $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
             }
           }else{
-          $this.isLoading.close();
             $this.$message({
               showClose: true,
               message: "未被分配该页面的访问权限",
@@ -678,7 +651,6 @@ export default {
             $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
           }
         }else{
-          $this.isLoading.close();
           $this.$message({
             showClose: true,
             message: response.info,
@@ -713,9 +685,7 @@ export default {
         if(response){
           if(response.status){
             $this.departUser = response.data;
-            $this.isLoading.close();
           }else{
-            $this.isLoading.close();
             $this.$message({
                 showClose: true,
                 message: response.info,
@@ -868,7 +838,6 @@ export default {
       dataParam.typeid = $this.currentID;
       dataParam.tags = $this.currentTagName;
       dataParam.tagsid = $this.currentTagID;
-      $this.loadingFun();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('article/postListAction',dataParam).then(res=>{
         if(res.status){
@@ -924,7 +893,6 @@ export default {
           }
           $this.tableData = res.data;
           $this.totalDataNum = res.allcount;
-          $this.isLoading.close();
           if($this.isSearch||$this.isList){
             $this.$nextTick(() => {
               $this.setHeight();
@@ -952,7 +920,6 @@ export default {
             $this.tags = [];
             $this.tagData = [];
           }
-          $this.isLoading.close();
         }else{
           $this.$message({
             showClose: true,
@@ -969,7 +936,6 @@ export default {
       dataParam.page = $this.page;
       dataParam.limit = $this.limit;
       dataParam.keywords = $this.keyword;
-      $this.loadingFun();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('article/postSearchListAction',dataParam).then(res=>{
         if(res.status){
@@ -1010,7 +976,6 @@ export default {
           }
           $this.searchData = res.data;
           $this.totalDataNum = res.allcount;
-          $this.isLoading.close();
           $this.$nextTick(() => {
             $this.setHeight();
           });

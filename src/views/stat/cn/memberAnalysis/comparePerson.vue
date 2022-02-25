@@ -90,21 +90,10 @@ export default {
     $this.initData();
   },
   methods: {
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 初始化数据
     initData() {
       var $this = this;
       if($this.searchData.id&&$this.searchData.id!=''){
-        $this.loadingFun();
         $this.getCnDepartList();
         $this.getPersoncountCompare();
       }else{
@@ -283,7 +272,6 @@ export default {
                 yearmoney.leftChartData=leftChartData;
               }
               $this.defaultChartData = [yearcount,yearscore,yearanumber,yearmoney];
-              $this.isLoading.close();
             } else {
               $this.$message({
                 showClose: true,
@@ -383,7 +371,6 @@ export default {
         var teamData=$this.teamArr;
         if(teamData.indexOf(valData)>=0){
             if(valData!=$this.searchData.id){
-                $this.loadingFun();
                 var newTeamData=[];
                 teamData.forEach(function(item,index){
                   if(item!=valData){
@@ -403,7 +390,6 @@ export default {
             }
         }else{
           if(teamData.length<4){
-            $this.loadingFun();
             teamData.push(valData);
             $this.choosePerson.forEach(function(item,index){
                 item.isOn=false;

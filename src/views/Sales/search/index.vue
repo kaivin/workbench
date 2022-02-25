@@ -259,7 +259,6 @@ export default {
         {label:"按照添加时间",value:2},
       ],
       pickerRangeOptions: this.$pickerRangeOptions,
-      isLoading:null,
       isDisabled:false,
     }
   },
@@ -343,16 +342,6 @@ export default {
       });
       $this.breadcrumbList = breadcrumbList;
     },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    },
     // 搜索结果
     searchResult(){
       var $this = this;
@@ -390,7 +379,6 @@ export default {
           return false;
         }
         $this.isDisabled=true;
-        $this.loadingFun();
         $this.is_groupData=$this.searchData.is_group;
         $this.initCluesList();
       }
@@ -398,7 +386,6 @@ export default {
     // 初始化数据
     initData(){
       var $this = this;    
-      $this.loadingFun();
       $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息-数据分析查询条件
@@ -427,9 +414,7 @@ export default {
               });
               $this.userlist=userlist;
             }
-            $this.isLoading.close();
           }else{
-            $this.isLoading.close();
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
                 showClose: true,
@@ -484,7 +469,6 @@ export default {
     initCluesList(){
       var $this = this;
       var searchData = $this.initSearchData();
-      $this.loadingFun();
       $this.$store.dispatch('Sales/getSalesDataAnalysisAction', searchData).then(response=>{
         if(response){
           if(response.status){
@@ -492,7 +476,6 @@ export default {
             $this.$nextTick(()=>{
               document.getElementById("resultPane").scrollIntoView({behavior: "smooth"});
             });
-            $this.isLoading.close();
             setTimeout(()=>{
               $this.isDisabled=false;
             },1000);
@@ -510,7 +493,6 @@ export default {
           infoData.allcount=response.allcount;
           infoData.warnlist=response.warnlist;
           $this.infoData = infoData;
-          $this.isLoading.close();
         }
       });
     },

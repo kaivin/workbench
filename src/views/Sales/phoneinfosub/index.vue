@@ -304,7 +304,6 @@ export default {
       },      
       isSalesman:false,
       feedback:'未反馈',
-      isLoading:null,
       isDisabled:false,
       selectedDisabled:true,
     }
@@ -409,24 +408,12 @@ export default {
     },
     // 初始化数据
     initData(){
-      var $this = this;
-      $this.loadingFun();
-      $this.getUserMenuButtonPermit();
+      var $this = this;ttonPermit();
     },
     // 初始化页面信息
     initPage(){
       var $this = this;
       $this.getLeftData();
-    },
-    // loading自定义
-    loadingFun(){
-      var $this = this;
-      $this.isLoading = $this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
     },
     // 询盘编辑获取初始化询盘信息
     initCluesInfo(){
@@ -532,7 +519,6 @@ export default {
       $this.formData.saleswarnstatus = $this.defaultInfo.saleswarnstatus;
       $this.formData.salesremark = $this.defaultInfo.salesremark;
       $this.compareDate();
-      $this.isLoading.close();
       setTimeout(()=>{
         $this.isDisabled=false;
       },1000);
@@ -679,7 +665,6 @@ export default {
       var $this = this;
       if(!$this.isDisabled){
         $this.isDisabled=true;
-        $this.loadingFun();
         var formSaveData = $this.initFormData();      
         $this.formSaveData = formSaveData;
         $this.$store.dispatch("Sales/getSalesDetailsModifyAction", formSaveData).then(response=>{
