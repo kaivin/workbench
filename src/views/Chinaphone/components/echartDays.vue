@@ -50,7 +50,6 @@ export default {
             itemObj.name='询盘个数';
             itemObj.type='line';
             itemObj.smooth=false;
-            // itemObj.showSymbol=false;
             itemObj.type='line';
             itemObj.lineStyle={
             normal: {
@@ -84,7 +83,6 @@ export default {
                 position: 'top',
                 distance: '5'
             };
-            // itemObj.showSymbol=false;
             itemObj.emphasis={
                 lineStyle: {
                     width: 2,	// hover时的折线宽度
@@ -241,6 +239,7 @@ export default {
                         }
                     },
                 }],
+                animation: false,
                 legend:false,
                 series:series,
             };

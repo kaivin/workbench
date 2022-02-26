@@ -1655,6 +1655,7 @@ export default {
                     lineHeight:18,
                 }
             },
+            animation: false,
             series:series,
         }
         option && MixChart.setOption(option);

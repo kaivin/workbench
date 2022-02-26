@@ -153,6 +153,7 @@ export default {
             color: '#eee'
           }
         },
+        animation: false,
         series: [
           {
             type: 'map', // 类型

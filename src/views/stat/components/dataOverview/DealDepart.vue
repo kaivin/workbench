@@ -192,6 +192,7 @@ export default {
             bottom:25,
             top:20
           },
+          animation: false,
           series: [
             //背景
             {

@@ -355,6 +355,7 @@ export default {
               }
             }
           },
+          animation: false,
           series: [
             {
               type: 'map', // 类型
@@ -598,6 +599,7 @@ export default {
             },
             show:false,
           },
+          animation: false,
           series: [
             {
               type: 'bar',
@@ -754,6 +756,7 @@ export default {
               color: '#eee'
             }
           },
+          animation: false,
           series: [
             {
               type: 'map', // 类型

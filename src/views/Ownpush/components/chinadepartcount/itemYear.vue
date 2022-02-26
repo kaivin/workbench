@@ -214,6 +214,7 @@ export default {
             top:0,
             align:'left',
           },
+          animation: false,
           series:series
         };
         option && myChart.setOption(option);

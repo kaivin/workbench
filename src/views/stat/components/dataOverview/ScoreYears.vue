@@ -211,6 +211,7 @@ export default {
             dataset:{
                 source: newlist
             },
+            animation: false,
             series: [
                 {
                     name: $this.type == 0 ? "积分" : "个数",

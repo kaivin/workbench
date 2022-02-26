@@ -50,6 +50,7 @@ export default {
             },
             legend:false,
             color:colorList1,
+            animation: false,
             series: [
                 {
                     type: 'pie',
@@ -123,6 +124,7 @@ export default {
             },
             legend:false,
             color:colorList1,
+            animation: false,
             series: [
                 {
                     type: 'pie',

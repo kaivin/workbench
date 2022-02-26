@@ -290,6 +290,7 @@ export default {
             right:30,
             data:$this.chartName
           },
+          animation: false,
           series:series,
       };
       option && myChart.setOption(option);
@@ -440,6 +441,7 @@ export default {
             right:30,
             data:$this.currentData.chartName
           },
+          animation: false,
           series:series,
       };
       option && lineChart.setOption(option);
@@ -601,6 +603,7 @@ export default {
           top:0,
           align:'left',
         },
+        animation: false,
         series:series
       };
       option && myChart.setOption(option);

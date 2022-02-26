@@ -264,6 +264,7 @@ export default {
                 },
             }],
             legend:legend,
+            animation: false,
             series:series,
         };
         option && myChart.setOption(option);

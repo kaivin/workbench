@@ -133,70 +133,8 @@ export default {
                 }
               },
             },
-            // dataset:{
-            //     source: chartBotData
-            // },
+            animation: false,
             series: [
-                // {
-                //     radius: ['35%', '62%'],
-                //     center: ['50%', '54%'],
-                //     type: 'pie',
-                //     showEmptyCircle: true,
-                //     itemStyle: {
-                //       color: function(params) {
-                //           return colorList[params.dataIndex]
-                //       }
-                //     },
-                //     z:2,
-                //     label:{
-                //       show:false,
-                //     },
-                //     labelLine:{
-                //       show:false
-                //     }
-                // },
-                // {
-                //     radius: ['35%', '62%'],
-                //     center: ['50%', '54%'],
-                //     type: 'pie',
-                //     showEmptyCircle: true,
-                //     itemStyle: {
-                //       // color: {
-                //       //   type: 'radial',
-                //       //   x: 0.5,
-                //       //   y: 0.5,
-                //       //   r: 0.5,
-                //       //   colorStops: [{
-                //       //       offset: .4, color: 'rgba(255,255,255,.2)' // 0% 处的颜色
-                //       //   }, {
-                //       //       offset: 1, color:  'rgba(0,0,0,.2)' // 100% 处的颜色
-                //       //   }],
-                //       //   global: false // 缺省为 false
-                //       // }
-                //       color: {
-                //         type: 'linear',
-                //         x: 1,
-                //         y: 1,
-                //         x2: 0,
-                //         y2: 1,
-                //         colorStops: [{
-                //             offset: .2, color: 'rgba(0,0,0,.2)' // 0% 处的颜色
-                //         }, {
-                //             offset: .5, color:  'rgba(255,255,255,.2)' // 100% 处的颜色
-                //         },{
-                //             offset: .8, color:  'rgba(0,0,0,.2)' // 100% 处的颜色
-                //         }],
-                //         global: false // 缺省为 false
-                //       }
-                //     },
-                //     z:3,
-                //     label:{
-                //       show:false,
-                //     },
-                //     labelLine:{
-                //       show:false
-                //     }
-                // },
                 {
                     radius: ['32%', '58%'],
                     center: ['50%', '50%'],
@@ -207,9 +145,6 @@ export default {
                       color: function(params) {
                         return colorList[params.dataIndex]
                       },
-                      // borderColor: "rgba(255, 255, 255, 0.6)",
-                      // borderWidth: "1",
-                      // borderType: "solid"
                     },
                     z:4,
                     labelLine: {
@@ -428,6 +363,7 @@ export default {
           toolbox: {
               show: false,
           },
+          animation: false,
           series: seriesOption,
         };
         option && myChart.setOption(option);
@@ -699,6 +635,7 @@ export default {
                     }
                 }
             },
+            animation: false,
             series: series
         };
         return option;

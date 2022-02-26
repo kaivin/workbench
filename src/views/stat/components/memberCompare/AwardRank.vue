@@ -37,7 +37,7 @@
               sortable
               >
             </el-table-column>
-            <el-table-column label="当月数据">
+            <el-table-column :label="defaultTagData">
                 <el-table-column
                   prop="monthnumber"
                   label="询盘个数"
@@ -105,6 +105,12 @@ export default {
       },
     },
     lang:{
+      type: String,
+      default: function () {
+        return "";
+      },
+    },
+    defaultTagData:{
       type: String,
       default: function () {
         return "";

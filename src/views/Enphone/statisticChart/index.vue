@@ -2410,6 +2410,7 @@ export default {
               color: "#888"
             }
           },
+          animation: false,
           series: [
             {
               name: '询盘个数',
@@ -2503,6 +2504,7 @@ export default {
               color: "#888"
             }
           },
+          animation: false,
           series: [
             {
               name: '询盘个数',
@@ -2565,6 +2567,7 @@ export default {
             icon: "circle",
           },
           color: ["#6395f9","#62daab","#5d7092","#f6bd16","#7666f9"],
+          animation: false,
           series: [
             {
               name: '询盘个数',
@@ -2636,6 +2639,7 @@ export default {
             icon: "circle",
           },
           color: ["#6395f9","#62daab","#5d7092","#f6bd16","#7666f9"],
+          animation: false,
           series: [
             {
               name: '询盘个数',
@@ -2724,6 +2728,7 @@ export default {
               color: "#888"
             }
           },
+          animation: false,
           series: [
             {
               name: '询盘个数',
@@ -2801,6 +2806,7 @@ export default {
             icon: 'circle',
           },
           color: ["#6395f9","#62daab","#5d7092","#f6bd16","#7666f9"],
+          animation: false,
           series: [
             {
               name: '询盘个数',
@@ -2920,6 +2926,7 @@ export default {
           dataset:{
             source: $this.searchResult.dayCount,  
           },
+          animation: false,
           series: [
             {
               name: "询盘个数",
@@ -3012,6 +3019,7 @@ export default {
               color: "#888"
             }
           },
+          animation: false,
           series: [
             {
               name: '询盘个数',
@@ -3102,6 +3110,7 @@ export default {
               color: "#888"
             }
           },
+          animation: false,
           series: [
             {
               name: '询盘个数',
@@ -3235,6 +3244,7 @@ export default {
               }
             }
           },
+          animation: false,
           series: [
             {
               type: 'map', // 类型

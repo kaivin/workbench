@@ -358,6 +358,7 @@ export default {
                   lineHeight:18,
               }
           },
+          animation: false,
           series:series,
       }
       option && columnChart.setOption(option);
@@ -406,6 +407,7 @@ export default {
         legend: {
           bottom:0
         },
+        animation: false,
         series: [
           {
             type: 'pie',
@@ -616,6 +618,7 @@ export default {
             right:30,
             data:$this.currentData.chartName
           },
+          animation: false,
           series:series,
       };
       option && myChart.setOption(option);
@@ -786,6 +789,7 @@ export default {
             right:30,
             data:$this.currentData.chartName
           },
+          animation: false,
           series:series,
       };
       option && lineChart.setOption(option);

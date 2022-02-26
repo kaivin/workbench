@@ -97,6 +97,7 @@ export default {
             tooltip: {
                 trigger: 'item'
             },
+            animation: false,
             series: [
                 {
                     color:colorList1,

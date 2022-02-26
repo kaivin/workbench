@@ -33,6 +33,7 @@
         <div class="flex-content dealRankMain" :class="searchData.dept_id==''?'':'active'">            
           <award-rank
               :RankData="tableDate"
+              :defaultTagData="defaultTag"
               :lang="en"
             ></award-rank>
         </div>
@@ -48,6 +49,8 @@ export default {
     return {
       department:[],//部门列表
       tableDate:[],
+      defaultTime:[],
+      defaultTag:'当月数据',
       isAwardBool:false,
       en:"en",
       searchData:{
@@ -57,6 +60,7 @@ export default {
           ustatus:'',
       },
       ustatusList:[
+        {id:0,name:"全部",isOn:false},
         {id:1,name:"试用期",isOn:false},
         {id:2,name:"一年/一年内",isOn:false},
         {id:3,name:"一年以上",isOn:false}
@@ -116,6 +120,12 @@ export default {
             if (res.status) {
                 if(res.data&&res.data.length>0){
                     var department=[];
+                    var objFirst={
+                        name:'全部',
+                        id:0,
+                        isOn:false
+                    };
+                    department.push(objFirst);
                     res.data.forEach(function(item,index){
                         var objItem={};
                         objItem.name=item.name;
@@ -152,25 +162,31 @@ export default {
     // 点击部门获取部门ID
     departChange(valData){
         var $this=this;
-        $this.searchData.dept_id=valData;
-        $this.department.forEach(function(item,index){
+        if(valData!=0){
+          $this.searchData.dept_id=valData;
+        }
+        var department=$this.department;
+        department.forEach(function(item,index){
             item.isOn=false;
-            if(item.id==valData){
-              item.isOn=true;
-            }
+              if(item.id==valData){
+                item.isOn=true;
+              }
         });
+        $this.department=department;
         $this.GetInquiryResult();
     },
     // 点击入职时间ID
     inTimePlug(valData){
-        var $this=this;
-        $this.searchData.ustatus=valData;
+        var $this=this;  
+        if(valData!=0){
+          $this.searchData.ustatus=valData;
+        }     
         var ustatusList=$this.ustatusList;
         ustatusList.forEach(function(item,index){
             item.isOn=false;
-            if(item.id==valData){
-              item.isOn=true;
-            }
+              if(item.id==valData){
+                item.isOn=true;
+              }
         });
         $this.ustatusList=ustatusList;
         $this.GetInquiryResult();
@@ -227,6 +243,15 @@ export default {
       if($this.searchData.data&&$this.searchData.data.length>0){
         searchData.starttime=$this.searchData.data[0];
         searchData.endtime=$this.searchData.data[1];
+        var timeOne= $this.searchData.data.toString();
+        var timeTwo= $this.defaultTime.toString();
+        if(timeOne==timeTwo){
+          $this.defaultTag='当月数据';
+        }else{
+          $this.defaultTag=$this.searchData.data[0]+' ~ '+$this.searchData.data[1]+'数据';
+        }
+      }else{
+        $this.defaultTag='当月数据';
       }
       if($this.searchData.ustatus&&$this.searchData.ustatus!=''){
         searchData.ustatus=$this.searchData.ustatus;
@@ -301,6 +326,7 @@ export default {
       $this.searchData.data=[endDate,endDate];
       $this.searchData.starttime=endDate;
       $this.searchData.endtime=endDate;
+      $this.defaultTime=[endDate,endDate];
     },
   }
 }

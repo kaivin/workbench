@@ -219,6 +219,7 @@ export default {
                       source: btmList
                   }
               ],
+              animation: false,
               series: [       
                 { //最低下的圆片
                   name: "",

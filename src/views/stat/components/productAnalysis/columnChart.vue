@@ -70,6 +70,7 @@ export default {
           yAxis: {
             type: 'value'
           },
+          animation: false,
           series: [
             {
               data:serieData,

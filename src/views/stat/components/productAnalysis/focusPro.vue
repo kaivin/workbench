@@ -179,6 +179,7 @@ export default {
             },
             data:$this.focusPro.legendData,
           },
+          animation: false,
           series: [
               {
                   color:colorList1,
@@ -378,6 +379,7 @@ export default {
                 lineHeight:18,
             }
           },
+          animation: false,
           series:series,
         };
         option && myChart.setOption(option);

@@ -370,6 +370,7 @@ export default {
                   },
                   splitNumber:4,
               },
+              animation: false,
               series: [
                     {
                         z: 3,

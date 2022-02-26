@@ -171,6 +171,7 @@ export default {
             dataset:{
                 source: newlist
             },
+            animation: false,
             series: [
                 {
                     name: "数量",
@@ -182,19 +183,6 @@ export default {
                         },
                     },
                     areaStyle: {
-                        // color:{
-                        //     type: 'linear',
-                        //     x: 0,
-                        //     y: 0,
-                        //     x2: 0,
-                        //     y2: 1,
-                        //     colorStops: [{
-                        //         offset: 0, color: "#fdce5f"
-                        //     },{
-                        //         offset: 1, color: "#ff9621"
-                        //     }]
-                        // },
-                        // opacity:1
                         color:{
                             type: 'linear',
                             x: 0,

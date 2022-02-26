@@ -171,6 +171,7 @@ export default {
                 dataset:{
                     source: newlist
                 },
+                animation: false,
                 series: [
                     {
                         name: "询盘数量",
