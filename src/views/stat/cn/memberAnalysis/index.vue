@@ -27,6 +27,132 @@
           </div>
       </div>
       <div class="flex-content dealRankMain" :class="searchData.dept_id==''?'':'active'">
+            <!--<div class="dealRankMainItem">  
+                <div class="memberTit">
+                  <h3>月统计<span>(截至2022.02.26)</span></h3>
+                  <p><span>非付费成员年度排行</span>(单位：个)</p>
+                </div>
+                <div class="dealRankMainBox">      
+                    <el-table
+                        ref="simpleTable"
+                        tooltip-effect="dark"
+                        stripe
+                        class="SiteTable EntableColor"
+                        style="width: 100%"
+                        row-key="id"
+                        key="a"
+                        >
+                        <el-table-column
+                          prop="排名"
+                          label="排名"
+                          width='50'
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="姓名"
+                          label="姓名"
+                          width='70'
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="入职时间"
+                          label="入职时间"
+                          width='80'
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="部门"
+                          label="部门"
+                          width='80'
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="询盘个数"
+                          label="询盘个数(个)"
+                          sortable
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="成交积分"
+                          label="成交积分(分)"
+                          sortable
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="百万成交数"
+                          label="百万成交数(个)"
+                          sortable
+                          >
+                        </el-table-column>
+                    </el-table>
+                </div> 
+            </div>
+            <div class="dealRankMainItem">
+                <div class="memberTit">
+                  <h3>年统计<span>(截至2022.02.26)</span></h3>
+                  <p><span>非付费成员年度排行</span>(单位：个)</p>
+                </div>  
+                <div class="dealRankMainBox">      
+                    <el-table
+                        ref="simpleTable"
+                        tooltip-effect="dark"
+                        stripe
+                        class="SiteTable EntableColor"
+                        style="width: 100%"
+                        row-key="id"
+                        key="a"
+                        >
+                        <el-table-column
+                          prop="排名"
+                          label="排名"
+                          width='50'
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="姓名"
+                          label="姓名"
+                          width='70'
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="入职时间"
+                          label="入职时间"
+                          width='80'
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="部门"
+                          label="部门"
+                          width='80'
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="询盘个数"
+                          label="询盘个数(个)"
+                          sortable
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="询盘平均数"
+                          label="询盘平均数(个)"
+                          sortable
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="成交积分"
+                          label="成交积分(分)"
+                          sortable
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="百万成交数"
+                          label="百万成交数(个)"
+                          sortable
+                          >
+                        </el-table-column>
+                    </el-table>
+                </div>      
+            </div>-->
         <div class="dealRankLeft">
           <div class="dealRankTop">
              <template v-if='searchData.dept_id!=12'>

@@ -1050,6 +1050,176 @@
     }
 }
 .dealRankMain{
+    margin:0px -10px;
+    .dealRankMainItem{
+        float: left;
+        width:calc(50% - 20px);
+        margin:0px 10px;
+        background-color: #fff;
+        border:1px solid #f0f0f0;
+        .memberTit{
+            height:80px; 
+            background: -moz-linear-gradient(right,#f9fbff 0%, #edf4ff 100%);
+            background: -webkit-linear-gradient(right,#f9fbff 0%,#edf4ff 100%);
+            background: -o-linear-gradient(right,#f9fbff 0%,#edf4ff 100%);
+            background: -ms-linear-gradient(right,#f9fbff 0%,#edf4ff 100%);
+            background: linear-gradient(to left,#f9fbff 0%,#edf4ff 100%);
+            &:after{
+                background: url(../assets/personal_bg01.png) no-repeat top right;
+                background-size:100%;
+            }
+            h3{color:#0749f3;}
+        }
+        .dealRankMainBox{
+            text-align: center;
+            thead{
+                height:48px;
+                color: #1a1a1a;
+                font-size:$fontsize14;
+                font-weight: normal;
+                tr,th{
+                    background-color: #fffcf5;
+                    font-weight: normal;
+                    color:#1a1a1a;
+                }
+                th.el-table__cell.is-leaf{
+                    border-top: 1px solid #f0f0f0;
+                    border-bottom:0px solid #f0f0f0;
+                    padding: 0;
+                }
+            }
+            .cell{
+                text-align: center;
+                line-height: normal;
+                .urank{
+                    color: #888888;
+                    font-size:$fontsize14;
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 2px;
+                    background: #dcdcdc;
+                    display:inline-block;
+                    &.urank01{
+                        background: -moz-linear-gradient(135deg,#f9bc1f 0%, #f9511b 100%);
+                        background: -webkit-linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
+                        background: -o-linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
+                        background: -ms-linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
+                        background: linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
+                        color:#fff;
+                    }
+                    &.urank02{
+                        background:#a7c2ca;
+                        color:#fff;
+                    }
+                    &.urank03{
+                        background: -moz-linear-gradient(top,#e5ca99 0%, #d0b583 100%);
+                        background: -webkit-linear-gradient(top,#e5ca99 0%,#d0b583 100%);
+                        background: -o-linear-gradient(top,#e5ca99 0%,#d0b583 100%);
+                        background: -ms-linear-gradient(top,#e5ca99 0%,#d0b583 100%);
+                        background: linear-gradient(to bottom,#e5ca99 0%,#d0b583 100%);
+                        color:#fff;
+                    }
+                }
+                .headImg{
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 4px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    position: relative;
+                    overflow: hidden;
+                    cursor: pointer;
+                    img{
+                        width: 100%;
+                    }
+                    &.headImgBorder{
+                        background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: linear-gradient(to left,#fbbf44 0%,#e85524 100%);
+                        padding: 1px;
+                        img{
+                            border-radius:50%;
+                        }
+                    }
+                }
+                .nopic{
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 4px;
+                    background: url(../assets/default_pic.jpg) center center no-repeat;
+                    background-size:100%;
+                    margin-left: auto;
+                    margin-right: auto;
+                    &.headImgBorder{
+                        background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
+                        background: linear-gradient(to left,#fbbf44 0%,#e85524 100%);
+                        padding: 1px;
+                        img{
+                            border-radius:50%;
+                        }
+                    }
+                }
+                .uname{
+                    font-size:$fontsize14;
+                    color: #111111;
+                    cursor: pointer;
+                }
+                .innum{
+                    color: #333333;
+                    font-size:$fontsize14;
+                }
+                .dealnum{
+                    color: #333333;
+                    font-size:$fontsize14;
+                }
+                .milnum{
+                    color: #333333;
+                    font-size:$fontsize14;
+                    padding-left:30px;
+                    display: inline-block;
+                    line-height:38px;
+                    position: relative;
+                    &:before{
+                        content: '';
+                        display: block;
+                        position: absolute;
+                        left: 0;
+                        top: 8px;
+                        width:30px;
+                        height:28px;
+                        background: url(../assets/mildeal.png) center center no-repeat;
+                        background-size: 100% auto;
+                    }
+                }
+            }
+            td.el-table__cell{
+                border-top: 1px solid #f0f0f0;
+                border-bottom:0px solid #f0f0f0;
+                padding:12px 0px;
+            }
+            .sort-caret.ascending{
+                border-bottom-color:#93adc7;
+                border-left-width: 4px;
+                border-right-width: 4px;
+            }
+            .sort-caret.descending{
+                border-top-color:#93adc7;
+                border-left-width: 4px;
+                border-right-width: 4px;
+            }
+            .ascending .sort-caret.ascending {
+                border-bottom-color:#315c88;
+            }
+            .descending .sort-caret.descending {
+                border-top-color:#315c88;
+            }
+        }
+    }
     &:after{
         content: '';
         display: block;
@@ -1082,8 +1252,6 @@
                 display: block;
                 clear: both;
             }
-        }
-        .payMember{
         }
     }
     .dealRankRight{

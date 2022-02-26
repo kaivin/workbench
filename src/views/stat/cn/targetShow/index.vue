@@ -36,7 +36,6 @@
           ></month-deal>
         </div>
       </div>
-
     </el-card>
   </div>
 </template>

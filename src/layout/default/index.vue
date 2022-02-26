@@ -10,9 +10,7 @@
               <div class="tags-list"><tags-view  /></div>
           </div>
         <el-main :style="{'margin-top':isSales?'48px':''}" class="main-layout" v-if="isRefresh">
-          <transition name="fade-transform" mode="out-in">
               <router-view :key="key"></router-view>
-            </transition>
         </el-main>
       </el-container>
     </el-container>

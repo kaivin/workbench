@@ -4,9 +4,7 @@
     <sidebar :menu-list="sidebarMenu" />
     <div class="flex-content" style="position:relative;">
       <div class="abs-panel">
-        <transition name="fade-transform" mode="out-in">
           <router-view></router-view>
-        </transition>
       </div>
     </div>
   </div>

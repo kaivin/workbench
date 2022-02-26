@@ -408,7 +408,8 @@ export default {
     },
     // 初始化数据
     initData(){
-      var $this = this;ttonPermit();
+      var $this = this;
+      $this.getUserMenuButtonPermit();
     },
     // 初始化页面信息
     initPage(){
