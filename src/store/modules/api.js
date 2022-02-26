@@ -69,8 +69,6 @@
   getEnproducttimecompare,
   getEnAddfocusproductone,
   getEnfocusproductcance,
-  getChinapersoncountdefault,
-  getEnpersoncountdefault,
 } from '@/api/api'
 //import { reject, resolve } from 'core-js/fn/promise';
 import Cookies from 'js-cookie';

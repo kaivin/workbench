@@ -130,6 +130,12 @@
                               >
                             </el-table-column>
                             <el-table-column
+                              prop="comtime"
+                              label="入职时间"
+                              width="150"
+                              >
+                            </el-table-column>
+                            <el-table-column
                               prop="remarks"
                               label="备注"
                               min-width="80"
@@ -235,6 +241,17 @@
                 </el-select>
               </el-form-item>
             </div>
+            <div class="item-form">
+              <el-form-item label="入职时间：" :label-width="formLabelWidth">                
+                  <el-date-picker
+                    v-model="dialogForm.comtime"
+                    type="date"
+                    placeholder="选择日期"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd">
+                  </el-date-picker>
+              </el-form-item>              
+            </div>
           </div>
           <div class="item-form userType">
               <label class="el-form-item__label" style="width: 110px;">用户类型：</label>
@@ -309,6 +326,7 @@ export default {
           limit:20,
           dept_id:0,
           is_delete:"",
+          comtime:''
       },
       userStatus:[
         {label:"激活用户",value:0,isOn:false},
@@ -332,6 +350,7 @@ export default {
         remarks:"",
         phone:"",
         email:"",
+        comtime:"",
         postion_id:"",
         workname_id:"",
         issales:1,
@@ -382,6 +401,7 @@ export default {
       isSaveData:false,
       isDisabled:false,
       isSaveRoleData:false,
+      isSaveAddRoleData:false,
     }
   },
   computed: {
@@ -784,6 +804,7 @@ export default {
       $this.dialogForm.remarks = row.remarks;
       $this.dialogForm.phone = row.phone;
       $this.dialogForm.email = row.email;
+      $this.dialogForm.comtime = row.comtime;
       $this.dialogForm.issales = row.issales;
       $this.dialogForm.postion_id = row.postion_id==0?'':row.postion_id;
       $this.dialogForm.workname_id = row.workname_id==0?'':row.workname_id;
@@ -807,6 +828,7 @@ export default {
         formData.id = $this.dialogForm.id;
         formData.phone = $this.dialogForm.phone;
         formData.email = $this.dialogForm.email;
+        formData.comtime = $this.dialogForm.comtime;
         formData.name = $this.dialogForm.name;
         formData.remarks = $this.dialogForm.remarks;
         formData.workname_id = $this.dialogForm.workname_id;
@@ -862,6 +884,7 @@ export default {
       $this.dialogForm.remarks = "";
       $this.dialogForm.phone = "";
       $this.dialogForm.email = "";
+      $this.dialogForm.comtime = "";
       $this.dialogForm.issales = 1;
       $this.dialogForm.postion_id = "";
       $this.dialogForm.workname_id = "";

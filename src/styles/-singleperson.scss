@@ -119,6 +119,16 @@
                 }
             }
         }
+        .Workstate{
+            width:120px;
+            padding:0px;
+            margin-left: 20px;
+            .el-input--small .el-input__inner{
+                border-radius:0px;
+                color: #606266;
+                font-size:$fontsize12;
+            }
+        }
     }
     .choosePerson{
             &.active{

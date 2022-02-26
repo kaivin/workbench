@@ -4,6 +4,248 @@
         url('../fonts/number.ttf') format('truetype');
     font-display: swap;
 }
+.memberTopTab{
+    background-color: #fff;
+    padding: 20px 30px;
+    margin-bottom:20px;
+    .chooseDepart{
+        position: relative;
+        z-index: 9;
+        .choosetit{
+            font-size:$fontsize14;
+            color: #666;
+            display: inline-block;
+            vertical-align: middle;
+            line-height:34px;
+        }
+        .departList{
+            line-height:30px;
+            span{
+                color: #333333;
+                font-size:$fontsize13;
+                padding: 6px 16px;
+                line-height: 20px;
+                cursor: pointer;
+                border: 1px solid #d8dce5;
+                background: #fff;
+                margin-left: -1px;
+                display: inline-block;
+                &:first-child{
+                    border-top-left-radius:4px;
+                    border-bottom-left-radius:4px;
+                }
+                &:last-child{
+                    border-top-right-radius:4px;
+                    border-bottom-right-radius:4px;
+                }
+                &.active,&:hover{
+                    border: 1px solid #0048ff;
+                    background-color: #e5ecff;
+                    color: #0048ff;
+                    position: relative;
+                    z-index: 2;
+                }
+            }
+        }
+        .departItems{
+            line-height:30px;
+            span{
+                color: #4c4c4c;
+                font-size:$fontsize14;
+                border: none;
+                padding: 6px 16px;
+                line-height: 25px;
+                background-color: #eff4f8;
+                margin-left:10px;
+                cursor: pointer;
+                &.active,&:hover{
+                    //background-color:  #2f88ff;
+                    background-color: #0048ff;
+                    color: #fff;
+                }
+                &.active{
+                    position: relative;
+                    &:after{
+                        content:'';
+                        position: absolute;
+                        width: 12px;
+                        height: 12px;
+                        border-left: 1px solid #f3f3f3;
+                        border-top: 1px solid #f3f3f3;
+                        background: #f6f7f8;
+                        transform: rotate(55deg) skew(20deg);
+                        left: 35px;
+                        top:37px;
+                        margin-left:-7px;
+                    }
+                }
+            }
+            .date-range{
+                width:200px;
+                border-radius:0;
+                position:relative;
+                height:34px;
+                padding:3px 25px 3px 8px;
+                border:1px solid #e1e3ea;
+                background: none;
+                vertical-align: top;
+                span.el-range-separator{
+                    background: none;
+                    padding: 6px 6px;
+                    width: auto;
+                    margin: 0px;
+                    line-height: 23px;
+                }
+                &.el-range-editor--mini .el-range-input{background: none;}
+                &.el-date-editor .el-range__icon{
+                    float:right;
+                    margin-left:0;
+                    position:absolute;
+                    right:0;
+                    top:0;
+                    &:before{
+                    vertical-align:middle;
+                    }
+                }
+            }
+        }
+        .departItemBtn{
+            display: inline-block;
+            font-style: normal;
+            color: #2f88ff;
+            font-size:$fontsize12;
+            line-height:34px;
+            margin-left:15px;
+            cursor: pointer;
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+        .Workstate{
+            width:120px;
+            padding:0px;
+            margin-left: 20px;
+            .el-input--small .el-input__inner{
+                border-radius:0px;
+                color: #606266;
+                font-size:$fontsize12;
+            }
+        }
+    }
+    .choosePerson{
+            &.active{
+                margin-top: 16px;
+                margin-left:90px;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                padding-left: 12px;
+                max-width: 1400px;
+                border: solid 1px #f0f0f0;
+                position: relative;
+                background: #f6f7f8;
+            }
+            .departItems{
+                .item-checkbox{
+                    float: left;
+                    border: none;
+                    padding-right:18px;
+                    cursor: pointer;
+                    line-height: 24px;
+                    position: relative;
+                    padding-left:21px;
+                    i{
+                        position: absolute;
+                        left:0px;
+                        top:50%;
+                        margin-top:-6px;
+                        display: inline-block;
+                        width: 11px;
+                        height: 11px;
+                        border: 1px solid #848484;
+                        box-sizing: border-box;
+                        border-radius:50%;
+                        vertical-align: middle;
+                    }
+                    span{
+                        font-size:$fontsize13;
+                        display: inline-block;
+                        color: #313131;
+                    }
+                    &.active,&:hover{
+                        i{
+                            border: 1px solid #0048ff;
+                            &:before{
+                                content:'';
+                                width: 7px;
+                                height: 7px;
+                                background:#0048ff;
+                                border-radius:50%;
+                                position: absolute;
+                                left:1px;
+                                top:1px;
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    .multiSelect{
+            margin-top: 16px;
+            margin-left:90px;
+            padding-top:5px;
+            padding-bottom:5px;
+            padding-left: 12px;
+            max-width: 1400px;
+            border: solid 1px #f0f0f0;
+            position: relative;
+            background: #f6f7f8;
+            .departItems{
+                .item-checkbox{
+                    float: left;
+                    border: none;
+                    padding-right:18px;
+                    cursor: pointer;
+                    line-height: 24px;
+                    position: relative;
+                    padding-left:21px;
+                    i{
+                        position: absolute;
+                        left:0px;
+                        top:50%;
+                        margin-top:-6px;
+                        display: inline-block;
+                        width: 11px;
+                        height: 11px;
+                        border: 1px solid #848484;
+                        box-sizing: border-box;
+                        vertical-align: middle;
+                    }
+                    span{
+                        font-size:$fontsize13;
+                        display: inline-block;
+                        color: #313131;
+                    }
+                    &.active,&:hover{
+                        i{
+                            border: 1px solid #2f88ff;
+                            background:#2f88ff;
+                            &:before {
+                                content: '';
+                                width: 7px;
+                                height: 4px;
+                                transform: rotate(-45deg);
+                                border-left: 1px solid #fff;
+                                border-bottom: 1px solid #fff;
+                                position: absolute;
+                                left: 1px;
+                                top: 1px;
+                            }
+                        }
+                    }
+                }
+            }
+    }
+}
 .memberTit{
     padding:19px 22px 0px 22px;
     position: relative;
@@ -691,639 +933,59 @@
         background: -ms-linear-gradient(right,#fffdfa 0%,#fff9e8 100%);
         background: linear-gradient(to left,#fffdfa 0%,#fff9e8 100%);
         span{
-            color: #d62815;
-            font-size:$fontsize19;
+            color: #999;
+            font-size:$fontsize12;
             margin-left: 5px;
             margin-right: 5px;
-        }
-    }
-}
-.payMember{
-    background-color: #fff;
-    border:1px solid #f0f0f0;
-    border-bottom: 0px;
-    .yearRank{
-        text-align: center;
-        thead{
-            height:48px;
-            color: #1a1a1a;
-            font-size:$fontsize14;
             font-weight: normal;
-            tr,th{
-                background-color: #fffcf5;
-                font-weight: normal;
-                color:#1a1a1a;
-            }
-            th.el-table__cell.is-leaf{
-                border-top: 1px solid #f0f0f0;
-                border-bottom:0px solid #f0f0f0;
-                padding: 0;
-            }
-        }
-        .cell{
-            text-align: center;
-            line-height: normal;
-            .urank{
-                color: #888888;
-                font-size:$fontsize14;
-                width: 18px;
-                height: 18px;
-                border-radius: 2px;
-                background: #dcdcdc;
-                display:inline-block;
-                &.urank01{
-                    background: -moz-linear-gradient(135deg,#f9bc1f 0%, #f9511b 100%);
-                    background: -webkit-linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
-                    background: -o-linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
-                    background: -ms-linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
-                    background: linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
-                    color:#fff;
-                }
-                &.urank02{
-                    background:#a7c2ca;
-                    color:#fff;
-                }
-                &.urank03{
-                    background: -moz-linear-gradient(top,#e5ca99 0%, #d0b583 100%);
-                    background: -webkit-linear-gradient(top,#e5ca99 0%,#d0b583 100%);
-                    background: -o-linear-gradient(top,#e5ca99 0%,#d0b583 100%);
-                    background: -ms-linear-gradient(top,#e5ca99 0%,#d0b583 100%);
-                    background: linear-gradient(to bottom,#e5ca99 0%,#d0b583 100%);
-                    color:#fff;
-                }
-            }
-            .headImg{
-                width: 36px;
-                height: 36px;
-                border-radius: 4px;
-                margin-left: auto;
-                margin-right: auto;
-                position: relative;
-                overflow: hidden;
-                cursor: pointer;
-                img{
-                    width: 100%;
-                }
-                &.headImgBorder{
-                    background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                    background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                    background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                    background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                    background: linear-gradient(to left,#fbbf44 0%,#e85524 100%);
-                    padding: 1px;
-                    img{
-                        border-radius:50%;
-                    }
-                }
-            }
-            .nopic{
-                width: 36px;
-                height: 36px;
-                border-radius: 4px;
-                background: url(../assets/default_pic.jpg) center center no-repeat;
-                background-size:100%;
-                margin-left: auto;
-                margin-right: auto;
-                &.headImgBorder{
-                    background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                    background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                    background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                    background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                    background: linear-gradient(to left,#fbbf44 0%,#e85524 100%);
-                    padding: 1px;
-                    img{
-                        border-radius:50%;
-                    }
-                }
-            }
-            .uname{
-                font-size:$fontsize14;
-                color: #111111;
-                cursor: pointer;
-            }
-            .innum{
-                color: #333333;
-                font-size:$fontsize14;
-            }
-            .dealnum{
-                color: #333333;
-                font-size:$fontsize14;
-            }
-            .milnum{
-                color: #333333;
-                font-size:$fontsize14;
-                padding-left:30px;
-                display: inline-block;
-                line-height:38px;
-                position: relative;
-                &:before{
-                    content: '';
-                    display: block;
-                    position: absolute;
-                    left: 0;
-                    top: 8px;
-                    width:30px;
-                    height:28px;
-                    background: url(../assets/mildeal.png) center center no-repeat;
-                    background-size: 100% auto;
-                }
-            }
-        }
-        td.el-table__cell{
-            border-top: 1px solid #f0f0f0;
-            border-bottom:0px solid #f0f0f0;
-            padding:12px 0px;
-        }
-        .sort-caret.ascending{
-            border-bottom-color:#93adc7;
-            border-left-width: 4px;
-            border-right-width: 4px;
-        }
-        .sort-caret.descending{
-            border-top-color:#93adc7;
-            border-left-width: 4px;
-            border-right-width: 4px;
-        }
-        .ascending .sort-caret.ascending {
-            border-bottom-color:#315c88;
-        }
-        .descending .sort-caret.descending {
-            border-top-color:#315c88;
-        }
-    }
-}
-.memberAward{
-    background-color: #fff;
-    border:1px solid #f0f0f0;
-    position: relative;
-    margin-bottom: 15px;
-    .memberTit{
-        position: relative;
-        height:80px; 
-        background: -moz-linear-gradient(right,#fffbfa 0%, #ffeeee 100%);
-        background: -webkit-linear-gradient(right,#fffbfa 0%,#ffeeee 100%);
-        background: -o-linear-gradient(right,#fffbfa 0%,#ffeeee 100%);
-        background: -ms-linear-gradient(right,#fffbfa 0%,#ffeeee 100%);
-        background: linear-gradient(to left,#fffbfa 0%,#ffeeee 100%);
-        &:after{
-            background: url(../assets/personal_bg04.png) no-repeat top right;
-            background-size:100%;
-            width:120px;
-            height:80px;
-            position: absolute;
-            right:0px;
-            top:0px;
-            z-index: 3;
-        }
-        &:before{
-            background: url(../assets/personal_bg05.gif) no-repeat top right;
-            background-size:100%;
-            width:120px;
-            height:80px;
-            position: absolute;
-            right:0px;
-            top:0px;
-            z-index: 2;
-        }
-        h3{color:#d62815;}
-    }
-    .awardRank{
-        .inul{
-            overflow: hidden;
-            .nodata{
-                padding: 30px 20px;
-                text-align: center;
-                font-size: 14px;
-                color: #a1a1a1;
-            }
-        }
-        li{
-            a{
-                flex:1;
-                padding: 13px 20px;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                border-top: 1px solid rgba(245, 231, 231, 0.6);
-                cursor: pointer;
-            }
-            .rankNum{
-                width:30px;
-                height:36px;
-                color: #888888;
-                font-size:$fontsize14;
-                text-align: center;
-                line-height:36px;
-                .numTop{
-                    width:30px;
-                    height:25px;
-                }
-                .numTop01{
-                    background: url(../assets/personal_AwardIcon01.png) center center no-repeat;
-                    background-size:20px 25px;
-                    margin-top: 5px;
-                }
-                .numTop02{
-                    background: url(../assets/personal_AwardIcon02.png) center center no-repeat;
-                    background-size:20px 25px;
-                    margin-top: 5px;
-                }
-                .numTop03{
-                    background: url(../assets/personal_AwardIcon03.png) center center no-repeat;
-                    background-size:20px 25px;
-                    margin-top: 5px;
-                }
-            }
-            .userImg{
-                padding-left:38px;
-                width:95px;
-                .headImg{
-                    width: 36px;
-                    height: 36px;
-                    overflow: hidden;
-                    position: relative;
-                    span{
-                        clear: both;
-                        display: block;
-                        overflow: hidden;
-                        width: 100%;
-                        height: 100%;
-                        border-radius: 4px;
-                        position: relative;
-                        margin: 0 auto;
-                        img{
-                            width: 100%;
-                            position: absolute;
-                            left: 0px;
-                            width: 100%;
-                            top: 0%;
-                            -o-object-fit: cover;
-                            object-fit: cover;
-                            transition: all 0.5s;
-                        }
-                    }
-                }
-                .nopic{
-                    width: 36px;
-                    height: 36px;
-                    overflow: hidden;
-                    border-radius: 4px;
-                    position: relative;
-                    cursor: pointer;
-                    background: url(../assets/default_pic.jpg) center center no-repeat;
-                    background-size:100%;
-                }    
-            }
-            .userName{
-                color: #111111;
-                font-size:$fontsize15;
-                .dept{
-                    color:#666;
-                }
-            }
-            .userAward{
-                color: #333333;
-                font-size:$fontsize14;
-                text-align: right;
-                .num01{
-                    background-image: linear-gradient(90deg,#f9c020 ,#f83801);
-                    background-clip: text;
-                    -webkit-background-clip: text;
-                    color: transparent;
-                    font-weight: bold;
-                }
-                .num02{
-                    background-image: linear-gradient(90deg,#92acc7 ,#315c88);
-                    background-clip: text;
-                    -webkit-background-clip: text;
-                    color: transparent;
-                    font-weight: bold;
-                }
-                .num03{
-                    background-image: linear-gradient(90deg,#ad6d2d ,#f5c166);
-                    background-clip: text;
-                    -webkit-background-clip: text;
-                    color: transparent;
-                    font-weight: bold;
-                }
-            }
-        }
-    }
-    .awardMore{
-        width: 60px;
-        height:0px;
-        position: absolute;
-        cursor: pointer;
-        left: 50%;
-        margin-left: -30px;
-        bottom: -15px;
-        border-top: 15px solid #e2e3e8;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-bottom:0px;
-        transition: all 0.3s ease;
-        &:before{
-            content: '';
-            display: block;
-            position: absolute;
-            left: 50%;
-            margin-left: -6px;
-            top: -10px;
-            width: 0;
-            height: 0;
-            border-left:5px solid transparent;
-            border-right:5px solid transparent;
-            border-top:5px solid #fff;
-            border-bottom:0px;
-        }
-        &:hover{
-            border-top-color:#d62815;
-        }
-    }
-    .rowRotate{
-        border-top-color: #ad6d2d;
-        &:before{
-            top: -11px;
-            -webkit-transform: rotate(180deg);
-            transform: rotate(180deg);
         }
     }
 }
 .dealRankMain{
-    margin:0px -10px;
     .dealRankMainItem{
-        float: left;
-        width:calc(50% - 20px);
-        margin:0px 10px;
+        width:100%;
         background-color: #fff;
         border:1px solid #f0f0f0;
-        .memberTit{
-            height:80px; 
-            background: -moz-linear-gradient(right,#f9fbff 0%, #edf4ff 100%);
-            background: -webkit-linear-gradient(right,#f9fbff 0%,#edf4ff 100%);
-            background: -o-linear-gradient(right,#f9fbff 0%,#edf4ff 100%);
-            background: -ms-linear-gradient(right,#f9fbff 0%,#edf4ff 100%);
-            background: linear-gradient(to left,#f9fbff 0%,#edf4ff 100%);
-            &:after{
-                background: url(../assets/personal_bg01.png) no-repeat top right;
-                background-size:100%;
-            }
-            h3{color:#0749f3;}
-        }
         .dealRankMainBox{
             text-align: center;
-            thead{
-                height:48px;
-                color: #1a1a1a;
-                font-size:$fontsize14;
-                font-weight: normal;
-                tr,th{
-                    background-color: #fffcf5;
+            .el-table{
+                &.SiteTable{border-radius:0px;}
+                &.SiteTable th.is-leaf{line-height: 38px!important;font-size: $fontsize13;}
+                thead.is-group th.el-table__cell{border-bottom:0px solid #dfe6ec;}
+                thead{
+                    height:48px;
+                    color: #333333;
+                    font-size:$fontsize13;
                     font-weight: normal;
-                    color:#1a1a1a;
-                }
-                th.el-table__cell.is-leaf{
-                    border-top: 1px solid #f0f0f0;
-                    border-bottom:0px solid #f0f0f0;
-                    padding: 0;
-                }
-            }
-            .cell{
-                text-align: center;
-                line-height: normal;
-                .urank{
-                    color: #888888;
-                    font-size:$fontsize14;
-                    width: 18px;
-                    height: 18px;
-                    border-radius: 2px;
-                    background: #dcdcdc;
-                    display:inline-block;
-                    &.urank01{
-                        background: -moz-linear-gradient(135deg,#f9bc1f 0%, #f9511b 100%);
-                        background: -webkit-linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
-                        background: -o-linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
-                        background: -ms-linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
-                        background: linear-gradient(135deg,#f9bc1f 0%,#f9511b 100%);
-                        color:#fff;
+                    tr,th{
+                        background-color: #f4f6f9;
+                        font-weight: normal;
+                        color:#1a1a1a;
                     }
-                    &.urank02{
-                        background:#a7c2ca;
-                        color:#fff;
-                    }
-                    &.urank03{
-                        background: -moz-linear-gradient(top,#e5ca99 0%, #d0b583 100%);
-                        background: -webkit-linear-gradient(top,#e5ca99 0%,#d0b583 100%);
-                        background: -o-linear-gradient(top,#e5ca99 0%,#d0b583 100%);
-                        background: -ms-linear-gradient(top,#e5ca99 0%,#d0b583 100%);
-                        background: linear-gradient(to bottom,#e5ca99 0%,#d0b583 100%);
-                        color:#fff;
+                    th.el-table__cell.is-leaf{
+                        border-top: 1px solid #e5ecf2;
+                        border-bottom:0px solid #e5ecf2!important;
+                        padding: 0;
                     }
                 }
-                .headImg{
-                    width: 36px;
-                    height: 36px;
-                    border-radius: 4px;
-                    margin-left: auto;
-                    margin-right: auto;
-                    position: relative;
-                    overflow: hidden;
-                    cursor: pointer;
-                    img{
-                        width: 100%;
-                    }
-                    &.headImgBorder{
-                        background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                        background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                        background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                        background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                        background: linear-gradient(to left,#fbbf44 0%,#e85524 100%);
-                        padding: 1px;
-                        img{
-                            border-radius:50%;
+                .cell{
+                    text-align: center;
+                    line-height: normal;
+                    .uname{
+                        font-size:$fontsize13;
+                        color: #333333;
+                        cursor: pointer;
+                        &:hover{
+                            color:#d62815;
                         }
                     }
                 }
-                .nopic{
-                    width: 36px;
-                    height: 36px;
-                    border-radius: 4px;
-                    background: url(../assets/default_pic.jpg) center center no-repeat;
-                    background-size:100%;
-                    margin-left: auto;
-                    margin-right: auto;
-                    &.headImgBorder{
-                        background: -moz-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                        background: -webkit-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                        background: -o-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                        background: -ms-linear-gradient(top,#fbbf44 0%, #e85524 100%);
-                        background: linear-gradient(to left,#fbbf44 0%,#e85524 100%);
-                        padding: 1px;
-                        img{
-                            border-radius:50%;
-                        }
-                    }
+                td.el-table__cell{
+                    border-top:1px solid #e5ecf2;
+                    border-bottom:0px!important;
+                    padding:15px 0px;
                 }
-                .uname{
-                    font-size:$fontsize14;
-                    color: #111111;
-                    cursor: pointer;
-                }
-                .innum{
-                    color: #333333;
-                    font-size:$fontsize14;
-                }
-                .dealnum{
-                    color: #333333;
-                    font-size:$fontsize14;
-                }
-                .milnum{
-                    color: #333333;
-                    font-size:$fontsize14;
-                    padding-left:30px;
-                    display: inline-block;
-                    line-height:38px;
-                    position: relative;
-                    &:before{
-                        content: '';
-                        display: block;
-                        position: absolute;
-                        left: 0;
-                        top: 8px;
-                        width:30px;
-                        height:28px;
-                        background: url(../assets/mildeal.png) center center no-repeat;
-                        background-size: 100% auto;
-                    }
-                }
-            }
-            td.el-table__cell{
-                border-top: 1px solid #f0f0f0;
-                border-bottom:0px solid #f0f0f0;
-                padding:12px 0px;
-            }
-            .sort-caret.ascending{
-                border-bottom-color:#93adc7;
-                border-left-width: 4px;
-                border-right-width: 4px;
-            }
-            .sort-caret.descending{
-                border-top-color:#93adc7;
-                border-left-width: 4px;
-                border-right-width: 4px;
-            }
-            .ascending .sort-caret.ascending {
-                border-bottom-color:#315c88;
-            }
-            .descending .sort-caret.descending {
-                border-top-color:#315c88;
-            }
-        }
-    }
-    &:after{
-        content: '';
-        display: block;
-        clear: both;
-    }
-    .dealRankLeft{
-        float: left;
-        width:75.5%;
-        padding-right: 10px;
-        .memberInquiry{
-            float: left;
-            margin-left:20px;
-            width:calc(33.3333% - 20px);
-        }
-        .memberDeal{
-            float: left;
-            margin-left:20px;
-            width:calc(33.3333% - 20px);
-        }
-        .millionDeal{
-            float: left;
-            margin-left:20px;
-            width:calc(33.3333% - 20px);
-        }
-        .dealRankTop{
-            margin-left:-20px;
-            margin-bottom:37px;
-            &:after{
-                content: '';
-                display: block;
-                clear: both;
-            }
-        }
-    }
-    .dealRankRight{
-        float: left;
-        width:24.5%;
-        padding-left: 10px;
-    }
-    &.active{
-        .dealRankLeft{
-            float:none;
-            width:100%;
-            padding-right: 0px;
-            .dealRankTop{
-            }
-            .memberInquiry{
-                width:calc(25% - 20px);
-            }
-            .memberDeal{
-                width:calc(25% - 20px);
-            }
-            .millionDeal{
-                width:calc(25% - 20px);
-            }
-            .dealRankRight{
-                width:calc(25% - 20px);
-                margin-left:20px;
-                padding-right:0px;
-                padding-left:0px;
-            }
-        }
-    }
-}
-@media screen and(max-width:1600px){
-    .dealRankMain{
-        .dealRankLeft{
-            width: 100%;
-            padding-right: 0;
-        }
-        .dealRankRight{
-            width: 100%;
-            margin-top: 20px;
-            padding-left: 0;
-            .memberAward{
-                width:100%;
-                .awardRank{
-                    .inul{
-                        padding-right: 20px;
-                        height: auto!important;
-                        li{
-                            float: left;
-                            padding:0px;
-                            margin-left: 20px;
-                            width: calc(33.3333% - 20px);
-                            .userImg{
-                                padding-left: 15px;
-                                width: 75px;
-                            }
-                            &:first-child,&:first-child+li,&:first-child+li+li{
-                                a{
-                                    border-top:0px;
-                                }
-                            }
-                        }
-                    }
-                }
-                .awardMore{display:none!important;}
-            }
-            &:after{
-                content: '';
-                display: block;
-                clear: both;
-            }
+            } 
         }
     }
 }

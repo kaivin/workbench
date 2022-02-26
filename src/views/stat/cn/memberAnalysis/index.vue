@@ -1,275 +1,66 @@
 ﻿<template>
   <div class="page-root scroll-panel personAnalysis" ref="boxPane">
-      <div class="personTopTab">
-          <div class="chooseDepart flex-box">
-                <span class="choosetit">部门选择：</span>
-                <div class="departItems noAfter">
-                     <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
-                </div>
-                <span class="choosetit" style="margin-left:20px">时间选择：</span>
-                <div class="departItems flex-content">
-                    <el-date-picker
-                      v-model="searchData.data"
-                      @change="handleData"
-                      type="monthrange"
-                      format="yyyy-MM"
-                      value-format="yyyy-MM"
-                      key="b"
-                      size="mini"
-                      class="date-range"
-                      range-separator="～"
-                      start-placeholder="开始日期"
-                      end-placeholder="结束日期"
-                      :picker-options="pickerMonthRangeOptions">
-                    </el-date-picker>
-                    <i class="departItemBtn" v-on:click="departItemBtn">重置</i>
-                </div>
-          </div>
-      </div>
-      <div class="flex-content dealRankMain" :class="searchData.dept_id==''?'':'active'">
-            <!--<div class="dealRankMainItem">  
-                <div class="memberTit">
-                  <h3>月统计<span>(截至2022.02.26)</span></h3>
-                  <p><span>非付费成员年度排行</span>(单位：个)</p>
-                </div>
-                <div class="dealRankMainBox">      
-                    <el-table
-                        ref="simpleTable"
-                        tooltip-effect="dark"
-                        stripe
-                        class="SiteTable EntableColor"
-                        style="width: 100%"
-                        row-key="id"
-                        key="a"
-                        >
-                        <el-table-column
-                          prop="排名"
-                          label="排名"
-                          width='50'
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="姓名"
-                          label="姓名"
-                          width='70'
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="入职时间"
-                          label="入职时间"
-                          width='80'
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="部门"
-                          label="部门"
-                          width='80'
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="询盘个数"
-                          label="询盘个数(个)"
-                          sortable
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="成交积分"
-                          label="成交积分(分)"
-                          sortable
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="百万成交数"
-                          label="百万成交数(个)"
-                          sortable
-                          >
-                        </el-table-column>
-                    </el-table>
-                </div> 
+        <div class="memberTopTab">
+            <div class="chooseDepart flex-box">
+                  <span class="choosetit">部门：</span>
+                  <div class="departList">
+                       <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
+                  </div>
+                  <span class="choosetit" style="margin-left:20px">时间：</span>
+                  <div class="departItems">
+                      <el-date-picker
+                        v-model="searchData.data"
+                        @change="handleData"
+                        type="monthrange"
+                        format="yyyy-MM"
+                        value-format="yyyy-MM"
+                        key="b"
+                        size="mini"
+                        class="date-range"
+                        range-separator="～"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :picker-options="pickerMonthRangeOptions">
+                      </el-date-picker>
+                  </div>
+                  <span class="choosetit" style="margin-left:20px">入职时间：</span>
+                  <div class="departList">
+                      <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in ustatusList" :key="index" v-on:click="inTimePlug(item.id)">{{item.name}}</span>
+                  </div>
+                  <i class="departItemBtn" v-on:click="departItemBtn">重置</i>
             </div>
-            <div class="dealRankMainItem">
-                <div class="memberTit">
-                  <h3>年统计<span>(截至2022.02.26)</span></h3>
-                  <p><span>非付费成员年度排行</span>(单位：个)</p>
-                </div>  
-                <div class="dealRankMainBox">      
-                    <el-table
-                        ref="simpleTable"
-                        tooltip-effect="dark"
-                        stripe
-                        class="SiteTable EntableColor"
-                        style="width: 100%"
-                        row-key="id"
-                        key="a"
-                        >
-                        <el-table-column
-                          prop="排名"
-                          label="排名"
-                          width='50'
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="姓名"
-                          label="姓名"
-                          width='70'
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="入职时间"
-                          label="入职时间"
-                          width='80'
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="部门"
-                          label="部门"
-                          width='80'
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="询盘个数"
-                          label="询盘个数(个)"
-                          sortable
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="询盘平均数"
-                          label="询盘平均数(个)"
-                          sortable
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="成交积分"
-                          label="成交积分(分)"
-                          sortable
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="百万成交数"
-                          label="百万成交数(个)"
-                          sortable
-                          >
-                        </el-table-column>
-                    </el-table>
-                </div>      
-            </div>-->
-        <div class="dealRankLeft">
-          <div class="dealRankTop">
-             <template v-if='searchData.dept_id!=12'>
-              <unpay-inquiry 
-                :unpayInquiry="unpayInquiry"
-                :unpayInquirySet="unpayInquirySet"
-                :lang="ch"
-                :ByTime ="Inquirytime"
-                @changeSet="changeSet"
-                :isdep1="isdep1"
-              ></unpay-inquiry>
-            </template>
-            <template v-if='searchData.dept_id==12'>
-              <unpay-inquiry 
-                :unpayInquiry="payMember"
-                :unpayInquirySet="payMemberSet"
-                :lang="ch"
-                :ByTime ="Paytime"
-                :isdep1="isdep1"
-                @changeSet="changeSet"
-              ></unpay-inquiry>
-            </template>
-              <unpay-deal
-                :dealScore="dealScore"
-                :dealScoreSet="dealScoreSet"
-                @changeSet="changeSet"
-                :scoretime ="scoretime"
-                :lang="ch"
-                :isdep1="isdep1"
-              ></unpay-deal>
-              <million-deal
-                :millionDeal="millionDeal"
-                :millionDealSet="millionDealSet"
-                :lang="ch"
-                :scoretime ="scoretime"
-                @changeSet="changeSet"
-              ></million-deal>
-              <div class="dealRankRight" v-if='searchData.dept_id!=""'>
-                <award-rank
-                  :awardMoney="awardMoney"
-                  :awardMoneySet="awardMoneySet"
-                  :lang="ch"
-                  :isAwardBool="isAwardBool"
-                  :moneytime ="moneytime"
-                  @changeSet="changeSet"
-                ></award-rank>
-              </div>
-          </div>
-          <pay-member
-            :payMember="payMember"
-            :lang="ch"
-            v-if='searchData.dept_id==""'
-          ></pay-member>
         </div>
-        <div class="dealRankRight" v-if='searchData.dept_id==""'>
-          <award-rank
-            :awardMoney="awardMoney"
-            :awardMoneySet="awardMoneySet"
-            :lang="ch"
-            :isAwardBool="isAwardBool"
-            :moneytime ="moneytime"
-            @changeSet="changeSet"
-          ></award-rank>
-        </div>
+      <div class="flex-content dealRankMain" :class="searchData.dept_id==''?'':'active'">
+            <award-rank
+              :RankData="tableDate"
+              :lang="ch"
+            ></award-rank>
       </div>
   </div>
 </template>
 <script>
-import UnpayInquiry from "../../components/memberCompare/UnpayInquiry";
-import UnpayDeal from "../../components/memberCompare/UnpayDeal";
-import PayMember from "../../components/memberCompare/PayMember";
-import MillionDeal from "../../components/memberCompare/MillionDeal";
 import AwardRank from "../../components/memberCompare/AwardRank";
-import {numSeparate,rankingWithTotalItem} from "@/utils/index";
+import {sortByDesc,rankingWithTotalItem} from "@/utils/index";
 import { mapGetters } from 'vuex';
 export default {
   name: "cnMemberAnalysis",
   data() {
     return {
       department:[],//部门列表
+      tableDate:[],
       isAwardBool:false,
-      unpayInquiry: [],
-      unpayInquirySet:{
-        ifFold: false,//是否需要折叠
-        boxHeight: '630px',
-        isFold: false,
-      },
       ch:'ch',
-      dealScore:[],
-      dealScoreSet:{
-        ifFold: false,//是否需要折叠
-        boxHeight: '630px',
-        isFold: false,
-      },
-      payMember:[],
-      payMemberSet:{
-        ifFold: false,//是否需要折叠
-        boxHeight: '630px',
-        isFold: false,
-      },
-      millionDeal:[],
-      millionDealSet:{
-        ifFold: false,//是否需要折叠
-        boxHeight: '630px',
-        isFold: false,
-      },
-      awardMoney:[],
-      awardMoneySet:{
-        ifFold: false,//是否需要折叠
-        boxHeight: '630px',
-        isFold: false,
-      },
       searchData:{
+        id:'',
         data:[],
         dept_id:'',
-        id:'',
+        ustatus:'',
       },
+      ustatusList:[
+        {id:1,name:"试用期",isOn:false},
+        {id:2,name:"一年/一年内",isOn:false},
+        {id:3,name:"一年以上",isOn:false}
+      ],
       scoretime:'',
       moneytime: '',
       Inquirytime: '',
@@ -292,30 +83,29 @@ export default {
           }
         }]
       },
-      isdep1:false
     };
   },
   computed: {
     ...mapGetters([
       'sidebar',
     ]),
+    monthTime(){
+        return new Date().getMonth() + 1;
+    }
+  },
+  components:{
+    AwardRank,
+  },
+  created() {
+    var $this = this;
+    $this.getNearMonth();
+    $this.getUserMenuButtonPermit();
   },
   mounted(){
     const $this = this;
     if(!$this.sidebar.opened){
       $this.$store.dispatch('app/toggleSideBar');
     }
-  },
-  components:{
-    UnpayInquiry,
-    UnpayDeal,
-    PayMember,
-    MillionDeal,
-    AwardRank,
-  },
-  created() {
-    var $this = this;
-    $this.getUserMenuButtonPermit();
   },
   methods: {
     //获取部门信息
@@ -324,6 +114,7 @@ export default {
       $this.$store.dispatch("api/getCnDepartAction").then((res) => {
           if (res) {
             if (res.status) {
+              console.log(res.data);
                 if(res.data&&res.data.length>0){
                     var department=[];
                     res.data.forEach(function(item,index){
@@ -356,6 +147,7 @@ export default {
         $this.searchData.data=[];
         $this.searchData.starttime='';
         $this.searchData.endtime='';
+        $this.searchData.ustatus='';
         $this.GetInquiryResult();
     },
     // 点击部门获取部门ID
@@ -368,6 +160,20 @@ export default {
               item.isOn=true;
             }
         });
+        $this.GetInquiryResult();
+    },
+    // 点击入职时间ID
+    inTimePlug(valData){
+        var $this=this;
+        $this.searchData.ustatus=valData;
+        var ustatusList=$this.ustatusList;
+        ustatusList.forEach(function(item,index){
+            item.isOn=false;
+            if(item.id==valData){
+              item.isOn=true;
+            }
+        });
+        $this.ustatusList=ustatusList;
         $this.GetInquiryResult();
     },
     //点击时间搜索
@@ -423,34 +229,15 @@ export default {
         searchData.starttime=$this.searchData.data[0];
         searchData.endtime=$this.searchData.data[1];
       }
+      if($this.searchData.ustatus&&$this.searchData.ustatus!=''){
+        searchData.ustatus=$this.searchData.ustatus;
+      }
       return searchData;
     },
     // 清空数据
     emptyData(){
         var $this=this;
-        $this.unpayInquiry=[];
-        $this.unpayInquirySet.ifFold=false;
-        $this.unpayInquirySet.boxHeight='630px';
-        $this.unpayInquirySet.isFold=false;
-        $this.payMemberSet.ifFold=false;
-        $this.payMemberSet.boxHeight='630px';
-        $this.payMemberSet.isFold=false;
-        $this.dealScore=[];
-        $this.dealScoreSet.ifFold=false;
-        $this.dealScoreSet.boxHeight='630px';
-        $this.dealScoreSet.isFold=false;
-        $this.payMember=[];
-        $this.millionDeal=[];
-        $this.millionDealSet.ifFold=false;
-        $this.millionDealSet.boxHeight='630px';
-        $this.millionDealSet.isFold=false;
-        $this.awardMoney=[];
-        $this.awardMoneySet.ifFold=false;
-        $this.awardMoneySet.boxHeight='630px';
-        $this.awardMoneySet.isFold=false;
-        $this.scoretime='';
-        $this.moneytime='';
-        $this.Inquirytime='';
+        $this.tableDate=[];
     },
     // 获取中文询盘、成交等情况
     GetInquiryResult(){
@@ -458,114 +245,40 @@ export default {
       var searchData={};
       searchData=$this.initsearch();
       $this.emptyData();
-      $this.$store.dispatch("memberCompare/postInquiryRank",searchData).then((response) => {
+      $this.$store.dispatch("memberCompare/getChinapersoncountdefaultAction",searchData).then((response) => {
           if (response) {
             if (response.status) {
-                if($this.searchData.dept_id==12){
-                  var scorelist = [];
-                  var inquirylist = [];
-                  var alist = [];
-                  if(response.semulist&&response.semulist.length>0){
-                    for(var i=0;i<response.semulist.length;i++){
-                      var scoreobj={};
-                      var inquiryobj={};
-                      var aobj={};
-                      scoreobj.uid = response.semulist[i].id;
-                      scoreobj.headimg = response.semulist[i].headimg;
-                      scoreobj.departname = response.semulist[i].departname;
-                      scoreobj.dept_id = response.semulist[i].dept_id;
-                      scoreobj.score = response.semulist[i].score;
-                      scoreobj.ownuser = response.semulist[i].name;
-                      
-                      inquiryobj.id = response.semulist[i].id;
-                      inquiryobj.headimg = response.semulist[i].headimg;
-                      inquiryobj.departname = response.semulist[i].departname;
-                      inquiryobj.dept_id = response.semulist[i].dept_id;
-                      inquiryobj.number = response.semulist[i].number;
-                      inquiryobj.name = response.semulist[i].name;
-                      
-                      aobj.dept_id = response.semulist[i].dept_id;
-                      aobj.headimg = response.semulist[i].headimg;
-                      aobj.departname = response.semulist[i].departname;
-                      aobj.uid = response.semulist[i].id;
-                      aobj.number = response.semulist[i].Anumber;
-                      aobj.ownuser = response.semulist[i].name;
-
-                      scorelist.push(scoreobj);
-                      inquirylist.push(inquiryobj);
-                      alist.push(aobj);
-                    }
-                    // 付费
-                    var inquirytime
-                    if($this.searchData.data&&$this.searchData.data.length>0){
-                      inquirytime=$this.searchData.data[0]+' ~ '+$this.searchData.data[1];
-                    }else{
-                        inquirytime='';
-                    }
-                    $this.payInquiryPlug(inquirylist,inquirytime);
-                    // 成交积分
-                    var scoretime
-                    if($this.searchData.data&&$this.searchData.data.length>0){
-                        scoretime=$this.searchData.data[0]+'|'+$this.searchData.data[1]
-                    }else{
-                        scoretime=response.scoretime;
-                    }
-                    $this.integralPlug(scorelist,scoretime);
-                    // 百万成交
-                    $this.MillionsPlug(alist);
+              var tableDate=[];
+              if(response.monthselectuser&&response.monthselectuser.length>0){
+                response.monthselectuser.forEach(function(item){
+                  var itemObj={};
+                  itemObj.id=item.id;
+                  itemObj.name=item.name;
+                  itemObj.dept_id=item.dept_id;
+                  itemObj.departname=item.departname;
+                  itemObj.comtime=item.comtime;
+                  itemObj.monthnumber=item.number;
+                  itemObj.monthscore=item.score;
+                  itemObj.monthallmoney=item.allmoney;
+                  itemObj.monthAnumber=item.Anumber;
+                  if(response.yearuser&&response.yearuser.length>0){
+                    response.yearuser.forEach(function(items){
+                      if(item.id==items.id){
+                          itemObj.yearnumber=items.number;
+                          itemObj.ranknumber=items.number;
+                          itemObj.yearAvgnumber=(items.number/$this.monthTime).toFixed(2)*1
+                          itemObj.yearscore=items.score;
+                          itemObj.yearallmoney=items.allmoney;
+                          itemObj.yearAnumber=items.Anumber;
+                      }
+                    });
                   }
-                  // 奖金排序
-                  if(response.moneylist&&response.moneylist.length>0){
-                    var moneytime
-                    if($this.searchData.data&&$this.searchData.data.length>0){
-                      moneytime=$this.searchData.data[0]+' ~ '+$this.searchData.data[1];
-                    }else{
-                        moneytime='截至'+response.moneytime;
-                    }
-                    $this.BonusPlug(response.moneylist,moneytime);
-                  }
-
-                  $this.isdep1=true
-                }else{
-                  // 非付费询盘
-                  if(response.xunulist&&response.xunulist.length>0){
-                    var moneytime
-                    if($this.searchData.data&&$this.searchData.data.length>0){
-                      moneytime=$this.searchData.data[0]+' ~ '+$this.searchData.data[1];
-                    }else{
-                        moneytime='';
-                    }
-                    $this.enquiriesPlug(response.xunulist,moneytime);
-                  }
-                  // 成交积分
-                  if(response.scorelist&&response.scorelist.length>0){
-                    var scoretime
-                    if($this.searchData.data&&$this.searchData.data.length>0){
-                        scoretime=$this.searchData.data[0]+'|'+$this.searchData.data[1]
-                    }else{
-                        scoretime=response.scoretime;
-                    }
-                    $this.integralPlug(response.scorelist,scoretime);
-                  }
-                  // 付费
-                  if(response.semulist&&response.semulist.length>0){
-                    $this.payPlug(response.semulist);
-                  }
-                  // 百万成交
-                  if(response.Alist&&response.Alist.length>0){
-                    $this.MillionsPlug(response.Alist);
-                  }
-                  // 奖金排序
-                  if(response.moneylist&&response.moneylist.length>0){
-                    var moneytime
-                    if($this.searchData.data&&$this.searchData.data.length>0){
-                      moneytime=$this.searchData.data[0]+' ~ '+$this.searchData.data[1];
-                    }else{
-                        moneytime='截至'+response.moneytime;
-                    }
-                    $this.BonusPlug(response.moneylist,moneytime);
-                  }
-                }
+                  tableDate.push(itemObj);
+                });
+              }              
+              tableDate.sort(sortByDesc("yearnumber"));
+              tableDate=rankingWithTotalItem(tableDate,'ranknumber');
+              $this.tableDate=tableDate;
             } else {
               $this.$message({
                 showClose: true,
@@ -578,127 +291,18 @@ export default {
           }
       });
     },
-    //非付费询盘
-    enquiriesPlug(varData,varTime){
-      var $this = this;
-      var unpayInquiry=rankingWithTotalItem(varData,'number');
-      unpayInquiry.forEach(function(item){
-        item.number = numSeparate(item.number);
-        item.deptName=item.departname;
-      });
-      $this.unpayInquiry = unpayInquiry;
-      $this.Inquirytime = varTime;
-      if(varData.length < 10){
-          $this.unpayInquirySet.ifFold = false;
-      }else{
-          $this.unpayInquirySet.ifFold = true;
-          $this.unpayInquirySet.isFold = false;
-      }
+    //默认时间周期
+    getNearMonth(){
+      var $this=this;
+      var end = new Date();
+      var endYear = end.getFullYear();
+      var endMonth = end.getMonth() + 1;
+      endMonth = endMonth<10?'0'+endMonth:endMonth;
+      var endDate = endYear+"-"+endMonth;
+      $this.searchData.data=[endDate,endDate];
+      $this.searchData.starttime=endDate;
+      $this.searchData.endtime=endDate;
     },
-    //成交积分
-    integralPlug(varData,varTime){
-      var $this = this;
-      var dealScore=varData.sort(function(a, b){return b.score - a.score});
-      dealScore=rankingWithTotalItem(dealScore,'score');
-      dealScore.forEach(function(item){
-        item.score = numSeparate(Math.floor(item.score*100)/100);
-        item.deptName=item.departname;
-      });
-      $this.dealScore = dealScore;
-      $this.scoretime = varTime;
-      if(varData.length < 10){
-          $this.dealScoreSet.ifFold = false;
-      }else{
-          $this.dealScoreSet.ifFold = true;
-          $this.dealScoreSet.isFold = false;
-      }
-    },
-    //付费询盘
-    payInquiryPlug(varData,varTime){
-      var $this = this;
-      var payMember = varData.sort(function(a, b){return b.number - a.number});
-      payMember = rankingWithTotalItem(payMember,'number');
-      
-      payMember.forEach(function(item){
-        item.numberStr = numSeparate(item.number);
-        item.deptName=item.departname;
-      });
-      $this.payMember=payMember;
-      $this.Paytime = varTime;
-      if(varData.length < 10){
-          $this.payMemberSet.ifFold = false;
-      }else{
-          $this.payMemberSet.ifFold = true;
-          $this.payMemberSet.isFold = false;
-      }
-    },
-    //付费
-    payPlug(varData){
-      var $this = this;
-      var payMember=rankingWithTotalItem(varData,'number');
-      payMember.forEach(function(item){
-        item.numberStr = numSeparate(item.number);
-        item.deptName=item.departname;
-      });
-      $this.payMember=payMember;
-    },
-    //百万成交
-    MillionsPlug(varData){
-      var $this = this;
-      var millionDeal=varData.sort(function(a, b){return b.number - a.number});
-      var millionDeal=rankingWithTotalItem(millionDeal,'number');
-      millionDeal.forEach(function(item){
-        item.deptName=item.departname;
-      });
-      $this.millionDeal=millionDeal;
-      if(varData.length < 10){
-          $this.millionDealSet.ifFold = false;
-      }else{
-          $this.millionDealSet.ifFold = true;
-          $this.millionDealSet.isFold = false;
-      }
-    },
-    //奖金排序
-    BonusPlug(varData,varTime){
-      var $this = this;                  
-      var moneyarr = varData;
-      moneyarr.sort($this.compare('allmoney'));
-      var awardMoney = rankingWithTotalItem(moneyarr,'allmoney');
-      awardMoney.forEach(function(item){
-        item.allmoney = numSeparate(Math.floor(item.allmoney*100)/100);
-        item.deptName=item.departname;
-      });
-      $this.awardMoney=awardMoney;
-      $this.moneytime = varTime;
-      if(varData.length < 10){
-          $this.awardMoneySet.ifFold = false;
-      }else{
-          $this.awardMoneySet.ifFold = true;
-          if($this.searchData.dept_id==""){
-              $this.isAwardBool=false;
-              $this.awardMoneySet.boxHeight = "1133px";
-          }else{
-              $this.isAwardBool=true;
-          }
-          $this.awardMoneySet.isFold = false;
-      }
-    },
-    // 展开折叠点击事件
-    changeSet(data,isfold,boxheight){
-      var $this = this;
-      var property = data;
-      property.isFold = isfold;
-      property.boxHeight = boxheight;
-    },
-    // 数组排序
-    compare(property) {
-      return function(a,b){
-        var value1 = a[property];
-        var value2 = b[property];
-        return value2 - value1;
-      }
-    }
-
   }
 }
 
