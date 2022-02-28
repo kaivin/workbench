@@ -19,13 +19,11 @@
             <el-table-column
               prop="departname"
               label="所属部门"
-              width='80'
               >
             </el-table-column>
             <el-table-column
               prop="name"
               label="姓名"
-              width='80'
               >
                 <template slot-scope="scope">
                   <router-link :to="{path: lang == 'ch'?'/stat/cn/memberAnalysis/singlePerson':'/stat/en/memberAnalysis/singlePerson',query:{deptId:scope.row.dept_id,itemId:scope.row.id}}" tag="a" target="_blank">
@@ -35,7 +33,6 @@
             <el-table-column
               prop="postionname"
               label="职位"
-              width='80'
               >
                 <template slot-scope="scope">
                     <span class="uname" :style="scope.row.postionname=='组长'||scope.row.postionname=='主管'?'color:red;font-weight:bold':''">{{scope.row.postionname}}</span>
@@ -44,7 +41,6 @@
             <el-table-column
               prop="comtime"
               label="入职时间"
-              width='120'
               sortable              
               >
                 <template slot-scope="scope">
@@ -56,7 +52,6 @@
                   prop="yesterdaynumber"
                   label="昨天"
                   sortable
-                  width='80'
                   class-name="dayStyle"
                   >
                 </el-table-column>
@@ -64,7 +59,6 @@
                   prop="todaynumber"
                   label="今天"
                   sortable
-                  width='80'
                   class-name="dayStyle"
                   >
                 </el-table-column>
@@ -103,6 +97,7 @@
                 <el-table-column
                   prop="yearAvgnumber"
                   label="平均月询盘个数"
+                  width='140'
                   sortable
                   class-name="yearStyle"
                   >
