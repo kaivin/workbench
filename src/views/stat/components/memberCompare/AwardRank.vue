@@ -4,6 +4,7 @@
         <el-table
             ref="SimpleTable"
             :data="RankData"
+            :header-cell-style="tableHeaderCellStyle"
             tooltip-effect="dark"
             stripe
             class="SiteTable EntableColor"
@@ -18,6 +19,11 @@
               >
             </el-table-column>
             <el-table-column
+              prop="departname"
+              label="所属部门"
+              >
+            </el-table-column>
+            <el-table-column
               prop="name"
               label="姓名"
               >
@@ -27,8 +33,8 @@
                 </template>
             </el-table-column>
             <el-table-column
-              prop="departname"
-              label="所属部门"
+              prop="postionname"
+              label="职位"
               >
             </el-table-column>
             <el-table-column
@@ -37,7 +43,21 @@
               sortable
               >
             </el-table-column>
-            <el-table-column :label="defaultTagData">
+            <el-table-column label="日询盘个数" >
+                <el-table-column
+                  prop="yesterdaynumber"
+                  label="昨天"
+                  sortable
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="todaynumber"
+                  label="今天"
+                  sortable
+                  >
+                </el-table-column>
+            </el-table-column>
+            <el-table-column :label="defaultTagData" class="monthStyle">
                 <el-table-column
                   prop="monthnumber"
                   label="询盘个数"
@@ -57,7 +77,7 @@
                   >
                 </el-table-column>
             </el-table-column>
-            <el-table-column :label="'本年数据('+yearTime+'年)'">
+            <el-table-column :label="'本年数据('+yearTime+'年)'" class="yearStyle">
                 <el-table-column
                   prop="yearnumber"
                   label="询盘个数"
@@ -126,6 +146,38 @@ export default {
     }
   },
   methods:{
+    tableHeaderCellStyle({row,column,rowIndex, columnIndex}) {
+      console.log(columnIndex,'columnIndex');
+        let cellStyle0;
+        let cellStyle1;
+        let cellStyle2;
+        let cellStyle3;
+        cellStyle0= "border-color:#fff;"
+        cellStyle1= "background:#f6ede6;border-color:#fff;"
+        cellStyle2= "background:#e7f3df;border-color:#fff;"
+        cellStyle3= "background:#f8f5e4;border-color:#fff;"
+        if(columnIndex >= 0 && columnIndex < 2 && rowIndex==1){
+          return cellStyle1;
+        }
+        if(columnIndex >= 2 && columnIndex < 5 && rowIndex==1){
+          return cellStyle2;
+        }
+        if(columnIndex >= 5 && columnIndex < 9 && rowIndex==1){
+          return cellStyle3;
+        }
+        if(columnIndex >= 0 && columnIndex < 5 && rowIndex==0){
+          return cellStyle0;
+        }
+        if(columnIndex == 5 && rowIndex==0){
+          return cellStyle1;
+        }
+        if(columnIndex == 6 && rowIndex==0){
+          return cellStyle2;
+        }
+        if(columnIndex == 7 && rowIndex==0){
+          return cellStyle3;
+        }
+    }
   }
 }
 </script>

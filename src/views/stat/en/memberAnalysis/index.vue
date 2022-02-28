@@ -318,6 +318,13 @@ export default {
                   itemObj.id=item.id;
                   itemObj.name=item.name;
                   itemObj.dept_id=item.dept_id;
+                  if(item.postionname==''||item.postionname==null){
+                      itemObj.postionname='组员';
+                  }else{
+                      itemObj.postionname=item.postionname;
+                  }
+                  itemObj.todaynumber=item.todayxunnumber;
+                  itemObj.yesterdaynumber=item.lastdayxunnumber;
                   itemObj.departname=item.departname;
                   itemObj.comtime=item.comtime;
                   itemObj.monthnumber=item.number;
