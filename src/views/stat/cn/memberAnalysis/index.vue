@@ -60,7 +60,7 @@ export default {
         ustatus:'',
       },
       ustatusList:[
-        {id:0,name:"全部",isOn:false},
+        {id:0,name:"全部",isOn:true},
         {id:1,name:"试用期",isOn:false},
         {id:2,name:"一年/一年内",isOn:false},
         {id:3,name:"一年以上",isOn:false}
@@ -118,13 +118,12 @@ export default {
       $this.$store.dispatch("api/getCnDepartAction").then((res) => {
           if (res) {
             if (res.status) {
-              console.log(res.data);
                 if(res.data&&res.data.length>0){
                     var department=[];
                     var objFirst={
                         name:'全部',
                         id:0,
-                        isOn:false
+                        isOn:true
                     };
                     department.push(objFirst);
                     res.data.forEach(function(item,index){
@@ -152,12 +151,19 @@ export default {
         var $this=this;
         $this.department.forEach(function(item,index){
             item.isOn=false;
+            if(item.id==0){
+              item.isOn=true;
+            }
         });
         $this.searchData.dept_id='';
-        $this.searchData.data=[];
-        $this.searchData.starttime='';
-        $this.searchData.endtime='';
+        $this.ustatusList.forEach(function(item,index){
+            item.isOn=false;
+            if(item.id==0){
+              item.isOn=true;
+            }
+        });
         $this.searchData.ustatus='';
+        $this.getNearMonth();
         $this.GetInquiryResult();
     },
     // 点击部门获取部门ID

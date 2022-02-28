@@ -121,16 +121,6 @@
                 text-decoration: underline;
             }
         }
-        .Workstate{
-            width:120px;
-            padding:0px;
-            margin-left: 20px;
-            .el-input--small .el-input__inner{
-                border-radius:0px;
-                color: #606266;
-                font-size:$fontsize12;
-            }
-        }
     }
     .choosePerson{
             &.active{
@@ -989,3 +979,21 @@
         }
     }
 }
+
+@media (max-width:1500px){
+    .memberTopTab{
+        .chooseDepart{
+            .departList{
+                span{
+                    padding: 6px 10px;
+                }
+            }
+            .departItems{
+                line-height:30px;
+                span{
+                    padding: 6px 10px;
+                }
+            }
+        }
+    }
+  }
