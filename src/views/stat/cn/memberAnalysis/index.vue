@@ -4,6 +4,7 @@
             <div class="chooseDepart flex-box">
                   <span class="choosetit">部门：</span>
                   <div class="departList">
+                       <span v-bind:class="departAll?'active':''" v-on:click="departChangeAll">全部</span>                       
                        <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
                   </div>
                   <span class="choosetit" style="margin-left:20px">时间：</span>
@@ -48,6 +49,7 @@ export default {
   data() {
     return {
       department:[],//部门列表
+      departAll:false,
       tableDate:[],
       defaultTime:[],
       defaultTag:'当月数据',
@@ -56,7 +58,7 @@ export default {
       searchData:{
         id:'',
         data:[],
-        dept_id:'',
+        dept_id:[],
         ustatus:'',
       },
       ustatusList:[
@@ -120,12 +122,6 @@ export default {
             if (res.status) {
                 if(res.data&&res.data.length>0){
                     var department=[];
-                    var objFirst={
-                        name:'全部',
-                        id:0,
-                        isOn:true
-                    };
-                    department.push(objFirst);
                     res.data.forEach(function(item,index){
                         var objItem={};
                         objItem.name=item.name;
@@ -149,13 +145,11 @@ export default {
     // 清除搜索数据
     departItemBtn(){
         var $this=this;
+        $this.departAll=false;
         $this.department.forEach(function(item,index){
             item.isOn=false;
-            if(item.id==0){
-              item.isOn=true;
-            }
         });
-        $this.searchData.dept_id='';
+        $this.searchData.dept_id=[];
         $this.ustatusList.forEach(function(item,index){
             item.isOn=false;
             if(item.id==0){
@@ -166,21 +160,55 @@ export default {
         $this.getNearMonth();
         $this.GetInquiryResult();
     },
+    // 点击获取全部部门ID
+    departChangeAll(){
+        var $this=this;
+        var dept_id=[];
+        var department=$this.department;
+        $this.departAll=!$this.departAll;
+        if($this.departAll){
+          department.forEach(function(item,index){
+            item.isOn=true;
+            dept_id.push(item.id);
+          });
+        }else{
+          department.forEach(function(item,index){
+            item.isOn=false
+          });
+        }
+        $this.searchData.dept_id=dept_id;
+        $this.department=department;
+        $this.GetInquiryResult();
+    },
     // 点击部门获取部门ID
     departChange(valData){
         var $this=this;
-        if(valData!=0){
-          $this.searchData.dept_id=valData;
-        }else{
-          $this.searchData.dept_id='';
-        }
+        var dept_id=[];
         var department=$this.department;
-        department.forEach(function(item,index){
-            item.isOn=false;
+        if($this.departAll){
+          $this.departAll=false;
+          department.forEach(function(item,index){
               if(item.id==valData){
-                item.isOn=true;
+                item.isOn=!item.isOn;
               }
-        });
+              if(item.isOn){
+                dept_id.push(item.id)
+              }
+          });
+        }else{
+          department.forEach(function(item,index){
+              if(item.id==valData){
+                item.isOn=!item.isOn;
+              }
+              if(item.isOn){
+                dept_id.push(item.id)
+              }
+          });
+          if(dept_id.length==department.length){
+            $this.departAll=true;
+          }
+        }
+        $this.searchData.dept_id=dept_id;
         $this.department=department;
         $this.GetInquiryResult();
     },
@@ -242,13 +270,13 @@ export default {
     initData() {
       var $this = this;
       $this.getCnDepartList();
-      $this.GetInquiryResult();
+      $this.GetInquiryResult();  
     },
     //重组搜索数据
     initsearch(){
       var $this = this;
       var searchData={};
-      if($this.searchData.dept_id&&$this.searchData.dept_id!=''){
+      if($this.searchData.dept_id&&$this.searchData.dept_id.length>0){
         searchData.dept_id=$this.searchData.dept_id;
       }
       if($this.searchData.data&&$this.searchData.data.length>0){
@@ -267,6 +295,7 @@ export default {
       if($this.searchData.ustatus&&$this.searchData.ustatus!=''){
         searchData.ustatus=$this.searchData.ustatus;
       }
+      console.log(searchData,'searchData')
       return searchData;
     },
     // 清空数据
