@@ -311,7 +311,7 @@ export default {
                   tableDate.push(itemObj);
                 });
               }              
-              tableDate.sort(sortByDesc("yearnumber"));
+              tableDate.sort(sortByDesc("monthnumber"));
               $this.tableDate=tableDate;
             } else {
               $this.$message({
