@@ -320,7 +320,7 @@ export default {
                   itemObj.name=item.name;
                   itemObj.dept_id=item.dept_id;
                   if(item.postionname==''||item.postionname==null){
-                      itemObj.postionname='组员';
+                      itemObj.postionname='普通';
                   }else{
                       itemObj.postionname=item.postionname;
                   }
