@@ -12,8 +12,8 @@
             key="a"
             >
             <el-table-column
-              prop="ranking"
-              label="排名"
+              label="序号" 
+              type="index"
               width='50'
               >
             </el-table-column>

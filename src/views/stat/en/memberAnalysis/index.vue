@@ -41,7 +41,7 @@
 </template>
 <script>
 import AwardRank from "../../components/memberCompare/AwardRank";
-import {sortByDesc,rankingWithTotalItem} from "@/utils/index";
+import {sortByDesc} from "@/utils/index";
 import { mapGetters } from 'vuex';
 export default {
   name: "enMemberAnalysis",
@@ -164,6 +164,8 @@ export default {
         var $this=this;
         if(valData!=0){
           $this.searchData.dept_id=valData;
+        }else{
+          $this.searchData.dept_id='';
         }
         var department=$this.department;
         department.forEach(function(item,index){
@@ -180,7 +182,9 @@ export default {
         var $this=this;  
         if(valData!=0){
           $this.searchData.ustatus=valData;
-        }     
+        }else{
+          $this.searchData.ustatus='';
+        } 
         var ustatusList=$this.ustatusList;
         ustatusList.forEach(function(item,index){
             item.isOn=false;
@@ -301,7 +305,6 @@ export default {
                 });
               }              
               tableDate.sort(sortByDesc("yearnumber"));
-              tableDate=rankingWithTotalItem(tableDate,'ranknumber');
               $this.tableDate=tableDate;
             } else {
               $this.$message({
