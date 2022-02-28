@@ -941,21 +941,27 @@
             .el-table{
                 &.SiteTable{border-radius:0px;}
                 &.SiteTable th.is-leaf{line-height: 38px!important;font-size: $fontsize13;}
-                thead.is-group th.el-table__cell{border-bottom:0px solid #dfe6ec;}
+                thead.is-group th.el-table__cell{border-bottom:0px;}
                 thead{
                     height:48px;
                     color: #333333;
                     font-size:$fontsize13;
                     font-weight: normal;
                     tr,th{
-                        background-color: #f4f6f9;
+                        background-color: #2d71b5;
                         font-weight: normal;
-                        color:#1a1a1a;
+                        color:#fff;
                     }
                     th.el-table__cell.is-leaf{
-                        border-top: 1px solid #e5ecf2;
-                        border-bottom:0px solid #e5ecf2!important;
+                        border-top: 1px solid #b7b7b7;
                         padding: 0;
+                        border-bottom: 1px solid #b7b7b7 !important;
+                        border-right: 1px solid #b7b7b7 !important;
+                    }
+                    th.el-table__cell{
+                        border-top: 1px solid #b7b7b7;
+                        border-bottom: 1px solid #b7b7b7 !important;
+                        border-right: 1px solid #b7b7b7 !important;
                     }
                 }
                 .cell{
@@ -971,11 +977,37 @@
                     }
                 }
                 td.el-table__cell{
-                    border-top:1px solid #e5ecf2;
-                    border-bottom:0px!important;
+                    border-bottom: 1px solid #b7b7b7 !important;
+                    border-right: 1px solid #b7b7b7 !important;
                     padding:15px 0px;
+                    &.dayStyle{
+                        background:#fbe5d6;
+                    }
+                    &.monthStyle{
+                        background:#fff4d1;
+                    }
+                    &.yearStyle{
+                        background:#e2f0d9;
+                    }
+                    position: relative;
+                    span.inTime{
+                        position: absolute;
+                        left: 0;
+                        right: 0;
+                        top: 0;
+                        bottom: 0;
+                        background: #ebebeb;
+                        display: table-cell;
+                        padding: 15px 0px;
+                    }
                 }
-            } 
+            }             
+            .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
+                background-color: #deebf7;
+                &.dayStyle,&.monthStyle,&.yearStyle,span.inTime{
+                    background: #deebf7;
+                }
+            }
         }
     }
 }

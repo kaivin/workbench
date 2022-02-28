@@ -328,6 +328,7 @@ export default {
                   itemObj.yesterdaynumber=item.lastdayxunnumber;
                   itemObj.departname=item.departname;
                   itemObj.comtime=item.comtime;
+                  itemObj.comtimeShow=$this.dateCompare(item.comtime);
                   itemObj.monthnumber=item.number;
                   itemObj.monthscore=item.score;
                   itemObj.monthallmoney=item.allmoney;
@@ -360,6 +361,34 @@ export default {
             }
           }
       });
+    },
+    
+    // 时间对比数据封装函数
+    dateCompare(dataArr){
+      var $this = this;
+      var InTime = new Date(dataArr);
+      var InTimeYear = InTime.getFullYear();
+      var InTimeMonth = InTime.getMonth() + 4;
+      if(InTimeMonth>12){
+        InTimeYear++
+        InTimeMonth=InTimeMonth-12;
+      }
+      InTimeMonth = InTimeMonth<10?'0'+InTimeMonth:InTimeMonth;                  
+      var InTimeday = InTime.getDate();
+      //转正时间
+      var PositiveTime=parseInt(InTimeYear.toString()+InTimeMonth.toString()+InTimeday.toString());
+      //当前时间
+      var myDate = new Date();
+      var myDateyear = myDate.getFullYear();
+      var myDatemon = myDate.getMonth() + 1;
+      myDatemon = myDatemon<10?'0'+myDatemon:myDatemon; 
+      var myDatedate = myDate.getDate();
+      var currentTime=parseInt(myDateyear.toString()+myDatemon.toString()+myDatedate.toString());
+      var timeBool=true;
+      if (PositiveTime > currentTime){
+        timeBool=false
+      }
+      return timeBool;
     },
     //默认时间周期
     getNearMonth(){
