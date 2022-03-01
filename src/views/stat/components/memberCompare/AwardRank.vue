@@ -49,15 +49,15 @@
             </el-table-column>
             <el-table-column label="日询盘个数">
                 <el-table-column
-                  prop="yesterdaynumber"
-                  label="昨天"
+                  prop="todaynumber"
+                  label="今天"
                   sortable
                   class-name="dayStyle"
                   >
                 </el-table-column>
                 <el-table-column
-                  prop="todaynumber"
-                  label="今天"
+                  prop="yesterdaynumber"
+                  label="昨天"
                   sortable
                   class-name="dayStyle"
                   >
@@ -86,7 +86,7 @@
                   >
                 </el-table-column>
             </el-table-column>
-            <el-table-column :label="'本年数据('+yearTime+'年)'">
+            <el-table-column :label="'本年数据 ('+yearTime+'年)'">
                 <el-table-column
                   prop="yearnumber"
                   label="询盘个数"

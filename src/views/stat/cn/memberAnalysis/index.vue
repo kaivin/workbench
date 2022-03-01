@@ -375,6 +375,7 @@ export default {
       }
       InTimeMonth = InTimeMonth<10?'0'+InTimeMonth:InTimeMonth;                  
       var InTimeday = InTime.getDate();
+      InTimeday = InTimeday<10?'0'+InTimeday:InTimeday; 
       //转正时间
       var PositiveTime=parseInt(InTimeYear.toString()+InTimeMonth.toString()+InTimeday.toString());
       //当前时间
@@ -383,6 +384,7 @@ export default {
       var myDatemon = myDate.getMonth() + 1;
       myDatemon = myDatemon<10?'0'+myDatemon:myDatemon; 
       var myDatedate = myDate.getDate();
+      myDatedate = myDatedate<10?'0'+myDatedate:myDatedate;
       var currentTime=parseInt(myDateyear.toString()+myDatemon.toString()+myDatedate.toString());
       var timeBool=true;
       if (PositiveTime > currentTime){

@@ -319,7 +319,7 @@ export default {
                   itemObj.name=item.name;
                   itemObj.dept_id=item.dept_id;
                   if(item.postionname==''||item.postionname==null){
-                      itemObj.postionname='组员';
+                      itemObj.postionname='普通';
                   }else{
                       itemObj.postionname=item.postionname;
                   }
@@ -374,6 +374,7 @@ export default {
       }
       InTimeMonth = InTimeMonth<10?'0'+InTimeMonth:InTimeMonth;                  
       var InTimeday = InTime.getDate();
+      InTimeday = InTimeday<10?'0'+InTimeday:InTimeday; 
       //转正时间
       var PositiveTime=parseInt(InTimeYear.toString()+InTimeMonth.toString()+InTimeday.toString());
       //当前时间
@@ -382,11 +383,13 @@ export default {
       var myDatemon = myDate.getMonth() + 1;
       myDatemon = myDatemon<10?'0'+myDatemon:myDatemon; 
       var myDatedate = myDate.getDate();
+      myDatedate = myDatedate<10?'0'+myDatedate:myDatedate; 
       var currentTime=parseInt(myDateyear.toString()+myDatemon.toString()+myDatedate.toString());
       var timeBool=true;
       if (PositiveTime > currentTime){
         timeBool=false
       }
+      console.log(timeBool,'--',PositiveTime,'--',currentTime);
       return timeBool;
     },
     //默认时间周期

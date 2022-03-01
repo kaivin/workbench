@@ -1000,6 +1000,7 @@
                         padding: 15px 0px;
                     }
                 }
+                .ascending .sort-caret.ascending{border-bottom-color:#fff;}
                 .descending .sort-caret.descending{border-top-color:#fff;}
             }             
             .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
