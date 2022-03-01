@@ -287,7 +287,7 @@ export default {
         if(timeOne==timeTwo){
           $this.defaultTag='当月数据';
         }else{
-          $this.defaultTag=$this.searchData.data[0]+' ~ '+$this.searchData.data[1]+'数据';
+          $this.defaultTag=$this.searchData.data[0]+' ~ '+$this.searchData.data[1]+' 数据';
         }
       }else{
         $this.defaultTag='当月数据';
