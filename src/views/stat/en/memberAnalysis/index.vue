@@ -3,9 +3,11 @@
         <div class="memberTopTab">
             <div class="chooseDepart flex-box">
                   <span class="choosetit">部门：</span>
-                  <div class="departList">
-                       <span v-bind:class="departAll?'active':''" v-on:click="departChangeAll">全部</span>            
-                       <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in department" :key="index" v-on:click="departChange(item.id)">{{item.name}}</span>
+                  <div class="departchoose">
+                      <el-checkbox class="all-select" :indeterminate="isAlldepart" size="mini" v-model="departAll" @change="departChangeAll">全选</el-checkbox>
+                      <el-checkbox-group class="team-list" v-model="searchData.dept_id" @change="departChange" size="mini">
+                        <el-checkbox class="item-checkbox" v-for="item in department" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                      </el-checkbox-group>
                   </div>
                   <span class="choosetit" style="margin-left:20px">时间：</span>
                   <div class="departItems">
@@ -50,6 +52,7 @@ export default {
     return {
       department:[],//部门列表
       departAll:false,
+      isAlldepart:false,
       tableDate:[],
       defaultTime:[],
       defaultTag:'当月数据',
@@ -124,8 +127,8 @@ export default {
                     var department=[];
                     res.data.forEach(function(item,index){
                         var objItem={};
-                        objItem.name=item.name;
-                        objItem.id=item.id;
+                        objItem.label=item.name;
+                        objItem.value=item.id;
                         objItem.isOn=false;
                         department.push(objItem);
                     });
@@ -161,58 +164,38 @@ export default {
         $this.GetInquiryResult();
     },
     // 点击获取全部部门ID
-    departChangeAll(){
-        var $this=this;
-        var dept_id=[];
-        var department=$this.department;
-        $this.departAll=!$this.departAll;
-        if($this.departAll){
-          department.forEach(function(item,index){
-            item.isOn=true;
-            dept_id.push(item.id);
-          });
-        }else{
-          department.forEach(function(item,index){
-            item.isOn=false
-          });
-        }
-        $this.searchData.dept_id=dept_id;
-        $this.department=department;
-        $this.GetInquiryResult();
+    departChangeAll(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.department.forEach(function(item,index){
+          checkedList.push(item.value);
+        });
+        $this.searchData.dept_id = checkedList;
+        $this.departAll= true;
+      }else{
+        $this.searchData.dept_id = [];
+        $this.departAll = false;
+      }
+      $this.isAlldepart = false;
+      $this.GetInquiryResult();
     },
-    // 点击部门获取部门ID
-    departChange(valData){
-        var $this=this;
-        var dept_id=[];
-        var department=$this.department;
-        if($this.departAll){
-          $this.departAll=false;
-          department.forEach(function(item,index){
-              if(item.id==valData){
-                item.isOn=!item.isOn;
-              }
-              if(item.isOn){
-                dept_id.push(item.id)
-              }
-          });
-        }else{
-          department.forEach(function(item,index){
-              if(item.id==valData){
-                item.isOn=!item.isOn;
-              }
-              if(item.isOn){
-                dept_id.push(item.id)
-              }
-          });
-          if(dept_id.length==department.length){
-            $this.departAll=true;
-          }
-        }
-        $this.searchData.dept_id=dept_id;
-        $this.department=department;
-        $this.GetInquiryResult();
+    // 点击部门获取部门ID    
+    departChange(e){
+      var $this = this;
+      var checkedCount = e.length;
+      if(checkedCount === $this.department.length){
+        $this.departAll = true;
+      }else{
+        $this.departAll = false;
+      }
+      if(checkedCount>0&&checkedCount<$this.department.length){
+        $this.isAlldepart = true;
+      }else{
+        $this.isAlldepart = false;
+      }
+      $this.GetInquiryResult();
     },
-    // 点击入职时间ID
     inTimePlug(valData){
         var $this=this;  
         if(valData!=0){
