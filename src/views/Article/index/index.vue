@@ -333,7 +333,7 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'articleIndex',
+  name: 'Article_index',
   data() {
     return {
       minHeight:"auto",
@@ -389,7 +389,8 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      isAll: false
+      isAll: false,
+      scrolltop: 0
     }
   },
   computed: {
@@ -402,18 +403,24 @@ export default {
       return this.sidebar.opened;
     },
   },
-  mounted(){
+
+  activated(){
       const $this = this;
       if(!$this.sidebar.opened){
         $this.$store.dispatch('app/toggleSideBar');
       }
-      // 监听竖向滚动条滚动事件
-      window.addEventListener('scroll',$this.handleScroll,true);
       this.$nextTick(function () {
         if($this.isSearch||$this.isList){
           $this.setHeight();
         }
       });
+      window.addEventListener('scroll', $this.handleScroll,true);
+      // 监听竖向滚动条滚动事件
+      if($this.scroll > 0){
+        document.querySelector(".scroll-panel").scrollTo(0, $this.scroll);
+        this.scroll = 0;
+      }
+      
       window.onresize = () => {
           return (() => {
             if($this.isSearch||$this.isList){
@@ -435,13 +442,20 @@ export default {
       },
       //监听相同路由下参数变化的时候，从而实现异步刷新
       '$route'(to,from) {
-        this.initData();
-      },
-      isOpen(e){
-        if(this.isSearch||this.isList){
-          this.setHeight();
+        if(to.name===from.name){
+          this.initData();
+        }else if(to.name == "Article_index"){
+          this.scrollPosition.isFixed=false;
+          if(document.querySelector(".el-table.SiteTable .el-table__body-wrapper")){
+            document.querySelector(".el-table.SiteTable .el-table__body-wrapper").style="padding-top:0"
+          }
         }
       },
+      // isOpen(e){
+      //   if(this.isSearch||this.isList){
+      //     this.setHeight();
+      //   }
+      // },
   },
   created(){
     var $this = this;
@@ -459,9 +473,10 @@ export default {
       }
     });
   },
-  destroyed(){
+  deactivated(){
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
+ 
   methods:{
     // 获取面包屑路径
     getBreadcrumbList(){
@@ -823,6 +838,8 @@ export default {
     // 当前页改变事件
     handleCurrentChange(val) {
       this.page = val;
+      this.scrollPosition.isFixed=false;
+      document.querySelector(".el-table.SiteTable .el-table__body-wrapper").style="padding-top:0"
       if(this.$route.query.id){
         this.getPostList();
       }else{
@@ -1123,6 +1140,8 @@ export default {
     },
     // 竖向滚动条滚动事件
     handleScroll(event){
+      // console.log("滚动事件");
+      this.scroll  = document.querySelector(".scroll-panel").scrollTop;
       var $this = this;
       if($this.isSearch||$this.isList){
         if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件

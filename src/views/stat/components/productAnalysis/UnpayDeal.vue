@@ -10,34 +10,144 @@
           </div>
       </div>
       <div class="dealRank">
-          <ul class="inquiryUl" :style="'height:'+ dealScoreSet.boxHeight">
-                <li class="inquiryUlTit">
-                  <div class="proSortTit"><span>排序</span></div>
-                  <div class="proName"><span>产品名</span></div>
-                  <div class="proNum flex-content" v-if="type==4"><span>个数</span></div>
-                  <div class="proPie flex-content" v-if="type==4"><span>产品占比</span></div>
-                  <div class="proNum flex-content" v-if="type==5"><span>积分</span></div>
-                  <div class="proPie flex-content" v-if="type==5"><span>积分占比</span></div>
-                </li>
-              <li v-for="(item,index) in dealScore" :key="index">
-                  <router-link :to="{path: lang == 'ch'?'/stat/cn/productAnalysis/ProAccount':'/stat/en/productAnalysis/ProAccount',query:{starttime:item.starttime,endtime:item.endtime,productname:item.productname,typeid:item.typeid}}" tag="a" target="_blank"> 
-                      <div class="proSort">
-                          <div class="numTop" v-if="item.ranking<4" :class="'numTop0'+(item.ranking)"></div>
-                          <div class="numTop" v-if="item.ranking>3 && item.ranking <= 9">
-                              0{{item.ranking}}
+
+          <div class="inquiryUl" :style="'height:'+ dealScoreSet.boxHeight">
+              <el-table
+                class="dataShowtable"
+                key="1"
+                :data="dealScore"
+                style="width: 100%"
+                v-if="type==4"
+                >
+                <el-table-column
+                    width="62"
+                    prop="ranking"
+                    align="center"
+                    label="排序">
+                    <template slot-scope="scope">
+                        <router-link :to="{path: lang == 'ch'?'/stat/cn/productAnalysis/ProAccount':'/stat/en/productAnalysis/ProAccount',query:{starttime:scope.row.starttime,endtime:scope.row.endtime,productname:scope.row.productname,typeid:scope.row.typeid}}" tag="a" target="_blank"> 
+                            <div class="proSort">
+                              <div class="numTop" v-if="scope.row.ranking<4" :class="'numTop0'+(scope.row.ranking)">
+                                <span class="inrank">0{{scope.row.ranking}}</span>
+                              </div>
+                              <div class="numTop" v-if="scope.row.ranking>3 && scope.row.ranking <= 9">
+                                  0{{scope.row.ranking}}
+                              </div>
+                              <div class="numTop" v-if="scope.row.ranking > 9">
+                                  {{scope.row.ranking}}
+                              </div>
+                            </div>
+                        </router-link>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="产品名"
+                    prop="keyproduct"
+                    >
+                    <template slot-scope="scope">
+                        <router-link :to="{path: lang == 'ch'?'/stat/cn/productAnalysis/ProAccount':'/stat/en/productAnalysis/ProAccount',query:{starttime:scope.row.starttime,endtime:scope.row.endtime,productname:scope.row.productname,typeid:scope.row.typeid}}" tag="a" target="_blank"> 
+                          <div class="proName">
+                            <span>
+                              {{scope.row.xunproduct}}
+                            </span>
                           </div>
-                          <div class="numTop" v-if="item.ranking > 9">
-                              {{item.ranking}}
+                        </router-link>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="个数"
+                    width="100"
+                    align="center"
+                    prop="number">
+                    <template slot-scope="scope">
+                      <router-link :to="{path: lang == 'ch'?'/stat/cn/productAnalysis/ProAccount':'/stat/en/productAnalysis/ProAccount',query:{starttime:scope.row.starttime,endtime:scope.row.endtime,productname:scope.row.productname,typeid:scope.row.typeid}}" tag="a" target="_blank"> 
+                        <div class="proNum"><span>{{scope.row.number}}个</span></div>
+                      </router-link>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="percentNum"
+                    width="112"
+                    align="center"
+                    label="产品占比">
+                    <template slot-scope="scope">
+                      <router-link :to="{path: lang == 'ch'?'/stat/cn/productAnalysis/ProAccount':'/stat/en/productAnalysis/ProAccount',query:{starttime:scope.row.starttime,endtime:scope.row.endtime,productname:scope.row.productname,typeid:scope.row.typeid}}" tag="a" target="_blank"> 
+                        <div class="proPie">
+                          <span>{{scope.row.percentNum}}%</span>
+                        </div>
+                      </router-link>
+                    </template>
+                </el-table-column>
+              </el-table>
+              <el-table
+                class="dataShowtable"
+                :data="dealScore"
+                style="width: 100%"
+                v-if="type==5"
+                key="2"
+                >
+                <el-table-column
+                    width="62"
+                    prop="ranking"
+                    align="center"
+                    label="排序">
+                    <template slot-scope="scope">
+                        <router-link :to="{path: lang == 'ch'?'/stat/cn/productAnalysis/ProAccount':'/stat/en/productAnalysis/ProAccount',query:{starttime:scope.row.starttime,endtime:scope.row.endtime,productname:scope.row.productname,typeid:scope.row.typeid}}" tag="a" target="_blank"> 
+                            <div class="proSort">
+                              <div class="numTop" v-if="scope.row.ranking<4" :class="'numTop0'+(scope.row.ranking)">
+                                <span class="inrank">0{{scope.row.ranking}}</span>
+                              </div>
+                              <div class="numTop" v-if="scope.row.ranking>3 && scope.row.ranking <= 9">
+                                  0{{scope.row.ranking}}
+                              </div>
+                              <div class="numTop" v-if="scope.row.ranking > 9">
+                                  {{scope.row.ranking}}
+                              </div>
+                            </div>
+                        </router-link>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="产品名"
+                    prop="keyproduct"
+                    >
+                    <template slot-scope="scope">
+                        <router-link :to="{path: lang == 'ch'?'/stat/cn/productAnalysis/ProAccount':'/stat/en/productAnalysis/ProAccount',query:{starttime:scope.row.starttime,endtime:scope.row.endtime,productname:scope.row.productname,typeid:scope.row.typeid}}" tag="a" target="_blank"> 
+                          <div class="proName">
+                            <span>
+                              {{scope.row.xunproduct}}
+                            </span>
                           </div>
-                      </div>
-                      <div class="proName"><span>{{item.xunproduct}}</span></div>
-                      <div class="proNum" v-if="type==4"><span>{{item.number}}个</span></div>
-                      <div class="proPie" v-if="type==4"><span>{{item.percentNum}}%</span></div>
-                      <div class="proNum" v-if="type==5"><span>{{item.scorenumber}}分</span></div>
-                      <div class="proPie" v-if="type==5"><span>{{item.percentScore}}%</span></div>
-                  </router-link>
-              </li>
-          </ul>
+                        </router-link>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                      label="积分"
+                      width="100"
+                      align="center"
+                      prop="scorenumber">
+                      <template slot-scope="scope">
+                        <router-link :to="{path: lang == 'ch'?'/stat/cn/productAnalysis/ProAccount':'/stat/en/productAnalysis/ProAccount',query:{starttime:scope.row.starttime,endtime:scope.row.endtime,productname:scope.row.productname,typeid:scope.row.typeid}}" tag="a" target="_blank"> 
+                          <div class="proNum"><span>{{scope.row.scorenumber}}分</span></div>
+                        </router-link>
+                      </template>
+                </el-table-column>
+                <el-table-column
+                      prop="percentScore"
+                      width="112"
+                      align="center"
+                      label="积分占比">
+                      <template slot-scope="scope">
+                        <router-link :to="{path: lang == 'ch'?'/stat/cn/productAnalysis/ProAccount':'/stat/en/productAnalysis/ProAccount',query:{starttime:scope.row.starttime,endtime:scope.row.endtime,productname:scope.row.productname,typeid:scope.row.typeid}}" tag="a" target="_blank"> 
+                          <div class="proPie">
+                            <span>{{scope.row.percentScore}}%</span>
+                          </div>
+                        </router-link>
+                      </template>
+                </el-table-column>
+              </el-table>
+          </div>
+
           <div class="deMore" v-if="dealScoreSet.ifFold" :class="!dealScoreSet.isFold? 'inRotate' : 'rowRotate' "  @click="showAll" ></div>
       </div>
   </div>

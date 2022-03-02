@@ -651,6 +651,7 @@ export default {
     })
   },
   destroyed(){
+
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{

@@ -311,6 +311,9 @@
                       </div>
                     </div>
                   </div>
+
+
+
                   <div class="card-header WebServerAddEditBtn ChinaphoneTwoBtn">
                       <el-button type="primary" class="updateBtn"  :class="isDisabled?'isDisabled':''" :disabled="isDisabled"  size="small" v-if="menuButtonPermit.includes('Enphone_countlist')" v-on:click="getCluesAnalysisData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
                       <el-button type="primary" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
@@ -712,6 +715,20 @@ export default {
       dialogExportVisible:false,
       downloadLoading: false,
       isExportDisabled:true,
+      resaultShowList:[
+        {id:1,value:1,label:"询盘总数"},
+        {id:2,value:2,label:"有效询盘"},
+        {id:3,value:3,label:"使用设备"},
+        {id:4,value:4,label:"产品分类"},
+        {id:5,value:5,label:"平均星期询盘量"},
+        {id:6,value:6,label:"来源渠道"},
+        {id:7,value:7,label:"每天询盘量"},
+        {id:8,value:8,label:"平均小时询盘量"},
+        {id:9,value:9,label:"热门产品"},
+        {id:10,value:10,label:"热门地区"},
+        {id:11,value:11,label:"产品"},
+        {id:12,value:12,label:"各组市场占比"}
+      ],
     }
   },
   computed: {
