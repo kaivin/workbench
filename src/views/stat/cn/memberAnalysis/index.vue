@@ -149,6 +149,7 @@ export default {
     departItemBtn(){
         var $this=this;
         $this.departAll=false;
+        $this.isAlldepart=false;
         $this.department.forEach(function(item,index){
             item.isOn=false;
         });
