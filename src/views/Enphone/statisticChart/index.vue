@@ -3533,7 +3533,15 @@ export default {
         var chartDom = document.getElementById('cluesChart13');
         var myChart = echarts.init(chartDom);
         var option;
-
+        var numberlist = [];
+        $this.searchResult.seasonCount.forEach(function(item,index){
+          var data = {};
+          data.name=item.name;
+          data.number=item.number;
+          data.startDate=item.startDate;
+          data.endDate=item.endDate;
+          numberlist.push(data);
+        });
         option = {
           grid:{
             left: '35',
@@ -3591,7 +3599,8 @@ export default {
             }
           },
           dataset:{
-            source: $this.searchResult.seasonCount
+            // source: $this.searchResult.seasonCount
+            source: numberlist
           },
           animation: false,
           series: [
@@ -3600,7 +3609,6 @@ export default {
               type: 'line',
               symbol:'circle',
               symbolSize: '5',
-              // data: numberlist,
               label:{
                 show: true,
                 position: 'top',
@@ -3614,6 +3622,20 @@ export default {
               lineStyle:{
                 color: "#0970ff",
                 width: 1
+              },
+              areaStyle:{
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                    offset: 0,
+                    color:'#0970ff',
+                    opacity:1
+                    },
+                    {
+                    offset: 1,
+                    color: "rgba(255, 255, 255, 0)",
+                    }
+                ]),
+                opacity:0.3
               },
               emphasis:{
                 lineStyle: {
