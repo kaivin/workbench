@@ -887,9 +887,34 @@ export default {
     initFormData(){
       var $this = this;
       var formData = {};
-      formData.custormname = $this.formData.custormname;
-      formData.custormemail = $this.formData.custormemail.replace(/\n/g,",");
-      formData.custormphone = $this.formData.custormphone.replace(/\n/g,",");
+      formData.custormname = $this.formData.custormname;     
+      var custormemailStr = $this.formData.custormemail.replace(/\n/g,",");
+      if(custormemailStr.indexOf(',')>=0){
+        var custormemailArr = custormemailStr.split(',');
+        var custormemailNewArr=[];
+        custormemailArr.forEach(function(item){
+          if(item!=''){
+            custormemailNewArr.push(item)
+          }
+        });
+        formData.custormemail=custormemailNewArr.join(',');
+      }else{
+        formData.custormemail=$this.formData.custormemail;
+      }
+      var custormphoneStr = $this.formData.custormphone.replace(/\n/g,",");
+      if(custormphoneStr.indexOf(',')>=0){
+        var custormphoneArr = custormphoneStr.split(',');
+        var custormphoneNewArr=[];
+        custormphoneArr.forEach(function(item){
+          if(item!=''){
+            custormphoneNewArr.push(item)
+          }
+        });
+        formData.custormphone=custormphoneNewArr.join(',');
+      }else{
+        formData.custormphone=$this.formData.custormphone;
+      }
+
       formData.noeffectivetime = $this.formData.noeffectivetime;
       if($this.formData.salesuserid!=''&&$this.formData.salesuserid!=null){
         formData.salesuserid = $this.formData.salesuserid;

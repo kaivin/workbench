@@ -845,6 +845,7 @@ export default {
       if(!$this.isSerchBtn){
         $this.isSerchBtn=true;
         var searchData = $this.initSearchData();
+        $this.tableData=[];
         document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
         $this.$store.dispatch('chinaphone/getCurrentCluesSearchListAction', searchData).then(response=>{
           if(response){

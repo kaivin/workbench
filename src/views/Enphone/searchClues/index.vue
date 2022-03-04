@@ -1459,8 +1459,8 @@ export default {
       if(!$this.isDisabled){
         $this.isDisabled=true;
         $this.searchData.phoneid= $this.deptOneId;
-        
         var resultData = $this.getSearchResultData(pageInit);
+        $this.tableData=[];
         document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
         $this.$store.dispatch('enphone/getCurrentCluesSearchListAction', resultData).then(response=>{
           if(response){
