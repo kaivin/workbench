@@ -253,6 +253,23 @@
             }
         }
     }
+    .search_statis{
+        padding:15px;
+        background: #fff;
+        position: relative;
+        margin-bottom:15px;
+        font-size:$fontsize14;
+        color:#004ab1;
+        b{
+            font-weight: normal;
+        }
+        p{
+            float: left;
+        }
+        span{
+            float: right;
+        }
+    }
     .msg-table{
         .msg-text{
             p{

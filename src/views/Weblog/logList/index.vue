@@ -61,7 +61,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-content" ref="tableContent">
+                    <div class="card-content" style="border-radius: 0px;" ref="tableContent">
+                         <div class="search_statis" v-if="searchData.isfile">
+                            <p>
+                              字节: <b>{{spiderCount.Byte}}</b>
+                              谷歌：<b>{{spiderCount.Google}}</b>
+                              搜狗：<b>{{spiderCount.Sogou}}</b>
+                              百度：<b>{{spiderCount.baidu}}</b>
+                              必应：<b>{{spiderCount.bing}}</b>
+                              360：<b>{{spiderCount.s360}}</b>
+                              神马：<b>{{spiderCount.shenma}}</b>
+                            </p>
+                            <span>总数：<b>{{totalDataNum}}</b></span>
+                         </div>
                          <div class="search-weblog">
                             <ul :style="'height:'+ boxHeight">
                                 <li v-for="(item,index) in loglist" :class="item.isOn?'active':''" @click="handleLog(item)" :key='index'>
@@ -125,6 +137,7 @@ export default {
         isFold:false,
         boxHeight:'84px',
         loglist:[],
+        spiderCount:[],
         tableData:[],
         searchData:{
           page:1,
@@ -340,6 +353,7 @@ export default {
         if(res.status){
             $this.tableData=res.data;
             $this.totalDataNum = res.allcount;
+            $this.spiderCount=res.spidercount;
         }else{
           $this.$message({
             showClose: true,
