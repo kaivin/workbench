@@ -9,7 +9,7 @@
                 <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
                 <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
               </template>
-              <span class="breadcrumb-link"><b>-</b><span>统计分析</span></span>
+              <!-- <span class="breadcrumb-link"><b>-</b><span>统计分析</span></span> -->
           </p>
           <el-card class="box-card scroll-card" shadow="hover">
               <div class="card-content ChinaphoneTwoBox" ref="tableContent">

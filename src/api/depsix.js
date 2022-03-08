@@ -16,3 +16,22 @@ export function getInquiryResult(data) {
     data
   });
 }
+
+// 询盘意向头部电话
+export function getIntentionPhone(data) {
+  return request({
+    url: "/hxindex/Sixdepart/Intentioncondition",
+    method: "POST",
+    data
+  });
+}
+
+// 询盘意向搜索结果
+export function getIntentionResult(data) {
+  return request({
+    url: "/hxindex/Sixdepart/Intentioncount",
+    method: "POST",
+    data
+  });
+}
+

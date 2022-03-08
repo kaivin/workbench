@@ -1,6 +1,8 @@
 import {
     getInquiryItem,
-    getInquiryResult
+    getInquiryResult,
+    getIntentionPhone,
+    getIntentionResult
 
 } from '@/api/depsix'
 
@@ -21,6 +23,26 @@ const actions = {
     inquirySearchAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             getInquiryResult(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 询盘意向电话
+    intentionPhone({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getIntentionPhone(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 询盘意向搜索
+    intentionSearch({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getIntentionResult(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
