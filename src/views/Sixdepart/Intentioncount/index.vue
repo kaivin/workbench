@@ -1,5 +1,5 @@
 <template>
-  <div class="page-root flex-box no-padding cn-phone-index cn-phone-stat" ref="boxPane">
+  <div class="page-root flex-box no-padding cn-phone-index cn-phone-stat six_depart" ref="boxPane">
     <div class="flex-content relative">
       <div class="abs-panel" ref="mainPane">
         <div class="scroll-panel" ref="scrollPane">
@@ -15,7 +15,6 @@
                   <div class="ChinaphoneTwo buttonTwo">
                     <div class="group-body">
                       <div class="team-panel">
-
                         <div class="team-header">
                           <span class="require">电话：</span>
                           <el-checkbox class="all-select" :indeterminate="isAllPhone" border size="mini" v-model="checkAllPhone" @change="handleCheckAllPhoneChange">全选</el-checkbox>
@@ -26,8 +25,28 @@
 
                         <div class="team-header">
                             <div class="team-headerItem">
-                                  <span class="require">时间：</span>
-                                  <el-date-picker
+                                  <span class="require">日期：</span>
+                                  <div class="date_pick">
+                                    <div class="daytitle" :class="searchData.type==2?'active':''" @click="changeDate(2)">日</div>
+                                    <div class="daytitle" :class="searchData.type==1?'active':''" @click="changeDate(1)">月</div>
+                                  </div>
+                                  <div class="date_time">
+                                    <el-date-picker
+                                      v-if="searchData.type==2"
+                                      v-model="searchData.day"
+                                      size="mini"
+                                      type="daterange"
+                                      align="right"
+                                      value-format = "yyyy-MM-dd"
+                                      unlink-panels
+                                      range-separator="至"
+                                      start-placeholder="开始日期"
+                                      end-placeholder="结束日期"
+                                      :picker-options="pickerDayRangeOptions"
+                                      :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
+                                    </el-date-picker> 
+                                    <el-date-picker
+                                      v-if="searchData.type==1"
                                       v-model="searchData.date"
                                       size="mini"
                                       type="monthrange"
@@ -39,7 +58,9 @@
                                       end-placeholder="结束日期"
                                       :picker-options="pickerRangeOptions"
                                       :class="searchData.date&&searchData.date.length>0?'el-xzstate':''">
-                                  </el-date-picker>              
+                                    </el-date-picker> 
+                                  </div>
+                                               
                             </div>
                         </div>
 
@@ -65,7 +86,7 @@
                   <el-row :gutter="15">
                     <el-col :md="24" :lg="12" v-if="checkedItem.includes(3)">
                       <div class="chart-wrapper">
-                        <div class="chart-header"><span>意向率趋势</span><i class="tip">（意向分/总询盘数）</i></div>
+                        <div class="chart-header"><span>总平均意向分趋势</span><i class="tip">（意向分/总询盘数）</i></div>
                         <div class="chart-body" style="height:400px;">                        
                             <div class="abs-canvas" v-if="searchResult.buypercerter.length>0">
                               <div id="cluesChart1" class="chart-canvas"></div>
@@ -139,7 +160,7 @@
 
                                   <el-table-column align="center" v-for="(item, index) in searchResult.ulist[0].son" :key="index" :label="item.date">
                                       <el-table-column 
-                                        label="意向率"
+                                        label="总平均意向分"
                                         class-name="colitem1"
                                         sortable="custom"
                                         :index="index"
@@ -200,6 +221,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import * as echarts from 'echarts';
+import {pickerDayRangeOptions} from "@/utils/index"
 export default {
   name: 'intentioncount',
   data() {
@@ -214,6 +236,8 @@ export default {
       phoneList:[],
       searchData:{
         date:[],
+        day:[],
+        type: 1
       },
       pickerRangeOptions: {
         shortcuts: [{
@@ -238,6 +262,7 @@ export default {
           }
         }]
       },
+      pickerDayRangeOptions: pickerDayRangeOptions,
       searchResult:{
         ulist:[],
         buynumbertrend:[],
@@ -258,7 +283,7 @@ export default {
       resaultShowList:[
         {id:1,value:1,label:"意向分趋势"},
         {id:2,value:2,label:"意向个数趋势"},
-        {id:3,value:3,label:"意向率趋势"},
+        {id:3,value:3,label:"总平均意向分趋势"},
         {id:4,value:4,label:"回复率趋势"},
         {id:5,value:5,label:"组员分析"}
       ],
@@ -367,6 +392,7 @@ export default {
       $this.checkAllPhone=false;
       $this.checkedPhone=[];
       $this.searchData.date=[];
+      $this.searchData.day=[];
       $this.searchResult.buynumbertrend=[];
       $this.searchResult.buypercerter=[];
       $this.searchResult.buyscorertrend=[];
@@ -400,6 +426,14 @@ export default {
         searchData.starttime = "";
         searchData.endtime = "";
       }
+      if($this.searchData.day&&$this.searchData.day.length>0){
+        searchData.time1 = $this.searchData.day[0];
+        searchData.time2 = $this.searchData.day[1];
+      }else{
+        searchData.time1 = "";
+        searchData.time2 = "";
+      }
+      searchData.timetype = $this.searchData.type;
       searchData.phoneid = $this.checkedPhone;
       searchData.type = $this.checkedItem;
       return searchData;
@@ -472,7 +506,7 @@ export default {
           });
           return false;
         }
-        if($this.searchData.date.length == 0){
+        if($this.searchData.date.length == 0 && $this.searchData.day.length == 0){
           $this.$message({
               showClose: true,
               message: '错误：请选择查询时间范围！',
@@ -665,7 +699,7 @@ export default {
           animation: false,
           series: [
             {
-              name: "意向率",
+              name: "总平均意向分",
               type: 'line',
               symbol:'circle',
               symbolSize: '5',
@@ -1004,7 +1038,10 @@ export default {
     getPercent(num){
       return num==0?num:num+'%'
     },
-
+    // 日月选择
+    changeDate(i){
+      this.searchData.type=i
+    },
     sortBycol(data){
         var index = data.column.index;
         var label = data.column.label;
@@ -1058,47 +1095,5 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.chart-wrapper{
-  margin-bottom: 15px;
-}
-.numspan{
-  i{
-    font-size: 12px;
-    font-style: normal;
-  }
-}
-.el-table .cell{
-  text-align:center;
-}
-.cn-phone-stat .chart-wrapper .chart-header .tip{
-  font-size: 14px;
-  color:#0970ff;
-  font-style: normal;
-}
-.el-table /deep/ thead.is-group th.el-table__cell{
-  background-color: #2d71b5;
-  font-weight: normal;
-  color: #fff;
-}
-.el-table--enable-row-hover /deep/ .el-table__body tr:hover > td.el-table__cell {
-    background-color: #deebf7;
-}
-.el-table /deep/ td.el-table__cell.colitem1{
-  background-color: #fff4d1;
-}
-.el-table /deep/ td.el-table__cell.colitem2{
-  background-color: #e2f0d9;
-}
-.el-table /deep/ td.el-table__cell.colitem3{
-  background-color: #fbe5d6;
-}
-.el-table /deep/ td.el-table__cell.colitem4{
-  background-color: #ededed;
-}
-.el-table /deep/ .ascending .sort-caret.ascending{
-  border-bottom-color: #e6a700;
-}
-.el-table /deep/ .descending .sort-caret.descending {
-    border-top-color: #e6a700;
-}
+
 </style>

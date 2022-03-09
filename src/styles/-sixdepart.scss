@@ -1,0 +1,75 @@
+.six_depart .chart-wrapper{
+    margin-bottom: 15px;
+  }
+  .depsix-table .numspan{
+    i{
+      font-size: 12px;
+      font-style: normal;
+    }
+  }
+  .depsix-table .el-table .cell{
+    text-align:center;
+  }
+  .six_depart .chart-wrapper .chart-header .tip{
+    font-size: 14px;
+    color:#0970ff;
+    font-style: normal;
+  }
+  .depsix-table .el-table thead.is-group th.el-table__cell{
+    background-color: #2d71b5;
+    font-weight: normal;
+    color: #fff;
+  }
+  .depsix-table .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
+      background-color: #deebf7;
+  }
+  .depsix-table .el-table td.el-table__cell.colitem1{
+    background-color: #fff4d1;
+  }
+  .depsix-table .el-table td.el-table__cell.colitem2{
+    background-color: #e2f0d9;
+  }
+  .depsix-table .el-table td.el-table__cell.colitem3{
+    background-color: #fbe5d6;
+  }
+  .depsix-table .el-table td.el-table__cell.colitem4{
+    background-color: #ededed;
+  }
+  .depsix-table .el-table .ascending .sort-caret.ascending{
+    border-bottom-color: #e6a700;
+  }
+  .depsix-table .el-table .descending .sort-caret.descending {
+      border-top-color: #e6a700;
+  }
+
+.six_depart .team-header{
+    margin-bottom: 10px;
+    .date_pick{
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 0;
+        .daytitle{
+            height: 28px;
+            padding: 0 8px;
+            line-height: 26px;
+            font-size: 14px;
+            color: #9ea5af;
+            display: inline-block;
+            border: 1px solid #e1e3ea;
+            cursor: pointer;
+            position: relative;
+        }
+        .daytitle+.daytitle{
+            border-left: none;
+        }
+        .active{
+            border: 1px solid #0970ff;
+            background-color: #0970ff;
+            color: #fff;
+        }
+    }
+    .date_time{
+        display: inline-block;
+        vertical-align: middle;
+    }
+}
