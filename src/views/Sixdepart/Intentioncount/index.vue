@@ -84,19 +84,6 @@
               <div class="card-content ChinaphoneTwoBox" ref="tableContent">
                 <div class="cavans-wrapper" id="canvasPane" ref="canvasPane">
                   <el-row :gutter="15">
-                    <el-col :md="24" :lg="12" v-if="checkedItem.includes(3)">
-                      <div class="chart-wrapper">
-                        <div class="chart-header"><span>总平均意向分趋势</span><i class="tip">（意向分/总询盘数）</i></div>
-                        <div class="chart-body" style="height:400px;">                        
-                            <div class="abs-canvas" v-if="searchResult.buypercerter.length>0">
-                              <div id="cluesChart1" class="chart-canvas"></div>
-                            </div>
-                            <div class="nocount" v-else>
-                              暂无数据
-                            </div>                     
-                        </div>
-                      </div>
-                    </el-col>
                     <el-col :md="24" :lg="12" v-if="checkedItem.includes(2)">
                       <div class="chart-wrapper">
                         <div class="chart-header"><span>意向个数趋势</span></div>
@@ -120,6 +107,19 @@
                             <div class="nocount" v-else>
                               暂无数据
                             </div> 
+                        </div>
+                      </div>
+                    </el-col>
+                    <el-col :md="24" :lg="12" v-if="checkedItem.includes(3)">
+                      <div class="chart-wrapper">
+                        <div class="chart-header"><span>总平均意向分趋势</span><i class="tip">（意向分/总询盘数）</i></div>
+                        <div class="chart-body" style="height:400px;">                        
+                            <div class="abs-canvas" v-if="searchResult.buypercerter.length>0">
+                              <div id="cluesChart1" class="chart-canvas"></div>
+                            </div>
+                            <div class="nocount" v-else>
+                              暂无数据
+                            </div>                     
                         </div>
                       </div>
                     </el-col>
@@ -160,16 +160,6 @@
 
                                   <el-table-column align="center" v-for="(item, index) in searchResult.ulist[0].son" :key="index" :label="item.date">
                                       <el-table-column 
-                                        label="总平均意向分"
-                                        class-name="colitem1"
-                                        sortable="custom"
-                                        :index="index"
-                                      >
-                                        <template slot-scope="scope">
-                                          <span class="numspan">{{getPercent(scope.row.son[index].percenter)}}</span>
-                                        </template>
-                                      </el-table-column>
-                                      <el-table-column 
                                         label="意向个数"
                                         class-name="colitem2"
                                         sortable="custom"
@@ -187,6 +177,16 @@
                                       >
                                         <template slot-scope="scope">
                                           <span class="numspan">{{scope.row.son[index].socre}}</span>
+                                        </template>
+                                      </el-table-column>
+                                      <el-table-column 
+                                        label="总平均意向分"
+                                        class-name="colitem1"
+                                        sortable="custom"
+                                        :index="index"
+                                      >
+                                        <template slot-scope="scope">
+                                          <span class="numspan">{{getPercent(scope.row.son[index].percenter)}}</span>
                                         </template>
                                       </el-table-column>
                                       <el-table-column 
@@ -281,8 +281,8 @@ export default {
       checkAllResault: false,
       checkedResShow: [],
       resaultShowList:[
-        {id:1,value:1,label:"意向分趋势"},
         {id:2,value:2,label:"意向个数趋势"},
+        {id:1,value:1,label:"意向分数趋势"},
         {id:3,value:3,label:"总平均意向分趋势"},
         {id:4,value:4,label:"回复率趋势"},
         {id:5,value:5,label:"组员分析"}
@@ -531,7 +531,16 @@ export default {
               $this.searchResult.buypercerter = response.buypercerter ? response.buypercerter : [];
               $this.searchResult.buyscorertrend = response.buyscorertrend ? response.buyscorertrend : [];
               $this.searchResult.replytrend = response.replytrend ? response.replytrend : [];
-              $this.searchResult.ulist = response.ulist ? response.ulist : [];
+              if(response.ulist){
+                if(response.ulist.length > 0){
+                  var newul = response.ulist;
+                  newul.forEach(function(item){
+                    item.son = item.son.reverse()
+                  });
+                  $this.searchResult.ulist = newul;
+                }
+              }
+              // $this.searchResult.ulist = response.ulist ? response.ulist : [];
               $this.$nextTick(()=>{
                 
                 document.getElementById("canvasPane").scrollIntoView({behavior: "smooth"});
@@ -1052,7 +1061,7 @@ export default {
         var $this = this;
         var title = '';
         var row='';
-        if(label == '意向率'){
+        if(label == '总平均意向分'){
             title='percenter';
         }else if(label == '意向个数'){
             title='number';
