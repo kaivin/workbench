@@ -118,6 +118,7 @@ const state = {
     isUserbonusAdd:false,
     ischAimScoreAdd:false,
     isenAimScoreAdd:false,
+    isselectuserAdd:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -349,6 +350,11 @@ const mutations = {
       state.isenAimScoreAdd = true;
     }else{
       state.isenAimScoreAdd = false;
+    }
+    if(permitData.includes("Enquiries_selectuseradd")&&data.page==""){
+      state.isselectuserAdd = true;
+    }else{
+      state.isselectuserAdd = false;
     }
   },
 }

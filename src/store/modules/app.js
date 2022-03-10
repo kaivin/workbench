@@ -42,6 +42,7 @@ const state = {
   addUserBonus:false,
   addchAimScore:false,
   addenAimScore:false,
+  addSelectuser:false,
 }
 
 const mutations = {
@@ -276,6 +277,12 @@ const mutations = {
   CLOSE_ENAIMSCORE: (state) => {
     state.addenAimScore = false
   },
+  ADD_SELECTUSER: (state) => {
+    state.addSelectuser = true
+  },
+  CLOSE_SELECTUSER: (state) => {
+    state.addSelectuser = false
+  },
 }
 
 const actions = {
@@ -505,6 +512,12 @@ const actions = {
   },
   closeenAimScore({ commit }) {
     commit('CLOSE_ENAIMSCORE')
+  },
+  addSelectuser({ commit }) {
+    commit('ADD_SELECTUSER')
+  },
+  closeSelectuser({ commit }) {
+    commit('CLOSE_SELECTUSER')
   },
 }
 

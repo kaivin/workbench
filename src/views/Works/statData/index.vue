@@ -85,7 +85,7 @@
                                     width="145"
                                     >
                                     <template slot-scope="scope">
-                                      <span>{{scope.row.monthscore && scope.row.monthscore - scope.row.monthusescore}}</span>
+                                      <span>{{scope.row.monthscore && scope.row.beenUsed}}</span>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
@@ -397,6 +397,7 @@ export default {
                 }
                 item.depart=item.name;
                 item.children=oBj.children;
+                item.beenUsed=(item.monthscore - item.monthusescore).toFixed(2);
                 dept_Date.forEach(function(items,indexs){
                   if(items.dept_id!=0){
                       if(item.name==items.depart){

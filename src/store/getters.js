@@ -91,6 +91,8 @@
     addchAimScore:state => state.app.addchAimScore,
     isenAimScoreAdd:state => state.api.isenAimScoreAdd,
     addenAimScore:state => state.app.addenAimScore,
+    isselectuserAdd:state => state.api.isselectuserAdd,
+    addSelectuser:state => state.app.addSelectuser,
 }
 export default getters
   
