@@ -84,6 +84,19 @@
               <div class="card-content ChinaphoneTwoBox" ref="tableContent">
                 <div class="cavans-wrapper" id="canvasPane" ref="canvasPane">
                   <el-row :gutter="15">
+                    <el-col :md="24" :lg="12" v-if="checkedItem.includes(6)">
+                      <div class="chart-wrapper">
+                        <div class="chart-header"><span>询盘月趋势</span></div>
+                        <div class="chart-body" style="height:400px;">                              
+                            <div class="abs-canvas" v-if="searchResult.monthxuntrend.length>0">
+                              <div id="cluesChart6" class="chart-canvas"></div>
+                            </div>
+                            <div class="nocount" v-else>
+                              暂无数据
+                            </div> 
+                        </div>
+                      </div>
+                    </el-col>
                     <el-col :md="24" :lg="12" v-if="checkedItem.includes(2)">
                       <div class="chart-wrapper">
                         <div class="chart-header"><span>意向个数趋势</span></div>
@@ -159,6 +172,16 @@
                                   </el-table-column>
 
                                   <el-table-column align="center" v-for="(item, index) in searchResult.ulist[0].son" :key="index" :label="item.date">
+                                      <el-table-column 
+                                        label="询盘总数"
+                                        class-name="colitem5"
+                                        sortable="custom"
+                                        :index="index"
+                                      >
+                                        <template slot-scope="scope">
+                                          <span class="numspan">{{scope.row.son[index].allnumber}}</span>
+                                        </template>
+                                      </el-table-column>
                                       <el-table-column 
                                         label="意向个数"
                                         class-name="colitem2"
@@ -268,19 +291,22 @@ export default {
         buynumbertrend:[],
         buypercerter:[],
         buyscorertrend:[],
-        replytrend:[]
+        replytrend:[],
+        monthxuntrend:[]
       },
       isDisabled:false,
       chartlist:{
         trendPercentPlot:'',
         trendScorePlot:'',
         trendNumberPlot:'',
-        trendReplyPlot:''
+        trendReplyPlot:'',
+        xunnumPlot:''
       },
       isAllResault: false,
       checkAllResault: false,
       checkedResShow: [],
       resaultShowList:[
+        {id:6,value:6,label:"询盘月趋势"},
         {id:2,value:2,label:"意向个数趋势"},
         {id:1,value:1,label:"意向分数趋势"},
         {id:3,value:3,label:"总平均意向分趋势"},
@@ -397,6 +423,7 @@ export default {
       $this.searchResult.buypercerter=[];
       $this.searchResult.buyscorertrend=[];
       $this.searchResult.replytrend=[];
+      $this.searchResult.monthxuntrend=[];
       $this.searchResult.ulist=[];
       $this.isAllResault = false;
       $this.checkAllResault = false;
@@ -531,6 +558,7 @@ export default {
               $this.searchResult.buypercerter = response.buypercerter ? response.buypercerter : [];
               $this.searchResult.buyscorertrend = response.buyscorertrend ? response.buyscorertrend : [];
               $this.searchResult.replytrend = response.replytrend ? response.replytrend : [];
+              $this.searchResult.monthxuntrend = response.monthxuntrend ? response.monthxuntrend : [];
               if(response.ulist){
                 if(response.ulist.length > 0){
                   var newul = response.ulist;
@@ -544,7 +572,12 @@ export default {
               $this.$nextTick(()=>{
                 
                 document.getElementById("canvasPane").scrollIntoView({behavior: "smooth"});
-                
+                if($this.chartlist.xunnumPlot){
+                    $this.chartlist.xunnumPlot.dispose();
+                }
+                if($this.checkedItem.includes(6)){
+                  $this.drawChart6();
+                }
                 if($this.chartlist.trendPercentPlot){
                     $this.chartlist.trendPercentPlot.dispose();
                 }
@@ -1042,7 +1075,100 @@ export default {
         $this.chartlist.trendReplyPlot = myChart;
       }
     },
+    // 询盘个数
+    drawChart6(){
+      var $this = this;
+      if($this.searchResult.monthxuntrend.length>0){
 
+        var chartDom = document.getElementById('cluesChart6');
+        var myChart = echarts.init(chartDom);
+        var option;
+        option = {
+          grid:{
+            left: '35',
+            top:'25',
+            right:'15',
+            bottom: '25'
+          },
+          tooltip:{
+            show: true,
+            trigger: "axis",
+            axisPointer: {
+              type: "line", 
+              lineStyle:{
+                color: "#5b8ff9"
+              }
+            },
+            formatter(params){
+              return `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                      <span>${params[0].seriesName}：</span>
+                      <span>${params[0].data.number}</span>
+                    </div>
+                  </div>`;
+            }
+          },
+          xAxis: {
+            type: 'category',
+            name: "日期",
+            axisLine:{
+              lineStyle:{
+                color: "#dedede"
+              }
+            },
+            axisLabel:{
+              color: "#888"
+            }
+          },
+          yAxis: {
+            type: 'value',
+            axisLabel:{
+              color: "#888"
+            }
+          },
+          dataset:{
+            source: $this.searchResult.monthxuntrend,  
+          },
+          animation: false,
+          series: [
+            {
+              name: "询盘个数",
+              type: 'line',
+              symbol:'circle',
+              symbolSize: '5',
+              label:{
+                show: true,
+                position: 'top',
+                distance: '5',
+              },
+              itemStyle:{
+                color: '#fff',
+                borderColor: "#0970ff",
+                borderWidth: 1
+              },
+              lineStyle:{
+                color: "#0970ff",
+                width: 1
+              },
+              emphasis:{
+                lineStyle: {
+                  width: 2,
+                },
+                itemStyle:{
+                  borderWidth: 2
+                }
+              }
+            }
+          ]
+        };
+
+        option && myChart.setOption(option);
+        $this.chartlist.xunnumPlot = myChart;
+
+      }
+    },
     // 百分值
     getPercent(num){
       return num==0?num:num+'%'
@@ -1069,6 +1195,8 @@ export default {
             title='socre';
         }else if(label == '回复率'){
             title='replypercenter';
+        }else if(label == '询盘总数'){
+            title='allnumber';
         }
         if(rank == 1){
             $this.searchResult.ulist.sort(function(item1,item2){
