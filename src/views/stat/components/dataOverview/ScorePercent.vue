@@ -25,6 +25,7 @@ export default {
         endTime:"",
         baseDepart:"",
         contrastDepart:"",
+        myChart: null
       }
     },
     props:{

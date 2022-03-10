@@ -70,6 +70,7 @@ export default {
         itemWidth:0,
         initName:"",
         initCountry:"",
+        myChart:null
       }
     },
     props:{

@@ -1,5 +1,6 @@
 ﻿
-<template><transition name="fade-transform" mode="out-in">
+<template>
+<!-- <transition name="fade-transform" mode="out-in"> -->
   <div class="page-root scroll-panel overview-page cn-stat" ref="boxPane">
     <div class="nowCate">
       {{nowcate}} 
@@ -100,7 +101,8 @@
           </el-row>
         </div>
     </el-card>
-  </div></transition>
+  </div>
+  <!-- </transition> -->
 </template>
 <script>
 import CostYears from "../../components/dataOverview/CostYears.vue";
