@@ -138,8 +138,14 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="returnscorre"
-                                    label="返还积分"
-                                    min-width="90"
+                                    label="当月返还积分"
+                                    min-width="120"
+                                    >
+                                </el-table-column>
+                                <el-table-column
+                                    prop="lastreturnscorre"
+                                    label="上月返还积分"
+                                    min-width="120"
                                     >
                                 </el-table-column>
                               </el-table>

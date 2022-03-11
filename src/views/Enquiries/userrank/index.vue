@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="page-root scroll-panel personAnalysis" ref="boxPane">
-        <div class="memberTopTab">
+        <div class="memberTopTab" v-if="isTab">
             <div class="chooseDepart flex-box">
                   <span class="choosetit">部门：</span>
                   <div class="departList">
@@ -25,11 +25,15 @@ export default {
   name: "Enquiries_userrank",
   data() {
     return {
+      dept:[],
+      menuButtonPermit:[],
+      defaultDeptList:[],
       deptList:[],
       tableDate:[],
       searchData:{
         dept:14
       },
+      isTab:false
     };
   },
   computed: {
@@ -58,19 +62,20 @@ export default {
         if(res){
           if(res.status){
             if(res.data.length>0){
-                var deptList = [];
+                var defaultDeptList = [];
                 res.data.forEach(function(item,index){
                   var itemData = {};
                   itemData.value = item.id;
                   itemData.label = item.name;
                   itemData.isOn=false;
                   if(item.id==14){
-                    itemData.isOn=true;
+                      itemData.isOn=true;
                   }
-                  deptList.push(itemData);
+                  defaultDeptList.push(itemData);
                 });
-                $this.deptList = deptList;
+                $this.defaultDeptList = defaultDeptList;
             }
+            $this.GetInquiryResult(); 
           }else{
               $this.$message({
                 showClose: true,
@@ -93,15 +98,15 @@ export default {
     // 点击部门获取部门ID    
     departChange(valData){
         var $this = this;
-        var deptList=$this.deptList;
-        deptList.forEach(function(item,index){
+        var defaultDeptList=$this.defaultDeptList;
+        defaultDeptList.forEach(function(item,index){
             item.isOn=false;
             if(item.value==valData){
                 item.isOn=true;
             }
         });
         $this.searchData.dept=valData;
-        $this.deptList=deptList;
+        $this.defaultDeptList=defaultDeptList;
         $this.GetInquiryResult();
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -109,11 +114,10 @@ export default {
       var $this = this;
       $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
         if(res.data.length>0){
-          var permitData = [];
-          res.data.forEach(function(item,index){
-            permitData.push(item.action_route);
-          });
-          if(permitData.includes('Enquiries_userrank')){
+            res.data.forEach(function(item,index){
+              $this.menuButtonPermit.push(item.action_route);
+            });
+          if($this.menuButtonPermit.includes('Enquiries_userrank')){
             $this.initData()
           }else{
             $this.$message({
@@ -138,8 +142,7 @@ export default {
     // 初始化数据
     initData() {
       var $this = this;
-      $this.getDeptList();
-      $this.GetInquiryResult();  
+      $this.getDeptList(); 
     },
     //重组搜索数据
     initsearch(){
@@ -165,6 +168,19 @@ export default {
       $this.$store.dispatch("Enquiries/UserrankAction",searchData).then((res) => {
           if (res) {
             if (res.status) {
+              if(res.dept.length>1){
+                  var deptList=[];
+                  $this.dept=res.dept;
+                  $this.defaultDeptList.forEach(function(item,index){
+                    res.dept.forEach(function(items,index){
+                      if(item.value==items){
+                        deptList.push(item);
+                      }
+                    });
+                  })
+                  $this.deptList=deptList;
+                  $this.isTab=true;
+              }
               var newHeader=[];
               if(res.newuser.length>0){
                 res.newuser.forEach(function(item,index){
@@ -201,7 +217,6 @@ export default {
                 tableDate.push(itemObj);
               }
               $this.tableDate=tableDate;
-              console.log(tableDate,'tableDate')
             } else {
               $this.$message({
                 showClose: true,
@@ -216,9 +231,4 @@ export default {
     },
   }
 }
-
-
 </script>
-
-
-
