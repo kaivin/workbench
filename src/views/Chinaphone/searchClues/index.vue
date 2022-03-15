@@ -307,7 +307,7 @@
                                     min-width="120"
                                     >
                                     <template slot-scope="scope">
-                                        <span class="product-span" v-bind:class="'level_'+scope.row.productlevel"><i>[{{scope.row.productlevel}}]</i>{{scope.row.keyproduct}}</span>
+                                        <span class="product-span level_star"><i v-if='scope.row.productlevel>0&&scope.row.productlevel<3'><svg-icon icon-class="star" /></i>{{scope.row.keyproduct}}</span>
                                     </template>
                                 </el-table-column>
                                 <el-table-column

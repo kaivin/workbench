@@ -1007,6 +1007,19 @@
         font-style:normal;
         font-weight:bold;
     }
+    &.level_star{
+        i{
+          width: 19px;
+          height: 19px;
+          color: #ffd800;
+          line-height: 19px;
+          text-align: center;
+          margin-right: 5px;
+          svg{
+            font-size:13px;
+          }
+        }
+    }
     &.level_1{
         i{color:#B3315F};
     }
