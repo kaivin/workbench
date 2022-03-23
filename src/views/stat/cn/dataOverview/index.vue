@@ -182,7 +182,7 @@ export default {
     this.getUserMenuButtonPermit()
     this.nowcate = this.$route.meta.title;
     var month = new Date().getMonth();
-    if(month < 3){
+    if(month < 2){
       this.type = 1
     }
   },

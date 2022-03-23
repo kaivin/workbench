@@ -481,7 +481,7 @@
   }
   .top-view{
     margin-top: 10px;
-    height: 404px;
+    height: 380px;
     .nodata{
       display: block;
       text-align: center;
@@ -576,7 +576,7 @@
         position: relative;
         display: flex;
         background-color: rgba(50,64,113,0.5);
-        margin-top: 7px;
+        margin-top: 5px;
         div{
           height: 22px;
           background-image: linear-gradient(90deg,  #2e7ff3 0%,  #5abfff 100%);;
@@ -652,7 +652,8 @@
       }
     }
     .top-item+.top-item{
-      padding-top: 30px;
+      // padding-top: 30px;
+      padding-top: 26px;
     }
   }
   .top-money{
@@ -828,7 +829,7 @@
   }
 }
 #HotProductChart{
-  height: 400px;
+  height: 376px;
   margin-top: 0px;
 }
 
