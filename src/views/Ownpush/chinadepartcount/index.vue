@@ -1,7 +1,7 @@
 ﻿<template>
   <div class="page-root scroll-panel depart-index" ref="boxPane" v-resize="changeSize">
         <p class="breadcrumb" ref="breadcrumbPane">
-            <router-link class="breadcrumb-link" to="/"><span>首页11</span></router-link>
+            <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
             <template v-for="item in breadcrumbList">
             <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
             <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
@@ -201,7 +201,6 @@ export default {
             {label:"消费分析",id:9,value:"consumptionAnalysis",isOn:false,disabled:true},
             {label:"询盘分析",id:1,value:"enquiriesFew",isOn:true,disabled:false},
             {label:"成交积分分析",id:2,value:"clinchScore",isOn:false,disabled:true},
-            {label:"消费分析",id:9,value:"consumptionAnalysis",isOn:false,disabled:true},
             {label:"质量分析",id:8,value:"qualityAnalysis",isOn:false,disabled:true},
             {label:'询盘年份',id:3,value:"enquiriesYear",isOn:false,disabled:true},
             {label:"询盘地图",id:4,value:"regionEnquiries",isOn:true,disabled:false},
@@ -542,7 +541,6 @@ export default {
       var $this = this;
       var defaultChartData = $this.defaultChartDataClump(res);
       $this.defaultChartData = defaultChartData;
-      console.log($this.defaultChartData,'$this.defaultChartData');
       var mapChartData = $this.mapChartDataClump(res);
       var productData = $this.productDataClump(res);
       if(productData){
@@ -996,7 +994,6 @@ export default {
             dealScoreData.avgTitle = "月平均成交积分";
             dealScoreData.historyTitle = "月历史峰值";
             dealScoreData.totalChart = [];
-            
             res.monthdepartscorepercentercompare.forEach(function(item){
               var itemChart = {};
               itemChart.name = item.departname;
@@ -1439,7 +1436,7 @@ export default {
                   }
                 });
               }else{
-                consumptionData.chartTitle = "电商一部消费日趋势";
+                item.name = "电商一部"
               }
               newItemArr.push(item);
             });
@@ -2925,13 +2922,6 @@ export default {
                   item.isOn = false;
                   item.disabled = true;
                 }
-              }else{
-                if($this.selectedData.dept_id.length<=1){
-                  if(item.value=='consumptionAnalysis'){
-                    item.isOn = false;
-                    item.disabled = true;
-                  }
-                }
               }
           }else{
             if(item.value=="enquiriesFew"||item.value=="regionEnquiries"){
@@ -3080,17 +3070,6 @@ export default {
             var selectedContrastType = [];
             var selectedType = [];
             contrastList.forEach(function(item,index){
-              if($this.selectedData.dept_id.length>1){
-                if(item.value=='consumptionAnalysis'){
-                  item.isOn=true;
-                  item.disabled=false;
-                }
-              }else{
-                if(item.value=='consumptionAnalysis'){
-                  item.isOn=false;
-                  item.disabled=true;
-                }
-              }
               if(item.value=='qualityAnalysis'){
                 item.isOn=true;
                 item.disabled=false;
@@ -3176,39 +3155,6 @@ export default {
         $this.selectedData.comparedept_id=[];
       }
     },
-    contrastTypeChangeHandler(obj){
-      var $this = this;
-      if(!obj.disabled){
-        var selectedContrastGroupID = [];
-        var contrastTypeList = $this.contrastTypeList;
-        contrastTypeList.forEach(function(item,index){
-          if(item.id == obj.id){
-            if(item.isOn){
-              item.isOn = false;
-            }else{
-              item.isOn = true;
-            }
-          }
-          if(item.isOn){
-            selectedContrastGroupID.push(item.id);
-          }
-        });
-        if(selectedContrastGroupID.length>0){
-          $this.contrastGroupList.forEach(function(item,index){
-            item.disabled=true;
-            item.isOn=false;
-          });
-        }else{
-          $this.contrastGroupList.forEach(function(item,index){
-            item.disabled=false;
-            item.isOn=false;
-          });
-        }
-        $this.selectedData.comparetype_id = selectedContrastGroupID;
-        $this.contrastTypeList = contrastTypeList;
-        $this.selectedData.comparedept_id=[];
-      }
-    },
     // 对比部门点击事件
     contrastGroupChangeHandler(obj){
       var $this = this;
@@ -3254,7 +3200,7 @@ export default {
     // 对比部门添加确定事件
     saveContrastGroup(){
       var $this = this;
-      if(($this.selectedData.comparedept_id&&$this.selectedData.comparedept_id.length>0)||($this.selectedData.comparetype_id&&$this.selectedData.comparetype_id.length>0)){
+      if($this.selectedData.comparedept_id&&$this.selectedData.comparedept_id.length>0){
           //月维度，部门对比屏蔽质量分析
           if($this.selectedData.isMonth){            
             var contrastList=$this.contrastList;
