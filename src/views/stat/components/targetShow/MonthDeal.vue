@@ -129,7 +129,7 @@ export default {
         var $this = this;
         $this.NowYear = new Date().getFullYear();
         $this.NowMonth = new Date().getMonth() + 1;
-        if(new Date().getMonth() < 4){
+        if(new Date().getMonth() < 2){
             $this.type = 1;
             $this.showYear = new Date().getFullYear()-1;
         }else{

@@ -153,17 +153,6 @@ export default {
       type: 2,//默认展示今年的数据
     };
   },
-  computed: {
-    ...mapGetters([
-      'sidebar',
-    ]),
-    nowYear(){
-      return new Date().getFullYear();
-    },
-    prevYear(){
-      return new Date().getFullYear()-1;
-    }
-  },
   components:{
     CostYears,//年度成本
     CostDepart,//部门年度成本
@@ -178,16 +167,28 @@ export default {
     XpanPercent,//部门年度询盘
     HotProduct,//热门产品
   },
+  computed:{
+    nowYear(){
+      return new Date().getFullYear();
+    },
+    prevYear(){
+      return new Date().getFullYear()-1;
+    },
+    ...mapGetters([
+      'sidebar',
+    ]),
+  },
   created() {
     this.getUserMenuButtonPermit()
     this.nowcate = this.$route.meta.title;
     var month = new Date().getMonth();
-    if(month < 3){
+    if(month < 2){
       this.type = 1
     }
   },
   mounted(){
     const $this = this;
+    console.log($this.sidebar)
     if(!$this.sidebar.opened){
       $this.$store.dispatch('app/toggleSideBar');
     }    
