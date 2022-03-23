@@ -2426,11 +2426,6 @@ export default {
         this.chooseData.chooseDepart = chooseDepart;
         this.chooseData.tag = tag;
         this.chooseData.time = new Date().valueOf();
-    },
-    echartsSize(){
-        if(this.MixChart){
-            this.MixChart.resize();
-        }
     }
   }
 }

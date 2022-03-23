@@ -199,7 +199,6 @@ export default {
                 }
               }
             ],
-            animation: false,
             series: [
               {
                 name: '搜索询盘',
