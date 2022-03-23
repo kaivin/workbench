@@ -411,21 +411,24 @@ export default {
         series: [
           {
             type: 'pie',
-            radius: '55%',
+            top:-30,
+            radius: '50%',
             color:echartColor,
             data:serieData,
             label: {
-                formatter: params => {
-                    return '{percent|占比：' + params.percent + '%} '
-                },
-                distanceToLabelLine: 0,
-                padding: [-2, 0, 0, 0],
-                rich: {
-                    percent: {
-                        color: "#333",
-                        align: 'center',
-                        fontSize: 12,
-                        padding: [5, 10]
+                normal: {
+                    formatter: params => {
+                        return '{percent|占比：}\n'+ params.percent + '%'
+                    },
+                    distanceToLabelLine: 0,
+                    padding: [-2, 0, 0, 0],
+                    rich: {
+                        percent: {
+                            color: "#333",
+                            align: 'left',
+                            fontSize: 12,
+                            padding: [5, 10]
+                        }
                     }
                 }
             },
