@@ -135,11 +135,20 @@
                                   </el-input>
                             </div>
                             <div class="team-headerItem">
-                                  <span class="require">地区：</span>
+                                  <span class="require">国家：</span>
                                   <el-input
                                       size="mini"
                                       v-model="searchData.country"
                                       :class="searchData.country!=''?'el-xzstate':''"
+                                      clearable>
+                                  </el-input>
+                            </div>
+                            <div class="team-headerItem">
+                                  <span class="require">大洲：</span>
+                                  <el-input
+                                      size="mini"
+                                      v-model="searchData.contient"
+                                      :class="searchData.contient!=''?'el-xzstate':''"
                                       clearable>
                                   </el-input>
                             </div>
@@ -484,7 +493,7 @@
                   <el-row :gutter="15" v-if="checkedItem.includes(8)">
                     <el-col :xs="24">
                       <div class="chart-wrapper">
-                        <div class="chart-header"><span>热门地区</span></div>
+                        <div class="chart-header"><span>热门国家</span></div>
                         <div class="chart-body chartmap-body" style="height:540px;text-align:center;">
                           <div class="map-panel flex-box">
                             <div class="map-chart enmap-chart">
@@ -632,6 +641,7 @@ export default {
         ennature:'',
         effective:false,
         country:'',
+        contient:'',
         material:'',
         domain:'',
         name:'',
@@ -761,7 +771,7 @@ export default {
         {id:5,value:5,label:"每天询盘量"},
         {id:6,value:6,label:"平均小时询盘量"},
         {id:7,value:7,label:"热门产品"},
-        {id:8,value:8,label:"热门地区"},
+        {id:8,value:8,label:"热门国家"},
         {id:9,value:9,label:"询盘月趋势"},
         {id:10,value:10,label:"询盘季度趋势"}
       ],
@@ -985,6 +995,7 @@ export default {
       $this.minProductNum=0;
       $this.searchData.date=[];
       $this.searchData.country="";
+      $this.searchData.contient="";
       $this.searchData.material="";
       $this.searchData.domain='';
       $this.searchData.name='';
@@ -1028,6 +1039,9 @@ export default {
       var searchData = {};
       if($this.searchData.country&&$this.searchData.country!=''){
         searchData.country = $this.searchData.country;
+      }
+      if($this.searchData.contient&&$this.searchData.contient!=''){
+        searchData.contient = $this.searchData.contient;
       }
       if($this.searchData.material&&$this.searchData.material!=''){
         searchData.material = $this.searchData.material;
