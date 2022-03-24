@@ -147,8 +147,8 @@
                                   <span class="require">大洲：</span>
                                   <el-input
                                       size="mini"
-                                      v-model="searchData.contient"
-                                      :class="searchData.contient!=''?'el-xzstate':''"
+                                      v-model="searchData.continent"
+                                      :class="searchData.continent!=''?'el-xzstate':''"
                                       clearable>
                                   </el-input>
                             </div>
@@ -641,7 +641,7 @@ export default {
         ennature:'',
         effective:false,
         country:'',
-        contient:'',
+        continent:'',
         material:'',
         domain:'',
         name:'',
@@ -995,7 +995,7 @@ export default {
       $this.minProductNum=0;
       $this.searchData.date=[];
       $this.searchData.country="";
-      $this.searchData.contient="";
+      $this.searchData.continent="";
       $this.searchData.material="";
       $this.searchData.domain='';
       $this.searchData.name='';
@@ -1040,8 +1040,8 @@ export default {
       if($this.searchData.country&&$this.searchData.country!=''){
         searchData.country = $this.searchData.country;
       }
-      if($this.searchData.contient&&$this.searchData.contient!=''){
-        searchData.contient = $this.searchData.contient;
+      if($this.searchData.continent&&$this.searchData.continent!=''){
+        searchData.continent = $this.searchData.continent;
       }
       if($this.searchData.material&&$this.searchData.material!=''){
         searchData.material = $this.searchData.material;
