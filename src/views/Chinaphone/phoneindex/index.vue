@@ -166,15 +166,8 @@
                           </el-option>
                         </el-select>
                       </div>
-                      <div class="item-search" style="width: 100px;">
-                        <el-select v-model="searchData.productlevel" size="small" clearable placeholder="类别" :class="searchData.productlevel!=''?'el-xzstate':''">
-                          <el-option
-                            v-for="item in categoryList"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                          </el-option>
-                        </el-select>
+                      <div class="item-search">
+                        <el-checkbox v-model="searchData.is_core" label="核心产品" border size="small"></el-checkbox>
                       </div>
                       <div class="item-search" style="width: 100px;">
                         <el-select v-model="searchData.userid" size="small" filterable clearable placeholder="提供者" :class="searchData.userid!=''?'el-xzstate':''">
@@ -472,6 +465,7 @@ export default {
         typekey:'',
         level_id:'',
         productlevel:'',
+        is_core:false,
         userid:'',
         device:'',
         effective:'',
@@ -484,7 +478,6 @@ export default {
       sourceList:[],
       userList:[],
       levelList:[],
-      categoryList:[],
       effectiveList:[
         {label:"有效",value:1},
         {label:"无效",value:2},
@@ -761,6 +754,7 @@ export default {
         $this.searchData.typekey="";
         $this.searchData.level_id="";
         $this.searchData.productlevel="";
+        $this.searchData.is_core=false;
         $this.searchData.userid="";
         $this.searchData.device="";
         $this.searchData.effective="";
@@ -946,6 +940,7 @@ export default {
         searchData.starttime = $this.searchData.date[0];
         searchData.endtime = $this.searchData.date[1];
       }
+      searchData.is_core = $this.searchData.is_core?1:0;
       return searchData;
     },
     // 初始化询盘列表数据
@@ -1109,14 +1104,6 @@ export default {
                 levelList.push(itemData);
               });
               $this.levelList = levelList;
-              var categoryList = [];
-              response.xuntype.forEach(function(item,index){
-                var itemData = {};
-                itemData.label = item.name;
-                itemData.value = item.id;
-                categoryList.push(itemData);
-              });
-              $this.categoryList = categoryList;
               $this.initCluesList();
             }else{
               $this.$message({

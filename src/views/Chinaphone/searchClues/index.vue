@@ -115,16 +115,6 @@
                                   </el-option>
                                 </el-select>
                               </div>
-                              <div class="item-search" style="width:100px;">
-                                <el-select v-model="searchData.productlevel" size="small" clearable placeholder="产品类别" :class="searchData.productlevel!=''?'el-xzstate':''">
-                                  <el-option
-                                  v-for="item in categoryList"
-                                  :key="item.value"
-                                  :label="item.label"
-                                  :value="item.value">
-                                  </el-option>
-                                </el-select>
-                              </div>
                               <div class="item-search" style="width:80px;">
                                 <el-select v-model="searchData.device" size="small" clearable placeholder="设备" :class="searchData.device!=''?'el-xzstate':''">
                                   <el-option
@@ -556,7 +546,6 @@ export default {
       phoneList:[],
       phoneBrandList:[],
       levelList:[],
-      categoryList:[],
       productList:[],
       effectiveList:[
         {label:"有效",value:1},
@@ -1021,14 +1010,6 @@ export default {
               levelList.push(itemData);
             });
             $this.levelList = levelList;
-            var categoryList = [];
-            response.xuntype.forEach(function(item,index){
-              var itemData = {};
-              itemData.label = item.name;
-              itemData.value = item.id;
-              categoryList.push(itemData);
-            });
-            $this.categoryList = categoryList;
           }else{
             $this.$message({
               showClose: true,
