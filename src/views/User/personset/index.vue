@@ -879,7 +879,8 @@ export default {
     checkeUsername(username){
         var str=username;
         //在JavaScript中，正则表达式只能使用"/"开头和结束，不能使用双引号
-        var Expression=/^(\w){3,20}$/; 
+        //用户名格式：限16个字符，支持中英文、数字、减号或下划线
+        var Expression=/^(\w|[\u4E00-\u9FA5]){3,20}$/; 
         var objExp=new RegExp(Expression);          //创建正则表达式对象
         if(objExp.test(str)==true){                   //通过正则表达式验证
             return true;
