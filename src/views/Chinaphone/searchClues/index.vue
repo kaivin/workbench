@@ -207,6 +207,9 @@
                               <div class="item-search">
                                 <el-checkbox v-model="searchData.is_group" label="分组统计" border size="small"></el-checkbox>
                               </div>
+                              <div class="item-search">
+                                <el-checkbox v-model="searchData.is_core" label="核心产品" border size="small"></el-checkbox>
+                              </div>
                               <div class="item-search" style="width:90px;">
                                 <el-select v-model="searchData.groupurlproduct" size="small" placeholder="分组类型" :class="searchData.groupurlproduct!=''?'el-xzstate':''">
                                   <el-option
@@ -541,6 +544,7 @@ export default {
         url:'',
         is_url:false,
         is_group:false,
+        is_core:false,
         idlist:'',
         groupurlproduct:1,
       },
@@ -792,6 +796,7 @@ export default {
         $this.searchData.url="";
         $this.searchData.is_url=false;
         $this.searchData.is_group=false;
+        $this.searchData.is_core=false;
         $this.searchData.idlist="";
         $this.searchData.groupurlproduct=1;
         $this.searchResult(); 
@@ -823,6 +828,7 @@ export default {
       searchData.is_url = $this.searchData.is_url?1:0;
       searchData.effective = $this.searchData.effective?1:0;
       searchData.is_group = $this.searchData.is_group?1:0;
+      searchData.is_core = $this.searchData.is_core?1:0;
       searchData.mode = $this.searchData.mode;
       searchData.typekey = $this.searchData.typekey;
       searchData.productid = $this.searchData.productid;

@@ -213,7 +213,7 @@
                     </div>
                     <div class="clues-info flex-box">
                         <div class="clues-infoFl flex-content">
-                              <p><span>共有<strong class="color1">{{infoData.totalCount}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效<strong class="color3">{{infoData.invalidCount}}</strong>条，一类产品<strong class="color4">{{infoData.levelOneCount}}</strong>个，二类产品<b class="color5">{{infoData.levelTwoCount}}</b>个。</span><span>||</span><span>本月共有<strong class="color1">{{infoData.totalCountMonth}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCountMonth}}</strong>条，无效<strong class="color3">{{infoData.invalidCountMonth}}</strong>条，一类产品<strong class="color4">{{infoData.levelOneCountMonth}}</strong>个，二类产品<b class="color5">{{infoData.levelTwoCountMonth}}</b>个。</span></p>
+                              <p><span>共有<strong class="color1">{{infoData.totalCount}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效<strong class="color3">{{infoData.invalidCount}}</strong>条。</span><span>||</span><span>本月共有<strong class="color1">{{infoData.totalCountMonth}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCountMonth}}</strong>条，无效<strong class="color3">{{infoData.invalidCountMonth}}</strong>条。</span></p>
                         </div>
                         <div class="clues-title-btn">
                             <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
@@ -278,8 +278,8 @@
                           label="意向设备"
                           min-width="120"
                           >
-                          <template slot-scope="scope">
-                            <span class="product-span" v-bind:class="'level_'+scope.row.productlevel"><i>[{{scope.row.productlevel}}]</i>{{scope.row.keyproduct}}</span>
+                          <template slot-scope="scope">                            
+                            <span class="product-span level_star"><i v-if='scope.row.productlevel>0&&scope.row.productlevel<3'><svg-icon icon-class="star" /></i>{{scope.row.keyproduct}}</span>
                           </template>
                         </el-table-column>
                         <el-table-column
@@ -493,13 +493,9 @@ export default {
         totalCount:0,
         effectiveCount:0,
         invalidCount:0,
-        levelOneCount:0,
-        levelTwoCount:0,
         totalCountMonth:0,
         effectiveCountMonth:0,
         invalidCountMonth:0,
-        levelOneCountMonth:0,
-        levelTwoCountMonth:0,
       },
       cnAreaPlot:null,
       formLabelWidth:"120px",
@@ -965,13 +961,9 @@ export default {
               infoData.totalCount=response.allcount;
               infoData.effectiveCount=response.effectivecount;
               infoData.invalidCount=response.noeffectivecount;
-              infoData.levelOneCount=response.productonecount;
-              infoData.levelTwoCount=response.producttwocount;
               infoData.totalCountMonth=response.nowmonthnumber;
               infoData.effectiveCountMonth=response.noweffectivenumber;
               infoData.invalidCountMonth=response.nownoeffectivenumber;
-              infoData.levelOneCountMonth=response.nowmonthone;
-              infoData.levelTwoCountMonth=response.nowmonthtwo;
               if(response.data.length>0){
                 response.data.forEach(function(item,index){
                   if(item.phonenumber.indexOf("-")!=-1){
