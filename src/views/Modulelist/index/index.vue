@@ -87,7 +87,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import {userCanAllotRole} from '@/api/user';
+import { mapGetters } from 'vuex';
 export default {
   name: 'Modulelist_index',
   data() {
@@ -437,7 +438,7 @@ export default {
       }
       var roleDataNow = $this.roleData;
       var roleIngData = [];
-      $this.$store.dispatch('user/userCanAllotRoleAction', null).then(response=>{
+      userCanAllotRole(null).then(response=>{
         if(response.status){
           if(response.data.length>0){
             if(roleDataNow.length>0){

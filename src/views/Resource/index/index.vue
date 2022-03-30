@@ -254,8 +254,9 @@
   </div>
 </template>
 <script>
-import router from '@/router'
-import { mapGetters } from 'vuex'
+import {resourceList,resourceAdd,resourceEdit,resourceDelete,resourceSearchData,resourceTypeSelected} from '@/api/resource';
+import router from '@/router';
+import { mapGetters } from 'vuex';
 export default {
   name: 'ResourceIndex',
   data() {
@@ -519,7 +520,7 @@ export default {
         formData.endtime = $this.searchData.date[1];
       }
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('resource/resourceListAction', formData).then(response=>{
+      resourceList(formData).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -654,34 +655,39 @@ export default {
         formData.uid = $this.dialogForm.uid;
         var pathUrl = "";
         if($this.dialogText=="修改资源"){
-          pathUrl = "resource/resourceEditAction";
+          resourceEdit(formData).then(response=>{
+            $this.funresourcePlug(response);
+          });
         }else{
-          pathUrl = "resource/resourceAddAction";
+          resourceAdd(formData).then(response=>{
+            $this.funresourcePlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.handleClose();
-                setTimeout(()=>{
-                $this.isSaveData=false;
-                },1000);
-              $this.initPage();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSaveData=false;
-              },1000);
-            }
-        });
       }
+    },
+    funresourcePlug(arrData){
+        var $this = this;
+        if(arrData.status){
+          $this.$message({
+            showClose: true,
+            message: arrData.info,
+            type: 'success'
+          });
+          $this.handleClose();
+            setTimeout(()=>{
+            $this.isSaveData=false;
+            },1000);
+          $this.initPage();
+        }else{
+          $this.$message({
+            showClose: true,
+            message: arrData.info,
+            type: 'error'
+          });
+          setTimeout(()=>{
+            $this.isSaveData=false;
+          },1000);
+        }
     },
     resetData(){
         var $this = this;
@@ -748,7 +754,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('resource/resourceDeleteAction', {id:row.id}).then(response=>{
+          resourceDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -786,7 +792,7 @@ export default {
     // 获取搜索条件数据
     getSearchData(){
       var $this = this;
-      $this.$store.dispatch('resource/resourceSearchDataAction', null).then(response=>{
+      resourceSearchData(null).then(response=>{
           if(response.status){
             var userList = [];
             response.user.forEach(function(item,index){
@@ -820,7 +826,7 @@ export default {
         if(e==""){
             $this.resourceList = [];
         }else{
-            $this.$store.dispatch('resource/resourceTypeSelectedAction', {id:e}).then(response=>{
+            resourceTypeSelected({id:e}).then(response=>{
                 if(response.status){
                     var resourceList = [];
                     response.data.forEach(function(item,index){

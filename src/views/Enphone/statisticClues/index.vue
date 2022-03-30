@@ -216,6 +216,7 @@
 </template>
 
 <script>
+import {getLeftPhoto,cluesAnalysisInitSystemData} from '@/api/enphone';
 import { mapGetters } from 'vuex';
 export default {
   name: 'statisticEnClues',
@@ -433,7 +434,7 @@ export default {
       var $this=this;
       if(!$this.isDisabled){
         $this.isDisabled=true;
-        $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
+        getLeftPhoto(null).then(response=>{
           if(response){
             if(response.status){
                 $this.linkAll.todayNum = response.alltodaynumber;
@@ -504,7 +505,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
-      $this.$store.dispatch('enphone/cluesAnalysisInitSystemDataAction', {status:$this.status}).then(response=>{
+      cluesAnalysisInitSystemData({status:$this.status}).then(response=>{
         if(response){
           if(response.status){
             $this.tableData = response.data;

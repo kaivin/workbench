@@ -157,8 +157,9 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import VueUeditorWrap from 'vue-ueditor-wrap'
+import { getSystemData,workOrderAdd,workOrderEdit,workOrderEditInitInfo } from '@/api/works';
+import { mapGetters } from 'vuex';
+import VueUeditorWrap from 'vue-ueditor-wrap';
 export default {
   name: 'workOrderAddEdit',
   components: { VueUeditorWrap },
@@ -453,7 +454,7 @@ export default {
     // 获取工单发布修改所需系统数据
     getShowData(){
       var $this = this;
-      $this.$store.dispatch('works/getSystemDataAction', null).then(response=>{
+      getSystemData(null).then(response=>{
         if(response){
           if(response.status){
             response.userwritetypepermit.forEach(function(item,index){
@@ -529,7 +530,7 @@ export default {
     // 获取编辑工单详情
     getArticleInfo(){
       var $this = this;
-      $this.$store.dispatch('works/workOrderEditInitInfoAction', {id:$this.formData.id}).then(response=>{
+      workOrderEditInitInfo({id:$this.formData.id}).then(response=>{
           if(response){
             if(response.status){
               $this.articleData = response.data;
@@ -675,38 +676,42 @@ export default {
         formData.score = $this.formData.score;
         formData.starttime = $this.formData.starttime;
         formData.endtime = $this.formData.endtime;
-        var pathUrl = "";
         if($this.formData.id!==0){
-          pathUrl = 'works/workOrderEditAction';
+          workOrderEdit(formData).then(response=>{
+            $this.funworkOrderPlug(response);
+          });
         }else{
-          pathUrl = 'works/workOrderAddAction';
+          workOrderAdd(formData).then(response=>{
+            $this.funworkOrderPlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              if($this.formData.id==0){
-                $this.clearFormData();
-              }else{
-                setTimeout(()=>{
-                  $this.isDisabled=false;
-                },1000);
-              }
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isDisabled=false;
-              },1000);
-            } 
-        });
       }
+    },
+    funworkOrderPlug(arrData){
+      var $this=this;
+      if(arrData.status){
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
+        });
+        if($this.formData.id==0){
+          $this.clearFormData();
+        }else{
+          setTimeout(()=>{
+            $this.isDisabled=false;
+          },1000);
+        }
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+        setTimeout(()=>{
+          $this.isDisabled=false;
+        },1000);
+      } 
     },
   }
 }

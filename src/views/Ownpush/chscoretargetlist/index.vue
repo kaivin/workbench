@@ -132,7 +132,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { chScoreList,chScoreAdd,chScoreEdit,chScoreDelete } from '@/api/ownaim';
+import { mapGetters } from 'vuex';
 export default {
   name: 'Ownpush_index',
   data() {
@@ -275,7 +276,7 @@ export default {
         $this.searchData.starttime = $this.searchDate[0];
         $this.searchData.endtime = $this.searchDate[1]; 
       }
-      $this.$store.dispatch('ownaim/getchScoreList', $this.searchData).then(response=>{
+      chScoreList($this.searchData).then(response=>{
         if(response){
           if(response.status){
             $this.totalDataNum = response.allcount;
@@ -375,31 +376,36 @@ export default {
         $this.isDisabled=true;
         var pathUrl = "";
         if($this.dialogText=="添加目标"){
-          pathUrl = "ownaim/addChScore";
+          chScoreAdd($this.dialogForm).then(response=>{
+            $this.funsavePlug(response);
+          });
         }else{
-          pathUrl = "ownaim/editChScore";
+          chScoreEdit($this.dialogForm).then(response=>{
+            $this.funsavePlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
-            if(response.status){
-              $this.isDisabled=false;
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.handleClose();
-              $this.initPage();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isDisabled=false;
-              },1000);
-            }
+      }
+    },
+    funsavePlug(arrData){
+      var $this = this;
+      if(arrData.status){
+        $this.isDisabled=false;
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
         });
+        $this.handleClose();
+        $this.initPage();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+        setTimeout(()=>{
+          $this.isDisabled=false;
+        },1000);
       }
     },
     // 重置添加数据表单
@@ -450,7 +456,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('ownaim/deleteChScore', {id:row.id}).then(response=>{
+          chScoreDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

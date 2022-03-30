@@ -92,7 +92,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import {getProductTypeList,productTypeDelete,productTypeEdit,productTypeAdd} from '@/api/chinaphone';
+import { mapGetters } from 'vuex';
 export default {
   name: 'Chinaphone_producttypelist',
   data() {
@@ -295,7 +296,7 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('chinaphone/productTypeListAction', null).then(response=>{
+      getProductTypeList(null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -412,30 +413,35 @@ export default {
         formData.sort = $this.dialogForm.sort;
         var pathUrl = "";
         if($this.dialogText=="编辑分类"){
-          pathUrl = "chinaphone/productTypeEditAction";
+          productTypeEdit(formData).then(response=>{
+            $this.funproductTypePlug(response);
+          });
         }else{
-          pathUrl = "chinaphone/productTypeAddAction";
+          productTypeAdd(formData).then(response=>{
+            $this.funproductTypePlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.handleClose();
-              $this.initPage();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSaveData=false;
-              },1000);
-            }
+      }
+    },
+    funproductTypePlug(arrData){
+      var $this = this;
+      if(arrData.status){
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
         });
+        $this.handleClose();
+        $this.initPage();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+        setTimeout(()=>{
+          $this.isSaveData=false;
+        },1000);
       }
     },
     // 重置添加数据表单
@@ -467,7 +473,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('chinaphone/productTypeDeleteAction', {id:row.id}).then(response=>{
+          productTypeDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

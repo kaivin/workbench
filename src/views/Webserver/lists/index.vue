@@ -198,7 +198,9 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { getWebserverList,webserverDelete,webserverSelectData } from '@/api/webserver';
+import { websiteAdd } from '@/api/website';
+import { mapGetters } from 'vuex';
 export default {
   name: 'Webserver_lists',
   data() {
@@ -476,7 +478,7 @@ export default {
         formData.useringid = $this.formData.useringid;
         formData.systemid = $this.formData.systemid;
         formData.ip = $this.formData.ip;
-        $this.$store.dispatch('webserver/webserverListAction', formData).then(response=>{
+        getWebserverList(formData).then(response=>{
           if(response){
             if(response.status){
               $this.tableData = response.data;
@@ -515,7 +517,7 @@ export default {
     // 获取查询相关展示数据
     getSearchItemData(){
       var $this = this;
-      $this.$store.dispatch('webserver/webserverSelectDataAction', null).then(response=>{
+      webserverSelectData(null).then(response=>{
         if(response){
           if(response.status){
             var languageList = [];
@@ -601,7 +603,7 @@ export default {
       if(!$this.validationForm()){
         return false;
       }
-      $this.$store.dispatch('website/websiteAddAction', $this.dialogForm).then(response=>{
+      websiteAdd($this.dialogForm).then(response=>{
           if(response.status){
             $this.$message({
               showClose: true,
@@ -665,7 +667,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('webserver/webserverDeleteAction', {id:row.id}).then(response=>{
+          webserverDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

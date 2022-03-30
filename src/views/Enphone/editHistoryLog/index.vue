@@ -130,6 +130,7 @@
 </template>
 
 <script>
+import {getLeftPhoto,customerEditHistoryLog} from '@/api/enphone';
 import { mapGetters } from 'vuex';
 export default {
   name: 'editHistoryLog',
@@ -323,7 +324,7 @@ export default {
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){
       var $this=this;
-      $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
+      getLeftPhoto(null).then(response=>{
         if(response){
           if(response.status){
               $this.linkAll.todayNum = response.alltodaynumber;
@@ -390,7 +391,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
-      $this.$store.dispatch('enphone/customerEditHistoryLogAction', {id:$this.$route.query.ID}).then(response=>{
+      customerEditHistoryLog({id:$this.$route.query.ID}).then(response=>{
         if(response){
           if(response.status){
             var tableData = response.data;

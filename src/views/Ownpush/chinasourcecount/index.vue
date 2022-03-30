@@ -78,6 +78,7 @@
   </div>
 </template>
 <script>
+import {getOwnsource,getOwnChinasourcedefault} from '@/api/ownpush';
 import {mapGetters} from 'vuex';
 import sourceRank from "../components/chinadepartcount/sourceRank.vue";
 import {randomString,numSeparate,sortByDesc,rankingWithTotalItem,singleArrColor} from "@/utils/index";
@@ -211,7 +212,7 @@ export default {
     // 获取渠道列表
     getChannelList(){
       var $this = this;
-      $this.$store.dispatch('ownpush/getOwnsourceAction', null).then(res=>{
+      getOwnsource(null).then(res=>{
         var channelList = [];
         var contrastSourceList = [];
         res.data.forEach(function(item,index){
@@ -327,7 +328,7 @@ export default {
       var searchData={};
       searchData=$this.initsearch();
       $this.emptyData();
-      $this.$store.dispatch('ownpush/getOwnChinasourcedefaultAction', searchData).then(res=>{
+      getOwnChinasourcedefault(searchData).then(res=>{
           if(res.status){
             var sourceData=[];
             //  消费

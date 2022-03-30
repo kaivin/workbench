@@ -105,6 +105,7 @@
 
 
 <script>
+import { getDataList, permitAdd,permitEdit,permitDelete } from '@/api/permit';
 import { mapGetters } from 'vuex'
 export default {
   name: 'permitIndex',
@@ -310,7 +311,7 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('permit/permitListAction', null).then(response=>{
+      getDataList(null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -505,30 +506,35 @@ export default {
         formData.action = $this.dialogForm.route;
         var pathUrl = "";
         if($this.dialogText=="编辑权限"){
-          pathUrl = "permit/permitEditAction";
+          permitEdit(formData).then(response=>{
+            $this.funpermitPlug(response);
+          });
         }else{
-          pathUrl = "permit/permitAddAction";
+          permitAdd(formData).then(response=>{
+            $this.funpermitPlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.handleClose();
-              $this.initData();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSaveData=false;
-              },1000);
-            }
+      }
+    },
+    funpermitPlug(arrData){
+      var $this = this;
+      if(arrData.status){
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
         });
+        $this.handleClose();
+        $this.initData();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+        setTimeout(()=>{
+          $this.isSaveData=false;
+        },1000);
       }
     },
     // 重置添加数据表单
@@ -578,7 +584,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('permit/permitDeleteAction', {id:parseInt(row.id.split("-")[1])}).then(response=>{
+          permitDelete({id:parseInt(row.id.split("-")[1])}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

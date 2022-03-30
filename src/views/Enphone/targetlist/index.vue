@@ -131,6 +131,7 @@
   </div>
 </template>
 <script>
+import {EndeparChoose,Entargetlist,EntargetlistDel,EntargetlistEdit,EntargetlistAdd} from '@/api/enphone';
 import { mapGetters } from 'vuex'
 export default {
   name: 'Enphone_targetlist',
@@ -362,7 +363,7 @@ export default {
     // 初始化部门数据
     dealData(){
       var $this = this;
-      $this.$store.dispatch('enphone/EndeparChooseAction', null).then(response=>{
+      EndeparChoose(null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -417,7 +418,7 @@ export default {
       var $this = this;
       var formData = $this.restearch();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('enphone/EntargetlistAction', formData).then(response=>{
+      Entargetlist(formData).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -551,30 +552,35 @@ export default {
         formData.mnumber = $this.dialogForm.mnumber;
         var pathUrl = "";
         if($this.dialogText=="编辑日目标"){
-          pathUrl = "enphone/EntargetlistEditAction";
+          EntargetlistEdit(formData).then(response=>{
+            $this.funEntargetlistPlug(response);
+          });
         }else{
-          pathUrl = "enphone/EntargetlistAddAction";
+          EntargetlistAdd(formData).then(response=>{
+            $this.funEntargetlistPlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.handleClose();
-              $this.initPage();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSaveData=false;
-              },1000);
-            }
+      }
+    },
+    funEntargetlistPlug(arrData){
+      var $this = this;
+      if(arrData.status){
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
         });
+        $this.handleClose();
+        $this.initPage();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+        setTimeout(()=>{
+          $this.isSaveData=false;
+        },1000);
       }
     },
     // 重置添加数据表单
@@ -614,7 +620,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('enphone/EntargetlistDelAction', {id:row.id}).then(response=>{
+          EntargetlistDel({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

@@ -492,6 +492,7 @@
 </template>
 
 <script>
+import {cluesAnalysisSystemData,cluesPhoneStatData,cluesAnalysisResultData} from '@/api/chinaphone';
 import { mapGetters } from 'vuex';
 import * as echarts from 'echarts';
 import {MapInterval} from "@/utils/MapColor";
@@ -875,7 +876,7 @@ export default {
     // 获取询盘统计的搜索条件数据
     getSearchSystemData(){
       var $this = this;
-      $this.$store.dispatch('chinaphone/cluesAnalysisSystemDataAction', null).then(response=>{
+      cluesAnalysisSystemData(null).then(response=>{
         if(response){
           if(response.status){
             var deviceList = [];
@@ -991,7 +992,7 @@ export default {
     // 获取电话列表及电话统计数字
     getPhoneListNum(){
       var $this = this;
-      $this.$store.dispatch('chinaphone/cluesPhoneStatDataAction', null).then(response=>{
+      cluesPhoneStatData(null).then(response=>{
         if(response){
           if(response.status){
             var phoneArr=response.data;
@@ -1050,7 +1051,7 @@ export default {
           return false;
         }
         $this.isDisabled=true;
-        $this.$store.dispatch('chinaphone/cluesAnalysisResultDataAction', searchData).then(response=>{
+        cluesAnalysisResultData(searchData).then(response=>{
           if(response){
             if(response.status){
               $this.isSearch=true;

@@ -19,6 +19,7 @@
   </div>
 </template>
 <script>
+import {getDepartList,Userrank} from '@/api/Enquiries';
 import EnquirifGrade from "../components/EnquirifGrade";
 import { mapGetters } from 'vuex';
 export default {
@@ -58,7 +59,7 @@ export default {
     // 获取部门列表
     getDeptList(){
       var $this = this;
-      $this.$store.dispatch('Enquiries/getDepartListAction', null).then(res=>{
+      getDepartList().then(res=>{
         if(res){
           if(res.status){
             if(res.data.length>0){
@@ -164,8 +165,8 @@ export default {
       var $this = this;
       var searchData={};
       searchData=$this.initsearch();
-      $this.emptyData();
-      $this.$store.dispatch("Enquiries/UserrankAction",searchData).then((res) => {
+      $this.emptyData();      
+      Userrank(searchData).then((res) => {
           if (res) {
             if (res.status) {
               if(res.dept.length>1){

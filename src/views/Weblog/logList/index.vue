@@ -125,6 +125,7 @@
   </div>
 </template>
 <script>
+import {getloglist,getlists,getlogSpidertype,getlogCheckspider} from '@/api/Weblog';
 import { mapGetters } from 'vuex';
 export default {
   name: 'WeblogLists',
@@ -190,7 +191,7 @@ export default {
     // 常用蜘蛛列表
     getspidertypeList(){
       var $this=this;
-      $this.$store.dispatch('Weblog/getlogSpidertypeAction').then(res=>{
+      getlogSpidertype().then(res=>{
         if(res.status){
            if(res.data&&res.data.length>0){
               var spidertypeList=[];
@@ -271,7 +272,7 @@ export default {
     getloglist(){
       var $this=this;
       var searchData=$this.Searchlog();
-      $this.$store.dispatch('Weblog/getloglistAction',searchData).then(res=>{
+      getloglist(searchData).then(res=>{
         if(res.status){
            if(res.data&&res.data.length>0){
              var loglist=[];
@@ -349,7 +350,7 @@ export default {
         $this.searchData.page = 1
       }
       $this.isPageBtn = false;
-      $this.$store.dispatch('Weblog/getlistsAction',searchData).then(res=>{
+      getlists(searchData).then(res=>{
         if(res.status){
             $this.tableData=res.data;
             $this.totalDataNum = res.allcount;
@@ -398,7 +399,7 @@ export default {
       var $this=this;
       var searchData={};
       searchData.ip=varDate.ip
-      $this.$store.dispatch('Weblog/getlogCheckspiderActive',searchData).then(res=>{
+      getlogCheckspider(searchData).then(res=>{
         if(res.status){
           $this.$message({
               message: res.data,

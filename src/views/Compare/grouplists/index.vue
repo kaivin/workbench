@@ -167,7 +167,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import {groupDealList,groupDealListChoose,groupDealListAdd,groupDealEdit,groupDealDel} from '@/api/Compare';
+import { mapGetters } from 'vuex';
 export default {
   name: 'Compare_lists',
   data() {
@@ -417,7 +418,7 @@ export default {
     // 初始化小组
     dealData(){
       var $this = this;
-      $this.$store.dispatch('Compare/groupDealListChooseAction', null).then(response=>{
+      groupDealListChoose(null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -473,7 +474,7 @@ export default {
       var $this = this;
       var formData = $this.restearch();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('Compare/groupDealListAction', formData).then(response=>{
+      groupDealList(formData).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -611,30 +612,35 @@ export default {
         formData.a_number = $this.dialogForm.a_number;
         var pathUrl = "";
         if($this.dialogText=="编辑小组成交"){
-          pathUrl = "Compare/groupDealEditAction";
+          groupDealEdit(formData).then(response=>{
+            $this.funsavePlug(response);
+          });
         }else{
-          pathUrl = "Compare/groupDealListAddAction";
+          groupDealListAdd(formData).then(response=>{
+            $this.funsavePlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.handleClose();
-              $this.initPage();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSaveData=false;
-              },1000);
-            }
+      }
+    },
+    funsavePlug(arrData){
+      var $this = this;
+      if(arrData.status){
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
         });
+        $this.handleClose();
+        $this.initPage();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+        setTimeout(()=>{
+          $this.isSaveData=false;
+        },1000);
       }
     },
     // 重置添加数据表单
@@ -684,7 +690,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('Compare/groupDealDelAction', {id:row.id}).then(response=>{
+          groupDealDel({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

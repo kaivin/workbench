@@ -829,6 +829,7 @@
 </template>
 
 <script>
+import {getLeftPhoto,cluesPhoneIndexSearchData,cluesCurrentPhoneSearchData,cluesCurrentPhoneDataEleEditPage,cluesCurrentPhoneDataEleEdit,cluesCurrentPhoneDataDelete,cluesCurrentPhoneUserCanEditField,getCurrentCateProductList,Custormeditlog,cluesPhoneIndexData,cluesCurrentPhoneData,allCluesData,allUnAllotCluesData} from '@/api/enphone';
 import { mapGetters } from 'vuex';
 export default {
   name: 'Enphone_phoneindex',
@@ -1244,7 +1245,7 @@ export default {
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){
       var $this=this;
-      $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
+      getLeftPhoto(null).then(response=>{
         if(response){
           if(response.status){
               $this.linkAll.todayNum = response.alltodaynumber;
@@ -1347,7 +1348,7 @@ export default {
       var $this = this;
       var deptForm={};
       deptForm.dept_id=$this.depart_id;
-      $this.$store.dispatch('enphone/cluesPhoneIndexSearchDataAction', deptForm).then(response=>{
+      cluesPhoneIndexSearchData(deptForm).then(response=>{
         if(response){
           if(response.status){
              $this.dept_Data=[];
@@ -1385,7 +1386,7 @@ export default {
     // 初始化首页统计页面信息
     initPage(){
       var $this = this;
-      $this.$store.dispatch('enphone/cluesPhoneIndexDataAction', null).then(response=>{
+      cluesPhoneIndexData(null).then(response=>{
         if(response){
           if(response.status){
             $this.linkAll.todayNum = response.alltodaynumber;
@@ -1588,65 +1589,71 @@ export default {
       if(!$this.isSearchResult){
         $this.isSearchResult=true;
         var searchData = $this.initSearchData();
-        var pathUrl = "";
         if($this.phoneID){
-          pathUrl = 'enphone/cluesCurrentPhoneDataAction';
           if($this.phoneID>800&&$this.searchData.waitstatus==1){
             searchData.salesownid=$this.searchData.salesownid;
             searchData.salesdepart_id=$this.searchData.salesdepart_id;
           }
+          cluesCurrentPhoneData(searchData).then(response=>{
+            $this.funCurrentPhonePulg(response);
+          });
         }else{
           if($this.currentKey){
             if($this.currentKey=="all"){
-              pathUrl = "enphone/allCluesDataAction";
               searchData.salesownid=$this.searchData.salesownid;
               searchData.salesdepart_id=$this.searchData.salesdepart_id;
+              allCluesData(searchData).then(response=>{
+                $this.funCurrentPhonePulg(response);
+              });
             }else{
-              pathUrl = "enphone/allUnAllotCluesDataAction";
+              allUnAllotCluesData(searchData).then(response=>{
+                $this.funCurrentPhonePulg(response);
+              });
             }
           }
         }
-        $this.$store.dispatch(pathUrl, searchData).then(response=>{
-          if(response){
-            if(response.status){
-              var infoData = {};            
-              infoData.totalCount=response.allcount;
-              infoData.effectiveCount=response.effectivecount;
-              infoData.invalidCount=response.noeffectivecount;
-              infoData.totalScore=response.countscore;
-              infoData.totalCountMonth=response.nowmonthnumber;
-              infoData.effectiveCountMonth=response.noweffectivenumber;
-              infoData.invalidCountMonth=response.nownoeffectivenumber;
-              infoData.totalScoreMonth=response.countmonthscore;
-              infoData.totalCountLastMonth=response.lastmonthnumber;
-              infoData.effectiveCountLastMonth=response.lasteffectivenumber;
-              infoData.invalidCountLastMonth=response.lastnoeffectivenumber;
-              infoData.totalScoreLastMonth=response.countlastmonthscore;
-              if(response.data.length>0){
-                response.data.forEach(function(item,index){
-                  item.isEffective = item.effective==1?true:false;
-                });
-                $this.isDisabled = false;
-              }else{
-                $this.isDisabled = true;
-              }
-              $this.writepermit = response.writepermit?true:false;
-              $this.tableData = response.data;
-              $this.infoData = infoData;
-              $this.totalDataNum = response.allcount;
-              $this.getPermitField();            
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSearchResult=false;
-              },1000);
-            }
+      }
+    },
+    funCurrentPhonePulg(arrData){
+      var $this = this;
+      if(arrData){
+        if(arrData.status){
+          var infoData = {};            
+          infoData.totalCount=arrData.allcount;
+          infoData.effectiveCount=arrData.effectivecount;
+          infoData.invalidCount=arrData.noeffectivecount;
+          infoData.totalScore=arrData.countscore;
+          infoData.totalCountMonth=arrData.nowmonthnumber;
+          infoData.effectiveCountMonth=arrData.noweffectivenumber;
+          infoData.invalidCountMonth=arrData.nownoeffectivenumber;
+          infoData.totalScoreMonth=arrData.countmonthscore;
+          infoData.totalCountLastMonth=arrData.lastmonthnumber;
+          infoData.effectiveCountLastMonth=arrData.lasteffectivenumber;
+          infoData.invalidCountLastMonth=arrData.lastnoeffectivenumber;
+          infoData.totalScoreLastMonth=arrData.countlastmonthscore;
+          if(arrData.data.length>0){
+            arrData.data.forEach(function(item,index){
+              item.isEffective = item.effective==1?true:false;
+            });
+            $this.isDisabled = false;
+          }else{
+            $this.isDisabled = true;
           }
-        });
+          $this.writepermit = arrData.writepermit?true:false;
+          $this.tableData = arrData.data;
+          $this.infoData = infoData;
+          $this.totalDataNum = arrData.allcount;
+          $this.getPermitField();            
+        }else{
+          $this.$message({
+            showClose: true,
+            message: arrData.info,
+            type: 'error'
+          });
+          setTimeout(()=>{
+            $this.isSearchResult=false;
+          },1000);
+        }
       }
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -1720,7 +1727,7 @@ export default {
       }else{
         resultData = null;
       }
-      $this.$store.dispatch('enphone/cluesCurrentPhoneSearchDataAction', resultData).then(response=>{
+      cluesCurrentPhoneSearchData(resultData).then(response=>{
         if(response){
           if(response.status){
             var natureList = [];
@@ -1916,7 +1923,7 @@ export default {
         itemData.remark3 = item.remark3;
         resultData.push(itemData);
       });
-      $this.$store.dispatch('enphone/cluesCurrentPhoneDataEleEditPageAction', resultData).then(response=>{
+      cluesCurrentPhoneDataEleEditPage(resultData).then(response=>{
         if(response){
           if(response.status){
             $this.$message({
@@ -1944,7 +1951,7 @@ export default {
       resultData.remark1 = row.remark1;
       resultData.remark2 = row.remark2;
       resultData.remark3 = row.remark3;
-      $this.$store.dispatch('enphone/cluesCurrentPhoneDataEleEditAction', resultData).then(response=>{
+      cluesCurrentPhoneDataEleEdit(resultData).then(response=>{
         if(response){
           if(response.status){
             $this.$message({
@@ -1971,7 +1978,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('enphone/cluesCurrentPhoneDataDeleteAction', {id:row.id}).then(response=>{
+          cluesCurrentPhoneDataDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -1997,7 +2004,7 @@ export default {
     // 获取当前登录用户有可写权限的询盘字段
     getPermitField(){
       var $this = this;
-      $this.$store.dispatch('enphone/cluesCurrentPhoneUserCanEditFieldAction', null).then(response=>{
+      cluesCurrentPhoneUserCanEditField(null).then(response=>{
         if(response){
           if(response.status){
             $this.permitField = response.data;
@@ -2027,7 +2034,7 @@ export default {
         var $this = this;
         if(e){
           $this.searchData.productid = "";
-          $this.$store.dispatch('enphone/getCurrentCateProductListAction', {typeid:e}).then(response=>{
+          getCurrentCateProductList({typeid:e}).then(response=>{
               if(response){
                   if(response.status){
                       var productList = [];
@@ -2057,7 +2064,7 @@ export default {
       var $this = this;
       var FormID={};
       FormID.id = Rid;
-      $this.$store.dispatch('enphone/CustormeditlogAction', FormID).then(response=>{
+      Custormeditlog(FormID).then(response=>{
         if(response){
           if(response.status){  
             if(response.data.length>0){

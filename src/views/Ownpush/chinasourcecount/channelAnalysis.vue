@@ -151,6 +151,7 @@
   </div>
 </template>
 <script>
+import {getOwnsource,getOwnChinasourcecount} from '@/api/ownpush';
 import {mapGetters} from 'vuex';
 import defaultChart from "../components/chinadepartcount/defaultChart.vue";
 import qualityChart from "../components/chinadepartcount/qualityChart.vue";
@@ -442,7 +443,7 @@ export default {
     // 获取渠道列表
     getChannelList(){
       var $this = this;
-      $this.$store.dispatch('ownpush/getOwnsourceAction', null).then(res=>{
+      getOwnsource(null).then(res=>{
         var channelList = [];
         var contrastSourceList = [];
         var baseDepart;
@@ -988,7 +989,7 @@ export default {
       var searchData = $this.searchDataInit();
       $this.clearData();
       if(searchData.source_id&&searchData.starttime&&searchData.endtime&&searchData.type){
-        $this.$store.dispatch('ownpush/getOwnChinasourcecountAction', searchData).then(res=>{
+        getOwnChinasourcecount(searchData).then(res=>{
          if(res.status){
             $this.filterDataClump(res);
           }else{

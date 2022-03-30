@@ -95,7 +95,8 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
+import {resourceTypeList,resourceTypeAdd,resourceTypeEdit,resourceTypeDelete} from '@/api/resource';
+import { mapGetters } from 'vuex';
 export default {
   name: 'ResourceTypelist',
   data() {
@@ -301,7 +302,7 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('resource/resourceTypeListAction', null).then(response=>{
+      resourceTypeList(null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -411,27 +412,32 @@ export default {
       formData.typeid = $this.dialogForm.typeid;
       var pathUrl = "";
       if($this.dialogText=="修改资源类型"){
-        pathUrl = "resource/resourceTypeEditAction";
+        resourceTypeEdit(formData).then(response=>{
+          $this.funresourceTypePlug(response);
+        });
       }else{
-        pathUrl = "resource/resourceTypeAddAction";
+        resourceTypeAdd(formData).then(response=>{
+          $this.funresourceTypePlug(response);
+        });
       }
-      $this.$store.dispatch(pathUrl, formData).then(response=>{
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.handleClose();
-            $this.initPage();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
-      });
+    },
+    funresourceTypePlug(arrData){
+      var $this = this;
+      if(arrData.status){
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
+        });
+        $this.handleClose();
+        $this.initPage();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+      }
     },
     // 重置添加数据表单
     resetFormData(){
@@ -462,7 +468,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('resource/resourceTypeDeleteAction', {id:row.id}).then(response=>{
+          resourceTypeDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

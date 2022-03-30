@@ -188,7 +188,6 @@ export default {
   },
   mounted(){
     const $this = this;
-    console.log($this.sidebar)
     if(!$this.sidebar.opened){
       $this.$store.dispatch('app/toggleSideBar');
     }    

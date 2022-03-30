@@ -184,6 +184,7 @@
   </div>
 </template>
 <script>
+import { userNameEdit,pwdEdit,contactEdit } from '@/api/user';
 import { validEmail,validPhone } from '@/utils/validate';
 import Cookies from 'js-cookie'
 import { mapGetters } from 'vuex'
@@ -369,7 +370,7 @@ export default {
       formData.username = $this.dialogNameForm.username;
       formData.newusername = $this.dialogNameForm.username1;
       formData.id = $this.dialogNameForm.id;
-      $this.$store.dispatch('user/userNameEditAction', formData).then(response=>{
+      userNameEdit(formData).then(response=>{
         if(response.status){
             $this.$message({
                 showClose: true,
@@ -486,7 +487,7 @@ export default {
       var formData = {};
       formData.password = $this.dialogPwdForm.password;
       formData.newpassword = $this.dialogPwdForm.newpassword;
-      $this.$store.dispatch('user/pwdEditAction', formData).then(response=>{
+      pwdEdit(formData).then(response=>{
         if(response.status){
             $this.$message({
                 showClose: true,
@@ -598,7 +599,7 @@ export default {
       formData.id = $this.dialogPhoneForm.id;
       formData.phone = $this.dialogPhoneForm.phone;
       formData.email = $this.dialogPhoneForm.email;
-      $this.$store.dispatch('user/contactEditAction', formData).then(response=>{
+      contactEdit(formData).then(response=>{
         if(response.status){
             $this.$message({
                 showClose: true,

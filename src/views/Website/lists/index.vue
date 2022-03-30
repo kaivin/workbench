@@ -388,7 +388,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { getWebsiteProperty,getWebsiteDataList,websiteAdd,websiteDelete } from '@/api/website';
+import { mapGetters } from 'vuex';
 export default {
   name: 'websiteLists',
   data() {
@@ -779,7 +780,7 @@ export default {
       }
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.scrollTable.scrollNum=0;
-      $this.$store.dispatch('website/websiteListAction', formData).then(response=>{
+      getWebsiteDataList(formData).then(response=>{
         if(response){
           if(response.status){
             response.data.forEach(function(item,index){
@@ -915,7 +916,7 @@ export default {
     // 获取查询相关展示数据
     getSearchItemData(){
       var $this = this;
-      $this.$store.dispatch('website/websitePropertyAction', null).then(response=>{
+      getWebsiteProperty(null).then(response=>{
         if(response){
           if(response.status){
             var brandSelectList = [];
@@ -1296,7 +1297,7 @@ export default {
           return false;
         }
         $this.isDisabled=true;
-        $this.$store.dispatch('website/websiteAddAction', $this.dialogForm).then(response=>{
+        websiteAdd($this.dialogForm).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -1364,7 +1365,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('website/websiteDeleteAction', {id:row.id}).then(response=>{
+          websiteDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

@@ -309,8 +309,9 @@
   </div>
 </template>
 <script>
-import router from '@/router'
-import { mapGetters } from 'vuex'
+import { getUserList,userAdd,userEdit,userDelete,userShowHide,userResetPwd,userAllotedRole,userCanAllotRole,userAllotRole,userCanDepart,getBrandList,changeUserLogin } from '@/api/user';
+import router from '@/router';
+import { mapGetters } from 'vuex';
 export default {
   name: 'userIndex',
   data() {
@@ -593,7 +594,7 @@ export default {
         formData.is_delete = $this.searchData.is_delete;
       }
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('user/userListAction', formData).then(response=>{
+      getUserList(formData).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -839,30 +840,35 @@ export default {
         formData.SellerIndustryGroup = $this.dialogForm.SellerIndustryGroup;
         var pathUrl = "";
         if($this.dialogText=="编辑用户"){
-          pathUrl = "user/userEditAction";
+          userEdit(formData).then(response=>{
+            $this.funuserPlug(response);
+          });
         }else{
-          pathUrl = "user/userAddAction";
+          userAdd(formData).then(response=>{
+            $this.funuserPlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.handleClose();
-              $this.initPage();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSaveData=false;
-              },1000);
-            }
+      }
+    },
+    funuserPlug(arrData){
+      var $this = this;
+      if(arrData.status){
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
         });
+        $this.handleClose();
+        $this.initPage();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+        setTimeout(()=>{
+          $this.isSaveData=false;
+        },1000);
       }
     },
     // 重置搜索数据
@@ -918,7 +924,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('user/userDeleteAction', {id:row.id}).then(response=>{
+          userDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -945,7 +951,7 @@ export default {
     // 删除表格行
     showHideTableRow(row,index){
       var $this = this;
-      $this.$store.dispatch('user/userShowHideAction', {id:row.id}).then(response=>{
+      userShowHide({id:row.id}).then(response=>{
         if(response.status){
           $this.$message({
             showClose: true,
@@ -971,7 +977,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('user/userResetPwdAction', {id:row.id}).then(response=>{
+          userResetPwd({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -1047,7 +1053,7 @@ export default {
           var rolePostData = {};
           rolePostData.id = $this.currentUserID;
           rolePostData.role_id = $this.roleValue;
-          $this.$store.dispatch('user/userAllotRoleAction', rolePostData).then(response=>{
+          userAllotRole(rolePostData).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -1072,7 +1078,7 @@ export default {
     // 获取当前用户已分配的角色数据
     getAllotedRole(){
       var $this = this;
-      $this.$store.dispatch('user/userAllotedRoleAction', {id:$this.currentUserID}).then(response=>{
+      userAllotedRole({id:$this.currentUserID}).then(response=>{
         if(response.status){
           var roleUserData = [];
           var selectedRoleUserData = [];
@@ -1109,7 +1115,7 @@ export default {
       }
       var roleDataNow = $this.roleData;
       var roleIngData = [];
-      $this.$store.dispatch('user/userCanAllotRoleAction', null).then(response=>{
+      userCanAllotRole(null).then(response=>{
         if(response.status){
           if(response.data.length>0){
             if(roleDataNow.length>0){
@@ -1158,7 +1164,7 @@ export default {
     // 切换用户登陆
     userLogin(row,index){
       var $this = this;
-      $this.$store.dispatch('user/changeUserLoginAction', {id:row.id}).then(response=>{
+      changeUserLogin({id:row.id}).then(response=>{
         if(response.status){
           $this.$store.dispatch('login/changeLogin', response).then(res=>{
             if(res.status){
@@ -1167,8 +1173,6 @@ export default {
                   if(res1.data.length>0){
                     $this.$store.dispatch('permission/generateRoutes', res1.data).then(res2=>{
                       if(res2.length>0){
-                        // router.addRoutes(res2);
-                        // router.addRoutes([{path: '*',name:'error404',redirect:"/404",meta: {title: '404', icon: null,hidden:true,keepAlive:false }}]);
                         var homeRedirect = "";
                         if(response.data.issales==2){
                           homeRedirect = '/Sales/index?Status=personcount';
@@ -1211,7 +1215,7 @@ export default {
     // 获取部门数据
     getBrandList(){
       var $this = this;
-      $this.$store.dispatch('user/getBrandListAction', null).then(response=>{
+      getBrandList(null).then(response=>{
         if(response.status){
           if(response.data.length>0){
             var brandList = [];
@@ -1235,7 +1239,7 @@ export default {
     // 获取部门数据
     getDepartList(){
       var $this = this;
-      $this.$store.dispatch('user/userCanDepartAction', null).then(response=>{
+      userCanDepart(null).then(response=>{
           if(response.status){
             if(response.data.length>0){
               var departData = $this.dataToTree(response.data,$this);

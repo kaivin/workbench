@@ -437,6 +437,8 @@
 </template>
 
 <script>
+import {getSalesList,getSalesSearchList,getSalesWaitDistribu,getSalesAllDistribuList,getSalesWaitFortis,getSalesInquiryFortis,getSalesMonthEndFeedback,getSalesNofeedback,getSalesWaitAddingFortis,getSalesInquiryfeedback,getSalesPublicData,getSalesWithdrawDistribuSalesman,getSalesDistribuSalesman} from '@/api/Sales';
+import {getCurrentCateProductList} from '@/api/enphone';
 import { mapGetters } from 'vuex';
 export default {
   name: 'Sales_search',
@@ -795,7 +797,7 @@ export default {
     // 初始化搜索数据
     searchInit(){
       var $this = this;
-      $this.$store.dispatch('Sales/getSalesSearchListAction', null).then(response=>{
+      getSalesSearchList(null).then(response=>{
         if(response){
           if(response.status){
             var producttype_idList=[];
@@ -874,7 +876,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
-      $this.$store.dispatch('Sales/getSalesPublicDataAction', null).then(response=>{
+      getSalesPublicData(null).then(response=>{
         if(response){        
           var defaultData = {};
           defaultData.waitcount=response.waitcount;
@@ -898,7 +900,7 @@ export default {
         var $this = this;
         if(e){
           $this.searchData.productid = "";
-          $this.$store.dispatch('enphone/getCurrentCateProductListAction', {typeid:e}).then(response=>{
+          getCurrentCateProductList({typeid:e}).then(response=>{
               if(response){
                   if(response.status){
                       var productidList = [];
@@ -993,47 +995,47 @@ export default {
       var searchData = $this.initSearchData();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       if($this.currentStatus=="waitcount"){
-        $this.$store.dispatch('Sales/getSalesWaitDistribuAction', searchData).then(response=>{
+        getSalesWaitDistribu(searchData).then(response=>{
             $this.resData(response,'等待分配');
         });
       }
       if($this.currentStatus=="allotcount"){
-        $this.$store.dispatch('Sales/getSalesAllDistribuListAction', searchData).then(response=>{
+        getSalesAllDistribuList(searchData).then(response=>{
             $this.resData(response,'所有已分配询盘');
         });
       }
       if($this.currentStatus=="personcount"){
-        $this.$store.dispatch('Sales/getSalesListAction', searchData).then(response=>{
+        getSalesList(searchData).then(response=>{
             $this.resData(response,'个人所有询盘');
         });
       }
       if($this.currentStatus=="waitdealcount"){
-        $this.$store.dispatch('Sales/getSalesWaitFortisAction', searchData).then(response=>{
+        getSalesWaitFortis(searchData).then(response=>{
             $this.resData(response,'等待处理');
         });
       }
       if($this.currentStatus=="monthsaycount"){
-        $this.$store.dispatch('Sales/getSalesMonthEndFeedbackAction', searchData).then(response=>{
+        getSalesMonthEndFeedback(searchData).then(response=>{
             $this.resData(response,'月底前需反馈');
         });
       }
       if($this.currentStatus=="hasnosaycount"){
-        $this.$store.dispatch('Sales/getSalesNofeedbackAction', searchData).then(response=>{
+        getSalesNofeedback(searchData).then(response=>{
             $this.resData(response,'所有未反馈');
         });
       }
       if($this.currentStatus=="waitftwordcount"){
-        $this.$store.dispatch('Sales/getSalesWaitAddingFortisAction', searchData).then(response=>{
+        getSalesWaitAddingFortis(searchData).then(response=>{
             $this.resData(response,'等待添加富通ID');
         });
       }
       if($this.currentStatus=="hasdealcount"){
-        $this.$store.dispatch('Sales/getSalesInquiryFortisAction', searchData).then(response=>{
+        getSalesInquiryFortis(searchData).then(response=>{
             $this.resData(response,'已处理');
         });
       }
       if($this.currentStatus=="hassaycount"){
-        $this.$store.dispatch('Sales/getSalesInquiryfeedbackAction', searchData).then(response=>{
+        getSalesInquiryfeedback(searchData).then(response=>{
             $this.resData(response,'已做反馈');
         });
       }
@@ -1330,7 +1332,7 @@ export default {
               resultData.ids.push(item.id);
           });
       }
-      $this.$store.dispatch('Sales/getSalesWithdrawDistribuSalesmanAction', resultData).then(response=>{
+      getSalesWithdrawDistribuSalesman(resultData).then(response=>{
           var $this = this;
           if(response){
             if(response.status){
@@ -1355,7 +1357,7 @@ export default {
           });
       }
       $this.Determine.ids=ids;
-      $this.$store.dispatch('Sales/getSalesDistribuSalesmanAction', $this.Determine).then(response=>{
+      getSalesDistribuSalesman($this.Determine).then(response=>{
           var $this = this;
           if(response){
             if(response.status){

@@ -43,6 +43,7 @@
   </div>
 </template>
 <script>
+import {getChinapersoncountdefault} from '@/api/memberCompare';
 import AwardRank from "../../components/memberCompare/AwardRank";
 import {sortByDesc} from "@/utils/index";
 import { mapGetters } from 'vuex';
@@ -280,7 +281,6 @@ export default {
       if($this.searchData.ustatus&&$this.searchData.ustatus!=''){
         searchData.ustatus=$this.searchData.ustatus;
       }
-      console.log(searchData,'searchData')
       return searchData;
     },
     // 清空数据
@@ -294,7 +294,7 @@ export default {
       var searchData={};
       searchData=$this.initsearch();
       $this.emptyData();
-      $this.$store.dispatch("memberCompare/getChinapersoncountdefaultAction",searchData).then((response) => {
+      getChinapersoncountdefault(searchData).then((response) => {
           if (response) {
             if (response.status) {
               var tableDate=[];

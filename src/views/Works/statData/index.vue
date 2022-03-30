@@ -162,7 +162,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { workOrderStatInfo } from '@/api/works';
+import { mapGetters } from 'vuex';
 export default {
   name: 'Works_worklist',
   data() {
@@ -372,7 +373,7 @@ export default {
       var $this =this;
       var searchData = $this.initSearchData();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('works/workOrderStatInfoAction', searchData).then(response=>{
+      workOrderStatInfo(searchData).then(response=>{
         if(response){
           if(response.status){
             var dept_Date = response.data;

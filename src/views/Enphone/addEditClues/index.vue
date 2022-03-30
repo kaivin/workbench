@@ -552,6 +552,7 @@
 </template>
 
 <script>
+import {getLeftPhoto,initCluesEditInfo,cluesAddEditData,getCurrentPhoneUser,cluesUrlGetPhone,cluesEdit,cluesAdd,customerWarnEdit,customerWarnIsRead,salesmanWarnIsRead,getcontient,inputKeywordList} from '@/api/enphone';
 import { mapGetters } from 'vuex';
 export default {
   name: 'addEditClues',
@@ -814,7 +815,7 @@ export default {
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){
       var $this=this;
-      $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
+      getLeftPhoto(null).then(response=>{
         if(response){
           if(response.status){
               $this.linkAll.todayNum = response.alltodaynumber;
@@ -957,7 +958,7 @@ export default {
     // 询盘编辑获取初始化询盘信息
     initCluesInfo(){
       var $this = this;
-      $this.$store.dispatch('enphone/initCluesEditInfoAction', {id:$this.ID}).then(response=>{
+      initCluesEditInfo({id:$this.ID}).then(response=>{
         if(response){
           if(response.status){
             $this.defaultInfo = response.data;
@@ -1159,7 +1160,7 @@ export default {
     // 获取当前页面的条件数据
     getSystemData(){
       var $this = this;
-      $this.$store.dispatch('enphone/cluesAddEditDataAction', null).then(response=>{
+      cluesAddEditData(null).then(response=>{
         if(response){
           if(response.status){
             var modeList = [];
@@ -1268,7 +1269,7 @@ export default {
     // 获取当前电话下的业务员经理
     getCurrentPhoneUser(){
       var $this = this;
-      $this.$store.dispatch("enphone/getCurrentPhoneUserAction", {id:$this.formData.phoneid}).then(response=>{
+      getCurrentPhoneUser({id:$this.formData.phoneid}).then(response=>{
           if(response.status){
             if(response.salesuser.length>0){
               var salesuserlist=[];
@@ -1312,7 +1313,7 @@ export default {
     urlChangePhone(e){
       var $this = this;
       if($this.formData.url!=""){
-        $this.$store.dispatch("enphone/cluesUrlGetPhoneAction", {url:$this.formData.url}).then(response=>{
+        cluesUrlGetPhone({url:$this.formData.url}).then(response=>{
             if(response.status){
               if(response.phone){
                 var phoneList = $this.phoneList;
@@ -1436,37 +1437,42 @@ export default {
         $this.isDisabled=true;
         var pathUrl = "";
         if($this.formData.id==0){
-          pathUrl = "enphone/cluesAddAction";
+          cluesAdd(formData).then(response=>{
+            $this.funcluesPlug(response);
+          });
         }else{
-          pathUrl = "enphone/cluesEditAction";
+          cluesEdit(formData).then(response=>{
+            $this.funcluesPlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              if($this.formData.id!=0){
-                $this.initCluesInfo();
-              }else{
-                var queryObj = {};
-                queryObj.phoneID = $this.formData.phoneid;
-                queryObj.waitstatus = "1";
-                var routeUrl =  $this.$router.resolve({path:'/Enphone/phoneindex',query:queryObj});
-                window.open(routeUrl.href,'_self');
-              }
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isDisabled=false;
-              },1000);
-            }
+      }
+    },
+    funcluesPlug(arrData){
+      var $this = this;
+      if(arrData.status){
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
         });
+        if($this.formData.id!=0){
+          $this.initCluesInfo();
+        }else{
+          var queryObj = {};
+          queryObj.phoneID = $this.formData.phoneid;
+          queryObj.waitstatus = "1";
+          var routeUrl =  $this.$router.resolve({path:'/Enphone/phoneindex',query:queryObj});
+          window.open(routeUrl.href,'_self');
+        }
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+        setTimeout(()=>{
+          $this.isDisabled=false;
+        },1000);
       }
     },
     // 清空添加数据表单
@@ -1595,7 +1601,7 @@ export default {
         resultData.id = $this.formData.id;
         resultData.custormselfwarn = $this.formData.custormselfwarn;
         resultData.custormselfwarnstatus = $this.noRead?3:2;
-        $this.$store.dispatch("enphone/customerWarnEditAction", resultData).then(response=>{
+        customerWarnEdit(resultData).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -1622,7 +1628,7 @@ export default {
       if(!$this.isCustomerWarnRead){
         var resultData = {};
         resultData.id = $this.formData.id;
-        $this.$store.dispatch("enphone/customerWarnIsReadAction", resultData).then(response=>{
+        customerWarnIsRead(resultData).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -1650,7 +1656,7 @@ export default {
         $this.isSalesmanWarnRead=true;
         var resultData = {};
         resultData.id = $this.formData.id;
-        $this.$store.dispatch("enphone/salesmanWarnIsReadAction", resultData).then(response=>{
+        salesmanWarnIsRead(resultData).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -1677,7 +1683,7 @@ export default {
       var formCountry = {};
       formCountry.name=$this.formData.country;
       if(formCountry.name!=''){
-          $this.$store.dispatch("enphone/getcontientAction", formCountry).then(response=>{
+          getcontient(formCountry).then(response=>{
               if(response.status){
                 if(response.data==null||response.data==''){
                   $this.formData.continent='';
@@ -1764,7 +1770,7 @@ export default {
       var returnData = [];
       resultData.keywork = queryString;
       resultData.status = 1;
-      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+      inputKeywordList(resultData).then(response=>{
           if(response.status){
             if(response.data.length>0){
               response.data.forEach(function(item){
@@ -1793,7 +1799,7 @@ export default {
       var returnData = [];
       resultData.keywork = queryString;
       resultData.status = 8;
-      $this.$store.dispatch("enphone/countryListAction", resultData).then(response=>{
+      inputKeywordList(resultData).then(response=>{
           if(response.status){
             if(response.data.length>0){
               response.data.forEach(function(item){
@@ -1825,7 +1831,7 @@ export default {
       var returnData = [];
       resultData.keywork = queryString;
       resultData.status = 2;
-      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+      inputKeywordList(resultData).then(response=>{
           if(response.status){
             if(response.data.length>0){
               response.data.forEach(function(item){
@@ -1853,7 +1859,7 @@ export default {
       var returnData = [];
       resultData.keywork = queryString;
       resultData.status = 3;
-      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+      inputKeywordList(resultData).then(response=>{
           if(response.status){
             if(response.data.length>0){
               response.data.forEach(function(item){
@@ -1882,7 +1888,7 @@ export default {
       var returnData = [];
       resultData.keywork = queryString;
       resultData.status = 4;
-      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+      inputKeywordList(resultData).then(response=>{
           if(response.status){
             if(response.data.length>0){
               response.data.forEach(function(item){
@@ -1910,7 +1916,7 @@ export default {
       var returnData = [];
       resultData.keywork = queryString;
       resultData.status = 5;
-      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+      inputKeywordList(resultData).then(response=>{
           if(response.status){
             if(response.data.length>0){
               response.data.forEach(function(item){
@@ -1938,7 +1944,7 @@ export default {
       var returnData = [];
       resultData.keywork = queryString;
       resultData.status = 6;
-      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+      inputKeywordList(resultData).then(response=>{
           if(response.status){
             if(response.data.length>0){
               response.data.forEach(function(item){
@@ -1966,7 +1972,7 @@ export default {
       var returnData = [];
       resultData.keywork = queryString;
       resultData.status = 7;
-      $this.$store.dispatch("enphone/inputKeywordListAction", resultData).then(response=>{
+      inputKeywordList(resultData).then(response=>{
           if(response.status){
             if(response.data.length>0){
               response.data.forEach(function(item){

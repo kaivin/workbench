@@ -1,5 +1,3 @@
-import {EnscoreList,EnscoreSearch,EnscoreAdd,EnscoreEdit,EnscoreDel,} from '@/api/Enuserscore'
-
 const state = {
     language:null,
     targetScore:{

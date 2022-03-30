@@ -41,6 +41,7 @@
   </div>
 </template>
 <script>
+import {getEnDealNumTarget,getEnDayTarget,getEnDayFinish,getEnDepYearFinish} from '@/api/homeobject';
 import {parseTime}  from "@/utils";
 import DayScore from "../../components/targetShow/DayScore";
 import enDealCount from "../../components/targetShow/enDealCount";
@@ -183,8 +184,7 @@ export default {
       if(val){
         data.time = val;
       }
-      $this.$store
-        .dispatch("homeobject/postEnDealNum", data)
+      getEnDealNumTarget(data)
         .then((response) => {
           if (response) {
             if (response.status) {
@@ -230,8 +230,7 @@ export default {
       var $this = this;
       var data = {};
       data.time = val;
-      $this.$store
-        .dispatch("homeobject/postEnDayTarget", data)
+      getEnDayTarget(data)
         .then((response) => {
           if (response) {
             if (response.status) {
@@ -305,8 +304,7 @@ export default {
       var $this = this;
       var data = {};
       data.time = val;
-      $this.$store
-        .dispatch("homeobject/postEnDayFinish", data)
+      getEnDayFinish(data)
         .then((response) => {
           if (response) {
             if (response.status) {
@@ -352,8 +350,7 @@ export default {
       }else{
         data.year = new Date().getFullYear();
       }
-      $this.$store
-        .dispatch("homeobject/postEnDepFinish", data)
+      getEnDepYearFinish(data)
         .then((response) => {
           if (response) {
             if (response.status) {

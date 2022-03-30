@@ -105,7 +105,8 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
+import {getDataList,postAdd,postEdit,postDelete} from '@/api/information';
+import { mapGetters } from 'vuex';
 export default {
   name: 'informationIndex',
   data() {
@@ -385,7 +386,7 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('information/postListAction', null).then(response=>{
+      getDataList(null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -472,30 +473,35 @@ export default {
         formData.sort = $this.dialogForm.sort;
         var pathUrl = "";
         if($this.dialogText=="编辑栏目"){
-          pathUrl = "information/postEditAction";
+          postEdit(formData).then(response=>{
+            $this.funsavePlug(response);
+          });
         }else{
-          pathUrl = "information/postAddAction";
+          postAdd(formData).then(response=>{
+            $this.funsavePlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-                $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'success'
-                });
-                $this.handleClose();
-                $this.initData();
-            }else{
-                $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'error'
-                });
-                setTimeout(()=>{
-                  $this.isSaveData=false;
-                },1000);
-            }
-        });
+      }
+    },
+    funsavePlug(arrData){
+      var $this = this;
+      if(arrData.status){
+          $this.$message({
+              showClose: true,
+              message: arrData.info,
+              type: 'success'
+          });
+          $this.handleClose();
+          $this.initData();
+      }else{
+          $this.$message({
+              showClose: true,
+              message: arrData.info,
+              type: 'error'
+          });
+          setTimeout(()=>{
+            $this.isSaveData=false;
+          },1000);
       }
     },
     // 重置添加数据表单
@@ -538,7 +544,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('information/postDeleteAction', {id:row.id}).then(response=>{
+          postDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

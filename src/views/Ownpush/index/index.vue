@@ -257,7 +257,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { getAccountList,accountAdd,accountEdit,accountDelete,userList,getCnChannelList } from '@/api/ownpush';
+import { mapGetters } from 'vuex';
 export default {
   name: 'Ownpush_index',
   data() {
@@ -503,7 +504,7 @@ export default {
     initPage(){
       var $this = this;      
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('ownpush/accountListAction', null).then(response=>{
+      getAccountList(null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -689,32 +690,36 @@ export default {
           return false;
         }
         $this.isDisabled=true;
-        var pathUrl = "";
         if($this.dialogText=="编辑账户"){
-          pathUrl = "ownpush/accountEditAction";
+          accountEdit($this.dialogForm).then(response=>{
+            $this.funsavePlug(response);
+          });
         }else{
-          pathUrl = "ownpush/accountAddAction";
+          accountAdd($this.dialogForm).then(response=>{
+            $this.funsavePlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.handleClose();
-              $this.initPage();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isDisabled=false;
-              },1000);
-            }
+      }
+    },
+    funsavePlug(arrData){
+      var $this = this;
+      if(arrData.status){
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
         });
+        $this.handleClose();
+        $this.initPage();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+        setTimeout(()=>{
+          $this.isDisabled=false;
+        },1000);
       }
     },
     // 重置添加数据表单
@@ -773,7 +778,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('ownpush/accountDeleteAction', {id:row.id}).then(response=>{
+          accountDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -799,7 +804,7 @@ export default {
     // 获取产品添加编辑是需要的系统数据
     getSelectData(){
       var $this = this;
-      $this.$store.dispatch('ownpush/userListAction', null).then(response=>{
+      userList(null).then(response=>{
           if(response.status){
             var userList = [];
             response.data.forEach(function(item,index){
@@ -822,7 +827,7 @@ export default {
     // 获取添加数据时的渠道选择数据
     getChannelData(){
       var $this = this;
-      $this.$store.dispatch('ownpush/cnChannelListAction', null).then(response=>{
+      getCnChannelList(null).then(response=>{
           if(response.status){
             var channelList = [];
             response.data.forEach(function(item,index){

@@ -433,6 +433,7 @@
 </template>
 
 <script>
+import {cluesPhoneIndexData,cluesPhoneStatData,cluesCurrentPhoneData,cluesCurrentPhoneSearchData,cluesCurrentPhoneDataEleEditPage,cluesCurrentPhoneDataEleEdit,cluesCurrentPhoneDataDelete,cluesCurrentPhoneUserCanEditField,cluesPhoneChartData,Custormeditlog,getkeyword} from '@/api/chinaphone';
 import { mapGetters } from 'vuex';
 import echartDays from "../components/echartDays";
 export default {
@@ -567,8 +568,7 @@ export default {
       if($this.$route.query.phoneID){
         $this.setHeight();
       }else{
-        if($this.$refs.mainPane&&$this.$refs.numPane){  
-          // $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-45-15; 
+        if($this.$refs.mainPane&&$this.$refs.numPane){
           $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-45-15; 
         }
         //$this.drawChart();
@@ -580,7 +580,6 @@ export default {
           $this.setHeight();
         }else{
           if($this.$refs.mainPane&&$this.$refs.numPane){
-            // $this.minHeight = $this.$refs.mainPane.offsetHeight-$this.$refs.numPane.offsetHeight-$this.$refs.breadcrumbPane.offsetHeight-45-15; 
             $this.minHeight = $this.$refs.mainPane.offsetHeight-45-15; 
           }
         }
@@ -778,7 +777,7 @@ export default {
     // 获取电话列表初始化页面数据
     getPhoneInitData(){
       var $this = this;
-      $this.$store.dispatch('chinaphone/cluesPhoneIndexDataAction', null).then(response=>{
+      cluesPhoneIndexData(null).then(response=>{
         if(response){
           if(response.status){
             var cluesChartData=[];
@@ -856,7 +855,7 @@ export default {
     // 获取电话列表及电话统计数字
     getPhoneListNum(){
       var $this = this;
-      $this.$store.dispatch('chinaphone/cluesPhoneStatDataAction', null).then(response=>{
+      cluesPhoneStatData(null).then(response=>{
         if(response){
           if(response.status){
             var phoneArr=response.data;
@@ -949,7 +948,7 @@ export default {
       if(!$this.isSearchResult){
         $this.isSearchResult=true;
         var searchData = $this.initSearchData();
-        $this.$store.dispatch('chinaphone/cluesCurrentPhoneDataAction', searchData).then(response=>{
+        cluesCurrentPhoneData(searchData).then(response=>{
           if(response){
             if(response.status){
               var infoData = {};
@@ -1061,7 +1060,7 @@ export default {
             }
           });
         });
-        $this.$store.dispatch('chinaphone/cluesCurrentPhoneSearchDataAction', {phoneid:$this.phoneID}).then(response=>{
+        cluesCurrentPhoneSearchData({phoneid:$this.phoneID}).then(response=>{
           if(response){
             if(response.status){
               var deviceList = [];
@@ -1218,7 +1217,7 @@ export default {
         });
         resultData.push(itemData);
       });
-      $this.$store.dispatch('chinaphone/cluesCurrentPhoneDataEleEditPageAction', resultData).then(response=>{
+      cluesCurrentPhoneDataEleEditPage(resultData).then(response=>{
         if(response){
           if(response.status){
             $this.$message({
@@ -1263,7 +1262,7 @@ export default {
           resultData.userid = item.value;
         }
       });
-      $this.$store.dispatch('chinaphone/cluesCurrentPhoneDataEleEditAction', resultData).then(response=>{
+      cluesCurrentPhoneDataEleEdit(resultData).then(response=>{
         if(response){
           if(response.status){
             $this.$message({
@@ -1290,7 +1289,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('chinaphone/cluesCurrentPhoneDataDeleteAction', {id:row.id}).then(response=>{
+          cluesCurrentPhoneDataDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -1316,7 +1315,7 @@ export default {
     // 获取当前登录用户有可写权限的询盘字段
     getPermitField(){
       var $this = this;
-      $this.$store.dispatch('chinaphone/cluesCurrentPhoneUserCanEditFieldAction', null).then(response=>{
+      cluesCurrentPhoneUserCanEditField(null).then(response=>{
         if(response){
           if(response.status){
             $this.permitField = response.data;           
@@ -1379,7 +1378,7 @@ export default {
         $this.chartData.endtime='';
       }
       $this.chartData.dept_id = $this.currentDepartID == 0?"":[$this.currentDepartID];
-      $this.$store.dispatch('chinaphone/cluesPhoneChartDataAction', $this.chartData).then(response=>{
+      cluesPhoneChartData($this.chartData).then(response=>{
         if(response){
           if(response.status){
             var cluesChartData=[];
@@ -1408,7 +1407,7 @@ export default {
       var $this = this;
       var FormID={};
       FormID.id = Rid;
-      $this.$store.dispatch('chinaphone/CustormeditlogAction', FormID).then(response=>{
+      Custormeditlog(FormID).then(response=>{
         if(response){
           if(response.status){  
             if(response.data.length>0){
@@ -1432,7 +1431,7 @@ export default {
       var returnData = [];
       resultData.keywork = queryString;
       resultData.phoneid=$this.phoneID;
-      $this.$store.dispatch("chinaphone/getkeywordAction", resultData).then(response=>{
+      getkeyword(resultData).then(response=>{
           if(response.status){
             if(response.data.length>0){
               response.data.forEach(function(item){

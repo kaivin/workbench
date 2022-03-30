@@ -37,13 +37,6 @@ export function userCanReadPost() {
     method: "POST"
   });
 }
-// 获取当前登录用户可写的论文文章类型接口
-export function userCanWritePost() {
-  return request({
-    url: "/hxindex/Article/userwritetypepermit",
-    method: "POST"
-  });
-}
 // 获取当前内网论坛分类文章列表数据
 export function postList(data) {
   return request({
@@ -66,27 +59,6 @@ export function postSearchList(data) {
     url: "/hxindex/Article/search",
     method: "POST",
     data
-  });
-}
-// 内网论坛文章编辑/修改界面获取系统标签
-export function postSystemTagList() {
-  return request({
-    url: "/hxindex/Article/tags",
-    method: "POST"
-  });
-}
-// 内网论坛文章编辑/修改界面获取可选部门
-export function postDepartList() {
-  return request({
-    url: "/hxindex/Article/getdepart",
-    method: "POST"
-  });
-}
-// 内网论坛文章编辑/修改界面获取可选用户
-export function postUserList() {
-  return request({
-    url: "/hxindex/Article/getuser",
-    method: "POST"
   });
 }
 // 内网论坛文章编辑/修改界面获取内网论坛文章详情
@@ -135,13 +107,6 @@ export function deleteComment(data) {
     url: "/hxindex/Article/commentdelete",
     method: "POST",
     data
-  });
-}
-// 获取当前登录用户可操作的数据字段
-export function getCanEditData() {
-  return request({
-    url: "/hxindex/Article/myfield",
-    method: "POST",
   });
 }
 // 获取添加/编辑页面展示数据

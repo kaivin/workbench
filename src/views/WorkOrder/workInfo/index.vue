@@ -137,7 +137,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { workOrderNoAllotInfo,workOrderInfo,workOrderComment } from '@/api/worksaccpet';
+import { mapGetters } from 'vuex';
 export default {
   name: 'workInfo',
   data() {
@@ -342,100 +343,104 @@ export default {
       var $this = this;
       $this.currentID = $this.$route.query.ID;
       $this.currentStatus = $this.$route.query.Status;
-      var pathUrl = "";
-      if($this.currentStatus=='receive'){
-        pathUrl = "worksaccpet/workOrderNoAllotInfoAction";
-      }else{
-        pathUrl = "worksaccpet/workOrderInfoAction";
-      }
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch(pathUrl, {id:$this.currentID}).then(response=>{
-          if(response){
-            if(response.status){
-              if(response.data.accpetusername&&response.data.accpetusername!=''&&response.data.accpetusername.indexOf('|')!=-1){
-                response.data.accpetusername = response.data.accpetusername.replace("|","、");
-              }
-              if(response.data.dealusername&&response.data.dealusername!=''&&response.data.dealusername.indexOf('|')!=-1){
-                response.data.dealusername = response.data.dealusername.replace("|","、");
-              }
-              var startTime = new Date(response.data.addtime);
-              var endTime = new Date(response.data.endtime);
-              var dateDiff = endTime.getTime() - startTime.getTime();
-              var dayDiff = Math.ceil(dateDiff/(24*3600*1000));
-              response.data.dayDiff = dayDiff;
-              if(response.data.timeing/response.data.dayDiff>1){
-                response.data.dayPercent = "100%";
-              }else{
-                response.data.dayPercent = parseFloat(response.data.timeing/response.data.dayDiff*100).toFixed(2)+"%";
-              }
-              var tagsList = [];
-              if(response.data.tagsname&&response.data.tagsname!=''){
-                if(response.data.tagsname.indexOf(",")!=-1){
-                  var tagsArr = response.data.tagsname.split(",");
-                  var colorsArr = response.data.tagsnamecolor.split(",");
-                  tagsArr.forEach(function(item,index){
-                    var itemData = {};
-                    itemData.name = item;
-                    itemData.color = colorsArr[index];
-                    tagsList.push(itemData);
-                  });
-                }else{
-                  var itemData = {};
-                  itemData.name = response.data.tagsname;
-                  itemData.color = response.data.tagsnamecolor;
-                  tagsList.push(itemData);
-                }
-              }
-              response.data.tagsList = tagsList;
-              var logList = [];
-              var dateArr = [];
-              response.loglist.forEach(function(item,index){
-                var dateTime = item.addtime.split(" ");
-                var date = dateTime[0];
-                if(!dateArr.includes(date)){
-                  dateArr.push(date);
-                }
-                item.date = date;
-                item.time = dateTime[1].split(":")[0]+":"+dateTime[1].split(":")[1];
-              });
-              dateArr.forEach(function(item,index){
+      if($this.currentStatus=='receive'){
+        workOrderNoAllotInfo({id:$this.currentID}).then(response=>{
+          $this.funinitPlug(response);
+        });
+      }else{
+        workOrderInfo({id:$this.currentID}).then(response=>{
+          $this.funinitPlug(response);
+        });
+      }
+    },
+    funinitPlug(arrData){
+      var $this = this;
+      if(arrData){
+        if(arrData.status){
+          if(arrData.data.accpetusername&&arrData.data.accpetusername!=''&&arrData.data.accpetusername.indexOf('|')!=-1){
+            arrData.data.accpetusername = arrData.data.accpetusername.replace("|","、");
+          }
+          if(arrData.data.dealusername&&arrData.data.dealusername!=''&&arrData.data.dealusername.indexOf('|')!=-1){
+            arrData.data.dealusername = arrData.data.dealusername.replace("|","、");
+          }
+          var startTime = new Date(arrData.data.addtime);
+          var endTime = new Date(arrData.data.endtime);
+          var dateDiff = endTime.getTime() - startTime.getTime();
+          var dayDiff = Math.ceil(dateDiff/(24*3600*1000));
+          arrData.data.dayDiff = dayDiff;
+          if(arrData.data.timeing/arrData.data.dayDiff>1){
+            arrData.data.dayPercent = "100%";
+          }else{
+            arrData.data.dayPercent = parseFloat(arrData.data.timeing/arrData.data.dayDiff*100).toFixed(2)+"%";
+          }
+          var tagsList = [];
+          if(arrData.data.tagsname&&arrData.data.tagsname!=''){
+            if(arrData.data.tagsname.indexOf(",")!=-1){
+              var tagsArr = arrData.data.tagsname.split(",");
+              var colorsArr = arrData.data.tagsnamecolor.split(",");
+              tagsArr.forEach(function(item,index){
                 var itemData = {};
-                itemData.date = item;
-                itemData.children = [];
-                response.loglist.forEach(function(item1,index1){
-                  if(item == item1.date){
-                    var itemChildren = {};
-                    itemChildren.time = item1.time;
-                    itemChildren.loginfo = item1.loginfo;
-                    itemChildren.uname = item1.uname;
-                    itemChildren.commentinfo = item1.commentinfo;
-                    itemData.children.push(itemChildren);
-                  }
-                });
-                logList.push(itemData);
+                itemData.name = item;
+                itemData.color = colorsArr[index];
+                tagsList.push(itemData);
               });
-              $this.logList = logList;
-              $this.ulist=response.ulist;
-              $this.articleData = response.data;
             }else{
-              if(response.permitstatus&&response.permitstatus==2){
-                  $this.$message({
-                    showClose: true,
-                    message: "未被分配该工单详情访问权限",
-                    type: 'error',
-                    duration:6000
-                  });
-                  $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-                }else{
-                  $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'error'
-                  });
-                }
+              var itemData = {};
+              itemData.name = arrData.data.tagsname;
+              itemData.color = arrData.data.tagsnamecolor;
+              tagsList.push(itemData);
             }
           }
-      });
+          arrData.data.tagsList = tagsList;
+          var logList = [];
+          var dateArr = [];
+          arrData.loglist.forEach(function(item,index){
+            var dateTime = item.addtime.split(" ");
+            var date = dateTime[0];
+            if(!dateArr.includes(date)){
+              dateArr.push(date);
+            }
+            item.date = date;
+            item.time = dateTime[1].split(":")[0]+":"+dateTime[1].split(":")[1];
+          });
+          dateArr.forEach(function(item,index){
+            var itemData = {};
+            itemData.date = item;
+            itemData.children = [];
+            arrData.loglist.forEach(function(item1,index1){
+              if(item == item1.date){
+                var itemChildren = {};
+                itemChildren.time = item1.time;
+                itemChildren.loginfo = item1.loginfo;
+                itemChildren.uname = item1.uname;
+                itemChildren.commentinfo = item1.commentinfo;
+                itemData.children.push(itemChildren);
+              }
+            });
+            logList.push(itemData);
+          });
+          $this.logList = logList;
+          $this.ulist=arrData.ulist;
+          $this.articleData = arrData.data;
+        }else{
+          if(arrData.permitstatus&&arrData.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该工单详情访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: arrData.info,
+                type: 'error'
+              });
+            }
+        }
+      }
     },
     // 重置留言表
     resetComment(){
@@ -482,7 +487,7 @@ export default {
         });
         return false;
       }
-      $this.$store.dispatch('worksaccpet/workOrderCommentAction', formData).then(response=>{
+      workOrderComment(formData).then(response=>{
           if(response){
             if(response.status){
               $this.$message({

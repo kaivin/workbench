@@ -76,7 +76,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import {getCnChannelList,cnChannelAdd,cnChannelEdit,cnChannelDelete} from '@/api/ownpush';
+import { mapGetters } from 'vuex';
 export default {
   name: 'Ownpush_pushtype',
   data() {
@@ -278,7 +279,7 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('ownpush/cnChannelListAction', null).then(response=>{
+      getCnChannelList(null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -390,30 +391,35 @@ export default {
         $this.isSaveData=true;
         var pathUrl = "";
         if($this.dialogText=="编辑渠道"){
-          pathUrl = "ownpush/cnChannelEditAction";
+          cnChannelEdit($this.dialogForm).then(response=>{
+            $this.funcnChannelPlug(response);
+          });
         }else{
-          pathUrl = "ownpush/cnChannelAddAction";
+          cnChannelAdd($this.dialogForm).then(response=>{
+            $this.funcnChannelPlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.handleClose();
-              $this.initPage();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSaveData=false;
-              },1000);
-            }
+      }
+    },
+    funcnChannelPlug(arrData){
+      var $this = this;
+      if(arrData.status){
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
         });
+        $this.handleClose();
+        $this.initPage();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+        setTimeout(()=>{
+          $this.isSaveData=false;
+        },1000);
       }
     },
     // 重置添加数据表单
@@ -444,7 +450,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('ownpush/cnChannelDeleteAction', {id:row.id}).then(response=>{
+          cnChannelDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

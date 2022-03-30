@@ -322,6 +322,7 @@
   </div>
 </template>
 <script>
+import { getWorkOrderList,getmyfocus,getmypublish,issuerList,departList,tagList,workOrderDelete,workOrderCancel,workOrderConfirm,workOrderRejected,workOrderEvaluateSave,getworkAddfocus,getCancelworkfocus } from '@/api/works';
 import { mapGetters } from 'vuex';
 export default {
   name: 'Works_worklist',
@@ -651,7 +652,7 @@ export default {
     // 初始化部门列表
     getpublishdepart(){
       var $this = this;
-      $this.$store.dispatch('works/departListAction',null).then(res=>{
+      departList(null).then(res=>{
           if(res){
               if(res.status){
                 if(res.data.length>0){
@@ -681,7 +682,7 @@ export default {
     // 初始化系统标签和自定义标签
     getTagData(){
       var $this = this;
-      $this.$store.dispatch('works/tagListAction', null).then(response=>{
+      tagList(null).then(response=>{
         if(response){
           if(response.status){
             var tagList = [];
@@ -723,7 +724,7 @@ export default {
     // 初始化发布人数据
     getUserData(){
       var $this = this;
-      $this.$store.dispatch('works/issuerListAction', null).then(response=>{
+      issuerList(null).then(response=>{
         if(response){
           if(response.status){
             var userList = [];
@@ -750,58 +751,44 @@ export default {
       var $this =this;      
       var searchData = {};
       searchData = $this.initSearchData();
-      var pathUrl = "";
-      if($this.currentStatus==="alltasks"){
-        pathUrl = "works/workOrderListAction";
-      }else if($this.currentStatus==="person"){
-        pathUrl = "works/getmypublishAction";
-      }else{
-        pathUrl = "works/getmyfocusAction";
-      }
       $this.tableData=[];
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch(pathUrl, searchData).then(response=>{
-        if(response){
-          if(response.status){
-            if(response.data.length>0){
-              response.data.forEach(function(item,index){
-                item.tagList = [];
-                if(item.tags&&item.tags != ""){
-                  if(item.tags.indexOf("|")!=-1){
-                    var tagArr = item.tags.split("|");
-                    tagArr.forEach(function(item1,index1){
-                      var itemData = {};
-                      if(item1.indexOf("-")!=-1){
-                        itemData.tag = item1.split("-")[0];
-                        itemData.color = item1.split("-")[1];
-                        if(itemData.tag=='紧急'||itemData.tag=='加急'){
-                          itemData.clBool=true;
-                        }else{
-                          itemData.clBool=false;
-                        }
-                      }else{
-                        itemData.tag = item1;
-                        itemData.color = "#1b3f75";
-                        if(itemData.tag=='紧急'||itemData.tag=='加急'){
-                          itemData.clBool=true;
-                        }else{
-                          itemData.clBool=false;
-                        }
-                      }
-                      item.tagList.push(itemData);
-                    });
-                  }else{
+      if($this.currentStatus==="alltasks"){
+        getWorkOrderList(searchData).then(response=>{
+          $this.funworksPlug(response);
+        });
+      }else if($this.currentStatus==="person"){
+        getmypublish(searchData).then(response=>{
+          $this.funworksPlug(response);
+        });
+      }else{
+        getmyfocus(searchData).then(response=>{
+          $this.funworksPlug(response);
+        });
+      }
+    },
+    funworksPlug(arrData){
+      var $this = this;
+      if(arrData){
+        if(arrData.status){
+          if(arrData.data.length>0){
+            arrData.data.forEach(function(item,index){
+              item.tagList = [];
+              if(item.tags&&item.tags != ""){
+                if(item.tags.indexOf("|")!=-1){
+                  var tagArr = item.tags.split("|");
+                  tagArr.forEach(function(item1,index1){
                     var itemData = {};
-                    if(item.tags.indexOf("-")!=-1){
-                      itemData.tag = item.tags.split("-")[0];
-                      itemData.color = item.tags.split("-")[1];
+                    if(item1.indexOf("-")!=-1){
+                      itemData.tag = item1.split("-")[0];
+                      itemData.color = item1.split("-")[1];
                       if(itemData.tag=='紧急'||itemData.tag=='加急'){
                         itemData.clBool=true;
                       }else{
                         itemData.clBool=false;
                       }
                     }else{
-                      itemData.tag = item.tags;
+                      itemData.tag = item1;
                       itemData.color = "#1b3f75";
                       if(itemData.tag=='紧急'||itemData.tag=='加急'){
                         itemData.clBool=true;
@@ -810,105 +797,125 @@ export default {
                       }
                     }
                     item.tagList.push(itemData);
-                  }
-                }
-              });
-            }
-            $this.groupScore=response.departscore;
-            if(response.data&&response.data.length>0){
-              var tableDataArr=response.data;
-              tableDataArr.forEach(function(item,index){
-                var dealusernameArr=[];
-                if(item.dealusername.indexOf('|')>0){
-                  item.dealusername.split('|').forEach(function(items,indexs){
-                    var obj={
-                      name:'',
-                      percent:'',
-                    }
-                    var splitArr=items.split('(');
-                    obj.name=splitArr[0];
-                    obj.percent=splitArr[1].replace(')','');
-                    dealusernameArr.push(obj);
                   });
                 }else{
-                  if(item.dealusername&&item.dealusername!=''){
-                    var obj={
-                      name:'',
-                      percent:'',
+                  var itemData = {};
+                  if(item.tags.indexOf("-")!=-1){
+                    itemData.tag = item.tags.split("-")[0];
+                    itemData.color = item.tags.split("-")[1];
+                    if(itemData.tag=='紧急'||itemData.tag=='加急'){
+                      itemData.clBool=true;
+                    }else{
+                      itemData.clBool=false;
                     }
-                    var splitArr=item.dealusername.split('(');
-                    obj.name=splitArr[0];
-                    obj.percent=splitArr[1].replace(')','');
-                    dealusernameArr.push(obj);
                   }else{
-                    var obj={
-                      name:'',
-                      percent:'0%',
+                    itemData.tag = item.tags;
+                    itemData.color = "#1b3f75";
+                    if(itemData.tag=='紧急'||itemData.tag=='加急'){
+                      itemData.clBool=true;
+                    }else{
+                      itemData.clBool=false;
                     }
-                    dealusernameArr.push(obj);
                   }
+                  item.tagList.push(itemData);
                 }
-                var starttime=[];
-                var endtime=[];
-                if(item.starttime&&item.starttime!=null){
-                  starttime=item.starttime.split(" ");
-                  item.starttimeDate=starttime[0];
-                  item.starttimeTime=starttime[1];
-                }else{
-                  item.starttimeDate='';
-                  item.starttimeTime='';
-                }
-                if(item.endtime&&item.endtime!=null){
-                  endtime=item.endtime.split(" ");
-                  item.endtimeDate=endtime[0];
-                  item.endtimeTime=endtime[1];
-                }else{
-                  item.endtimeDate='';
-                  item.endtimeTime='';
-                }
-                item.dealuserArr=dealusernameArr;
-              });
-            }
-            $this.tableData = tableDataArr;
-            $this.totalDataNum = response.allcount;
-            $this.defaultData.accpetcountNum=response.allcount;
-            $this.defaultData.personNum=response.mypublishcount;
-            $this.defaultData.focusonNum=response.myfocuscount;
-            $this.statusList[1].departNum=response.waitcount;
-            $this.statusList[2].departNum=response.workincount;
-            $this.statusList[3].departNum=response.waitcheckcount;
-            $this.statusList[4].departNum=response.rejectedcount; 
-            $this.statusList[5].departNum=response.hasfinishcount;                         
-            $this.statusList[8].departNum=response.hasouttimecount;
-            var infoData = {};
-            infoData.totalCount = response.allcount;
-            infoData.doingCount = response.workincount;
-            infoData.doneCount = response.hasfinishcount;
-            infoData.checkingCount = response.waitcheckcount;
-            infoData.overdueCount = response.hasouttimecount;
-            $this.infoData = infoData;
-            $this.$nextTick(()=>{
-              $this.setTableHeight();
+              }
             });
+          }
+          $this.groupScore=arrData.departscore;
+          if(arrData.data&&arrData.data.length>0){
+            var tableDataArr=arrData.data;
+            tableDataArr.forEach(function(item,index){
+              var dealusernameArr=[];
+              if(item.dealusername.indexOf('|')>0){
+                item.dealusername.split('|').forEach(function(items,indexs){
+                  var obj={
+                    name:'',
+                    percent:'',
+                  }
+                  var splitArr=items.split('(');
+                  obj.name=splitArr[0];
+                  obj.percent=splitArr[1].replace(')','');
+                  dealusernameArr.push(obj);
+                });
+              }else{
+                if(item.dealusername&&item.dealusername!=''){
+                  var obj={
+                    name:'',
+                    percent:'',
+                  }
+                  var splitArr=item.dealusername.split('(');
+                  obj.name=splitArr[0];
+                  obj.percent=splitArr[1].replace(')','');
+                  dealusernameArr.push(obj);
+                }else{
+                  var obj={
+                    name:'',
+                    percent:'0%',
+                  }
+                  dealusernameArr.push(obj);
+                }
+              }
+              var starttime=[];
+              var endtime=[];
+              if(item.starttime&&item.starttime!=null){
+                starttime=item.starttime.split(" ");
+                item.starttimeDate=starttime[0];
+                item.starttimeTime=starttime[1];
+              }else{
+                item.starttimeDate='';
+                item.starttimeTime='';
+              }
+              if(item.endtime&&item.endtime!=null){
+                endtime=item.endtime.split(" ");
+                item.endtimeDate=endtime[0];
+                item.endtimeTime=endtime[1];
+              }else{
+                item.endtimeDate='';
+                item.endtimeTime='';
+              }
+              item.dealuserArr=dealusernameArr;
+            });
+          }
+          $this.tableData = tableDataArr;
+          $this.totalDataNum = arrData.allcount;
+          $this.defaultData.accpetcountNum=arrData.allcount;
+          $this.defaultData.personNum=arrData.mypublishcount;
+          $this.defaultData.focusonNum=arrData.myfocuscount;
+          $this.statusList[1].departNum=arrData.waitcount;
+          $this.statusList[2].departNum=arrData.workincount;
+          $this.statusList[3].departNum=arrData.waitcheckcount;
+          $this.statusList[4].departNum=arrData.rejectedcount; 
+          $this.statusList[5].departNum=arrData.hasfinishcount;                         
+          $this.statusList[8].departNum=arrData.hasouttimecount;
+          var infoData = {};
+          infoData.totalCount = arrData.allcount;
+          infoData.doingCount = arrData.workincount;
+          infoData.doneCount = arrData.hasfinishcount;
+          infoData.checkingCount = arrData.waitcheckcount;
+          infoData.overdueCount = arrData.hasouttimecount;
+          $this.infoData = infoData;
+          $this.$nextTick(()=>{
+            $this.setTableHeight();
+          });
+        }else{
+          if(arrData.permitstatus&&arrData.permitstatus==2){
+            $this.$message({
+              showClose: true,
+              message: "未被分配该页面访问权限",
+              type: 'error',
+              duration:6000
+            });
+            $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
           }else{
-            if(response.permitstatus&&response.permitstatus==2){
-              $this.$message({
-                showClose: true,
-                message: "未被分配该页面访问权限",
-                type: 'error',
-                duration:6000
-              });
-              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-            }
+            $this.$message({
+              showClose: true,
+              message: arrData.info,
+              type: 'error'
+            });
           }
         }
-      });
+      }
     },
     // 组装搜索接口所需数据
     initSearchData(){
@@ -1018,7 +1025,7 @@ export default {
       var $this = this;
       var searchData = {};
       searchData.id=FocusId;
-      $this.$store.dispatch('works/getworkAddfocusAction',searchData).then(res=>{
+      getworkAddfocus(searchData).then(res=>{
           if(res){
               if(res.status){
                   $this.$message({
@@ -1042,7 +1049,7 @@ export default {
       var $this = this;
       var searchData = {};
       searchData.id=FocusId;
-      $this.$store.dispatch('works/getCancelworkfocusAction',searchData).then(res=>{
+      getCancelworkfocus(searchData).then(res=>{
           if(res){
               if(res.status){
                   $this.$message({
@@ -1189,7 +1196,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('works/workOrderCancelAction', {id:row.id}).then(response=>{
+          workOrderCancel({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -1220,7 +1227,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('works/workOrderDeleteAction', {id:row.id}).then(response=>{
+          workOrderDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -1278,40 +1285,46 @@ export default {
     // 保存评价
     saveData(){
       var $this = this;
-      var pathUrl = "";
       var pathformData = "";
       if($this.dialogText == "添加评价"){
-          pathUrl = "works/workOrderEvaluateSaveAction";
           pathformData=$this.dialogForm;
+          workOrderEvaluateSave(pathformData).then(response=>{
+            $this.funworkOrderPlug(response);
+          });
       }
       if($this.dialogText == "驳回原因"){
-          pathUrl = "works/workOrderRejectedAction";
           $this.noconfirmForm.rejectinfo = $this.dialogForm.commentinfo;
           pathformData=$this.noconfirmForm;
+          workOrderRejected(pathformData).then(response=>{
+            $this.funworkOrderPlug(response);
+          });
       }
       if($this.dialogText == "打赏积分"){
-          pathUrl = "works/workOrderConfirmAction";
           pathformData=$this.otherscoreForm;
+          workOrderConfirm(pathformData).then(response=>{
+            $this.funworkOrderPlug(response);
+          });
       }
-      $this.$store.dispatch(pathUrl, pathformData).then(response=>{
-        if(response){
-          if(response.status){
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'success'
-            });
-            $this.handleClose();
-            $this.initPage();
-          }else{
-            $this.$message({
-              showClose: true,
-              message: response.info,
-              type: 'error'
-            });
-          }
+    },
+    funworkOrderPlug(arrData){
+      var $this = this;
+      if(arrData){
+        if(response.status){
+          $this.$message({
+            showClose: true,
+            message: arrData.info,
+            type: 'success'
+          });
+          $this.handleClose();
+          $this.initPage();
+        }else{
+          $this.$message({
+            showClose: true,
+            message: arrData.info,
+            type: 'error'
+          });
         }
-      });
+      }
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){

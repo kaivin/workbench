@@ -54,7 +54,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { buckleInitInfo,buckleInfoSave } from '@/api/works';
+import { mapGetters } from 'vuex';
 export default {
   name: 'Works_buckle',
   data() {
@@ -202,7 +203,7 @@ export default {
     // 获取工单发布修改所需系统数据
     initPage(){
       var $this = this;
-      $this.$store.dispatch('works/buckleInitInfoAction', null).then(response=>{
+      buckleInitInfo(null).then(response=>{
         if(response){
           if(response.status){
             $this.serverData = response.data;            
@@ -262,7 +263,7 @@ export default {
         formData.score = $this.formData.score;
         formData.limit_ip = $this.formData.limit_ip;
         formData.permitip = $this.formData.permitip;
-        $this.$store.dispatch('works/buckleInfoSaveAction', formData).then(response=>{
+        buckleInfoSave(formData).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

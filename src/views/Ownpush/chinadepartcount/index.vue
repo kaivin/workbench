@@ -161,6 +161,7 @@
   </div>
 </template>
 <script>
+import {getOwnChinadepartcount} from '@/api/ownpush';
 import {mapGetters} from 'vuex';
 import mapChart from "../components/chinadepartcount/mapChart.vue";
 import qualityChart from "../components/chinadepartcount/qualityChart.vue";
@@ -521,7 +522,7 @@ export default {
       var searchData = $this.searchDataInit();
       $this.clearData();
       if(searchData.dept_id&&searchData.starttime&&searchData.endtime&&searchData.type){
-        $this.$store.dispatch('ownpush/getOwnChinadepartcountAction', searchData).then(res=>{
+        getOwnChinadepartcount(searchData).then(res=>{
          if(res.status){
             $this.filterDataClump(res);
           }else{
