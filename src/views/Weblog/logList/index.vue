@@ -188,6 +188,16 @@ export default {
     $this.initData();
   },
   methods:{
+    // loading自定义
+    loadingFun(){
+      var $this = this;
+      $this.isLoading = $this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+    },
     // 常用蜘蛛列表
     getspidertypeList(){
       var $this=this;
@@ -214,6 +224,7 @@ export default {
     },
     initData(){
       var $this=this;
+      $this.loadingFun();
       $this.getRouterQuery();
     },
     // 获取路由参数
@@ -239,7 +250,7 @@ export default {
       if(weburl&&weburl!=''){
         $this.searchData.weburl=weburl;
       }
-      $this.getloglist();
+      $this.loglistPlug();
     },
     // 组装日志文件所需数据
     Searchlog(){
@@ -264,12 +275,12 @@ export default {
     },
     //获取最后斜杠后的字符串 
     LastStr(str){       
-      let index = str .lastIndexOf("\/");  
-      str  = str .substring(index + 1, str.length);
+      let index = str.lastIndexOf("\/");  
+      str  = str.substring(index + 1, str.length);
       return str;
     },
     // 调用日志文件
-    getloglist(){
+    loglistPlug(){
       var $this=this;
       var searchData=$this.Searchlog();
       getloglist(searchData).then(res=>{
@@ -285,6 +296,7 @@ export default {
              });
              $this.loglist=loglist;
            }
+           $this.isLoading.close();
         }else{
           $this.$message({
             showClose: true,
@@ -297,6 +309,7 @@ export default {
     // 点击日志标签
     handleLog(valDate){
       var $this=this;
+      $this.loadingFun();
       $this.searchData.isfile=valDate.label;
       $this.loglist.forEach(function(item,index){
         item.isOn=false;
@@ -355,6 +368,7 @@ export default {
             $this.tableData=res.data;
             $this.totalDataNum = res.allcount;
             $this.spiderCount=res.spidercount;
+            $this.isLoading.close();
         }else{
           $this.$message({
             showClose: true,
@@ -379,6 +393,7 @@ export default {
     // 搜索
     searchResult(){
       var $this=this;
+      $this.loadingFun();
       $this.getWeblogLists();
     },
     // 每页显示条数改变事件
@@ -386,6 +401,7 @@ export default {
       var $this=this;
       $this.searchData.limit = val;
       $this.page = 1;
+      $this.loadingFun();
       $this.getWeblogLists();
     },
     // 当前页改变事件
@@ -393,6 +409,7 @@ export default {
       var $this=this;
       $this.searchData.page = val;
       $this.isPageBtn = true;
+      $this.loadingFun();
       $this.getWeblogLists();
     },
     spiderBtn(varDate){
