@@ -1309,7 +1309,7 @@ export default {
     funworkOrderPlug(arrData){
       var $this = this;
       if(arrData){
-        if(response.status){
+        if(arrData.status){
           $this.$message({
             showClose: true,
             message: arrData.info,

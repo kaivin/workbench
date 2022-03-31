@@ -830,7 +830,7 @@ export default {
             sort:"asc",
             ftword_id:"",
         },
-        pageSizeList:[20,50,100,200,500],
+        pageSizeList:[20],
         totalDataNum:0,
         pickerRangeOptions: this.$pickerRangeOptions,
         phoneList:[],

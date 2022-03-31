@@ -513,7 +513,7 @@ export default {
       maxDate:[],
       minDate:[],
       maxNum:0,
-      pageSizeList:[20,50,100,200,500],
+      pageSizeList:[20],
       phoneSelected:[],
       searchData:{
         date:[],
