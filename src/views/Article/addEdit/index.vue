@@ -262,8 +262,9 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import VueUeditorWrap from 'vue-ueditor-wrap'
+import { getEditPostData,postArticleEditInfo,postArticleAdd,postArticleEdit } from '@/api/article';
+import { mapGetters } from 'vuex';
+import VueUeditorWrap from 'vue-ueditor-wrap';
 export default {
   name: 'articleAddEdit',
   components: { VueUeditorWrap },
@@ -592,7 +593,7 @@ export default {
     // 获取当前登录用户添加发布时可选择的论坛栏目
     getShowData(){
       var $this = this;
-      $this.$store.dispatch('article/getEditPostDataAction', null).then(response=>{
+      getEditPostData(null).then(response=>{
         if(response){
           if(response.status){
             response.userwritetypepermit.forEach(function(item,index){
@@ -664,7 +665,7 @@ export default {
     // 获取编辑文章详情
     getArticleInfo(){
       var $this = this;
-      $this.$store.dispatch('article/postArticleEditInfoAction', {id:$this.formData.id}).then(response=>{
+      postArticleEditInfo({id:$this.formData.id}).then(response=>{
           if(response){
             if(response.status){
               $this.articleData = response.data;
@@ -905,31 +906,35 @@ export default {
         if($this.permitField.includes("is_updatetime")){
           formData.is_updatetime = $this.formData.is_updatetime?1:0;
         }
-        var pathUrl = "";
         if($this.formData.id!==0){
-          pathUrl = 'article/postArticleEditAction';
+          postArticleEdit(formData).then(response=>{
+            $this.saveArticlePlug(response);
+          });
         }else{
-          pathUrl = 'article/postArticleAddAction';
+          postArticleAdd(formData).then(response=>{
+            $this.saveArticlePlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.$router.push({path:'/Article/index',query:{id:$this.formData.postTypeID}});
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isDisabled=false;
-              },1000);
-            }
+      }
+    },
+    saveArticlePlug(arrData){
+      var $this = this;
+      if(arrData.status){
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
         });
+        $this.$router.push({path:'/Article/index',query:{id:$this.formData.postTypeID}});
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+        setTimeout(()=>{
+          $this.isDisabled=false;
+        },1000);
       }
     },
     // markdown文本发生变化时执行事件

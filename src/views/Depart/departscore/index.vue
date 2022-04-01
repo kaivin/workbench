@@ -136,7 +136,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { departScore,departScoreAdd,departScoreEdit,departScoreDelete,getdepart } from '@/api/depart';
+import { mapGetters } from 'vuex';
 export default {
   name: 'Depart_departscore',
   data() {
@@ -367,7 +368,7 @@ export default {
     // 初始化部门数据
     dealData(){
       var $this = this;
-      $this.$store.dispatch('depart/getdepartAction', null).then(response=>{
+      getdepart(null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -422,7 +423,7 @@ export default {
       var $this = this;
       var formData = $this.restearch();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('depart/departScoreAction', formData).then(response=>{
+      departScore(formData).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -560,30 +561,35 @@ export default {
         formData.score = $this.dialogForm.score;
         var pathUrl = "";
         if($this.dialogText=="编辑部门月度积分"){
-          pathUrl = "depart/departScoreEditAction";
+          departScoreEdit(formData).then(response=>{
+            $this.saveDataPlug(response);
+          });
         }else{
-          pathUrl = "depart/departScoreAddAction";
+          departScoreAdd(formData).then(response=>{
+            $this.saveDataPlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.handleClose();
-              $this.initPage();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSaveData=false;
-              },1000);
-            }
+      }
+    },
+    saveDataPlug(arrData){
+      var $this = this;
+      if(arrData.status){
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
         });
+        $this.handleClose();
+        $this.initPage();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+        setTimeout(()=>{
+          $this.isSaveData=false;
+        },1000);
       }
     },
     // 重置添加数据表单
@@ -623,7 +629,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('depart/departScoreDeleteAction', {id:row.id}).then(response=>{
+          departScoreDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

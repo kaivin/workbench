@@ -150,6 +150,7 @@
   </div>
 </template>
 <script>
+import { groupDealDel } from '@/api/Compare';
 import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'Compare_lists',
@@ -649,7 +650,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('Compare/groupDealDelAction', {id:row.id}).then(response=>{
+          groupDealDel({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

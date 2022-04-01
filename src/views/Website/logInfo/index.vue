@@ -58,7 +58,7 @@
               <div class="comment-header">
                 <span class="name" v-if="item.is_hidename==0">{{item.name}}</span><span class="name" v-else>匿名</span>
                 <span class="time">{{item.addtime}}</span>
-                <span v-if="articleData.commentdelete==1&&menuButtonPermit.includes('Article_commentdelete')" class="delete" v-on:click="deleteComment(item.id)" title="删除该条评论"><i class="el-icon-delete-solid"></i></span>
+                <span v-if="articleData.commentdelete==1&&menuButtonPermit.includes('Article_commentdelete')" class="delete" v-on:click="deletePlug(item.id)" title="删除该条评论"><i class="el-icon-delete-solid"></i></span>
               </div>
               <div class="comment-body" v-html="item.content"></div>
             </div>
@@ -70,8 +70,9 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import VueUeditorWrap from 'vue-ueditor-wrap'
+import { postArticleSubmitComment,postArticleCommentList,deleteComment } from '@/api/article';
+import { mapGetters } from 'vuex';
+import VueUeditorWrap from 'vue-ueditor-wrap';
 export default {
   name: 'articleInfo',
   components: { VueUeditorWrap },
@@ -405,7 +406,7 @@ export default {
           return false;
         }
         $this.isSubmitComment=true;
-        $this.$store.dispatch('article/postArticleSubmitCommentAction', formData).then(response=>{
+        postArticleSubmitComment(formData).then(response=>{
             if(response){
               if(response.status){
                 $this.resetComment();
@@ -432,7 +433,7 @@ export default {
     // 获取留言列表数据
     getCommentList(){
       var $this = this;
-      $this.$store.dispatch('article/postArticleCommentListAction', {id:$this.currentID}).then(response=>{
+      postArticleCommentList({id:$this.currentID}).then(response=>{
           if(response){
             if(response.status){
               $this.commentList = response.data;
@@ -462,14 +463,14 @@ export default {
       window.open(routeUrl.href,'_self');
     },
     // 删除评论
-    deleteComment(id){
+    deletePlug(id){
       var $this = this;
       $this.$confirm('是否确认删除该评论?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-        $this.$store.dispatch('article/deleteCommentAction', {id:id}).then(response=>{
+        deleteComment({id:id}).then(response=>{
             if(response){
               if(response.status){
                 $this.$message({

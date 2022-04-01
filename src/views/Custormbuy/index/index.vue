@@ -146,12 +146,13 @@
   </div>
 </template>
 <script>
-import { mapGetters ,mapActions} from 'vuex'
+import { deparDealListChoose,deparDealEdit,deparDealListAdd,deparDealDel } from '@/api/Compare';
+import { getCustormbuyList,setExportLink } from '@/api/Custormbuy';
+import { mapGetters } from 'vuex';
 export default {
   name: 'Custormbuy_index',
   data() {
-    return {
-      
+    return {      
       breadcrumbList:[],
       menuButtonPermit:[],
       operationsWidth:"",
@@ -282,16 +283,13 @@ export default {
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
-    ...mapActions({
-      setExportLinkAction:'Custormbuy/setExportLinkAction'
-    }),
     //中文详情导入
     custormbuyFileUp(e){
       var $this = this;
       let filedata = e.target.files[0];
       var formData = new FormData();
       formData.append('filename',filedata);
-      this.setExportLinkAction(formData).then(res=>{
+      setExportLink(formData).then(res=>{
         $this.$message({
           showClose: true,
           message: res.info,
@@ -428,7 +426,7 @@ export default {
     // 初始化部门数据
     dealData(){
       var $this = this;
-      $this.$store.dispatch('Compare/deparDealListChooseAction', null).then(response=>{
+      deparDealListChoose(null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -472,7 +470,7 @@ export default {
       var $this = this;
       var formData = $this.restearch();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('Custormbuy/getCustormbuyListAction', formData).then(response=>{
+      getCustormbuyList(formData).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -612,30 +610,35 @@ export default {
         formData.personnumber = $this.dialogForm.personnumber;
         var pathUrl = "";
         if($this.dialogText=="编辑部门成交"){
-          pathUrl = "Compare/deparDealEditAction";
+          deparDealEdit(formData).then(response=>{
+            $this.saveDataPlug(response);
+          });
         }else{
-          pathUrl = "Compare/deparDealListAddAction";
+          deparDealListAdd(formData).then(response=>{
+            $this.saveDataPlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.handleClose();
-              $this.initPage();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSaveData=false;
-              },1000);
-            }
+      }
+    },
+    saveDataPlug(arrData){
+      var $this = this;
+      if(arrData.status){
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'success'
         });
+        $this.handleClose();
+        $this.initPage();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: arrData.info,
+          type: 'error'
+        });
+        setTimeout(()=>{
+          $this.isSaveData=false;
+        },1000);
       }
     },
     // 重置添加数据表单
@@ -685,7 +688,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('Compare/deparDealDelAction', {id:row.id}).then(response=>{
+          deparDealDel({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

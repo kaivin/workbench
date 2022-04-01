@@ -119,7 +119,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { getDataList,departAdd,departEdit,departDelete,departAllotedRole,departCanAllotRole,departAllotRole } from '@/api/depart';
+import { mapGetters } from 'vuex';
 export default {
   name: 'departIndex',
   data() {
@@ -333,7 +334,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
-      $this.$store.dispatch('depart/departListAction', null).then(response=>{
+      getDataList(null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -581,32 +582,36 @@ export default {
         formData.fid = Array.isArray($this.dialogForm.fid)?$this.dialogForm.fid.length == 0 ? 0 :$this.dialogForm.fid[$this.dialogForm.fid.length-1]:$this.dialogForm.fid;
         formData.name = $this.dialogForm.name;
         formData.remarks = $this.dialogForm.remarks;
-        var pathUrl = "";
         if($this.dialogText=="编辑部门"){
-          pathUrl = "depart/departEditAction";
+          departEdit(formData).then(response=>{
+            $this.saveDataPlug(response);
+          });
         }else{
-          pathUrl = "depart/departAddAction";
+          departAdd(formData).then(response=>{
+            $this.saveDataPlug(response);
+          });
         }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-                $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'success'
-                });
-                $this.handleClose();
-                $this.initData();
-            }else{
-                $this.$message({
-                    showClose: true,
-                    message: response.info,
-                    type: 'error'
-                });
-                setTimeout(()=>{
-                  $this.isSaveData=false;
-                },1000);
-            }
-        });
+      }
+    },
+    saveDataPlug(arrData){
+      var $this = this;
+      if(arrData.status){
+          $this.$message({
+              showClose: true,
+              message: arrData.info,
+              type: 'success'
+          });
+          $this.handleClose();
+          $this.initData();
+      }else{
+          $this.$message({
+              showClose: true,
+              message: arrData.info,
+              type: 'error'
+          });
+          setTimeout(()=>{
+            $this.isSaveData=false;
+          },1000);
       }
     },
     // 重置添加数据表单
@@ -639,7 +644,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          $this.$store.dispatch('depart/departDeleteAction', {id:row.id}).then(response=>{
+          departDelete({id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -680,7 +685,7 @@ export default {
           var rolePostData = {};
           rolePostData.id = $this.currentDepartID;
           rolePostData.role_id = $this.roleValue;
-          $this.$store.dispatch('depart/departAllotRoleAction', rolePostData).then(response=>{
+          departAllotRole(rolePostData).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -705,7 +710,7 @@ export default {
     // 获取当前用户已分配的角色数据
     getAllotedRole(){
       var $this = this;
-      $this.$store.dispatch('depart/departAllotedRoleAction', {id:$this.currentDepartID}).then(response=>{
+      departAllotedRole({id:$this.currentDepartID}).then(response=>{
         if(response.status){
           var roleUserData = [];
           var selectedRoleUserData = [];
@@ -742,7 +747,7 @@ export default {
       }
       var roleDataNow = $this.roleData;
       var roleIngData = [];
-      $this.$store.dispatch('depart/departCanAllotRoleAction', null).then(response=>{
+      departCanAllotRole(null).then(response=>{
         if(response.status){
           if(response.data.length>0){
             if(roleDataNow.length>0){
