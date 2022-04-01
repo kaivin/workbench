@@ -113,7 +113,7 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-      <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Enquiries_selectuser')" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="680px">
+      <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Enquiries_selectuseradd')" custom-class="add-edit-dialog" :before-close="handleClose" :visible.sync="dialogFormVisible" width="680px">
         <el-form :model="dialogForm">
           <div class="item-form-group">
                 <div class="item-form Compart-time-width">
@@ -171,8 +171,7 @@
   </div>
 </template>
 <script>
-import {getDepartList,Getdepartuser,Selectuser,Selectuserdel,Selectuserlist} from '@/api/Enquiries';
-import {mapGetters } from 'vuex';
+import {mapGetters } from 'vuex'
 export default {
   name: 'Enquiries_selectuserlist',
   data() {
@@ -435,7 +434,7 @@ export default {
     // 获取部门列表
     getDeptList(){
       var $this = this;
-      getDepartList().then(res=>{
+      $this.$store.dispatch('Enquiries/getDepartListAction', null).then(res=>{
         if(res){
           if(res.status){
             if(res.data.length>0){
@@ -509,7 +508,7 @@ export default {
       var formData = $this.restSearch();
       $this.tableData = [];
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      Selectuserlist(formData).then(res=>{
+      $this.$store.dispatch('Enquiries/SelectuserlistAction', formData).then(res=>{
         if(res){
           if(res.status){
             if(res.data.length>0){                           
@@ -570,7 +569,7 @@ export default {
           return false;
         }
         $this.isSaveData=true;
-        Selectuser($this.dialogForm).then(res=>{
+        $this.$store.dispatch("Enquiries/SelectuserAction", $this.dialogForm).then(res=>{
             if(res.status){
               $this.$message({
                 showClose: true,
@@ -647,7 +646,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-        Selectuserdel(formData).then(res=>{
+        $this.$store.dispatch('Enquiries/SelectuserdelAction', formData).then(res=>{
             if(res){
                 if(res.status){
                     $this.$message({
@@ -687,10 +686,11 @@ export default {
       var $this = this;
       $this.dialogForm.uid = [];
       var formData={};
-      formData.dept=$this.dialogForm.dept_id;      
-      Getdepartuser(formData).then(res=>{
+      formData.dept=$this.dialogForm.dept_id;
+      $this.$store.dispatch('Enquiries/GetdepartuserAction', formData).then(res=>{
         if(res){
-          if(res.status){              
+          if(res.status){
+              console.log(res,'res');              
             if(res.data.length>0){
                 var departUser = [];
                 res.data.forEach(function(item,index){

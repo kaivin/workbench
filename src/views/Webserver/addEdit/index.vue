@@ -190,8 +190,7 @@
   </div>
 </template>
 <script>
-import { webserverAdd,webserverEdit,webserverSelectData,webserverEditInfo } from '@/api/webserver';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'webserverAddEdit',
   data() {
@@ -385,7 +384,7 @@ export default {
     // 获取系统展示数据
     getSearchItemData(){
       var $this = this;
-      webserverSelectData(null).then(response=>{
+      $this.$store.dispatch('webserver/webserverSelectDataAction', null).then(response=>{
         if(response){
           if(response.status){
             var languageList = [];
@@ -436,7 +435,7 @@ export default {
       var $this = this;
       if($this.$route.query.webserverID){
           $this.formData.id = $this.$route.query.webserverID;
-          webserverEditInfo({id:$this.formData.id}).then(response=>{
+          $this.$store.dispatch('webserver/webserverEditInfoAction', {id:$this.formData.id}).then(response=>{
               if(response){
                 if(response.status){
                   $this.webserverInfo = response.data;
@@ -529,36 +528,31 @@ export default {
         formData.sort = $this.formData.sort;
         formData.adminuserid = $this.formData.adminuserid;
         if(formData.id==0){
-          webserverAdd(formData).then(response=>{
-            $this.funwebserverPlug(response);
-          });
+          actionPath = 'webserver/webserverAddAction';
         }else{
-          webserverEdit(formData).then(response=>{
-            $this.funwebserverPlug(response);
-          });
+          actionPath = 'webserver/webserverEditAction';
         }
-      }
-    },
-    funwebserverPlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
+        $this.$store.dispatch(actionPath, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
         });
-        setTimeout(()=>{
-          $this.isDisabled=false;
-        },1000);
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isDisabled=false;
-        },1000);
       }
     },
     // 跳转到服务器管理

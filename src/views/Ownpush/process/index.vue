@@ -418,9 +418,8 @@
   </div>
 </template>
 <script>
-import { getAccountListAll,userList,getCnProcessList,cnProcessAdd,cnProcessEdit,cnProcessDelete,cnProcessImport,getCnChannelList } from '@/api/ownpush';
-import { mapGetters } from 'vuex';
-import UploadExcelComponent from '@/components/UploadExcel/index.vue';
+import { mapGetters } from 'vuex'
+import UploadExcelComponent from '@/components/UploadExcel/index.vue'
 export default {
   name: 'Ownpush_process',
   components: { UploadExcelComponent },
@@ -750,7 +749,7 @@ export default {
       var $this = this;
       var searchData = $this.searchDataInit();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      getCnProcessList(searchData).then(response=>{
+      $this.$store.dispatch('ownpush/cnProcessListAction', searchData).then(response=>{
         if(response){
           if(response.status){
             response.data.forEach(function(item,index){
@@ -884,35 +883,30 @@ export default {
         $this.isSaveData=true;
         var pathUrl = "";
         if($this.dialogText=="编辑数据"){
-          cnProcessEdit($this.dialogForm).then(response=>{
-            $this.funcnProcessPlug(response);
-          });
+          pathUrl = "ownpush/cnProcessEditAction";
         }else{
-          cnProcessAdd($this.dialogForm).then(response=>{
-            $this.funcnProcessPlug(response);
-          });
+          pathUrl = "ownpush/cnProcessAddAction";
         }
-      }
-    },
-    funcnProcessPlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
+        $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
         });
-        $this.handleClose();
-        $this.initPage();
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isSaveData=false;
-        },1000);
       }
     },
     // 重置添加数据表单
@@ -985,7 +979,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          cnProcessDelete({id:row.id}).then(response=>{
+          $this.$store.dispatch('ownpush/cnProcessDeleteAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -1011,7 +1005,7 @@ export default {
     // 获取添加数据时的账户选择数据
     getAccountData(){
       var $this = this;
-      getAccountListAll(null).then(response=>{
+      $this.$store.dispatch('ownpush/accountListAllAction', null).then(response=>{
           if(response.status){
             var accountList = [];
             response.data.forEach(function(item,index){
@@ -1036,7 +1030,7 @@ export default {
     // 获取添加数据时的渠道选择数据
     getChannelData(){
       var $this = this;
-      getCnChannelList(null).then(response=>{
+      $this.$store.dispatch('ownpush/cnChannelListAction', null).then(response=>{
           if(response.status){
             var channelList = [];
             response.data.forEach(function(item,index){
@@ -1060,7 +1054,7 @@ export default {
     // 获取添加数据是的负责人选择数据
     getUserData(){
       var $this = this;
-      userList(null).then(response=>{
+      $this.$store.dispatch('ownpush/userListAction', null).then(response=>{
           if(response.status){
             var userList = [];
             response.data.forEach(function(item,index){
@@ -1156,7 +1150,7 @@ export default {
     // 上传服务器
     importDataBase(){
       var $this =this;
-      cnProcessImport($this.importData).then(response=>{
+      $this.$store.dispatch('ownpush/cnProcessImportAction', $this.importData).then(response=>{
           if(response.status){
             $this.$message.success({
               message: '数据上传成功！',

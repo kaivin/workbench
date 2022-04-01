@@ -158,8 +158,7 @@
   </div>
 </template>
 <script>
-import {EnscoreList,EnscoreSearch,EnscoreAdd,EnscoreEdit,EnscoreDel} from '@/api/Enuserscore';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'Enuserscore_userscore',
   data() {
@@ -412,7 +411,7 @@ export default {
     // 获取用户
     userListData(){
       var $this = this;
-      EnscoreList(null).then(response=>{
+      $this.$store.dispatch('Enuserscore/EnscoreListAction', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -489,7 +488,7 @@ export default {
       var $this = this;
       var formData = $this.restearch();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      EnscoreSearch(formData).then(response=>{
+      $this.$store.dispatch('Enuserscore/EnscoreSearchAction', formData).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -628,37 +627,33 @@ export default {
         formData.groupname = $this.dialogForm.groupname;
         formData.mtime = $this.dialogForm.mtime;
         formData.number = $this.dialogForm.number;
-        formData.anumber = $this.dialogForm.anumber;
+        formData.anumber = $this.dialogForm.anumber;        
+        var pathUrl = "";
         if($this.dialogText=="编辑部门成交"){
-          EnscoreEdit(formData).then(response=>{
-              $this.funsavePlug(response);
-          });
+          pathUrl = "Enuserscore/EnscoreEditAction";
         }else{
-          EnscoreAdd(formData).then(response=>{
-              $this.funsavePlug(response);
-          });
+          pathUrl = "Enuserscore/EnscoreAddAction";
         }
-      }
-    },
-    funsavePlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
         });
-        $this.handleClose();
-        $this.initPage();
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isSaveData=false;
-        },1000);
       }
     },
     // 重置添加数据表单
@@ -701,7 +696,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          EnscoreDel({id:row.id}).then(response=>{
+          $this.$store.dispatch('Enuserscore/EnscoreDelAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

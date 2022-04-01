@@ -134,8 +134,7 @@
   </div>
 </template>
 <script>
-import { getDataList, getActionList } from '@/api/logs';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'Logs_index',
   data() {
@@ -381,7 +380,7 @@ export default {
         formData.endtime = "";
       }
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      getDataList(formData).then(response=>{
+      $this.$store.dispatch('logs/logsListAction', formData).then(response=>{
           if(response){
             if(response.status){
               if(response.data){
@@ -458,7 +457,7 @@ export default {
     // 获取所有操作动作数据
     getActionList(){
         var $this = this;
-        getActionList(null).then(response=>{
+        $this.$store.dispatch('logs/logsActionAction', null).then(response=>{
           if(response){
             if(response.status){
               if(response.data.length>0){

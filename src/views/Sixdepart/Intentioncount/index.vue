@@ -242,7 +242,6 @@
 </template>
 
 <script>
-import {getIntentionPhone,getIntentionResult} from '@/api/depsix';
 import { mapGetters } from 'vuex';
 import * as echarts from 'echarts';
 import {pickerDayRangeOptions} from "@/utils/index"
@@ -507,7 +506,7 @@ export default {
     // 获取询盘统计的搜索条件数据
     getSearchSystemData(){
       var $this = this;
-      getIntentionPhone().then(response=>{
+      $this.$store.dispatch('depsix/intentionPhone').then(response=>{
         if(response){
           if(response.status){
             $this.phoneList = response.phone;
@@ -551,7 +550,7 @@ export default {
           return false;
         }
         $this.isDisabled=true;
-        getIntentionResult(searchData).then(response=>{
+        $this.$store.dispatch('depsix/intentionSearch', searchData).then(response=>{
           if(response){
             if(response.status){
               $this.isSearch=true;

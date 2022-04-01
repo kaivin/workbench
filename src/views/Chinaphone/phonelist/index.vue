@@ -198,9 +198,7 @@
   </div>
 </template>
 <script>
-import {userCanAllotRole} from '@/api/user';
-import {getPhoneList,phoneDelete,phoneAddEditData,phoneAllotedReadRole,phoneAllotedWriteRole,phoneAllotedDomain,userCanAllotDomain,phoneEdit,phoneAdd,phoneAllotReadRole,phoneAllotWriteRole,phoneAllotDomain} from '@/api/chinaphone';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'Chinaphone_phonelist',
   data() {
@@ -433,7 +431,7 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      getPhoneList(null).then(response=>{
+      $this.$store.dispatch('chinaphone/phoneListAction', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -587,35 +585,30 @@ export default {
         formData.sort = $this.dialogForm.sort;
         var pathUrl = "";
         if($this.dialogText=="编辑电话"){
-          phoneEdit(formData).then(response=>{
-              $this.funphoneAcPlug(response);
-          });
+          pathUrl = "chinaphone/phoneEditAction";
         }else{
-          phoneAdd(formData).then(response=>{
-              $this.funphoneAcPlug(response);
-          });
+          pathUrl = "chinaphone/phoneAddAction";
         }
-      }
-    },
-    funphoneAcPlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
         });
-        $this.handleClose();
-        $this.initPage();
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isSaveData=false;
-        },1000);
       }
     },
     // 重置添加数据表单
@@ -657,7 +650,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          phoneDelete({id:row.id}).then(response=>{
+          $this.$store.dispatch('chinaphone/phoneDeleteAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -683,7 +676,7 @@ export default {
     // 获取电话添加编辑是需要的系统数据
     getSelectData(){
       var $this = this;
-      phoneAddEditData(null).then(response=>{
+      $this.$store.dispatch('chinaphone/phoneAddEditDataAction', null).then(response=>{
           if(response.status){
             var departList = [];
             response.depart.forEach(function(item,index){
@@ -750,41 +743,36 @@ export default {
           rolePhoneData.role_id = $this.roleValue;
           var pathUrl = "";
           if($this.isRead){
-            phoneAllotReadRole(rolePhoneData).then(response=>{
-              $this.funphoneAllotPlug(response);
-            });
+            pathUrl = "chinaphone/phoneAllotReadRoleAction";
           }else{
-            phoneAllotWriteRole(rolePhoneData).then(response=>{
-              $this.funphoneAllotPlug(response);
-            });
+            pathUrl = "chinaphone/phoneAllotWriteRoleAction";
           }
+          $this.$store.dispatch(pathUrl, rolePhoneData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.dialogRoleVisible = false;
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveRoleData=false;
+              },1000);
+            }
+          });
         }
-    },
-    funphoneAllotPlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
-        });
-        $this.dialogRoleVisible = false;
-        $this.initPage();
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isSaveRoleData=false;
-        },1000);
-      }
     },
     // 获取当前字段可读权限已分配的角色数据
     getAllotedReadRole(){
       var $this = this;
-      phoneAllotedReadRole({chinaphone_id:$this.currentID}).then(response=>{
+      $this.$store.dispatch('chinaphone/phoneAllotedReadRoleAction', {chinaphone_id:$this.currentID}).then(response=>{
         if(response.status){
           var roleUserData = [];
           var selectedRoleUserData = [];
@@ -813,7 +801,7 @@ export default {
     // 获取当前字段可写权限已分配的角色数据
     getAllotedWriteRole(){
       var $this = this;
-      phoneAllotedWriteRole({chinaphone_id:$this.currentID}).then(response=>{
+      $this.$store.dispatch('chinaphone/phoneAllotedWriteRoleAction', {chinaphone_id:$this.currentID}).then(response=>{
         if(response.status){
           var roleUserData = [];
           var selectedRoleUserData = [];
@@ -850,7 +838,7 @@ export default {
       }
       var roleDataNow = $this.roleData;
       var roleIngData = [];
-      userCanAllotRole(null).then(response=>{
+      $this.$store.dispatch('user/userCanAllotRoleAction', null).then(response=>{
         if(response.status){
           if(response.data.length>0){
             if(roleDataNow.length>0){
@@ -903,7 +891,7 @@ export default {
           var domainPhoneData = {};
           domainPhoneData.phoneid = $this.currentID;
           domainPhoneData.domain_id = $this.domainValue;
-          phoneAllotDomain(domainPhoneData).then(response=>{
+          $this.$store.dispatch("chinaphone/phoneAllotDomainAction", domainPhoneData).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -928,7 +916,7 @@ export default {
     // 获取当前电话已绑定的域名
     getAllotedDomain(){
       var $this = this;
-      phoneAllotedDomain({phoneid:$this.currentID}).then(response=>{
+      $this.$store.dispatch('chinaphone/phoneAllotedDomainAction', {phoneid:$this.currentID}).then(response=>{
         if(response.status){
           var phoneDomainData = [];
           var selectedPhoneDomainData = [];
@@ -965,7 +953,7 @@ export default {
       }
       var domainDataNow = $this.domainData;
       var domainIngData = [];
-      userCanAllotDomain({phoneid:$this.currentID}).then(response=>{
+      $this.$store.dispatch('chinaphone/userCanAllotDomainAction', {phoneid:$this.currentID}).then(response=>{
         if(response.status){
           if(response.data.length>0){
             if(domainDataNow.length>0){

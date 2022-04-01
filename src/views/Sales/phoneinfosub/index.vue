@@ -213,7 +213,6 @@
 </template>
 
 <script>
-import {getSalesSearchList,getSalesPublicData,getSalesDetails,getSalesDetailsModify,getSalesConfirmrRemind} from '@/api/Sales';
 import copyText from '@/utils/clipboard';
 import { mapGetters } from 'vuex';
 export default {
@@ -420,7 +419,7 @@ export default {
     // 询盘编辑获取初始化询盘信息
     initCluesInfo(){
       var $this = this;
-      getSalesDetails($this.formValidate).then(response=>{
+      $this.$store.dispatch('Sales/getSalesDetailsAction',$this.formValidate).then(response=>{
         if(response){
           if(response.status){           
             $this.defaultInfo = response.data;
@@ -528,7 +527,7 @@ export default {
     // 获取左侧数据
     getLeftData(){
       var $this = this;
-      getSalesPublicData(null).then(response=>{
+      $this.$store.dispatch('Sales/getSalesPublicDataAction', null).then(response=>{
         if(response){        
           var defaultData = {};
           defaultData.waitcount=response.waitcount;
@@ -615,7 +614,7 @@ export default {
     // 获取当前页面的条件数据
     getSystemData(){
       var $this = this;
-      getSalesSearchList(null).then(response=>{
+      $this.$store.dispatch('Sales/getSalesSearchListAction', null).then(response=>{
         if(response){
           if(response.status){
             var salesuseridList=[];
@@ -669,7 +668,7 @@ export default {
         $this.isDisabled=true;
         var formSaveData = $this.initFormData();      
         $this.formSaveData = formSaveData;
-        getSalesDetailsModify(formSaveData).then(response=>{
+        $this.$store.dispatch("Sales/getSalesDetailsModifyAction", formSaveData).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -709,7 +708,7 @@ export default {
       var $this = this;
       var resultData = {};
       resultData.id = $this.formData.id;
-      getSalesConfirmrRemind(resultData).then(response=>{
+      $this.$store.dispatch("Sales/getSalesConfirmrRemindAction", resultData).then(response=>{
           if(response.status){
             $this.$message({
               showClose: true,

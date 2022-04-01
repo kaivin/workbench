@@ -600,7 +600,6 @@
 </template>
 
 <script>
-import {getLeftPhoto,getInquiryItem,getInquiryResult} from '@/api/enphone';
 import { mapGetters } from 'vuex';
 import * as echarts from 'echarts';
 import {MapInterval} from "@/utils/MapColor";
@@ -875,7 +874,7 @@ export default {
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){
       var $this=this;
-      getLeftPhoto(null).then(response=>{
+      $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
         if(response){
           if(response.status){
               $this.linkAll.todayNum = response.alltodaynumber;
@@ -1140,7 +1139,7 @@ export default {
     // 获取询盘统计的搜索条件数据
     getSearchSystemData(){
       var $this = this;
-      getInquiryItem().then(response=>{
+      $this.$store.dispatch('enphone/inquiryItemAction').then(response=>{
         if(response){
           if(response.status){
             var deviceList = [];
@@ -1282,7 +1281,7 @@ export default {
           return false;
         }
         $this.isDisabled=true;
-        getInquiryResult(searchData).then(response=>{
+        $this.$store.dispatch('enphone/inquirySearchAction', searchData).then(response=>{
           if(response){
             if(response.status){
               $this.isSearch=true;

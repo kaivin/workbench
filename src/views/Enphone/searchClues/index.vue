@@ -773,7 +773,6 @@
 </template>
 
 <script>
-import {cluesCurrentPhoneUserCanEditField,getLeftPhoto,cluesSearchSelectData,getCurrentCluesSearchList,getCurrentCateProductList,Custormeditlog} from '@/api/enphone';
 import { mapGetters } from 'vuex';
 export default {
   name: 'searchEnClues',
@@ -1126,7 +1125,7 @@ export default {
     // 获取当前登录用户有可写权限的询盘字段
     getPermitField(){
       var $this = this;
-      cluesCurrentPhoneUserCanEditField(null).then(response=>{
+      $this.$store.dispatch('enphone/cluesCurrentPhoneUserCanEditFieldAction', null).then(response=>{
         if(response){
           if(response.status){
             $this.permitField = response.data;
@@ -1152,7 +1151,7 @@ export default {
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){
       var $this=this;
-        getLeftPhoto(null).then(response=>{
+        $this.$store.dispatch('enphone/getLeftPhotoAction', null).then(response=>{
         if(response){
           if(response.status){
               $this.linkAll.todayNum = response.alltodaynumber;
@@ -1219,7 +1218,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
-      cluesSearchSelectData(null).then(response=>{
+      $this.$store.dispatch('enphone/cluesSearchSelectDataAction', null).then(response=>{
         if(response){
           if(response.status){
               var departData=response.phone;
@@ -1463,7 +1462,7 @@ export default {
         var resultData = $this.getSearchResultData(pageInit);
         $this.tableData=[];
         document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-        getCurrentCluesSearchList(resultData).then(response=>{
+        $this.$store.dispatch('enphone/getCurrentCluesSearchListAction', resultData).then(response=>{
           if(response){
             if(response.status){
               var infoData = {};
@@ -1743,7 +1742,7 @@ export default {
         var $this = this;
         if(e){
           $this.searchData.productid = "";
-          getCurrentCateProductList({typeid:e}).then(response=>{
+          $this.$store.dispatch('enphone/getCurrentCateProductListAction', {typeid:e}).then(response=>{
               if(response){
                   if(response.status){
                       var productList = [];
@@ -1863,7 +1862,7 @@ export default {
       var $this = this;
       var FormID={};
       FormID.id = Rid;
-      Custormeditlog(FormID).then(response=>{
+      $this.$store.dispatch('enphone/CustormeditlogAction', FormID).then(response=>{
         if(response){
           if(response.status){   
             if(response.data.length>0){

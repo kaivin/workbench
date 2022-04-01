@@ -552,8 +552,6 @@
     </div>
 </template>
 <script>
-import { workOrderPublicData,receiveWorkOrderData,personWorkOrderData,statWorkOrderData,receiveWorkOrder,backWorkOrder,confirmWorkOrder,undoWorkOrder,confirmDoneWorkOrder,workOrderUserList,workOrderpercenter,workOrderconfirmstart,workOrderEditscore,getpublishdepart,allaccpetwork,getCancelworkfocus,getmyfocuswork } from '@/api/worksaccpet';
-import { tagList,getworkAddfocus } from '@/api/works';
 import { mapGetters } from 'vuex';
 import { isNumber } from '@/utils/validate';
 export default {
@@ -928,7 +926,7 @@ export default {
       $this.defaultData.receiveNum=0;
       $this.defaultData.personNum=0;
       $this.defaultData.focusonNum=0;
-      workOrderPublicData(null).then(response=>{
+      $this.$store.dispatch('worksaccpet/workOrderPublicDataAction', null).then(response=>{
         if(response){
           if(response.status){
             $this.defaultData.accpetcountNum = response.accpetcount;
@@ -976,57 +974,67 @@ export default {
         }
         $this.isPageBtn = false;
       }
+      var pathUrl = "";
+      if($this.currentStatus==="alltasks"){
+        pathUrl = "worksaccpet/allaccpetworkAction";
+      }else if($this.currentStatus==="person"){
+        pathUrl = "worksaccpet/personWorkOrderDataAction";
+      }else if($this.currentStatus==="focuson"){
+        pathUrl = "worksaccpet/getmyfocusworkAction";
+      }else if($this.currentStatus==="receive"){
+        pathUrl = "worksaccpet/receiveWorkOrderDataAction";
+      }else{
+        pathUrl = "worksaccpet/statWorkOrderDataAction";
+      }
       $this.tableData=[];
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      if($this.currentStatus==="alltasks"){
-        allaccpetwork(searchData).then(response=>{
-          $this.funCurrentPlug(response);
-        });
-      }else if($this.currentStatus==="person"){
-        personWorkOrderData(searchData).then(response=>{
-          $this.funCurrentPlug(response);
-        });
-      }else if($this.currentStatus==="focuson"){
-        getmyfocuswork(searchData).then(response=>{
-          $this.funCurrentPlug(response);
-        });
-      }else if($this.currentStatus==="receive"){
-        receiveWorkOrderData(searchData).then(response=>{
-          $this.funCurrentPlug(response);
-        });
-      }else{
-        statWorkOrderData(searchData).then(response=>{
-          $this.funCurrentPlug(response);
-        });
-      }
-    },
-    funCurrentPlug(arrData){
-      var $this = this;
-      if(arrData){
-        if(arrData.status){
-          var tableData = arrData.data;
-          if($this.currentStatus==="stat"){
-              $this.groupScore=arrData.group;
-          }else{
-            if(tableData.length>0){
-              tableData.forEach(function(item,index){
-                item.ownScore = "";
-                item.tagList = [];
-                if(item.tags&&item.tags != ""){
-                  if(item.tags.indexOf("|")!=-1){
-                    var tagArr = item.tags.split("|");
-                    tagArr.forEach(function(item1,index1){
+      $this.$store.dispatch(pathUrl, searchData).then(response=>{
+        if(response){
+          if(response.status){
+            var tableData = response.data;
+            if($this.currentStatus==="stat"){
+                $this.groupScore=response.group;
+            }else{
+              if(tableData.length>0){
+                tableData.forEach(function(item,index){
+                  item.ownScore = "";
+                  item.tagList = [];
+                  if(item.tags&&item.tags != ""){
+                    if(item.tags.indexOf("|")!=-1){
+                      var tagArr = item.tags.split("|");
+                      tagArr.forEach(function(item1,index1){
+                        var itemData = {};
+                        if(item1.indexOf("-")!=-1){
+                          itemData.tag = item1.split("-")[0];
+                          itemData.color = item1.split("-")[1];
+                          if(itemData.tag=='紧急'||itemData.tag=='加急'){
+                            itemData.clBool=true;
+                          }else{
+                            itemData.clBool=false;
+                          }
+                        }else{
+                          itemData.tag = item1;
+                          itemData.color = "#1b3f75";
+                          if(itemData.tag=='紧急'||itemData.tag=='加急'){
+                            itemData.clBool=true;
+                          }else{
+                            itemData.clBool=false;
+                          }
+                        }
+                        item.tagList.push(itemData);
+                      });
+                    }else{
                       var itemData = {};
-                      if(item1.indexOf("-")!=-1){
-                        itemData.tag = item1.split("-")[0];
-                        itemData.color = item1.split("-")[1];
+                      if(item.tags.indexOf("-")!=-1){
+                        itemData.tag = item.tags.split("-")[0];
+                        itemData.color = item.tags.split("-")[1];
                         if(itemData.tag=='紧急'||itemData.tag=='加急'){
                           itemData.clBool=true;
                         }else{
                           itemData.clBool=false;
                         }
                       }else{
-                        itemData.tag = item1;
+                        itemData.tag = item.tags;
                         itemData.color = "#1b3f75";
                         if(itemData.tag=='紧急'||itemData.tag=='加急'){
                           itemData.clBool=true;
@@ -1035,106 +1043,86 @@ export default {
                         }
                       }
                       item.tagList.push(itemData);
-                    });
-                  }else{
-                    var itemData = {};
-                    if(item.tags.indexOf("-")!=-1){
-                      itemData.tag = item.tags.split("-")[0];
-                      itemData.color = item.tags.split("-")[1];
-                      if(itemData.tag=='紧急'||itemData.tag=='加急'){
-                        itemData.clBool=true;
-                      }else{
-                        itemData.clBool=false;
-                      }
-                    }else{
-                      itemData.tag = item.tags;
-                      itemData.color = "#1b3f75";
-                      if(itemData.tag=='紧急'||itemData.tag=='加急'){
-                        itemData.clBool=true;
-                      }else{
-                        itemData.clBool=false;
-                      }
                     }
-                    item.tagList.push(itemData);
                   }
-                }
-                var startdotime=[];
-                var starttime=[];
-                var endtime=[];
-                if(item.startdotime&&item.startdotime!=null){
-                  startdotime=item.startdotime.split(" ");
-                  item.startdotimeDate=startdotime[0];
-                  item.startdotimeTime=startdotime[1];
-                }else{
-                  item.startdotimeDate='';
-                  item.startdotimeTime='';
-                }
-                if(item.starttime&&item.starttime!=null){
-                  starttime=item.starttime.split(" ");
-                  item.starttimeDate=starttime[0];
-                  item.starttimeTime=starttime[1];
-                }else{
-                  item.starttimeDate='';
-                  item.starttimeTime='';
-                }
-                if(item.endtime&&item.endtime!=null){
-                  endtime=item.endtime.split(" ");
-                  item.endtimeDate=endtime[0];
-                  item.endtimeTime=endtime[1];
-                }else{
-                  item.endtimeDate='';
-                  item.endtimeTime='';
-                }
-              });
-            }else{
-              tableData=[];
+                  var startdotime=[];
+                  var starttime=[];
+                  var endtime=[];
+                  if(item.startdotime&&item.startdotime!=null){
+                    startdotime=item.startdotime.split(" ");
+                    item.startdotimeDate=startdotime[0];
+                    item.startdotimeTime=startdotime[1];
+                  }else{
+                    item.startdotimeDate='';
+                    item.startdotimeTime='';
+                  }
+                  if(item.starttime&&item.starttime!=null){
+                    starttime=item.starttime.split(" ");
+                    item.starttimeDate=starttime[0];
+                    item.starttimeTime=starttime[1];
+                  }else{
+                    item.starttimeDate='';
+                    item.starttimeTime='';
+                  }
+                  if(item.endtime&&item.endtime!=null){
+                    endtime=item.endtime.split(" ");
+                    item.endtimeDate=endtime[0];
+                    item.endtimeTime=endtime[1];
+                  }else{
+                    item.endtimeDate='';
+                    item.endtimeTime='';
+                  }
+                });
+              }else{
+                tableData=[];
+              }
+              if($this.currentStatus==="alltasks"){
+                $this.totalDataNum = response.allcount;
+                $this.groupScore=response.group;
+              }
             }
-            if($this.currentStatus==="alltasks"){
-              $this.totalDataNum = arrData.allcount;
-              $this.groupScore=arrData.group;
-            }
-          }
-          $this.tableData = tableData;
-          $this.certinfoKey=!$this.certinfoKey;
-          $this.$nextTick(() => {
-            $this.$refs.simpleTable.doLayout();
-          });
-          setTimeout(()=>{
-            $this.isDisabled=false;
-          },1000);
-          $this.$nextTick(()=>{
-            $this.setHeight();
-          });
-        }else{
-          if(arrData.permitstatus&&arrData.permitstatus==2){
-            $this.$message({
-              showClose: true,
-              message: "未被分配该页面访问权限",
-              type: 'error',
-              duration:6000
-            });
-            $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-          }else{
-            $this.$message({
-              showClose: true,
-              message: arrData.info,
-              type: 'error'
+            $this.tableData = tableData;
+            $this.certinfoKey=!$this.certinfoKey;
+            $this.$nextTick(() => {
+              $this.$refs.simpleTable.doLayout();
             });
             setTimeout(()=>{
               $this.isDisabled=false;
             },1000);
+            $this.$nextTick(()=>{
+              $this.setHeight();
+            });
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
           }
+        }else{
+          setTimeout(()=>{
+            $this.isDisabled=false;
+          },1000);
         }
-      }else{
-        setTimeout(()=>{
-          $this.isDisabled=false;
-        },1000);
-      }
+      });
     },
     // 初始化部门列表
     getpublishdepart(){
       var $this = this;
-      getpublishdepart(null).then(res=>{
+      $this.$store.dispatch('worksaccpet/getpublishdepartAction',null).then(res=>{
           if(res){
               if(res.status){
                 if(res.data.length>0){
@@ -1164,7 +1152,7 @@ export default {
     // 初始化系统标签和自定义标签
     getTagData(){
       var $this = this;
-      tagList(null).then(response=>{
+      $this.$store.dispatch('works/tagListAction', null).then(response=>{
         if(response){
           if(response.status){
             var tagList = [];
@@ -1205,7 +1193,7 @@ export default {
     // 初始化工单具体负责人数据
     getWorkOrderUser(){
       var $this = this;
-      workOrderUserList(null).then(response=>{
+      $this.$store.dispatch('worksaccpet/workOrderUserListAction', null).then(response=>{
         if(response){
           if(response.status){
             var userList = [];
@@ -1311,7 +1299,7 @@ export default {
       var $this = this;
       var searchData = {};
       searchData.id=FocusId;
-      getworkAddfocus(searchData).then(res=>{
+      $this.$store.dispatch('worksaccpet/getworkAddfocusAction',searchData).then(res=>{
           if(res){
               if(res.status){
                   $this.$message({
@@ -1335,7 +1323,7 @@ export default {
       var $this = this;
       var searchData = {};
       searchData.id=FocusId;
-      getCancelworkfocus(searchData).then(res=>{
+      $this.$store.dispatch('worksaccpet/getCancelworkfocusAction',searchData).then(res=>{
           if(res){
               if(res.status){
                   $this.$message({
@@ -1424,7 +1412,7 @@ export default {
       var dateForm={};
       dateForm.id=varID;
       dateForm.percenter=varPercenter;
-      workOrderpercenter(dateForm).then(res=>{
+      $this.$store.dispatch('worksaccpet/workOrderpercenterAction',dateForm).then(res=>{
           if(res){
               if(res.status){
                   $this.$message({
@@ -1456,7 +1444,7 @@ export default {
       var $this = this;
       if(!$this.isSaveData){
         $this.isSaveData=true;
-        confirmDoneWorkOrder($this.dialogForm).then(response=>{
+        $this.$store.dispatch('worksaccpet/confirmDoneWorkOrderAction', $this.dialogForm).then(response=>{
             if(response){
                 if(response.status){
                     $this.$message({
@@ -1572,7 +1560,7 @@ export default {
     // 确认开始做工单
     confirmstartRow(row,index){
       var $this = this;
-      workOrderconfirmstart({id:row.id}).then(response=>{
+      $this.$store.dispatch('worksaccpet/workOrderconfirmstartAction', {id:row.id}).then(response=>{
           if(response){
               if(response.status){
                   $this.$message({
@@ -1601,7 +1589,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-        backWorkOrder(resultData).then(response=>{
+        $this.$store.dispatch('worksaccpet/backWorkOrderAction', resultData).then(response=>{
             if(response){
                 if(response.status){
                     $this.$message({
@@ -1648,7 +1636,7 @@ export default {
         var resultData = {};
         resultData.work_id = row.id;
         resultData.score = row.ownScore;
-        receiveWorkOrder(resultData).then(response=>{
+        $this.$store.dispatch('worksaccpet/receiveWorkOrderAction', resultData).then(response=>{
             if(response){
                 if(response.status){
                     $this.$message({
@@ -1681,7 +1669,7 @@ export default {
       var resultData = {};
       resultData.ids = row.id;
       resultData.dealuserid = row.dealuserid;
-      confirmWorkOrder(resultData).then(response=>{
+      $this.$store.dispatch('worksaccpet/confirmWorkOrderAction', resultData).then(response=>{
           if(response){
               if(response.status){
                   $this.$message({
@@ -1706,7 +1694,7 @@ export default {
       var resultData = {};
       resultData.id = row.id;
       resultData.score = row.score;
-      workOrderEditscore(resultData).then(response=>{
+      $this.$store.dispatch('worksaccpet/workOrderEditscoreAction', resultData).then(response=>{
           if(response){
               if(response.status){
                   $this.$message({
@@ -1735,7 +1723,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-        undoWorkOrder(resultData).then(response=>{
+        $this.$store.dispatch('worksaccpet/undoWorkOrderAction', resultData).then(response=>{
             if(response){
                 if(response.status){
                     $this.$message({

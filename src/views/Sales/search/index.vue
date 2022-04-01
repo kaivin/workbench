@@ -188,7 +188,6 @@
 </template>
 
 <script>
-import {getSalesPublicData,getSalesAnalysisCondition,getSalesDataAnalysis} from '@/api/Sales';
 import { mapGetters } from 'vuex';
 export default {
   name: 'Sales_search',
@@ -392,7 +391,7 @@ export default {
     // 初始化页面信息-数据分析查询条件
     initPage(){
       var $this = this;
-      getSalesAnalysisCondition(null).then(response=>{
+      $this.$store.dispatch('Sales/getSalesAnalysisConditionAction', null).then(response=>{
         if(response){
           if(response.status){
             var productList=[];
@@ -470,7 +469,7 @@ export default {
     initCluesList(){
       var $this = this;
       var searchData = $this.initSearchData();
-      getSalesDataAnalysis(searchData).then(response=>{
+      $this.$store.dispatch('Sales/getSalesDataAnalysisAction', searchData).then(response=>{
         if(response){
           if(response.status){
             $this.tableData = response.data;
@@ -500,7 +499,7 @@ export default {
     // 侧边任务数据
     publlcData(){
       var $this = this;
-      getSalesPublicData(null).then(response=>{
+      $this.$store.dispatch('Sales/getSalesPublicDataAction', null).then(response=>{
         if(response){        
           var defaultData = {};
           defaultData.waitcount=response.waitcount;

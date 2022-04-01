@@ -535,8 +535,7 @@
   </div>
 </template>
 <script>
-import { websiteAdd,websiteEditSystemInfo,websiteEditInfo } from '@/api/website';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'websiteEdit',
   data() {
@@ -726,7 +725,7 @@ export default {
     // 获取系统展示数据
     getWebsiteSystemData(){
       var $this = this;
-      websiteEditSystemInfo(null).then(response=>{
+      $this.$store.dispatch('website/websiteEditSystemInfoAction', null).then(response=>{
         if(response){
           if(response.status){
             var brandSelectList = [];
@@ -788,7 +787,7 @@ export default {
       if($this.$route.query.websiteID){
           $this.formData.id = $this.$route.query.websiteID;
           $this.formData.domain = $this.$route.query.website;
-          websiteEditInfo({id:$this.formData.id}).then(response=>{
+          $this.$store.dispatch('website/websiteEditInfoAction', {id:$this.formData.id}).then(response=>{
               if(response){
                 if(response.status){
                   $this.websiteInfo = response.data;
@@ -1040,7 +1039,7 @@ export default {
         formData.website_departid = $this.formData.website_departid;
         formData.sort = $this.formData.sort;
         formData.website_serveruser = $this.formData.website_serveruser;
-        websiteEdit(formData).then(response=>{
+        $this.$store.dispatch('website/websiteEditAction', formData).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

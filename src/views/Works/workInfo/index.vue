@@ -134,8 +134,7 @@
   </div>
 </template>
 <script>
-import { workOrderEditInitInfo,addCommentInfo } from '@/api/works';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'workInfo',
   data() {
@@ -338,7 +337,7 @@ export default {
     initPage(){
       var $this = this;
       $this.currentID = $this.$route.query.ID;
-      workOrderEditInitInfo({id:$this.currentID}).then(response=>{
+      $this.$store.dispatch('works/workOrderEditInitInfoAction', {id:$this.currentID}).then(response=>{
           if(response){
             if(response.status){
               if(response.data.accpertusername!=''&&response.data.accpertusername.indexOf('|')!=-1){
@@ -471,7 +470,7 @@ export default {
         });
         return false;
       }
-      addCommentInfo(formData).then(response=>{
+      $this.$store.dispatch('works/addCommentInfoAction', formData).then(response=>{
           if(response){
             if(response.status){
               $this.$message({

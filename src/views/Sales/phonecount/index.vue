@@ -248,7 +248,6 @@
 </template>
 
 <script>
-import {getSalesPublicData,getSalesSalesmanData} from '@/api/Sales';
 import { mapGetters } from 'vuex';
 export default {
   name: 'Sales_phonecount',
@@ -455,7 +454,7 @@ export default {
     // 获取左侧数据
     getLeftData(){
       var $this = this;
-      getSalesPublicData(null).then(response=>{
+      $this.$store.dispatch('Sales/getSalesPublicDataAction', null).then(response=>{
         if(response){        
           var defaultData = {};
           defaultData.waitcount=response.waitcount;
@@ -477,7 +476,7 @@ export default {
     // 获取统计数据
     getStatData(){
       var $this = this;
-      getSalesSalesmanData({status:$this.status}).then(response=>{
+      $this.$store.dispatch('Sales/getSalesSalesmanDataAction', {status:$this.status}).then(response=>{
         if(response){
           if(response.status){
             $this.tableData = response.data;

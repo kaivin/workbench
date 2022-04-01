@@ -43,7 +43,6 @@
   </div>
 </template>
 <script>
-import {getEnpersoncountdefault} from '@/api/memberCompare';
 import AwardRank from "../../components/memberCompare/AwardRank";
 import {sortByDesc} from "@/utils/index";
 import { mapGetters } from 'vuex';
@@ -293,7 +292,7 @@ export default {
       var searchData={};
       searchData=$this.initsearch();
       $this.emptyData();
-      getEnpersoncountdefault(searchData).then((response) => {
+      $this.$store.dispatch("memberCompare/getEnpersoncountdefaultAction",searchData).then((response) => {
           if (response) {
             if (response.status) {
               var tableDate=[];
@@ -374,6 +373,7 @@ export default {
       if (PositiveTime > currentTime){
         timeBool=false
       }
+      console.log(timeBool,'--',PositiveTime,'--',currentTime);
       return timeBool;
     },
     //默认时间周期

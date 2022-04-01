@@ -168,8 +168,7 @@
   </div>
 </template>
 <script>
-import {getProductList,productDelete,productAddEditData,productEdit,productAdd} from '@/api/enphone';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'Enphone_productlist',
   data() {
@@ -409,7 +408,7 @@ export default {
       formData.limit = $this.searchData.limit;
       formData.name = $this.searchData.name;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      getProductList(formData).then(response=>{
+      $this.$store.dispatch('enphone/productListAction', formData).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -542,38 +541,33 @@ export default {
         formData.pimg = $this.dialogForm.pimg;
         var pathUrl = "";
         if($this.dialogText=="编辑产品"){
-          productEdit(formData).then(response=>{
-            $this.funproductPlug(response);
-          });
+          pathUrl = "enphone/productEditAction";
         }else{
-          productAdd(formData).then(response=>{
-            $this.funproductPlug(response);
-          });
+          pathUrl = "enphone/productAddAction";
         }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
+        });
       }
     },
-    funproductPlug(arrData){
-      var $this=this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
-        });
-        $this.handleClose();
-        $this.initPage();
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isSaveData=false;
-        },1000);
-      }
-    },
-    //图片上传
+        //图片上传
     httpRequest(param){
       var $this=this;
       var formData = new FormData();
@@ -651,7 +645,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          productDelete({id:row.id}).then(response=>{
+          $this.$store.dispatch('enphone/productDeleteAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -688,7 +682,7 @@ export default {
     // 获取产品添加编辑是需要的系统数据
     getSelectData(){
       var $this = this;
-      productAddEditData(null).then(response=>{
+      $this.$store.dispatch('enphone/productAddEditDataAction', null).then(response=>{
           if(response.status){
             var typeList = [];
             response.type.forEach(function(item,index){

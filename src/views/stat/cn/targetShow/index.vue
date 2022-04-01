@@ -40,7 +40,6 @@
   </div>
 </template>
 <script>
-import {getDealNumTarget,getDayTarget,getDayFinish,getDepYearFinish} from '@/api/homeobject';
 import {parseTime}  from "@/utils";
 import DayScore from "../../components/targetShow/DayScore";
 import DealCount from "../../components/targetShow/DealCount";
@@ -182,7 +181,8 @@ export default {
       if(val){
         data.time = val;
       }
-      getDealNumTarget(data)
+      $this.$store
+        .dispatch("homeobject/postDealNum", data)
         .then((response) => {
           if (response) {
             if (response.status) {
@@ -234,7 +234,8 @@ export default {
       var $this = this;
       var data = {};
       data.time = val;
-      getDayTarget(data)
+      $this.$store
+        .dispatch("homeobject/postDayTarget", data)
         .then((response) => {
           if (response) {
             if (response.status) {
@@ -309,7 +310,8 @@ export default {
       var $this = this;
       var data = {};
       data.time = val;
-      getDayFinish(data)
+      $this.$store
+        .dispatch("homeobject/postDayFinish", data)
         .then((response) => {
           if (response) {
             if (response.status) {
@@ -355,7 +357,8 @@ export default {
       }else{
         data.year = new Date().getFullYear();
       }
-      getDepYearFinish(data)
+      $this.$store
+        .dispatch("homeobject/postDepFinish", data)
         .then((response) => {
           if (response) {
             if (response.status) {

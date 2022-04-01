@@ -136,8 +136,7 @@
   </div>
 </template>
 <script>
-import { getWebsiteLogDataList,websiteLogDelete } from '@/api/website';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'websiteLogList',
   data() {
@@ -398,7 +397,7 @@ export default {
           formData.limit = $this.limit;
           formData.page = $this.page;
           formData.website_id = $this.$route.query.websiteID;
-          getWebsiteLogDataList(formData).then(response=>{
+          $this.$store.dispatch('website/websiteLogListAction', formData).then(response=>{
               if(response){
                   if(response.status){
                       response.data.forEach(function(item,index){
@@ -475,7 +474,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          websiteLogDelete({id:row.id}).then(response=>{
+          $this.$store.dispatch('website/websiteLogDeleteAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

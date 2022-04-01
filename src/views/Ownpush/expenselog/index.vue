@@ -132,8 +132,7 @@
   </div>
 </template>
 <script>
-import {getExpenselog,getExpenseadd} from '@/api/ownpush';
-import { mapGetters} from 'vuex';
+import { mapGetters,mapActions} from 'vuex'
 export default {
   name: 'Ownpush_expenselog',
   data() {
@@ -371,7 +370,7 @@ export default {
       var $this = this;
       var searchData = $this.searchDataInit();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      getExpenselog(searchData).then(res=>{
+      $this.$store.dispatch('ownpush/getExpenselogAction', searchData).then(res=>{
         if(res){
           if(res.status){
               $this.tableData=res.data;
@@ -467,13 +466,16 @@ export default {
         this.exportForm.fileName = "";
       })
     },
+    ...mapActions({
+      setExpenseaddAction:'ownpush/getExpenseaddAction'
+    }),
     //导入数据
     FileUp(e){
       var $this = this;
       let filedata = e.target.files[0];
       var formData = new FormData();
       formData.append('filename',filedata);
-      getExpenseadd(formData).then(res=>{
+      this.setExpenseaddAction(formData).then(res=>{
         $this.$message({
           showClose: true,
           message: res.info,

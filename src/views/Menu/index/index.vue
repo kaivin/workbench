@@ -265,7 +265,6 @@
   </div>
 </template>
 <script>
-import {getDataList,menuAdd,menuEdit,menuDelete} from '@/api/menu';
 import svgIcons from "./svg-icons.js";
 import elementIcons from "./element-icons.js";
 import { mapGetters } from "vuex";
@@ -501,7 +500,7 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      getDataList(null).then((response) => {
+      $this.$store.dispatch("menu/menuListAction", null).then((response) => {
         if (response) {
           if (response.status) {
             if (response.data.length > 0) {
@@ -753,35 +752,30 @@ export default {
         }
         var pathUrl = "";
         if ($this.dialogText == "编辑菜单") {
-          menuEdit(formData).then((response) => {
-            $this.funsavePlug(response);
-          });
+          pathUrl = "menu/menuEditAction";
         } else {
-          menuAdd(formData).then((response) => {
-            $this.funsavePlug(response);
-          });
+          pathUrl = "menu/menuAddAction";
         }
-      }
-    },
-    funsavePlug(arrData){
-      var $this = this;
-      if (arrData.status) {
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: "success",
+        $this.$store.dispatch(pathUrl, formData).then((response) => {
+          if (response.status) {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "success",
+            });
+            $this.handleClose();
+            $this.initPage();
+          } else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+            setTimeout(()=>{
+              $this.isSaveData=false;
+            },1000);
+          }
         });
-        $this.handleClose();
-        $this.initPage();
-      } else {
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: "error",
-        });
-        setTimeout(()=>{
-          $this.isSaveData=false;
-        },1000);
       }
     },
     // 重置添加数据表单
@@ -830,7 +824,8 @@ export default {
     // 删除表格行
     deleteTableRow(row, index) {
       var $this = this;
-      menuDelete({ id: row.id })
+      $this.$store
+        .dispatch("menu/menuDeleteAction", { id: row.id })
         .then((response) => {
           if (response.status) {
             $this.$message({

@@ -56,7 +56,7 @@
               <div class="comment-header">
                 <span class="name" v-if="item.is_hidename==0">{{item.name}}</span><span class="name" v-else>匿名</span>
                 <span class="time">{{item.addtime}}</span>
-                <span v-if="articleData.commentdelete==1&&menuButtonPermit.includes('Article_commentdelete')" class="delete" v-on:click="deleteCommentPlug(item.id)" title="删除该条评论"><i class="el-icon-delete-solid"></i></span>
+                <span v-if="articleData.commentdelete==1&&menuButtonPermit.includes('Article_commentdelete')" class="delete" v-on:click="deleteComment(item.id)" title="删除该条评论"><i class="el-icon-delete-solid"></i></span>
               </div>
               <div class="comment-body" v-html="item.content"></div>
             </div>
@@ -68,9 +68,8 @@
   </div>
 </template>
 <script>
-import {postArticleSubmitComment,postArticleCommentList,deleteComment,postArticleInfo,postArticleReadUser} from '@/api/article';
-import { mapGetters } from 'vuex';
-import VueUeditorWrap from 'vue-ueditor-wrap';
+import { mapGetters } from 'vuex'
+import VueUeditorWrap from 'vue-ueditor-wrap'
 export default {
   name: 'articleInfo',
   components: { VueUeditorWrap },
@@ -286,7 +285,7 @@ export default {
             }else{
               if($this.$route.query.id){
                 $this.currentID = $this.$route.query.id;
-                postArticleInfo({id:$this.currentID}).then(response=>{
+                $this.$store.dispatch('article/postArticleInfoAction', {id:$this.currentID}).then(response=>{
                     if(response){
                       if(response.status){
                         $this.articleData = response.data;
@@ -338,7 +337,7 @@ export default {
     // 获取当前文章的已读用户、未读用户、应读用户
     getReadUser(){
       var $this = this;
-      postArticleReadUser({id:$this.currentID}).then(response=>{
+      $this.$store.dispatch('article/postArticleReadUserAction', {id:$this.currentID}).then(response=>{
           if(response){
             if(response.status){
               $this.userList = response;
@@ -385,7 +384,7 @@ export default {
           return false;
         }
         $this.isSubmitComment=true;
-        postArticleSubmitComment(formData).then(response=>{
+        $this.$store.dispatch('article/postArticleSubmitCommentAction', formData).then(response=>{
             if(response){
               if(response.status){
                 $this.resetComment();
@@ -412,7 +411,7 @@ export default {
     // 获取留言列表数据
     getCommentList(){
       var $this = this;
-      postArticleCommentList({id:$this.currentID}).then(response=>{
+      $this.$store.dispatch('article/postArticleCommentListAction', {id:$this.currentID}).then(response=>{
           if(response){
             if(response.status){
               $this.commentList = response.data;
@@ -442,14 +441,14 @@ export default {
       window.open(routeUrl.href,'_self');
     },
     // 删除评论
-    deleteCommentPlug(id){
+    deleteComment(id){
       var $this = this;
       $this.$confirm('是否确认删除该评论?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-        deleteComment({id:id}).then(response=>{
+        $this.$store.dispatch('article/deleteCommentAction', {id:id}).then(response=>{
             if(response){
               if(response.status){
                 $this.$message({

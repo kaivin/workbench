@@ -262,9 +262,8 @@
   </div>
 </template>
 <script>
-import {postArticleAdd,postArticleEdit,postArticleEditInfo,getEditPostData} from '@/api/article';
-import { mapGetters } from 'vuex';
-import VueUeditorWrap from 'vue-ueditor-wrap';
+import { mapGetters } from 'vuex'
+import VueUeditorWrap from 'vue-ueditor-wrap'
 export default {
   name: 'articleAddEdit',
   components: { VueUeditorWrap },
@@ -593,7 +592,7 @@ export default {
     // 获取当前登录用户添加发布时可选择的论坛栏目
     getShowData(){
       var $this = this;
-      getEditPostData().then(response=>{
+      $this.$store.dispatch('article/getEditPostDataAction', null).then(response=>{
         if(response){
           if(response.status){
             response.userwritetypepermit.forEach(function(item,index){
@@ -665,7 +664,7 @@ export default {
     // 获取编辑文章详情
     getArticleInfo(){
       var $this = this;
-      postArticleEditInfo({id:$this.formData.id}).then(response=>{
+      $this.$store.dispatch('article/postArticleEditInfoAction', {id:$this.formData.id}).then(response=>{
           if(response){
             if(response.status){
               $this.articleData = response.data;
@@ -908,34 +907,29 @@ export default {
         }
         var pathUrl = "";
         if($this.formData.id!==0){
-          postArticleEdit(formData).then(response=>{
-              $this.funArticle(response);
-          });
+          pathUrl = 'article/postArticleEditAction';
         }else{
-          postArticleAdd(formData).then(response=>{
-              $this.funArticle(response);
-          });
+          pathUrl = 'article/postArticleAddAction';
         }
-      }
-    },
-    funArticle(res){
-      var $this = this;
-      if(res.status){
-        $this.$message({
-          showClose: true,
-          message: res.info,
-          type: 'success'
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.$router.push({path:'/Article/index',query:{id:$this.formData.postTypeID}});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
         });
-        $this.$router.push({path:'/Article/index',query:{id:$this.formData.postTypeID}});
-      }else{
-        $this.$message({
-          showClose: true,
-          message: res.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isDisabled=false;
-        },1000);
       }
     },
     // markdown文本发生变化时执行事件

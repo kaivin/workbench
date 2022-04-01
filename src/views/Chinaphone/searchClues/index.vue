@@ -495,7 +495,6 @@
 </template>
 
 <script>
-import {getCurrentCluesSearchList,cluesSearchSelectData,cluesPhoneStatData,getCurrentCateProductList,currentCluesSetALevel,Custormeditlog} from '@/api/chinaphone';
 import { mapGetters } from 'vuex';
 export default {
   name: 'searchClues',
@@ -843,7 +842,7 @@ export default {
         var searchData = $this.initSearchData();
         $this.tableData=[];
         document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-        getCurrentCluesSearchList(searchData).then(response=>{
+        $this.$store.dispatch('chinaphone/getCurrentCluesSearchListAction', searchData).then(response=>{
           if(response){
             if(response.status){
               var infoData = {};
@@ -951,7 +950,7 @@ export default {
     // 获取当前电话的搜索条件数据
     getSearchSelectData(){
       var $this = this;
-      cluesSearchSelectData(null).then(response=>{
+      $this.$store.dispatch('chinaphone/cluesSearchSelectDataAction', null).then(response=>{
         if(response){
           if(response.status){
             var deviceList = [];
@@ -1113,7 +1112,7 @@ export default {
     // 获取电话列表及电话统计数字
     getPhoneListNum(){
       var $this = this;
-      cluesPhoneStatData(null).then(response=>{
+      $this.$store.dispatch('chinaphone/cluesPhoneStatDataAction', null).then(response=>{
         if(response){
           if(response.status){
             var phoneArr=response.data;
@@ -1155,7 +1154,7 @@ export default {
         var $this = this;
         if(e){
           $this.searchData.productid = "";
-          getCurrentCateProductList({typeid:e}).then(response=>{
+          $this.$store.dispatch('chinaphone/getCurrentCateProductListAction', {typeid:e}).then(response=>{
               if(response){
                   if(response.status){
                       var productList = [];
@@ -1257,7 +1256,7 @@ export default {
         levelID.push(item.id);
       });
       postData.id = levelID;
-      currentCluesSetALevel(postData).then(response=>{
+      $this.$store.dispatch('chinaphone/currentCluesSetALevelAction', postData).then(response=>{
         if(response){
           if(response.status){
             $this.$message({
@@ -1281,7 +1280,7 @@ export default {
       var $this = this;
       var FormID={};
       FormID.id = Rid;
-      Custormeditlog(FormID).then(response=>{
+      $this.$store.dispatch('chinaphone/CustormeditlogAction', FormID).then(response=>{
         if(response){
           if(response.status){   
             if(response.data.length>0){

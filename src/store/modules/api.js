@@ -351,7 +351,7 @@ const mutations = {
     }else{
       state.isenAimScoreAdd = false;
     }
-    if(permitData.includes("Enquiries_selectuser")&&data.page==""){
+    if(permitData.includes("Enquiries_selectuseradd")&&data.page==""){
       state.isselectuserAdd = true;
     }else{
       state.isselectuserAdd = false;

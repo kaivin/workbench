@@ -132,8 +132,7 @@
   </div>
 </template>
 <script>
-import {enScoreList,enScoreAdd,enScoreEdit,enScoreDelete} from '@/api/ownaim';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'Ownpush_index',
   data() {
@@ -276,7 +275,7 @@ export default {
         $this.searchData.starttime = $this.searchDate[0];
         $this.searchData.endtime = $this.searchDate[1]; 
       }      
-      enScoreList($this.searchData).then(response=>{
+      $this.$store.dispatch('ownaim/getenScoreList', $this.searchData).then(response=>{
         if(response){
           if(response.status){
             $this.totalDataNum = response.allcount;
@@ -376,36 +375,31 @@ export default {
         $this.isDisabled=true;
         var pathUrl = "";
         if($this.dialogText=="添加目标"){
-          enScoreAdd($this.dialogForm).then(response=>{
-            $this.funsavePlug(response);
-          });
+          pathUrl = "ownaim/addEnScore";
         }else{
-          enScoreEdit($this.dialogForm).then(response=>{
-            $this.funsavePlug(response);
-          });
+          pathUrl = "ownaim/editEnScore";
         }
-      }
-    },
-    funsavePlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.isDisabled=false;
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
+        $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
+            if(response.status){
+              $this.isDisabled=false;
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
         });
-        $this.handleClose();
-        $this.initPage();
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isDisabled=false;
-        },1000);
       }
     },
     // 重置添加数据表单
@@ -456,7 +450,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          enScoreDelete({id:row.id}).then(response=>{
+          $this.$store.dispatch('ownaim/deleteEnScore', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

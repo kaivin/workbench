@@ -87,9 +87,7 @@
   </div>
 </template>
 <script>
-import { websiteFieldList,websiteFieldAllotedReadPermit,websiteFieldAllotedWritePermit,websiteFieldAllotReadPermit,websiteFieldAllotWritePermit } from '@/api/website';
-import {userCanAllotRole} from '@/api/user';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'tableconfigIndex',
   data() {
@@ -330,7 +328,7 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      websiteFieldList(null).then(response=>{
+      $this.$store.dispatch('website/websiteFieldListAction', null).then(response=>{
         if(response){
           if(response.status){
             $this.tableData = response.data;
@@ -393,41 +391,36 @@ export default {
           rolePostData.role_id = $this.roleValue;
           var pathUrl = "";
           if($this.isRead){
-            websiteFieldAllotReadPermit(rolePostData).then(response=>{
-              $this.funwebsiteFieldAllotPlug(response);
-            });
+            pathUrl = "website/websiteFieldAllotReadPermitAction";
           }else{
-            websiteFieldAllotWritePermit(rolePostData).then(response=>{
-              $this.funwebsiteFieldAllotPlug(response);
-            });
+            pathUrl = "website/websiteFieldAllotWritePermitAction";
           }
-        }
-    },
-    funwebsiteFieldAllotPlug(arrData){
-      var $this = this;
-      if(arrData.status){
-          $this.$message({
-            showClose: true,
-            message: arrData.info,
-            type: 'success'
+          $this.$store.dispatch(pathUrl, rolePostData).then(response=>{
+            if(response.status){
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'success'
+                });
+                $this.dialogRoleVisible = false;
+                $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveRoleData=false;
+              },1000);
+            }
           });
-          $this.dialogRoleVisible = false;
-          $this.initPage();
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isSaveRoleData=false;
-        },1000);
-      }
+        }
     },
     // 获取当前字段可读权限已分配的角色数据
     getAllotedReadRole(){
       var $this = this;
-      websiteFieldAllotedReadPermit({name:$this.currentName}).then(response=>{
+      $this.$store.dispatch('website/websiteFieldAllotedReadPermitAction', {name:$this.currentName}).then(response=>{
         if(response.status){
           var roleUserData = [];
           var selectedRoleUserData = [];
@@ -456,7 +449,7 @@ export default {
     // 获取当前字段可写权限已分配的角色数据
     getAllotedWriteRole(){
       var $this = this;
-      websiteFieldAllotedWritePermit({name:$this.currentName}).then(response=>{
+      $this.$store.dispatch('website/websiteFieldAllotedWritePermitAction', {name:$this.currentName}).then(response=>{
         if(response.status){
           var roleUserData = [];
           var selectedRoleUserData = [];
@@ -493,7 +486,7 @@ export default {
       }
       var roleDataNow = $this.roleData;
       var roleIngData = [];
-      userCanAllotRole(null).then(response=>{
+      $this.$store.dispatch('user/userCanAllotRoleAction', null).then(response=>{
         if(response.status){
           if(response.data.length>0){
             if(roleDataNow.length>0){

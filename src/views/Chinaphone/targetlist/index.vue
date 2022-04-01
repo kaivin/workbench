@@ -141,7 +141,6 @@
   </div>
 </template>
 <script>
-import {CndeparChoose,Cntargetlist,CntargetlistDel,CntargetlistEdit,CntargetlistAdd} from '@/api/chinaphone';
 import { mapGetters } from 'vuex'
 export default {
   name: 'Chinaphone_targetlist',
@@ -374,7 +373,7 @@ export default {
     // 初始化部门数据
     dealData(){
       var $this = this;
-      CndeparChoose(null).then(response=>{
+      $this.$store.dispatch('chinaphone/CndeparChooseAction', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -429,7 +428,7 @@ export default {
       var $this = this;
       var formData = $this.restearch();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      Cntargetlist(formData).then(response=>{
+      $this.$store.dispatch('chinaphone/CntargetlistAction', formData).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -565,35 +564,30 @@ export default {
         formData.searchnumber = $this.dialogForm.searchnumber;
         var pathUrl = "";
         if($this.dialogText=="编辑日目标"){
-          CntargetlistEdit(formData).then(response=>{
-            $this.funCntargetPlug(response);
-          });
+          pathUrl = "chinaphone/CntargetlistEditAction";
         }else{
-          CntargetlistAdd(formData).then(response=>{
-            $this.funCntargetPlug(response);
-          });
+          pathUrl = "chinaphone/CntargetlistAddAction";
         }
-      }
-    },
-    funCntargetPlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
         });
-        $this.handleClose();
-        $this.initPage();
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isSaveData=false;
-        },1000);
       }
     },
     // 重置添加数据表单
@@ -634,7 +628,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          CntargetlistDel({id:row.id}).then(response=>{
+          $this.$store.dispatch('chinaphone/CntargetlistDelAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

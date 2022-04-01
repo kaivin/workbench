@@ -150,9 +150,7 @@
   </div>
 </template>
 <script>
-import { userPersonotherExportlink,userPersonotherEdit,userPersonotherAdd,userPersonother } from '@/api/user';
-import {groupDealDel} from '@/api/Compare';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'Compare_lists',
   data() {
@@ -278,13 +276,16 @@ export default {
     window.removeEventListener('scroll', this.handleScroll,true);//监听页面滚动事件
   },
   methods:{
+      ...mapActions({
+          userPersonotherExportlinkAction:"user/userPersonotherExportlinkAction"
+      }),
       //导入
     custormbuyFileUp(e){
       var $this = this;
       let filedata = e.target.files[0];
       var formData = new FormData();
       formData.append('filename',filedata);
-      userPersonotherExportlink(formData).then(res=>{
+      this.userPersonotherExportlinkAction(formData).then(res=>{
         $this.$message({
           showClose: true,
           message: res.info,
@@ -408,7 +409,7 @@ export default {
     // 初始化小组
     dealData(){
       var $this = this;
-      userPersonother(null).then(response=>{
+      $this.$store.dispatch('user/getUserPersonotherAction', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -464,7 +465,7 @@ export default {
       var $this = this;
       var formData = $this.restearch();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      userPersonother(formData).then(response=>{
+      $this.$store.dispatch('user/userPersonotherAction', formData).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -585,35 +586,30 @@ export default {
         $this.isSaveData=true;
         var pathUrl = "";
         if($this.dialogText=="编辑个人信息"){
-          userPersonotherEdit($this.dialogForm).then(response=>{
-            $this.funuserPersonotherPlug(response);
-          });
+          pathUrl = "user/userPersonotherEditAction";
         }else{
-          userPersonotherAdd($this.dialogForm).then(response=>{
-            $this.funuserPersonotherPlug(response);
-          });
+          pathUrl = "user/userPersonotherAddAction";
         }
-      }
-    },
-    funuserPersonotherPlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
+        $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
         });
-        $this.handleClose();
-        $this.initPage();
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isSaveData=false;
-        },1000);
       }
     },
     // 重置添加数据表单
@@ -653,7 +649,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          groupDealDel({id:row.id}).then(response=>{
+          $this.$store.dispatch('Compare/groupDealDelAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

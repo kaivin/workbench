@@ -125,7 +125,6 @@
   </div>
 </template>
 <script>
-import {getloglist,getlists,getlogSpidertype,getlogCheckspider} from '@/api/Weblog';
 import { mapGetters } from 'vuex';
 export default {
   name: 'WeblogLists',
@@ -201,7 +200,7 @@ export default {
     // 常用蜘蛛列表
     getspidertypeList(){
       var $this=this;
-      getlogSpidertype().then(res=>{
+      $this.$store.dispatch('Weblog/getlogSpidertypeAction').then(res=>{
         if(res.status){
            if(res.data&&res.data.length>0){
               var spidertypeList=[];
@@ -250,7 +249,7 @@ export default {
       if(weburl&&weburl!=''){
         $this.searchData.weburl=weburl;
       }
-      $this.loglistPlug();
+      $this.getloglist();
     },
     // 组装日志文件所需数据
     Searchlog(){
@@ -275,15 +274,15 @@ export default {
     },
     //获取最后斜杠后的字符串 
     LastStr(str){       
-      let index = str.lastIndexOf("\/");  
-      str  = str.substring(index + 1, str.length);
+      let index = str .lastIndexOf("\/");  
+      str  = str .substring(index + 1, str.length);
       return str;
     },
     // 调用日志文件
-    loglistPlug(){
+    getloglist(){
       var $this=this;
       var searchData=$this.Searchlog();
-      getloglist(searchData).then(res=>{
+      $this.$store.dispatch('Weblog/getloglistAction',searchData).then(res=>{
         if(res.status){
            if(res.data&&res.data.length>0){
              var loglist=[];
@@ -363,7 +362,7 @@ export default {
         $this.searchData.page = 1
       }
       $this.isPageBtn = false;
-      getlists(searchData).then(res=>{
+      $this.$store.dispatch('Weblog/getlistsAction',searchData).then(res=>{
         if(res.status){
             $this.tableData=res.data;
             $this.totalDataNum = res.allcount;
@@ -416,7 +415,7 @@ export default {
       var $this=this;
       var searchData={};
       searchData.ip=varDate.ip
-      getlogCheckspider(searchData).then(res=>{
+      $this.$store.dispatch('Weblog/getlogCheckspiderActive',searchData).then(res=>{
         if(res.status){
           $this.$message({
               message: res.data,

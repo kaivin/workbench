@@ -35,7 +35,6 @@
     </div>
 </template>
 <script>
-import { getChScore,getEnScore } from '@/api/ownaim';
 import FlipDown from './FlipDown.vue';
 export default {
     name: "welcome",
@@ -65,31 +64,27 @@ export default {
     methods: {
         getchtarget(){
             var $this = this;
+            var pathUrl = "";
             if($this.status == 1){
-                getChScore().then(response=>{
-                    $this.funchtargetPlug(response);
-                });
+                 pathUrl = "ownaim/getChScore";
             }else{
-                getEnScore().then(response=>{
-                    $this.funchtargetPlug(response);
-                });
+                 pathUrl = "ownaim/getEnScore";
             }
-        },
-        funchtargetPlug(arrData){
-            var $this = this;
-            if(arrData.status){
-                $this.hasscore = arrData.hasscore;
-                $this.targetscore = arrData.targetscore;
-                var leftday = arrData.timeday;
-                var timeStamp = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
-                $this.finishTime = leftday*24*60*60*1000 + timeStamp;
-            }else{
-                $this.$message({
-                    showClose: true,
-                    message: arrData.info,
-                    type: 'error'
-                });
-            }
+            $this.$store.dispatch(pathUrl).then(response=>{
+                if(response.status){
+                    $this.hasscore = response.hasscore;
+                    $this.targetscore = response.targetscore;
+                    var leftday = response.timeday;
+                    var timeStamp = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+                    $this.finishTime = leftday*24*60*60*1000 + timeStamp;
+                }else{
+                    $this.$message({
+                        showClose: true,
+                        message: response.info,
+                        type: 'error'
+                    });
+                }
+            });
         },
         // 计时结束
         commitTimeEnd(){

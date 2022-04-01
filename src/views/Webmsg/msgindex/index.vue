@@ -318,7 +318,6 @@
 </template>
 
 <script>
-import { webMsgAllList,webMsgUntreatedList,webMsgPendingList,webMsgProcessedList,webMsgStarList,webMsgSpamList,webMsgTestList,webMsgPromotePendingList,webMsgPromoteProcessedList,webMsgFilterSpamList,webMsgRecycleList,webMsgSearchSystemList,webMsgInitData,webMsgAllotToPending,webMsgEdit,webMsgPromotePending,webMsgRevoke,webMsgPromoteProcessed,webMsgDelete,webMsgRecycleBack,webMsgFilterBack } from '@/api/webmsg'
 import { mapGetters ,mapMutations} from 'vuex';
 export default {
   name: 'Webmsg_msgindex',
@@ -578,58 +577,35 @@ export default {
       searchData.language = $this.searchData.language;
       searchData.brand_id = $this.searchData.brand_id;
       searchData.keyword = $this.searchData.keyword;
-      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
+      var pathUrl = "";
       if($this.currentStatus==="All"){
-        webMsgAllList(searchData).then(response=>{
-          $this.funwebMsgPlug(response);
-        });
+        pathUrl = "webmsg/webMsgAllListAction";
       }else if($this.currentStatus==="Untreated"){
-        webMsgUntreatedList(searchData).then(response=>{
-          $this.funwebMsgPlug(response);
-        });
+        pathUrl = "webmsg/webMsgUntreatedListAction";
       }else if($this.currentStatus==="Pending"){
-        webMsgPendingList(searchData).then(response=>{
-          $this.funwebMsgPlug(response);
-        });
+        pathUrl = "webmsg/webMsgPendingListAction";
       }else if($this.currentStatus==="Processed"){
-        webMsgProcessedList(searchData).then(response=>{
-          $this.funwebMsgPlug(response);
-        });
+        pathUrl = "webmsg/webMsgProcessedListAction";
       }else if($this.currentStatus==="Starred"){
-        webMsgStarList(searchData).then(response=>{
-          $this.funwebMsgPlug(response);
-        });
+        pathUrl = "webmsg/webMsgStarListAction";
       }else if($this.currentStatus==="Spam"){
-        webMsgSpamList(searchData).then(response=>{
-          $this.funwebMsgPlug(response);
-        });
+        pathUrl = "webmsg/webMsgSpamListAction";
       }else if($this.currentStatus==="Test"){
-        webMsgTestList(searchData).then(response=>{
-          $this.funwebMsgPlug(response);
-        });
+        pathUrl = "webmsg/webMsgTestListAction";
       }else if($this.currentStatus==="SNS_1"){
-        webMsgPromotePendingList(searchData).then(response=>{
-          $this.funwebMsgPlug(response);
-        });
+        pathUrl = "webmsg/webMsgPromotePendingListAction";
       }else if($this.currentStatus==="SNS_2"){
-        webMsgPromoteProcessedList(searchData).then(response=>{
-          $this.funwebMsgPlug(response);
-        });
+        pathUrl = "webmsg/webMsgPromoteProcessedListAction";
       }else if($this.currentStatus==="Filter"){
-        webMsgFilterSpamList(searchData).then(response=>{
-          $this.funwebMsgPlug(response);
-        });
+        pathUrl = "webmsg/webMsgFilterSpamListAction";
       }else{
-        webMsgRecycleList(searchData).then(response=>{
-          $this.funwebMsgPlug(response);
-        });
+        pathUrl = "webmsg/webMsgRecycleListAction";
       }
-    },
-    funwebMsgPlug(arrData){
-      var $this = this;
-        if(arrData){
-          if(arrData.status){
-            var tableData = arrData.data;
+      document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
+      $this.$store.dispatch(pathUrl, searchData).then(response=>{
+        if(response){
+          if(response.status){
+            var tableData = response.data;
             tableData.forEach(function(item,index){
               if(item.starstatus==1){
                 item.isStar = false;
@@ -641,8 +617,8 @@ export default {
               }else{
                 item.isProcessed = true;
               }
-              if($this.currentStatus==="All"||$this.currentStatus==="Untreated"||$this.currentStatus==="Processed"||$this.currentStatus==="Starred"||$this.currentStatus==="Spam"||$this.currentStatus==="Test"||$this.currentStatus==="Filter"||$this.currentStatus==="Recycle"){
-                if(arrData.emailshow === 2){
+              if($this.currentStatus==="All"||$this.currentStatus==="Untreated"||$this.currentStatus==="Processed"||$this.currentStatus==="Starred"||$this.currentStatus==="Spam"||$this.currentStatus==="Test"||$this.currentStatus==="Filter"){
+                if(response.emailshow === 2){
                   if(item.email&&item.email.indexOf("@")!=-1){
                     item.encryptEmail = "";
                     var emailArr = item.email.split("@");
@@ -659,7 +635,7 @@ export default {
                 }else{
                   item.encryptEmail = item.email;
                 }
-                if(arrData.phoneshow === 2){
+                if(response.phoneshow === 2){
                   if(item.telephone&&item.telephone.length>6){
                     item.encryptPhone = item.telephone.substring(0,item.telephone.length-6)+"******";
                   }else{
@@ -674,7 +650,7 @@ export default {
               }
             });
             $this.tableData = tableData;
-            $this.totalDataNum = arrData.allcount;
+            $this.totalDataNum = response.allcount;
             $this.$nextTick(()=>{
               $this.setHeight();
             });
@@ -682,7 +658,7 @@ export default {
               $this.isSearchResult=false;
             },1000);
           }else{
-            if(arrData.permitstatus&&arrData.permitstatus==2){
+            if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
                 showClose: true,
                 message: "未被分配该页面访问权限",
@@ -693,7 +669,7 @@ export default {
             }else{
               $this.$message({
                 showClose: true,
-                message: arrData.info,
+                message: response.info,
                 type: 'error'
               });
               setTimeout(()=>{
@@ -702,11 +678,12 @@ export default {
             }
           }
         }
+      });
     },
     // 获取系统筛选数据
     getSearchSystemData(){
       var $this = this;
-      webMsgSearchSystemList(null).then(response=>{
+      $this.$store.dispatch('webmsg/webMsgSearchSystemListAction', null).then(response=>{
         if(response){
           if(response.status){
             var brandList = [];
@@ -741,7 +718,7 @@ export default {
       var $this = this;
       if(!$this.isSearchResult){
         $this.isSearchResult=true;
-        webMsgInitData(null).then(response=>{
+        $this.$store.dispatch('webmsg/webMsgInitDataAction', null).then(response=>{
           if(response){
             if(response.status){
               $this.defaultData.totalNum = response.countall;
@@ -966,7 +943,7 @@ export default {
         $this.selectedData.forEach(function(item,index){
           resultData.id.push(item.id);
         });
-        webMsgAllotToPending(resultData).then(response=>{
+        $this.$store.dispatch('webmsg/webMsgAllotToPendingAction', resultData).then(response=>{
           if(response){
             if(response.status){
               $this.$message({
@@ -998,7 +975,7 @@ export default {
       resultData.starstatus = row.isStar?2:1;
       resultData.dealstatus = row.isProcessed?2:1;
       resultData.allotremark = row.allotremark;
-      webMsgEdit(resultData).then(response=>{
+      $this.$store.dispatch('webmsg/webMsgEditAction', resultData).then(response=>{
         if(response){
           if(response.status){
             $this.$message({
@@ -1051,37 +1028,33 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
+            var pathUrl = "";
             if($this.currentStatus==="Recycle"){
-              webMsgDelete(resultData).then(response=>{
-                $this.deleteTableRowPlug(response);
-              });
+              pathUrl = "webmsg/webMsgDeleteAction"
             }else{
-              webMsgDelete(resultData).then(response=>{
-                $this.deleteTableRowPlug(response);
-              });
+              pathUrl = "webmsg/webMsgDeleteAction"
             }
+            $this.$store.dispatch(pathUrl, resultData).then(response=>{
+                if(response.status){
+                  $this.$message({
+                      showClose: true,
+                      message: response.info,
+                      type: 'success'
+                  });
+                  $this.initPage();
+                }else{
+                  $this.$message({
+                      showClose: true,
+                      message: response.info,
+                      type: 'error'
+                  });
+                }
+            });
         }).catch(() => {
             $this.$message({
                 type: 'info',
                 message: '已取消删除'
             });          
-        });
-      }
-    },
-    deleteTableRowPlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-            showClose: true,
-            message: arrData.info,
-            type: 'success'
-        });
-        $this.initPage();
-      }else{
-        $this.$message({
-            showClose: true,
-            message: arrData.info,
-            type: 'error'
         });
       }
     },
@@ -1096,39 +1069,34 @@ export default {
         });
         var pathUrl = "";
         if($this.currentStatus==="Recycle"){
-          webMsgRecycleBack(resultData).then(response=>{
-            $this.msgBackPlug(response);
-          });
+          pathUrl = "webmsg/webMsgRecycleBackAction";
         }else{
-          webMsgFilterBack(resultData).then(response=>{
-            $this.msgBackPlug(response);
-          });
+          pathUrl = "webmsg/webMsgFilterBackAction";
         }
-      }
-    },
-    msgBackPlug(arrData){
-      var $this = this;
-      if(arrData){
-        if(arrData.status){
-          $this.$message({
-            showClose: true,
-            message: arrData.info,
-            type: 'success'
-          });
-          $this.initPage();
-        }else{
-          $this.$message({
-            showClose: true,
-            message: arrData.info,
-            type: 'error'
-          });
-        }
+        $this.$store.dispatch(pathUrl, resultData).then(response=>{
+          if(response){
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          }
+        });
       }
     },
     // 改为推广待处理
     promotePendingEdit(row,index){
       var $this = this;
-      webMsgPromotePending({id:row.id}).then(response=>{
+      $this.$store.dispatch('webmsg/webMsgPromotePendingAction', {id:row.id}).then(response=>{
         if(response){
           if(response.status){
             $this.$message({
@@ -1150,7 +1118,7 @@ export default {
     // 撤回推广待处理
     revokeEdit(row,index){
       var $this = this;
-      webMsgRevoke({id:row.id}).then(response=>{
+      $this.$store.dispatch('webmsg/webMsgRevokeAction', {id:row.id}).then(response=>{
         if(response){
           if(response.status){
             $this.$message({
@@ -1172,7 +1140,7 @@ export default {
     // 改为推广已处理
     promoteProcessedEdit(row,index){
       var $this = this;
-      webMsgPromoteProcessed({id:row.id}).then(response=>{
+      $this.$store.dispatch('webmsg/webMsgPromoteProcessedAction', {id:row.id}).then(response=>{
         if(response){
           if(response.status){
             $this.$message({

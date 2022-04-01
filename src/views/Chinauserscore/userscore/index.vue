@@ -159,7 +159,6 @@
   </div>
 </template>
 <script>
-import {CnscoreList,CnscoreSearch,CnscoreAdd,CnscoreEdit,CnscoreDel} from '@/api/Chinauserscore';
 import { mapGetters } from 'vuex'
 export default {
   name: 'Chinauserscore_userscore',
@@ -412,7 +411,7 @@ export default {
     // 获取用户
     userListData(){
       var $this = this;
-      CnscoreList(null).then(response=>{
+      $this.$store.dispatch('Chinauserscore/CnscoreListAction', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -489,7 +488,7 @@ export default {
       var $this = this;
       var formData = $this.restearch();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      CnscoreSearch(formData).then(response=>{
+      $this.$store.dispatch('Chinauserscore/CnscoreSearchAction', formData).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -632,35 +631,30 @@ export default {
         formData.anumber = $this.dialogForm.anumber;        
         var pathUrl = "";
         if($this.dialogText=="编辑部门成交"){
-          CnscoreEdit(formData).then(response=>{
-            $this.funsavePlug(response);
-          });
+          pathUrl = "Chinauserscore/CnscoreEditAction";
         }else{
-          CnscoreAdd(formData).then(response=>{
-            $this.funsavePlug(response);
-          });
+          pathUrl = "Chinauserscore/CnscoreAddAction";
         }
-      }
-    },
-    funsavePlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
         });
-        $this.handleClose();
-        $this.initPage();
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isSaveData=false;
-        },1000);
       }
     },
     // 重置添加数据表单
@@ -703,7 +697,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          CnscoreDel({id:row.id}).then(response=>{
+          $this.$store.dispatch('Chinauserscore/CnscoreDelAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

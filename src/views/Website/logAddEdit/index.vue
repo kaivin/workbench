@@ -156,9 +156,8 @@
 
 
 <script>
-import { websiteLogAdd,websiteLogEdit,systemTagList,websiteLogEditInfo } from '@/api/website';
-import { mapGetters } from 'vuex';
-import VueUeditorWrap from 'vue-ueditor-wrap';
+import { mapGetters } from 'vuex'
+import VueUeditorWrap from 'vue-ueditor-wrap'
 export default {
   name: 'websiteLogAddEdit',
   components: { VueUeditorWrap },
@@ -495,7 +494,7 @@ export default {
     // 获取系统标签
     getSystemTagData(){
       var $this = this;
-      systemTagList(null).then(response=>{
+      $this.$store.dispatch('website/systemTagListAction', null).then(response=>{
         if(response){
           if(response.status){
             $this.postSystemTag = response.data;
@@ -522,7 +521,7 @@ export default {
       $this.website = $this.$route.query.website;
       if($this.$route.query.logID){
           $this.formData.id = parseInt($this.$route.query.logID);
-          websiteLogEditInfo({id:$this.formData.id}).then(response=>{
+          $this.$store.dispatch('website/websiteLogEditInfoAction', {id:$this.formData.id}).then(response=>{
             if(response){
               if(response.status){
                 $this.articleData = response.data;
@@ -651,36 +650,31 @@ export default {
         formData.titlecolor = $this.formData.titleColor;
         var pathUrl = "";
         if($this.formData.id!==0){
-          websiteLogEdit(formData).then(response=>{
-            $this.funwebsiteLogPlug(response);
-          });
+          pathUrl = 'website/websiteLogEditAction';
         }else{
-          websiteLogAdd(formData).then(response=>{
-            $this.funwebsiteLogPlug(response);
-          });
+          pathUrl = 'website/websiteLogAddAction';
         }
-      }
-    },
-    funwebsiteLogPlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
         });
-        setTimeout(()=>{
-          $this.isDisabled=false;
-        },1000);
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isDisabled=false;
-        },1000);
       }
     },
     // markdown文本发生变化时执行事件

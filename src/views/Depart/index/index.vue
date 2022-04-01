@@ -119,8 +119,7 @@
 </template>
 
 <script>
-import {getDataList,departAdd,departEdit,departDelete,departAllotedRole,departCanAllotRole,departAllotRole} from '@/api/depart';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'departIndex',
   data() {
@@ -334,7 +333,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
-      getDataList(null).then(response=>{
+      $this.$store.dispatch('depart/departListAction', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -584,35 +583,30 @@ export default {
         formData.remarks = $this.dialogForm.remarks;
         var pathUrl = "";
         if($this.dialogText=="编辑部门"){
-          departEdit(formData).then(response=>{
-            $this.funsavePlug(response);
-          });
+          pathUrl = "depart/departEditAction";
         }else{
-          departAdd(formData).then(response=>{
-            $this.funsavePlug(response);
-          });
+          pathUrl = "depart/departAddAction";
         }
-      }
-    },
-    funsavePlug(arrData){
-      var $this = this;
-      if(arrData.status){
-          $this.$message({
-              showClose: true,
-              message: arrData.info,
-              type: 'success'
-          });
-          $this.handleClose();
-          $this.initData();
-      }else{
-          $this.$message({
-              showClose: true,
-              message: arrData.info,
-              type: 'error'
-          });
-          setTimeout(()=>{
-            $this.isSaveData=false;
-          },1000);
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'success'
+                });
+                $this.handleClose();
+                $this.initData();
+            }else{
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isSaveData=false;
+                },1000);
+            }
+        });
       }
     },
     // 重置添加数据表单
@@ -645,7 +639,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          departDelete({id:row.id}).then(response=>{
+          $this.$store.dispatch('depart/departDeleteAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -686,7 +680,7 @@ export default {
           var rolePostData = {};
           rolePostData.id = $this.currentDepartID;
           rolePostData.role_id = $this.roleValue;
-          departAllotRole(rolePostData).then(response=>{
+          $this.$store.dispatch('depart/departAllotRoleAction', rolePostData).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -711,7 +705,7 @@ export default {
     // 获取当前用户已分配的角色数据
     getAllotedRole(){
       var $this = this;
-      departAllotedRole({id:$this.currentDepartID}).then(response=>{
+      $this.$store.dispatch('depart/departAllotedRoleAction', {id:$this.currentDepartID}).then(response=>{
         if(response.status){
           var roleUserData = [];
           var selectedRoleUserData = [];
@@ -748,7 +742,7 @@ export default {
       }
       var roleDataNow = $this.roleData;
       var roleIngData = [];
-      departCanAllotRole(null).then(response=>{
+      $this.$store.dispatch('depart/departCanAllotRoleAction', null).then(response=>{
         if(response.status){
           if(response.data.length>0){
             if(roleDataNow.length>0){

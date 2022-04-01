@@ -106,7 +106,6 @@
     </div>
 </template>
 <script>
-import { getGoodcomment } from '@/api/worksaccpet';
 import { mapGetters } from 'vuex';
 export default {
   name: 'Worksaccpet_goodcomment',
@@ -410,7 +409,7 @@ export default {
       var $this = this;
       var searchData = {};
       searchData = $this.initSearchData();
-      getGoodcomment(searchData).then(res=>{
+      $this.$store.dispatch('worksaccpet/getGoodcommentAction', searchData).then(res=>{
         if(res){
           if(res.status){
               $this.tableData=res.data;

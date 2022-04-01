@@ -450,7 +450,6 @@
 </template>
 
 <script>
-import {getInquiryItem,getInquiryResult} from '@/api/depsix';
 import { mapGetters } from 'vuex';
 import * as echarts from 'echarts';
 import {MapInterval} from "@/utils/MapColor";
@@ -884,7 +883,7 @@ export default {
     // 获取询盘统计的搜索条件数据
     getSearchSystemData(){
       var $this = this;
-      getInquiryItem().then(response=>{
+      $this.$store.dispatch('depsix/inquiryItemAction').then(response=>{
         if(response){
           if(response.status){
             var deviceList = [];
@@ -1001,7 +1000,7 @@ export default {
           return false;
         }
         $this.isDisabled=true;
-        getInquiryResult(searchData).then(response=>{
+        $this.$store.dispatch('depsix/inquirySearchAction', searchData).then(response=>{
           if(response){
             if(response.status){
               $this.isSearch=true;

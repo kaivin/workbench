@@ -141,10 +141,9 @@
   </div>
 </template>
 <script>
-import { enGroupDefault,enGroupFilter } from '@/api/teamMember';
 import defaultChart from "../../components/departGroup/defaultChart.vue";
 import mapChart from "../../components/departGroup/mapChart.vue";
-import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate,numSeparate,pickerDateRangeOptions} from "@/utils/index";
+import {randomString,sortByDesc,groupColor,groupDateColor,singleArrColor,formatDate,numSeparate,pickerDateRangeOptions} from "@/utils/index"
 import {MapInterval,TopTenColor} from "@/utils/MapColor"
 import { worldCountry } from "@/utils/worldCountry";
 import { mapGetters } from 'vuex';
@@ -329,7 +328,7 @@ export default {
     // 默认展示数据
     initData() {
       var $this = this;
-      enGroupDefault(null).then(response=>{
+      $this.$store.dispatch('teamMember/enGroupDefaultAction', null).then(response=>{
           if(response){
             if(response.status){
                 var groupList = response.group;
@@ -967,7 +966,7 @@ export default {
       var searchData = $this.searchDataInit();
       $this.clearData();
       if(searchData.userid&&searchData.starttime&&searchData.endtime&&searchData.type){
-        enGroupFilter(searchData).then(res=>{
+        $this.$store.dispatch('teamMember/enGroupFilterAction', searchData).then(res=>{
           if(res.status){
             $this.filterDataClump(res);
           }else{

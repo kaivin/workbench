@@ -331,8 +331,7 @@
     </div>
 </template>
 <script>
-import {getDataList,postArticleDelete,userCanReadPost,postList,postTagList,postSearchList} from '@/api/article';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'Article_index',
   data() {
@@ -678,7 +677,7 @@ export default {
     // 获取当前登录用户可看到的论坛栏目数据
     getPostTypeData(){
       var $this = this;
-      userCanReadPost().then(response=>{
+      $this.$store.dispatch('article/userCanReadPostAction', null).then(response=>{
         if(response){
           if(response.status){
             $this.postTypeData = $this.dataToTree(response.data,$this);
@@ -697,7 +696,7 @@ export default {
     getUserCanReadDepartUser(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      getDataList().then(response=>{
+      $this.$store.dispatch('article/postArticleAction', null).then(response=>{
         if(response){
           if(response.status){
             $this.departUser = response.data;
@@ -803,7 +802,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          postArticleDelete({id:row.id}).then(response=>{
+          $this.$store.dispatch('article/postArticleDeleteAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -857,7 +856,7 @@ export default {
       dataParam.tags = $this.currentTagName;
       dataParam.tagsid = $this.currentTagID;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      postList(dataParam).then(res=>{
+      $this.$store.dispatch('article/postListAction',dataParam).then(res=>{
         if(res.status){
           if(res.data.length>0){
             res.data.forEach(function(item,index){
@@ -930,7 +929,7 @@ export default {
       var $this = this;
       var dataParam = {}
       dataParam.id = $this.currentID;
-      postTagList(dataParam).then(res=>{
+      $this.$store.dispatch('article/postTagListAction',dataParam).then(res=>{
         if(res.status){
           if(res.data.length>0){
             $this.changeTagType(res.data,$this.currentTagID,$this.currentTagName,$this);
@@ -955,7 +954,7 @@ export default {
       dataParam.limit = $this.limit;
       dataParam.keywords = $this.keyword;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      postSearchList(dataParam).then(res=>{
+      $this.$store.dispatch('article/postSearchListAction',dataParam).then(res=>{
         if(res.status){
           if(res.data.length>0){
             var keywordList = $this.keyword.split(" ");
@@ -1141,6 +1140,7 @@ export default {
     },
     // 竖向滚动条滚动事件
     handleScroll(event){
+      // console.log("滚动事件");
       this.scroll  = document.querySelector(".scroll-panel").scrollTop;
       var $this = this;
       if($this.isSearch||$this.isList){

@@ -307,9 +307,7 @@
   </div>
 </template>
 <script>
-import { userCanDepart } from '@/api/user';
-import { getDataList,roleAdd,roleEdit,roleDelete,rolePermited,rolePermiting,rolePermit,roleUser,roleAllotUser,roleAllotedPostPermit,roleAllotPostPermit,canAllotPostPermit,userCanAllotPost,userCanAllotPostAllPermit,roleWorkOrder,roleAllotWorkOrder,getWorkOrder,userCanAllotWorkOrderAllPermit,roleNetwork,roleAllotNetwork,getNetwork,roleResource,roleAllotResource,getResource,userCanAllotResourceAllPermit } from '@/api/role';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'Role_index',
   data() {
@@ -600,7 +598,7 @@ export default {
     // 获取角色列表数据
     getRoleList(){
       var $this = this;
-      getDataList(null).then(response=>{
+      $this.$store.dispatch('role/roleListAction', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -956,37 +954,33 @@ export default {
           formData.readwebmsglangauge = $this.dialogForm.readwebmsglangauge;
           formData.readwebmsgbrand = $this.dialogForm.readwebmsgbrand;
         }
+        var pathUrl = "";
         if($this.dialogText=="编辑角色"){
+          pathUrl = "role/roleEditAction";
           formData.readip = $this.dialogForm.readip;
-          roleEdit(formData).then(response=>{
-            $this.funrolePlug(response);
-          });
         }else{
-          roleAdd(formData).then(response=>{
-            $this.funrolePlug(response);
-          });
+          pathUrl = "role/roleAddAction";
         }
-      }
-    },
-    funrolePlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initData();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
         });
-        $this.handleClose();
-        $this.initData();
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isSaveData=false;
-        },1000);
       }
     },
     // 重置添加数据表单
@@ -1024,7 +1018,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          roleDelete({id:row.id}).then(response=>{
+          $this.$store.dispatch('role/roleDeleteAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -1089,7 +1083,7 @@ export default {
     // 获取当前角色已分配的用户数据
     getAllotedUser(){
       var $this = this;
-      roleUser({id:$this.currentRoleID}).then(response=>{
+      $this.$store.dispatch('role/roleUserAction', {id:$this.currentRoleID}).then(response=>{
         if(response.status){
           var roleUserData = [];
           var selectedRoleUserData = [];
@@ -1198,7 +1192,7 @@ export default {
         permitPostData.rid = $this.currentRoleID;
         permitPostData.name = $this.currentRoleName;
         permitPostData.permit = $this.permitValue;
-        rolePermit(permitPostData).then(response=>{
+        $this.$store.dispatch('role/rolePermitAction', permitPostData).then(response=>{
           if(response.status){
             $this.$message({
               showClose: true,
@@ -1228,7 +1222,7 @@ export default {
         var userPostData = {};
         userPostData.rid = $this.currentRoleID;
         userPostData.uid = $this.userValue;
-        roleAllotUser(userPostData).then(response=>{
+        $this.$store.dispatch('role/roleAllotUserAction', userPostData).then(response=>{
           if(response.status){
             $this.$message({
               showClose: true,
@@ -1315,7 +1309,7 @@ export default {
     // 获取当前角色已拥有的权限数据
     getRolePermited(id){
       var $this = this;
-      rolePermited({id:id}).then(response=>{
+      $this.$store.dispatch('role/rolePermitedAction', {id:id}).then(response=>{
         if(response.status){
           var rolePermitData = [];
           var selectedRolePermitData = [];
@@ -1344,7 +1338,7 @@ export default {
     // 获取当前登录用户可分配的权限数据
     getUserAllotPermitData(){
       var $this = this;
-      rolePermiting( null).then(response=>{
+      $this.$store.dispatch('role/rolePermitingAction', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -1415,7 +1409,7 @@ export default {
     // 获取部门数据
     getDepartList(){
       var $this = this;
-      userCanDepart(null).then(response=>{
+      $this.$store.dispatch('user/userCanDepartAction', null).then(response=>{
           if(response.status){
             if(response.data.length>0){
               var departData = $this.departDataToTree(response.data,$this);
@@ -1524,7 +1518,7 @@ export default {
         var permitPostData = {};
         permitPostData.id = $this.currentRoleID;
         permitPostData.typepermitid = $this.postPermitValue;
-        roleAllotPostPermit(permitPostData).then(response=>{
+        $this.$store.dispatch('role/roleAllotPostPermitAction', permitPostData).then(response=>{
           if(response.status){
             $this.$message({
               showClose: true,
@@ -1559,7 +1553,7 @@ export default {
             postPermitDataNow.push(item);
           }
         });
-        canAllotPostPermit({ids:str}).then(response=>{
+        $this.$store.dispatch('role/canAllotPostPermitAction', {ids:str}).then(response=>{
           if(response.status){
             if(response.data.length>0){
               response.data.forEach(function(item,index){
@@ -1585,7 +1579,7 @@ export default {
     // 获取论坛栏目数据
     getPostData(){
       var $this = this;
-      userCanAllotPost(null).then(response=>{
+      $this.$store.dispatch('role/userCanAllotPostAction', null).then(response=>{
         if(response){
           if(response.status){
             var menuData = [];
@@ -1615,7 +1609,7 @@ export default {
     // 获取当前角色已拥有的论坛栏目权限数据
     getRolePostPermited(id){
       var $this = this;
-      roleAllotedPostPermit({id:id}).then(response=>{
+      $this.$store.dispatch('role/roleAllotedPostPermitAction', {id:id}).then(response=>{
         if(response.status){
           var rolePostPermitData = [];
           var selectedRolePostPermitData = [];
@@ -1644,7 +1638,7 @@ export default {
     // 获取当前登录用户可分配的权限数据
     getUserAllotPostPermitData(){
       var $this = this;
-      userCanAllotPostAllPermit(null).then(response=>{
+      $this.$store.dispatch('role/userCanAllotPostAllPermitAction', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -1694,7 +1688,7 @@ export default {
     // 获取当前角色已分配的工单权限数据
     getAllotedWorkOrder(){
       var $this = this;
-      roleWorkOrder({id:$this.currentRoleID}).then(response=>{
+      $this.$store.dispatch('role/roleWorkOrderAction', {id:$this.currentRoleID}).then(response=>{
         if(response.status){
           var roleWorkOrderData = [];
           var selectedRoleWorkOrderData = [];
@@ -1731,7 +1725,7 @@ export default {
       }
       var workOrderDataNow = $this.workOrderData;
       var workOrderIngData = [];
-      getWorkOrder({ids:"1"}).then(response=>{
+      $this.$store.dispatch('role/getWorkOrderAction', {ids:"1"}).then(response=>{
         if(response.status){
           if(response.data.length>0){
             if(workOrderDataNow.length>0){
@@ -1770,7 +1764,7 @@ export default {
     // 获取当前登录用户可分配的工单权限数据
     getUserAllotWorkOrderPermitData(){
       var $this = this;
-      userCanAllotWorkOrderAllPermit(null).then(response=>{
+      $this.$store.dispatch('role/userCanAllotWorkOrderAllPermitAction', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -1806,7 +1800,7 @@ export default {
         var workOrderData = {};
         workOrderData.id = $this.currentRoleID;
         workOrderData.typepermitid = $this.workOrderValue;
-        roleAllotWorkOrder(workOrderData).then(response=>{
+        $this.$store.dispatch('role/roleAllotWorkOrderAction', workOrderData).then(response=>{
           if(response.status){
             $this.$message({
               showClose: true,
@@ -1850,7 +1844,7 @@ export default {
     // 获取当前角色已分配的外网访问菜单权限数据
     getAllotedNetwork(){
       var $this = this;
-      roleNetwork({rid:$this.currentRoleID}).then(response=>{
+      $this.$store.dispatch('role/roleNetworkAction', {rid:$this.currentRoleID}).then(response=>{
         if(response.status){
           var roleNetworkData = [];
           var selectedRoleNetworkData = [];
@@ -1887,7 +1881,7 @@ export default {
       }
       var networkDataNow = $this.networkData;
       var networkIngData = [];
-      getNetwork({rid:$this.currentRoleID}).then(response=>{
+      $this.$store.dispatch('role/getNetworkAction', {rid:$this.currentRoleID}).then(response=>{
         if(response.status){
           if(response.data.length>0){
             if(networkDataNow.length>0){
@@ -1930,7 +1924,7 @@ export default {
         var networkData = {};
         networkData.rid = $this.currentRoleID;
         networkData.menuids = $this.networkValue;
-        roleAllotNetwork(networkData).then(response=>{
+        $this.$store.dispatch('role/roleAllotNetworkAction', networkData).then(response=>{
           if(response.status){
             $this.$message({
               showClose: true,
@@ -1974,7 +1968,7 @@ export default {
     // 获取当前角色已分配的资源权限数据
     getAllotedResource(){
       var $this = this;
-      roleResource({id:$this.currentRoleID}).then(response=>{
+      $this.$store.dispatch('role/roleResourceAction', {id:$this.currentRoleID}).then(response=>{
         if(response.status){
           var roleResourceData = [];
           var selectedRoleResourceData = [];
@@ -2011,7 +2005,7 @@ export default {
       }
       var resourceDataNow = $this.resourceData;
       var resourceIngData = [];
-      getResource({ids:"1"}).then(response=>{
+      $this.$store.dispatch('role/getResourceAction', {ids:"1"}).then(response=>{
         if(response.status){
           if(response.data.length>0){
             if(resourceDataNow.length>0){
@@ -2050,7 +2044,7 @@ export default {
     // 获取当前登录用户可分配的资源权限数据
     getUserAllotResourcePermitData(){
       var $this = this;
-      userCanAllotResourceAllPermit(null).then(response=>{
+      $this.$store.dispatch('role/userCanAllotResourceAllPermitAction', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -2086,7 +2080,7 @@ export default {
         var resourceData = {};
         resourceData.id = $this.currentRoleID;
         resourceData.typepermitid = $this.resourceValue;
-        roleAllotResource(resourceData).then(response=>{
+        $this.$store.dispatch('role/roleAllotResourceAction', resourceData).then(response=>{
           if(response.status){
             $this.$message({
               showClose: true,

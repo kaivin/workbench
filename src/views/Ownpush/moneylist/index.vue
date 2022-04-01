@@ -241,8 +241,7 @@
   </div>
 </template>
 <script>
-import { getAccountListAll,userList,getCnCostList,cnCostAdd,cnCostEdit,cnCostDelete,getCnChannelList } from '@/api/ownpush';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'Ownpush_moneylist',
   data() {
@@ -555,7 +554,7 @@ export default {
       var $this = this;
       var searchData = $this.searchDataInit();
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      getCnCostList(searchData).then(response=>{
+      $this.$store.dispatch('ownpush/cnCostListAction', searchData).then(response=>{
         if(response){
           if(response.status){
               response.data.forEach(function(item,index){
@@ -702,35 +701,30 @@ export default {
         $this.isSaveData=true;
         var pathUrl = "";
         if($this.dialogText=="编辑充值记录"){
-          cnCostEdit($this.dialogForm).then(response=>{
-            $this.funcnCostPlug(response);
-          });
+          pathUrl = "ownpush/cnCostEditAction";
         }else{
-          cnCostAdd($this.dialogForm).then(response=>{
-            $this.funcnCostPlug(response);
-          });
+          pathUrl = "ownpush/cnCostAddAction";
         }
-      }
-    },
-    funcnCostPlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
+        $this.$store.dispatch(pathUrl, $this.dialogForm).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
         });
-        $this.handleClose();
-        $this.initPage();
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isSaveData=false;
-        },1000);
       }
     },
     // 重置添加数据表单
@@ -780,7 +774,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          cnCostDelete({id:row.id}).then(response=>{
+          $this.$store.dispatch('ownpush/cnCostDeleteAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -806,7 +800,7 @@ export default {
     // 获取产品添加编辑是需要的系统数据
     getSelectData(){
       var $this = this;
-      userList(null).then(response=>{
+      $this.$store.dispatch('ownpush/userListAction', null).then(response=>{
           if(response.status){
             var userList = [];
             response.data.forEach(function(item,index){
@@ -828,7 +822,7 @@ export default {
     // 获取添加数据时的账户选择数据
     getAccountData(){
       var $this = this;
-      getAccountListAll(null).then(response=>{
+      $this.$store.dispatch('ownpush/accountListAllAction', null).then(response=>{
           if(response.status){
             var accountList = [];
             response.data.forEach(function(item,index){
@@ -852,7 +846,7 @@ export default {
     // 获取添加数据时的渠道选择数据
     getChannelData(){
       var $this = this;
-      getCnChannelList(null).then(response=>{
+      $this.$store.dispatch('ownpush/cnChannelListAction', null).then(response=>{
           if(response.status){
             var channelList = [];
             response.data.forEach(function(item,index){
@@ -876,7 +870,7 @@ export default {
     // 获取添加数据是的负责人选择数据
     getUserData(){
       var $this = this;
-      userList(null).then(response=>{
+      $this.$store.dispatch('ownpush/userListAction', null).then(response=>{
           if(response.status){
             var userList = [];
             response.data.forEach(function(item,index){

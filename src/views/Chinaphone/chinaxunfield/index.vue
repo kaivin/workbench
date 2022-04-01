@@ -88,9 +88,7 @@
   </div>
 </template>
 <script>
-import {userCanAllotRole} from '@/api/user';
-import {getCluesList,cluesAllotRole,cluesAllotedRole} from '@/api/chinaphone';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'Chinaphone_chinaxunfield',
   data() {
@@ -281,7 +279,7 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      getCluesList(null).then(response=>{
+      $this.$store.dispatch('chinaphone/cluesListAction', null).then(response=>{
         if(response){
           if(response.status){
             $this.tableData = response.data;
@@ -374,7 +372,7 @@ export default {
           var rolePostData = {};
           rolePostData.name = $this.currentName;
           rolePostData.role_id = $this.roleValue;
-          cluesAllotRole(rolePostData).then(response=>{
+          $this.$store.dispatch('chinaphone/cluesAllotRoleAction', rolePostData).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
@@ -399,7 +397,7 @@ export default {
     // 获取当前字段已分配的角色数据
     getAllotedRole(){
       var $this = this;
-      cluesAllotedRole({name:$this.currentName}).then(response=>{
+      $this.$store.dispatch('chinaphone/cluesAllotedRoleAction', {name:$this.currentName}).then(response=>{
         if(response.status){
           var roleUserData = [];
           var selectedRoleUserData = [];
@@ -436,7 +434,7 @@ export default {
       }
       var roleDataNow = $this.roleData;
       var roleIngData = [];
-      userCanAllotRole(null).then(response=>{
+      $this.$store.dispatch('user/userCanAllotRoleAction', null).then(response=>{
         if(response.status){
           if(response.data.length>0){
             if(roleDataNow.length>0){

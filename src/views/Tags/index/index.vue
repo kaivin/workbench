@@ -116,8 +116,7 @@
 
 
 <script>
-import { getDataList, tagsAdd,tagsEdit,tagsDelete } from '@/api/tags';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'tagsIndex',
   data() {
@@ -331,7 +330,7 @@ export default {
     initPage(){
       var $this =this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      getDataList(null).then(response=>{
+      $this.$store.dispatch('tags/tagsListAction', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -451,35 +450,30 @@ export default {
         formData.sort = $this.dialogForm.sort;
         var pathUrl = "";
         if($this.dialogText=="编辑标签"){
-          tagsEdit(formData).then(response=>{
-            $this.funtagsPlug(response);
-          });
+          pathUrl = "tags/tagsEditAction";
         }else{
-          tagsAdd(formData).then(response=>{
-            $this.funtagsPlug(response);
-          });
+          pathUrl = "tags/tagsAddAction";
         }
-      }
-    },
-    funtagsPlug(arrData){
-      var $this = this;
-      if(arrData.status){
-          $this.$message({
-              showClose: true,
-              message: arrData.info,
-              type: 'success'
-          });
-          $this.handleClose();
-          $this.initData();
-      }else{
-          $this.$message({
-              showClose: true,
-              message: arrData.info,
-              type: 'error'
-          });
-          setTimeout(()=>{
-            $this.isSaveData=false;
-          },1000);
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'success'
+                });
+                $this.handleClose();
+                $this.initData();
+            }else{
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isSaveData=false;
+                },1000);
+            }
+        });
       }
     },
     // 重置添加数据表单
@@ -521,7 +515,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          tagsDelete({id:row.id}).then(response=>{
+          $this.$store.dispatch('tags/tagsDeleteAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,

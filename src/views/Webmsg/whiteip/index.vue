@@ -123,7 +123,6 @@
   </div>
 </template>
 <script>
-import { webMsgWhiteIpList,webMsgWhiteIpAdd,webMsgWhiteIpEdit,webMsgWhiteIpDelete } from '@/api/webmsg';
 import { mapGetters } from 'vuex'
 export default {
   name: 'webmsg_whiteip',
@@ -397,7 +396,7 @@ export default {
       searchData.limit = $this.limit;
       searchData.ip = $this.ip;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      webMsgWhiteIpList(searchData).then(response=>{
+      $this.$store.dispatch('webmsg/webMsgWhiteIpListAction', searchData).then(response=>{
         if(response){
           if(response.status){
             $this.totalDataNum = response.allcount;
@@ -468,36 +467,32 @@ export default {
         var formData = {}
         formData.id = $this.dialogForm.id;
         formData.ip = $this.dialogForm.ip;
+        var pathUrl = "";
         if($this.dialogText=="修改IP"){
-          webMsgWhiteIpEdit(formData).then(response=>{
-            $this.saveDataPlug(response);
-          });
+          pathUrl = "webmsg/webMsgWhiteIpEditAction";
         }else{
-          webMsgWhiteIpAdd(formData).then(response=>{
-            $this.saveDataPlug(response);
-          });
+          pathUrl = "webmsg/webMsgWhiteIpAddAction";
         }
-      }
-    },
-    saveDataPlug(arrData){
-      var $this = this;
-      if(arrData.status){
-          $this.$message({
-              showClose: true,
-              message: arrData.info,
-              type: 'success'
-          });
-          $this.handleClose();
-          $this.initPage();
-      }else{
-        $this.$message({
-            showClose: true,
-            message: arrData.info,
-            type: 'error'
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+                $this.$message({
+                    showClose: true,
+                    message: response.info,
+                    type: 'success'
+                });
+                $this.handleClose();
+                $this.initPage();
+            }else{
+              $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
         });
-        setTimeout(()=>{
-          $this.isSaveData=false;
-        },1000);
       }
     },
     // 重置添加数据表单
@@ -539,7 +534,7 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            webMsgWhiteIpDelete(resultData).then(response=>{
+            $this.$store.dispatch('webmsg/webMsgWhiteIpDeleteAction', resultData).then(response=>{
                 if(response.status){
                 $this.$message({
                     showClose: true,

@@ -269,7 +269,6 @@
 </template>
 
 <script>
-import {initCluesEditInfo,cluesAddEditData,cluesPhoneStatData,cluesUrlGetPhone,cluesRegionValid,cluesAdd,cluesEdit} from '@/api/chinaphone';
 import { mapGetters } from 'vuex';
 export default {
   name: 'addEditClues',
@@ -473,7 +472,7 @@ export default {
     // 询盘编辑获取初始化询盘信息
     initCluesInfo(){
       var $this = this;
-      initCluesEditInfo({id:$this.ID}).then(response=>{
+      $this.$store.dispatch('chinaphone/initCluesEditInfoAction', {id:$this.ID}).then(response=>{
         if(response){
           if(response.status){
             $this.defaultInfo = response.data;
@@ -610,7 +609,7 @@ export default {
     // 获取当前页面的条件数据
     getSystemData(){
       var $this = this;
-      cluesAddEditData(null).then(response=>{
+      $this.$store.dispatch('chinaphone/cluesAddEditDataAction', null).then(response=>{
         if(response){
           if(response.status){
             var sourceList = [];
@@ -673,7 +672,7 @@ export default {
     // 获取电话列表及电话统计数字
     getPhoneListNum(){
       var $this = this;
-      cluesPhoneStatData(null).then(response=>{
+      $this.$store.dispatch('chinaphone/cluesPhoneStatDataAction', null).then(response=>{
         if(response){
           if(response.status){
             var phoneArr=response.data;
@@ -714,7 +713,7 @@ export default {
     urlChangePhone(e){
       var $this = this;
       if($this.formData.url!=""){
-        cluesUrlGetPhone({url:$this.formData.url}).then(response=>{
+        $this.$store.dispatch("chinaphone/cluesUrlGetPhoneAction", {url:$this.formData.url}).then(response=>{
             if(response.status){
               if(response.phone){
                 var phoneList = $this.phoneList;
@@ -742,7 +741,7 @@ export default {
     provinceChangeHandler(e){
       var $this = this;
       if($this.formData.province!=''){
-        cluesRegionValid({name:$this.formData.province}).then(response=>{
+        $this.$store.dispatch("chinaphone/cluesRegionValidAction", {name:$this.formData.province}).then(response=>{
             if(!response.status){
               $this.$message({
                 showClose: true,
@@ -758,7 +757,7 @@ export default {
     cityChangeHandler(e){
       var $this = this;
       if($this.formData.city!=''){
-        cluesRegionValid({name:$this.formData.city}).then(response=>{
+        $this.$store.dispatch("chinaphone/cluesRegionValidAction", {name:$this.formData.city}).then(response=>{
             if(!response.status){
               $this.$message({
                 showClose: true,
@@ -857,41 +856,36 @@ export default {
         var formData = $this.initFormData();
         var pathUrl = "";
         if($this.formData.id==0){
-          cluesAdd(formData).then(response=>{
-            $this.funcluesPlug(response);
-          });
+          pathUrl = "chinaphone/cluesAddAction";
         }else{
-          cluesEdit(formData).then(response=>{
-            $this.funcluesPlug(response);
-          });
+          pathUrl = "chinaphone/cluesEditAction";
         }
-      }
-    },
-    funcluesPlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              if($this.formData.id!=0){
+                $this.initCluesInfo();
+              }else{
+                var queryObj = {};
+                queryObj.phoneID = $this.formData.phoneid;
+                var routeUrl =  $this.$router.resolve({path:'/Chinaphone/phoneindex',query:queryObj});
+                window.open(routeUrl.href,'_self');
+              }
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isDisabled=false;
+              },1000);
+            }
         });
-        if($this.formData.id!=0){
-          $this.initCluesInfo();
-        }else{
-          var queryObj = {};
-          queryObj.phoneID = $this.formData.phoneid;
-          var routeUrl =  $this.$router.resolve({path:'/Chinaphone/phoneindex',query:queryObj});
-          window.open(routeUrl.href,'_self');
-        }
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isDisabled=false;
-        },1000);
       }
     },
     // 清空添加数据表单

@@ -86,9 +86,7 @@
   </div>
 </template>
 <script>
-import { webMsgPermitFieldList,webMsgPermitFieldAllotRole,webMsgPermitFieldAllotedRoleList } from '@/api/webmsg';
-import {userCanAllotRole} from '@/api/user';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'tableconfigIndex',
   data() {
@@ -326,7 +324,7 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      webMsgPermitFieldList(null).then(response=>{
+      $this.$store.dispatch('webmsg/webMsgPermitFieldListAction', null).then(response=>{
         if(response){
           if(response.status){
             $this.tableData = response.data;
@@ -376,7 +374,7 @@ export default {
           var rolePostData = {};
           rolePostData.name = $this.currentName;
           rolePostData.role_id = $this.roleValue;
-          webMsgPermitFieldAllotRole(rolePostData).then(response=>{
+          $this.$store.dispatch("webmsg/webMsgPermitFieldAllotRoleAction", rolePostData).then(response=>{
             if(response.status){
                 $this.$message({
                   showClose: true,
@@ -401,7 +399,7 @@ export default {
     // 获取当前字段可读权限已分配的角色数据
     getAllotedRole(){
       var $this = this;
-      webMsgPermitFieldAllotedRoleList({name:$this.currentName}).then(response=>{
+      $this.$store.dispatch('webmsg/webMsgPermitFieldAllotedRoleListAction', {name:$this.currentName}).then(response=>{
         if(response.status){
           var roleUserData = [];
           var selectedRoleUserData = [];
@@ -438,7 +436,7 @@ export default {
       }
       var roleDataNow = $this.roleData;
       var roleIngData = [];
-      userCanAllotRole(null).then(response=>{
+      $this.$store.dispatch('user/userCanAllotRoleAction', null).then(response=>{
         if(response.status){
           if(response.data.length>0){
             if(roleDataNow.length>0){

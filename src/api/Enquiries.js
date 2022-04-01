@@ -6,7 +6,6 @@ export function getDepartList() {
       method: "POST",
     });
 }
-
 // 获取指定部门下的所有成员
 export function Getdepartuser(data) {
     return request({

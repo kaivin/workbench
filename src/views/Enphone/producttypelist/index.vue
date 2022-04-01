@@ -90,8 +90,7 @@
   </div>
 </template>
 <script>
-import {getProductTypeList,productTypeDelete,productTypeEdit,productTypeAdd} from '@/api/enphone';
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   name: 'Enphone_producttypelist',
   data() {
@@ -294,7 +293,7 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      getProductTypeList(null).then(response=>{
+      $this.$store.dispatch('enphone/productTypeListAction', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -414,35 +413,30 @@ export default {
         formData.sort = $this.dialogForm.sort;
         var pathUrl = "";
         if($this.dialogText=="编辑分类"){
-          productTypeEdit(formData).then(response=>{
-            $this.funproductTypePlug(response);
-          });
+          pathUrl = "enphone/productTypeEditAction";
         }else{
-          productTypeAdd(formData).then(response=>{
-            $this.funproductTypePlug(response);
-          });
+          pathUrl = "enphone/productTypeAddAction";
         }
-      }
-    },
-    funproductTypePlug(arrData){
-      var $this = this;
-      if(arrData.status){
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'success'
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.handleClose();
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
         });
-        $this.handleClose();
-        $this.initPage();
-      }else{
-        $this.$message({
-          showClose: true,
-          message: arrData.info,
-          type: 'error'
-        });
-        setTimeout(()=>{
-          $this.isSaveData=false;
-        },1000);
       }
     },
     // 重置添加数据表单
@@ -474,7 +468,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
       }).then(() => {
-          productTypeDelete({id:row.id}).then(response=>{
+          $this.$store.dispatch('enphone/productTypeDeleteAction', {id:row.id}).then(response=>{
             if(response.status){
               $this.$message({
                 showClose: true,
