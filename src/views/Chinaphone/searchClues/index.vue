@@ -148,12 +148,22 @@
                               </div>
                               <div class="item-search" style="width:120px;">
                                 <el-input
-                                      placeholder="备注/提供者"
+                                      placeholder="备注"
                                       size="small"
                                       class="tips-input-3"
                                       v-model="searchData.anymessage"
                                       @keyup.enter.native="searchResult"
                                       :class="searchData.anymessage!=''?'el-xzstate':''"
+                                      clearable>
+                                  </el-input>
+                              </div>
+                              <div class="item-search" style="width:120px;">
+                                <el-input
+                                      placeholder="提供者"
+                                      size="small"
+                                      v-model="searchData.useridname"
+                                      @keyup.enter.native="searchResult"
+                                      :class="searchData.useridname!=''?'el-xzstate':''"
                                       clearable>
                                   </el-input>
                               </div>
@@ -530,6 +540,7 @@ export default {
         province:"",
         search:'',
         anymessage:'',
+        useridname:'',
         domain:'',
         url:'',
         is_url:false,
@@ -781,6 +792,7 @@ export default {
         $this.searchData.province="";
         $this.searchData.search="";
         $this.searchData.anymessage="";
+        $this.searchData.useridname="";
         $this.searchData.domain="";
         $this.searchData.url="";
         $this.searchData.is_url=false;
@@ -811,6 +823,7 @@ export default {
       searchData.province = $this.searchData.province;
       searchData.search = $this.searchData.search;
       searchData.anymessage = $this.searchData.anymessage;
+      searchData.useridname = $this.searchData.useridname;
       searchData.domain = $this.searchData.domain;
       searchData.url = $this.searchData.url;
       searchData.groupurlproduct = $this.searchData.groupurlproduct;

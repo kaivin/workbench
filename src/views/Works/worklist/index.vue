@@ -178,6 +178,14 @@
                                     >
                                 </el-table-column>
                                 <el-table-column
+                                    prop="backscore"
+                                    label="返还积分"
+                                    align="center"
+                                    width="80"
+                                    v-if="!searchData.status"
+                                    >
+                                </el-table-column>
+                                <el-table-column
                                     prop="commentnumber"
                                     label="评论"
                                     width="60"
