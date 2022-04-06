@@ -352,7 +352,7 @@ export default {
       var data = {};
       if(val){
         data.year = val;
-      }else if(new Date().getMonth() < 4){
+      }else if(new Date().getMonth() < 3){
         data.year = new Date().getFullYear()-1;
       }else{
         data.year = new Date().getFullYear();
