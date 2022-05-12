@@ -17,7 +17,7 @@ export function Getdepartuser(data) {
 // 选择每个月参与评比的新老员工
 export function Selectuser(data) {
     return request({
-      url: "/hxindex/Enquiries/selectuser",
+      url: "/hxindex/Enquiries/selectuseradd",
       method: "POST",
       data
     });
