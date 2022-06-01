@@ -188,6 +188,7 @@ export default {
                     newHeader.push(item.threemonth+' ('+item.threeuser+'人)');
                     newHeader.push(item.twomonth+' ('+item.twouser+'人)');
                     newHeader.push(item.month+' ('+item.nowuser+'人)');
+                    newHeader.push(item.nowmonth+' ('+item.nowmonthuser+'人)');
                   }
                 });
               }
@@ -198,6 +199,7 @@ export default {
                     oldHeader.push(item.threemonth+' ('+item.threeuser+'人)');
                     oldHeader.push(item.twomonth+' ('+item.twouser+'人)');
                     oldHeader.push(item.month+' ('+item.nowuser+'人)');
+                    oldHeader.push(item.nowmonth+' ('+item.nowmonthuser+'人)');
                   }
                 });
               }

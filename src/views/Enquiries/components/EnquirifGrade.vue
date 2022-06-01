@@ -31,6 +31,7 @@
               <div v-if="item.indexOf(scope.row.threemonth)>=0">{{scope.row.threemonthnumber}}</div>
               <div v-if="item.indexOf(scope.row.twomonth)>=0">{{scope.row.twomonthnumber}}</div>
               <div v-if="item.indexOf(scope.row.month)>=0">{{scope.row.monthnumber}}</div>
+              <div v-if="item.indexOf(scope.row.nowmonth)>=0">{{scope.row.nowmonthnumber}}</div>
             </template>
           </el-table-column>
           <!-- 动态生成列结束 -->
