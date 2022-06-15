@@ -1,7 +1,7 @@
 ﻿import { getUserList,userAdd,userEdit,userDelete,userShowHide,userResetPwd,userAllotedRole,userCanAllotRole,userAllotRole,userCanDepart,userNameEdit,pwdEdit,
   contactEdit,
   getBrandList,
-  changeUserLogin,userPersonother,getUserPersonother,userPersonotherAdd,userPersonotherEdit,userPersonotherExportlink} from '@/api/user'
+  changeUserLogin,userPersonother,getUserPersonother,userPersonotherAdd,userPersonotherEdit,userPersonotherExportlink,getAccountList,transAccount} from '@/api/user'
 
 const state = {}
 const mutations = {}
@@ -202,6 +202,26 @@ const actions = {
   changeUserLoginAction({ commit, state },data) {
     return new Promise((resolve, reject) => {
       changeUserLogin(data).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // 可操作的账号资源
+  getAccountListAction({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      getAccountList().then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // 转移账号
+  transAccountAction({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+      transAccount(data).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)

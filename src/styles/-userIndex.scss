@@ -24,3 +24,31 @@
         }
     }
 }
+.el-dropdown-menu{
+    .userControlItem{
+        display: block;
+        color: #606266;
+        font-size: 12px;
+        width: 100%;
+        text-align: left;
+        &:hover{
+            color: #0048ff;
+        }
+    }
+}
+.transfer-dialog{
+    .transfer-account{
+        height: auto!important;
+        .transfer-title{
+            font-size: 16px;
+            color: #111;
+            margin-bottom: 15px;
+        }
+        .transfer-wrap{
+            .el-transfer{
+                height: 400px!important;
+                margin-bottom: 30px;
+            }
+        }
+    }
+}

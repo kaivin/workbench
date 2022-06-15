@@ -160,3 +160,20 @@ export function userPersonotherExportlink(data) {
     }
   });
 }
+
+// 可操作的账号资源
+export function getAccountList() {
+  return request({
+    url: "/hxindex/Api/getmyuser",
+    method: "POST",
+  });
+}
+
+// 转移资源
+export function transAccount(data) {
+  return request({
+    url: "/hxindex/User/usermove",
+    method: "POST",
+    data
+  });
+}
