@@ -1,7 +1,7 @@
 ﻿import { getUserList,userAdd,userEdit,userDelete,userShowHide,userResetPwd,userAllotedRole,userCanAllotRole,userAllotRole,userCanDepart,userNameEdit,pwdEdit,
   contactEdit,
   getBrandList,
-  changeUserLogin,userPersonother,getUserPersonother,userPersonotherAdd,userPersonotherEdit,userPersonotherExportlink,getAccountList,transAccount} from '@/api/user'
+  changeUserLogin,userPersonother,getUserPersonother,userPersonotherAdd,userPersonotherEdit,userPersonotherExportlink,getAccountList,transAccount,getMoveInqury} from '@/api/user'
 
 const state = {}
 const mutations = {}
@@ -222,6 +222,16 @@ const actions = {
   transAccountAction({ commit, state },data) {
     return new Promise((resolve, reject) => {
       transAccount(data).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // 转移资源的询盘
+  moveInquryAction({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+      getMoveInqury(data).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)

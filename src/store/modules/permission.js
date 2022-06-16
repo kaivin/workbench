@@ -315,6 +315,12 @@ function setRoutes(routers){
         component: () => import(/* webpackChunkName: "DemoTest" */ "@/views/Demo/test/index.vue"),
         meta: {id:'demo_test-1001',title: '测试页面2', icon: null, keepAlive:false},
       },
+      {
+        path: "/User/movedata",
+        name:'moveData',
+        component: () => import(/* webpackChunkName: "moveData" */ "@/views/User/movedata/index.vue"),
+        meta: {id:'moveData-27',title: '资源转移', icon: null, keepAlive:false},
+      },
     ]
   }]
   accessedRouters.forEach(function(item,index){

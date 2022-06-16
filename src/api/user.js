@@ -164,7 +164,7 @@ export function userPersonotherExportlink(data) {
 // 可操作的账号资源
 export function getAccountList() {
   return request({
-    url: "/hxindex/Api/getmyuser",
+    url: "/hxindex/Api/getsalesuser",
     method: "POST",
   });
 }
@@ -173,6 +173,15 @@ export function getAccountList() {
 export function transAccount(data) {
   return request({
     url: "/hxindex/User/usermove",
+    method: "POST",
+    data
+  });
+}
+
+// 获取要转移资源的用户的询盘
+export function getMoveInqury(data) {
+  return request({
+    url: "/hxindex/User/userxun",
     method: "POST",
     data
   });

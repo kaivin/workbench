@@ -152,7 +152,7 @@
                                 <div class="table-button">
                                   <el-button size="mini" @click="userLogin(scope.row,scope.$index)" v-if="menuButtonPermit.includes('User_tabuser')">用户登陆</el-button>
                                   <el-button size="mini" @click="allotRole(scope.row,scope.$index)" v-if="menuButtonPermit.includes('User_getrole')">分配角色</el-button> 
-                                  <el-button size="mini" @click="moveAccount(scope.row,scope.$index)" v-if="menuButtonPermit.includes('User_usermove')">转移资源</el-button>
+                                  <el-button size="mini" :disabled="scope.row.is_delete==0" @click="moveAccount(scope.row,scope.$index)" v-if="menuButtonPermit.includes('User_usermove')">转移资源</el-button>
                                   <el-dropdown class="userControl" v-if="menuButtonPermit.includes('User_resetpwd') || menuButtonPermit.includes('User_edit') || menuButtonPermit.includes('User_showhide') || menuButtonPermit.includes('User_delete')">
                                     <el-button size="mini">
                                       更多<i class="el-icon-arrow-down el-icon--right"></i>
@@ -322,40 +322,7 @@
           </span>
         </template>
       </el-dialog>
-      <el-dialog title="" v-if="(menuButtonPermit.includes('User_usermove'))" custom-class="transfer-dialog" :visible.sync="dialogAccountVisible" width="840px">
-        <div class="transfer-panel transfer-account">
-          <div class="transfer-wrap">
-            <div class="transfer-title">
-              选择资源接收人员：
-            </div>
-            <el-transfer 
-              v-model="accountValue" 
-              :data="accountData"
-              :titles="['资源接收人员', '已选择人员']"
-              filterable
-              :filter-method="filterAccountMethod"
-              filter-placeholder="请输入搜索关键字"
-              @left-check-change="transferUserChange"
-              @change="checkedChange"
-            ></el-transfer>
-
-            <div class="transfer-title">
-              选择要转移的资源类型：
-            </div>
-            <div class="accountCheck">
-              <el-checkbox-group v-model="sourceList">
-                <el-checkbox v-for="item in sourceType" :label="item.label" :key="item.label">{{item.name}}</el-checkbox>
-              </el-checkbox-group>
-            </div>
-          </div>
-        </div>
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button @click="dialogAccountVisible = false">取 消</el-button>
-            <el-button type="primary" :class="isSaveAccountData?'isDisabled':''" :disabled="isSaveAccountData" @click="saveAccountData">确 定</el-button>
-          </span>
-        </template>
-      </el-dialog>
+      
   </div>
 </template>
 <script>
@@ -452,27 +419,6 @@ export default {
       isDisabled:false,
       isSaveRoleData:false,
       isSaveAddRoleData:false,
-      resourceUserId: 0,
-      accountData:[], //账号资源
-      accountValue:[], //已有账号资源
-      dialogAccountVisible:false, //转移账号资源弹窗
-      isSaveAccountData:false, 
-      filterAccountMethod(query, item) {
-          if(item.label){
-            return item.label.indexOf(query) > -1;
-          }
-      },
-      sourceType:[
-        {
-          label: 1,
-          name: "询盘资源"
-        },
-        {
-          label: 2,
-          name: "权限资源"
-        }
-      ],
-      sourceList:[1,2],//要转移的资源
     }
   },
   computed: {
@@ -1574,127 +1520,9 @@ export default {
     // 账号资源转移按钮
     moveAccount(row,index){
       var $this = this;
-      $this.dialogAccountVisible = true;
-      $this.resourceUserId = row.id;
-      $this.accountValue=[];
-      if($this.accountData.length == 0){
-        $this.getAccountUser();
-      }else{
-        $this.accountData.forEach(item=>{
-          if(item.key != row.id){
-            item.disabled = false;
-          }else{
-            item.disabled = true;
-          }
-            
-        })
-      }
+      var rowid = row.id;
+      $this.$router.push({path:"/User/movedata", query:{id: rowid}})
     },
-    // 
-    getAccountUser(){
-      var $this = this;
-      $this.$store.dispatch('user/getAccountListAction').then(response=>{
-        if(response.status){
-          var data = response.data;
-          var userlist = [];
-          data.forEach(item=>{
-            var obj = {};
-            obj.label = item.depart ? item.depart+"-"+item.name : item.name;
-            obj.key = item.id;
-            if(item.id != $this.resourceUserId){
-              obj.disabled = false;
-            }else{
-              obj.disabled = true;
-            }
-            
-            userlist.push(obj)
-          })
-          $this.accountData = userlist;
-        }else{
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: 'error'
-          });
-        }
-      });
-    },
-    // 账号资源转移保存
-    saveAccountData(){
-        var $this = this;
-        if(!$this.isSaveAccountData){
-          if($this.accountValue.length == 0){
-            $this.$message({
-              message: "请选择资源接收人员",
-              type: 'error',
-            });
-            return false;
-          }
-          if($this.sourceList.length == 0){
-            $this.$message({
-              message: "请选择要转移的资源类型",
-              type: 'error',
-            });
-            return false;
-          }
-          var resData = {};
-          resData.id = $this.resourceUserId;
-          resData.accpet_id = $this.accountValue[0];
-          resData.source_id = $this.sourceList;
-          $this.isSaveAccountData=true;
-          $this.$store.dispatch('user/transAccountAction', resData).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
-              $this.dialogAccountVisible = false;
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSaveAccountData=false;
-              },1000);
-            }
-          });
-        }
-    },
-    // 左侧点击选择
-    transferUserChange(e){
-      var $this = this;
-      if(e.length > 0){
-        $this.accountData.forEach(item=>{
-          if(item.key != e[0]){
-            item.disabled = true;
-          }
-        })
-      }else{
-        $this.accountData.forEach(item=>{
-          if(item.key != $this.resourceUserId){
-            item.disabled = false;
-          }else{
-            item.disabled = true;
-          }
-        })
-      }
-    },
-    // 选中改变
-    checkedChange(e){
-      var $this = this;
-      if(e.length == 0){
-        $this.accountData.forEach(item=>{
-          if(item.key != $this.resourceUserId){
-            item.disabled = false;
-          }else{
-            item.disabled = true;
-          }
-        })
-      }
-    }
   }
 }
 </script>

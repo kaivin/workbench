@@ -374,6 +374,7 @@
                                         <p>{{scope.row.SalesEnxunprice}}</p>
                                         <p :style="scope.row.replystatus==1?'color:#d02c34':'color:#49c96a'">{{scope.row.Salesreplystatus}}</p> 
                                         <p>{{scope.row.salesremark}}</p>
+                                        <p v-if="scope.row.move && (currentStatus=='allotcount' || currentStatus == 'personcount')">{{scope.row.move}}</p>
                                     </div>
                                 </template>
                                 </el-table-column>
