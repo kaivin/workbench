@@ -2,7 +2,7 @@
 *,:after,:before{margin:0;padding:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
 article,aside,audio,blockquot,body,dd,div,dl,dt,figcaption,figure,filedset,form,h1,h2,h3,h4,h5,h6,header,html,input,li,nav,ol,p,section,ul,video{margin:0;padding:0}
 li,ol,ul{list-style:none}
-fieldset,img{max-width:100%;height:auto;border:0 none;vertical-align:middle;}
+fieldset,img{height:auto;border:0 none;vertical-align:middle;}
 table{width: 100%;max-width: 100%;border-collapse:separate;}
 table td,table th{word-break:break-all;}
 button,input,select,textarea{font:12px/20px Arial;outline:0;resize:none;border:none}
@@ -25,7 +25,7 @@ body.view{
 body.view> p,body.view> div{
 	margin:15px 0;
 }
-body.view img,body.view video,body.view table{
+body.view table{
 	max-width: 100%;
 }
 body.view table{
