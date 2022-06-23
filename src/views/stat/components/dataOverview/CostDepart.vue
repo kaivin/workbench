@@ -382,7 +382,7 @@ export default {
                   type: 'pictorialBar',
                   symbolSize: [40, 10],
                   symbolOffset: [-2, -3],
-                  z: 1,
+                  z: 15,
                   zlevel: 0,
                   itemStyle: {
                       color: 'transparent', //数据的间隔颜色
