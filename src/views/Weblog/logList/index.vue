@@ -9,7 +9,7 @@
                             <div class="search-wrap">
                                 <div class="item-search" style="padding-top:0px;padding-bottom:0px;">
                                     <el-input
-                                        style="width:180px;"
+                                        style="width:150px;"
                                         placeholder="ip"
                                         v-model="searchData.isIp"
                                         size="small"
@@ -18,15 +18,15 @@
                                 </div>
                                 <div class="item-search" style="padding-top:0px;padding-bottom:0px;">
                                     <el-input
-                                        style="width:180px;"
-                                        placeholder="url"
+                                        style="width:300px;"
+                                        placeholder="抓取页面、UA 模糊查询"
                                         v-model="searchData.url"
                                         size="small"
                                         clearable>
                                     </el-input>
                                 </div>
                                 <div class="item-search" style="padding-top:0px;padding-bottom:0px;">
-                                    <el-select v-model="searchData.spidertype" size="small" clearable placeholder="蜘蛛类型">
+                                    <el-select style="width:150px;" v-model="searchData.spidertype" size="small" clearable placeholder="蜘蛛类型">
                                         <el-option
                                             v-for="item in spidertypeList"
                                             :key="item.value"
@@ -36,7 +36,7 @@
                                     </el-select>
                                 </div>
                                 <div class="item-search" style="padding-top:0px;padding-bottom:0px;">
-                                    <el-select v-model="searchData.type" size="small" clearable placeholder="页面类型">
+                                    <el-select style="width:120px;" v-model="searchData.type" size="small" clearable placeholder="页面类型">
                                         <el-option
                                             v-for="item in pagetypeList"
                                             :key="item.value"
@@ -46,14 +46,20 @@
                                     </el-select>
                                 </div>
                                 <div class="item-search" style="padding-top:0px;padding-bottom:0px;">
-                                    <el-select v-model="searchData.code" size="small" clearable placeholder="状态码">
-                                        <el-option
-                                            v-for="item in codeList"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value">
-                                        </el-option>
-                                    </el-select>
+                                    <el-input
+                                        style="width:90px;"
+                                        placeholder="状态码"
+                                        v-model="searchData.startcode"
+                                        size="small"
+                                        clearable>
+                                    </el-input> -
+                                    <el-input
+                                        style="width:90px;"
+                                        placeholder="状态码"
+                                        v-model="searchData.endcode"
+                                        size="small"
+                                        clearable>
+                                    </el-input>
                                 </div>
                                 <div class="item-search" style="padding-top:0px;padding-bottom:0px;">
                                     <el-button class="item-input" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
@@ -91,7 +97,11 @@
                               class="SiteTable"
                               row-key="id"
                               >
-                                <el-table-column prop="url" label="抓取页面"></el-table-column>
+                                <el-table-column prop="url" label="抓取页面">
+                                  <template slot-scope="scope">
+                                    <a class="spiderItem" :href="scope.row.url" target="_blank">{{scope.row.url}}</a>
+                                  </template>
+                                </el-table-column>
                                 <el-table-column prop="ip" label="ip" width="130"></el-table-column>
                                 <el-table-column prop="code" label="状态码" width="70"></el-table-column>
                                 <el-table-column prop="size" label="文件大小" width="80"></el-table-column>
@@ -153,20 +163,16 @@ export default {
           spidertype:'',
           isfile:'',
           type:'',
-          code:'',
+          startcode:'',
+          endcode:'',
+          webip:'',
+          domain:'',
         },
         spidertypeList:[],
         pagetypeList:[
           {value:1,label:'图片'},
           {value:2,label:'html'},
           {value:3,label:'js'},
-        ],
-        codeList:[
-          {value:200,label:'200'},
-          {value:301,label:'301'},
-          {value:302,label:'302'},
-          {value:404,label:'404'},
-          {value:500,label:'500'},
         ],
     }
   },
@@ -234,6 +240,7 @@ export default {
       var ftppwd = $this.$route.query.ftppwd;
       var path = $this.$route.query.path;
       var weburl = $this.$route.query.weburl;
+      var domain = $this.$route.query.weburl;
       if(ip&&ip!=''){
         $this.searchData.ip=ip;
       }
@@ -248,6 +255,9 @@ export default {
       }
       if(weburl&&weburl!=''){
         $this.searchData.weburl=weburl;
+      }
+      if(domain&&domain!=''){
+        $this.searchData.domain=domain;
       }
       $this.getloglist();
     },
@@ -269,6 +279,9 @@ export default {
       }
       if($this.searchData.weburl&&$this.searchData.weburl!=''){
         searchData.weburl = $this.searchData.weburl;
+      }
+      if($this.searchData.domain&&$this.searchData.domain!=''){
+        searchData.domain = $this.searchData.domain;
       }
       return searchData;
     },
@@ -333,8 +346,11 @@ export default {
       if($this.searchData.type&&$this.searchData.type!=''){
         searchData.type = $this.searchData.type;
       }
-      if($this.searchData.code&&$this.searchData.code!=''){
-        searchData.code = $this.searchData.code;
+      if($this.searchData.startcode&&$this.searchData.startcode!=''){
+        searchData.startcode = $this.searchData.startcode;
+      }
+      if($this.searchData.endcode&&$this.searchData.endcode!=''){
+        searchData.endcode = $this.searchData.endcode;
       }
       if($this.searchData.url&&$this.searchData.url!=''){
         searchData.url = $this.searchData.url;
@@ -351,6 +367,9 @@ export default {
       if($this.searchData.ftppwd&&$this.searchData.ftppwd!=''){
         searchData.ftppwd = $this.searchData.ftppwd;
       }
+      if($this.searchData.domain&&$this.searchData.domain!=''){
+        searchData.domain = $this.searchData.domain;
+      }
       return searchData;
     },
     // 获取当前日志文件的抓取详情
@@ -364,6 +383,7 @@ export default {
       $this.isPageBtn = false;
       $this.$store.dispatch('Weblog/getlistsAction',searchData).then(res=>{
         if(res.status){
+          console.log(res,'res---')
             $this.tableData=res.data;
             $this.totalDataNum = res.allcount;
             $this.spiderCount=res.spidercount;
