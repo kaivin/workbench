@@ -1195,10 +1195,11 @@ export default {
                         }else{
                           if(response.data.id==533||response.data.id==1112){
                               homeRedirect = '/stat/cn/targetShow';
-                          }else if(response.haschtarget == 1){
-                              homeRedirect = '/welcome?status=1';
-                          }else if(response.hasentarget == 1){
-                              homeRedirect = '/welcome?status=2';
+                          // 这里一部欢迎页面
+                          // }else if(response.haschtarget == 1){
+                          //     homeRedirect = '/welcome?status=1';
+                          // }else if(response.hasentarget == 1){
+                          //     homeRedirect = '/welcome?status=2';
                           }else{
                               homeRedirect = '/Home/index' ;
                           }
