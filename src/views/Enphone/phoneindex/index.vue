@@ -1148,7 +1148,6 @@ export default {
       if(this.$route.query.key == 'unAllot'){
         type = 'unAllot'
       }
-      
       $this.$store.dispatch('api/clearCacheAction', {cachename:type}).then(response=>{
         if(response){
           if(response.status){

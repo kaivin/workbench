@@ -80,6 +80,10 @@
                             </p>
                             <span>总数：<b>{{totalDataNum}}</b></span>
                          </div>
+                         <div class="search_ip" v-if="iparrCount.length>0">
+                              <p>ip：数量</p>
+                              <span v-for="(item,index) in iparrCount">{{item.label}}: <b>{{item.value}}</b></span>
+                         </div>
                          <div class="search-weblog">
                             <ul :style="'height:'+ boxHeight">
                                 <li v-for="(item,index) in loglist" :class="item.isOn?'active':''" @click="handleLog(item)" :key='index'>
@@ -147,6 +151,7 @@ export default {
         isFold:false,
         boxHeight:'84px',
         loglist:[],
+        iparrCount:[],
         spiderCount:[],
         tableData:[],
         searchData:{
@@ -387,6 +392,16 @@ export default {
             $this.tableData=res.data;
             $this.totalDataNum = res.allcount;
             $this.spiderCount=res.spidercount;
+            var iparrCount=[]
+            for(let key in res.iparr){
+              iparrCount.push({
+                label:key,
+                value:res.iparr[key]
+              })
+            }
+            console.log(typeof(iparrCount))
+            console.log(iparrCount,'iparrCount')
+            $this.iparrCount=iparrCount;
             $this.isLoading.close();
         }else{
           $this.$message({
