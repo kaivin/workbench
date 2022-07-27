@@ -606,7 +606,7 @@ import {MapInterval} from "@/utils/MapColor";
 import {sortByDesc,pickerDayRangeOptions} from "@/utils/index";
 import { worldCountry } from "@/utils/worldCountry";
 export default {
-  name: 'statisticChart',
+  name: 'enstatisticChart',
   data() {
     return {
       isSearch:false,

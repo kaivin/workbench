@@ -10,7 +10,7 @@
               <div class="tags-list"><tags-view  /></div>
           </div>
         <el-main :style="{'margin-top':isSales?'48px':''}" class="main-layout" v-if="isRefresh">
-          <keep-alive include="Article_index">
+          <keep-alive include="Article_index,enstatisticChart,statisticChart,enintentioncount">
             <router-view :key="key"></router-view>
           </keep-alive>
         </el-main>

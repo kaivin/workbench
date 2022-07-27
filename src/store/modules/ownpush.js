@@ -24,6 +24,8 @@
     getOwnChinasourcecount,
     getOwnsource,
     getOwnChinasourcedefault,
+    getEnIntentionConditon,
+    getEnIntentionCount,
 } from '@/api/ownpush'
 
 const state = {}
@@ -282,7 +284,26 @@ const actions = {
             });
         });
     },
-    
+    // 英文意向分析条件
+    getEnIntentionConditonAction({ commit }, data){
+        return new Promise((resolve, reject) => {
+            getEnIntentionConditon(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            });
+        });
+    },
+    // 英文意向分析结果
+    getEnIntentionCountAction({ commit }, data){
+        return new Promise((resolve, reject) => {
+            getEnIntentionCount(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            });
+        });
+    },
 }
 
 export default {

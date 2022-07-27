@@ -199,3 +199,21 @@ export function getOwnChinasourcedefault(data) {
     data
   });
 }
+
+// 英文意向分析头部条件
+export function getEnIntentionConditon(data) {
+  return request({
+    url: "/hxindex/Ownpush/Intentionconditon",
+    method: "POST",
+    data
+  });
+}
+
+// 英文意向分析结果
+export function getEnIntentionCount(data) {
+  return request({
+    url: "/hxindex/Ownpush/enintentioncount",
+    method: "POST",
+    data
+  });
+}
