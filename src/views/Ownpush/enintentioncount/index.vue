@@ -262,7 +262,7 @@
                     <el-col :md="24" :lg="12" v-if="checkedResult.includes(4)">
                       <div class="chart-wrapper">
                         <div class="chart-header"><span>产品分类询盘个数</span></div>
-                        <div class="chart-body" style="height:450px;">                        
+                        <div class="chart-body" style="height:550px;">                        
                             <div class="abs-canvas" v-if="searchResult.productInquiryCount.pronumberdata.length>0">
                               <div id="productinquiry" class="chart-canvas"></div>
                             </div>
@@ -276,7 +276,7 @@
                     <el-col :md="24" :lg="12" v-if="checkedResult.includes(5)">
                       <div class="chart-wrapper">
                         <div class="chart-header"><span>产品分类意向分数</span></div>
-                        <div class="chart-body" style="height:450px;">                        
+                        <div class="chart-body" style="height:550px;">                        
                             <div class="abs-canvas" v-if="searchResult.productScoreCount.proscoredata.length>0">
                               <div id="productscore" class="chart-canvas"></div>
                             </div>
@@ -676,50 +676,6 @@ export default {
       $this.checkedA11Product=[];
       $this.checkedA12Product=[];
       $this.checkedA13Product=[];
-      // 产品对比
-      // $this.productCompareCount=0;
-      // $this.isAllCompareProduct=false;
-      // $this.checkAllCompareProduct=false;
-      // $this.isAllA1CompareProduct=false;
-      // $this.checkAllA1CompareProduct=false;
-      // $this.isAllA2CompareProduct=false;
-      // $this.checkAllA2CompareProduct=false;
-      // $this.isAllA3CompareProduct=false;
-      // $this.checkAllA3CompareProduct=false;
-      // $this.isAllA4CompareProduct=false;
-      // $this.checkAllA4CompareProduct=false;
-      // $this.isAllA5CompareProduct=false;
-      // $this.checkAllA5CompareProduct=false;
-      // $this.isAllA6CompareProduct=false;
-      // $this.checkAllA6CompareProduct=false;
-      // $this.isAllA7CompareProduct=false;
-      // $this.checkAllA7CompareProduct=false;
-      // $this.isAllA8CompareProduct=false;
-      // $this.checkAllA8CompareProduct=false;
-      // $this.isAllA9CompareProduct=false;
-      // $this.checkAllA9CompareProduct=false;
-      // $this.isAllA10CompareProduct=false;
-      // $this.checkAllA10CompareProduct=false;
-      // $this.isAllA11CompareProduct=false;
-      // $this.checkAllA11CompareProduct=false;
-      // $this.isAllA12CompareProduct=false;
-      // $this.checkAllA12CompareProduct=false;
-      // $this.isAllA13CompareProduct=false;
-      // $this.checkAllA13CompareProduct=false;
-      // $this.checkedA1CompareProduct=[];
-      // $this.checkedA2CompareProduct=[];
-      // $this.checkedA3CompareProduct=[];
-      // $this.checkedA4CompareProduct=[];
-      // $this.checkedA5CompareProduct=[];
-      // $this.checkedA6CompareProduct=[];
-      // $this.checkedA7CompareProduct=[];
-      // $this.checkedA8CompareProduct=[];
-      // $this.checkedA9CompareProduct=[];
-      // $this.checkedA10CompareProduct=[];
-      // $this.checkedA11CompareProduct=[];
-      // $this.checkedA12CompareProduct=[];
-      // $this.checkedA13CompareProduct=[];
-
       $this.isAllSource=false;
       $this.checkAllSource=false;
       $this.checkedSource=[];
@@ -798,23 +754,7 @@ export default {
       var checkedA11Product = $this.checkedA11Product;
       var checkedA12Product = $this.checkedA12Product;
       var checkedA13Product = $this.checkedA13Product;
-      searchData.productid=checkedA1Product.concat(checkedA2Product).concat(checkedA3Product).concat(checkedA4Product).concat(checkedA5Product).concat(checkedA6Product).concat(checkedA7Product).concat(checkedA8Product).concat(checkedA9Product).concat(checkedA10Product).concat(checkedA11Product).concat(checkedA12Product).concat(checkedA13Product)
-      // // 对比
-      // var checkedA1CompareProduct = $this.checkedA1CompareProduct;
-      // var checkedA2CompareProduct = $this.checkedA2CompareProduct;
-      // var checkedA3CompareProduct = $this.checkedA3CompareProduct;
-      // var checkedA4CompareProduct = $this.checkedA4CompareProduct;
-      // var checkedA5CompareProduct = $this.checkedA5CompareProduct;
-      // var checkedA6CompareProduct = $this.checkedA6CompareProduct;
-      // var checkedA7CompareProduct = $this.checkedA7CompareProduct;
-      // var checkedA8CompareProduct = $this.checkedA8CompareProduct;
-      // var checkedA9CompareProduct = $this.checkedA9CompareProduct;
-      // var checkedA10CompareProduct = $this.checkedA10CompareProduct;
-      // var checkedA11CompareProduct = $this.checkedA11CompareProduct;
-      // var checkedA12CompareProduct = $this.checkedA12CompareProduct;
-      // var checkedA13CompareProduct = $this.checkedA13CompareProduct;
-      // searchData.compareproductid=checkedA1CompareProduct.concat(checkedA2CompareProduct).concat(checkedA3CompareProduct).concat(checkedA4CompareProduct).concat(checkedA5CompareProduct).concat(checkedA6CompareProduct).concat(checkedA7CompareProduct).concat(checkedA8CompareProduct).concat(checkedA9CompareProduct).concat(checkedA10CompareProduct).concat(checkedA11CompareProduct).concat(checkedA12CompareProduct).concat(checkedA13CompareProduct);
-
+      searchData.productid=checkedA1Product.concat(checkedA2Product).concat(checkedA3Product).concat(checkedA4Product).concat(checkedA5Product).concat(checkedA6Product).concat(checkedA7Product).concat(checkedA8Product).concat(checkedA9Product).concat(checkedA10Product).concat(checkedA11Product).concat(checkedA12Product).concat(checkedA13Product);
       return searchData;
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -893,8 +833,6 @@ export default {
             });
             $this.productList = productList;
             $this.productCount = productCount;
-            $this.productCompareList = productList;
-            $this.productCompareCount = productCount;
 
             var phoneList = [];
             var phoneCount = 0;
@@ -977,8 +915,7 @@ export default {
               // $this.searchResult.productScoreCount = response.proscoretrend;
               // $this.searchResult.productInquiryCount = response.pronumbertrend;
               // 产品意向分
-              var ChartColor=["#044bff","#fe4c46","#fdcb66","#47cbfe","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822"]; 
-
+              var ChartColor=["#044bff","#fe4c46","#fdcb66","#47cbfe","#19adaf","#91cb74","#ff8d61","#9a60b4","#e522db","#59678c","#95706d","#c05050","#dc69aa","#c14089"]; 
               var proscoredate = [];
               var proscoredata = [];
               var proscorecatelist = [];
@@ -2439,7 +2376,7 @@ export default {
             left: '35',
             top:'25',
             right:'15',
-            bottom: '55'
+            bottom: '85'
           },
           tooltip:{
             show: true,
@@ -2563,7 +2500,7 @@ export default {
             left: '35',
             top:'25',
             right:'15',
-            bottom: '55'
+            bottom: '85'
           },
           tooltip:{
             show: true,
