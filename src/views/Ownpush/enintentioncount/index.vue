@@ -74,6 +74,16 @@
                       <div class="team-panel team-time">
                         <div class="team-header">
                             <div class="team-headerItem">
+                                <span class="require">国家：</span>
+                                <el-input
+                                    size="mini"
+                                    v-model="searchData.country"
+                                    :class="searchData.country!=''?'el-xzstate':''"
+                                    placeholder="国家"
+                                    clearable>
+                                </el-input>
+                            </div>
+                            <div class="team-headerItem">
                                 <span class="require">备注：</span>
                                 <el-input
                                     size="mini"
@@ -427,6 +437,7 @@ export default {
       searchData:{
         date:[],
         name:'',
+        country:""
       },
       deviceList:[],
       productList:[],
@@ -693,6 +704,7 @@ export default {
       $this.checkedResult = [];
       $this.searchData.date=[];
       $this.searchData.name='';
+      $this.searchData.country='';
       $this.searchResult.allInquiryCount=[];
       $this.searchResult.trendScoreCount=[];
       $this.searchResult.trendInquiryCount=[];
@@ -728,6 +740,7 @@ export default {
       var $this = this;
       var searchData = {};
       searchData.keyword = $this.searchData.name;
+      searchData.country = $this.searchData.country;
       if($this.searchData.date&&$this.searchData.date.length>0){
         searchData.starttime = $this.searchData.date[0];
         searchData.endtime = $this.searchData.date[1];
