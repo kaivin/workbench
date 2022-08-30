@@ -119,6 +119,7 @@ const state = {
     ischAimScoreAdd:false,
     isenAimScoreAdd:false,
     isselectuserAdd:false,
+    isChinaQualityAdd:false
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -356,6 +357,12 @@ const mutations = {
     }else{
       state.isselectuserAdd = false;
     }
+    if(permitData.includes("Chinaphone_chinaqualityadd")&&data.page==""){
+      state.isChinaQualityAdd = true;
+    }else{
+      state.isChinaQualityAdd = false;
+    }
+    
   },
 }
 

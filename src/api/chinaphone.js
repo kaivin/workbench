@@ -418,3 +418,67 @@ export function getkeyword(data) {
     data
   });
 }
+// 中文询盘质量判定添加
+export function chinaQualityAdd(data) {
+  return request({
+    url: "/hxindex/Chinaphone/chinaqualityadd",
+    method: "POST",
+    data
+  });
+}
+// 中文询盘质量判定修改
+export function chinaQualityEdit(data) {
+  return request({
+    url: "/hxindex/Chinaphone/chinaqualityedit",
+    method: "POST",
+    data
+  });
+}
+// 质量判定条件列表
+export function chinaQualityList(data) {
+  return request({
+    url: "/hxindex/Chinaphone/chinaqualitylist",
+    method: "POST",
+    data
+  });
+}
+// 质量判定条件删除
+export function chinaQualityDelete(data) {
+  return request({
+    url: "/hxindex/Chinaphone/chinaqualitydelete",
+    method: "POST",
+    data
+  });
+}
+// 供选择的质量判定条件列表
+export function chinaQualitySelect(data) {
+  return request({
+    url: "/hxindex/Chinaphone/chinaqualityselect",
+    method: "POST",
+    data
+  });
+}
+// 中文询盘质量判定提交
+export function chinaQualityConfirm(data) {
+  return request({
+    url: "/hxindex/Chinaphone/chinaqualityconfirm",
+    method: "POST",
+    data
+  });
+}
+// 中文询盘质量判定修改
+export function chinaQualityConfirmedit(data) {
+  return request({
+    url: "/hxindex/Chinaphone/chinaqualityconfirmedit",
+    method: "POST",
+    data
+  });
+}
+// 已经选择的中文询盘质量判定
+export function chinaQualityHasSelect(data) {
+  return request({
+    url: "/hxindex/Chinaphone/chinaqualityhasselect",
+    method: "POST",
+    data
+  });
+}

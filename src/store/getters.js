@@ -93,6 +93,8 @@
     addenAimScore:state => state.app.addenAimScore,
     isselectuserAdd:state => state.api.isselectuserAdd,
     addSelectuser:state => state.app.addSelectuser,
+    isChinaQualityAdd:state => state.api.isChinaQualityAdd,
+    addChinaQuality:state => state.app.addChinaQuality
 }
 export default getters
   

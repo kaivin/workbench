@@ -43,6 +43,7 @@ const state = {
   addchAimScore:false,
   addenAimScore:false,
   addSelectuser:false,
+  addChinaQuality:false
 }
 
 const mutations = {
@@ -283,6 +284,12 @@ const mutations = {
   CLOSE_SELECTUSER: (state) => {
     state.addSelectuser = false
   },
+  ADD_CHINAQUALITY: (state) => {
+    state.addChinaQuality = true
+  },
+  CLOSE_CHINAQUALITY: (state) => {
+    state.addChinaQuality = false
+  },
 }
 
 const actions = {
@@ -518,6 +525,12 @@ const actions = {
   },
   closeSelectuser({ commit }) {
     commit('CLOSE_SELECTUSER')
+  },
+  addChinaQuality({ commit }) {
+    commit('ADD_CHINAQUALITY')
+  },
+  closeChinaQuality({ commit }) {
+    commit('CLOSE_CHINAQUALITY')
   },
 }
 

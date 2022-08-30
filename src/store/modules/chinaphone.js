@@ -52,6 +52,14 @@
     CntargetlistEdit,
     CntargetlistDel,
     getkeyword,
+    chinaQualityAdd,
+    chinaQualityEdit,
+    chinaQualityList,
+    chinaQualityDelete,
+    chinaQualitySelect,
+    chinaQualityConfirm,
+    chinaQualityConfirmedit,
+    chinaQualityHasSelect
 } from '@/api/chinaphone'
 
 const state = {}
@@ -590,6 +598,86 @@ const actions = {
     getkeywordAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             getkeyword(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 中文询盘质量判定添加
+    getChinaQualityAdd({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            chinaQualityAdd(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 中文询盘质量判定修改
+    getChinaQualityEdit({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            chinaQualityEdit(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 中文询盘质量判定条件列表
+    getChinaQualityList({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            chinaQualityList(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 中文询盘质量判定条件删除
+    getChinaQualityDelete({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            chinaQualityDelete(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 供选择的质量判定条件列表
+    getChinaQualitySelect({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            chinaQualitySelect(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 中文询盘质量判定提交
+    getChinaQualityConfirm({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            chinaQualityConfirm(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 中文询盘质量判定提交修改
+    getChinaQualityConfirmedit({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            chinaQualityConfirmedit(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 已经选择的中文询盘质量判定
+    getChinaQualityHasSelect({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            chinaQualityHasSelect(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

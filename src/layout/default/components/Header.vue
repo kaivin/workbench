@@ -7,7 +7,7 @@
             </router-link>
         </div>
         <div class="header-center">
-            <div class="header-button" v-if="isArticleAdd||isWebsiteAdd||isWebserverAdd||isCnPhoneAdd||isEnPhoneAdd||isEnCateAdd||isEnProductAdd||isCnCateAdd||isCnProductAdd||isWebsiteAttrAdd||isInformationAdd||isTagAdd||isUserAdd||isDepartAdd||isRoleAdd||isMenuAdd||isPermitAdd||isPromotedAccountAdd||isPromotedChannelAdd||isCnProcessAdd||isCnMoneyAdd||isCnCluesAdd||isEnCluesAdd||isWebsiteLogAdd||isWebMsgIpAdd||iscompareListAdd||isEncompareListAdd||isCntargetlistAdd||isEntargetlistAdd||isWorkOrderTagAdd||isWorkOrderAdd||isDepartScoreAdd||isResourceTypeAdd||isResourceAdd||isCnScoreAdd||isEnScoreAdd||iscompareGroupListAdd||isEncompareGroupListAdd||isUserbonusAdd||ischAimScoreAdd||isenAimScoreAdd||isselectuserAdd">
+            <div class="header-button" v-if="isArticleAdd||isWebsiteAdd||isWebserverAdd||isCnPhoneAdd||isEnPhoneAdd||isEnCateAdd||isEnProductAdd||isCnCateAdd||isCnProductAdd||isWebsiteAttrAdd||isInformationAdd||isTagAdd||isUserAdd||isDepartAdd||isRoleAdd||isMenuAdd||isPermitAdd||isPromotedAccountAdd||isPromotedChannelAdd||isCnProcessAdd||isCnMoneyAdd||isCnCluesAdd||isEnCluesAdd||isWebsiteLogAdd||isWebMsgIpAdd||iscompareListAdd||isEncompareListAdd||isCntargetlistAdd||isEntargetlistAdd||isWorkOrderTagAdd||isWorkOrderAdd||isDepartScoreAdd||isResourceTypeAdd||isResourceAdd||isCnScoreAdd||isEnScoreAdd||iscompareGroupListAdd||isEncompareGroupListAdd||isUserbonusAdd||ischAimScoreAdd||isenAimScoreAdd||isselectuserAdd||isChinaQualityAdd">
               <div class="item-button" v-if="isArticleAdd" v-on:click="articleAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">发布文章</span></div>
               <div class="item-button" v-if="isWebsiteAdd" v-on:click="websiteAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加网站</span></div>
               <div class="item-button" v-if="isWebserverAdd" v-on:click="webserverAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加服务器</span></div>
@@ -50,6 +50,7 @@
               <div class="item-button" v-if="ischAimScoreAdd" v-on:click="depchAimAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加目标</span></div>
               <div class="item-button" v-if="isenAimScoreAdd" v-on:click="depenAimAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加目标</span></div>
               <div class="item-button" v-if="isselectuserAdd" v-on:click="selectuserAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加员工</span></div>
+              <div class="item-button" v-if="isChinaQualityAdd" v-on:click="chinaQualityAdd"><span class="button-icon"><svg-icon icon-class="add" class-name="disabled" /></span><span class="button-font">添加质量判定条件</span></div>
             </div>
             <!-- <div class="header-search" v-if="isArticleSearch">
               <el-input placeholder="请输入内容" v-model="searchWord" @keypress.native.enter="searchResult" size="small" class="article-search">
@@ -176,6 +177,7 @@ export default {
         'ischAimScoreAdd',
         'isenAimScoreAdd',
         'isselectuserAdd',
+        'isChinaQualityAdd'
       ]),
     },
   watch: {
@@ -511,6 +513,10 @@ export default {
       // 新老组别划分添加
       selectuserAdd(){
         this.$store.dispatch('app/addSelectuser')
+      },
+      // 添加中文质量判定条件
+      chinaQualityAdd(){
+        this.$store.dispatch('app/addChinaQuality')
       }
   }
 }

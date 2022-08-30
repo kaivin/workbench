@@ -206,7 +206,7 @@
                     </div>
                     <div class="clues-info flex-box">
                         <div class="clues-infoFl flex-content">
-                              <p><span>共有<strong class="color1">{{infoData.totalCount}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效<strong class="color3">{{infoData.invalidCount}}</strong>条。</span><span>||</span><span>本月共有<strong class="color1">{{infoData.totalCountMonth}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCountMonth}}</strong>条，无效<strong class="color3">{{infoData.invalidCountMonth}}</strong>条。</span></p>
+                              <p><span>共有<strong class="color1">{{infoData.totalCount}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效<strong class="color3">{{infoData.invalidCount}}</strong>条，积分<strong class="color2">{{infoData.qualityscore}}</strong>分。</span><span>||</span><span>本月共有<strong class="color1">{{infoData.totalCountMonth}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCountMonth}}</strong>条，无效<strong class="color3">{{infoData.invalidCountMonth}}</strong>条，积分<strong class="color2">{{infoData.nowqualityscore}}</strong>分。</span></p>
                         </div>
                         <div class="clues-title-btn">
                             <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
@@ -277,8 +277,9 @@
                         </el-table-column>
                         <el-table-column
                           prop="effective"
-                          label="添加人/有效/级别"
+                          label="添加人/有效/积分"
                           min-width="100"
+                          align="center"
                           >
                           <template slot-scope="scope">
                             <div>
@@ -286,7 +287,24 @@
                                 <p style="text-align:center;">{{scope.row.addusername}}</p>
                               </div>
                               <div class="table-tag" style="text-align:center;margin: 5px auto;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                              <div class="table-tag" style="text-align:center;"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div>
+                              <!-- <div class="table-tag" style="text-align:center;"><span class="level" @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></div> -->
+                              
+                              <el-popover
+                                placement="right"
+                                trigger="hover"
+                                @show="popoverShow(scope.row.id)"
+                                :popper-class="popContent.length > 0 ? '' : 'pop-quality-hide'"
+                                >
+                                <p v-for="item in popContent" :key="item" class="pop-p">{{item}}</p>
+                                <div class="table-tag table-score" slot="reference">{{scope.row.qualityscore}}</div>
+                              </el-popover>
+
+
+                              <!-- <div class="table-tag" style="text-align:center; color: #f73a3e; font-weight: bold">{{scope.row.qualityscore}}</div> -->
+                              
+                              <div class="table-tag" style="text-align:center;margin-top:5px" v-if="menuButtonPermit.includes('Chinaphone_chinaqualityconfirmedit') || menuButtonPermit.includes('Chinaphone_chinaqualityconfirm')">
+                                <el-button size="mini" @click="qualityJudge(scope.row.id)">质量判定</el-button>
+                              </div>
                             </div>
                           </template>
                         </el-table-column>
@@ -429,6 +447,36 @@
           </span>
         </template>
     </el-dialog>
+    <!-- 询盘线索质量判定 -->
+    <el-dialog  title="询盘线索质量判定" custom-class="quality-dialog" :visible.sync="qualityDecision">
+        <div class="pop_title">
+          <span>类型：</span>
+          <el-radio-group v-model="popType" size="small">
+            <el-radio-button :label="1">多选</el-radio-button>
+            <el-radio-button :label="2">单选</el-radio-button>
+          </el-radio-group>
+        </div>
+        <div class="quality-selection" v-if="popType == 1">
+          <el-checkbox-group v-model="qualityMultiChoosed" @change="qualityChooseChange">
+            <el-checkbox v-for="item in qualityMultiOptions" :key="item.id" :label="item.id">
+              {{item.content}}<span class="qscore">({{item.score}})</span>
+            </el-checkbox>
+          </el-checkbox-group>
+        </div>
+        <div class="quality-selection" v-if="popType == 2">
+          <el-radio-group v-model="qualitySingleChoosed" @change="qualitySingleChange">
+            <el-radio v-for="item in qualitySingleOptions" :key="item.id" :label="item.id">
+              {{item.content}}<span class="qscore">({{item.score}})</span>
+            </el-radio>
+          </el-radio-group>
+        </div>
+        
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button type="primary" size="small" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="qualityDecide">确定</el-button>
+          </span>
+        </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -541,6 +589,20 @@ export default {
       currentTeam:"中文合计",
       chartLoading:false,
       isSearchResult:false,
+      qualityDecision: false,//询盘质量判定弹窗
+      qualityOptions: [],//询盘意向情况
+      qualityMultiOptions: [],//询盘多选意向情况
+      qualitySingleOptions: [],//询盘单选意向情况
+      qualityChoosed: [],
+      qualityMultiChoosed: [],
+      qualitySingleChoosed: 0,
+      totalScore: 0,
+      qualityId : 0,
+      isSaveData: false,
+      isNewAdd: true,
+      popType: 1,
+      popContent: [],
+      judgeOptions: [],
     }
   },
   components:{
@@ -959,6 +1021,8 @@ export default {
               infoData.totalCountMonth=response.nowmonthnumber;
               infoData.effectiveCountMonth=response.noweffectivenumber;
               infoData.invalidCountMonth=response.nownoeffectivenumber;
+              infoData.nowqualityscore = response.nowqualityscore > 0 ? response.nowqualityscore.toFixed(1) : 0;
+              infoData.qualityscore = response.qualityscore > 0 ? response.qualityscore.toFixed(1) : 0;
               if(response.data.length>0){
                 response.data.forEach(function(item,index){
                   if(item.phonenumber.indexOf("-")!=-1){
@@ -1621,6 +1685,350 @@ export default {
       $this.scrollPosition.startPageX = 0;
       $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
     },
+    // 质量判定点击
+    qualityJudge(id){
+      var $this = this;
+      if($this.qualityOptions.length == 0){
+        $this.getQualityCondition();
+      }
+      
+      $this.isSaveData = false;
+      $this.qualityId = id;
+      $this.getSelectedQuality(id);
+      
+    },
+    // 质量判定条件列表
+    getQualityCondition(){
+      var $this = this;
+      $this.$store.dispatch('chinaphone/getChinaQualitySelect', null).then(response=>{
+        if(response){
+          if(response.status){
+            if(response.data.length>0){
+              response.data.sort(function(a,b){
+                return a.sort - b.sort
+              })
+              var multiOption = response.data.filter(item=>{
+                return item.status == 1
+              })
+              var singleOption = response.data.filter(item=>{
+                return item.status == 2
+              })
+              $this.qualityOptions = response.data;
+              $this.qualityMultiOptions = multiOption;
+              $this.qualitySingleOptions = singleOption;
+              $this.radioOption(response.data);
+            }else{
+              $this.qualityOptions = [];
+            }
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          }
+        }
+      });
+    },
+    // 多选单选改变
+    // popTypeChange(e){
+    //   var $this = this;
+    //   $this.totalScore = 0;
+    //   if(e == 1){
+    //     $this.qualityMultiChoosed = [];
+    //   }else if(e == 2){
+    //     $this.qualitySingleChoosed = [];
+    //   }
+    // },
+    // 多选选项选择
+    qualityChooseChange(e){
+      var $this = this;
+      $this.qualitySingleChoosed = [];
+      if(e.length > 0){
+        $this.getChoosedDataFilter(e);
+      }
+    },
+    // 数据筛选
+    getChoosedDataFilter(data){
+      var $this = this;
+      var filterChoosed = [];
+      var filterResult = [];
+      var resultScore = 0;
+      // 先将数据还原一下
+      data.forEach((item,index)=>{
+        var itemObj = $this.getAimObj(item);
+        filterChoosed.push(itemObj);
+      })
+      // 过滤排斥数据
+      var filterChoosedArr = [...filterChoosed];
+      var lastItem = filterChoosed.slice(-1)[0];
+      var lastItemId = lastItem.id;
+      var lastItemSameId = lastItem.same_id;
+      var idArr = [];
+      var lastIdIndex = $this.getArrayIndex(lastItemId);
+      var lastSameIdIndex = $this.getArrayIndex(lastItemSameId);
+      for(var i = 0; i < filterChoosed.length -1; i++){
+        if(filterChoosed[i].id == lastItemSameId || filterChoosed[i].same_id == lastItemId){
+          idArr.push(filterChoosed[i].id);
+        }
+        var judgeIdRes = $this.judgeOptions[lastIdIndex];
+        var judgeSameIdRes = $this.judgeOptions[lastSameIdIndex];
+        var judgeId = filterChoosed[i].id
+        if((judgeIdRes &&　judgeIdRes.indexOf(judgeId) > -1 )|| (judgeSameIdRes && judgeSameIdRes.indexOf(judgeId) > -1)){
+          idArr.push(filterChoosed[i].id);
+        }
+      }
+      if(idArr.length > 0){
+        idArr.forEach(item=>{
+          filterChoosedArr = filterChoosedArr.filter(sitem=>{
+            return sitem.id != item;
+          })
+        })
+      }
+      
+      filterChoosedArr.forEach(item=>{
+        filterResult.push(item.id);
+        resultScore += item.score;
+      })
+
+      $this.qualityMultiChoosed = filterResult;
+      $this.totalScore = resultScore;
+    },
+    // 单选选项选择
+    qualitySingleChange(e){
+      var $this = this;
+      $this.qualityMultiChoosed = [];
+      var resObj = $this.getAimObj(e);
+      $this.totalScore = resObj.score;
+    },
+    // 查找指定元素
+    getAimObj(id){
+      var $this = this;
+      var item = $this.qualityOptions.filter(item=>{
+        return item.id == id
+      })
+
+      return item[0];
+    },
+    // 质量判定按钮确定
+    qualityDecide(){
+      var $this = this;
+      if(!$this.isSaveData){        
+        $this.isSaveData=true;
+        var formData = {}
+        formData.cid = $this.qualityId;
+        if($this.popType == 1){
+          formData.qid = $this.qualityMultiChoosed;
+        }else{
+          var newarr = [];
+          newarr.push($this.qualitySingleChoosed)
+          formData.qid = newarr;
+        }
+        
+        formData.score = $this.totalScore == 0 ? 0 : $this.totalScore.toFixed(1);
+        var pathUrl = "";
+        if($this.isNewAdd){
+          pathUrl = "chinaphone/getChinaQualityConfirm";
+        }else{
+          pathUrl = "chinaphone/getChinaQualityConfirmedit";
+        }
+        $this.$store.dispatch(pathUrl, formData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.isSaveData = false;
+              $this.qualityDecision = false;
+              $this.initCluesList();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveData=false;
+              },1000);
+            }
+        });
+      }
+    },
+    // 获取已经选择的质量判定
+    getSelectedQuality(id){
+      var $this = this;
+      var formData = {}
+      formData.cid = id;
+      $this.$store.dispatch('chinaphone/getChinaQualityHasSelect', formData).then(response=>{
+        if(response){
+          if(response.status){
+            if(response.data.length>0){
+                $this.isNewAdd = false;
+                var options = [];
+                response.data.forEach(item=>{
+                  options.push(item.qid);
+                })
+                var checkedData = $this.getAimObj(options[0]);
+                var status = checkedData.status;
+                if(status == 1){
+                  $this.popType = 1;
+                  $this.qualitySingleChoosed = [];
+                  $this.qualityMultiChoosed = options;
+                }else if(status == 2){
+                  $this.popType = 2;
+                  $this.qualityMultiChoosed = [];
+                  $this.qualitySingleChoosed = options[0];
+                }
+
+                $this.qualityDecision = true;
+            }else{
+              $this.qualityMultiChoosed = [];
+              $this.qualitySingleChoosed = [];
+              $this.popType = 1;
+              $this.isNewAdd = true;
+              $this.qualityDecision = true;
+            }
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          }
+        }
+      });
+    },
+    // 获取已经选择的质量判定：hover事件
+    getSelectedQualityText(id){
+      var $this = this;
+      if($this.qualityOptions.length == 0){
+        $this.getQualityCondition();
+      }
+      var formData = {}
+      formData.cid = id;
+      $this.$store.dispatch('chinaphone/getChinaQualityHasSelect', formData).then(response=>{
+        if(response){
+          if(response.status){
+            if(response.data.length>0){
+                var options = [];
+                response.data.forEach(item=>{
+                  options.push(item.qid);
+                })
+                // 拼接内容：
+                var poptext = [];
+                options.forEach(id=>{
+                  var nowtext = $this.getAimObj(id).content;
+                  poptext.push(nowtext);
+                })
+                $this.popContent = poptext;
+            }else{
+              $this.popContent = "";
+            }
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+          }
+        }
+      });
+    },
+    popoverShow(id){
+      var $this = this;
+      $this.popContent = [];
+      if($this.menuButtonPermit.includes('Chinaphone_chinaqualityhasselect')){
+        $this.getSelectedQualityText(id)
+      }
+    },
+    // 全部选项排斥情况判断
+    radioOption(data){
+      var $this = this;
+      var judgeOptions = [];
+      var qoption = data;
+      for(var i = 0; i < qoption.length; i++){
+        for(var j = 0; j < qoption.length; j++){
+          if(qoption[i].same_id == qoption[j].id){
+            if(judgeOptions.length == 0){
+              var newArr = [];
+              newArr.push(qoption[i].id);
+              newArr.push(qoption[j].id);
+              if(qoption[j].same_id > 0){
+                newArr.push(qoption[j].same_id);
+              }
+              judgeOptions.push(newArr);
+            }else{
+              judgeOptions.forEach((item,index)=>{
+                if(item.indexOf(qoption[i].id) > -1 && item.indexOf(qoption[j].id) < 0){
+                  judgeOptions[index].push(qoption[j].id);
+                }else if(item.indexOf(qoption[j].id) > -1 && item.indexOf(qoption[i].id) < 0){
+                  judgeOptions[index].push(qoption[i].id);
+                }else if(item.indexOf(qoption[j].id) > -1 && item.indexOf(qoption[i].id) > -1){
+                  return false;
+                }else if(qoption[j].same_id > 0){
+                  if(item.indexOf(qoption[j].same_id) < 0 && item.indexOf(qoption[j].id) > -1 ){
+                    judgeOptions[index].push(qoption[j].same_id);
+                  }else{
+                    return false;
+                  }
+                }else{
+                  var newArr = [];
+                  newArr.push(qoption[i].id);
+                  newArr.push(qoption[j].id);
+                  if(qoption[j].same_id > 0){
+                    newArr.push(qoption[j].same_id);
+                  }
+                  judgeOptions.push(newArr)
+                }
+              })
+            }
+          }
+        }
+      }
+      $this.judgeOptions = judgeOptions;
+    },
+    getArrayIndex(item){
+      var $this = this;
+      var sindex = -1;
+      $this.judgeOptions.forEach((sitem,index)=>{
+        if(sitem.indexOf(item) > -1){
+          sindex = index
+          return sindex;
+        }
+      })
+      return sindex;
+    }
   }
 }
 </script>
