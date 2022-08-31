@@ -537,6 +537,8 @@ export default {
         totalCountMonth:0,
         effectiveCountMonth:0,
         invalidCountMonth:0,
+        nowqualityscore: 0,
+        qualityscore: 0,
       },
       cnAreaPlot:null,
       formLabelWidth:"120px",
@@ -1922,9 +1924,9 @@ export default {
     // 获取已经选择的质量判定：hover事件
     getSelectedQualityText(id){
       var $this = this;
-      if($this.qualityOptions.length == 0){
-        $this.getQualityCondition();
-      }
+      // if($this.qualityOptions.length == 0){
+      //   $this.getQualityCondition();
+      // }
       var formData = {}
       formData.cid = id;
       $this.$store.dispatch('chinaphone/getChinaQualityHasSelect', formData).then(response=>{
@@ -1933,15 +1935,15 @@ export default {
             if(response.data.length>0){
                 var options = [];
                 response.data.forEach(item=>{
-                  options.push(item.qid);
+                  options.push(item.content);
                 })
                 // 拼接内容：
-                var poptext = [];
-                options.forEach(id=>{
-                  var nowtext = $this.getAimObj(id).content;
-                  poptext.push(nowtext);
-                })
-                $this.popContent = poptext;
+                // var poptext = [];
+                // options.forEach(id=>{
+                //   var nowtext = $this.getAimObj(id).content;
+                //   poptext.push(nowtext);
+                // })
+                $this.popContent = options;
             }else{
               $this.popContent = "";
             }
