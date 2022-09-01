@@ -519,27 +519,37 @@
     </el-dialog>
 
     <!-- 询盘线索质量判定 -->
-    <el-dialog  title="询盘线索质量判定" custom-class="quality-dialog" :visible.sync="qualityDecision">
-        <div class="pop_title">
-          <span>类型：</span>
-          <el-radio-group v-model="popType" size="small">
-            <el-radio-button :label="1">多选</el-radio-button>
-            <el-radio-button :label="2">单选</el-radio-button>
-          </el-radio-group>
-        </div>
-        <div class="quality-selection" v-if="popType == 1">
-          <el-checkbox-group v-model="qualityMultiChoosed" @change="qualityChooseChange">
-            <el-checkbox v-for="item in qualityMultiOptions" :key="item.id" :label="item.id">
-              {{item.content}}<span class="qscore">({{item.score}})</span>
-            </el-checkbox>
-          </el-checkbox-group>
-        </div>
-        <div class="quality-selection" v-if="popType == 2">
-          <el-radio-group v-model="qualitySingleChoosed" @change="qualitySingleChange">
-            <el-radio v-for="item in qualitySingleOptions" :key="item.id" :label="item.id">
-              {{item.content}}<span class="qscore">({{item.score}})</span>
-            </el-radio>
-          </el-radio-group>
+    <el-dialog  title="询盘线索质量判定" custom-class="quality-dialog" :visible.sync="qualityDecision" width="1100px" top="15px">
+        <div class="quality_content">
+          <div class="quality_title">
+            <div class="title_type">多选</div>
+            <div class="title_content">具体情况</div>
+          </div>
+          <div class="content_selection">
+            <div class="quality-selection">
+              <el-checkbox-group v-model="qualityMultiChoosed" @change="qualityChooseChange">
+                <el-checkbox v-for="item in qualityMultiOptions" :key="item.id" :label="item.id">
+                  {{item.content}}
+                </el-checkbox>
+              </el-checkbox-group>
+            </div>
+            <div class="quality-remark">
+              <div v-for="item in qualityMultiOptions" :key="item.id" :label="item.id" :class="item.sindex > -1? 'normal-div the-same'+item.sindex : 'normal-div' ">
+                <span v-if="item.sindex > -1">二选一</span>
+              </div>
+            </div>
+          </div>
+          <div class="quality_title">
+            <div class="title_type">单选</div>
+            <div class="title_content">具体情况</div>
+          </div>
+          <div class="quality-selection">
+            <el-radio-group v-model="qualitySingleChoosed" @change="qualitySingleChange">
+              <el-radio v-for="item in qualitySingleOptions" :key="item.id" :label="item.id">
+                {{item.content}}
+              </el-radio>
+            </el-radio-group>
+          </div>
         </div>
         
         <template #footer>
@@ -1645,9 +1655,13 @@ export default {
                 return item.status == 2
               })
               $this.qualityOptions = response.data;
+              $this.radioOption(response.data);
+              multiOption.forEach(item=>{
+                var index = $this.getArrayIndex(item.id);
+                item.sindex = index;
+              })
               $this.qualityMultiOptions = multiOption;
               $this.qualitySingleOptions = singleOption;
-              $this.radioOption(response.data);
             }else{
               $this.qualityOptions = [];
             }
@@ -1758,7 +1772,7 @@ export default {
         $this.isSaveData=true;
         var formData = {}
         formData.cid = $this.qualityId;
-        if($this.popType == 1){
+        if($this.qualityMultiChoosed.length > 0){
           formData.qid = $this.qualityMultiChoosed;
         }else{
           var newarr = [];
@@ -1911,7 +1925,7 @@ export default {
       for(var i = 0; i < qoption.length; i++){
         for(var j = 0; j < qoption.length; j++){
           if(qoption[i].same_id == qoption[j].id){
-            if(judgeOptions.length == 0){
+            // if(judgeOptions.length == 0){
               var newArr = [];
               newArr.push(qoption[i].id);
               newArr.push(qoption[j].id);
@@ -1919,31 +1933,31 @@ export default {
                 newArr.push(qoption[j].same_id);
               }
               judgeOptions.push(newArr);
-            }else{
-              judgeOptions.forEach((item,index)=>{
-                if(item.indexOf(qoption[i].id) > -1 && item.indexOf(qoption[j].id) < 0){
-                  judgeOptions[index].push(qoption[j].id);
-                }else if(item.indexOf(qoption[j].id) > -1 && item.indexOf(qoption[i].id) < 0){
-                  judgeOptions[index].push(qoption[i].id);
-                }else if(item.indexOf(qoption[j].id) > -1 && item.indexOf(qoption[i].id) > -1){
-                  return false;
-                }else if(qoption[j].same_id > 0){
-                  if(item.indexOf(qoption[j].same_id) < 0 && item.indexOf(qoption[j].id) > -1 ){
-                    judgeOptions[index].push(qoption[j].same_id);
-                  }else{
-                    return false;
-                  }
-                }else{
-                  var newArr = [];
-                  newArr.push(qoption[i].id);
-                  newArr.push(qoption[j].id);
-                  if(qoption[j].same_id > 0){
-                    newArr.push(qoption[j].same_id);
-                  }
-                  judgeOptions.push(newArr)
-                }
-              })
-            }
+            // }else{
+            //   judgeOptions.forEach((item,index)=>{
+            //     if(item.indexOf(qoption[i].id) > -1 && item.indexOf(qoption[j].id) < 0){
+            //       judgeOptions[index].push(qoption[j].id);
+            //     }else if(item.indexOf(qoption[j].id) > -1 && item.indexOf(qoption[i].id) < 0){
+            //       judgeOptions[index].push(qoption[i].id);
+            //     }else if(item.indexOf(qoption[j].id) > -1 && item.indexOf(qoption[i].id) > -1){
+            //       return false;
+            //     }else if(qoption[j].same_id > 0){
+            //       if(item.indexOf(qoption[j].same_id) < 0 && item.indexOf(qoption[j].id) > -1 ){
+            //         judgeOptions[index].push(qoption[j].same_id);
+            //       }else{
+            //         return false;
+            //       }
+            //     }else{
+            //       var newArr = [];
+            //       newArr.push(qoption[i].id);
+            //       newArr.push(qoption[j].id);
+            //       if(qoption[j].same_id > 0){
+            //         newArr.push(qoption[j].same_id);
+            //       }
+            //       judgeOptions.push(newArr)
+            //     }
+            //   })
+            // }
           }
         }
       }
