@@ -26,6 +26,8 @@
     getCancelworkfocus,
     getmyfocus,
     getmypublish,
+    getmodworkscore,
+    getbackwork,
 } from '@/api/works'
 
 const state = {}
@@ -297,6 +299,26 @@ const actions = {
     getmypublishAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             getmypublish(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //运维修改视频组的工单分数（2022-09-01新增）
+    getmodworkscoreAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getmodworkscore(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //运维驳回发布的工单（2022-09-01新增）
+    getbackworkAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getbackwork(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

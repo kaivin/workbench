@@ -211,3 +211,19 @@ export function getmyfocus(data) {
     data,
   });
 }
+// 运维修改视频组的工单分数（2022-09-01新增）
+export function getmodworkscore(data) {
+  return request({
+    url: "/hxindex/Works/modworkscore",
+    method: "POST",
+    data,
+  });
+}
+// 运维驳回发布的工单（2022-09-01新增）
+export function getbackwork(data) {
+  return request({
+    url: "/hxindex/Works/backwork",
+    method: "POST",
+    data,
+  });
+}

@@ -51,7 +51,7 @@
                     <div class="item-form inline-item other-td">
                       <strong>工单标签：</strong>
                       <div class="item-form-panel buttonTwo">
-                        <el-checkbox-group class="checkbox-panel" v-model="formData.tags_id" size="small">
+                        <el-checkbox-group @change="tagsChange" class="checkbox-panel" v-model="formData.tags_id" size="small">
                             <el-checkbox :label="item.id" v-for="item in systemTag" v-bind:key="item.id" border>{{item.name}}</el-checkbox>
                         </el-checkbox-group>
                       </div>
@@ -99,7 +99,7 @@
                         </el-date-picker>
                       </div>
                     </div>
-                    <div class="item-form inline-item other-td">
+                    <div class="item-form inline-item other-td" v-if="isScore">
                       <strong>工单积分：</strong>
                       <div class="item-form-panel">
                         <el-input
@@ -301,6 +301,7 @@ export default {
       },
       articleData:{},
       isDisabled:false,
+      isScore:true,//判断是否显示工单积分
     }
   },
   computed: {
@@ -314,7 +315,7 @@ export default {
     var $this = this;
     if(!$this.sidebar.opened){
       $this.$store.dispatch('app/toggleSideBar');
-    };
+    }
   },
   created(){
     var $this = this;
@@ -521,6 +522,19 @@ export default {
           $this.isDisabled=false;
         },1000);
     },
+    // 工单标签选中视频组，隐藏工单积分
+    tagsChange(tagsDate){
+      var $this = this;
+      var isScore=true;
+      if(tagsDate.length>0){
+        tagsDate.forEach(function(item){
+          if (item == 15) {
+              isScore=false;
+          }
+        })
+      }
+      $this.isScore=isScore;
+    },
     // 5、 你可以在ready方法中拿到editorInstance实例,所有API和官方的实例是一样了。http://fex.baidu.com/ueditor/#api-common
     ready (ue) {
       ue.addListener('ready', () => {
@@ -579,6 +593,7 @@ export default {
           var tags_id = parseInt(data.tags_id);
           $this.formData.tags_id = [tags_id];
         }
+        $this.tagsChange($this.formData.tags_id);
       }else{
         $this.formData.tags_id = [];
       }
@@ -628,7 +643,7 @@ export default {
         });
         return false;
       }
-      if($this.formData.score == ""){
+      if($this.formData.score == ""&&$this.isScore){
         $this.$message({
             showClose: true,
             message: '错误：工单积分不能为空！',

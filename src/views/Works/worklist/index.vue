@@ -176,6 +176,10 @@
                                     width="60"
                                     v-if="labelColumn[4].isshow"
                                     >
+                                    <template slot-scope="scope">
+                                        <span style="cursor:pointer;" v-if="scope.row.isVideoScore&&menuButtonPermit.includes('Works_modworkscore')&&scope.row.status==1" @click="modWorkscore(scope.row,scope.$index)">{{scope.row.score}}</span>
+                                        <span v-else>{{scope.row.score}}</span>
+                                    </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="backscore"
@@ -235,7 +239,7 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column
-                                    v-if="(menuButtonPermit.includes('Works_workedit')||menuButtonPermit.includes('Works_workcancel')||menuButtonPermit.includes('Works_workconfirm')||menuButtonPermit.includes('Works_noconfirm')||menuButtonPermit.includes('Works_workdelete'))"
+                                    v-if="(menuButtonPermit.includes('Works_workedit')||menuButtonPermit.includes('Works_workcancel')||menuButtonPermit.includes('Works_workconfirm')||menuButtonPermit.includes('Works_noconfirm')||menuButtonPermit.includes('Works_workdelete')||menuButtonPermit.includes('Works_backwork'))"
                                     :width="operationsWidth"
                                     align="center"
                                     fixed="right"
@@ -263,6 +267,7 @@
                                           <el-button size="mini" @click="rejectTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_noconfirm')&&(scope.row.status==4)">驳回</el-button>
                                           <el-button size="mini" @click="confirmTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_workconfirm')&&(scope.row.status==4)">确认完成</el-button>
                                           <el-button size="mini" @click="commentTableRow(scope.row,scope.$index)" v-if="scope.row.editshow&&menuButtonPermit.includes('Works_addevaluation')&&scope.row.status==6&&scope.row.commentstatus==0">添加评价</el-button>
+                                          <el-button size="mini" @click="backTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Works_backwork')&&scope.row.status==1&&scope.row.isVideoScore">运维驳回</el-button>
                                           <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="scope.row.deleteshow&&menuButtonPermit.includes('Works_workdelete')&&(scope.row.status==0||scope.row.status==1)" type="info" plain>删除</el-button>
                                       </div>
                                     </template>
@@ -290,14 +295,14 @@
           </div>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
-      <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Works_addevaluation')" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
+      <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Works_addevaluation')||menuButtonPermit.includes('Works_modworkscore')||menuButtonPermit.includes('Works_backwork')||menuButtonPermit.includes('Works_noconfirm')" custom-class="add-edit-dialog" :visible.sync="dialogFormVisible" :before-close="handleClose" width="480px">
         <el-form :model="dialogForm">
           <div class="item-form" v-if="dialogText=='打赏积分'">
               <el-form-item label="额外打赏积分：" :label-width="formLabelWidth">
                 <el-input v-model="otherscoreForm.otherscore"></el-input>
               </el-form-item>
           </div>
-          <div class="item-form" v-if="dialogText=='驳回原因'">
+          <div class="item-form" v-if="dialogText=='驳回原因'||dialogText=='运维驳回原因'">
               <el-form-item label="驳回内容：" :label-width="formLabelWidth">
                 <el-input type="textarea" v-model="dialogForm.commentinfo" :autosize="{ minRows: 2, maxRows: 4}" ref="commentinfo"></el-input>
               </el-form-item>
@@ -317,6 +322,11 @@
                   <el-radio :label="2">一般</el-radio>
                   <el-radio :label="3">差评</el-radio>
                 </el-radio-group>
+              </el-form-item>
+          </div>
+          <div class="item-form" v-if="dialogText=='运维修改积分'">
+              <el-form-item label="工单积分：" :label-width="formLabelWidth">
+                <el-input-number v-model="dialogForm.otherscore" size="small" style="width:150px" :min="0" :max="20" label="描述文字"></el-input-number>
               </el-form-item>
           </div>
         </el-form>
@@ -347,6 +357,10 @@ export default {
       dialogFormVisible:false,
       dialogText:"",
       formLabelWidth:"120px",
+      modworkscoreForm:{
+        id:0,
+        score:"",
+      },
       noconfirmForm:{
         id:0,
         rejectinfo:"",
@@ -454,7 +468,7 @@ export default {
       const $this = this;
       if(!$this.sidebar.opened){
         $this.$store.dispatch('app/toggleSideBar');
-      };
+      }
       // 监听竖向滚动条滚动事件
       window.addEventListener('scroll',this.handleScroll,true);
       this.$nextTick(function () {
@@ -826,6 +840,10 @@ export default {
             if(response.data&&response.data.length>0){
               var tableDataArr=response.data;
               tableDataArr.forEach(function(item,index){
+                item.isVideoScore=false;
+                if(item.tags.indexOf('视频组工单') != -1){
+                  item.isVideoScore=true;
+                }
                 var dealusernameArr=[];
                 if(item.dealusername.indexOf('|')>0){
                   item.dealusername.split('|').forEach(function(items,indexs){
@@ -1176,6 +1194,14 @@ export default {
       $this.noconfirmForm.id = 0;
       $this.noconfirmForm.rejectinfo = "";
     },
+    // 运维驳回表格行
+    backTableRow(row,index){
+      var $this = this;
+      $this.noconfirmData();
+      $this.dialogFormVisible = true;
+      $this.dialogText = "运维驳回原因";
+      $this.noconfirmForm.id = row.id;
+    },
     // 确认表格行
     confirmTableRow(row,index){
       var $this = this;
@@ -1263,6 +1289,15 @@ export default {
       this.isPageBtn = true;
       this.initPage();
     },
+    // 运维修改工单分数
+    modWorkscore(row,index){
+      var $this = this;
+      $this.resetFormData();
+      $this.dialogFormVisible = true;
+      $this.modworkscoreForm.id = row.id;
+      $this.dialogForm.otherscore = row.score;
+      $this.dialogText = "运维修改积分";
+    },
     // 添加表格行数据
     commentTableRow(row,index){
       var $this = this;
@@ -1288,12 +1323,22 @@ export default {
       var $this = this;
       var pathUrl = "";
       var pathformData = "";
+      if($this.dialogText == "运维修改积分"){
+          pathUrl = "works/getmodworkscoreAction";
+          $this.modworkscoreForm.score = $this.dialogForm.otherscore;
+          pathformData=$this.modworkscoreForm;
+      }
       if($this.dialogText == "添加评价"){
           pathUrl = "works/workOrderEvaluateSaveAction";
           pathformData=$this.dialogForm;
       }
-      if($this.dialogText == "驳回原因"){
-          pathUrl = "works/workOrderRejectedAction";
+      if($this.dialogText == "驳回原因"||$this.dialogText == "运维驳回原因"){
+          if($this.dialogText == "驳回原因"){
+            pathUrl = "works/workOrderRejectedAction";
+          }
+          if($this.dialogText == "运维驳回原因"){
+            pathUrl = "works/getbackworkAction";
+          }
           $this.noconfirmForm.rejectinfo = $this.dialogForm.commentinfo;
           pathformData=$this.noconfirmForm;
       }
