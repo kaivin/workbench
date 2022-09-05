@@ -1627,10 +1627,10 @@ export default {
     },
 
     // 质量判定点击
-    qualityJudge(id){
+    async qualityJudge(id){
       var $this = this;
       if($this.qualityOptions.length == 0){
-        $this.getQualityCondition();
+        await $this.getQualityCondition();
       }
       
       $this.isSaveData = false;
@@ -1925,39 +1925,37 @@ export default {
       for(var i = 0; i < qoption.length; i++){
         for(var j = 0; j < qoption.length; j++){
           if(qoption[i].same_id == qoption[j].id){
-            // if(judgeOptions.length == 0){
+            if(judgeOptions.length == 0){
               var newArr = [];
               newArr.push(qoption[i].id);
               newArr.push(qoption[j].id);
-              if(qoption[j].same_id > 0){
+              if(qoption[j].same_id > 0 && qoption[j].same_id != qoption[i].id){
                 newArr.push(qoption[j].same_id);
               }
               judgeOptions.push(newArr);
-            // }else{
-            //   judgeOptions.forEach((item,index)=>{
-            //     if(item.indexOf(qoption[i].id) > -1 && item.indexOf(qoption[j].id) < 0){
-            //       judgeOptions[index].push(qoption[j].id);
-            //     }else if(item.indexOf(qoption[j].id) > -1 && item.indexOf(qoption[i].id) < 0){
-            //       judgeOptions[index].push(qoption[i].id);
-            //     }else if(item.indexOf(qoption[j].id) > -1 && item.indexOf(qoption[i].id) > -1){
-            //       return false;
-            //     }else if(qoption[j].same_id > 0){
-            //       if(item.indexOf(qoption[j].same_id) < 0 && item.indexOf(qoption[j].id) > -1 ){
-            //         judgeOptions[index].push(qoption[j].same_id);
-            //       }else{
-            //         return false;
-            //       }
-            //     }else{
-            //       var newArr = [];
-            //       newArr.push(qoption[i].id);
-            //       newArr.push(qoption[j].id);
-            //       if(qoption[j].same_id > 0){
-            //         newArr.push(qoption[j].same_id);
-            //       }
-            //       judgeOptions.push(newArr)
-            //     }
-            //   })
-            // }
+            }else{
+              var index = $this.findArrayIndex(judgeOptions, qoption[i].same_id);
+              var idindex = $this.findArrayIndex(judgeOptions, qoption[i].id);
+              var sameindex = $this.findArrayIndex(judgeOptions, qoption[j].same_id);
+              if(index > -1){
+                if(idindex < 0){
+                  judgeOptions[index].push(qoption[i].id);
+                }
+                if(qoption[j].same_id > 0){
+                  if(sameindex < 0){
+                    judgeOptions[index].push(qoption[j].same_id);
+                  }
+                }
+              }else{
+                var newArr = [];
+                newArr.push(qoption[i].id);
+                newArr.push(qoption[j].id);
+                if(qoption[j].same_id > 0 && qoption[j].same_id != qoption[i].id){
+                  newArr.push(qoption[j].same_id);
+                }
+                judgeOptions.push(newArr)
+              }
+            }
           }
         }
       }
@@ -1967,6 +1965,17 @@ export default {
       var $this = this;
       var sindex = -1;
       $this.judgeOptions.forEach((sitem,index)=>{
+        if(sitem.indexOf(item) > -1){
+          sindex = index
+          return sindex;
+        }
+      })
+      return sindex;
+    },
+    findArrayIndex(aimarr,item){
+      var $this = this;
+      var sindex = -1;
+      aimarr.forEach((sitem,index)=>{
         if(sitem.indexOf(item) > -1){
           sindex = index
           return sindex;
