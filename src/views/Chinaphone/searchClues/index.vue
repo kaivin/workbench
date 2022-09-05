@@ -1627,19 +1627,18 @@ export default {
     },
 
     // 质量判定点击
-    async qualityJudge(id){
+    qualityJudge(id){
       var $this = this;
-      if($this.qualityOptions.length == 0){
-        await $this.getQualityCondition();
-      }
-      
       $this.isSaveData = false;
       $this.qualityId = id;
-      $this.getSelectedQuality(id);
-      
+      if($this.qualityOptions.length == 0){
+        $this.getQualityCondition(id);
+      }else{
+        $this.getSelectedQuality(id);
+      }
     },
     // 质量判定条件列表
-    getQualityCondition(){
+    getQualityCondition(id){
       var $this = this;
       $this.$store.dispatch('chinaphone/getChinaQualitySelect', null).then(response=>{
         if(response){
@@ -1662,6 +1661,7 @@ export default {
               })
               $this.qualityMultiOptions = multiOption;
               $this.qualitySingleOptions = singleOption;
+              $this.getSelectedQuality(id);
             }else{
               $this.qualityOptions = [];
             }
