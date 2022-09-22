@@ -200,7 +200,7 @@
                         </el-select>
                       </div>
                       <div class="item-search" style="width: 100px;">
-                        <el-select v-model="searchData.hasquality" size="small" clearable placeholder="是否判定" :class="searchData.effective!=''?'el-xzstate':''">
+                        <el-select v-model="searchData.hasquality" size="small" clearable placeholder="质量判定" :class="searchData.effective!=''?'el-xzstate':''">
                           <el-option
                             v-for="item in hasQualityList"
                             :key="item.value"
