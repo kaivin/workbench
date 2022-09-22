@@ -216,7 +216,7 @@
                     </div>
                     <div class="clues-info flex-box">
                         <div class="clues-infoFl flex-content">
-                              <p><span>共有<strong class="color1">{{infoData.totalCount}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效<strong class="color3">{{infoData.invalidCount}}</strong>条，质量分<strong class="color2">{{infoData.qualityscore}}</strong>分。</span><span>||</span><span>本月共有<strong class="color1">{{infoData.totalCountMonth}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCountMonth}}</strong>条，无效<strong class="color3">{{infoData.invalidCountMonth}}</strong>条，质量分<strong class="color2">{{infoData.nowqualityscore}}</strong>分。</span></p>
+                              <p><span>共有<strong class="color1">{{infoData.totalCount}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效<strong class="color3">{{infoData.invalidCount}}</strong>条，已判定<strong class="color2">{{infoData.hasqualitynumber}}</strong>条，未判定<strong class="color3">{{infoData.noqualitynumber}}</strong>条，总质量分<strong class="color2">{{infoData.qualityscore}}</strong>分，平均质量分<strong class="color2">{{infoData.avaragescore}}</strong>分。</span><span>||</span><span>本月共有<strong class="color1">{{infoData.totalCountMonth}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCountMonth}}</strong>条，无效<strong class="color3">{{infoData.invalidCountMonth}}</strong>条，质量分<strong class="color2">{{infoData.nowqualityscore}}</strong>分。</span></p>
                         </div>
                         <div class="clues-title-btn">
                             <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
@@ -564,6 +564,9 @@ export default {
         invalidCountMonth:0,
         nowqualityscore: 0,
         qualityscore: 0,
+        avaragescore: 0,
+        hasqualitynumber: 0,
+        noqualitynumber: 0
       },
       cnAreaPlot:null,
       formLabelWidth:"120px",
@@ -1052,6 +1055,17 @@ export default {
               infoData.invalidCountMonth=response.nownoeffectivenumber;
               infoData.nowqualityscore = response.nowqualityscore > 0 ? response.nowqualityscore.toFixed(1) : 0;
               infoData.qualityscore = response.qualityscore > 0 ? response.qualityscore.toFixed(1) : 0;
+              infoData.hasqualitynumber = response.hasqualitynumber;
+              infoData.noqualitynumber = response.noqualitynumber;
+              if(response.hasqualitynumber > 0){
+                if(response.qualityscore == 0){
+                  infoData.avaragescore =  0;
+                }else{
+                  infoData.avaragescore =  (response.qualityscore/response.hasqualitynumber).toFixed(2);
+                }
+              }else{
+                infoData.avaragescore =  0;
+              }
               if(response.data.length>0){
                 response.data.forEach(function(item,index){
                   if(item.phonenumber.indexOf("-")!=-1){
