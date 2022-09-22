@@ -220,6 +220,16 @@
                                   </el-option>
                                 </el-select>
                               </div>
+                              <div class="item-search" style="width: 100px;">
+                                <el-select v-model="searchData.hasquality" size="small" clearable placeholder="是否判定" :class="searchData.effective!=''?'el-xzstate':''">
+                                  <el-option
+                                    v-for="item in hasQualityList"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                  </el-option>
+                                </el-select>
+                              </div>
                               <div class="item-search">
                                 <span style="float:left;line-height:32px;font-size:12px;">显示条数：</span>
                                 <el-input
@@ -232,9 +242,9 @@
                             </div>
                             <div class="clues-info flex-box">
                                 <div class="clues-infoFl flex-content">
-                                    <p v-if="isClues"><span>根据查询条件共找到：<strong class="color1">{{infoData.totalCount}}</strong>条，其中有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效：<strong class="color3">{{infoData.invalidCount}}</strong>条，积分：<strong class="color2">{{infoData.qualityscore}}</strong>分。</span></p>
-                                    <p v-if="isUrl"><span>共计：<strong class="color1">{{infoData.groupCount}}</strong>条URL，询盘<strong class="color2">{{infoData.totalCount}}</strong>个，积分：<strong class="color2">{{infoData.qualityscore}}</strong>分。</span></p>
-                                    <p v-if="isProduct"><span>共计：<strong class="color1">{{infoData.groupCount}}</strong>种产品，条URL，询盘<strong class="color2">{{infoData.totalCount}}</strong>个，积分：<strong class="color2">{{infoData.qualityscore}}</strong>分。</span></p>
+                                    <p v-if="isClues"><span>根据查询条件共找到：<strong class="color1">{{infoData.totalCount}}</strong>条，其中有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效：<strong class="color3">{{infoData.invalidCount}}</strong>条，质量分：<strong class="color2">{{infoData.qualityscore}}</strong>分。</span></p>
+                                    <p v-if="isUrl"><span>共计：<strong class="color1">{{infoData.groupCount}}</strong>条URL，询盘<strong class="color2">{{infoData.totalCount}}</strong>个，质量分：<strong class="color2">{{infoData.qualityscore}}</strong>分。</span></p>
+                                    <p v-if="isProduct"><span>共计：<strong class="color1">{{infoData.groupCount}}</strong>种产品，条URL，询盘<strong class="color2">{{infoData.totalCount}}</strong>个，质量分：<strong class="color2">{{infoData.qualityscore}}</strong>分。</span></p>
                                 </div>
                                 <div class="clues-title-btn">  
                                   <el-button type="primary" size="small" class="serchBtn"  :class="isSerchBtn?'isDisabled':''" :disabled="isSerchBtn" @click="searchResult"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>查询</el-button>                       
@@ -315,7 +325,7 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="effective"
-                                    label="添加人/有效/积分"
+                                    label="添加人/有效/质量分"
                                     min-width="90"
                                     align="center"
                                     >
@@ -334,7 +344,7 @@
                                           :popper-class="popContent.length > 0 ? '' : 'pop-quality-hide'"
                                           >
                                           <p v-for="item in popContent" :key="item" class="pop-p">{{item}}</p>
-                                          <div class="table-tag table-score" slot="reference">{{scope.row.qualityscore}}</div>
+                                          <div class="table-tag table-score" slot="reference" v-if="scope.row.hasquality == 2">{{scope.row.qualityscore}}</div>
                                         </el-popover>
                                       
                                         <div class="table-tag" style="text-align:center;margin-top:5px" v-if="menuButtonPermit.includes('Chinaphone_chinaqualityconfirmedit') || menuButtonPermit.includes('Chinaphone_chinaqualityconfirm')">
@@ -606,7 +616,12 @@ export default {
         is_core:false,
         idlist:'',
         groupurlproduct:1,
+        hasquality: ''
       },
+      hasQualityList:[
+        {label:"待判定",value:1},
+        {label:"已判定",value:2},
+      ],
       totalDataNum:0,
       pickerRangeOptions: this.$pickerRangeOptions,
       deviceList:[],
@@ -912,6 +927,7 @@ export default {
       searchData.productlevel = $this.searchData.productlevel;
       searchData.device = $this.searchData.device;
       searchData.idlist = $this.searchData.idlist;
+      searchData.hasquality = $this.searchData.hasquality;
       if($this.searchData.date&&$this.searchData.date.length>0){
         searchData.starttime = $this.searchData.date[0];
         searchData.endtime = $this.searchData.date[1];

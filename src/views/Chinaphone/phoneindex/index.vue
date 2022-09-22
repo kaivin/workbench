@@ -199,6 +199,16 @@
                           </el-option>
                         </el-select>
                       </div>
+                      <div class="item-search" style="width: 100px;">
+                        <el-select v-model="searchData.hasquality" size="small" clearable placeholder="是否判定" :class="searchData.effective!=''?'el-xzstate':''">
+                          <el-option
+                            v-for="item in hasQualityList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                      </div>
                       <div class="item-search">
                         <el-button class="item-input"  :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult">查询</el-button>
                         <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
@@ -206,7 +216,7 @@
                     </div>
                     <div class="clues-info flex-box">
                         <div class="clues-infoFl flex-content">
-                              <p><span>共有<strong class="color1">{{infoData.totalCount}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效<strong class="color3">{{infoData.invalidCount}}</strong>条，积分<strong class="color2">{{infoData.qualityscore}}</strong>分。</span><span>||</span><span>本月共有<strong class="color1">{{infoData.totalCountMonth}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCountMonth}}</strong>条，无效<strong class="color3">{{infoData.invalidCountMonth}}</strong>条，积分<strong class="color2">{{infoData.nowqualityscore}}</strong>分。</span></p>
+                              <p><span>共有<strong class="color1">{{infoData.totalCount}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效<strong class="color3">{{infoData.invalidCount}}</strong>条，质量分<strong class="color2">{{infoData.qualityscore}}</strong>分。</span><span>||</span><span>本月共有<strong class="color1">{{infoData.totalCountMonth}}</strong>条信息，有效<strong class="color2">{{infoData.effectiveCountMonth}}</strong>条，无效<strong class="color3">{{infoData.invalidCountMonth}}</strong>条，质量分<strong class="color2">{{infoData.nowqualityscore}}</strong>分。</span></p>
                         </div>
                         <div class="clues-title-btn">
                             <el-button type="primary" size="small" class="derived" :disabled="isDisabled" v-if="menuButtonPermit.includes('Chinaphone_listexport')" @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
@@ -277,7 +287,7 @@
                         </el-table-column>
                         <el-table-column
                           prop="effective"
-                          label="添加人/有效/积分"
+                          label="添加人/有效/质量分"
                           min-width="100"
                           align="center"
                           >
@@ -296,7 +306,7 @@
                                 :popper-class="popContent.length > 0 ? '' : 'pop-quality-hide'"
                                 >
                                 <p v-for="item in popContent" :key="item" class="pop-p">{{item}}</p>
-                                <div class="table-tag table-score" slot="reference">{{scope.row.qualityscore}}</div>
+                                <div class="table-tag table-score" slot="reference" v-if="scope.row.hasquality == 2">{{scope.row.qualityscore}}</div>
                               </el-popover>
 
 
@@ -527,6 +537,7 @@ export default {
         userid:'',
         device:'',
         effective:'',
+        hasquality:''
       },
       pageSizeList:[20,50,100,200,500],
       totalDataNum:0,
@@ -539,6 +550,10 @@ export default {
       effectiveList:[
         {label:"有效",value:1},
         {label:"无效",value:2},
+      ],
+      hasQualityList:[
+        {label:"待判定",value:1},
+        {label:"已判定",value:2},
       ],
       infoData:{
         totalCount:0,
@@ -1005,6 +1020,9 @@ export default {
       }
       if($this.searchData.effective&&$this.searchData.effective!=''){
         searchData.effective = $this.searchData.effective;
+      }
+      if($this.searchData.hasquality&&$this.searchData.hasquality!=''){
+        searchData.hasquality = $this.searchData.hasquality;
       }
       if($this.searchData.name&&$this.searchData.name!=''){
         searchData.name = $this.searchData.name;
