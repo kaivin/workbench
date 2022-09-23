@@ -1853,8 +1853,11 @@ export default {
             if(response.data.length>0){
                 $this.isNewAdd = false;
                 var options = [];
+                var scoreArr = [];
                 response.data.forEach(item=>{
                   options.push(item.qid);
+                  var obj = $this.getAimObj(item.qid);
+                  scoreArr.push(obj.score)
                 })
                 var checkedData = $this.getAimObj(options[0]);
                 var status = checkedData.status;
@@ -1862,10 +1865,12 @@ export default {
                   $this.popType = 1;
                   $this.qualitySingleChoosed = [];
                   $this.qualityMultiChoosed = options;
+                  $this.totalScore = scoreArr.reduce((prev,n) => prev + n)
                 }else if(status == 2){
                   $this.popType = 2;
                   $this.qualityMultiChoosed = [];
                   $this.qualitySingleChoosed = options[0];
+                  $this.totalScore = scoreArr[0]
                 }
 
                 $this.qualityDecision = true;
