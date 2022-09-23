@@ -344,7 +344,11 @@
                                           :popper-class="popContent.length > 0 ? '' : 'pop-quality-hide'"
                                           >
                                           <p v-for="item in popContent" :key="item" class="pop-p">{{item}}</p>
-                                          <div class="table-tag table-score" slot="reference" v-if="scope.row.hasquality == 2">{{scope.row.qualityscore}}</div>
+                                          <div class="table-tag table-score" slot="reference">
+                                            <span v-if="scope.row.hasquality == 2">
+                                              {{scope.row.qualityscore}}
+                                            </span>
+                                          </div>
                                         </el-popover>
                                       
                                         <div class="table-tag" style="text-align:center;margin-top:5px" v-if="menuButtonPermit.includes('Chinaphone_chinaqualityconfirmedit') || menuButtonPermit.includes('Chinaphone_chinaqualityconfirm')">
@@ -1054,6 +1058,17 @@ export default {
                 infoData.effectiveCount = response.effectivecount;
                 infoData.invalidCount = response.noeffectivecount;
                 infoData.qualityscore = response.qualityscore > 0 ? response.qualityscore.toFixed(1) : 0;
+                infoData.hasqualitynumber = response.hasqualitynumber;
+                infoData.noqualitynumber = response.noqualitynumber;
+                if(response.hasqualitynumber > 0){
+                  if(response.qualityscore == 0){
+                    infoData.avaragescore =  0;
+                  }else{
+                    infoData.avaragescore =  (response.qualityscore/response.hasqualitynumber).toFixed(2);
+                  }
+                }else{
+                  infoData.avaragescore =  0;
+                }
                 if(response.data.length>0){
                   response.data.forEach(function(item,index){
                     if(item.phonenumber.indexOf("-")!=-1){

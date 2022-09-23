@@ -306,7 +306,11 @@
                                 :popper-class="popContent.length > 0 ? '' : 'pop-quality-hide'"
                                 >
                                 <p v-for="item in popContent" :key="item" class="pop-p">{{item}}</p>
-                                <div class="table-tag table-score" slot="reference" v-if="scope.row.hasquality == 2">{{scope.row.qualityscore}}</div>
+                                <div class="table-tag table-score" slot="reference" > 
+                                  <span v-if="scope.row.hasquality == 2">
+                                    {{scope.row.qualityscore}}
+                                  </span>
+                                </div>
                               </el-popover>
 
 

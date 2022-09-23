@@ -668,8 +668,10 @@
   display: inline-block; 
   color: #f73a3e; 
   font-weight: bold;
-  padding: 5px;
   cursor: pointer;
+  span{
+    padding: 5px;
+  }
 }
 .el-popover .pop-p{
   position: relative;
