@@ -243,8 +243,8 @@
                             <div class="clues-info flex-box">
                                 <div class="clues-infoFl flex-content">
                                     <p v-if="isClues"><span>根据查询条件共找到：<strong class="color1">{{infoData.totalCount}}</strong>条，其中有效<strong class="color2">{{infoData.effectiveCount}}</strong>条，无效：<strong class="color3">{{infoData.invalidCount}}</strong>条，已判定<strong class="color2">{{infoData.hasqualitynumber}}</strong>条，未判定<strong class="color3">{{infoData.noqualitynumber}}</strong>条，总质量分<strong class="color2">{{infoData.qualityscore}}</strong>分， 平均质量分<strong class="color2">{{infoData.avaragescore}}</strong>分。</span></p>
-                                    <p v-if="isUrl"><span>共计：<strong class="color1">{{infoData.groupCount}}</strong>条URL，询盘<strong class="color2">{{infoData.totalCount}}</strong>个，已判定<strong class="color2">{{infoData.hasqualitynumber}}</strong>条，未判定<strong class="color3">{{infoData.noqualitynumber}}</strong>条，总质量分<strong class="color2">{{infoData.qualityscore}}</strong>分，平均质量分<strong class="color2">{{infoData.avaragescore}}</strong>分。</span></p>
-                                    <p v-if="isProduct"><span>共计：<strong class="color1">{{infoData.groupCount}}</strong>种产品，条URL，询盘<strong class="color2">{{infoData.totalCount}}</strong>个，已判定<strong class="color2">{{infoData.hasqualitynumber}}</strong>条，未判定<strong class="color3">{{infoData.noqualitynumber}}</strong>条，总质量分<strong class="color2">{{infoData.qualityscore}}</strong>分，平均质量分<strong class="color2">{{infoData.avaragescore}}</strong>分。</span></p>
+                                    <p v-if="isUrl"><span>共计：<strong class="color1">{{infoData.groupCount}}</strong>条URL，询盘<strong class="color2">{{infoData.totalCount}}</strong>个，总质量分<strong class="color2">{{infoData.qualityscore}}</strong>分。</span></p>
+                                    <p v-if="isProduct"><span>共计：<strong class="color1">{{infoData.groupCount}}</strong>种产品，询盘<strong class="color2">{{infoData.totalCount}}</strong>个，总质量分<strong class="color2">{{infoData.qualityscore}}</strong>分。</span></p>
                                 </div>
                                 <div class="clues-title-btn">  
                                   <el-button type="primary" size="small" class="serchBtn"  :class="isSerchBtn?'isDisabled':''" :disabled="isSerchBtn" @click="searchResult"><i class="svg-i" ><svg-icon icon-class="serch_en" /></i>查询</el-button>                       
@@ -955,6 +955,7 @@ export default {
               infoData.totalCount = response.allcount;
               if($this.searchData.is_group){
                 infoData.groupCount = response.countgroup;
+                infoData.qualityscore = response.qualityscore > 0 ? response.qualityscore.toFixed(1) : 0;
                 if($this.searchData.groupurlproduct ==1){
                   $this.isUrl=true;
                   $this.isProduct=false;
