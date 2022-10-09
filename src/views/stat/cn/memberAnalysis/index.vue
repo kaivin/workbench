@@ -10,8 +10,11 @@
                       </el-checkbox-group>
                   </div>
                   <span class="choosetit" style="margin-left:20px">时间：</span>
-                  <div class="departItems">
-                      <el-date-picker
+                  <div class="departList">
+                    <span v-bind:class="item.isOn?'active':''" v-for="item in dateDimension" :key="item.value" v-on:click="dimensionPlug(item)">{{item.label}}</span>
+                  </div>
+                  <div class="departItems" style="margin-left:10px" v-if="isMonth">
+                      <el-date-picker                        
                         v-model="searchData.data"
                         @change="handleData"
                         type="monthrange"
@@ -26,6 +29,19 @@
                         :picker-options="pickerMonthRangeOptions">
                       </el-date-picker>
                   </div>
+                  <div class="timeItems" style="margin-left:10px" v-else>
+                      <el-date-picker
+                        v-model="searchData.year"
+                        @change="yearChosePlug"
+                        type="year"
+                        format="yyyy"
+                        key="a"
+                        size="mini"
+                        class="date-range"
+                        placeholder="选择年"
+                      >
+                      </el-date-picker>
+                  </div>
                   <span class="choosetit" style="margin-left:20px">入职时间：</span>
                   <div class="departList">
                       <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in ustatusList" :key="index" v-on:click="inTimePlug(item.id)">{{item.name}}</span>
@@ -35,15 +51,16 @@
         </div>
       <div class="flex-content dealRankMain" :class="searchData.dept_id==''?'':'active'">
             <award-rank
-              :RankData="tableDate"
-              :defaultTagData="defaultTag"
+              :rank-data="tableDate"
+              :month-bool="isMonth"
+              :default-tag-data="defaultTag"
               :lang="ch"
             ></award-rank>
       </div>
   </div>
 </template>
 <script>
-import AwardRank from "../../components/memberCompare/AwardRank";
+import AwardRank from "../../components/memberCompare/AwardRankCN";
 import {sortByDesc} from "@/utils/index";
 import { mapGetters } from 'vuex';
 export default {
@@ -55,15 +72,24 @@ export default {
       isAlldepart:false,
       tableDate:[],
       defaultTime:[],
+      defaultYear:'',
       defaultTag:'当月数据',
       isAwardBool:false,
       ch:'ch',
       searchData:{
         id:'',
-        data:[],
         dept_id:[],
+        starttime:'',
+        endtime:'',
         ustatus:'',
+        type:1,
+        year:'',
+        data:[],
       },
+      dateDimension:[
+        {label:"月",value:"month",isOn:true},
+        {label:"年",value:"year",isOn:false},
+      ],
       ustatusList:[
         {id:0,name:"全部",isOn:true},
         {id:1,name:"试用期",isOn:false},
@@ -91,7 +117,8 @@ export default {
             picker.$emit('pick', [start, end]);
           }
         }]
-      },
+      },  
+      isMonth:true,
     };
   },
   computed: {
@@ -114,7 +141,7 @@ export default {
     const $this = this;
     if(!$this.sidebar.opened){
       $this.$store.dispatch('app/toggleSideBar');
-    };
+    }
   },
   methods: {
     //获取部门信息
@@ -215,6 +242,54 @@ export default {
         $this.ustatusList=ustatusList;
         $this.GetInquiryResult();
     },
+    // 日期维度点击事件
+    dimensionPlug(obj){
+      var $this = this;
+      if(!obj.isOn){
+        var dateDimension = $this.dateDimension;
+        dateDimension.forEach(function(item){
+          if(item.value==obj.value){
+            item.isOn = true;
+            if(item.value=="month"){
+              $this.isMonth = true;
+              $this.searchData.type = 1;
+              $this.defaultTag='当月数据';
+            }else{
+              $this.isMonth = false;
+              $this.searchData.type = 2;
+              $this.defaultTag='当年数据';
+            }
+          }else{
+            item.isOn = false;
+          }
+        });
+        $this.dateDimension = dateDimension;
+        // 切换日期维度，对比时间清空，默认时间给一个默认时间范围
+        if($this.isMonth){
+          $this.getNearMonth();
+        }else{
+          $this.getNearYear();
+        }
+        $this.GetInquiryResult();
+      }
+    },
+    yearChosePlug(){
+      var $this=this;
+      var start = new Date();
+      var startYear = start.getFullYear();
+      var endYear=$this.searchData.year;
+      endYear=endYear.getFullYear();
+      if(endYear>startYear){
+          $this.$message({
+            showClose: true,
+            message:'年份大于' + startYear + '年，请重新选择!',
+            type: "error",
+            duration: 6000
+          });
+      }else{
+        $this.GetInquiryResult();
+      }      
+    },
     //点击时间搜索
     handleData(){
       var $this=this;
@@ -261,21 +336,43 @@ export default {
     initsearch(){
       var $this = this;
       var searchData={};
+      searchData.type=$this.searchData.type;
       if($this.searchData.dept_id&&$this.searchData.dept_id.length>0){
         searchData.dept_id=$this.searchData.dept_id;
       }
-      if($this.searchData.data&&$this.searchData.data.length>0){
-        searchData.starttime=$this.searchData.data[0];
-        searchData.endtime=$this.searchData.data[1];
-        var timeOne= $this.searchData.data.toString();
-        var timeTwo= $this.defaultTime.toString();
-        if(timeOne==timeTwo){
-          $this.defaultTag='当月数据';
+      if($this.searchData.type==1){
+        if($this.searchData.data&&$this.searchData.data.length>0){
+          searchData.starttime=$this.searchData.data[0];
+          searchData.endtime=$this.searchData.data[1];
+          var timeOne= $this.searchData.data.toString();
+          var timeTwo= $this.defaultTime.toString();
+          if(timeOne==timeTwo){
+            $this.defaultTag='当月数据';
+          }else{
+            $this.defaultTag=$this.searchData.data[0]+' ~ '+$this.searchData.data[1]+' 数据';
+          }
         }else{
-          $this.defaultTag=$this.searchData.data[0]+' ~ '+$this.searchData.data[1]+' 数据';
+          $this.defaultTag='当月数据';
         }
-      }else{
-        $this.defaultTag='当月数据';
+      }
+      if($this.searchData.type==2){
+        if($this.searchData.year&&$this.searchData.year!=''){
+          if($this.searchData.year.toString().length>4){
+            var searchDataYear=$this.searchData.year;
+            searchData.year=searchDataYear.getFullYear();
+          }else{
+            searchData.year=$this.searchData.year;           
+          }
+          var timeOne= searchData.year.toString();
+          var timeTwo= $this.defaultYear.toString();
+          if(timeOne==timeTwo){
+            $this.defaultTag='当年数据';
+          }else{
+            $this.defaultTag=timeOne +'年数据';
+          }
+        }else{
+          $this.defaultTag='当年数据';
+        }
       }
       if($this.searchData.ustatus&&$this.searchData.ustatus!=''){
         searchData.ustatus=$this.searchData.ustatus;
@@ -309,31 +406,47 @@ export default {
                   }else{
                       itemObj.postionname=item.postionname;
                   }
-                  itemObj.todaynumber=item.todayxunnumber;
-                  itemObj.yesterdaynumber=item.lastdayxunnumber;
                   itemObj.departname=item.departname;
                   itemObj.comtime=item.comtime;
                   itemObj.comtimeShow=$this.dateCompare(item.comtime);
-                  itemObj.monthnumber=item.number;
-                  itemObj.monthscore=item.score;
-                  itemObj.monthallmoney=item.allmoney;
-                  itemObj.monthAnumber=item.Anumber;
-                  if(response.yearuser&&response.yearuser.length>0){
-                    response.yearuser.forEach(function(items){
-                      if(item.id==items.id){
-                          itemObj.yearnumber=items.number;
-                          itemObj.ranknumber=items.number;
-                          itemObj.yearAvgnumber=(items.number/$this.monthTime).toFixed(2)*1
-                          itemObj.yearscore=items.score;
-                          itemObj.yearallmoney=items.allmoney;
-                          itemObj.yearAnumber=items.Anumber;
-                      }
-                    });
-                  }
+                  itemObj.avghasqualityscore=item.avghasqualityscore;
+                  itemObj.todayhasquality=item.todayhasquality;
+                  itemObj.todaynohasquality=item.todaynohasquality;
+                  itemObj.lastdayhasquality=item.lastdayhasquality;
+                  itemObj.lastdaynohasquality=item.lastdaynohasquality;
+                  itemObj.monthhasquality=item.monthhasquality;
+                  itemObj.monthnohasquality=item.monthnohasquality;
+                  itemObj.monthhasqualityscore=item.monthhasqualityscore;
+                  itemObj.score=item.score;
+                  itemObj.Anumber=item.Anumber;
                   tableDate.push(itemObj);
                 });
-              }              
-              tableDate.sort(sortByDesc("monthnumber"));
+                tableDate.sort(sortByDesc("todayhasquality"));
+              }  
+              if(response.yearuser&&response.yearuser.length>0){
+                response.yearuser.forEach(function(item){
+                  var itemObj={};
+                  itemObj.id=item.id;
+                  itemObj.name=item.name;
+                  itemObj.dept_id=item.dept_id;
+                  if(item.postionname==''||item.postionname==null){
+                      itemObj.postionname='普通';
+                  }else{
+                      itemObj.postionname=item.postionname;
+                  }
+                  itemObj.departname=item.departname;
+                  itemObj.comtime=item.comtime;
+                  itemObj.comtimeShow=$this.dateCompare(item.comtime);
+                  itemObj.avghasqualityscore=item.avghasqualityscore;
+                  itemObj.hasqualitynumber=item.hasqualitynumber;
+                  itemObj.nohasqualitynumber=item.nohasqualitynumber;
+                  itemObj.hasqualityscore=item.hasqualityscore;
+                  itemObj.score=item.score;
+                  itemObj.Anumber=item.Anumber;
+                  tableDate.push(itemObj);
+                });
+                tableDate.sort(sortByDesc("hasqualitynumber"));
+              }
               $this.tableDate=tableDate;
             } else {
               $this.$message({
@@ -389,6 +502,14 @@ export default {
       $this.searchData.starttime=endDate;
       $this.searchData.endtime=endDate;
       $this.defaultTime=[endDate,endDate];
+    },
+    // 默认当年
+    getNearYear(){
+      var $this=this;
+      const start = new Date();
+      var startYear = start.getFullYear();
+      $this.searchData.year=startYear.toString();
+      $this.defaultYear=startYear.toString();
     },
   }
 }

@@ -35,15 +35,15 @@
         </div>
         <div class="flex-content dealRankMain" :class="searchData.dept_id==''?'':'active'">            
           <award-rank
-              :RankData="tableDate"
-              :defaultTagData="defaultTag"
+              :rank-data="tableDate"
+              :default-tag-data="defaultTag"
               :lang="en"
             ></award-rank>
         </div>
   </div>
 </template>
 <script>
-import AwardRank from "../../components/memberCompare/AwardRank";
+import AwardRank from "../../components/memberCompare/AwardRankEN";
 import {sortByDesc} from "@/utils/index";
 import { mapGetters } from 'vuex';
 export default {

@@ -96,7 +96,7 @@
                 </div>
                 <div class="card-content ChinaphoneMapChart">
                   <div class="canvas-wrap">
-                    <echart-days :enquirieChart="defaultData.cluesChartData"></echart-days>
+                    <echart-days :enquirie-chart="defaultData.cluesChartData"></echart-days>
                   </div>
                 </div>
               </el-card>
@@ -893,11 +893,11 @@ export default {
             var phoneArr=response.data;
             phoneArr.forEach(function(item,index){
                item.phone.forEach(function(item01,index01){
-                   var tagphone='-';
-                   item01.isOn = false;
-                　　if(item01.phonenumber.indexOf(tagphone)!=-1){
+                    var tagphone='-';
+                    item01.isOn = false;
+                    if(item01.phonenumber.indexOf(tagphone)!=-1){
                        item01.shortPhonenumber=item01.phonenumber.split("-")[1];
-                　　}else{
+                    }else{
                       item01.shortPhonenumber=item01.phonenumber;
                     }
                });
@@ -957,11 +957,11 @@ export default {
             var phoneArr=response.data;
             phoneArr.forEach(function(item,index){
                item.phone.forEach(function(item01,index01){
-                   var tagphone='-';
-                   item01.isOn = false;
-                　　if(item01.phonenumber.indexOf(tagphone)!=-1){
+                    var tagphone='-';
+                    item01.isOn = false;
+                    if(item01.phonenumber.indexOf(tagphone)!=-1){
                        item01.shortPhonenumber=item01.phonenumber.split("-")[1];
-                　　}else{
+                    }else{
                       item01.shortPhonenumber=item01.phonenumber;
                     }
                });
@@ -1836,7 +1836,7 @@ export default {
         var judgeIdRes = $this.judgeOptions[lastIdIndex];
         var judgeSameIdRes = $this.judgeOptions[lastSameIdIndex];
         var judgeId = filterChoosed[i].id
-        if((judgeIdRes &&　judgeIdRes.indexOf(judgeId) > -1 )|| (judgeSameIdRes && judgeSameIdRes.indexOf(judgeId) > -1)){
+        if((judgeIdRes && judgeIdRes.indexOf(judgeId) > -1 )|| (judgeSameIdRes && judgeSameIdRes.indexOf(judgeId) > -1)){
           idArr.push(filterChoosed[i].id);
         }
       }

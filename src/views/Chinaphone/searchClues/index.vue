@@ -1329,9 +1329,9 @@ export default {
                item.phone.forEach(function(item01,index01){
                    var tagphone='-';
                    item01.isOn = false;
-                　　if(item01.phonenumber.indexOf(tagphone)!=-1){
+                    if(item01.phonenumber.indexOf(tagphone)!=-1){
                        item01.shortPhonenumber=item01.phonenumber.split("-")[1];
-                　　}else{
+                    }else{
                       item01.shortPhonenumber=item01.phonenumber;
                     }
                });
@@ -1776,7 +1776,7 @@ export default {
         var judgeIdRes = $this.judgeOptions[lastIdIndex];
         var judgeSameIdRes = $this.judgeOptions[lastSameIdIndex];
         var judgeId = filterChoosed[i].id
-        if((judgeIdRes &&　judgeIdRes.indexOf(judgeId) > -1 )|| (judgeSameIdRes && judgeSameIdRes.indexOf(judgeId) > -1)){
+        if((judgeIdRes && judgeIdRes.indexOf(judgeId) > -1 )|| (judgeSameIdRes && judgeSameIdRes.indexOf(judgeId) > -1)){
           idArr.push(filterChoosed[i].id);
         }
       }
