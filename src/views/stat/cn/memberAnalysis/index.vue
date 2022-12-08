@@ -13,7 +13,23 @@
                   <div class="departList">
                     <span v-bind:class="item.isOn?'active':''" v-for="item in dateDimension" :key="item.value" v-on:click="dimensionPlug(item)">{{item.label}}</span>
                   </div>
-                  <div class="departItems" style="margin-left:10px" v-if="isMonth">
+                  <div class="departItems" style="margin-left:10px" v-if="isMonth == 3">
+                      <el-date-picker                        
+                        v-model="searchData.daydata"
+                        @change="handleData"
+                        type="daterange"
+                        format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd"
+                        key="c"
+                        size="mini"
+                        class="date-range"
+                        range-separator="～"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :picker-options="pickerDayRangeOptions">
+                      </el-date-picker>
+                  </div>
+                  <div class="departItems" style="margin-left:10px" v-if="isMonth == 1">
                       <el-date-picker                        
                         v-model="searchData.data"
                         @change="handleData"
@@ -29,7 +45,7 @@
                         :picker-options="pickerMonthRangeOptions">
                       </el-date-picker>
                   </div>
-                  <div class="timeItems" style="margin-left:10px" v-else>
+                  <div class="timeItems" style="margin-left:10px" v-if="isMonth == 2">
                       <el-date-picker
                         v-model="searchData.year"
                         @change="yearChosePlug"
@@ -52,16 +68,17 @@
       <div class="flex-content dealRankMain" :class="searchData.dept_id==''?'':'active'">
             <award-rank
               :rank-data="tableDate"
-              :month-bool="isMonth"
+              :month="isMonth"
               :default-tag-data="defaultTag"
               :lang="ch"
+              @rankChange ="getRankChange"
             ></award-rank>
       </div>
   </div>
 </template>
 <script>
 import AwardRank from "../../components/memberCompare/AwardRankCN";
-import {sortByDesc} from "@/utils/index";
+import {sortByDesc, sortByAsc} from "@/utils/index";
 import { mapGetters } from 'vuex';
 export default {
   name: "cnMemberAnalysis",
@@ -73,7 +90,8 @@ export default {
       tableDate:[],
       defaultTime:[],
       defaultYear:'',
-      defaultTag:'当月数据',
+      defaultDay:[],
+      defaultTag:'当日数据',
       isAwardBool:false,
       ch:'ch',
       searchData:{
@@ -82,12 +100,16 @@ export default {
         starttime:'',
         endtime:'',
         ustatus:'',
-        type:1,
+        type:3,
         year:'',
+        startdate: '',
+        enddate: '',
         data:[],
+        daydata: []
       },
       dateDimension:[
-        {label:"月",value:"month",isOn:true},
+        {label:"日",value:"day",isOn:true},
+        {label:"月",value:"month",isOn:false},
         {label:"年",value:"year",isOn:false},
       ],
       ustatusList:[
@@ -117,8 +139,35 @@ export default {
             picker.$emit('pick', [start, end]);
           }
         }]
-      },  
-      isMonth:true,
+      },
+      pickerDayRangeOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
+      isMonth: 3,
     };
   },
   computed: {
@@ -134,7 +183,7 @@ export default {
   },
   created() {
     var $this = this;
-    $this.getNearMonth();
+    $this.getNearDay();
     $this.getUserMenuButtonPermit();
   },
   mounted(){
@@ -188,7 +237,7 @@ export default {
             }
         });
         $this.searchData.ustatus='';
-        $this.getNearMonth();
+        $this.getNearDay();
         $this.GetInquiryResult();
     },
     // 点击获取全部部门ID
@@ -250,12 +299,16 @@ export default {
         dateDimension.forEach(function(item){
           if(item.value==obj.value){
             item.isOn = true;
-            if(item.value=="month"){
-              $this.isMonth = true;
+            if(item.value=="day"){
+              $this.isMonth = 3;
+              $this.searchData.type = 3;
+              $this.defaultTag='当日数据';
+            }else if(item.value=="month"){
+              $this.isMonth = 1;
               $this.searchData.type = 1;
               $this.defaultTag='当月数据';
             }else{
-              $this.isMonth = false;
+              $this.isMonth = 2;
               $this.searchData.type = 2;
               $this.defaultTag='当年数据';
             }
@@ -265,7 +318,9 @@ export default {
         });
         $this.dateDimension = dateDimension;
         // 切换日期维度，对比时间清空，默认时间给一个默认时间范围
-        if($this.isMonth){
+        if($this.isMonth == 3){
+          $this.getNearDay();
+        }else if($this.isMonth == 1){
           $this.getNearMonth();
         }else{
           $this.getNearYear();
@@ -374,6 +429,21 @@ export default {
           $this.defaultTag='当年数据';
         }
       }
+      if($this.searchData.type==3){
+        if($this.searchData.daydata&&$this.searchData.daydata.length>0){
+          searchData.startdate=$this.searchData.daydata[0];
+          searchData.enddate=$this.searchData.daydata[1];
+          var timeOne= $this.searchData.daydata.toString();
+          var timeTwo= $this.defaultDay.toString();
+          if(timeOne==timeTwo){
+            $this.defaultTag='当日数据';
+          }else{
+            $this.defaultTag=$this.searchData.daydata[0]+' ~ '+$this.searchData.daydata[1]+' 数据';
+          }
+        }else{
+          $this.defaultTag='当日数据';
+        }
+      }
       if($this.searchData.ustatus&&$this.searchData.ustatus!=''){
         searchData.ustatus=$this.searchData.ustatus;
       }
@@ -447,6 +517,28 @@ export default {
                 });
                 tableDate.sort(sortByDesc("hasqualitynumber"));
               }
+              if(response.dateselectuser&&response.dateselectuser.length>0){
+                response.dateselectuser.forEach(function(item){
+                  var itemObj={};
+                  itemObj.id=item.id;
+                  itemObj.name=item.name;
+                  itemObj.dept_id=item.dept_id;
+                  if(item.postionname==''||item.postionname==null){
+                      itemObj.postionname='普通';
+                  }else{
+                      itemObj.postionname=item.postionname;
+                  }
+                  itemObj.departname=item.departname;
+                  itemObj.comtime=item.comtime;
+                  itemObj.comtimeShow=$this.dateCompare(item.comtime);
+                  itemObj.avghasqualityscore=item.avghasqualityscore;
+                  itemObj.datehasqualityscore=item.datehasqualityscore;
+                  itemObj.datehasquality=item.datehasquality;
+                  itemObj.datenohasquality=item.datenohasquality;
+                  tableDate.push(itemObj);
+                });
+                tableDate.sort(sortByDesc("datehasqualityscore"));
+              } 
               $this.tableDate=tableDate;
             } else {
               $this.$message({
@@ -490,6 +582,20 @@ export default {
       }
       return timeBool;
     },
+    //默认日
+    getNearDay(){
+      var $this=this;
+      var end = new Date();
+      var endYear = end.getFullYear();
+      var endMonth = end.getMonth() + 1;
+      endMonth = endMonth<10?'0'+endMonth:endMonth;
+      var endDay = end.getDate()<10 ? '0'+end.getDate() : end.getDate();
+      var endDate = endYear+"-"+endMonth+"-"+endDay;
+      $this.searchData.daydata=[endDate,endDate];
+      $this.searchData.startdate=endDate;
+      $this.searchData.enddate=endDate;
+      $this.defaultDay=[endDate,endDate];
+    },
     //默认时间周期
     getNearMonth(){
       var $this=this;
@@ -511,6 +617,31 @@ export default {
       $this.searchData.year=startYear.toString();
       $this.defaultYear=startYear.toString();
     },
+    // 总询盘排序
+    getRankChange(param){
+      console.log(param)
+      let $this = this;
+      let nowTableDate = $this.tableDate;
+      if($this.isMonth == 1){
+        nowTableDate.forEach(item =>{
+          item.allcount = item.monthhasquality+item.monthnohasquality
+        })
+      }else if($this.isMonth == 2){
+        nowTableDate.forEach(item =>{
+          item.allcount = item.hasqualitynumber+item.nohasqualitynumber
+        })
+      }else{
+        nowTableDate.forEach(item =>{
+          item.allcount = item.datehasquality+item.datenohasquality
+        })
+      }
+      if(param == 'descending'){
+        $this.tableDate = nowTableDate.sort(sortByDesc("allcount"));
+      }else{
+        $this.tableDate = nowTableDate.sort(sortByAsc("allcount"));
+      }
+      
+    }
   }
 }
 

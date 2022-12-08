@@ -9,6 +9,7 @@
                 style="width: 100%"
                 row-key="id"
                 key="a"
+                @sort-change="sortAllChange"
                 >
                 <el-table-column
                   label="序号" 
@@ -47,37 +48,56 @@
                         <span :class="scope.row.comtimeShow?'':'inTime'">{{scope.row.comtime}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="日询盘个数" v-if="isMonth">
+                <el-table-column :label="defaultTagData" v-if="isMonth == 3">
                     <el-table-column
-                      prop="todayhasquality"
-                      label="今天已判定"
+                      label="总询盘"
+                      sortable="custom"
+                      class-name="dayStyle"
+                      >
+                      <template slot-scope="scope">
+                        {{scope.row.datehasquality+scope.row.datenohasquality}}
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      prop="datehasquality"
+                      label="已判定"
                       sortable
                       class-name="dayStyle"
                       >
                     </el-table-column>
                     <el-table-column
-                      prop="todaynohasquality"
-                      label="今天未判定"
+                      prop="datenohasquality"
+                      label="未判定"
+                      sortable
+                      class-name="dayStyle"
+                      >
+                    </el-table-column>
+                    
+                    <el-table-column
+                      prop="datehasqualityscore"
+                      label="质量分"
                       sortable
                       class-name="dayStyle"
                       >
                     </el-table-column>
                     <el-table-column
-                      prop="lastdayhasquality"
-                      label="昨天已判定"
-                      sortable
-                      class-name="dayStyle"
-                      >
-                    </el-table-column>
-                    <el-table-column
-                      prop="lastdaynohasquality"
-                      label="昨天未判定"
+                      prop="avghasqualityscore"
+                      label="平均质量分"
                       sortable
                       class-name="dayStyle"
                       >
                     </el-table-column>
                 </el-table-column>
-                <el-table-column :label="defaultTagData" v-if="isMonth">
+                <el-table-column :label="defaultTagData" v-if="isMonth == 1">
+                    <el-table-column
+                      label="总询盘"
+                      sortable="custom"
+                      class-name="dayStyle"
+                      >
+                      <template slot-scope="scope">
+                        {{scope.row.monthhasquality+scope.row.monthnohasquality}}
+                      </template>
+                    </el-table-column>
                     <el-table-column
                       prop="monthhasquality"
                       label="已判定"
@@ -121,7 +141,16 @@
                       >
                     </el-table-column>
                 </el-table-column>
-                <el-table-column :label="defaultTagData" v-if="!isMonth">
+                <el-table-column :label="defaultTagData" v-if="isMonth ==2">
+                    <el-table-column
+                      label="总询盘"
+                      sortable="custom"
+                      class-name="dayStyle"
+                      >
+                      <template slot-scope="scope">
+                        {{scope.row.hasqualitynumber+scope.row.nohasqualitynumber}}
+                      </template>
+                    </el-table-column>
                     <el-table-column
                       prop="hasqualitynumber"
                       label="已判定数量"
@@ -176,7 +205,7 @@
       name: "AwardRank",
       data() {
         return {
-            isMonth:true,
+            isMonth: 3,
         };
       },
       created(){
@@ -200,9 +229,9 @@
             return "";
           },
         },
-        MonthBool: {
-          type: Boolean,
-          default: true,
+        month: {
+          type: Number,
+          default: 1,
         },
       },
       computed:{
@@ -214,13 +243,17 @@
         }
       },
       watch: {
-        MonthBool:{
+        month:{
             handler(newValue, oldValue) {
                 this.isMonth = newValue;
             },
         },
       },
       methods:{
+        sortAllChange(res){
+          let $this = this;
+          $this.$emit('rankChange', res.order);
+        }
       }
     }
     </script>
