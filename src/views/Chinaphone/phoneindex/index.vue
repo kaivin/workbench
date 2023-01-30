@@ -305,7 +305,20 @@
                                 @show="popoverShow(scope.row.id)"
                                 :popper-class="popContent.length > 0 ? '' : 'pop-quality-hide'"
                                 >
-                                <p v-for="item in popContent" :key="item" class="pop-p">{{item}}</p>
+                                <div class="pop-box">
+                                  <p class="pop-time" v-if="popTime"><span class="tit">判定时间：</span>{{popTime}}</p>
+                                  <div class="pop-cont">
+                                    <span class="tit">具体情况：</span>
+                                    <ul class="pop-ul" v-if="popContent.length > 1">
+                                      <li class="pop-p" v-for="item,index in popContent" :key="item"><span class="num">{{index+1}}、</span><span class="cont">{{item}}</span></li>
+                                    </ul>
+                                    <ul class="pop-ul" v-else>
+                                      <li class="pop-p" v-for="item,index in popContent" :key="item">{{item}}</li>
+                                    </ul>
+                                  </div>
+                                  
+                                </div>
+                                
                                 <div class="table-tag table-score" slot="reference" > 
                                   <span v-if="scope.row.hasquality == 2">
                                     {{scope.row.qualityscore}}
@@ -636,6 +649,7 @@ export default {
       isNewAdd: true,
       popType: 1,
       popContent: [],
+      popTime: "",
       judgeOptions: [],
     }
   },
@@ -1989,7 +2003,10 @@ export default {
           if(response.status){
             if(response.data.length>0){
                 var options = [];
-                response.data.forEach(item=>{
+                response.data.forEach((item,index)=>{
+                  if(index == 0){
+                    $this.popTime = item.addtime;
+                  }
                   options.push(item.content);
                 })
                 // 拼接内容：
@@ -2000,7 +2017,8 @@ export default {
                 // })
                 $this.popContent = options;
             }else{
-              $this.popContent = "";
+              $this.popTime = "";
+              $this.popContent = [];
             }
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -2025,6 +2043,7 @@ export default {
     popoverShow(id){
       var $this = this;
       $this.popContent = [];
+      $this.popTime = "";
       if($this.menuButtonPermit.includes('Chinaphone_chinaqualityhasselect')){
         $this.getSelectedQualityText(id)
       }
