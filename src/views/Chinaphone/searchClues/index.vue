@@ -324,9 +324,10 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column
-                                    prop="effective"
+                                    prop="qualityscore"
+                                    sortable
                                     label="添加人/有效/质量分"
-                                    min-width="90"
+                                    min-width="100"
                                     align="center"
                                     >
                                     <template slot-scope="scope">
