@@ -45,8 +45,13 @@ module.exports = {
                     @import "./src/styles/-variables.scss";
                     @import "./src/styles/-mixin.scss";
                     @import "./src/styles/element_variables.scss";
-                    `
+                    `,
                 // additionalData:`@import "~@/styles/variables.scss"`
+                implementation: require('sass'),
+                sassOptions: {
+                  // 生效代码
+                  outputStyle: 'expanded'
+                }	
             }
         }
     },
