@@ -199,10 +199,20 @@
                           </el-option>
                         </el-select>
                       </div>
-                      <div class="item-search" style="width: 100px;">
-                        <el-select v-model="searchData.hasquality" size="small" clearable placeholder="质量判定" :class="searchData.effective!=''?'el-xzstate':''">
+                      <div class="item-search" style="width: 120px;">
+                        <el-select v-model="searchData.hasquality" size="small" clearable placeholder="质量判定情况" :class="searchData.effective!=''?'el-xzstate':''">
                           <el-option
                             v-for="item in hasQualityList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                      </div>
+                      <div class="item-search" style="width: 120px;">
+                        <el-select v-model="searchData.qualityscore" size="small" clearable placeholder="质量判定分数" :class="searchData.effective!=''?'el-xzstate':''">
+                          <el-option
+                            v-for="item in qualityScoreList"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -555,7 +565,8 @@ export default {
         userid:'',
         device:'',
         effective:'',
-        hasquality:''
+        hasquality:'',
+        qualityscore: '',
       },
       pageSizeList:[20,50,100,200,500],
       totalDataNum:0,
@@ -572,6 +583,24 @@ export default {
       hasQualityList:[
         {label:"待判定",value:1},
         {label:"已判定",value:2},
+      ],
+      qualityScoreList: [
+        {label:"0",value:0},
+        {label:"0.1",value:0.1},
+        {label:"0.2",value:0.2},
+        {label:"0.3",value:0.3},
+        {label:"0.4",value:0.4},
+        {label:"0.5",value:0.5},
+        {label:"0.6",value:0.6},
+        {label:"0.7",value:0.7},
+        {label:"0.8",value:0.8},
+        {label:"0.9",value:0.9},
+        {label:"1.0",value:1.0},
+        {label:"1.1",value:1.1},
+        {label:"1.2",value:1.2},
+        {label:"1.3",value:1.3},
+        {label:"1.4",value:1.4},
+        {label:"1.5",value:1.5},
       ],
       infoData:{
         totalCount:0,
@@ -868,6 +897,8 @@ export default {
         $this.searchData.userid="";
         $this.searchData.device="";
         $this.searchData.effective="";
+        $this.searchData.hasquality="";
+        $this.searchData.qualityscore="";
         $this.searchResult();    
     },
     // 初始化数据
@@ -1045,6 +1076,9 @@ export default {
       }
       if($this.searchData.hasquality&&$this.searchData.hasquality!=''){
         searchData.hasquality = $this.searchData.hasquality;
+      }
+      if($this.searchData.qualityscore&&$this.searchData.qualityscore!=''){
+        searchData.qualityscore = $this.searchData.qualityscore;
       }
       if($this.searchData.name&&$this.searchData.name!=''){
         searchData.name = $this.searchData.name;
