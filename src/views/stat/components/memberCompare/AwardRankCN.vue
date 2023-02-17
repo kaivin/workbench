@@ -72,7 +72,16 @@
                       class-name="dayStyle"
                       >
                     </el-table-column>
-                    
+                    <el-table-column
+                      prop="zero"
+                      label="无效率"
+                      sortable
+                      class-name="dayStyle"
+                      >
+                      <template slot-scope="scope">
+                        {{scope.row.zero}}%
+                      </template>
+                    </el-table-column>
                     <el-table-column
                       prop="datehasqualityscore"
                       label="质量分"
@@ -111,6 +120,16 @@
                       sortable
                       class-name="monthStyle"
                       >
+                    </el-table-column>
+                    <el-table-column
+                      prop="zero"
+                      label="无效率"
+                      sortable
+                      class-name="dayStyle"
+                      >
+                      <template slot-scope="scope">
+                        {{scope.row.zero}}%
+                      </template>
                     </el-table-column>
                     <el-table-column
                       prop="monthhasqualityscore"
@@ -164,6 +183,16 @@
                       sortable
                       class-name="yearStyle"
                       >
+                    </el-table-column>
+                    <el-table-column
+                      prop="zero"
+                      label="无效率"
+                      sortable
+                      class-name="dayStyle"
+                      >
+                      <template slot-scope="scope">
+                        {{scope.row.zero}}%
+                      </template>
                     </el-table-column>
                     <el-table-column
                       prop="hasqualityscore"

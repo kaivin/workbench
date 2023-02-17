@@ -489,6 +489,7 @@ export default {
                   itemObj.monthhasqualityscore=item.monthhasqualityscore;
                   itemObj.score=item.score;
                   itemObj.Anumber=item.Anumber;
+                  itemObj.zero = item.zero;
                   tableDate.push(itemObj);
                 });
                 tableDate.sort(sortByDesc("todayhasquality"));
@@ -513,6 +514,7 @@ export default {
                   itemObj.hasqualityscore=item.hasqualityscore;
                   itemObj.score=item.score;
                   itemObj.Anumber=item.Anumber;
+                  itemObj.zero = item.zero;
                   tableDate.push(itemObj);
                 });
                 tableDate.sort(sortByDesc("hasqualitynumber"));
@@ -535,6 +537,7 @@ export default {
                   itemObj.datehasqualityscore=item.datehasqualityscore;
                   itemObj.datehasquality=item.datehasquality;
                   itemObj.datenohasquality=item.datenohasquality;
+                  itemObj.zero = item.zero;
                   tableDate.push(itemObj);
                 });
                 tableDate.sort(sortByDesc("datehasqualityscore"));
