@@ -2487,6 +2487,10 @@ export default {
                 color: "#5b8ff9"
               }
             },
+            textStyle:{
+                fontSize:12,
+                color: '#666'
+            },
             formatter(params){
               return `<div class="toolDiv">
                     <div class="tooltitle">${params[0].name}</div>

@@ -164,6 +164,10 @@ export default {
                   }
                   returnData +=`</div>`;
                   return returnData;
+                },
+                textStyle:{
+                  fontSize:12,
+                  color: '#666'
                 }
             },
             grid: {

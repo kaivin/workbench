@@ -144,6 +144,7 @@ export default {
                 },
                 textStyle:{
                   fontSize:12,
+                  color: "#666"
                 }
               },
               grid: {

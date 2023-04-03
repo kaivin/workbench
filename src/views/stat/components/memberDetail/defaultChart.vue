@@ -191,6 +191,7 @@ export default {
               trigger: "axis",
               textStyle:{
                 fontSize:'12',
+                color: '#666'
               }
           },
           grid: {
@@ -342,6 +343,7 @@ export default {
               trigger: "axis",
               textStyle:{
                 fontSize:'12',
+                color: '#333'
               }
           },
           grid: {

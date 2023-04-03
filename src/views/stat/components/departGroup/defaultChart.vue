@@ -511,6 +511,7 @@ export default {
               trigger: "axis",
               textStyle:{
                 fontSize:'12',
+                color: '#666'
               },
               formatter(params){
                 let returnData = `<div class="toolDiv">
@@ -682,6 +683,7 @@ export default {
               trigger: "axis",
               textStyle:{
                 fontSize:'12',
+                color: '#666'
               },
               formatter(params){
                 let returnData = `<div class="toolDiv">

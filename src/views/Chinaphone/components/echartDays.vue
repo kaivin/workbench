@@ -130,6 +130,7 @@ export default {
                     trigger: "axis",
                     textStyle:{
                         fontSize:12,
+                        color: '#666'
                     },
                     formatter(params){
                         return `<div class="toolDiv">
