@@ -447,6 +447,19 @@
                       </div>
                     </el-col>
                   </el-row>
+                  <el-row :gutter="15" v-if="checkedItem.includes(11)">
+                    <el-col :xs="24">
+                      <div class="chart-wrapper" style="margin-bottom:15px">
+                        <div class="chart-header"><span>周询盘趋势</span></div>
+                        <div class="chart-body" style="height:400px;">
+                          <div class="abs-canvas" v-if="searchResult.weekListCount.length > 0"><div id="cluesChart14" class="chart-canvas"></div></div>
+                          <div class="nocount" v-else>
+                              暂无数据
+                          </div>
+                        </div>
+                      </div>
+                    </el-col>
+                  </el-row>
                   <el-row :gutter="15" v-if="checkedItem.includes(5)">
                     <el-col :xs="24">
                       <div class="chart-wrapper">
@@ -727,6 +740,7 @@ export default {
         materlist:[],
         monthCount:[],
         seasonCount:[],
+        weekListCount:[]
       },
       maxWeek:[],
       minWeek:[],
@@ -753,7 +767,8 @@ export default {
         columnProductPlot:'',
         chart:'',
         monthPlot:'',
-        seasonPlot:''
+        seasonPlot:'',
+        weekPlot: ''
       },
       formLabelWidth:"120px",
       exportForm:{
@@ -772,6 +787,7 @@ export default {
         {id:6,value:6,label:"平均小时询盘量"},
         {id:7,value:7,label:"热门产品"},
         {id:8,value:8,label:"热门国家"},
+        {id:11, value: 11, label: "询盘周趋势"},
         {id:9,value:9,label:"询盘月趋势"},
         {id:10,value:10,label:"询盘季度趋势"}
       ],
@@ -1018,6 +1034,7 @@ export default {
       $this.searchResult.weekCount=[];
       $this.searchResult.monthCount=[];
       $this.searchResult.seasonCount=[];
+      $this.searchResult.weekListCount = [];
       $this.isExportDisabled = true;
       $this.isAllItem=false;
       $this.checkAllItem=false;
@@ -1309,6 +1326,7 @@ export default {
               $this.searchResult.materlist = response.materlist ? response.materlist : [];
               $this.searchResult.monthCount = response.monthtrend ? response.monthtrend : [];
               $this.searchResult.seasonCount = response.quartertrend ? response.quartertrend : [];
+              $this.searchResult.weekListCount = response.weektrend ? response.weektrend : [];
               // $this.searchResult.searchWordCount = response.searchwordcount;
               var numArr = [];
               if(response.weekdaycount){
@@ -1467,7 +1485,9 @@ export default {
                 if($this.checkedItem.includes(10)){
                   $this.drawChart13();
                 }
-                
+                if($this.checkedItem.includes(11)){
+                  $this.drawChart14();
+                }
               });
               setTimeout(()=>{
                 $this.isDisabled=false;
@@ -3558,7 +3578,7 @@ export default {
         });
         option = {
           grid:{
-            left: '35',
+            left: '45',
             top:'25',
             right:'15',
             bottom: '25'
@@ -3668,6 +3688,132 @@ export default {
       }
     },
 
+    // 周趋势
+    drawChart14(){
+      var $this = this;
+      if($this.searchResult.weekListCount.length>0){
+        var chartDom = document.getElementById('cluesChart14');
+        var myChart = echarts.init(chartDom);
+        var option;
+        var numberlist = [];
+        $this.searchResult.weekListCount.forEach(function(item,index){
+          var data = {};
+          data.name=item.name;
+          data.number=item.number;
+          data.startDate=item.startDate;
+          data.endDate=item.endDate;
+          numberlist.push(data);
+        });
+        option = {
+          grid:{
+            left: '35',
+            top:'25',
+            right:'15',
+            bottom: '25'
+          },
+          tooltip:{
+            show: true,
+            trigger: "axis",
+            axisPointer: {
+              type: "line", 
+              lineStyle:{
+                color: "#5b8ff9"
+              }
+            },
+            formatter(params){
+              return `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                      <span>开始时间：</span>
+                      <span>${params[0].data.startDate}</span>
+                    </div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                      <span>结束时间：</span>
+                      <span>${params[0].data.endDate}</span>
+                    </div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                      <span>${params[0].seriesName}：</span>
+                      <span>${params[0].data.number}</span>
+                    </div>
+                  </div>`;
+            }
+          },
+          xAxis: {
+            type: 'category',
+            name: "季度",
+            axisLine:{
+              lineStyle:{
+                color: "#dedede"
+              }
+            },
+            axisLabel:{
+              color: "#888"
+            }
+          },
+          yAxis: {
+            type: 'value',
+            axisLabel:{
+              color: "#888"
+            }
+          },
+          dataset:{
+            source: numberlist
+          },
+          animation: false,
+          series: [
+            {
+              name: "询盘个数",
+              type: 'line',
+              symbol:'circle',
+              symbolSize: '5',
+              label:{
+                show: true,
+                position: 'top',
+                distance: '5',
+              },
+              itemStyle:{
+                color: '#fff',
+                borderColor: "#0970ff",
+                borderWidth: 1
+              },
+              lineStyle:{
+                color: "#0970ff",
+                width: 1
+              },
+              areaStyle:{
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                    offset: 0,
+                    color:'#0970ff',
+                    opacity:1
+                    },
+                    {
+                    offset: 1,
+                    color: "rgba(255, 255, 255, 0)",
+                    }
+                ]),
+                opacity:0.3
+              },
+              emphasis:{
+                lineStyle: {
+                  width: 2,
+                },
+                itemStyle:{
+                  borderWidth: 2
+                }
+              }
+            }
+          ]
+        };
+
+        option && myChart.setOption(option);
+        $this.chartlist.weekPlot = myChart;
+      }
+    },
+
     getSummaries(param){
       var $this = this;
       const { columns, data } = param;
@@ -3753,6 +3899,9 @@ export default {
       }
       if($this.chartlist.chart){
         $this.chartlist.chart.resize();
+      }
+      if($this.chartlist.weekPlot){
+        $this.chartlist.weekPlot.resize();
       }
     }
   },
