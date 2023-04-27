@@ -228,7 +228,7 @@ export function TopTenColor(resArr,obj){
             }
         }
     });
-    topTenColor.reverse();
+    // topTenColor.reverse();
     return topTenColor;
 }
 export function currentColor(value,obj){ 
