@@ -2156,7 +2156,7 @@ export default {
 .remark2{
   margin-top: 10px;
   :deep(.el-textarea__inner){
-    height: 40px!important;
+    height: 32px!important;
   }
 }
 </style>
