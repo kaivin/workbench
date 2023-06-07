@@ -423,12 +423,13 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="remark"
-                                    label="备注"
+                                    label="备注/其他"
                                     width="120"
                                     >
                                     <template slot-scope="scope">
                                       <div class="table-input cnClues">
                                         <el-input size="small" type="textarea" rows="5" resize="none" v-model="scope.row.remark"></el-input>
+                                        <el-input size="small" type="textarea" class="remark2" rows="2" resize="none" v-model="scope.row.remark2"></el-input>
                                       </div>
                                     </template>
                                 </el-table-column>
@@ -2093,4 +2094,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.remark2{
+  margin-top: 10px;
+  :deep(.el-textarea__inner){
+    height: 32px!important;
+  }
+}
 </style>
