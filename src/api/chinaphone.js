@@ -482,3 +482,11 @@ export function chinaQualityHasSelect(data) {
     data
   });
 }
+// 导出数据
+export function exportSearchData(data){
+  return request({
+    url: "/hxindex/Chinaphone/searchexport",
+    method: "POST",
+    data
+  });
+}

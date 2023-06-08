@@ -1305,7 +1305,7 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['ID', '电话','询盘时间','星期','域名','渠道', '地区', '城市', '意向设备','有效','无效原因','添加人','添加时间', '等级', '客服备注','客服原因', '链接', '平台', '关键词', '电商备注', '提供者', '设备']
+        const tHeader = ['ID', '电话','询盘时间','星期','域名','渠道', '地区', '城市', '意向设备','是否有效','无效原因','是否判定','质量分','添加人','添加时间', '等级', '客服备注','客服原因', '链接', '平台', '关键词', '电商备注', '提供者', '设备']
         const list = this.tableData
         const data = [];
         list.forEach(function(item,index){
@@ -1321,6 +1321,8 @@ export default {
           itemData.push(item.keyproduct);
           itemData.push(item.effective==1?'有效':'无效');
           itemData.push(item.invalidcause);
+          itemData.push(item.hasquality==2?'已判定':'未判定');
+          itemData.push(item.qualityscore);
           itemData.push(item.addusername);
           itemData.push(item.addtime);
           itemData.push(item.levelname);

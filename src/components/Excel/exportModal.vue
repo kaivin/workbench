@@ -96,6 +96,14 @@ export default {
       this.visible = false
     },
     handleOk() {
+      if(this.checkedFields.length == 0) {
+        this.$message({
+          showClose: true,
+          message: "请选择要导出的字段",
+          type: 'error'
+        });
+        return false
+      }
       const sortArr = []
       const headerObj = {}
       this.fieldList.forEach((item) => {

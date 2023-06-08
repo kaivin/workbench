@@ -59,7 +59,8 @@
     chinaQualitySelect,
     chinaQualityConfirm,
     chinaQualityConfirmedit,
-    chinaQualityHasSelect
+    chinaQualityHasSelect,
+    exportSearchData
 } from '@/api/chinaphone'
 
 const state = {}
@@ -678,6 +679,16 @@ const actions = {
     getChinaQualityHasSelect({ commit, state },data) {
         return new Promise((resolve, reject) => {
             chinaQualityHasSelect(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 导出数据
+    getExportSearchData({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            exportSearchData(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

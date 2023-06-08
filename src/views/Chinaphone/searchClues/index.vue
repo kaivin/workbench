@@ -388,7 +388,7 @@
         </div>
       </div>
     </div>
-    <ExportModal ref="ExportModalRef" :field-list="fieldList" @exportSuccess="exportDone"></ExportModal>
+    <ExportModal ref="ExportModalRef" @exportSuccess="exportDone"></ExportModal>
     <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="440px">
       <el-form :inline="true" :model="exportForm">
         <el-form-item label="文件名称：" :label-width="formLabelWidth">
@@ -785,31 +785,100 @@ export default {
           }
         })
       } else { // 导出全量后台数据
-        // getListData({ pageIndex: 1, pageSize: listData.total }, { config: { showLoading: false, mockEnable: true } }).then((res:any) => {
-        //   if (res.data && res.data.length > 0) {
-        //     const customData = []
-        //     res.data.forEach((item) => {
-        //       const itemObj = {}
-        //       headerSort.forEach((current) => {
-        //         itemObj[current] = item[current]
-        //       })
-        //       customData.push(itemObj)
-        //     })
-        //     jsonToSheetXlsx({
-        //       data: customData,
-        //       header: header,
-        //       filename: filename,
-        //       json2sheetOpts: {
-        //         // 指定顺序
-        //         header: headerSort
-        //       },
-        //       write2excelOpts: {
-        //         bookType
-        //       }
-        //     })
-        //   }
-        // })
+        var $this = this;
+        if($this.searchData.date && $this.searchData.date.length == 0) {
+          $this.$message({
+            showClose: true,
+            message: "请选择日期范围",
+            type: 'error'
+          });
+          return false
+        }
+        const loading = $this.$loading({
+          lock: true,
+          text: '正在导出内容，请耐心等待……'
+        });
+        var searchData = $this.initExportSearchData();
+        $this.$store.dispatch('chinaphone/getExportSearchData', searchData).then(res => {
+          if (res) {
+            loading.close();
+            if(res.status){
+              if (res.data && res.data.length > 0) {
+                const customData = []
+                res.data.forEach((item) => {
+                  const itemObj = {}
+                  headerSort.forEach((current) => {
+                    if(current == 'effective'){
+                      itemObj[current] = item[current]==1?'有效':'无效'
+                    }else if(current == 'hasquality'){
+                      itemObj[current] = item[current]==2?'已判定':'未判定'
+                    }else{
+                      itemObj[current] = item[current]
+                    }
+                  })
+                  customData.push(itemObj)
+                })
+                jsonToSheetXlsx({
+                  data: customData,
+                  header: header,
+                  filename: filename,
+                  json2sheetOpts: {
+                    // 指定顺序
+                    header: headerSort
+                  },
+                  write2excelOpts: {
+                    bookType
+                  }
+                })
+              }
+            }else{
+              $this.$message({
+                showClose: true,
+                message: res.info,
+                type: 'error'
+              });
+            }
+          }
+          
+        })
       }
+    },
+    // 组装导出接口所需数据
+    initExportSearchData() {
+      var $this = this;
+      var searchData = {};
+      searchData.page = $this.searchData.page;
+      searchData.limit = $this.searchData.limit;
+      searchData.phoneid = $this.phoneSelected;
+      searchData.messageid = $this.searchData.messageid;
+      searchData.province = $this.searchData.province;
+      searchData.search = $this.searchData.search;
+      searchData.anymessage = $this.searchData.anymessage;
+      searchData.useridname = $this.searchData.useridname;
+      searchData.domain = $this.searchData.domain;
+      searchData.url = $this.searchData.url;
+      searchData.groupurlproduct = $this.searchData.groupurlproduct;
+      searchData.is_url = $this.searchData.is_url ? 1 : 0;
+      searchData.effective = $this.searchData.effective ? 1 : 0;
+      searchData.is_group = $this.searchData.is_group ? 1 : 0;
+      searchData.is_core = $this.searchData.is_core ? 1 : 0;
+      searchData.mode = $this.searchData.mode;
+      searchData.typekey = $this.searchData.typekey;
+      searchData.productid = $this.searchData.productid;
+      searchData.level_id = $this.searchData.level_id;
+      searchData.productlevel = $this.searchData.productlevel;
+      searchData.device = $this.searchData.device;
+      searchData.idlist = $this.searchData.idlist;
+      searchData.hasquality = $this.searchData.hasquality;
+      searchData.qualityscore = $this.searchData.qualityscore;
+      if ($this.searchData.date && $this.searchData.date.length > 0) {
+        searchData.starttime = $this.searchData.date[0];
+        searchData.endtime = $this.searchData.date[1];
+      } else {
+        searchData.starttime = "";
+        searchData.endtime = "";
+      }
+      return searchData;
     },
     // 获取面包屑路径
     getBreadcrumbList() {
