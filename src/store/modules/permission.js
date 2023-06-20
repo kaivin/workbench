@@ -321,6 +321,12 @@ function setRoutes(routers){
         component: () => import(/* webpackChunkName: "moveData" */ "@/views/User/movedata/index.vue"),
         meta: {id:'moveData-27',title: '资源转移', icon: null, keepAlive:false},
       },
+      {
+        path: "/Keyword/keywordinfo",
+        name:'Keyword_keywordinfo',
+        component: () => import(/* webpackChunkName: "Keyword_keywordinfo" */ "@/views/Keyword/keywordinfo/index.vue"),
+        meta: {id:'Keyword_keywordinfo-146',title: '搜索词趋势', icon: null, keepAlive:false},
+      },
     ]
   }]
   accessedRouters.forEach(function(item,index){

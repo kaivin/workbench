@@ -545,3 +545,13 @@ export function getEnfocusproductcance(data) {
     data
   });
 }
+
+
+// 搜索词指数
+export const base = {
+  productType: (data) => request({
+    url: "/hxindex/Api/getproducttype",
+    method: "POST",
+    data
+  })
+}
