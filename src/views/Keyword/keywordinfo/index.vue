@@ -229,6 +229,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
+      $this.chartData = []
       if ($this.searchData.id && $this.searchData.id !== '') {
         var formData = {}
         formData.id = $this.searchData.id;
