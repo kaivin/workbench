@@ -30,8 +30,10 @@
                       :picker-options="pickerDateRangeMonthOptions">
                     </el-date-picker>
                   </div>
-                  <div class="item-search"><span>对比</span></div>
-                  <div class="item-search" style="width: 240px;">
+                  <div class="item-search">
+                    <el-checkbox v-model="isCheck" label="日期对比" size="mini" @change="checkChange" style="margin-top: 5px;margin-bottom:4px;" />
+                  </div>
+                  <div v-if="isCheck" class="item-search" style="width: 240px;">
                     <el-date-picker
                       v-model="searchData.dateValue2"
                       @change="searchResult"
@@ -77,54 +79,71 @@
                         label="搜索词"
                         min-width="180"
                         >
+                        <template #default="scope">
+                          <div class="item-text">{{ scope.row['name'] }}</div>
+                        </template>
                       </el-table-column>
                       <el-table-column
                         prop="baidu_avg"
                         label="百度指数"
-                        align="right"
-                        sortable
-                        min-width="180"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="byte_avg"
-                        label="巨量指数（头条）"
-                        align="right"
-                        sortable
-                        min-width="180"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="douyin_avg"
-                        label="巨量指数（抖音）"
-                        align="right"
-                        sortable
-                        min-width="180"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="360_avg"
-                        label="360指数"
-                        align="right"
-                        sortable
-                        min-width="180"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="all_avg"
-                        label="查询时间范围总指数"
-                        align="right"
+                        align="center"
                         sortable
                         min-width="180"
                         >
                         <template #default="scope">
-                          <div :class="['item-text', scope.row.avg_cha > 0 ? 'red' : scope.row.avg_cha < 0 ? 'green' : '']">{{ scope.row.all_avg }}</div>
+                          <div class="item-text">{{ scope.row['baidu_avg'] }}</div>
                         </template>
                       </el-table-column>
                       <el-table-column
+                        prop="byte_avg"
+                        label="巨量指数（头条）"
+                        align="center"
+                        sortable
+                        min-width="180"
+                        >
+                        <template #default="scope">
+                          <div class="item-text">{{ scope.row['byte_avg'] }}</div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="douyin_avg"
+                        label="巨量指数（抖音）"
+                        align="center"
+                        sortable
+                        min-width="180"
+                        >
+                        <template #default="scope">
+                          <div class="item-text">{{ scope.row['douyin_avg'] }}</div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="360_avg"
+                        label="360指数"
+                        align="center"
+                        sortable
+                        min-width="180"
+                        >
+                        <template #default="scope">
+                          <div class="item-text">{{ scope.row['360_avg'] }}</div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="all_avg"
+                        label="总指数"
+                        align="center"
+                        sortable
+                        min-width="180"
+                        >
+                        <template #default="scope">
+                          <div v-if="isCheck" :class="['item-text', scope.row.avg_cha > 0 ? 'red' : scope.row.avg_cha < 0 ? 'green' : '']">{{ scope.row.all_avg }}</div>
+                          <div v-else class="item-text">{{ scope.row.all_avg }}</div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        v-if="isCheck"
                         prop="compare_avg"
                         label="对比时间范围总指数"
-                        align="right"
+                        align="center"
                         sortable
                         min-width="180"
                         >
@@ -133,9 +152,10 @@
                         </template>
                       </el-table-column>
                       <el-table-column
+                        v-if="isCheck"
                         prop="avg_cha"
                         label="指数对比差值"
-                        align="right"
+                        align="center"
                         sortable
                         min-width="180"
                         >
@@ -190,6 +210,7 @@ import { indices } from '@/api/keyword'
 import { pickerDateRangeMonthOptions } from "@/utils/index"
 import ExportModal from '@/components/Excel/exportModal.vue'
 import { jsonToSheetXlsx } from '@/components/Excel/Export2Excel'
+import { deepClone } from '@/utils'
 export default {
   name: 'Keyword_keywordcount',
   components: {
@@ -200,6 +221,7 @@ export default {
       breadcrumbList:[],
       menuButtonPermit:[],
       operationsWidth: "",
+      isCheck: false,
       tips: '',
       pagerCount:5,
       pageSizeList:[50, 100, 150, 200],
@@ -243,9 +265,7 @@ export default {
         { key: 'byte_avg', value: '巨量指数（头条）' },
         { key: 'douyin_avg', value: '巨量指数（抖音）' },
         { key: '360_avg', value: '360指数' },
-        { key: 'all_avg', value: '总指数' },
-        { key: 'compare_avg', value: '对比指数' },
-        { key: 'avg_cha', value: '指数对比差值' }
+        { key: 'all_avg', value: '总指数' }
       ]
     }
   },
@@ -611,6 +631,13 @@ export default {
                   $this.setTableHeight();
                 })
               }
+              if ($this.isCheck && response.msg) {
+                $this.$notify({
+                  title: '提示',
+                  message: response.msg,
+                  type: 'warning'
+                });
+              }
             }else{
               if(response.permitstatus&&response.permitstatus==2){
                 $this.$message({
@@ -709,6 +736,23 @@ export default {
     handleCurrentChange(val) {
       this.searchData.page = val;
       this.initPage();
+    },
+    checkChange() {
+      if (this.isCheck) {
+        const a = [
+        { key: 'compare_avg', value: '对比指数' },
+        { key: 'avg_cha', value: '指数对比差值' }]
+        this.fieldList.push(...a)
+        this.searchResult()
+      } else {
+        const result = deepClone(this.fieldList)
+        this.fieldList = []
+        result.forEach(item => {
+          if (item.key !== 'compare_avg' && item.key !== 'avg_cha') {
+            this.fieldList.push(item)
+          }
+        })
+      }
     },
     dateChangeHandle() {
       var $this = this
@@ -920,6 +964,9 @@ export default {
     }
     .el-date-editor--daterange.el-input, .el-date-editor--daterange.el-input__inner, .el-date-editor--timerange.el-input, .el-date-editor--timerange.el-input__inner {
       width: 100% !important
+    }
+    .el-checkbox__label{
+      padding-left: 6px;
     }
   }
   .input-panel{
