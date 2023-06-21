@@ -34,6 +34,7 @@
                   <div class="item-search" style="width: 240px;">
                     <el-date-picker
                       v-model="searchData.dateValue2"
+                      @change="searchResult"
                       type="daterange"
                       format="yyyy/MM/dd"
                       value-format="yyyy/MM/dd"
@@ -711,7 +712,8 @@ export default {
     },
     dateChangeHandle() {
       var $this = this
-      $this.searchData.dateValue2 = $this.getOtherDay();
+      $this.searchData.dateValue2 = $this.getOtherDay(); 
+      $this.searchResult()
     },
     getNearDay(){
       const end = new Date();
