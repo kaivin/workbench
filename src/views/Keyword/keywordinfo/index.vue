@@ -247,6 +247,19 @@ export default {
               if(response.status){
                 if(response.data){
                   $this.keyword = response.data['baidu'][0].word
+                  var chartDataAll=[];
+                  response.data['all'].forEach(function(item,index){
+                    var itemObj={};
+                    var itemTime=item.time.split('-');
+                    itemObj.name = itemTime[1]+'-'+itemTime[2]+"\n"+item.week.replace("星期","周");
+                    itemObj.value = item.number ? item.number : 0;
+                    chartDataAll.push(itemObj);
+                  });
+                  $this.chartData.push({
+                    type: 'all',
+                    typeName: '总指数',
+                    data: chartDataAll
+                  })
                   var chartDataBaidu=[];
                   response.data['baidu'].forEach(function(item,index){
                     var itemObj={};

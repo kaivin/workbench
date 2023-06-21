@@ -14,10 +14,26 @@
             <div slot="header">
               <div class="card-header" ref="headerPane">
                 <div class="search-wrap" ref="searchPane">
-                  <div class="item-search">
+                  <div class="item-search" style="width: 240px;">
                     <el-date-picker
                       v-model="searchData.dateValue"
-                      @change="searchResult"
+                      @change="dateChangeHandle"
+                      type="daterange"
+                      format="yyyy/MM/dd"
+                      value-format="yyyy/MM/dd"
+                      key="a"
+                      size="mini"
+                      class="date-range"
+                      range-separator="～"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期"
+                      :picker-options="pickerDateRangeMonthOptions">
+                    </el-date-picker>
+                  </div>
+                  <div class="item-search"><span>对比</span></div>
+                  <div class="item-search" style="width: 240px;">
+                    <el-date-picker
+                      v-model="searchData.dateValue2"
                       type="daterange"
                       format="yyyy/MM/dd"
                       value-format="yyyy/MM/dd"
@@ -34,6 +50,7 @@
                     <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                     <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                     <el-button type="primary" size="small" class="derived" @click="showExportDialog"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                    <p style="display: inline-block; font-size: 14px; color: #999;margin-left: 12px;">{{ tips }}</p>
                   </div>
                 </div>
               </div>
@@ -51,16 +68,8 @@
                       :style="'min-height:'+tableHeight+'px;'"
                       row-key="id"
                       @selection-change="handleSelectionChange"
-                      :span-method="spanCell"
                       >
                       <el-table-column type="selection" align="center" width="48"></el-table-column>
-                      <el-table-column
-                        prop="typename"
-                        label="分类"
-                        align="center"
-                        min-width="200"
-                        >
-                      </el-table-column>
                       <el-table-column
                         prop="name"
                         align="center"
@@ -72,6 +81,7 @@
                         prop="baidu_avg"
                         label="百度指数"
                         align="right"
+                        sortable
                         min-width="180"
                         >
                       </el-table-column>
@@ -79,6 +89,7 @@
                         prop="byte_avg"
                         label="巨量指数（头条）"
                         align="right"
+                        sortable
                         min-width="180"
                         >
                       </el-table-column>
@@ -86,6 +97,7 @@
                         prop="douyin_avg"
                         label="巨量指数（抖音）"
                         align="right"
+                        sortable
                         min-width="180"
                         >
                       </el-table-column>
@@ -93,8 +105,42 @@
                         prop="360_avg"
                         label="360指数"
                         align="right"
+                        sortable
                         min-width="180"
                         >
+                      </el-table-column>
+                      <el-table-column
+                        prop="all_avg"
+                        label="查询时间范围总指数"
+                        align="right"
+                        sortable
+                        min-width="180"
+                        >
+                        <template #default="scope">
+                          <div :class="['item-text', scope.row.avg_cha > 0 ? 'red' : scope.row.avg_cha < 0 ? 'green' : '']">{{ scope.row.all_avg }}</div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="compare_avg"
+                        label="对比时间范围总指数"
+                        align="right"
+                        sortable
+                        min-width="180"
+                        >
+                        <template #default="scope">
+                          <div :class="['item-text', scope.row.avg_cha > 0 ? 'red' : scope.row.avg_cha < 0 ? 'green' : '']">{{ scope.row.compare_avg }}</div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="avg_cha"
+                        label="指数对比差值"
+                        align="right"
+                        sortable
+                        min-width="180"
+                        >
+                        <template #default="scope">
+                          <div :class="['item-text', scope.row.avg_cha > 0 ? 'red' : scope.row.avg_cha < 0 ? 'green' : '']">{{ scope.row.avg_cha }}</div>
+                        </template>
                       </el-table-column>
                       <el-table-column
                         v-if="menuButtonPermit.includes('Keyword_keywordinfo')"
@@ -153,6 +199,7 @@ export default {
       breadcrumbList:[],
       menuButtonPermit:[],
       operationsWidth: "",
+      tips: '',
       pagerCount:5,
       pageSizeList:[50, 100, 150, 200],
       totalDataNum:0,
@@ -161,7 +208,8 @@ export default {
       selectedData: [],
       pickerDateRangeMonthOptions: pickerDateRangeMonthOptions,
       searchData:{
-        dateValue: []
+        dateValue: [],
+        dateValue2: [],
       },
       scrollPosition:{
         width:0,
@@ -189,12 +237,14 @@ export default {
       },
       isSearchResult:false,
       fieldList: [
-        { key: 'typename', value: '分类' },
         { key: 'name', value: '搜索词' },
         { key: 'baidu_avg', value: '百度指数' },
         { key: 'byte_avg', value: '巨量指数（头条）' },
         { key: 'douyin_avg', value: '巨量指数（抖音）' },
-        { key: '360_avg', value: '360指数' }
+        { key: '360_avg', value: '360指数' },
+        { key: 'all_avg', value: '总指数' },
+        { key: 'compare_avg', value: '对比指数' },
+        { key: 'avg_cha', value: '指数对比差值' }
       ]
     }
   },
@@ -238,6 +288,7 @@ export default {
   created(){
     var $this = this;
     $this.searchData.dateValue = $this.getNearDay();
+    $this.searchData.dateValue2 = $this.getOtherDay();
     $this.getBreadcrumbList();
     $this.initData();
   },
@@ -407,6 +458,13 @@ export default {
           formData.starttime = ''
           formData.endtime = ''
         }
+        if ($this.searchData.dateValue2 && $this.searchData.dateValue2.length > 0) {
+          formData.time1 = $this.searchData.dateValue2[0]
+          formData.time2 = $this.searchData.dateValue2[1]
+        } else {
+          formData.time1 = ''
+          formData.time2 = ''
+        }
         const loading = $this.$loading({
           lock: true,
           text: '正在导出内容，请耐心等待……'
@@ -417,7 +475,7 @@ export default {
             if(res.status){
               if (res.data && res.data.length > 0) {
                 const result = []
-                const customData = $this.operateData(res.data);
+                const customData = res.data;
                 customData.forEach((item) => {
                   const itemObj = {}
                   headerSort.forEach((current) => {
@@ -463,6 +521,7 @@ export default {
     resetData(){
         var $this = this;
         $this.searchData.dateValue = $this.getNearDay();
+        $this.searchData.dateValue2 = $this.getOtherDay();
         // $this.searchData.page=1;
         // $this.searchData.limit=50;
         $this.searchResult();
@@ -528,13 +587,21 @@ export default {
         formData.starttime = ''
         formData.endtime = ''
       }
+      if ($this.searchData.dateValue2 && $this.searchData.dateValue2.length > 0) {
+        formData.time1 = $this.searchData.dateValue2[0]
+        formData.time2 = $this.searchData.dateValue2[1]
+      } else {
+        formData.time1 = ''
+        formData.time2 = ''
+      }
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       indices.stats.search(formData).then(response=>{
         console.log(response, '指数列表')
           if(response){
             if(response.status){
               if(response.data){
-                $this.tableData = $this.operateData(response.data);
+                $this.tableData = response.data;
+                $this.tips = response.tip
                 // $this.totalDataNum = response.allcount;
                 setTimeout(()=>{
                   $this.isSearchResult=false;
@@ -579,8 +646,6 @@ export default {
               byte_avg: v.byte_avg,
               douyin_avg: v.douyin_avg,
               '360_avg': v['360_avg'],
-              isStart: idx === 0,
-              end: item.word.length
             })
           })
         }
@@ -602,6 +667,30 @@ export default {
         }
       }
     },
+    diffDateCount() {
+      var $this = this;
+      let aDate = $this.searchData.dateValue[0].split('/')
+      const oDate1 = new Date(aDate[0], aDate[1], aDate[2])
+      aDate = $this.searchData.dateValue[1].split('/')
+      const oDate2 = new Date(aDate[0], aDate[1], aDate[2])
+      const iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24)
+      return iDays
+    },
+    getNextDay(date, day = -1, format='{y}/{m}/{d}') {
+      if (date) {
+        const nDate = new Date(date)
+        nDate.setDate(nDate.getDate() + day)
+        const formatObj = {
+          y: nDate.getFullYear(),
+          m: nDate.getMonth() + 1,
+          d: nDate.getDate()
+        }
+        return format.replace(/{([ymd])+}/g, (result, key) => {
+          const value = formatObj[key]
+          return value.toString().padStart(2, '0')
+        })
+      }
+    },
     // 重置搜索数据
     resetSearchData(){
       var $this = this;
@@ -619,6 +708,10 @@ export default {
     handleCurrentChange(val) {
       this.searchData.page = val;
       this.initPage();
+    },
+    dateChangeHandle() {
+      var $this = this
+      $this.searchData.dateValue2 = $this.getOtherDay();
     },
     getNearDay(){
       const end = new Date();
@@ -640,6 +733,12 @@ export default {
       var startDate = startYear+"/"+startMonth+"/"+startDay;
       var endDate = endYear+"/"+endMonth+"/"+endDay;
       return [startDate,endDate];
+    },
+    getOtherDay() {
+      const dayCount = 0 - this.diffDateCount()
+      const endDay = this.getNextDay(this.searchData.dateValue[0])
+      const startDay = this.getNextDay(endDay, dayCount)
+      return [startDay, endDay]
     },
     // 跳转详情页
     getInfo(row) {},
@@ -813,12 +912,28 @@ export default {
   .item-search{
     float:left;
     padding: 10px 10px 10px 0;
+    span{
+      font-size: 14px;
+      line-height: 28px;
+    }
+    .el-date-editor--daterange.el-input, .el-date-editor--daterange.el-input__inner, .el-date-editor--timerange.el-input, .el-date-editor--timerange.el-input__inner {
+      width: 100% !important
+    }
   }
   .input-panel{
     width: 190px;
   }
   .select-panel{
     width: 150px;
+  }
+}
+.item-text{
+  color: #606266;
+  &.red{
+    color: #f56c6c;
+  }
+  &.green{
+    color: #67c23a;
   }
 }
 </style>
