@@ -60,18 +60,27 @@
                         label="分类"
                         min-width="200"
                         >
+                        <template #default="scope">
+                          <div class="item-text"><span>{{ scope.row['typename'] }}</span></div>
+                        </template>
                       </el-table-column>
                       <el-table-column
                         prop="name"
                         label="搜索词"
                         min-width="180"
                         >
+                        <template #default="scope">
+                          <div class="item-text"><span><i v-if="scope.row.is_other === 1" class="icon-other el-icon-warning"></i>{{ scope.row['name'] }}</span></div>
+                        </template>
                       </el-table-column>
                       <el-table-column
                         prop="sort"
                         label="排序"
                         min-width="180"
                         >
+                        <template #default="scope">
+                          <div class="item-text"><span>{{ scope.row['sort'] }}</span></div>
+                        </template>
                       </el-table-column>
                       <el-table-column
                         v-if="(menuButtonPermit.includes('Keyword_edit')||menuButtonPermit.includes('Keyword_delete'))"
@@ -127,6 +136,9 @@
         </el-form-item>
         <el-form-item label="排序：" :label-width="formLabelWidth">
           <el-input v-model="dialogForm.sort" ref="sort"></el-input>
+        </el-form-item>
+        <el-form-item label="是否有歧义：" :label-width="formLabelWidth">
+          <el-switch v-model="dialogForm.is_other"></el-switch>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -194,7 +206,8 @@ export default {
         id: 0,
         name: "",
         producttype_id: "",
-        sort: 0
+        sort: 0,
+        is_other: false
       }
     }
   },
@@ -503,6 +516,7 @@ export default {
       $this.dialogForm.name = row.name;
       $this.dialogForm.sort = row.sort;
       $this.dialogForm.producttype_id = row.producttype_id;
+      $this.dialogForm.is_other = row.is_other === 1 ? true : false;
     },
     // 保存添加/编辑数据
     saveData() {
@@ -516,6 +530,7 @@ export default {
         result.name = $this.dialogForm.name
         result.sort = $this.dialogForm.sort
         result.producttype_id = $this.dialogForm.producttype_id
+        result.is_other = $this.dialogForm.is_other ? 1 : 0
         result.id = $this.dialogForm.id
         var request = "";
         if ($this.dialogForm.id === 0) {
@@ -552,6 +567,7 @@ export default {
       $this.dialogForm.name = "";
       $this.dialogForm.producttype_id = "";
       $this.dialogForm.sort = 0;
+      $this.dialogForm.is_other = false;
     },
     // 验证是否为空
     validationForm() {
@@ -782,6 +798,35 @@ export default {
   }
   .select-panel{
     width: 150px;
+  }
+}
+.item-text{
+  color: #606266;
+  display: flex;
+  align-items: center;
+  line-height: 0;
+  &.keyword{
+    justify-content: center;
+    span{
+      justify-content: center;
+    }
+  }
+  span{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    line-height: 24px;
+  }
+  .icon-other{
+    font-size: 16px;
+    color: #f65252;
+    margin-right: 6px;
+  }
+  &.red{
+    color: #f65252;
+  }
+  &.green{
+    color: #26bf6a;
   }
 }
 </style>

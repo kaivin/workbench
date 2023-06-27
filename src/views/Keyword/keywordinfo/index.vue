@@ -15,20 +15,23 @@
             <div slot="header">
               <div class="card-header" ref="headerPane">
                 <div class="search-wrap" ref="searchPane">
-                  <div class="item-search">
+                  <div class="item-search" style="width: 230px;">
                     <el-date-picker
                       v-model="searchData.dateValue"
                       @change="searchResult"
                       type="daterange"
-                      format="yyyy/MM/dd"
-                      value-format="yyyy/MM/dd"
+                      format="yyyy-MM-dd"
+                      value-format="yyyy-MM-dd"
                       key="a"
-                      size="mini"
+                      size="small"
                       class="date-range"
                       range-separator="～"
                       start-placeholder="开始日期"
                       end-placeholder="结束日期"
-                      :picker-options="pickerDateRangeMonthOptions">
+                      :picker-options="{
+                        shortcuts: shortcutsMonth,
+                        disabledDate: disabledDate
+                      }">
                     </el-date-picker>
                   </div>
                   <div class="item-search">
@@ -40,9 +43,9 @@
             </div>
             <div v-if="chartData" class="card-content" ref="tableContent">
               <div v-for="(item, index) in chartData" :key="index" class="item-chart">
-                <div class="chart-header">{{ keyword }} - {{ item.typeName }}</div>
+                <div class="chart-header" :style="{color: item.color}">{{ keyword }} - {{ item.typeName }}</div>
                 <div class="chart-wrap">
-                  <lineChart :chart-data="item.data" :id="item.type"></lineChart>
+                  <lineChart :chart-data="item.data" :color="item.color" :id="item.type"></lineChart>
                 </div>
               </div>
             </div>
@@ -56,7 +59,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { indices } from '@/api/keyword'
-import { pickerDateRangeMonthOptions } from "@/utils/index"
+import { shortcutsMonth } from "@/utils/index"
 import lineChart from "../components/lineChart";
 export default {
   name: 'Keyword_keywordinfo',
@@ -73,7 +76,7 @@ export default {
         id: '',
         dateValue: []
       },
-      pickerDateRangeMonthOptions: pickerDateRangeMonthOptions,
+      shortcutsMonth: shortcutsMonth,
       isSearchResult:false,
     }
   },
@@ -91,7 +94,7 @@ export default {
   },
   created(){
     var $this = this;
-    $this.searchData.dateValue = $this.getNearDay();
+    $this.searchData.dateValue = $this.getDefaultDate();
     $this.getRouterQuery()
     $this.getBreadcrumbList();
     $this.initData();
@@ -170,7 +173,7 @@ export default {
     // 重置表单
     resetData(){
         var $this = this;
-        $this.searchData.dateValue = $this.getNearDay();
+        $this.searchData.dateValue = $this.getDefaultDate();
         // $this.searchData.page=1;
         // $this.searchData.limit=50;
         $this.searchResult();
@@ -258,6 +261,7 @@ export default {
                   $this.chartData.push({
                     type: 'all',
                     typeName: '总指数',
+                    color: "#2d4aca",
                     data: chartDataAll
                   })
                   var chartDataBaidu=[];
@@ -271,6 +275,7 @@ export default {
                   $this.chartData.push({
                     type: 'baidu',
                     typeName: '百度指数',
+                    color: "#4e6ef2",
                     data: chartDataBaidu
                   })
                   var chartDataTouTiao=[];
@@ -284,6 +289,7 @@ export default {
                   $this.chartData.push({
                     type: 'toutiao',
                     typeName: '巨量（头条）指数',
+                    color: "#f04142",
                     data: chartDataTouTiao
                   })
                   var chartDataDouyin=[];
@@ -297,6 +303,7 @@ export default {
                   $this.chartData.push({
                     type: 'douyin',
                     typeName: '巨量（抖音）指数',
+                    color: "#fca14b",
                     data: chartDataDouyin
                   })
                   var chartData360=[];
@@ -310,6 +317,7 @@ export default {
                   $this.chartData.push({
                     type: '360',
                     typeName: '360指数',
+                    color: "#1bc550",
                     data: chartData360
                   })
                   setTimeout(()=>{
@@ -347,25 +355,33 @@ export default {
       // $this.searchData.page = 1;
       // $this.searchData.limit = 50;
     },
-    getNearDay(){
-      const end = new Date();
+    getDefaultEndDay() {
       const start = new Date();
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 2);
       // end.setTime(end.getTime());
       // end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
       var startYear = start.getFullYear();
       var startMonth = start.getMonth() +1;
       var startDay = start.getDate();
-      var endYear = end.getFullYear();
-      var endMonth = end.getMonth() + 1;
-      // var endDay = end.getDate()-1;
-      var endDay = end.getDate();
       startMonth = startMonth<10?'0'+startMonth:startMonth;
       startDay = startDay<10?'0'+startDay:startDay;
-      endMonth = endMonth<10?'0'+endMonth:endMonth;
-      endDay = endDay<10?'0'+endDay:endDay;
-      var startDate = startYear+"/"+startMonth+"/"+startDay;
-      var endDate = endYear+"/"+endMonth+"/"+endDay;
+      var startDate = startYear+"-"+startMonth+"-"+startDay;
+      return startDate
+    },
+    disabledDate(time) {
+      const endDate = this.getDefaultEndDay()
+      return time.getTime() > new Date(endDate) || time.getTime() < new Date('2023-06-15')
+    },
+    getDefaultDate() {
+      const endDate = this.getDefaultEndDay()
+      const start = new Date(endDate);
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+      var startYear = start.getFullYear();
+      var startMonth = start.getMonth() +1;
+      var startDay = start.getDate();
+      startMonth = startMonth<10?'0'+startMonth:startMonth;
+      startDay = startDay<10?'0'+startDay:startDay;
+      var startDate = startYear+"-"+startMonth+"-"+startDay;
       return [startDate,endDate];
     }
   }
@@ -376,6 +392,9 @@ export default {
   .item-search{
     float:left;
     padding: 10px 10px 10px 0;
+    .el-date-editor--daterange.el-input, .el-date-editor--daterange.el-input__inner, .el-date-editor--timerange.el-input, .el-date-editor--timerange.el-input__inner {
+      width: 100% !important
+    }
   }
   .input-panel{
     width: 190px;

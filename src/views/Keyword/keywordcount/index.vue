@@ -14,50 +14,65 @@
             <div slot="header">
               <div class="card-header" ref="headerPane">
                 <div class="search-wrap" ref="searchPane">
-                  <div class="item-search" style="width: 240px;">
-                    <el-date-picker
-                      v-model="searchData.dateValue"
-                      @change="dateChangeHandle"
-                      type="daterange"
-                      format="yyyy/MM/dd"
-                      value-format="yyyy/MM/dd"
-                      key="a"
-                      size="mini"
-                      class="date-range"
-                      range-separator="～"
-                      start-placeholder="开始日期"
-                      end-placeholder="结束日期"
-                      :picker-options="pickerDateRangeMonthOptions">
-                    </el-date-picker>
-                  </div>
-                  <div class="item-search">
-                    <el-checkbox v-model="isCheck" label="日期对比" size="mini" @change="checkChange" style="margin-top: 5px;margin-bottom:4px;" />
-                  </div>
-                  <div v-if="isCheck" class="item-search" style="width: 240px;">
-                    <el-date-picker
-                      v-model="searchData.dateValue2"
-                      @change="searchResult"
-                      type="daterange"
-                      format="yyyy/MM/dd"
-                      value-format="yyyy/MM/dd"
-                      key="a"
-                      size="mini"
-                      class="date-range"
-                      range-separator="～"
-                      start-placeholder="开始日期"
-                      end-placeholder="结束日期"
-                      :picker-options="pickerDateRangeMonthOptions">
-                    </el-date-picker>
+                  <div class="item-search flex-box">
+                    <div class="item-label">时间选择：</div>
+                    <div class="item-date-range flex-box">
+                      <div class="item-change">
+                        <span v-for="(item, index) in dateList" :key="index" :class="item.active ? 'active' : ''" @click="checkDate(item)">{{ item.label }}</span>
+                      </div>
+                      <div v-if="currentDateCount < 0" class="item-date flex-box">
+                        <div class="before-date" style="width: 220px;">
+                          <el-date-picker
+                            v-model="searchData.dateValue"
+                            @change="dateChangeHandle"
+                            type="daterange"
+                            format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd"
+                            key="a"
+                            size="small"
+                            class="date-range"
+                            range-separator="～"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :picker-options="{
+                              shortcuts: shortcutsMonth,
+                              disabledDate: disabledDate
+                            }">
+                          </el-date-picker>
+                        </div>
+                        <div class="center">环比</div>
+                        <div class="after-date" style="width: 220px;">
+                          <el-date-picker
+                            v-model="searchData.dateValue2"
+                            @change="searchResult"
+                            type="daterange"
+                            format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd"
+                            key="a"
+                            size="small"
+                            class="date-range"
+                            range-separator="～"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :picker-options="{
+                              shortcuts: shortcutsMonth,
+                              disabledDate: disabledDate
+                            }">
+                          </el-date-picker>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div class="item-search">
                     <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                     <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                     <el-button type="primary" size="small" class="derived" @click="showExportDialog"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出数据</el-button>
-                    <p style="display: inline-block; font-size: 14px; color: #999;margin-left: 12px;">{{ tips }}</p>
+                    <p style="display: inline-block; font-size: 14px; color: #999;margin-left: 12px;">注：2023-06-15前无数据，每天凌晨抓取前天的数据</p>
                   </div>
                 </div>
               </div>
             </div>
+            <p style="font-size: 14px; line-height: 16px; color: #999;margin-bottom: 15px;">当前数据日期范围：{{ searchDate[0] }} 至 {{ searchDate[1] }}；环比数据日期范围：{{ compareDate[0] }} 至 {{ compareDate[1] }}</p>
             <div class="card-content" ref="tableContent">
               <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
                 <div class="table-mask"></div>
@@ -65,7 +80,6 @@
                       ref="simpleTable"
                       :data="tableData"
                       tooltip-effect="dark"
-                      stripe
                       class="SiteTable"
                       style="width: 100%"
                       :style="'min-height:'+tableHeight+'px;'"
@@ -77,91 +91,159 @@
                         prop="name"
                         align="center"
                         label="搜索词"
-                        min-width="180"
+                        min-width="140"
                         >
                         <template #default="scope">
-                          <div class="item-text">{{ scope.row['name'] }}</div>
+                          <div class="item-text keyword"><span><el-tooltip class="item" :offset="5" :visible-arrow="false" effect="light" content="该搜索词存在歧义，数据可能不准确" placement="top-start">
+                            <i v-if="scope.row.is_other === 1" class="icon-other el-icon-warning"></i>
+    </el-tooltip>{{ scope.row['name'] }}</span></div>
                         </template>
                       </el-table-column>
-                      <el-table-column
-                        prop="baidu_avg"
-                        label="百度指数"
-                        align="center"
-                        sortable
-                        min-width="180"
-                        >
-                        <template #default="scope">
-                          <div class="item-text">{{ scope.row['baidu_avg'] }}</div>
-                        </template>
+                      <el-table-column label="百度指数" align="center">
+                        <el-table-column
+                          prop="baidu_avg"
+                          label="当前指数"
+                          align="center"
+                          sortable
+                          min-width="140"
+                          class-name="stripe"
+                          >
+                          <template #default="scope">
+                            <div class="item-text center">
+                              <span class="before">{{ scope.row['baidu_avg'] }}</span>
+                              <span v-if="scope.row['baidu_avg_cha'] !== 0" class="after" :class="scope.row['baidu_avg_cha'] > 0 ? 'red' : scope.row['baidu_avg_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['baidu_avg_cha']) }}</span>
+                              <span v-else class="zero"></span>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="compare_baidu_avg"
+                          label="环比指数"
+                          align="center"
+                          sortable
+                          min-width="100"
+                          class-name="stripe"
+                          >
+                          <template #default="scope">
+                            <div class="item-text regular"><span>{{ scope.row['compare_baidu_avg'] }}</span></div>
+                          </template>
+                        </el-table-column>
                       </el-table-column>
-                      <el-table-column
-                        prop="byte_avg"
-                        label="巨量指数（头条）"
-                        align="center"
-                        sortable
-                        min-width="180"
-                        >
-                        <template #default="scope">
-                          <div class="item-text">{{ scope.row['byte_avg'] }}</div>
-                        </template>
+                      <el-table-column label="巨量指数（头条）" align="center">
+                        <el-table-column
+                          prop="byte_avg"
+                          label="当前指数"
+                          align="center"
+                          sortable
+                          min-width="140"
+                          >
+                          <template #default="scope">
+                            <div class="item-text center">
+                              <span class="before">{{ scope.row['byte_avg'] }}</span>
+                              <span v-if="scope.row['byte_avg_cha'] !== 0" class="after" :class="scope.row['byte_avg_cha'] > 0 ? 'red' : scope.row['byte_avg_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['byte_avg_cha']) }}</span>
+                              <span v-else class="zero"></span>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="compare_byte_avg"
+                          label="环比指数"
+                          align="center"
+                          sortable
+                          min-width="100"
+                          >
+                          <template #default="scope">
+                            <div class="item-text regular"><span>{{ scope.row['compare_byte_avg'] }}</span></div>
+                          </template>
+                        </el-table-column>
                       </el-table-column>
-                      <el-table-column
-                        prop="douyin_avg"
-                        label="巨量指数（抖音）"
-                        align="center"
-                        sortable
-                        min-width="180"
-                        >
-                        <template #default="scope">
-                          <div class="item-text">{{ scope.row['douyin_avg'] }}</div>
-                        </template>
+                      <el-table-column label="巨量指数（抖音）" align="center">
+                        <el-table-column
+                          prop="douyin_avg"
+                          label="当前指数"
+                          align="center"
+                          sortable
+                          min-width="140"
+                          class-name="stripe"
+                          >
+                          <template #default="scope">
+                            <div class="item-text center">
+                              <span class="before">{{ scope.row['douyin_avg'] }}</span>
+                              <span v-if="scope.row['douyin_avg_cha'] !== 0" class="after" :class="scope.row['douyin_avg_cha'] > 0 ? 'red' : scope.row['douyin_avg_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['douyin_avg_cha']) }}</span>
+                              <span v-else class="zero"></span>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="compare_douyin_avg"
+                          label="环比指数"
+                          align="center"
+                          sortable
+                          min-width="100"
+                          class-name="stripe"
+                          >
+                          <template #default="scope">
+                            <div class="item-text regular"><span>{{ scope.row['compare_douyin_avg'] }}</span></div>
+                          </template>
+                        </el-table-column>
                       </el-table-column>
-                      <el-table-column
-                        prop="360_avg"
-                        label="360指数"
-                        align="center"
-                        sortable
-                        min-width="180"
-                        >
-                        <template #default="scope">
-                          <div class="item-text">{{ scope.row['360_avg'] }}</div>
-                        </template>
+                      <el-table-column label="360指数" align="center">
+                        <el-table-column
+                          prop="360_avg"
+                          label="当前指数"
+                          align="center"
+                          sortable
+                          min-width="140"
+                          >
+                          <template #default="scope">
+                            <div class="item-text center">
+                              <span class="before">{{ scope.row['360_avg'] }}</span>
+                              <span v-if="scope.row['360_avg_cha'] !== 0" class="after" :class="scope.row['360_avg_cha'] > 0 ? 'red' : scope.row['360_avg_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['360_avg_cha']) }}</span>
+                              <span v-else class="zero"></span>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="compare_360_avg"
+                          label="环比指数"
+                          align="center"
+                          sortable
+                          min-width="100"
+                          >
+                          <template #default="scope">
+                            <div class="item-text regular"><span>{{ scope.row['compare_360_avg'] }}</span></div>
+                          </template>
+                        </el-table-column>
                       </el-table-column>
-                      <el-table-column
-                        prop="all_avg"
-                        label="总指数"
-                        align="center"
-                        sortable
-                        min-width="180"
-                        >
-                        <template #default="scope">
-                          <div v-if="isCheck" :class="['item-text', scope.row.avg_cha > 0 ? 'red' : scope.row.avg_cha < 0 ? 'green' : '']">{{ scope.row.all_avg }}</div>
-                          <div v-else class="item-text">{{ scope.row.all_avg }}</div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        v-if="isCheck"
-                        prop="compare_avg"
-                        label="对比时间范围总指数"
-                        align="center"
-                        sortable
-                        min-width="180"
-                        >
-                        <template #default="scope">
-                          <div :class="['item-text', scope.row.avg_cha > 0 ? 'red' : scope.row.avg_cha < 0 ? 'green' : '']">{{ scope.row.compare_avg }}</div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        v-if="isCheck"
-                        prop="avg_cha"
-                        label="指数对比差值"
-                        align="center"
-                        sortable
-                        min-width="180"
-                        >
-                        <template #default="scope">
-                          <div :class="['item-text', scope.row.avg_cha > 0 ? 'red' : scope.row.avg_cha < 0 ? 'green' : '']">{{ scope.row.avg_cha }}</div>
-                        </template>
+                      <el-table-column label="总指数" align="center">
+                        <el-table-column
+                          prop="avg_cha"
+                          label="当前指数"
+                          align="center"
+                          sortable
+                          min-width="140"
+                          class-name="stripe-all"
+                          >
+                          <template #default="scope">
+                            <div class="item-text center">
+                              <span class="before">{{ scope.row['all_avg'] }}</span>
+                              <span v-if="scope.row['avg_cha'] !== 0" class="after" :class="scope.row['avg_cha'] > 0 ? 'red' : scope.row['avg_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['avg_cha']) }}</span>
+                              <span v-else class="zero"></span>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="compare_avg"
+                          label="环比指数"
+                          align="center"
+                          sortable
+                          min-width="100"
+                          class-name="stripe-all"
+                          >
+                          <template #default="scope">
+                            <div class="item-text regular"><span>{{ scope.row['compare_avg'] }}</span></div>
+                          </template>
+                        </el-table-column>
                       </el-table-column>
                       <el-table-column
                         v-if="menuButtonPermit.includes('Keyword_keywordinfo')"
@@ -207,10 +289,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import { indices } from '@/api/keyword'
-import { pickerDateRangeMonthOptions } from "@/utils/index"
+import { shortcutsMonth } from "@/utils/index"
 import ExportModal from '@/components/Excel/exportModal.vue'
 import { jsonToSheetXlsx } from '@/components/Excel/Export2Excel'
-import { deepClone } from '@/utils'
 export default {
   name: 'Keyword_keywordcount',
   components: {
@@ -221,7 +302,6 @@ export default {
       breadcrumbList:[],
       menuButtonPermit:[],
       operationsWidth: "",
-      isCheck: false,
       tips: '',
       pagerCount:5,
       pageSizeList:[50, 100, 150, 200],
@@ -229,7 +309,10 @@ export default {
       tableData:[],
       tableHeight:200,
       selectedData: [],
-      pickerDateRangeMonthOptions: pickerDateRangeMonthOptions,
+      shortcutsMonth: shortcutsMonth,
+      currentDateCount: 0,
+      searchDate: [],
+      compareDate: [],
       searchData:{
         dateValue: [],
         dateValue2: [],
@@ -258,14 +341,31 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
+      dateList: [
+        {label: '最新', value: 0, active: true },
+        {label: '7天', value: 7, active: false },
+        {label: '30天', value: 30, active: false },
+        {label: '近3月', value: 90, active: false },
+        {label: '自定义', value: -1, active: false },
+      ],
       isSearchResult:false,
       fieldList: [
         { key: 'name', value: '搜索词' },
         { key: 'baidu_avg', value: '百度指数' },
+        { key: 'compare_baidu_avg', value: '百度环比指数' },
+        { key: 'baidu_avg_cha', value: '百度指数差值' },
         { key: 'byte_avg', value: '巨量指数（头条）' },
+        { key: 'compare_byte_avg', value: '头条环比指数' },
+        { key: 'byte_avg_cha', value: '头条指数差值' },
         { key: 'douyin_avg', value: '巨量指数（抖音）' },
+        { key: 'compare_douyin_avg', value: '抖音环比指数' },
+        { key: 'douyin_avg_cha', value: '抖音指数差值' },
         { key: '360_avg', value: '360指数' },
-        { key: 'all_avg', value: '总指数' }
+        { key: 'compare_360_avg', value: '360环比指数' },
+        { key: '360_avg_cha', value: '360指数差值' },
+        { key: 'all_avg', value: '总指数' },
+        { key: 'compare_avg', value: '环比总指数' },
+        { key: 'avg_cha', value: '总指数差值' }
       ]
     }
   },
@@ -308,8 +408,10 @@ export default {
   },
   created(){
     var $this = this;
-    $this.searchData.dateValue = $this.getNearDay();
+    $this.searchData.dateValue = $this.getDefaultDate();
+    $this.searchDate = $this.getDefaultDate();
     $this.searchData.dateValue2 = $this.getOtherDay();
+    $this.compareDate = $this.getOtherDay();
     $this.getBreadcrumbList();
     $this.initData();
   },
@@ -404,7 +506,7 @@ export default {
       var headerHeight = $this.$refs.headerPane.offsetHeight;
       var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
-      $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40-45;
+      $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40-45-31;
       $this.getBrowserType();
         setTimeout(function() {
           $this.setScrollDom();
@@ -541,8 +643,10 @@ export default {
     // 重置表单
     resetData(){
         var $this = this;
-        $this.searchData.dateValue = $this.getNearDay();
+        $this.searchData.dateValue = $this.getDefaultDate();
+        $this.searchDate = $this.getDefaultDate();
         $this.searchData.dateValue2 = $this.getOtherDay();
+        $this.compareDate = $this.getOtherDay();
         // $this.searchData.page=1;
         // $this.searchData.limit=50;
         $this.searchResult();
@@ -631,11 +735,12 @@ export default {
                   $this.setTableHeight();
                 })
               }
-              if ($this.isCheck && response.msg) {
-                $this.$notify({
+              if (response.msg) {
+                $this.$message({
                   title: '提示',
                   message: response.msg,
-                  type: 'warning'
+                  type: 'warning',
+                  duration:6000
                 });
               }
             }else{
@@ -697,14 +802,14 @@ export default {
     },
     diffDateCount() {
       var $this = this;
-      let aDate = $this.searchData.dateValue[0].split('/')
+      let aDate = $this.searchData.dateValue[0].split('-')
       const oDate1 = new Date(aDate[0], aDate[1], aDate[2])
-      aDate = $this.searchData.dateValue[1].split('/')
+      aDate = $this.searchData.dateValue[1].split('-')
       const oDate2 = new Date(aDate[0], aDate[1], aDate[2])
       const iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24)
       return iDays
     },
-    getNextDay(date, day = -1, format='{y}/{m}/{d}') {
+    getNextDay(date, day = -1, format='{y}-{m}-{d}') {
       if (date) {
         const nDate = new Date(date)
         nDate.setDate(nDate.getDate() + day)
@@ -737,54 +842,70 @@ export default {
       this.searchData.page = val;
       this.initPage();
     },
-    checkChange() {
-      if (this.isCheck) {
-        const a = [
-        { key: 'compare_avg', value: '对比指数' },
-        { key: 'avg_cha', value: '指数对比差值' }]
-        this.fieldList.push(...a)
-        this.searchResult()
-      } else {
-        const result = deepClone(this.fieldList)
-        this.fieldList = []
-        result.forEach(item => {
-          if (item.key !== 'compare_avg' && item.key !== 'avg_cha') {
-            this.fieldList.push(item)
-          }
-        })
-      }
-    },
     dateChangeHandle() {
       var $this = this
+      $this.searchDate = $this.searchData.dateValue
       $this.searchData.dateValue2 = $this.getOtherDay(); 
+      $this.compareDate = $this.getOtherDay();
       $this.searchResult()
     },
-    getNearDay(){
-      const end = new Date();
-      const start = new Date();
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-      // end.setTime(end.getTime());
-      // end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
-      var startYear = start.getFullYear();
-      var startMonth = start.getMonth() +1;
-      var startDay = start.getDate();
-      var endYear = end.getFullYear();
-      var endMonth = end.getMonth() + 1;
-      // var endDay = end.getDate()-1;
-      var endDay = end.getDate();
-      startMonth = startMonth<10?'0'+startMonth:startMonth;
-      startDay = startDay<10?'0'+startDay:startDay;
-      endMonth = endMonth<10?'0'+endMonth:endMonth;
-      endDay = endDay<10?'0'+endDay:endDay;
-      var startDate = startYear+"/"+startMonth+"/"+startDay;
-      var endDate = endYear+"/"+endMonth+"/"+endDay;
-      return [startDate,endDate];
+    checkDate(item) {
+      this.dateList.forEach((v) => {
+        v.active = false
+        if (v.value === item.value) {
+          v.active = true
+          this.currentDateCount = v.value
+          if (item.value >= 0) {
+            this.searchDate = this.getDefaultDate();
+            this.searchData.dateValue = this.getDefaultDate();
+            this.searchData.dateValue2 = this.getOtherDay();
+            this.compareDate = this.getOtherDay();
+            this.searchResult();
+          } else {
+            this.searchDate = this.searchData.dateValue
+            this.compareDate = this.getOtherDay()
+            this.searchData.dateValue = []
+            this.searchData.dateValue2 = []
+          }
+        }
+      })
     },
     getOtherDay() {
       const dayCount = 0 - this.diffDateCount()
       const endDay = this.getNextDay(this.searchData.dateValue[0])
       const startDay = this.getNextDay(endDay, dayCount)
       return [startDay, endDay]
+    },
+    getDefaultDate() {
+      const endDate = this.getDefaultEndDay()
+      const start = new Date(endDate);
+      if (this.currentDateCount > 0) {
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * this.currentDateCount);
+      }
+      var startYear = start.getFullYear();
+      var startMonth = start.getMonth() +1;
+      var startDay = start.getDate();
+      startMonth = startMonth<10?'0'+startMonth:startMonth;
+      startDay = startDay<10?'0'+startDay:startDay;
+      var startDate = startYear+"-"+startMonth+"-"+startDay;
+      return [startDate,endDate];
+    },
+    getDefaultEndDay() {
+      const start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 2);
+      // end.setTime(end.getTime());
+      // end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
+      var startYear = start.getFullYear();
+      var startMonth = start.getMonth() +1;
+      var startDay = start.getDate();
+      startMonth = startMonth<10?'0'+startMonth:startMonth;
+      startDay = startDay<10?'0'+startDay:startDay;
+      var startDate = startYear+"-"+startMonth+"-"+startDay;
+      return startDate
+    },
+    disabledDate(time) {
+      const endDate = this.getDefaultEndDay()
+      return time.getTime() > new Date(endDate) || time.getTime() < new Date('2023-06-15')
     },
     // 跳转详情页
     getInfo(row) {},
@@ -954,6 +1075,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.el-table.SiteTable .table-button .el-button{
+  margin: 0;
+}
 .search-wrap{
   .item-search{
     float:left;
@@ -968,6 +1092,46 @@ export default {
     .el-checkbox__label{
       padding-left: 6px;
     }
+
+    .item-label{
+      line-height: 32px;
+      font-size: 14px;
+      color: #606266;
+    }
+    
+    .item-date-range{
+          .item-change{
+              float:left;
+              span{
+                  float:left;
+                  border:1px solid #e1e3ea;
+                  font-size:14px;
+                  color:#555555;
+                  padding:5px 15px;
+                  line-height:20px;
+                  margin-left:-1px;
+                  cursor:pointer;
+                  &.active,&:hover{
+                      color:#044bff;
+                      border:1px solid #044bff;
+                      background:#e0e9ff;
+                      position:relative;
+                      z-index:2;
+                  }
+              }
+          }
+          .item-date{
+              float:left;
+              vertical-align:top;
+              margin-left: 10px;
+              .center{
+                line-height: 32px;
+                font-size: 14px;
+                color: #606266;
+                padding: 0 12px;
+              }
+          }
+      }
   }
   .input-panel{
     width: 190px;
@@ -976,13 +1140,114 @@ export default {
     width: 150px;
   }
 }
+.el-table.SiteTable svg{
+  font-size: 20px;
+}
 .item-text{
   color: #606266;
-  &.red{
-    color: #f56c6c;
+  display: flex;
+  align-items: center;
+  line-height: 0;
+  &.regular{
+    color: #999;
   }
-  &.green{
-    color: #67c23a;
+  &.keyword{
+    justify-content: center;
+    span{
+      justify-content: center;
+    }
   }
+  &.center{
+    justify-content: center;
+    span{
+      flex: none;
+      display: inline-flex;
+      justify-content: center;
+      line-height: 24px;
+    }
+  }
+  span{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 24px;
+    .svg-i{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    &.before{
+      justify-content: flex-end;
+      color: #111;
+    }
+    &.after{
+      justify-content: flex-start;
+      margin-left: 4px;
+    }
+    &.zero{
+      padding-left: 6px;
+      position: relative;
+      &:before{
+        content: '';
+        height: 2px;
+        width: 6px;
+        background-color: #999;
+        position: absolute;
+        left: 6px;
+        top: 0;
+      }
+    }
+    &.default{
+      padding-left: 10px;
+      color: #999;
+    }
+    &.red{
+      padding-left: 10px;
+      color: #f97979;
+      background: url(../../../assets/up.png) left center no-repeat;
+      background-size: auto 10px;
+    }
+    &.green{
+      padding-left: 10px;
+      color: #6dd29a;
+      background: url(../../../assets/down.png) left center no-repeat;
+      background-size: auto 10px;
+    }
+  }
+  .icon-other{
+    font-size: 16px;
+    color: #f97979;
+    margin-right: 6px;
+    cursor: pointer;
+  }
+}
+</style>
+<style>
+
+.el-table__cell.stripe{
+  background: #fafafa;
+}
+
+.el-table__cell.stripe-all{
+  background: #f2f6f9;
+}
+
+.el-table--border th.el-table__cell{
+  border-bottom: 1px solid #ebeff1;
+}
+.el-table--border .el-table__cell {
+    border-right: 1px solid #ebeff1;
+}
+.el-table th.el-table__cell{
+  font-weight: normal;
+  color: #111;
+}
+.el-tooltip__popper.is-light{
+  color: #606266!important;
+}
+.el-message{
+  max-width: 380px;
+  min-width: 380px!important;
 }
 </style>

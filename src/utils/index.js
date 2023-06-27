@@ -204,8 +204,7 @@ export const pickerDayRangeOptions = {
 /**
  * 日期选择：最近一个月、上月、本月
  */
- export const pickerDateRangeMonthOptions = {
-    shortcuts: [{
+ export const shortcutsMonth = [{
           text: '最近一个月',
           onClick(picker) {
             const end = new Date();
@@ -274,7 +273,7 @@ export const pickerDayRangeOptions = {
         picker.$emit('pick', [start, end]);
       }
     }]
-}
+
 
 /**
  * Parse the time to string

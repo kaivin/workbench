@@ -22,7 +22,11 @@
       id: {
         type: String, 
         default: ''
-      }
+      },
+      color: {
+        type: String, 
+        default: ''
+      },
     },
     destroyed(){
       window.removeEventListener('resize',this.echartsSize);
@@ -58,13 +62,13 @@
               itemObj.lineStyle={
               normal: {
                   width: 1,
-                  color:'#0970ff', // 线条颜色
+                  color: $this.color, // 线条颜色
               },
               };
               itemObj.itemStyle={
                   normal: {
                       color: '#fff',
-                      borderColor:'#0970ff', // 折点颜色
+                      borderColor:$this.color, // 折点颜色
                       borderWidth: 1
                   },
               };
@@ -72,7 +76,7 @@
                   color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                       {
                       offset: 0,
-                      color:'#0970ff',
+                      color:$this.color,
                       opacity:1
                       },
                       {
@@ -120,7 +124,7 @@
                           return `<div class="toolDiv">
                                   <div class="tooltitle">${params[0].name}</div>
                                   <div class="bar clearfix">
-                                  <span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                                  <span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${$this.color};"></span>
                                   <span>${params[0].seriesName}：</span>
                                   <span>${params[0].data}</span>
                                   </div>
