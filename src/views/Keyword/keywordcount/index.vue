@@ -86,11 +86,12 @@
                       row-key="id"
                       @selection-change="handleSelectionChange"
                       >
-                      <el-table-column type="selection" align="center" width="48"></el-table-column>
+                      <el-table-column type="selection" align="center" width="48" fixed="left"></el-table-column>
                       <el-table-column
                         prop="name"
                         align="center"
                         label="搜索词"
+                        fixed="left"
                         min-width="140"
                         >
                         <template #default="scope">
@@ -121,7 +122,7 @@
                           label="环比指数"
                           align="center"
                           sortable
-                          min-width="100"
+                          min-width="110"
                           class-name="stripe"
                           >
                           <template #default="scope">
@@ -150,7 +151,7 @@
                           label="环比指数"
                           align="center"
                           sortable
-                          min-width="100"
+                          min-width="110"
                           >
                           <template #default="scope">
                             <div class="item-text regular"><span>{{ scope.row['compare_byte_avg'] }}</span></div>
@@ -179,7 +180,7 @@
                           label="环比指数"
                           align="center"
                           sortable
-                          min-width="100"
+                          min-width="110"
                           class-name="stripe"
                           >
                           <template #default="scope">
@@ -208,7 +209,7 @@
                           label="环比指数"
                           align="center"
                           sortable
-                          min-width="100"
+                          min-width="110"
                           >
                           <template #default="scope">
                             <div class="item-text regular"><span>{{ scope.row['compare_360_avg'] }}</span></div>
@@ -237,7 +238,7 @@
                           label="环比指数"
                           align="center"
                           sortable
-                          min-width="100"
+                          min-width="110"
                           class-name="stripe-all"
                           >
                           <template #default="scope">
@@ -335,9 +336,11 @@ export default {
         scrollDom:null,
         tableHeaderFixedDom:null,
         tableFixedRightDom:null,
+        tableFixedLeftDom:null,
         fixedTopHeight:0,
         tableheaderHeight:0,
         fixedRightWidth:0,
+        fixedLeftWidth:0,
         tableBottom:0,
         clientHeight:0,
       },
@@ -907,8 +910,6 @@ export default {
       const endDate = this.getDefaultEndDay()
       return time.getTime() > new Date(endDate) || time.getTime() < new Date('2023-06-15')
     },
-    // 跳转详情页
-    getInfo(row) {},
     // 设置横向滚动条相关DOM数据
     setScrollDom(){
       var $this = this;
@@ -929,6 +930,7 @@ export default {
       var scrollDom = document.querySelector(".SiteTable .el-table__body-wrapper");
       var tableHeaderFixedDom = document.querySelector(".SiteTable .el-table__header-wrapper");
       var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+      var tableFixedLeftDom = document.querySelector(".el-table__fixed");
       $this.scrollPosition.width = maxWidth;
       $this.scrollPosition.left = leftWidth;
       $this.scrollPosition.insetWidth = insetWidth;
@@ -947,6 +949,9 @@ export default {
       if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
          $this.scrollTable.tableFixedRightDom = tableFixedRightDom;
       }
+      if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
+         $this.scrollTable.tableFixedLeftDom = tableFixedLeftDom;
+      }
       var fixedHeaderObj = $this.scrollTable.tableHeaderFixedDom.getBoundingClientRect();
       // 获取表格头的高度
       $this.scrollTable.tableheaderHeight = fixedHeaderObj.height;
@@ -954,6 +959,11 @@ export default {
          var fixedRightObj = $this.scrollTable.tableFixedRightDom.getBoundingClientRect();
          // 获取右侧固定列的总宽度
          $this.scrollTable.fixedRightWidth = fixedRightObj.width;
+      }
+      if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
+         var fixedLeftObj = $this.scrollTable.tableFixedLeftDom.getBoundingClientRect();
+         // 获取左侧侧固定列的总宽度
+         $this.scrollTable.fixedLeftWidth = fixedLeftObj.width;
       }
       var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
       $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+54+20;
@@ -963,20 +973,15 @@ export default {
         var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;";
         $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
         document.querySelector(".table-mask").style = tableHeaderStyle;
-        var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";        
+        var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+        var tableStyle4 = "width:"+$this.scrollTable.fixedLeftWidth+"px;";
         if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
           document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
         }
-        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+54+20;
-      }
-      // 视窗宽高改变时需要设置默认滚动条的位置
-      if($this.totalDataNum>50){
-        var scrTop = $this.$refs.scrollDom.scrollTop;
-        if(scrTop+$this.scrollTable.clientHeight>=$this.scrollTable.tableBottom-20){
-          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-10;
-        }else{
-          $this.scrollPosition.fixedBottom = 20;
+        if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
+          document.querySelector(".SiteTable .el-table__fixed .el-table__fixed-header-wrapper").style=tableStyle4;
         }
+        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+54+20;
       }
     },
     // 竖向滚动条滚动事件
@@ -985,6 +990,7 @@ export default {
       if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
         var scrTop = event.target.scrollTop;
         var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+        var tableFixedLeftDom = document.querySelector(".SiteTable .el-table__fixed");
         if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
           $this.scrollPosition.isFixed = true;
           var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
@@ -993,11 +999,15 @@ export default {
           var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
           var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
           var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+          var tableStyle4 = "width:"+$this.scrollTable.fixedLeftWidth+"px;";
           document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
-          
           if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
             document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
             document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          }
+          if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed .el-table__fixed-body-wrapper").style=tableStyle2;
+            document.querySelector(".SiteTable .el-table__fixed .el-table__fixed-header-wrapper").style=tableStyle4;
           }
         }else{// 头部需要变为正常
           $this.scrollPosition.isFixed = false;
@@ -1006,15 +1016,12 @@ export default {
           var tableStyle1 = "padding-top:0";
           document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
           var tableStyle3 = "width:auto";
+          var tableStyle4 = "width:auto";
           if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
             document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
           }
-        }
-        if($this.totalDataNum>50){
-          if(scrTop+$this.scrollTable.clientHeight>=$this.scrollTable.tableBottom-20){
-            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-10;
-          }else{
-            $this.scrollPosition.fixedBottom = 20;
+          if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed .el-table__fixed-header-wrapper").style=tableStyle4;
           }
         }
       }
