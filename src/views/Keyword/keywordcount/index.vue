@@ -346,9 +346,9 @@ export default {
       },
       dateList: [
         {label: '最新', value: 0, active: true },
-        {label: '7天', value: 7, active: false },
-        {label: '30天', value: 30, active: false },
-        {label: '近3月', value: 90, active: false },
+        {label: '7天', value: 6, active: false },
+        {label: '30天', value: 29, active: false },
+        {label: '近3月', value: 89, active: false },
         {label: '自定义', value: -1, active: false },
       ],
       isSearchResult:false,
