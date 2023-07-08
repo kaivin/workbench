@@ -2395,6 +2395,8 @@ export default {
           }
         }
       });
+      // 这里保留两位小数
+      itemScoreObj.value = itemScoreObj.value.toFixed(2)
       itemData.dealScore.push(itemScoreObj);
       itemData.randomStr1 = randomString(4);
       itemData.randomStr2 = randomString(4);
