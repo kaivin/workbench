@@ -1,5 +1,5 @@
 ﻿import { getUserList,userAdd,userEdit,userDelete,userShowHide,userResetPwd,userAllotedRole,userCanAllotRole,userAllotRole,userCanDepart,userNameEdit,pwdEdit,
-  contactEdit,
+  contactEdit,cometimeEdit,
   getBrandList,
   changeUserLogin,userPersonother,getUserPersonother,userPersonotherAdd,userPersonotherEdit,userPersonotherExportlink,getAccountList,transAccount,getMoveInqury} from '@/api/user'
 
@@ -192,6 +192,16 @@ const actions = {
   contactEditAction({ commit, state },data) {
     return new Promise((resolve, reject) => {
         contactEdit(data).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // 入职时间修改
+  cometimeEditAction({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+        cometimeEdit(data).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)

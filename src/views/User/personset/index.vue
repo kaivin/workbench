@@ -5,7 +5,7 @@
             <th colspan="2">基本信息</th>
         </tr>
         <tr>
-            <td style="min-width: 100px;width: 100px;"><span>头像：</span></td>
+            <td style="min-width: 120px;width: 120px;"><span>头像：</span></td>
             <td>
               <template v-if="menuButtonPermit.includes('User_headimg')">
                 <el-upload
@@ -25,7 +25,7 @@
             </td>
         </tr>
         <tr>
-            <td style="min-width: 100px;width: 100px;"><span>姓名：</span></td>
+            <td style="min-width: 120px;width: 120px;"><span>姓名：</span></td>
             <td>{{userData.name}}</td>
         </tr>
         <tr v-if="userData.workname&&userData.workname!=''">
@@ -36,9 +36,20 @@
             <td><span>职称：</span></td>
             <td>{{userData.postionname}}</td>
         </tr>
-        <tr v-if="userData.depart&&userData.depart!=''">
+        <tr>
             <td><span>部门：</span></td>
-            <td>{{userData.depart}}</td>
+            <td>
+              <template v-if="userData.depart&&userData.depart!=''">
+                {{userData.depart}}
+              </template>
+              <template v-else>
+                电子商务部
+              </template>
+            </td>
+        </tr>
+        <tr>
+            <td><span>入职时间：</span></td>
+            <td><span v-if="userData.comtime&&userData.comtime!=''" style="margin-right: 15px;" >{{userData.comtime}}</span><el-button type="primary" size="mini" icon="el-icon-edit" v-on:click="editComeTime" v-if="(menuButtonPermit.includes('User_persontime'))">修改入职时间</el-button> </td>
         </tr>
         <tr>
             <td><span>用户名：</span></td>
@@ -181,6 +192,26 @@
         </span>
       </template>
     </el-dialog>
+    <el-dialog title="修改入职时间" v-if="(menuButtonPermit.includes('User_persontime'))" custom-class="add-edit-dialog" :visible.sync="dialogComeTimeVisible" width="480px">
+      <el-form :model="dialogComeTimeForm">
+          <el-form-item label="入职时间：" :label-width="formLabelWidth">
+            <el-date-picker
+              v-model="dialogComeTimeForm.comtime"
+              type="date"
+              ref="comtime"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
+              placeholder="选择入职时间">
+            </el-date-picker>
+          </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogComeTimeVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveComeTimeData">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -221,6 +252,11 @@ export default {
           code:"",
           newpassword:"",
           newpassword1:"",
+        },
+        dialogComeTimeVisible: false,
+        dialogComeTimeForm: {
+          comtime: '',
+          id: ''
         },
         txtCode:"获取验证码",
         isSend: false,
@@ -901,6 +937,37 @@ export default {
             return false;
         }
     },
+
+    editComeTime(){
+      this.dialogComeTimeForm.comtime = this.userData.comtime;
+      this.dialogComeTimeForm.id = this.userData.id;
+      this.dialogComeTimeVisible = true;
+    },
+    // 修改入职时间保存
+    saveComeTimeData() {
+      var $this = this;
+      var formData = {};
+      formData.id = $this.dialogComeTimeForm.id;
+      formData.comtime = $this.dialogComeTimeForm.comtime;
+      $this.$store.dispatch('user/cometimeEditAction', formData).then(response=>{
+        if(response.status){
+            $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+            });
+            $this.dialogComeTimeVisible = false;            
+            $this.initData();
+        }else{
+            $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+            });
+        }
+      });
+      
+    }
   }
 }
 </script>

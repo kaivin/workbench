@@ -101,6 +101,14 @@ export function contactEdit(data) {
     data
   });
 }
+// 个人中心修改入职时间
+export function cometimeEdit(data) {
+  return request({
+    url: "/hxindex/User/persontime",
+    method: "POST",
+    data
+  });
+}
 
 // 获取品牌数据
 export function getBrandList() {

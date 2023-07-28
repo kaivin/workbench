@@ -43,7 +43,9 @@
             </div>
             <div class="loginFrFoot" v-if='isTip'>
                  <strong>请注意！</strong>
-                 <p>用人单位与劳动者可以在劳动合同中约定保守用人单位的商业秘密和与知识产权相关的保密事项</p>
+                 <p>1. 本工作台仅供园区日常管理使用，因技术原因，各租赁企业在系统内均以部门形式展示，使用人劳动关系以用人单位与劳动者签订的劳动合同为准，本工作台不具备法律效力。</p>
+                 <p>2. 各租赁企业可根据需要设置相关模块，并自行对数据负责。</p>
+                 <p>3. 用人单位与劳动者可以在劳动合同中约定保守用人单位的商业秘密和与知识产权相关的保密事项。</p>
                  <span class="CloseTip" v-on:click="CloseTip">关闭提示</span>
             </div>
             <el-dialog title="忘记密码" custom-class="add-edit-dialog" :visible.sync="dialogForgetPwdVisible" width="480px">
