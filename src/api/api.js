@@ -288,6 +288,15 @@ export function getCnDepart() {
     method: "POST"
   });
 }
+
+// 中文数据分析那里获取中文部门
+export function getCnDepartAnalysis() {
+  return request({
+    url: "/hxindex/Api/chinacountdepart",
+    method: "POST"
+  });
+}
+
 // 获取中文部门下的组员​
 export function getCnPersonlist(data) {
   return request({

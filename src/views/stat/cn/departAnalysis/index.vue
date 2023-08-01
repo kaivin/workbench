@@ -405,7 +405,7 @@ export default {
     // 获取部门数据
     getDepart(){
       var $this = this;
-      $this.$store.dispatch('api/getCnDepartAction', null).then(res=>{
+      $this.$store.dispatch('api/getCnDepartAnalysisAction', null).then(res=>{
         var groupList = [];
         res.data.forEach(function(item,index){
           var itemData = {};
@@ -678,13 +678,27 @@ export default {
       var groupList = $this.groupList;
       var groupName = "";
       var fontArr = [];
+      var font2Arr = [];
       groupList.forEach(function(item,index){
         if(item.isOn){
-          var font = item.name.substring(2,3);
-          fontArr.push(font);
+          if(item.name.indexOf('电商') > -1){
+            var font = item.name.substring(2,3);
+            fontArr.push(font);
+          }else{
+            font2Arr.push(item.name);
+          }
         }
       })
-      groupName = "电商"+fontArr.join("、")+"部";
+      
+      if(fontArr.length > 0){
+        groupName += "电商"+fontArr.join("、")+"部";
+      }
+      if(fontArr.length > 0 && font2Arr.length > 0){
+        groupName += '、'
+      }
+      if(font2Arr.length > 0){
+        groupName += font2Arr.join("、");
+      }
       $this.groupName = groupName;
     },
     // 日期维度点击事件

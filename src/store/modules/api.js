@@ -69,6 +69,7 @@
   getEnproducttimecompare,
   getEnAddfocusproductone,
   getEnfocusproductcance,
+  getCnDepartAnalysis
 } from '@/api/api'
 //import { reject, resolve } from 'core-js/fn/promise';
 import Cookies from 'js-cookie';
@@ -749,6 +750,16 @@ const actions = {
     getCnDepartAction({ commit, state },data) {
       return new Promise((resolve, reject) => {
         getCnDepart().then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 获取中文部门
+    getCnDepartAnalysisAction({ commit, state },data) {
+      return new Promise((resolve, reject) => {
+        getCnDepartAnalysis().then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)
