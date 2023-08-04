@@ -163,11 +163,26 @@
                             </div>
                             <div class="team-headerItem">
                                   <span class="require">备注：</span>
+
                                   <el-input
                                       size="mini"
-                                      v-model="searchData.name"
-                                      :class="searchData.name!=''?'el-xzstate':''"
-                                      placeholder="备注1、备注2、备注3"
+                                      v-model="searchData.remark1"
+                                      :class="searchData.remark1!=''?'el-xzstate row-input':'row-input'"
+                                      placeholder="备注1"
+                                      clearable>
+                                  </el-input>
+                                  <el-input
+                                      size="mini"
+                                      v-model="searchData.remark2"
+                                      :class="searchData.remark2!=''?'el-xzstate row-input':'row-input'"
+                                      placeholder="备注2"
+                                      clearable>
+                                  </el-input>
+                                  <el-input
+                                      size="mini"
+                                      v-model="searchData.remark3"
+                                      :class="searchData.remark3!=''?'el-xzstate row-input':'row-input'"
+                                      placeholder="备注3"
                                       clearable>
                                   </el-input>
                             </div>
@@ -657,7 +672,9 @@ export default {
         continent:'',
         material:'',
         domain:'',
-        name:'',
+        remark1:'',
+        remark2: '',
+        remark3: '',
         url:''
       },
       pickerRangeOptions: pickerDayRangeOptions,
@@ -1014,7 +1031,9 @@ export default {
       $this.searchData.continent="";
       $this.searchData.material="";
       $this.searchData.domain='';
-      $this.searchData.name='';
+      $this.searchData.remark1='';
+      $this.searchData.remark2='';
+      $this.searchData.remark3='';
       $this.searchData.url='';
       $this.searchData.ennature='';
       $this.searchData.effective=false;
@@ -1066,8 +1085,14 @@ export default {
       if($this.searchData.domain&&$this.searchData.domain!=''){
         searchData.domain = $this.searchData.domain;
       }
-      if($this.searchData.name&&$this.searchData.name!=''){
-        searchData.name = $this.searchData.name;
+      if($this.searchData.remark1&&$this.searchData.remark1!=''){
+        searchData.remark1 = $this.searchData.remark1;
+      }
+      if($this.searchData.remark2&&$this.searchData.remark2!=''){
+        searchData.remark2 = $this.searchData.remark2;
+      }
+      if($this.searchData.remark3&&$this.searchData.remark3!=''){
+        searchData.remark3 = $this.searchData.remark3;
       }
       if($this.searchData.url&&$this.searchData.url!=''){
         searchData.url = $this.searchData.url;
@@ -3911,4 +3936,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.ChinaphoneTwo .group-body .team-panel .team-header .team-headerItem .row-input{
+  margin-left: 5px;
+}
+.ChinaphoneTwo .group-body .team-panel .team-header .team-headerItem .row-input+.row-input{
+  margin-left: 8px;
+}
 </style>

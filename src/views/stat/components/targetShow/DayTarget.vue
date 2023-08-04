@@ -1,5 +1,5 @@
 <template>
-  <div class="rowDayCount">
+  <div class="rowDayCount" :class="lang=='ch'? 'chrowDayCount':''">
     <div class="rowTitle">
       <div class="title-left">
         <h3 class="tit-h3"><span v-if="lang == 'ch'">中文</span><span v-else>英文</span>日目标</h3>
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="rowMain">
-        <div id="dayTarget"></div>
+        <div id="dayTarget" :class="lang=='ch'? 'chDayCountMap':'DayCountMap'"></div>
         <div class="legendFly">
           <span class="legendItem1">目标询盘</span>
           <span class="legendItem2">询盘数量</span>
@@ -410,7 +410,10 @@ export default {
 </script>
 
 <style>
-  #dayTarget{
+  .DayCountMap{
     height: 240px;
+  }
+  .chDayCountMap{
+    height: 300px;
   }
 </style>

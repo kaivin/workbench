@@ -6,13 +6,13 @@
           <div class="filter-title"><span class="txt-title">小组：</span></div>
           <div class="filter-content flex-content">
             <div class="item-list group">
-              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-if="item.typeid==1" v-for="item in groupList" v-bind:key="item.userid" v-on:click="groupChangeHandler(item.userid)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b>[{{item.departName}}]</b></div>
+              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-if="item.typeid==1" v-for="item in groupList" v-bind:key="item.userid" v-on:click="groupChangeHandler(item.userid)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b v-if="item.departName">[{{item.departName}}]</b></div>
             </div>
             <div class="item-list group">
-              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-if="item.typeid==2" v-for="item in groupList" v-bind:key="item.userid" v-on:click="groupChangeHandler(item.userid)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b>[{{item.departName}}]</b></div>
+              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-if="item.typeid==2" v-for="item in groupList" v-bind:key="item.userid" v-on:click="groupChangeHandler(item.userid)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b v-if="item.departName">[{{item.departName}}]</b></div>
             </div>
             <div class="item-list group">
-              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-if="item.typeid==3||item.typeid==4" v-for="item in groupList" v-bind:key="item.userid" v-on:click="groupChangeHandler(item.userid)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b>[{{item.departName}}]</b></div>
+              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-if="item.typeid==3||item.typeid==4" v-for="item in groupList" v-bind:key="item.userid" v-on:click="groupChangeHandler(item.userid)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b v-if="item.departName">[{{item.departName}}]</b></div>
             </div>
           </div>
         </div>
@@ -115,7 +115,7 @@
           <div class="item-button">
             <div class="button-click" v-on:click="toggleContrast"><i class="svg-i"><svg-icon icon-class="s-add" class-name="disabled" /></i><span>添加对比</span></div>
             <div class="group-contrast" v-show="isContrastShow" v-bind:style="{width:contrastWidth+'px'}">
-              <div class="item-checkbox" v-bind:class="[item.disabled?'is-disabled':'',item.isOn?'active':'']" v-for="item in contrastGroupList" v-bind:key="item.userid" v-on:click="contrastGroupChangeHandler(item)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b>[{{item.departName}}]</b></div>
+              <div class="item-checkbox" v-bind:class="[item.disabled?'is-disabled':'',item.isOn?'active':'']" v-for="item in contrastGroupList" v-bind:key="item.userid" v-on:click="contrastGroupChangeHandler(item)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b v-if="item.departName">[{{item.departName}}]</b></div>
               <div class="item-sure" v-on:click="saveContrastGroup">确定</div>
             </div>
           </div>
@@ -377,8 +377,8 @@ export default {
                 var groupList = response.group;
                 var typeArr = []
                 groupList.forEach(function(item,index){
-                  item.departName = item.departname.slice(2);
-                  item.groupName = item.othername.split("-")[1];
+                  item.departName = item.departname.indexOf("电商") > -1 ? item.departname.slice(2) : '';
+                  item.groupName = item.othername.split("-").length == 2 ? item.othername.split("-")[1] : item.othername;
                   item.isOn = false;
                   item.disabled = false;
                   typeArr.push(item.typename);
@@ -1030,11 +1030,23 @@ export default {
             $this.groupList.forEach(function(item){
               if(item.userid == $this.selectedData.groupID[0]){
                 if($this.selectedData.isMonth){
-                  inquiryData.chartTitle = item.departName+"-"+item.groupName+"组询盘日期对比月趋势";
+                  if(item.departName){
+                    inquiryData.chartTitle = item.departName+"-"+item.groupName+"组询盘日期对比月趋势";
+                  }else{
+                    inquiryData.chartTitle = item.groupName+"组询盘日期对比月趋势";
+                  }
                 }else{
-                  inquiryData.chartTitle = item.departName+"-"+item.groupName+"组询盘日期对比日趋势";
+                  if(item.departName){
+                    inquiryData.chartTitle = item.departName+"-"+item.groupName+"组询盘日期对比日趋势";
+                  }else{
+                    inquiryData.chartTitle = item.groupName+"组询盘日期对比日趋势";
+                  }
                 }
-                inquiryData.name = item.departName+"-"+item.groupName+"组询盘统计";
+                if(item.departName){
+                  inquiryData.name = item.departName+"-"+item.groupName+"组询盘统计";
+                }else{
+                  inquiryData.name = item.groupName+"组询盘统计";
+                }
               }
             });
           }else{
@@ -1073,7 +1085,12 @@ export default {
                   if($this.selectedData.groupID.length==1){
                     $this.groupList.forEach(function(item1){
                       if(item1.isOn){
-                        itemChart.name = item1.departName+"-"+item1.groupName+"组";
+                        if(item1.departName){
+                          itemChart.name = item1.departName+"-"+item1.groupName+"组";
+                        }else{
+                          itemChart.name = item1.groupName+"组";
+                        }
+                        
                       }
                     });
                   }else{
@@ -1086,7 +1103,11 @@ export default {
                       selectContrastGroupList.push(item1);
                     }
                   });
-                  itemChart.name=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
+                  if(selectContrastGroupList[index-1].departName){
+                    itemChart.name=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
+                  }else{
+                    itemChart.name=selectContrastGroupList[index-1].groupName+"组";
+                  }
                 }
                 if($this.selectedData.isMonth){
                   // 月维度
@@ -1182,7 +1203,11 @@ export default {
               if($this.selectedData.groupID.length==1){
                 $this.groupList.forEach(function(item1){
                   if(item1.userid == $this.selectedData.groupID[0]){
-                    item.name = item1.departName+"-"+item1.groupName+"组";
+                    if(item1.departName){
+                      item.name = item1.departName+"-"+item1.groupName+"组";
+                    }else{
+                      item.name = item1.groupName+"组";
+                    }
                   }
                 });
               }else{
@@ -1250,11 +1275,23 @@ export default {
             $this.groupList.forEach(function(item){
               if(item.userid == $this.selectedData.groupID[0]){
                 if($this.selectedData.isMonth){
-                  dealScoreData.chartTitle = item.departName+"-"+item.groupName+"组成交积分日期对比月趋势";
+                  if(item.departName){
+                    dealScoreData.chartTitle = item.departName+"-"+item.groupName+"组成交积分日期对比月趋势";
+                  }else{
+                    dealScoreData.chartTitle = item.groupName+"组成交积分日期对比月趋势";
+                  }
                 }else{
-                  dealScoreData.chartTitle = item.departName+"-"+item.groupName+"组成交积分日期对比日趋势";
+                  if(item.departName){
+                    dealScoreData.chartTitle = item.departName+"-"+item.groupName+"组成交积分日期对比日趋势";
+                  }else{
+                    dealScoreData.chartTitle = item.groupName+"组成交积分日期对比日趋势";
+                  }
                 }
-                dealScoreData.name = item.departName+"-"+item.groupName+"组成交积分统计";
+                if(item.departName){
+                  dealScoreData.name = item.departName+"-"+item.groupName+"组成交积分统计";
+                }else{
+                  dealScoreData.name = item.groupName+"组成交积分统计";
+                }
               }
             });
           }else{
@@ -1285,7 +1322,11 @@ export default {
                   if($this.selectedData.groupID.length==1){
                     $this.groupList.forEach(function(item1){
                       if(item1.isOn){
-                        itemChart.name = item1.departName+"-"+item1.groupName+"组";
+                        if(item1.departName){
+                          itemChart.name = item1.departName+"-"+item1.groupName+"组";
+                        }else{
+                          itemChart.name = item1.groupName+"组";
+                        }
                       }
                     });
                   }else{
@@ -1298,7 +1339,12 @@ export default {
                       selectContrastGroupList.push(item1);
                     }
                   });
-                  itemChart.name=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
+                  if(selectContrastGroupList[index-1].departName){
+                    itemChart.name=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
+                  }else{
+                    itemChart.name=selectContrastGroupList[index-1].groupName+"组";
+                  }
+                  
                 }
                 itemChart.key = item1.date;
                 itemChart.value = Math.floor(item1.score*100)/100;
@@ -1344,7 +1390,11 @@ export default {
               if($this.selectedData.groupID.length==1){
                 $this.groupList.forEach(function(item1){
                   if(item1.userid == $this.selectedData.groupID[0]){
-                    item.name = item1.departName+"-"+item1.groupName+"组";
+                    if(item1.departName){
+                      item.name = item1.departName+"-"+item1.groupName+"组";
+                    }else{
+                      item.name = item1.groupName+"组";
+                    }
                   }
                 });
               }else{
@@ -1434,7 +1484,11 @@ export default {
           if($this.selectedData.groupID.length==1){
             $this.groupList.forEach(function(item){
               if(item.isOn){
-                title = item.departName+"-"+item.groupName+"组";
+                if(item.departName){
+                  title = item.departName+"-"+item.groupName+"组";
+                }else{
+                  title = item.groupName+"组";
+                }
               }
             });
           }else{
@@ -1508,7 +1562,11 @@ export default {
                 if($this.selectedData.groupID.length==1){
                   $this.groupList.forEach(function(item1){
                     if(item1.isOn){
-                      itemChart.title = item1.departName+"-"+item1.groupName+"组";
+                      if(item1.departName){
+                        itemChart.title = item1.departName+"-"+item1.groupName+"组";
+                      }else{
+                        itemChart.title = item1.groupName+"组";
+                      }
                     }
                   });
                 }else{
@@ -1521,7 +1579,12 @@ export default {
                     selectContrastGroupList.push(item1);
                   }
                 });
-                itemChart.title=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
+                if(selectContrastGroupList[index-1].departName){
+                  itemChart.title=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
+                }else{
+                  itemChart.title=selectContrastGroupList[index-1].groupName+"组";
+                }
+                
               }
               itemChart.randomStr = randomString(4);
               itemChart.mapData = chinaData(item,"name","number");
@@ -1622,7 +1685,11 @@ export default {
           if($this.selectedData.groupID.length==1){
             $this.groupList.forEach(function(item){
               if(item.isOn){
-                title = item.departName+"-"+item.groupName+"组";
+                if(item.departName){
+                  title = item.departName+"-"+item.groupName+"组";
+                }else{
+                  title = item.groupName+"组";
+                }
               }
             });
           }else{
@@ -1688,7 +1755,11 @@ export default {
                 if($this.selectedData.groupID.length==1){
                   $this.groupList.forEach(function(item1){
                     if(item1.isOn){
-                      itemChart.title = item1.departName+"-"+item1.groupName+"组";
+                      if(item1.departName){
+                        itemChart.title = item1.departName+"-"+item1.groupName+"组";
+                      }else{
+                        itemChart.title = item1.groupName+"组";
+                      }
                     }
                   });
                 }else{
@@ -1701,7 +1772,11 @@ export default {
                     selectContrastGroupList.push(item1);
                   }
                 });
-                itemChart.title=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
+                if(selectContrastGroupList[index-1].departName){
+                  itemChart.title=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
+                }else{
+                  itemChart.title=selectContrastGroupList[index-1].groupName+"组";
+                }
               }
               itemChart.randomStr = randomString(4);
               itemChart.mapData = chinaData(item,"name","number");;
@@ -1810,7 +1885,11 @@ export default {
           if($this.selectedData.groupID.length==1){
             $this.groupList.forEach(function(item){
               if(item.isOn){
-                title = item.departName+"-"+item.groupName+"组";
+                if(item.departName){
+                  title = item.departName+"-"+item.groupName+"组";
+                }else{
+                  title = item.groupName+"组";
+                }
               }
             });
           }else{
@@ -1840,7 +1919,11 @@ export default {
                 if($this.selectedData.groupID.length==1){
                   $this.groupList.forEach(function(item1){
                     if(item1.isOn){
-                      productData.itemData[0].title = item1.departName+"-"+item1.groupName+"组";
+                      if(item1.departName){
+                        productData.itemData[0].title = item1.departName+"-"+item1.groupName+"组";
+                      }else{
+                        productData.itemData[0].title = item1.groupName+"组";
+                      }
                     }
                   });
                 }else{
@@ -1853,7 +1936,11 @@ export default {
                     selectContrastGroupList.push(item1);
                   }
                 });
-                productData.itemData[index].title=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
+                if(selectContrastGroupList[index-1].departName){
+                  productData.itemData[index].title=selectContrastGroupList[index-1].departName+"-"+selectContrastGroupList[index-1].groupName+"组";
+                }else{
+                  productData.itemData[index].title=selectContrastGroupList[index-1].groupName+"组";
+                }
               }
             });
             productData.title = "产品分析";

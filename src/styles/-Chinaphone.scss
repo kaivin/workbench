@@ -546,6 +546,8 @@
 .quality-dialog{
   .quality_content{
     border: 1px solid #ebeef5;
+    height: calc(100vh - 250px);
+    overflow: scroll;
     .quality_title{
       font-size: 0;
       width: 100%;
@@ -595,18 +597,136 @@
       .normal-div + .normal-div{
         border-top: 1px solid #ebeef5;
       }
-      .the-same0,.the-same1,.the-same2,.the-same3,.the-same4,.the-same5,.the-same6{
+      .the-same1,.the-same2,.the-same3,.the-same4,.the-same5,.the-same6,
+      .the-same7,.the-same8,.the-same9,.the-same10,.the-same11,.the-same12{
         position: relative;
         span{
-          top: 30px;
           position: absolute;
           width: 100%;
           left: 0;
         }
       }
-      .the-same0+.the-same0,.the-same1+.the-same1,.the-same2+.the-same2,
-      .the-same3+.the-same3,.the-same4+.the-same4,.the-same5+.the-same5,
-      .the-same6+.the-same6{
+      .the-same1{
+        span{
+          top: 12px;
+        }
+      }
+      .the-same2{
+        span{
+          top: 32px;
+        }
+      }
+      .the-same3{
+        span{
+          top: 52px;
+        }
+      }
+      .the-same4{
+        span{
+          top: 72px;
+        }
+      }
+      .the-same5{
+        span{
+          top: 92px;
+        }
+      }
+      .the-same6{
+        span{
+          top: 112px;
+        }
+      }
+      .the-same7{
+        span{
+          top: 132px;
+        }
+      }
+      .the-same8{
+        span{
+          top: 152px;
+        }
+      }
+      .the-same9{
+        span{
+          top: 172px;
+        }
+      }
+      .the-same10{
+        span{
+          top: 192px;
+        }
+      }
+      .the-same11{
+        span{
+          top: 212px;
+        }
+      }
+      .the-same12{
+        span{
+          top: 232px;
+        }
+      }
+
+      .the-same2+.the-same2+.the-same2,
+      .the-same2+.the-same2+.the-same2+.the-same2+.the-same2,
+      .the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2,
+      .the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2,
+      .the-same3+.the-same3+.the-same3+.the-same3,
+      .the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3,
+      .the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3,
+      .the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3
+      .the-same4+.the-same4+.the-same4+.the-same4+.the-same4,
+      .the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4,
+      .the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4
+      .the-same5+.the-same5+.the-same5+.the-same5+.the-same5+.the-same5,
+      .the-same6+.the-same6+.the-same6+.the-same6+.the-same6+.the-same6+.the-same6
+      {
+        border-top: 1px solid #ebeef5;
+        span{
+          display: block;
+        }
+      }
+      .the-same2+.the-same2,
+      .the-same2+.the-same2+.the-same2+.the-same2,
+      .the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2,
+      .the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2,
+      .the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2+.the-same2,
+      .the-same3+.the-same3,
+      .the-same3+.the-same3+.the-same3,
+      .the-same3+.the-same3+.the-same3+.the-same3+.the-same3,
+      .the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3,
+      .the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3,
+      .the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3,
+      .the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3.the-same3+.the-same3,
+      .the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3.the-same3+.the-same3+.the-same3,
+      .the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3+.the-same3.the-same3+.the-same3+.the-same3+.the-same3+.the-same3,
+      .the-same4+.the-same4,
+      .the-same4+.the-same4+.the-same4,
+      .the-same4+.the-same4+.the-same4+.the-same4,
+      .the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4,
+      .the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4,
+      .the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4,
+      .the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4,
+      .the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4,
+      .the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4,
+      .the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4+.the-same4,
+      .the-same5+.the-same5,
+      .the-same5+.the-same5+.the-same5,
+      .the-same5+.the-same5+.the-same5+.the-same5,
+      .the-same5+.the-same5+.the-same5+.the-same5+.the-same5,
+      .the-same5+.the-same5+.the-same5+.the-same5+.the-same5+.the-same5+.the-same5,
+      .the-same6+.the-same6,
+      .the-same6+.the-same6+.the-same6,
+      .the-same6+.the-same6+.the-same6+.the-same6,
+      .the-same6+.the-same6+.the-same6+.the-same6+.the-same6,
+      .the-same6+.the-same6+.the-same6+.the-same6+.the-same6+.the-same6,
+      .the-same6+.the-same6+.the-same6+.the-same6+.the-same6+.the-same6+.the-same6+.the-same6,
+      .the-same7+.the-same7,
+      .the-same8+.the-same8,
+      .the-same9+.the-same9,
+      .the-same10+.the-same10,
+      .the-same11+.the-same11,
+      .the-same12+.the-same12{
         border-top: none;
         span{
           display: none;

@@ -505,7 +505,7 @@
             border: 1px solid #cbcbcb;
             margin-right: 10px;
             position: relative;
-            vertical-align: -1px;
+            vertical-align: middle;
             &:hover{
               border: 1px solid $menuActiveText;
             }
@@ -513,6 +513,7 @@
           span,b{
             font-size:$fontsize14;
             display: inline-block;
+            vertical-align: middle;
             height: 28px;
             line-height: 28px;
           }

@@ -11,6 +11,11 @@
                     </template>
                   </p>
                   <el-card class="box-card" shadow="hover">
+                    <div class="top_select">
+                      <el-radio-group v-model="searchData.type" @change="initPage" size="small">
+                        <el-radio-button v-for="item in typeList" :label="item.value" :key="item.value">{{item.label}}</el-radio-button>
+                      </el-radio-group>
+                    </div>
                     <div class="card-content" ref="tableContent">
                       <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
                             <div class="table-mask"></div>
@@ -71,12 +76,12 @@
                                 width="120"
                                 align="center"
                                 >
-                                <template slot-scope="scope">
+                                <!-- <template slot-scope="scope">
                                   <span v-if="scope.row.same_id > 0">{{scope.row.same_id}}</span>
-                                </template>
+                                </template> -->
                               </el-table-column>
                               <el-table-column
-                                v-if="(menuButtonPermit.indexOf('Chinaphone_chinaqualityedit')||menuButtonPermit.indexOf('Chinaphone_chinaqualitydelete'))"
+                                v-if="(menuButtonPermit.indexOf('Chinaphone_chinaqualityedit')||menuButtonPermit.indexOf('Chinaphone_chinaqualitydelete')) && searchData.type == 2"
                                 :width="operationsWidth"
                                 align="center"
                                 fixed="right"
@@ -126,9 +131,9 @@
                 <el-input v-model="dialogForm.sort" ref="sort" clearable></el-input>
             </el-form-item>
           </div>
-          <div class="item-form">
+          <div class="item-form" v-if="dialogForm.status == 1">
             <el-form-item label="互斥选项：" :label-width="formLabelWidth">
-                <el-select v-model="dialogForm.same_id" placeholder="请选择" clearable>
+                <el-select v-model="same_ids" multiple placeholder="请选择" clearable>
                   <el-option
                     v-for="item in qualityOptions"
                     :key="item.value"
@@ -171,6 +176,7 @@ export default {
         score:"",
         same_id:""
       },
+      same_ids: [],
       scrollPosition:{
         width:0,
         left:0,
@@ -196,7 +202,20 @@ export default {
         clientHeight:0,
       },
       isSaveData:false,
-      qualityOptions:[]
+      qualityOptions:[],
+      searchData: {
+        type: 2
+      },
+      typeList: [
+        {
+          label: "新版",
+          value: 2
+        },
+        {
+          label: "旧版",
+          value: 1
+        }
+      ]
     }
   },
   computed: {
@@ -357,7 +376,8 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('chinaphone/getChinaQualityList', null).then(response=>{
+      var searchData = $this.searchData
+      $this.$store.dispatch('chinaphone/getChinaQualityList', searchData).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -399,18 +419,24 @@ export default {
           if(response.status){
             if(response.data.length>0){
                 var options = [];
+                var alloptions = [];
                 response.data.forEach(item=>{
-                  if(id && item.id == id){
-                    return false;
-                  }else{
-                    var newobj = {};
-                    newobj.id = item.id;
-                    newobj.value = item.id;
-                    newobj.label = item.content;
-                    options.push(newobj)
+                  var newobj = {};
+                  newobj.id = item.id;
+                  newobj.value = item.id;
+                  newobj.label = item.content;
+                  if(item.status == 1){
+                    alloptions.push(newobj);
+                    if(id && item.id != id){
+                      options.push(newobj);
+                    }
                   }
                 })
-                $this.qualityOptions = options;
+                if(id){
+                  $this.qualityOptions = options;
+                }else{
+                  $this.qualityOptions = alloptions;
+                }
             }else{
               $this.qualityOptions = [];
             }
@@ -508,7 +534,13 @@ export default {
       $this.dialogForm.status = row.status;
       $this.dialogForm.sort = row.sort==0?"":row.sort;
       $this.dialogForm.score = row.score;
-      $this.dialogForm.same_id = row.same_id ==0 ? "" : row.same_id;
+      $this.dialogForm.same_id = row.same_id == 0 ? "" : row.same_id;
+      let resArr = row.same_id.split(',');
+      let newArr = []
+      resArr.forEach(item => {
+        newArr.push(Number(item))
+      })
+      $this.same_ids = newArr
     },
     // 保存添加/编辑数据
     saveData(){
@@ -523,7 +555,7 @@ export default {
         formData.status = $this.dialogForm.status;
         formData.sort = $this.dialogForm.sort;
         formData.score = $this.dialogForm.score;
-        formData.same_id = $this.dialogForm.same_id;
+        formData.same_id = $this.same_ids.join(',');
         var pathUrl = "";
         if($this.isNewAdd){
           pathUrl = "chinaphone/getChinaQualityAdd";
@@ -562,6 +594,7 @@ export default {
       $this.dialogForm.status = "";
       $this.dialogForm.score = "";
       $this.dialogForm.same_id = "";
+      $this.same_ids = [];
     },
     // 验证是否为空
     validationForm(){
@@ -774,4 +807,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.top_select{
+  // padding: 15px;
+  // background: #fff;
+  margin-bottom: 15px;
+  border-radius: 0px;
+  border: none;
+  border-radius: 8px;
+  .item-input{
+    margin-left: 15px;
+  }
+}    
 </style>

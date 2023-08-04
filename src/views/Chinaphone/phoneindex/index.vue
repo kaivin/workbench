@@ -341,7 +341,7 @@
                               <!-- <div class="table-tag" style="text-align:center; color: #f73a3e; font-weight: bold">{{scope.row.qualityscore}}</div> -->
                               
                               <div class="table-tag" style="text-align:center;margin-top:5px" v-if="menuButtonPermit.includes('Chinaphone_chinaqualityconfirmedit') || menuButtonPermit.includes('Chinaphone_chinaqualityconfirm')">
-                                <el-button size="mini" @click="qualityJudge(scope.row.id)">质量判定</el-button>
+                                <el-button size="mini" @click="qualityJudge(scope.row)">质量判定</el-button>
                               </div>
                             </div>
                           </template>
@@ -487,8 +487,14 @@
         </template>
     </el-dialog>
     <!-- 询盘线索质量判定 -->
-    <el-dialog  title="询盘线索质量判定" custom-class="quality-dialog" :visible.sync="qualityDecision" width="1100px" top="15px">
-        <div class="quality_content">
+    <el-dialog title="询盘线索质量判定" custom-class="quality-dialog" :visible.sync="qualityDecision" width="1100px" :top="showTab?'19px': '46px'">
+        <div class="top_quality_select" v-if="showTab">
+          <el-radio-group v-model="typeValue" @change="qualityTypeChange" size="medium">
+            <el-radio-button v-for="item in typeList" :label="item.value" :key="item.value">{{item.label}}</el-radio-button>
+          </el-radio-group>
+          <el-button type="text" class="clearBtn" icon="el-icon-brush" @click="clearSelect">清除选择</el-button>
+        </div>
+        <div class="quality_content" ref="quality_content">
           <div class="quality_title">
             <div class="title_type">多选</div>
             <div class="title_content">具体情况</div>
@@ -496,14 +502,14 @@
           <div class="content_selection">
             <div class="quality-selection">
               <el-checkbox-group v-model="qualityMultiChoosed" @change="qualityChooseChange">
-                <el-checkbox v-for="item in qualityMultiOptions" :key="item.id" :label="item.id">
+                <el-checkbox v-for="item in qualityMultiOptions" :key="item.id" :label="item.id" :disabled="item.disabled">
                   {{item.content}}
                 </el-checkbox>
               </el-checkbox-group>
             </div>
             <div class="quality-remark">
-              <div v-for="item in qualityMultiOptions" :key="item.id" :label="item.id" :class="item.sindex > -1? 'normal-div the-same'+item.sindex : 'normal-div' ">
-                <span v-if="item.sindex > -1">二选一</span>
+              <div v-for="item in qualityMultiOptions" :key="item.id" :label="item.id" :class="item.slength > 0 ? 'normal-div the-same'+item.slength : 'normal-div' ">
+                <span v-if="item.slength > 0">{{item.slength}}选1</span>
               </div>
             </div>
           </div>
@@ -513,7 +519,7 @@
           </div>
           <div class="quality-selection">
             <el-radio-group v-model="qualitySingleChoosed" @change="qualitySingleChange">
-              <el-radio v-for="item in qualitySingleOptions" :key="item.id" :label="item.id">
+              <el-radio v-for="item in qualitySingleOptions" :key="item.id" :label="item.id" :disabled="item.disabled">
                 {{item.content}}
               </el-radio>
             </el-radio-group>
@@ -522,6 +528,7 @@
         
         <template #footer>
           <span class="dialog-footer">
+            <el-button size="small" @click="qualityDecision = false">取 消</el-button>
             <el-button type="primary" size="small" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="qualityDecide">确定</el-button>
           </span>
         </template>
@@ -668,20 +675,40 @@ export default {
       chartLoading:false,
       isSearchResult:false,
       qualityDecision: false,//询盘质量判定弹窗
-      qualityOptions: [],//询盘意向情况
       qualityMultiOptions: [],//询盘多选意向情况
       qualitySingleOptions: [],//询盘单选意向情况
-      qualityChoosed: [],
       qualityMultiChoosed: [],
       qualitySingleChoosed: 0,
       totalScore: 0,
       qualityId : 0,
       isSaveData: false,
       isNewAdd: true,
-      popType: 1,
       popContent: [],
       popTime: "",
-      judgeOptions: [],
+      typeValue: 2,
+      typeList: [
+        {
+          label: "新版",
+          value: 2
+        },{
+          label: "旧版",
+          value: 1
+        }
+      ],
+      newQualityOptions: [],//新版询盘意向情况
+      newQualityMultiOptions: [],//旧版询盘多选意向情况
+      newQualitySingleOptions: [],//旧版询盘单选意向情况
+      newQualityMultiChoosed: [],
+      newQualitySingleChoosed: 0,
+      newJudgeOptions: [],
+      oldQualityOptions: [],//旧版询盘意向情况
+      oldQualityMultiOptions: [],//旧版询盘多选意向情况
+      oldQualitySingleOptions: [],//旧版询盘单选意向情况
+      oldQualityMultiChoosed: [],
+      oldQualitySingleChoosed: 0,
+      oldJudgeOptions: [],
+      showTab: true,
+      quality_content: null
     }
   },
   components:{
@@ -1784,20 +1811,42 @@ export default {
       $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
     },
     // 质量判定点击
-    qualityJudge(id){
+    qualityJudge(data){
       var $this = this;
-      $this.isSaveData = false;
-      $this.qualityId = id;
-      if($this.qualityOptions.length == 0){
-        $this.getQualityCondition(id);
+      var xuntimeStamp = Date.parse(data.addtime);
+      var aimtimeStamp = Date.parse("2023-08-04 17:10:00");
+      if(xuntimeStamp > aimtimeStamp){
+        $this.showTab = false;
       }else{
-        $this.getSelectedQuality(id);
+        $this.showTab = true;
+      }
+      if($this.$refs.quality_content){
+        console.log($this.$refs.quality_content.scrollTop)
+        $this.$refs.quality_content.scrollTop = 0;
+      }
+      
+      $this.isSaveData = false;
+      $this.qualityId = data.id;
+      $this.typeValue = 2;
+      $this.qualityMultiChoosed = [];
+      $this.qualitySingleChoosed = 0;
+      $this.newQualityMultiChoosed = [];
+      $this.newQualitySingleChoosed = 0;
+      $this.oldQualityMultiChoosed = [];
+      $this.oldQualitySingleChoosed = 0;
+      if($this.newQualityOptions.length == 0){
+        $this.getQualityCondition(data.id);
+      }else{
+        $this.getSelectedQuality(data.id);
       }
     },
     // 质量判定条件列表
     getQualityCondition(id){
       var $this = this;
-      $this.$store.dispatch('chinaphone/getChinaQualitySelect', null).then(response=>{
+      var searchData = {
+        type: $this.typeValue
+      }
+      $this.$store.dispatch('chinaphone/getChinaQualitySelect', searchData).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -1810,19 +1859,47 @@ export default {
               var singleOption = response.data.filter(item=>{
                 return item.status == 2
               })
-              $this.qualityOptions = response.data;
-              $this.radioOption(response.data);
+              $this.newQualityOptions = response.data;
+              $this.newJudgeOptions = $this.radioOption(response.data);
 
               multiOption.forEach(item=>{
-                var index = $this.getArrayIndex(item.id);
-                item.sindex = index;
+                var index = $this.getArrayIndex($this.newJudgeOptions,item.id);
+                item.disabled = false;
+                item.sindex = index.sindex;
+                item.slength = index.slength;
               })
-              $this.qualityMultiOptions = multiOption;
-              $this.qualitySingleOptions = singleOption;
-              $this.getSelectedQuality(id);
+              $this.newQualityMultiOptions = multiOption;
+              $this.newQualitySingleOptions = singleOption;
             }else{
-              $this.qualityOptions = [];
+              $this.newQualityOptions = [];
             }
+
+            if(response.old_data.length>0){
+              response.old_data.sort(function(a,b){
+                return a.sort - b.sort
+              })
+              var multiOption = response.old_data.filter(item=>{
+                return item.status == 1
+              })
+              var singleOption = response.old_data.filter(item=>{
+                return item.status == 2
+              })
+              $this.oldQualityOptions = response.old_data;
+              $this.oldJudgeOptions = $this.radioOption(response.old_data);
+
+              multiOption.forEach(item=>{
+                var index = $this.getArrayIndex($this.oldJudgeOptions, item.id);
+                item.disabled = false;
+                item.sindex = index.sindex;
+                item.slength = index.slength;
+              })
+              $this.oldQualityMultiOptions = multiOption;
+              $this.oldQualitySingleOptions = singleOption;
+            }else{
+              $this.oldQualityOptions = [];
+            }
+
+            $this.getSelectedQuality(id);
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -1843,54 +1920,64 @@ export default {
         }
       });
     },
-    // 多选单选改变
-    // popTypeChange(e){
-    //   var $this = this;
-    //   $this.totalScore = 0;
-    //   if(e == 1){
-    //     $this.qualityMultiChoosed = [];
-    //   }else if(e == 2){
-    //     $this.qualitySingleChoosed = [];
-    //   }
-    // },
+
     // 多选选项选择
     qualityChooseChange(e){
       var $this = this;
-      $this.qualitySingleChoosed = [];
+      $this.qualitySingleChoosed = 0;
       if(e.length > 0){
-        $this.getChoosedDataFilter(e);
+        if($this.typeValue == 2){
+          $this.qualityMultiChoosed = $this.getChoosedDataFilter($this.newQualityOptions, $this.newQualityMultiChoosed, $this.newJudgeOptions ,e);
+        }else{
+          $this.qualityMultiChoosed = $this.getChoosedDataFilter($this.oldQualityOptions, $this.oldQualityMultiChoosed, $this.oldJudgeOptions , e);
+        }
+      }else{
+        $this.qualityMultiChoosed = []
       }
+      console.log($this.qualityMultiChoosed)
     },
     // 数据筛选
-    getChoosedDataFilter(data){
+    getChoosedDataFilter(qualityOptions, qualityChoosed, judgeOptions, data){
       var $this = this;
       var filterChoosed = [];
       var filterResult = [];
-      var resultScore = 0;
       // 先将数据还原一下
       data.forEach((item,index)=>{
-        var itemObj = $this.getAimObj(item);
+        var itemObj = $this.getAimObj(qualityOptions, item);
         filterChoosed.push(itemObj);
       })
       // 过滤排斥数据
       var filterChoosedArr = [...filterChoosed];
+      var idArr = [];
       var lastItem = filterChoosed.slice(-1)[0];
       var lastItemId = lastItem.id;
-      var lastItemSameId = lastItem.same_id;
-      var idArr = [];
-      var lastIdIndex = $this.getArrayIndex(lastItemId);
-      var lastSameIdIndex = $this.getArrayIndex(lastItemSameId);
-      for(var i = 0; i < filterChoosed.length -1; i++){
-        if(filterChoosed[i].id == lastItemSameId || filterChoosed[i].same_id == lastItemId){
-          idArr.push(filterChoosed[i].id);
-        }
-        var judgeIdRes = $this.judgeOptions[lastIdIndex];
-        var judgeSameIdRes = $this.judgeOptions[lastSameIdIndex];
-        var judgeId = filterChoosed[i].id
-        if((judgeIdRes && judgeIdRes.indexOf(judgeId) > -1 )|| (judgeSameIdRes && judgeSameIdRes.indexOf(judgeId) > -1)){
-          idArr.push(filterChoosed[i].id);
-        }
+      var lastIdIndexObj = $this.getArrayIndex(judgeOptions, lastItemId); // 查找元素
+      var lastIdIndex = lastIdIndexObj.sindex; //获取最后一个元素的id在option数组的index 
+      if(lastIdIndex > -1){
+        idArr = judgeOptions[lastIdIndex].filter(sitem => {
+          return sitem != lastItemId
+        })
       }
+      // var lastItemSameId = lastItem.same_id;
+      // var lastItemSameIdArr = lastItemSameId.split(',');
+      // var lastSameIdIndex = -1; //获取最后一个元素的same_id在option数组的index
+      // if(lastItemSameIdArr.length > 0){
+      //   var lastSameIdIndexObj = $this.getArrayIndex(lastItemSameId);
+      //   lastSameIdIndex = lastSameIdIndexObj.sindex;
+      // }
+      
+      // 查找最后一个元素的所有排斥元素
+      // for(var i = 0; i < filterChoosed.length -1; i++){
+      //   if(filterChoosed[i].id == lastItemSameId || filterChoosed[i].same_id == lastItemId){
+      //     idArr.push(filterChoosed[i].id);
+      //   }
+      //   var judgeIdRes = $this.judgeOptions[lastIdIndex];
+      //   var judgeSameIdRes = $this.judgeOptions[lastSameIdIndex];
+      //   var judgeId = filterChoosed[i].id
+      //   if((judgeIdRes && judgeIdRes.indexOf(judgeId) > -1 )|| (judgeSameIdRes && judgeSameIdRes.indexOf(judgeId) > -1)){
+      //     idArr.push(filterChoosed[i].id);
+      //   }
+      // }
       if(idArr.length > 0){
         idArr.forEach(item=>{
           filterChoosedArr = filterChoosedArr.filter(sitem=>{
@@ -1901,23 +1988,19 @@ export default {
       
       filterChoosedArr.forEach(item=>{
         filterResult.push(item.id);
-        resultScore += item.score;
       })
 
-      $this.qualityMultiChoosed = filterResult;
-      $this.totalScore = resultScore;
+      return filterResult;
     },
     // 单选选项选择
     qualitySingleChange(e){
       var $this = this;
       $this.qualityMultiChoosed = [];
-      var resObj = $this.getAimObj(e);
-      $this.totalScore = resObj.score;
     },
     // 查找指定元素
-    getAimObj(id){
+    getAimObj(qualityOptions, id){
       var $this = this;
-      var item = $this.qualityOptions.filter(item=>{
+      var item = qualityOptions.filter(item=>{
         return item.id == id
       })
 
@@ -1926,19 +2009,36 @@ export default {
     // 质量判定按钮确定
     qualityDecide(){
       var $this = this;
+      if($this.typeValue == 1){
+        $this.oldQualityMultiChoosed = $this.qualityMultiChoosed;
+        $this.oldQualitySingleChoosed = $this.qualitySingleChoosed;
+      }else{
+        $this.newQualityMultiChoosed = $this.qualityMultiChoosed;
+        $this.newQualitySingleChoosed = $this.qualitySingleChoosed;
+      }
       if(!$this.isSaveData){        
         $this.isSaveData=true;
         var formData = {}
         formData.cid = $this.qualityId;
-        if($this.qualityMultiChoosed.length > 0){
-          formData.qid = $this.qualityMultiChoosed;
+        if($this.newQualityMultiChoosed.length > 0 || $this.oldQualityMultiChoosed.length > 0){
+          if($this.newQualityMultiChoosed.length > 0){
+            formData.qid = $this.newQualityMultiChoosed
+          }
+          if($this.oldQualityMultiChoosed.length > 0){
+            formData.qid = $this.oldQualityMultiChoosed
+          }
+          formData.score = $this.getQualityScore(formData.qid);
         }else{
           var newarr = [];
-          newarr.push($this.qualitySingleChoosed)
+          if($this.newQualitySingleChoosed > 0){
+            newarr.push($this.newQualitySingleChoosed)
+          }
+          if($this.oldQualitySingleChoosed > 0){
+            newarr.push($this.oldQualitySingleChoosed)
+          }
           formData.qid = newarr;
+          formData.score = $this.getQualityScore(formData.qid);
         }
-        
-        formData.score = $this.totalScore == 0 ? 0 : $this.totalScore.toFixed(1);
         var pathUrl = "";
         if($this.isNewAdd){
           pathUrl = "chinaphone/getChinaQualityConfirm";
@@ -1968,6 +2068,20 @@ export default {
         });
       }
     },
+    // 获取最终的评分
+    getQualityScore(arr) {
+      var $this = this;
+      let options = $this.newQualityMultiOptions.concat($this.oldQualityMultiOptions).concat($this.newQualitySingleOptions).concat($this.oldQualitySingleOptions);
+      console.log(arr);
+      let totalNum = 0;
+      arr.forEach(item => {
+        let obj = $this.getAimObj(options, item);
+        console.log(obj)
+        totalNum += Number(obj.score);
+      })
+      totalNum = totalNum == 0 ? 0 : totalNum.toFixed(1);
+      return totalNum;
+    },
     // 获取已经选择的质量判定
     getSelectedQuality(id){
       var $this = this;
@@ -1976,37 +2090,104 @@ export default {
       $this.$store.dispatch('chinaphone/getChinaQualityHasSelect', formData).then(response=>{
         if(response){
           if(response.status){
+            // 获取选中的值-新版
             if(response.data.length>0){
                 $this.isNewAdd = false;
+                // 获取选中的值
                 var options = [];
-                var scoreArr = [];
                 response.data.forEach(item=>{
                   options.push(item.qid);
-                  var obj = $this.getAimObj(item.qid);
-                  scoreArr.push(obj.score)
                 })
-                var checkedData = $this.getAimObj(options[0]);
+                var checkedData = $this.getAimObj($this.newQualityOptions, options[0]);
                 var status = checkedData.status;
                 if(status == 1){
-                  $this.popType = 1;
-                  $this.qualitySingleChoosed = [];
-                  $this.qualityMultiChoosed = options;
-                  $this.totalScore = scoreArr.reduce((prev,n) => prev + n)
+                  $this.newQualitySingleChoosed = 0;
+                  $this.newQualityMultiChoosed = options;
                 }else if(status == 2){
-                  $this.popType = 2;
-                  $this.qualityMultiChoosed = [];
-                  $this.qualitySingleChoosed = options[0];
-                  $this.totalScore = scoreArr[0]
+                  $this.newQualityMultiChoosed = [];
+                  $this.newQualitySingleChoosed = options[0];
                 }
-
-                $this.qualityDecision = true;
-            }else{
-              $this.qualityMultiChoosed = [];
-              $this.qualitySingleChoosed = [];
-              $this.popType = 1;
-              $this.isNewAdd = true;
-              $this.qualityDecision = true;
+                // 内容赋值
+                $this.typeValue = 2;
+                $this.oldQualityMultiOptions.forEach(item => {
+                  item.disabled = true
+                })
+                $this.oldQualitySingleOptions.forEach(item => {
+                  item.disabled = true
+                })
+                $this.newQualityMultiOptions.forEach(item => {
+                  item.disabled = false
+                })
+                $this.newQualitySingleOptions.forEach(item => {
+                  item.disabled = false
+                })
+                
+                // 表格赋值
+                $this.qualityMultiChoosed = $this.newQualityMultiChoosed;
+                $this.qualitySingleChoosed = $this.newQualitySingleChoosed;
+                $this.qualityMultiOptions = $this.newQualityMultiOptions;
+                $this.qualitySingleOptions = $this.newQualitySingleOptions;
             }
+
+            // 获取选中的值-旧版
+            if(response.old_data.length>0){
+                $this.isNewAdd = false;
+                // 获取选中的值
+                var options = [];
+                response.old_data.forEach(item=>{
+                  options.push(item.qid);
+                })
+                var checkedData = $this.getAimObj($this.oldQualityOptions, options[0]);
+                var status = checkedData.status;
+                if(status == 1){
+                  $this.oldQualitySingleChoosed = 0;
+                  $this.oldQualityMultiChoosed = options;
+                }else if(status == 2){
+                  $this.oldQualityMultiChoosed = [];
+                  $this.oldQualitySingleChoosed = options[0];
+                }
+                // 内容赋值
+                $this.typeValue = 1;
+                $this.newQualityMultiOptions.forEach(item => {
+                  item.disabled = true
+                })
+                $this.newQualitySingleOptions.forEach(item => {
+                  item.disabled = true
+                })
+                $this.oldQualityMultiOptions.forEach(item => {
+                  item.disabled = false
+                })
+                $this.oldQualitySingleOptions.forEach(item => {
+                  item.disabled = false
+                })
+                // 表格赋值
+                $this.qualityMultiChoosed = $this.oldQualityMultiChoosed;
+                $this.qualitySingleChoosed = $this.oldQualitySingleChoosed;
+                $this.qualityMultiOptions = $this.oldQualityMultiOptions;
+                $this.qualitySingleOptions = $this.oldQualitySingleOptions;
+            }
+
+            // 未判定，默认展示新版，内容赋值
+            if( response.data.length == 0 && response.old_data.length == 0){
+              $this.typeValue = 2;
+              $this.isNewAdd = true;
+              $this.newQualityMultiChoosed = [];
+              $this.newQualitySingleChoosed = 0;
+              $this.oldQualityMultiChoosed = [];
+              $this.oldQualitySingleChoosed = 0;
+              $this.newQualityMultiOptions.forEach(item => {
+                item.disabled = false
+              })
+              $this.newQualitySingleOptions.forEach(item => {
+                item.disabled = false
+              })
+              $this.qualityMultiChoosed = [];
+              $this.qualitySingleChoosed = 0;
+              $this.qualityMultiOptions = $this.newQualityMultiOptions;
+              $this.qualitySingleOptions = $this.newQualitySingleOptions;
+            }
+
+            $this.qualityDecision = true;
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -2038,25 +2219,28 @@ export default {
       $this.$store.dispatch('chinaphone/getChinaQualityHasSelect', formData).then(response=>{
         if(response){
           if(response.status){
+            var options = [];
+            var popTime = '';
             if(response.data.length>0){
-                var options = [];
+                
                 response.data.forEach((item,index)=>{
                   if(index == 0){
-                    $this.popTime = item.addtime;
+                    popTime = item.addtime;
                   }
                   options.push(item.content);
                 })
-                // 拼接内容：
-                // var poptext = [];
-                // options.forEach(id=>{
-                //   var nowtext = $this.getAimObj(id).content;
-                //   poptext.push(nowtext);
-                // })
-                $this.popContent = options;
-            }else{
-              $this.popTime = "";
-              $this.popContent = [];
             }
+            if(response.old_data.length>0){
+                
+                response.old_data.forEach((item,index)=>{
+                  if(index == 0){
+                    popTime = item.addtime;
+                  }
+                  options.push(item.content);
+                })
+            }
+            $this.popTime = popTime;
+            $this.popContent = options;
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -2092,34 +2276,69 @@ export default {
       var qoption = data;
       for(var i = 0; i < qoption.length; i++){
         for(var j = 0; j < qoption.length; j++){
-          if(qoption[i].same_id == qoption[j].id){
+          let i_same_ids = qoption[i].same_id.split(',');
+          if(i_same_ids.indexOf('' + qoption[j].id) > -1){
             if(judgeOptions.length == 0){
               var newArr = [];
               newArr.push(qoption[i].id);
               newArr.push(qoption[j].id);
-              if(qoption[j].same_id > 0 && qoption[j].same_id != qoption[i].id){
-                newArr.push(qoption[j].same_id);
+              i_same_ids.forEach(item => {
+                if(newArr.indexOf(Number(item)) < 0){
+                  newArr.push(Number(item))
+                }
+              })
+
+              let j_same_ids = qoption[j].same_id.split(',');
+              if(j_same_ids.length > 0){
+                j_same_ids.forEach(item => {
+                  if(newArr.indexOf(Number(item)) < 0){
+                    newArr.push(Number(item))
+                  }
+                })
               }
               judgeOptions.push(newArr);
             }else{
-              var index = $this.findArrayIndex(judgeOptions, qoption[i].same_id);
+              var index = $this.findArrayIndex(judgeOptions, qoption[j].id);
               var idindex = $this.findArrayIndex(judgeOptions, qoption[i].id);
-              var sameindex = $this.findArrayIndex(judgeOptions, qoption[j].same_id);
               if(index > -1){
                 if(idindex < 0){
                   judgeOptions[index].push(qoption[i].id);
                 }
-                if(qoption[j].same_id > 0){
-                  if(sameindex < 0){
-                    judgeOptions[index].push(qoption[j].same_id);
-                  }
+                let j_same_ids = qoption[j].same_id.split(',');
+                if(j_same_ids.length > 0){
+                  j_same_ids.forEach(item => {
+                    if(judgeOptions[index].indexOf(Number(item)) < 0){
+                      judgeOptions[index].push(Number(item))
+                    }
+                  })
+                }
+                let i_same_ids = qoption[i].same_id.split(',');
+                if(i_same_ids.length > 0){
+                  i_same_ids.forEach(item => {
+                    if(judgeOptions[index].indexOf(Number(item)) < 0){
+                      judgeOptions[index].push(Number(item))
+                    }
+                  })
                 }
               }else{
                 var newArr = [];
                 newArr.push(qoption[i].id);
                 newArr.push(qoption[j].id);
-                if(qoption[j].same_id > 0 && qoption[j].same_id != qoption[i].id){
-                  newArr.push(qoption[j].same_id);
+                let j_same_ids = qoption[j].same_id.split(',');
+                if(j_same_ids.length > 0){
+                  j_same_ids.forEach(item => {
+                    if(newArr.indexOf(Number(item)) < 0){
+                      newArr.push(Number(item))
+                    }
+                  })
+                }
+                let i_same_ids = qoption[i].same_id.split(',');
+                if(i_same_ids.length > 0){
+                  i_same_ids.forEach(item => {
+                    if(newArr.indexOf(Number(item)) < 0){
+                      newArr.push(Number(item))
+                    }
+                  })
                 }
                 judgeOptions.push(newArr)
               }
@@ -2127,30 +2346,92 @@ export default {
           }
         }
       }
-      $this.judgeOptions = judgeOptions;
+      return judgeOptions;
     },
-    getArrayIndex(item){
+    getArrayIndex(aimarr, item){
       var $this = this;
-      var sindex = -1;
-      $this.judgeOptions.forEach((sitem,index)=>{
+      var obj = {
+        sindex: -1,
+        slength: 0
+      }
+      aimarr.forEach((sitem,index)=>{
         if(sitem.indexOf(item) > -1){
-          sindex = index
-          return sindex;
+          obj.sindex = index;
+          obj.slength = sitem.length;
         }
       })
-      return sindex;
+      return obj;
     },
     findArrayIndex(aimarr,item){
-      var $this = this;
       var sindex = -1;
       aimarr.forEach((sitem,index)=>{
         if(sitem.indexOf(item) > -1){
           sindex = index
-          return sindex;
         }
       })
       return sindex;
+    },
+    qualityTypeChange(val){
+      var $this = this;
+      if(val == 1){
+        // 将值保存
+        $this.newQualityMultiChoosed = $this.qualityMultiChoosed;
+        $this.newQualitySingleChoosed = $this.qualitySingleChoosed;
+        if($this.qualityMultiChoosed.length > 0 || $this.qualitySingleChoosed > 0){
+          $this.oldQualityMultiOptions.forEach(item => {
+            item.disabled = true
+          })
+          $this.oldQualitySingleOptions.forEach(item => {
+            item.disabled = true
+          })
+          
+        }else{
+          $this.oldQualityMultiOptions.forEach(item => {
+            item.disabled = false
+          })
+          $this.oldQualitySingleOptions.forEach(item => {
+            item.disabled = false
+          })
+        }
+        // table赋值
+        $this.qualityMultiOptions = $this.oldQualityMultiOptions;
+        $this.qualitySingleOptions = $this.oldQualitySingleOptions;
+        $this.qualityMultiChoosed = $this.oldQualityMultiChoosed;
+        $this.qualitySingleChoosed = $this.oldQualitySingleChoosed;
+      }else{
+        // 将值保存
+        $this.oldQualityMultiChoosed = $this.qualityMultiChoosed;
+        $this.oldQualitySingleChoosed = $this.qualitySingleChoosed;
+        if($this.qualityMultiChoosed.length > 0 || $this.qualitySingleChoosed > 0){
+          $this.newQualityMultiOptions.forEach(item => {
+            item.disabled = true
+          })
+          $this.newQualitySingleOptions.forEach(item => {
+            item.disabled = true
+          })
+        }else{
+          $this.newQualityMultiOptions.forEach(item => {
+            item.disabled = false
+          })
+          $this.newQualitySingleOptions.forEach(item => {
+            item.disabled = false
+          })
+        }
+        // table赋值
+        $this.qualityMultiOptions = $this.newQualityMultiOptions;
+        $this.qualitySingleOptions = $this.newQualitySingleOptions;
+        $this.qualityMultiChoosed = $this.newQualityMultiChoosed;
+        $this.qualitySingleChoosed = $this.newQualitySingleChoosed;
+      }
+    },
+    
+    // 清除选择内容
+    clearSelect(){
+      var $this = this;
+      $this.qualityMultiChoosed = [];
+      $this.qualitySingleChoosed = 0;
     }
+
   }
 }
 </script>
@@ -2159,6 +2440,19 @@ export default {
   margin-top: 10px;
   :deep(.el-textarea__inner){
     height: 32px!important;
+  }
+}
+.type-select{
+  width: 120px;
+  margin-left: 20px;
+}
+.top_quality_select{
+  margin-bottom: 20px;
+  .el-radio-group{
+    width: auto;
+  }
+  .clearBtn{
+    margin-left: 20px;
   }
 }
 </style>

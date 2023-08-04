@@ -294,6 +294,7 @@ export default {
             itemHeight:2,
             itemGap:20,
             right:10,
+            width: 300,
             textStyle:{
               color:'#c2c2c2',
               fontStyle:'normal',

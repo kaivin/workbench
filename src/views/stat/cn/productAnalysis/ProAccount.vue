@@ -267,7 +267,7 @@ export default {
       isYearBool:false,//时间是否跨年
       isCate:false,//点击分类属性
       xunmaxmonth:{},//最大询盘月份
-      ChartColor:['#044bff','#fe4c46','#fdcb66','#47cbfe'],
+      ChartColor:['#044bff','#fe4c46','#ffa037','#2d7df3','#ff7b43','#91cc75','#47cbfe','#fdcb66'],
       minWidth:"",
       mapRatio:0.75,
       mapNum:'',//地图个数
@@ -1189,7 +1189,7 @@ export default {
     // 时间对比数据封装函数
     dateCompare(dataArr,key,valName,TagName){
       var $this = this;
-      var ChartColor=['#044bff','#fe4c46','#fdcb66','#47cbfe'];
+      var ChartColor=['#044bff','#fe4c46','#ffa037','#2d7df3','#ff7b43','#91cc75','#47cbfe','#fdcb66'];
       dataArr.forEach(function(item,index){
           item.color = ChartColor[index]
       });
@@ -1281,7 +1281,7 @@ export default {
     // 面积图插件
     echartareaPlug(valData,valName,TagName,contrastName){
         var $this = this;
-        var ChartColor=['#044bff','#fe4c46','#fdcb66','#47cbfe'];
+        var ChartColor=['#044bff','#fe4c46','#ffa037','#2d7df3','#ff7b43','#91cc75','#47cbfe','#fdcb66'];
         valData.forEach(function(item,index){
             item.color = ChartColor[index]
         });
@@ -1336,7 +1336,7 @@ export default {
         var $this = this;
         var departcount=[];
         var totalNum=0;
-        var ChartColor=['#044bff','#fe4c46','#fdcb66','#47cbfe'];        
+        var ChartColor=['#044bff','#fe4c46','#ffa037','#2d7df3','#ff7b43','#91cc75','#47cbfe','#fdcb66'];        
         valData.forEach(function(item,index){
             item.color = ChartColor[index];
             item.num = index+1;

@@ -2,67 +2,78 @@
   <div class="page-root scroll-panel personAnalysis" ref="boxPane">
         <div class="memberTopTab">
             <div class="chooseDepart flex-box">
-                  <span class="choosetit">部门：</span>
-                  <div class="departchoose">
-                      <el-checkbox class="all-select" :indeterminate="isAlldepart" size="mini" v-model="departAll" @change="departChangeAll">全选</el-checkbox>
-                      <el-checkbox-group class="team-list" v-model="searchData.dept_id" @change="departChange" size="mini">
-                        <el-checkbox class="item-checkbox" v-for="item in department" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
-                      </el-checkbox-group>
-                  </div>
-                  <span class="choosetit" style="margin-left:20px">时间：</span>
-                  <div class="departList">
-                    <span v-bind:class="item.isOn?'active':''" v-for="item in dateDimension" :key="item.value" v-on:click="dimensionPlug(item)">{{item.label}}</span>
-                  </div>
-                  <div class="departItems" style="margin-left:10px" v-if="isMonth == 3">
-                      <el-date-picker                        
-                        v-model="searchData.daydata"
-                        @change="handleData"
-                        type="daterange"
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd"
-                        key="c"
-                        size="mini"
-                        class="date-range"
-                        range-separator="～"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        :picker-options="pickerDayRangeOptions">
-                      </el-date-picker>
-                  </div>
-                  <div class="departItems" style="margin-left:10px" v-if="isMonth == 1">
-                      <el-date-picker                        
-                        v-model="searchData.data"
-                        @change="handleData"
-                        type="monthrange"
-                        format="yyyy-MM"
-                        value-format="yyyy-MM"
-                        key="b"
-                        size="mini"
-                        class="date-range"
-                        range-separator="～"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        :picker-options="pickerMonthRangeOptions">
-                      </el-date-picker>
-                  </div>
-                  <div class="timeItems" style="margin-left:10px" v-if="isMonth == 2">
-                      <el-date-picker
-                        v-model="searchData.year"
-                        @change="yearChosePlug"
-                        type="year"
-                        format="yyyy"
-                        key="a"
-                        size="mini"
-                        class="date-range"
-                        placeholder="选择年"
-                      >
-                      </el-date-picker>
-                  </div>
-                  <span class="choosetit" style="margin-left:20px">入职时间：</span>
-                  <div class="departList">
-                      <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in ustatusList" :key="index" v-on:click="inTimePlug(item.id)">{{item.name}}</span>
-                  </div>
-                  <i class="departItemBtn" v-on:click="departItemBtn">重置</i>
+              <div class="bind_items flex-box">
+                <span class="choosetit">部门：</span>
+                <div class="departchoose">
+                    <el-checkbox class="all-select" :indeterminate="isAlldepart" size="mini" v-model="departAll" @change="departChangeAll">全选</el-checkbox>
+                    <el-checkbox-group class="team-list" v-model="searchData.dept_id" @change="departChange" size="mini">
+                      <el-checkbox class="item-checkbox" v-for="item in department" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                    </el-checkbox-group>
+                </div>
+              </div>
+              
+              <div class="bind_items flex-box">
+                <span class="choosetit">时间：</span>
+                <div class="departList">
+                  <span v-bind:class="item.isOn?'active':''" v-for="item in dateDimension" :key="item.value" v-on:click="dimensionPlug(item)">{{item.label}}</span>
+                </div>
+                <div class="departItems" style="margin-left:10px" v-if="isMonth == 3">
+                    <el-date-picker                        
+                      v-model="searchData.daydata"
+                      @change="handleData"
+                      type="daterange"
+                      format="yyyy-MM-dd"
+                      value-format="yyyy-MM-dd"
+                      key="c"
+                      size="mini"
+                      class="date-range"
+                      range-separator="～"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期"
+                      :picker-options="pickerDayRangeOptions">
+                    </el-date-picker>
+                </div>
+                <div class="departItems" style="margin-left:10px" v-if="isMonth == 1">
+                    <el-date-picker                        
+                      v-model="searchData.data"
+                      @change="handleData"
+                      type="monthrange"
+                      format="yyyy-MM"
+                      value-format="yyyy-MM"
+                      key="b"
+                      size="mini"
+                      class="date-range"
+                      range-separator="～"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期"
+                      :picker-options="pickerMonthRangeOptions">
+                    </el-date-picker>
+                </div>
+                <div class="timeItems" style="margin-left:10px" v-if="isMonth == 2">
+                    <el-date-picker
+                      v-model="searchData.year"
+                      @change="yearChosePlug"
+                      type="year"
+                      format="yyyy"
+                      key="a"
+                      size="mini"
+                      class="date-range"
+                      placeholder="选择年"
+                    >
+                    </el-date-picker>
+                </div>
+              </div>
+              
+              <div class="bind_items flex-box">
+                <span class="choosetit">入职时间：</span>
+                <div class="departList">
+                    <span v-bind:class="item.isOn?'active':''" v-for="(item,index) in ustatusList" :key="index" v-on:click="inTimePlug(item.id)">{{item.name}}</span>
+                </div>
+              </div>
+
+              <div class="bind_items">
+                <i class="departItemBtn" v-on:click="departItemBtn">重置</i>
+              </div>
             </div>
         </div>
       <div class="flex-content dealRankMain" :class="searchData.dept_id==''?'':'active'">
@@ -651,5 +662,14 @@ export default {
 
 </script>
 
-
+<style lang="scss" scoped>
+.chooseDepart{
+  flex-wrap: wrap;
+  .bind_items{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 20px;
+  }
+}
+</style>
 

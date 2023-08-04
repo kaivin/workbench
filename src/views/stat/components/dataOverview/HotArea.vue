@@ -210,7 +210,8 @@ export default {
                   item.forEach(function(item2){
                     item2.name = item1.name;
                     item2.index =index+1;
-                    item2.depart = item2.departname.substring(2);
+                    // item2.depart = item2.departname.substring(2);
+                    item2.depart = item2.departname;
                     item2.percent = item2.number==0||item1.value==0?'0%':parseInt(item2.number/item1.value*100)+"%";
                     item2.color = currentColor(item1.value,mapInterval);
                   });
@@ -230,7 +231,8 @@ export default {
                   item.forEach(function(item2){
                     item2.name = item1.name;
                     item2.index =index+1;
-                    item2.depart = item2.departname.substring(2);
+                    // item2.depart = item2.departname.substring(2);
+                    item2.depart = item2.departname;
                     item2.percent = item2.number==0||item1.value==0?'0%':parseInt(item2.number/item1.value*100)+"%";
                     item2.color = currentColor(item1.value,mapInterval);
                   });

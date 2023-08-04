@@ -84,9 +84,9 @@ export default {
             $this.myChart.dispose();
           }
           let chartBotData = JSON.parse(JSON.stringify(val));
-          for(let i = 0;i<chartBotData.length;i++){
-            chartBotData[i].departname=chartBotData[i].departname.slice(-2)
-          }
+          // for(let i = 0;i<chartBotData.length;i++){
+          //   chartBotData[i].departname=chartBotData[i].departname.slice(-2)
+          // }
           chartBotData.forEach(item=>{
             item.avgallmoney = parseFloat(item.avgallmoney.toFixed(1))
           })
@@ -149,7 +149,7 @@ export default {
               },
               grid: {
                   left: '0',
-                  right: '0',
+                  right: '10',
                   bottom: '3%',
                   top: '20',
                   containLabel: true
@@ -239,6 +239,12 @@ export default {
                             return  '#0041d0';
                         }else if(params.dataIndex == 3){
                           return  '#3a6cc6';
+                        }else if(params.dataIndex == 4){
+                          return  '#b10a27';
+                        }else if(params.dataIndex == 5){
+                          return  '#dc5b00';
+                        }else if(params.dataIndex == 6){
+                          return  '#0041d0';
                         }
                       }
                   },
@@ -289,6 +295,33 @@ export default {
                         },{
                             offset: 1,
                             color: '#4ab5f8'
+                        }], false)
+                      }if(params.dataIndex == 4){
+                        return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#ff395d'
+                        },{
+                            offset: 1,
+                            color: '#d21435'
+                        }], false)
+                      }else if(params.dataIndex == 5){
+                        return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#ffaf47'
+                        },{
+                            offset: 1,
+                            color: '#ff7a21'
+                        }], false)
+                      }else if(params.dataIndex == 6){
+                        return new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#2e7ff3'
+                        },{
+                            offset: 0.5,
+                            color: '#1969f9'
+                        },{
+                            offset: 1,
+                            color: '#0352ff'
                         }], false)
                       }
                     }
@@ -349,6 +382,30 @@ export default {
                           return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
                                   offset: 0,
                                   color: '#91eaff'
+                              }, {
+                                  offset: 1,
+                                  color: '#53d0f6'
+                          }], false)
+                        } if(params.dataIndex == 4){
+                          return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                  offset: 0,
+                                  color: '#ff617e'
+                              }, {
+                                  offset: 1,
+                                  color: '#ff91a4'
+                          }], false)
+                        }else if(params.dataIndex == 5){
+                          return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                  offset: 0,
+                                  color: '#ff9e37'
+                              }, {
+                                  offset: 1,
+                                  color: '#ffe154'
+                          }], false)
+                        }else if(params.dataIndex == 6){
+                          return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                  offset: 0,
+                                  color: '#2d7df3'
                               }, {
                                   offset: 1,
                                   color: '#53d0f6'

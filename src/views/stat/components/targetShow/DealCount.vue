@@ -1,5 +1,5 @@
 <template>
-  <div class="rowDealCount">
+  <div class="rowDealCount" :class="lang=='ch'? 'chrowDealCount':''">
     <div class="rowTitle">
       <div class="title-left">
         <h3 class="tit-h3"><span v-if="lang == 'ch'">中文</span><span v-else>英文</span>月成交成绩</h3>
