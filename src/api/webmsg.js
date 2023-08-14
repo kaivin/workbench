@@ -189,6 +189,14 @@ export function webMsgSyncPlatMsg(data) {
   });
 }
 
+// 留言系统同步hxjq.com.cn留言信息
+export function webMsgSyncPlatMsgTwo(data) {
+  return request({
+    url: "/hxindex/Webmsg/getmsgtwo",
+    method: "POST",
+    data
+  });
+}
 
 // 留言表系统权限字段列表数据
 export function webMsgPermitFieldList() {

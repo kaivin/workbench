@@ -122,6 +122,10 @@
                                     <div class="item-search">
                                         <el-button class="item-input" size="small" type="primary" :disabled="!isReady" :icon="isReady?'':'el-icon-loading'" v-if="menuButtonPermit.includes('Webmsg_getmsg')" @click="getCnMsgData">同步中文留言</el-button>
                                     </div>
+                                    <div class="item-search" v-if="menuButtonPermit.includes('Webmsg_getmsgtwo')">
+                                        <el-button class="item-input" size="small" type="primary" :disabled="!isReady2" :icon="isReady2?'':'el-icon-loading'" @click="getCnMsgDataTwo">同步hxjq.com.cn留言</el-button>
+                                    </div>
+                                    
                                     <div class="item-search" v-if="currentStatus==='Untreated'&&menuButtonPermit.includes('Webmsg_addpersondeal')">
                                         <el-button class="item-input" size="small" type="primary" :disabled="isDisabled" @click="allotToPending">添加到个人待处理</el-button>
                                     </div>
@@ -370,6 +374,7 @@ export default {
         selectedData:[],
         permitStatus:[],
         isReady:true,
+        isReady2: true,
         scrollPosition:{
           width:0,
           left:0,
@@ -401,6 +406,7 @@ export default {
     ...mapGetters([
       'userInfo',
       'msgPage',
+      'msgPage2',
       'sidebar',
       'menuData'
     ]),
@@ -453,6 +459,7 @@ export default {
   created(){
     var $this = this;
     this.SYNC_PLATMSG(-1);
+    this.SYNC_PLATMSG2(-1);
     $this.getBreadcrumbList();
     $this.initData();
   },
@@ -461,7 +468,8 @@ export default {
   },
   methods:{
     ...mapMutations({
-      SYNC_PLATMSG:"webmsg/SYNC_PLATMSG"
+      SYNC_PLATMSG:"webmsg/SYNC_PLATMSG",
+      SYNC_PLATMSG2:"webmsg/SYNC_PLATMSG2"
     }),
     // 获取面包屑路径
     getBreadcrumbList(){
@@ -900,6 +908,38 @@ export default {
         if(response){
           if(response.status){
             $this.isReady = true;
+            if(response.success!=0){
+              $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'success'
+              });
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: "请求失败",
+                type: 'error'
+              });
+            }
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    // 获取hxjq.com.cn中文留言信息
+    getCnMsgDataTwo(){
+      var $this = this;
+      $this.isReady2 = false;
+      $this.$store.dispatch('webmsg/webMsgSyncPlatMsgTwoAction', {number:$this.msgPage2}).then(response=>{
+        if(response){
+          if(response.status){
+            $this.isReady2 = true;
             if(response.success!=0){
               $this.$message({
                   showClose: true,

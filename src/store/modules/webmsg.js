@@ -23,6 +23,7 @@ import {
   webMsgPromotePending,
   webMsgPromoteProcessed,
   webMsgSyncPlatMsg,
+  webMsgSyncPlatMsgTwo,
   webMsgPermitFieldList,
   webMsgPermitFieldAllotedRoleList,
   webMsgPermitFieldAllotRole,
@@ -38,12 +39,18 @@ import {
 
 const state = {
   msgPage: Cookies.get('msgPage') ? Cookies.get('msgPage') : 0,
+  msgPage2: Cookies.get('msgPage2') ? Cookies.get('msgPage2') : 0,
 }
 const mutations = {
   SYNC_PLATMSG: (state, page) => {
     var pageIndex = parseInt(page) + 1;
     state.msgPage = pageIndex;
     Cookies.set('msgPage', pageIndex);
+  },
+  SYNC_PLATMSG2: (state, page) => {
+    var pageIndex = parseInt(page) + 1;
+    state.msgPage2 = pageIndex;
+    Cookies.set('msgPage2', pageIndex);
   },
 }
 
@@ -291,7 +298,19 @@ const actions = {
       })
     })
   },
-
+  // 留言系统同步hxjq.com.cn的信息
+  webMsgSyncPlatMsgTwoAction({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+      webMsgSyncPlatMsgTwo(data).then(response => {
+        if(response.success!=0){
+          commit('SYNC_PLATMSG2',data.number)
+        }
+          resolve(response)
+      }).catch(error => {
+            reject(error)
+      })
+    })
+  },
 
 
 
