@@ -487,14 +487,13 @@
         </template>
     </el-dialog>
     <!-- 询盘线索质量判定 -->
-    <el-dialog title="询盘线索质量判定" custom-class="quality-dialog" :visible.sync="qualityDecision" width="1100px" :top="showTab?'19px': '46px'">
-        <div class="top_quality_select" v-if="showTab">
-          <el-radio-group v-model="typeValue" @change="qualityTypeChange" size="medium">
+    <el-dialog title="询盘线索质量判定" custom-class="quality-dialog" :visible.sync="qualityDecision" width="1100px" :top="showOld ? '18px' : '46px'">
+        <div class="top_quality_select" v-if="showOld">
+          <el-radio-group v-model="typeValue" size="medium">
             <el-radio-button v-for="item in typeList" :label="item.value" :key="item.value">{{item.label}}</el-radio-button>
           </el-radio-group>
-          <el-button type="text" class="clearBtn" icon="el-icon-brush" @click="clearSelect">清除选择</el-button>
         </div>
-        <div class="quality_content" ref="quality_content">
+        <div class="quality_content" ref="quality_content" v-if="typeValue == 2">
           <div class="quality_title">
             <div class="title_type">多选</div>
             <div class="title_content">具体情况</div>
@@ -525,9 +524,16 @@
             </el-radio-group>
           </div>
         </div>
+
+        <div class="old_has_select" v-if="typeValue == 1">
+          <div class="quality_title">具体情况</div>
+          <div class="old_item" v-for="item in qualityHasOldData" :key="item.pid">
+            {{item.content}}
+          </div>
+        </div>
         
         <template #footer>
-          <span class="dialog-footer">
+          <span class="dialog-footer" v-show="typeValue == 2">
             <el-button size="small" @click="qualityDecision = false">取 消</el-button>
             <el-button type="primary" size="small" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="qualityDecide">确定</el-button>
           </span>
@@ -679,36 +685,27 @@ export default {
       qualitySingleOptions: [],//询盘单选意向情况
       qualityMultiChoosed: [],
       qualitySingleChoosed: 0,
+      qualityOptions: [], // 询盘情况弹窗
+      judgeOptions: [],
       totalScore: 0,
       qualityId : 0,
       isSaveData: false,
       isNewAdd: true,
       popContent: [],
       popTime: "",
-      typeValue: 2,
+      showOld: false, // 是否展示旧数据
+      qualityHasOldData: [], //已选择旧数据
+      typeValue: 1,
       typeList: [
         {
-          label: "新版",
-          value: 2
-        },{
-          label: "旧版",
+          label: "已有内容",
           value: 1
+        },
+        {
+          label: "质量判定",
+          value: 2
         }
       ],
-      newQualityOptions: [],//新版询盘意向情况
-      newQualityMultiOptions: [],//旧版询盘多选意向情况
-      newQualitySingleOptions: [],//旧版询盘单选意向情况
-      newQualityMultiChoosed: [],
-      newQualitySingleChoosed: 0,
-      newJudgeOptions: [],
-      oldQualityOptions: [],//旧版询盘意向情况
-      oldQualityMultiOptions: [],//旧版询盘多选意向情况
-      oldQualitySingleOptions: [],//旧版询盘单选意向情况
-      oldQualityMultiChoosed: [],
-      oldQualitySingleChoosed: 0,
-      oldJudgeOptions: [],
-      showTab: true,
-      quality_content: null
     }
   },
   components:{
@@ -1813,28 +1810,12 @@ export default {
     // 质量判定点击
     qualityJudge(data){
       var $this = this;
-      var xuntimeStamp = Date.parse(data.addtime);
-      var aimtimeStamp = Date.parse("2023-08-04 17:10:00");
-      if(xuntimeStamp > aimtimeStamp){
-        $this.showTab = false;
-      }else{
-        $this.showTab = true;
-      }
-      if($this.$refs.quality_content){
-        console.log($this.$refs.quality_content.scrollTop)
-        $this.$refs.quality_content.scrollTop = 0;
-      }
-      
       $this.isSaveData = false;
       $this.qualityId = data.id;
       $this.typeValue = 2;
       $this.qualityMultiChoosed = [];
       $this.qualitySingleChoosed = 0;
-      $this.newQualityMultiChoosed = [];
-      $this.newQualitySingleChoosed = 0;
-      $this.oldQualityMultiChoosed = [];
-      $this.oldQualitySingleChoosed = 0;
-      if($this.newQualityOptions.length == 0){
+      if($this.qualityOptions.length == 0){
         $this.getQualityCondition(data.id);
       }else{
         $this.getSelectedQuality(data.id);
@@ -1843,10 +1824,7 @@ export default {
     // 质量判定条件列表
     getQualityCondition(id){
       var $this = this;
-      var searchData = {
-        type: $this.typeValue
-      }
-      $this.$store.dispatch('chinaphone/getChinaQualitySelect', searchData).then(response=>{
+      $this.$store.dispatch('chinaphone/getChinaQualitySelect', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
@@ -1859,44 +1837,19 @@ export default {
               var singleOption = response.data.filter(item=>{
                 return item.status == 2
               })
-              $this.newQualityOptions = response.data;
-              $this.newJudgeOptions = $this.radioOption(response.data);
+              $this.qualityOptions = response.data;
+              $this.judgeOptions = $this.radioOption(response.data);
 
               multiOption.forEach(item=>{
-                var index = $this.getArrayIndex($this.newJudgeOptions,item.id);
+                var index = $this.getArrayIndex($this.judgeOptions,item.id);
                 item.disabled = false;
                 item.sindex = index.sindex;
                 item.slength = index.slength;
               })
-              $this.newQualityMultiOptions = multiOption;
-              $this.newQualitySingleOptions = singleOption;
+              $this.qualityMultiOptions = multiOption;
+              $this.qualitySingleOptions = singleOption;
             }else{
-              $this.newQualityOptions = [];
-            }
-
-            if(response.old_data.length>0){
-              response.old_data.sort(function(a,b){
-                return a.sort - b.sort
-              })
-              var multiOption = response.old_data.filter(item=>{
-                return item.status == 1
-              })
-              var singleOption = response.old_data.filter(item=>{
-                return item.status == 2
-              })
-              $this.oldQualityOptions = response.old_data;
-              $this.oldJudgeOptions = $this.radioOption(response.old_data);
-
-              multiOption.forEach(item=>{
-                var index = $this.getArrayIndex($this.oldJudgeOptions, item.id);
-                item.disabled = false;
-                item.sindex = index.sindex;
-                item.slength = index.slength;
-              })
-              $this.oldQualityMultiOptions = multiOption;
-              $this.oldQualitySingleOptions = singleOption;
-            }else{
-              $this.oldQualityOptions = [];
+              $this.qualityOptions = [];
             }
 
             $this.getSelectedQuality(id);
@@ -1926,15 +1879,10 @@ export default {
       var $this = this;
       $this.qualitySingleChoosed = 0;
       if(e.length > 0){
-        if($this.typeValue == 2){
-          $this.qualityMultiChoosed = $this.getChoosedDataFilter($this.newQualityOptions, $this.newQualityMultiChoosed, $this.newJudgeOptions ,e);
-        }else{
-          $this.qualityMultiChoosed = $this.getChoosedDataFilter($this.oldQualityOptions, $this.oldQualityMultiChoosed, $this.oldJudgeOptions , e);
-        }
+        $this.qualityMultiChoosed = $this.getChoosedDataFilter($this.qualityOptions, $this.qualityMultiChoosed, $this.judgeOptions ,e);
       }else{
         $this.qualityMultiChoosed = []
       }
-      console.log($this.qualityMultiChoosed)
     },
     // 数据筛选
     getChoosedDataFilter(qualityOptions, qualityChoosed, judgeOptions, data){
@@ -1999,80 +1947,85 @@ export default {
     },
     // 查找指定元素
     getAimObj(qualityOptions, id){
-      var $this = this;
       var item = qualityOptions.filter(item=>{
         return item.id == id
       })
-
       return item[0];
     },
     // 质量判定按钮确定
     qualityDecide(){
       var $this = this;
-      if($this.typeValue == 1){
-        $this.oldQualityMultiChoosed = $this.qualityMultiChoosed;
-        $this.oldQualitySingleChoosed = $this.qualitySingleChoosed;
-      }else{
-        $this.newQualityMultiChoosed = $this.qualityMultiChoosed;
-        $this.newQualitySingleChoosed = $this.qualitySingleChoosed;
-      }
       if(!$this.isSaveData){        
         $this.isSaveData=true;
         var formData = {}
         formData.cid = $this.qualityId;
-        if($this.newQualityMultiChoosed.length > 0 || $this.oldQualityMultiChoosed.length > 0){
-          if($this.newQualityMultiChoosed.length > 0){
-            formData.qid = $this.newQualityMultiChoosed
-          }
-          if($this.oldQualityMultiChoosed.length > 0){
-            formData.qid = $this.oldQualityMultiChoosed
-          }
+        if($this.qualityMultiChoosed.length > 0){
+          formData.qid = $this.qualityMultiChoosed
           formData.score = $this.getQualityScore(formData.qid);
-        }else{
+          $this.submitQualityData(formData)
+        }else if($this.qualitySingleChoosed){
           var newarr = [];
-          if($this.newQualitySingleChoosed > 0){
-            newarr.push($this.newQualitySingleChoosed)
-          }
-          if($this.oldQualitySingleChoosed > 0){
-            newarr.push($this.oldQualitySingleChoosed)
-          }
+          newarr.push($this.qualitySingleChoosed)
           formData.qid = newarr;
           formData.score = $this.getQualityScore(formData.qid);
-        }
-        var pathUrl = "";
-        if($this.isNewAdd){
-          pathUrl = "chinaphone/getChinaQualityConfirm";
+          $this.submitQualityData(formData)
         }else{
-          pathUrl = "chinaphone/getChinaQualityConfirmedit";
-        }
-        $this.$store.dispatch(pathUrl, formData).then(response=>{
-            if(response.status){
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'success'
-              });
+          if($this.qualityHasOldData.length > 0){
+            this.$confirm('您暂未选择具体情况，点击确定按钮，会清除质量判定的已有内容，确定要继续吗？', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              formData.qid = [];
+              formData.score = 0;
+              $this.submitQualityData(formData);
+            }).catch(() => {
               $this.isSaveData = false;
-              $this.qualityDecision = false;
-              $this.initCluesList();
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSaveData=false;
-              },1000);
-            }
-        });
+            });
+          }else{
+            formData.qid = [];
+            formData.score = 0;
+            $this.submitQualityData(formData)
+          }
+        }
+
       }
+    },
+    // 提交数据
+    submitQualityData(formData){
+      var $this = this;
+      var pathUrl = "";
+      if($this.isNewAdd){
+        pathUrl = "chinaphone/getChinaQualityConfirm";
+      }else{
+        pathUrl = "chinaphone/getChinaQualityConfirmedit";
+      }
+      $this.$store.dispatch(pathUrl, formData).then(response=>{
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.isSaveData = false;
+            $this.qualityDecision = false;
+            $this.initCluesList();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+            setTimeout(()=>{
+              $this.isSaveData=false;
+            },1000);
+          }
+      });
     },
     // 获取最终的评分
     getQualityScore(arr) {
       var $this = this;
-      let options = $this.newQualityMultiOptions.concat($this.oldQualityMultiOptions).concat($this.newQualitySingleOptions).concat($this.oldQualitySingleOptions);
-      console.log(arr);
+      let options = $this.qualityOptions.concat($this.qualitySingleOptions);
       let totalNum = 0;
       arr.forEach(item => {
         let obj = $this.getAimObj(options, item);
@@ -2090,7 +2043,7 @@ export default {
       $this.$store.dispatch('chinaphone/getChinaQualityHasSelect', formData).then(response=>{
         if(response){
           if(response.status){
-            // 获取选中的值-新版
+            // 获取选中的值
             if(response.data.length>0){
                 $this.isNewAdd = false;
                 // 获取选中的值
@@ -2098,93 +2051,32 @@ export default {
                 response.data.forEach(item=>{
                   options.push(item.qid);
                 })
-                var checkedData = $this.getAimObj($this.newQualityOptions, options[0]);
-                var status = checkedData.status;
-                if(status == 1){
-                  $this.newQualitySingleChoosed = 0;
-                  $this.newQualityMultiChoosed = options;
-                }else if(status == 2){
-                  $this.newQualityMultiChoosed = [];
-                  $this.newQualitySingleChoosed = options[0];
+                if(response.is_new == 1){
+                  var checkedData = $this.getAimObj($this.qualityOptions, options[0]);
+                  var status = checkedData.status;
+                  if(status == 1){
+                    $this.qualitySingleChoosed = 0;
+                    $this.qualityMultiChoosed = options;
+                  }else if(status == 2){
+                    $this.qualityMultiChoosed = [];
+                    $this.qualitySingleChoosed = options[0];
+                  }
+                  $this.showOld = false;
+                  $this.typeValue = 2;
+                  $this.qualityHasOldData = [];
+                }else{
+                  $this.qualitySingleChoosed = 0;
+                  $this.qualityMultiChoosed = [];
+                  $this.qualityHasOldData = response.data;
+                  $this.showOld = true;
+                  $this.typeValue = 1;
                 }
-                // 内容赋值
-                $this.typeValue = 2;
-                $this.oldQualityMultiOptions.forEach(item => {
-                  item.disabled = true
-                })
-                $this.oldQualitySingleOptions.forEach(item => {
-                  item.disabled = true
-                })
-                $this.newQualityMultiOptions.forEach(item => {
-                  item.disabled = false
-                })
-                $this.newQualitySingleOptions.forEach(item => {
-                  item.disabled = false
-                })
-                
-                // 表格赋值
-                $this.qualityMultiChoosed = $this.newQualityMultiChoosed;
-                $this.qualitySingleChoosed = $this.newQualitySingleChoosed;
-                $this.qualityMultiOptions = $this.newQualityMultiOptions;
-                $this.qualitySingleOptions = $this.newQualitySingleOptions;
-            }
-
-            // 获取选中的值-旧版
-            if(response.old_data.length>0){
-                $this.isNewAdd = false;
-                // 获取选中的值
-                var options = [];
-                response.old_data.forEach(item=>{
-                  options.push(item.qid);
-                })
-                var checkedData = $this.getAimObj($this.oldQualityOptions, options[0]);
-                var status = checkedData.status;
-                if(status == 1){
-                  $this.oldQualitySingleChoosed = 0;
-                  $this.oldQualityMultiChoosed = options;
-                }else if(status == 2){
-                  $this.oldQualityMultiChoosed = [];
-                  $this.oldQualitySingleChoosed = options[0];
-                }
-                // 内容赋值
-                $this.typeValue = 1;
-                $this.newQualityMultiOptions.forEach(item => {
-                  item.disabled = true
-                })
-                $this.newQualitySingleOptions.forEach(item => {
-                  item.disabled = true
-                })
-                $this.oldQualityMultiOptions.forEach(item => {
-                  item.disabled = false
-                })
-                $this.oldQualitySingleOptions.forEach(item => {
-                  item.disabled = false
-                })
-                // 表格赋值
-                $this.qualityMultiChoosed = $this.oldQualityMultiChoosed;
-                $this.qualitySingleChoosed = $this.oldQualitySingleChoosed;
-                $this.qualityMultiOptions = $this.oldQualityMultiOptions;
-                $this.qualitySingleOptions = $this.oldQualitySingleOptions;
-            }
-
-            // 未判定，默认展示新版，内容赋值
-            if( response.data.length == 0 && response.old_data.length == 0){
-              $this.typeValue = 2;
-              $this.isNewAdd = true;
-              $this.newQualityMultiChoosed = [];
-              $this.newQualitySingleChoosed = 0;
-              $this.oldQualityMultiChoosed = [];
-              $this.oldQualitySingleChoosed = 0;
-              $this.newQualityMultiOptions.forEach(item => {
-                item.disabled = false
-              })
-              $this.newQualitySingleOptions.forEach(item => {
-                item.disabled = false
-              })
-              $this.qualityMultiChoosed = [];
+            }else{
+              $this.showOld = false;
               $this.qualitySingleChoosed = 0;
-              $this.qualityMultiOptions = $this.newQualityMultiOptions;
-              $this.qualitySingleOptions = $this.newQualitySingleOptions;
+              $this.qualityMultiChoosed = [];
+              $this.qualityHasOldData = [];
+              $this.typeValue = 2;
             }
 
             $this.qualityDecision = true;
@@ -2222,17 +2114,7 @@ export default {
             var options = [];
             var popTime = '';
             if(response.data.length>0){
-                
                 response.data.forEach((item,index)=>{
-                  if(index == 0){
-                    popTime = item.addtime;
-                  }
-                  options.push(item.content);
-                })
-            }
-            if(response.old_data.length>0){
-                
-                response.old_data.forEach((item,index)=>{
                   if(index == 0){
                     popTime = item.addtime;
                   }
@@ -2371,59 +2253,6 @@ export default {
       })
       return sindex;
     },
-    qualityTypeChange(val){
-      var $this = this;
-      if(val == 1){
-        // 将值保存
-        $this.newQualityMultiChoosed = $this.qualityMultiChoosed;
-        $this.newQualitySingleChoosed = $this.qualitySingleChoosed;
-        if($this.qualityMultiChoosed.length > 0 || $this.qualitySingleChoosed > 0){
-          $this.oldQualityMultiOptions.forEach(item => {
-            item.disabled = true
-          })
-          $this.oldQualitySingleOptions.forEach(item => {
-            item.disabled = true
-          })
-          
-        }else{
-          $this.oldQualityMultiOptions.forEach(item => {
-            item.disabled = false
-          })
-          $this.oldQualitySingleOptions.forEach(item => {
-            item.disabled = false
-          })
-        }
-        // table赋值
-        $this.qualityMultiOptions = $this.oldQualityMultiOptions;
-        $this.qualitySingleOptions = $this.oldQualitySingleOptions;
-        $this.qualityMultiChoosed = $this.oldQualityMultiChoosed;
-        $this.qualitySingleChoosed = $this.oldQualitySingleChoosed;
-      }else{
-        // 将值保存
-        $this.oldQualityMultiChoosed = $this.qualityMultiChoosed;
-        $this.oldQualitySingleChoosed = $this.qualitySingleChoosed;
-        if($this.qualityMultiChoosed.length > 0 || $this.qualitySingleChoosed > 0){
-          $this.newQualityMultiOptions.forEach(item => {
-            item.disabled = true
-          })
-          $this.newQualitySingleOptions.forEach(item => {
-            item.disabled = true
-          })
-        }else{
-          $this.newQualityMultiOptions.forEach(item => {
-            item.disabled = false
-          })
-          $this.newQualitySingleOptions.forEach(item => {
-            item.disabled = false
-          })
-        }
-        // table赋值
-        $this.qualityMultiOptions = $this.newQualityMultiOptions;
-        $this.qualitySingleOptions = $this.newQualitySingleOptions;
-        $this.qualityMultiChoosed = $this.newQualityMultiChoosed;
-        $this.qualitySingleChoosed = $this.newQualitySingleChoosed;
-      }
-    },
     
     // 清除选择内容
     clearSelect(){
@@ -2448,11 +2277,5 @@ export default {
 }
 .top_quality_select{
   margin-bottom: 20px;
-  .el-radio-group{
-    width: auto;
-  }
-  .clearBtn{
-    margin-left: 20px;
-  }
 }
 </style>

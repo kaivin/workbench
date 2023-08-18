@@ -11,11 +11,6 @@
                     </template>
                   </p>
                   <el-card class="box-card" shadow="hover">
-                    <div class="top_select">
-                      <el-radio-group v-model="searchData.type" @change="initPage" size="small">
-                        <el-radio-button v-for="item in typeList" :label="item.value" :key="item.value">{{item.label}}</el-radio-button>
-                      </el-radio-group>
-                    </div>
                     <div class="card-content" ref="tableContent">
                       <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
                             <div class="table-mask"></div>
@@ -81,7 +76,7 @@
                                 </template> -->
                               </el-table-column>
                               <el-table-column
-                                v-if="(menuButtonPermit.indexOf('Chinaphone_chinaqualityedit')||menuButtonPermit.indexOf('Chinaphone_chinaqualitydelete')) && searchData.type == 2"
+                                v-if="(menuButtonPermit.indexOf('Chinaphone_chinaqualityedit')||menuButtonPermit.indexOf('Chinaphone_chinaqualitydelete'))"
                                 :width="operationsWidth"
                                 align="center"
                                 fixed="right"
@@ -203,19 +198,6 @@ export default {
       },
       isSaveData:false,
       qualityOptions:[],
-      searchData: {
-        type: 2
-      },
-      typeList: [
-        {
-          label: "新版",
-          value: 2
-        },
-        {
-          label: "旧版",
-          value: 1
-        }
-      ]
     }
   },
   computed: {
@@ -376,8 +358,7 @@ export default {
     initPage(){
       var $this = this;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      var searchData = $this.searchData
-      $this.$store.dispatch('chinaphone/getChinaQualityList', searchData).then(response=>{
+      $this.$store.dispatch('chinaphone/getChinaQualityList', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data.length>0){
