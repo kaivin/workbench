@@ -114,6 +114,18 @@
             </el-form-item>
           </div>
           <div class="item-form">
+            <el-form-item label="其他类型：" :label-width="formLabelWidth">
+              <el-select v-model="dialogForm.phoentype_id" clearable placeholder="请选择其他电话类型">
+                <el-option
+                  v-for="item in otherPhoneTypeList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+          <div class="item-form">
             <el-form-item label="部门：" :label-width="formLabelWidth">
               <el-select v-model="dialogForm.dept_id" clearable placeholder="请选择部门">
                 <el-option
@@ -215,6 +227,7 @@ export default {
       departList:[],
       userList:[],
       phoneTypeList:[],
+      otherPhoneTypeList: [],
       dialogForm:{
         id:0,
         phonenumber:"",
@@ -223,6 +236,7 @@ export default {
         othername:"",
         dept_id:"",
         sort:"",
+        phoentype_id: "",
       },
       dialogRoleVisible:false,
       roleData:[{key:"",label:""}],
@@ -563,8 +577,9 @@ export default {
       $this.dialogForm.phonenumber = row.phonenumber;
       $this.dialogForm.userid = userID;
       $this.dialogForm.typeid = row.typeid;
+      $this.dialogForm.phoentype_id = row.phoentype_id == 0 ? '' : row.phoentype_id;
       $this.dialogForm.othername = row.othername;
-      $this.dialogForm.dept_id = row.dept_id;
+      $this.dialogForm.dept_id = row.dept_id == 0 ? '' : row.dept_id;
       $this.dialogForm.sort = row.sort==0?'':row.sort;
     },
     // 保存添加/编辑数据
@@ -580,6 +595,7 @@ export default {
         formData.phonenumber = $this.dialogForm.phonenumber;
         formData.userid = $this.dialogForm.userid;
         formData.typeid = $this.dialogForm.typeid;
+        formData.phoentype_id = $this.dialogForm.phoentype_id;
         formData.othername = $this.dialogForm.othername;
         formData.dept_id = $this.dialogForm.dept_id;
         formData.sort = $this.dialogForm.sort;
@@ -618,6 +634,7 @@ export default {
       $this.dialogForm.userid = [];
       $this.dialogForm.phonenumber = "";
       $this.dialogForm.typeid = "";
+      $this.dialogForm.phoentype_id = "";
       $this.dialogForm.othername = "";
       $this.dialogForm.dept_id = "";
       $this.dialogForm.sort = "";
@@ -702,6 +719,14 @@ export default {
               phoneTypeList.push(itemData);
             });
             $this.phoneTypeList = phoneTypeList;
+            var otherPhoneTypeList = [];
+            response.typetwo.forEach(function(item,index){
+              var itemData = {};
+              itemData.value = item.id;
+              itemData.label = item.name;
+              otherPhoneTypeList.push(itemData);
+            });
+            $this.otherPhoneTypeList = otherPhoneTypeList;
           }else{
             $this.$message({
               showClose: true,
