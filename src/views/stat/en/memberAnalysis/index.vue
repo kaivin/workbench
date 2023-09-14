@@ -314,6 +314,7 @@ export default {
                   itemObj.comtimeShow=$this.dateCompare(item.comtime);
                   itemObj.monthnumber=item.number;
                   itemObj.monthscore=item.score;
+                  itemObj.monthtruescore = item.true_score;
                   itemObj.monthallmoney=item.allmoney;
                   itemObj.monthAnumber=item.Anumber;
                   if(response.yearuser&&response.yearuser.length>0){
@@ -323,6 +324,7 @@ export default {
                           itemObj.ranknumber=items.number;
                           itemObj.yearAvgnumber=(items.number/$this.monthTime).toFixed(2)*1
                           itemObj.yearscore=items.score;
+                          itemObj.yeartruescore = items.true_score;
                           itemObj.yearallmoney=items.allmoney;
                           itemObj.yearAnumber=items.Anumber;
                       }

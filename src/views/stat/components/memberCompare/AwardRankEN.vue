@@ -72,6 +72,14 @@
                   >
                 </el-table-column>
                 <el-table-column
+                  prop="monthtruescore"
+                  label="意向客户分"
+                  sortable
+                  width='110'
+                  class-name="monthStyle"
+                  >
+                </el-table-column>
+                <el-table-column
                   prop="monthscore"
                   label="成交积分"
                   sortable
@@ -81,6 +89,7 @@
                 <el-table-column
                   prop="monthAnumber"
                   label="100万个数"
+                  width='110'
                   sortable
                   class-name="monthStyle"
                   >
@@ -103,6 +112,14 @@
                   >
                 </el-table-column>
                 <el-table-column
+                  prop="yeartruescore"
+                  label="意向客户分"
+                  width='110'
+                  sortable
+                  class-name="yearStyle"
+                  >
+                </el-table-column>
+                <el-table-column
                   prop="yearscore"
                   label="成交积分"
                   sortable
@@ -112,6 +129,7 @@
                 <el-table-column
                   prop="yearAnumber"
                   label="100万个数"
+                  width='110'
                   sortable
                   class-name="yearStyle"
                   >
