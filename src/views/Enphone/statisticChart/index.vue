@@ -411,16 +411,16 @@
                         </div>
                       </div>
                     </el-col>
-                    <el-col :md="24" :lg="12" v-if="checkedItem.includes(3)">
+                    <el-col :md="24" :lg="12" v-if="checkedItem.includes(12)">
                       <div class="chart-wrapper" style="margin-bottom:15px">
-                        <div class="chart-header"><span>平均星期询盘量</span></div>
-                        <div class="chart-body" style="height:400px;">
-                            <div class="abs-canvas" v-if="searchResult.weekCount.length>0">
-                              <div id="cluesChart5" class="chart-canvas"></div>
-                            </div>
-                            <div class="nocount" v-else>
-                              暂无数据
-                            </div>
+                        <div class="chart-header"><span>网站询盘</span></div>
+                        <div class="chart-body" style="height:400px;">                                              
+                          <div class="abs-canvas" v-if="searchResult.domainCount.length>0">
+                            <div id="cluesChart15" class="chart-canvas"></div>
+                          </div>
+                          <div class="nocount" v-else>
+                            暂无数据
+                          </div>
                         </div>
                       </div>
                     </el-col>
@@ -454,6 +454,21 @@
                         <div class="chart-body" style="height:400px;">
                             <div class="abs-canvas" v-if="searchResult.seasonCount.length>0">
                               <div id="cluesChart13" class="chart-canvas"></div>
+                            </div>
+                            <div class="nocount" v-else>
+                              暂无数据
+                            </div>
+                        </div>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row :gutter="15" v-if="checkedItem.includes(3)">
+                    <el-col :xs="24">
+                      <div class="chart-wrapper" style="margin-bottom:15px">
+                        <div class="chart-header"><span>平均星期询盘量</span></div>
+                        <div class="chart-body" style="height:400px;">
+                            <div class="abs-canvas" v-if="searchResult.weekCount.length>0">
+                              <div id="cluesChart5" class="chart-canvas"></div>
                             </div>
                             <div class="nocount" v-else>
                               暂无数据
@@ -757,7 +772,8 @@ export default {
         materlist:[],
         monthCount:[],
         seasonCount:[],
-        weekListCount:[]
+        weekListCount:[],
+        domainCount: []
       },
       maxWeek:[],
       minWeek:[],
@@ -785,7 +801,8 @@ export default {
         chart:'',
         monthPlot:'',
         seasonPlot:'',
-        weekPlot: ''
+        weekPlot: '',
+        pieDomainPlot: ''
       },
       formLabelWidth:"120px",
       exportForm:{
@@ -798,12 +815,13 @@ export default {
       resaultShowList:[
         {id:1,value:1,label:"使用设备"},
         {id:2,value:2,label:"产品分类"},
-        {id:3,value:3,label:"平均星期询盘量"},
+        {id:12,value:12,label: "网站询盘"},
         {id:4,value:4,label:"来源渠道"},
         {id:5,value:5,label:"每天询盘量"},
         {id:6,value:6,label:"平均小时询盘量"},
         {id:7,value:7,label:"热门产品"},
         {id:8,value:8,label:"热门国家"},
+        {id:3,value:3,label:"平均星期询盘量"},
         {id:11, value: 11, label: "询盘周趋势"},
         {id:9,value:9,label:"询盘月趋势"},
         {id:10,value:10,label:"询盘季度趋势"}
@@ -1352,6 +1370,7 @@ export default {
               $this.searchResult.monthCount = response.monthtrend ? response.monthtrend : [];
               $this.searchResult.seasonCount = response.quartertrend ? response.quartertrend : [];
               $this.searchResult.weekListCount = response.weektrend ? response.weektrend : [];
+              $this.searchResult.domainCount = response.domaincount ? response.domaincount : [];
               // $this.searchResult.searchWordCount = response.searchwordcount;
               var numArr = [];
               if(response.weekdaycount){
@@ -1510,8 +1529,17 @@ export default {
                 if($this.checkedItem.includes(10)){
                   $this.drawChart13();
                 }
+                if($this.chartlist.weekPlot){
+                  $this.chartlist.weekPlot.dispose();
+                }
                 if($this.checkedItem.includes(11)){
                   $this.drawChart14();
+                }
+                if($this.chartlist.pieDomainPlot){
+                  $this.chartlist.pieDomainPlot.dispose();
+                }
+                if($this.checkedItem.includes(12)){
+                  $this.drawChart15();
                 }
               });
               setTimeout(()=>{
@@ -3839,6 +3867,87 @@ export default {
       }
     },
 
+    // 网站询盘量
+    drawChart15(){
+      var $this = this;
+      if($this.searchResult.domainCount.length>0){
+        var newData = [];
+        $this.searchResult.domainCount.forEach(function(item,index){
+          var objitem={};
+          objitem.value= item.number;
+          objitem.name = item.domain;
+          newData.push(objitem);
+        });
+        var chartDom = document.getElementById('cluesChart15');
+        var myChart = echarts.init(chartDom);
+        var option;
+        option = {
+          tooltip: {
+            trigger: 'item',
+            formatter(items){
+              var tooltext = `<div class="counttoolTip">
+              <div class="title">${items.name}</div>
+              <div class="bar clearfix">
+                ${items.marker}
+                <span class="name">${items.seriesName}：</span>
+                <span class="num">${items.value}</span>
+              </div>
+              `;
+              return tooltext;
+            }
+          },
+          legend: {
+            type: 'scroll',
+            orient: 'horizontal',
+            left: 'center',
+            bottom: 'bottom',
+            // orient: 'vertical',
+            // right: 'right',
+            // top: 'middle',
+            itemWidth: 8,
+            itemHeight: 8,
+            icon: "circle",
+          },
+          color: ["#6395f9","#62daab","#5d7092","#f6bd16","#7666f9","#fe4c46","#1760ff","#fc8452","#47cbfe","#3ba272"],
+          animation: false,
+          series: [
+            {
+              name: '询盘个数',
+              type: 'pie',
+              radius: '75%',
+              data: newData,
+              emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              },
+              label:{
+                  normal:{
+                      formatter: function(params){
+                          var str = '';
+                          if(params.percent > 0){
+                            str = params.name+":"+params.percent.toFixed(1)+"%";
+                          }else{
+                            str = params.name+":"+params.percent+"%";
+                          }
+                          return str
+                      },
+                      position: 'outside',
+                      fontSize: 13,
+                      color: "#666",
+                      overflow: 'none'
+                  }
+                },
+            }
+          ]
+        };
+        option && myChart.setOption(option);
+        $this.chartlist.pieDomainPlot = myChart;
+      }
+    },
+
     getSummaries(param){
       var $this = this;
       const { columns, data } = param;
@@ -3925,8 +4034,17 @@ export default {
       if($this.chartlist.chart){
         $this.chartlist.chart.resize();
       }
+      if($this.chartlist.monthPlot){
+        $this.chartlist.monthPlot.resize();
+      }
+      if($this.chartlist.seasonPlot){
+        $this.chartlist.seasonPlot.resize();
+      }
       if($this.chartlist.weekPlot){
         $this.chartlist.weekPlot.resize();
+      }
+      if($this.chartlist.pieDomainPlot){
+        $this.chartlist.pieDomainPlot.resize();
       }
     }
   },
