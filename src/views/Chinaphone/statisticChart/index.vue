@@ -494,13 +494,8 @@
 <script>
 import { mapGetters } from 'vuex';
 import * as echarts from 'echarts';
-<<<<<<< Updated upstream
 import {MapInterval} from "@/utils/MapColor";
 import {sortByDesc,pickerDayRangeOptions} from "@/utils/index";
-=======
-import {MapCountInterval} from "@/utils/MapColor";
-import {sortByDesc} from "@/utils/index";
->>>>>>> Stashed changes
 export default {
   name: 'statisticChart',
   data() {
@@ -1055,10 +1050,6 @@ export default {
           return false;
         }
         $this.isDisabled=true;
-<<<<<<< Updated upstream
-=======
-        $this.loadingFun();
->>>>>>> Stashed changes
         $this.$store.dispatch('chinaphone/cluesAnalysisResultDataAction', searchData).then(response=>{
           if(response){
             if(response.status){
@@ -1203,10 +1194,6 @@ export default {
                 }else{
                   $this.drawChart10();
                 }
-<<<<<<< Updated upstream
-=======
-                $this.isLoading.close();
->>>>>>> Stashed changes
               });
               setTimeout(()=>{
                 $this.isDisabled=false;
@@ -2016,10 +2003,7 @@ export default {
               color: "#888"
             }
           },
-<<<<<<< Updated upstream
           animation: false,
-=======
->>>>>>> Stashed changes
           series: [
             {
               name: '询盘个数',
@@ -2113,10 +2097,7 @@ export default {
               color: "#888"
             }
           },
-<<<<<<< Updated upstream
           animation: false,
-=======
->>>>>>> Stashed changes
           series: [
             {
               name: '询盘个数',
@@ -2179,10 +2160,7 @@ export default {
             icon: "circle",
           },
           color: ["#6395f9","#62daab","#5d7092","#f6bd16","#7666f9"],
-<<<<<<< Updated upstream
           animation: false,
-=======
->>>>>>> Stashed changes
           series: [
             {
               name: '询盘个数',
@@ -2254,10 +2232,7 @@ export default {
             icon: "circle",
           },
           color: ["#6395f9","#62daab","#5d7092","#f6bd16","#7666f9"],
-<<<<<<< Updated upstream
           animation: false,
-=======
->>>>>>> Stashed changes
           series: [
             {
               name: '询盘个数',
@@ -2346,10 +2321,7 @@ export default {
               color: "#888"
             }
           },
-<<<<<<< Updated upstream
           animation: false,
-=======
->>>>>>> Stashed changes
           series: [
             {
               name: '询盘个数',
@@ -2408,7 +2380,6 @@ export default {
               fontSize: 20,
               fontWeight: 'normal',
               color: '#000'
-<<<<<<< Updated upstream
             },
             subtext: totalnum,
             subtextStyle:{
@@ -2429,27 +2400,6 @@ export default {
           },
           color: ["#6395f9","#62daab","#5d7092","#f6bd16","#7666f9"],
           animation: false,
-=======
-            },
-            subtext: totalnum,
-            subtextStyle:{
-              fontSize: 28,
-              fontWeight: 'bold',
-              color: '#000'
-            },
-            left: 'center',
-            top: '42%'
-          },
-          legend: {
-            orient: 'vertical',
-            right: 'right',
-            top: 'middle',
-            itemWidth: 8,
-            itemHeight: 8,
-            icon: 'circle',
-          },
-          color: ["#6395f9","#62daab","#5d7092","#f6bd16","#7666f9"],
->>>>>>> Stashed changes
           series: [
             {
               name: '询盘个数',
@@ -2534,7 +2484,6 @@ export default {
             axisPointer: {
               type: "line", 
               lineStyle:{
-<<<<<<< Updated upstream
                 color: "#5b8ff9"
               }
             },
@@ -2565,24 +2514,6 @@ export default {
               color: "#888"
             }
           },
-=======
-                color: "#dedede"
-              }
-            },
-          },
-          xAxis: {
-            type: 'category',
-            name: "日期",
-            axisLine:{
-              lineStyle:{
-                color: "#dedede"
-              }
-            },
-            axisLabel:{
-              color: "#888"
-            }
-          },
->>>>>>> Stashed changes
           yAxis: {
             type: 'value',
             axisLabel:{
@@ -2592,15 +2523,11 @@ export default {
           dataset:{
             source: $this.searchResult.dayCount,  
           },
-<<<<<<< Updated upstream
           animation: false,
-=======
->>>>>>> Stashed changes
           series: [
             {
               name: "询盘个数",
               type: 'line',
-<<<<<<< Updated upstream
               symbol: 'circle',
               symbolSize: '5',
               label:{
@@ -2624,13 +2551,6 @@ export default {
                 itemStyle:{
                   borderWidth: 2
                 }
-=======
-              smooth: true,
-              symbol: 'none',
-              lineStyle:{
-                color: "#5b8ff9",
-                lineWidth: 1
->>>>>>> Stashed changes
               }
             }
           ]
@@ -2696,10 +2616,7 @@ export default {
               color: "#888"
             }
           },
-<<<<<<< Updated upstream
           animation: false,
-=======
->>>>>>> Stashed changes
           series: [
             {
               name: '询盘个数',
@@ -2790,10 +2707,7 @@ export default {
               color: "#888"
             }
           },
-<<<<<<< Updated upstream
           animation: false,
-=======
->>>>>>> Stashed changes
           series: [
             {
               name: '询盘个数',
@@ -2847,11 +2761,7 @@ export default {
         var chartDom = document.getElementById('cluesChart10');
         var myChart = echarts.init(chartDom);
         var maxNum = mapCountData[0].value;
-<<<<<<< Updated upstream
         let mapInterval = MapInterval(maxNum);
-=======
-        let mapInterval = MapCountInterval(maxNum);
->>>>>>> Stashed changes
         var option;
          option = {
           // 提示框组件
@@ -2900,7 +2810,6 @@ export default {
               lineHeight:140,
               fontSize: 12,
               color: '#888'
-<<<<<<< Updated upstream
             },
             realtime: false, // 拖拽时，是否实时更新
             calculable: true, // 是否显示拖拽用的手柄
@@ -2908,15 +2817,6 @@ export default {
             inRange: {
               color: mapInterval.defaultColor // 图元的颜色
             },
-=======
-            },
-            realtime: false, // 拖拽时，是否实时更新
-            calculable: true, // 是否显示拖拽用的手柄
-            // 定义 在选中范围中 的视觉元素
-            inRange: {
-              color: mapInterval.defaultColor // 图元的颜色
-            },
->>>>>>> Stashed changes
             inverse:false,
             orient:'vertical',
             itemWidth:9,
@@ -2936,11 +2836,7 @@ export default {
             },
             itemStyle: {
               borderWidth: 0.5, // 描边线宽 为 0 时无描边
-<<<<<<< Updated upstream
               borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
-=======
-              borderColor: '#bae7ff', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
->>>>>>> Stashed changes
               borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
             },
             emphasis: {
@@ -2950,10 +2846,7 @@ export default {
               }
             }
           },
-<<<<<<< Updated upstream
           animation: false,
-=======
->>>>>>> Stashed changes
           series: [
             {
               type: 'map', // 类型
@@ -2968,11 +2861,7 @@ export default {
               // 地图区域的多边形 图形样式
               itemStyle: {
                 borderWidth: 0.5, // 描边线宽 为 0 时无描边
-<<<<<<< Updated upstream
                 borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
-=======
-                borderColor: '#bae7ff', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
->>>>>>> Stashed changes
                 borderType: 'solid' // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
               },
               // 高亮状态下的多边形和标签样式
@@ -2986,11 +2875,7 @@ export default {
                 },
                 itemStyle: {
                   borderWidth: 0.5, // 描边线宽 为 0 时无描边
-<<<<<<< Updated upstream
                   borderColor: '#999', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
-=======
-                  borderColor: '#0050b3', // 图形的描边颜色 支持的颜色格式同 color，不支持回调函数
->>>>>>> Stashed changes
                   borderType: 'solid', // 描边类型，默认为实线，支持 'solid', 'dashed', 'dotted'
                 }
               },

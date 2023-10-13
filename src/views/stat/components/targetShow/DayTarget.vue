@@ -189,7 +189,6 @@ export default {
               }
             ],
             yAxis: [
-<<<<<<< Updated upstream
               {
                 type: 'value',
                 splitNumber: 3,
@@ -202,20 +201,6 @@ export default {
             ],
             series: [
               {
-=======
-              {
-                type: 'value',
-                splitNumber: 3,
-                splitLine: {
-                  lineStyle:{
-                    color:"#dedede"
-                  }
-                }
-              }
-            ],
-            series: [
-              {
->>>>>>> Stashed changes
                 name: '搜索询盘',
                 type: 'bar',
                 stack: '询盘数量',
