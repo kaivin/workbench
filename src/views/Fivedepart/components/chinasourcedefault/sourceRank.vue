@@ -3,6 +3,7 @@
       <div class="memberTit">
           <h3>{{currentData.name}}<span style="font-size:12px">{{currentData.isavg}}</span></h3>
           <p>({{datetime}})
+            <span class="totalNum">总计：{{currentData.totalNum}}</span>
             <!-- <span class="memberBtn"><i v-if='YSort' v-on:click="fallSort(currentData.name)">排序</i></span> -->
           </p>
       </div>
@@ -141,4 +142,10 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.memberTit p .totalNum{
+  float: right;
+  color: #0749f3;
+  font-size: 14px;
+}
+</style>

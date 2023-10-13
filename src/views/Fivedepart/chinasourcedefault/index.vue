@@ -301,6 +301,10 @@
         itemObj.mainArr=dateArr;
         itemObj.name=Name;
         itemObj.unit=Tag;
+        var total = dateArr.reduce((prev,next) => {
+          return prev + Number(next.value)
+        },0)
+        itemObj.totalNum = total.toFixed(1) + Tag;
         if(dateArr.length>8){
           itemObj.ifFold=true;
           itemObj.boxHeight='504px';
