@@ -38,42 +38,6 @@
                     ></source-rank>
                 </template>
             </div>
-            <div class="OwnRankTop">
-                <template v-if="sourceData.length>0" v-for="(item,index) in sourceData">
-                  <source-rank 
-                    :itemData="item" 
-                    :ByTime ="searchTime"
-                    :YSort='true'
-                     v-if="index>2&&index<6"
-                    @fallSort='getfallSort'
-                    @changeSet='changeSet'
-                    ></source-rank>
-                </template>
-            </div>
-            <div class="OwnRankTop">
-                <template v-if="sourceData.length>0" v-for="(item,index) in sourceData">
-                  <source-rank 
-                    :itemData="item" 
-                    :ByTime ="searchTime"
-                    :YSort='true'
-                     v-if="index>5&&index<9"
-                    @fallSort='getfallSort'
-                    @changeSet='changeSet'
-                    ></source-rank>
-                </template>
-            </div>
-            <div class="OwnRankTop">
-                <template v-if="sourceData.length>0" v-for="(item,index) in sourceData">
-                  <source-rank 
-                    :itemData="item" 
-                    :ByTime ="searchTime"
-                    :YSort='true'
-                     v-if="index>8"
-                    @fallSort='getfallSort'
-                    @changeSet='changeSet'
-                    ></source-rank>
-                </template>
-            </div>
         </div>
     </div>
   </template>
@@ -82,7 +46,7 @@
   import sourceRank from "../components/chinasourcedefault/sourceRank.vue";
   import {randomString,numSeparate,sortByDesc,rankingWithTotalItem,singleArrColor} from "@/utils/index";
   export default {
-    name: 'Ownpush_chinasourcecount',
+    name: 'Fivedepart_chinasourcedefault',
     components: {
       sourceRank,
     },
@@ -115,6 +79,7 @@
           },
           sourceData:[],
           scorelist:[],
+          allscore: 0
       };
     },
     computed: {
@@ -273,6 +238,7 @@
         $this.$store.dispatch('depfive/depfiveSourceDataAction', searchData).then(res=>{
             if(res.status){
               var sourceData=[];
+              $this.allscore = res.allscore;
               //  成交积分
               if(res.scorelist && res.scorelist.length > 0){
                 var scorelist=$this.departDataRes(res.scorelist,'score');
@@ -281,7 +247,7 @@
                   item.number = numSeparate(item.value);
                 });
                 $this.scorelist=scoreSource;
-                var scoreObj=$this.sourceRank(scoreSource,'成交积分排行榜','分');
+                var scoreObj=$this.sourceRank(scoreSource,'成交积分排行榜','分', res.allscore);
                 sourceData.push(scoreObj);       
                 $this.sourceData=sourceData;
               }
@@ -296,11 +262,12 @@
         });
       },
  
-      sourceRank(dateArr,Name,Tag,isLevel){
+      sourceRank(dateArr,Name,Tag, allscore){
         var itemObj={};
         itemObj.mainArr=dateArr;
         itemObj.name=Name;
         itemObj.unit=Tag;
+        itemObj.allscore = allscore;
         var total = dateArr.reduce((prev,next) => {
           return prev + Number(next.value)
         },0)

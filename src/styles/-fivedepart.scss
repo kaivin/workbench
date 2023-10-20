@@ -1,0 +1,32 @@
+.fiveScoreMain{
+    background-color: #fff;
+    padding: 20px;
+    min-height: 790px;
+    position: relative;
+    .ChooseTime{
+        position: absolute;
+        top: 36px;
+        left: 400px;
+        z-index: 1;
+        .Choosetit{
+            font-size: 14px;
+            color: #666;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 31px;
+        }
+        .date-range{
+            width: 200px;
+            border-radius: 0;
+            position: relative;
+            height: 30px;
+            padding: 3px 25px 3px 8px;
+            border: 1px solid #e1e3ea;
+            background: none;
+            vertical-align: top;
+        }
+    }
+    .chartShow{
+        margin-top: 20px;
+    }
+}
