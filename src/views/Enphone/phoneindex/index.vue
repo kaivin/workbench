@@ -1421,12 +1421,15 @@ export default {
                   isOn:true,
                 }
                 departArr.push(departObj);
-                response.departnumber.forEach(function(item){
-                    item.depart_id=item.depart_id;
-                    item.depart=item.depart;
-                    item.isOn=false,
-                    departArr.push(item);
-                });
+                  if(response.departnumber && response.departnumber.length > 0){
+                    response.departnumber.forEach(function(item){
+                      item.depart_id=item.depart_id;
+                      item.depart=item.depart;
+                      item.isOn=false,
+                      departArr.push(item);
+                  });
+                }
+                
                 var departcountUlist=[];
                 var totalObj={     
                   depart_id:0,
@@ -1437,15 +1440,18 @@ export default {
                   todaycount:response.alltodaynumber,
                 }
                 departcountUlist.push(totalObj);
-                response.departnumber.forEach(function(item){
-                    item.depart_id=item.depart_id;
-                    item.isOn=false,
-                    item.depart=item.depart;
-                    item.lastdaycount=item.lastdaynumber;
-                    item.monthcount=item.monthnumber;
-                    item.todaycount=item.todaynumber;
-                    departcountUlist.push(item);
-                });
+                if(response.departnumber && response.departnumber.length > 0){
+                  response.departnumber.forEach(function(item){
+                      item.depart_id=item.depart_id;
+                      item.isOn=false,
+                      item.depart=item.depart;
+                      item.lastdaycount=item.lastdaynumber;
+                      item.monthcount=item.monthnumber;
+                      item.todaycount=item.todaynumber;
+                      departcountUlist.push(item);
+                  });
+                }
+                
                 $this.departcountUlist = departcountUlist;
                 $this.defaultData = response;
                 $this.defaultData.departArr = departArr;
