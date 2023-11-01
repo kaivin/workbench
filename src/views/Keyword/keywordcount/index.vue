@@ -139,7 +139,14 @@
                           min-width="140"
                           >
                           <template #default="scope">
-                            <div class="item-text center">
+                            <el-link v-if="scope.row.uid == 1112" :href="scope.row.toutiao" type="primary" :underline="false" target="_blank" class="link">
+                              <div class="item-text center">
+                                <span class="before">{{ scope.row['byte_avg'] }}</span>
+                                <span v-if="scope.row['byte_avg_cha'] !== 0" class="after" :class="scope.row['byte_avg_cha'] > 0 ? 'red' : scope.row['byte_avg_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['byte_avg_cha']) }}</span>
+                                <span v-else class="zero"></span>
+                              </div>
+                            </el-link>
+                            <div class="item-text center" v-else>
                               <span class="before">{{ scope.row['byte_avg'] }}</span>
                               <span v-if="scope.row['byte_avg_cha'] !== 0" class="after" :class="scope.row['byte_avg_cha'] > 0 ? 'red' : scope.row['byte_avg_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['byte_avg_cha']) }}</span>
                               <span v-else class="zero"></span>
@@ -168,7 +175,14 @@
                           class-name="stripe"
                           >
                           <template #default="scope">
-                            <div class="item-text center">
+                            <el-link v-if="scope.row.uid == 1112" :href="scope.row.douyin" type="primary" :underline="false" target="_blank" class="link">
+                              <div class="item-text center">
+                                <span class="before">{{ scope.row['douyin_avg'] }}</span>
+                                <span v-if="scope.row['douyin_avg_cha'] !== 0" class="after" :class="scope.row['douyin_avg_cha'] > 0 ? 'red' : scope.row['douyin_avg_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['douyin_avg_cha']) }}</span>
+                                <span v-else class="zero"></span>
+                              </div>
+                            </el-link>
+                            <div class="item-text center" v-else>
                               <span class="before">{{ scope.row['douyin_avg'] }}</span>
                               <span v-if="scope.row['douyin_avg_cha'] !== 0" class="after" :class="scope.row['douyin_avg_cha'] > 0 ? 'red' : scope.row['douyin_avg_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['douyin_avg_cha']) }}</span>
                               <span v-else class="zero"></span>
@@ -1229,6 +1243,18 @@ export default {
     cursor: pointer;
   }
 }
+
+.link{
+  color:#0970ff;
+  font-size: 13px;
+  .item-text span.before{
+    color:#0970ff;
+  }
+  .item-text span.zero:before{
+    background-color:#0970ff;
+  }
+}
+
 </style>
 <style>
 
