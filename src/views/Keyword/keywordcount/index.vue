@@ -110,7 +110,14 @@
                           class-name="stripe"
                           >
                           <template #default="scope">
-                            <div class="item-text center">
+                            <el-link v-if="scope.row.uid == 1112" :href="scope.row.baidu" type="primary" :underline="false" target="_blank" class="link">
+                              <div class="item-text center">
+                                <span class="before">{{ scope.row['baidu_avg'] }}</span>
+                                <span v-if="scope.row['baidu_avg_cha'] !== 0" class="after" :class="scope.row['baidu_avg_cha'] > 0 ? 'red' : scope.row['baidu_avg_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['baidu_avg_cha']) }}</span>
+                                <span v-else class="zero"></span>
+                              </div>
+                            </el-link>
+                            <div class="item-text center" v-else>
                               <span class="before">{{ scope.row['baidu_avg'] }}</span>
                               <span v-if="scope.row['baidu_avg_cha'] !== 0" class="after" :class="scope.row['baidu_avg_cha'] > 0 ? 'red' : scope.row['baidu_avg_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['baidu_avg_cha']) }}</span>
                               <span v-else class="zero"></span>
