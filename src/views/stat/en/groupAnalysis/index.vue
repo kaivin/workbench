@@ -14,6 +14,9 @@
             <div class="item-list group">
               <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-if="item.dept_id==23" v-for="item in groupList" v-bind:key="item.userid" v-on:click="groupChangeHandler(item.userid)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b>[{{item.departName}}]</b></div>
             </div>
+            <div class="item-list group">
+              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-if="item.dept_id==91" v-for="item in groupList" v-bind:key="item.userid" v-on:click="groupChangeHandler(item.userid)"><i></i><span>{{item.typename}} {{item.groupName}}组</span><b>[{{item.departName}}]</b></div>
+            </div>
           </div>
         </div>
         <div class="item-filter flex-box date">
@@ -334,12 +337,17 @@ export default {
                 var groupList = response.group;
                 var typeArr = []
                 groupList.forEach(function(item,index){
-                  item.departName = item.othername.split("-")[0];
-                  item.groupName = item.othername.split("-")[1];
+                  if(item.othername.indexOf("-") > -1){
+                    item.departName = item.othername.split("-")[0];
+                    item.groupName = item.othername.split("-")[1];
+                  }else{
+                    item.departName = "";
+                    item.groupName = item.othername;
+                  }
                   if(item.groupName.indexOf("组")!=-1){
                     item.groupName = item.groupName.slice(0,item.groupName.length-1);
                   }
-                  if(item.dept_id==12){
+                  if(item.dept_id==12 || item.dept_id == 91){
                     item.typename = "SEM";
                   }else if(item.dept_id==13||item.dept_id==16){
                     item.typename = "SEO";
