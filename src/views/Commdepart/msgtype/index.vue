@@ -4,7 +4,7 @@
             <div class="ChannelMain flex-box">
                   <span class="Channeltit">部门：</span>
                   <div class="ChannelItem">
-                      <span class="ChannelItemTag" v-bind:class="searchData.depart_id == '' ?'active':''"  v-on:click="allItemCheck">全部</span>
+                      <span class="ChannelItemTag" v-bind:class="searchData.depart_id == '' ?'active':''"  v-on:click="allItemCheck">全部门</span>
                       <span class="ChannelItemTag" v-bind:class="item.isOn?'active':''" v-for="(item,index) in departList" :key="index" v-on:click="groupChangeHandler(item.id)">{{item.name}}</span>
                       <span class="Channeltit" style="margin-left:20px">时间选择：</span>                     
                       <el-date-picker
@@ -33,7 +33,6 @@
                     :ByTime ="searchTime"
                     :YSort='true'
                      v-if="index>=0&&index<3"
-                    @fallSort='getfallSort'
                     @changeSet='changeSet'
                     ></source-rank>
                 </template>
@@ -43,10 +42,10 @@
   </template>
   <script>
   import {mapGetters} from 'vuex';
-  import sourceRank from "../components/chinasourcedefault/sourceRank.vue";
+  import sourceRank from "../components/msgtype/sourceRank.vue";
   import {randomString,numSeparate,sortByDesc,rankingWithTotalItem,singleArrColor} from "@/utils/index";
   export default {
-    name: 'Fivedepart_chinasourcedefault',
+    name: 'msgtype',
     components: {
       sourceRank,
     },
@@ -78,8 +77,7 @@
             }]
           },
           sourceData:[],
-          scorelist:[],
-          allscore: 0
+          allNumber: 0
       };
     },
     computed: {
@@ -122,7 +120,7 @@
             res.data.forEach(function(item,index){
               permitData.push(item.action_route);
             });
-            if(permitData.includes('Fivedepart_chinasourcedefault')){
+            if(permitData.includes('Commdepart_msgtype')){
                 $this.getDepartList()
             }else{
               $this.$message({
@@ -147,7 +145,7 @@
       // 获取部门列表
       getDepartList(){
         var $this = this;
-        $this.$store.dispatch('depfive/depfiveConditionAction', null).then(res=>{
+        $this.$store.dispatch('depcomm/depcomConditionAction', null).then(res=>{
           var departList = [];
           if(res.depart && res.depart.length > 0){
             res.depart.forEach(function(item,index){
@@ -235,20 +233,18 @@
         var $this = this;
         var searchData={};
         searchData=$this.initsearch();
-        $this.$store.dispatch('depfive/depfiveSourceDataAction', searchData).then(res=>{
+        $this.$store.dispatch('depcomm/depcomMsgtypeAction', searchData).then(res=>{
             if(res.status){
               var sourceData=[];
-              $this.allscore = res.allscore;
-              //  成交积分
-              if(res.scorelist && res.scorelist.length > 0){
-                var scorelist=$this.departDataRes(res.scorelist,'score');
-                var scoreSource=rankingWithTotalItem(scorelist,'value');
-                scoreSource.forEach(function(item){
-                  item.number = numSeparate(item.value);
+              //  询盘类型
+              if(res.xunlist && res.xunlist.length > 0){
+                var xunlist=$this.departDataRes(res.xunlist,'number');
+                var xunSource=rankingWithTotalItem(xunlist,'value');
+                xunSource.forEach(function(item){
+                  item.number = numSeparate(item.number);
                 });
-                $this.scorelist=scoreSource;
-                var scoreObj=$this.sourceRank(scoreSource,'成交积分排行榜','分', res.allscore);
-                sourceData.push(scoreObj);
+                var xunObj=$this.sourceRank(xunSource,'英文询盘类型排行榜','个', res.xunlist);
+                sourceData.push(xunObj);
               }
               $this.sourceData=sourceData;
             }else{
@@ -262,16 +258,16 @@
         });
       },
  
-      sourceRank(dateArr,Name,Tag, allscore){
+      sourceRank(dateArr,Name,Tag, xunlist){
         var itemObj={};
         itemObj.mainArr=dateArr;
         itemObj.name=Name;
         itemObj.unit=Tag;
-        itemObj.allscore = allscore;
+        itemObj.xunlist = xunlist;
         var total = dateArr.reduce((prev,next) => {
           return prev + Number(next.value)
         },0)
-        itemObj.totalNum = total.toFixed(1) + Tag;
+        itemObj.totalNum = total + Tag;
         if(dateArr.length>8){
           itemObj.ifFold=true;
           itemObj.boxHeight='504px';
@@ -308,13 +304,6 @@
             }
         });
         $this.sourceData=sourceData;
-      },
-      //点击排序
-      getfallSort(dateArr){
-        var $this=this;
-        if(dateArr=='成交积分排行榜'){
-          $this.getfallSortPlug($this.scorelist,dateArr);
-        }
       },
       getfallSortPlug(dateArr,Tag){
         var $this=this;

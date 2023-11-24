@@ -86,6 +86,13 @@
                             <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                           </el-checkbox-group>
                         </div>
+                        <div class="team-header" v-else-if="item.icon=='i5'">
+                          <span class="require">{{item.name}}：</span>
+                          <el-checkbox class="all-select" :indeterminate="isAllNewPhone" border size="mini" v-model="checkAllNewPhone" @change="handleCheckAllNewPhoneChange">全选</el-checkbox>
+                          <el-checkbox-group class="team-list" v-model="checkedNew" @change="handleCheckedNewChange" size="mini">
+                            <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
                         <div class="team-header" v-else>
                           <span class="require">{{item.name}}：</span>
                           <el-checkbox class="all-select" :indeterminate="isAllOtherPhone" border size="mini" v-model="checkAllOtherPhone" @change="handleCheckAllOtherPhoneChange">全选</el-checkbox>
@@ -674,11 +681,14 @@ export default {
       checkAllSnsPhone:false,
       isAllOtherPhone:false,
       checkAllOtherPhone:false,
+      isAllNewPhone:false,
+      checkAllNewPhone:false,
       checkedSem:[],
       checkedSeo:[],
       checkedMedia:[],
       checkedSns:[],
       checkedOther:[],
+      checkedNew: [],
       searchData:{
         date:[],
         ennature:'',
@@ -972,11 +982,14 @@ export default {
       $this.checkAllSnsPhone=false;
       $this.isAllOtherPhone=false;
       $this.checkAllOtherPhone=false;
+      $this.isAllNewPhone=false;
+      $this.checkAllNewPhone=false;
       $this.checkedSem=[];
       $this.checkedSeo=[];
       $this.checkedMedia=[];
       $this.checkedSns=[];
       $this.checkedOther=[];
+      $this.checkedNew=[];
       $this.phoneCount=0;
       $this.productCount=0;
       $this.isAllProduct=false;
@@ -1132,7 +1145,8 @@ export default {
       var checkedMedia = $this.checkedMedia;
       var checkedSns = $this.checkedSns;
       var checkedOther = $this.checkedOther;
-      searchData.phoneid = checkedSem.concat(checkedSeo).concat(checkedMedia).concat(checkedSns).concat(checkedOther);
+      var checkedNew = $this.checkedNew;
+      searchData.phoneid = checkedSem.concat(checkedSeo).concat(checkedMedia).concat(checkedSns).concat(checkedOther).concat(checkedNew);
       if($this.checkedSource&&$this.checkedSource!=''){
         searchData.mode = $this.checkedSource;
       }
@@ -1589,33 +1603,41 @@ export default {
             });
             $this.checkedSns = checkedList;
             $this.checkAllSnsPhone = true;
+          }else if(item.icon=="i5"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+            $this.checkedNew = checkedList;
+            $this.checkAllNewPhone = true;
+          }else{
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+            $this.checkedOther = checkedList;
+            $this.checkAllOtherPhone = true;
           }
-          // else{
-          //   item.children.forEach(function(item1,index1){
-          //     checkedList.push(item1.value);
-          //   });
-          //   $this.checkedOther = checkedList;
-          //   $this.checkAllOtherPhone = true;
-          // }
         });
       }else{
         $this.checkedSem = [];
         $this.checkedSeo = [];
         $this.checkedMedia = [];
         $this.checkedSns = [];
-        // $this.checkedOther = [];
+        $this.checkedOther = [];
+        $this.checkedNew = [];
         $this.checkAllSemPhone = false;
         $this.checkAllSeoPhone = false;
         $this.checkAllMediaPhone = false;
         $this.checkAllSnsPhone = false;
-        // $this.checkAllOtherPhone = false;
+        $this.checkAllOtherPhone = false;
+        $this.checkAllNewPhone = false;
       }
       $this.isAllPhone = false;
       $this.isAllSemPhone = false;
       $this.isAllSeoPhone = false;
       $this.isAllMediaPhone = false;
       $this.isAllSnsPhone = false;
-      // $this.isAllOtherPhone = false;
+      $this.isAllOtherPhone = false;
+      $this.isAllNewPhone = false;
     },
     handleCheckAllSemPhoneChange(e){
       var $this = this;
@@ -1694,7 +1716,7 @@ export default {
       if(e){
         var checkedList = [];
         $this.phoneList.forEach(function(item,index){
-          if(item.icon=="other"){
+          if(item.icon=="i6"){
             item.children.forEach(function(item1,index1){
               checkedList.push(item1.value);
             });
@@ -1705,6 +1727,24 @@ export default {
         $this.checkedOther = [];
       }
       $this.isAllOtherPhone = false;
+      $this.allPhoneSelectedStatus();
+    },
+    handleCheckAllNewPhoneChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.phoneList.forEach(function(item,index){
+          if(item.icon=="i5"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+          }
+        });
+        $this.checkedNew = checkedList;
+      }else{
+        $this.checkedNew = [];
+      }
+      $this.isAllNewPhone = false;
       $this.allPhoneSelectedStatus();
     },
     handleCheckedSemChange(e){
@@ -1787,7 +1827,7 @@ export default {
       var $this = this;
       var checkedCount = e.length;
       $this.phoneList.forEach(function(item,index){
-        if(item.icon=="other"){
+        if(item.icon=="i6"){
           if(checkedCount === item.children.length){
             $this.checkAllOtherPhone = true;
           }else{
@@ -1802,11 +1842,29 @@ export default {
       });
       $this.allPhoneSelectedStatus();
     },
+    handleCheckedNewChange(e){
+      var $this = this;
+      var checkedCount = e.length;
+      $this.phoneList.forEach(function(item,index){
+        if(item.icon=="i5"){
+          if(checkedCount === item.children.length){
+            $this.checkAllNewPhone = true;
+          }else{
+            $this.checkAllNewPhone = false;
+          }
+          if(checkedCount>0&&checkedCount<item.children.length){
+            $this.isAllNewPhone = true;
+          }else{
+            $this.isAllNewPhone = false;
+          }
+        }
+      });
+      $this.allPhoneSelectedStatus();
+    },
     // 全选按钮状态事件
     allPhoneSelectedStatus(){
       var $this = this;
-      var totalCheckedCount = $this.checkedSem.length+$this.checkedSeo.length+$this.checkedMedia.length+$this.checkedSns.length;
-      // +$this.checkedOther.length;
+      var totalCheckedCount = $this.checkedSem.length+$this.checkedSeo.length+$this.checkedMedia.length+$this.checkedSns.length+$this.checkedOther.length+$this.checkedNew.length;
       if(totalCheckedCount>0&&totalCheckedCount<$this.phoneCount){
         $this.isAllPhone = true;
       }else{

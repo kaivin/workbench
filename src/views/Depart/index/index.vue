@@ -83,6 +83,11 @@
             </el-form-item>
           </div>
           <div class="item-form">
+            <el-form-item label="排序：" :label-width="formLabelWidth">
+              <el-input v-model="dialogForm.sort" ref="name"></el-input>
+            </el-form-item>
+          </div>
+          <div class="item-form">
               <el-form-item label="备注：" :label-width="formLabelWidth">
                 <el-input type="textarea" v-model="dialogForm.remarks" :autosize="{ minRows: 2, maxRows: 4}" ref="remarks"></el-input>
               </el-form-item>
@@ -139,6 +144,7 @@ export default {
         id:0,
         name:"",
         remarks:"",
+        sort: 0,
       },
       dialogRoleVisible:false,
       roleData:[{key:"",label:""}],
@@ -529,6 +535,7 @@ export default {
       $this.dialogForm.id = row.id;
       $this.dialogForm.name = row.name;
       $this.dialogForm.remarks = row.remarks;
+      $this.dialogForm.sort = row.sort;
     },
     // 初始化部门下拉框的禁用状态
     resetDisabledDepart(data,$this){
@@ -582,6 +589,7 @@ export default {
         formData.fid = Array.isArray($this.dialogForm.fid)?$this.dialogForm.fid.length == 0 ? 0 :$this.dialogForm.fid[$this.dialogForm.fid.length-1]:$this.dialogForm.fid;
         formData.name = $this.dialogForm.name;
         formData.remarks = $this.dialogForm.remarks;
+        formData.sort = $this.dialogForm.sort;
         if($this.dialogText=="编辑部门"){
           departEdit(formData).then(response=>{
             $this.saveDataPlug(response);
@@ -621,6 +629,7 @@ export default {
       $this.dialogForm.id = 0;
       $this.dialogForm.name = "";
       $this.dialogForm.remarks = "";
+      $this.dialogForm.sort = 0;
     },
     // 验证是否为空
     validationForm(){

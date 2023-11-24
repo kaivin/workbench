@@ -81,6 +81,27 @@
                             <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
                           </el-checkbox-group>
                         </div>
+                        <div class="team-header" v-else-if="item.icon=='kj'">
+                          <span class="require">{{item.name}}：</span>
+                          <el-checkbox class="all-select" :indeterminate="isAllKjPhone" border size="mini" v-model="checkAllKjPhone" @change="handleCheckAllKjPhoneChange">全选</el-checkbox>
+                          <el-checkbox-group class="team-list" v-model="checkedKj" @change="handleCheckedKjChange" size="mini">
+                            <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
+                        <div class="team-header" v-else-if="item.icon=='icon1'">
+                          <span class="require">{{item.name}}：</span>
+                          <el-checkbox class="all-select" :indeterminate="isAllNew01Phone" border size="mini" v-model="checkAllNew01Phone" @change="handleCheckAllNew01PhoneChange">全选</el-checkbox>
+                          <el-checkbox-group class="team-list" v-model="checkedNew01" @change="handleCheckedNew01Change" size="mini">
+                            <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
+                        <div class="team-header" v-else-if="item.icon=='icon2'">
+                          <span class="require">{{item.name}}：</span>
+                          <el-checkbox class="all-select" :indeterminate="isAllNew02Phone" border size="mini" v-model="checkAllNew02Phone" @change="handleCheckAllNew02PhoneChange">全选</el-checkbox>
+                          <el-checkbox-group class="team-list" v-model="checkedNew02" @change="handleCheckedNew02Change" size="mini">
+                            <el-checkbox class="item-checkbox" v-for="phone in item.children" :label="phone.value" :key="phone.value" border>{{phone.label}}</el-checkbox>
+                          </el-checkbox-group>
+                        </div>
                         <div class="team-header" v-else>
                           <span class="require">{{item.name}}：</span>
                           <el-checkbox class="all-select" :indeterminate="isAllOtherPhone" border size="mini" v-model="checkAllOtherPhone" @change="handleCheckAllOtherPhoneChange">全选</el-checkbox>
@@ -516,11 +537,20 @@ export default {
       checkAllSnsPhone:false,
       isAllOtherPhone:false,
       checkAllOtherPhone:false,
+      isAllKjPhone:false,
+      checkAllKjPhone:false,
+      isAllNew01Phone:false,
+      checkAllNew01Phone:false,
+      isAllNew02Phone:false,
+      checkAllNew02Phone:false,
       checkedSem:[],
       checkedSeo:[],
       checkedMedia:[],
       checkedSns:[],
       checkedOther:[],
+      checkedKj:[],
+      checkedNew01: [],
+      checkedNew02: [],
       searchData:{
         date:[],
         province:"",
@@ -714,11 +744,20 @@ export default {
       $this.checkAllSnsPhone=false;
       $this.isAllOtherPhone=false;
       $this.checkAllOtherPhone=false;
+      $this.isAllKjPhone=false;
+      $this.checkAllKjPhone=false;
+      $this.isAllNew01Phone=false;
+      $this.checkAllNew01Phone=false;
+      $this.isAllNew02Phone=false;
+      $this.checkAllNew02Phone=false;
       $this.checkedSem=[];
       $this.checkedSeo=[];
       $this.checkedMedia=[];
       $this.checkedSns=[];
       $this.checkedOther=[];
+      $this.checkedKj=[];
+      $this.checkedNew01=[];
+      $this.checkedNew02=[];
       $this.phoneCount=0;
       $this.productCount=0;
       $this.isAllProduct=false;
@@ -819,7 +858,10 @@ export default {
       var checkedMedia = $this.checkedMedia;
       var checkedSns = $this.checkedSns;
       var checkedOther = $this.checkedOther;
-      searchData.phoneid = checkedSem.concat(checkedSeo).concat(checkedMedia).concat(checkedSns).concat(checkedOther);
+      var checkedKj = $this.checkedKj;
+      var checkedNew01 = $this.checkedNew01;
+      var checkedNew02 = $this.checkedNew02;
+      searchData.phoneid = checkedSem.concat(checkedSeo).concat(checkedMedia).concat(checkedSns).concat(checkedOther).concat(checkedKj).concat(checkedNew01).concat(checkedNew02);
       searchData.mode = $this.checkedSource;
       searchData.level_id = $this.checkedLevel;
       searchData.device = $this.checkedDevice;
@@ -1242,6 +1284,24 @@ export default {
             });
             $this.checkedSns = checkedList;
             $this.checkAllSnsPhone = true;
+          }else if(item.icon=="kj"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+            $this.checkedKj = checkedList;
+            $this.checkAllKjPhone = true;
+          }else if(item.icon=="icon1"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+            $this.checkedNew01 = checkedList;
+            $this.checkAllNew01Phone = true;
+          }else if(item.icon=="icon2"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+            $this.checkedNew02 = checkedList;
+            $this.checkAllNew02Phone = true;
           }else{
             item.children.forEach(function(item1,index1){
               checkedList.push(item1.value);
@@ -1256,11 +1316,17 @@ export default {
         $this.checkedMedia = [];
         $this.checkedSns = [];
         $this.checkedOther = [];
+        $this.checkedKj = [];
+        $this.checkedNew01 = [];
+        $this.checkedNew02 = [];
         $this.checkAllSemPhone = false;
         $this.checkAllSeoPhone = false;
         $this.checkAllMediaPhone = false;
         $this.checkAllSnsPhone = false;
         $this.checkAllOtherPhone = false;
+        $this.checkAllKjPhone = false;
+        $this.checkAllNew01Phone = false;
+        $this.checkAllNew02Phone = false;
       }
       $this.isAllPhone = false;
       $this.isAllSemPhone = false;
@@ -1268,6 +1334,9 @@ export default {
       $this.isAllMediaPhone = false;
       $this.isAllSnsPhone = false;
       $this.isAllOtherPhone = false;
+      $this.isAllKjPhone = false;
+      $this.isAllNew01Phone = false;
+      $this.isAllNew02Phone = false;
     },
     handleCheckAllSemPhoneChange(e){
       var $this = this;
@@ -1357,6 +1426,60 @@ export default {
         $this.checkedOther = [];
       }
       $this.isAllOtherPhone = false;
+      $this.allPhoneSelectedStatus();
+    },
+    handleCheckAllKjPhoneChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.phoneList.forEach(function(item,index){
+          if(item.icon=="kj"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+          }
+        });
+        $this.checkedKj = checkedList;
+      }else{
+        $this.checkedKj = [];
+      }
+      $this.isAllKjPhone = false;
+      $this.allPhoneSelectedStatus();
+    },
+    handleCheckAllNew01PhoneChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.phoneList.forEach(function(item,index){
+          if(item.icon=="icon1"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+          }
+        });
+        $this.checkedNew01 = checkedList;
+      }else{
+        $this.checkedNew01 = [];
+      }
+      $this.isAllNew01Phone = false;
+      $this.allPhoneSelectedStatus();
+    },
+    handleCheckAllNew02PhoneChange(e){
+      var $this = this;
+      if(e){
+        var checkedList = [];
+        $this.phoneList.forEach(function(item,index){
+          if(item.icon=="icon2"){
+            item.children.forEach(function(item1,index1){
+              checkedList.push(item1.value);
+            });
+          }
+        });
+        $this.checkedNew02 = checkedList;
+      }else{
+        $this.checkedNew02 = [];
+      }
+      $this.isAllNew02Phone = false;
       $this.allPhoneSelectedStatus();
     },
     handleCheckedSemChange(e){
@@ -1454,10 +1577,67 @@ export default {
       });
       $this.allPhoneSelectedStatus();
     },
+    handleCheckedKjChange(e){
+      var $this = this;
+      var checkedCount = e.length;
+      $this.phoneList.forEach(function(item,index){
+        if(item.icon=="kj"){
+          if(checkedCount === item.children.length){
+            $this.checkAllKjPhone = true;
+          }else{
+            $this.checkAllKjPhone = false;
+          }
+          if(checkedCount>0&&checkedCount<item.children.length){
+            $this.isAllKjPhone = true;
+          }else{
+            $this.isAllKjPhone = false;
+          }
+        }
+      });
+      $this.allPhoneSelectedStatus();
+    },
+    handleCheckedNew01Change(e){
+      var $this = this;
+      var checkedCount = e.length;
+      $this.phoneList.forEach(function(item,index){
+        if(item.icon=="icon1"){
+          if(checkedCount === item.children.length){
+            $this.checkAllNew01Phone = true;
+          }else{
+            $this.checkAllNew01Phone = false;
+          }
+          if(checkedCount>0&&checkedCount<item.children.length){
+            $this.isAllNew01Phone = true;
+          }else{
+            $this.isAllNew01Phone = false;
+          }
+        }
+      });
+      $this.allPhoneSelectedStatus();
+    },
+    handleCheckedNew02Change(e){
+      var $this = this;
+      var checkedCount = e.length;
+      $this.phoneList.forEach(function(item,index){
+        if(item.icon=="icon2"){
+          if(checkedCount === item.children.length){
+            $this.checkAllNew02Phone = true;
+          }else{
+            $this.checkAllNew02Phone = false;
+          }
+          if(checkedCount>0&&checkedCount<item.children.length){
+            $this.isAllNew02Phone = true;
+          }else{
+            $this.isAllNew02Phone = false;
+          }
+        }
+      });
+      $this.allPhoneSelectedStatus();
+    },
     // 全选按钮状态事件
     allPhoneSelectedStatus(){
       var $this = this;
-      var totalCheckedCount = $this.checkedSem.length+$this.checkedSeo.length+$this.checkedMedia.length+$this.checkedSns.length+$this.checkedOther.length;
+      var totalCheckedCount = $this.checkedSem.length+$this.checkedSeo.length+$this.checkedMedia.length+$this.checkedSns.length+$this.checkedOther.length+$this.checkedKj.length+$this.checkedNew01.length+$this.checkedNew02.length;
       if(totalCheckedCount>0&&totalCheckedCount<$this.phoneCount){
         $this.isAllPhone = true;
       }else{

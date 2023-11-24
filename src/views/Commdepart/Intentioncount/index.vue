@@ -48,7 +48,7 @@
                     </div>
                   </div>
                   <div class="card-header WebServerAddEditBtn ChinaphoneTwoBtn">
-                      <el-button type="primary" class="updateBtn"  :class="isDisabled?'isDisabled':''" :disabled="isDisabled"  size="small" v-if="menuButtonPermit.includes('Fivedepart_Intentioncount')" v-on:click="getCluesAnalysisData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
+                      <el-button type="primary" class="updateBtn"  :class="isDisabled?'isDisabled':''" :disabled="isDisabled"  size="small" v-if="menuButtonPermit.includes('Commdepart_Intentioncount')" v-on:click="getCluesAnalysisData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>生成数据</el-button>
                       <el-button type="primary" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                   </div>
               </div>
@@ -146,8 +146,8 @@ export default {
         {id: 5, value: 5, label: "中德"}
       ],
       resaultShowList:[
-        {id:1,value:1,label:"意向询盘占比"},
-        {id:2,value:2,label:"平均意向分"},
+        {id:1,value:1,label:"意向询盘"},
+        {id:2,value:2,label:"回复率"},
         {id:3,value:3,label:"意向询盘国家"}
       ],
       isAllItem:false,
@@ -257,7 +257,7 @@ export default {
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
-            if(!$this.menuButtonPermit.includes('Fivedepart_Intentioncount')){
+            if(!$this.menuButtonPermit.includes('Commdepart_Intentioncount')){
               $this.$message({
                 showClose: true,
                 message: "未被分配该页面的访问权限",
@@ -315,7 +315,7 @@ export default {
           return false;
         }
         $this.isDisabled=true;
-        $this.$store.dispatch('depfive/depfiveIntentionCountAction', searchData).then(response=>{
+        $this.$store.dispatch('depcomm/depcomIntentionCountAction', searchData).then(response=>{
           if(response){
             if(response.status){
               $this.isSearch=true;
@@ -338,6 +338,7 @@ export default {
                         itemChart.key = item1.date;
                         itemChart.value = item1.number;
                         itemChart.number = item1.goodnumber;
+                        itemChart.allnumber = item1.allnumber;
                         itemChart.color = item[0].color;
                         newItemArr.push(itemChart);   
                     });
@@ -363,12 +364,12 @@ export default {
               resXunData.randomStr = "yMfy";
               resXunData.formatLabel = true;
               $this.searchResult.resXunData = resXunData;
-              // 积分趋势内容处理
+              // 回复率趋势内容处理
               $this.searchResult.avgscore = response.avgscore ? response.avgscore : [];
               var resScoreData = {}
-              resScoreData.name = "平均意向分统计";
-              resScoreData.chartTitle = "平均意向分月趋势";
-              resScoreData.unit = "（单位：分）";
+              resScoreData.name = "回复询盘占比统计";
+              resScoreData.chartTitle = "回复率月趋势(有回复的询盘/部门总询盘)";
+              resScoreData.unit = "（单位：%）";
               resScoreData.chartType = "area";
               var mainScoreData = [];
               var totalScoreChart = [];
@@ -380,9 +381,11 @@ export default {
                         var itemChart = {};
                         itemChart.name=item1.depart;
                         itemChart.key = item1.date;
-                        itemChart.value = Math.floor(item1.avgsocre*100)/100;
+                        itemChart.value = Math.floor(item1.percenter*100);
+                        itemChart.number = item1.hui_number;
+                        itemChart.allnumber = item1.all_number;
                         itemChart.color = item[0].color;
-                        newItemArr.push(itemChart);   
+                        newItemArr.push(itemChart);
                     });
                     mainScoreData.push(newItemArr);
                 });
@@ -391,7 +394,7 @@ export default {
                   if(item.length > 0){
                     var itemChart = {};
                     var totalnum = item.reduce((prev,next) => {
-                      return prev + Number(next.avgsocre)
+                      return prev + Number(next.percenter*100)
                     },0);
                     itemChart.name = item[0].depart;
                     itemChart.value = Math.floor(totalnum/(item.length)*100)/100;
@@ -404,7 +407,7 @@ export default {
               resScoreData.totalChart = singleArrColor(totalScoreChart);
               resScoreData.totalChart.sort(sortByDesc("value"));
               resScoreData.randomStr = "yMfy2";
-              resScoreData.formatLabel = false;
+              resScoreData.formatLabel = true;
               $this.searchResult.resScoreData = resScoreData;
               // 意向询盘国家处理
               $this.searchResult.provincemap = response.provincemap ? response.provincemap : [];
