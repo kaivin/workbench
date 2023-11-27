@@ -636,7 +636,8 @@ export default {
                     }else{
                       emailName = "***";
                     }
-                    item.encryptEmail = emailName+emailArr[1]
+                    // item.encryptEmail = emailName+emailArr[1]
+                    item.encryptEmail = "******";
                   }else{
                     item.encryptEmail = item.email;
                   }
@@ -645,7 +646,8 @@ export default {
                 }
                 if(response.phoneshow === 2){
                   if(item.telephone&&item.telephone.length>6){
-                    item.encryptPhone = item.telephone.substring(0,item.telephone.length-6)+"******";
+                    // item.encryptPhone = item.telephone.substring(0,item.telephone.length-6)+"******";
+                    item.encryptPhone = "******";
                   }else{
                     item.encryptPhone = item.telephone;
                   }
