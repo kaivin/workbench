@@ -237,6 +237,19 @@
                       </div>
                       <div class="team-panel">
                         <div class="team-header">
+                          <span class="require">留言类型：</span>                          
+                          <el-select v-model="searchData.messagetype" size="small" clearable placeholder="类型" :class="searchData.messagetype!=''?'el-xzstate':''" style="width:320px;margin:5px 10px 5px 5px;">
+                              <el-option
+                                  v-for="item in msgtypeList"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                              </el-option>
+                          </el-select>
+                        </div>
+                      </div>
+                      <div class="team-panel">
+                        <div class="team-header">
                           <span class="require">有效：</span>                          
                           <el-checkbox class="item-checkbox" v-model="searchData.effective" size="mini" border>只显示有效</el-checkbox>
                         </div>
@@ -700,7 +713,8 @@ export default {
         remark1:'',
         remark2: '',
         remark3: '',
-        url:''
+        url:'',
+        messagetype: ''
       },
       pickerRangeOptions: pickerDayRangeOptions,
       natureList:[],
@@ -709,6 +723,12 @@ export default {
       sourceList:[],
       levelList:[],
       phoneList:[],
+      msgtypeList:[
+          {label:"留言板",value:"留言板"},
+          {label:"Email",value:"Email"},
+          {label:"商务通",value:"商务通"},
+          {label:"其他",value:"其他"},
+      ],
       phoneCount:0,
       productCount:0,
       isAllProduct:false,
@@ -1068,6 +1088,7 @@ export default {
       $this.searchData.url='';
       $this.searchData.ennature='';
       $this.searchData.effective=false;
+      $this.searchData.messagetype = '';
       $this.searchResult.hoursCount=[];
       $this.searchResult.deviceCount=[];
       $this.searchResult.dayCount=[];
@@ -1130,6 +1151,9 @@ export default {
       }
       if($this.searchData.ennature&&$this.searchData.ennature!=''){
         searchData.ennature = $this.searchData.ennature;
+      }
+      if($this.searchData.messagetype&&$this.searchData.messagetype!=''){
+        searchData.messagetype = $this.searchData.messagetype;
       }
       searchData.effective = $this.searchData.effective?1:0;
       if($this.searchData.date&&$this.searchData.date.length>0){
