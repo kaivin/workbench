@@ -3,6 +3,7 @@
     <div class="nowCate">
       {{nowcate}}
       <div class="btn-group">
+        <div @click="changeType(3)" class="btn-item" :class="type == 3?'active':''">{{prevTwoYear}}年</div>
         <div @click="changeType(1)" class="btn-item" :class="type == 1?'active':''">{{prevYear}}年</div>
         <div @click="changeType(2)" class="btn-item" :class="type == 2?'active':''">{{nowYear}}年</div>
       </div>
@@ -185,6 +186,9 @@ export default {
     prevYear(){
       return new Date().getFullYear()-1;
     },
+    prevTwoYear(){
+      return new Date().getFullYear()-2;
+    },
     ...mapGetters([
       'sidebar',
     ]),
@@ -231,6 +235,8 @@ export default {
       var data = {};
       if(this.type == 1){
         data.ytime = this.prevYear
+      }else if(this.type == 3){
+        data.ytime = this.prevTwoYear
       }else{
         data.ytime = this.nowYear
       }
