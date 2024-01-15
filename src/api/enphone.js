@@ -476,3 +476,12 @@ export function getInquiryResult(data) {
     data
   });
 }
+
+// 导出数据
+export function exportSearchData(data){
+  return request({
+    url: "/hxindex/Enphone/search_export",
+    method: "POST",
+    data
+  });
+}

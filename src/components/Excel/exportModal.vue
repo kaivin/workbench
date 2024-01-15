@@ -94,6 +94,16 @@ export default {
     },
     handleCloseDialog() {
       this.visible = false
+      this.checkAllField = false
+      this.isIndeterminate = false
+      this.checkedFields = []
+      this.fieldList = []
+      this.hasData = false
+      this.hasSelected = false
+      this.exportInfo.filename = ''
+      this.exportInfo.fileType = 'xlsx'
+      this.exportInfo.dataScope = 3
+      this.exportInfo.filename = ''
     },
     handleOk() {
       if(this.checkedFields.length == 0) {

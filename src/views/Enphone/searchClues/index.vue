@@ -323,7 +323,7 @@
                                                 <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="enCluesSearchData"><i class="svg-i" ><svg-icon icon-class="planeWhite" /></i>搜索</el-button>
                                                 <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                                                 <el-button type="info" plain size="small" v-on:click="clearCache">清除缓存</el-button>
-                                                <el-button type="primary" size="small" class="derived" :disabled="isExportDisabled"  @click="dialogExportVisible = true"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                                                <el-button type="primary" size="small" class="derived" v-if="menuButtonPermit.includes('Enphone_listexport')" :disabled="isExportDisabled"  @click="showExportDialog()"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出数据</el-button>
                                             </div>
                                         </div> 
                                     </div>
@@ -716,7 +716,7 @@
                                     <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
                                 </div>
                             </div>
-                            <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
+                            <div class="pagination-panel" v-if="isClues && totalDataNum>20" ref="pagePane">
                                 <el-pagination
                                     @size-change="handleSizeChange"
                                     :page-sizes="pageSizeList"
@@ -732,6 +732,8 @@
             </div>     
             <el-backtop target=".scroll-panel"></el-backtop>
         </div>
+        
+        <ExportModal ref="ExportModalRef" @exportSuccess="exportDone"></ExportModal>
         <el-dialog title="导出" custom-class="export-dialog" :visible.sync="dialogExportVisible" width="440px">
             <el-form :inline="true" :model="exportForm">
                 <el-form-item label="文件名称：" :label-width="formLabelWidth">
@@ -774,8 +776,13 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import ExportModal from '@/components/Excel/exportModal.vue';
+import { jsonToSheetXlsx } from '@/components/Excel/Export2Excel';
 export default {
   name: 'searchEnClues',
+  components: {
+    ExportModal
+  },
   data() {
     return {
       breadcrumbList:[],
@@ -949,6 +956,46 @@ export default {
           clientHeight:0,
         },
         isDisabled:false,
+      fieldList: [
+        { key: 'id', value: 'ID' },
+        { key: 'timeing', value: '时段' },
+        { key: 'weekday', value: '星期' },
+        { key: 'xuntime', value: '本地时间' },
+        { key: 'foreigntime', value: '当地时间' },
+        { key: 'domain', value: '域名' },
+        { key: 'sourcename', value: '渠道' },
+        { key: 'messagetype', value: '来源类型' },
+        { key: 'continent', value: '大洲' },
+        { key: 'country', value: '国家' },
+        { key: 'ip', value: 'IP' },
+        { key: 'device', value: '设备' },
+        { key: 'producttypename', value: '产品分类' },
+        { key: 'keyproduct', value: '意向产品' },
+        { key: 'material', value: '物料' },
+        { key: 'production', value: '产量' },
+        { key: 'infeed', value: '进料' },
+        { key: 'outfeed', value: '出料' },
+        { key: 'isEffective', value: '是否有效' },
+        { key: 'invalidcause', value: '无效原因' },
+        { key: 'noeffectivetime', value: '无效时间' },
+        { key: 'levelname', value: '初次等级' },
+        { key: 'ennaturename', value: '性质' },
+        { key: 'enxunpricename', value: '需求' },
+        { key: 'managestatus', value: '状态' },
+        { key: 'erroring', value: '异常' },
+        { key: 'xunremark', value: '备注' },
+        { key: 'addusername', value: '添加人' },
+        { key: 'allotusername', value: '分配人' },
+        { key: 'hassale', value: '业务员' },
+        { key: 'addtime', value: '添加时间' },
+        { key: 'allottime', value: '分配时间' },
+        { key: 'updatetime', value: '修改时间' },
+        { key: 'managetime', value: '业务时间' },
+        { key: 'score', value: '价值分' },
+        { key: 'remark1', value: '备注1' },
+        { key: 'remark2', value: '备注2' },
+        { key: 'remark3', value: '备注3' },
+      ],
     }
   },
   computed: {
@@ -1673,7 +1720,8 @@ export default {
               }
               pageSizeListArr = [$this.searchData.limit];
               $this.pageSizeList = pageSizeListArr;
-              $this.getPermitField();       
+              $this.getPermitField();
+              $this.searchData.page = response.currentpage;
             }else{
               $this.$message({
                   showClose: true,
@@ -1845,6 +1893,170 @@ export default {
         this.dialogExportVisible = false;
         this.exportForm.fileName = "";
       })
+    },
+    // 导出数据弹窗
+    showExportDialog() {
+      var $this = this;
+      if ($this.isClues) {
+          $this.$refs.ExportModalRef.showDialog({ fieldList: $this.fieldList, hasSelected: false, hasData: $this.tableData.length > 0 })
+      }else{
+        if($this.searchData.is_group){
+          var groupList = [];
+          if($this.searchData.groupurlproduct == 1){
+            groupList.push({key: 'url', value: 'URL'});
+          }else if($this.searchData.groupurlproduct == 2){
+            groupList.push({key: 'keyproduct', value: '产品'});
+          }else if($this.searchData.groupurlproduct == 3){
+            groupList.push({key: 'country', value: '国家'});
+          }else if($this.searchData.groupurlproduct == 4){
+            groupList.push({key: 'continent', value: '大洲'});
+          }else if($this.searchData.groupurlproduct == 5){
+            groupList.push({key: 'phoneid', value: '组别'});
+          }else if($this.searchData.groupurlproduct == 6){
+            groupList.push({key: 'producttype_id', value: '产品分类'});
+          }else{
+            groupList.push({key: 'url', value: 'URL'});
+          }
+          groupList.push({key: 'number', value: '数量'});
+          groupList.push({key: 'allscore', value: '积分'});
+          $this.$refs.ExportModalRef.showDialog({ fieldList: groupList, hasSelected: false, hasData: $this.tableData.length > 0 })
+        }
+      }
+    },
+    exportDone(obj) {
+      const filename = obj.filename
+      const customData = []
+      let header = null
+      const bookType = obj.fileType
+      const headerSort = obj.sort
+      if (obj.headerType === 'custom') {
+        header = obj.header
+      }
+      if (obj.dataScope === 1) { // 导出当前页数据
+        this.tableData.forEach((item) => {
+          const itemObj = {}
+          headerSort.forEach((current) => {
+            itemObj[current] = item[current]
+          })
+          customData.push(itemObj)
+        })
+        jsonToSheetXlsx({
+          data: customData,
+          header: header,
+          filename: filename,
+          json2sheetOpts: {
+            // 指定顺序
+            header: headerSort
+          },
+          write2excelOpts: {
+            bookType
+          }
+        })
+      } else { // 导出全量后台数据
+        var $this = this;
+        if($this.searchData.date && $this.searchData.date.length == 0) {
+          $this.$message({
+            showClose: true,
+            message: "请选择日期范围",
+            type: 'error'
+          });
+          return false
+        }
+        const loading = $this.$loading({
+          lock: true,
+          text: '正在导出内容，请耐心等待……'
+        });
+        var searchData = $this.initExportSearchData();
+        $this.$store.dispatch('enphone/getExportSearchData', searchData).then(res => {
+          if (res) {
+            loading.close();
+            if(res.status){
+              if (res.data && res.data.length > 0) {
+                const customData = []
+                if($this.searchData.is_group){
+                  if(res.data.length>0){
+                    var searArr=[];
+                    res.data.forEach(function(item){
+                      customData.push(item);
+                    });
+                  }
+                }else{
+                  res.data.forEach((item) => {
+                    const itemObj = {}
+                    headerSort.forEach((current) => {
+                      if(current == 'effective'){
+                        itemObj[current] = item[current]==1?'有效':'无效'
+                      }else if(current == 'managestatus'){
+                        itemObj[current] = item[current]==1?'':'已开始处理'
+                      }else{
+                        itemObj[current] = item[current]
+                      }
+                    })
+                    customData.push(itemObj)
+                  })
+                }
+                
+                jsonToSheetXlsx({
+                  data: customData,
+                  header: header,
+                  filename: filename,
+                  json2sheetOpts: {
+                    // 指定顺序
+                    header: headerSort
+                  },
+                  write2excelOpts: {
+                    bookType
+                  }
+                })
+              }
+            }else{
+              $this.$message({
+                showClose: true,
+                message: res.info,
+                type: 'error'
+              });
+            }
+          }
+          
+        })
+      }
+    },
+    // 组装导出接口所需数据
+    initExportSearchData() {
+      var $this = this;
+      var searchData = {};
+      searchData.page = $this.searchData.page;
+      searchData.limit = $this.searchData.limit;
+      searchData.phoneid = $this.phoneSelected;
+      searchData.messageid = $this.searchData.messageid;
+      searchData.province = $this.searchData.province;
+      searchData.search = $this.searchData.search;
+      searchData.anymessage = $this.searchData.anymessage;
+      searchData.useridname = $this.searchData.useridname;
+      searchData.domain = $this.searchData.domain;
+      searchData.url = $this.searchData.url;
+      searchData.groupurlproduct = $this.searchData.groupurlproduct;
+      searchData.is_url = $this.searchData.is_url ? 1 : 0;
+      searchData.effective = $this.searchData.effective ? 1 : 0;
+      searchData.is_group = $this.searchData.is_group ? 1 : 0;
+      searchData.is_core = $this.searchData.is_core ? 1 : 0;
+      searchData.mode = $this.searchData.mode;
+      searchData.typekey = $this.searchData.typekey;
+      searchData.productid = $this.searchData.productid;
+      searchData.level_id = $this.searchData.level_id;
+      searchData.productlevel = $this.searchData.productlevel;
+      searchData.device = $this.searchData.device;
+      searchData.idlist = $this.searchData.idlist;
+      searchData.hasquality = $this.searchData.hasquality;
+      searchData.qualityscore = $this.searchData.qualityscore;
+      if ($this.searchData.date && $this.searchData.date.length > 0) {
+        searchData.starttime = $this.searchData.date[0];
+        searchData.endtime = $this.searchData.date[1];
+      } else {
+        searchData.starttime = "";
+        searchData.endtime = "";
+      }
+      return searchData;
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {

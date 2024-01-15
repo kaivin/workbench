@@ -58,7 +58,8 @@
     cluesPhoneIndexSearchData,
     inputKeywordList,
     getInquiryItem,
-    getInquiryResult
+    getInquiryResult,
+    exportSearchData
 
 } from '@/api/enphone'
 
@@ -683,6 +684,16 @@ const actions = {
     inquirySearchAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             getInquiryResult(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 导出数据
+    getExportSearchData({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            exportSearchData(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
