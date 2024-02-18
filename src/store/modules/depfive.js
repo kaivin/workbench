@@ -2,7 +2,10 @@ import {
     getDepfiveCondition,
     getDepfiveSourceData,
     getDepfiveScoreTrend,
-    getDepfiveIntentionCount
+    getDepfiveIntentionCount,
+    getDepfiveEnCondition,
+    getDepfiveEnSourceData,
+    getDepfiveEnScoreData
 
 } from '@/api/depfive'
 
@@ -43,6 +46,36 @@ const actions = {
     depfiveIntentionCountAction({ commit, state },data) {
         return new Promise((resolve, reject) => {
             getDepfiveIntentionCount(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 获取英文询盘条件
+    depfiveEnConditionAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getDepfiveEnCondition(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 获取英文渠道询盘
+    depfiveEnSourceDataAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getDepfiveEnSourceData(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 获取英文成交积分询盘
+    depfiveEnScoreDataAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getDepfiveEnScoreData(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

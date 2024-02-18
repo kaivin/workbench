@@ -35,3 +35,30 @@ export function getDepfiveIntentionCount(data) {
     data
   });
 }
+
+// 获取英文渠道列表
+export function getDepfiveEnCondition(data) {
+  return request({
+    url: "/hxindex/Fivedepart/getencondition",
+    method: "POST",
+    data
+  });
+}
+
+// 获取英文渠道分析数据
+export function getDepfiveEnSourceData(data) {
+  return request({
+    url: "/hxindex/Fivedepart/ensourcecount",
+    method: "POST",
+    data
+  });
+}
+
+// 获取英文成交积分数据
+export function getDepfiveEnScoreData(data) {
+  return request({
+    url: "/hxindex/Fivedepart/enscorecount",
+    method: "POST",
+    data
+  });
+}
