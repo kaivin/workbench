@@ -198,8 +198,8 @@
                                         <template slot-scope="scope">
                                           <div class="msg-text">
                                             <p><strong class="EnColor05">联系人：</strong><span class="txt-span">{{scope.row.name}}</span></p>
-                                            <p><strong class="EnColor05">电话：</strong><span class="txt-span">{{scope.row.encryptPhone}}</span><span v-if="scope.row.encryptPhone&&scope.row.encryptPhone!=''&&scope.row.phonecount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.encryptPhone)">({{scope.row.phonecount}})</span></p>
-                                            <p><strong class="EnColor05">Email：</strong><span class="txt-span">{{scope.row.encryptEmail}}</span><span v-if="scope.row.encryptEmail&&scope.row.encryptEmail!=''&&scope.row.emailcount>1" class="txt-link num-span" v-on:click="searchJumpLink(scope.row.encryptEmail)">({{scope.row.emailcount}})</span></p>
+                                            <p><strong class="EnColor05">电话：</strong><span class="txt-span">{{scope.row.encryptPhone}}</span><span v-if="scope.row.encryptPhone&&scope.row.encryptPhone!=''&&scope.row.phonecount>1" class="txt-link num-span" v-on:click="searchJumpSearchLink(scope.row.id, 'id_phone')">({{scope.row.phonecount}})</span></p>
+                                            <p><strong class="EnColor05">Email：</strong><span class="txt-span">{{scope.row.encryptEmail}}</span><span v-if="scope.row.encryptEmail&&scope.row.encryptEmail!=''&&scope.row.emailcount>1" class="txt-link num-span" v-on:click="searchJumpSearchLink(scope.row.id, 'id_email')">({{scope.row.emailcount}})</span></p>
                                             <p><strong class="EnColor05">理想联系方式：</strong><span class="txt-span">{{scope.row.othercontact}}</span></p>
                                           </div>
                                         </template>
@@ -400,6 +400,10 @@ export default {
           clientHeight:0,
         },
         isSearchResult:false,
+        id_email: "",
+        id_phone: "",
+        addOther: false,
+        showEmail: false,
     }
   },
   computed: {
@@ -585,6 +589,13 @@ export default {
       searchData.language = $this.searchData.language;
       searchData.brand_id = $this.searchData.brand_id;
       searchData.keyword = $this.searchData.keyword;
+      if($this.addOther){
+        if($this.showEmail){
+          searchData.id_email = $this.id_email
+        }else{
+          searchData.id_phone = $this.id_phone
+        }
+      }
       var pathUrl = "";
       if($this.currentStatus==="All"){
         pathUrl = "webmsg/webMsgAllListAction";
@@ -842,6 +853,18 @@ export default {
                   if($this.$route.query.keyword){
                     $this.searchData.keyword = $this.$route.query.keyword;
                   }
+                  if($this.$route.query.id_email){
+                    $this.addOther = true;
+                    $this.showEmail = true;
+                    $this.id_email = $this.$route.query.id_email;
+                  }else if($this.$route.query.id_phone){
+                    $this.addOther = true;
+                    $this.showEmail = false;
+                    $this.id_phone = $this.$route.query.id_phone;
+                  }else{
+                    $this.addOther = false;
+                    $this.showEmail = false;
+                  }
                   $this.getSearchSystemData();
                 }else{
                   $this.$router.push({path:'/Webmsg/msgindex',query:{Status:$this.permitStatus[0]}});
@@ -902,6 +925,20 @@ export default {
         $this.$router.push({path:'/Webmsg/msgindex',query:{Status:'All',keyword:val}});
       }
     },
+
+    searchJumpSearchLink(val, str){
+      var $this = this;
+      if($this.permitStatus.includes("All")){
+        $this.resetSearchData();
+        if(str == "id_email"){
+          $this.$router.push({path:'/Webmsg/msgindex',query:{Status:'All', id_email: val}});
+        }else if(str == "id_phone"){
+          $this.$router.push({path:'/Webmsg/msgindex',query:{Status:'All', id_phone: val}});
+        }
+        
+      }
+    },
+
     // 获取第三方平台中文留言信息
     getCnMsgData(){
       var $this = this;
