@@ -11,39 +11,43 @@
             </template>
           </p>
           <el-card class="box-card" shadow="hover">
-            <div slot="header">
-              <div class="card-header" ref="headerPane">
-                <div class="search-wrap" ref="searchPane">
-                  <div class="item-search item-check">
-                    <el-checkbox v-model="searchData.all_name" label="一/二部" border />
-                  </div>
-                  <div class="item-search">
-                    <el-input
-                        class="input-panel"
-                        size="small"
-                        placeholder="请输入关键词"
-                        v-model="searchData.keyword"
-                        @keyup.enter.native="searchResult"
-                        clearable>
-                    </el-input>
-                  </div>
-                  <div class="item-search">
-                    <el-input
-                        class="input-panel"
-                        size="small"
-                        placeholder="请输入抖音名称"
-                        v-model="searchData.nickname"
-                        @keyup.enter.native="searchResult"
-                        clearable>
-                    </el-input>
-                  </div>
-                  <div class="item-search">
-                    <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
-                    <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
-                    <el-button type="primary" size="small" class="derived" @click="showExportDialog"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出数据</el-button>
-                  </div>
+            <div class="card-header" ref="headerPane">
+              <div class="search-wrap" ref="searchPane">
+                <div class="item-search item-check">
+                  <el-checkbox v-model="searchData.all_name" label="一/二部" border @change="searchResult" />
+                </div>
+                <div class="item-search">
+                  <el-input
+                      class="input-panel"
+                      size="small"
+                      placeholder="请输入关键词"
+                      v-model="searchData.keyword"
+                      @keyup.enter.native="searchResult"
+                      @clear="searchResult"
+                      clearable>
+                  </el-input>
+                </div>
+                <div class="item-search">
+                  <el-input
+                      class="input-panel"
+                      size="small"
+                      placeholder="请输入抖音名称"
+                      v-model="searchData.nickname"
+                      @keyup.enter.native="searchResult"
+                      @clear="searchResult"
+                      clearable>
+                  </el-input>
+                </div>
+                <div class="item-search">
+                  <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+                  <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+                  <el-button type="primary" size="small" class="derived" @click="showExportDialog"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出数据</el-button>
                 </div>
               </div>
+            </div>
+            <div class="douyin_count" ref="countPane">
+              <span class="dy_item" @click="searchByName(item.name)" v-for="item,index in scoreList" :key="item.id">{{index<9?'0'+(index+1):index+1}}. {{item.name}}({{item.uname}})：{{item.score}}</span>
+              <span class="dy_item dy_red">积分总计：{{scoreCount}}</span>
             </div>
             <div class="card-content" ref="tableContent">
               <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
@@ -75,15 +79,10 @@
                         </template>
                       </el-table-column>
                       <el-table-column
-                        prop="desc"
-                        label="标题"
-                        min-width="300"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="nickname"
-                        label="名称"
-                        min-width="100"
+                        prop="my_level"
+                        label="关键词等级"
+                        align="center"
+                        width="100"
                         >
                       </el-table-column>
                       <el-table-column
@@ -101,6 +100,7 @@
                         >
                       </el-table-column>
                       <el-table-column
+                        v-if="searchData.all_name"
                         prop="depart"
                         align="center"
                         label="部门"
@@ -108,10 +108,30 @@
                         >
                       </el-table-column>
                       <el-table-column
+                        v-if="searchData.all_name"
                         prop="uname"
                         align="center"
                         label="负责人"
                         width="90"
+                        >
+                      </el-table-column>
+                      <el-table-column
+                        prop="score"
+                        align="center"
+                        label="积分"
+                        width="60"
+                        >
+                      </el-table-column>
+                      <el-table-column
+                        prop="desc"
+                        label="标题"
+                        min-width="300"
+                        >
+                      </el-table-column>
+                      <el-table-column
+                        prop="nickname"
+                        label="名称"
+                        min-width="100"
                         >
                       </el-table-column>
                     </el-table>
@@ -144,6 +164,7 @@
 import { mapGetters } from 'vuex'
 import ExportModal from '@/components/Excel/exportModal.vue'
 import { jsonToSheetXlsx } from '@/components/Excel/Export2Excel'
+import {sortByDesc} from "@/utils/index"
 export default {
   name: 'Douyin_index',
   components: {
@@ -195,13 +216,26 @@ export default {
       selectedData: [],
       fieldList: [
         { key: 'name', value: '关键词' },
+        { key: 'my_level', value: '关键词等级' },
+        { key: 'rank_number', value: '排名' },
+        { key: 'avgnumber', value: '抖音指数' },
+        { key: 'score', value: '积分' },
         { key: 'desc', value: '标题' },
         { key: 'nickname', value: '名称' },
+      ],
+      fieldList2: [
+        { key: 'name', value: '关键词' },
+        { key: 'my_level', value: '关键词等级' },
         { key: 'rank_number', value: '排名' },
         { key: 'avgnumber', value: '抖音指数' },
         { key: 'depart', value: '部门' },
-        { key: 'uname', value: '负责人' }
-      ]
+        { key: 'uname', value: '负责人' },
+        { key: 'score', value: '积分' },
+        { key: 'desc', value: '标题' },
+        { key: 'nickname', value: '名称' },
+      ],
+      scoreList: [],
+      scoreCount: 0
     }
   },
   computed: {
@@ -337,7 +371,8 @@ export default {
       var headerHeight = $this.$refs.headerPane.offsetHeight;
       var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
-      $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40-45-31;
+      var countHeight = $this.$refs.countPane.offsetHeight;
+      $this.tableHeight = screenHeight-headerHeight-countHeight-breadcrumbHeight-40-45-31;
       $this.getBrowserType();
         setTimeout(function() {
           $this.setScrollDom();
@@ -349,7 +384,12 @@ export default {
       $this.selectedData = val;
     },
     showExportDialog() {
-      this.$refs.ExportModalRef.showDialog({ fieldList: this.fieldList, hasSelected: this.selectedData.length > 0, hasData: this.tableData.length > 0 })
+      if(this.searchData.all_name){
+        this.$refs.ExportModalRef.showDialog({ fieldList: this.fieldList2, hasSelected: this.selectedData.length > 0, hasData: this.tableData.length > 0 })
+      }else{
+        this.$refs.ExportModalRef.showDialog({ fieldList: this.fieldList, hasSelected: this.selectedData.length > 0, hasData: this.tableData.length > 0 })
+      }
+      
     },
     exportDone(obj) {
       const filename = obj.filename
@@ -485,7 +525,8 @@ export default {
               $this.menuButtonPermit.push(item.action_route);
             });
             if($this.menuButtonPermit.includes('Douyin_index')){
-              $this.initPage()
+              $this.initPage();
+              $this.getDouyinCount();
             }else{
               $this.$message({
                 showClose: true,
@@ -559,6 +600,53 @@ export default {
           }
       });
     },
+    // 获取抖音统计数据
+    getDouyinCount(){
+      var $this = this;
+      $this.$store.dispatch('douyin/getDouyinScoreData', null).then(response=>{
+          if(response){
+            if(response.status){
+              if(response.data && response.data.length > 0){
+                $this.scoreList = response.data.sort(sortByDesc("score"));
+                var count = 0;
+                response.data.forEach(item => {
+                  count += item.score;
+                })
+                $this.scoreCount = Number(count).toFixed(1);
+              }
+            }else{
+              if(response.permitstatus&&response.permitstatus==2){
+                $this.$message({
+                  showClose: true,
+                  message: "未被分配该页面访问权限",
+                  type: 'error',
+                  duration:6000
+                });
+                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+              }else{
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isSearchResult=false;
+                },1000);
+              }
+            }
+          }
+      });
+    },
+    // 内容点击搜索
+    searchByName(data){
+      var $this = this;
+      $this.searchData.page=1;
+      $this.searchData.limit=20;
+      $this.searchData.keyword = "";
+      $this.searchData.nickname = data;
+      $this.searchData.all_name = true;
+      $this.searchResult();
+    },
     // 每页显示条数改变事件
     handleSizeChange(val) {
       this.searchData.limit = val;
@@ -601,7 +689,7 @@ export default {
       $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
       // 获取表格头吸顶需滚动的高度
       if($this.$refs.headerPane){
-         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20;
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.countPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20;
       }else{
          $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15+20;
       }
@@ -746,6 +834,9 @@ export default {
   margin: 0;
 }
 .search-wrap{
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 15px;
   .item-search{
     float:left;
     padding: 10px 10px 10px 0;
@@ -858,7 +949,10 @@ export default {
     cursor: pointer;
   }
 }
-
+.box-card .el-card__header{
+  padding: 0;
+  background-color: transparent;
+}
 .link{
   color:#0970ff;
   font-size: 13px;
@@ -869,7 +963,31 @@ export default {
     background-color:#0970ff;
   }
 }
-
+.douyin_count{
+  padding: 15px;
+  background: #fff;
+  margin-bottom: 15px;
+  border-radius: 0;
+  min-height: 142px;
+  .dy_item{
+    display: inline-block;
+    vertical-align: top;
+    width: 20%;
+    font-size: 14px;
+    line-height: 2;
+    cursor: pointer;
+    color: #0970ff;
+  }
+  .dy_red{
+    color: red;
+  }
+}
+@media screen and (max-width: 1560px){
+  .douyin_count .dy_item{
+    width: auto;
+    margin-right: 30px;
+  }
+}
 </style>
 <style>
 

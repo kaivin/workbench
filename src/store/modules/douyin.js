@@ -1,5 +1,6 @@
 import {
-    getDouyinData
+    getDouyinData,
+    getDouyinScore
 
 } from '@/api/douyin'
 
@@ -10,6 +11,16 @@ const actions = {
     getDouyinResData({ commit, state }, data) {
         return new Promise((resolve, reject) => {
             getDouyinData(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 获取抖音t统计结果
+    getDouyinScoreData({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getDouyinScore(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

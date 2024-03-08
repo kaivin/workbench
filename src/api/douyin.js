@@ -8,3 +8,12 @@ export function getDouyinData(data) {
     data
   });
 }
+
+// 获取部门统计情况
+export function getDouyinScore(data) {
+  return request({
+    url: "/hxindex/Douyin/departscore",
+    method: "POST",
+    data
+  });
+}
