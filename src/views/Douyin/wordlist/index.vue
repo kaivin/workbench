@@ -11,43 +11,37 @@
             </template>
           </p>
           <el-card class="box-card" shadow="hover">
-            <div class="card-header" ref="headerPane">
-              <div class="search-wrap" ref="searchPane">
-                <div class="item-search item-check">
-                  <el-checkbox v-model="searchData.all_name" label="一/二部" border @change="searchResult" />
-                </div>
-                <div class="item-search">
-                  <el-input
-                      class="input-panel"
-                      size="small"
-                      placeholder="请输入关键词"
-                      v-model="searchData.keyword"
-                      @keyup.enter.native="searchResult"
-                      @clear="searchResult"
-                      clearable>
-                  </el-input>
-                </div>
-                <div class="item-search">
-                  <el-input
-                      class="input-panel"
-                      size="small"
-                      placeholder="请输入抖音名称"
-                      v-model="searchData.nickname"
-                      @keyup.enter.native="searchResult"
-                      @clear="searchResult"
-                      clearable>
-                  </el-input>
-                </div>
-                <div class="item-search">
-                  <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
-                  <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
-                  <el-button type="primary" size="small" class="derived" @click="showExportDialog"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出数据</el-button>
+            <div slot="header">
+              <div class="card-header" ref="headerPane">
+                <div class="search-wrap" ref="searchPane">
+                  <div class="item-search">
+                    <el-select v-model="searchData.my_level" size="small" clearable placeholder="关键词等级" class="select-panel" @change="searchResult">
+                        <el-option
+                            v-for="item in levelList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                  </div>
+                  <div class="item-search">
+                      <el-input
+                          class="input-panel"
+                          size="small"
+                          placeholder="请输入搜索词"
+                          v-model="searchData.keyword"
+                          @keyup.enter.native="searchResult"
+                          @clear="searchResult"
+                          clearable>
+                      </el-input>
+                  </div>
+                  <div class="item-search">
+                    <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+                    <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+                    <el-button v-if="menuButtonPermit.includes('Douyin_wordadd')" type="success" size="small" icon="el-icon-plus" v-on:click="addTableRow()">新增关键词</el-button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="douyin_count" ref="countPane">
-              <span class="dy_item" @click="searchByName(item.name)" v-for="item,index in scoreList" :key="item.id"><span class="rank">{{index<9?'0'+(index+1):index+1}}.</span> <span class="cname">{{item.name}}</span><span class="uname">[{{item.uname}}]</span>：<span class="score">{{item.score}}</span></span>
-              <span class="dy_item dy_red">积分总计：{{scoreCount}}</span>
             </div>
             <div class="card-content" ref="tableContent">
               <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
@@ -56,83 +50,37 @@
                       ref="simpleTable"
                       :data="tableData"
                       tooltip-effect="dark"
+                      stripe
                       class="SiteTable"
                       style="width: 100%"
                       :style="'min-height:'+tableHeight+'px;'"
                       row-key="id"
-                      @selection-change="handleSelectionChange"
                       >
-                      <el-table-column type="selection" align="center" width="48"></el-table-column>
-                      <el-table-column align="center" width="80" prop="id" label="ID"></el-table-column>
                       <el-table-column
                         prop="name"
                         label="关键词"
-                        min-width="90"
+                        min-width="180"
                         >
-                        <template #default="scope">
-                          <el-link v-if="scope.row.url" :href="scope.row.url" target="_blank" type="primary">
-                            {{scope.row.name}}
-                          </el-link>
-                          <span v-else>
-                            {{scope.row.name}}
-                          </span>
-                        </template>
                       </el-table-column>
                       <el-table-column
                         prop="my_level"
                         label="关键词等级"
+                        min-width="120"
                         align="center"
-                        width="100"
                         >
                       </el-table-column>
                       <el-table-column
-                        prop="rank_number"
-                        label="排名"
+                        v-if="menuButtonPermit.includes('Douyin_worddel')"
+                        :width="operationsWidth"
                         align="center"
-                        width="60"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="avgnumber"
-                        align="center"
-                        label="抖音指数"
-                        width="90"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        v-if="searchData.all_name"
-                        prop="depart"
-                        align="center"
-                        label="部门"
-                        width="100"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        v-if="searchData.all_name"
-                        prop="uname"
-                        align="center"
-                        label="负责人"
-                        width="90"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="score"
-                        align="center"
-                        label="积分"
-                        width="60"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="desc"
-                        label="标题"
-                        min-width="300"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="nickname"
-                        label="名称"
-                        min-width="100"
-                        >
+                        fixed="right"
+                        prop="operations"
+                        label="操作" >
+                        <template #default="scope">
+                          <div class="table-button">
+                            <el-button size="mini" @click="deleteTableRow(scope.row, scope.$index)" type="info" plain >删除</el-button>
+                          </div>
+                        </template>
                       </el-table-column>
                     </el-table>
                 </div>
@@ -157,34 +105,52 @@
       </div>
     </div>
     <el-backtop target=".scroll-panel"></el-backtop>
-    <ExportModal ref="ExportModalRef" @exportSuccess="exportDone"></ExportModal>
+    <el-dialog :title="dialogText" v-if="menuButtonPermit.includes('Douyin_wordadd')" custom-class="add-edit-dialog" :visible.sync="visible" :before-close="handleClose" width="500px">
+      <el-form :model="dialogForm">
+        <el-form-item label="关键词：" :label-width="formLabelWidth">
+          <el-input v-model="dialogForm.name" ref="name" placeholder="请输入关键词"></el-input>
+        </el-form-item>
+        <el-form-item label="关键词等级：" :label-width="formLabelWidth">
+          <el-select v-model="dialogForm.my_level" size="small" clearable placeholder="请选择关键词等级" class="select-panel">
+            <el-option
+                v-for="item in levelList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="handleClose">取 消</el-button>
+          <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="saveData">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import ExportModal from '@/components/Excel/exportModal.vue'
-import { jsonToSheetXlsx } from '@/components/Excel/Export2Excel'
-import {sortByDesc} from "@/utils/index"
 export default {
-  name: 'Douyin_index',
-  components: {
-    ExportModal
-  },
+  name: 'Douyin_wordlist',
   data() {
     return {
       breadcrumbList:[],
       menuButtonPermit:[],
+      operationsWidth: "",
+      formLabelWidth:"100px",
       pagerCount:5,
-      pageSizeList:[20, 50, 100, 150, 200],
-      totalDataNum: 0,
+      pageSizeList:[50, 100, 150, 200],
+      totalDataNum:0,
       tableData:[],
       tableHeight:200,
+      productTypeList: [],
       searchData:{
-        keyword: "",
-        nickname: "",
-        all_name: false,
-        page: 1,
-        limit: 20
+        keyword:"",
+        my_level: "",
+        page:1,
+        limit:50,
       },
       scrollPosition:{
         width:0,
@@ -204,38 +170,35 @@ export default {
         scrollDom:null,
         tableHeaderFixedDom:null,
         tableFixedRightDom:null,
-        tableFixedLeftDom:null,
         fixedTopHeight:0,
         tableheaderHeight:0,
         fixedRightWidth:0,
-        fixedLeftWidth:0,
         tableBottom:0,
         clientHeight:0,
       },
       isSearchResult:false,
-      selectedData: [],
-      fieldList: [
-        { key: 'name', value: '关键词' },
-        { key: 'my_level', value: '关键词等级' },
-        { key: 'rank_number', value: '排名' },
-        { key: 'avgnumber', value: '抖音指数' },
-        { key: 'score', value: '积分' },
-        { key: 'desc', value: '标题' },
-        { key: 'nickname', value: '名称' },
-      ],
-      fieldList2: [
-        { key: 'name', value: '关键词' },
-        { key: 'my_level', value: '关键词等级' },
-        { key: 'rank_number', value: '排名' },
-        { key: 'avgnumber', value: '抖音指数' },
-        { key: 'depart', value: '部门' },
-        { key: 'uname', value: '负责人' },
-        { key: 'score', value: '积分' },
-        { key: 'desc', value: '标题' },
-        { key: 'nickname', value: '名称' },
-      ],
-      scoreList: [],
-      scoreCount: 0
+      isSaveData:false,
+      visible: false,
+      dialogText: "",
+      dialogForm: {
+        name: "",
+        my_level: ""
+      },
+      levelList: [
+        {
+          label: "A",
+          value: "A"
+        },{
+          label: "B",
+          value: "B"
+        },{
+          label: "C",
+          value: "C"
+        },{
+          label: "D",
+          value: "D"
+        },
+      ]
     }
   },
   computed: {
@@ -371,125 +334,11 @@ export default {
       var headerHeight = $this.$refs.headerPane.offsetHeight;
       var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
-      var countHeight = $this.$refs.countPane.offsetHeight;
-      $this.tableHeight = screenHeight-headerHeight-countHeight-breadcrumbHeight-40-45-31;
+      $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40 - 45;
       $this.getBrowserType();
         setTimeout(function() {
           $this.setScrollDom();
       }, 400);
-    },
-    // 表格多选改变事件
-    handleSelectionChange(val) {
-      var $this = this;
-      $this.selectedData = val;
-    },
-    showExportDialog() {
-      if(this.searchData.all_name){
-        this.$refs.ExportModalRef.showDialog({ fieldList: this.fieldList2, hasSelected: this.selectedData.length > 0, hasData: this.tableData.length > 0 })
-      }else{
-        this.$refs.ExportModalRef.showDialog({ fieldList: this.fieldList, hasSelected: this.selectedData.length > 0, hasData: this.tableData.length > 0 })
-      }
-      
-    },
-    exportDone(obj) {
-      const filename = obj.filename
-      const customData = []
-      let header = null
-      const bookType = obj.fileType
-      const headerSort = obj.sort
-      if (obj.headerType === 'custom') {
-        header = obj.header
-      }
-      if (obj.dataScope === 1) { // 导出当前页数据
-        this.tableData.forEach((item) => {
-          const itemObj = {}
-          headerSort.forEach((current) => {
-            itemObj[current] = item[current]
-          })
-          customData.push(itemObj)
-        })
-        jsonToSheetXlsx({
-          data: customData,
-          header: header,
-          filename: filename,
-          json2sheetOpts: {
-            // 指定顺序
-            header: headerSort
-          },
-          write2excelOpts: {
-            bookType
-          }
-        })
-      } else if (obj.dataScope === 2) { // 导出选中数据
-        this.selectedData.forEach((item) => {
-          const itemObj = {}
-          headerSort.forEach((current) => {
-            itemObj[current] = item[current]
-          })
-          customData.push(itemObj)
-        })
-        jsonToSheetXlsx({
-          data: customData,
-          header: header,
-          filename: filename,
-          json2sheetOpts: {
-            // 指定顺序
-            header: headerSort
-          },
-          write2excelOpts: {
-            bookType
-          }
-        })
-      } else { // 导出全量后台数据
-        var $this = this;
-        var formData = {}
-        formData.page = $this.searchData.page;
-        formData.limit = $this.totalDataNum;
-        formData.keyword = $this.searchData.keyword;
-        formData.nickname = $this.searchData.nickname;
-        formData.all_name = $this.searchData.all_name ? 1 : "";
-        const loading = $this.$loading({
-          lock: true,
-          text: '正在导出内容，请耐心等待……'
-        });
-        $this.$store.dispatch('douyin/getDouyinResData', formData).then(res => {
-          if (res) {
-            loading.close();
-            if(res.status){
-              if (res.data && res.data.length > 0) {
-                const result = []
-                const customData = res.data;
-                customData.forEach((item) => {
-                  const itemObj = {}
-                  headerSort.forEach((current) => {
-                    itemObj[current] = item[current]
-                  })
-                  result.push(itemObj)
-                })
-                jsonToSheetXlsx({
-                  data: result,
-                  header: header,
-                  filename: filename,
-                  json2sheetOpts: {
-                    // 指定顺序
-                    header: headerSort
-                  },
-                  write2excelOpts: {
-                    bookType
-                  }
-                })
-              }
-            }else{
-              $this.$message({
-                showClose: true,
-                message: res.info,
-                type: 'error'
-              });
-            }
-          }
-          
-        })
-      }
     },
     // 搜索点击事件
     searchResult(){
@@ -503,11 +352,10 @@ export default {
     // 重置表单
     resetData(){
         var $this = this;
+        $this.searchData.keyword='';
         $this.searchData.page=1;
-        $this.searchData.limit=20;
-        $this.searchData.keyword = "";
-        $this.searchData.nickname = "";
-        $this.searchData.all_name = false;
+        $this.searchData.limit=50;
+        $this.searchData.my_level='';
         $this.searchResult();
     },
     // 初始化数据
@@ -524,9 +372,16 @@ export default {
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
-            if($this.menuButtonPermit.includes('Douyin_index')){
-              $this.initPage();
-              $this.getDouyinCount();
+            if($this.menuButtonPermit.includes('Douyin_wordlist')){
+                var operationsWidth = 22;
+                if($this.menuButtonPermit.includes('Douyin_wordedit')){
+                  operationsWidth+=66;
+                }
+                if($this.menuButtonPermit.includes('Douyin_worddel')){
+                  operationsWidth+=66;
+                }
+                $this.operationsWidth = "" + operationsWidth;
+                $this.initPage();
             }else{
               $this.$message({
                 showClose: true,
@@ -561,91 +416,53 @@ export default {
       formData.page = $this.searchData.page;
       formData.limit = $this.searchData.limit;
       formData.keyword = $this.searchData.keyword;
-      formData.nickname = $this.searchData.nickname;
-      formData.all_name = $this.searchData.all_name ? 1 : "";
+      formData.my_level = $this.searchData.my_level;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('douyin/getDouyinResData', formData).then(response=>{
-          if(response){
-            if(response.status){
-              if(response.data){
-                $this.tableData = response.data;
-                $this.totalDataNum = response.allcount;
-                setTimeout(()=>{
-                  $this.isSearchResult=false;
-                },1000);
-                $this.$nextTick(function () {
-                  $this.setTableHeight();
-                })
-              }
+      $this.$store.dispatch('douyin/getDouyinKeywordList',formData).then(response=>{
+        if(response){
+          if(response.status){
+            if(response.data){
+              $this.tableData = response.data;
+              $this.totalDataNum = response.allcount;
+              setTimeout(()=>{
+                $this.isSearchResult=false;
+                $this.isSaveData=false;
+              },1000);
+              $this.$nextTick(function () {
+                $this.setTableHeight();
+              })
+            }
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
             }else{
-              if(response.permitstatus&&response.permitstatus==2){
-                $this.$message({
-                  showClose: true,
-                  message: "未被分配该页面访问权限",
-                  type: 'error',
-                  duration:6000
-                });
-                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-              }else{
-                $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'error'
-                });
-                setTimeout(()=>{
-                  $this.isSearchResult=false;
-                },1000);
-              }
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSearchResult=false;
+                $this.isSaveData=false;
+              },1000);
             }
           }
+        }
       });
     },
-    // 获取抖音统计数据
-    getDouyinCount(){
+    // 重置搜索数据
+    resetSearchData(){
       var $this = this;
-      $this.$store.dispatch('douyin/getDouyinScoreData', null).then(response=>{
-          if(response){
-            if(response.status){
-              if(response.data && response.data.length > 0){
-                $this.scoreList = response.data.sort(sortByDesc("score"));
-                var count = 0;
-                response.data.forEach(item => {
-                  count += item.score;
-                })
-                $this.scoreCount = Number(count).toFixed(1);
-              }
-            }else{
-              if(response.permitstatus&&response.permitstatus==2){
-                $this.$message({
-                  showClose: true,
-                  message: "未被分配该页面访问权限",
-                  type: 'error',
-                  duration:6000
-                });
-                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-              }else{
-                $this.$message({
-                  showClose: true,
-                  message: response.info,
-                  type: 'error'
-                });
-                setTimeout(()=>{
-                  $this.isSearchResult=false;
-                },1000);
-              }
-            }
-          }
-      });
-    },
-    // 内容点击搜索
-    searchByName(data){
-      var $this = this;
-      $this.searchData.page=1;
-      $this.searchData.limit=20;
       $this.searchData.keyword = "";
-      $this.searchData.nickname = data;
-      $this.searchData.all_name = true;
-      $this.searchResult();
+      $this.searchData.page = 1;
+      $this.searchData.limit = 50;
+      $this.searchData.my_level = "";
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
@@ -657,6 +474,104 @@ export default {
     handleCurrentChange(val) {
       this.searchData.page = val;
       this.initPage();
+    },
+    // 关闭添加菜单弹窗
+    handleClose(){
+      var $this = this;
+      $this.visible = false;
+    },
+    // 添加表格行数据
+    addTableRow() {
+      this.visible = true;
+      this.dialogText = "新增关键词";
+      this.resetFormData();
+    },
+    // 保存添加/编辑数据
+    saveData() {
+      var $this = this;
+      if(!$this.isSaveData){
+        if (!$this.validationForm()) {
+          return false;
+        }
+        $this.isSaveData=true;
+        const result = {}
+        result.name = $this.dialogForm.name
+        result.my_level = $this.dialogForm.my_level
+        $this.$store.dispatch('douyin/douyinKeywordAdd',result).then(response=>{
+          if (response.status) {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "success",
+            });
+            $this.handleClose();
+            $this.initPage();
+          } else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+            setTimeout(()=>{
+              $this.isSaveData=false;
+            },1000);
+          }
+        });
+      }
+    },
+    // 重置添加数据表单
+    resetFormData() {
+      var $this = this;
+      $this.dialogForm.name = "";
+      $this.dialogForm.my_level = "";
+    },
+    // 验证是否为空
+    validationForm() {
+      var $this = this;
+      if ($this.dialogForm.name == "") {
+        $this.$message({
+          showClose: true,
+          message: "错误：关键词名称不能为空！",
+          type: "error",
+        });
+        $this.$refs["name"].focus();
+        return false;
+      }
+      if ($this.dialogForm.my_level == "") {
+        $this.$message({
+          showClose: true,
+          message: "错误：关键词等级不能为空！",
+          type: "error",
+        });
+        return false;
+      }
+      return true;
+    },
+    // 删除表格行
+    deleteTableRow(row, index) {
+      var $this = this;
+      $this.$confirm('是否确认删除该数据?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+      }).then(() => {
+        $this.$store.dispatch('douyin/douyinKeywordDel',{ id: row.id }).then(response=>{
+          if (response.status) {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "success",
+            });
+            $this.initPage();
+          } else {
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: "error",
+            });
+          }
+        });
+      });
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){
@@ -678,7 +593,6 @@ export default {
       var scrollDom = document.querySelector(".SiteTable .el-table__body-wrapper");
       var tableHeaderFixedDom = document.querySelector(".SiteTable .el-table__header-wrapper");
       var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
-      var tableFixedLeftDom = document.querySelector(".el-table__fixed");
       $this.scrollPosition.width = maxWidth;
       $this.scrollPosition.left = leftWidth;
       $this.scrollPosition.insetWidth = insetWidth;
@@ -689,16 +603,13 @@ export default {
       $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
       // 获取表格头吸顶需滚动的高度
       if($this.$refs.headerPane){
-         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.countPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20;
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20;
       }else{
          $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15+20;
       }
       $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
       if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
          $this.scrollTable.tableFixedRightDom = tableFixedRightDom;
-      }
-      if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
-         $this.scrollTable.tableFixedLeftDom = tableFixedLeftDom;
       }
       var fixedHeaderObj = $this.scrollTable.tableHeaderFixedDom.getBoundingClientRect();
       // 获取表格头的高度
@@ -708,11 +619,6 @@ export default {
          // 获取右侧固定列的总宽度
          $this.scrollTable.fixedRightWidth = fixedRightObj.width;
       }
-      if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
-         var fixedLeftObj = $this.scrollTable.tableFixedLeftDom.getBoundingClientRect();
-         // 获取左侧侧固定列的总宽度
-         $this.scrollTable.fixedLeftWidth = fixedLeftObj.width;
-      }
       var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
       $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+54+20;
       $this.scrollTable.clientHeight = document.documentElement.clientHeight;
@@ -721,15 +627,20 @@ export default {
         var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;";
         $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
         document.querySelector(".table-mask").style = tableHeaderStyle;
-        var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
-        var tableStyle4 = "width:"+$this.scrollTable.fixedLeftWidth+"px;";
+        var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";        
         if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
           document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
         }
-        if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
-          document.querySelector(".SiteTable .el-table__fixed .el-table__fixed-header-wrapper").style=tableStyle4;
-        }
         $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+54+20;
+      }
+      // 视窗宽高改变时需要设置默认滚动条的位置
+      if($this.totalDataNum>50){
+        var scrTop = $this.$refs.scrollDom.scrollTop;
+        if(scrTop+$this.scrollTable.clientHeight>=$this.scrollTable.tableBottom-20){
+          $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-10;
+        }else{
+          $this.scrollPosition.fixedBottom = 20;
+        }
       }
     },
     // 竖向滚动条滚动事件
@@ -738,7 +649,6 @@ export default {
       if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
         var scrTop = event.target.scrollTop;
         var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
-        var tableFixedLeftDom = document.querySelector(".SiteTable .el-table__fixed");
         if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
           $this.scrollPosition.isFixed = true;
           var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
@@ -747,15 +657,11 @@ export default {
           var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
           var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
           var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
-          var tableStyle4 = "width:"+$this.scrollTable.fixedLeftWidth+"px;";
           document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          
           if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
             document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
             document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
-          }
-          if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
-            document.querySelector(".SiteTable .el-table__fixed .el-table__fixed-body-wrapper").style=tableStyle2;
-            document.querySelector(".SiteTable .el-table__fixed .el-table__fixed-header-wrapper").style=tableStyle4;
           }
         }else{// 头部需要变为正常
           $this.scrollPosition.isFixed = false;
@@ -764,12 +670,15 @@ export default {
           var tableStyle1 = "padding-top:0";
           document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
           var tableStyle3 = "width:auto";
-          var tableStyle4 = "width:auto";
           if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
             document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
           }
-          if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
-            document.querySelector(".SiteTable .el-table__fixed .el-table__fixed-header-wrapper").style=tableStyle4;
+        }
+        if($this.totalDataNum>50){
+          if(scrTop+$this.scrollTable.clientHeight>=$this.scrollTable.tableBottom-20){
+            $this.scrollPosition.fixedBottom = scrTop+$this.scrollTable.clientHeight-$this.scrollTable.tableBottom-10;
+          }else{
+            $this.scrollPosition.fixedBottom = 20;
           }
         }
       }
@@ -830,194 +739,45 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.el-table.SiteTable .table-button .el-button{
-  margin: 0;
-}
 .search-wrap{
-  background-color: #fff;
-  padding: 15px;
-  margin-bottom: 15px;
   .item-search{
     float:left;
     padding: 10px 10px 10px 0;
-    span{
-      font-size: 14px;
-      line-height: 28px;
-    }
-    .el-date-editor--daterange.el-input, .el-date-editor--daterange.el-input__inner, .el-date-editor--timerange.el-input, .el-date-editor--timerange.el-input__inner {
-      width: 100% !important
-    }
-    .el-checkbox__label{
-      padding-left: 6px;
-    }
-    .el-checkbox.is-bordered.el-checkbox--medium{
-      height: 32px;
-      padding-top: 6px;
-    }
-    .item-label{
-      line-height: 32px;
-      font-size: 14px;
-      color: #606266;
-    }
   }
   .input-panel{
     width: 190px;
   }
   .select-panel{
-    width: 150px;
+    width: 120px;
   }
-}
-.el-table.SiteTable svg{
-  font-size: 20px;
 }
 .item-text{
   color: #606266;
   display: flex;
   align-items: center;
   line-height: 0;
-  &.regular{
-    color: #999;
-  }
   &.keyword{
     justify-content: center;
     span{
       justify-content: center;
     }
   }
-  &.center{
-    justify-content: center;
-    span{
-      flex: none;
-      display: inline-flex;
-      justify-content: center;
-      line-height: 24px;
-    }
-  }
   span{
     flex: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
     line-height: 24px;
-    .svg-i{
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    &.before{
-      justify-content: flex-end;
-      color: #111;
-    }
-    &.after{
-      justify-content: flex-start;
-      margin-left: 4px;
-    }
-    &.zero{
-      padding-left: 6px;
-      position: relative;
-      &:before{
-        content: '';
-        height: 2px;
-        width: 6px;
-        background-color: #999;
-        position: absolute;
-        left: 6px;
-        top: 0;
-      }
-    }
-    &.default{
-      padding-left: 10px;
-      color: #999;
-    }
-    &.red{
-      padding-left: 10px;
-      color: #f97979;
-      background: url(../../../assets/up.png) left center no-repeat;
-      background-size: auto 10px;
-    }
-    &.green{
-      padding-left: 10px;
-      color: #6dd29a;
-      background: url(../../../assets/down.png) left center no-repeat;
-      background-size: auto 10px;
-    }
   }
   .icon-other{
     font-size: 16px;
-    color: #f97979;
+    color: #f65252;
     margin-right: 6px;
-    cursor: pointer;
   }
-}
-.box-card .el-card__header{
-  padding: 0;
-  background-color: transparent;
-}
-.link{
-  color:#0970ff;
-  font-size: 13px;
-  .item-text span.before{
-    color:#0970ff;
+  &.red{
+    color: #f65252;
   }
-  .item-text span.zero:before{
-    background-color:#0970ff;
+  &.green{
+    color: #26bf6a;
   }
-}
-.douyin_count{
-  padding: 15px;
-  background: #fff;
-  margin-bottom: 15px;
-  border-radius: 0;
-  min-height: 142px;
-  .dy_item{
-    display: inline-block;
-    vertical-align: top;
-    width: 20%;
-    font-size: 14px;
-    line-height: 2.4;
-    cursor: pointer;
-    color: #0970ff;
-    .cname{}
-    .uname{}
-    .rank{}
-    .score{}
-  }
-  .dy_red{
-    color: red;
-  }
-}
-@media screen and (max-width: 1560px){
-  .douyin_count .dy_item{
-    width: auto;
-    margin-right: 30px;
-  }
-}
-</style>
-<style>
-
-.el-table__cell.stripe{
-  background: #fafafa;
-}
-
-.el-table__cell.stripe-all{
-  background: #f2f6f9;
-}
-
-.el-table--border th.el-table__cell{
-  border-bottom: 1px solid #ebeff1;
-}
-.el-table--border .el-table__cell {
-    border-right: 1px solid #ebeff1;
-}
-.el-table th.el-table__cell{
-  font-weight: normal;
-  color: #111;
-}
-.el-tooltip__popper.is-light{
-  color: #606266!important;
-}
-.el-message{
-  max-width: 380px;
-  min-width: 380px!important;
 }
 </style>
