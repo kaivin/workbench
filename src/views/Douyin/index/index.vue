@@ -17,6 +17,16 @@
                   <el-checkbox v-model="searchData.all_name" label="一/二部" border @change="searchResult" />
                 </div>
                 <div class="item-search">
+                  <el-select v-model="searchData.num" size="small" clearable placeholder="请选择日期" class="select-panel" @change="selectedTimeChange">
+                      <el-option
+                          v-for="item in timeList"
+                          :key="item.num"
+                          :label="item.addtime"
+                          :value="item.num">
+                      </el-option>
+                  </el-select>
+                </div>
+                <div class="item-search">
                   <el-input
                       class="input-panel"
                       size="small"
@@ -184,7 +194,8 @@ export default {
         nickname: "",
         all_name: false,
         page: 1,
-        limit: 20
+        limit: 20,
+        num: ''
       },
       scrollPosition:{
         width:0,
@@ -235,7 +246,8 @@ export default {
         { key: 'nickname', value: '名称' },
       ],
       scoreList: [],
-      scoreCount: 0
+      scoreCount: 0,
+      timeList: []
     }
   },
   computed: {
@@ -448,6 +460,7 @@ export default {
         formData.keyword = $this.searchData.keyword;
         formData.nickname = $this.searchData.nickname;
         formData.all_name = $this.searchData.all_name ? 1 : "";
+        formData.num = $this.searchData.num;
         const loading = $this.$loading({
           lock: true,
           text: '正在导出内容，请耐心等待……'
@@ -508,6 +521,7 @@ export default {
         $this.searchData.keyword = "";
         $this.searchData.nickname = "";
         $this.searchData.all_name = false;
+        $this.searchData.num = "";
         $this.searchResult();
     },
     // 初始化数据
@@ -525,8 +539,7 @@ export default {
               $this.menuButtonPermit.push(item.action_route);
             });
             if($this.menuButtonPermit.includes('Douyin_index')){
-              $this.initPage();
-              $this.getDouyinCount();
+              $this.getDouyinTime();
             }else{
               $this.$message({
                 showClose: true,
@@ -554,6 +567,31 @@ export default {
         }
       });
     },
+    // 获取日期
+    getDouyinTime(){
+      var $this = this;
+      $this.$store.dispatch('douyin/douyinCountTime',null).then(res=>{
+        if(res.status){
+          $this.timeList = res.data;
+          $this.initPage();
+          $this.getDouyinCount();
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
+    },
+    selectedTimeChange(){
+      var $this = this;
+      if(!$this.isSearchResult){
+        $this.isSearchResult=true;
+        $this.initPage();
+        $this.getDouyinCount();
+      }
+    },
     // 初始化页面信息
     initPage(){
       var $this = this;
@@ -563,6 +601,7 @@ export default {
       formData.keyword = $this.searchData.keyword;
       formData.nickname = $this.searchData.nickname;
       formData.all_name = $this.searchData.all_name ? 1 : "";
+      formData.num = $this.searchData.num;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('douyin/getDouyinResData', formData).then(response=>{
           if(response){
@@ -603,7 +642,9 @@ export default {
     // 获取抖音统计数据
     getDouyinCount(){
       var $this = this;
-      $this.$store.dispatch('douyin/getDouyinScoreData', null).then(response=>{
+      var formData = {}
+      formData.num = $this.searchData.num;
+      $this.$store.dispatch('douyin/getDouyinScoreData', formData).then(response=>{
           if(response){
             if(response.status){
               if(response.data && response.data.length > 0){
@@ -642,7 +683,6 @@ export default {
       var $this = this;
       $this.searchData.page=1;
       $this.searchData.limit=20;
-      $this.searchData.keyword = "";
       $this.searchData.nickname = data;
       $this.searchData.all_name = true;
       $this.searchResult();
@@ -864,7 +904,7 @@ export default {
     width: 190px;
   }
   .select-panel{
-    width: 150px;
+    width: 120px;
   }
 }
 .el-table.SiteTable svg{
@@ -986,7 +1026,7 @@ export default {
     color: red;
   }
 }
-@media screen and (max-width: 1560px){
+@media screen and (max-width: 1800px){
   .douyin_count .dy_item{
     width: auto;
     margin-right: 30px;

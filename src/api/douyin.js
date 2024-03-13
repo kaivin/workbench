@@ -62,3 +62,12 @@ export function getDouyinDepartlist(data) {
     data
   });
 }
+
+// 获取日期
+export function getDouyinTime(data) {
+  return request({
+    url: "/hxindex/Douyin/getnumber",
+    method: "POST",
+    data
+  });
+}

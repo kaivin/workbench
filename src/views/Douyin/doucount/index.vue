@@ -11,15 +11,14 @@
       <div class="filter-list">
         <div class="item-filter flex-box group">
           <div class="filter-title"><span class="txt-title">账号：</span></div>
-          <div class="filter-content flex-content">
+          <!-- <div class="filter-content flex-content">
             <div class="checked_item">
               <el-checkbox
                 v-model="checkAll"
                 :indeterminate="isIndeterminate"
                 @change="handleCheckAllChange"
-                ><span class="c_tit">全选</span></el-checkbox>
-            </div>
-            <div class="checked_item">
+                ><span class="c_tit">全选</span>
+              </el-checkbox>
               <el-checkbox-group
                 v-model="searchData.ids"
                 @change="handleCheckedChange"
@@ -33,7 +32,15 @@
                     <span class="c_tit">{{item.name}}</span><b  class="c_name">[{{item.uname}}]</b>
                   </el-checkbox>
               </el-checkbox-group>
+              <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getDouyinCountData">查询</el-button>
             </div>
+          </div> -->
+          <div class="filter-content flex-content">
+            <div class="item-list group">
+              <div class="item-checkbox" v-bind:class="checkAll?'active':''" @click="checkAllData"><i></i><span>全选</span></div>
+              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="item in groupList" v-bind:key="item.id" v-on:click="groupChangeHandler(item.id)"><i></i><span>{{item.name}}</span><b>[{{item.uname}}]</b></div>
+            </div>
+            <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getDouyinCountData">查询</el-button>
           </div>
         </div>
       </div>
@@ -60,6 +67,7 @@ export default {
         groupList: [],
         isIndeterminate: false,
         checkAll: false,
+        isSearchData: false
     };
   },
   computed: {
@@ -254,7 +262,6 @@ export default {
       }else{
         $this.isIndeterminate = false;
       }
-      $this.getDouyinCountData();
     },
     // 全选
     handleCheckAllChange(e){
@@ -271,57 +278,104 @@ export default {
         $this.checkAll= false;
       }
       $this.isIndeterminate = false;
-      $this.getDouyinCountData();
+    },
+    // 小组点击事件
+    groupChangeHandler(id){
+      var $this = this;
+      var groupList = $this.groupList;
+      var selectedID = [];
+      groupList.forEach(function(item,index){
+        if(item.id == id){
+          item.isOn = !item.isOn;
+        }
+        if(item.isOn){
+          selectedID.push(item.id);
+        }
+      });
+      if(selectedID.length === $this.groupList.length ){
+        $this.checkAll = true
+      }else{
+        $this.checkAll = false
+      }
+      $this.groupList = groupList;
+      $this.searchData.ids = selectedID;
+    },
+    checkAllData(){
+      var $this = this;
+      if($this.checkAll){
+        $this.checkAll = false;
+        var groupList = $this.groupList;
+        groupList.forEach(function(item,index){
+          item.isOn = false;
+        });
+        $this.groupList = groupList;
+        $this.searchData.ids = [];
+      }else{
+        $this.checkAll = true;
+        var groupList = $this.groupList;
+        var selectedID = [];
+        groupList.forEach(function(item,index){
+          item.isOn = true;
+          selectedID.push(item.id);
+        });
+        $this.groupList = groupList;
+        $this.searchData.ids = selectedID;
+      }
+      
     },
     // 获取抖音数据
     getDouyinCountData(){
       var $this = this;
-      var formData = {};
-      formData.ids = $this.searchData.ids;
-      $this.$store.dispatch('douyin/douyinCountData', formData).then(response=>{
-        if(response){
-          if(response.status){
-            if(response.data){
-              var resList = []
-              if(response.data.length > 0){
-                response.data.forEach(item => {
-                  var obj = {};
-                  obj.addtime = item.addtime;
-                  obj.user_data = item.user_data;
-                  resList.push(obj);
-                })
+      if(!$this.isSearchData){
+        var formData = {};
+        formData.ids = $this.searchData.ids;
+        $this.isSearchData = true;
+        $this.$store.dispatch('douyin/douyinCountData', formData).then(response=>{
+          if(response){
+            $this.isSearchData = false;
+            if(response.status){
+              if(response.data){
+                var resList = []
+                if(response.data.length > 0){
+                  response.data.forEach(item => {
+                    var obj = {};
+                    obj.addtime = item.addtime;
+                    obj.user_data = item.user_data;
+                    resList.push(obj);
+                  })
+                }
+                $this.scorelist = resList;
+                if($this.myChart){
+                  $this.myChart.dispose();
+                  $this.drawAreaChart();
+                }else{
+                  $this.drawAreaChart();
+                }
               }
-              $this.scorelist = resList;
-              if($this.myChart){
-                $this.myChart.dispose();
-                $this.drawAreaChart();
-              }else{
-                $this.drawAreaChart();
-              }
-            }
-          }else{
-            if(response.permitstatus&&response.permitstatus==2){
-              $this.$message({
-                showClose: true,
-                message: "未被分配该页面访问权限",
-                type: 'error',
-                duration:6000
-              });
-              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
             }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSearchResult=false;
-                $this.isSaveData=false;
-              },1000);
+              if(response.permitstatus&&response.permitstatus==2){
+                $this.$message({
+                  showClose: true,
+                  message: "未被分配该页面访问权限",
+                  type: 'error',
+                  duration:6000
+                });
+                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+              }else{
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isSearchResult=false;
+                  $this.isSaveData=false;
+                },1000);
+              }
             }
           }
-        }
-      });
+        });
+      }
     },
     // 曲线图
     drawAreaChart(){
@@ -427,15 +481,15 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 
   .chartShow{
     margin-top: 20px;
     padding: 20px;
     background-color: #fff;
-    height: calc(100vh - 396px);
+    height: calc(100vh - 401px);
     #chart{
-      height: calc(100vh - 436px);
+      height: calc(100vh - 441px);
     }
   }
   .checked_item .c_tit, .checked_item .c_name{
@@ -456,5 +510,21 @@ export default {
   }
   .checked_item .is-checked .c_tit, .checked_item .is-checked .c_name{
     color: #0970ff;
+  }
+  .group-index .filter-panel .filter-list .item-filter.group .filter-content .item-list.group .item-checkbox{
+    min-width: 280px;
+  }
+  @media screen and (min-width: 2400px){
+    .chartShow{
+      height: calc(100vh - 367px);
+      #chart{
+        height: calc(100vh - 407px);
+      }
+    }
+  }
+  .search_btn{
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-top: 10px;
   }
 </style>

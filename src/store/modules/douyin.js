@@ -5,7 +5,8 @@ import {
     dyKeywordAdd,
     dyKeywordDel,
     getDouyinCount,
-    getDouyinDepartlist
+    getDouyinDepartlist,
+    getDouyinTime
 
 } from '@/api/douyin'
 
@@ -76,6 +77,16 @@ const actions = {
     douyinCountData({ commit, state }, data) {
         return new Promise((resolve, reject) => {
             getDouyinCount(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 获取日期
+    douyinCountTime({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getDouyinTime(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
