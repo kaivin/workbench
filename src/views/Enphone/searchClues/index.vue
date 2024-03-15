@@ -318,6 +318,7 @@
                                                 <p v-if="isContinent"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个州，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
                                                 <p v-if="isGroup"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个小组，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
                                                 <p v-if="isProducttype"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>种产品分类，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
+                                                <p v-if="isDomain"><span class="item-span-1">共计：<strong>{{infoData.groupCount}}</strong>个域名，数量：<strong>{{infoData.totalCount}}</strong>个询盘。</span></p>
                                             </div>
                                             <div class="clues-title-btn">
                                                 <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" v-if="menuButtonPermit.includes('Enphone_search')" v-on:click="enCluesSearchData"><i class="svg-i" ><svg-icon icon-class="planeWhite" /></i>搜索</el-button>
@@ -711,6 +712,36 @@
                                             >
                                         </el-table-column>
                                     </el-table>
+                                    <el-table
+                                        v-if="isDomain"
+                                        key="h"
+                                        ref="simpleTable"
+                                        :data="tableData"
+                                        class="SiteTable"
+                                        tooltip-effect="dark"
+                                        stripe
+                                        style="width: 100%"
+                                        :style="'min-height:'+minHeight+'px;'"
+                                        >
+                                        <el-table-column
+                                            prop="url"
+                                            label="按域名"
+                                            min-width="200"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="number"
+                                            label="数量"
+                                            min-width="120"
+                                            >
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="allscore"
+                                            label="积分"
+                                            min-width="120"
+                                            >
+                                        </el-table-column>
+                                    </el-table>
                                 </div>
                                 <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
                                     <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
@@ -864,6 +895,7 @@ export default {
             {label:"按大洲",value:4,isOn:false},
             {label:"按组别",value:5,isOn:false},
             {label:"按产品分类",value:6,isOn:false},
+            {label:"按域名",value:7,isOn:false}
         ],
         timeList:[
             {label:"0-3",value:"0-3"},
@@ -928,6 +960,7 @@ export default {
         isContinent:false,
         isGroup:false,
         isProducttype:false,
+        isDomain:false,
         isClues:true,
         levelPop:[],  
         levelPopBool:false,
@@ -1524,6 +1557,7 @@ export default {
                       $this.isContinent=false;
                       $this.isGroup=false;
                       $this.isProducttype=false;
+                      $this.isDomain=false;
                       if(response.data.length>0){
                         var searArr=[];
                         response.data.forEach(function(item){
@@ -1547,6 +1581,7 @@ export default {
                       $this.isContinent=false;
                       $this.isGroup=false;
                       $this.isProducttype=false;
+                      $this.isDomain=false;
                       if(response.data.length>0){
                         var searArr=[];
                         response.data.forEach(function(item){
@@ -1572,6 +1607,7 @@ export default {
                       $this.isContinent=false;
                       $this.isGroup=false;
                       $this.isProducttype=false;
+                      $this.isDomain=false;
                       if(response.data.length>0){
                         var searArr=[];
                         response.data.forEach(function(item){
@@ -1597,6 +1633,7 @@ export default {
                       $this.isContinent=true;
                       $this.isGroup=false;
                       $this.isProducttype=false;
+                      $this.isDomain=false;
                       if(response.data.length>0){
                         var searArr=[];
                         response.data.forEach(function(item){
@@ -1622,6 +1659,7 @@ export default {
                       $this.isContinent=false;
                       $this.isGroup=true;
                       $this.isProducttype=false;
+                      $this.isDomain=false;
                       if(response.data.length>0){
                         var searArr=[];
                         response.data.forEach(function(item){
@@ -1647,6 +1685,7 @@ export default {
                       $this.isContinent=false;
                       $this.isGroup=false;
                       $this.isProducttype=true;
+                      $this.isDomain=false;
                       if(response.data.length>0){
                         var searArr=[];
                         response.data.forEach(function(item){
@@ -1660,6 +1699,30 @@ export default {
                             obj.number=item.number;
                             obj.producttype_id=item.producttype_id;
                             obj.producttypename=item.producttypename;
+                            searArr.push(obj);
+                        });
+                        $this.tableData = searArr;
+                      }
+                  }
+                  if($this.searchData.groupurlproduct == 7){
+                      $this.isUrl=false;
+                      $this.isProduct=false;
+                      $this.isCountry=false;
+                      $this.isContinent=false;
+                      $this.isGroup=false;
+                      $this.isProducttype=false;
+                      $this.isDomain=true;
+                      if(response.data.length>0){
+                        var searArr=[];
+                        response.data.forEach(function(item){
+                            var obj={
+                              allscore:0,
+                              number:0,
+                              url: "",
+                            }
+                            obj.allscore=parseFloat(item.allscore).toFixed(2);
+                            obj.number=item.number;
+                            obj.url=item.url;
                             searArr.push(obj);
                         });
                         $this.tableData = searArr;
@@ -1685,6 +1748,7 @@ export default {
                   $this.isContinent=false;
                   $this.isGroup=false;
                   $this.isProducttype=false;
+                  $this.isDomain=false;
                   $this.isClues=true;
                   response.data.forEach(function(item,index){
                     item.isEffective = item.effective==1?true:false;

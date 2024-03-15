@@ -6,7 +6,10 @@ import {
     dyKeywordDel,
     getDouyinCount,
     getDouyinDepartlist,
-    getDouyinTime
+    getDouyinTime,
+    getDouyinEachLine,
+    getDouyinAccountLine,
+    getDouyinPersonalCount
 
 } from '@/api/douyin'
 
@@ -92,7 +95,38 @@ const actions = {
                 reject(error)
             })
         })
-    }
+    },
+    // 获取每个图表曲线
+    douyinEachLine({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getDouyinEachLine(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 获取账号图表曲线
+    douyinAccountLine({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getDouyinAccountLine(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 获取个人账号图表曲线
+    douyinPersonalCountLine({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getDouyinPersonalCount(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    
 }
 
 export default {

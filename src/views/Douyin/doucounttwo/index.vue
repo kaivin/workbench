@@ -9,6 +9,26 @@
     </p>
     <div class="filter-panel" ref="filterbox">
       <div class="filter-list">
+        <div class="item-search">
+          <div class="filter-title"><span class="txt-title">开始日期：</span></div>
+          <el-select v-model="searchData.start_num" size="small" clearable placeholder="请选择开始日期" class="select-panel">
+              <el-option
+                  v-for="item in timeList"
+                  :key="item.num"
+                  :label="item.addtime"
+                  :value="item.num">
+              </el-option>
+          </el-select>
+          <div class="filter-title" style="margin-left:50px"><span class="txt-title">结束日期：</span></div>
+          <el-select v-model="searchData.end_num" size="small" clearable placeholder="请选择开始日期" class="select-panel">
+              <el-option
+                  v-for="item in timeList"
+                  :key="item.num"
+                  :label="item.addtime"
+                  :value="item.num">
+              </el-option>
+          </el-select>
+        </div>
         <div class="item-filter flex-box group">
           <div class="filter-title"><span class="txt-title">账号：</span></div>
           <!-- <div class="filter-content flex-content">
@@ -38,14 +58,18 @@
           <div class="filter-content flex-content">
             <div class="item-list group">
               <div class="item-checkbox" v-bind:class="checkAll?'active':''" @click="checkAllData"><i></i><span>全选</span></div>
-              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="item in groupList" v-bind:key="item.id" v-on:click="groupChangeHandler(item.id)"><i></i><span>{{item.name}}</span><b>[{{item.uname}}]</b></div>
+              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="item in groupList" v-bind:key="item.id" v-on:click="groupChangeHandler(item.id)">
+                <span><i></i><span>{{item.name}}</span><b>[{{item.uname}}]</b> </span>
+              </div>
             </div>
             <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getDouyinCountData">查询</el-button>
+            <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
           </div>
         </div>
       </div>
     </div>
     <div class="chartShow result-panel">
+        <div class="search" v-if="isSearchData"><p>请稍候...</p></div>
         <div id="chart"></div>
     </div>
   </div>
@@ -53,13 +77,16 @@
 <script>
 import {mapGetters} from 'vuex';
 import * as echarts from 'echarts';
+import {sortByAsc} from "@/utils/index"
 export default {
-  name: 'Douyin_doucount',
+  name: 'Douyin_doucounttwo',
   data() {
     return {
         menuButtonPermit:[],         //网页权限字段
         searchData:{
-          ids:[]
+          ids:[],
+          start_num: "",
+          end_num: ""
         },
         scorelist:[],
         showChart: false,
@@ -67,7 +94,8 @@ export default {
         groupList: [],
         isIndeterminate: false,
         checkAll: false,
-        isSearchData: false
+        isSearchData: false,
+        timeList: [],
     };
   },
   computed: {
@@ -176,7 +204,8 @@ export default {
           res.data.forEach(function(item,index){
             permitData.push(item.action_route);
           });
-          if(permitData.includes('Douyin_doucount')){
+          if(permitData.includes('Douyin_doucounttwo')){
+              $this.getDouyinTime();
               $this.getDepartList();
           }else{
             $this.$message({
@@ -202,6 +231,21 @@ export default {
     initData(){
       var $this = this;
       $this.getUserMenuButtonPermit();
+    },
+    // 获取日期
+    getDouyinTime(){
+      var $this = this;
+      $this.$store.dispatch('douyin/douyinCountTime',null).then(res=>{
+        if(res.status){
+          $this.timeList = res.data;
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
     },
     // 获取部门列表
     getDepartList(){
@@ -327,8 +371,39 @@ export default {
     getDouyinCountData(){
       var $this = this;
       if(!$this.isSearchData){
+        if($this.searchData.start_num == "" ){
+          $this.$message({
+            showClose: true,
+            message: "错误：请选择开始日期！",
+            type: "error",
+          });
+          return false;
+        }else if($this.searchData.end_num == "" ){
+          $this.$message({
+            showClose: true,
+            message: "错误：请选择结束日期！",
+            type: "error",
+          });
+          return false;
+        }else if($this.searchData.end_num < $this.searchData.start_num ){
+          $this.$message({
+            showClose: true,
+            message: "错误：请核对开始、结束日期！",
+            type: "error",
+          });
+          return false;
+        }else if($this.searchData.ids.length === 0){
+          $this.$message({
+            showClose: true,
+            message: "错误：请选择要查询的账号！",
+            type: "error",
+          });
+          return false;
+        }
         var formData = {};
         formData.ids = $this.searchData.ids;
+        formData.start_num = $this.searchData.start_num;
+        formData.end_num = $this.searchData.end_num;
         $this.isSearchData = true;
         $this.$store.dispatch('douyin/douyinCountData', formData).then(response=>{
           if(response){
@@ -337,12 +412,7 @@ export default {
               if(response.data){
                 var resList = []
                 if(response.data.length > 0){
-                  response.data.forEach(item => {
-                    var obj = {};
-                    obj.addtime = item.addtime;
-                    obj.user_data = item.user_data;
-                    resList.push(obj);
-                  })
+                  resList = response.data;
                 }
                 $this.scorelist = resList;
                 if($this.myChart){
@@ -377,8 +447,250 @@ export default {
         });
       }
     },
-    // 曲线图
     drawAreaChart(){
+      var $this = this;
+      if($this.scorelist.length>0){
+        var totalNum = 0;
+        $this.scorelist.forEach((item, index) => {
+          if(index === 0){
+            totalNum = item.score_trend.length
+          }
+          if(item.score_trend && item.score_trend.length > 0){
+            item.score_trend = item.score_trend.sort(sortByAsc("num"));
+          }
+        })
+        if(totalNum > 0){
+          var colorArr = ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"]
+          var chartDom = document.getElementById('chart');
+          var myChart = echarts.init(chartDom);
+          var option;
+          var xData = [];
+          var series = [];
+          var dataset = [];
+          if($this.scorelist.length > 1){
+            // 获取总值
+            var totalObj={};
+            totalObj.smooth=false;
+            totalObj.type='line';
+            totalObj.name = "总积分";
+            totalObj.label={
+              show: true,
+              position: 'top'
+            }
+            totalObj.lineStyle={
+                width: 1,
+                color: "#fe3a33", // 线条颜色
+            };
+            totalObj.itemStyle={
+                color: '#fff',
+                borderColor: "#fe3a33", // 折点颜色
+                borderWidth: 1
+            };
+            totalObj.areaStyle={
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                      offset: 0,
+                      color: "#fe3a33",
+                      opacity:1
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(255, 255, 255, 0)",
+                    }
+                  ]),
+                  opacity:0.3
+            };
+            totalObj.emphasis={
+              lineStyle: {
+                width: 2,	// hover时的折线宽度
+              },
+              itemStyle:{
+                borderWidth: 2
+              }
+            };
+            totalObj.symbolSize=5;
+            totalObj.symbol='circle';
+            totalObj.data=[];
+            
+            for(var i = 0; i< totalNum; i++){
+              var tobj = {
+                value: 0,
+                one_number: 0,
+                two_number: 0,
+                three_number: 0,
+                four_number: 0
+              }
+              $this.scorelist.forEach((item, index) => {
+                tobj.value += Number(item.score_trend[i].score);
+                tobj.one_number += Number(item.score_trend[i].one_number);
+                tobj.two_number += Number(item.score_trend[i].two_number);
+                tobj.three_number += Number(item.score_trend[i].three_number);
+                tobj.four_number += Number(item.score_trend[i].four_number);
+              })
+              tobj.value = tobj.value.toFixed(1);
+              totalObj.data.push(tobj)
+            }
+            totalObj.animationDuration=2800;
+            totalObj.animationEasing='quadraticOut';
+            series.push(totalObj);
+          }
+          // 组装每个值
+          $this.scorelist.forEach((item,index) => {
+            var itemObj={};
+            itemObj.smooth=false;
+            itemObj.type='line';
+            itemObj.name = item.name;
+            itemObj.label={
+              show: true,
+              position: 'top'
+            }
+            itemObj.lineStyle={
+                width: 1,
+                color: colorArr[index%14], // 线条颜色
+            };
+            itemObj.itemStyle={
+                color: '#fff',
+                borderColor: colorArr[index%14], // 折点颜色
+                borderWidth: 1
+            };
+            itemObj.areaStyle={
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                      offset: 0,
+                      color: colorArr[index%14],
+                      opacity:1
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(255, 255, 255, 0)",
+                    }
+                  ]),
+                  opacity:0.3
+            };
+            itemObj.emphasis={
+              lineStyle: {
+                width: 2,	// hover时的折线宽度
+              },
+              itemStyle:{
+                borderWidth: 2
+              }
+            };
+            itemObj.symbolSize=5;
+            itemObj.symbol='circle';
+            itemObj.data=[];
+            if(item.score_trend && item.score_trend.length > 0){
+              item.score_trend.forEach((sitem, sindex) => {
+                if(index === 0){
+                  xData.push(sitem.addtime);
+                }
+                var obj = {}
+                obj.value = sitem.score;
+                obj.one_number = sitem.one_number;
+                obj.two_number = sitem.two_number;
+                obj.three_number = sitem.three_number;
+                obj.four_number = sitem.four_number;
+                itemObj.data.push(obj);
+              })
+            }
+            itemObj.animationDuration=2800;
+            itemObj.animationEasing='quadraticOut';
+            series.push(itemObj);
+          });
+          option = {
+            tooltip: {
+                backgroundColor:'rgba(255,255,255,0.95)',
+                trigger: "axis",
+                textStyle:{
+                  fontSize:'12',
+                  color: '#666'
+                },
+                formatter(params){
+                  let returnData = `<div class="toolDiv">
+                      <div class="tooltitle">${params[0].name}</div>`;
+                  for (let i = 0; i < params.length; i++) {
+                      returnData += `<div class="bar clearfix" style="margin-top:5px">
+                        <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].borderColor};"></span>
+                        <span>${params[i].seriesName}：</span>
+                        <span>积分：${params[i].value}</span>
+                        </div>
+                        <div class="bar clearfix">
+                        <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;"></span>
+                        <span style="opacity: 0; vibisity: hidden;"> ${params[i].seriesName}：</span>
+                        <span>数量：</span>
+                        <span>${params[i].data.one_number}<span style="color: #999"> (1-5名)</span></span>
+                        <span style="margin-left: 10px;">${params[i].data.two_number}<span style="color: #999"> (6-10名)</span></span>
+                        <span style="margin-left: 10px;">${params[i].data.three_number}<span style="color: #999"> (11-15名)</span></span>
+                        <span style="margin-left: 10px;">${params[i].data.four_number}<span style="color: #999"> (16-20名)</span></span>
+                        </div>
+                        `;
+                  }
+                  returnData +=`</div>`;
+                  return returnData;
+              }
+            },
+            grid: {
+                top:60,
+                right:52,
+                bottom:40,
+                left:52,
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: xData,
+                axisLine: {
+                    show: false,
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLine:{
+                    show: true,
+                    lineStyle:{
+                        type: [4, 0],
+                        dashOffset: 3,
+                        color: '#e5e5e5',
+                        opacity: 1,
+                        shadowColor: null,
+                        shadowBlur: 0,
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                    }
+                },
+                axisLabel: {
+                    interval:1,
+                    color: "#555",
+                    fontSize: "12",
+                    lineHeight: 18,
+                },
+            },
+            yAxis:{
+                type: 'value',
+                position: 'left',
+                axisLine:{
+                    show: true,
+                    lineStyle:{
+                        type: [4, 0],
+                        dashOffset: 3,
+                        color: '#e0e0e0',
+                        opacity: 1,
+                        shadowColor: null,
+                        shadowBlur: 0,
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                    }
+                },
+            },
+            animation: false,
+            series:series,
+          };
+          option && myChart.setOption(option);
+          $this.myChart = myChart;
+        }
+      }
+    },
+    // 曲线图
+    drawAreaChart2(){
       var $this = this;
       if($this.scorelist.length>0){
         var chartDom = document.getElementById('chart');
@@ -417,7 +729,7 @@ export default {
           },
           xAxis: {
             type: 'category',
-            name: "次数",
+            name: "日期",
             axisLine:{
               lineStyle:{
                 color: "#dedede"
@@ -477,6 +789,20 @@ export default {
       if(this.myChart){
           this.myChart.resize();
       }
+    },
+    resetData(){
+      var $this = this;
+      $this.searchData.ids = [];
+      $this.searchData.start_num = "";
+      $this.searchData.end_num = "";
+      var groupList = $this.groupList;
+      groupList.forEach(function(item,index){
+          item.isOn = false;
+      });
+      $this.groupList = groupList;
+      if($this.myChart){
+        $this.myChart.dispose();
+      }
     }
   }
 }
@@ -487,9 +813,8 @@ export default {
     margin-top: 20px;
     padding: 20px;
     background-color: #fff;
-    height: calc(100vh - 401px);
     #chart{
-      height: calc(100vh - 441px);
+      height: 600px;
     }
   }
   .checked_item .c_tit, .checked_item .c_name{
@@ -527,4 +852,58 @@ export default {
     padding-bottom: 8px;
     margin-top: 10px;
   }
+  .result-panel{
+  position: relative;
+  .search,.no-data{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 14px;
+    line-height: 2;
+    text-align: center;
+    p{
+      position: absolute;
+      left: 0;
+      width: 100%;
+      top: 50%;
+      margin-top: -20px;
+    }
+  }
+  .search p{
+    color: #999
+  }
+}
+.group-index .filter-panel .filter-list .item-filter .filter-content .item-list .item-checkbox .icon_chart{
+  margin-left: 10px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  color: #0970ff;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 4px;
+  font-size: 16px;
+  i{
+    font-size: 16px;
+  }
+}
+.item-search{
+  margin-bottom: 10px;
+}
+.item-search .filter-title{
+  width: 70px;
+  display:inline-block;
+  .txt-title{
+    display: block;
+    height: 28px;
+    line-height: 28px;
+    font-size: 14px;
+    color: #666666;
+    text-align: left;
+  }
+}
 </style>

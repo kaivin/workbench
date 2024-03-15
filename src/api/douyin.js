@@ -48,7 +48,7 @@ export function dyKeywordDel(data) {
 // 抖音账号统计
 export function getDouyinCount(data) {
   return request({
-    url: "/hxindex/Douyin/doucount",
+    url: "/hxindex/Douyin/doucounttwo",
     method: "POST",
     data
   });
@@ -67,6 +67,33 @@ export function getDouyinDepartlist(data) {
 export function getDouyinTime(data) {
   return request({
     url: "/hxindex/Douyin/getnumber",
+    method: "POST",
+    data
+  });
+}
+
+// 获取账号图表
+export function getDouyinEachLine(data) {
+  return request({
+    url: "/hxindex/Douyin/dinfo",
+    method: "POST",
+    data
+  });
+}
+
+// 获取部门图表
+export function getDouyinAccountLine(data) {
+  return request({
+    url: "/hxindex/Douyin/departinfo",
+    method: "POST",
+    data
+  });
+}
+
+// 获取账号统计
+export function getDouyinPersonalCount(data) {
+  return request({
+    url: "/hxindex/Douyin/personcount",
     method: "POST",
     data
   });

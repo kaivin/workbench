@@ -56,8 +56,15 @@
               </div>
             </div>
             <div class="douyin_count" ref="countPane">
-              <span class="dy_item" @click="searchByName(item.name)" v-for="item,index in scoreList" :key="item.id"><span class="rank">{{index<9?'0'+(index+1):index+1}}.</span> <span class="cname">{{item.name}}</span><span class="uname">[{{item.uname}}]</span>：<span class="score">{{item.score}}</span></span>
-              <span class="dy_item dy_red">积分总计：{{scoreCount}}</span>
+              <div class="dy_item" v-for="item,index in scoreList" :key="item.id">
+                <span class="dy_item_s" @click="searchByName(item.name)">
+                  <span class="rank">{{index<9?'0'+(index+1):index+1}}.</span>
+                  <span class="cname">{{item.name}}</span>
+                  <span class="uname">[{{item.uname}}]</span>：<span class="score">{{item.score}}</span>
+                </span>
+                <span class="dy_item_c" @click="showAccountChart(item)"><svg-icon icon-class="line2" /></span>
+              </div>
+              <div class="dy_item dy_red">积分总计：{{scoreCount}}</div>
             </div>
             <div class="card-content" ref="tableContent">
               <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
@@ -129,8 +136,12 @@
                         prop="score"
                         align="center"
                         label="积分"
-                        width="60"
+                        width="90"
                         >
+                        <template #default="scope">
+                          <span>{{scope.row.score}}</span>
+                          <span class="icon_chart" @click="showLineChart(scope.row)"><svg-icon icon-class="line2" /></span>
+                        </template>
                       </el-table-column>
                       <el-table-column
                         prop="desc"
@@ -168,13 +179,21 @@
     </div>
     <el-backtop target=".scroll-panel"></el-backtop>
     <ExportModal ref="ExportModalRef" @exportSuccess="exportDone"></ExportModal>
+    <el-dialog :title="dialogTitle" custom-class="chart-line" :visible.sync="isChartShow" :before-close="handleClose" width="1000px">
+      <div class="line_box">
+        <div class="search" v-if="isSearchLine"><p>请稍候...</p></div>
+        <div class="no-data" v-if="!isSearchLine && lineData.length == 0">暂无数据</div>
+        <div id="chart"></div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import ExportModal from '@/components/Excel/exportModal.vue'
 import { jsonToSheetXlsx } from '@/components/Excel/Export2Excel'
-import {sortByDesc} from "@/utils/index"
+import {sortByDesc, sortByAsc} from "@/utils/index"
+import * as echarts from 'echarts';
 export default {
   name: 'Douyin_index',
   components: {
@@ -247,7 +266,12 @@ export default {
       ],
       scoreList: [],
       scoreCount: 0,
-      timeList: []
+      timeList: [],
+      lineData: [],
+      isChartShow: false,
+      myChart:null,
+      isSearchLine: false,
+      dialogTitle: ""
     }
   },
   computed: {
@@ -687,6 +711,225 @@ export default {
       $this.searchData.all_name = true;
       $this.searchResult();
     },
+    // 点击展示图表
+    showLineChart(data){
+      var $this = this;
+      $this.dialogTitle = data.nickname+"——"+data.name;
+      $this.isChartShow = true;
+      $this.isSearchLine = true;
+      var formData = {};
+      formData.pid = data.pid;
+      formData.my_level = data.my_level;
+      formData.nickname = data.nickname;
+      $this.$store.dispatch('douyin/douyinEachLine', formData).then(response=>{
+          if(response){
+            $this.isSearchLine = false;
+            $this.lineData = [];
+            if(response.status){
+              if(response.data && response.data.length > 0){
+                var resData = [];
+                response.data.forEach(item => {
+                  var obj = {};
+                  obj.addtime = item.addtime;
+                  obj.score = item.score;
+                  obj.number_one = item.number_one;
+                  obj.number_two = item.number_two;
+                  obj.number_three = item.number_three;
+                  obj.number_four = item.number_four;
+                  obj.num = item.num;
+                  resData.push(obj);
+                })
+                $this.lineData = resData.sort(sortByAsc("num"));
+                $this.drawLineChart();
+              }
+            }else{
+              if(response.permitstatus&&response.permitstatus==2){
+                $this.$message({
+                  showClose: true,
+                  message: "未被分配该页面访问权限",
+                  type: 'error',
+                  duration:6000
+                });
+                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+              }else{
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isSearchResult=false;
+                },1000);
+              }
+            }
+          }
+      });
+    },
+    showAccountChart(data){
+      var $this = this;
+      $this.dialogTitle = data.name+"["+data.uname+"]";
+      $this.isChartShow = true;
+      $this.isSearchLine = true;
+      var formData = {};
+      formData.id = data.id;
+      $this.$store.dispatch('douyin/douyinAccountLine', formData).then(response=>{
+        if(response){
+          $this.isSearchLine = false;
+          $this.lineData = [];
+          if(response.status){
+            if(response.data && response.data.length > 0){
+              var resData = []
+              response.data.forEach(item => {
+                var obj = {};
+                obj.addtime = item.addtime;
+                obj.score = item.user_data;
+                obj.number_one = item.one_number;
+                obj.number_two = item.two_number;
+                obj.number_three = item.three_number;
+                obj.number_four = item.four_number;
+                obj.num = item.num;
+                resData.push(obj);
+              })
+              $this.lineData = resData.sort(sortByAsc("num"));
+              $this.drawLineChart();
+            }
+            
+          }else{
+            if(response.permitstatus&&response.permitstatus==2){
+              $this.$message({
+                showClose: true,
+                message: "未被分配该页面访问权限",
+                type: 'error',
+                duration:6000
+              });
+              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSearchResult=false;
+                $this.isSaveData=false;
+              },1000);
+            }
+          }
+        }
+      });
+    },
+    // 曲线图
+    drawLineChart(){
+      var $this = this;
+      if($this.lineData.length>0){
+        var chartDom = document.getElementById('chart');
+        var myChart = echarts.init(chartDom);
+        var option;
+        option = {
+          grid:{
+            left: '45',
+            top:'25',
+            right:'15',
+            bottom: '25'
+          },
+          tooltip:{
+            show: true,
+            trigger: "axis",
+            axisPointer: {
+              type: "line", 
+              lineStyle:{
+                color: "#5b8ff9"
+              }
+            },
+            textStyle:{
+                fontSize:12,
+                color: '#666'
+            },
+            formatter(params){
+              var res = `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                      <span>${params[0].seriesName}：</span>
+                      <span>${params[0].data.score}</span>
+                    </div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;"></span>
+                      <span>数量：</span>
+                      <span>${params[0].data.number_one}<span style="color: #999"> (1-5名)</span></span>
+                      <span style="margin-left: 10px;">${params[0].data.number_two}<span style="color: #999"> (6-10名)</span></span>
+                      <span style="margin-left: 10px;">${params[0].data.number_three}<span style="color: #999"> (11-15名)</span></span>
+                      <span style="margin-left: 10px;">${params[0].data.number_four}<span style="color: #999"> (16-20名)</span></span>
+                    </div>
+                  </div>`;
+                return res;
+            }
+          },
+          xAxis: {
+            type: 'category',
+            name: "日期",
+            axisLine:{
+              lineStyle:{
+                color: "#dedede"
+              }
+            },
+            axisLabel:{
+              color: "#888"
+            },
+          },
+          yAxis: {
+            type: 'value',
+            axisLabel:{
+              color: "#888"
+            }
+          },
+          animation: false,
+          dataset:{
+            source: $this.lineData,  
+          },
+          series: [
+            {
+              name: "积分",
+              type: 'line',
+              symbol: 'circle',
+              symbolSize: '5',
+              label:{
+                show: true,
+                position: 'top',
+                distance: '5'
+              },
+              itemStyle:{
+                color: '#fff',
+                borderColor: "#0970ff",
+                borderWidth: 1
+              },
+              lineStyle:{
+                color: "#0970ff",
+                width: 1
+              },
+              emphasis:{
+                lineStyle: {
+                  width: 2,
+                },
+                itemStyle:{
+                  borderWidth: 2
+                }
+              }
+            }
+          ]
+        };
+        option && myChart.setOption(option);
+        $this.myChart = myChart;
+      }
+    },
+    handleClose(){
+      var $this = this;
+      $this.isChartShow = false;
+      if($this.myChart){
+        $this.myChart.dispose();
+      }
+      $this.myChart = null;
+    },
     // 每页显示条数改变事件
     handleSizeChange(val) {
       this.searchData.limit = val;
@@ -1008,7 +1251,6 @@ export default {
   background: #fff;
   margin-bottom: 15px;
   border-radius: 0;
-  min-height: 142px;
   .dy_item{
     display: inline-block;
     vertical-align: top;
@@ -1021,6 +1263,15 @@ export default {
     .uname{}
     .rank{}
     .score{}
+    .dy_item_s, .dy_item_c{
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .dy_item_c{
+      margin-left: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
   }
   .dy_red{
     color: red;
@@ -1030,6 +1281,48 @@ export default {
   .douyin_count .dy_item{
     width: auto;
     margin-right: 30px;
+  }
+}
+.icon_chart{
+  margin-left: 10px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  color: #0970ff;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  i{
+    font-size: 16px;
+  }
+}
+
+#chart{
+  width: 960px;
+  height: 400px;
+}
+.line_box{
+  position: relative;
+  .search,.no-data{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 14px;
+    line-height: 2;
+    text-align: center;
+    p{
+      position: absolute;
+      left: 0;
+      width: 100%;
+      top: 50%;
+      margin-top: -20px;
+    }
+  }
+  .search p{
+    color: #999
   }
 }
 </style>

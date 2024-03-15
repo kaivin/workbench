@@ -28,7 +28,7 @@
                       <el-input
                           class="input-panel"
                           size="small"
-                          placeholder="请输入搜索词"
+                          placeholder="请输入关键词"
                           v-model="searchData.keyword"
                           @keyup.enter.native="searchResult"
                           @clear="searchResult"
