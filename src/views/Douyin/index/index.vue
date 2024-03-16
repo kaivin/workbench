@@ -27,6 +27,26 @@
                   </el-select>
                 </div>
                 <div class="item-search">
+                  <el-select v-model="searchData.sort" size="small" clearable placeholder="排序方式" class="select-panel" @change="searchResult">
+                      <el-option
+                          v-for="item in sortList"
+                          :key="item.label"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                </div>
+                <div class="item-search">
+                  <el-select v-model="searchData.my_level" size="small" clearable placeholder="关键词等级" class="select-panel" @change="searchResult">
+                      <el-option
+                          v-for="item in levelList"
+                          :key="item.label"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                  </el-select>
+                </div>
+                <div class="item-search">
                   <el-input
                       class="input-panel"
                       size="small"
@@ -56,15 +76,29 @@
               </div>
             </div>
             <div class="douyin_count" ref="countPane">
-              <div class="dy_item" v-for="item,index in scoreList" :key="item.id">
-                <span class="dy_item_s" @click="searchByName(item.name)">
-                  <span class="rank">{{index<9?'0'+(index+1):index+1}}.</span>
-                  <span class="cname">{{item.name}}</span>
-                  <span class="uname">[{{item.uname}}]</span>：<span class="score">{{item.score}}</span>
-                </span>
-                <span class="dy_item_c" @click="showAccountChart(item)"><svg-icon icon-class="line2" /></span>
+              <div class="dy_box">
+                <div class="dy_item" v-for="item,index in scoreList" :key="item.id">
+                  <span class="dy_item_s" @click="searchByName(item)">
+                    <span class="rank">{{index<9?'0'+(index+1):index+1}}.</span>
+                    <span class="cname">{{item.name}}</span>
+                    <span class="uname">[{{item.uname}}]</span>：<span class="score">{{item.score}}</span>
+                  </span>
+                  <el-tooltip content="点击查看积分趋势" placement="right-start" effect="light">
+                    <span class="dy_item_c" @click="showAccountChart(item)"><svg-icon icon-class="line2" /></span>
+                  </el-tooltip>
+                </div>
+                <div class="dy_item dy_red">积分总计：{{scoreCount}}</div>
               </div>
-              <div class="dy_item dy_red">积分总计：{{scoreCount}}</div>
+            </div>
+            <div class="dy_res" v-if="nick_res.length > 0 || add_word.length > 0 || desc_word.length > 0">
+              <p v-if="nick_res.length > 0">
+                <span class="color_01">{{searchData.nickname}}</span>的所有关键词中：<span v-for="item,index in nick_res" :key="index"><i v-if="index > 0">，</i>{{item.name}}有<strong class="color_02" >{{item.value}}</strong>个</span>。
+                <el-button type="info" plain size="mini" class="more_btn" @click="showPieChart">查看详情</el-button>
+                <span class="word_count" v-if="add_word.length > 0 || desc_word.length > 0" >最近一次统计中，</span>
+                <span v-if="add_word.length > 0">新增的词有<strong class="color_02" >{{add_word.length}}</strong>个</span><span v-if="add_word.length > 0 && desc_word.length > 0">，</span>
+                <span v-if="desc_word.length > 0">减少的词有<strong class="color_02" >{{desc_word.length}}</strong>个</span>。
+                <el-button v-if="add_word.length > 0 || desc_word.length > 0" type="info" plain size="mini" class="more_btn" @click="showWordList">查看详情</el-button>
+              </p>
             </div>
             <div class="card-content" ref="tableContent">
               <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
@@ -84,7 +118,7 @@
                       <el-table-column
                         prop="name"
                         label="关键词"
-                        min-width="90"
+                        min-width="100"
                         >
                         <template #default="scope">
                           <el-link v-if="scope.row.url" :href="scope.row.url" target="_blank" type="primary">
@@ -136,23 +170,25 @@
                         prop="score"
                         align="center"
                         label="积分"
-                        width="90"
+                        width="110"
                         >
                         <template #default="scope">
-                          <span>{{scope.row.score}}</span>
-                          <span class="icon_chart" @click="showLineChart(scope.row)"><svg-icon icon-class="line2" /></span>
-                        </template>
+                          <span class="score_num">{{scope.row.score}}</span>
+                          <el-tooltip content="点击查看积分趋势" placement="right-start" effect="light">
+                            <span class="icon_chart" @click="showLineChart(scope.row)"><svg-icon icon-class="line2" alt="" /></span>
+                          </el-tooltip>
+                          </template>
                       </el-table-column>
                       <el-table-column
                         prop="desc"
                         label="标题"
-                        min-width="300"
+                        min-width="480"
                         >
                       </el-table-column>
                       <el-table-column
                         prop="nickname"
                         label="名称"
-                        min-width="100"
+                        min-width="150"
                         >
                       </el-table-column>
                     </el-table>
@@ -179,12 +215,28 @@
     </div>
     <el-backtop target=".scroll-panel"></el-backtop>
     <ExportModal ref="ExportModalRef" @exportSuccess="exportDone"></ExportModal>
-    <el-dialog :title="dialogTitle" custom-class="chart-line" :visible.sync="isChartShow" :before-close="handleClose" width="1000px">
+    <el-dialog :title="dialogTitle" top="20vh" :custom-class="isSearchPie ? 'chart-line pie_chart' : 'chart-line'" :visible.sync="isChartShow" :before-close="handleClose" :width="dialogWidth">
       <div class="line_box">
         <div class="search" v-if="isSearchLine"><p>请稍候...</p></div>
-        <div class="no-data" v-if="!isSearchLine && lineData.length == 0">暂无数据</div>
+        <div class="no-data" v-if="!isSearchLine && lineData.length == 0 && !isSearchPie">暂无数据</div>
         <div id="chart"></div>
       </div>
+    </el-dialog>
+    <el-dialog :title="dialogTitle" top="10vh" custom-class="chart-line word-line" :visible.sync="isWordShow" :before-close="handleWordClose" :width="dialogWidth">
+      <el-scrollbar class="word_box">
+        <div class="word_item" v-if="add_word.length > 0">
+          <h3 class="word_tit">新增的词：</h3>
+          <ul class="word_ul">
+            <li v-for="item,index in add_word" :key="index">{{item.value}}</li>
+          </ul>
+        </div>
+        <div class="word_item" v-if="desc_word.length > 0">
+          <h3 class="word_tit">减少的词：</h3>
+          <ul class="word_ul">
+            <li v-for="item,index in desc_word" :key="index">{{item.value}}</li>
+          </ul>
+        </div>
+      </el-scrollbar>
     </el-dialog>
   </div>
 </template>
@@ -214,7 +266,9 @@ export default {
         all_name: false,
         page: 1,
         limit: 20,
-        num: ''
+        num: "",
+        my_level: "",
+        sort: ""
       },
       scrollPosition:{
         width:0,
@@ -271,7 +325,58 @@ export default {
       isChartShow: false,
       myChart:null,
       isSearchLine: false,
-      dialogTitle: ""
+      isSearchPie: false,
+      dialogTitle: "",
+      dialogWidth: "1200px",
+      levelList: [
+        {
+          label: "A1",
+          value: "A1"
+        },
+        {
+          label: "A2",
+          value: "A2"
+        },
+        {
+          label: "B1",
+          value: "B1"
+        },
+        {
+          label: "B2",
+          value: "B2"
+        },
+        {
+          label: "C2",
+          value: "C2"
+        },
+        {
+          label: "C3",
+          value: "C3"
+        },
+        {
+          label: "D",
+          value: "D"
+        },
+      ],
+      sortList: [
+        {
+          label: "默认排序",
+          value: 0
+        },
+        {
+          label: "关键词等级降序",
+          value: 1
+        },
+        {
+          label: "排名降序",
+          value: 2
+        },
+      ],
+      nick_res: [],
+      isClickName: false,
+      add_word: [],
+      desc_word: [],
+      isWordShow: false
     }
   },
   computed: {
@@ -485,6 +590,8 @@ export default {
         formData.nickname = $this.searchData.nickname;
         formData.all_name = $this.searchData.all_name ? 1 : "";
         formData.num = $this.searchData.num;
+        formData.my_level = $this.searchData.my_level;
+        formData.sort = $this.searchData.sort;
         const loading = $this.$loading({
           lock: true,
           text: '正在导出内容，请耐心等待……'
@@ -546,6 +653,8 @@ export default {
         $this.searchData.nickname = "";
         $this.searchData.all_name = false;
         $this.searchData.num = "";
+        $this.searchData.my_level = "";
+        $this.searchData.sort = "";
         $this.searchResult();
     },
     // 初始化数据
@@ -626,6 +735,8 @@ export default {
       formData.nickname = $this.searchData.nickname;
       formData.all_name = $this.searchData.all_name ? 1 : "";
       formData.num = $this.searchData.num;
+      formData.my_level = $this.searchData.my_level;
+      formData.sort = $this.searchData.sort;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
       $this.$store.dispatch('douyin/getDouyinResData', formData).then(response=>{
           if(response){
@@ -639,6 +750,45 @@ export default {
                 $this.$nextTick(function () {
                   $this.setTableHeight();
                 })
+              }
+              if(response.nick_res){
+                var keys = Object.keys(response.nick_res);
+                var resList = [];
+                keys.forEach(item => {
+                  var obj = {};
+                  obj.name = item;
+                  obj.value = response.nick_res[item];
+                  resList.push(obj);
+                })
+                $this.nick_res = resList;
+              }else{
+                $this.nick_res = [];
+              }
+              if(response.add_word){
+                var keys = Object.keys(response.add_word);
+                var resList = [];
+                keys.forEach(item => {
+                  var obj = {};
+                  obj.name = item;
+                  obj.value = response.add_word[item];
+                  resList.push(obj);
+                })
+                $this.add_word = resList;
+              }else{
+                $this.add_word = [];
+              }
+              if(response.desc_word){
+                var keys = Object.keys(response.desc_word);
+                var resList = [];
+                keys.forEach(item => {
+                  var obj = {};
+                  obj.name = item;
+                  obj.value = response.desc_word[item];
+                  resList.push(obj);
+                })
+                $this.desc_word = resList;
+              }else{
+                $this.desc_word = [];
               }
             }else{
               if(response.permitstatus&&response.permitstatus==2){
@@ -707,14 +857,16 @@ export default {
       var $this = this;
       $this.searchData.page=1;
       $this.searchData.limit=20;
-      $this.searchData.nickname = data;
+      $this.searchData.nickname = data.name;
       $this.searchData.all_name = true;
+      $this.isClickName = true;
       $this.searchResult();
     },
     // 点击展示图表
     showLineChart(data){
       var $this = this;
       $this.dialogTitle = data.nickname+"——"+data.name;
+      $this.dialogWidth = "1200px";
       $this.isChartShow = true;
       $this.isSearchLine = true;
       var formData = {};
@@ -770,6 +922,7 @@ export default {
       $this.dialogTitle = data.name+"["+data.uname+"]";
       $this.isChartShow = true;
       $this.isSearchLine = true;
+      $this.dialogWidth = "1200px";
       var formData = {};
       formData.id = data.id;
       $this.$store.dispatch('douyin/douyinAccountLine', formData).then(response=>{
@@ -925,6 +1078,8 @@ export default {
     handleClose(){
       var $this = this;
       $this.isChartShow = false;
+      $this.isSearchLine = false;
+      $this.isSearchPie = false;
       if($this.myChart){
         $this.myChart.dispose();
       }
@@ -1108,7 +1263,88 @@ export default {
       $this.scrollPosition.isMouseDown = false;
       $this.scrollPosition.startPageX = 0;
       $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
-    }
+    },
+    showPieChart(){
+      var $this = this;
+      $this.isChartShow = true;
+      $this.dialogTitle = $this.searchData.nickname;
+      $this.dialogWidth = "800px";
+      $this.isSearchPie = true;
+      setTimeout(() => {
+        $this.drawPieChart();
+      }, 300);
+    },
+    drawPieChart(){
+      var $this = this;
+      var chartDom = document.getElementById('chart');
+      var myChart = echarts.init(chartDom);
+      var option;
+      option = {
+        tooltip: {
+          trigger: 'item',
+          formatter(items){
+            var tooltext = `<div class="counttoolTip">
+            <div class="title">${items.name}</div>
+            <div class="bar clearfix">
+              ${items.marker}
+              <span class="name">${items.seriesName}：</span>
+              <span class="num">${items.value}</span>
+            </div>
+            `;
+            return tooltext;
+          }
+        },
+        legend: {
+          orient: 'vertical',
+          right: 'right',
+          top: 'middle',
+          itemWidth: 8,
+          itemHeight: 8,
+          icon: "circle",
+        },
+        color: ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"],
+        animation: false,
+        series: [
+          {
+            name: '关键词个数',
+            type: 'pie',
+            radius: '75%',
+            data: $this.nick_res,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            },
+            label:{
+                normal:{
+                    formatter: function(params){
+                        var str = '';
+                        str = params.name+":"+params.percent.toFixed(1)+"%";
+                        return str
+                    },
+                    position: 'outside',
+                    fontSize: 13,
+                    color: "#666",
+                }
+              },
+          }
+        ]
+      };
+      option && myChart.setOption(option);
+      $this.myChart = myChart;
+    },
+    showWordList(){
+      var $this = this;
+      $this.isWordShow = true;
+      $this.dialogTitle = $this.searchData.nickname;
+      $this.dialogWidth = "1200px";
+    },
+    handleWordClose(){
+      var $this = this;
+      $this.isWordShow = false;
+    },
   }
 }
 </script>
@@ -1144,10 +1380,10 @@ export default {
     }
   }
   .input-panel{
-    width: 190px;
+    width: 210px;
   }
   .select-panel{
-    width: 120px;
+    width: 140px;
   }
 }
 .el-table.SiteTable svg{
@@ -1269,19 +1505,129 @@ export default {
     }
     .dy_item_c{
       margin-left: 10px;
-      font-size: 16px;
+      font-size: 20px;
       cursor: pointer;
+      line-height:1;
     }
   }
   .dy_red{
-    color: red;
+    color: #f2302f;
   }
 }
+.dy_res{
+    padding-bottom: 15px;
+    p{
+      color: #666;
+      font-size: 13px;
+      line-height: 1.5;
+      padding-left: 15px;
+    }
+    .color_01{
+      color: #444;
+    }
+    .color_02{
+      color: #f2302f;
+      margin-left: 2px;
+      margin-right: 2px;
+    }
+    i{
+      font-style: normal;
+    }
+    .more_btn{
+      padding: 6px 10px;
+      color: #666;
+      &:hover, &:focus{
+        color: #fff;
+      }
+    }
+    .place_span{
+      opacity: 0;
+      visibility: hidden;
+    }
+    .word_count{
+      margin-left: 30px;
+    }
+  }
+.word-line{
+  .word_box{
+    height: 70vh;
+    :deep(.el-scrollbar__wrap){
+      height: 70vh;
+    }
+  }
+  .word_tit{
+    padding-left: 15px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    position: relative;
+    margin-bottom: 15px;
+    &:before{
+      content: "";
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 2px;
+      width: 5px;
+      bottom: 2px;
+      border-radius: 3px;
+      background-color: #2f9e32;
+    }
+  }
+  .word_ul{
+    padding-left: 15px;
+    li{
+      margin-top: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #666;
+      float: left;
+      width: 25%;
+      padding-left: 14px;
+      position: relative;
+      &:before{
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        margin-top: -2px;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: #2f9e32;
+      }
+    }
+    &:after{
+      content: "";
+      display: block;
+      clear: both;
+    }
+  }
+  .word_item+.word_item{
+    margin-top: 40px;
+    .word_tit:before{
+      background-color: #f2302f;
+    }
+    .word_ul{
+      li:before{
+        background-color: #f2302f;
+      }
+    }
+  }
+}
+
 @media screen and (max-width: 1800px){
   .douyin_count .dy_item{
     width: auto;
     margin-right: 30px;
   }
+}
+.score_num{
+  display: inline-block;
+  vertical-align: middle;
+  width: 40px;
 }
 .icon_chart{
   margin-left: 10px;
@@ -1299,8 +1645,11 @@ export default {
 }
 
 #chart{
-  width: 960px;
+  width: 1160px;
   height: 400px;
+}
+.pie_chart #chart{
+  width: 760px;
 }
 .line_box{
   position: relative;
