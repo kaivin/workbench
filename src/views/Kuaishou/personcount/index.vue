@@ -31,38 +31,14 @@
         </div>
         <div class="item-filter flex-box group">
           <div class="filter-title"><span class="txt-title">账号：</span></div>
-          <!-- <div class="filter-content flex-content">
-            <div class="checked_item">
-              <el-checkbox
-                v-model="checkAll"
-                :indeterminate="isIndeterminate"
-                @change="handleCheckAllChange"
-                ><span class="c_tit">全选</span>
-              </el-checkbox>
-              <el-checkbox-group
-                v-model="searchData.ids"
-                @change="handleCheckedChange"
-              >
-                  <el-checkbox
-                    v-for="item in groupList"
-                    :key="item.id"
-                    :label="item.id"
-                    :value="item.id"
-                    >
-                    <span class="c_tit">{{item.name}}</span><b  class="c_name">[{{item.uname}}]</b>
-                  </el-checkbox>
-              </el-checkbox-group>
-              <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getDouyinCountData">查询</el-button>
-            </div>
-          </div> -->
           <div class="filter-content flex-content">
             <div class="item-list group">
               <div class="item-checkbox" v-bind:class="checkAll?'active':''" @click="checkAllData"><i></i><span>全选</span></div>
-              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="item in groupList" v-bind:key="item.id" v-on:click="groupChangeHandler(item.id)">
-                <span><i></i><span>{{item.name}}</span><b>[{{item.uname}}]</b> </span>
+              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="item in groupList" v-bind:key="item.uname" v-on:click="groupChangeHandler(item.uname)">
+                <span><i></i>{{item.department}}-{{item.uname}}</span>
               </div>
             </div>
-            <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getDouyinCountData">查询</el-button>
+            <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getKSCountData">查询</el-button>
             <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
           </div>
         </div>
@@ -70,6 +46,7 @@
     </div>
     <div class="chartShow result-panel">
         <div class="search" v-if="isSearchData"><p>请稍候...</p></div>
+        <div class="search" v-if="noData"><p>暂无数据</p></div>
         <div id="chart"></div>
     </div>
   </div>
@@ -79,13 +56,13 @@ import {mapGetters} from 'vuex';
 import * as echarts from 'echarts';
 import {sortByAsc} from "@/utils/index"
 export default {
-  name: 'Douyin_doucounttwo',
+  name: 'Kuaishou_personcount',
   data() {
     return {
         menuButtonPermit:[],         //网页权限字段
         searchData:{
-          ids:[],
-          start_num: "",
+          uname:[],
+          start_num:"",
           end_num: ""
         },
         scorelist:[],
@@ -96,6 +73,7 @@ export default {
         checkAll: false,
         isSearchData: false,
         timeList: [],
+        noData: false
     };
   },
   computed: {
@@ -204,8 +182,8 @@ export default {
           res.data.forEach(function(item,index){
             permitData.push(item.action_route);
           });
-          if(permitData.includes('Douyin_doucounttwo')){
-              $this.getDouyinTime();
+          if(permitData.includes('Kuaishou_personcount')){
+              $this.getKSTime();
               $this.getDepartList();
           }else{
             $this.$message({
@@ -232,34 +210,17 @@ export default {
       var $this = this;
       $this.getUserMenuButtonPermit();
     },
-    // 获取日期
-    getDouyinTime(){
-      var $this = this;
-      $this.$store.dispatch('douyin/douyinCountTime',null).then(res=>{
-        if(res.status){
-          $this.timeList = res.data;
-        }else{
-          $this.$message({
-            showClose: true,
-            message: response.info,
-            type: 'error'
-          });
-        }
-      });
-    },
     // 获取部门列表
     getDepartList(){
       var $this = this;
-      $this.$store.dispatch('douyin/douyinDepartlist', null).then(response=>{
+      $this.$store.dispatch('kuaishou/KSdepartgroup', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data){
+              var resList = [];
               if(response.data.length > 0){
-                var resList = [];
                 response.data.forEach(item => {
                   var obj = {};
-                  obj.id = item.id;
-                  obj.name = item.name;
                   obj.uname = item.uname;
                   obj.department = item.department;
                   obj.isOn = false;
@@ -292,48 +253,32 @@ export default {
         }
       });
     },
-    // 点击选中
-    handleCheckedChange(e){
+    // 获取日期
+    getKSTime(){
       var $this = this;
-      var checkedCount = e.length;
-      if(checkedCount === $this.groupList.length){
-        $this.checkAll = true;
-      }else{
-        $this.checkAll = false;
-      }
-      if(checkedCount>0&&checkedCount<$this.groupList.length){
-        $this.isIndeterminate = true;
-      }else{
-        $this.isIndeterminate = false;
-      }
-    },
-    // 全选
-    handleCheckAllChange(e){
-      var $this = this;
-      var checkedList = [];
-      if(e){
-        $this.groupList.forEach((item) =>{
-          checkedList.push(item.id);
-        })
-        $this.searchData.ids = checkedList;
-        $this.checkAll= true;
-      }else{
-        $this.searchData.ids = [];
-        $this.checkAll= false;
-      }
-      $this.isIndeterminate = false;
+      $this.$store.dispatch('kuaishou/getKSResTime',null).then(res=>{
+        if(res.status){
+          $this.timeList = res.data;
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
     },
     // 小组点击事件
-    groupChangeHandler(id){
+    groupChangeHandler(uname){
       var $this = this;
       var groupList = $this.groupList;
       var selectedID = [];
       groupList.forEach(function(item,index){
-        if(item.id == id){
+        if(item.uname == uname){
           item.isOn = !item.isOn;
         }
         if(item.isOn){
-          selectedID.push(item.id);
+          selectedID.push(item.uname);
         }
       });
       if(selectedID.length === $this.groupList.length ){
@@ -342,7 +287,7 @@ export default {
         $this.checkAll = false
       }
       $this.groupList = groupList;
-      $this.searchData.ids = selectedID;
+      $this.searchData.uname = selectedID;
     },
     checkAllData(){
       var $this = this;
@@ -353,22 +298,22 @@ export default {
           item.isOn = false;
         });
         $this.groupList = groupList;
-        $this.searchData.ids = [];
+        $this.searchData.uname = [];
       }else{
         $this.checkAll = true;
         var groupList = $this.groupList;
         var selectedID = [];
         groupList.forEach(function(item,index){
           item.isOn = true;
-          selectedID.push(item.id);
+          selectedID.push(item.uname);
         });
         $this.groupList = groupList;
-        $this.searchData.ids = selectedID;
+        $this.searchData.uname = selectedID;
       }
       
     },
     // 获取抖音数据
-    getDouyinCountData(){
+    getKSCountData(){
       var $this = this;
       if(!$this.isSearchData){
         if($this.searchData.start_num == "" ){
@@ -392,7 +337,7 @@ export default {
             type: "error",
           });
           return false;
-        }else if($this.searchData.ids.length === 0){
+        }else if($this.searchData.uname.length === 0){
           $this.$message({
             showClose: true,
             message: "错误：请选择要查询的账号！",
@@ -401,11 +346,11 @@ export default {
           return false;
         }
         var formData = {};
-        formData.ids = $this.searchData.ids;
+        formData.uname = $this.searchData.uname;
         formData.start_num = $this.searchData.start_num;
         formData.end_num = $this.searchData.end_num;
         $this.isSearchData = true;
-        $this.$store.dispatch('douyin/douyinCountData', formData).then(response=>{
+        $this.$store.dispatch('kuaishou/KSPersonalCountLine', formData).then(response=>{
           if(response){
             $this.isSearchData = false;
             if(response.status){
@@ -449,8 +394,8 @@ export default {
     },
     drawAreaChart(){
       var $this = this;
+      var totalNum = 0;
       if($this.scorelist.length>0){
-        var totalNum = 0;
         $this.scorelist.forEach((item, index) => {
           if(index === 0){
             totalNum = item.score_trend.length
@@ -459,7 +404,8 @@ export default {
             item.score_trend = item.score_trend.sort(sortByAsc("num"));
           }
         })
-        if(totalNum > 0){
+        if(totalNum>0){
+          $this.noData = false;
           var colorArr = ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"]
           var chartDom = document.getElementById('chart');
           var myChart = echarts.init(chartDom);
@@ -467,8 +413,8 @@ export default {
           var xData = [];
           var series = [];
           var dataset = [];
+          // 获取总值
           if($this.scorelist.length > 1){
-            // 获取总值
             var totalObj={};
             totalObj.smooth=false;
             totalObj.type='line';
@@ -511,7 +457,6 @@ export default {
             totalObj.symbolSize=5;
             totalObj.symbol='circle';
             totalObj.data=[];
-            
             for(var i = 0; i< totalNum; i++){
               var tobj = {
                 value: 0,
@@ -534,12 +479,13 @@ export default {
             totalObj.animationEasing='quadraticOut';
             series.push(totalObj);
           }
+          
           // 组装每个值
           $this.scorelist.forEach((item,index) => {
             var itemObj={};
             itemObj.smooth=false;
             itemObj.type='line';
-            itemObj.name = item.name;
+            itemObj.name = item.department+'-'+item.uname;
             itemObj.label={
               show: true,
               position: 'top'
@@ -686,103 +632,9 @@ export default {
           };
           option && myChart.setOption(option);
           $this.myChart = myChart;
+        }else{
+          $this.noData = true;
         }
-      }
-    },
-    // 曲线图
-    drawAreaChart2(){
-      var $this = this;
-      if($this.scorelist.length>0){
-        var chartDom = document.getElementById('chart');
-        var myChart = echarts.init(chartDom);
-        var option;
-        option = {
-          grid:{
-            left: '45',
-            top:'25',
-            right:'15',
-            bottom: '25'
-          },
-          tooltip:{
-            show: true,
-            trigger: "axis",
-            axisPointer: {
-              type: "line", 
-              lineStyle:{
-                color: "#5b8ff9"
-              }
-            },
-            textStyle:{
-                fontSize:12,
-                color: '#666'
-            },
-            formatter(params){
-              return `<div class="toolDiv">
-                    <div class="tooltitle">${params[0].name}</div>
-                    <div class="bar clearfix">
-                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
-                      <span>${params[0].seriesName}：</span>
-                      <span>${params[0].data.user_data}</span>
-                    </div>
-                  </div>`;
-            }
-          },
-          xAxis: {
-            type: 'category',
-            name: "日期",
-            axisLine:{
-              lineStyle:{
-                color: "#dedede"
-              }
-            },
-            axisLabel:{
-              color: "#888"
-            }
-          },
-          yAxis: {
-            type: 'value',
-            axisLabel:{
-              color: "#888"
-            }
-          },
-          dataset:{
-            source: $this.scorelist,  
-          },
-          animation: false,
-          series: [
-            {
-              name: "积分",
-              type: 'line',
-              symbol: 'circle',
-              symbolSize: '5',
-              label:{
-                show: true,
-                position: 'top',
-                distance: '5'
-              },
-              itemStyle:{
-                color: '#fff',
-                borderColor: "#0970ff",
-                borderWidth: 1
-              },
-              lineStyle:{
-                color: "#0970ff",
-                width: 1
-              },
-              emphasis:{
-                lineStyle: {
-                  width: 2,
-                },
-                itemStyle:{
-                  borderWidth: 2
-                }
-              }
-            }
-          ]
-        };
-
-        option && myChart.setOption(option);
-        $this.myChart = myChart;
       }
     },
     echartsSize(){
@@ -790,9 +642,18 @@ export default {
           this.myChart.resize();
       }
     },
+    findData(value, aim, str){
+      var isIn = false;
+      aim.forEach(item => {
+        if(item[str] === value){
+          isIn = true
+        }
+      })
+      return isIn
+    },
     resetData(){
       var $this = this;
-      $this.searchData.ids = [];
+      $this.searchData.uname = [];
       $this.searchData.start_num = "";
       $this.searchData.end_num = "";
       $this.checkAll = false;
@@ -809,13 +670,18 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+.group-index .filter-panel .filter-list{
+  padding: 20px 30px;
+}
   .chartShow{
     margin-top: 20px;
     padding: 20px;
     background-color: #fff;
+    height: calc(100vh - 355px);
+    min-height: 530px;
     #chart{
-      height: 600px;
+      height: calc(100vh - 395px);
+      min-height: 490px;
     }
   }
   .checked_item .c_tit, .checked_item .c_name{
@@ -831,27 +697,27 @@ export default {
     margin-left: 4px;
   }
   .checked_item .el-checkbox{
-    min-width: 280px;
+    min-width: 140px;
     margin: 3px;
   }
   .checked_item .is-checked .c_tit, .checked_item .is-checked .c_name{
     color: #0970ff;
   }
   .group-index .filter-panel .filter-list .item-filter.group .filter-content .item-list.group .item-checkbox{
-    min-width: 280px;
+    min-width: 140px;
   }
   @media screen and (min-width: 2400px){
     .chartShow{
-      height: calc(100vh - 367px);
+      height: calc(100vh - 387px);
       #chart{
-        height: calc(100vh - 407px);
+        height: calc(100vh - 427px);
       }
     }
   }
   .search_btn{
     padding-top: 8px;
     padding-bottom: 8px;
-    margin-top: 10px;
+    margin-top: 12px;
   }
   .result-panel{
   position: relative;
@@ -892,6 +758,7 @@ export default {
     font-size: 16px;
   }
 }
+
 .item-search{
   margin-bottom: 10px;
 }

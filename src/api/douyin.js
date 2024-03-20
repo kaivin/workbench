@@ -98,3 +98,12 @@ export function getDouyinPersonalCount(data) {
     data
   });
 }
+
+// 抖音账号统计
+export function getDouyinDepartgroup(data) {
+  return request({
+    url: "/hxindex/Douyin/departgroup",
+    method: "POST",
+    data
+  });
+}

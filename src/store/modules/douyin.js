@@ -9,7 +9,8 @@ import {
     getDouyinTime,
     getDouyinEachLine,
     getDouyinAccountLine,
-    getDouyinPersonalCount
+    getDouyinPersonalCount,
+    getDouyinDepartgroup
 
 } from '@/api/douyin'
 
@@ -126,7 +127,15 @@ const actions = {
             })
         })
     },
-    
+    douyinDepartgroup({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getDouyinDepartgroup(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
 }
 
 export default {

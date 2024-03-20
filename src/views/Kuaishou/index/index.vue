@@ -13,9 +13,6 @@
           <el-card class="box-card" shadow="hover">
             <div class="card-header" ref="headerPane">
               <div class="search-wrap" ref="searchPane">
-                <div class="item-search item-check">
-                  <el-checkbox v-model="searchData.all_name" label="一/二部" border @change="searchResult" />
-                </div>
                 <div class="item-search">
                   <el-select v-model="searchData.num" size="small" clearable placeholder="请选择日期" class="select-panel" @change="selectedTimeChange">
                       <el-option
@@ -61,7 +58,7 @@
                   <el-input
                       class="input-panel"
                       size="small"
-                      placeholder="请输入抖音名称"
+                      placeholder="请输入快手名称"
                       v-model="searchData.nickname"
                       @keyup.enter.native="searchResult"
                       @clear="searchResult"
@@ -90,16 +87,6 @@
                 <div class="dy_item dy_red">积分总计：{{scoreCount}}</div>
               </div>
             </div>
-            <div class="dy_res" v-if="nick_res.length > 0 || add_word.length > 0 || desc_word.length > 0">
-              <p v-if="nick_res.length > 0">
-                <span class="color_01">{{searchData.nickname}}</span>的所有关键词中：<span v-for="item,index in nick_res" :key="index"><i v-if="index > 0">，</i>{{item.name}}有<strong class="color_02" >{{item.value}}</strong>个</span>。
-                <el-button type="info" plain size="mini" class="more_btn" @click="showPieChart">查看详情</el-button>
-                <span class="word_count" v-if="add_word.length > 0 || desc_word.length > 0" >最近一次统计中，</span>
-                <span v-if="add_word.length > 0">新增的词有<strong class="color_02" >{{add_word.length}}</strong>个</span><span v-if="add_word.length > 0 && desc_word.length > 0">，</span>
-                <span v-if="desc_word.length > 0">减少的词有<strong class="color_02" >{{desc_word.length}}</strong>个</span>。
-                <el-button v-if="add_word.length > 0 || desc_word.length > 0" type="info" plain size="mini" class="more_btn" @click="showWordList">查看详情</el-button>
-              </p>
-            </div>
             <div class="card-content" ref="tableContent">
               <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
                 <div class="table-mask"></div>
@@ -121,12 +108,9 @@
                         min-width="100"
                         >
                         <template #default="scope">
-                          <el-link v-if="scope.row.url" :href="scope.row.url" target="_blank" type="primary">
+                          <el-link :href="'https://www.kuaishou.com/short-video/'+scope.row.aweme_id" target="_blank" type="primary">
                             {{scope.row.name}}
                           </el-link>
-                          <span v-else>
-                            {{scope.row.name}}
-                          </span>
                         </template>
                       </el-table-column>
                       <el-table-column
@@ -146,7 +130,7 @@
                       <el-table-column
                         prop="avgnumber"
                         align="center"
-                        label="抖音指数"
+                        label="快手指数"
                         width="90"
                         >
                       </el-table-column>
@@ -177,7 +161,7 @@
                           <el-tooltip content="点击查看积分趋势" placement="right-start" effect="light">
                             <span class="icon_chart" @click="showLineChart(scope.row)"><svg-icon icon-class="line2" alt="" /></span>
                           </el-tooltip>
-                          </template>
+                        </template>
                       </el-table-column>
                       <el-table-column
                         prop="desc"
@@ -247,7 +231,7 @@ import { jsonToSheetXlsx } from '@/components/Excel/Export2Excel'
 import {sortByDesc, sortByAsc} from "@/utils/index"
 import * as echarts from 'echarts';
 export default {
-  name: 'Douyin_index',
+  name: 'Kuaishou_index',
   components: {
     ExportModal
   },
@@ -263,7 +247,6 @@ export default {
       searchData:{
         keyword: "",
         nickname: "",
-        all_name: false,
         page: 1,
         limit: 20,
         num: "",
@@ -302,18 +285,7 @@ export default {
         { key: 'name', value: '关键词' },
         { key: 'my_level', value: '关键词等级' },
         { key: 'rank_number', value: '排名' },
-        { key: 'avgnumber', value: '抖音指数' },
-        { key: 'score', value: '积分' },
-        { key: 'desc', value: '标题' },
-        { key: 'nickname', value: '名称' },
-      ],
-      fieldList2: [
-        { key: 'name', value: '关键词' },
-        { key: 'my_level', value: '关键词等级' },
-        { key: 'rank_number', value: '排名' },
-        { key: 'avgnumber', value: '抖音指数' },
-        { key: 'depart', value: '部门' },
-        { key: 'uname', value: '负责人' },
+        { key: 'avgnumber', value: '快手指数' },
         { key: 'score', value: '积分' },
         { key: 'desc', value: '标题' },
         { key: 'nickname', value: '名称' },
@@ -511,8 +483,7 @@ export default {
       var headerHeight = $this.$refs.headerPane.offsetHeight;
       var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
-      var countHeight = $this.$refs.countPane.offsetHeight;
-      $this.tableHeight = screenHeight-headerHeight-countHeight-breadcrumbHeight-40-45-31;
+      $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40-45-31;
       $this.getBrowserType();
         setTimeout(function() {
           $this.setScrollDom();
@@ -524,12 +495,7 @@ export default {
       $this.selectedData = val;
     },
     showExportDialog() {
-      if(this.searchData.all_name){
-        this.$refs.ExportModalRef.showDialog({ fieldList: this.fieldList2, hasSelected: this.selectedData.length > 0, hasData: this.tableData.length > 0 })
-      }else{
-        this.$refs.ExportModalRef.showDialog({ fieldList: this.fieldList, hasSelected: this.selectedData.length > 0, hasData: this.tableData.length > 0 })
-      }
-      
+      this.$refs.ExportModalRef.showDialog({ fieldList: this.fieldList, hasSelected: this.selectedData.length > 0, hasData: this.tableData.length > 0 })
     },
     exportDone(obj) {
       const filename = obj.filename
@@ -587,7 +553,6 @@ export default {
         formData.limit = $this.totalDataNum;
         formData.keyword = $this.searchData.keyword;
         formData.nickname = $this.searchData.nickname;
-        formData.all_name = $this.searchData.all_name ? 1 : "";
         formData.num = $this.searchData.num;
         formData.my_level = $this.searchData.my_level;
         formData.sort = $this.searchData.sort;
@@ -595,7 +560,7 @@ export default {
           lock: true,
           text: '正在导出内容，请耐心等待……'
         });
-        $this.$store.dispatch('douyin/getDouyinResData', formData).then(res => {
+        $this.$store.dispatch('kuaishou/getKSResData', formData).then(res => {
           if (res) {
             loading.close();
             if(res.status){
@@ -650,7 +615,6 @@ export default {
         $this.searchData.limit=20;
         $this.searchData.keyword = "";
         $this.searchData.nickname = "";
-        $this.searchData.all_name = false;
         $this.searchData.num = "";
         $this.searchData.my_level = "";
         $this.searchData.sort = "";
@@ -670,8 +634,8 @@ export default {
             res.data.forEach(function(item,index){
               $this.menuButtonPermit.push(item.action_route);
             });
-            if($this.menuButtonPermit.includes('Douyin_index')){
-              $this.getDouyinTime();
+            if($this.menuButtonPermit.includes('Kuaishou_index')){
+              $this.getKuaishouTime();
             }else{
               $this.$message({
                 showClose: true,
@@ -700,13 +664,13 @@ export default {
       });
     },
     // 获取日期
-    getDouyinTime(){
+    getKuaishouTime(){
       var $this = this;
-      $this.$store.dispatch('douyin/douyinCountTime',null).then(res=>{
+      $this.$store.dispatch('kuaishou/getKSResTime',null).then(res=>{
         if(res.status){
           $this.timeList = res.data;
           $this.initPage();
-          $this.getDouyinCount();
+          $this.getKSCount();
         }else{
           $this.$message({
             showClose: true,
@@ -721,7 +685,7 @@ export default {
       if(!$this.isSearchResult){
         $this.isSearchResult=true;
         $this.initPage();
-        $this.getDouyinCount();
+        $this.getKSCount();
       }
     },
     // 初始化页面信息
@@ -732,12 +696,11 @@ export default {
       formData.limit = $this.searchData.limit;
       formData.keyword = $this.searchData.keyword;
       formData.nickname = $this.searchData.nickname;
-      formData.all_name = $this.searchData.all_name ? 1 : "";
       formData.num = $this.searchData.num;
       formData.my_level = $this.searchData.my_level;
       formData.sort = $this.searchData.sort;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('douyin/getDouyinResData', formData).then(response=>{
+      $this.$store.dispatch('kuaishou/getKSResData', formData).then(response=>{
           if(response){
             if(response.status){
               if(response.data){
@@ -749,45 +712,6 @@ export default {
                 $this.$nextTick(function () {
                   $this.setTableHeight();
                 })
-              }
-              if(response.nick_res){
-                var keys = Object.keys(response.nick_res);
-                var resList = [];
-                keys.forEach(item => {
-                  var obj = {};
-                  obj.name = item;
-                  obj.value = response.nick_res[item];
-                  resList.push(obj);
-                })
-                $this.nick_res = resList;
-              }else{
-                $this.nick_res = [];
-              }
-              if(response.add_word){
-                var keys = Object.keys(response.add_word);
-                var resList = [];
-                keys.forEach(item => {
-                  var obj = {};
-                  obj.name = item;
-                  obj.value = response.add_word[item];
-                  resList.push(obj);
-                })
-                $this.add_word = resList;
-              }else{
-                $this.add_word = [];
-              }
-              if(response.desc_word){
-                var keys = Object.keys(response.desc_word);
-                var resList = [];
-                keys.forEach(item => {
-                  var obj = {};
-                  obj.name = item;
-                  obj.value = response.desc_word[item];
-                  resList.push(obj);
-                })
-                $this.desc_word = resList;
-              }else{
-                $this.desc_word = [];
               }
             }else{
               if(response.permitstatus&&response.permitstatus==2){
@@ -812,12 +736,12 @@ export default {
           }
       });
     },
-    // 获取抖音统计数据
-    getDouyinCount(){
+    // 获取快手账号统计数据
+    getKSCount(){
       var $this = this;
       var formData = {}
       formData.num = $this.searchData.num;
-      $this.$store.dispatch('douyin/getDouyinScoreData', formData).then(response=>{
+      $this.$store.dispatch('kuaishou/getKSScoreData', formData).then(response=>{
           if(response){
             if(response.status){
               if(response.data && response.data.length > 0){
@@ -857,7 +781,6 @@ export default {
       $this.searchData.page=1;
       $this.searchData.limit=20;
       $this.searchData.nickname = data.name;
-      $this.searchData.all_name = true;
       $this.searchResult();
     },
     // 点击展示图表
@@ -871,7 +794,7 @@ export default {
       formData.pid = data.pid;
       formData.my_level = data.my_level;
       formData.nickname = data.nickname;
-      $this.$store.dispatch('douyin/douyinEachLine', formData).then(response=>{
+      $this.$store.dispatch('kuaishou/KSEachLine', formData).then(response=>{
           if(response){
             $this.isSearchLine = false;
             $this.lineData = [];
@@ -923,7 +846,7 @@ export default {
       $this.dialogWidth = "1200px";
       var formData = {};
       formData.id = data.id;
-      $this.$store.dispatch('douyin/douyinAccountLine', formData).then(response=>{
+      $this.$store.dispatch('kuaishou/KSAccountLine', formData).then(response=>{
         if(response){
           $this.isSearchLine = false;
           $this.lineData = [];
@@ -1125,8 +1048,8 @@ export default {
       $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
       // 获取表格头吸顶需滚动的高度
       if($this.$refs.headerPane){
-         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.countPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20;
-      }else{
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20;
+        }else{
          $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15+20;
       }
       $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
@@ -1342,7 +1265,7 @@ export default {
     handleWordClose(){
       var $this = this;
       $this.isWordShow = false;
-    },
+    }
   }
 }
 </script>
