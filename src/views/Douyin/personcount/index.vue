@@ -55,7 +55,6 @@
                         row-key="id"
                         :span-method="objectSpanMethod"
                         :row-class-name="tableRowClass"
-                        stripe
                         @sort-change="tableSort"
                         >
                         <el-table-column
@@ -150,7 +149,7 @@ export default {
         tableHeight:200,
         tableHeader: [
           {
-            label: "用户",
+            label: "姓名",
             prop: 'uname',
             width: 80,
             hasChildren: 0,
@@ -487,7 +486,7 @@ export default {
             $this.isSearchData = false;
             $this.tableHeader = [
               {
-                label: "用户",
+                label: "姓名",
                 prop: 'uname',
                 width: 80,
                 hasChildren: 0,
@@ -506,7 +505,7 @@ export default {
                 var resList = []
                 if(response.data.length > 0){
                   var latest_num = $this.searchData.end_num;
-                  var prev_num = $this.getPrevTime();
+                  var prev_num = $this.searchData.start_num;
                   response.data.forEach((item,index) => {
                     if(item.score_trend && item.score_trend.length > 0){
                       // 多个账号
@@ -550,7 +549,7 @@ export default {
                                 }
                               }
                             }
-                            if(index === 0){
+                            if(index === 0 && i === 0){
                               $this.tableHeader.push({
                                 label: sitem.addtime,
                                 prop: 'count'+sindex,
@@ -932,7 +931,7 @@ export default {
       $this.scorelist = [];
       $this.tableHeader = [
           {
-            label: "用户",
+            label: "姓名",
             prop: 'uname',
             width: 80,
             hasChildren: 0,
@@ -1180,7 +1179,16 @@ export default {
       return spanOneArr
     },
     tableRowClass(val){
-      if(val.row.name == '总计'){
+      var $this = this;
+      var totalObj = [];
+      var newlist = $this.scorelist;
+      newlist.forEach((item,index) => {
+        if(totalObj.indexOf(item.uname) < 0){
+          totalObj.push(item.uname)
+        }
+      })
+      // if(val.row.name == '总计'){
+      if(totalObj.indexOf(val.row.uname)%2 === 0){
          return 'row-bg';
       }else{
          return '';
@@ -1368,6 +1376,6 @@ export default {
       // }
 }
 .userCount .el-table__row.row-bg .el-table__cell{
-  background-color: #f1f1f1;
+  background-color: #f5f5f5;
 }
 </style>

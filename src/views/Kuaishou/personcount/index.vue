@@ -1,54 +1,99 @@
 <template>
-  <div class="page-root scroll-panel group-index" ref="boxPane"> 
-    <p class="breadcrumb" ref="breadcrumbPane">
-      <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
-      <template v-for="item in breadcrumbList">
-        <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
-        <span v-else class="breadcrumb-link" v-bind:key="'last-' + item.id"><b>-</b><span>{{item.title}}</span></span>
-      </template>
-    </p>
-    <div class="filter-panel" ref="filterbox">
-      <div class="filter-list">
-        <div class="item-search">
-          <div class="filter-title"><span class="txt-title">开始日期：</span></div>
-          <el-select v-model="searchData.start_num" size="small" clearable placeholder="请选择开始日期" class="select-panel">
-              <el-option
-                  v-for="item in timeList"
-                  :key="item.num"
-                  :label="item.addtime"
-                  :value="item.num">
-              </el-option>
-          </el-select>
-          <div class="filter-title" style="margin-left:50px"><span class="txt-title">结束日期：</span></div>
-          <el-select v-model="searchData.end_num" size="small" clearable placeholder="请选择开始日期" class="select-panel">
-              <el-option
-                  v-for="item in timeList"
-                  :key="item.num"
-                  :label="item.addtime"
-                  :value="item.num">
-              </el-option>
-          </el-select>
-        </div>
-        <div class="item-filter flex-box group">
-          <div class="filter-title"><span class="txt-title">账号：</span></div>
-          <div class="filter-content flex-content">
-            <div class="item-list group">
-              <div class="item-checkbox" v-bind:class="checkAll?'active':''" @click="checkAllData"><i></i><span>全选</span></div>
-              <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="item in groupList" v-bind:key="item.uname" v-on:click="groupChangeHandler(item.uname)">
-                <span><i></i>{{item.department}}-{{item.uname}}</span>
+  <div class="page-root scroll-panel group-index" ref="boxPane">
+    <div class="abs-panel" ref="mainPane">
+      <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
+        <div class="true-height" ref="scrollPane">
+          <p class="breadcrumb" ref="breadcrumbPane">
+            <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+            <template v-for="item in breadcrumbList">
+              <router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+              <span v-else class="breadcrumb-link" v-bind:key="'last-' + item.id"><b>-</b><span>{{item.title}}</span></span>
+            </template>
+          </p>
+          <div class="filter-panel" ref="headerPane">
+            <div class="filter-list">
+              <div class="item-search">
+                <el-select v-model="searchData.start_num" size="small" clearable placeholder="请选择开始日期" class="select-panel">
+                    <el-option
+                        v-for="item in timeList"
+                        :key="item.num"
+                        :label="item.addtime"
+                        :value="item.num">
+                    </el-option>
+                </el-select>
+                <el-select style="margin-left: 10px;" v-model="searchData.end_num" size="small" clearable placeholder="请选择结束日期" class="select-panel">
+                    <el-option
+                        v-for="item in timeList"
+                        :key="item.num"
+                        :label="item.addtime"
+                        :value="item.num">
+                    </el-option>
+                </el-select>
+                <el-button class="search_btn" type="primary" size="small" :disabled="isSearchData" @click="getKSCountData">查询</el-button>
+                <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
               </div>
             </div>
-            <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getKSCountData">查询</el-button>
-            <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+          </div>
+          <!-- <div class="chartShow result-panel">
+              <div class="search" v-if="isSearchData"><p>请稍候...</p></div>
+              <div class="search" v-if="noData"><p>暂无数据</p></div>
+              <div id="chart"></div>
+          </div> -->
+          <div class="dealRankMain">
+            <div class="dealRankMainItem">  
+              <div class="dealRankMainBox">   
+                <div class="card-content" ref="tableContent">
+                  <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
+                      <div class="table-mask"></div>
+                      <el-table
+                        ref="simpleTable"
+                        :data="scorelist"
+                        tooltip-effect="dark"
+                        class="SiteTable userCount"
+                        style="width: 100%"
+                        :style="'min-height:'+tableHeight+'px;'"
+                        row-key="id"
+                        :span-method="objectSpanMethod"
+                        :row-class-name="tableRowClass"
+                        @sort-change="tableSort"
+                        >
+                        <el-table-column
+                        v-for="item,index in tableHeader" 
+                        :prop="item.prop"
+                        :key="item.prop"
+                        align="center"
+                        :fixed="item.fixed"
+                        :min-width="item.width"
+                        :class-name = "item.classname"
+                        :sortable = "item.sortable"
+                        :label="item.label">
+                            <template v-if="item.hasChildren === 1">
+                              <el-table-column
+                                  v-for="_item,_index in item.children"
+                                  :label="_item.label"
+                                  :prop="_item.prop"
+                                  :key="_item.prop"
+                                  :fixed="_item.fixed"
+                                  sortable="custom"
+                                  :min-width="_item.width"
+                                  :class-name = "_item.classname"
+                                  align="center"
+                                ></el-table-column>
+                            </template>
+                        </el-table-column>
+                      </el-table>
+                  </div>
+                  <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
+                      <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="chartShow result-panel">
-        <div class="search" v-if="isSearchData"><p>请稍候...</p></div>
-        <div class="search" v-if="noData"><p>暂无数据</p></div>
-        <div id="chart"></div>
-    </div>
+    <el-backtop target=".scroll-panel"></el-backtop>
   </div>
 </template>
 <script>
@@ -56,7 +101,7 @@ import {mapGetters} from 'vuex';
 import * as echarts from 'echarts';
 import {sortByAsc} from "@/utils/index"
 export default {
-  name: 'Kuaishou_personcount',
+  name: 'Douyin_personcount',
   data() {
     return {
         menuButtonPermit:[],         //网页权限字段
@@ -66,6 +111,7 @@ export default {
           end_num: ""
         },
         scorelist:[],
+        scorelist2: [],
         showChart: false,
         myChart:null,
         groupList: [],
@@ -73,7 +119,51 @@ export default {
         checkAll: false,
         isSearchData: false,
         timeList: [],
-        noData: false
+        noData: false,
+        scrollPosition:{
+          width:0,
+          left:0,
+          fixedBottom: 20,
+          insetWidth:0,
+          oldInsetLeft:0,
+          insetLeft:0,
+          ratio:0,
+          startPageX:0,
+          maxScrollWidth:0,
+          isMouseDown:false,
+          isPC:true,
+          isFixed:false,
+        },
+        scrollTable:{
+          scrollDom:null,
+          tableHeaderFixedDom:null,
+          tableFixedRightDom:null,
+          tableFixedLeftDom:null,
+          fixedTopHeight:0,
+          tableheaderHeight:0,
+          fixedRightWidth:0,
+          fixedLeftWidth:0,
+          tableBottom:0,
+          clientHeight:0,
+        },
+        tableHeight:200,
+        tableHeader: [
+          {
+            label: "姓名",
+            prop: 'uname',
+            width: 80,
+            hasChildren: 0,
+            fixed: "left",
+          },
+          {
+            label: "账号",
+            prop: 'name',
+            width: 150,
+            hasChildren: 0,
+            fixed: false,
+          }
+        ], 
+        timeArr: [],
     };
   },
   computed: {
@@ -92,11 +182,40 @@ export default {
   },
   mounted(){
     const $this = this;
-    window.addEventListener('resize',$this.echartsSize);
+    // window.addEventListener('resize',$this.echartsSize);
+    // 监听竖向滚动条滚动事件
+    window.addEventListener('scroll',$this.handleScroll,true);
+    $this.$nextTick(function () {
+      $this.setTableHeight();
+    });
+    window.onresize = () => {
+      return (() => {
+        $this.setTableHeight();
+      })()
+    }
+  },
+  watch: {
+    tableHeight(val) {
+      if (!this.timer) {
+        this.tableHeight = val
+        this.timer = true
+        const $this = this
+        setTimeout(function() {
+          $this.timer = false
+        }, 400)
+      }
+    },
+  },
+  updated(){
+    var $this = this;
+    $this.$nextTick(() => {
+      $this.$refs.simpleTable.doLayout();
+    });
   },
   destroyed(){
     const $this = this;
-    window.removeEventListener('resize', $this.echartsSize);
+    // window.removeEventListener('resize', $this.echartsSize);
+    window.removeEventListener('scroll', $this.handleScroll,true);//监听页面滚动事件
   },
   methods: {
     // 获取面包屑路径
@@ -183,7 +302,6 @@ export default {
             permitData.push(item.action_route);
           });
           if(permitData.includes('Kuaishou_personcount')){
-              $this.getKSTime();
               $this.getDepartList();
           }else{
             $this.$message({
@@ -218,6 +336,7 @@ export default {
           if(response.status){
             if(response.data){
               var resList = [];
+              var unames = [];
               if(response.data.length > 0){
                 response.data.forEach(item => {
                   var obj = {};
@@ -225,9 +344,12 @@ export default {
                   obj.department = item.department;
                   obj.isOn = false;
                   resList.push(obj);
+                  unames.push(item.uname);
                 })
               }
               $this.groupList = resList;
+              $this.searchData.uname = unames;
+              $this.getKSTime();
             }
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -259,6 +381,14 @@ export default {
       $this.$store.dispatch('kuaishou/getKSResTime',null).then(res=>{
         if(res.status){
           $this.timeList = res.data;
+          var numArr = [];
+          res.data.forEach(item => {
+            numArr.push(item.num)
+          })
+          $this.timeArr = numArr;
+          $this.searchData.end_num = Math.max(...numArr);
+          $this.searchData.start_num = $this.getPrevTime($this.searchData.end_num);
+          $this.getKSCountData();
         }else{
           $this.$message({
             showClose: true,
@@ -352,20 +482,167 @@ export default {
         $this.isSearchData = true;
         $this.$store.dispatch('kuaishou/KSPersonalCountLine', formData).then(response=>{
           if(response){
+            $this.scorelist = [];
             $this.isSearchData = false;
+            $this.tableHeader = [
+              {
+                label: "姓名",
+                prop: 'uname',
+                width: 80,
+                hasChildren: 0,
+                fixed: "left",
+              },
+              {
+                label: "账号",
+                prop: 'name',
+                width: 150,
+                hasChildren: 0,
+                fixed: false,
+              }
+            ];
+            $this.isAddScore = false;
             if(response.status){
               if(response.data){
                 var resList = []
                 if(response.data.length > 0){
-                  resList = response.data;
+                  var latest_num = $this.searchData.end_num;
+                  var prev_num = $this.searchData.start_num;
+                  response.data.forEach((item,index) => {
+                    if(item.score_trend && item.score_trend.length > 0){
+                      // 多个账号
+                      if(item.score_trend[0].son.length > 1){
+                        var num = item.score_trend[0].son.length;
+                        var vid = 0;
+                        // 加个总计
+                        var latest_score_2 = 0;
+                        var prev_score_2 = 0;
+                        var newobj = {};
+                        newobj.id = item.id+"_"+index+"_x";
+                        newobj.uname = item.uname;
+                        newobj.department = item.department;
+                        newobj.name = "总计";
+                        for(var i = 0; i< num; i++){
+                          var latest_score = 0;
+                          var prev_score = 0;
+                          var obj = {};
+                          obj.uname = item.uname;
+                          obj.department = item.department;
+                          item.score_trend.forEach((sitem,sindex) => {
+                            if(index === 0){
+                              console.log(item.score_trend)
+                            }
+                            obj.name = sitem.son[i].name;
+                            obj.id = item.id+"_"+ vid;
+                            vid++;
+                            obj.totalscore = item.score;
+                            obj['score'+ sindex] = sitem.son[i].score;
+                            if($this.searchData.end_num > $this.searchData.start_num ){
+                              if(sitem.num === latest_num){
+                                latest_score = sitem.son[i].score;
+                              }else if(sitem.num === prev_num){
+                                prev_score = sitem.son[i].score;
+                              }
+                            }
+                            if(i === num-1){
+                              newobj['score'+ sindex] = sitem.score;
+                              if($this.searchData.end_num > $this.searchData.start_num ){
+                                if(sitem.num === latest_num){
+                                  latest_score_2 = sitem.score;
+                                }else if(sitem.num === prev_num){
+                                  prev_score_2 = sitem.score;
+                                }
+                              }
+                            }
+                            if(index === 0 && i === 0){
+                              console.log(sitem.addtime, "多内容")
+                              $this.tableHeader.push({
+                                label: sitem.addtime,
+                                prop: 'count'+sindex,
+                                hasChildren: 1,
+                                fixed: false,
+                                children: [{
+                                    label:"积分",
+                                    width: 100,
+                                    prop: 'score'+sindex,
+                                    fixed: false,
+                                  }
+                                ]
+                              })
+                            }
+                          });
+                          obj.num_seperate = (latest_score - prev_score).toFixed(1);
+                          resList.push(obj);
+                        }
+                        newobj.num_seperate = (latest_score_2 - prev_score_2).toFixed(1);
+                        resList.push(newobj);
+                      }else{
+                        var latest_score = 0;
+                        var prev_score = 0;
+                        var obj = {};
+                        // 单账号
+                        item.score_trend.forEach((sitem,sindex) => {
+                          obj.id = item.id;
+                          obj.uname = item.uname;
+                          obj.department = item.department;
+                          obj.name = item.name;
+                          obj['score'+ sindex] = sitem.score;
+                          if($this.searchData.end_num > $this.searchData.start_num ){
+                            if(sitem.num === latest_num){
+                              latest_score = sitem.score;
+                            }else if(sitem.num === prev_num){
+                              prev_score = sitem.score;
+                            }
+                          }
+                          if(index === 0){
+                            $this.tableHeader.push({
+                              label: sitem.addtime,
+                              prop: 'count'+sindex,
+                              hasChildren: 1,
+                              fixed: false,
+                              children: [{
+                                  label:"积分",
+                                  width: 100,
+                                  prop: 'score'+sindex,
+                                  fixed: false,
+                                }
+                              ]
+                            })
+                          }
+                        });
+                        obj.num_seperate = (latest_score - prev_score).toFixed(1);
+                        resList.push(obj);
+                      }
+                    }
+                    
+                  })
+                  if($this.searchData.end_num > $this.searchData.start_num ){
+                    $this.tableHeader.push({
+                      label: "积分增幅",
+                      prop: "num_seperate",
+                      hasChildren: 0,
+                      fixed: false,
+                      sortable: "custom",
+                      classname: "num06",
+                      width: 100,
+                      sortway: (a,b) =>{ return a.num_seperate - b.num_seperate; }
+                    })
+                  }
                 }
-                $this.scorelist = resList;
-                if($this.myChart){
-                  $this.myChart.dispose();
-                  $this.drawAreaChart();
-                }else{
-                  $this.drawAreaChart();
-                }
+                resList.sort((a,b) =>{
+                  return b.num_seperate- a.num_seperate
+                });
+                var aimres = $this.sortByGroup(resList);
+                $this.scorelist = aimres;
+                $this.scorelist2 = [...aimres];
+                // if($this.myChart){
+                //   $this.myChart.dispose();
+                //   $this.drawAreaChart();
+                // }else{
+                //   $this.drawAreaChart();
+                // }
+                $this.$nextTick(function () {
+                  $this.setTableHeight();
+                })
               }
             }else{
               if(response.permitstatus&&response.permitstatus==2){
@@ -653,10 +930,26 @@ export default {
     },
     resetData(){
       var $this = this;
-      $this.searchData.uname = [];
       $this.searchData.start_num = "";
       $this.searchData.end_num = "";
       $this.checkAll = false;
+      $this.scorelist = [];
+      $this.tableHeader = [
+          {
+            label: "姓名",
+            prop: 'uname',
+            width: 80,
+            hasChildren: 0,
+            fixed: "left",
+          },
+          {
+            label: "账号",
+            prop: 'name',
+            width: 150,
+            hasChildren: 0,
+            fixed: false,
+          }
+        ];
       var groupList = $this.groupList;
       groupList.forEach(function(item,index){
           item.isOn = false;
@@ -665,22 +958,324 @@ export default {
       if($this.myChart){
         $this.myChart.dispose();
       }
+    },
+    // 设置高度
+    setTableHeight(){
+      var $this = this;
+      $this.tableHeight = 0;      
+      var headerHeight = $this.$refs.headerPane.offsetHeight;
+      var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
+      var screenHeight = $this.$refs.boxPane.offsetHeight;
+      $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40-45-31;
+      $this.getBrowserType();
+        setTimeout(function() {
+          $this.setScrollDom();
+      }, 400);
+    },
+    // 设置横向滚动条相关DOM数据
+    setScrollDom(){
+      var $this = this;
+      $this.scrollPosition.insetLeft = 0;
+      $this.scrollPosition.oldInsetLeft = 0;
+      // 表格真实宽度（可能超出屏幕）
+      var scrollWidth = $this.$refs.simpleTable.bodyWrapper.scrollWidth;
+      // 表格可见宽度（屏幕内宽度）
+      var maxWidth = $this.$refs.simpleTable.bodyWrapper.clientWidth;
+      // 获取表格的位置信息（距离视窗左边的位置信息）
+      var rectOBJ = $this.$refs.simpleTable.$el.getBoundingClientRect();
+      // 获取距离视窗左边的宽度
+      var leftWidth = rectOBJ.left;
+      // 根据百分比算出滚动条滑块的宽度
+      var insetWidth = parseInt(maxWidth/scrollWidth*maxWidth);
+      // 算出滚动条与视口比例（滚动条滚动1像素视口需要滚动多少像素）
+      var ratio = (scrollWidth - maxWidth) / (maxWidth - insetWidth);
+      var scrollDom = document.querySelector(".SiteTable .el-table__body-wrapper");
+      var tableHeaderFixedDom = document.querySelector(".SiteTable .el-table__header-wrapper");
+      var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+      var tableFixedLeftDom = document.querySelector(".el-table__fixed");
+      $this.scrollPosition.width = maxWidth;
+      $this.scrollPosition.left = leftWidth;
+      $this.scrollPosition.insetWidth = insetWidth;
+      $this.scrollPosition.ratio = parseFloat(ratio);
+      $this.scrollPosition.maxScrollWidth = maxWidth - insetWidth;
+      $this.scrollTable.scrollDom = scrollDom;
+      // 视窗改变时，让自定义滚动条的位置与真实滚动条滚动的位置相吻合
+      $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
+      // 获取表格头吸顶需滚动的高度
+      if($this.$refs.headerPane){
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20;
+      }else{
+         $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15+20;
+      }
+      $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
+      if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+         $this.scrollTable.tableFixedRightDom = tableFixedRightDom;
+      }
+      if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
+         $this.scrollTable.tableFixedLeftDom = tableFixedLeftDom;
+      }
+      var fixedHeaderObj = $this.scrollTable.tableHeaderFixedDom.getBoundingClientRect();
+      // 获取表格头的高度
+      $this.scrollTable.tableheaderHeight = fixedHeaderObj.height;
+      if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+         var fixedRightObj = $this.scrollTable.tableFixedRightDom.getBoundingClientRect();
+         // 获取右侧固定列的总宽度
+         $this.scrollTable.fixedRightWidth = fixedRightObj.width;
+      }
+      if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
+         var fixedLeftObj = $this.scrollTable.tableFixedLeftDom.getBoundingClientRect();
+         // 获取左侧侧固定列的总宽度
+         $this.scrollTable.fixedLeftWidth = fixedLeftObj.width;
+      }
+      var tableObj = $this.scrollTable.scrollDom.getBoundingClientRect();
+      $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+$this.scrollTable.tableheaderHeight+54+20;
+      $this.scrollTable.clientHeight = document.documentElement.clientHeight;
+      // 头部固定情况下视窗宽高改变，需要重新设置的一些宽高
+      if($this.scrollPosition.isFixed){
+        var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;";
+        $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+        document.querySelector(".table-mask").style = tableHeaderStyle;
+        var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+        var tableStyle4 = "width:"+$this.scrollTable.fixedLeftWidth+"px;";
+        if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+          document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+        }
+        if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
+          document.querySelector(".SiteTable .el-table__fixed .el-table__fixed-header-wrapper").style=tableStyle4;
+        }
+        $this.scrollTable.tableBottom = tableObj.height+$this.scrollTable.fixedTopHeight+54+20;
+      }
+    },
+    // 竖向滚动条滚动事件
+    handleScroll(event){
+      var $this = this;
+      if(!$this.scrollPosition.isMouseDown&&event.target.className=="scroll-panel"){// 非鼠标按下状态，为竖向滚动条触发的滚动事件
+        var scrTop = event.target.scrollTop;
+        var tableFixedRightDom = document.querySelector(".SiteTable .el-table__fixed-right");
+        var tableFixedLeftDom = document.querySelector(".SiteTable .el-table__fixed");
+        if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
+          $this.scrollPosition.isFixed = true;
+          var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          document.querySelector(".table-mask").style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle2 = "top:"+$this.scrollTable.tableheaderHeight+"px;";
+          var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
+          var tableStyle4 = "width:"+$this.scrollTable.fixedLeftWidth+"px;";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-body-wrapper").style=tableStyle2;
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          }
+          if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed .el-table__fixed-body-wrapper").style=tableStyle2;
+            document.querySelector(".SiteTable .el-table__fixed .el-table__fixed-header-wrapper").style=tableStyle4;
+          }
+        }else{// 头部需要变为正常
+          $this.scrollPosition.isFixed = false;
+          var tableHeaderStyle = "width:100%";
+          $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
+          var tableStyle1 = "padding-top:0";
+          document.querySelector(".SiteTable .el-table__body-wrapper").style=tableStyle1;
+          var tableStyle3 = "width:auto";
+          var tableStyle4 = "width:auto";
+          if(tableFixedRightDom&&tableFixedRightDom!=null&&tableFixedRightDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed-right .el-table__fixed-header-wrapper").style=tableStyle3;
+          }
+          if(tableFixedLeftDom&&tableFixedLeftDom!=null&&tableFixedLeftDom!=undefined){
+            document.querySelector(".SiteTable .el-table__fixed .el-table__fixed-header-wrapper").style=tableStyle4;
+          }
+        }
+      }
+    },
+    // 监听横向滚动条鼠标按下事件
+    mouseDownHandler(e){
+      this.crossMoveStartHandler(e);
+      window.addEventListener('mousemove',this.crossMoveingHandler);
+      window.addEventListener('mouseup',this.crossMoveEndHandler);
+    },
+    // 横向滚动条移动开始事件
+    crossMoveStartHandler(e){
+      var $this = this;
+      $this.scrollPosition.isMouseDown = true;
+      $this.scrollPosition.startPageX = e.pageX;
+    },
+    // 横向滚动条鼠标移动事件
+    crossMoveingHandler(e){
+      var $this = this;
+      if($this.scrollPosition.isMouseDown){// 只在鼠标按下时监听鼠标移动事件
+        var moveLeft = e.pageX - $this.scrollPosition.startPageX;
+        var scrollWidth = 0;
+        // 判断本次鼠标按下后鼠标移动的距离 大于0为向右移动
+        if(moveLeft>0){
+          // 本次移动距离+历史已移动距离如果大于最大能移动距离，说明向右已经滚动到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft>=$this.scrollPosition.maxScrollWidth){
+            scrollWidth = $this.scrollPosition.maxScrollWidth;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else if(moveLeft<0){
+          // 小于0为向左移动
+          // 本次移动距离+历史已移动距离，如果小于0，说明向左移动已经到头
+          if(moveLeft+$this.scrollPosition.oldInsetLeft<0){
+            scrollWidth = 0;
+          }else{
+            scrollWidth = moveLeft+$this.scrollPosition.oldInsetLeft;
+          }
+        }else{// 鼠标按下后，未移动
+          scrollWidth = $this.scrollPosition.insetLeft;
+        }
+        // 计算得出本次移动+历史移动总距离
+        // 自定义滚动条位置改变
+        $this.scrollPosition.insetLeft = scrollWidth;
+        // 真实滚动条滚动距离 = 自定义滚动条滚动距离*自定义滚动条与真实滚动条的滚动比
+        $this.scrollTable.scrollDom.scrollLeft = scrollWidth*$this.scrollPosition.ratio;
+        e.preventDefault();
+      }
+    },
+    // 横向滚动条移动结束事件
+    crossMoveEndHandler(e){
+      var $this = this;
+      $this.scrollPosition.isMouseDown = false;
+      $this.scrollPosition.startPageX = 0;
+      $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
+    },
+    getPrevTime(){
+      var $this = this;
+      var prev = $this.searchData.start_num;
+      var end = $this.searchData.end_num;
+      if($this.timeArr.length > 1){
+        $this.timeArr.forEach(item => {
+          if(item > prev && item < end){
+            prev = item;
+          }
+        })
+      }else{
+        prev = $this.searchData.end_num;
+      }
+      
+      return prev;
+    },
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      // 如果是第一行
+      var $this = this;
+      if (columnIndex === 0) {
+        const _row = $this.filterSpan($this.scorelist, 'uname')[rowIndex] // 这里需要修改
+        const _col = _row > 0 ? 1 : 0
+        return {
+          rowspan: _row,
+          colspan: _col
+        }
+      }
+    },
+    // 处理数据
+    filterSpan(arr, condition) {
+      const spanOneArr = []
+      let concatOne = 0
+      arr.map((item, index) => {
+        if (index === 0) {
+          spanOneArr.push(1)
+        } else {
+          // 第一列需合并相同内容的判断条件
+          if (item[condition] === arr[index - 1][condition]) {
+            spanOneArr[concatOne] += 1
+            spanOneArr.push(0)
+          } else {
+            spanOneArr.push(1)
+            concatOne = index
+          }
+        }
+      })
+      return spanOneArr
+    },
+    tableRowClass(val){
+      var $this = this;
+      var totalObj = [];
+      var newlist = $this.scorelist;
+      newlist.forEach((item,index) => {
+        if(totalObj.indexOf(item.uname) < 0){
+          totalObj.push(item.uname)
+        }
+      })
+      // if(val.row.name == '总计'){
+      if(totalObj.indexOf(val.row.uname)%2 === 0){
+         return 'row-bg';
+      }else{
+         return '';
+      }
+    },
+    sortByGroup(scorelist){
+      var $this = this;
+      var totalObj = [];
+      var newlist = scorelist;
+      newlist.forEach((item,index) => {
+        if(item.name === "总计"){
+          totalObj.push(item.uname)
+        }
+      })
+      var needArr = [];
+      newlist.forEach(item => {
+        if(totalObj.indexOf(item.uname) > -1 && item.name !== "总计"){
+          needArr.push(item);
+        }
+      })
+      var aimRes = [];
+      newlist.forEach(item => {
+        if(totalObj.indexOf(item.uname) < 0){
+          aimRes.push(item);
+        }
+        if(totalObj.indexOf(item.uname) > -1 && item.name === "总计"){
+          needArr.forEach(nitem => {
+            if(nitem.uname === item.uname){
+              aimRes.push(nitem)
+            }
+          })
+          aimRes.push(item);
+        }
+      })
+      return aimRes;
+    },
+    tableSort(column){
+      var $this = this;
+      var col = column.prop;
+      var way = column.order;
+      var scorelist = $this.scorelist;
+      if(way === 'ascending'){
+        scorelist.sort((a,b) =>{
+          return a[col]- b[col]
+        });
+        var aimres = $this.sortByGroup(scorelist);
+        $this.scorelist = aimres;
+      }else if(way === 'descending'){
+        scorelist.sort((a,b) =>{
+          return b[col]- a[col]
+        });
+        var aimres = $this.sortByGroup(scorelist);
+        $this.scorelist = aimres;
+      }else{
+        $this.scorelist = [...$this.scorelist2];
+      }
+      $this.$refs.simpleTable.doLayout();
     }
-  }
+  },
+
 }
 </script>
 <style lang="scss" scoped>
 .group-index .filter-panel .filter-list{
-  padding: 20px 30px;
+  padding: 20px 20px;
+}
+.group-index .filter-panel{
+  margin-bottom: 20px;
 }
   .chartShow{
     margin-top: 20px;
     padding: 20px;
     background-color: #fff;
-    height: calc(100vh - 355px);
+    height: calc(100vh - 387px);
     min-height: 530px;
     #chart{
-      height: calc(100vh - 395px);
+      height: calc(100vh - 427px);
       min-height: 490px;
     }
   }
@@ -715,9 +1310,7 @@ export default {
     }
   }
   .search_btn{
-    padding-top: 8px;
-    padding-bottom: 8px;
-    margin-top: 12px;
+    margin-left: 10px;
   }
   .result-panel{
   position: relative;
@@ -758,10 +1351,6 @@ export default {
     font-size: 16px;
   }
 }
-
-.item-search{
-  margin-bottom: 10px;
-}
 .item-search .filter-title{
   width: 70px;
   display:inline-block;
@@ -773,5 +1362,30 @@ export default {
     color: #666666;
     text-align: left;
   }
+}
+</style>
+<style lang="scss">
+.userCount .el-table__cell{
+      &.num01{
+          background:#fbe5d6;
+      }
+      &.num02{
+          background:#fff4d1;
+      }
+      &.num03{
+          background:#e2f0d9;
+      }
+      &.num04{
+        background: #eaf4ff;
+      }
+      &.num05{
+        background: #f1f1f1;
+      }
+      // &.num06{
+      //   background: #cce7f4;
+      // }
+}
+.userCount .el-table__row.row-bg .el-table__cell{
+  background-color: #f5f5f5;
 }
 </style>

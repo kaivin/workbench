@@ -13,6 +13,9 @@
           <el-card class="box-card" shadow="hover">
             <div class="card-header" ref="headerPane">
               <div class="search-wrap" ref="searchPane">
+                <div class="item-search item-check">
+                  <el-checkbox v-model="searchData.all_name" label="一/二部" border @change="searchResult" />
+                </div>
                 <div class="item-search">
                   <el-select v-model="searchData.num" size="small" clearable placeholder="请选择日期" class="select-panel" @change="selectedTimeChange">
                       <el-option
@@ -87,6 +90,16 @@
                 <div class="dy_item dy_red">积分总计：{{scoreCount}}</div>
               </div>
             </div>
+            <div class="dy_res" v-if="nick_res.length > 0 || add_word.length > 0 || desc_word.length > 0">
+              <p v-if="nick_res.length > 0">
+                <span class="color_01">{{searchData.nickname}}</span>的所有关键词中：<span v-for="item,index in nick_res" :key="index"><i v-if="index > 0">，</i>{{item.name}}有<strong class="color_02" >{{item.value}}</strong>个</span>。
+                <el-button type="info" plain size="mini" class="more_btn" @click="showPieChart">查看详情</el-button>
+                <span class="word_count" v-if="add_word.length > 0 || desc_word.length > 0" >最近一次统计中，</span>
+                <span v-if="add_word.length > 0">新增的词有<strong class="color_02" >{{add_word.length}}</strong>个</span><span v-if="add_word.length > 0 && desc_word.length > 0">，</span>
+                <span v-if="desc_word.length > 0">减少的词有<strong class="color_02" >{{desc_word.length}}</strong>个</span>。
+                <el-button v-if="add_word.length > 0 || desc_word.length > 0" type="info" plain size="mini" class="more_btn" @click="showWordList">查看详情</el-button>
+              </p>
+            </div>
             <div class="card-content" ref="tableContent">
               <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
                 <div class="table-mask"></div>
@@ -125,13 +138,6 @@
                         label="排名"
                         align="center"
                         width="60"
-                        >
-                      </el-table-column>
-                      <el-table-column
-                        prop="avgnumber"
-                        align="center"
-                        label="快手指数"
-                        width="90"
                         >
                       </el-table-column>
                       <el-table-column
@@ -251,7 +257,8 @@ export default {
         limit: 20,
         num: "",
         my_level: "",
-        sort: ""
+        sort: "",
+        all_name: false
       },
       scrollPosition:{
         width:0,
@@ -285,7 +292,16 @@ export default {
         { key: 'name', value: '关键词' },
         { key: 'my_level', value: '关键词等级' },
         { key: 'rank_number', value: '排名' },
-        { key: 'avgnumber', value: '快手指数' },
+        { key: 'score', value: '积分' },
+        { key: 'desc', value: '标题' },
+        { key: 'nickname', value: '名称' },
+      ],
+      fieldList2: [
+        { key: 'name', value: '关键词' },
+        { key: 'my_level', value: '关键词等级' },
+        { key: 'rank_number', value: '排名' },
+        { key: 'depart', value: '部门' },
+        { key: 'uname', value: '负责人' },
         { key: 'score', value: '积分' },
         { key: 'desc', value: '标题' },
         { key: 'nickname', value: '名称' },
@@ -495,7 +511,11 @@ export default {
       $this.selectedData = val;
     },
     showExportDialog() {
-      this.$refs.ExportModalRef.showDialog({ fieldList: this.fieldList, hasSelected: this.selectedData.length > 0, hasData: this.tableData.length > 0 })
+      if(this.searchData.all_name){
+        this.$refs.ExportModalRef.showDialog({ fieldList: this.fieldList2, hasSelected: this.selectedData.length > 0, hasData: this.tableData.length > 0 })
+      }else{
+        this.$refs.ExportModalRef.showDialog({ fieldList: this.fieldList, hasSelected: this.selectedData.length > 0, hasData: this.tableData.length > 0 })
+      }
     },
     exportDone(obj) {
       const filename = obj.filename
@@ -551,6 +571,7 @@ export default {
         var formData = {}
         formData.page = $this.searchData.page;
         formData.limit = $this.totalDataNum;
+        formData.all_name = $this.searchData.all_name ? 1 : "";
         formData.keyword = $this.searchData.keyword;
         formData.nickname = $this.searchData.nickname;
         formData.num = $this.searchData.num;
@@ -618,6 +639,7 @@ export default {
         $this.searchData.num = "";
         $this.searchData.my_level = "";
         $this.searchData.sort = "";
+        $this.searchData.all_name = false;
         $this.searchResult();
     },
     // 初始化数据
@@ -694,6 +716,7 @@ export default {
       var formData = {}
       formData.page = $this.searchData.page;
       formData.limit = $this.searchData.limit;
+      formData.all_name = $this.searchData.all_name ? 1 : "";
       formData.keyword = $this.searchData.keyword;
       formData.nickname = $this.searchData.nickname;
       formData.num = $this.searchData.num;
@@ -712,6 +735,45 @@ export default {
                 $this.$nextTick(function () {
                   $this.setTableHeight();
                 })
+              }
+              if(response.nick_res){
+                var keys = Object.keys(response.nick_res);
+                var resList = [];
+                keys.forEach(item => {
+                  var obj = {};
+                  obj.name = item;
+                  obj.value = response.nick_res[item];
+                  resList.push(obj);
+                })
+                $this.nick_res = resList;
+              }else{
+                $this.nick_res = [];
+              }
+              if(response.add_word){
+                var keys = Object.keys(response.add_word);
+                var resList = [];
+                keys.forEach(item => {
+                  var obj = {};
+                  obj.name = item;
+                  obj.value = response.add_word[item];
+                  resList.push(obj);
+                })
+                $this.add_word = resList;
+              }else{
+                $this.add_word = [];
+              }
+              if(response.desc_word){
+                var keys = Object.keys(response.desc_word);
+                var resList = [];
+                keys.forEach(item => {
+                  var obj = {};
+                  obj.name = item;
+                  obj.value = response.desc_word[item];
+                  resList.push(obj);
+                })
+                $this.desc_word = resList;
+              }else{
+                $this.desc_word = [];
               }
             }else{
               if(response.permitstatus&&response.permitstatus==2){
@@ -781,6 +843,7 @@ export default {
       $this.searchData.page=1;
       $this.searchData.limit=20;
       $this.searchData.nickname = data.name;
+      $this.searchData.all_name = true;
       $this.searchResult();
     },
     // 点击展示图表
