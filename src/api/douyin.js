@@ -107,3 +107,21 @@ export function getDouyinDepartgroup(data) {
     data
   });
 }
+
+// 抖音账号统计
+export function getDouyinTotalCount(data) {
+  return request({
+    url: "/hxindex/Douyin/doucount",
+    method: "POST",
+    data
+  });
+}
+
+// 抖音关键词详情
+export function getDouyinWordInfo(data) {
+  return request({
+    url: "/hxindex/Douyin/wordinfo",
+    method: "POST",
+    data
+  });
+}

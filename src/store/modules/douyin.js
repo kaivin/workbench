@@ -10,7 +10,9 @@ import {
     getDouyinEachLine,
     getDouyinAccountLine,
     getDouyinPersonalCount,
-    getDouyinDepartgroup
+    getDouyinDepartgroup,
+    getDouyinTotalCount,
+    getDouyinWordInfo
 
 } from '@/api/douyin'
 
@@ -130,6 +132,26 @@ const actions = {
     douyinDepartgroup({ commit, state }, data) {
         return new Promise((resolve, reject) => {
             getDouyinDepartgroup(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 账号总计
+    douyinTotalCountData({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getDouyinTotalCount(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 关键词详情
+    douyinWordInfo({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getDouyinWordInfo(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
