@@ -327,6 +327,12 @@ function setRoutes(routers){
         component: () => import(/* webpackChunkName: "Keyword_keywordinfo" */ "@/views/Keyword/keywordinfo/index.vue"),
         meta: {id:'Keyword_keywordinfo-146',title: '搜索词趋势', icon: null, keepAlive:false},
       },
+      {
+        path: "/Douyin/keywordcount",
+        name:'Douyin_keywordcount',
+        component: () => import(/* webpackChunkName: "Douyin_keywordcount" */ "@/views/Douyin/keywordcount/index.vue"),
+        meta: {id:'Douyin_keywordcount-159',title: '关键词统计', icon: null, keepAlive:false},
+      },
     ]
   }]
   accessedRouters.forEach(function(item,index){

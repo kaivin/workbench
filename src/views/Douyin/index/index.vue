@@ -105,8 +105,8 @@
                 </div>
               </div>
             </div>
-            <div class="dy_res" v-if="nick_res.length > 0 || add_word.length > 0 || desc_word.length > 0">
-              <p v-if="nick_res.length > 0">
+            <div class="dy_res" v-if="checkBtnShow && nick_res.length > 0">
+              <p class="res_p">
                 <span class="color_01" v-if="searchData.nickname">{{searchData.nickname}}</span>
                 <span class="color_01" v-else>以上所有账号</span>
                 的关键词中：<span v-for="item,index in nick_res" :key="index"><i v-if="index > 0">，</i>{{item.name}}有<strong class="color_02" >{{item.value}}</strong>个</span>。
@@ -161,7 +161,7 @@
                         width="100"
                         >
                         <template #default="scope">
-                          <div class="item_text">
+                          <div class="item_text item_text_rank">
                             <span class="before">{{scope.row.rank_number}}</span>
                             <template v-if="scope.row.hasOwnProperty('rand_cha')">
                               <span v-if="scope.row['rand_cha'] !== 0" class="after" :class="scope.row['rand_cha'] > 0 ? 'red' : scope.row['rand_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['rand_cha']) }}</span>
@@ -256,198 +256,6 @@
         <div class="no-data" v-if="!isSearchLine && lineData.length == 0 ">暂无数据</div>
         <div id="chart"></div>
       </div>
-    </el-dialog>
-    <el-dialog :title="dialogTitle" top="10vh" custom-class="chart-line word-line" :visible.sync="isColumnShow" :before-close="handleClose" :width="dialogWidth">
-        <div class="pop_search">
-          <el-select v-model="popSearch.start_num" size="small" clearable placeholder="请选择开始日期" class="select-panel">
-              <el-option
-                  v-for="item in timeList"
-                  :key="item.num"
-                  :label="item.addtime"
-                  :value="item.num">
-              </el-option>
-          </el-select>
-          <el-select style="margin-left: 10px;" v-model="popSearch.end_num" size="small" clearable placeholder="请选择结束日期" class="select-panel">
-              <el-option
-                  v-for="item in timeList"
-                  :key="item.num"
-                  :label="item.addtime"
-                  :value="item.num">
-              </el-option>
-          </el-select>
-          <el-button class="search_btn" type="primary" size="small" :disabled="isPopSearch" @click="getColumnRes('search')">查询</el-button>
-          <el-popover
-            placement="top-start"
-            width="228"
-            trigger="hover">
-            <el-table class="dyTable" stripe border :data="stageData">
-              <el-table-column width="50" align="center" property="stage" label="级别"></el-table-column>
-              <el-table-column width="150" align="center"  property="desc" label="描述"></el-table-column>
-            </el-table>
-            <svg-icon class="tips_div" slot="reference"  icon-class="tips"></svg-icon>
-          </el-popover>
-        </div>
-        <div class="search_body">
-          <div class="seach_total">
-            <p class="tab_p" v-if="activeName=='second' && add_allscore.length > 0">
-              增加的词<template v-for="item,index in add_allscore">
-                <template v-if="index > 0">，</template><template v-if="index == 1">其中</template>{{item.label}}为<span class="dy_red"> {{item.value}} </span><template v-if="index == 0">分</template><template v-if="index > 0">个</template>
-              </template>。
-            </p>
-            <p class="tab_p" v-if="activeName=='third'  && desc_allscore.length > 0">
-              减少的词<template v-for="item,index in desc_allscore">
-                <template v-if="index > 0">，</template><template v-if="index == 1">其中</template>{{item.label}}为<span class="dy_red"> {{item.value}} </span><template v-if="index == 0">分</template><template v-if="index > 0">个</template>
-              </template>。
-            </p>
-          </div>
-          <el-tabs v-model="activeName" type="card" >
-            <el-tab-pane label="关键词等级统计" name="first">
-              <div class="search_col">
-                <div class="search" v-if="isPopSearch"><p>请稍候...</p></div>
-                <div class="search_tab" v-else>
-                  <div class="search_dw">单位：个</div>
-                </div>
-                <div class="search_column">
-                  <div id="columnChart"></div>
-                </div>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="增加的词" name="second">
-              <div class="search_col">
-                <div class="search" v-if="isPopSearch"><p>请稍候...</p></div>
-                <div class="table_wrap" v-else>
-                  
-                  <el-table
-                    ref="dyTable"
-                    :data="add_list"
-                    tooltip-effect="dark"
-                    class="dyTable"
-                    style="width: 1160px"
-                    height= "100%"
-                    row-key="id"
-                    >
-                    <el-table-column
-                      prop="name"
-                      label="关键词"
-                      min-width="100"
-                      >
-                      <template #default="scope">
-                        <el-link v-if="scope.row.url" :href="scope.row.url" target="_blank" type="primary">
-                          {{scope.row.name}}
-                        </el-link>
-                        <span v-else>
-                          {{scope.row.name}}
-                        </span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="my_level"
-                      label="关键词等级"
-                      align="center"
-                      min-width="60"
-                      >
-                    </el-table-column>
-                    <el-table-column
-                      prop="rank_number"
-                      label="排名"
-                      align="center"
-                      min-width="60"
-                      >
-                    </el-table-column>
-                    <el-table-column
-                      prop="score"
-                      label="积分"
-                      align="center"
-                      min-width="60"
-                      >
-                    </el-table-column>
-                    <el-table-column
-                      prop="depart"
-                      align="center"
-                      label="部门"
-                      min-width="60"
-                      >
-                    </el-table-column>
-                    <el-table-column
-                      prop="uname"
-                      align="center"
-                      label="负责人"
-                      min-width="60"
-                      >
-                    </el-table-column>
-                  </el-table>
-                </div>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="减少的词" name="third">
-              <div class="search_col">
-                <div class="search" v-if="isPopSearch"><p>请稍候...</p></div>
-                <div class="table_wrap" v-else>
-                  
-                  <el-table
-                    ref="dyTable"
-                    :data="add_list"
-                    tooltip-effect="dark"
-                    class="dyTable"
-                    style="width: 1160px"
-                    height= "100%"
-                    row-key="id"
-                    >
-                    <el-table-column
-                      prop="name"
-                      label="关键词"
-                      min-width="100"
-                      >
-                      <template #default="scope">
-                        <el-link v-if="scope.row.url" :href="scope.row.url" target="_blank" type="primary">
-                          {{scope.row.name}}
-                        </el-link>
-                        <span v-else>
-                          {{scope.row.name}}
-                        </span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      prop="my_level"
-                      label="关键词等级"
-                      align="center"
-                      min-width="60"
-                      >
-                    </el-table-column>
-                    <el-table-column
-                      prop="score"
-                      label="积分"
-                      align="center"
-                      min-width="60"
-                      >
-                    </el-table-column>
-                    <el-table-column
-                      prop="rank_number"
-                      label="排名"
-                      align="center"
-                      min-width="60"
-                      >
-                    </el-table-column>
-                    <el-table-column
-                      prop="depart"
-                      align="center"
-                      label="部门"
-                      min-width="60"
-                      >
-                    </el-table-column>
-                    <el-table-column
-                      prop="uname"
-                      align="center"
-                      label="负责人"
-                      min-width="60"
-                      >
-                    </el-table-column>
-                  </el-table>
-                </div>
-              </div>
-            </el-tab-pane>
-          </el-tabs>
-        </div>
     </el-dialog>
   </div>
 </template>
@@ -636,6 +444,7 @@ export default {
       pieChart2: null,
       piedata_one: [],
       piedata_two: [],
+      checkBtnShow: false
     }
   },
   computed: {
@@ -789,7 +598,6 @@ export default {
       }else{
         this.$refs.ExportModalRef.showDialog({ fieldList: this.fieldList, hasSelected: this.selectedData.length > 0, hasData: this.tableData.length > 0 })
       }
-      
     },
     exportDone(obj) {
       const filename = obj.filename
@@ -994,6 +802,7 @@ export default {
     // 初始化页面信息
     initPage(){
       var $this = this;
+      $this.nick_res = [];
       var formData = {}
       formData.page = $this.searchData.page;
       formData.limit = $this.searchData.limit;
@@ -1055,6 +864,12 @@ export default {
                 $this.desc_word = resList;
               }else{
                 $this.desc_word = [];
+              }
+
+              if( $this.searchData.nickname == "" || $this.searchData.nickname && $this.CheckNameIn()){
+                $this.checkBtnShow = true;
+              }else{
+                $this.checkBtnShow = false;
               }
             }else{
               if(response.permitstatus&&response.permitstatus==2){
@@ -1601,503 +1416,27 @@ export default {
     },
     showColumnChart(){
       var $this = this;
-      $this.isColumnShow = true;
-      if($this.searchData.nickname){
-        $this.dialogTitle = "关键词统计——"+$this.searchData.nickname;
-      }else{
-        $this.dialogTitle = "关键词统计";
-      }
-      $this.dialogWidth = "1200px";
-      if(!$this.isPopSearch){
-        $this.getColumnRes("first");
-      }
-    },
-    getColumnRes(str){
-      var $this = this;
-      if($this.myChart){
-        $this.myChart.dispose();
-      }
-      if($this.pieChart1){
-        $this.pieChart1.dispose();
-      }
-      if($this.pieChart2){
-        $this.pieChart2.dispose();
-      }
-      $this.myChart = null;
-      $this.pieChart1 = null;
-      $this.pieChart2 = null;
-      $this.add_allscore = [];
-      $this.desc_allscore = [];
-      var formData = {};
-      $this.isPopSearch = true;
+      var resId = [];
+      var res_start = "";
+      var res_end = "";
       if($this.searchData.nickname){
         var ids = [];
-        ids.push($this.searchData.id);
-        formData.ids = ids;
-      }else{
-        $this.searchData.id = "";
-        formData.ids = $this.accountIds;
-      }
-      
-      if(str == 'first'){
-        if($this.searchData.num){
-          formData.end_num = $this.searchData.num;
+        if($this.searchData.id){
+          ids.push($this.searchData.id);
         }else{
-          formData.end_num = Math.max(...$this.timeArr);
+          ids.push($this.tableData[0].aweme_id);
         }
-        formData.start_num = $this.getPrevTime($this.searchData.num);
-        $this.popSearch.ids = formData.ids;
-        $this.popSearch.start_num = formData.start_num;
-        $this.popSearch.end_num = formData.end_num;
+        resId = ids;
       }else{
-        formData.start_num = $this.popSearch.start_num;
-        formData.end_num = $this.popSearch.end_num;
+        resId = $this.accountIds;
       }
-      
-      $this.$store.dispatch('douyin/douyinWordInfo', formData).then(response=>{
-        if(response){
-          $this.columnData = {};
-          $this.piedata_one = [];
-          $this.piedata_two = [];
-          if(response.status){
-            $this.isPopSearch = false;
-            var resObj = {};
-            if(response.data_one){
-              var keyArr = Object.keys(response.data_one);
-              if(keyArr.length > 0){
-                resObj.name = keyArr;
-                var data_one = [];
-                var data_two = [];
-                var data_one_num = 0;
-                var data_two_num = 0;
-                var pie_one = [];
-                var pie_two = [];
-                keyArr.forEach(item => {
-                  if(Object.hasOwnProperty.call(response.data_one, item)){
-                    data_one_num+= response.data_one[item];
-                    data_one.push(response.data_one[item]);
-                  }else{
-                    data_one.push(0)
-                  }
-                  if(Object.hasOwnProperty.call(response.data_two, item)){
-                    data_two_num += response.data_two[item];
-                    data_two.push(response.data_two[item]);
-                  }else{
-                    data_two.push(0)
-                  }
-                  var obj1 = {};
-                  var obj2 = {};
-                  obj1.name = item;
-                  obj1.value = response.data_one[item];
-                  obj2.name = item;
-                  obj2.value = response.data_two[item];
-                  pie_one.push(obj1);
-                  pie_two.push(obj2);
-                })
-                resObj.data_one = data_one;
-                resObj.data_two = data_two;
-                resObj.data_one_num = data_one_num;
-                resObj.data_two_num = data_two_num;
-                $this.columnData = resObj;
-                $this.piedata_one = pie_one;
-                $this.piedata_two = pie_two;
-                // if($this.nowChart == 1){
-                  $this.drawColumnChart();
-                // }else{
-                //   $this.drawPieChart1();
-                //   $this.drawPieChart2();
-                // }
-              }
-            }
-            if(response.add_word && response.add_word.length > 0){
-              var count = 0;
-              var counta1 = 0;
-              var counta2 = 0;
-              var countb1 = 0;
-              var countb2 = 0;
-              var countc2 = 0;
-              var countc3 = 0;
-              var countd = 0;
-              var addArr = [];
-              response.add_word.forEach(item => {
-                count += item.score;
-                if(item.my_level == "A1"){
-                  counta1 += 1
-                }
-                if(item.my_level == "A2"){
-                  counta2 += 1
-                }
-                if(item.my_level == "B1"){
-                  countb1 += 1
-                }
-                if(item.my_level == "B2"){
-                  countb2 += 1
-                }
-                if(item.my_level == "C2"){
-                  countc2 += 1
-                }
-                if(item.my_level == "C3"){
-                  countc3 += 1
-                }
-                if(item.my_level == "D"){
-                  countd += 1
-                }
-              })
-              addArr.push({label: "总计", value: Number(count).toFixed(1)});
-              addArr.push({label: "A1", value: counta1});
-              addArr.push({label: "A2", value: counta2});
-              addArr.push({label: "B1", value: countb1});
-              addArr.push({label: "B1", value: countb2});
-              addArr.push({label: "C2", value: countc2});
-              addArr.push({label: "C3", value: countc3});
-              addArr.push({label: "D", value: countd});
-              $this.add_allscore = addArr;
-              $this.add_list = response.add_word;
-            }
-            if(response.desc_word && response.desc_word.length > 0){
-              var count = 0;
-              var count = 0;
-              var counta1 = 0;
-              var counta2 = 0;
-              var countb1 = 0;
-              var countb2 = 0;
-              var countc2 = 0;
-              var countc3 = 0;
-              var countd = 0;
-              var descArr = [];
-              response.desc_word.forEach(item => {
-                count += item.score;
-                if(item.my_level == "A1"){
-                  counta1 += 1
-                }
-                if(item.my_level == "A2"){
-                  counta2 += 1
-                }
-                if(item.my_level == "B1"){
-                  countb1 += 1
-                }
-                if(item.my_level == "B2"){
-                  countb2 += 1
-                }
-                if(item.my_level == "C2"){
-                  countc2 += 1
-                }
-                if(item.my_level == "C3"){
-                  countc3 += 1
-                }
-                if(item.my_level == "D"){
-                  countd += 1
-                }
-              })
-              descArr.push({label: "总计", value: Number(count).toFixed(1)});
-              descArr.push({label: "A1", value: counta1});
-              descArr.push({label: "A2", value: counta2});
-              descArr.push({label: "B1", value: countb1});
-              descArr.push({label: "B1", value: countb2});
-              descArr.push({label: "C2", value: countc2});
-              descArr.push({label: "C3", value: countc3});
-              descArr.push({label: "D", value: countd});
-              $this.desc_allscore = descArr;
-              $this.desc_list = response.desc_word;
-            }
-          }else{
-            if(response.permitstatus&&response.permitstatus==2){
-              $this.$message({
-                showClose: true,
-                message: "未被分配该页面访问权限",
-                type: 'error',
-                duration:6000
-              });
-              $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
-            }else{
-              $this.$message({
-                showClose: true,
-                message: response.info,
-                type: 'error'
-              });
-              setTimeout(()=>{
-                $this.isSearchResult=false;
-              },1000);
-            }
-          }
-        }
-      });
-    },
-    drawColumnChart(){
-      var $this = this;
-      var chartDom = document.getElementById('columnChart');
-      var myChart = echarts.init(chartDom);
-      var option;
-      var series=[];
-      var color = ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"];
-      var startname = "";
-      var endname = "";
-      $this.timeList.forEach(item => {
-        if(item.num == $this.popSearch.start_num){
-          startname = item.addtime
-        }
-        if(item.num == $this.popSearch.end_num){
-          endname = item.addtime
-        }
-      })
-      series=[{
-        type: 'bar',
-          data: $this.columnData.data_two,
-          barWidth: '28px',
-          name: startname,
-          itemStyle: {
-            color: "#2259e5"
-          },
-          label: {
-              show: true,
-              position: 'top',
-          },
-      },{
-          type: 'bar',
-          data: $this.columnData.data_one,
-          barWidth: '28px',
-          name: endname,
-          itemStyle: {
-            color: "#3ebea7"
-          },
-          label: {
-              show: true,
-              position: 'top',
-          },
-      }];
-      var option;
-      option = {
-        tooltip:{
-            show: true,
-            trigger: "axis",
-            axisPointer: {
-              type: "line", 
-              lineStyle:{
-                color: "#5b8ff9"
-              }
-            },
-            textStyle:{
-                fontSize:12,
-                color: '#666'
-            },
-            formatter(params){
-              let returnData = `<div class="toolDiv">
-                      <div class="tooltitle">${params[0].name}</div>`;
-                      for (let i = 0; i < params.length; i++) {
-                        var pernum = "";
-                        if(i == 0){
-                          if($this.columnData.data_two_num && $this.columnData.data_two_num > 0){
-                            pernum = (params[i].value*100/$this.columnData.data_two_num).toFixed(1)+"%"
-                          }else{
-                            prenum = "0%"
-                          }
-                        }
-                        if(i == 1){
-                          if($this.columnData.data_one_num && $this.columnData.data_one_num > 0){
-                            pernum = (params[i].value*100/$this.columnData.data_one_num).toFixed(1)+"%"
-                          }else{
-                            prenum = "0%"
-                          }
-                        }
-                        returnData += `<div class="bar clearfix" style="margin-top:5px">
-                          <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].borderColor};"></span>
-                          <span>${params[i].seriesName}</span>
-                          <span>：${params[i].value}（${pernum}）</span>
-                          </div>
-                          `;
-                      }
-                  returnData +=`</div>`;
-                  return returnData;
-            }
-          },
-          grid: {
-              top:'40',
-              right:'18',
-              left:'50',
-              bottom:'30'
-          },
-          xAxis:{
-              type: 'category',
-              data: $this.columnData.name,
-              axisTick: {
-                  show: false
-              },
-              axisLine:{
-                  show: true,
-                  lineStyle:{
-                      type: [4, 2],
-                      dashOffset: 3,
-                      color: '#000',
-                      opacity:0.1,
-                      shadowColor: null,
-                      shadowBlur: 0,
-                      shadowOffsetX: 0,
-                      shadowOffsetY: 0,
-                  }
-              },
-              axisLabel: {
-                  color: "#999",
-                  fontSize: "12",
-                  lineHeight: 18,
-              },
-              nameTextStyle:{
-                  lineHeight:18,
-              }
-          },
-          yAxis:{
-              type: 'value',
-              axisTick: {
-                  show: false
-              },
-              axisLabel: {
-                  color: "#999",
-                  fontSize: "12",
-                  lineHeight: 18,
-              },
-              axisLine:{
-                  show: false,
-              },
-              splitLine:{
-                  show: true,
-                  lineStyle:{
-                      type: [4, 2],
-                      dashOffset: 3,
-                      color: '#000',
-                      opacity:0.1,
-                      shadowColor: null,
-                      shadowBlur: 0,
-                      shadowOffsetX: 0,
-                      shadowOffsetY: 0,
-                  }
-              },
-              splitNumber:3,
-              nameTextStyle:{
-                  lineHeight:18,
-              }
-          },
-          animation: false,
-          series:series,
+      if($this.searchData.num){
+        res_end = $this.searchData.num;
+      }else{
+        res_end = Math.max(...$this.timeArr);
       }
-      option && myChart.setOption(option);
-      $this.myChart = myChart;
-    },
-    drawPieChart1(){
-      var $this = this;
-      var chartDom = document.getElementById('pieChart1');
-      var myChart = echarts.init(chartDom);
-      var option;
-      option = {
-        tooltip: {
-          trigger: 'item',
-          formatter(items){
-            var tooltext = `<div class="counttoolTip">
-            <div class="title">${items.name}</div>
-            <div class="bar clearfix">
-              ${items.marker}
-              <span class="name">${items.seriesName}：</span>
-              <span class="num">${items.value}</span>
-            </div>
-            `;
-            return tooltext;
-          }
-        },
-        legend: {
-          show: false
-        },
-        color: ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"],
-        animation: false,
-        series: [
-          {
-            name: "关键词个数",
-            type: 'pie',
-            radius: '75%',
-            data: $this.piedata_one,
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            },
-            label:{
-                normal:{
-                    formatter: function(params){
-                        var str = '';
-                        str = params.name+":"+params.percent.toFixed(1)+"%";
-                        return str
-                    },
-                    position: 'outside',
-                    fontSize: 13,
-                    color: "#666",
-                }
-              },
-          }
-        ]
-      };
-      option && myChart.setOption(option);
-      $this.pieChart1 = myChart;
-    },
-    drawPieChart2(){
-      var $this = this;
-      var chartDom = document.getElementById('pieChart2');
-      var myChart = echarts.init(chartDom);
-      var option;
-      option = {
-        tooltip: {
-          trigger: 'item',
-          formatter(items){
-            var tooltext = `<div class="counttoolTip">
-            <div class="title">${items.name}</div>
-            <div class="bar clearfix">
-              ${items.marker}
-              <span class="name">${items.seriesName}：</span>
-              <span class="num">${items.value}</span>
-            </div>
-            `;
-            return tooltext;
-          }
-        },
-        legend: {
-          show: false
-          // orient: 'vertical',
-          // left: 'left',
-          // top: 'middle',
-          // itemWidth: 8,
-          // itemHeight: 8,
-          // icon: "circle",
-        },
-        color: ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"],
-        animation: false,
-        series: [
-          {
-            name: "关键词个数",
-            type: 'pie',
-            radius: '75%',
-            data: $this.piedata_two,
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            },
-            label:{
-                normal:{
-                    formatter: function(params){
-                        var str = '';
-                        str = params.name+":"+params.percent.toFixed(1)+"%";
-                        return str
-                    },
-                    position: 'outside',
-                    fontSize: 13,
-                    color: "#666",
-                }
-              },
-          }
-        ]
-      };
-      option && myChart.setOption(option);
-      $this.pieChart2 = myChart;
+      res_start = $this.getPrevTime(res_end);
+      $this.$router.push({path:'/Douyin/keywordcount',query:{ id:resId.join(","), start_num:res_start, end_num: res_end}, target: '_blank'});
     },
     getPrevTime(){
       var $this = this;
@@ -2110,42 +1449,16 @@ export default {
       })
       return prev;
     },
-    tabChange(inx){
+    CheckNameIn(){
       var $this = this;
-      $this.nowChart = inx;
-      if($this.myChart){
-        $this.myChart.dispose();
-      }
-      $this.myChart = null;
-      if($this.pieChart1){
-        $this.pieChart1.dispose();
-      }
-      $this.pieChart1 = null;
-      if($this.pieChart2){
-        $this.pieChart2.dispose();
-      }
-      $this.pieChart2 = null;
-      if(inx == 1){
-        setTimeout(() => {
-          $this.drawColumnChart();  
-        }, 500);
-        
-      }else{
-        setTimeout(() => {
-          $this.drawPieChart1();
-          $this.drawPieChart2();
-        }, 500);
-      }
-    },
-    getTimeName(num){
-      var $this = this;
-      var time = "";
-      $this.timeList.forEach(item => {
-        if(item.num == num){
-          time = item.addtime;
+      var isIn = false;
+      var aim = $this.searchData.nickname;
+      $this.scoreList.forEach(item => {
+        if(item.name == aim){
+          isIn = true;
         }
       })
-      return time;
+      return isIn;
     }
   }
 }
@@ -2621,6 +1934,22 @@ export default {
     content: "";
     display: block;
     clear: both;
+  }
+}
+.item_text_rank{
+  span{
+    &.before{
+      width: 30px;
+    }
+    &.after{
+      width: 32px;
+    }
+    &.zero{
+      width:32px;
+      &:before{
+        left: 13px;
+      }
+    }
   }
 }
 .chart_main{
