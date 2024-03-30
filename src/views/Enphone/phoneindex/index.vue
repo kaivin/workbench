@@ -338,6 +338,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
+                                  <el-checkbox v-if="currentKey&&currentKey=='all'" class="search_checkbox" v-model="searchData.once_allot">二次分配询盘</el-checkbox>
                                   <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
                                   <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()" style="margin:5px 10px 5px 0px;float:left;">重置</el-button>
                                    <el-button type="info" plain size="small" style="margin:5px 10px 5px 0px;float:left;" v-on:click="clearCache">清除缓存</el-button>
@@ -881,6 +882,7 @@ export default {
         waitstatus:"1",
         salesownid:"",
         salesdepart_id:"",
+        once_allot: false
       },
       pageSizeList:[20, 50, 100, 500],
       totalDataNum:0,
@@ -1238,6 +1240,7 @@ export default {
         $this.searchData.sort="xuntime";
         $this.searchData.salesownid="";
         $this.searchData.salesdepart_id="";
+        $this.searchData.once_allot = false;
         $this.searchResult();
     },
     // 右侧标题-左侧电话括号小数字
@@ -1606,6 +1609,7 @@ export default {
               pathUrl = "enphone/allCluesDataAction";
               searchData.salesownid=$this.searchData.salesownid;
               searchData.salesdepart_id=$this.searchData.salesdepart_id;
+              searchData.once_allot = $this.searchData.once_allot ? 2 : '';
             }else{
               pathUrl = "enphone/allUnAllotCluesDataAction";
             }
@@ -2293,4 +2297,16 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.search_checkbox{
+  float: left;
+  padding: 0 15px;
+  border-radius: 4px;
+  border: 1px solid #DCDFE6;
+  font-size: 13px;
+  height: 32px;
+  line-height: 32px;
+  color: #606266;
+  margin: 5px 10px 5px 0;
+  box-sizing: border-box;
+}
 </style>

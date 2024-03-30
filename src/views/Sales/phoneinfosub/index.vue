@@ -146,7 +146,18 @@
                                         <span>是否回复<i>*</i>：</span>
                                         <div class="flex-content">
                                             <el-checkbox-group v-model="replystatusArr" @change="replystatusClick">
-                                              <el-checkbox v-for="item in replystatusList" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+                                              <el-checkbox v-for="item in replystatusList" :label="item.value" :key="item.value">
+                                                {{item.label}}
+                                                <template v-if="item.value == 4">
+                                                  <el-popover
+                                                    placement="top-start"
+                                                    trigger="hover"
+                                                    content="选择此项，客服会二次分配此询盘"
+                                                    >
+                                                    <svg-icon slot="reference" class="tips_div" icon-class="tips"></svg-icon>
+                                                  </el-popover>
+                                                </template>
+                                              </el-checkbox>
                                             </el-checkbox-group>                         
                                         </div>                       
                                       </dd>
@@ -290,6 +301,7 @@ export default {
         {label:"未标记",value:1},
         {label:"已回复",value:2},
         {label:"未回复",value:3},
+        {label:"五天内没有回复",value:4},
       ],
       defaultInfo:{},
       formSaveData:{
@@ -768,4 +780,5 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.tips_div{margin-left:3px;}
 </style>
