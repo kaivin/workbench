@@ -175,7 +175,7 @@
                                   </el-option>
                                 </el-select>
                               </div>
-                              <div class="item-search" style="width:100px;">
+                              <div class="item-search" style="width:140px;">
                                 <el-select v-model="searchData.replystatus" size="small" clearable placeholder="回复情况" :class="searchData.replystatus!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in replystatusList"
@@ -372,7 +372,15 @@
                                         <p :style="scope.row.managestatus==1?'color:#d02c34':'color:#1a6fdf'">{{scope.row.Salesmanagestatus}}</p>
                                         <p>{{scope.row.SalesEnnature}}</p>
                                         <p>{{scope.row.SalesEnxunprice}}</p>
-                                        <p :style="scope.row.replystatus==1?'color:#d02c34':'color:#49c96a'">{{scope.row.Salesreplystatus}}</p> 
+                                        <p :style="scope.row.replystatus==1?'color:#d02c34':'color:#49c96a'">
+                                          <template v-if="scope.row.replystatus==4">
+                                            未回复
+                                          </template>
+                                          <template v-else>
+                                            {{scope.row.Salesreplystatus}}  
+                                          </template>
+                                        </p> 
+                                       
                                         <p>{{scope.row.salesremark}}</p>
                                         <p v-if="scope.row.move && (currentStatus=='allotcount' || currentStatus == 'personcount')">{{scope.row.move}}</p>
                                     </div>
@@ -502,6 +510,7 @@ export default {
         {label:"未标记",value:1},
         {label:"已回复",value:2},
         {label:"未回复",value:3},
+        {label:"五天内没有回复",value:4},
       ],
       ennatureList:[],
       enxunpriceList:[],

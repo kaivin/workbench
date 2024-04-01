@@ -161,7 +161,7 @@
                                             </el-checkbox-group>                         
                                         </div>                       
                                       </dd>
-                                      <dd class="flex-wrap">                             
+                                      <!-- <dd class="flex-wrap">                             
                                         <span>延时反馈：</span>
                                         <div class="flex-content">
                                           <el-checkbox v-model="formData.ask_feedback">申请延时反馈</el-checkbox>                     
@@ -177,7 +177,7 @@
                                             v-model="formData.feedback_info">
                                           </el-input>                   
                                         </div>                       
-                                      </dd>
+                                      </dd> -->
                                     </dl>
                                     <dl class="SaleFootMid">
                                       <dt>
@@ -319,8 +319,8 @@ export default {
       replystatusList:[
         {label:"未标记",value:1},
         {label:"已回复",value:2},
-        {label:"未回复",value:3},
-        {label:"五天内没有回复",value:4},
+        // {label:"未回复",value:3},
+        {label:"五天内没有回复或回复后非公司产品",value:4},
       ],
       defaultInfo:{},
       formSaveData:{
@@ -814,8 +814,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tips_div{margin-left:3px;}
-.SaleAddEdit .SaleAddEditMain .SaleAddEditMainItem.SaleAddEditBtn{
-  padding-top: 0;
-  margin-top: -40px;
-}
+// .SaleAddEdit .SaleAddEditMain .SaleAddEditMainItem.SaleAddEditBtn{
+//   padding-top: 0;
+//   margin-top: -40px;
+// }
 </style>
