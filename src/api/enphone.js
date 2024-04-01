@@ -485,3 +485,12 @@ export function exportSearchData(data){
     data
   });
 }
+
+// 英文延时反馈
+export function enphoneFeedback(data){
+  return request({
+    url: "/hxindex/Enphone/askfeedback",
+    method: "POST",
+    data
+  });
+}

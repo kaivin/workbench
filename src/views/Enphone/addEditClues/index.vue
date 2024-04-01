@@ -14,7 +14,7 @@
                   <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
                 </router-link>
               </div>
-              <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')">
+              <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')&&menuButtonPermit.includes('Enphone_askfeedback')">
                   <dd v-bind:class="currentKey&&currentKey=='all'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookall')">
                     <router-link :to="{path:'/Enphone/phoneindex',query:{key:'all'}}">
                       <span>查看所有</span><i>({{linkAll.monthNum}})</i><em>({{linkAll.yestodayNum}})</em><b>({{linkAll.todayNum}})</b>
@@ -23,6 +23,11 @@
                   <dd v-bind:class="currentKey&&currentKey=='unAllot'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookwaitdealall')">
                     <router-link :to="{path:'/Enphone/phoneindex',query:{key:'unAllot'}}">
                       <span>未分配</span><i>({{linkAll.unAllotNum}})</i>
+                    </router-link>
+                  </dd>
+                  <dd v-bind:class="currentKey&&currentKey=='feedback'?'active':''" v-if="menuButtonPermit.includes('Enphone_askfeedback')">
+                    <router-link :to="{path:'/Enphone/phoneindex',query:{key:'feedback'}}">
+                      <span>延时反馈询盘</span>
                     </router-link>
                   </dd>
               </dl>
@@ -50,6 +55,18 @@
                       <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
                     </template>
                     <span class="breadcrumb-link"><b>-</b><span>添加|编辑询盘</span></span>
+                    <span class="feedback" v-if="formData.ask_feedback == 2">
+                      业务员申请了延时反馈
+                      <template v-if="formData.feedback_info">
+                        <el-popover
+                          placement="top-start"
+                          trigger="hover"
+                          :content="formData.feedback_info"
+                          >
+                          <svg-icon slot="reference" class="tips_div" icon-class="tips"></svg-icon>
+                        </el-popover>
+                      </template>
+                    </span>
                   </p>
                   <el-card class="box-card scroll-card" shadow="hover">
                       <ul class="SaleTips" v-if="(ID&&isCustomer)||(ID&&isSalesman)">
@@ -706,6 +723,8 @@ export default {
         enxunprice:"",
         givecustormwarn:"",
         custormselfwarn:"",
+        ask_feedback: 1,
+        feedback_info: ""
       },
       defaultInfo:{},
       priceList:[],
@@ -995,6 +1014,8 @@ export default {
     // 设置询盘初始化信息
     setCluesInfo(){
       var $this = this;
+      $this.formData.ask_feedback = $this.defaultInfo.ask_feedback;
+      $this.formData.feedback_info = $this.defaultInfo.feedback_info;
       $this.formData.id = $this.defaultInfo.id;
       $this.formData.custormname = $this.defaultInfo.custormname;
       $this.formData.custormemail = $this.defaultInfo.custormemail?$this.defaultInfo.custormemail.replace(/,/g,"\n"):'';
@@ -1508,7 +1529,9 @@ export default {
       $this.formData.phoneid = "";
       $this.formData.keying = [];
       $this.formData.enxunprice = "";
-      $this.formData.ennature = "";      
+      $this.formData.ennature = ""; 
+      $this.formData.ask_feedback = 1;
+      $this.formData.feedback_info = "";     
       var phoneList = $this.phoneList;
       phoneList.forEach(function(item,index){
         item.isOn = false;
@@ -1991,4 +2014,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.feedback{
+  margin-left: 30px;
+  color: #ff0000;
+  font-size: 14px;
+  line-height: 18px;
+}
 </style>

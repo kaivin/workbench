@@ -15,7 +15,7 @@
                   <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
                 </router-link>
               </div>
-              <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')">
+              <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')&&menuButtonPermit.includes('Enphone_askfeedback')">
                   <dd v-bind:class="currentKey&&currentKey=='all'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookall')">
                     <router-link :to="{path:'/Enphone/phoneindex',query:{key:'all'}}">
                       <span>查看所有</span><i>({{linkAll.monthNum}})</i><em>({{linkAll.yestodayNum}})</em><b>({{linkAll.todayNum}})</b>
@@ -24,6 +24,11 @@
                   <dd v-bind:class="currentKey&&currentKey=='unAllot'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookwaitdealall')">
                     <router-link :to="{path:'/Enphone/phoneindex',query:{key:'unAllot'}}">
                       <span>未分配</span><i>({{linkAll.unAllotNum}})</i>
+                    </router-link>
+                  </dd>
+                  <dd v-bind:class="currentKey&&currentKey=='feedback'?'active':''" v-if="menuButtonPermit.includes('Enphone_askfeedback')">
+                    <router-link :to="{path:'/Enphone/phoneindex',query:{key:'feedback'}}">
+                      <span>延时反馈询盘</span>
                     </router-link>
                   </dd>
               </dl>

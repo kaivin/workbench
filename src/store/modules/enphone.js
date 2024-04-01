@@ -59,7 +59,8 @@
     inputKeywordList,
     getInquiryItem,
     getInquiryResult,
-    exportSearchData
+    exportSearchData,
+    enphoneFeedback
 
 } from '@/api/enphone'
 
@@ -694,6 +695,16 @@ const actions = {
     getExportSearchData({ commit, state },data) {
         return new Promise((resolve, reject) => {
             exportSearchData(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 英文延时反馈数据
+    getEnphoneFeedbackData({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            enphoneFeedback(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

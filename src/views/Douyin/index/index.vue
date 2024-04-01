@@ -1436,7 +1436,7 @@ export default {
         res_end = Math.max(...$this.timeArr);
       }
       res_start = $this.getPrevTime(res_end);
-      $this.$router.push({path:'/Douyin/keywordcount',query:{ id:resId.join(","), start_num:res_start, end_num: res_end}, target: '_blank'});
+      $this.$router.push({path:'/Douyin/keywordcount',query:{ id:resId.join(","), start_num:res_start, end_num: res_end}});
     },
     getPrevTime(){
       var $this = this;

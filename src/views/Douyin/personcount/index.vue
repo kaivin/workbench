@@ -1285,7 +1285,7 @@ export default {
         id.push(data.cid);
         ids = id;
       }
-      $this.$router.push({path:'/Douyin/keywordcount',query:{id:ids.join(","), start_num:$this.searchData.start_num, end_num: $this.searchData.end_num, target: "_blank"}});
+      $this.$router.push({path:'/Douyin/keywordcount',query:{id:ids.join(","), start_num:$this.searchData.start_num, end_num: $this.searchData.end_num}});
     },
     getDataIds(name){
       var $this = this;

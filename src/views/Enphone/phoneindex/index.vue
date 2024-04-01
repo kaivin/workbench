@@ -14,7 +14,7 @@
               <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
             </router-link>
           </div>
-          <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')">
+          <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')&&menuButtonPermit.includes('Enphone_askfeedback')">
               <dd v-bind:class="currentKey&&currentKey=='all'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookall')">
                 <router-link :to="{page:'Enphone/phoneindex',query:{key:'all'}}">
                   <span>查看所有</span><i>({{linkAll.monthNum}})</i><em>({{linkAll.yestodayNum}})</em><b>({{linkAll.todayNum}})</b>
@@ -23,6 +23,11 @@
               <dd v-bind:class="currentKey&&currentKey=='unAllot'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookwaitdealall')">
                 <router-link :to="{page:'Enphone/phoneindex',query:{key:'unAllot'}}">
                   <span>未分配</span><i>({{linkAll.unAllotNum}})</i>
+                </router-link>
+              </dd>
+              <dd v-bind:class="currentKey&&currentKey=='feedback'?'active':''" v-if="menuButtonPermit.includes('Enphone_askfeedback')">
+                <router-link :to="{page:'Enphone/phoneindex',query:{key:'feedback'}}">
+                  <span>延时反馈询盘</span>
                 </router-link>
               </dd>
           </dl>
@@ -320,7 +325,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.feedback" size="small" clearable placeholder="反馈" :class="searchData.feedback!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-if="currentKey!='feedback'" v-model="searchData.feedback" size="small" clearable placeholder="反馈" :class="searchData.feedback!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in feedbackList"
                                       :key="item.value"
@@ -347,17 +352,19 @@
                                     <div class="clues-infoFl flex-content">
                                           <p>
                                             <span class="item-span-1">当前结果集：共有<strong>{{infoData.totalCount}}</strong>条。</span>
-                                            <span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条，</span>
-                                            <span class="item-span-3">无效：<strong>{{infoData.invalidCount}}</strong>条。</span>
-                                            <span class="item-span-1">总分：<strong>{{infoData.totalScore}}</strong>。</span>
-                                            <br/>
-                                            <span class="item-span-1">本月（自然月） 共有<strong>{{infoData.totalCountMonth}}</strong>条。</span>
-                                            <span class="item-span-2">有效：<strong>{{infoData.effectiveCountMonth}}</strong>条，</span>                  
-                                            <span class="item-span-1">积分：<strong>{{infoData.totalScoreMonth}}</strong>。</span><em>||</em>
-                                            
-                                            <span class="item-span-1">上月（自然月） 共有<strong>{{infoData.totalCountLastMonth}}</strong>条。</span>
-                                            <span class="item-span-2">有效：<strong>{{infoData.effectiveCountLastMonth}}</strong>条，</span>                  
-                                            <span class="item-span-1">积分：<strong>{{infoData.totalScoreLastMonth}}</strong>。</span>
+                                            <template v-if="currentKey!='feedback'">
+                                              <span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条，</span>
+                                              <span class="item-span-3">无效：<strong>{{infoData.invalidCount}}</strong>条。</span>
+                                              <span class="item-span-1">总分：<strong>{{infoData.totalScore}}</strong>。</span>
+                                              <br/>
+                                              <span class="item-span-1">本月（自然月） 共有<strong>{{infoData.totalCountMonth}}</strong>条。</span>
+                                              <span class="item-span-2">有效：<strong>{{infoData.effectiveCountMonth}}</strong>条，</span>                  
+                                              <span class="item-span-1">积分：<strong>{{infoData.totalScoreMonth}}</strong>。</span><em>||</em>
+                                              
+                                              <span class="item-span-1">上月（自然月） 共有<strong>{{infoData.totalCountLastMonth}}</strong>条。</span>
+                                              <span class="item-span-2">有效：<strong>{{infoData.effectiveCountLastMonth}}</strong>条，</span>                  
+                                              <span class="item-span-1">积分：<strong>{{infoData.totalScoreLastMonth}}</strong>。</span>
+                                            </template>
                                           </p>
                                     </div>
                                     <div class="clues-title-btn">
@@ -732,7 +739,7 @@
                                   </template>
                                 </el-table-column>
                                 <el-table-column
-                                  v-if="permitField.includes('remark1')||permitField.includes('remark2')||permitField.includes('remark3')"
+                                  v-if="currentKey!='feedback' && (permitField.includes('remark1')||permitField.includes('remark2')||permitField.includes('remark3'))"
                                   key="d"
                                   prop="searchword"
                                   label="备注"
@@ -746,6 +753,13 @@
                                       <el-input size="small" class="tips-input-4" v-model="scope.row.remark3" v-if="scope.row.writepermit&&permitField.includes('remark3')"></el-input>
                                     </div>
                                   </template>
+                                </el-table-column>
+                                <el-table-column
+                                  prop="feedback_info"
+                                  label="延时反馈原因"
+                                  min-width="90"
+                                  v-if="currentKey&&currentKey=='feedback'"
+                                  >
                                 </el-table-column>
                                 <el-table-column
                                   v-if="menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')"
@@ -994,7 +1008,7 @@ export default {
         todayNum:0,
         yestodayNum:0,
         monthNum:0,
-        unAllotNum:0,
+        unAllotNum:0
       },
       currentKey:null,
       scrollPosition:{
@@ -1150,6 +1164,9 @@ export default {
       if(this.$route.query.key == 'unAllot'){
         type = 'unAllot'
       }
+      if(this.$route.query.key == 'feedback'){
+        type = 'feedback'
+      }
       $this.$store.dispatch('api/clearCacheAction', {cachename:type}).then(response=>{
         if(response){
           if(response.status){
@@ -1282,8 +1299,10 @@ export default {
                   });
                   if($this.$route.query.key=="all"){
                     $this.currentPhone = "查看所有";
-                  }else{
+                  }else if($this.$route.query.key=="unAllot"){
                     $this.currentPhone = "所有未分配";
+                  }else if($this.$route.query.key=="feedback"){
+                    $this.currentPhone = "申请延时反馈的询盘";
                   }
                 }
               }
@@ -1610,8 +1629,13 @@ export default {
               searchData.salesownid=$this.searchData.salesownid;
               searchData.salesdepart_id=$this.searchData.salesdepart_id;
               searchData.once_allot = $this.searchData.once_allot ? 2 : '';
-            }else{
+            }else if($this.currentKey=="unAllot"){
               pathUrl = "enphone/allUnAllotCluesDataAction";
+            }else if($this.currentKey=="feedback"){
+              pathUrl = "enphone/getEnphoneFeedbackData";
+              searchData.salesownid=$this.searchData.salesownid;
+              searchData.salesdepart_id=$this.searchData.salesdepart_id;
+              searchData.once_allot = $this.searchData.once_allot ? 2 : '';
             }
           }
         }

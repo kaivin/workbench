@@ -161,6 +161,23 @@
                                             </el-checkbox-group>                         
                                         </div>                       
                                       </dd>
+                                      <dd class="flex-wrap">                             
+                                        <span>延时反馈：</span>
+                                        <div class="flex-content">
+                                          <el-checkbox v-model="formData.ask_feedback">申请延时反馈</el-checkbox>                     
+                                        </div>                       
+                                      </dd>
+                                      <dd class="flex-wrap">                             
+                                        <span>延时反馈原因：</span>
+                                        <div class="flex-content">
+                                          <el-input
+                                            type="textarea"
+                                            :rows="3"
+                                            placeholder="请输入延时反馈原因"
+                                            v-model="formData.feedback_info">
+                                          </el-input>                   
+                                        </div>                       
+                                      </dd>
                                     </dl>
                                     <dl class="SaleFootMid">
                                       <dt>
@@ -198,19 +215,19 @@
                                     </dl>
                               </div>
                               <div class="SaleAddEditMainItem SaleAddEditBtn">
-                                  <p>备注：(在此填写内容可提醒推广人员，如需提醒请勾选提醒)</p>
-                                  <el-checkbox 
-                                        v-model="formData.custormwarnstatus"
-                                        class="remind"
-                                        clearable>提醒</el-checkbox>
-                                  <el-input
-                                    type="textarea"
-                                    :rows="1"
-                                    placeholder="请输入内容"
-                                    style="display:inline-block; width:300px;"
-                                    v-model="formData.givecustormwarn">
-                                  </el-input>
-                                  <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" v-if="menuButtonPermit.includes('Sales_phoneinfosub')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
+                                <p>备注：(在此填写内容可提醒推广人员，如需提醒请勾选提醒)</p>
+                                <el-checkbox 
+                                      v-model="formData.custormwarnstatus"
+                                      class="remind"
+                                      clearable>提醒</el-checkbox>
+                                <el-input
+                                  type="textarea"
+                                  :rows="1"
+                                  placeholder="请输入内容"
+                                  style="display:inline-block; width:300px;"
+                                  v-model="formData.givecustormwarn">
+                                </el-input>
+                                <el-button type="primary" class="updateBtn" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" size="small" v-if="menuButtonPermit.includes('Sales_phoneinfosub')" @click="saveData"><i class="svg-i planeWhite" ><svg-icon icon-class="planeWhite" /></i>保存</el-button>
                               </div>
                           </div>
                       </div>
@@ -288,6 +305,8 @@ export default {
         custormwarnstatus:false,
         givesaleswarn:'',
         saleswarnstatus:'',
+        ask_feedback: false,
+        feedback_info: '',
       },      
       formValidate:{
         id:null,
@@ -312,7 +331,9 @@ export default {
         ennature: "",
         enxunprice: "",
         givecustormwarn: "",
-        custormwarnstatus:false
+        custormwarnstatus:false,
+        ask_feedback: false,
+        feedback_info: ""
       },      
       isSalesman:false,
       feedback:'未反馈',
@@ -531,6 +552,8 @@ export default {
       $this.formData.givesaleswarn = $this.defaultInfo.givesaleswarn;
       $this.formData.saleswarnstatus = $this.defaultInfo.saleswarnstatus;
       $this.formData.salesremark = $this.defaultInfo.salesremark;
+      $this.formData.ask_feedback = $this.defaultInfo.ask_feedback == 2 ? true : false;
+      $this.formData.feedback_info = $this.defaultInfo.feedback_info;
       $this.compareDate();
       setTimeout(()=>{
         $this.isDisabled=false;
@@ -671,11 +694,21 @@ export default {
       formSaveData.givecustormwarn = $this.formData.givecustormwarn;
       formSaveData.custormwarnstatus = $this.formData.custormwarnstatus==true?'3':'2';
       formSaveData.salesremark = $this.formData.salesremark;
+      formSaveData.ask_feedback = $this.formData.ask_feedback ? 2 : 1;
+      formSaveData.feedback_info = $this.formData.feedback_info;
       return formSaveData;
     },
     // 保存添加/编辑数据
     saveData(){
       var $this = this;
+      if($this.formData.ask_feedback && $this.formData.feedback_info == ""){
+          $this.$message({
+            showClose: true,
+            message: "请填写延时反馈原因",
+            type: 'error'
+          });
+          return false;
+      }
       if(!$this.isDisabled){
         $this.isDisabled=true;
         var formSaveData = $this.initFormData();      
@@ -781,4 +814,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tips_div{margin-left:3px;}
+.SaleAddEdit .SaleAddEditMain .SaleAddEditMainItem.SaleAddEditBtn{
+  padding-top: 0;
+  margin-top: -40px;
+}
 </style>
