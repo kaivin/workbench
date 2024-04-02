@@ -142,17 +142,18 @@
                                                   clearable>已处理</el-checkbox>
                                         </div>                         
                                       </dd>
-                                      <dd class="flex-wrap">                             
-                                        <span>是否回复<i>*</i>：</span>
+                                      <dd class="flex-wrap">                            
+                                        <span>是否回复<i>*</i>：
+                                        </span>
                                         <div class="flex-content">
                                             <el-checkbox-group v-model="replystatusArr" @change="replystatusClick">
-                                              <el-checkbox v-for="item in replystatusList" :label="item.value" :key="item.value">
+                                              <el-checkbox v-for="item in replystatusList" :label="item.value" :key="item.value" :disabled="item.value== 4||item.value==5?formData.is_select==1?false:true:false">
                                                 {{item.label}}
-                                                <template v-if="item.value == 4">
+                                                <template v-if="item.value == 4||item.value ==5">
                                                   <el-popover
                                                     placement="top-start"
                                                     trigger="hover"
-                                                    content="选择此项，客服会二次分配此询盘"
+                                                    content="选择此项，客服会二次分配此询盘。2024.4.2号以后分配的询盘可操作此项"
                                                     >
                                                     <svg-icon slot="reference" class="tips_div" icon-class="tips"></svg-icon>
                                                   </el-popover>
@@ -178,6 +179,17 @@
                                           </el-input>                   
                                         </div>                       
                                       </dd> -->
+                                      <dd class="flex-wrap" v-if="replystatusArr.includes(5)">                             
+                                        <span>客户真实需求<i>*</i>：</span>
+                                        <div class="flex-content">
+                                          <el-input
+                                            type="textarea"
+                                            :rows="3"
+                                            placeholder="请输入客户真实需求"
+                                            v-model="formData.true_ask">
+                                          </el-input>                   
+                                        </div>                       
+                                      </dd>
                                     </dl>
                                     <dl class="SaleFootMid">
                                       <dt>
@@ -307,6 +319,8 @@ export default {
         saleswarnstatus:'',
         ask_feedback: false,
         feedback_info: '',
+        true_ask: '',
+        is_select: ''
       },      
       formValidate:{
         id:null,
@@ -320,7 +334,8 @@ export default {
         {label:"未标记",value:1},
         {label:"已回复",value:2},
         // {label:"未回复",value:3},
-        {label:"五天内没有回复或回复后非公司产品",value:4},
+        {label:"五天内未回复",value:4},
+        {label:"回复后非公司产品",value:5}
       ],
       defaultInfo:{},
       formSaveData:{
@@ -333,7 +348,8 @@ export default {
         givecustormwarn: "",
         custormwarnstatus:false,
         ask_feedback: false,
-        feedback_info: ""
+        feedback_info: "",
+        true_ask: ""
       },      
       isSalesman:false,
       feedback:'未反馈',
@@ -554,6 +570,8 @@ export default {
       $this.formData.salesremark = $this.defaultInfo.salesremark;
       $this.formData.ask_feedback = $this.defaultInfo.ask_feedback == 2 ? true : false;
       $this.formData.feedback_info = $this.defaultInfo.feedback_info;
+      $this.formData.true_ask = $this.defaultInfo.true_ask;
+      $this.formData.is_select = $this.defaultInfo.is_select;
       $this.compareDate();
       setTimeout(()=>{
         $this.isDisabled=false;
@@ -696,6 +714,7 @@ export default {
       formSaveData.salesremark = $this.formData.salesremark;
       formSaveData.ask_feedback = $this.formData.ask_feedback ? 2 : 1;
       formSaveData.feedback_info = $this.formData.feedback_info;
+      formSaveData.true_ask = $this.formData.true_ask;
       return formSaveData;
     },
     // 保存添加/编辑数据
@@ -705,6 +724,14 @@ export default {
           $this.$message({
             showClose: true,
             message: "请填写延时反馈原因",
+            type: 'error'
+          });
+          return false;
+      }
+      if($this.formData.replystatus == 5 && !$this.formData.true_ask){
+          $this.$message({
+            showClose: true,
+            message: "请填写客户真实需求",
             type: 'error'
           });
           return false;
@@ -818,4 +845,14 @@ export default {
 //   padding-top: 0;
 //   margin-top: -40px;
 // }
+.SaleAddEdit .SaleAddEditMain .SaleAddEditMainItem.SaleFoot dl{
+  width: 22.3%;
+  margin-left: 3.6%;
+}
+.SaleAddEdit .SaleAddEditMain .SaleAddEditMainItem.SaleFoot dl:first-child{
+  margin-left: 0
+}
+.SaleAddEdit .SaleAddEditMain .SaleAddEditMainItem.timeArr dl dt span{
+  width: 104px;
+}
 </style>

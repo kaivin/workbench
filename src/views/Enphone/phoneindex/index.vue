@@ -49,13 +49,22 @@
         <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
             <div class="true-height" ref="scrollPane">
                 <div class="EnStatistical" v-if="!phoneID&&!currentKey">
-                    <div class="tips-list" v-if="(defaultData.custormwarntatus==1&&defaultData.custormwarn.length>0)||(defaultData.warningstatus==1&&defaultData.saleswarning.length>0)">
-                          <div class="item-tips" :class="item.type=='custormwarn'?'type-1':'type-2'" v-for="(item,index) in defaultData.custorAndsalesmwarn" v-bind:key="index" v-on:click="jumpEditPage(item.id)">
-                              <i>{{index+1}}</i>
-                              <strong>ID：{{item.id}}</strong>
-                              <span>{{item.warning}}</span>
-                          </div>
-                    </div>
+                  <div class="coll_main" v-if="(defaultData.custormwarntatus==1&&defaultData.custormwarn.length>0)||(defaultData.warningstatus==1&&defaultData.saleswarning.length>0)">
+                    <el-collapse v-model="activeNames01">
+                      <el-collapse-item :title="defaultData.custorAndsalesmwarn.length+'条提醒'" name="11" >
+                        <template slot="title">
+                          <div class="coll_title"><span>消息提醒：</span>有<span class="red">{{defaultData.custorAndsalesmwarn.length}}</span>条待办事项</div>
+                        </template>
+                        <div class="tips-list" >
+                              <div class="item-tips" :class="item.type=='custormwarn'?'type-1':'type-2'" v-for="(item,index) in defaultData.custorAndsalesmwarn" v-bind:key="index" v-on:click="jumpEditPage(item.id)">
+                                  <i>{{index+1}}</i>
+                                  <strong>ID：{{item.id}}</strong>
+                                  <span>{{item.warning}}</span>
+                              </div>
+                        </div>
+                      </el-collapse-item>
+                    </el-collapse>
+                  </div>
                     <el-card class="box-card" shadow="hover">
                           <div slot="header">
                               <div class="EnStatisticalTop" ref="enTopPane">
@@ -118,13 +127,22 @@
                     <el-card class="box-card scroll-card tipsHas" shadow="hover">
                       <div slot="header">
                         <div class="card-header EnphoneCardHeader" ref="headerPane">
-                            <div class="tips-list" ref="tipsPane" v-if="(defaultData.custormwarntatus==1&&defaultData.custormwarn.length>0)||(defaultData.warningstatus==1&&defaultData.saleswarning.length>0)">
-                                  <div class="item-tips" :class="item.type=='custormwarn'?'type-1':'type-2'" v-for="(item,index) in defaultData.custorAndsalesmwarn" v-bind:key="index" v-on:click="jumpEditPage(item.id)">
-                                      <i>{{index+1}}</i>
-                                      <strong>ID：{{item.id}}</strong>
-                                      <span>{{item.warning}}</span>
-                                  </div>
-                            </div>
+                          <div class="coll_main" v-if="(defaultData.custormwarntatus==1&&defaultData.custormwarn.length>0)||(defaultData.warningstatus==1&&defaultData.saleswarning.length>0)">
+                            <el-collapse v-model="activeNames02">
+                              <el-collapse-item :title="defaultData.custorAndsalesmwarn.length+'条提醒'" name="21"  >
+                                <template slot="title">
+                                  <div class="coll_title"><span>消息提醒：</span>有<span class="red">{{defaultData.custorAndsalesmwarn.length}}</span>条待办事项</div>
+                                </template>
+                                <div class="tips-list" ref="tipsPane" >
+                                      <div class="item-tips" :class="item.type=='custormwarn'?'type-1':'type-2'" v-for="(item,index) in defaultData.custorAndsalesmwarn" v-bind:key="index" v-on:click="jumpEditPage(item.id)">
+                                          <i>{{index+1}}</i>
+                                          <strong>ID：{{item.id}}</strong>
+                                          <span>{{item.warning}}</span>
+                                      </div>
+                                </div>
+                              </el-collapse-item>
+                            </el-collapse>
+                          </div>
                             <div class="tipsHasItem">
                                 <h2 class="clues-title">当前信息：{{currentPhone}}</h2>
                                 <div class="search-wrap">
@@ -492,6 +510,7 @@
                                       <p><span class="EnColor05" v-if="scope.row.xunremark&&scope.row.xunremark!=''">询盘：</span>{{scope.row.xunremark}}</p>
                                       <p v-if="permitField.includes('custormremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.custormremark&&scope.row.custormremark!=''">客服：</span>{{scope.row.custormremark}}</p>
                                       <p v-if="permitField.includes('salesremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.salesremark&&scope.row.salesremark!=''">业务员：</span>{{scope.row.salesremark}}</p>
+                                      <p v-if="permitField.includes('salesremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.true_ask&&scope.row.true_ask!=''">真实需求：</span>{{scope.row.true_ask}}</p>
                                     </div>
                                   </template>
                                 </el-table-column>
@@ -689,6 +708,7 @@
                                       <p><span class="EnColor05" v-if="scope.row.xunremark&&scope.row.xunremark!=''">询盘：</span>{{scope.row.xunremark}}</p>
                                       <p v-if="permitField.includes('custormremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.custormremark&&scope.row.custormremark!=''">客服：</span>{{scope.row.custormremark}}</p>
                                       <p v-if="permitField.includes('salesremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.salesremark&&scope.row.salesremark!=''">业务员：</span>{{scope.row.salesremark}}</p>
+                                      <p v-if="permitField.includes('salesremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.true_ask&&scope.row.true_ask!=''">真实需求：</span>{{scope.row.true_ask}}</p>
                                     </div>
                                   </template>
                                 </el-table-column>
@@ -1037,6 +1057,8 @@ export default {
       },
       brandID:null,
       isSearchResult:false,
+      activeNames01:"11",
+      activeNames02:"21",
     }
   },
   computed: {
@@ -1323,7 +1345,7 @@ export default {
                       custormwarn.push(Obj);
                   });
               }
-              if(response.saleswarning.length>0){
+              if(response.saleswarning && response.saleswarning.length>0){
                   response.saleswarning.forEach(function(item){
                       var Obj={
                         id:'0',
@@ -1494,7 +1516,7 @@ export default {
                     custormwarn.push(Obj);
                 });
             }
-            if(response.saleswarning.length>0){
+            if(response.saleswarning && response.saleswarning.length>0){
                 response.saleswarning.forEach(function(item){
                     var Obj={
                       id:'0',
@@ -2332,5 +2354,42 @@ export default {
   color: #606266;
   margin: 5px 10px 5px 0;
   box-sizing: border-box;
+}
+.coll_main{
+  margin-bottom: 10px;
+  .coll_title{
+    padding-left: 20px;
+    color: #705321;
+    font-size: 14px;
+    span{
+      font-weight: bold;
+    }
+    .red{
+      color: #f73a3e;
+      margin-left: 2px;
+      margin-right: 2px;
+    }
+  }
+  .header-icon{
+    font-size: 16px;
+    margin-left: 5px;
+  }
+}
+.EnphoneCard .tips-list{
+  margin-bottom: 0;
+}
+</style>
+<style>
+.el-collapse-item__content{
+  padding: 20px;
+}
+
+.el-collapse-item__header{
+  background: #fdf8e4;
+  border: 1px solid #faebcc;
+  font-size: 14px;
+}
+.el-collapse-item__arrow{
+  margin-right: 10px;
 }
 </style>

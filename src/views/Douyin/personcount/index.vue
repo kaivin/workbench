@@ -31,6 +31,7 @@
                 </el-select>
                 <el-button class="search_btn" type="primary" size="small" :disabled="isSearchData" icon="el-icon-search" @click="getDouyinCountData">查询</el-button>
                 <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+                <el-button type="warning" size="small" :disabled="isSearchData" class="exportBtn derived" @click="showExportDialog"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出数据</el-button>
               </div>
             </div>
           </div>
@@ -107,14 +108,20 @@
       </div>
     </div>
     <el-backtop target=".scroll-panel"></el-backtop>
+    <ExportModal ref="ExportModalRef" @exportSuccess="exportDone"></ExportModal>
   </div>
 </template>
 <script>
 import {mapGetters} from 'vuex';
 import * as echarts from 'echarts';
 import {sortByAsc} from "@/utils/index"
+import ExportModal from '@/components/Excel/exportModal.vue'
+import { jsonToSheetXlsx } from '@/components/Excel/Export2Excel'
 export default {
   name: 'Douyin_personcount',
+  components: {
+    ExportModal
+  },
   data() {
     return {
         menuButtonPermit:[],         //网页权限字段
@@ -1297,6 +1304,54 @@ export default {
       })
       return ids;
     },
+    showExportDialog() {
+      var $this = this;
+      var fieldList = [];
+      $this.tableHeader.forEach(item => {
+        var obj = {};
+        obj.value = item.label;
+        if(item.hasChildren == 1){
+          obj.key = item.children[0].prop;
+        }else{
+          obj.key = item.prop;
+        }
+        fieldList.push(obj);
+      })
+      $this.$refs.ExportModalRef.showDialog({ fieldList: fieldList, hasSelected: false, hasData: false })
+    },
+    exportDone(obj) {
+      var $this = this;
+      const filename = obj.filename
+      const customData = []
+      let header = null
+      const bookType = obj.fileType
+      const headerSort = obj.sort
+      if (obj.headerType === 'custom') {
+        header = obj.header
+      }
+      var resData = $this.scorelist;
+      resData.forEach((item) => {
+        console.log(item)
+        console.log(headerSort)
+        const itemObj = {}
+        headerSort.forEach((current) => {
+          itemObj[current] = item[current]
+        })
+        customData.push(itemObj)
+      })
+      jsonToSheetXlsx({
+        data: customData,
+        header: header,
+        filename: filename,
+        json2sheetOpts: {
+          // 指定顺序
+          header: headerSort
+        },
+        write2excelOpts: {
+          bookType
+        }
+      })
+    },
   },
 
 }
@@ -1593,6 +1648,13 @@ export default {
 .dy_red{
     color: #f2302f;
   }
+.exportBtn{
+  background-color: #f9a500;
+  &:hover,&:focus{
+    background: #ffba00;
+    border-color: #ffba00;
+  }
+}
 </style>
 <style lang="scss">
 .userCount .el-table__cell{

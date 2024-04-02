@@ -85,16 +85,26 @@
                   </p>
                   <el-card class="box-card scroll-card SaleCardFlFrTable tipsHas" shadow="hover">
                     <div slot="header">  
-                      <div class="card-header" ref="headerPane">                      
-                        <div class="tips-list" v-if="defaultData.warningcount>0" ref="tipsPane">
-                              <div class="item-tips type-1" v-for="(item,index) in defaultData.warning" v-bind:key="index">
-                                  <router-link :to="{path:'/Sales/phoneinfosub',query:{ID:item.id, status: '1'}}">
-                                    <i>{{index+1}}</i>
-                                    <strong>ID：{{item.id}}</strong>
-                                    <span>{{item.givesaleswarn}}</span>
-                                  </router-link>
+                      <div class="card-header" ref="headerPane">
+                        <div class="coll_main" v-if="defaultData.warningcount>0">
+                          <el-collapse v-model="activeNames"  >
+                            <el-collapse-item :title="defaultData.warningcount+'条提醒'" name="1">
+                              <template slot="title">
+                                <div class="coll_title"><span>消息提醒：</span>有<span class="red">{{defaultData.warningcount}}</span>条待办事项</div>
+                              </template>
+                              <div class="tips-list" ref="tipsPane">
+                                <div class="item-tips type-1" v-for="(item,index) in defaultData.warning" v-bind:key="index">
+                                    <router-link :to="{path:'/Sales/phoneinfosub',query:{ID:item.id, status: '1'}}">
+                                      <i>{{index+1}}</i>
+                                      <strong>ID：{{item.id}}</strong>
+                                      <span>{{item.givesaleswarn}}</span>
+                                    </router-link>
+                                </div>
                               </div>
-                        </div>
+                            </el-collapse-item>
+                          </el-collapse>
+                        </div>                    
+                        
                         <div class="tipsHasItem">
                             <div class="search-wrap">
                               <div class="item-search" style="width:130px;">
@@ -175,7 +185,7 @@
                                   </el-option>
                                 </el-select>
                               </div>
-                              <div class="item-search" style="width:140px;">
+                              <div class="item-search" style="width:150px;">
                                 <el-select v-model="searchData.replystatus" size="small" clearable placeholder="回复情况" :class="searchData.replystatus!=''?'el-xzstate':''">
                                   <el-option
                                       v-for="item in replystatusList"
@@ -396,7 +406,7 @@
                                         <p><span>询盘：</span>{{scope.row.weekday}}</p>
                                         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{scope.row.xuntime}}</p>
                                         <p><span>添加：</span>{{scope.row.xuntime}}</p>
-                                        <p><span>分配：</span>{{scope.row.addtime}}</p>
+                                        <p><span>分配：</span>{{scope.row.allottime}}</p>
                                         <p><span>更新：</span>{{scope.row.updatetime}}</p>
                                     </div>
                                 </template>
@@ -442,6 +452,23 @@
       </div>
     </div>
     <el-backtop target=".scroll-panel"></el-backtop>
+    <div :class="isShow?isOpen?'notice_left notice_pop notice_active':'notice_pop notice_active':'notice_pop'">
+      <div class="n_head">
+        <div class="title">分配超过五天 待标记询盘提醒</div>
+        <div class="del" @click="hideNotice"><i class="el-icon-close"></i></div>
+      </div>
+      <div class="n_body">
+        <ul class="n_ul tips-list">
+          <li class="item-tips type-1" v-for="(item,index) in defaultData.rely_warn" v-bind:key="index">
+              <router-link :to="{path:'/Sales/phoneinfosub',query:{ID:item.id, status: '1'}}">
+                <i>{{index+1}}</i>
+                <strong>ID：{{item.id}}</strong>
+                <span>分配超过五天待标记询盘</span>
+              </router-link>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -510,7 +537,8 @@ export default {
         {label:"未标记",value:1},
         {label:"已回复",value:2},
         {label:"未回复",value:3},
-        {label:"五天内没有回复",value:4},
+        {label:"五天内未回复",value:4},
+        {label:"回复后非公司产品",value:5}
       ],
       ennatureList:[],
       enxunpriceList:[],
@@ -567,6 +595,9 @@ export default {
         clientHeight:0,
       },
       isDisabled:false,
+      activeNames:"1",
+      noticeShow: true,
+      isShow: false,
     }
   },
   computed: {
@@ -898,8 +929,14 @@ export default {
           defaultData.hassaycount=response.hassaycount;
           defaultData.warning=response.warning;
           defaultData.warningcount=response.warningcount;
+          defaultData.rely_warn=response.rely_warn;
           $this.defaultData = defaultData;         
           $this.searchInit();
+          if(response.rely_warn && response.rely_warn.length > 0){
+            setTimeout(() => {
+              $this.isShow = true;
+            }, 1000);
+          }
         }
       });
     },    
@@ -1541,9 +1578,124 @@ export default {
       $this.scrollPosition.isMouseDown = false;
       $this.scrollPosition.startPageX = 0;
       $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
+    },
+    hideNotice(){
+      var $this = this;
+      $this.isShow = false;
     }
   }
 }
 </script>
 <style lang="scss" scoped>
+.coll_main{
+  margin-bottom: 10px;
+  border-radius: 8px;
+  overflow: hidden;
+  .coll_title{
+    padding-left: 20px;
+    color: #705321;
+    font-size: 14px;
+    span{
+      font-weight: bold;
+    }
+    .red{
+      color: #f73a3e;
+      margin-left: 2px;
+      margin-right: 2px;
+    }
+  }
+  .header-icon{
+    font-size: 16px;
+    margin-left: 5px;
+  }
+}
+.EnphoneCard .tips-list{
+  margin-bottom: 0;
+}
+.notice_pop{
+  position:fixed;
+  bottom: -600px;
+  left: 66px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #9f9f9f;
+  z-index: 333;
+  width: 340px;
+  overflow: hidden;
+  transition: all 0.6s ease;
+  .n_head{
+    padding: 10px 15px;
+    color: #fff;
+    background-color: #0970ff;
+    .title{
+      float: left;
+      font-size: 14px;
+    }
+    .del{
+      float: right;
+      cursor: pointer;
+    }
+    &:after{
+      content: "";
+      display: block;
+      clear: both;
+    }
+  }
+  .n_body{
+    background-color: #fff;
+    padding: 20px 15px;
+  }
+  .tips-list .item-tips {
+    line-height: 16px;
+    text-align: left;
+    color: #333333;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .tips-list .item-tips+.item-tips{
+    margin-top: 16px;
+  }
+  .tips-list .item-tips i {
+    font-size: 13px;
+    font-weight: bold;
+    padding-left: 3px;
+    padding-right: 3px;
+    min-width: 22px;
+    height: 16px;
+    text-align: center;
+    line-height: 16px;
+    display: inline-block;
+    border-radius: 4px;
+    color: #fff;
+    font-style: normal;
+    background: #e42c35;
+  }
+  .tips-list .item-tips strong {
+    display: inline-block;
+    border-right: 1px solid #fdac32;
+    padding-right: 10px;
+    margin-right: 10px;
+    padding-left: 10px;
+  }
+}
+.notice_active{
+  bottom: 50px;
+}
+.notice_left{
+  left: 226px;
+}
+
+</style>
+<style>
+.el-collapse-item__content{
+  padding: 20px;
+}
+
+.el-collapse-item__header{
+  background: #fdf8e4;
+  border: 1px solid #faebcc;
+  font-size: 14px;
+}
+.el-collapse-item__arrow{
+  margin-right: 10px;
+}
 </style>

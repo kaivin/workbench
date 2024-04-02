@@ -71,7 +71,7 @@
                 <div class="item-search">
                   <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                   <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
-                  <el-button type="primary" size="small" class="derived" @click="showExportDialog"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                  <el-button type="warning" size="small" class="exportBtn derived" @click="showExportDialog"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出数据</el-button>
                   <el-popover
                     placement="top-start"
                     width="228"
@@ -1975,6 +1975,13 @@ export default {
   margin-left: 10px;
   font-size: 24px;
   color: #b4b4b4;
+}
+.exportBtn{
+  background-color: #f9a500;
+  &:hover,&:focus{
+    background: #ffba00;
+    border-color: #ffba00;
+  }
 }
 </style>
 <style lang="scss" > 
