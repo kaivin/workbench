@@ -29,7 +29,7 @@
                           :value="item.num">
                       </el-option>
                     </el-select>
-                    <el-button class="search_btn" type="primary" size="small" icon="el-icon-search" :disabled="isPopSearch" @click="getColumnRes">查询</el-button>
+                    <el-button class="search_btn" type="primary" size="small" icon="el-icon-search" :disabled="isPopSearch" @click="getSearchRes">查询</el-button>
                 </div>
               </div>
               <div class="card-content" ref="tableContent">
@@ -41,7 +41,7 @@
                   <span class="account_name">所有账号</span>
                 </div>
                 <div class="search_body">
-                  <div class="seach_total">
+                  <div class="seach_total"  :class="showXun ? 'total_xun':''">
                     <el-popover
                       placement="top-start"
                       width="228"
@@ -58,7 +58,7 @@
                       </template>。
                     </p>
                     <p class="tab_p" v-if="activeName=='third'">
-                      减少的积分总计{{desc_allscore}}分，<template v-for="item,index in columnData.data_descCount">
+                      减少的积分总计{{desc_allscore}}分<template v-for="item,index in columnData.data_descCount">
                         ，<template v-if="index == 0">其中</template>{{item.label}}为<span class="dy_red"> {{item.value}} </span>个
                       </template>。
                     </p>
@@ -66,11 +66,62 @@
                     <el-button v-if="activeName=='third'" type="primary" size="small" class="derived" @click="showExportDialog('desc')"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出减少的词</el-button>
                   </div>
                   <el-tabs v-model="activeName" type="card" @tab-click="tabClick">
+                    <el-tab-pane label="积分趋势" name="forth">
+                      <div class="search_col">
+                        <div class="search" v-if="isPopSearch"><p>请稍候...</p></div>
+                        <div id="scoreChart"></div>
+                      </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="询盘趋势" name="fifth" v-if="showXun">
+                      <div class="search_col">
+                        <div class="search" v-if="isPopSearch"><p>请稍候...</p></div>
+                        <div class="search_tab" v-else>
+                          <div class="item-change">
+                            <div class="item-font" :class="nowChart == 1?'active':''" @click="tabChange(1)">月询盘统计</div>
+                            <div class="item-font" :class="nowChart == 2?'active':''" @click="tabChange(2)">阶段询盘统计</div>
+                          </div>
+                          <div class="search_dw" v-if="nowChart == 1">
+                            <el-popover
+                              placement="right"
+                              content="1号询盘：上个月16号到上个月月底的询盘数；15号询盘：本月1号到15号的询盘数。"
+                              trigger="hover">
+                              <svg-icon class="tips_div tips_div2" slot="reference" icon-class="tips"></svg-icon>
+                            </el-popover>  
+                          </div>
+                        </div>
+                        <div class="search_column" v-if="nowChart == 1">
+                          <div id="xunChart"></div>
+                        </div>
+                        <div class="search_column" v-if="nowChart == 2">
+                          <div id="xunChart2"></div>
+                        </div>
+                      </div>
+                    </el-tab-pane>
                     <el-tab-pane label="关键词等级统计" name="first">
                       <div class="search_col">
                         <div class="search" v-if="isPopSearch"><p>请稍候...</p></div>
+                        <div class="search_tab" v-if="false">
+                          <div class="item-change">
+                            <div class="item-font" :class="nowChart == 1?'active':''" @click="tabChange(1)">排行</div>
+                            <div class="item-font" :class="nowChart == 2?'active':''" @click="tabChange(2)">占比</div>
+                          </div>
+                        </div>
                         <div class="search_column">
                           <div id="columnChart"></div>
+                        </div>
+                        <div class="search_pie" v-if="nowChart == 2">
+                          <div class="pie_item">
+                            <div id="pieChart1"></div>
+                            <p class="pie_title" v-if="!isPopSearch">增加的积分占比</p>
+                          </div>
+                          <div class="pie_item">
+                            <div id="pieChart2"></div>
+                            <p class="pie_title" v-if="!isPopSearch">减少的积分占比</p>
+                          </div>
+                          <div class="pie_item">
+                            <div id="pieChart3"></div>
+                            <p class="pie_title" v-if="!isPopSearch">改变的积分占比</p>
+                          </div>
                         </div>
                       </div>
                     </el-tab-pane>
@@ -316,7 +367,7 @@
           end_num: ""
         },
         isPopSearch: false,
-        activeName: "first",
+        activeName: "forth",
         stageData: [
             {
               stage: "A1",
@@ -362,6 +413,19 @@
         groupList: [],
         add_allscore: 0,
         desc_allscore: 0,
+        lineChart: null,
+        xundata: [],
+        xundata2: [],
+        pieChart1: null,
+        pieChart2: null,
+        pieChart3: null,
+        scoreChart:null,
+        scoreData: [],
+        isAccountSearch: false,
+        isScoreSearch: false,
+        showXun: false,
+        xunChart: false,
+        xunChart2: false,
       }
     },
     computed: {
@@ -552,8 +616,13 @@
             if($this.$route.query.end_num){
               $this.popSearch.end_num = Number($this.$route.query.end_num);
             }
+            if($this.$route.query.isall == "1"){
+              $this.showXun = true;
+            }else{
+              $this.showXun = false;
+            }
             $this.getDepartList();
-            $this.getColumnRes();
+            $this.getDouyinCount();
           }else{
             $this.$message({
               showClose: true,
@@ -783,6 +852,74 @@
         $this.scrollPosition.startPageX = 0;
         $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
       },
+      getDouyinCount(){
+        var $this = this;
+        $this.isPopSearch = true;
+        var formData = {};
+        formData.ids = $this.popSearch.ids;
+        formData.start_num = $this.popSearch.start_num;
+        formData.end_num = $this.popSearch.end_num;
+        $this.$store.dispatch('douyin/douyinCountInfo', formData).then(response=>{
+          if(response){
+            if(response.status){
+              $this.isPopSearch = false;
+              $this.isScoreSearch = true;
+              $this.xundata = response.xundata&&response.xundata.length > 0 ? response.xundata : [];
+              var xundata2 = [];
+              if(response.data && response.data.length > 0){
+                var resData = []
+                response.data.forEach(item => {
+                  var obj = {};
+                  obj.addtime = item.addtime;
+                  obj.score = item.user_data;
+                  obj.number_one = item.one_number;
+                  obj.number_two = item.two_number;
+                  obj.number_three = item.three_number;
+                  obj.number_four = item.four_number;
+                  obj.num = item.num;
+                  resData.push(obj);
+                  var xunobj = {};
+                  xunobj.addtime = item.addtime;
+                  xunobj.number = item.xunnumber;
+                  xundata2.push(xunobj);
+                })
+                $this.scoreData = resData.sort(sortByAsc("num"));
+                $this.xundata2 = xundata2.sort(sortByAsc("num"));
+                setTimeout(() => {
+                  if($this.activeName == "fifth"){
+                    if($this.nowChart == 1){
+                      $this.drawXunChart();
+                    }else{
+                      $this.drawXunChart2();
+                    }
+                  }else if($this.activeName == "forth"){
+                    $this.drawScoreChart();
+                  }
+                }, 500);
+              }
+            }else{
+              if(response.permitstatus&&response.permitstatus==2){
+                $this.$message({
+                  showClose: true,
+                  message: "未被分配该页面访问权限",
+                  type: 'error',
+                  duration:6000
+                });
+                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+              }else{
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isPopSearch=false;
+                },1000);
+              }
+            }
+          }
+        });
+      },
       getColumnRes(){
         var $this = this;
         $this.isPopSearch = true;
@@ -794,6 +931,7 @@
           if(response){
             $this.columnData = {};
             if(response.status){
+              $this.isAccountSearch = true;
               $this.isPopSearch = false;
               $this.add_allscore = response.totalscore_add;
               $this.desc_allscore = response.totalscore_desc;
@@ -807,6 +945,9 @@
               var data_desc_num = 0;
               var add_allscore = 0;
               var desc_allscore = 0;
+              var pie_addList = [];
+              var pie_descList = [];
+              var pie_totalList = [];
               if(response.add_word && response.add_word.length > 0){
                 var filterAddList = [];
                 // 统计每个等级个数
@@ -827,6 +968,7 @@
                 var scorec3 = 0;
                 var scored = 0;
                 var addScoreArr = [];
+                var pieAddScore = [];
                 response.add_word.forEach(item => {
                   if(!item.addscore == 0){
                     filterAddList.push(item);
@@ -834,7 +976,6 @@
                     if(item.my_level == "A1"){
                       counta1 += 1;
                       scorea1 += item.addscore;
-                      console.log(item.score)
                     }else if(item.my_level == "A2"){
                       counta2 += 1;
                       scorea2 += item.addscore;
@@ -870,9 +1011,17 @@
                 addScoreArr.push(scorec2.toFixed(1));
                 addScoreArr.push(scorec3.toFixed(1));
                 addScoreArr.push(scored.toFixed(1));
+                pieAddScore.push({name: "A1", value: scorea1.toFixed(1)});
+                pieAddScore.push({name: "A2", value: scorea2.toFixed(1)});
+                pieAddScore.push({name: "B1", value: scoreb1.toFixed(1)});
+                pieAddScore.push({name: "B2", value: scoreb2.toFixed(1)});
+                pieAddScore.push({name: "C2", value: scorec2.toFixed(1)});
+                pieAddScore.push({name: "C3", value: scorec3.toFixed(1)});
+                pieAddScore.push({name: "D", value: scored.toFixed(1)});
                 data_addCount = addArr;
                 data_add_num = counta1+counta2+countb1+countb2+countc2+countc3+countd;
                 data_addList = addScoreArr;
+                pie_addList = pieAddScore;
                 $this.add_list = filterAddList;
               }
               if(response.desc_word && response.desc_word.length > 0){
@@ -895,6 +1044,7 @@
                 var scorec3 = 0;
                 var scored = 0;
                 var descScoreArr = [];
+                var pieDescScore = [];
                 response.desc_word.forEach(item => {
                   if(!item.descscore == 0){
                     filterDescList.push(item);
@@ -937,26 +1087,45 @@
                 descScoreArr.push(-scorec2.toFixed(1));
                 descScoreArr.push(-scorec3.toFixed(1));
                 descScoreArr.push(-scored.toFixed(1));
+                pieDescScore.push({name: "A1", value: scorea1.toFixed(1)});
+                pieDescScore.push({name: "A2", value: scorea2.toFixed(1)});
+                pieDescScore.push({name: "B1", value: scoreb1.toFixed(1)});
+                pieDescScore.push({name: "B2", value: scoreb2.toFixed(1)});
+                pieDescScore.push({name: "C2", value: scorec2.toFixed(1)});
+                pieDescScore.push({name: "C3", value: scorec3.toFixed(1)});
+                pieDescScore.push({name: "D", value: scored.toFixed(1)});
                 data_descCount = descArr;
                 data_desc_num = counta1+counta2+countb1+countb2+countc2+countc3+countd;
                 data_descList = descScoreArr;
+                pie_descList = pieDescScore;
                 $this.desc_list = filterDescList;
               }
+              var stage = ["A1","A2","B1","B2","C2","C3","D"];
               // 计算总数
               data_addList.forEach((item,index) => {
                 var res = Number(item)+Number(data_descList[index]);
                 data_totalList.push(Number(res).toFixed(1));
+                pie_totalList.push({name: stage[index], value: Number(res).toFixed(1)});
               })
               resObj.data_addList = data_addList;
               resObj.data_descList = data_descList;
               resObj.data_totalList = data_totalList;
+              resObj.pie_addList = pie_addList;
+              resObj.pie_descList = pie_descList;
+              resObj.pie_totalList = pie_totalList;
               resObj.data_addCount = data_addCount;
               resObj.data_descCount = data_descCount;
               resObj.data_add_num = data_add_num;
               resObj.data_desc_num = data_desc_num;
-              resObj.name = ["A1","A2","B1","B2","C2","C3","D"];
+              resObj.name = stage;
               $this.columnData = resObj;
-              $this.drawColumnChart();
+              if($this.activeName == "first"){
+                $this.drawColumnChart();
+              }else{
+                // $this.drawPieChart1();
+                // $this.drawPieChart2();
+                // $this.drawPieChart3();
+              }
             }else{
               if(response.permitstatus&&response.permitstatus==2){
                 $this.$message({
@@ -1077,7 +1246,7 @@
             }
           },
           grid: {
-              top:'40',
+              top:'35',
               right:'18',
               left:'50',
               bottom:'30'
@@ -1149,6 +1318,335 @@
         option && myChart.setOption(option);
         $this.myChart = myChart;
       },
+      drawPieChart1(){
+        var $this = this;
+        var chartDom = document.getElementById('pieChart1');
+        var myChart = echarts.init(chartDom);
+        var option;
+        option = {
+          tooltip: {
+            trigger: 'item',
+            formatter(items){
+              var tooltext = `<div class="counttoolTip">
+              <div class="title">${items.name}</div>
+              <div class="bar clearfix">
+                ${items.marker}
+                <span class="name">${items.seriesName}：</span>
+                <span class="num">${items.value}</span>
+              </div>
+              `;
+              return tooltext;
+            }
+          },
+          legend: {
+            show: false,
+            orient: 'vertical',
+            right: 'right',
+            top: 'middle',
+            itemWidth: 8,
+            itemHeight: 8,
+            icon: "circle",
+          },
+          color: ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"],
+          animation: false,
+          series: [
+            {
+              name: '增加的积分',
+              type: 'pie',
+              radius: '60%',
+              data: $this.columnData.pie_addList,
+              emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              },
+              label:{
+                  normal:{
+                      formatter: function(params){
+                          var str = '';
+                          str = params.name+":"+params.percent.toFixed(1)+"%";
+                          return str
+                      },
+                      position: 'outside',
+                      fontSize: 13,
+                      color: "#666",
+                  }
+                },
+            }
+          ]
+        };
+        option && myChart.setOption(option);
+        $this.pieChart1 = myChart;
+      },
+      drawPieChart2(){
+        var $this = this;
+        var chartDom = document.getElementById('pieChart2');
+        var myChart = echarts.init(chartDom);
+        var option;
+        option = {
+          tooltip: {
+            trigger: 'item',
+            formatter(items){
+              var tooltext = `<div class="counttoolTip">
+              <div class="title">${items.name}</div>
+              <div class="bar clearfix">
+                ${items.marker}
+                <span class="name">${items.seriesName}：</span>
+                <span class="num">${items.value}</span>
+              </div>
+              `;
+              return tooltext;
+            }
+          },
+          legend: {
+            show: false,
+            orient: 'vertical',
+            right: 'right',
+            top: 'middle',
+            itemWidth: 8,
+            itemHeight: 8,
+            icon: "circle",
+          },
+          color: ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"],
+          animation: false,
+          series: [
+            {
+              name: '减少的积分',
+              type: 'pie',
+              radius: '60%',
+              data: $this.columnData.pie_descList,
+              emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              },
+              label:{
+                  normal:{
+                      formatter: function(params){
+                          var str = '';
+                          str = params.name+":"+params.percent.toFixed(1)+"%";
+                          return str
+                      },
+                      position: 'outside',
+                      fontSize: 13,
+                      color: "#666",
+                  }
+                },
+            }
+          ]
+        };
+        option && myChart.setOption(option);
+        $this.pieChart2 = myChart;
+      },
+      drawPieChart3(){
+        var $this = this;
+        var chartDom = document.getElementById('pieChart3');
+        var myChart = echarts.init(chartDom);
+        var option;
+        let changeData = $this.columnData.pie_totalList.map((item) => {
+          let changeItem = {};
+          $this.deepCopyData(changeItem, item);
+          return changeItem;
+        });
+        changeData.map((item) => {
+          for (let key in item) {
+            if (item[key] < 0) {
+              item[key] = JSON.stringify(Math.abs(item[key]));
+            }
+          }
+        });
+        option = {
+          tooltip: {
+            trigger: 'item',
+            formatter(items){
+              var value = "";
+              if ($this.columnData.pie_totalList[items.dataIndex].value < 0) {
+                value = "-"+items.value;
+              }else{
+                value = items.value;
+              }
+              var tooltext = `<div class="counttoolTip">
+              <div class="title">${items.name}</div>
+              <div class="bar clearfix">
+                ${items.marker}
+                <span class="name">${items.seriesName}：</span>
+                <span class="num">${value}</span>
+              </div>
+              `;
+              return tooltext;
+            }
+          },
+          legend: {
+            show: false,
+            orient: 'vertical',
+            right: 'right',
+            top: 'middle',
+            itemWidth: 8,
+            itemHeight: 8,
+            icon: "circle",
+          },
+          color: ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"],
+          animation: false,
+          series: [
+            {
+              name: '改变的积分',
+              type: 'pie',
+              radius: '60%',
+              data: changeData,
+              emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              },
+              label:{
+                  normal:{
+                      formatter: function(params){
+                          var str = '';
+                          if ($this.columnData.pie_totalList[params.dataIndex].value < 0) {
+                            str = params.name+":-"+params.percent.toFixed(1)+"%";
+                          }else{
+                            str = params.name+":"+params.percent.toFixed(1)+"%";
+                          }
+                          return str
+                      },
+                      position: 'outside',
+                      fontSize: 13,
+                      color: "#666",
+                  }
+                },
+            }
+          ]
+        };
+        option && myChart.setOption(option);
+        $this.pieChart3 = myChart;
+      },
+      deepCopyData(newobj, oldobj){
+        for (let k in oldobj) {
+          let item = oldobj[k];
+          if (item instanceof Array) {
+            newobj[k] = [];
+            deepCopy(newobj[k], item);
+          } else if (item instanceof Object) {
+            newobj[k] = {};
+            deepCopy(newobj[k], item);
+          } else {
+            newobj[k] = item;
+          }
+        }
+      },
+      // 曲线图
+      drawScoreChart(){
+        var $this = this;
+        var chartDom = document.getElementById('scoreChart');
+        var myChart = echarts.init(chartDom);
+        var option;
+        option = {
+          grid:{
+            left: '50',
+            top:'35',
+            right:'18',
+            bottom: '30'
+          },
+          tooltip:{
+            show: true,
+            trigger: "axis",
+            axisPointer: {
+              type: "line", 
+              lineStyle:{
+                color: "#5b8ff9"
+              }
+            },
+            textStyle:{
+                fontSize:12,
+                color: '#666'
+            },
+            formatter(params){
+              var res = `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                      <span>${params[0].seriesName}：</span>
+                      <span>${params[0].data.score}</span>
+                    </div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;"></span>
+                      <span>数量：</span>
+                      <span>${params[0].data.number_one}<span style="color: #999"> (1-5名)</span></span>
+                      <span style="margin-left: 10px;">${params[0].data.number_two}<span style="color: #999"> (6-10名)</span></span>
+                      <span style="margin-left: 10px;">${params[0].data.number_three}<span style="color: #999"> (11-15名)</span></span>
+                      <span style="margin-left: 10px;">${params[0].data.number_four}<span style="color: #999"> (16-20名)</span></span>
+                    </div>
+                  </div>`;
+                return res;
+            }
+          },
+          xAxis: {
+            type: 'category',
+            name: "日期",
+            axisLine:{
+              lineStyle:{
+                color: "#dedede"
+              }
+            },
+            axisLabel:{
+              color: "#888"
+            },
+          },
+          yAxis: {
+            type: 'value',
+            name: "单位（分）",
+            nameTextStyle: {
+              color: "#b4b4b4",
+              nameLocation: "start",
+            },
+            axisLabel:{
+              color: "#888"
+            }
+          },
+          animation: false,
+          dataset:{
+            source: $this.scoreData,  
+          },
+          series: [
+            {
+              name: "积分",
+              type: 'line',
+              symbol: 'circle',
+              symbolSize: '5',
+              label:{
+                show: true,
+                position: 'top',
+                distance: '5'
+              },
+              itemStyle:{
+                color: '#fff',
+                borderColor: "#0970ff",
+                borderWidth: 1
+              },
+              lineStyle:{
+                color: "#0970ff",
+                width: 1
+              },
+              emphasis:{
+                lineStyle: {
+                  width: 2,
+                },
+                itemStyle:{
+                  borderWidth: 2
+                }
+              }
+            }
+          ]
+        };
+        option && myChart.setOption(option);
+        $this.scoreChart = myChart;
+      },
       getPrevTime(){
         var $this = this;
         var prev = 0;
@@ -1163,6 +1661,28 @@
       tabChange(inx){
         var $this = this;
         $this.nowChart = inx;
+        if($this.xunChart){
+          $this.xunChart.dispose();
+        }
+        $this.xunChart = null;
+        if($this.xunChart2){
+          $this.xunChart2.dispose();
+        }
+        $this.xunChart2 = null;
+        if(inx == 1){
+          setTimeout(() => {
+            $this.drawXunChart();  
+          }, 500);
+          
+        }else{
+          setTimeout(() => {
+            $this.drawXunChart2();
+          }, 500);
+        }
+      },
+      tabChange2(inx){
+        var $this = this;
+        $this.nowChart = inx;
         if($this.myChart){
           $this.myChart.dispose();
         }
@@ -1175,6 +1695,10 @@
           $this.pieChart2.dispose();
         }
         $this.pieChart2 = null;
+        if($this.pieChart3){
+          $this.pieChart3.dispose();
+        }
+        $this.pieChart3 = null;
         if(inx == 1){
           setTimeout(() => {
             $this.drawColumnChart();  
@@ -1184,6 +1708,7 @@
           setTimeout(() => {
             $this.drawPieChart1();
             $this.drawPieChart2();
+            $this.drawPieChart3();
           }, 500);
         }
       },
@@ -1240,6 +1765,51 @@
       },
       tabClick(e){
         var $this = this;
+        if(e.name == "first" || e.name == "second" || e.name == "third"){
+          if($this.myChart){
+            $this.myChart.dispose();
+          }
+          $this.myChart=null;
+          if(!$this.isAccountSearch){
+            $this.getColumnRes();
+          }
+          if(e.name == 'first'){
+            setTimeout(() => {
+              $this.drawColumnChart();  
+            }, 300);
+          }
+        }else if(e.name == "forth"||e.name == "fifth"){
+          if($this.scoreChart){
+            $this.scoreChart.dispose();
+          }
+          $this.scoreChart = null;
+          if($this.xunChart){
+            $this.xunChart.dispose();
+          }
+          $this.xunChart = null;
+          if($this.xunChart2){
+            $this.xunChart2.dispose();
+          }
+          $this.xunChart2 = null;
+          if(!$this.isScoreSearch){
+            $this.getDouyinCount();
+          }
+          if(e.name == 'forth'){
+            setTimeout(() => {
+              $this.drawScoreChart();  
+            }, 300);
+          }
+          if(e.name == 'fifth'){
+            setTimeout(() => {
+              if($this.nowChart == 1){
+                $this.drawXunChart();  
+              }else{
+                $this.drawXunChart2();  
+              }
+            }, 300);
+          }
+        }
+        
         if(e.name == "second"){
           $this.$nextTick(() => {
             $this.$refs.addTable.doLayout()
@@ -1249,7 +1819,224 @@
             $this.$refs.descTable.doLayout()
           })
         }
-      }
+      },
+      getSearchRes(){
+        var $this = this;
+        $this.isAccountSearch = false;
+        $this.isScoreSearch = false;
+        if($this.myChart){
+          $this.myChart.dispose();
+        }
+        $this.myChart=null;
+        if($this.scoreChart){
+          $this.scoreChart.dispose();
+        }
+        $this.scoreChart = null;
+        if($this.xunChart){
+          $this.xunChart.dispose();
+        }
+        $this.xunChart = null;
+        if($this.activeName == "forth" || $this.activeName == "fifth"){
+          $this.getDouyinCount();
+        }else{
+          $this.getColumnRes();
+        }
+      },
+      // 询盘
+      drawXunChart(){
+        var $this = this;
+        var chartDom = document.getElementById('xunChart');
+        var myChart = echarts.init(chartDom);
+        var option;
+        option = {
+          grid:{
+            left: '45',
+            top:'35',
+            right:'15',
+            bottom: '25'
+          },
+          tooltip:{
+            show: true,
+            trigger: "axis",
+            axisPointer: {
+              type: "line", 
+              lineStyle:{
+                color: "#5b8ff9"
+              }
+            },
+            textStyle:{
+                fontSize:12,
+                color: '#666'
+            },
+            formatter(params){
+              var res = `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:top;margin-top:4px;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                      <span>${params[0].seriesName}：</span>
+                      <span>${params[0].data.number}</span>
+                    </div>`;
+                return res;
+            }
+          },
+          xAxis: {
+            type: 'category',
+            name: "日期",
+            axisLine:{
+              lineStyle:{
+                color: "#dedede"
+              }
+            },
+            axisLabel:{
+              color: "#888"
+            },
+          },
+          yAxis: {
+            type: 'value',
+            name: "单位（个）",
+            nameTextStyle: {
+              color: "#b4b4b4",
+              nameLocation: "start",
+            },
+            axisLabel:{
+              color: "#888"
+            }
+          },
+          animation: false,
+          dataset:{
+            source: $this.xundata,  
+          },
+          series: [
+            {
+              name: "询盘个数",
+              type: 'line',
+              symbol: 'circle',
+              symbolSize: '5',
+              label:{
+                show: true,
+                position: 'top',
+                distance: '5'
+              },
+              itemStyle:{
+                color: '#fff',
+                borderColor: "#0970ff",
+                borderWidth: 1
+              },
+              lineStyle:{
+                color: "#0970ff",
+                width: 1
+              },
+              emphasis:{
+                lineStyle: {
+                  width: 2,
+                },
+                itemStyle:{
+                  borderWidth: 2
+                }
+              }
+            }
+          ]
+        };
+        option && myChart.setOption(option);
+        $this.xunChart = myChart;
+      },
+      drawXunChart2(){
+        var $this = this;
+        var chartDom = document.getElementById('xunChart2');
+        var myChart = echarts.init(chartDom);
+        var option;
+        option = {
+          grid:{
+            left: '45',
+            top:'35',
+            right:'15',
+            bottom: '25'
+          },
+          tooltip:{
+            show: true,
+            trigger: "axis",
+            axisPointer: {
+              type: "line", 
+              lineStyle:{
+                color: "#5b8ff9"
+              }
+            },
+            textStyle:{
+                fontSize:12,
+                color: '#666'
+            },
+            formatter(params){
+              var res = `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:top;margin-top:4px;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                      <span>${params[0].seriesName}：</span>
+                      <span>${params[0].data.number}</span>
+                    </div>`;
+                return res;
+            }
+          },
+          xAxis: {
+            type: 'category',
+            name: "日期",
+            axisLine:{
+              lineStyle:{
+                color: "#dedede"
+              }
+            },
+            axisLabel:{
+              color: "#888"
+            },
+          },
+          yAxis: {
+            type: 'value',
+            name: "单位（个）",
+            nameTextStyle: {
+              color: "#b4b4b4",
+              nameLocation: "start",
+            },
+            axisLabel:{
+              color: "#888"
+            }
+          },
+          animation: false,
+          dataset:{
+            source: $this.xundata2,  
+          },
+          series: [
+            {
+              name: "询盘个数",
+              type: 'line',
+              symbol: 'circle',
+              symbolSize: '5',
+              label:{
+                show: true,
+                position: 'top',
+                distance: '5'
+              },
+              itemStyle:{
+                color: '#fff',
+                borderColor: "#0970ff",
+                borderWidth: 1
+              },
+              lineStyle:{
+                color: "#0970ff",
+                width: 1
+              },
+              emphasis:{
+                lineStyle: {
+                  width: 2,
+                },
+                itemStyle:{
+                  borderWidth: 2
+                }
+              }
+            }
+          ]
+        };
+        option && myChart.setOption(option);
+        $this.xunChart2 = myChart;
+      },
     }
   }
   </script>
@@ -1351,7 +2138,7 @@
     .seach_total{
       position: absolute;
       z-index: 33;
-      left: 400px;
+      left: 500px;
       height: 40px;
       line-height: 40px;
       font-size: 14px;
@@ -1364,6 +2151,9 @@
         font-size: 20px;
         color: #b4b4b4;
       }
+    }
+    .total_xun{
+      left: 600px;
     }
   }
   .user_account{
@@ -1390,6 +2180,22 @@
   }
   #columnChart{
     width: 100%;
+    // height: calc(100vh - 434px);
+    height: calc(100vh - 398px);
+  }
+  #scoreChart{
+    width: 100%;
+    height: calc(100vh - 398px);
+  }
+  #xunChart{
+    width: 100%;
+    height: calc(100vh - 440px);
+  }
+  #xunChart2{
+    width: 100%;
+    height: calc(100vh - 440px);
+  }
+  .search_col{
     height: calc(100vh - 398px);
   }
   .table_wrap{
@@ -1508,7 +2314,69 @@
       }
     }
   }
- 
+  .search_tab{
+    .item-change{
+        float:left;
+        margin-left: 1px;
+        margin-left: 20px;
+        margin-bottom: 10px;
+        .item-font{
+            float:left;
+            border:1px solid #e1e3ea;
+            font-size:13px;
+            color:#555555;
+            padding:5px 12px;
+            line-height:20px;
+            margin-left:-1px;
+            cursor:pointer;
+            &.active,&:hover{
+                color:#0970ff;
+                border:1px solid #0970ff;
+                background:#e0e9ff;
+                position:relative;
+                z-index:2;
+            }
+        }
+    }
+    .search_dw{
+      float: left;
+      font-size: 13px;
+      color: #acacac;
+      margin-top: 6px;
+    }
+    .tips_div2{
+      display:inline-block;
+      vertical-align: middle;
+      margin-left: 10px;
+      font-size: 20px;
+      color: #b4b4b4;
+      cursor: pointer;
+    }
+    &:after{
+      content: "";
+      display: block;
+      clear: both;
+    }
+}
+.search_pie:after{
+  content: "";
+  display: block;
+  clear: both;
+}
+.pie_item{
+  float: left;
+  width: 33.3%;
+  .pie_title{
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+    color: #666;
+  }
+  #pieChart1,#pieChart2,#pieChart3{
+    width: 100%;
+    height: calc(100vh - 454px);
+  }
+}
   </style>
   <style lang="scss" > 
   .el-table__cell.stripe{

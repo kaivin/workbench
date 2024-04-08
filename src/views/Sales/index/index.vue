@@ -452,10 +452,11 @@
       </div>
     </div>
     <el-backtop target=".scroll-panel"></el-backtop>
-    <div :class="isShow?isOpen?'notice_left notice_pop notice_active':'notice_pop notice_active':'notice_pop'">
+    <div :class="popClass">
       <div class="n_head">
         <div class="title">分配超过五天 待标记询盘提醒</div>
-        <div class="del" @click="hideNotice"><i class="el-icon-close"></i></div>
+        <div class="del" v-if="isShow" @click="hideNotice"><i class="el-icon-arrow-down"></i></div>
+        <div class="show" v-if="isCollapse" @click="showNotice"><i class="el-icon-arrow-up"></i></div>
       </div>
       <div class="n_body">
         <ul class="n_ul tips-list">
@@ -474,6 +475,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import io from '@/utils/socket.io.js';
 export default {
   name: 'Sales_search',
   data() {
@@ -598,6 +600,7 @@ export default {
       activeNames:"1",
       noticeShow: true,
       isShow: false,
+      isCollapse: false,
     }
   },
   computed: {
@@ -609,6 +612,20 @@ export default {
     isOpen() {
       return this.sidebar.opened;
     },
+    popClass(){
+      var $this = this;
+      var resclass = "notice_pop";
+      if($this.isOpen){
+        resclass += " notice_left";
+      }
+      if($this.isShow){
+        resclass += " notice_active";
+      }
+      if($this.isCollapse){
+        resclass += " notice_coll";
+      }
+      return resclass;
+    }
   },
   mounted(){
     const $this = this;
@@ -625,6 +642,7 @@ export default {
             $this.setTableHeight();
         })()
     }
+    // $this.getWebsocketMsg();
   },
   watch: {
       tableHeight(val) {
@@ -1582,6 +1600,37 @@ export default {
     hideNotice(){
       var $this = this;
       $this.isShow = false;
+      $this.isCollapse = true;
+    },
+    showNotice(){
+      var $this = this;
+      $this.isShow = true;
+      $this.isCollapse = false;
+    },
+    getWebsocketMsg(){
+        var $this = this;
+        // 连接服务端，workerman.net:2120换成实际部署web-msg-sender服务的域名或者ip
+        var socket = io('https://testphp81.kssbchina.com:2120');
+        // uid可以是自己网站的用户id，以便针对uid推送以及统计在线人数
+        var uid = $this.userInfo.id;
+        console.log(uid);
+        // socket连接后以uid登录
+        socket.on('connect', function(){
+            socket.emit('login', uid);
+        });
+        // 后端推送来消息时
+        socket.on('new_msg', function(msg){
+            var msg2 = $this.HTMLEncode(msg);
+            console.log("收到消息："+msg2);
+        });
+    },
+    //转移内容
+    HTMLEncode(text) {
+        let temp = document.createElement("div");
+        temp.innerHTML = text;
+        let output = temp.innerText || temp.textContent;
+        temp = null;
+        return output;
     }
   }
 }
@@ -1623,16 +1672,17 @@ export default {
   overflow: hidden;
   transition: all 0.6s ease;
   .n_head{
-    padding: 10px 15px;
     color: #fff;
     background-color: #0970ff;
     .title{
       float: left;
       font-size: 14px;
+      padding: 10px 15px;
     }
-    .del{
+    .del, .show{
       float: right;
       cursor: pointer;
+      padding: 10px 15px;
     }
     &:after{
       content: "";
@@ -1683,7 +1733,10 @@ export default {
 .notice_left{
   left: 226px;
 }
-
+.notice_coll{
+  bottom: auto;
+  top: calc(100vh - 40px);
+}
 </style>
 <style>
 .el-collapse-item__content{

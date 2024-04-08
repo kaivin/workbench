@@ -125,3 +125,12 @@ export function getDouyinWordInfo(data) {
     data
   });
 }
+
+// 抖音关键词详情
+export function getDouyinCountInfo(data) {
+  return request({
+    url: "/hxindex/Douyin/doucountinfo",
+    method: "POST",
+    data
+  });
+}

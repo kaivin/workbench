@@ -66,7 +66,7 @@
                         :fixed="item.fixed"
                         :min-width="item.width"
                         :class-name = "item.classname"
-                        :sortable = "item.sortable"
+                        :sortable = "item.sortable? 'custom' : false"
                         :label="item.label">
                           <template #default="scope">
                             <span :class="item.prop == 'num_seperate' ? 'icon_num': ''">{{scope.row[item.prop]}}</span>
@@ -550,12 +550,13 @@ export default {
                           obj.department = item.department;
                           obj.haschart = 0;
                           item.score_trend.forEach((sitem,sindex) => {
-                            obj.name = sitem.son[i].name;
-                            obj.id = item.id+"_"+ vid;
-                            obj.cid = sitem.son[i].id;
-                            vid++;
-                            obj.totalscore = item.score;
-                            obj['score'+ sindex] = sitem.son[i].score;
+                            if(sitem.num == prev_num || sitem.num == latest_num){
+                              obj.name = sitem.son[i].name;
+                              obj.id = item.id+"_"+ vid;
+                              obj.cid = sitem.son[i].id;
+                              vid++;
+                              obj['score'+ sindex] = sitem.son[i].score;
+                            }
                             if($this.searchData.end_num > $this.searchData.start_num ){
                               if(sitem.num === latest_num){
                                 latest_score = sitem.son[i].score;
@@ -564,7 +565,9 @@ export default {
                               }
                             }
                             if(i === num-1){
-                              newobj['score'+ sindex] = sitem.score;
+                              if(sitem.num == prev_num || sitem.num == latest_num){
+                                newobj['score'+ sindex] = sitem.score;
+                              }
                               if($this.searchData.end_num > $this.searchData.start_num ){
                                 if(sitem.num === latest_num){
                                   latest_score_2 = sitem.score;
@@ -573,19 +576,26 @@ export default {
                                 }
                               }
                             }
-                            if(index === 0 && i === 0){
+                            if(index === 0 && i === 0 && (sitem.num == prev_num || sitem.num == latest_num)){
+                              // $this.tableHeader.push({
+                              //   label: sitem.addtime,
+                              //   prop: 'count'+sindex,
+                              //   hasChildren: 1,
+                              //   fixed: false,
+                              //   children: [{
+                              //       label:"积分",
+                              //       width: 100,
+                              //       prop: 'score'+sindex,
+                              //       fixed: false,
+                              //     }
+                              //   ]
+                              // })
                               $this.tableHeader.push({
                                 label: sitem.addtime,
-                                prop: 'count'+sindex,
-                                hasChildren: 1,
+                                prop: 'score'+sindex,
+                                hasChildren: 0,
                                 fixed: false,
-                                children: [{
-                                    label:"积分",
-                                    width: 100,
-                                    prop: 'score'+sindex,
-                                    fixed: false,
-                                  }
-                                ]
+                                sortable: true,
                               })
                             }
                           });
@@ -600,33 +610,43 @@ export default {
                         var obj = {};
                         // 单账号
                         item.score_trend.forEach((sitem,sindex) => {
-                          obj.id = item.id;
-                          obj.uname = item.uname;
-                          obj.department = item.department;
-                          obj.name = item.name;
-                          obj.haschart = 1;
-                          obj.cid = item.id;
-                          obj['score'+ sindex] = sitem.score;
-                          if($this.searchData.end_num > $this.searchData.start_num ){
-                            if(sitem.num === latest_num){
-                              latest_score = sitem.score;
-                            }else if(sitem.num === prev_num){
-                              prev_score = sitem.score;
+                          if(sitem.num == prev_num || sitem.num == latest_num){
+                            obj.id = item.id;
+                            obj.uname = item.uname;
+                            obj.department = item.department;
+                            obj.name = item.name;
+                            obj.haschart = 1;
+                            obj.cid = item.id;
+                            obj['score'+ sindex] = sitem.score;
+                            if($this.searchData.end_num > $this.searchData.start_num ){
+                              if(sitem.num === latest_num){
+                                latest_score = sitem.score;
+                              }else if(sitem.num === prev_num){
+                                prev_score = sitem.score;
+                              }
                             }
                           }
-                          if(index === 0){
+                          
+                          if(index === 0 && (sitem.num == prev_num || sitem.num == latest_num)){
+                            // $this.tableHeader.push({
+                            //   label: sitem.addtime,
+                            //   prop: 'count'+sindex,
+                            //   hasChildren: 1,
+                            //   fixed: false,
+                            //   children: [{
+                            //       label:"积分",
+                            //       width: 100,
+                            //       prop: 'score'+sindex,
+                            //       fixed: false,
+                            //     }
+                            //   ]
+                            // })
                             $this.tableHeader.push({
                               label: sitem.addtime,
-                              prop: 'count'+sindex,
-                              hasChildren: 1,
+                              prop: 'score'+sindex,
+                              hasChildren: 0,
                               fixed: false,
-                              children: [{
-                                  label:"积分",
-                                  width: 100,
-                                  prop: 'score'+sindex,
-                                  fixed: false,
-                                }
-                              ]
+                              sortable: true
                             })
                           }
                         });
@@ -634,7 +654,7 @@ export default {
                         resList.push(obj);
                       }
                     }
-                    
+
                   })
                   if($this.searchData.end_num > $this.searchData.start_num ){
                     $this.tableHeader.push({
@@ -1287,12 +1307,19 @@ export default {
       var ids = [];
       if(data.name == "总计"){
         ids = $this.getDataIds(data.uname);
+        $this.$router.push({path:'/Douyin/keywordcount',query:{id:ids.join(","), start_num:$this.searchData.start_num, end_num: $this.searchData.end_num, isall:1}});
       }else{
         var id = [];
         id.push(data.cid);
         ids = id;
+        var allids = $this.getDataIds(data.uname);
+        if(allids.length == 1){
+          $this.$router.push({path:'/Douyin/keywordcount',query:{id:ids.join(","), start_num:$this.searchData.start_num, end_num: $this.searchData.end_num, isall:1}});
+        }else if(allids.length > 1){
+          $this.$router.push({path:'/Douyin/keywordcount',query:{id:ids.join(","), start_num:$this.searchData.start_num, end_num: $this.searchData.end_num, isall:0}});
+        }
       }
-      $this.$router.push({path:'/Douyin/keywordcount',query:{id:ids.join(","), start_num:$this.searchData.start_num, end_num: $this.searchData.end_num}});
+     
     },
     getDataIds(name){
       var $this = this;
@@ -1683,6 +1710,7 @@ export default {
 .userCount .el-table__row.row-total .el-table__cell{
   // background-color: #fff4d1;
   color: #0970ff;
+  background-color: #e2eeff!important;
 }
 .el-table.dyTable{
   width: 1160px;

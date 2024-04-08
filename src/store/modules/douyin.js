@@ -12,7 +12,8 @@ import {
     getDouyinPersonalCount,
     getDouyinDepartgroup,
     getDouyinTotalCount,
-    getDouyinWordInfo
+    getDouyinWordInfo,
+    getDouyinCountInfo
 
 } from '@/api/douyin'
 
@@ -152,6 +153,16 @@ const actions = {
     douyinWordInfo({ commit, state }, data) {
         return new Promise((resolve, reject) => {
             getDouyinWordInfo(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 关键词详情
+    douyinCountInfo({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getDouyinCountInfo(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

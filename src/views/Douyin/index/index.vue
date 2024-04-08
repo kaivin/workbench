@@ -251,10 +251,47 @@
     <el-backtop target=".scroll-panel"></el-backtop>
     <ExportModal ref="ExportModalRef" @exportSuccess="exportDone"></ExportModal>
     <el-dialog :title="dialogTitle" top="20vh" custom-class="chart-line" :visible.sync="isChartShow" :before-close="handleClose" :width="dialogWidth">
-      <div class="line_box">
+      <div class="line_box" v-if="charttype == 1">
         <div class="search" v-if="isSearchLine"><p>请稍候...</p></div>
         <div class="no-data" v-if="!isSearchLine && lineData.length == 0 ">暂无数据</div>
         <div id="chart"></div>
+      </div>
+      <div class="line_box" v-if="charttype == 2">
+        <div class="search" v-if="isSearchLine"><p>请稍候...</p></div>
+        <el-tabs v-model="activeName" type="card" @tab-click="tabClick">
+          <el-tab-pane label="积分趋势" name="first">
+            <div class="search_column">
+              <div class="search" v-if="isPopSearch"><p>请稍候...</p></div>
+              <div id="chart"></div>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="询盘趋势" name="second">
+            <div class="search_tab">
+              <div class="item-change">
+                <div class="item-font" :class="nowChart == 1?'active':''" @click="tabChange(1)">月询盘统计</div>
+                <div class="item-font" :class="nowChart == 2?'active':''" @click="tabChange(2)">阶段询盘统计</div>
+              </div>
+              <div class="search_dw" v-if="nowChart == 1">
+                <el-popover
+                  placement="right"
+                  content="1号询盘：上个月16号到上个月月底的询盘数；15号询盘：本月1号到15号的询盘数。"
+                  trigger="hover">
+                  <svg-icon class="tips_div tips_div2" slot="reference" icon-class="tips"></svg-icon>
+                </el-popover>  
+              </div>
+            </div>
+            <div class="search_column" v-if="nowChart == 1">
+              <div class="search" v-if="isPopSearch"><p>请稍候...</p></div>
+              <div id="xunChart"></div>
+            </div>
+            <div class="search_column" v-if="nowChart == 2">
+              <div class="search" v-if="isPopSearch"><p>请稍候...</p></div>
+              <div id="xunChart2"></div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+        
+          
       </div>
     </el-dialog>
   </div>
@@ -440,11 +477,12 @@ export default {
           },
       ],
       nowChart: 1,
-      pieChart1: null,
-      pieChart2: null,
-      piedata_one: [],
-      piedata_two: [],
-      checkBtnShow: false
+      xunChart: null,
+      xundata: [],
+      xunChart2: null,
+      xundata2: [],
+      checkBtnShow: false,
+      charttype: 1,
     }
   },
   computed: {
@@ -953,6 +991,7 @@ export default {
       $this.dialogWidth = "1200px";
       $this.isChartShow = true;
       $this.isSearchLine = true;
+      $this.charttype = 1;
       var formData = {};
       formData.pid = data.pid;
       formData.my_level = data.my_level;
@@ -1007,6 +1046,7 @@ export default {
       $this.isChartShow = true;
       $this.isSearchLine = true;
       $this.dialogWidth = "1200px";
+      $this.charttype = 1;
       var formData = {};
       formData.id = data.id;
       $this.$store.dispatch('douyin/douyinAccountLine', formData).then(response=>{
@@ -1015,7 +1055,7 @@ export default {
           $this.lineData = [];
           if(response.status){
             if(response.data && response.data.length > 0){
-              var resData = []
+              var resData = [];
               response.data.forEach(item => {
                 var obj = {};
                 obj.addtime = item.addtime;
@@ -1028,9 +1068,11 @@ export default {
                 resData.push(obj);
               })
               $this.lineData = resData.sort(sortByAsc("num"));
-              $this.drawLineChart();
+              setTimeout(() => {
+                $this.drawLineChart();
+              }, 500);
             }
-            
+
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -1065,7 +1107,7 @@ export default {
         option = {
           grid:{
             left: '45',
-            top:'25',
+            top:'35',
             right:'15',
             bottom: '25'
           },
@@ -1116,6 +1158,11 @@ export default {
           },
           yAxis: {
             type: 'value',
+            name: "单位（分）",
+            nameTextStyle: {
+              color: "#b4b4b4",
+              nameLocation: "start",
+            },
             axisLabel:{
               color: "#888"
             }
@@ -1170,14 +1217,14 @@ export default {
         $this.myChart.dispose();
       }
       $this.myChart = null;
-      if($this.pieChart1){
-        $this.pieChart1.dispose();
+      if($this.xunChart){
+        $this.xunChart.dispose();
       }
-      if($this.pieChart2){
-        $this.pieChart2.dispose();
+      $this.xunChart = null;
+      if($this.xunChart2){
+        $this.xunChart2.dispose();
       }
-      $this.pieChart1 = null;
-      $this.pieChart2 = null;
+      $this.xunChart2 = null;
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
@@ -1360,10 +1407,11 @@ export default {
     },
     getTotalCountData(){
       var $this = this;
-      $this.dialogTitle = "总积分趋势";
+      $this.dialogTitle = "所有账号";
       $this.dialogWidth = "1200px";
       $this.isChartShow = true;
       $this.isSearchLine = true;
+      $this.charttype = 2;
       var formData = {};
       var ids = [];
       $this.scoreList.forEach(item => {
@@ -1377,6 +1425,7 @@ export default {
             if(response.status){
               if(response.data && response.data.length > 0){
                 var resData = [];
+                var xundata2 = [];
                 response.data.forEach(item => {
                   var obj = {};
                   obj.addtime = item.addtime;
@@ -1387,9 +1436,25 @@ export default {
                   obj.number_four = item.four_number;
                   obj.num = item.num;
                   resData.push(obj);
+                  var xunobj = {};
+                  xunobj.addtime = item.addtime;
+                  xunobj.number = item.xunnumber;
+                  xundata2.push(xunobj);
                 })
+                $this.xundata = response.xundata&&response.xundata.length > 0 ? response.xundata : [];
+                $this.xundata2 = xundata2.sort(sortByAsc("num"));
                 $this.lineData = resData.sort(sortByAsc("num"));
-                $this.drawLineChart();
+                setTimeout(() => {
+                  if($this.activeName == 'first'){
+                    $this.drawLineChart();
+                  }else{
+                    if($this.nowChart == 1){
+                      $this.drawXunChart();
+                    }else if($this.nowChart == 2){
+                      $this.drawXunChart2();
+                    }
+                  }
+                }, 500);
               }
             }else{
               if(response.permitstatus&&response.permitstatus==2){
@@ -1419,6 +1484,12 @@ export default {
       var resId = [];
       var res_start = "";
       var res_end = "";
+      if($this.searchData.num){
+        res_end = $this.searchData.num;
+      }else{
+        res_end = Math.max(...$this.timeArr);
+      }
+      res_start = $this.getPrevTime(res_end);
       if($this.searchData.nickname){
         var ids = [];
         if($this.searchData.id){
@@ -1427,16 +1498,16 @@ export default {
           ids.push($this.tableData[0].aweme_id);
         }
         resId = ids;
+        console.log($this.checkAccount($this.searchData.nickname))
+        if($this.checkAccount($this.searchData.nickname)){
+          $this.$router.push({path:'/Douyin/keywordcount',query:{ id:resId.join(","), start_num:res_start, end_num: res_end, isall:1}});
+        }else{
+          $this.$router.push({path:'/Douyin/keywordcount',query:{ id:resId.join(","), start_num:res_start, end_num: res_end, isall:0}});
+        }
       }else{
         resId = $this.accountIds;
+        $this.$router.push({path:'/Douyin/keywordcount',query:{ id:resId.join(","), start_num:res_start, end_num: res_end, isall:1}});
       }
-      if($this.searchData.num){
-        res_end = $this.searchData.num;
-      }else{
-        res_end = Math.max(...$this.timeArr);
-      }
-      res_start = $this.getPrevTime(res_end);
-      $this.$router.push({path:'/Douyin/keywordcount',query:{ id:resId.join(","), start_num:res_start, end_num: res_end}});
     },
     getPrevTime(){
       var $this = this;
@@ -1459,7 +1530,269 @@ export default {
         }
       })
       return isIn;
-    }
+    },
+    tabChange(inx){
+      var $this = this;
+      $this.nowChart = inx;
+      if($this.xunChart){
+        $this.xunChart.dispose();
+      }
+      $this.xunChart = null;
+      if($this.xunChart2){
+        $this.xunChart2.dispose();
+      }
+      $this.xunChart2 = null;
+      if(inx == 1){
+        setTimeout(() => {
+          $this.drawXunChart();
+        }, 500);
+      }else if(inx == 2){
+        setTimeout(() => {
+          $this.drawXunChart2();
+        }, 500);
+      }
+    },
+    // 询盘
+    drawXunChart(){
+      var $this = this;
+      var chartDom = document.getElementById('xunChart');
+      var myChart = echarts.init(chartDom);
+      var option;
+      option = {
+        grid:{
+          left: '45',
+          top:'35',
+          right:'15',
+          bottom: '25'
+        },
+        tooltip:{
+          show: true,
+          trigger: "axis",
+          axisPointer: {
+            type: "line", 
+            lineStyle:{
+              color: "#5b8ff9"
+            }
+          },
+          textStyle:{
+              fontSize:12,
+              color: '#666'
+          },
+          formatter(params){
+            var res = `<div class="toolDiv">
+                  <div class="tooltitle">${params[0].name}</div>
+                  <div class="bar clearfix">
+                    <span style="display:inline-block;vertical-align:top;margin-top:4px;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                    <span>${params[0].seriesName}：</span>
+                    <span>${params[0].data.number}</span>
+                  </div>`;
+              return res;
+          }
+        },
+        xAxis: {
+          type: 'category',
+          name: "日期",
+          axisLine:{
+            lineStyle:{
+              color: "#dedede"
+            }
+          },
+          axisLabel:{
+            color: "#888"
+          },
+        },
+        yAxis: {
+          type: 'value',
+          name: "单位（个）",
+          nameTextStyle: {
+            color: "#b4b4b4",
+            nameLocation: "start",
+          },
+          axisLabel:{
+            color: "#888"
+          }
+        },
+        animation: false,
+        dataset:{
+          source: $this.xundata,  
+        },
+        series: [
+          {
+            name: "询盘个数",
+            type: 'line',
+            symbol: 'circle',
+            symbolSize: '5',
+            label:{
+              show: true,
+              position: 'top',
+              distance: '5'
+            },
+            itemStyle:{
+              color: '#fff',
+              borderColor: "#0970ff",
+              borderWidth: 1
+            },
+            lineStyle:{
+              color: "#0970ff",
+              width: 1
+            },
+            emphasis:{
+              lineStyle: {
+                width: 2,
+              },
+              itemStyle:{
+                borderWidth: 2
+              }
+            }
+          }
+        ]
+      };
+      option && myChart.setOption(option);
+      $this.xunChart = myChart;
+    },
+    drawXunChart2(){
+      var $this = this;
+      var chartDom = document.getElementById('xunChart2');
+      var myChart = echarts.init(chartDom);
+      var option;
+      option = {
+        grid:{
+          left: '45',
+          top:'35',
+          right:'15',
+          bottom: '25'
+        },
+        tooltip:{
+          show: true,
+          trigger: "axis",
+          axisPointer: {
+            type: "line", 
+            lineStyle:{
+              color: "#5b8ff9"
+            }
+          },
+          textStyle:{
+              fontSize:12,
+              color: '#666'
+          },
+          formatter(params){
+            var res = `<div class="toolDiv">
+                  <div class="tooltitle">${params[0].name}</div>
+                  <div class="bar clearfix">
+                    <span style="display:inline-block;vertical-align:top;margin-top:4px;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                    <span>${params[0].seriesName}：</span>
+                    <span>${params[0].data.number}</span>
+                  </div>`;
+              return res;
+          }
+        },
+        xAxis: {
+          type: 'category',
+          name: "日期",
+          axisLine:{
+            lineStyle:{
+              color: "#dedede"
+            }
+          },
+          axisLabel:{
+            color: "#888"
+          },
+        },
+        yAxis: {
+          type: 'value',
+          name: "单位（个）",
+          nameTextStyle: {
+            color: "#b4b4b4",
+            nameLocation: "start",
+          },
+          axisLabel:{
+            color: "#888"
+          }
+        },
+        animation: false,
+        dataset:{
+          source: $this.xundata2,  
+        },
+        series: [
+          {
+            name: "询盘个数",
+            type: 'line',
+            symbol: 'circle',
+            symbolSize: '5',
+            label:{
+              show: true,
+              position: 'top',
+              distance: '5'
+            },
+            itemStyle:{
+              color: '#fff',
+              borderColor: "#0970ff",
+              borderWidth: 1
+            },
+            lineStyle:{
+              color: "#0970ff",
+              width: 1
+            },
+            emphasis:{
+              lineStyle: {
+                width: 2,
+              },
+              itemStyle:{
+                borderWidth: 2
+              }
+            }
+          }
+        ]
+      };
+      option && myChart.setOption(option);
+      $this.xunChart2 = myChart;
+    },
+    checkAccount(name){
+      var $this = this;
+      var uname = "";
+      var ids = [];
+      $this.scoreList.forEach(item => {
+        if(item.name == name){
+          uname = item.uname
+        }
+      })
+      $this.scoreList.forEach(item => {
+        if(item.uname == uname){
+          ids.push(item.id);
+        }
+      })
+      if(ids.length > 1){
+        return false
+      }else{
+        return true
+      }
+    },
+    tabClick(e){
+      var $this = this;
+      if($this.xunChart){
+        $this.xunChart.dispose();
+      }
+      $this.xunChart = null;
+      if($this.xunChart2){
+        $this.xunChart2.dispose();
+      }
+      $this.xunChart2 = null;
+        
+      if(e.name == 'first'){
+        setTimeout(() => {
+          $this.drawLineChart();  
+        }, 300);
+      }
+      if(e.name == 'second'){
+        setTimeout(() => {
+          if($this.nowChart == 1){
+            $this.drawXunChart();  
+          }else{
+            $this.drawXunChart2();  
+          }
+        }, 300);
+      }
+    },
   }
 }
 </script>
@@ -1825,16 +2158,17 @@ export default {
   height: calc(80vh - 185px);
 }
 .search_tab{
+  margin-bottom: 10px;
   .item-change{
       float:left;
-      margin-right:20px;
+      margin-right:15px;
       margin-left: 1px;
       .item-font{
           float:left;
           border:1px solid #e1e3ea;
-          font-size:14px;
+          font-size:13px;
           color:#555555;
-          padding:4px 15px;
+          padding:5px 12px;
           line-height:20px;
           margin-left:-1px;
           cursor:pointer;
@@ -1851,7 +2185,7 @@ export default {
     float: left;
     font-size: 13px;
     color: #acacac;
-    margin-top: 8px;
+    margin-top: 4px;
   }
   &:after{
     content: "";
@@ -1975,6 +2309,12 @@ export default {
   margin-left: 10px;
   font-size: 24px;
   color: #b4b4b4;
+  cursor: pointer;
+}
+.tips_div2{
+  font-size: 20px;
+  margin-left: 0;
+  margin-top: 2px;
 }
 .exportBtn{
   background-color: #f9a500;
@@ -1982,6 +2322,14 @@ export default {
     background: #ffba00;
     border-color: #ffba00;
   }
+}
+
+.search_column #chart{
+  height: 442px;
+}
+.search_column #xunChart, .search_column #xunChart2{
+  width: 100%;
+  height: 400px;
 }
 </style>
 <style lang="scss" > 
