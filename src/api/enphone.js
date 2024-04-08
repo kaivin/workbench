@@ -494,3 +494,12 @@ export function enphoneFeedback(data){
     data
   });
 }
+
+// 英文五天未反馈
+export function enphoneFiveXun(data){
+  return request({
+    url: "/hxindex/Enphone/fivexun",
+    method: "POST",
+    data
+  });
+}

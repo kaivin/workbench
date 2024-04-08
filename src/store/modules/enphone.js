@@ -60,7 +60,8 @@
     getInquiryItem,
     getInquiryResult,
     exportSearchData,
-    enphoneFeedback
+    enphoneFeedback,
+    enphoneFiveXun
 
 } from '@/api/enphone'
 
@@ -705,6 +706,16 @@ const actions = {
     getEnphoneFeedbackData({ commit, state },data) {
         return new Promise((resolve, reject) => {
             enphoneFeedback(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 英文五天未反馈数据
+    getEnphoneFiveXunData({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            enphoneFiveXun(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

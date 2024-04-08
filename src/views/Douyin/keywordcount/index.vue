@@ -53,12 +53,12 @@
                       <svg-icon class="tips_div" slot="reference"  icon-class="tips"></svg-icon>
                     </el-popover>
                     <p class="tab_p" v-if="activeName=='second'">
-                      增加的积分总计{{add_allscore}}分<template v-for="item,index in columnData.data_addCount">
+                      增加的积分总计<span class="dy_red"> {{add_allscore}} </span>分<template v-for="item,index in columnData.data_addCount">
                         ，<template v-if="index == 1">其中</template>{{item.label}}为<span class="dy_red"> {{item.value}} </span>个
                       </template>。
                     </p>
                     <p class="tab_p" v-if="activeName=='third'">
-                      减少的积分总计{{desc_allscore}}分<template v-for="item,index in columnData.data_descCount">
+                      减少的积分总计<span class="dy_red"> {{desc_allscore}} </span>分<template v-for="item,index in columnData.data_descCount">
                         ，<template v-if="index == 0">其中</template>{{item.label}}为<span class="dy_red"> {{item.value}} </span>个
                       </template>。
                     </p>

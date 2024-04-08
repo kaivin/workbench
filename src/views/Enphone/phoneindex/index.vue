@@ -30,6 +30,11 @@
                   <span>延时反馈询盘</span>
                 </router-link>
               </dd>
+              <dd v-bind:class="currentKey&&currentKey=='fivexun'?'active':''" v-if="menuButtonPermit.includes('Enphone_fivexun')">
+                <router-link :to="{page:'Enphone/phoneindex',query:{key:'fivexun'}}">
+                  <span>五天未回复询盘</span>
+                </router-link>
+              </dd>
           </dl>
           <template v-for="(item,index) in defaultData.data">
             <dl class="phone-list" v-if="item.phone.length>0" v-bind:key="index">
@@ -343,7 +348,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-if="currentKey!='feedback'" v-model="searchData.feedback" size="small" clearable placeholder="反馈" :class="searchData.feedback!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-if="currentKey!='feedback'&&currentKey!='fivexun'" v-model="searchData.feedback" size="small" clearable placeholder="反馈" :class="searchData.feedback!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in feedbackList"
                                       :key="item.value"
@@ -370,7 +375,7 @@
                                     <div class="clues-infoFl flex-content">
                                           <p>
                                             <span class="item-span-1">当前结果集：共有<strong>{{infoData.totalCount}}</strong>条。</span>
-                                            <template v-if="currentKey!='feedback'">
+                                            <template v-if="currentKey!='feedback'&&currentKey!='fivexun'">
                                               <span class="item-span-2">有效：<strong>{{infoData.effectiveCount}}</strong>条，</span>
                                               <span class="item-span-3">无效：<strong>{{infoData.invalidCount}}</strong>条。</span>
                                               <span class="item-span-1">总分：<strong>{{infoData.totalScore}}</strong>。</span>
@@ -759,7 +764,7 @@
                                   </template>
                                 </el-table-column>
                                 <el-table-column
-                                  v-if="currentKey!='feedback' && (permitField.includes('remark1')||permitField.includes('remark2')||permitField.includes('remark3'))"
+                                  v-if="currentKey!='feedback' && currentKey!='fivexun' && (permitField.includes('remark1')||permitField.includes('remark2')||permitField.includes('remark3'))"
                                   key="d"
                                   prop="searchword"
                                   label="备注"
@@ -779,6 +784,13 @@
                                   label="延时反馈原因"
                                   min-width="90"
                                   v-if="currentKey&&currentKey=='feedback'"
+                                  >
+                                </el-table-column>
+                                <el-table-column
+                                  prop="givecustormwarn"
+                                  label="提醒"
+                                  min-width="90"
+                                  v-if="currentKey&&currentKey=='fivexun'"
                                   >
                                 </el-table-column>
                                 <el-table-column
@@ -1189,6 +1201,9 @@ export default {
       if(this.$route.query.key == 'feedback'){
         type = 'feedback'
       }
+      if(this.$route.query.key == 'fivexun'){
+        type = 'fivexun'
+      }
       $this.$store.dispatch('api/clearCacheAction', {cachename:type}).then(response=>{
         if(response){
           if(response.status){
@@ -1324,7 +1339,9 @@ export default {
                   }else if($this.$route.query.key=="unAllot"){
                     $this.currentPhone = "所有未分配";
                   }else if($this.$route.query.key=="feedback"){
-                    $this.currentPhone = "申请延时反馈的询盘";
+                    $this.currentPhone = "延时反馈询盘";
+                  }else if($this.$route.query.key=="fivexun"){
+                    $this.currentPhone = "五天未回复询盘"
                   }
                 }
               }
@@ -1655,6 +1672,11 @@ export default {
               pathUrl = "enphone/allUnAllotCluesDataAction";
             }else if($this.currentKey=="feedback"){
               pathUrl = "enphone/getEnphoneFeedbackData";
+              searchData.salesownid=$this.searchData.salesownid;
+              searchData.salesdepart_id=$this.searchData.salesdepart_id;
+              searchData.once_allot = $this.searchData.once_allot ? 2 : '';
+            }else if($this.currentKey=="fivexun"){
+              pathUrl = "enphone/getEnphoneFiveXunData";
               searchData.salesownid=$this.searchData.salesownid;
               searchData.salesdepart_id=$this.searchData.salesdepart_id;
               searchData.once_allot = $this.searchData.once_allot ? 2 : '';

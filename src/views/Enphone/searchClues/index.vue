@@ -30,6 +30,11 @@
                       <span>延时反馈询盘</span>
                     </router-link>
                   </dd>
+                  <dd v-bind:class="currentKey&&currentKey=='fivexun'?'active':''" v-if="menuButtonPermit.includes('Enphone_fivexun')">
+                    <router-link :to="{path:'/Enphone/phoneindex',query:{key:'fivexun'}}">
+                      <span>五天未回复询盘</span>
+                    </router-link>
+                  </dd>
               </dl>
               <template v-for="(item,index) in defaultData.data">
                 <dl class="phone-list" v-if="item.phone.length>0" v-bind:key="index">

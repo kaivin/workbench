@@ -52,7 +52,7 @@
 			},
 			data: {
 				handler(){
-					this.$emit('update:modelValue', this.data);
+					this.$emit('updateValue', this.data);
 				},
 				deep: true
 			}
