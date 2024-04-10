@@ -45,6 +45,16 @@ export function saveRecord(data) {
     });
 }
 
+// 删除记录
+export function delRecord(data) {
+  return request({
+    url: "/hxindex/videocount/delword",
+    method: "POST",
+    data
+  });
+}
+
+
 // 手动分配
 export function seprateScore(data) {
     return request({

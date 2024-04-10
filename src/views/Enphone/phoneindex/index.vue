@@ -223,7 +223,7 @@
                                           :value="item.value">
                                       </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.device" size="small" clearable placeholder="设备" :class="searchData.device!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-if="currentKey!='fivexun'"  v-model="searchData.device" size="small" clearable placeholder="设备" :class="searchData.device!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in deviceList"
                                       :key="item.value"
@@ -231,7 +231,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.level_id" size="small" clearable placeholder="级别" :class="searchData.level_id!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-if="currentKey!='fivexun'" v-model="searchData.level_id" size="small" clearable placeholder="级别" :class="searchData.level_id!=''?'el-xzstate':''" style="width:80px;margin:5px 10px 5px 0px;float:left;">
                                       <el-option
                                           v-for="item in levelList"
                                           :key="item.value"
@@ -263,7 +263,7 @@
                                           :value="item.value">
                                       </el-option>
                                   </el-select>
-                                  <el-select v-model="searchData.adduser" size="small" clearable placeholder="添加人" :class="searchData.adduser!=''?'el-xzstate':''" style="width:90px;margin:5px 10px 5px 0px;float:left;">
+                                  <el-select v-if="currentKey!='fivexun'" v-model="searchData.adduser" size="small" clearable placeholder="添加人" :class="searchData.adduser!=''?'el-xzstate':''" style="width:90px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in userList"
                                       :key="item.value"
@@ -287,7 +287,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)" v-model="searchData.salesownid" size="small" clearable placeholder="业务员" :class="searchData.salesownid!=''?'el-xzstate':''" 
+                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)||(currentKey&&currentKey=='fivexun')" v-model="searchData.salesownid" size="small" clearable placeholder="业务员" :class="searchData.salesownid!=''?'el-xzstate':''" 
                                     style="width:90px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in salesuserList"
@@ -356,8 +356,19 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <span style="float:left;line-height:32px;font-size:13px;margin:5px;">排序：</span>
-                                  <el-select v-model="searchData.sort" size="small" placeholder="排序" :class="searchData.sort!=''?'el-xzstate':''" 
+                                  <el-checkbox border v-if="currentKey=='fivexun'" size="small" v-model="moreChecked" style="width:100px;margin:5px 10px 5px 0px;float:left;">多次标记</el-checkbox>
+                                  <el-input
+                                    v-if="currentKey=='fivexun'"
+                                    class="tips-input-5"
+                                    style="width: 100px;margin:5px 10px 5px 0px;float:left;" size="small"
+                                    placeholder="询盘id"
+                                    v-model="searchData.en_id"
+                                    @keyup.enter.native="enterBtn"
+                                    :class="searchData.en_id!=''?'el-xzstate':''"
+                                    clearable>
+                                  </el-input>
+                                  <span style="float:left;line-height:32px;font-size:13px;margin:5px;" v-if="currentKey!='fivexun'">排序：</span>
+                                  <el-select v-if="currentKey!='fivexun'" v-model="searchData.sort" size="small" placeholder="排序" :class="searchData.sort!=''?'el-xzstate':''" 
                                   style="width:130px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in sortList"
@@ -366,10 +377,14 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-checkbox v-if="currentKey&&currentKey=='all'" class="search_checkbox" v-model="searchData.once_allot">二次分配询盘</el-checkbox>
+                                  <el-checkbox v-if="currentKey&&currentKey=='all'" size="small"  v-model="searchData.once_allot">二次分配询盘</el-checkbox>
+                                  <el-checkbox v-if="currentKey=='fivexun'" class="search_checkbox" v-model="searchData.is_group" size="small" border style="width:70px;margin:5px 10px 5px 0px;float:left;">分组</el-checkbox>
+                                  <template v-if="currentKey=='fivexun'">
+                                      <span class="fivexun-clus" v-for="item in groupTypeList" v-bind:class="item.isOn?'active':''" v-bind:key="item.value" v-on:click="groupTypeClick(item.value)"><i></i>{{item.label}}</span>
+                                  </template>
                                   <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
                                   <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()" style="margin:5px 10px 5px 0px;float:left;">重置</el-button>
-                                   <el-button type="info" plain size="small" style="margin:5px 10px 5px 0px;float:left;" v-on:click="clearCache">清除缓存</el-button>
+                                  <el-button v-if="currentKey!='fivexun'" type="info" plain size="small" style="margin:5px 10px 5px 0px;float:left;" v-on:click="clearCache">清除缓存</el-button>
                                 </div>
                                 <div class="clues-info flex-wrap">
                                     <div class="clues-infoFl flex-content">
@@ -402,421 +417,489 @@
                           <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
                               <div class="table-mask"></div>
                               <el-table
-                                ref="simpleTable"
-                                :data="tableData"
-                                tooltip-effect="dark"
-                                stripe
-                                class="SiteTable EntableColor"
-                                style="width: 100%"
-                                :style="'min-height:'+tableHeight+'px;'"
-                                row-key="id"
-                                key="a"
-                                v-if="phoneID"
-                                >
-                                <el-table-column
-                                  prop="id"
-                                  label="ID"
-                                  width="70"
+                                  v-if="isGroup"
+                                  key="f"
+                                  ref="simpleTable"
+                                  :data="tableData"
+                                  class="SiteTable"
+                                  tooltip-effect="dark"
+                                  stripe
+                                  style="width: 100%"
+                                  :style="'min-height:'+tableHeight+'px;'"
                                   >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p>{{scope.row.id}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="xuntime"
-                                  label="时间"
-                                  min-width="120"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p>时段：{{scope.row.timeing}}</p>
-                                      <p class="EnColor02">星期：{{scope.row.weekday}}</p>
-                                      <p>本地：{{scope.row.xuntime}}</p>
-                                      <p>当地：{{scope.row.foreigntime}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="sourcename"
-                                  label="来源"
-                                  min-width="110"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank" :title="scope.row.url">{{scope.row.domain}}</a></p>
-                                      <p>{{scope.row.sourcename}}</p>
-                                      <p>{{scope.row.messagetype}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="sourcename"
-                                  label="大洲/地区/IP"
-                                  min-width="90"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p><span class="EnColor05">大洲：</span>{{scope.row.continent}}</p>
-                                      <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
-                                      <p><span class="EnColor05">来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip" :title="scope.row.ip">IP</a></p>
-                                      <p><span class="EnColor05">设备：</span>{{scope.row.device}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="keyproduct"
-                                  label="类型/产品"
-                                  min-width="130"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p><span class="EnColor05">产品：</span><span :style="'font-weight:bold;color:'+scope.row.producttypecolor">{{scope.row.producttypename}}</span>/{{scope.row.keyproduct}}</p>
-                                      <p class="EnColor05"><span>物料：</span>{{scope.row.material}}</p>
-                                      <p class="EnColor05"><span>产量：</span>{{scope.row.production}}</p>
-                                      <p class="EnColor05"><span>进料：</span>{{scope.row.infeed}}</p>
-                                      <p class="EnColor05"><span>出料：</span>{{scope.row.outfeed}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="isEffective"
-                                  label="有效/原因"
-                                  min-width="90"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                                    <div class="table-text">{{scope.row.invalidcause}}<span class="redTip">{{scope.row.noeffectivetime}}</span></div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="levelname"
-                                  label="首次/二次"
-                                  min-width="100"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p class="table-tag"><span class="EnColor05">初次：</span><span class="level"  @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></p>
-                                      <p><span class="EnColor05">性质：</span>{{scope.row.ennaturename?scope.row.ennaturename:'未判定'}}</p>
-                                      <p><span class="EnColor05">需求：</span>{{scope.row.enxunpricename?scope.row.enxunpricename:'未判定'}}</p>
-                                      <p><span class="EnColor05">状态：</span>{{scope.row.managestatus==1?'':'已开始处理'}}</p>
-                                      <p><span class="EnColor05">异常：</span>{{scope.row.erroring}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="xunremark"
-                                  label="备注"
-                                  min-width="90"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p><span class="EnColor05" v-if="scope.row.xunremark&&scope.row.xunremark!=''">询盘：</span>{{scope.row.xunremark}}</p>
-                                      <p v-if="permitField.includes('custormremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.custormremark&&scope.row.custormremark!=''">客服：</span>{{scope.row.custormremark}}</p>
-                                      <p v-if="permitField.includes('salesremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.salesremark&&scope.row.salesremark!=''">业务员：</span>{{scope.row.salesremark}}</p>
-                                      <p v-if="permitField.includes('salesremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.true_ask&&scope.row.true_ask!=''">真实需求：</span>{{scope.row.true_ask}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="addusername"
-                                  label="添/分人员"
-                                  width="100"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p><span>添：</span>{{scope.row.addusername}}</p>
-                                      <p><span>分：</span>{{scope.row.allotusername}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="addusername"
-                                  label="业务人员"
-                                  width="80"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p>{{scope.row.hassale}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="addtime"
-                                  label="添/分/改/业务时间"
-                                  min-width="90"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p>{{scope.row.addtime}}</p>
-                                      <p>{{scope.row.allottime}}</p>
-                                      <p>{{scope.row.updatetime}}</p>
-                                      <p style="color:red;">{{scope.row.managetime}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="sourcename"
-                                  label="价值分"
-                                  width="70"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  v-if="writepermit&&(permitField.includes('remark1')||permitField.includes('remark2')||permitField.includes('remark3'))"
-                                  key="d"
-                                  prop="searchword"
-                                  label="备注"
-                                  width="100"
-                                  fixed="right"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-input">
-                                      <el-input size="small" class="tips-input-2" v-model="scope.row.remark1" v-if="permitField.includes('remark1')"></el-input>
-                                      <el-input size="small" class="tips-input-3" v-model="scope.row.remark2" v-if="permitField.includes('remark2')"></el-input>
-                                      <el-input size="small" class="tips-input-4" v-model="scope.row.remark3" v-if="permitField.includes('remark3')"></el-input>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  v-if="writepermit&&(menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit'))"
-                                  width="88"
-                                  align="center"
-                                  prop="operations"
-                                  fixed="right"
-                                  label="操作">
-                                  <template #default="scope">
-                                    <div class="table-button">
-                                      <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_otheredit')">修改</el-button>
-                                      <router-link :to="{path:'/Enphone/addEditClues',query:{ID:scope.row.id}}" tag="a" target="_blank" v-if="menuButtonPermit.includes('Enphone_edit')">
-                                        <el-button size="mini">编辑</el-button>        
-                                      </router-link>
-                                      <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="menuButtonPermit.includes('Enphone_edit')" style="color:red;">({{scope.row.eidtnumber}})</span>
-                                    </div>
-                                  </template>
-                                </el-table-column>
+                                  <el-table-column
+                                      prop="id"
+                                      label="业务员ID"
+                                      min-width="65"
+                                      text-align='center'
+                                      >
+                                  </el-table-column>
+                                  <el-table-column
+                                      prop="name"
+                                      label="姓名"
+                                      min-width="80"
+                                      >
+                                  </el-table-column>
+                                  <el-table-column
+                                      prop="five_number"
+                                      label="五天未回复询盘数"
+                                      min-width="80"
+                                      sortable
+                                      >
+                                      <template slot-scope="scope">
+                                          <div class="table-text">
+                                              <p><b style="color:#379bff">{{scope.row.five_number}}</b></p>
+                                          </div>
+                                      </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                      prop="more_number"
+                                      label="多次提交未回复询盘数"
+                                      min-width="70"
+                                      sortable
+                                      >
+                                      <template slot-scope="scope">
+                                          <div class="table-text">
+                                              <p><b style="color:#ed475e">{{scope.row.more_number}}</b></p>
+                                          </div>
+                                      </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                      prop="use_number"
+                                      label="分给其他人后回复的询盘数"
+                                      min-width="100"
+                                      sortable
+                                      >
+                                      <template slot-scope="scope">
+                                          <div class="table-text">
+                                              <p><b style="color:#f37220">{{scope.row.use_number}}</b></p>
+                                          </div>
+                                      </template>
+                                  </el-table-column>
                               </el-table>
-                              <el-table
-                                ref="simpleTable"
-                                :data="tableData"
-                                tooltip-effect="dark"
-                                stripe
-                                class="SiteTable EntableColor"
-                                style="width: 100%"
-                                :style="'min-height:'+tableHeight+'px;'"
-                                row-key="id"
-                                key="a"
-                                v-else
-                                >
-                                <el-table-column
-                                  prop="id"
-                                  label="ID"
-                                  width="70"
+                              <template v-else>
+                                <el-table
+                                  ref="simpleTable"
+                                  :data="tableData"
+                                  tooltip-effect="dark"
+                                  stripe
+                                  class="SiteTable EntableColor"
+                                  style="width: 100%"
+                                  :style="'min-height:'+tableHeight+'px;'"
+                                  row-key="id"
+                                  key="a"
+                                  v-if="phoneID"
                                   >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p>{{scope.row.id}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="xuntime"
-                                  label="时间"
-                                  min-width="120"
+                                  <el-table-column
+                                    prop="id"
+                                    label="ID"
+                                    width="70"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p>{{scope.row.id}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="xuntime"
+                                    label="时间"
+                                    min-width="120"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p>时段：{{scope.row.timeing}}</p>
+                                        <p class="EnColor02">星期：{{scope.row.weekday}}</p>
+                                        <p>本地：{{scope.row.xuntime}}</p>
+                                        <p>当地：{{scope.row.foreigntime}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="sourcename"
+                                    label="来源"
+                                    min-width="110"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank" :title="scope.row.url">{{scope.row.domain}}</a></p>
+                                        <p>{{scope.row.sourcename}}</p>
+                                        <p>{{scope.row.messagetype}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="sourcename"
+                                    label="大洲/地区/IP"
+                                    min-width="90"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p><span class="EnColor05">大洲：</span>{{scope.row.continent}}</p>
+                                        <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
+                                        <p><span class="EnColor05">来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip" :title="scope.row.ip">IP</a></p>
+                                        <p><span class="EnColor05">设备：</span>{{scope.row.device}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="keyproduct"
+                                    label="类型/产品"
+                                    min-width="130"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p><span class="EnColor05">产品：</span><span :style="'font-weight:bold;color:'+scope.row.producttypecolor">{{scope.row.producttypename}}</span>/{{scope.row.keyproduct}}</p>
+                                        <p class="EnColor05"><span>物料：</span>{{scope.row.material}}</p>
+                                        <p class="EnColor05"><span>产量：</span>{{scope.row.production}}</p>
+                                        <p class="EnColor05"><span>进料：</span>{{scope.row.infeed}}</p>
+                                        <p class="EnColor05"><span>出料：</span>{{scope.row.outfeed}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="isEffective"
+                                    label="有效/原因"
+                                    min-width="90"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
+                                      <div class="table-text">{{scope.row.invalidcause}}<span class="redTip">{{scope.row.noeffectivetime}}</span></div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="levelname"
+                                    label="首次/二次"
+                                    min-width="100"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p class="table-tag"><span class="EnColor05">初次：</span><span class="level"  @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></p>
+                                        <p><span class="EnColor05">性质：</span>{{scope.row.ennaturename?scope.row.ennaturename:'未判定'}}</p>
+                                        <p><span class="EnColor05">需求：</span>{{scope.row.enxunpricename?scope.row.enxunpricename:'未判定'}}</p>
+                                        <p><span class="EnColor05">状态：</span>{{scope.row.managestatus==1?'':'已开始处理'}}</p>
+                                        <p><span class="EnColor05">异常：</span>{{scope.row.erroring}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="xunremark"
+                                    label="备注"
+                                    min-width="90"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p><span class="EnColor05" v-if="scope.row.xunremark&&scope.row.xunremark!=''">询盘：</span>{{scope.row.xunremark}}</p>
+                                        <p v-if="permitField.includes('custormremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.custormremark&&scope.row.custormremark!=''">客服：</span>{{scope.row.custormremark}}</p>
+                                        <p v-if="permitField.includes('salesremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.salesremark&&scope.row.salesremark!=''">业务员：</span>{{scope.row.salesremark}}</p>
+                                        <p v-if="permitField.includes('salesremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.true_ask&&scope.row.true_ask!=''">真实需求：</span>{{scope.row.true_ask}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="addusername"
+                                    label="添/分人员"
+                                    width="100"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p><span>添：</span>{{scope.row.addusername}}</p>
+                                        <p><span>分：</span>{{scope.row.allotusername}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="addusername"
+                                    label="业务人员"
+                                    width="80"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p>{{scope.row.hassale}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="addtime"
+                                    label="添/分/改/业务时间"
+                                    min-width="90"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p>{{scope.row.addtime}}</p>
+                                        <p>{{scope.row.allottime}}</p>
+                                        <p>{{scope.row.updatetime}}</p>
+                                        <p style="color:red;">{{scope.row.managetime}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="sourcename"
+                                    label="价值分"
+                                    width="70"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    v-if="writepermit&&(permitField.includes('remark1')||permitField.includes('remark2')||permitField.includes('remark3'))"
+                                    key="d"
+                                    prop="searchword"
+                                    label="备注"
+                                    width="100"
+                                    fixed="right"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-input">
+                                        <el-input size="small" class="tips-input-2" v-model="scope.row.remark1" v-if="permitField.includes('remark1')"></el-input>
+                                        <el-input size="small" class="tips-input-3" v-model="scope.row.remark2" v-if="permitField.includes('remark2')"></el-input>
+                                        <el-input size="small" class="tips-input-4" v-model="scope.row.remark3" v-if="permitField.includes('remark3')"></el-input>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    v-if="writepermit&&(menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit'))"
+                                    width="88"
+                                    align="center"
+                                    prop="operations"
+                                    fixed="right"
+                                    label="操作">
+                                    <template #default="scope">
+                                      <div class="table-button">
+                                        <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_otheredit')">修改</el-button>
+                                        <router-link :to="{path:'/Enphone/addEditClues',query:{ID:scope.row.id}}" tag="a" target="_blank" v-if="menuButtonPermit.includes('Enphone_edit')">
+                                          <el-button size="mini">编辑</el-button>        
+                                        </router-link>
+                                        <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="menuButtonPermit.includes('Enphone_edit')" style="color:red;">({{scope.row.eidtnumber}})</span>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                </el-table>
+                                <el-table
+                                  ref="simpleTable"
+                                  :data="tableData"
+                                  tooltip-effect="dark"
+                                  stripe
+                                  class="SiteTable EntableColor"
+                                  style="width: 100%"
+                                  :style="'min-height:'+tableHeight+'px;'"
+                                  row-key="id"
+                                  key="a"
+                                  v-else
                                   >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p>时段：{{scope.row.timeing}}</p>
-                                      <p class="EnColor02">星期：{{scope.row.weekday}}</p>
-                                      <p>本地：{{scope.row.xuntime}}</p>
-                                      <p>当地：{{scope.row.foreigntime}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="sourcename"
-                                  label="来源"
-                                  min-width="110"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank" :title="scope.row.url">{{scope.row.domain}}</a></p>
-                                      <p>{{scope.row.sourcename}}</p>
-                                      <p>{{scope.row.messagetype}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="sourcename"
-                                  label="大洲/地区/IP"
-                                  min-width="90"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p><span class="EnColor05">大洲：</span>{{scope.row.continent}}</p>
-                                      <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
-                                      <p><span class="EnColor05">来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip" :title="scope.row.ip">IP</a></p>
-                                      <p><span class="EnColor05">设备：</span>{{scope.row.device}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="keyproduct"
-                                  label="类型/产品"
-                                  min-width="130"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p><span class="EnColor05">产品：</span><span :style="'font-weight:bold;color:'+scope.row.producttypecolor">{{scope.row.producttypename}}</span>/{{scope.row.keyproduct}}</p>
-                                      <p class="EnColor05"><span>物料：</span>{{scope.row.material}}</p>
-                                      <p class="EnColor05"><span>产量：</span>{{scope.row.production}}</p>
-                                      <p class="EnColor05"><span>进料：</span>{{scope.row.infeed}}</p>
-                                      <p class="EnColor05"><span>出料：</span>{{scope.row.outfeed}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="effective"
-                                  label="有效/原因"
-                                  min-width="90"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
-                                    <div class="table-text">{{scope.row.invalidcause}}<span class="redTip">{{scope.row.noeffectivetime}}</span></div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="levelname"
-                                  label="首次/二次"
-                                  min-width="100"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p class="table-tag"><span class="EnColor05">初次：</span><span class="level"  @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></p>
-                                      <p><span class="EnColor05">性质：</span>{{scope.row.ennaturename?scope.row.ennaturename:'未判定'}}</p>
-                                      <p><span class="EnColor05">需求：</span>{{scope.row.enxunpricename?scope.row.enxunpricename:'未判定'}}</p>
-                                      <p><span class="EnColor05">状态：</span>{{scope.row.managestatus==1?'':'已开始处理'}}</p>
-                                      <p><span class="EnColor05">异常：</span>{{scope.row.erroring}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="xunremark"
-                                  label="备注"
-                                  min-width="90"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p><span class="EnColor05" v-if="scope.row.xunremark&&scope.row.xunremark!=''">询盘：</span>{{scope.row.xunremark}}</p>
-                                      <p v-if="permitField.includes('custormremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.custormremark&&scope.row.custormremark!=''">客服：</span>{{scope.row.custormremark}}</p>
-                                      <p v-if="permitField.includes('salesremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.salesremark&&scope.row.salesremark!=''">业务员：</span>{{scope.row.salesremark}}</p>
-                                      <p v-if="permitField.includes('salesremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.true_ask&&scope.row.true_ask!=''">真实需求：</span>{{scope.row.true_ask}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="addusername"
-                                  label="添/分人员"
-                                  width="100"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p><span>添：</span>{{scope.row.addusername}}</p>
-                                      <p><span>分：</span>{{scope.row.allotusername}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="addusername"
-                                  label="业务人员"
-                                  width="80"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p>{{scope.row.hassale}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="addtime"
-                                  label="添/分/改/业务时间"
-                                  min-width="90"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-text">
-                                      <p>{{scope.row.addtime}}</p>
-                                      <p>{{scope.row.allottime}}</p>
-                                      <p>{{scope.row.updatetime}}</p>
-                                      <p style="color:red;">{{scope.row.managetime}}</p>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="sourcename"
-                                  label="价值分"
-                                  width="70"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  v-if="currentKey!='feedback' && currentKey!='fivexun' && (permitField.includes('remark1')||permitField.includes('remark2')||permitField.includes('remark3'))"
-                                  key="d"
-                                  prop="searchword"
-                                  label="备注"
-                                  width="100"
-                                  fixed="right"
-                                  >
-                                  <template slot-scope="scope">
-                                    <div class="table-input">
-                                      <el-input size="small" class="tips-input-2" v-model="scope.row.remark1" v-if="scope.row.writepermit&&permitField.includes('remark1')"></el-input>
-                                      <el-input size="small" class="tips-input-3" v-model="scope.row.remark2" v-if="scope.row.writepermit&&permitField.includes('remark2')"></el-input>
-                                      <el-input size="small" class="tips-input-4" v-model="scope.row.remark3" v-if="scope.row.writepermit&&permitField.includes('remark3')"></el-input>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  prop="feedback_info"
-                                  label="延时反馈原因"
-                                  min-width="90"
-                                  v-if="currentKey&&currentKey=='feedback'"
-                                  >
-                                </el-table-column>
-                                <el-table-column
-                                  prop="givecustormwarn"
-                                  label="提醒"
-                                  min-width="90"
-                                  v-if="currentKey&&currentKey=='fivexun'"
-                                  >
-                                </el-table-column>
-                                <el-table-column
-                                  v-if="menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')"
-                                  width="88"
-                                  align="center"
-                                  prop="operations"
-                                  fixed="right"
-                                  label="操作">
-                                  <template #default="scope">
-                                    <div class="table-button">
-                                      <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_otheredit')">修改</el-button>
-                                      <router-link :to="{path:'/Enphone/addEditClues',query:{ID:scope.row.id}}" tag="a" target="_blank" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')">
-                                      <el-button size="mini" >编辑</el-button>
-                                      </router-link>
-                                      <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')" style="color:red;">({{scope.row.eidtnumber}})</span>
-                                    </div>
-                                  </template>
-                                </el-table-column>
-                              </el-table>
+                                  <el-table-column
+                                    prop="id"
+                                    label="ID"
+                                    width="70"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p>{{scope.row.id}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="xuntime"
+                                    label="时间"
+                                    min-width="120"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p>时段：{{scope.row.timeing}}</p>
+                                        <p class="EnColor02">星期：{{scope.row.weekday}}</p>
+                                        <p>本地：{{scope.row.xuntime}}</p>
+                                        <p>当地：{{scope.row.foreigntime}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="sourcename"
+                                    label="来源"
+                                    min-width="110"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p v-if="scope.row.domain"><a :href="scope.row.url" target="_blank" :title="scope.row.url">{{scope.row.domain}}</a></p>
+                                        <p>{{scope.row.sourcename}}</p>
+                                        <p>{{scope.row.messagetype}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="sourcename"
+                                    label="大洲/地区/IP"
+                                    min-width="90"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p><span class="EnColor05">大洲：</span>{{scope.row.continent}}</p>
+                                        <p><span class="EnColor05">国家：</span>{{scope.row.country}}</p>
+                                        <p><span class="EnColor05">来路：</span><a :href="'https://www.ip138.com/iplookup.asp?ip='+scope.row.ip+'&action=2'" target="_blank" v-if="scope.row.ip" :title="scope.row.ip">IP</a></p>
+                                        <p><span class="EnColor05">设备：</span>{{scope.row.device}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="keyproduct"
+                                    label="类型/产品"
+                                    min-width="130"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p><span class="EnColor05">产品：</span><span :style="'font-weight:bold;color:'+scope.row.producttypecolor">{{scope.row.producttypename}}</span>/{{scope.row.keyproduct}}</p>
+                                        <p class="EnColor05"><span>物料：</span>{{scope.row.material}}</p>
+                                        <p class="EnColor05"><span>产量：</span>{{scope.row.production}}</p>
+                                        <p class="EnColor05"><span>进料：</span>{{scope.row.infeed}}</p>
+                                        <p class="EnColor05"><span>出料：</span>{{scope.row.outfeed}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="effective"
+                                    label="有效/原因"
+                                    min-width="90"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-tag" style="text-align:center;"><el-checkbox v-model="scope.row.isEffective" disabled></el-checkbox></div>
+                                      <div class="table-text">{{scope.row.invalidcause}}<span class="redTip">{{scope.row.noeffectivetime}}</span></div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="levelname"
+                                    label="首次/二次"
+                                    min-width="100"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p class="table-tag"><span class="EnColor05">初次：</span><span class="level"  @click="handleCustormeditlogClick(scope.row.id)" :class="'level-'+scope.row.level_id">{{scope.row.levelname}}</span></p>
+                                        <p><span class="EnColor05">性质：</span>{{scope.row.ennaturename?scope.row.ennaturename:'未判定'}}</p>
+                                        <p><span class="EnColor05">需求：</span>{{scope.row.enxunpricename?scope.row.enxunpricename:'未判定'}}</p>
+                                        <p><span class="EnColor05">状态：</span>{{scope.row.managestatus==1?'':'已开始处理'}}</p>
+                                        <p><span class="EnColor05">异常：</span>{{scope.row.erroring}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="xunremark"
+                                    label="备注"
+                                    min-width="90"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p><span class="EnColor05" v-if="scope.row.xunremark&&scope.row.xunremark!=''">询盘：</span>{{scope.row.xunremark}}</p>
+                                        <p v-if="permitField.includes('custormremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.custormremark&&scope.row.custormremark!=''">客服：</span>{{scope.row.custormremark}}</p>
+                                        <p v-if="permitField.includes('salesremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.salesremark&&scope.row.salesremark!=''">业务员：</span>{{scope.row.salesremark}}</p>
+                                        <p v-if="permitField.includes('salesremark')" class="EnColor07"><span class="EnColor05" v-if="scope.row.true_ask&&scope.row.true_ask!=''">真实需求：</span>{{scope.row.true_ask}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="addusername"
+                                    label="添/分人员"
+                                    width="100"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p><span>添：</span>{{scope.row.addusername}}</p>
+                                        <p><span>分：</span>{{scope.row.allotusername}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="addusername"
+                                    label="业务人员"
+                                    width="80"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p>{{scope.row.hassale}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="addtime"
+                                    label="添/分/改/业务时间"
+                                    min-width="90"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-text">
+                                        <p>{{scope.row.addtime}}</p>
+                                        <p>{{scope.row.allottime}}</p>
+                                        <p>{{scope.row.updatetime}}</p>
+                                        <p style="color:red;">{{scope.row.managetime}}</p>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="sourcename"
+                                    label="价值分"
+                                    width="70"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-score"><span class="EnColor06">{{scope.row.score}}</span></div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    v-if="currentKey!='feedback' && currentKey!='fivexun' && (permitField.includes('remark1')||permitField.includes('remark2')||permitField.includes('remark3'))"
+                                    key="d"
+                                    prop="searchword"
+                                    label="备注"
+                                    width="100"
+                                    fixed="right"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="table-input">
+                                        <el-input size="small" class="tips-input-2" v-model="scope.row.remark1" v-if="scope.row.writepermit&&permitField.includes('remark1')"></el-input>
+                                        <el-input size="small" class="tips-input-3" v-model="scope.row.remark2" v-if="scope.row.writepermit&&permitField.includes('remark2')"></el-input>
+                                        <el-input size="small" class="tips-input-4" v-model="scope.row.remark3" v-if="scope.row.writepermit&&permitField.includes('remark3')"></el-input>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="feedback_info"
+                                    label="延时反馈原因"
+                                    min-width="90"
+                                    v-if="currentKey&&currentKey=='feedback'"
+                                    >
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="givecustormwarn"
+                                    label="提醒"
+                                    min-width="90"
+                                    v-if="currentKey&&currentKey=='fivexun'"
+                                    >
+                                    <template slot-scope="scope">
+                                      {{scope.row.givecustormwarn}}
+                                      <div style="color:#d02c34">({{scope.row.nowname}})</div>
+                                      <div>{{scope.row.allot_time}}</div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    v-if="menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')"
+                                    width="88"
+                                    align="center"
+                                    prop="operations"
+                                    fixed="right"
+                                    label="操作">
+                                    <template #default="scope">
+                                      <div class="table-button">
+                                        <el-button size="mini" @click="editTableInputRow(scope.row,scope.$index)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_otheredit')">修改</el-button>
+                                        <router-link :to="{path:'/Enphone/addEditClues',query:{ID:scope.row.id}}" tag="a" target="_blank" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')">
+                                        <el-button size="mini" >编辑</el-button>
+                                        </router-link>
+                                        <span class="edit-times" v-on:click="jumpEditHistoryPage(scope.row.id)" v-if="scope.row.writepermit&&menuButtonPermit.includes('Enphone_edit')" style="color:red;">({{scope.row.eidtnumber}})</span>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                </el-table>
+                              </template>
                           </div>
                           <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
                               <div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
                           </div>
                       </div>
-                      <div class="pagination-panel" v-if="totalDataNum>20" ref="pagePane">
+                      <div class="pagination-panel" v-if="totalDataNum>20 && !isGroup" ref="pagePane">
                         <el-pagination
                           @size-change="handleSizeChange"
                           @current-change="handleCurrentChange"
@@ -900,6 +983,12 @@ export default {
       maxDate:[],
       minDate:[],
       maxNum:0,
+      moreChecked: false,
+      is_group: false,
+      isGroup: false,
+      groupTypeList:[
+          {label:"按业务员",value:1,isOn:false}
+      ],
       searchData:{
         date:[],
         timeing:"",
@@ -928,7 +1017,11 @@ export default {
         waitstatus:"1",
         salesownid:"",
         salesdepart_id:"",
-        once_allot: false
+        once_allot: false,
+        en_id: "",
+        is_more: "",
+        is_group: false,
+        grouptype: ""
       },
       pageSizeList:[20, 50, 100, 500],
       totalDataNum:0,
@@ -1295,7 +1388,15 @@ export default {
         $this.searchData.salesownid="";
         $this.searchData.salesdepart_id="";
         $this.searchData.once_allot = false;
+        $this.searchData.en_id = "";
+        $this.searchData.is_more = "";
+        $this.searchData.is_group = false;
+        $this.moreChecked = false;
+        $this.searchData.grouptype = "";
         $this.searchResult();
+        $this.groupTypeList.forEach(item => {
+          item.isOn = false;
+        })
     },
     // 右侧标题-左侧电话括号小数字
     leftPhoto(){
@@ -1680,6 +1781,18 @@ export default {
               searchData.salesownid=$this.searchData.salesownid;
               searchData.salesdepart_id=$this.searchData.salesdepart_id;
               searchData.once_allot = $this.searchData.once_allot ? 2 : '';
+              if($this.searchData.en_id){
+                searchData.en_id = $this.searchData.en_id;
+              }
+              if($this.moreChecked){
+                searchData.is_more = 1;
+              }else{
+                searchData.is_more = 0;
+              }
+              if($this.searchData.is_group){
+                searchData.is_group = 1
+              }
+              searchData.grouptype=$this.searchData.grouptype;
             }
           }
         }
@@ -1699,7 +1812,7 @@ export default {
               infoData.effectiveCountLastMonth=response.lasteffectivenumber;
               infoData.invalidCountLastMonth=response.lastnoeffectivenumber;
               infoData.totalScoreLastMonth=response.countlastmonthscore;
-              if(response.data.length>0){
+              if(response.data && response.data.length>0){
                 response.data.forEach(function(item,index){
                   item.isEffective = item.effective==1?true:false;
                 });
@@ -1711,7 +1824,14 @@ export default {
               $this.tableData = response.data;
               $this.infoData = infoData;
               $this.totalDataNum = response.allcount;
-              $this.getPermitField();            
+              $this.getPermitField();
+              if($this.searchData.is_group){
+                $this.isDisabled = false;
+                $this.tableData = response.ulist;
+                $this.isGroup = true;
+              }else{
+                $this.isGroup = false;
+              }           
             }else{
               $this.$message({
                 showClose: true,
@@ -2361,6 +2481,24 @@ export default {
       $this.scrollPosition.startPageX = 0;
       $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
     },
+    //分组选择点击事件
+    groupTypeClick(id){
+      var $this = this;
+      var groupTypeList = $this.groupTypeList;
+      groupTypeList.forEach(function(item,index){
+        if(item.value == id){
+          if(item.isOn){
+            item.isOn = false;
+          }else{
+            item.isOn = true;
+            $this.searchData.grouptype = id;
+          }
+        }else{
+          item.isOn = false;
+        }
+      });
+      $this.groupTypeList = groupTypeList;
+    },
   }
 }
 </script>
@@ -2399,6 +2537,40 @@ export default {
 }
 .EnphoneCard .tips-list{
   margin-bottom: 0;
+}
+.fivexun-clus {
+    float: left;
+    position: relative;
+    font-size: 13px;
+    color: #606266;
+    cursor: pointer;
+    line-height: 20px;
+    margin: 5px;
+    border: 1px solid #DCDFE6;
+    border-radius: 4px;
+    padding: 5px 15px 5px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    i {
+      position: relative;
+      float: left;
+      width: 12px;
+      height: 12px;
+      box-sizing: border-box;
+      border-radius: 50%;
+      border: 1px solid #DCDFE6;
+      background: #fff;
+      margin-top: 4px;
+      margin-right: 8px;
+    }
+    &.active{
+      color: #0970ff;
+      border-color: #0970ff;
+      i {
+        border: 4px solid #0970ff;
+      }
+    }
 }
 </style>
 <style>

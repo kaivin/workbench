@@ -1,27 +1,37 @@
 <template>
-	<el-dialog :visible.sync="isDialogShow" :before-close="handleClose" width="1000px">
-        <el-form ref="ruleForm" :model="form" label-width="100px">
-            <el-form-item label="员工" prop="uid">
-                <el-select v-model="form.uid" multiple filterable placeholder="请选择">
-                    <el-option v-for="item in userList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="类型" prop="type_id">
-                <el-select v-model="form.type_id" placeholder="请选择">
-                    <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="积分" prop="score">
-                <el-input-number v-model="form.score" :min="0" :step="0.1"></el-input-number>
-            </el-form-item>
-            <el-form-item label="备注" prop="score">
-                <el-input v-model="form.remark" placeholder="请输入备注" type="textarea" :rows="2"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="submitForm">保存</el-button>
-                <el-button @click="resetForm">重置</el-button>
-            </el-form-item>
-        </el-form>
+	<el-dialog title="分配积分" :visible.sync="isDialogShow" :before-close="handleClose" width="500px">
+        <div class="form_box">
+            <el-form ref="ruleForm" :model="form" label-width="50px">
+                <el-form-item label="员工" prop="uid">
+                    <el-select v-model="form.uid" multiple filterable placeholder="请选择">
+                        <el-option v-for="item in userList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
+                <div class="row_col">
+                    <div class="row_item">
+                        <el-form-item label="类型" prop="type_id">
+                            <el-select v-model="form.type_id" placeholder="请选择">
+                                <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <div class="row_item">
+                        <el-form-item label="积分" prop="score">
+                            <el-input-number v-model="form.score" :min="0" :step="0.1"></el-input-number>
+                        </el-form-item>
+                    </div>
+                </div>
+                <el-form-item label="备注" prop="score">
+                    <el-input v-model="form.remark" placeholder="请输入备注" type="textarea" :rows="2"></el-input>
+                </el-form-item>
+            </el-form>
+        </div>
+        <template #footer>
+            <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="submitForm">保 存</el-button>
+            </span>
+        </template>
 	</el-dialog>
 </template>
 
@@ -36,6 +46,7 @@
 		data(){
 			return {
                 isDialogShow: false,
+                isSaveData: false,
 				form: {
                     uid: [],
                     type_id: "",
@@ -44,6 +55,8 @@
 				},
                 typeList: [],
                 userList: [],
+                isGetType: false,
+                isGetUser: false
 			}
 		},
         computed: {
@@ -56,36 +69,49 @@
 		methods: {
             showDialog(v) {
                 var $this = this;
-                $this.typeList = v.typeList;
                 $this.isDialogShow = true;
-                $this.getUserList();
+                if(!$this.isGetUser){
+                    $this.getUserList();
+                }
+                if(!$this.isGetType){
+                    $this.getTypeList();
+                }
+                if(v.type == 'edit'){
+                    $this.form.uid = v.data.uid;
+                    $this.form.type_id = v.data.type_id;
+                    $this.form.score = v.data.score;
+                    $this.form.remark = v.data.remark;
+                }
             },
 			submitForm(){
 				var $this = this;
-                $this.checkForm();
+                if(!$this.checkForm()){
+                    return false;
+                }
                 var formData = {};
                 formData.uid = $this.form.uid;
                 formData.type_id = $this.form.type_id;
                 formData.score = $this.form.score;
                 formData.remark = $this.form.remark;
-                console.log(formData)
-                // $this.$store.dispatch('videocount/seprateUserScore',formData).then(res=>{
-                //     if(res.code == 200){
-                //         $this.$message({
-                //             showClose: true,
-                //             message: res.msg,
-                //             type: 'success'
-                //         });
-                //         $this.$emit("saveSuccess");
-                //         $this.isDialogShow = false;
-                //     }else{
-                //         $this.$message({
-                //             showClose: true,
-                //             message: res.msg,
-                //             type: 'error'
-                //         });
-                //     }
-                // });
+                $this.isSaveData = true;
+                $this.$store.dispatch('videocount/seprateUserScore',formData).then(res=>{
+                    if(res.code == 200){
+                        $this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'success'
+                        });
+                        $this.isSaveData = false;
+                        $this.$emit("saveSuccess");
+                        $this.isDialogShow = false;
+                    }else{
+                        $this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'error'
+                        });
+                    }
+                });
 			},
             checkForm(){
                 var $this = this;
@@ -113,6 +139,7 @@
                     });
                     return false
                 }
+                return true;
             },
 			resetForm(){
 				var $this = this;
@@ -140,6 +167,33 @@
                             })
                         }
                         $this.userList = resData;
+                        $this.isGetUser = true;
+                    }else{
+                        $this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'error'
+                        });
+                    }
+                });
+            },
+            // 获取工作类型
+            getTypeList(){
+                var $this = this;
+                $this.$store.dispatch('videocount/getVideoTypeData',null).then(res=>{
+                    if(res.code == 200){
+                        var resData = [];
+                        if(res.data && res.data.length > 0){
+                            res.data.forEach(item => {
+                                var obj = {};
+                                obj.label = item.name;
+                                obj.value = item.id;
+                                obj.disabled = false;
+                                resData.push(obj);
+                            })
+                        }
+                        $this.typeList = resData;
+                        $this.isGetType = true;
                     }else{
                         $this.$message({
                             showClose: true,
@@ -154,6 +208,26 @@
 </script>
 <style lang="scss" scoped>
 	.el-input-number{
-		width: 140px;
+		width: 100%;
 	}
+    .form_box{
+        padding-right: 10px;
+    }
+    .el-select{
+        width: 100%;
+    }
+    .row_col{
+        &:after{
+            content: "";
+            display: block;
+            clear: both;
+        }
+        .row_item{
+            width: 46%;
+            float: left;
+        }
+        .row_item+.row_item{
+            float: right;
+        }
+    }
 </style>

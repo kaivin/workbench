@@ -5,7 +5,8 @@ import {
     getRecordDetail,
     saveRecord,
     seprateScore,
-    getUserList
+    getUserList,
+    delRecord
 } from '@/api/videocount'
 
 const state = {}
@@ -61,6 +62,16 @@ const actions = {
             })
         })
     },
+    // 删除工作内容
+    delRecordData({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            delRecord(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
     // 分配积分
     seprateUserScore({ commit, state }, data) {
         return new Promise((resolve, reject) => {
@@ -81,6 +92,7 @@ const actions = {
             })
         })
     },
+    
 }
 
 export default {

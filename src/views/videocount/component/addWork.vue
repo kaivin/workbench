@@ -1,47 +1,51 @@
 <template>
-	<el-dialog :visible.sync="isDialogShow" :before-close="handleClose" width="1000px">
-        <el-form ref="ruleForm" :model="form" label-width="60px">
-            <el-form-item label="日期" prop="date">
-                <el-date-picker
-                    v-model="form.record_time"
-                    type="date"
-                    placeholder="选择日期"
-                    format="yyyy-MM-dd"
-                    value-format="yyyy-MM-dd"
-                    :picker-options="pickerOptions">
-                </el-date-picker>
-            </el-form-item>
-            <el-form-item label="岗位" prop="post_id">
-                <el-radio-group v-model="form.post_id">
-                    <el-radio v-for="item in postList" :key="item.value" :label="item.value">{{item.label}}</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item label="内容" prop="data">
-                <sc-form-table ref="table" v-model="form.data" :addTemplate="addTemplate" @updateValue="updateDataValue" placeholder="暂无数据">
-                    <el-table-column prop="type_id" label="类型" align="center"  width="200">
-                        <template #default="scope">
-                            <el-select v-model="scope.row.type_id" placeholder="请选择">
-                                <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="number" align="center" label="个数" width="180">
-                        <template #default="scope">
-                            <el-input-number v-model="scope.row.number" :min="0"></el-input-number>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="remark" label="备注" align="center" >
-                        <template #default="scope">
-                            <el-input v-model="scope.row.remark" placeholder="请输入内容"></el-input>
-                        </template>
-                    </el-table-column>
-                </sc-form-table>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="submitForm">保存</el-button>
-                <el-button @click="resetForm">重置</el-button>
-            </el-form-item>
-        </el-form>
+	<el-dialog title="添加工作汇报" :visible.sync="isDialogShow" :before-close="handleClose" width="1000px">
+        <div class="form_box">
+            <el-form ref="ruleForm" :model="form" label-width="50px">
+                <el-form-item label="日期" prop="date">
+                    <el-date-picker
+                        v-model="form.record_time"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd"
+                        :picker-options="pickerOptions">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="岗位" prop="post_id">
+                    <el-radio-group v-model="form.post_id">
+                        <el-radio v-for="item in postList" :key="item.value" :label="item.value">{{item.label}}</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="内容" prop="data">
+                    <sc-form-table ref="table" v-model="form.data" :addTemplate="addTemplate" :hideAdd="addDisabled" :hideDelete="addDisabled" @updateValue="updateDataValue" placeholder="暂无数据">
+                        <el-table-column prop="type_id" label="类型" align="center"  width="200">
+                            <template #default="scope">
+                                <el-select v-model="scope.row.type_id" placeholder="请选择">
+                                    <el-option v-for="item in typeList" :disabled="item.disabled" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="number" align="center" label="个数" width="180">
+                            <template #default="scope">
+                                <el-input-number v-model="scope.row.number" :min="0"></el-input-number>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="remark" label="备注" align="center" >
+                            <template #default="scope">
+                                <el-input v-model="scope.row.remark" placeholder="请输入内容"></el-input>
+                            </template>
+                        </el-table-column>
+                    </sc-form-table>
+                </el-form-item>
+            </el-form>
+        </div>
+        <template #footer>
+            <span class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" :class="isSaveData?'isDisabled':''" :disabled="isSaveData" @click="submitForm">保 存</el-button>
+            </span>
+        </template>
 	</el-dialog>
 </template>
 
@@ -57,6 +61,7 @@ export default {
     data(){
         return {
             isDialogShow: false,
+            isSaveData: false,
             addTemplate: {
                 type_id: '',
                 number: '',
@@ -66,11 +71,7 @@ export default {
                 uid: "",
                 id: "",
                 record_time: "",
-                data: [{
-                    type_id: '',
-                    number: '',
-                    remark: '' 
-                }],
+                data: [],
                 post_id: '',
             },
             editType: "",
@@ -101,7 +102,9 @@ export default {
             },
             typeList: [],
             postList: [],
-
+            isGetPost: false,
+            isGetType: false,
+            addDisabled: false,
         }
     },
     computed: {
@@ -114,24 +117,54 @@ export default {
     methods: {
         showDialog(v) {
             var $this = this;
-            $this.isDialogShow = true;
-            $this.typeList = v.typeList;
-            $this.postList = v.postList;
             $this.editType = v.type;
-            $this.form.uid = $this.userInfo.id;
-            var nowDay = parseTime(new Date(),'{y}-{m}-{d}');
-            $this.form.record_time = nowDay;
+            if(!$this.isGetType){
+                if(v.type == "edit"){
+                    $this.getTypeList(v.data.data);
+                }else{
+                    $this.getTypeList();
+                }
+            }else{
+                if(v.type == "edit"){
+                    $this.form.data.push(v.data.data);
+                }
+            }
+            if(!$this.isGetPost){
+                $this.getPostList();
+            }else{
+                if(v.type == 'add'){
+                    if($this.postList.length > 0){
+                        $this.form.post_id = $this.postList[0].value;
+                    }
+                }
+            }
+            
             if(v.type == 'edit'){
                 $this.form.uid = v.data.uid;
                 $this.form.id = v.data.id;
                 $this.form.record_time = v.data.record_time;
-                $this.form.data = v.data.data;
                 $this.form.post_id = v.data.post_id;
+                $this.addDisabled = true;
+            }else{
+                var nowDay = parseTime(new Date(),'{y}-{m}-{d}');
+                $this.form.record_time = nowDay;
+                $this.form.uid = $this.userInfo.id;
+                $this.addDisabled = false;
             }
+            $this.isDialogShow = true;
         },
         submitForm(){
             var $this = this;
-            $this.checkForm();
+            if(!$this.checkForm()){
+                return false;
+            }
+            const loading = this.$loading({
+                lock: true,
+                text: '保存中',
+                spinner: 'el-icon-loading',
+                background: 'rgba(255, 255, 255, 0.7)'
+            });
+            $this.isSaveData = true;
             var formData = {};
             formData.uid = $this.form.uid;
             formData.record_time = $this.form.record_time;
@@ -140,32 +173,37 @@ export default {
             if($this.editType == 'edit'){
                 formData.id = $this.form.id;
             }
-            console.log(formData)
-            // $this.$store.dispatch('videocount/saveRecordData',formData).then(res=>{
-            //     if(res.code == 200){
-            //         $this.$message({
-            //             showClose: true,
-            //             message: res.msg,
-            //             type: 'success'
-            //         });
-            //         $this.$emit("saveSuccess");
-            //         $this.isDialogShow = false;
-            //     }else{
-            //         $this.$message({
-            //             showClose: true,
-            //             message: res.msg,
-            //             type: 'error'
-            //         });
-            //     }
-            // });
+            $this.$store.dispatch('videocount/saveRecordData',formData).then(res=>{
+                if(res.code == 200){
+                    $this.$message({
+                        showClose: true,
+                        message: res.msg,
+                        type: 'success'
+                    });
+                    $this.$emit("saveSuccess");
+                    loading.close();
+                    $this.resetForm();
+                    $this.isDialogShow = false;
+                    $this.isSaveData = false;
+                }else{
+                    $this.$message({
+                        showClose: true,
+                        message: res.msg,
+                        type: 'error'
+                    });
+                }
+            });
         },
         resetForm(){
             var $this = this;
             $this.form.uid = "";
             $this.form.id = "";
             $this.form.record_time = "";
-            $this.form.data = [];
+            $this.form.data.splice(0, $this.form.data.length);
             $this.form.post_id = "";
+            $this.typeList.forEach(item => {
+                item.disabled = false;
+            })
         },
         checkForm(){
             var $this = this;
@@ -212,6 +250,7 @@ export default {
                     return false
                 }
             }
+            return true;
         },
         handleClose(){
             var $this = this;
@@ -221,7 +260,82 @@ export default {
         updateDataValue(value){
             var $this = this;
             $this.form.data = value;
-        }
+            var ids = [];
+            if(value && value.length > 0){
+                value.forEach(item => {
+                    if(item.type_id){
+                        ids.push(item.type_id);
+                    }
+                })
+            }
+            if(ids.length > 0){
+                $this.typeList.forEach(item => {
+                    if(ids.includes(item.value)){
+                        item.disabled = true;
+                    }else{
+                            item.disabled = false;
+                    }
+                })
+            }
+        },
+		// 获取工作类型
+		getTypeList(data){
+			var $this = this;
+			var formData = {};
+			formData.type = "manual";
+			$this.$store.dispatch('videocount/getVideoTypeData',formData).then(res=>{
+				if(res.code == 200){
+					var resData = [];
+					if(res.data && res.data.length > 0){
+						res.data.forEach(item => {
+							var obj = {};
+							obj.label = item.name;
+							obj.value = item.id;
+							obj.disabled = false;
+							resData.push(obj);
+						})
+					}
+					$this.typeList = resData;
+                    $this.isGetType = true;
+                    if(data){
+                        $this.form.data.push(data);
+                    }
+				}else{
+					$this.$message({
+						showClose: true,
+						message: res.msg,
+						type: 'error'
+					});
+				}
+			});
+		},
+        // 获取岗位
+		getPostList(){
+			var $this = this;
+			$this.$store.dispatch('videocount/getVideoPostData',null).then(res=>{
+				if(res.code == 200){
+                    var resData = [];
+                    if(res.data && res.data.length > 0){
+                        res.data.forEach(item => {
+                            var obj = {};
+                            obj.label = item.name;
+                            obj.value = item.id;
+                            obj.disabled = false;
+                            resData.push(obj);
+                        })
+                    }
+                    $this.postList = resData;
+                    $this.form.post_id = resData.length > 0 ? resData[0].value : "";
+                    $this.isGetPost = true;
+				}else{
+                    $this.$message({
+                        showClose: true,
+                        message: res.msg,
+                        type: 'error'
+                    });
+                    }
+			});
+		},
     }
 }
 </script>
@@ -229,6 +343,9 @@ export default {
 	.el-input-number{
 		width: 158px;
 	}
+    .form_box{
+        padding-right: 10px;
+    }
 </style>
 <style lang="scss">
   .el-table{

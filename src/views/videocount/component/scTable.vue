@@ -87,3 +87,6 @@
 	.sc-form-table .hover-row .sc-form-table-handle-delete button {display: inline-block;}
 	.sc-form-table .move {text-align: center;font-size: 14px;margin-top: 3px;}
 </style>
+<style>
+	.el-button--small.is-circle{padding: 5px;}
+</style>

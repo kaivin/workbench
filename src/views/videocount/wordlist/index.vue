@@ -3,119 +3,233 @@
 	  <div class="abs-panel" ref="mainPane">
 		<div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
 			<div class="true-height" ref="scrollPane">
-			<p class="breadcrumb" ref="breadcrumbPane">
-				<router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
-				<template v-for="item in breadcrumbList">
-				<router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
-				<span v-else class="breadcrumb-link" v-bind:key="'last-' + item.id"><b>-</b><span>{{item.title}}</span></span>
-				</template>
-			</p>
-			<el-card class="box-card" shadow="hover">
-				<div class="card-header" ref="headerPane">
-				<div class="search-wrap" ref="searchPane">
-					<div class="item-search item-search-date">
-					<el-date-picker
-						v-model="searchData.time"
-						@change="searchResult"
-						type="daterange"
-						format="yyyy-MM-dd"
-						value-format="yyyy-MM-dd"
-						key="b"
-						size="small"
-						class="date-range"
-						range-separator="～"
-						start-placeholder="开始日期"
-						end-placeholder="结束日期"
-						:picker-options="pickerDateRangeOptions">
-					</el-date-picker>
+				<p class="breadcrumb" ref="breadcrumbPane">
+					<router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
+					<template v-for="item in breadcrumbList">
+						<router-link class="breadcrumb-link" :to="item.router" v-bind:key="item.id" v-if="item.router!=''"><b>-</b><span>{{item.title}}</span></router-link>
+						<span v-else class="breadcrumb-link" v-bind:key="'last-' + item.id"><b>-</b><span>{{item.title}}</span></span>
+					</template>
+				</p>
+				<el-card class="box-card" shadow="hover">
+					<div class="card-header" ref="headerPane">
+						<div class="search-wrap" ref="searchPane">
+							<div class="item-search item-search-date">
+								<el-date-picker
+									v-model="searchData.time"
+									@change="searchResult"
+									type="daterange"
+									format="yyyy-MM-dd"
+									value-format="yyyy-MM-dd"
+									key="b"
+									size="small"
+									class="date-range"
+									range-separator="～"
+									start-placeholder="开始日期"
+									end-placeholder="结束日期"
+									:picker-options="pickerDateRangeOptions">
+								</el-date-picker>
+							</div>
+							<div class="item-search">
+								<el-input
+									class="input-panel"
+									size="small"
+									placeholder="请输入姓名"
+									v-model="searchData.name"
+									@keyup.enter.native="searchResult"
+									@clear="searchResult"
+									clearable>
+								</el-input>
+							</div>
+							<div class="item-search">
+								<el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
+								<el-button type="info" :disabled="isSearchResult" class="resetBtn" size="small" @click="resetData">重置</el-button>
+								<el-button type="success" :disabled="isSearchResult" size="small" icon="el-icon-plus" @click="addTableRow" v-if="menuButtonPermit.includes('videocount_saveword')">添加工作汇报</el-button>
+								<el-button type="warning" :disabled="isSearchResult" size="small" icon="el-icon-thumb" class="exportBtn derived" v-if="menuButtonPermit.includes('videocount_distribution')" @click="addScore">分配积分</el-button>
+							</div>
+						</div>
 					</div>
-					<div class="item-search">
-					<el-input
-						class="input-panel"
-						size="small"
-						placeholder="请输入姓名"
-						v-model="searchData.name"
-						@keyup.enter.native="searchResult"
-						@clear="searchResult"
-						clearable>
-					</el-input>
+					<div class="card-content" ref="tableContent">
+						<div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
+							<div class="table-mask"></div>
+								<el-table
+									ref="simpleTable"
+									:data="tableData"
+									tooltip-effect="dark"
+									class="SiteTable"
+									style="width: 100%"
+									stripe
+									:style="'min-height:'+tableHeight+'px;'"
+									>
+									<el-table-column align="center" width="60" type="expand">
+										<template slot-scope="props">
+											<div class="table_detail">
+												<el-table
+													ref="childTable"
+													:data="props.row.detail"
+													style="width:100%"
+													>
+													<el-table-column
+														prop="post_name"
+														label="岗位"
+														align="center"
+														min-width="100"
+														>
+														<template slot-scope="scopes">
+															{{scopes.row.extend.post_name}}
+														</template>
+													</el-table-column>
+													<el-table-column
+														prop="type_name"
+														label="类型"
+														align="center"
+														min-width="130"
+														>
+														<template slot-scope="scopes">
+															{{scopes.row.extend.type_name}}
+														</template>
+													</el-table-column>
+													<el-table-column
+														prop="number"
+														label="数量"
+														align="center"
+														min-width="100"
+														>
+														<template slot-scope="scopes">
+															{{scopes.row.extend.number}}
+														</template>
+													</el-table-column>
+													<el-table-column
+														prop="score"
+														label="单个积分"
+														align="center"
+														min-width="100"
+														>
+														<template slot-scope="scopes">
+															{{scopes.row.extend.score}}
+														</template>
+													</el-table-column>
+													<el-table-column
+														prop="score"
+														label="积分总计"
+														min-width="100"
+														align="center"
+														>
+													</el-table-column>
+													<el-table-column
+														prop="remark"
+														label="备注"
+														align="center"
+														min-width="150"
+														>
+													</el-table-column>
+													<el-table-column
+														v-if="props.row.detail.length > 0 && props.row.detail[0].user_id == userInfo.id && (menuButtonPermit.includes('videocount_saveword') || menuButtonPermit.includes('videocount_delword'))"
+														:width="operationsWidth"
+														align="center"
+														prop="operations"
+														label="操作" >
+														<template slot-scope="scopes">
+															<div class="table-button" >
+																<el-button v-if="menuButtonPermit.includes('videocount_saveword') && scopes.row.type_type == 'manual'" size="mini" @click="editTableRow(scopes.row, scopes.$index)" plain >编辑</el-button>
+																<el-button v-if="menuButtonPermit.includes('videocount_delword') && scopes.row.type_type == 'manual'" size="mini" @click="deleteTableRow(scopes.row, scopes.$index)" type="info" plain >删除</el-button>
+																<el-button v-if="menuButtonPermit.includes('videocount_distribution') && scopes.row.type_type == 'specify'" size="mini" @click="editScoreRow(scopes.row, scopes.$index)" plain >编辑</el-button>
+																<el-button v-if="menuButtonPermit.includes('videocount_distribution') && scopes.row.type_type == 'specify'" size="mini" @click="deleteScoreRow(scopes.row, scopes.$index)" type="info" plain >删除</el-button>
+															</div>
+														</template>
+													</el-table-column>
+												</el-table>
+											</div>
+										</template>
+									</el-table-column>
+									<el-table-column
+										prop="user_name"
+										label="姓名"
+										align="center"
+										min-width="100"
+										>
+									</el-table-column>
+									<el-table-column
+										prop="day"
+										label="日期"
+										align="center"
+										min-width="100"
+										>
+									</el-table-column>
+									<el-table-column
+										prop="promotional_video"
+										label="公司宣传片积分"
+										align="center"
+										min-width="140"
+										>
+									</el-table-column>
+									<el-table-column
+										prop="character_on_camera"
+										label="人物上镜短视频积分"
+										align="center"
+										min-width="140"
+										>
+									</el-table-column>
+									<el-table-column
+										prop="wechat_moments"
+										label="朋友圈视频积分"
+										align="center"
+										min-width="140"
+										>
+									</el-table-column>
+									<el-table-column
+										prop="pure_shear_video"
+										label="纯剪视频积分"
+										align="center"
+										min-width="140"
+										>
+									</el-table-column>
+									<el-table-column
+										prop="other"
+										label="其他（素材处理）积分"
+										align="center"
+										min-width="140"
+										>
+									</el-table-column>
+									<el-table-column
+										prop="specify"
+										align="center"
+										label="分配的积分"
+										min-width="140"
+										>
+									</el-table-column>
+									<el-table-column
+										prop="inquiry"
+										align="center"
+										label="询盘成交积分"
+										min-width="140"
+										>
+									</el-table-column>
+									<el-table-column
+										prop="score"
+										align="center"
+										label="积分总计"
+										min-width="140"
+										>
+									</el-table-column>
+								</el-table>
+							</div>
+							<div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
+								<div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
+							</div>
+						</div>
+					<div class="pagination-panel" v-if="totalDataNum>50" ref="pagePane">
+						<el-pagination
+							@size-change="handleSizeChange"
+							@current-change="handleCurrentChange"
+							:current-page="searchData.page"
+							:page-sizes="pageSizeList"
+							:page-size="searchData.limit"
+							:pager-count="pagerCount"
+							:layout="'total, sizes, prev, pager, next, jumper'"
+							:total="totalDataNum">
+						</el-pagination>
 					</div>
-					<div class="item-search">
-					<el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
-					<el-button type="info" class="resetBtn" size="small" @click="resetData">重置</el-button>
-					<el-button type="success" size="small" icon="el-icon-plus" @click="addTableRow" v-if="menuButtonPermit.includes('videocount_saveword')">添加工作汇报</el-button>
-					<el-button type="warning" size="small" icon="el-icon-thumb" class="exportBtn derived" v-if="menuButtonPermit.includes('videocount_distribution')" @click="addScore">分配积分</el-button>
-					</div>
-				</div>
-				</div>
-				<div class="card-content" ref="tableContent">
-				<div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
-					<div class="table-mask"></div>
-						<el-table
-						ref="simpleTable"
-						:data="tableData"
-						tooltip-effect="dark"
-						class="SiteTable"
-						style="width: 100%"
-						:style="'min-height:'+tableHeight+'px;'"
-						row-key="id"
-						>
-						<el-table-column
-							prop="name"
-							label="姓名"
-							min-width="120"
-							>
-						</el-table-column>
-						<el-table-column
-							prop="my_level"
-							label="日期"
-							align="center"
-							width="100"
-							>
-						</el-table-column>
-						
-						<el-table-column
-							prop="score"
-							align="center"
-							label="积分"
-							width="140"
-							>
-						</el-table-column>
-						<el-table-column
-							v-if="menuButtonPermit.includes('videocount_saveword') || menuButtonPermit.includes('videocount_delword')"
-							:width="operationsWidth"
-							align="center"
-							fixed="right"
-							prop="operations"
-							label="操作" >
-							<template #default="scope">
-								<div class="table-button" v-if="menuButtonPermit.includes('videocount_saveword')">
-									<el-button size="mini" @click="editTableRow(scope.row, scope.$index)" plain >编辑</el-button>
-								</div>
-								<div class="table-button" v-if="menuButtonPermit.includes('videocount_delword')">
-									<el-button size="mini" @click="deleteTableRow(scope.row, scope.$index)" type="info" plain >删除</el-button>
-								</div>
-							</template>
-						</el-table-column>
-						</el-table>
-					</div>
-					<div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
-						<div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
-					</div>
-				</div>
-				<div class="pagination-panel" v-if="totalDataNum>50" ref="pagePane">
-				<el-pagination
-					@size-change="handleSizeChange"
-					@current-change="handleCurrentChange"
-					:current-page="searchData.page"
-					:page-sizes="pageSizeList"
-					:page-size="searchData.limit"
-					:pager-count="pagerCount"
-					:layout="'total, sizes, prev, pager, next, jumper'"
-					:total="totalDataNum">
-				</el-pagination>
-				</div>
-			</el-card>
+				</el-card>
 			</div>
 		</div>
 	  </div>
@@ -139,60 +253,59 @@ export default {
 	},
 	data() {
 		return {
-		breadcrumbList:[],
-		menuButtonPermit:[],
-		pagerCount:5,
-		pageSizeList:[20, 50, 100, 150, 200],
-		totalDataNum: 0,
-		tableData:[],
-		tableHeight:200,
-		searchData:{
-			time: [],
-			name: "",
-			page: 1,
-			limit: 20,
-		},
-		scrollPosition:{
-			width:0,
-			left:0,
-			fixedBottom: 20,
-			insetWidth:0,
-			oldInsetLeft:0,
-			insetLeft:0,
-			ratio:0,
-			startPageX:0,
-			maxScrollWidth:0,
-			isMouseDown:false,
-			isPC:true,
-			isFixed:false,
-		},
-		scrollTable:{
-			scrollDom:null,
-			tableHeaderFixedDom:null,
-			tableFixedRightDom:null,
-			tableFixedLeftDom:null,
-			fixedTopHeight:0,
-			tableheaderHeight:0,
-			fixedRightWidth:0,
-			fixedLeftWidth:0,
-			tableBottom:0,
-			clientHeight:0,
-		},
-		operationsWidth: "",
-		isSearchResult:false,
-		selectedData: [],
-		pickerDateRangeOptions: this.$pickerRangeOptions,
-		typeList: [],
-		postList: []
+			breadcrumbList:[],
+			menuButtonPermit:[],
+			pagerCount:5,
+			pageSizeList:[20, 50, 100, 150, 200],
+			totalDataNum: 0,
+			tableData:[],
+			tableHeight:200,
+			searchData:{
+				time: [],
+				name: "",
+				page: 1,
+				limit: 20,
+			},
+			scrollPosition:{
+				width:0,
+				left:0,
+				fixedBottom: 20,
+				insetWidth:0,
+				oldInsetLeft:0,
+				insetLeft:0,
+				ratio:0,
+				startPageX:0,
+				maxScrollWidth:0,
+				isMouseDown:false,
+				isPC:true,
+				isFixed:false,
+			},
+			scrollTable:{
+				scrollDom:null,
+				tableHeaderFixedDom:null,
+				tableFixedRightDom:null,
+				tableFixedLeftDom:null,
+				fixedTopHeight:0,
+				tableheaderHeight:0,
+				fixedRightWidth:0,
+				fixedLeftWidth:0,
+				tableBottom:0,
+				clientHeight:0,
+			},
+			operationsWidth: "",
+			isSearchResult:false,
+			selectedData: [],
+			pickerDateRangeOptions: this.$pickerRangeOptions,
 		}
 	},
 	computed: {
 		...mapGetters([
-		'sidebar',
-		'menuData'
+			'sidebar',
+			'menuData',
+			'userInfo'
 		]),
 		isOpen() {
-		return this.sidebar.opened;
+			return this.sidebar.opened;
 		},
 	},
 	mounted(){
@@ -213,14 +326,14 @@ export default {
 	},
 	watch: {
 		tableHeight(val) {
-		if (!this.timer) {
-			this.tableHeight = val
-			this.timer = true
-			const $this = this
-			setTimeout(function() {
-			$this.timer = false
-			}, 400)
-		}
+			if (!this.timer) {
+				this.tableHeight = val
+				this.timer = true
+				const $this = this
+				setTimeout(function() {
+					$this.timer = false
+				}, 400)
+			}
 		},
 	},
 	created(){
@@ -296,8 +409,8 @@ export default {
 						});
 					}
 				}
-		});
-		$this.breadcrumbList = breadcrumbList;
+			});
+			$this.breadcrumbList = breadcrumbList;
 		},
 		// 判断浏览器类型
 		getBrowserType(){
@@ -319,7 +432,7 @@ export default {
 			var headerHeight = $this.$refs.headerPane.offsetHeight;
 			var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
 			var screenHeight = $this.$refs.boxPane.offsetHeight;
-			$this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40-45-31;
+			$this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40;
 			$this.getBrowserType();
 				setTimeout(function() {
 				$this.setScrollDom();
@@ -401,8 +514,6 @@ export default {
 			const end = parseTime(new Date(), '{y}-{m}-{d}');
 			const start = parseTime(new Date()-3600 * 1000 * 24 * 7, '{y}-{m}-{d}');
 			$this.searchData.time = [start, end];
-			$this.getTypeList();
-			$this.getPostList();
 			$this.getWorkList();
 		},
 		// 获取工作列表
@@ -411,7 +522,7 @@ export default {
 			var formData = {}
 			formData.page = $this.searchData.page;
 			formData.limit = $this.searchData.limit;
-			formData.time = $this.searchData.time.join("-");
+			formData.time = $this.searchData.time.join(" - ");
 			formData.name = $this.searchData.name;
 			document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
 			$this.$store.dispatch('videocount/getRecordData', formData).then(response=>{
@@ -450,89 +561,102 @@ export default {
 				}
 			});
 		},
-		// 获取工作类型
-		getTypeList(){
-			var $this = this;
-			$this.$store.dispatch('videocount/getVideoTypeData',null).then(res=>{
-				if(res.code == 200){
-					var resData = [];
-					if(res.data && res.data.length > 0){
-						res.data.forEach(item => {
-							var obj = {};
-							obj.label = item.name;
-							obj.value = item.id;
-							resData.push(obj);
-						})
-					}
-					$this.typeList = resData;
-				}else{
-					$this.$message({
-						showClose: true,
-						message: res.msg,
-						type: 'error'
-					});
-				}
-			});
-		},
-		// 获取岗位
-		getPostList(){
-			var $this = this;
-			$this.$store.dispatch('videocount/getVideoPostData',null).then(res=>{
-				if(res.code == 200){
-				var resData = [];
-				if(res.data && res.data.length > 0){
-					res.data.forEach(item => {
-						var obj = {};
-						obj.label = item.name;
-						obj.value = item.id;
-						resData.push(obj);
-					})
-				}
-				$this.postList = resData;
-				}else{
-				$this.$message({
-					showClose: true,
-					message: res.msg,
-					type: 'error'
-				});
-				}
-			});
-		},
 		addTableRow() {
 			var $this = this;
-			$this.$refs.AddWorkRef.showDialog({typeList: $this.typeList, postList: $this.postList, type: "add"})
+			$this.$refs.AddWorkRef.showDialog({type: "add"})
 		},
 		editTableRow(data) {
-			$this.$refs.AddWorkRef.showDialog({typeList: $this.typeList, postList: $this.postList, type: "edit", data: data})
+			var $this = this;
+			var dataObj = {};
+			var resData = [];
+			var obj = {};
+			obj.type_id = data.type_id;
+			obj.number = data.extend.number;
+			obj.remark = data.remark;
+			resData.push(obj);
+			dataObj.uid = data.user_id;
+			dataObj.id = data.id;
+			dataObj.record_time = data.record_time;
+			dataObj.data = obj;
+			dataObj.post_id = data.post_id;
+			$this.$refs.AddWorkRef.showDialog({type: "edit", data: dataObj})
 		},
 		// 删除表格行
 		deleteTableRow(row, index) {
 			var $this = this;
-			$this.$confirm('是否确认删除该数据?', '提示', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
+			$this.$confirm('确认删除该数据?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
 				}).then(() => {
-				$this.$store.dispatch('douyin/douyinKeywordDel',{ id: row.id }).then(response=>{
-					if (response.status) {
-						$this.$message({
-							showClose: true,
-							message: response.info,
-							type: "success",
-						});
-						$this.initPage();
-					} else {
-						$this.$message({
-							showClose: true,
-							message: response.info,
-							type: "error",
-						});
-					}
-				});
+					var formData = {};
+					formData.uid = row.user_id;
+					formData.record_time = row.record_time;
+					formData.post_id = row.post_id;
+					formData.type_id = row.type_id;
+					$this.$store.dispatch('videocount/delRecordData',formData).then(response=>{
+						if (response.code == 200) {
+							$this.$message({
+								showClose: true,
+								message: response.msg,
+								type: "success",
+							});
+							$this.initPage();
+						} else {
+							$this.$message({
+								showClose: true,
+								message: response.msg,
+								type: "error",
+							});
+						}
+					});
 			});
 		},
 		addScore(){
-			$this.$refs.AddScoreRef.showDialog({typeList: $this.typeList})
+			var $this = this;
+			$this.$refs.AddScoreRef.showDialog({type: "add"})
+		},
+		editScoreRow(data) {
+			var $this = this;
+			var dataObj = {};
+			var resData = [];
+			var obj = {};
+			obj.type_id = data.type_id;
+			dataObj.uid = [data.user_id];
+			dataObj.record_time = data.record_time;
+			dataObj.post_id = 0;
+			$this.$refs.AddScoreRef.showDialog({type: "edit", data: dataObj})
+		},
+		// 删除表格行
+		deleteScoreRow(row, index) {
+			var $this = this;
+			$this.$confirm('确认删除该数据?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					var formData = {};
+					formData.uid = row.user_id;
+					formData.record_time = row.record_time;
+					formData.post_id = 0;
+					formData.type_id = row.type_id;
+					$this.$store.dispatch('videocount/delRecordData',formData).then(response=>{
+						if (response.code == 200) {
+							$this.$message({
+								showClose: true,
+								message: response.msg,
+								type: "success",
+							});
+							$this.initPage();
+						} else {
+							$this.$message({
+								showClose: true,
+								message: response.msg,
+								type: "error",
+							});
+						}
+					});
+			});
 		},
 		// 每页显示条数改变事件
 		handleSizeChange(val) {
@@ -858,10 +982,23 @@ font-size: 13px;
 	background-color:#0970ff;
 }
 }
+.table_detail{
+	padding: 20px 30px 20px;
+	.table_detail_title{
+		font-size: 15px;
+		color: #333;
+		margin-bottom: 15px;
+	}
+}
+.table-button{
+	.el-button+.el-button{
+		margin-left: 10px!important;
+	}
+}
 </style>
 <style lang="scss" > 
 .el-table__cell.stripe{
-background: #fafafa;
+	background: #fafafa;
 }
 
 .el-table__cell.stripe-all{
@@ -926,5 +1063,17 @@ svg,i[class~="el-cion"]{
 	display:none!important;
 }
 }
-
+.fixed-table .table_detail .el-table__header-wrapper{
+	position: relative;
+	z-index: 1;
+	top: 0;
+}
+.el-table.SiteTable .table_detail .el-table{
+	border-radius: 0;
+}
+.el-table.SiteTable .table_detail th.is-leaf{
+	background: rgba(226, 233, 237, 0.4);
+}
+.el-table.SiteTable .table_detail td{
+}
 </style>

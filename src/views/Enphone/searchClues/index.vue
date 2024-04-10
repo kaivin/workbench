@@ -296,6 +296,23 @@
                                             <el-checkbox class="item-checkbox" v-model="searchData.effective" size="mini" border>只显示有效</el-checkbox>
                                             <el-checkbox class="item-checkbox" v-model="searchData.is_adduser" size="mini" border>只显示我添加的（客服）</el-checkbox>
                                             <div class="search-panelThree" style="display:inline-block">
+                                                <span style="float:left;line-height:28px;font-size:12px;">意向分：</span>
+                                                <el-input
+                                                    size="mini"
+                                                    style="width:56px;"
+                                                    v-model="searchData.start_score"
+                                                    clearable>
+                                                </el-input>
+                                                ~
+                                                <el-input
+                                                    size="mini"
+                                                    style="width:56px;"
+                                                    v-model="searchData.end_score"
+                                                    clearable
+                                                    >
+                                                </el-input>
+                                            </div>
+                                            <div class="search-panelThree" style="display:inline-block;margin-left: 10px;">
                                                 <span style="float:left;line-height:28px;font-size:12px;">显示条数：</span>
                                                 <el-input
                                                     size="mini"
@@ -876,6 +893,8 @@ export default {
             groupurlproduct:"1",
             sort:"asc",
             ftword_id:"",
+            start_score: "",
+            end_score: ""
         },
         pageSizeList:[20],
         totalDataNum:0,
@@ -1536,6 +1555,10 @@ export default {
         resultData.phoneid = $this.searchData.phoneid;
         resultData.messagetype = $this.searchData.messagetype;//留言类型
         resultData.ennature = $this.searchData.ennature;//性质id
+        if(!isNaN(parseFloat($this.searchData.start_score)) && !isNaN(parseFloat($this.searchData.end_score))){
+          resultData.start_score = $this.searchData.start_score;
+          resultData.end_score = $this.searchData.end_score;
+        }
         return resultData;
     },
     // 时间搜索
@@ -1854,6 +1877,8 @@ export default {
         $this.searchData.is_group=false;
         $this.searchData.groupurlproduct="1";
         $this.searchData.sort="asc";
+        $this.searchData.start_score="";
+        $this.searchData.end_score="";
         $this.isAllTeam=false;
         $this.checkAllTeam=false;
         $this.pageSizeList=[20];
@@ -2129,6 +2154,10 @@ export default {
       } else {
         searchData.starttime = "";
         searchData.endtime = "";
+      }
+      if(!isNaN(parseFloat($this.searchData.start_score)) && !isNaN(parseFloat($this.searchData.end_score))){
+        searchData.start_score = $this.searchData.start_score;
+        searchData.end_score = $this.searchData.end_score;
       }
       return searchData;
     },
