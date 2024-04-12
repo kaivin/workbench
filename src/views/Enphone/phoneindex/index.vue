@@ -287,7 +287,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)||(currentKey&&currentKey=='fivexun')" v-model="searchData.salesownid" size="small" clearable placeholder="业务员" :class="searchData.salesownid!=''?'el-xzstate':''" 
+                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)||(currentKey&&currentKey=='fivexun')" v-model="searchData.salesownid" size="small" clearable filterable placeholder="业务员" :class="searchData.salesownid!=''?'el-xzstate':''" 
                                     style="width:90px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in salesuserList"
@@ -357,6 +357,7 @@
                                     </el-option>
                                   </el-select>
                                   <el-checkbox border v-if="currentKey=='fivexun'" size="small" v-model="moreChecked" style="width:100px;margin:5px 10px 5px 0px;float:left;">多次标记</el-checkbox>
+                                  <el-checkbox border v-if="currentKey=='fivexun'" size="small" v-model="badChecked" style="width:130px;margin:5px 10px 5px 0px;float:left;">多次标记未回复</el-checkbox>
                                   <el-input
                                     v-if="currentKey=='fivexun'"
                                     class="tips-input-5"
@@ -377,7 +378,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-checkbox v-if="currentKey&&currentKey=='all'" size="small"  v-model="searchData.once_allot">二次分配询盘</el-checkbox>
+                                  <el-checkbox v-if="currentKey&&currentKey=='all'" size="small" class="search_checkbox"  v-model="searchData.once_allot">二次分配询盘</el-checkbox>
                                   <el-checkbox v-if="currentKey=='fivexun'" class="search_checkbox" v-model="searchData.is_group" size="small" border style="width:70px;margin:5px 10px 5px 0px;float:left;">分组</el-checkbox>
                                   <template v-if="currentKey=='fivexun'">
                                       <span class="fivexun-clus" v-for="item in groupTypeList" v-bind:class="item.isOn?'active':''" v-bind:key="item.value" v-on:click="groupTypeClick(item.value)"><i></i>{{item.label}}</span>
@@ -416,67 +417,76 @@
                       <div class="card-content" ref="tableContent">
                           <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
                               <div class="table-mask"></div>
-                              <el-table
-                                  v-if="isGroup"
-                                  key="f"
-                                  ref="simpleTable"
-                                  :data="tableData"
-                                  class="SiteTable"
-                                  tooltip-effect="dark"
-                                  stripe
-                                  style="width: 100%"
-                                  :style="'min-height:'+tableHeight+'px;'"
-                                  >
-                                  <el-table-column
-                                      prop="id"
-                                      label="业务员ID"
-                                      min-width="65"
-                                      text-align='center'
-                                      >
-                                  </el-table-column>
-                                  <el-table-column
-                                      prop="name"
-                                      label="姓名"
-                                      min-width="80"
-                                      >
-                                  </el-table-column>
-                                  <el-table-column
-                                      prop="five_number"
-                                      label="五天未回复询盘数"
-                                      min-width="80"
-                                      sortable
-                                      >
-                                      <template slot-scope="scope">
-                                          <div class="table-text">
-                                              <p><b style="color:#379bff">{{scope.row.five_number}}</b></p>
-                                          </div>
-                                      </template>
-                                  </el-table-column>
-                                  <el-table-column
-                                      prop="more_number"
-                                      label="多次提交未回复询盘数"
-                                      min-width="70"
-                                      sortable
-                                      >
-                                      <template slot-scope="scope">
-                                          <div class="table-text">
-                                              <p><b style="color:#ed475e">{{scope.row.more_number}}</b></p>
-                                          </div>
-                                      </template>
-                                  </el-table-column>
-                                  <el-table-column
-                                      prop="use_number"
-                                      label="分给其他人后回复的询盘数"
-                                      min-width="100"
-                                      sortable
-                                      >
-                                      <template slot-scope="scope">
-                                          <div class="table-text">
-                                              <p><b style="color:#f37220">{{scope.row.use_number}}</b></p>
-                                          </div>
-                                      </template>
-                                  </el-table-column>
-                              </el-table>
+                              <template v-if="isGroup">
+                                <div class="item-change">
+                                  <div class="item-font" :class="activeType == 1?'active':''" @click="tabChange(1)">默认</div>
+                                  <div class="item-font" :class="activeType == 2?'active':''" @click="tabChange(2)">图表</div>
+                                </div>
+                                <el-table
+                                    v-if="activeType == 1"
+                                    key="f"
+                                    ref="simpleTable"
+                                    :data="tableData"
+                                    class="SiteTable"
+                                    tooltip-effect="dark"
+                                    stripe
+                                    style="width: 100%"
+                                    :style="'min-height:'+tableHeight+'px;'"
+                                    >
+                                    <el-table-column
+                                        prop="id"
+                                        label="业务员ID"
+                                        min-width="65"
+                                        text-align='center'
+                                        >
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        min-width="80"
+                                        >
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="five_number"
+                                        label="五天未回复询盘数"
+                                        min-width="80"
+                                        sortable
+                                        >
+                                        <template slot-scope="scope">
+                                            <div class="table-text">
+                                                <p><b style="color:#379bff">{{scope.row.five_number}}</b></p>
+                                            </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="more_number"
+                                        label="多次提交未回复询盘数"
+                                        min-width="70"
+                                        sortable
+                                        >
+                                        <template slot-scope="scope">
+                                            <div class="table-text">
+                                                <p><b style="color:#ed475e">{{scope.row.more_number}}</b></p>
+                                            </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="use_number"
+                                        label="分给其他人后回复的询盘数"
+                                        min-width="100"
+                                        sortable
+                                        >
+                                        <template slot-scope="scope">
+                                            <div class="table-text">
+                                                <p><b style="color:#f37220">{{scope.row.use_number}}</b></p>
+                                            </div>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                                <div class="chart_box" v-if="activeType == 2"> 
+                                  <div id="columnChart"></div>
+                                </div>
+                              </template>
                               <template v-else>
                                 <el-table
                                   ref="simpleTable"
@@ -684,7 +694,7 @@
                                   class="SiteTable EntableColor"
                                   style="width: 100%"
                                   :style="'min-height:'+tableHeight+'px;'"
-                                  row-key="id"
+                                  row-key="rowKey"
                                   key="a"
                                   v-else
                                   >
@@ -841,6 +851,16 @@
                                     </template>
                                   </el-table-column>
                                   <el-table-column
+                                    prop="remark1"
+                                    label="推广人员"
+                                    min-width="90"
+                                    v-if="currentKey&&currentKey=='fivexun'"
+                                    >
+                                    <template slot-scope="scope">
+                                      {{scope.row.remark1}}
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
                                     v-if="currentKey!='feedback' && currentKey!='fivexun' && (permitField.includes('remark1')||permitField.includes('remark2')||permitField.includes('remark3'))"
                                     key="d"
                                     prop="searchword"
@@ -864,17 +884,18 @@
                                     >
                                   </el-table-column>
                                   <el-table-column
-                                    prop="givecustormwarn"
+                                    prop="warning"
                                     label="提醒"
                                     min-width="90"
                                     v-if="currentKey&&currentKey=='fivexun'"
                                     >
                                     <template slot-scope="scope">
-                                      {{scope.row.givecustormwarn}}
+                                      {{scope.row.warning}}
                                       <div style="color:#d02c34">({{scope.row.nowname}})</div>
                                       <div>{{scope.row.allot_time}}</div>
                                     </template>
                                   </el-table-column>
+
                                   <el-table-column
                                     v-if="menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')"
                                     width="88"
@@ -960,6 +981,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import * as echarts from 'echarts';
 export default {
   name: 'Enphone_phoneindex',
   data() {
@@ -984,6 +1006,7 @@ export default {
       minDate:[],
       maxNum:0,
       moreChecked: false,
+      badChecked: false,
       is_group: false,
       isGroup: false,
       groupTypeList:[
@@ -1021,7 +1044,8 @@ export default {
         en_id: "",
         is_more: "",
         is_group: false,
-        grouptype: ""
+        grouptype: "",
+        is_bad: ""
       },
       pageSizeList:[20, 50, 100, 500],
       totalDataNum:0,
@@ -1164,6 +1188,9 @@ export default {
       isSearchResult:false,
       activeNames01:"11",
       activeNames02:"21",
+      columnData: {},
+      columnChart: null,
+      activeType: 1,
     }
   },
   computed: {
@@ -1175,6 +1202,9 @@ export default {
     isOpen() {
       return this.sidebar.opened;
     },
+    rowKey() {
+      return (row, index) => `${row.id}-${index}`;
+    }
   },
   mounted(){
     const $this = this;
@@ -1360,6 +1390,8 @@ export default {
     // 重置表单
     resetData(){
         var $this = this;
+        $this.moreChecked = false;
+        $this.badChecked = false;
         $this.searchData.date=[];
         $this.searchData.timeing="";
         $this.searchData.continent="";
@@ -1390,6 +1422,7 @@ export default {
         $this.searchData.once_allot = false;
         $this.searchData.en_id = "";
         $this.searchData.is_more = "";
+        $this.searchData.is_bad = "";
         $this.searchData.is_group = false;
         $this.moreChecked = false;
         $this.searchData.grouptype = "";
@@ -1789,6 +1822,11 @@ export default {
               }else{
                 searchData.is_more = 0;
               }
+              if($this.badChecked){
+                searchData.is_bad = 1;
+              }else{
+                searchData.is_bad = 0;
+              }
               if($this.searchData.is_group){
                 searchData.is_group = 1
               }
@@ -1829,6 +1867,30 @@ export default {
                 $this.isDisabled = false;
                 $this.tableData = response.ulist;
                 $this.isGroup = true;
+                if(response.ulist && response.ulist.length > 0){
+                  var resObj = {};
+                  var userData = [];
+                  var fiveData = [];
+                  var useData = [];
+                  var moreData = [];
+                  response.ulist.forEach(item => {
+                    if(!(item.five_number == 0 && item.use_number == 0 && item.more_number == 0)){
+                      userData.push(item.name);
+                      fiveData.push(item.five_number);
+                      useData.push(item.use_number);
+                      moreData.push(item.more_number);
+                    }
+                  })
+                  resObj.userData = userData;
+                  resObj.fiveData = fiveData;
+                  resObj.useData = useData;
+                  resObj.moreData = moreData;
+                  $this.columnData = resObj;
+                  $this.infoData.totalCount= response.ulist.length;
+                }else{
+                  $this.columnData = {};
+                  $this.infoData.totalCount = 0;
+                }
               }else{
                 $this.isGroup = false;
               }           
@@ -2499,6 +2561,163 @@ export default {
       });
       $this.groupTypeList = groupTypeList;
     },
+    tabChange(inx){
+      var $this = this;
+      $this.activeType = inx;
+      if($this.columnChart){
+        $this.columnChart.dispose();
+      }
+      $this.columnChart = null;
+      if(inx == 2){
+        setTimeout(() => {
+          $this.drawColumnChart();
+        }, 300);
+      }
+    },
+    drawColumnChart(){
+      var $this = this;
+        var chartDom = document.getElementById('columnChart');
+        var myChart = echarts.init(chartDom);
+        var option;
+        var series=[];
+        var color = ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"];
+        series=[{
+            type: 'bar',
+            data: $this.columnData.fiveData,
+            name: "五天未回复询盘数",
+            itemStyle: {
+              color: "#2259e5"
+            },
+            label: {
+                show: true,
+                position: 'top',
+            },
+        },{
+            type: 'bar',
+            data: $this.columnData.moreData,
+            name: "多次提交未回复询盘数",
+            itemStyle: {
+              color: "#eca12d"
+            },
+            label: {
+                show: true,
+                position: 'top',
+            },
+        },{
+            type: 'bar',
+            data: $this.columnData.useData,
+            name: "分给其他人后回复的询盘数",
+            itemStyle:{
+              color: '#fe4c46',
+            },
+            label: {
+                show: true,
+                position: 'top',
+            },
+        }];
+        var option;
+        option = {
+          tooltip:{
+            show: true,
+            trigger: "axis",
+            axisPointer: {
+              type: "line", 
+              lineStyle:{
+                color: "#5b8ff9"
+              }
+            },
+            textStyle:{
+                fontSize:12,
+                color: '#666'
+            },
+            formatter(params){
+              let returnData = `<div class="toolDiv">
+                      <div class="tooltitle">${params[0].name}</div>`;
+                      for (let i = 0; i < params.length; i++) {
+                        returnData += `<div class="bar clearfix" style="margin-top:5px">
+                          <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].color};"></span>
+                          <span>${params[i].seriesName}</span>
+                          <span>：${params[i].value}</span>
+                          </div>
+                          `;
+                      }
+                  returnData +=`</div>`;
+                  return returnData;
+            }
+          },
+          grid: {
+              top:'35',
+              right:'18',
+              left:'50',
+              bottom:'30'
+          },
+          xAxis:{
+              type: 'category',
+              data: $this.columnData.userData,
+              axisTick: {
+                  show: false
+              },
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 2],
+                      dashOffset: 3,
+                      color: '#000',
+                      opacity:0.1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              axisLabel: {
+                  color: "#999",
+                  fontSize: "12",
+                  lineHeight: 18,
+              },
+              nameTextStyle:{
+                  lineHeight:18,
+              }
+          },
+          yAxis:{
+              type: 'value',
+              name: "询盘（个）",
+              nameTextStyle: {
+                color: "#b4b4b4",
+                nameLocation: "start",
+              },
+              axisTick: {
+                  show: false
+              },
+              axisLabel: {
+                  color: "#999",
+                  fontSize: "12",
+                  lineHeight: 18,
+              },
+              axisLine:{
+                  show: false,
+              },
+              splitLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 2],
+                      dashOffset: 3,
+                      color: '#000',
+                      opacity:0.1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              splitNumber:3,
+          },
+          animation: false,
+          series:series,
+        }
+        option && myChart.setOption(option);
+        $this.columnChart = myChart;
+    }
   }
 }
 </script>
@@ -2545,7 +2764,7 @@ export default {
     color: #606266;
     cursor: pointer;
     line-height: 20px;
-    margin: 5px;
+    margin: 5px 10px 5px 0;
     border: 1px solid #DCDFE6;
     border-radius: 4px;
     padding: 5px 15px 5px 10px;
@@ -2571,6 +2790,44 @@ export default {
         border: 4px solid #0970ff;
       }
     }
+}
+.item-change{
+  margin-left: 15px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  .item-font{
+      float:left;
+      border:1px solid #e1e3ea;
+      font-size:13px;
+      color:#555555;
+      padding:4px 12px;
+      line-height:20px;
+      margin-left:-1px;
+      cursor:pointer;
+      &.active,&:hover{
+          color:#0970ff;
+          border:1px solid #0970ff;
+          background:#e0e9ff;
+          position:relative;
+          z-index:2;
+      }
+  }
+  &:after{
+    content:"";
+    display: block;
+    clear: both;
+  }
+}
+.chart_box{
+  width: 100%;
+  height: calc(100vh - 430px);
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  #columnChart{
+    width: 100%;
+    height: calc(100vh - 460px);
+  }
 }
 </style>
 <style>
