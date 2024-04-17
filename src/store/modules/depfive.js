@@ -5,8 +5,11 @@ import {
     getDepfiveIntentionCount,
     getDepfiveEnCondition,
     getDepfiveEnSourceData,
-    getDepfiveEnScoreData
-
+    getDepfiveEnScoreData,
+    getDepfiveDomainData,
+    getDepfiveExport,
+    getDepfiveTime,
+    addDepfiveUrl
 } from '@/api/depfive'
 
 const state = {}
@@ -81,7 +84,47 @@ const actions = {
                 reject(error)
             })
         })
-    }
+    },
+    // 获取域名统计内容
+    depfiveDomainDataAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getDepfiveDomainData(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 广告数据导入
+    depfiveExportAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getDepfiveExport(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 获取时间下拉
+    depfiveTimeAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            getDepfiveTime(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+
+    depfiveUrlAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            addDepfiveUrl(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
 }
 
 export default {

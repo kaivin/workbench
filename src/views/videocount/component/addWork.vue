@@ -1,5 +1,5 @@
 <template>
-	<el-dialog title="添加工作汇报" :visible.sync="isDialogShow" :before-close="handleClose" width="1000px">
+	<el-dialog :title="dialogTitle" :visible.sync="isDialogShow" :before-close="handleClose" width="1200px">
         <div class="form_box">
             <el-form ref="ruleForm" :model="form" label-width="50px">
                 <el-form-item label="日期" prop="date">
@@ -28,7 +28,12 @@
                         </el-table-column>
                         <el-table-column prop="number" align="center" label="个数" width="180">
                             <template #default="scope">
-                                <el-input-number v-model="scope.row.number" :min="0"></el-input-number>
+                                <el-input-number v-model="scope.row.number" :min="0" ></el-input-number>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="invalid_number" align="center" label="未通过审核个数" width="180">
+                            <template #default="scope">
+                                <el-input-number v-model="scope.row.invalid_number" :min="0" :max="Number(scope.row.number)"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column prop="remark" label="备注" align="center" >
@@ -37,7 +42,7 @@
                             </template>
                         </el-table-column>
                     </sc-form-table>
-                </el-form-item>
+                </el-form-item> 
             </el-form>
         </div>
         <template #footer>
@@ -64,8 +69,9 @@ export default {
             isSaveData: false,
             addTemplate: {
                 type_id: '',
-                number: '',
-                remark: ''
+                number: 0,
+                remark: '',
+                invalid_number: 0
             },
             form: {
                 uid: "",
@@ -105,6 +111,7 @@ export default {
             isGetPost: false,
             isGetType: false,
             addDisabled: false,
+            dialogTitle: "",
         }
     },
     computed: {
@@ -118,6 +125,13 @@ export default {
         showDialog(v) {
             var $this = this;
             $this.editType = v.type;
+            // 设置标题
+            if(v.type == "add"){
+                $this.dialogTitle = "添加工作汇报";
+            }else if(v.type == "edit"){
+                $this.dialogTitle = "编辑工作汇报";
+            }
+            // 请求数据
             if(!$this.isGetType){
                 if(v.type == "edit"){
                     $this.getTypeList(v.data.data);
@@ -138,7 +152,7 @@ export default {
                     }
                 }
             }
-            
+            // 绑定数据
             if(v.type == 'edit'){
                 $this.form.uid = v.data.uid;
                 $this.form.id = v.data.id;
@@ -170,6 +184,7 @@ export default {
             formData.record_time = $this.form.record_time;
             formData.data = $this.form.data;
             formData.post_id = $this.form.post_id;
+            formData.invalid_number = $this.form.invalid_number;
             if($this.editType == 'edit'){
                 formData.id = $this.form.id;
             }
@@ -225,12 +240,16 @@ export default {
             }else{
                 var isTypeEmpty = false;
                 var isNumberEmpty =  false;
+                var isWrongData = false;
                 $this.form.data.forEach(item => {
                     if(item.type_id == '' ){
                         isTypeEmpty = true;
                     }
                     if(!item.number){
                         isNumberEmpty = true;
+                    }
+                    if(item.number && item.invalid_number && item.invalid_number > item.number){
+                        isWrongData = true;
                     }
                 })
                 if(isTypeEmpty){
@@ -245,6 +264,14 @@ export default {
                     $this.$message({
                         showClose: true,
                         message: "请将工作数量补充完整",
+                        type: 'error'
+                    });
+                    return false
+                }
+                if(isWrongData){
+                    $this.$message({
+                        showClose: true,
+                        message: "请核对工作数量与未通过审核数量",
                         type: 'error'
                     });
                     return false

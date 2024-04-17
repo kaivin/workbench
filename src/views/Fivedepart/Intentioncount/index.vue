@@ -35,6 +35,32 @@
                                 </el-date-picker> 
                               </div>       
                             </div>
+                            <div class="team-headerItem">
+                              <span class="require">分类：</span>
+                              <div class="date_time">
+                                <el-select v-model="searchData.typekey" size="mini" clearable placeholder="分类" :class="searchData.typekey!=''?'el-xzstate':''">
+                                      <el-option
+                                          v-for="item in productTypeList"
+                                          :key="item.value"
+                                          :label="item.label"
+                                          :value="item.value">
+                                      </el-option>
+                                </el-select>
+                              </div>       
+                            </div>
+                            <div class="team-headerItem">
+                              <span class="require">渠道：</span>
+                              <div class="date_time">
+                                <el-select v-model="searchData.mode" size="mini" clearable placeholder="渠道" :class="searchData.mode!=''?'el-xzstate':''">
+                                      <el-option
+                                          v-for="item in sourceList"
+                                          :key="item.value"
+                                          :label="item.label"
+                                          :value="item.value">
+                                      </el-option>
+                                </el-select>
+                              </div>       
+                            </div>
                         </div>
 
                         <div class="team-header">
@@ -102,6 +128,8 @@ export default {
       menuButtonPermit:[],
       searchData:{
         date:[],
+        typekey: "",
+        mode: ""
       },
       pickerRangeOptions: {
         shortcuts: [{
@@ -167,7 +195,9 @@ export default {
         pluralGroupDateCompare: false,     // 多基础部门的时间对比
         pluralGroupTeamCompare: false,     // 多基础部门与其他部门对比
         pluralGroupTeamSameCompare: false, // 多基础部门与其他部门对比，且有部门同时存在于基础部门与对比部门
-      }
+      },
+      productTypeList: [],
+      sourceList: [],
     }
   },
   computed: {
@@ -215,6 +245,8 @@ export default {
       var $this = this;
       $this.isSearch = false;
       $this.searchData.date=[];
+      $this.searchData.typekey = "";
+      $this.searchData.mode = "";
       $this.searchResult.departxun=[];
       $this.searchResult.avgscore=[];
       $this.searchResult.provincemap=[];
@@ -246,6 +278,8 @@ export default {
       }
       searchData.type = $this.checkedItem;
       searchData.brand_id = $this.checkedBrand;
+      searchData.typekey = $this.searchData.typekey;
+      searchData.mode = $this.searchData.mode;
       return searchData;
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -265,6 +299,8 @@ export default {
                   duration:6000
               });
               $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+            }else{
+              $this.getConditionList();
             }
           }else{
             $this.$message({
@@ -284,7 +320,35 @@ export default {
         }
       });
     },
-
+    // 获取条件列表
+    getConditionList(){
+        var $this = this;
+        $this.$store.dispatch('depfive/depfiveEnConditionAction', null).then(response=>{
+          if(response.status){
+            var productTypeList = [];
+            if(response.producttype && response.producttype.length > 0){
+              response.producttype.forEach(function(item,index){
+                var itemData = {};
+                itemData.label = item.name;
+                itemData.value = item.id;
+                productTypeList.push(itemData);
+              });
+            }
+            
+            $this.productTypeList = productTypeList;  
+            var sourceList = [];
+            if(response.source&&response.source.length > 0){
+              response.source.forEach(function(item,index){
+                var itemData = {};
+                itemData.label = item.name;
+                itemData.value = item.id;
+                sourceList.push(itemData);
+              });
+            }
+            $this.sourceList = sourceList;    
+          }
+        });
+    },
     // 获取统计数据
     getCluesAnalysisData(){
       var $this = this;

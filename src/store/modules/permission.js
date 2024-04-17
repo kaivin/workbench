@@ -333,6 +333,12 @@ function setRoutes(routers){
         component: () => import(/* webpackChunkName: "Douyin_keywordcount" */ "@/views/Douyin/keywordcount/index.vue"),
         meta: {id:'Douyin_keywordcount-159',title: '关键词统计', icon: null, keepAlive:false},
       },
+      {
+        path: "/videocount/index",
+        name:'videocount_index',
+        component: () => import(/* webpackChunkName: "videocount_index" */ "@/views/videocount/index/index.vue"),
+        meta: {id:'videocount_index-159',title: '关键词统计', icon: null, keepAlive:false},
+      },
     ]
   }]
   accessedRouters.forEach(function(item,index){

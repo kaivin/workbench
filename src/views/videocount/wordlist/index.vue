@@ -26,7 +26,7 @@
 									range-separator="～"
 									start-placeholder="开始日期"
 									end-placeholder="结束日期"
-									:picker-options="pickerDateRangeOptions">
+									:picker-options="pickerRangeOptions">
 								</el-date-picker>
 							</div>
 							<div class="item-search">
@@ -43,10 +43,16 @@
 							<div class="item-search">
 								<el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
 								<el-button type="info" :disabled="isSearchResult" class="resetBtn" size="small" @click="resetData">重置</el-button>
-								<el-button type="success" :disabled="isSearchResult" size="small" icon="el-icon-plus" @click="addTableRow" v-if="menuButtonPermit.includes('videocount_saveword')">添加工作汇报</el-button>
-								<el-button type="warning" :disabled="isSearchResult" size="small" icon="el-icon-thumb" class="exportBtn derived" v-if="menuButtonPermit.includes('videocount_distribution')" @click="addScore">分配积分</el-button>
+								<!-- v-if="menuButtonPermit.includes('videocount_saveword')" -->
+								<el-button type="success" :disabled="isSearchResult" size="small" icon="el-icon-plus" @click="addTableRow" >添加工作汇报</el-button>
+								<el-button type="warning" size="small" :disabled="isSearchResult" class="exportBtn derived" @click="showExportDialog"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出数据</el-button>
+								<!-- v-if="menuButtonPermit.includes('videocount_distribution')" -->
+								<el-button type="danger" :disabled="isSearchResult" size="small" icon="el-icon-thumb" class="exportBtn derived"  @click="addScore">分配积分</el-button>
 							</div>
 						</div>
+					</div>
+					<div class="clues_info">
+						<p><span>共有<strong class="color3">{{infoData.totalNumber}}</strong>条数据，完成积分<strong class="color2">{{infoData.allScore}}</strong>分，有效积分<strong class="color1">{{infoData.trueScore}}</strong>分</span></p>
 					</div>
 					<div class="card-content" ref="tableContent">
 						<div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
@@ -80,17 +86,17 @@
 													</el-table-column>
 													<el-table-column
 														prop="type_name"
-														label="类型"
+														label="类型/单个积分"
 														align="center"
 														min-width="130"
 														>
 														<template slot-scope="scopes">
-															{{scopes.row.extend.type_name}}
+															{{scopes.row.extend.type_name}}（{{scopes.row.extend.score}}）
 														</template>
 													</el-table-column>
 													<el-table-column
 														prop="number"
-														label="数量"
+														label="完成数量"
 														align="center"
 														min-width="100"
 														>
@@ -99,18 +105,25 @@
 														</template>
 													</el-table-column>
 													<el-table-column
-														prop="score"
-														label="单个积分"
+														prop="invalid_number"
+														label="未通过审核数量"
 														align="center"
 														min-width="100"
 														>
 														<template slot-scope="scopes">
-															{{scopes.row.extend.score}}
+															{{scopes.row.extend.invalid_number}}
 														</template>
 													</el-table-column>
 													<el-table-column
 														prop="score"
-														label="积分总计"
+														label="完成积分"
+														min-width="100"
+														align="center"
+														>
+													</el-table-column>
+													<el-table-column
+														prop="valid_score"
+														label="有效积分"
 														min-width="100"
 														align="center"
 														>
@@ -122,18 +135,23 @@
 														min-width="150"
 														>
 													</el-table-column>
+													<!--  && (menuButtonPermit.includes('videocount_saveword') || menuButtonPermit.includes('videocount_delword')) -->
 													<el-table-column
-														v-if="props.row.detail.length > 0 && props.row.detail[0].user_id == userInfo.id && (menuButtonPermit.includes('videocount_saveword') || menuButtonPermit.includes('videocount_delword'))"
+														v-if="props.row.detail && props.row.detail.length > 0 && props.row.detail[0].user_id == userInfo.id"
 														:width="operationsWidth"
 														align="center"
 														prop="operations"
 														label="操作" >
 														<template slot-scope="scopes">
 															<div class="table-button" >
-																<el-button v-if="menuButtonPermit.includes('videocount_saveword') && scopes.row.type_type == 'manual'" size="mini" @click="editTableRow(scopes.row, scopes.$index)" plain >编辑</el-button>
-																<el-button v-if="menuButtonPermit.includes('videocount_delword') && scopes.row.type_type == 'manual'" size="mini" @click="deleteTableRow(scopes.row, scopes.$index)" type="info" plain >删除</el-button>
-																<el-button v-if="menuButtonPermit.includes('videocount_distribution') && scopes.row.type_type == 'specify'" size="mini" @click="editScoreRow(scopes.row, scopes.$index)" plain >编辑</el-button>
-																<el-button v-if="menuButtonPermit.includes('videocount_distribution') && scopes.row.type_type == 'specify'" size="mini" @click="deleteScoreRow(scopes.row, scopes.$index)" type="info" plain >删除</el-button>
+																<!-- menuButtonPermit.includes('videocount_saveword') &&  -->
+																<el-button v-if="scopes.row.type_type == 'manual'" size="mini" @click="editTableRow(scopes.row, scopes.$index)" plain type="primary" >编辑</el-button>
+																<!-- menuButtonPermit.includes('videocount_delword') && -->
+																<el-button v-if=" scopes.row.type_type == 'manual'" size="mini" @click="deleteTableRow(scopes.row, scopes.$index)" type="info" plain >删除</el-button>
+																<!-- menuButtonPermit.includes('videocount_distribution') &&  -->
+																<el-button v-if="scopes.row.type_type == 'specify'" size="mini" @click="editScoreRow(scopes.row, scopes.$index)" plain type="primary" >编辑</el-button>
+																<!-- menuButtonPermit.includes('videocount_distribution') &&  -->
+																<el-button v-if="scopes.row.type_type == 'specify'" size="mini" @click="deleteScoreRow(scopes.row, scopes.$index)" type="info" plain >删除</el-button>
 															</div>
 														</template>
 													</el-table-column>
@@ -157,58 +175,74 @@
 									</el-table-column>
 									<el-table-column
 										prop="promotional_video"
-										label="公司宣传片积分"
+										label="公司宣传片"
 										align="center"
-										min-width="140"
+										sortable
+										min-width="130"
 										>
 									</el-table-column>
 									<el-table-column
 										prop="character_on_camera"
-										label="人物上镜短视频积分"
+										label="人物上镜短视频"
 										align="center"
-										min-width="140"
+										sortable
+										min-width="150"
 										>
 									</el-table-column>
 									<el-table-column
 										prop="wechat_moments"
-										label="朋友圈视频积分"
+										label="朋友圈视频"
 										align="center"
-										min-width="140"
+										sortable
+										min-width="130"
 										>
 									</el-table-column>
 									<el-table-column
 										prop="pure_shear_video"
-										label="纯剪视频积分"
+										label="纯剪视频"
 										align="center"
-										min-width="140"
+										sortable
+										min-width="120"
 										>
 									</el-table-column>
 									<el-table-column
 										prop="other"
-										label="其他（素材处理）积分"
+										label="其他（素材处理）"
 										align="center"
-										min-width="140"
+										sortable
+										min-width="160"
 										>
 									</el-table-column>
 									<el-table-column
 										prop="specify"
 										align="center"
+										sortable
 										label="分配的积分"
-										min-width="140"
+										min-width="120"
 										>
 									</el-table-column>
 									<el-table-column
 										prop="inquiry"
 										align="center"
-										label="询盘成交积分"
-										min-width="140"
+										sortable
+										label="询盘成交"
+										min-width="120"
 										>
 									</el-table-column>
 									<el-table-column
 										prop="score"
 										align="center"
-										label="积分总计"
-										min-width="140"
+										sortable
+										label="完成积分"
+										min-width="120"
+										>
+									</el-table-column>
+									<el-table-column
+										prop="valid_score"
+										align="center"
+										sortable
+										label="有效积分"
+										min-width="120"
 										>
 									</el-table-column>
 								</el-table>
@@ -236,6 +270,7 @@
 	  <el-backtop target=".scroll-panel"></el-backtop>
 	  <AddWork ref="AddWorkRef" @saveSuccess="searchResult"></AddWork>
 	  <AddScore ref="AddScoreRef" @saveSuccess="searchResult"></AddScore>
+	  <ExportModal ref="ExportModalRef" @exportSuccess="exportDone"></ExportModal>
 	</div>
 </template>
 <script>
@@ -245,11 +280,14 @@ import AddWork from '../component/addWork.vue';
 import {sortByDesc, sortByAsc} from "@/utils/index";
 import * as echarts from 'echarts';
 import {parseTime}  from "@/utils";
+import ExportModal from '@/components/Excel/exportModal.vue'
+import { jsonToSheetXlsx } from '@/components/Excel/Export2Excel'
 export default {
 	name: 'Douyin_index',
 	components: {
 		AddScore,
-		AddWork
+		AddWork,
+		ExportModal
 	},
 	data() {
 		return {
@@ -295,7 +333,24 @@ export default {
 			operationsWidth: "",
 			isSearchResult:false,
 			selectedData: [],
-			pickerDateRangeOptions: this.$pickerRangeOptions,
+			fieldList: [
+				{ key: 'user_name', value: '姓名' },
+				{ key: 'day', value: '日期' },
+				{ key: 'promotional_video', value: '公司宣传片积分' },
+				{ key: 'character_on_camera', value: '人物上镜短视频积分' },
+				{ key: 'wechat_moments', value: '朋友圈视频积分' },
+				{ key: 'pure_shear_video', value: '纯剪视频积分' },
+				{ key: 'other', value: '其他（素材处理）积分' },
+				{ key: 'specify', value: '分配的积分' },
+				{ key: 'inquiry', value: '询盘成交积分' },
+				{ key: 'score', value: '积分总计' },
+			],
+			infoData:{
+				totalNumber: 0,
+				allScore: 0,
+				trueScore: 0
+			},
+			pickerRangeOptions: this.$pickerRangeOptions,
 		}
 	},
 	computed: {
@@ -432,7 +487,7 @@ export default {
 			var headerHeight = $this.$refs.headerPane.offsetHeight;
 			var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
 			var screenHeight = $this.$refs.boxPane.offsetHeight;
-			$this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40;
+			$this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40-35;
 			$this.getBrowserType();
 				setTimeout(function() {
 				$this.setScrollDom();
@@ -450,8 +505,6 @@ export default {
 		// 重置表单
 		resetData(){
 			var $this = this;
-			$this.searchData.page=1;
-			$this.searchData.limit=20;
 			const end = parseTime(new Date(), '{y}-{m}-{d}');
 			const start = parseTime(new Date()-3600 * 1000 * 24 * 7, '{y}-{m}-{d}');
 			$this.searchData.time = [start, end];
@@ -529,8 +582,19 @@ export default {
 				if(response){
 					if(response.code == 200){
 						if(response.data){
-							$this.tableData = response.data;
-							$this.totalDataNum = response.allcount;
+							if(response.data.length > 0){
+								$this.tableData = response.data;
+								$this.infoData.totalNumber = response.extend.count;
+								var score = 0;
+								var truescore = 0;
+								response.data.forEach(item => {
+									score += parseFloat(item.score);
+									truescore += parseFloat(item.valid_score);
+								})
+								$this.infoData.allScore = score;
+								$this.infoData.trueScore = truescore;
+							}
+							
 							setTimeout(()=>{
 								$this.isSearchResult=false;
 							},1000);
@@ -573,6 +637,7 @@ export default {
 			obj.type_id = data.type_id;
 			obj.number = data.extend.number;
 			obj.remark = data.remark;
+			obj.invalid_number = data.extend.invalid_number;
 			resData.push(obj);
 			dataObj.uid = data.user_id;
 			dataObj.id = data.id;
@@ -619,12 +684,10 @@ export default {
 		editScoreRow(data) {
 			var $this = this;
 			var dataObj = {};
-			var resData = [];
-			var obj = {};
-			obj.type_id = data.type_id;
+			dataObj.type_id = data.type_id;
 			dataObj.uid = [data.user_id];
-			dataObj.record_time = data.record_time;
-			dataObj.post_id = 0;
+			dataObj.remark = data.remark;
+			dataObj.score = data.score;
 			$this.$refs.AddScoreRef.showDialog({type: "edit", data: dataObj})
 		},
 		// 删除表格行
@@ -837,6 +900,41 @@ export default {
 			$this.scrollPosition.startPageX = 0;
 			$this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
 		},
+		showExportDialog() {
+			var $this = this;
+			$this.$refs.ExportModalRef.showDialog({ fieldList: $this.fieldList, hasSelected: false, hasData: false })
+		},
+		exportDone(obj) {
+			var $this = this;
+			const filename = obj.filename
+			const customData = []
+			let header = null
+			const bookType = obj.fileType
+			const headerSort = obj.sort
+			if (obj.headerType === 'custom') {
+				header = obj.header
+			}
+			var resData = $this.tableData;
+			resData.forEach((item) => {
+				const itemObj = {}
+				headerSort.forEach((current) => {
+					itemObj[current] = item[current]
+				})
+				customData.push(itemObj)
+			})
+			jsonToSheetXlsx({
+				data: customData,
+				header: header,
+				filename: filename,
+				json2sheetOpts: {
+				// 指定顺序
+				header: headerSort
+				},
+				write2excelOpts: {
+				bookType
+				}
+			})
+		},
 	}
 }
 </script>
@@ -994,6 +1092,70 @@ font-size: 13px;
 	.el-button+.el-button{
 		margin-left: 10px!important;
 	}
+}
+.clues_info{
+	margin-bottom: 15px;
+	padding-left: 15px;
+    border-radius:4px;
+	font-size: 14px;
+    line-height:20px;
+    color:#333;
+    em{
+      font-style:normal;
+      margin:0 10px;
+    }
+    span{
+      color:#888;
+      padding:0px 5px;
+    }
+    strong,b{
+      margin:0 2px;
+    }
+    .color1{
+      color:#d02c34;
+    }
+    .color2{
+      color:#f8a53a;
+    }
+    .color3{
+      color:#333;
+    }
+    .color4{
+      color:#f5522a;
+    }
+    .color5{
+      color:#fb7d23;
+    }
+    .item-span-1{
+      strong{
+        color:#d02c34;
+      }
+    }
+    .item-span-2{
+      strong{
+        color:#f8a53a;
+      }
+    }
+    .item-span-3{
+      strong{
+        color:#333;        
+      }
+    }
+    .item-span-5{
+      strong{
+        color: #f5522a;
+      }
+      b{
+        color: #fb7d23;
+      }
+    }
+    .item-span-4{
+      color:#2e88ff;
+      font-weight:bold;
+      &:hover{
+        opacity: 0.6;
+      }
+    }
 }
 </style>
 <style lang="scss" > 

@@ -14,7 +14,7 @@
               <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
             </router-link>
           </div>
-          <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')&&menuButtonPermit.includes('Enphone_askfeedback')">
+          <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')&&menuButtonPermit.includes('Enphone_askfeedback')||menuButtonPermit.includes('Enphone_fivexun')">
               <dd v-bind:class="currentKey&&currentKey=='all'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookall')">
                 <router-link :to="{page:'Enphone/phoneindex',query:{key:'all'}}">
                   <span>查看所有</span><i>({{linkAll.monthNum}})</i><em>({{linkAll.yestodayNum}})</em><b>({{linkAll.todayNum}})</b>
@@ -287,7 +287,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)||(currentKey&&currentKey=='fivexun')" v-model="searchData.salesownid" size="small" clearable filterable placeholder="业务员" :class="searchData.salesownid!=''?'el-xzstate':''" 
+                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)||(currentKey&&currentKey=='fivexun'&&permitField.includes('salesremark'))" v-model="searchData.salesownid" size="small" clearable filterable placeholder="业务员" :class="searchData.salesownid!=''?'el-xzstate':''" 
                                     style="width:90px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in salesuserList"
@@ -358,6 +358,7 @@
                                   </el-select>
                                   <el-checkbox border v-if="currentKey=='fivexun'" size="small" v-model="moreChecked" style="width:100px;margin:5px 10px 5px 0px;float:left;">多次标记</el-checkbox>
                                   <el-checkbox border v-if="currentKey=='fivexun'" size="small" v-model="badChecked" style="width:130px;margin:5px 10px 5px 0px;float:left;">多次标记未回复</el-checkbox>
+                                  <el-checkbox border v-if="currentKey=='fivexun'" size="small" v-model="goodChecked" style="width:150px;margin:5px 10px 5px 0px;float:left;">多次标记最终回复</el-checkbox>
                                   <el-input
                                     v-if="currentKey=='fivexun'"
                                     class="tips-input-5"
@@ -379,8 +380,8 @@
                                     </el-option>
                                   </el-select>
                                   <el-checkbox v-if="currentKey&&currentKey=='all'" size="small" class="search_checkbox"  v-model="searchData.once_allot">二次分配询盘</el-checkbox>
-                                  <el-checkbox v-if="currentKey=='fivexun'" class="search_checkbox" v-model="searchData.is_group" size="small" border style="width:70px;margin:5px 10px 5px 0px;float:left;">分组</el-checkbox>
-                                  <template v-if="currentKey=='fivexun'">
+                                  <el-checkbox v-if="currentKey=='fivexun'&&permitField.includes('salesremark')" class="search_checkbox" v-model="searchData.is_group" size="small" border style="width:70px;margin:5px 10px 5px 0px;float:left;">分组</el-checkbox>
+                                  <template v-if="currentKey=='fivexun'&&permitField.includes('salesremark')">
                                       <span class="fivexun-clus" v-for="item in groupTypeList" v-bind:class="item.isOn?'active':''" v-bind:key="item.value" v-on:click="groupTypeClick(item.value)"><i></i>{{item.label}}</span>
                                   </template>
                                   <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
@@ -820,6 +821,7 @@
                                     prop="addusername"
                                     label="业务人员"
                                     width="80"
+                                    v-if="currentKey&&currentKey=='fivexun'?permitField.includes('salesremark'):true"
                                     >
                                     <template slot-scope="scope">
                                       <div class="table-text">
@@ -887,7 +889,7 @@
                                     prop="warning"
                                     label="提醒"
                                     min-width="90"
-                                    v-if="currentKey&&currentKey=='fivexun'"
+                                    v-if="currentKey&&currentKey=='fivexun'&&permitField.includes('salesremark')"
                                     >
                                     <template slot-scope="scope">
                                       {{scope.row.warning}}
@@ -897,7 +899,7 @@
                                   </el-table-column>
 
                                   <el-table-column
-                                    v-if="menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')"
+                                    v-if="currentKey&&currentKey=='fivexun' ? permitField.includes('salesremark')&&(menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')) : menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')"
                                     width="88"
                                     align="center"
                                     prop="operations"
@@ -1007,6 +1009,7 @@ export default {
       maxNum:0,
       moreChecked: false,
       badChecked: false,
+      goodChecked: false,
       is_group: false,
       isGroup: false,
       groupTypeList:[
@@ -1045,7 +1048,8 @@ export default {
         is_more: "",
         is_group: false,
         grouptype: "",
-        is_bad: ""
+        is_bad: "",
+        is_good: "",
       },
       pageSizeList:[20, 50, 100, 500],
       totalDataNum:0,
@@ -1392,6 +1396,7 @@ export default {
         var $this = this;
         $this.moreChecked = false;
         $this.badChecked = false;
+        $this.goodChecked = false;
         $this.searchData.date=[];
         $this.searchData.timeing="";
         $this.searchData.continent="";
@@ -1826,6 +1831,11 @@ export default {
                 searchData.is_bad = 1;
               }else{
                 searchData.is_bad = 0;
+              }
+              if($this.goodChecked){
+                searchData.is_good = 1;
+              }else{
+                searchData.is_good = 0;
               }
               if($this.searchData.is_group){
                 searchData.is_group = 1

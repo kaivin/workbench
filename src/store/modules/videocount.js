@@ -6,7 +6,8 @@ import {
     saveRecord,
     seprateScore,
     getUserList,
-    delRecord
+    delRecord,
+    getCountData
 } from '@/api/videocount'
 
 const state = {}
@@ -92,7 +93,16 @@ const actions = {
             })
         })
     },
-    
+    // 获取统计数据
+    getVideoCountData({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getCountData(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
 }
 
 export default {

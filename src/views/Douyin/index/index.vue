@@ -1552,17 +1552,76 @@ export default {
         }, 500);
       }
     },
+    getScoreData(data){
+      var $this = this;
+      var score = 0;
+      var hasScore = 0;
+      $this.lineData.forEach(item => {
+        if(item.addtime == data){
+          hasScore = 1;
+          score = item.score
+        }
+      })
+      if(hasScore == 1){
+        return score
+      }else{
+        var prevTime = "";
+        var nextTime = "";
+        var prevScore = 0;
+        var nextScore = 0;
+        $this.lineData.forEach(item => {
+          if(prevTime){
+            if(new Date(item.addtime) > new Date(prevTime) && new Date(item.addtime) < new Date(data)){
+              prevTime = item.addtime;
+              prevScore = item.score;
+            }
+          }else{
+            if(new Date(item.addtime) < new Date(data)){
+              prevTime = item.addtime;
+              prevScore = item.score;
+            }
+          }
+          if(nextTime){
+            if(new Date(item.addtime) < new Date(nextTime) && new Date(item.addtime) > new Date(data)){
+              nextTime = item.addtime;
+              prevScore = item.score;
+            }
+          }else{
+            if(new Date(item.addtime) > new Date(data)){
+              nextTime = item.addtime;
+              nextScore = item.score;
+            }
+          }
+        })
+        if(prevTime){
+          return prevScore
+        }else{
+          return nextScore
+        }
+      }
+    },
     // 询盘
     drawXunChart(){
       var $this = this;
       var chartDom = document.getElementById('xunChart');
       var myChart = echarts.init(chartDom);
       var option;
+      var timeList = [];
+      var xunList = [];
+      var scoreList = [];
+      $this.xundata.forEach(item => {
+        timeList.push(item.date);
+        xunList.push(item.number);
+      })
+      timeList.forEach(item => {
+        var score = $this.getScoreData(item);
+        scoreList.push(score);
+      })
       option = {
         grid:{
           left: '45',
           top:'35',
-          right:'15',
+          right:'45',
           bottom: '25'
         },
         tooltip:{
@@ -1580,18 +1639,20 @@ export default {
           },
           formatter(params){
             var res = `<div class="toolDiv">
-                  <div class="tooltitle">${params[0].name}</div>
-                  <div class="bar clearfix">
-                    <span style="display:inline-block;vertical-align:top;margin-top:4px;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
-                    <span>${params[0].seriesName}：</span>
-                    <span>${params[0].data.number}</span>
-                  </div>`;
-              return res;
+                  <div class="tooltitle">${params[0].name}</div>`;
+                  params.forEach(item => {
+                    res +=`<div class="bar clearfix">
+                          <span style="display:inline-block;vertical-align:top;margin-top:4px;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${item.borderColor};"></span>
+                          <span>${item.seriesName}：</span>
+                          <span>${item.value}</span>
+                        </div>`;
+                  })
+                return res;
           }
         },
         xAxis: {
           type: 'category',
-          name: "日期",
+          data: timeList,
           axisLine:{
             lineStyle:{
               color: "#dedede"
@@ -1601,24 +1662,39 @@ export default {
             color: "#888"
           },
         },
-        yAxis: {
-          type: 'value',
-          name: "单位（个）",
-          nameTextStyle: {
-            color: "#b4b4b4",
-            nameLocation: "start",
+        yAxis: [
+          {
+            type: 'value',
+            name: "单位（个）",
+            nameTextStyle: {
+              color: "#b4b4b4",
+              nameLocation: "start",
+            },
+            alignTicks: true,
+            axisLabel:{
+              color: "#888"
+            },
+            
           },
-          axisLabel:{
-            color: "#888"
-          }
-        },
+          {
+            type: 'value',
+            name: "单位（分）",
+            nameTextStyle: {
+              color: "#b4b4b4",
+              nameLocation: "end",
+            },
+            alignTicks: true,
+            axisLabel:{
+              color: "#888"
+            },
+            splitNumber: 5
+          },
+        ],
         animation: false,
-        dataset:{
-          source: $this.xundata,  
-        },
         series: [
           {
             name: "询盘个数",
+            data: xunList,
             type: 'line',
             symbol: 'circle',
             symbolSize: '5',
@@ -1644,7 +1720,37 @@ export default {
                 borderWidth: 2
               }
             }
-          }
+          },
+          {
+            name: "积分",
+            data: scoreList,
+            type: 'line',
+            symbol: 'circle',
+            symbolSize: '5',
+            yAxisIndex: 1,
+            label:{
+              show: true,
+              position: 'top',
+              distance: '5'
+            },
+            itemStyle:{
+              color: '#fff',
+              borderColor: "#3ebea7",
+              borderWidth: 1
+            },
+            lineStyle:{
+              color: "#3ebea7",
+              width: 1
+            },
+            emphasis:{
+              lineStyle: {
+                width: 2,
+              },
+              itemStyle:{
+                borderWidth: 2
+              }
+            }
+          },
         ]
       };
       option && myChart.setOption(option);

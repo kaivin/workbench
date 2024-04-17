@@ -62,3 +62,41 @@ export function getDepfiveEnScoreData(data) {
     data
   });
 }
+
+
+export function getDepfiveDomainData(data) {
+  return request({
+    url: "/hxindex/Fivedepart/domaincount",
+    method: "POST",
+    data
+  });
+}
+
+export function getDepfiveExport(data) {
+  return request({
+    url: "/hxindex/Fivedepart/exportlink",
+    method: "POST",
+    data,
+    headers:{
+      isFile:true,
+    }
+  });
+}
+
+// 获取日期下拉
+export function getDepfiveTime(data) {
+  return request({
+    url: "/hxindex/Fivedepart/gettime",
+    method: "POST",
+    data
+  });
+}
+
+// 添加设备相关数据
+export function addDepfiveUrl(data) {
+  return request({
+    url: "/hxindex/Fivedepart/addurl",
+    method: "POST",
+    data
+  });
+}

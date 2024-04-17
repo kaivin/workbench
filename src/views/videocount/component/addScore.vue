@@ -71,14 +71,28 @@
                 var $this = this;
                 $this.isDialogShow = true;
                 if(!$this.isGetUser){
-                    $this.getUserList();
+                    if(v.type == "edit"){
+                        $this.getUserList(v.data.uid);
+                    }else{
+                        $this.getUserList(); 
+                    }
+                }else{
+                    if(v.type == "edit"){
+                        $this.form.uid = v.data.uid;
+                    }
                 }
                 if(!$this.isGetType){
-                    $this.getTypeList();
+                    if(v.type == "edit"){
+                        $this.getTypeList(v.data.type_id);
+                    }else{
+                        $this.getTypeList();
+                    }
+                }else{
+                    if(v.type == "edit"){
+                        $this.form.type_id = v.data.type_id;
+                    }
                 }
                 if(v.type == 'edit'){
-                    $this.form.uid = v.data.uid;
-                    $this.form.type_id = v.data.type_id;
                     $this.form.score = v.data.score;
                     $this.form.remark = v.data.remark;
                 }
@@ -153,7 +167,7 @@
                 $this.resetForm();
                 $this.isDialogShow = false;
             },
-            getUserList(){
+            getUserList(uid){
                 var $this = this;
                 $this.$store.dispatch('videocount/userListData',null).then(res=>{
                     if(res.code == 200){
@@ -168,6 +182,9 @@
                         }
                         $this.userList = resData;
                         $this.isGetUser = true;
+                        if(uid && uid.length > 0){
+                            $this.form.uid = uid;
+                        }
                     }else{
                         $this.$message({
                             showClose: true,
@@ -178,7 +195,7 @@
                 });
             },
             // 获取工作类型
-            getTypeList(){
+            getTypeList(typeid){
                 var $this = this;
                 $this.$store.dispatch('videocount/getVideoTypeData',null).then(res=>{
                     if(res.code == 200){
@@ -194,6 +211,9 @@
                         }
                         $this.typeList = resData;
                         $this.isGetType = true;
+                        if(typeid){
+                            $this.form.type_id = typeid;
+                        }
                     }else{
                         $this.$message({
                             showClose: true,

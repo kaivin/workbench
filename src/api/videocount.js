@@ -72,3 +72,12 @@ export function getUserList(data) {
     data
   });
 }
+
+// 统计数据
+export function getCountData(data) {
+  return request({
+    url: "hxindex/videocount/index",
+    method: "POST",
+    data
+  });
+}

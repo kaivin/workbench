@@ -15,7 +15,7 @@
                   <el-button type="primary" plain size="mini"><i class="svg-i" ><svg-icon icon-class="analy_en" /></i>业务员数据统计</el-button>
                 </router-link>
               </div>
-              <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')&&menuButtonPermit.includes('Enphone_askfeedback')">
+              <dl class="phone-list" v-if="menuButtonPermit.includes('Enphone_lookall')&&menuButtonPermit.includes('Enphone_lookwaitdealall')&&menuButtonPermit.includes('Enphone_askfeedback')||menuButtonPermit.includes('Enphone_fivexun')">
                   <dd v-bind:class="currentKey&&currentKey=='all'?'active':''" v-if="menuButtonPermit.includes('Enphone_lookall')">
                     <router-link :to="{path:'/Enphone/phoneindex',query:{key:'all'}}">
                       <span>查看所有</span><i>({{linkAll.monthNum}})</i><em>({{linkAll.yestodayNum}})</em><b>({{linkAll.todayNum}})</b>
