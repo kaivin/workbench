@@ -113,8 +113,7 @@
           nowDimension: "day",
           userList: [],
           nowChart: 1,
-          columnData: {},
-          pieData: {}
+          chartData: {},
       };
     },
     computed: {
@@ -259,6 +258,7 @@
         })
         $this.getDefaultTime();
         $this.getUserList();
+        $this.handleChartData();
       },
       // 获取日期
       getUserList(){
@@ -342,20 +342,8 @@
                   if(response.data.length > 0){
                     resList = response.data;
                   }
-                  $this.searchData = resultData;
-                  var c_name = [];
-                  var c_data = [];
-                  var p_name = [];
-                  var p_data = [];
-                  resultData.day_word_data.forEach(item => {
-                    c_name.push(item.name);
-                  });
-                  if($this.columnChart){
-                    $this.columnChart.dispose();
-                    $this.drawColumnChart();
-                  }else{
-                    $this.drawColumnChart();
-                  }
+                  $this.searchData = resList;
+                  $this.handleChartData();
                 }
               }else{
                 if(response.permitstatus&&response.permitstatus==2){
@@ -382,125 +370,101 @@
           });
         }
       },
+      handleChartData(){
+        var $this = this;
+        var c_name = [];
+        var c_data = [];
+        var p_name = [];
+        var p_data = [];
+        resultData.day_word_data.forEach((item,index) => {
+          c_name.push(item.day);
+          if(item.user_data && item.user_data.length > 0){
+            var truescore = [];
+            var finishscore = [];
+            var sepscore = [];
+            var percent = [];
+            item.user_data.forEach((sitem, sindex) => {
+              if(index == 0){
+                p_name.push(sitem.name);
+              }
+              var trueobj = {};
+              trueobj.value = sitem.data.user_effective_score;
+              trueobj.all = sitem.data.user_actual_score;
+              truescore.push(trueobj);
+              var obj = {};
+              obj.value = sitem.data.user_actual_score-sitem.data.user_effective_score;
+              obj.all = sitem.data.user_actual_score;
+              sepscore.push(obj);
+              percent.push(Number(sitem.data.user_effective_score*100/sitem.data.user_actual_score).toFixed(1));
+            })
+            c_data.push(truescore);
+            c_data.push(sepscore);
+            c_data.push(percent);
+          }
+        });
+        $this.chartData.c_name = c_name;
+        $this.chartData.c_data = c_data;
+        $this.chartData.p_name = p_name;
+        $this.chartData.p_data = p_data;
+        $this.tabChange(1);
+      },
       drawColumnChart(){
         var $this = this;
-        if($this.scorelist.length>0){
-          var totalNum = 0;
-          $this.scorelist.forEach((item, index) => {
-            if(index === 0){
-              totalNum = item.score_trend.length
-            }
-            if(item.score_trend && item.score_trend.length > 0){
-              item.score_trend = item.score_trend.sort(sortByAsc("num"));
-            }
-          })
-          if(totalNum > 0){
-            var colorArr = ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"]
-            var chartDom = document.getElementById('chart');
-            var myChart = echarts.init(chartDom);
-            var option;
-            var xData = [];
-            var series = [];
-            var dataset = [];
-            if($this.scorelist.length > 1){
-              // 获取总值
-              var totalObj={};
-              totalObj.smooth=false;
-              totalObj.type='line';
-              totalObj.name = "总积分";
-              totalObj.label={
-                show: true,
-                position: 'top'
+        var colorArr = ["#2259e5","#3c6be5", "#3ebea7","#5ed8c2", "#eca12d","#edb257", "#ee4747", "#ed6060","#33abda", "#73c0de","#6ec840", "#91cb74","#f57543","#ff8d61","#9a60b4", "#c088da", "#c20cb8", "#e522db","#c8bc12", "#e5d822", "#3759be", "#5470c6", "#e06430", "#fc8452", "#e2ac34", "#fac858", "#ce3f3f","#ee6666"]
+        var chartDom = document.getElementById('columnChart');
+        var myChart = echarts.init(chartDom);
+        var option;
+        var xData = [];
+        var series = [];
+        if($this.chartData.c_data.length > 0){
+          $this.chartData.c_data.forEach((item,index) => {
+            var itemObj={};
+            var nameindex = Math.floor(index/3);
+            itemObj.name = $this.chartData.p_name[nameindex];
+            itemObj.data = item;
+            // 柱状图
+            if(index%3 == 0 || index%3 == 1){
+              itemObj.type='bar';
+              itemObj.barWidth ="auto";
+              if(index%3 == 0){
+                itemObj.label={
+                  show: true,
+                  position: 'insideTop',
+                  distance: 10,
+                  color: "#fff"
+                };
+                itemObj.itemStyle={
+                  color: colorArr[nameindex*2],
+                  borderColor: colorArr[nameindex*2],
+                };
+              }else{
+                itemObj.label={
+                  show: true,
+                  position: 'top',
+                  distance: 5,
+                  formatter:function(params){
+                    return params.data.all
+                  },
+                };
+                itemObj.itemStyle={
+                  color: colorArr[nameindex*2+1],
+                  borderColor: colorArr[nameindex*2+1],
+                };
               }
-              totalObj.lineStyle={
-                  width: 1,
-                  color: "#fe3a33", // 线条颜色
-              };
-              totalObj.itemStyle={
-                  color: '#fff',
-                  borderColor: "#fe3a33", // 折点颜色
-                  borderWidth: 1
-              };
-              totalObj.areaStyle={
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                      {
-                        offset: 0,
-                        color: "#fe3a33",
-                        opacity:1
-                      },
-                      {
-                        offset: 1,
-                        color: "rgba(255, 255, 255, 0)",
-                      }
-                    ]),
-                    opacity:0.3
-              };
-              totalObj.emphasis={
-                lineStyle: {
-                  width: 2,	// hover时的折线宽度
-                },
-                itemStyle:{
-                  borderWidth: 2
-                }
-              };
-              totalObj.symbolSize=5;
-              totalObj.symbol='circle';
-              totalObj.data=[];
-              
-              for(var i = 0; i< totalNum; i++){
-                var tobj = {
-                  value: 0,
-                  one_number: 0,
-                  two_number: 0,
-                  three_number: 0,
-                  four_number: 0
-                }
-                $this.scorelist.forEach((item, index) => {
-                  tobj.value += Number(item.score_trend[i].score);
-                  tobj.one_number += Number(item.score_trend[i].one_number);
-                  tobj.two_number += Number(item.score_trend[i].two_number);
-                  tobj.three_number += Number(item.score_trend[i].three_number);
-                  tobj.four_number += Number(item.score_trend[i].four_number);
-                })
-                tobj.value = tobj.value.toFixed(1);
-                totalObj.data.push(tobj)
-              }
-              totalObj.animationDuration=2800;
-              totalObj.animationEasing='quadraticOut';
-              series.push(totalObj);
-            }
-            // 组装每个值
-            $this.scorelist.forEach((item,index) => {
-              var itemObj={};
+              itemObj.stack = "data"+nameindex;
+              series.push(itemObj);
+            }else if(index%3 == 2){
+              // 折线图
               itemObj.smooth=false;
               itemObj.type='line';
-              itemObj.name = item.name;
-              itemObj.label={
-                show: true,
-                position: 'top'
-              }
               itemObj.lineStyle={
                   width: 1,
-                  color: colorArr[index%14], // 线条颜色
+                  color: colorArr[nameindex*2], // 线条颜色
               };
               itemObj.itemStyle={
                   color: '#fff',
-                  borderColor: colorArr[index%14], // 折点颜色
+                  borderColor: colorArr[nameindex*2], // 折点颜色
                   borderWidth: 1
-              };
-              itemObj.areaStyle={
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                      {
-                        offset: 0,
-                        color: colorArr[index%14],
-                        opacity:1
-                      },
-                      {
-                        offset: 1,
-                        color: "rgba(255, 255, 255, 0)",
-                      }
-                    ]),
-                    opacity:0.3
               };
               itemObj.emphasis={
                 lineStyle: {
@@ -512,117 +476,111 @@
               };
               itemObj.symbolSize=5;
               itemObj.symbol='circle';
-              itemObj.data=[];
-              if(item.score_trend && item.score_trend.length > 0){
-                item.score_trend.forEach((sitem, sindex) => {
-                  if(index === 0){
-                    xData.push(sitem.addtime);
-                  }
-                  var obj = {}
-                  obj.value = sitem.score;
-                  obj.one_number = sitem.one_number;
-                  obj.two_number = sitem.two_number;
-                  obj.three_number = sitem.three_number;
-                  obj.four_number = sitem.four_number;
-                  itemObj.data.push(obj);
-                })
-              }
               itemObj.animationDuration=2800;
               itemObj.animationEasing='quadraticOut';
               series.push(itemObj);
-            });
-            option = {
-              tooltip: {
-                  backgroundColor:'rgba(255,255,255,0.95)',
-                  trigger: "axis",
-                  textStyle:{
-                    fontSize:'12',
-                    color: '#666'
-                  },
-                  formatter(params){
-                    let returnData = `<div class="toolDiv">
-                        <div class="tooltitle">${params[0].name}</div>`;
-                    for (let i = 0; i < params.length; i++) {
-                        returnData += `<div class="bar clearfix" style="margin-top:5px">
-                          <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].borderColor};"></span>
-                          <span>${params[i].seriesName}：</span>
-                          <span>积分：${params[i].value}</span>
-                          </div>
-                          <div class="bar clearfix">
-                          <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;"></span>
-                          <span style="opacity: 0; vibisity: hidden;"> ${params[i].seriesName}：</span>
-                          <span>数量：</span>
-                          <span>${params[i].data.one_number}<span style="color: #999"> (1-5名)</span></span>
-                          <span style="margin-left: 10px;">${params[i].data.two_number}<span style="color: #999"> (6-10名)</span></span>
-                          <span style="margin-left: 10px;">${params[i].data.three_number}<span style="color: #999"> (11-15名)</span></span>
-                          <span style="margin-left: 10px;">${params[i].data.four_number}<span style="color: #999"> (16-20名)</span></span>
-                          </div>
-                          `;
-                    }
-                    returnData +=`</div>`;
-                    return returnData;
-                }
-              },
-              grid: {
-                  top:60,
-                  right:52,
-                  bottom:40,
-                  left:52,
-              },
-              xAxis: {
-                  type: 'category',
-                  boundaryGap: false,
-                  data: xData,
-                  axisLine: {
-                      show: false,
-                  },
-                  axisTick: {
-                      show: false,
-                  },
-                  axisLine:{
-                      show: true,
-                      lineStyle:{
-                          type: [4, 0],
-                          dashOffset: 3,
-                          color: '#e5e5e5',
-                          opacity: 1,
-                          shadowColor: null,
-                          shadowBlur: 0,
-                          shadowOffsetX: 0,
-                          shadowOffsetY: 0,
-                      }
-                  },
-                  axisLabel: {
-                      interval:1,
-                      color: "#555",
-                      fontSize: "12",
-                      lineHeight: 18,
-                  },
-              },
-              yAxis:{
-                  type: 'value',
-                  position: 'left',
-                  axisLine:{
-                      show: true,
-                      lineStyle:{
-                          type: [4, 0],
-                          dashOffset: 3,
-                          color: '#e0e0e0',
-                          opacity: 1,
-                          shadowColor: null,
-                          shadowBlur: 0,
-                          shadowOffsetX: 0,
-                          shadowOffsetY: 0,
-                      }
-                  },
-              },
-              animation: false,
-              series:series,
-            };
-            option && myChart.setOption(option);
-            $this.columnChart = myChart;
-          }
+            }
+          })
         }
+        option = {
+          tooltip: {
+              backgroundColor:'rgba(255,255,255,0.95)',
+              trigger: "axis",
+              textStyle:{
+                fontSize:'12',
+                color: '#666'
+              },
+              formatter(params){
+                let returnData = `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>`;
+                for (let i = 0; i < params.length; i++) {
+                  if(i%3 == 0 || i%3 == 2){
+                    
+                    if(i%3 == 0){
+                      returnData += `<div class="bar clearfix" style="margin-top:5px">
+                        <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].borderColor};"></span><span>`;
+                        if(params.length > 4){
+                          returnData += `${params[i].seriesName}`;
+                        }
+                      returnData += `实际完成：</span><span>${params[i].data.all}积分</span></div>`;
+                      returnData += `<div class="bar clearfix" style="margin-top:5px">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].borderColor};"></span><span>`;
+                      if(params.length > 4){
+                        returnData += `${params[i].seriesName}`;
+                      }
+                      returnData += `有效完成：</span><span>${params[i].data.value}积分</span></div>`;
+                    }
+                    if(i%3 == 2){
+                      returnData += `<div class="bar clearfix" style="margin-top:5px">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i-2].borderColor};"></span><span>`;
+                      if(params.length > 4){
+                        returnData += `${params[i].seriesName}`;
+                      }
+                      returnData += `完成度：</span><span>${params[i].value}%</span></div>`;
+                    }
+                  }
+                }
+                returnData +=`</div>`;
+                return returnData;
+            }
+          },
+          grid: {
+              top:60,
+              right:52,
+              bottom:40,
+              left:52,
+          },
+          xAxis: {
+              type: 'category',
+              data: $this.chartData.c_name,
+              axisLine: {
+                  show: false,
+              },
+              axisTick: {
+                  show: false,
+              },
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e5e5e5',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+              axisLabel: {
+                  interval:1,
+                  color: "#555",
+                  fontSize: "12",
+                  lineHeight: 18,
+              },
+          },
+          yAxis:{
+              type: 'value',
+              position: 'left',
+              axisLine:{
+                  show: true,
+                  lineStyle:{
+                      type: [4, 0],
+                      dashOffset: 3,
+                      color: '#e0e0e0',
+                      opacity: 1,
+                      shadowColor: null,
+                      shadowBlur: 0,
+                      shadowOffsetX: 0,
+                      shadowOffsetY: 0,
+                  }
+              },
+          },
+          animation: false,
+          series:series,
+        };
+        option && myChart.setOption(option);
+        $this.columnChart = myChart;
       },
       drawPieChart(){
         var $this = this;
@@ -793,7 +751,8 @@
       padding: 20px;
       background-color: #fff;
       height: calc(100vh - 364px);
-      #pieChart, #lineChart{
+      #pieChart, #columnChart{
+        width: 100%;
         height: calc(100vh - 446px);
       }
     }

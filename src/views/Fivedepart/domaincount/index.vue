@@ -4,16 +4,44 @@
             <div class="chooseDepart flex-box">
               <div class="bind_items flex-box">
                 <span class="choosetit">日期：</span>
-                <el-select v-model="searchData.date" placeholder="选择日期" clearable style="width: 200px">
+                <el-date-picker
+                    style="width: 220px"
+                    v-model="searchData.date"
+                    type="daterange"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd"
+                    key="b"
+                    size="small"
+                    class="date-range"
+                    range-separator="～"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    :picker-options="pickerRangeOptions">
+                  </el-date-picker>
+              </div>
+              <div class="bind_items flex-box">
+                <span class="choosetit">分类：</span>
+                <el-select v-model="searchData.typekey" size="small" clearable placeholder="分类" :class="searchData.typekey!=''?'el-xzstate':''" style="width:100px" @change="currentCateChange">
+                      <el-option
+                          v-for="item in productTypeList"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                      </el-option>
+                </el-select>
+              </div>
+              <div class="bind_items flex-box">
+                <span class="choosetit">产品：</span>
+                <el-select v-model="searchData.productid" size="small" clearable placeholder="产品" :class="searchData.productid!=''?'el-xzstate':''" style="width:160px;">
                   <el-option
-                    v-for="item in timeList"
-                    :key="item.ads_time"
-                    :label="item.ads_time"
-                    :value="item.ads_time">
+                      v-for="item in productList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
                   </el-option>
                 </el-select>
               </div>
-
+              
               <div class="bind_items flex-box">
                 <span class="choosetit">域名：</span>
                 <div class="departchoose">
@@ -35,13 +63,20 @@
               </div>
               <el-button type="primary" class="updateBtn" size="small" :disabled="isDisabled" v-if="menuButtonPermit.includes('Fivedepart_domaincount')" v-on:click="getDomainData" icon="el-icon-search">搜索</el-button>
               <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()" :disabled="isDisabled">重置</el-button>
-              <el-button type="success" class="deviceBtn" icon="el-icon-plus" size="small" :disabled="isDisabled" v-if="menuButtonPermit.includes('Fivedepart_addurl')" @click="deviceShow">设备数据</el-button>
+              <!-- <el-button type="success" class="deviceBtn" icon="el-icon-plus" size="small" :disabled="isDisabled" v-if="menuButtonPermit.includes('Fivedepart_addurl')" @click="deviceShow">设备数据</el-button>
               <el-button type="primary" class="importBtn" plain size="small" :disabled="isDisabled" v-if="menuButtonPermit.includes('Fivedepart_exportlink')" @click="importShow">导入excel</el-button>
-              <el-link type="primary" v-if="menuButtonPermit.includes('Fivedepart_exportlink')" @click='downloadLink' class="mb_link">下载模板</el-link>
+              <el-link type="primary" v-if="menuButtonPermit.includes('Fivedepart_exportlink')" @click='downloadLink' class="mb_link">下载模板</el-link> -->
             </div>
         </div>
         <div class="card-content" ref="tableContent">
           <div class="exportDiv" v-if="checkedItem.length > 0 && (searchResult.word_count.length > 0 || searchResult.device_count.length > 0 || searchResult.ads_count.length > 0 || searchResult.url_count.length > 0)">
+            <p class="total_num">{{exportTitle}}询盘共计
+              <span v-if="activeNames == '1'">{{searchResult.word_total}}</span>
+              <span v-if="activeNames == '2'">{{searchResult.device_total}}</span>
+              <span v-if="activeNames == '3'">{{searchResult.ads_total}}</span>
+              <span v-if="activeNames == '4'">{{searchResult.url_total}}</span>
+              个
+            </p>
             <el-button type="warning" size="small" class="exportBtn" :disabled="isExportDisabled"  @click="showExportDialog"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出{{exportTitle}}数据</el-button>
           </div>
           <el-tabs v-model="activeNames" type="card" @tab-click="tabClick" v-if="checkedItem.length > 0 && (searchResult.word_count.length > 0 || searchResult.device_count.length > 0 || searchResult.ads_count.length > 0 || searchResult.url_count.length > 0)">
@@ -72,7 +107,7 @@
                         :min-width="100"
                         >
                       </el-table-column>
-                      <el-table-column
+                      <!-- <el-table-column
                         prop="zh_rate_sort"
                         label="转化率"
                         align="center"
@@ -87,8 +122,8 @@
                             {{scope.row.zh_rate}}
                           </span>
                         </template>
-                      </el-table-column>
-                      <el-table-column
+                      </el-table-column> -->
+                      <!-- <el-table-column
                         prop="price_sort"
                         label="平均询盘费用"
                         align="center"
@@ -98,7 +133,7 @@
                         <template #default="scope">
                           {{scope.row.price}}
                         </template>
-                      </el-table-column>
+                      </el-table-column> -->
                   </el-table>
               </div>
             </el-tab-pane>
@@ -129,7 +164,7 @@
                       :min-width="100"
                       >
                     </el-table-column>
-                    <el-table-column
+                    <!-- <el-table-column
                       prop="zh_rate_sort"
                       label="转化率"
                       align="center"
@@ -144,8 +179,8 @@
                           {{scope.row.zh_rate}}
                         </span>
                       </template>
-                    </el-table-column>
-                    <el-table-column
+                    </el-table-column> -->
+                    <!-- <el-table-column
                       prop="price_sort"
                       label="平均询盘费用"
                       align="center"
@@ -155,7 +190,7 @@
                       <template #default="scope">
                         {{scope.row.price}}
                       </template>
-                    </el-table-column>
+                    </el-table-column> -->
                   </el-table>
               </div>
             </el-tab-pane>
@@ -186,7 +221,7 @@
                         :min-width="100"
                         >
                       </el-table-column>
-                      <el-table-column
+                      <!-- <el-table-column
                         prop="zh_rate_sort"
                         label="转化率"
                         sortable
@@ -201,8 +236,8 @@
                             {{scope.row.zh_rate}}
                           </span>
                         </template>
-                      </el-table-column>
-                      <el-table-column
+                      </el-table-column> -->
+                      <!-- <el-table-column
                         prop="price_sort"
                         label="平均询盘费用"
                         align="center"
@@ -212,7 +247,7 @@
                         <template #default="scope">
                           {{scope.row.price}}
                         </template>
-                      </el-table-column>
+                      </el-table-column> -->
                   </el-table>
               </div>
             </el-tab-pane>
@@ -246,7 +281,7 @@
                         :min-width="100"
                         >
                       </el-table-column>
-                      <el-table-column
+                      <!-- <el-table-column
                         prop="zh_rate_sort"
                         label="转化率"
                         sortable
@@ -261,8 +296,8 @@
                             {{scope.row.zh_rate}}
                           </span>
                         </template>
-                      </el-table-column>
-                      <el-table-column
+                      </el-table-column> -->
+                      <!-- <el-table-column
                         prop="price_sort"
                         label="平均询盘费用"
                         align="center"
@@ -272,7 +307,7 @@
                         <template #default="scope">
                           {{scope.row.price}}
                         </template>
-                      </el-table-column>
+                      </el-table-column> -->
                   </el-table>
               </div>
             </el-tab-pane>
@@ -300,13 +335,19 @@ export default {
       defaultData:{},
       menuButtonPermit:[],
       searchData:{
-        date:"",
+        date:[],
+        typekey: "",
+        productid: ""
       },
       searchResult: {
         word_count:[],
         device_count: [],
         ads_count: [],
-        url_count: []
+        url_count: [],
+        word_total: 0,
+        device_total: 0,
+        ads_total: 0,
+        url_total: 0,
       },
       isDisabled:false,
       isExportDisabled: true,
@@ -330,6 +371,8 @@ export default {
       activeNames: "1",
       exportTitle: "搜索词",
       timeList: [],
+      productTypeList: [],
+      productList:[],
     }
   },
   components: {
@@ -381,7 +424,9 @@ export default {
     // 重置选择项
     resetData(){
       var $this = this;
-      $this.searchData.date="";
+      $this.searchData.date=[];
+      $this.searchData.typekey = "";
+      $this.searchData.productid = "";
       $this.searchResult.word_count=[];
       $this.searchResult.url_count=[];
       $this.searchResult.ads_count=[];
@@ -404,9 +449,14 @@ export default {
     initSearchData(){
       var $this = this;
       var searchData = {};
-      searchData.ads_time = $this.searchData.date;
+      if($this.searchData.date.length > 0){
+        searchData.starttime = $this.searchData.date[0];
+        searchData.endtime = $this.searchData.date[1];
+      }
       searchData.type = $this.checkedItem;
       searchData.domain = $this.checkedDomain;
+      searchData.typekey = $this.searchData.typekey;
+      searchData.productid = $this.searchData.productid;
       return searchData;
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -427,7 +477,7 @@ export default {
               });
               $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
             }else{
-              $this.getTimeList();
+              $this.getConditionList();
             }
           }else{
             $this.$message({
@@ -447,7 +497,25 @@ export default {
         }
       });
     },
-    
+    // 获取条件列表
+    getConditionList(){
+        var $this = this;
+        $this.$store.dispatch('depfive/depfiveEnConditionAction', null).then(response=>{
+          if(response.status){
+            var productTypeList = [];
+            if(response.producttype && response.producttype.length > 0){
+              response.producttype.forEach(function(item,index){
+                var itemData = {};
+                itemData.label = item.name;
+                itemData.value = item.id;
+                productTypeList.push(itemData);
+              });
+            }
+            
+            $this.productTypeList = productTypeList;
+          }
+        });
+    },
     getTimeList(){
       var $this = this;
       $this.$store.dispatch('depfive/depfiveTimeAction', null).then(response=>{
@@ -469,12 +537,42 @@ export default {
         }
       });
     },
+    // 当前产品分类改变触发事件
+    currentCateChange(e){
+      var $this = this;
+      if(e){
+          $this.searchData.productid = "";
+          $this.$store.dispatch('enphone/getCurrentCateProductListAction', {typeid:e}).then(response=>{
+              if(response){
+                  if(response.status){
+                      var productList = [];
+                      response.data.forEach(function(item,index){
+                          var itemData = {};
+                          itemData.label = item.name;
+                          itemData.value = item.id;
+                          productList.push(itemData);
+                      });
+                      $this.productList = productList;
+                  }else{
+                      $this.$message({
+                      showClose: true,
+                      message: response.info,
+                      type: 'error'
+                      });
+                  }
+              }
+          });
+        }else{
+          $this.searchData.productid = "";
+          $this.productList = [];
+        }
+    },
     // 获取统计数据
     getDomainData(){
       var $this = this;
       if(!$this.isDisabled){
         var searchData = $this.initSearchData();
-        if($this.searchData.date == ""){
+        if($this.searchData.date.length == 0){
           $this.$message({
               showClose: true,
               message: '请选择查询时间！',
@@ -502,17 +600,45 @@ export default {
         $this.$store.dispatch('depfive/depfiveDomainDataAction', searchData).then(response=>{
           if(response){
             if(response.status){
+              $this.searchResult.word_count = [];
+              $this.searchResult.device_count = [];
+              $this.searchResult.ads_count = [];
+              $this.searchResult.url_count = [];
+              $this.searchResult.word_total = 0;
+              $this.searchResult.device_total = 0;
+              $this.searchResult.ads_total = 0;
+              $this.searchResult.url_total = 0;
               if(response.word_count && response.word_count.length > 0){
                 $this.searchResult.word_count = response.word_count;
+                var totalcount = 0;
+                response.word_count.forEach(item => {
+                  totalcount += Number(item.xunnumber);
+                });
+                $this.searchResult.word_total = totalcount;
               }
               if(response.device_count && response.device_count.length > 0){
                 $this.searchResult.device_count = response.device_count;
+                var totalcount = 0;
+                response.device_count.forEach(item => {
+                  totalcount += Number(item.xunnumber);
+                });
+                $this.searchResult.device_total = totalcount;
               }
               if(response.ads_count && response.ads_count.length > 0){
                 $this.searchResult.ads_count = response.ads_count;
+                var totalcount = 0;
+                response.ads_count.forEach(item => {
+                  totalcount += Number(item.xunnumber);
+                });
+                $this.searchResult.ads_total = totalcount;
               }
               if(response.url_count && response.url_count.length > 0){
                 $this.searchResult.url_count = response.url_count;
+                var totalcount = 0;
+                response.url_count.forEach(item => {
+                  totalcount += Number(item.xunnumber);
+                });
+                $this.searchResult.url_total = totalcount;
               }
               $this.activeNames = ''+$this.checkedItem[0];
               if(''+$this.checkedItem[0] == "1"){
@@ -615,8 +741,6 @@ export default {
         fieldList.push({ key: 'word_filename', value: '网址'})
       }
       fieldList.push({ key: 'xunnumber', value: '询盘'})
-      fieldList.push({ key: 'zh_rate', value: '转化率'})
-      fieldList.push({ key: 'price', value: '平均询盘费用'})
 			$this.$refs.ExportModalRef.showDialog({ fieldList: fieldList, hasSelected: false, hasData: false })
 		},
 		exportDone(obj) {
@@ -746,10 +870,29 @@ export default {
   height: calc(100vh - 257px);
   position: relative;
   .exportDiv{
+    left: 330px;
     position: absolute;
     z-index: 33;
     right: 20px;
     top: 10px;
+    &:after{
+      content: "";
+      display: block;
+      clear:both;
+    }
+    .total_num{
+      float: left;
+      font-size: 14px;
+      color: #666;
+      line-height: 34px;
+      margin-top: 15px;
+      span{
+        color: red;
+      }
+    }
+    .exportBtn{
+      float: right;
+    }
   }
 }
 .memberTopTab .chooseDepart .departItems .date-range span.el-range-separator:hover{

@@ -340,6 +340,14 @@
                                     :class="searchData.remark3!=''?'el-xzstate':''"
                                     clearable>
                                   </el-input>
+                                  <el-select v-if="currentKey&&currentKey=='fivexun'" v-model="searchData.replystatus" size="small" clearable placeholder="回复状态" :class="searchData.saleswarnstatus!=''?'el-xzstate':''" style="width:120px;margin:5px 10px 5px 0px;float:left;">
+                                    <el-option
+                                      v-for="item in replyList"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                    </el-option>
+                                  </el-select>
                                   <el-select v-model="searchData.effective" size="small" clearable placeholder="有效性" :class="searchData.effective!=''?'el-xzstate':''" style="width:100px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in effectiveList"
@@ -356,7 +364,8 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-checkbox border v-if="currentKey=='fivexun'" size="small" v-model="moreChecked" style="width:100px;margin:5px 10px 5px 0px;float:left;">多次标记</el-checkbox>
+                                  <el-checkbox border v-if="currentKey=='fivexun'" size="small" v-model="xunChecked" style="width:150px;margin:5px 10px 5px 0px;float:left;">根据询盘id分组</el-checkbox>
+                                  <!-- <el-checkbox border v-if="currentKey=='fivexun'" size="small" v-model="moreChecked" style="width:100px;margin:5px 10px 5px 0px;float:left;">多次标记</el-checkbox> -->
                                   <el-checkbox border v-if="currentKey=='fivexun'" size="small" v-model="badChecked" style="width:130px;margin:5px 10px 5px 0px;float:left;">多次标记未回复</el-checkbox>
                                   <el-checkbox border v-if="currentKey=='fivexun'" size="small" v-model="goodChecked" style="width:150px;margin:5px 10px 5px 0px;float:left;">多次标记最终回复</el-checkbox>
                                   <el-input
@@ -451,6 +460,7 @@
                                         prop="five_number"
                                         label="五天未回复询盘数"
                                         min-width="80"
+                                        align="center"
                                         sortable
                                         >
                                         <template slot-scope="scope">
@@ -463,6 +473,7 @@
                                         prop="more_number"
                                         label="多次提交未回复询盘数"
                                         min-width="70"
+                                        align="center"
                                         sortable
                                         >
                                         <template slot-scope="scope">
@@ -475,6 +486,7 @@
                                         prop="use_number"
                                         label="分给其他人后回复的询盘数"
                                         min-width="100"
+                                        align="center"
                                         sortable
                                         >
                                         <template slot-scope="scope">
@@ -826,6 +838,12 @@
                                     <template slot-scope="scope">
                                       <div class="table-text">
                                         <p>{{scope.row.hassale}}</p>
+                                        <template v-if="currentKey&&currentKey=='fivexun'">
+                                          <p style="color:red;" v-if="scope.row.replystatus == 1">（未标记）</p>
+                                          <p style="color:red;" v-if="scope.row.replystatus == 2">（已回复）</p>
+                                          <p style="color:red;" v-if="scope.row.replystatus == 4">（五天未回复）</p>
+                                          <p style="color:red;" v-if="scope.row.replystatus == 5">（回复后非公司产品）</p>
+                                        </template>
                                       </div>
                                     </template>
                                   </el-table-column>
@@ -889,7 +907,21 @@
                                     prop="warning"
                                     label="提醒"
                                     min-width="90"
-                                    v-if="currentKey&&currentKey=='fivexun'&&permitField.includes('salesremark')"
+                                    v-if="currentKey&&currentKey=='fivexun'&&permitField.includes('salesremark') && xunChecked"
+                                    >
+                                    <template slot-scope="scope">
+                                      <div class="div_line" v-for="item in scope.row.alist" :key="item.id">
+                                        {{item.remark}}
+                                        <div style="color:#d02c34">({{item.uname}})</div>
+                                        <div>{{item.addtime}}</div>
+                                      </div>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    prop="warning"
+                                    label="提醒"
+                                    min-width="90"
+                                    v-if="currentKey&&currentKey=='fivexun'&&permitField.includes('salesremark') && !xunChecked"
                                     >
                                     <template slot-scope="scope">
                                       {{scope.row.warning}}
@@ -897,7 +929,6 @@
                                       <div>{{scope.row.allot_time}}</div>
                                     </template>
                                   </el-table-column>
-
                                   <el-table-column
                                     v-if="currentKey&&currentKey=='fivexun' ? permitField.includes('salesremark')&&(menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')) : menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')"
                                     width="88"
@@ -1010,6 +1041,7 @@ export default {
       moreChecked: false,
       badChecked: false,
       goodChecked: false,
+      xunChecked: false,
       is_group: false,
       isGroup: false,
       groupTypeList:[
@@ -1050,6 +1082,8 @@ export default {
         grouptype: "",
         is_bad: "",
         is_good: "",
+        is_xun: "",
+        replystatus: ""
       },
       pageSizeList:[20, 50, 100, 500],
       totalDataNum:0,
@@ -1099,6 +1133,13 @@ export default {
       effectiveList:[
         {label:"只显示有效",value:1},
         {label:"只显示无效",value:2},
+      ],
+      replyList:[
+        {label:"未标记",value:1},
+        {label:"已回复",value:2},
+        {label:"未回复",value:3},
+        {label:"五天未回复",value:4},
+        {label:"回复后非公司产品",value:5},
       ],
       feedbackList:[
         {label:"已反馈",value:1},
@@ -1397,6 +1438,7 @@ export default {
         $this.moreChecked = false;
         $this.badChecked = false;
         $this.goodChecked = false;
+        $this.xunChecked = false;
         $this.searchData.date=[];
         $this.searchData.timeing="";
         $this.searchData.continent="";
@@ -1429,6 +1471,7 @@ export default {
         $this.searchData.is_more = "";
         $this.searchData.is_bad = "";
         $this.searchData.is_group = false;
+        $this.searchData.replystatus = "";
         $this.moreChecked = false;
         $this.searchData.grouptype = "";
         $this.searchResult();
@@ -1822,11 +1865,11 @@ export default {
               if($this.searchData.en_id){
                 searchData.en_id = $this.searchData.en_id;
               }
-              if($this.moreChecked){
-                searchData.is_more = 1;
-              }else{
-                searchData.is_more = 0;
-              }
+              // if($this.moreChecked){
+              //   searchData.is_more = 1;
+              // }else{
+              //   searchData.is_more = 0;
+              // }
               if($this.badChecked){
                 searchData.is_bad = 1;
               }else{
@@ -1837,9 +1880,15 @@ export default {
               }else{
                 searchData.is_good = 0;
               }
+              if($this.xunChecked){
+                searchData.is_xun = 1;
+              }else{
+                searchData.is_xun = 0;
+              }
               if($this.searchData.is_group){
                 searchData.is_group = 1
               }
+              searchData.replystatus = $this.searchData.replystatus;
               searchData.grouptype=$this.searchData.grouptype;
             }
           }
@@ -2838,6 +2887,11 @@ export default {
     width: 100%;
     height: calc(100vh - 460px);
   }
+}
+.div_line+.div_line{
+  padding-top: 10px;
+  margin-top: 10px;
+  border-top: 1px solid #ebeff1;
 }
 </style>
 <style>

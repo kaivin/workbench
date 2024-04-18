@@ -2,7 +2,7 @@ export const resultData = {
     day_word_data: [
       {
         "day": "2024-04-14", //日期
-          "user_data": [
+        "user_data": [
               {
                 "name": "贺庆宵", //用户名
                 "data": {
