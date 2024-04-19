@@ -1687,7 +1687,6 @@ export default {
             axisLabel:{
               color: "#888"
             },
-            splitNumber: 5
           },
         ],
         animation: false,

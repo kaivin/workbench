@@ -287,7 +287,7 @@
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
-                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)||(currentKey&&currentKey=='fivexun'&&permitField.includes('salesremark'))" v-model="searchData.salesownid" size="small" clearable filterable placeholder="业务员" :class="searchData.salesownid!=''?'el-xzstate':''" 
+                                  <el-select v-if="(currentKey&&currentKey=='all')||(!currentKey&&searchData.waitstatus==1&&phoneID>800)||(currentKey&&currentKey=='fivexun'&&permitField.includes('givecustormwarn'))" v-model="searchData.salesownid" size="small" clearable filterable placeholder="业务员" :class="searchData.salesownid!=''?'el-xzstate':''" 
                                     style="width:90px;margin:5px 10px 5px 0px;float:left;">
                                     <el-option
                                       v-for="item in salesuserList"
@@ -389,15 +389,15 @@
                                     </el-option>
                                   </el-select>
                                   <el-checkbox v-if="currentKey&&currentKey=='all'" size="small" class="search_checkbox"  v-model="searchData.once_allot">二次分配询盘</el-checkbox>
-                                  <el-checkbox v-if="currentKey=='fivexun'&&permitField.includes('salesremark')" class="search_checkbox" v-model="searchData.is_group" size="small" border style="width:70px;margin:5px 10px 5px 0px;float:left;">分组</el-checkbox>
-                                  <template v-if="currentKey=='fivexun'&&permitField.includes('salesremark')">
+                                  <el-checkbox v-if="currentKey=='fivexun'&&permitField.includes('givecustormwarn')" class="search_checkbox" v-model="searchData.is_group" size="small" border style="width:70px;margin:5px 10px 5px 0px;float:left;">分组</el-checkbox>
+                                  <template v-if="currentKey=='fivexun'&&permitField.includes('givecustormwarn')">
                                       <span class="fivexun-clus" v-for="item in groupTypeList" v-bind:class="item.isOn?'active':''" v-bind:key="item.value" v-on:click="groupTypeClick(item.value)"><i></i>{{item.label}}</span>
                                   </template>
                                   <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" size="small" type="primary" icon="el-icon-search" @click="searchResult" style="margin:5px 10px 5px 0px;float:left;">查询</el-button>
                                   <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()" style="margin:5px 10px 5px 0px;float:left;">重置</el-button>
                                   <el-button v-if="currentKey!='fivexun'" type="info" plain size="small" style="margin:5px 10px 5px 0px;float:left;" v-on:click="clearCache">清除缓存</el-button>
                                 </div>
-                                <div class="clues-info flex-wrap">
+                                <div class="clues-info flex-wrap" v-if="!(currentKey=='fivexun'&& searchData.is_group)">
                                     <div class="clues-infoFl flex-content">
                                           <p>
                                             <span class="item-span-1">当前结果集：共有<strong>{{infoData.totalCount}}</strong>条。</span>
@@ -833,7 +833,7 @@
                                     prop="addusername"
                                     label="业务人员"
                                     width="80"
-                                    v-if="currentKey&&currentKey=='fivexun'?permitField.includes('salesremark'):true"
+                                    v-if="currentKey&&currentKey=='fivexun'?permitField.includes('givecustormwarn'):true"
                                     >
                                     <template slot-scope="scope">
                                       <div class="table-text">
@@ -907,7 +907,7 @@
                                     prop="warning"
                                     label="提醒"
                                     min-width="90"
-                                    v-if="currentKey&&currentKey=='fivexun'&&permitField.includes('salesremark') && xunChecked"
+                                    v-if="currentKey&&currentKey=='fivexun'&&permitField.includes('givecustormwarn') && xunChecked"
                                     >
                                     <template slot-scope="scope">
                                       <div class="div_line" v-for="item in scope.row.alist" :key="item.id">
@@ -921,7 +921,7 @@
                                     prop="warning"
                                     label="提醒"
                                     min-width="90"
-                                    v-if="currentKey&&currentKey=='fivexun'&&permitField.includes('salesremark') && !xunChecked"
+                                    v-if="currentKey&&currentKey=='fivexun'&&permitField.includes('givecustormwarn') && !xunChecked"
                                     >
                                     <template slot-scope="scope">
                                       {{scope.row.warning}}
@@ -930,7 +930,7 @@
                                     </template>
                                   </el-table-column>
                                   <el-table-column
-                                    v-if="currentKey&&currentKey=='fivexun' ? permitField.includes('salesremark')&&(menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')) : menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')"
+                                    v-if="currentKey&&currentKey=='fivexun' ? permitField.includes('givecustormwarn')&&(menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')) : menuButtonPermit.includes('Enphone_edit')||menuButtonPermit.includes('Enphone_otheredit')"
                                     width="88"
                                     align="center"
                                     prop="operations"

@@ -7,16 +7,14 @@
             <span v-else class="breadcrumb-link" v-bind:key="'last-' + item.id"><b>-</b><span>{{item.title}}</span></span>
             </template>
         </p>
-        <div class="filter-panel" ref="filterbox">
-            <div class="filter-list">
-
-                <div class="item-search flex-box">
-                    <div class="filter-title"><span class="txt-title">日期：</span></div>
-                    <div class="item-list">
-                        <div class="item-change">
-                            <div class="item-font" v-bind:class="item.isOn?'active':''" v-for="item in dateDimension" v-bind:key="item.value" v-on:click="dimensionChangeHandler(item)">{{item.label}}</div>
-                        </div>
-                        <div class="item-date">
+        <div class="chart_main">
+          <el-tabs v-model="nowChart" type="card" @tab-click="tabChange">
+            <el-tab-pane label="详细" name="1">
+              <div class="filter-panel" ref="filterbox">
+                  <div class="filter-list">
+                      <div class="item-search flex-box">
+                          <div class="filter-title"><span class="txt-title">日期：</span></div>
+                          <div class="item-list">
                             <el-date-picker
                                 v-model="searchData.time"
                                 type="daterange"
@@ -29,68 +27,124 @@
                                 end-placeholder="结束日期"
                                 >
                             </el-date-picker>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-filter flex-box group">
-                    <div class="filter-title"><span class="txt-title">账号：</span></div>
-                    <div class="filter-content flex-content">
-                        <div class="checked_item">
-                            <el-checkbox
-                            v-model="checkAll"
-                            :indeterminate="isIndeterminate"
-                            @change="handleCheckAllChange"
-                            ><span class="c_tit">全选</span>
-                            </el-checkbox>
-                            <el-checkbox-group
-                            v-model="searchData.name"
-                            @change="handleCheckedChange"
-                            >
-                                <el-checkbox
-                                v-for="item in userList"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.name"
+                          </div>
+                      </div>
+                      <div class="item-filter flex-box group">
+                          <div class="filter-title"><span class="txt-title">人员：</span></div>
+                          <div class="filter-content flex-content">
+                              <div class="checked_item">
+                                  <el-checkbox
+                                  v-model="checkAll"
+                                  :indeterminate="isIndeterminate"
+                                  @change="handleCheckAllChange"
+                                  ><span class="c_tit">全选</span>
+                                  </el-checkbox>
+                                  <el-checkbox-group
+                                  v-model="searchData.name"
+                                  @change="handleCheckedChange"
+                                  >
+                                      <el-checkbox
+                                      v-for="item in userList"
+                                      :key="item.id"
+                                      :label="item.name"
+                                      :value="item.name"
+                                      >
+                                      <span class="c_tit">{{item.name}}</span>
+                                      </el-checkbox>
+                                  </el-checkbox-group>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="item-search item-btn">
+                          <div class="filter-title" style="opacity: 0; visibility: hidden;"><span class="txt-title">人员：</span></div>
+                          <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getCountData">查询</el-button>
+                          <el-button type="info" class="reset_btn" v-on:click="resetColumnData()">重置</el-button>
+                      </div>
+                  </div>
+              </div>
+              <div class="chartShow result-panel">
+                  <!-- <div class="item-change">
+                      <div class="item-font" :class="nowChart == 1?'active':''" @click="tabChange(1)">详细</div>
+                      <div class="item-font" :class="nowChart == 2?'active':''" @click="tabChange(2)">占比</div>
+                  </div> -->
+                  <div class="chart_item">
+                      <div class="search" v-if="isSearchData"><p>请稍候...</p></div>
+                      <ColumnChart :chartData="chartData"></ColumnChart>
+                  </div>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="占比" name="2">
+              <div class="filter-panel" ref="filterbox">
+                  <div class="filter-list">
+                      <div class="item-search flex-box">
+                          <div class="filter-title"><span class="txt-title">日期：</span></div>
+                          <div class="item-list">
+                            <el-date-picker
+                                v-model="searchData.time"
+                                type="daterange"
+                                format="yyyy-MM-dd"
+                                value-format="yyyy-MM-dd"
+                                key="a"
+                                size="small"
+                                class="date-range"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"
                                 >
-                                <span class="c_tit">{{item.name}}</span>
-                                </el-checkbox>
-                            </el-checkbox-group>
+                            </el-date-picker>
+                          </div>
+                          <div class="filter-title" style="margin-left: 50px"><span class="txt-title">岗位：</span></div>
+                          <div class="item-list">
+                            <el-select v-model="pieSearch.post_id" placeholder="请选择">
+                                <el-option v-for="item in isGetPost" :disabled="item.disabled" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                          </div>
+                      </div>
+                      <div class="item-filter flex-box group">
+                          <div class="filter-title"><span class="txt-title">人员：</span></div>
+                          <div class="filter-content flex-content">
+                              <div class="checked_item">
+                                  <el-radio-group
+                                  v-model="pieSearch.name"
+                                  >
+                                      <el-radio
+                                      v-for="item in userList"
+                                      :key="item.id"
+                                      :label="item.name"
+                                      :value="item.name"
+                                      >
+                                      <span class="c_tit">{{item.name}}</span>
+                                      </el-radio>
+                                  </el-radio-group>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="item-search item-btn">
+                          <div class="filter-title" style="opacity: 0; visibility: hidden;"><span class="txt-title">人员：</span></div>
+                          <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getPieData">查询</el-button>
+                          <el-button type="info" class="reset_btn" v-on:click="resetPieData()">重置</el-button>
+                      </div>
+                  </div>
+              </div>
+              <div class="chartShow result-panel">
+                  <div class="chart_item">
+                      <div class="search" v-if="isSearchData"><p>请稍候...</p></div>
+                      <div class="pie_list">
+                        <div class="pie_item">
+                          <div id="pieChart"></div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="item-search item-btn">
-                    <div class="filter-title" style="opacity: 0; visibility: hidden;"><span class="txt-title">账号：</span></div>
-                    <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getCountData">查询</el-button>
-                    <el-button type="info" class="reset_btn" v-on:click="resetData()">重置</el-button>
-                </div>
-
-            </div>
-        </div>
-        <div class="chartShow result-panel">
-            <div class="item-change">
-                <div class="item-font" :class="nowChart == 1?'active':''" @click="tabChange(1)">详细</div>
-                <div class="item-font" :class="nowChart == 2?'active':''" @click="tabChange(2)">占比</div>
-            </div>
-            <div class="chart_item" v-if="nowChart == 1">
-                <div class="search" v-if="isSearchData"><p>请稍候...</p></div>
-                <div id="columnChart"></div>
-            </div>
-            <div class="chart_item" v-if="nowChart == 2">
-                <div class="search" v-if="isSearchData"><p>请稍候...</p></div>
-                <div id="pieChart"></div>
-            </div>
+                      </div>
+                  </div>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
         </div>
     </div>
   </template>
   <script>
   import {mapGetters} from 'vuex';
-  import * as echarts from 'echarts';
-  import {sortByAsc} from "@/utils/index";
-  import {resultData} from "./index.js";
+  import ColumnChart from '../component/columnChart.vue';
   export default {
-    name: 'videocount_count',
+    name: 'videocount_index',
     data() {
       return {
           menuButtonPermit:[],         //网页权限字段
@@ -98,23 +152,28 @@
             name:[],
             time: []
           },
+          pieSearch:{
+            time: [],
+            name: "",
+            post_id: ""
+          },
           showChart: false,
-          columnChart:null,
-          pieChart: null,
           isIndeterminate: false,
           checkAll: false,
           isSearchData: false,
           pickerDateRangeOptions: this.$pickerRangeOptions,
-          dateDimension:[
-            {label:"日",value:"day",isOn:false},
-            {label:"周",value:"week",isOn:false},
-            {label:"月",value:"month",isOn:false},
-          ],
-          nowDimension: "day",
           userList: [],
-          nowChart: 1,
+          typeList: [],
+          nowChart: "1",
           chartData: {},
+          isSearchColumn: false,
+          isSearchPie: false,
+          isGetPost: false,
       };
+    },
+    components: {
+      ColumnChart,
+      
     },
     computed: {
       ...mapGetters([
@@ -222,9 +281,10 @@
             res.data.forEach(function(item,index){
               permitData.push(item.action_route);
             });
-            if(permitData.includes('Douyin_doucounttwo')){
-                $this.getDouyinTime();
-                $this.getDepartList();
+            if(permitData.includes('videocount_index')){
+              $this.searchData.time = $this.getDefaultTime();
+              $this.pieSearch.time = $this.getDefaultTime();
+              $this.getUserList();
             }else{
               $this.$message({
                 showClose: true,
@@ -248,19 +308,9 @@
       // 初始化数据
       initData(){
         var $this = this;
-        // $this.getUserMenuButtonPermit();
-        $this.dateDimension.forEach(item => {
-            if(item.value == "day"){
-                item.isOn = true;
-            }else{
-                item.isOn = false;
-            }
-        })
-        $this.getDefaultTime();
-        $this.getUserList();
-        $this.handleChartData();
+        $this.getUserMenuButtonPermit();
       },
-      // 获取日期
+      // 获取用户
       getUserList(){
         var $this = this;
         $this.$store.dispatch('videocount/userListData',null).then(res=>{
@@ -270,6 +320,7 @@
                     resData = res.data;
                 }
                 $this.userList = resData;
+                $this.getCountData();
             }else{
                 $this.$message({
                     showClose: true,
@@ -279,6 +330,30 @@
             }
         });
       },
+      getPostList(){
+        var $this = this;
+        $this.$store.dispatch('videocount/getVideoPostData',null).then(res=>{
+          if(res.code == 200){
+            var resData = [];
+            if(res.data && res.data.length > 0){
+                res.data.forEach(item => {
+                    var obj = {};
+                    obj.label = item.name;
+                    obj.value = item.id;
+                    obj.disabled = false;
+                    resData.push(obj);
+                })
+            }
+            $this.isGetPost = true;
+				  }else{
+            $this.$message({
+                showClose: true,
+                message: res.msg,
+                type: 'error'
+            });
+          }
+			  });
+		  },
       // 点击选中
       handleCheckedChange(e){
         var $this = this;
@@ -305,7 +380,7 @@
           $this.searchData.name = checkedList;
           $this.checkAll= true;
         }else{
-          $this.searchData.ids = [];
+          $this.searchData.name = [];
           $this.checkAll= false;
         }
         $this.isIndeterminate = false;
@@ -314,21 +389,6 @@
       getCountData(){
         var $this = this;
         if(!$this.isSearchData){
-          if($this.searchData.time.length == 0 ){
-            $this.$message({
-              showClose: true,
-              message: "错误：请选择日期！",
-              type: "error",
-            });
-            return false;
-          }else if($this.searchData.name.length === 0){
-            $this.$message({
-              showClose: true,
-              message: "错误：请选择要查询的用户！",
-              type: "error",
-            });
-            return false;
-          }
           var formData = {};
           formData.name = $this.searchData.name;
           formData.time = $this.searchData.time.join(" - ");
@@ -336,14 +396,14 @@
           $this.$store.dispatch('videocount/getVideoCountData', formData).then(response=>{
             if(response){
               $this.isSearchData = false;
+              $this.chartData = {}
               if(response.code == 200){
                 if(response.data){
-                  var resList = []
-                  if(response.data.length > 0){
-                    resList = response.data;
+                  if(response.data.day_word_data.length > 0){
+                    var resList = response.data.day_word_data;
+                    resList = resList.sort($this.sortByAsc("day"));
+                    $this.handleChartData(resList);
                   }
-                  $this.searchData = resList;
-                  $this.handleChartData();
                 }
               }else{
                 if(response.permitstatus&&response.permitstatus==2){
@@ -370,390 +430,181 @@
           });
         }
       },
-      handleChartData(){
+      // 获取饼图数据
+      getPieData(){
+        var $this = this;
+        if(!$this.isSearchData){
+          var formData = {};
+          formData.name = $this.pieSearch.name;
+          formData.time = $this.pieSearch.time.join(" - ");
+          formData.post_id = $this.pieSearch.post_id;
+          $this.isSearchData = true;
+          $this.$store.dispatch('videocount/getVideoCountData', formData).then(response=>{
+            if(response){
+              $this.isSearchData = false;
+              $this.chartData = {}
+              if(response.code == 200){
+                if(response.data){
+                  if(response.data.day_word_data.length > 0){
+                    var resList = response.data.day_word_data;
+                    resList = resList.sort($this.sortByAsc("day"));
+                    $this.handlePieData(resList);
+                  }
+                }
+              }else{
+                if(response.permitstatus&&response.permitstatus==2){
+                  $this.$message({
+                    showClose: true,
+                    message: "未被分配该页面访问权限",
+                    type: 'error',
+                    duration:6000
+                  });
+                  $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+                }else{
+                  $this.$message({
+                    showClose: true,
+                    message: response.msg,
+                    type: 'error'
+                  });
+                  setTimeout(()=>{
+                    $this.isSearchResult=false;
+                    $this.isSaveData=false;
+                  },1000);
+                }
+              }
+            }
+          });
+        }
+      },
+      handleChartData(data){
         var $this = this;
         var c_name = [];
         var c_data = [];
-        var p_name = [];
-        var p_data = [];
-        resultData.day_word_data.forEach((item,index) => {
+        var c_user = [];
+        var all_truescore = [];
+        var all_sepscore = [];
+        var all_percent = [];
+        data.forEach((item,index) => {
           c_name.push(item.day);
           if(item.user_data && item.user_data.length > 0){
-            var truescore = [];
-            var finishscore = [];
-            var sepscore = [];
-            var percent = [];
             item.user_data.forEach((sitem, sindex) => {
               if(index == 0){
-                p_name.push(sitem.name);
+                var truescore = [];
+                var sepscore = [];
+                var percent = [];
+                c_user.push(sitem.name);
+                for(var i = 0; i < data.length;i++){
+                  var trueobj = {};
+                  var result = data[i].user_data[sindex];
+                  trueobj.value = result.data.user_effective_score;
+                  trueobj.all = result.data.user_actual_score;
+                  trueobj.actual_data = result.data.user_actual_data;
+                  trueobj.effective_data = result.data.user_effective_data;
+                  truescore.push(trueobj);
+                  var obj = {};
+                  obj.value = result.data.user_actual_score-result.data.user_effective_score;
+                  obj.all = result.data.user_actual_score;
+                  sepscore.push(obj);
+                  if(result.data.user_effective_score > 0 && result.data.user_actual_score > 0){
+                    percent.push(Number(result.data.user_effective_score*100/result.data.user_actual_score).toFixed(1));
+                  }else{
+                    percent.push(0);
+                  }
+                }
+                c_data.push(truescore);
+                c_data.push(sepscore);
+                c_data.push(percent);
               }
-              var trueobj = {};
-              trueobj.value = sitem.data.user_effective_score;
-              trueobj.all = sitem.data.user_actual_score;
-              truescore.push(trueobj);
-              var obj = {};
-              obj.value = sitem.data.user_actual_score-sitem.data.user_effective_score;
-              obj.all = sitem.data.user_actual_score;
-              sepscore.push(obj);
-              percent.push(Number(sitem.data.user_effective_score*100/sitem.data.user_actual_score).toFixed(1));
             })
-            c_data.push(truescore);
-            c_data.push(sepscore);
-            c_data.push(percent);
+            
+          }else{
+            var trueobj = {};
+            trueobj.value = item.all_user_effective_score;
+            trueobj.all = item.all_user_actual_score;
+            trueobj.actual_data = item.all_user_actual_data;
+            trueobj.effective_data = item.all_user_effective_data;
+            all_truescore.push(trueobj);
+            var obj = {};
+            obj.value = item.all_user_actual_score-item.all_user_effective_score;
+            obj.all = item.all_user_actual_score;
+            all_sepscore.push(obj);
+            if(item.all_user_effective_score > 0 && item.all_user_actual_score > 0){
+              all_percent.push(Number(item.all_user_effective_score*100/item.all_user_actual_score).toFixed(1));
+            }else{
+              all_percent.push(0);
+            }
           }
         });
+        if($this.searchData.name.length == 0){
+          c_data.push(all_truescore);
+          c_data.push(all_sepscore);
+          c_data.push(all_percent);
+        }
         $this.chartData.c_name = c_name;
         $this.chartData.c_data = c_data;
-        $this.chartData.p_name = p_name;
-        $this.chartData.p_data = p_data;
-        $this.tabChange(1);
+        $this.chartData.c_user = c_user;
       },
-      drawColumnChart(){
+      resetColumnData(){
         var $this = this;
-        var colorArr = ["#2259e5","#3c6be5", "#3ebea7","#5ed8c2", "#eca12d","#edb257", "#ee4747", "#ed6060","#33abda", "#73c0de","#6ec840", "#91cb74","#f57543","#ff8d61","#9a60b4", "#c088da", "#c20cb8", "#e522db","#c8bc12", "#e5d822", "#3759be", "#5470c6", "#e06430", "#fc8452", "#e2ac34", "#fac858", "#ce3f3f","#ee6666"]
-        var chartDom = document.getElementById('columnChart');
-        var myChart = echarts.init(chartDom);
-        var option;
-        var xData = [];
-        var series = [];
-        if($this.chartData.c_data.length > 0){
-          $this.chartData.c_data.forEach((item,index) => {
-            var itemObj={};
-            var nameindex = Math.floor(index/3);
-            itemObj.name = $this.chartData.p_name[nameindex];
-            itemObj.data = item;
-            // 柱状图
-            if(index%3 == 0 || index%3 == 1){
-              itemObj.type='bar';
-              itemObj.barWidth ="auto";
-              if(index%3 == 0){
-                itemObj.label={
-                  show: true,
-                  position: 'insideTop',
-                  distance: 10,
-                  color: "#fff"
-                };
-                itemObj.itemStyle={
-                  color: colorArr[nameindex*2],
-                  borderColor: colorArr[nameindex*2],
-                };
-              }else{
-                itemObj.label={
-                  show: true,
-                  position: 'top',
-                  distance: 5,
-                  formatter:function(params){
-                    return params.data.all
-                  },
-                };
-                itemObj.itemStyle={
-                  color: colorArr[nameindex*2+1],
-                  borderColor: colorArr[nameindex*2+1],
-                };
-              }
-              itemObj.stack = "data"+nameindex;
-              series.push(itemObj);
-            }else if(index%3 == 2){
-              // 折线图
-              itemObj.smooth=false;
-              itemObj.type='line';
-              itemObj.lineStyle={
-                  width: 1,
-                  color: colorArr[nameindex*2], // 线条颜色
-              };
-              itemObj.itemStyle={
-                  color: '#fff',
-                  borderColor: colorArr[nameindex*2], // 折点颜色
-                  borderWidth: 1
-              };
-              itemObj.emphasis={
-                lineStyle: {
-                  width: 2,	// hover时的折线宽度
-                },
-                itemStyle:{
-                  borderWidth: 2
-                }
-              };
-              itemObj.symbolSize=5;
-              itemObj.symbol='circle';
-              itemObj.animationDuration=2800;
-              itemObj.animationEasing='quadraticOut';
-              series.push(itemObj);
-            }
-          })
-        }
-        option = {
-          tooltip: {
-              backgroundColor:'rgba(255,255,255,0.95)',
-              trigger: "axis",
-              textStyle:{
-                fontSize:'12',
-                color: '#666'
-              },
-              formatter(params){
-                let returnData = `<div class="toolDiv">
-                    <div class="tooltitle">${params[0].name}</div>`;
-                for (let i = 0; i < params.length; i++) {
-                  if(i%3 == 0 || i%3 == 2){
-                    
-                    if(i%3 == 0){
-                      returnData += `<div class="bar clearfix" style="margin-top:5px">
-                        <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].borderColor};"></span><span>`;
-                        if(params.length > 4){
-                          returnData += `${params[i].seriesName}`;
-                        }
-                      returnData += `实际完成：</span><span>${params[i].data.all}积分</span></div>`;
-                      returnData += `<div class="bar clearfix" style="margin-top:5px">
-                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i].borderColor};"></span><span>`;
-                      if(params.length > 4){
-                        returnData += `${params[i].seriesName}`;
-                      }
-                      returnData += `有效完成：</span><span>${params[i].data.value}积分</span></div>`;
-                    }
-                    if(i%3 == 2){
-                      returnData += `<div class="bar clearfix" style="margin-top:5px">
-                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[i-2].borderColor};"></span><span>`;
-                      if(params.length > 4){
-                        returnData += `${params[i].seriesName}`;
-                      }
-                      returnData += `完成度：</span><span>${params[i].value}%</span></div>`;
-                    }
-                  }
-                }
-                returnData +=`</div>`;
-                return returnData;
-            }
-          },
-          grid: {
-              top:60,
-              right:52,
-              bottom:40,
-              left:52,
-          },
-          xAxis: {
-              type: 'category',
-              data: $this.chartData.c_name,
-              axisLine: {
-                  show: false,
-              },
-              axisTick: {
-                  show: false,
-              },
-              axisLine:{
-                  show: true,
-                  lineStyle:{
-                      type: [4, 0],
-                      dashOffset: 3,
-                      color: '#e5e5e5',
-                      opacity: 1,
-                      shadowColor: null,
-                      shadowBlur: 0,
-                      shadowOffsetX: 0,
-                      shadowOffsetY: 0,
-                  }
-              },
-              axisLabel: {
-                  interval:1,
-                  color: "#555",
-                  fontSize: "12",
-                  lineHeight: 18,
-              },
-          },
-          yAxis:{
-              type: 'value',
-              position: 'left',
-              axisLine:{
-                  show: true,
-                  lineStyle:{
-                      type: [4, 0],
-                      dashOffset: 3,
-                      color: '#e0e0e0',
-                      opacity: 1,
-                      shadowColor: null,
-                      shadowBlur: 0,
-                      shadowOffsetX: 0,
-                      shadowOffsetY: 0,
-                  }
-              },
-          },
-          animation: false,
-          series:series,
-        };
-        option && myChart.setOption(option);
-        $this.columnChart = myChart;
-      },
-      drawPieChart(){
-        var $this = this;
-        var chartDom = document.getElementById('pieChart');
-        var myChart = echarts.init(chartDom);
-        var option;
-        option = {
-          tooltip: {
-            trigger: 'item',
-            formatter(items){
-              var tooltext = `<div class="counttoolTip">
-              <div class="title">${items.name}</div>
-              <div class="bar clearfix">
-                ${items.marker}
-                <span class="name">${items.seriesName}：</span>
-                <span class="num">${items.value}</span>
-              </div>
-              `;
-              return tooltext;
-            }
-          },
-          legend: {
-            show: false,
-            orient: 'vertical',
-            right: 'right',
-            top: 'middle',
-            itemWidth: 8,
-            itemHeight: 8,
-            icon: "circle",
-          },
-          color: ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"],
-          animation: false,
-          series: [
-            {
-              name: '增加的积分',
-              type: 'pie',
-              radius: '60%',
-              data: $this.columnData.pie_addList,
-              emphasis: {
-                itemStyle: {
-                  shadowBlur: 10,
-                  shadowOffsetX: 0,
-                  shadowColor: 'rgba(0, 0, 0, 0.5)'
-                }
-              },
-              label:{
-                  normal:{
-                      formatter: function(params){
-                          var str = '';
-                          str = params.name+":"+params.percent.toFixed(1)+"%";
-                          return str
-                      },
-                      position: 'outside',
-                      fontSize: 13,
-                      color: "#666",
-                  }
-                },
-            }
-          ]
-        };
-        option && myChart.setOption(option);
-        $this.pieChart = myChart;
-      },
-      echartsSize(){
-        if(this.columnChart){
-            this.columnChart.resize();
-        }
-        if(this.pieChart){
-            this.pieChart.resize();
-        }
-      },
-      resetData(){
-        var $this = this;
-        $this.searchData.ids = [];
+        $this.searchData.name = [];
         $this.searchData.time = [];
         $this.checkAll = false;
-        if($this.columnChart){
-          $this.columnChart.dispose();
-        }
-        if($this.pieChart){
-          $this.pieChart.dispose();
-        }
       },
-      dimensionChangeHandler(obj){
+      resetPieData(){
         var $this = this;
-        if(!obj.isOn){
-            var dateDimension = $this.dateDimension;
-            dateDimension.forEach(function(item){
-            if(item.value==obj.value){
-                item.isOn = true;
-                $this.dateSelected = true;
-                $this.nowDimension = item.value;
-            }else{
-                item.isOn = false;
-            }
-            });
-            $this.dateDimension = dateDimension;
-            $this.getDefaultTime();
-        }
+        $this.pieSearch.name = "";
+        $this.pieSearch.time = [];
+        $this.pieSearch.post_id = "";
+        $this.checkAll = false;
       },
       getDefaultTime(){
         var $this = this;
-        if($this.nowDimension == "day"){
-            $this.searchData.time = [new Date().toISOString().slice(0, 10), new Date().toISOString().slice(0, 10)]; 
-        }else if($this.nowDimension == "week"){
-            const now = new Date();
-            const dayOfWeek = now.getDay();
-            var deltaDay = 0;
-            if(dayOfWeek == 0){
-                deltaDay = -6;
-            }else{
-                deltaDay = 1 - dayOfWeek;
-            }
-            const monday = new Date(now);
-            monday.setDate(now.getDate() + deltaDay);
-            const sunday = new Date(now);
-            sunday.setDate(monday.getDate() + 6);
-            $this.searchData.time = [monday.toISOString().slice(0, 10), sunday.toISOString().slice(0, 10)];
-        }else if($this.nowDimension == "month"){
-            var date = new Date();
-            var year = date.getFullYear().toString();
-            var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
-            var end = '';
-            var start = year + '-' + month + '-01';
-            if(month == '12'){
-              end = (parseInt(year) + 1) + '-01-01';
-            }else{
-              end = parseInt(month) + 1>9 ? year + '-' + (parseInt(month) + 1)  + '-01':year + '-0' + (parseInt(month) + 1)  + '-01';
-            }
-            $this.searchData.time = [start, end];
-        }
-      },
-      weekChange(val) {
-        let startTime = new Date(val.getTime()); //开始时间
-        let endTime = new Date(val.getTime() + (24 * 60 * 60 * 1000) * 6); //结束时间
-        let timeArr = [startTime.toISOString().slice(0, 10), endTime.toISOString().slice(0, 10)];
+        const end = new Date();
+        const start = new Date();
+        start.setTime(start.getTime());
+        end.setTime(end.getTime() - 3600 * 1000 * 24 * 6);
+        let timeArr = [end.toISOString().slice(0, 10), start.toISOString().slice(0, 10)];
         return timeArr;
       },
-      tabChange(inx){
+      tabChange(item){
         var $this = this;
-        $this.nowChart = inx;
-        if($this.columnChart){
-          $this.columnChart.dispose();
-        }
-        $this.columnChart = null;
+        $this.nowChart = item.name;
         if($this.pieChart){
           $this.pieChart.dispose();
         }
         $this.pieChart = null;
-        if(inx == 1){
-          setTimeout(() => {
-            $this.drawColumnChart();  
-          }, 500);
+        if(item.name == "1"){
+          if(!isSearchColumn){
+            $this.getCountData();
+          }
+        }else if(item.name == "2"){
+          if(!$this.isGetPost){
+            $this.getPostList();
+          }else{
+            if(!isSearchPie){
+              $this.getPieData();
+            }
+          }
           
-        }else{
-          setTimeout(() => {
-            $this.drawPieChart();
-          }, 500);
         }
       },
+      sortByAsc(i){
+        return function(a,b){
+          return new Date(a[i]).getTime() - new Date(b[i]).getTime()
+        }
+      }
     }
   }
   </script>
   <style lang="scss" scoped>
-  
     .chartShow{
       margin-top: 20px;
       padding: 20px;
       background-color: #fff;
-      height: calc(100vh - 364px);
-      #pieChart, #columnChart{
+      min-height: calc(100vh - 417px);
+      #columnChart{
         width: 100%;
-        height: calc(100vh - 446px);
+        height: calc(100vh - 460px);
       }
     }
     .checked_item .c_tit, .checked_item .c_name{
@@ -864,4 +715,19 @@
     .group-index .filter-panel .filter-list{
       padding: 18px 30px 15px;
     }
+    .group-index .filter-panel{
+      margin-top: 5px;
+    }
+  </style>
+  <style>
+  .el-tabs__item{
+    background-color: #fff;
+  }
+  .el-tabs--card > .el-tabs__header{
+    border-bottom: 1px solid #fff;
+  }
+  .el-tabs__item.is-active{
+    color: #fff;
+    background-color: #0970ff;
+  }
   </style>
